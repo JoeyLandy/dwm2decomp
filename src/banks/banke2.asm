@@ -5560,9 +5560,9 @@ Func_0E2_6696:: ; address name
     ld b, a
     ld a, [wBattleActor]
     cp a, c
-    ld hl, Data_0E2_66B9
+    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66B9
     jr z, Jump_0E2_66AC
-    ld hl, Data_0E2_66BF
+    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF
 
 Jump_0E2_66AC::
     ld a, b
@@ -5573,11 +5573,13 @@ Jump_0E2_66AC::
     ret
 
 ; address loaded by AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
-Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_66B9:: ; address name
     db $1E, $1F, $20, $21, $22, $22
 
 ; address loaded by AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
-Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_66BF:: ; address name
     db $AB, $AC, $AD, $AE, $AF, $AF
 
 ; for the three slots of the side in A (bit 2), runs Func_0E2_66DC with hFFC6 = slot for each occupied one (E-0122)
@@ -5616,9 +5618,9 @@ Func_0E2_66DC:: ; address name
     ld b, a
     ld a, [wBattleActor]
     cp a, c
-    ld hl, Data_0E2_66FF
+    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_66FF
     jr z, Jump_0E2_66F2
-    ld hl, Data_0E2_6705
+    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_6705
 
 Jump_0E2_66F2::
     ld a, b
@@ -5629,11 +5631,13 @@ Jump_0E2_66F2::
     ret
 
 ; address loaded by ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
-Data_0E2_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_66FF:: ; address name
     db $1D, $1E, $1F, $20, $21, $22
 
 ; address loaded by ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
-Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_6705:: ; address name
     db $AA, $AB, $AC, $AD, $AE, $AF
 
 ; only called from AIScore_Ramming (E-0047)
@@ -5647,7 +5651,7 @@ Func_0E2_670B:: ; address name
     ld a, c
     pop bc
     ld b, a
-    ld hl, Data_0E2_6727
+    ld hl, AIScore_Ramming_HPBandOfSlotTemp0_Data
     ld a, b
     add_a_to_hl
     ld c, [hl]
@@ -5656,7 +5660,8 @@ Func_0E2_670B:: ; address name
     ret
 
 ; address loaded by AIScore_Ramming_HPBandOfSlotTemp0
-Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AIScore_Ramming_HPBandOfSlotTemp0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_6727:: ; address name
     db $1D, $1E, $1F, $20, $21, $22
 
 ; only called from AIScore_Cover (E-0047)
@@ -5695,9 +5700,9 @@ Func_0E2_6744:: ; address name
     ld b, a
     ld a, [wBattleActor]
     cp a, c
-    ld hl, Data_0E2_6767
+    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_6767
     jr z, Jump_0E2_675A
-    ld hl, Data_0E2_676D
+    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_676D
 
 Jump_0E2_675A::
     ld a, b
@@ -5708,11 +5713,13 @@ Jump_0E2_675A::
     ret
 
 ; address loaded by AIScore_Cover_Sub01_HPBandOfSlotTemp0
-Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_6767:: ; address name
     db $21, $20, $1F, $1E, $1D, $1D
 
 ; address loaded by AIScore_Cover_Sub01_HPBandOfSlotTemp0
-Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_676D:: ; address name
     db $AA, $AA, $AB, $AC, $AD, $AE
 
 ; only called from AIScore_Upper (E-0047)
@@ -6057,7 +6064,7 @@ Jump_0E2_6917::
 ClearBattleStatusBitsWithMaskD_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_0E2_691D:: ; address name
     ld a, d
-    ld hl, Data_0E2_6932
+    ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -6069,7 +6076,8 @@ Func_0E2_691D:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_BankE2
-Data_0E2_6932:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_BankE2_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E2_6932:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)

@@ -132,11 +132,13 @@ Data_058_45FF:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1605FF, $107
 
 ; LZSS-compressed asset: 245 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_058_4706:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+ScreenMap_58_4706:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_058_4706:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $160706, $F5
 
 ; LZSS-compressed asset: 243 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_058_47FB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+ScreenMap_58_47FB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_058_47FB:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1607FB, $F3
 
 ; LZSS-compressed asset: 188 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -160,11 +162,13 @@ Data_058_4BB3:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $160BB3, $8F
 
 ; LZSS-compressed asset: 137 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_058_4C42:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+ScreenMap_58_4C42:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_058_4C42:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $160C42, $89
 
 ; LZSS-compressed asset: 113 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_058_4CCB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+ScreenMap_58_4CCB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_058_4CCB:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $160CCB, $71
 
 ; LZSS-compressed asset: 86 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)

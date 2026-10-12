@@ -1552,7 +1552,7 @@ Func_0A0_48D0:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     ld bc, $0B00
-    ld hl, Data_0A0_48F5
+    ld hl, PickRandomBand0To10_Data
 
 Jump_0A0_48DC::
     cp a, [hl]
@@ -1577,7 +1577,8 @@ Jump_0A0_48F3::
     ret
 
 ; address loaded by PickRandomBand0To10
-Data_0A0_48F5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PickRandomBand0To10_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_48F5:: ; address name
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
 ; copies battler records 0 and 1 ($4E bytes each, wBattlerRecords and wD123) to wD1BF and wD20D (E-0118)
@@ -1622,7 +1623,7 @@ Jump_0A0_4931::
 Jump_0A0_4933::
     push bc
     ld a, c
-    ld hl, Data_0A0_4B0A
+    ld hl, ApplyLevelScaledStatsToSlots_Data
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -1938,7 +1939,8 @@ Func_0A0_4AE4:: ; address name
     ret
 
 ; address loaded by ApplyLevelScaledStatsToSlots
-Data_0A0_4B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ApplyLevelScaledStatsToSlots_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_4B0A:: ; address name
     db $BF, $D1, $0D, $D2, $5B, $D2
 
 ; only called from GameMode7_Init_Sub01_Sub02 (E-0047)
@@ -3621,7 +3623,7 @@ RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles::
 Jump_0A0_5622:: ; address name
     call DrawRect4DC7AndWriteDATiles
     ld a, [wBattleResultStep]
-    ld hl, Data_0A0_56CA
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -3743,7 +3745,8 @@ Jump_0A0_56BA::
     ret
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles
-Data_0A0_56CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_56CA:: ; address name
     db $04, $F7, $04, $0E, $04, $12, $04, $16
 
 ; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
@@ -4274,7 +4277,7 @@ Jump_0A0_59EB:: ; address name
 ; points at: wTextBuf1
 CopyF0StringFromTable5A4AToTextBuf1::
 Func_0A0_5A30:: ; address name
-    ld hl, Data_0A0_5A4A
+    ld hl, CopyF0StringFromTable5A4AToTextBuf1_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -4293,7 +4296,8 @@ Jump_0A0_5A48::
     ret
 
 ; address loaded by CopyF0StringFromTable5A4AToTextBuf1
-Data_0A0_5A4A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyF0StringFromTable5A4AToTextBuf1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5A4A:: ; address name
     db $56, $5A, $59, $5A, $5C, $5A, $60, $5A, $64, $5A, $68, $5A, $11, $19, $F0, $16
     db $19, $F0, $0A, $1D, $14, $F0, $0D, $0E, $0F, $F0, $0A, $10, $15, $F0, $12, $17
     db $1D, $F0
@@ -4317,9 +4321,9 @@ Func_0A0_5A6C:: ; address name
 Jump_0A0_5A7F::
     ld [hl], a
     ld a, [wLinkRuleTurnLimit]
-    ld hl, Data_0A0_5B25
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B25
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, Data_0A0_5B2C
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B2C
     add_a_to_hl
     push hl
     ld hl, wKeyNameBuf
@@ -4347,9 +4351,9 @@ Jump_0A0_5A7F::
     ld a, l
     ld [wWorkBuf], a
     ld [wWildBand], a
-    ld hl, Data_0A0_5B33
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B33
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, Data_0A0_5B39
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B39
     add_a_to_hl
     ld a, [wWildLevel]
     ld e, a
@@ -4403,7 +4407,7 @@ Jump_0A0_5B04::
 
 Jump_0A0_5B0C::
     ld a, e
-    ld hl, Data_0A0_5B3F
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B3F
     call CountTableBytesAtOrBelowA_BankA0
     ld [wWorkBuf + $1], a
     ld [wWildByteE5], a
@@ -4427,23 +4431,28 @@ Jump_0A0_5B23::
     ret
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-Data_0A0_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B25:: ; address name
     db $06, $0B, $15, $29, $33, $3D, $FF
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-Data_0A0_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B2C:: ; address name
     db $14, $0A, $05, $00, $FB, $F6, $EC
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-Data_0A0_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B33:: ; address name
     db $01, $03, $05, $07, $09, $FF
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-Data_0A0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B39:: ; address name
     db $EC, $F6, $FB, $00, $05, $0A
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-Data_0A0_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B3F:: ; address name
     db $14, $28, $32, $3C, $46, $50, $5A, $FF
 
 ; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case00 (E-0047)
@@ -4482,7 +4491,7 @@ Jump_0A0_5B85::
     call OffsetByIndexOfMinOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D5A
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D5A
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4491,7 +4500,7 @@ Jump_0A0_5B85::
     ld [wWorkBuf + $A], a
     ld a, [wWorkBuf + $1]
     add a, a
-    ld hl, Data_0A0_5D6A
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D6A
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
@@ -4502,7 +4511,7 @@ Jump_0A0_5BAE::
     call OffsetByIndexOfMaxOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D62
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4515,7 +4524,7 @@ Jump_0A0_5BAE::
 Jump_0A0_5BCB::
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D62
+    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4725,7 +4734,7 @@ Func_0A0_5CCD:: ; address name
     call KeepMinWordEntry
     ld a, e
     ld [wWorkBuf + $9], a
-    ld hl, Data_0A0_5D54
+    ld hl, OffsetByIndexOfMinOfFiveWords_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4772,7 +4781,7 @@ Func_0A0_5D0C:: ; address name
     call KeepMaxWordEntry
     ld a, e
     ld [wWorkBuf + $9], a
-    ld hl, Data_0A0_5D54
+    ld hl, OffsetByIndexOfMinOfFiveWords_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4811,19 +4820,23 @@ Func_0A0_5D4B:: ; address name
     ret
 
 ; address loaded by OffsetByIndexOfMinOfFiveWords, OffsetByIndexOfMaxOfFiveWords
-Data_0A0_5D54:: ; heuristic: pointer load in the same bank (bank assumed); C0
+OffsetByIndexOfMinOfFiveWords_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D54:: ; address name
     db $00, $04, $06, $08, $0A, $0C
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-Data_0A0_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D5A:: ; address name
     db $01, $02, $03, $04, $05, $06, $08, $0A
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-Data_0A0_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D62:: ; address name
     db $01, $01, $01, $01, $01, $01, $01, $01
 
 ; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-Data_0A0_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D6A:: ; address name
     db $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03
 
 ; only called from RunBattlePhaseWhenTextIdle_A0_Case01_Case00 (E-0047)
@@ -4989,7 +5002,7 @@ Jump_0A0_5E39:: ; address name
 RunBattleSetup_BankA0_Case00_ReadMenuState::
 Jump_0A0_5E71:: ; address name
     call RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0
-    ld hl, Data_0A0_6977
+    ld hl, RunBattleSetup_BankA0_Case00_ReadMenuState_Data
     ld a, [wMenuState]
     and a, $03
     add a, a
@@ -5011,7 +5024,7 @@ Jump_0A0_5E71:: ; address name
 ; points at: wMenuState, wMenuSubState, wBattleResolveStep
 RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case02::
 Jump_0A0_5E93:: ; address name
-    ld de, Data_0A0_6977
+    ld de, RunBattleSetup_BankA0_Case00_ReadMenuState_Data
     ld hl, wMenuState
     call RunBattleSetup_BankA0_Case00_Case02_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
@@ -5240,7 +5253,7 @@ Jump_0A0_5FEB:: ; address name
     ld a, [hl]
     ld [wMenuSubState], a
     call DrawWC278Rect20x11ToBGMapRow7_BankA0
-    ld hl, Data_0A0_697F
+    ld hl, RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data
     ld a, [wMenuSubState]
     and a, $03
     add a, a
@@ -5265,7 +5278,7 @@ Jump_0A0_5FEB:: ; address name
 ; points at: wMenuSubState, wBattleSetupD8, wBattleResolveStep, wBattleActionChoice, wSideControl
 RunBattleSetup_BankA0_Case01_WriteBattleArg1AndBattleResolveStepEtc::
 Jump_0A0_6021:: ; address name
-    ld de, Data_0A0_697F
+    ld de, RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data
     ld hl, wMenuSubState
     call RunBattleSetup_BankA0_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
@@ -5378,7 +5391,7 @@ Jump_0A0_60AC:: ; address name
 RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0::
 Jump_0A0_60F3:: ; address name
     call DrawWC2B8Rect11x9ToBGMapRow9_BankA0
-    ld hl, Data_0A0_6987
+    ld hl, RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Data
     ld a, [wMenuSelectedMember]
     and a, $03
     add a, a
@@ -5401,7 +5414,7 @@ Jump_0A0_60F3:: ; address name
 ; points at: wMenuSelectedMember, wBattleResolveStep, wSideControl, wBattleActionChoice
 RunBattleSetup_BankA0_Case01_ClearAndLayoutTileBlocksForBattleFoeCount::
 Jump_0A0_6115:: ; address name
-    ld de, Data_0A0_6987
+    ld de, RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Data
     ld hl, wMenuSelectedMember
     call RunBattleSetup_BankA0_Case01_Case06_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
@@ -5607,7 +5620,7 @@ Jump_0A0_6243:: ; address name
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, Data_0A0_697F
+    ld de, RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data
     call ShowSkillPageNames_BankA0
     call RunBattleSetup_BankA0_ClearBit6AndCursorEntryTile_BankA0
     farcall CopyRectRecords7600And7734ToScreenBuffer
@@ -5640,7 +5653,7 @@ Jump_0A0_6243:: ; address name
 RunBattleSetup_BankA0_Case01_DrawWC2A4AndWC2B8Rects_BankA0_Case0D::
 Jump_0A0_62A3:: ; address name
     call DrawWC2A4AndWC2B8Rects_BankA0
-    ld hl, Data_0A0_697F
+    ld hl, RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data
     ld a, [wMenuCursor]
     and a, $03
     add a, a
@@ -5666,7 +5679,7 @@ Jump_0A0_62A3:: ; address name
 ; points at: wMenuCursor, wBattleMP, wSideControl, wBattleActionChoice, wBattleResolveStep
 RunBattleSetup_BankA0_Case01_ClearAndLayoutTileBlocksForBattleFoeCount_Case0E::
 Jump_0A0_62CD:: ; address name
-    ld de, Data_0A0_697F
+    ld de, RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data
     ld hl, wMenuCursor
     call RunBattleSetup_BankA0_SetBit6AndBlankEntryTile_BankA0
     ld a, [wJoypadPressed]
@@ -6520,7 +6533,7 @@ WriteFiveTilesFromTable67D2::
 Func_0A0_67B8:: ; address name
     push hl
     ld a, [wCommandMonster]
-    ld hl, Data_0A0_67D2
+    ld hl, WriteFiveTilesFromTable67D2_Data
     add_a_to_hl
     xor a, a
     ld [wMenuSubState], a
@@ -6536,7 +6549,8 @@ Jump_0A0_67CC::
     ret
 
 ; address loaded by WriteFiveTilesFromTable67D2
-Data_0A0_67D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteFiveTilesFromTable67D2_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_67D2:: ; address name
     db $D0, $D5
 
 ; only called from RunBattleSetup_BankA0_Case01_Case06 (E-0047)
@@ -6820,15 +6834,18 @@ Func_0A0_694B:: ; address name
     ret
 
 ; address loaded by RunBattleSetup_BankA0_Case00_ReadMenuState, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case02
-Data_0A0_6977:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_BankA0_Case00_ReadMenuState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6977:: ; address name
     db $C1, $01, $01, $02, $C7, $01, $07, $02
 
 ; address loaded by RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01, RunBattleSetup_BankA0_Case01_WriteBattleArg1AndBattleResolveStepEtc, RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Case0C, RunBattleSetup_BankA0_Case01_DrawWC2A4AndWC2B8Rects_BankA0_Case0D and 1 more
-Data_0A0_697F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_697F:: ; address name
     db $41, $01, $81, $01, $C1, $01, $01, $02
 
 ; address loaded by RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0, RunBattleSetup_BankA0_Case01_ClearAndLayoutTileBlocksForBattleFoeCount
-Data_0A0_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6987:: ; address name
     db $81, $01, $C1, $01, $01, $02, $C1, $01, $01, $02, $C1, $01, $01, $02, $29, $00
     db $69, $00, $A9, $00, $E9, $00, $2F, $01, $6F, $01
 
@@ -7002,7 +7019,7 @@ Jump_0A0_6A7F::
     call DrawSlotLevel_BankA0
     ld a, c
     and a, $03
-    ld hl, Data_0A0_6B1A
+    ld hl, DrawSlotStatusMarks_BankA0_Data
     add a, a
     add_a_to_hl
     call DerefHL_BankA0
@@ -7013,7 +7030,7 @@ Jump_0A0_6A95::
     call DrawSlotLevel_BankA0
     ld a, c
     and a, $03
-    ld hl, Data_0A0_6B1A
+    ld hl, DrawSlotStatusMarks_BankA0_Data
     add a, a
     add_a_to_hl
     call DerefHL_BankA0
@@ -7028,7 +7045,7 @@ Jump_0A0_6AA9::
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0::
 Func_0A0_6AAB:: ; address name
     push hl
-    ld hl, Data_0A0_6B0A
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld a, $C3
     ld [hl+], a
@@ -7044,7 +7061,7 @@ Func_0A0_6AAB:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub02::
 Func_0A0_6ABB:: ; address name
     push hl
-    ld hl, Data_0A0_6B0A
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C0
     pop hl
@@ -7055,7 +7072,7 @@ Func_0A0_6ABB:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub03::
 Func_0A0_6AC6:: ; address name
     push hl
-    ld hl, Data_0A0_6B12
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub03_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C1
     pop hl
@@ -7066,7 +7083,7 @@ Func_0A0_6AC6:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub04::
 Func_0A0_6AD1:: ; address name
     push hl
-    ld hl, Data_0A0_6B12
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub03_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C7
     pop hl
@@ -7077,7 +7094,7 @@ Func_0A0_6AD1:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub05::
 Func_0A0_6ADC:: ; address name
     push hl
-    ld hl, Data_0A0_6B16
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub05_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C8
     pop hl
@@ -7088,7 +7105,7 @@ Func_0A0_6ADC:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub06::
 Func_0A0_6AE7:: ; address name
     push hl
-    ld hl, Data_0A0_6B0E
+    ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub06_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $C9
     pop hl
@@ -7099,7 +7116,7 @@ Func_0A0_6AE7:: ; address name
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub07::
 Func_0A0_6AF2:: ; address name
     push hl
-    ld hl, Data_0A0_6B1A
+    ld hl, DrawSlotStatusMarks_BankA0_Data
     call ReadWordTableEntryForSlotC_BankA0
     ld [hl], $CA
     pop hl
@@ -7125,23 +7142,28 @@ Func_0A0_6B06:: ; address name
     ret
 
 ; address loaded by DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub02
-Data_0A0_6B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6B0A:: ; address name
     db $39, $C2, $46, $C2
 
 ; address loaded by DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub06
-Data_0A0_6B0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub06_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6B0E:: ; address name
     db $3A, $C2, $47, $C2
 
 ; address loaded by DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub03, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub04
-Data_0A0_6B12:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6B12:: ; address name
     db $3B, $C2, $48, $C2
 
 ; address loaded by DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub05
-Data_0A0_6B16:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6B16:: ; address name
     db $3C, $C2, $49, $C2
 
 ; address loaded by DrawSlotStatusMarks_BankA0, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Sub07
-Data_0A0_6B1A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6B1A:: ; address name
     db $3D, $C2, $4A, $C2
 
 ; C = slot 0-2: copies the 5-tile panel row at Data_0A0_6D53's offset from wScreenTileBuffer to vBGMap0 (the wC58A = 2 form of CopySlotPanelRowToVRAM) (E-0111)
@@ -7152,7 +7174,7 @@ Func_0A0_6B1E:: ; address name
     ld a, c
     cp a, $03
     jr nc, Jump_0A0_6B45
-    ld hl, Data_0A0_6D53
+    ld hl, CopySlotPanelRowToVRAM_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7195,7 +7217,7 @@ Func_0A0_6B46:: ; address name
     ld a, c
     and a, $03
     push hl
-    ld hl, Data_0A0_6D47
+    ld hl, DrawSlotHPDigits_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7233,7 +7255,7 @@ Func_0A0_6B79:: ; address name
     ld a, c
     and a, $03
     push hl
-    ld hl, Data_0A0_6D4B
+    ld hl, DrawSlotMPDigits_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7262,7 +7284,7 @@ Func_0A0_6BB3:: ; address name
     jr z, Jump_0A0_6BEE
     ld a, c
     and a, $03
-    ld hl, Data_0A0_6D4F
+    ld hl, DrawSlotLevel_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7299,7 +7321,7 @@ Func_0A0_6BF0:: ; address name
     and a, $03
     cp a, $03
     jr z, Jump_0A0_6C21
-    ld hl, Data_0A0_6D47
+    ld hl, DrawSlotHPDigits_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7334,7 +7356,7 @@ Func_0A0_6C22:: ; address name
     and a, $03
     cp a, $03
     jr z, Jump_0A0_6C53
-    ld hl, Data_0A0_6D4B
+    ld hl, DrawSlotMPDigits_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7369,7 +7391,7 @@ Func_0A0_6C54:: ; address name
     and a, $03
     cp a, $03
     jr z, Jump_0A0_6C80
-    ld hl, Data_0A0_6D4F
+    ld hl, DrawSlotLevel_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7512,19 +7534,23 @@ Func_0A0_6CF7:: ; address name
     ret
 
 ; address loaded by DrawSlotHPDigits_BankA0, CopySlotPanelPart6D47ToVRAM
-Data_0A0_6D47:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotHPDigits_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6D47:: ; address name
     db $62, $00, $6F, $00
 
 ; address loaded by DrawSlotMPDigits_BankA0, CopySlotPanelPart6D4BToVRAM
-Data_0A0_6D4B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotMPDigits_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6D4B:: ; address name
     db $82, $00, $8F, $00
 
 ; address loaded by DrawSlotLevel_BankA0, CopySlotPanelPart6D4FToVRAM
-Data_0A0_6D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotLevel_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6D4F:: ; address name
     db $A1, $00, $AE, $00
 
 ; address loaded by CopySlotPanelRowToVRAM_BankA0
-Data_0A0_6D53:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopySlotPanelRowToVRAM_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_6D53:: ; address name
     db $A1, $00, $AE, $00
 
 ; E-0256 (C1: PickEncounterMonsterForSlotC reads the word at $6D57 + 16 * PickRandomBand0To10 + 2 * wWildBand and picks one of the count words after the count byte with AdvanceRandom; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands).

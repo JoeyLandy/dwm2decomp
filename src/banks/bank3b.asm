@@ -1557,7 +1557,7 @@ Func_03B_48FA:: ; address name
     ld a, [wBattleActionId]
     sub a, $19
     add a, a
-    ld hl, Data_03B_492A
+    ld hl, SubtractActionAmountFromTargetBattleWordArray3F_Data
     add_a_to_hl
     ld a, [hl+]
     ld b, [hl]
@@ -1580,7 +1580,8 @@ Jump_03B_4925::
     ret
 
 ; address loaded by SubtractActionAmountFromTargetBattleWordArray3F
-Data_03B_492A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SubtractActionAmountFromTargetBattleWordArray3F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03B_492A:: ; address name
     db $05, $00, $0A, $00, $14, $00, $64, $00, $05, $00
 
 ; adds the word Data_03B_4949[action - $19] to wD89F, capped at 1800 (E-0122)
@@ -1591,14 +1592,15 @@ Func_03B_4934:: ; address name
     ld a, [wBattleActionId]
     sub a, $19
     add a, a
-    ld hl, Data_03B_4949
+    ld hl, AddActionAmountToBattleMeter_Data
     add_a_to_hl
     deref_hl
     call AddHLToBattleMeterCappedAt1800
     ret
 
 ; address loaded by AddActionAmountToBattleMeter
-Data_03B_4949:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AddActionAmountToBattleMeter_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03B_4949:: ; address name
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
 ; wD89F += HL, capped at $0708 (1800) (E-0122)
@@ -1663,7 +1665,7 @@ Func_03B_4990:: ; address name
     sub a, $24
     add a, a
     add a, a
-    ld de, Data_03B_4A24
+    ld de, RollTableDamageScaledByResistance_Data
     add a, e
     ld e, a
     jr nc, Jump_03B_499F
@@ -1758,7 +1760,8 @@ Jump_03B_4A1C::
     ret
 
 ; address loaded by RollTableDamageScaledByResistance
-Data_03B_4A24:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RollTableDamageScaledByResistance_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03B_4A24:: ; address name
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8C, $00, $B4, $00, $C8, $00
 
 ; only called from InflictTargetStatus0Bit0 (E-0047)
@@ -2736,7 +2739,7 @@ Jump_03B_4F89::
 ClearBattleStatusBitsWithMaskD_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_03B_4F8F:: ; address name
     ld a, d
-    ld hl, Data_03B_4FA4
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank3B_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -2748,7 +2751,8 @@ Func_03B_4F8F:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_Bank3B
-Data_03B_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_Bank3B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03B_4FA4:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)

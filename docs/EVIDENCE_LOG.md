@@ -2431,6 +2431,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0285 — Data labels named after reader, pointer run, stream kind or record; shared-helper roots
+
+- Kind: TOOL (structural naming; C2 for the relations used).
+- **Reader.** A data label with only an address name that code loads (`ld rr, n`) is named <Reader>_Data, or <Reader>_Data_AAAA when that routine loads several. The reader is the routine whose instructions load it; the comment still lists every reader. 483 labels.
+- **Pointer run.** A target of a monotone pointer run is named <run label>_EntryNN, after the entry that points at it. PointerRun_BB_AAAA stands in when the run's first word has no name.
+- **Stream kind.** Streams found only by tiling or in back-to-back runs are named KeyWorldScreen_BB_AAAA, ScreenMap_BB_AAAA (360 bytes) or Gfx_BB_AAAA. Together with pointer runs, 498 labels.
+- **Record.** A label at a record boundary inside a laid-out table is named <Table>_<id>. 30 labels.
+- Data labels with only an address name went from 1,029 to 18.
+- **Fix.** Shared helpers (Root_SharedNN, E-0098) take the callers' common named root when their callers sit under differently named states (VaultMenu_Store and VaultMenu_TakeOut both lead to VaultMenu). E-0276 had left 8 routines with only an address name; there are 0 again.
+- Binary verification: build/run373 PASS, 0 differing bytes; tests OK.
+
 ### E-0284 — No compounding; RAM names for wider routines; what is left
 
 - Kind: TOOL.

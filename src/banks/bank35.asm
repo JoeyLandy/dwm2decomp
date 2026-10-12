@@ -417,7 +417,7 @@ Data_035_403B:: ; address name
     dw SpeciesRecords ; id 349 ?
     dw SpeciesRecords ; id 350 ?
     dw SpeciesRecord_DracoLord ; id 351 DracoLord
-    dw Data_035_7906 ; id 352 DracoLord
+    dw SpeciesRecords_125 ; id 352 DracoLord
     dw SpeciesRecord_LordDraco ; id 353 LordDraco
     dw SpeciesRecord_Hargon ; id 354 Hargon
     dw SpeciesRecord_Sidoh ; id 355 Sidoh
@@ -429,14 +429,14 @@ Data_035_403B:: ; address name
     dw SpeciesRecord_PsychoPiz ; id 361 PsychoPiz
     dw SpeciesRecord_Esterk ; id 362 Esterk
     dw SpeciesRecord_Mirudraas ; id 363 Mirudraas
-    dw Data_035_7B3A ; id 364 Mirudraas
+    dw SpeciesRecords_131 ; id 364 Mirudraas
     dw SpeciesRecord_Mudou ; id 365 Mudou
     dw SpeciesRecord_DeathMore ; id 366 DeathMore
-    dw Data_035_7BC7 ; id 367 DeathMore
-    dw Data_035_7BF6 ; id 368 DeathMore
+    dw SpeciesRecords_134 ; id 367 DeathMore
+    dw SpeciesRecords_135 ; id 368 DeathMore
     dw SpeciesRecord_Darkdrium ; id 369 Darkdrium
     dw SpeciesRecord_Orgodemir ; id 370 Orgodemir
-    dw Data_035_7C83 ; id 371 Orgodemir
+    dw SpeciesRecords_138 ; id 371 Orgodemir
     dw SpeciesRecord_Darck ; id 372 Darck
     dw SpeciesRecord_Tatsu ; id 373 Tatsu
     dw SpeciesRecord_Diago ; id 374 Diago
@@ -2797,7 +2797,8 @@ Data_035_78D7:: ; address name
     db $04, $3B, $9F, $02, $14, $1E, $15, $14, $17, $17, $01, $01, $00, $00, $00, $01 ; bytes 8-23
     db $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $01, $01, $03, $02, $03, $03 ; bytes 24-39
     db $03, $03, $00, $00, $00, $10, $02 ; bytes 40-46
-Data_035_7906:: ; heuristic: species record; C0
+SpeciesRecords_125:: ; heuristic: species record; C0
+Data_035_7906:: ; address name
     db $0A ; id 293: family (StringTable_MonsterFamilies index; $FF unused)
     db $00, $00, $00, $06, $00, $46 ; bytes 1-6
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
@@ -2892,7 +2893,8 @@ Data_035_7B0B:: ; address name
     db $01, $07, $0D, $02, $15, $1E, $1A, $15, $17, $17, $02, $02, $02, $01, $02, $02 ; bytes 8-23
     db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
     db $03, $03, $01, $01, $01, $50, $02 ; bytes 40-46
-Data_035_7B3A:: ; heuristic: species record; C0
+SpeciesRecords_131:: ; heuristic: species record; C0
+Data_035_7B3A:: ; address name
     db $0A ; id 305: family (StringTable_MonsterFamilies index; $FF unused)
     db $00, $00, $00, $06, $00, $50 ; bytes 1-6
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
@@ -2915,14 +2917,16 @@ Data_035_7B98:: ; address name
     db $3E, $3F, $85, $02, $15, $1E, $1A, $15, $17, $17, $01, $02, $02, $01, $01, $02 ; bytes 8-23
     db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
     db $03, $03, $01, $00, $02, $48, $02 ; bytes 40-46
-Data_035_7BC7:: ; heuristic: species record; C0
+SpeciesRecords_134:: ; heuristic: species record; C0
+Data_035_7BC7:: ; address name
     db $0A ; id 308: family (StringTable_MonsterFamilies index; $FF unused)
     db $00, $00, $00, $06, $00, $46 ; bytes 1-6
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $6F, $82, $03, $18, $1E, $1A, $15, $17, $17, $02, $02, $02, $02, $01, $02 ; bytes 8-23
     db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
     db $03, $03, $02, $01, $03, $6C, $02 ; bytes 40-46
-Data_035_7BF6:: ; heuristic: species record; C0
+SpeciesRecords_135:: ; heuristic: species record; C0
+Data_035_7BF6:: ; address name
     db $0A ; id 309: family (StringTable_MonsterFamilies index; $FF unused)
     db $00, $01, $00, $06, $01, $50 ; bytes 1-6
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
@@ -2945,7 +2949,8 @@ Data_035_7C54:: ; address name
     db $07, $6B, $8A, $02, $18, $19, $1A, $17, $16, $1F, $02, $02, $02, $02, $02, $02 ; bytes 8-23
     db $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $02, $02, $02, $03, $02, $01 ; bytes 24-39
     db $02, $02, $02, $02, $02, $6C, $02 ; bytes 40-46
-Data_035_7C83:: ; heuristic: species record; C0
+SpeciesRecords_138:: ; heuristic: species record; C0
+Data_035_7C83:: ; address name
     db $0A ; id 312: family (StringTable_MonsterFamilies index; $FF unused)
     db $00, $00, $00, $06, $00, $46 ; bytes 1-6
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)

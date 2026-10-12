@@ -204,9 +204,11 @@ Data_01F_4780:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 138
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 139
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 140
-Data_01F_48E0:: ; heuristic: argument of a bank-switching copy helper; C0
+RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_48E0:: ; address name
     db $FF, $05, $FF, $05, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 141
-Data_01F_48F0:: ; heuristic: argument of a bank-switching copy helper; C0
+DebugResultsDisplay_Init_Data:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_01F_48F0:: ; address name
     db $FF, $02, $FF, $05, $FF, $02, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; id 142
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $30, $FF, $48, $FF, $48, $FF, $30 ; id 143
 Tiles2Plus710Tiles_1F_4910:: ; heuristic: argument of a bank-switching copy helper; C0
@@ -439,7 +441,7 @@ Data_01F_5094:: ; address name
     dw SgbPctTrn_1F_51AE ; id 15
     dw SgbChrTrn_1F_51BE ; id 16
     dw SgbChrTrn_1F_51CE ; id 17
-    dw Data_01F_51DE ; id 18
+    dw SGBPackets_12 ; id 18
     dw SgbIconEn_1F_51EE ; id 19
     dw SgbMaskEn_1F_51FE ; id 20
 
@@ -500,7 +502,8 @@ Data_01F_51BE:: ; address name
 SgbChrTrn_1F_51CE:: ; heuristic: SGB packet; C0
 Data_01F_51CE:: ; address name
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
-Data_01F_51DE:: ; heuristic: SGB packet; C0
+SGBPackets_12:: ; heuristic: SGB packet; C0
+Data_01F_51DE:: ; address name
     db $C9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
 SgbIconEn_1F_51EE:: ; heuristic: SGB packet; C0
 Data_01F_51EE:: ; address name
@@ -1313,7 +1316,7 @@ Jump_01F_5C4A::
 Jump_01F_5C71::
     ld a, c
     add a, a
-    ld hl, Data_01F_5C9C
+    ld hl, DrawRecordListPageNames_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1341,7 +1344,8 @@ Jump_01F_5C90::
     ret
 
 ; address loaded by DrawRecordListPageNames
-Data_01F_5C9C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageNames_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_5C9C:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
@@ -1414,7 +1418,7 @@ Func_01F_5CF8:: ; address name
     ld e, l
     ld d, h
     push de
-    ld hl, Data_01F_5D20
+    ld hl, GlyphCopyArgsForA_Data
     ld a, [wGlyphListStart]
     sla a
     add_a_to_hl
@@ -1428,7 +1432,8 @@ Func_01F_5CF8:: ; address name
     ret
 
 ; address loaded by GlyphCopyArgsForA
-Data_01F_5D20:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GlyphCopyArgsForA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_5D20:: ; address name
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 ; parameters wD7F1/wD7F2 = source (high, low), wD7F3 = width, wD7F4 = rows, wD7F5/wD7F6 = BG map destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wD7F7 is 0, also zero-fills the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
@@ -2076,7 +2081,8 @@ Data_01F_6FE7:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $06, $35, $3B, $28, $39, $C3, $13, $24, $30, $28, $C3, $C3, $C3, $C3, $B7 ; id 5
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 6
     db $B6, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $C3, $0F, $10, $11, $12, $B7 ; id 7
-Data_01F_7087:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_Case07_Data:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_7087:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 8
     db $B6, $13, $14, $15, $16, $17, $18, $19, $1A, $1B, $1C, $1D, $1E, $1F, $C3, $20, $21, $22, $23, $B7 ; id 9
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 10
@@ -2094,7 +2100,8 @@ TileRect_1F_714F::
 Data_01F_714F:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; id 1
-Data_01F_7177:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+RunNameEntryStateWhenNotFading_Case02_DrawTileRectFromArg1Params_Data:: ; heuristic: wArg1/wArg2 source of a far call to DrawTileRectFromArg1Params; C0
+Data_01F_7177:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
     db $B6, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
@@ -2149,7 +2156,7 @@ Func_01F_7375:: ; address name
 Jump_01F_7377::
     push bc
     ld a, c
-    ld de, Data_01F_73BC
+    ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73BC
     add a, e
     ld e, a
     jr nc, Jump_01F_7381
@@ -2174,7 +2181,7 @@ Jump_01F_7381::
     push de
     ld a, c
     sla a
-    ld de, Data_01F_73CC
+    ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73CC
     add a, e
     ld e, a
     jr nc, Jump_01F_73A7
@@ -2198,11 +2205,13 @@ Jump_01F_73A7::
     ret
 
 ; address loaded by LoadSixteenGlyphTilesFromTable73BC
-Data_01F_73BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadSixteenGlyphTilesFromTable73BC_Data_73BC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_73BC:: ; address name
     db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
 
 ; address loaded by LoadSixteenGlyphTilesFromTable73BC
-Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadSixteenGlyphTilesFromTable73BC_Data_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01F_73CC:: ; address name
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 

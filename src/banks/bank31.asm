@@ -509,26 +509,26 @@ Jump_031_430A::
 
 Jump_031_4329::
     ld hl, wTextBuf0
-    ld de, Data_031_438E
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_438E
     ld b, $09
     ld a, [wStringIndex]
     cp a, $0B
     jr nz, Jump_031_433F
-    ld de, Data_031_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
     ld b, $09
     jr Jump_031_435E
 
 Jump_031_433F::
     cp a, $0C
     jr nz, Jump_031_434A
-    ld de, Data_031_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
     ld b, $0D
     jr Jump_031_435E
 
 Jump_031_434A::
     cp a, $0D
     jr nz, Jump_031_4355
-    ld de, Data_031_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
     ld b, $0D
     jr Jump_031_435E
 
@@ -536,7 +536,7 @@ Jump_031_4355::
     cp a, $0E
     jr nz, Jump_031_435E
     ld b, $09
-    ld de, Data_031_4397
+    ld de, BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397
 
 Jump_031_435E::
     ld a, [de]
@@ -584,11 +584,13 @@ Jump_031_4384::
     ret
 
 ; address loaded by BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
-Data_031_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_438E:: ; address name
     db $30, $32, $31, $36, $37, $28, $35, $36, $F0
 
 ; address loaded by BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
-Data_031_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc_Data_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_4397:: ; address name
     db $16, $32, $31, $36, $37, $28, $35, $36, $F0
 
 ; wBattlePhase 0, wBattleStep 4 (E-0044)
@@ -1010,7 +1012,7 @@ Jump_031_45B3::
     jr nz, Jump_031_45E7
     ld a, c
     and a, $03
-    ld hl, Data_031_45EC
+    ld hl, BattleEnd_Step3_WriteBattleExpAward_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -1033,7 +1035,8 @@ Jump_031_45E7::
     ret
 
 ; address loaded by BattleEnd_Step3_WriteBattleExpAward
-Data_031_45EC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step3_WriteBattleExpAward_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_45EC:: ; address name
     db $D7, $D1, $25, $D2, $73, $D2
 
 ; only called from BattleEnd_Step3 (E-0047)
@@ -2064,7 +2067,7 @@ Jump_031_4B8F:: ; address name
 RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM::
 Jump_031_4BCC:: ; address name
     call RunBattleSetup_ToCopyRect32StrideToVRAM
-    ld hl, Data_031_639F
+    ld hl, RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM_Data
     ld a, [wMenuState]
     and a, $03
     add a, a
@@ -2086,7 +2089,7 @@ Jump_031_4BCC:: ; address name
 ; points at: wMenuState, wMenuSubState, wBattleResolveStep
 RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_4BEE:: ; address name
-    ld de, Data_031_639F
+    ld de, RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM_Data
     ld hl, wMenuState
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -2531,9 +2534,9 @@ Jump_031_4E7D::
     add_a_to_hl
     ld a, [hl]
     cp a, $97
-    ld hl, Data_031_4EC6
+    ld hl, RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4EC6
     jr c, Jump_031_4E91
-    ld hl, Data_031_4ED6
+    ld hl, RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4ED6
 
 Jump_031_4E91::
     ld a, e
@@ -2578,11 +2581,13 @@ Jump_031_4EBF::
     ret
 
 ; address loaded by RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty
-Data_031_4EC6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4EC6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_4EC6:: ; address name
     db $04, $00, $00, $0A, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
 ; address loaded by RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty
-Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty_Data_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_4ED6:: ; address name
     db $08, $00, $00, $0F, $06, $00, $00, $0A, $04, $00, $00, $05, $02, $00, $00, $03
 
 ; entry 10 of the `rst $00` table in RunBattleSetup_Case00
@@ -2668,7 +2673,7 @@ Jump_031_4F2A:: ; address name
 ; points at: wMenuSubState, wBattleResolveStep
 RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D::
 Jump_031_4F50:: ; address name
-    ld de, Data_031_63C5
+    ld de, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5
     ld hl, wMenuSubState
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -2676,7 +2681,7 @@ Jump_031_4F50:: ; address name
     ret z
     ld a, [wMenuSubState]
     and a, $01
-    ld hl, Data_031_4FA4
+    ld hl, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_4FA4
     add a, a
     add_a_to_hl
     deref_hl
@@ -2705,7 +2710,8 @@ Jump_031_4F8F::
     ret
 
 ; address loaded by RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D
-Data_031_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_4FA4:: ; address name
     db $2F, $99, $6F, $99
 
 ; entry 14 of the `rst $00` table in RunBattleSetup_Case00
@@ -2859,7 +2865,7 @@ Jump_031_5087:: ; address name
     ld a, [hl]
     ld [wMenuSubState], a
     call DrawWC278Rect12x11ToBGMapRow7
-    ld hl, Data_031_63A7
+    ld hl, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuSubState]
     and a, $03
     add a, a
@@ -2884,7 +2890,7 @@ Jump_031_5087:: ; address name
 ; points at: wMenuSubState, wBattleSetupD8, wBattleActionChoice, wSideControl, wBattleResolveStep, wSlotMarks
 RunBattleSetup_Case01_MoveBattleCommandCursor::
 Jump_031_50BF:: ; address name
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuSubState
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -3033,7 +3039,7 @@ Jump_031_518A:: ; address name
 RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4::
 Jump_031_51CE:: ; address name
     call DrawWC2B8LeftToBGMapRow9_74B4
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     ld a, [wMenuSelectedMember]
     and a, $03
     add a, a
@@ -3056,7 +3062,7 @@ Jump_031_51CE:: ; address name
 ; points at: wMenuSelectedMember, wBattleResolveStep, wSideControl, wBattleActionChoice
 RunBattleSetup_Case01_FillWC278WithC3_Bank31::
 Jump_031_51F0:: ; address name
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     ld hl, wMenuSelectedMember
     call RunBattleSetup_Case01_Case06_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
@@ -3262,7 +3268,7 @@ Jump_031_5319:: ; address name
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     and a, $03
     add a, a
     add_a_to_hl
@@ -3290,7 +3296,7 @@ Jump_031_5350:: ; address name
     xor a, $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
@@ -3380,7 +3386,7 @@ Jump_031_53CD:: ; address name
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     call ShowSkillPageNames
     call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31
     call CopyRectRecords7600And7734ToScreenBufferFar
@@ -3413,7 +3419,7 @@ Jump_031_53CD:: ; address name
 RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11::
 Jump_031_542A:: ; address name
     call DrawWC2A4AndWC2B8Rects
-    ld hl, Data_031_63A7
+    ld hl, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuCursor]
     and a, $03
     add a, a
@@ -3439,7 +3445,7 @@ Jump_031_542A:: ; address name
 ; points at: wMenuCursor, wBattleMP, wSideControl, wBattleActionChoice, wBattleResolveStep
 RunBattleSetup_Case01_MoveBattleCommandCursor_Case12::
 Jump_031_5454:: ; address name
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuCursor
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -3749,7 +3755,7 @@ Jump_031_5639::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     and a, $03
     add a, a
     add_a_to_hl
@@ -3776,7 +3782,7 @@ Jump_031_566A:: ; address name
     and a, $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
@@ -3907,7 +3913,7 @@ Jump_031_573C::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     and a, $03
     add a, a
     add_a_to_hl
@@ -3935,7 +3941,7 @@ Jump_031_576F:: ; address name
     xor a, $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
@@ -4089,7 +4095,7 @@ Jump_031_5855:: ; address name
     call DrawWC278RowsToBGMapRow7
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     call ShowInventoryPageItemNames
     call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31_Shared02
     call CopyRectRecord7600ToScreenBufferFar
@@ -4127,7 +4133,7 @@ Jump_031_589C:: ; address name
     ret z
     xor a, a
     ld [wBattleArg0], a
-    ld hl, Data_031_63A7
+    ld hl, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld a, [wMenuOption]
     and a, $03
     add a, a
@@ -4153,7 +4159,7 @@ Jump_031_589C:: ; address name
 ; points at: wMenuOption, wBattleResolveStep, wCommandCursor
 RunBattleSetup_Case02_MoveBattleCommandCursor::
 Jump_031_58CF:: ; address name
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wMenuOption
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -4256,7 +4262,7 @@ Jump_031_5995::
     bit 2, a
     jr z, Jump_031_59A7
     farcall SortInventory
-    ld de, Data_031_63A7
+    ld de, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data
     ld hl, wCommandCursor
     set 7, [hl]
 
@@ -4314,7 +4320,7 @@ Jump_031_59BC:: ; address name
 RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11::
 Jump_031_59EA:: ; address name
     call DrawWC2F8Rect8x7ToBGMapRow11
-    ld hl, Data_031_639F
+    ld hl, RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM_Data
     ld a, [wSubMenuCursor]
     and a, $03
     add a, a
@@ -4337,7 +4343,7 @@ Jump_031_59EA:: ; address name
 ; points at: wSubMenuCursor, wBattleResolveStep
 RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_5A0C:: ; address name
-    ld de, Data_031_63B5
+    ld de, RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink_Data
     ld hl, wSubMenuCursor
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -4472,7 +4478,7 @@ Jump_031_5ACC::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     and a, $03
     add a, a
     add_a_to_hl
@@ -4499,7 +4505,7 @@ Jump_031_5AFD:: ; address name
     and a, $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
@@ -4613,7 +4619,7 @@ Jump_031_5BA3::
     ld e, $01
     ld a, $00
     call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
-    ld hl, Data_031_63AF
+    ld hl, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     and a, $03
     add a, a
     add_a_to_hl
@@ -4641,7 +4647,7 @@ Jump_031_5BD6:: ; address name
     xor a, $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, Data_031_63AF
+    ld de, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data
     call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
@@ -5566,7 +5572,7 @@ Func_031_60CC:: ; address name
 WriteFiveTilesFromTable6102::
 Func_031_60EB:: ; address name
     push hl
-    ld hl, Data_031_6102
+    ld hl, WriteFiveTilesFromTable6102_Data
     add_a_to_hl
     xor a, a
     ld [wMenuSubState], a
@@ -5582,7 +5588,8 @@ Jump_031_60FC::
     ret
 
 ; address loaded by WriteFiveTilesFromTable6102
-Data_031_6102:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteFiveTilesFromTable6102_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_6102:: ; address name
     db $D0, $D5, $DA
 
 ; only called from RunBattleSetup_Case01_Case06 (E-0047)
@@ -6037,27 +6044,33 @@ Func_031_6373:: ; address name
     ret
 
 ; address loaded by RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11
-Data_031_639F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_639F:: ; address name
     db $C1, $01, $01, $02, $C8, $01, $08, $02
 
 ; address loaded by RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01, RunBattleSetup_Case01_MoveBattleCommandCursor, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11 and 4 more
-Data_031_63A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_63A7:: ; address name
     db $41, $01, $81, $01, $C1, $01, $01, $02
 
 ; address loaded by RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4, RunBattleSetup_Case01_FillWC278WithC3_Bank31, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D, RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0E and 8 more
-Data_031_63AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_63AF:: ; address name
     db $81, $01, $C1, $01, $01, $02
 
 ; address loaded by RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink
-Data_031_63B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_63B5:: ; address name
     db $C1, $01, $01, $02, $C1, $01, $01, $02
 
 ; address loaded by RunBattleEndStep4SubSteps_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer
-Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_63BD:: ; address name
     db $29, $00, $69, $00, $A9, $00, $E9, $00
 
 ; address loaded by RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink
-Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_63C5:: ; address name
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
 ; A = value: stores A in wDA43[wCFD4], and also in wDA4B[wCFD4] unless A is 3 (E-0118)
@@ -8228,7 +8241,7 @@ Jump_031_6EF7:: ; address name
 ; points at: wMenuState, wWorkBuf, wTextBuf2, wBattleSubStep, wCommandCursor
 RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
 Jump_031_6F57:: ; address name
-    ld de, Data_031_63BD
+    ld de, RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data
     ld hl, wMenuState
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -8281,7 +8294,7 @@ RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer::
 Jump_031_6FB1:: ; address name
     ld a, [wMenuState]
     and a, $0F
-    ld hl, Data_031_63BD
+    ld hl, RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8333,7 +8346,7 @@ Jump_031_6FE9:: ; address name
 ; points at: wMenuSubState, wWorkBuf, wBattleSubStep
 RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_700F:: ; address name
-    ld de, Data_031_63C5
+    ld de, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D_Data_63C5
     ld hl, wMenuSubState
     call ToggleEntryBitsByJoypadAndBlink
     ld a, [wJoypadPressed]
@@ -8448,7 +8461,7 @@ Jump_031_70B3::
     push bc
     push hl
     ld a, c
-    ld hl, Data_031_70FD
+    ld hl, RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8486,7 +8499,8 @@ Jump_031_70D2::
     ret
 
 ; address loaded by RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
-Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_70FD:: ; address name
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; shows the name (category 9) of skill wD09D[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wC39E (E-0128)
@@ -8802,7 +8816,7 @@ Func_031_72CC:: ; address name
     ld d, $14
     ld a, [wBattleFoeCount]
     dec a
-    ld hl, Data_031_7317
+    ld hl, LayoutTileBlocksForBattleFoeCount_Data_7317
     add a, a
     add_a_to_hl
     call LayoutTileBlocksForBattleFoeCount_Sub01
@@ -8811,7 +8825,7 @@ Func_031_72CC:: ; address name
     jr z, Jump_031_7316
     dec a
     dec a
-    ld hl, Data_031_731D
+    ld hl, LayoutTileBlocksForBattleFoeCount_Data_731D
     add a, a
     add_a_to_hl
     call LayoutTileBlocksForBattleFoeCount_Sub01
@@ -8851,11 +8865,13 @@ Jump_031_7316::
     ret
 
 ; address loaded by LayoutTileBlocksForBattleFoeCount
-Data_031_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LayoutTileBlocksForBattleFoeCount_Data_7317:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_7317:: ; address name
     db $7F, $C2, $7C, $C2, $79, $C2
 
 ; address loaded by LayoutTileBlocksForBattleFoeCount
-Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LayoutTileBlocksForBattleFoeCount_Data_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_731D:: ; address name
     db $82, $C2, $7F, $C2
 
 ; on CGB loads the picture attribute blocks for one, two or three battle monsters (wD960, or wBattleMonsterId when bit 1 of wC57F is set) at vBGMap0 + $E1-$ED (E-0125)
@@ -9438,7 +9454,7 @@ Jump_031_7710::
     call DrawSlotStatusMarks_DrawSlotLevel_BankA0
     ld a, c
     and a, $03
-    ld hl, Data_031_77B3
+    ld hl, DrawSlotStatusMarks_Data
     add a, a
     add_a_to_hl
     call DerefHL_Bank31
@@ -9449,7 +9465,7 @@ Jump_031_7726::
     call DrawSlotStatusMarks_DrawSlotLevel_BankA0
     ld a, c
     and a, $03
-    ld hl, Data_031_77B3
+    ld hl, DrawSlotStatusMarks_Data
     add a, a
     add_a_to_hl
     call DerefHL_Bank31
@@ -9464,7 +9480,7 @@ Jump_031_773A::
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC::
 Func_031_773C:: ; address name
     push hl
-    ld hl, Data_031_779B
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data
     call ReadWordTableEntryForSlotC
     ld a, $C3
     ld [hl+], a
@@ -9480,7 +9496,7 @@ Func_031_773C:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02::
 Func_031_774C:: ; address name
     push hl
-    ld hl, Data_031_779B
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $C0
     pop hl
@@ -9491,7 +9507,7 @@ Func_031_774C:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03::
 Func_031_7757:: ; address name
     push hl
-    ld hl, Data_031_77A7
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $C1
     pop hl
@@ -9502,7 +9518,7 @@ Func_031_7757:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04::
 Func_031_7762:: ; address name
     push hl
-    ld hl, Data_031_77A7
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $C7
     pop hl
@@ -9513,7 +9529,7 @@ Func_031_7762:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05::
 Func_031_776D:: ; address name
     push hl
-    ld hl, Data_031_77AD
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $C8
     pop hl
@@ -9524,7 +9540,7 @@ Func_031_776D:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06::
 Func_031_7778:: ; address name
     push hl
-    ld hl, Data_031_77A1
+    ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $C9
     pop hl
@@ -9535,7 +9551,7 @@ Func_031_7778:: ; address name
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07::
 Func_031_7783:: ; address name
     push hl
-    ld hl, Data_031_77B3
+    ld hl, DrawSlotStatusMarks_Data
     call ReadWordTableEntryForSlotC
     ld [hl], $CA
     pop hl
@@ -9561,23 +9577,28 @@ Func_031_7797:: ; address name
     ret
 
 ; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02
-Data_031_779B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_779B:: ; address name
     db $39, $C2, $3F, $C2, $45, $C2
 
 ; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06
-Data_031_77A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_77A1:: ; address name
     db $3A, $C2, $40, $C2, $46, $C2
 
 ; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04
-Data_031_77A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_77A7:: ; address name
     db $3B, $C2, $41, $C2, $47, $C2
 
 ; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05
-Data_031_77AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_77AD:: ; address name
     db $3C, $C2, $42, $C2, $48, $C2
 
 ; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07
-Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_77B3:: ; address name
     db $3D, $C2, $43, $C2, $49, $C2
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
@@ -9680,7 +9701,7 @@ Jump_031_782B::
     ld a, c
     and a, $03
     push hl
-    ld hl, Data_031_7AC8
+    ld hl, DrawSlotHPDigits_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9739,7 +9760,7 @@ Jump_031_7884::
     ld a, c
     and a, $03
     push hl
-    ld hl, Data_031_7ACE
+    ld hl, DrawSlotMPDigits_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9789,7 +9810,7 @@ Jump_031_78DD::
     jr z, Jump_031_7912
     ld a, c
     and a, $03
-    ld hl, Data_031_7AD4
+    ld hl, DrawSlotStatusMarks_DrawSlotLevel_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9847,7 +9868,7 @@ Jump_031_7938::
     and a, $03
     cp a, $03
     jr z, Jump_031_7964
-    ld hl, Data_031_7AC8
+    ld hl, DrawSlotHPDigits_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9903,7 +9924,7 @@ Jump_031_7989::
     and a, $03
     cp a, $03
     jr z, Jump_031_79B5
-    ld hl, Data_031_7ACE
+    ld hl, DrawSlotMPDigits_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9959,7 +9980,7 @@ Jump_031_79DA::
     and a, $03
     cp a, $03
     jr z, Jump_031_7A01
-    ld hl, Data_031_7AD4
+    ld hl, DrawSlotStatusMarks_DrawSlotLevel_BankA0_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -10102,15 +10123,18 @@ Func_031_7A78:: ; address name
     ret
 
 ; address loaded by DrawSlotHPDigits, CopySlotPanelPart7AC8ToVRAM
-Data_031_7AC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotHPDigits_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_7AC8:: ; address name
     db $62, $00, $68, $00, $6E, $00
 
 ; address loaded by DrawSlotMPDigits, CopySlotPanelPart7ACEToVRAM
-Data_031_7ACE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotMPDigits_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_7ACE:: ; address name
     db $82, $00, $88, $00, $8E, $00
 
 ; address loaded by DrawSlotStatusMarks_DrawSlotLevel_BankA0, CopySlotPanelPart7AD4ToVRAM
-Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSlotStatusMarks_DrawSlotLevel_BankA0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_031_7AD4:: ; address name
     db $A1, $00, $A7, $00, $AD, $00
 
 ; E-0212 (C1: CopySlotPanelRowToVRAM reads the word at $7ADA + 2 * (slot & 3) and copies 5 tiles from wScreenTileBuffer + offset to the same offset of vBGMap0; three words for slots 0-2).

@@ -8,7 +8,8 @@ Data_054_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $150001, $77
 
 ; LZSS-compressed asset: 1057 bytes expand to 1239 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_054_4078:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_54_4078:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_054_4078:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $150078, $2B4
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)

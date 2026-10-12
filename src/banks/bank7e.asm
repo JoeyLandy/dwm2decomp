@@ -223,43 +223,50 @@ Data_07E_4CED:: ; address name
     db $2C, $34, $58, $68, $70, $70, $00, $00, $80, $80, $02, $A0, $FA
 
 ; LZSS-compressed asset: 53 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4D1A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4D1A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4D1A:: ; address name
     db $40, $00, $00, $FF, $FF, $80, $FF, $D8, $A7, $F9, $86, $FF, $FE, $FF, $BF, $FF
     db $BF, $FF, $80, $C4, $BB, $CE, $B1, $FB, $84, $F8, $87, $CC, $B3, $C6, $B9, $FF
     db $80, $FF, $FF, $00, $00, $00, $DA, $A5, $DA, $A5, $D9, $A6, $FE, $81, $FD, $FE
     db $FA, $87, $00, $10, $0C
 
 ; LZSS-compressed asset: 59 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4D4F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4D4F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4D4F:: ; address name
     db $40, $00, $01, $01, $FF, $F0, $0E, $00, $0F, $04, $1F, $06, $19, $0F, $1A, $0D
     db $1E, $05, $01, $FF, $F0, $7C, $00, $FC, $38, $CC, $F8, $2C, $D8, $5C, $B0, $18
     db $F0, $0C, $07, $0E, $03, $1F, $05, $3F, $08, $3C, $10, $38, $01, $FF, $F1, $38
     db $E0, $DC, $30, $9C, $F8, $FC, $60, $F0, $01, $A0, $F3
 
 ; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4D8A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4D8A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4D8A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8D8A, $42
 
 ; LZSS-compressed asset: 58 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4DCC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4DCC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4DCC:: ; address name
     db $40, $00, $01, $01, $FF, $F6, $07, $00, $0F, $03, $7D, $06, $00, $00, $3C, $00
     db $7E, $18, $76, $2C, $E6, $3C, $FE, $58, $FC, $A0, $70, $C0, $FB, $3C, $DF, $60
     db $DE, $71, $BF, $69, $77, $3D, $79, $1F, $37, $0E, $0F, $00, $E0, $40, $60, $C0
     db $E0, $80, $C0, $00, $80, $01, $37, $01, $00, $00
 
 ; LZSS-compressed asset: 49 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4E06:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4E06:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4E06:: ; address name
     db $40, $00, $01, $01, $FF, $F4, $07, $00, $0F, $03, $1C, $07, $3B, $0C, $01, $FF
     db $F4, $C0, $00, $E0, $80, $70, $C0, $38, $E0, $34, $1B, $3A, $0D, $1C, $07, $0F
     db $03, $07, $01, $FF, $F3, $58, $B0, $38, $E0, $70, $C0, $E0, $80, $C0, $01, $A0
     db $F3
 
 ; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4E37:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4E37:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4E37:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8E37, $42
 
 ; LZSS-compressed asset: 58 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4E79:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4E79:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4E79:: ; address name
     db $40, $00, $02, $02, $FF, $F0, $01, $00, $03, $00, $03, $01, $03, $01, $03, $00
     db $07, $00, $00, $00, $FC, $00, $FE, $78, $87, $FC, $23, $FE, $F3, $DE, $F3, $1E
     db $E3, $FE, $1F, $03, $3C, $0F, $71, $1F, $67, $3E, $7F, $18, $3C, $02, $FF, $F1
@@ -275,7 +282,8 @@ Data_07E_4EB3:: ; address name
     db $1E, $00, $DC, $B0, $F8, $60, $B0, $C0, $C0, $00, $80, $02, $A0, $F3
 
 ; LZSS-compressed asset: 49 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4EF1:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4EF1:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4EF1:: ; address name
     db $40, $00, $01, $01, $FF, $F4, $07, $00, $0F, $03, $1F, $04, $1C, $0B, $01, $FF
     db $F4, $E0, $00, $F0, $C0, $B8, $60, $58, $B0, $1D, $0A, $1C, $0B, $1F, $04, $0F
     db $03, $07, $01, $FF, $F3, $D8, $30, $D8, $30, $B8, $60, $F0, $C0, $E0, $01, $A0
@@ -288,52 +296,62 @@ Data_07E_4F22:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8F22, $41
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4F63:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4F63:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4F63:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8F63, $43
 
 ; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4FA6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4FA6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4FA6:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F8FA6, $42
 
 ; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_4FE8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_4FE8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_4FE8:: ; address name
     db $40, $00, $01, $01, $FF, $F0, $07, $07, $1D, $1A, $37, $2F, $73, $5C, $E6, $B9
     db $AD, $F2, $01, $FF, $F0, $E0, $E0, $B8, $58, $EC, $F4, $7E, $8A, $EF, $15, $D5
     db $2F, $BB, $E4, $F7, $A8, $7E, $51, $37, $2F, $1D, $1A, $07, $07, $01, $FF, $F0
     db $A5, $5F, $47, $BD, $8E, $7A, $EC, $F4, $B8, $58, $E0, $E0, $01, $A0, $F0
 
 ; LZSS-compressed asset: 63 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5027:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5027:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5027:: ; address name
     db $40, $00, $01, $01, $FF, $F0, $07, $07, $18, $1F, $2F, $3E, $5B, $7C, $B7, $EE
     db $DA, $BF, $01, $FF, $F0, $E0, $E0, $18, $F8, $F4, $7C, $DA, $3E, $ED, $77, $5B
     db $FD, $EF, $BE, $BA, $DF, $5E, $6F, $23, $3E, $1B, $1C, $07, $07, $01, $FF, $F0
     db $F7, $7D, $5D, $FB, $7A, $F6, $C4, $7C, $D8, $38, $E0, $E0, $01, $A0, $F0
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5066:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5066:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5066:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9066, $43
 
 ; LZSS-compressed asset: 66 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_50A9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_50A9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_50A9:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F90A9, $42
 
 ; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_50EB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_50EB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_50EB:: ; address name
     db $40, $00, $02, $02, $FF, $F2, $1F, $1F, $17, $18, $0D, $0E, $0B, $0F, $05, $07
     db $02, $FF, $F2, $80, $80, $60, $E0, $B0, $50, $68, $98, $B8, $C8, $03, $03, $01
     db $01, $1C, $1C, $3E, $22, $7A, $4E, $47, $7F, $3B, $3A, $01, $01, $44, $FC, $E4
     db $FC, $E8, $F8, $9B, $FB, $55, $77, $33, $33, $80, $80, $80, $80
 
 ; LZSS-compressed asset: 128 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5128:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5128:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5128:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9128, $80
 
 ; LZSS-compressed asset: 221 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_51A8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_51A8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_51A8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F91A8, $DD
 
 ; LZSS-compressed asset: 55 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5285:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5285:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5285:: ; address name
     db $40, $00, $01, $00, $00, $1F, $1F, $3F, $20, $7F, $40, $01, $06, $01, $49, $7F
     db $40, $00, $00, $F0, $F0, $F8, $08, $FC, $04, $01, $16, $01, $24, $FC, $04, $01
     db $06, $00, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01, $FE, $F0, $01, $16, $00
@@ -349,24 +367,29 @@ Data_07E_52BC:: ; address name
     db $FE, $F0, $7C, $84, $7C, $84, $F8, $08, $F0, $F0, $01, $A0, $F4
 
 ; LZSS-compressed asset: 119 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_52F9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_52F9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_52F9:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F92F9, $77
 
 ; LZSS-compressed asset: 170 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5370:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5370:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5370:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9370, $AA
 
 ; LZSS-compressed asset: 68 bytes expand to 80 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_541A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_541A:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_541A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F941A, $44
 
 ; address loaded by LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte
 ; LZSS-compressed asset: 181 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_545E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_545E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F945E, $B5
 
 ; LZSS-compressed asset: 130 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5513:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5513:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5513:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9513, $82
 
 ; address loaded by LoadSpriteGraphics7E5595ToTiles0
@@ -376,11 +399,13 @@ Data_07E_5595:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9595, $AB
 
 ; LZSS-compressed asset: 131 bytes expand to 128 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5640:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5640:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5640:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9640, $83
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_56C3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_56C3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_56C3:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F96C3, $43
 
 ; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM
@@ -394,7 +419,8 @@ Data_07E_5756:: ; heuristic: stream decompressed while the game ran on the emula
     INCBIN "dwm2-cobi-us.gbc", $1F9756, $11A
 
 ; LZSS-compressed asset: 143 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5870:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_7E_5870:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_07E_5870:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9870, $8F
 
 ; address loaded by LoadAltObjectGraphicsIfPlayerStateFlagsBit3, Talk00Event01_Sub02_DecompressToVRAM

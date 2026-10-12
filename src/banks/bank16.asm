@@ -4639,7 +4639,7 @@ Func_016_5A7E:: ; address name
     ld b, a
     ld a, c
     and a, $07
-    ld hl, Data_016_5AA7
+    ld hl, TestSpeciesFlag_Data
     add_a_to_hl
     ld a, [hl]
     srl b
@@ -4657,7 +4657,8 @@ Func_016_5A7E:: ; address name
     ret
 
 ; address loaded by TestSpeciesFlag
-Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+TestSpeciesFlag_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_5AA7:: ; address name
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
@@ -4844,7 +4845,7 @@ Func_016_5B7E:: ; address name
     ld a, [hl]
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
-    ld de, Data_016_5D0B
+    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B
     jr nz, Jump_016_5C15
     farcall LoadSpeciesRecord
     call NextTableByte
@@ -4858,7 +4859,7 @@ Func_016_5B7E:: ; address name
     ld a, [wSpeciesRecord + $4]
     cp a, $07
     jp z, Jump_016_5CF5
-    ld hl, Data_016_5CFB
+    ld hl, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5CFB
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -4866,7 +4867,7 @@ Func_016_5B7E:: ; address name
     ld a, [wBattleEndFlag]
     or a, a
     jp nz, Jump_016_5CFA
-    ld de, Data_016_5D03
+    ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D03
 
 Jump_016_5C15::
     ld a, [wBattleMeter]
@@ -5018,15 +5019,18 @@ Jump_016_5CFA::
     ret
 
 ; address loaded by BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
-Data_016_5CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_5CFB:: ; address name
     db $64, $32, $18, $0A, $06, $02, $01, $00
 
 ; address loaded by BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
-Data_016_5D03:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D03:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_5D03:: ; address name
     db $00, $01, $02, $03, $04, $05, $06, $07
 
 ; address loaded by BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
-Data_016_5D0B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_5D0B:: ; address name
     db $00, $11, $12, $13, $14, $15, $16, $07
 
 ; only called from BattleEnd_Step5_Case01_Case01 (E-0047)
@@ -5174,7 +5178,7 @@ Jump_016_5DB2:: ; address name
 BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton::
 Jump_016_5DE6:: ; address name
     ld de, wMenuState
-    ld hl, Data_016_66E7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data
     call SetDEFlagOnBButton
     ret z
     ld hl, wBattleSubStep
@@ -5202,7 +5206,7 @@ Jump_016_5E0B:: ; address name
     ld hl, vBGMap0 + $12F
     call WriteVRAMByte
     ld a, [wFarmLevel]
-    ld hl, Data_016_75EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
     ld a, [wTemp0]
     ld b, a
@@ -5293,7 +5297,7 @@ Jump_016_5E5A:: ; address name
 BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B::
 Jump_016_5E96:: ; address name
     ld de, wMenuState
-    ld hl, Data_016_6701
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B_Data
     call SetDEFlagOnBButton
     ret z
     ld a, [wJoypadPressed]
@@ -5371,7 +5375,7 @@ Jump_016_5EEC:: ; address name
 BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor::
 Jump_016_5F24:: ; address name
     ld de, wMenuState
-    ld hl, Data_016_66F7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
@@ -5407,7 +5411,7 @@ Jump_016_5F4D::
 BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E::
 Jump_016_5F5C:: ; address name
     ld a, [wMenuState]
-    ld hl, Data_016_66F7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5442,7 +5446,7 @@ Jump_016_5F5C:: ; address name
 BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F::
 Jump_016_5FA4:: ; address name
     ld de, wMenuSubState
-    ld hl, Data_016_66EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -5530,7 +5534,7 @@ Jump_016_6058:: ; address name
     farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
     ld [wMenuState], a
-    ld hl, Data_016_66DD
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5804,7 +5808,7 @@ Jump_016_622B::
 BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17::
 Jump_016_6250:: ; address name
     ld de, wMenuState
-    ld hl, Data_016_66EF
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
@@ -5868,7 +5872,7 @@ Jump_016_62A9:: ; address name
 Jump_016_62D3::
     call DrawFourListEntriesForPageListPage
     ld a, [wCommandCursorMax]
-    ld hl, Data_016_66EF
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5905,7 +5909,7 @@ Jump_016_62D3::
 ; points at: wMenuSelectedMember, wBattleSubStep, wListEntries, wTextBuf1
 BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19::
 Jump_016_631B:: ; address name
-    ld hl, Data_016_66EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -5994,7 +5998,7 @@ Jump_016_63B9:: ; address name
     ld a, [wListCursor]
     ld [wMenuState], a
     ld [wCommandCursorMax], a
-    ld hl, Data_016_66EF
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -6111,7 +6115,7 @@ Func_016_6493:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, Data_016_75EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6183,7 +6187,7 @@ Jump_016_64F3::
     dec b
     jr nz, Jump_016_64F3
     ld a, [wFarmLevel]
-    ld hl, Data_016_75EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6300,7 +6304,7 @@ Func_016_65B1:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, Data_016_75EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6493,27 +6497,33 @@ Func_016_66CB:: ; address name
     ret
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F
-Data_016_66DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_66DD:: ; address name
     db $B9, $C1, $F9, $C1, $39, $C2, $79, $C2, $B9, $C2
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
-Data_016_66E7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_66E7:: ; address name
     db $2F, $99, $6F, $99
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C
-Data_016_66EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_66EB:: ; address name
     db $2D, $99, $6D, $99
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer
-Data_016_66EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_66EF:: ; address name
     db $A1, $98, $E1, $98, $21, $99, $61, $99
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
-Data_016_66F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_66F7:: ; address name
     db $21, $98, $61, $98, $A1, $98, $E1, $98, $21, $99
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
-Data_016_6701:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_6701:: ; address name
     db $2B, $99, $6B, $99
 
 ; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
@@ -6788,7 +6798,7 @@ Jump_016_68B6::
 Jump_016_68B8::
     ld c, a
     ld a, [wBattleArg0]
-    ld hl, Data_016_690F
+    ld hl, DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -6801,7 +6811,7 @@ Jump_016_68CB::
     ld bc, $0200
     call ShowStringBCAtTileRowBattleArg0
     ld a, [wBattleArg0]
-    ld hl, Data_016_690F
+    ld hl, DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -6845,7 +6855,8 @@ Func_016_68F0:: ; address name
     ret
 
 ; address loaded by DrawFourListEntriesForPageListPage_SRAMRecordAddress
-Data_016_690F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_690F:: ; address name
     db $43, $C2, $83, $C2, $C3, $C2, $03, $C3
 
 ; when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)
@@ -7252,7 +7263,7 @@ Jump_016_6B57:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, Data_016_75EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -7486,7 +7497,7 @@ Jump_016_6C9E:: ; address name
 ; points at: wMenuState, wBattleSubStep
 BattleEnd_Step5_Case04_Sub01_MovePagedListCursor::
 Jump_016_6CC8:: ; address name
-    ld hl, Data_016_66E7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data
     ld de, wMenuState
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7663,7 +7674,7 @@ Jump_016_6DA6:: ; address name
     ld bc, $140D
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wMenuSubState]
-    ld hl, Data_016_66F7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7680,7 +7691,7 @@ Jump_016_6DA6:: ; address name
 ; points at: wMenuSubState, wBattleArg0, wTextBuf0, wBattleSubStep
 BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A::
 Jump_016_6DE4:: ; address name
-    ld hl, Data_016_66F7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
     ld de, wMenuSubState
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7743,7 +7754,7 @@ Jump_016_6E38:: ; address name
     ld [wListPageCount], a
     ld a, $02
     ld [wListLastPageSize], a
-    ld hl, Data_016_66F7
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
     ld a, [wMenuSubState]
     add a, a
     add_a_to_hl
@@ -7765,7 +7776,7 @@ Jump_016_6E38:: ; address name
 ; points at: wMenuSelectedMember, wBattleSubStep, wBattleArg0, wTextBuf0
 BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C::
 Jump_016_6E80:: ; address name
-    ld hl, Data_016_66EB
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7901,7 +7912,7 @@ Jump_016_6F6F:: ; address name
     call CopyRect7923AndDrawBattleArg0Values
     ld a, [wListCursor]
     ld [wMenuSubState], a
-    ld hl, Data_016_66DD
+    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -9083,7 +9094,8 @@ Jump_016_7577::
     ret
 
 ; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte, CountRecordsByField6E, ListPartyAndStoredRecordsForPage, ListRecordsWithField6EToListEntries and 1 more
-Data_016_75EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_75EB:: ; address name
     db $0A, $14, $1E
 
 ; checks the save; when valid, loads the player name, play time, party summaries and other title-screen details from SRAM bank 1 into wD0D5 onward (E-0129)
@@ -9591,12 +9603,12 @@ Func_016_78F9:: ; address name
     ld [wWorkBuf], a
     push hl
     ld a, c
-    ld hl, Data_016_7A36
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A36
     push af
     ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7912
-    ld hl, Data_016_7A39
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A39
 
 Jump_016_7912::
     pop af
@@ -9636,12 +9648,12 @@ Jump_016_7912::
     call HLToDecimalDigits
     pop bc
     ld a, c
-    ld hl, Data_016_7A3C
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A3C
     push af
     ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_795B
-    ld hl, Data_016_7A42
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
 
 Jump_016_795B::
     pop af
@@ -9654,12 +9666,12 @@ Jump_016_795B::
     ret
 
 Jump_016_7969::
-    ld hl, Data_016_7A3C
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A3C
     push af
     ld a, [wGameMode]
     cp a, $05
     jr nz, Jump_016_7977
-    ld hl, Data_016_7A42
+    ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
 
 Jump_016_7977::
     pop af
@@ -9776,19 +9788,23 @@ Jump_016_7A22::
     ret
 
 ; address loaded by DrawSaveSummaryPartyEntryC
-Data_016_7A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSaveSummaryPartyEntryC_Data_7A36:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_7A36:: ; address name
     db $25, $2B, $31
 
 ; address loaded by DrawSaveSummaryPartyEntryC
-Data_016_7A39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSaveSummaryPartyEntryC_Data_7A39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_7A39:: ; address name
     db $45, $4B, $51
 
 ; address loaded by DrawSaveSummaryPartyEntryC
-Data_016_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSaveSummaryPartyEntryC_Data_7A3C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_7A3C:: ; address name
     db $22, $C2, $62, $C2, $A2, $C2
 
 ; address loaded by DrawSaveSummaryPartyEntryC
-Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawSaveSummaryPartyEntryC_Data_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_016_7A42:: ; address name
     db $62, $C2, $A2, $C2, $E2, $C2
 
 ; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)

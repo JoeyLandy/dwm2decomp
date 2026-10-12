@@ -124,7 +124,8 @@ Data_055_4A27:: ; address name
     db $4E, $0F, $4D, $03, $0E, $0F
 
 ; LZSS-compressed asset: 415 bytes expand to 775 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_055_4A4D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_55_4A4D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_055_4A4D:: ; address name
     db $07, $03, $00, $0F, $01, $03, $F6, $F8, $03, $E8, $0F, $3D, $03, $00, $04, $03
     db $40, $1F, $01
 

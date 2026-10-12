@@ -72,7 +72,7 @@ Jump_0F1_4057:: ; address name
     jr Jump_0F1_40DC
 
 Jump_0F1_4062::
-    ld de, Data_0F1_4A6A
+    ld de, PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1_Data
     ld hl, wMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressedRepeat]
@@ -177,7 +177,7 @@ Jump_0F1_4104:: ; address name
 ; points at: wSubMenuCursor, wTemp0
 PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1::
 Jump_0F1_4119:: ; address name
-    ld de, Data_0F1_4A72
+    ld de, PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1_Data
     ld hl, wSubMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressed]
@@ -368,7 +368,7 @@ Func_0F1_422D:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_0F1_4A6A
+    ld hl, PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -383,10 +383,10 @@ Func_0F1_4244:: ; address name
     ld e, $1B
     farcall CopyBlockToTileBuffer
     ld a, [wItemId]
-    ld hl, Data_0F1_4613
+    ld hl, BuildItemScreenForWItemId_BankF1_Data_4613
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_0F1_4676
+    ld hl, BuildItemScreenForWItemId_BankF1_Data_4676
     add a, a
     add_a_to_hl
     deref_hl
@@ -405,7 +405,7 @@ Func_0F1_4276:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld hl, Data_0F1_4A5E
+    ld hl, BuildItemScreenWithRecordCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -429,7 +429,7 @@ Func_0F1_429C:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, Data_0F1_4A72
+    ld hl, PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -447,7 +447,7 @@ Func_0F1_42B6:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, Data_0F1_4A72
+    ld hl, PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -709,7 +709,7 @@ Func_0F1_442F:: ; address name
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
-    ld hl, Data_0F1_4613
+    ld hl, BuildItemScreenForWItemId_BankF1_Data_4613
     add_a_to_hl
     ld a, [hl]
     push af
@@ -803,7 +803,7 @@ Jump_0F1_44BA::
     ld [wStringIndex], a
     ld a, $07
     ld [wStringCategory], a
-    ld hl, Data_0F1_45B0
+    ld hl, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc_Data
     ld b, $00
     add hl, bc
     ld a, [hl]
@@ -981,7 +981,8 @@ Func_0F1_45AA:: ; address name
     ret
 
 ; address loaded by BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
-Data_0F1_45B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_45B0:: ; address name
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
@@ -1027,69 +1028,80 @@ Data_0F1_45CB:: ; address name
     db $00, $00 ; id 35
 
 ; address loaded by BuildItemScreenForWItemId_BankF1, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
-Data_0F1_4613:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildItemScreenForWItemId_BankF1_Data_4613:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_4613:: ; address name
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
 ; address loaded by BuildItemScreenForWItemId_BankF1
-Data_0F1_4676:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_0F1_4688
-    dw Data_0F1_46B0
-    dw Data_0F1_46D8
-    dw Data_0F1_4700
-    dw Data_0F1_4728
-    dw Data_0F1_4750
-    dw Data_0F1_4778
-    dw Data_0F1_47A0
-    dw Data_0F1_47C8
+BuildItemScreenForWItemId_BankF1_Data_4676:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_4676:: ; address name
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry00
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry01
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry02
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry03
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry04
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry05
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry06
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry07
+    dw BuildItemScreenForWItemId_BankF1_Data_4676_Entry08
 
 ; LZSS-compressed asset: 253 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_4688:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_4688:: ; address name
     db $41, $01, $0C, $03, $FB, $FC, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 258 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_46B0:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_46B0:: ; address name
     db $41, $01, $0C, $03, $FD, $FE, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 261 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_46D8:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_46D8:: ; address name
     db $41, $01, $0C, $03, $F6, $F7, $F8, $F9, $FA, $0E, $0F, $10, $11, $12, $13, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $1A, $1B, $1C, $1D
     db $1E, $1F, $20, $21, $22, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 273 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_4700:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_4700:: ; address name
     db $41, $01, $0C, $03, $0B, $0C, $0D, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 302 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_4728:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_4728:: ; address name
     db $41, $01, $0C, $03, $FF, $00, $01, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 305 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_4750:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_4750:: ; address name
     db $41, $01, $0C, $03, $02, $03, $04, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 310 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_4778:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_4778:: ; address name
     db $41, $01, $0C, $03, $05, $06, $07, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 313 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_47A0:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_47A0:: ; address name
     db $41, $01, $0C, $03, $08, $09, $0A, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 317 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F1_47C8:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_BankF1_Data_4676_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_0F1_47C8:: ; address name
     db $41, $01, $0C, $03
     ds $24, $C3
     db $AF, $EA, $A6, $C0, $AF, $EA, $6E, $C4, $CD, $E0, $43, $21, $A6, $C0, $2A, $BE
@@ -1533,15 +1545,18 @@ Func_0F1_4A23:: ; address name
     ret
 
 ; address loaded by BuildItemScreenWithRecordCursor_BankF1
-Data_0F1_4A5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildItemScreenWithRecordCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_4A5E:: ; address name
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
 ; address loaded by PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1, BuildScreenBlock32WithCursor_BankF1
-Data_0F1_4A6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_4A6A:: ; address name
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
 ; address loaded by PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
-Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State4_Sub02_Case01_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_4A72:: ; address name
     db $A1, $98, $E1, $98, $21, $99, $61, $99, $47, $99, $87, $99, $C7, $99, $07, $9A
     db $61, $98, $A1, $98, $4A, $99, $8A, $99, $CA, $99, $0A, $9A, $64, $98, $A4, $98
     db $E4, $98, $2F, $99, $6F, $99, $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99
@@ -2450,7 +2465,7 @@ Jump_0F1_4FEA::
     jr z, Jump_0F1_500C
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, Data_0F1_5ACF
+    ld hl, RunScreenStateWhenNotFading_F1_Case04_RunFunc58FAAt024FAndDrawBox_BankF1_Data
     call StoreBAtWordTableEntry_BankF1
     ld a, [wScreenStep]
     inc a
@@ -3906,7 +3921,7 @@ Func_0F1_58D2:: ; address name
 Jump_0F1_58D4::
     ld a, [wTwoChoiceCursor]
     add a, a
-    ld hl, Data_0F1_58F4
+    ld hl, DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3924,7 +3939,8 @@ Jump_0F1_58D4::
     ret
 
 ; address loaded by DrawArrowTileBCAtTwoChoiceEntry_BankF1
-Data_0F1_58F4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_58F4:: ; address name
     db $EC, $00, $2C, $01, $6C, $01
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
@@ -4223,7 +4239,8 @@ Data_0F1_5A90:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
 ; address loaded by RunScreenStateWhenNotFading_F1_Case04_RunFunc58FAAt024FAndDrawBox_BankF1
-Data_0F1_5ACF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_F1_Case04_RunFunc58FAAt024FAndDrawBox_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_5ACF:: ; address name
     db $FC, $C3, $24, $C4, $4C, $C4
 
 ; only called from GameMode5_Update_Case07 (E-0047)
@@ -4426,7 +4443,7 @@ Jump_0F1_5BF8::
 ; points at: wBGPaletteBuffer
 LoadBGPalettesFrom5E04::
 Func_0F1_5C05:: ; address name
-    ld hl, Data_0F1_5E04
+    ld hl, LoadBGPalettesFrom5E04_Data
     ld de, wBGPaletteBuffer
     ld c, $40
 
@@ -4474,7 +4491,8 @@ Data_0F1_5DEE:: ; address name
     db $0F, $16, $02, $4F, $0F, $00
 
 ; address loaded by LoadBGPalettesFrom5E04
-Data_0F1_5E04:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadBGPalettesFrom5E04_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F1_5E04:: ; address name
     db $EE, $3D, $FF, $7F, $D6, $5A, $63, $00, $12, $36, $FF, $7F, $D8, $42, $66, $00
     db $12, $36, $FF, $7F, $D8, $42, $BF, $30, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
     db $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F

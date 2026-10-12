@@ -841,7 +841,7 @@ Func_005_43F2:: ; address name
     or a, a
     jr z, Jump_005_4438
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -3388,7 +3388,7 @@ Func_005_5052:: ; address name
     or a, a
     jr z, Jump_005_50B4
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -6634,7 +6634,7 @@ Jump_005_6102::
     jr z, Jump_005_60E9
     ld a, d
     push hl
-    ld hl, Data_005_614B
+    ld hl, SlotCHasCastableHealSkill_Data
     add_a_to_hl
     ld d, [hl]
     ld a, c
@@ -6680,7 +6680,8 @@ Func_005_6141:: ; address name
     ret
 
 ; address loaded by SlotCHasCastableHealSkill
-Data_005_614B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SlotCHasCastableHealSkill_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_005_614B:: ; address name
     db $02, $05, $07, $12, $24, $01, $0C, $1C
 
 ; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe without status 1 mask $2A has bits 4-5 of its wDA74 byte clear, else $FF (E-0125)
@@ -7450,7 +7451,7 @@ Func_005_64FE:: ; address name
     or a, a
     jr z, Jump_005_6550
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -8053,7 +8054,7 @@ Jump_005_6840::
     jr z, Jump_005_6896
     push de
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -8196,7 +8197,7 @@ Jump_005_6920::
     push bc
     push hl
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -8358,7 +8359,7 @@ Jump_005_6A03::
     or a, a
     jr z, Jump_005_6A65
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -8445,7 +8446,7 @@ Func_005_6A6B:: ; address name
     or a, a
     jr z, Jump_005_6AE2
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]
@@ -9426,7 +9427,8 @@ Func_005_6F60:: ; address name
     ret
 
 ; address loaded by AnyFoeNotFullyResistant, PassIfFoesAverageResistanceAtLeast2, FailIfAnyFoeFullyResistant, AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024 and 4 more
-Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AnyFoeNotFullyResistant_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_005_6F6B:: ; address name
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03
     db $04, $02, $04, $01, $04, $00, $05, $03, $05, $02, $05, $01, $05, $00, $06, $03
@@ -9584,7 +9586,7 @@ Func_005_702D:: ; address name
 ReadActorResistanceFieldForSkillA:: ; heuristic: follows a terminator; C0
 Func_005_7032:: ; address name
     dec a
-    ld hl, Data_005_6F6B
+    ld hl, AnyFoeNotFullyResistant_Data
     add a, a
     add_a_to_hl
     ld d, [hl]

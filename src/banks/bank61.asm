@@ -722,7 +722,7 @@ Jump_061_443C::
     ld [wMapTallTileMin], a
     ld [wMapHeaderByte11], a
     ld a, [wKeyWorldGoalKind]
-    ld hl, Data_061_4468
+    ld hl, LoadKeyWorldTilesetAndHeader_Data
     add_a_to_hl
     ld a, [hl]
     ld [wMapSpriteKind], a
@@ -742,7 +742,8 @@ Jump_061_4467::
     ret
 
 ; address loaded by LoadKeyWorldTilesetAndHeader
-Data_061_4468:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadKeyWorldTilesetAndHeader_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_4468:: ; address name
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
 ; only called from LoadMapScreen (E-0047)
@@ -1313,7 +1314,7 @@ Func_061_474C:: ; address name
     and a, $0F
     cp a, $0F
     jr z, Jump_061_479B
-    ld de, Data_061_480A
+    ld de, DrawKeyWorldExitTile_Data
     add a, e
     ld e, a
     jr nc, Jump_061_4797
@@ -1328,7 +1329,7 @@ Jump_061_479B::
     ld a, [hl]
     swap a
     and a, $0F
-    ld de, Data_061_480A
+    ld de, DrawKeyWorldExitTile_Data
     add a, e
     ld e, a
     jr nc, Jump_061_47A8
@@ -1407,7 +1408,8 @@ Jump_061_47C5::
     ret
 
 ; address loaded by DrawKeyWorldExitTile
-Data_061_480A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawKeyWorldExitTile_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_480A:: ; address name
     db $00, $30, $11, $22, $03, $33
 
 ; E-0195 (C1: CheckTwoWCDB0EntriesForKeyWorldArea_Sub01 reads the byte at $4810 + B (B from the floor state entry) and continues only when it equals hMapScreenX/Y packed as nibbles).
@@ -2731,7 +2733,7 @@ Jump_061_59DD::
     ld a, [de]
     swap a
     and a, $0F
-    ld hl, Data_061_5A2D
+    ld hl, CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2766,7 +2768,8 @@ Jump_061_59DD::
     ret
 
 ; address loaded by CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc
-Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_5A2D:: ; address name
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case05 (E-0047)
@@ -2835,7 +2838,7 @@ Jump_061_5A7A::
     and a, $0F
     cp a, $0F
     jp z, Jump_061_5A9B
-    ld hl, Data_061_5BB5
+    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -2845,7 +2848,7 @@ Jump_061_5A9B::
     ld a, [de]
     swap a
     and a, $0F
-    ld hl, Data_061_5BB5
+    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -2953,7 +2956,7 @@ Jump_061_5B66::
     and a, $0F
 
 Jump_061_5B6B::
-    ld hl, Data_061_5BB5
+    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2988,7 +2991,8 @@ Jump_061_5B6B::
     ret
 
 ; address loaded by CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc
-Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_5BB5:: ; address name
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case02 (E-0047)
@@ -3376,7 +3380,7 @@ Jump_061_5E02::
     add_a_to_hl
     ld a, [hl]
     and a, $0F
-    ld hl, Data_061_5E87
+    ld hl, CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -3430,7 +3434,8 @@ Jump_061_5E7A::
     jp Jump_061_5CD6
 
 ; address loaded by CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc
-Data_061_5E87:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_061_5E87:: ; address name
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case00 (E-0047)

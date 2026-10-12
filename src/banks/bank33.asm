@@ -1609,7 +1609,7 @@ Jump_033_563B:: ; address name
     ret nz
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_033_63EF
+    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $B1
@@ -1620,7 +1620,7 @@ Jump_033_563B:: ; address name
     call DrawScreenBufferRectToBGMap_33
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_033_63EF
+    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call SetDefaultStringWindow_Bank33
     ld a, [wScreenStep]
@@ -1696,7 +1696,7 @@ Jump_033_56E1::
     call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_033_63EF
+    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     ld hl, wScreenStep
@@ -1818,7 +1818,7 @@ Jump_033_57B2:: ; address name
     and a, a
     ret nz
     ld c, $05
-    ld hl, Data_033_63EF
+    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call WriteC3AtWordTableEntries_Bank33
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -2842,7 +2842,7 @@ Jump_033_5E6B:: ; address name
     call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_033_63EF
+    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
     call StoreBAtWordTableEntry_Bank33
     call DrawPlayerNameAndString0Category1
     ld a, [wScreenStep]
@@ -3677,7 +3677,8 @@ Data_033_63C7:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00
-Data_033_63EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_033_63EF:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)

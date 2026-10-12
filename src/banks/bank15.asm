@@ -446,7 +446,7 @@ Jump_015_42B3:: ; address name
     ld [wArg1], a
     ld a, $08
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_42F4
     ld hl, wWindowTileBuffer + $64
     ld bc, $080B
@@ -639,12 +639,12 @@ BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep::
 Jump_015_444D:: ; address name
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     call DrawScreenBufferAtScrollAndIncScreenStep
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ret
 
@@ -693,7 +693,7 @@ Jump_015_449C::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ld hl, wTextWindowTileLo
     xor a, a
@@ -728,7 +728,7 @@ Jump_015_44D3:: ; address name
     ld [wArg1], a
     ld a, $09
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld c, $09
     ld hl, $0224
     ld de, $0058
@@ -736,7 +736,7 @@ Jump_015_44D3:: ; address name
     ld [wArg1], a
     ld a, $0C
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_6FA3
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
@@ -762,7 +762,7 @@ Jump_015_451B:: ; address name
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -829,7 +829,7 @@ Jump_015_4570:: ; address name
 ; writes: wScreenStep
 BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep::
 Jump_015_45A5:: ; address name
-    ld de, Data_015_7505
+    ld de, BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep_Data
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C05
     call CopyRectTo20ByteRows_Bank15
@@ -844,7 +844,7 @@ Jump_015_45A5:: ; address name
 BreedMenu_Case04_BlankWordTableTargets_Case10::
 Jump_015_45B9:: ; address name
     ld c, $05
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -1009,12 +1009,12 @@ Jump_015_46D3:: ; address name
     ld hl, wWindowTileBuffer + $94
     ld bc, $0C03
     call CopyRectTo20ByteRows_Bank15
-    ld de, Data_015_7505
+    ld de, BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep_Data
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C05
     call CopyRectTo20ByteRows_Bank15
     ld c, $05
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -1189,7 +1189,7 @@ Jump_015_47FF::
     ld a, [wArg7]
     ld [wArg2], a
     ld [wSpeciesIdHi], a
-    ld de, Data_015_75C5
+    ld de, BreedMenu_Case04_ComputeBreedingChild_Data
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -1308,7 +1308,7 @@ Jump_015_48E3::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ld hl, wTextWindowTileLo
     xor a, a
@@ -1343,7 +1343,7 @@ Jump_015_491A:: ; address name
     ld [wArg1], a
     ld a, $0C
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld a, $B7
     ld [wWindowTileBuffer + $93], a
     ld [wWindowTileBuffer + $A7], a
@@ -1352,7 +1352,7 @@ Jump_015_491A:: ; address name
     ld hl, wWindowTileBuffer + $BC
     ld bc, $0C01
     call CopyRectTo20ByteRows_Bank15
-    ld de, Data_015_7511
+    ld de, BreedMenu_Case04_DrawGoldBoxAndStep_Bank15_Data
     ld hl, wWindowTileBuffer + $120
     ld bc, $0C04
     call CopyRectTo20ByteRows_Bank15
@@ -1472,7 +1472,7 @@ Jump_015_49C9:: ; address name
 BreedMenu_Case04_BlankWordTableTargets_Case25::
 Jump_015_4A2A:: ; address name
     ld c, $05
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -1625,7 +1625,7 @@ Jump_015_4B38::
     ld [wArg1], a
     ld a, [hl]
     ld [wArg2], a
-    ld hl, Data_015_75C5
+    ld hl, BreedMenu_Case04_ComputeBreedingChild_Data
     ld a, l
     ld [wArg3], a
     ld a, h
@@ -1979,7 +1979,7 @@ Jump_015_4D6E:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -2014,7 +2014,7 @@ Jump_015_4D96:: ; address name
 BreedMenu_Case04_StoreBAtWordTableEntry_Bank15::
 Jump_015_4DB0:: ; address name
     ld a, [wGridCursorX]
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -2090,7 +2090,7 @@ Jump_015_4E1D:: ; address name
     ld a, [hl]
     ldh [hTemp0], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared02
+    call BreedMenu_Shared03
     ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
@@ -2544,7 +2544,7 @@ Jump_015_50FB:: ; address name
     ld bc, $0D09
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -2623,7 +2623,7 @@ Jump_015_5165:: ; address name
 Jump_015_51AC::
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_015_7333
+    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -2631,7 +2631,7 @@ Jump_015_51AC::
     call DrawScreenBufferRect_Bank15
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_015_7333
+    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     ld a, [wScreenStep]
     inc a
@@ -2732,7 +2732,7 @@ Jump_015_525F::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_7333
+    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -2749,7 +2749,7 @@ Jump_015_525F::
     xor a, a
     ld [rRAMG2], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared02
+    call BreedMenu_Shared03
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2779,7 +2779,7 @@ Jump_015_52BD:: ; address name
     ld [wArg1], a
     ld a, $0D
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld a, [wThreeOptionResult]
     or a, a
     jr z, Jump_015_52EB
@@ -2855,7 +2855,7 @@ Jump_015_5323::
 BreedMenu_Case04_BlankWordTableTargets::
 Jump_015_5358:: ; address name
     ld c, $03
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     call BlankWordTableTargets
     xor a, a
     ld [wScreenStep], a
@@ -3082,7 +3082,7 @@ Func_015_54C0:: ; address name
 Jump_015_54C2::
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, Data_015_54E2
+    ld hl, BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3100,7 +3100,8 @@ Jump_015_54C2::
     ret
 
 ; address loaded by BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap
-Data_015_54E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_54E2:: ; address name
     db $2D, $01, $6D, $01
 
 ; entry 14 of the `rst $00` table in BreedMenu_Case05
@@ -3717,7 +3718,7 @@ Jump_015_58D2:: ; address name
     ld bc, $0807
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -3739,7 +3740,7 @@ Jump_015_58D2:: ; address name
 BreedMenu_ReturnToMap_BlankWordTableTargets::
 Jump_015_5920:: ; address name
     ld c, $03
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     call BlankWordTableTargets
     xor a, a
     ld [wScreenStep], a
@@ -3799,7 +3800,7 @@ Jump_015_593E:: ; address name
 Jump_015_5998::
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, Data_015_733B
+    ld hl, BreedMenu_ReturnToMap_SRAMRecordAddress_Data
     call StoreBAtWordTableEntry_Bank15
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -3859,7 +3860,7 @@ Func_015_5A2D:: ; address name
 Jump_015_5A2F::
     push bc
     ld a, c
-    ld de, Data_015_5A67
+    ld de, BreedMenu_ReturnToMap_Case0B_Sub01_Data_5A67
     add a, e
     ld e, a
     jr nc, Jump_015_5A39
@@ -3881,7 +3882,7 @@ Jump_015_5A39::
     push de
     ld a, c
     add a, a
-    ld de, Data_015_5A77
+    ld de, BreedMenu_ReturnToMap_Case0B_Sub01_Data_5A77
     add a, e
     ld e, a
     jr nc, Jump_015_5A55
@@ -3903,11 +3904,13 @@ Jump_015_5A55::
     ret
 
 ; address loaded by BreedMenu_ReturnToMap_Case0B_Sub01
-Data_015_5A67:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_ReturnToMap_Case0B_Sub01_Data_5A67:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_5A67:: ; address name
     db $A3, $50, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
 
 ; address loaded by BreedMenu_ReturnToMap_Case0B_Sub01
-Data_015_5A77:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_ReturnToMap_Case0B_Sub01_Data_5A77:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_5A77:: ; address name
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
@@ -4112,7 +4115,7 @@ Jump_015_5BD9::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ld hl, vTiles1
     ld a, l
@@ -4159,7 +4162,7 @@ Jump_015_5C19:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0601
@@ -4212,21 +4215,21 @@ Jump_015_5C7D:: ; address name
     ld [wArg1], a
     ld a, $08
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRows_Bank15
-    ld de, Data_015_7471
+    ld de, BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_Data
     ld hl, wWindowTileBuffer + $10C
     ld bc, $0C01
     call CopyRectTo20ByteRows_Bank15
     xor a, a
     ld b, $BC
-    ld hl, Data_015_733B
+    ld hl, BreedMenu_ReturnToMap_SRAMRecordAddress_Data
     call StoreBAtWordTableEntry_Bank15
     ld c, $04
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     ld a, [wScreenStep]
     inc a
@@ -4402,7 +4405,7 @@ Jump_015_5DCE:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call Func_015_6791
+    call BreedMenu_CopyBytesDEToHL_Bank15
     ld de, Tiles1Plus2D0Tiles_1F_43C0
     ld hl, vTiles1 + $2D0
     ld b, $1F
@@ -4428,7 +4431,7 @@ BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_Case1F::
 Jump_015_5E0C:: ; address name
     call DrawPair72A9And72C5AndStep_570C
     ld a, [wGridCursorX]
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -4864,7 +4867,7 @@ BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15::
 Jump_015_60E2:: ; address name
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_7333
+    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
@@ -4896,7 +4899,7 @@ Jump_015_6101:: ; address name
     xor a, a
     ld [rRAMG2], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared02
+    call BreedMenu_Shared03
     xor a, a
     ld [wStringCategory], a
     ld a, $1B
@@ -5053,11 +5056,11 @@ Jump_015_6203:: ; address name
 BreedMenu_Case10_BlankWordTableTargets::
 Jump_015_6235:: ; address name
     ld c, $04
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
@@ -5194,11 +5197,11 @@ Jump_015_62F7::
 
 Jump_015_631B::
     ld c, $05
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_015_73A1
+    ld hl, BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
     ld a, [wScreenStep]
     inc a
@@ -5489,7 +5492,7 @@ Jump_015_64DC::
     call QueueSoundEffect
     call DrawArrowTileBCAtGridCursorXEntry_Bank15
     ld c, $03
-    ld hl, Data_015_732D
+    ld hl, BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data
     call BlankWordTableTargets
     ld a, [wGridCursorX]
     cp a, $02
@@ -5560,7 +5563,7 @@ Func_015_6546:: ; address name
 Jump_015_6548::
     ld a, [wGridCursorX]
     add a, a
-    ld hl, Data_015_6566
+    ld hl, DrawArrowTileBCAtGridCursorXEntry_Bank15_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -5578,7 +5581,8 @@ Jump_015_6548::
     ret
 
 ; address loaded by DrawArrowTileBCAtGridCursorXEntry_Bank15
-Data_015_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawArrowTileBCAtGridCursorXEntry_Bank15_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6566:: ; address name
     db $21, $00, $61, $00, $A1, $00
 
 ; only called from BreedMenu_ReturnToMap_Case10 (E-0047)
@@ -5831,7 +5835,7 @@ Jump_015_66AE::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 6 call sites from 5 routines (e.g. CloseBreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_Init, Func_015_6791, BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15, ...)
+; 6 call sites from 5 routines (e.g. CloseBreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_Init, BreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15, ...)
 CopyBytesDEToHL_Bank15::
 Func_015_66AF:: ; address name
     ld a, [de]
@@ -5844,7 +5848,7 @@ Func_015_66AF:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 6 call sites from 5 routines (e.g. CloseBreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_Init, Func_015_6791, BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15, ...)
+; 6 call sites from 5 routines (e.g. CloseBreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_Init, BreedMenu_CopyBytesDEToHL_Bank15, BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15, ...)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank15::
 Func_015_66B8:: ; address name
@@ -5886,7 +5890,7 @@ Func_015_66CA:: ; address name
 ; points at: wScreenStep
 BreedMenu_Case04_Case13_WriteArg1AndArg2Etc::
 Func_015_66D8:: ; address name
-    ld hl, Data_015_731B
+    ld hl, BreedMenu_Case04_Case13_WriteArg1AndArg2Etc_Data
     ld a, $9D
     jr Jump_015_66E4
 
@@ -5897,7 +5901,7 @@ Func_015_66D8:: ; address name
 ; points at: wScreenStep
 BreedMenu_Case05_Case00_WriteArg1AndArg2Etc::
 Func_015_66DF:: ; address name
-    ld hl, Data_015_731B
+    ld hl, BreedMenu_Case04_Case13_WriteArg1AndArg2Etc_Data
     ld a, $9C
 
 Jump_015_66E4::
@@ -6032,10 +6036,12 @@ Jump_015_6783::
     jr nz, Jump_015_6782
     ret
 
+; only called from routines of BreedMenu (E-0098)
 ; 9 call sites from 8 routines (e.g. BreedMenu_Case04_BGMapAddressAtScroll_Bank15, BreedMenu_Case04_DrawGoldBoxAndStep_Bank15, BreedMenu_Case04_CopyRectTo20ByteRows_Bank15_Case09, BreedMenu_Case04_CopyRectTo20ByteRows_Bank15_Case00, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-Func_015_6791::
+BreedMenu_CopyBytesDEToHL_Bank15::
+Func_015_6791:: ; address name
     push bc
     push hl
     push de
@@ -6091,7 +6097,7 @@ Jump_015_67D2::
 
 Jump_015_67E1::
     dec c
-    jr nz, Func_015_6791
+    jr nz, BreedMenu_CopyBytesDEToHL_Bank15
     ret
 
 ; HL = table of addresses, C = count: stores tile $C3 at the address in each of the first C entries (StoreBAtWordTableEntry_Bank15) (E-0074)
@@ -6152,7 +6158,7 @@ Func_015_680F:: ; address name
 ; only called from routines of BreedMenu (E-0098)
 ; 3 call sites from 3 routines (e.g. BreedMenu_Case04_TenTimesTemp0PlusTenToDigits, BreedMenu_Case05_UpdatePagedListCursor, BreedMenu_Case0F_SetArg5ToListEntriesCell4)
 ; points at: wArg4, wTextBuf0
-BreedMenu_Shared02::
+BreedMenu_Shared03::
 Func_015_6822:: ; address name
     ld hl, wArg4
     ld de, wTextBuf0
@@ -6337,7 +6343,7 @@ Func_015_68FA:: ; address name
     push hl
     ld a, e
     and a, $07
-    ld hl, Data_015_6937
+    ld hl, TestBitInFieldAtArg3_Data
     add_a_to_hl
     ld a, [hl]
     ld b, a
@@ -6355,7 +6361,8 @@ Jump_015_6931::
     ret
 
 ; address loaded by TestBitInFieldAtArg3
-Data_015_6937:: ; heuristic: pointer load in the same bank (bank assumed); C0
+TestBitInFieldAtArg3_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6937:: ; address name
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; only called from routines of BreedMenu (E-0098)
@@ -6805,7 +6812,7 @@ Jump_015_6C0C::
     push bc
     ld a, c
     add a, a
-    ld hl, Data_015_6E0E
+    ld hl, ShowSaveFileInfoWindow_Data_6E0E
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6867,7 +6874,7 @@ Jump_015_6C6F::
     push bc
     ld a, c
     add a, a
-    ld hl, Data_015_6E08
+    ld hl, ShowSaveFileInfoWindow_Data_6E08
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6902,7 +6909,7 @@ Jump_015_6CB4::
 Jump_015_6CC8::
     push hl
     push bc
-    ld hl, Data_015_6DD0
+    ld hl, ShowSaveFileInfoWindow_Data_6DD0
     ld a, c
     add a, a
     add_a_to_hl
@@ -7048,7 +7055,8 @@ Jump_015_6DB4::
     ret
 
 ; address loaded by ShowSaveFileInfoWindow
-Data_015_6DD0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSaveFileInfoWindow_Data_6DD0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6DD0:: ; address name
     db $A8, $C3, $D0, $C3, $F8, $C3
 
 ; writes the digits at DE as tiles $E0 + digit to HL (WaitForVRAMAccess, interrupts off), counting C up to B (E-0117)
@@ -7091,11 +7099,13 @@ Func_015_6DE6:: ; address name
     ret
 
 ; address loaded by ShowSaveFileInfoWindow
-Data_015_6E08:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSaveFileInfoWindow_Data_6E08:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6E08:: ; address name
     db $AA, $C3, $D2, $C3, $FA, $C3
 
 ; address loaded by ShowSaveFileInfoWindow
-Data_015_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSaveFileInfoWindow_Data_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_6E0E:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; restores the player position, facing, wFollowerRecords, wC8F0-wC8FB and wCB86 from wC937-wC943 and clears wC936 (E-0121)
@@ -7462,20 +7472,24 @@ Data_015_72FF:: ; address name
     dw $4160, $41A0, $40B0, $4910, $4910, $FFFF
 
 ; address loaded by BreedMenu_Case04_Case13_WriteArg1AndArg2Etc, BreedMenu_Case05_Case00_WriteArg1AndArg2Etc
-Data_015_731B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_Case13_WriteArg1AndArg2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_731B:: ; address name
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $FF, $FF
 
 ; address loaded by BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_Case04_StoreBAtWordTableEntry_Bank15, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, BreedMenu_Case04_BlankWordTableTargets and 4 more
-Data_015_732D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case0A_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_732D:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3
 
 ; address loaded by BreedMenu_Case05_ClampRecordListPageCursor4_Case03, BreedMenu_Case05_UpdatePagedListCursor, BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15
-Data_015_7333:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7333:: ; address name
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
 
 ; address loaded by BreedMenu_ReturnToMap_SRAMRecordAddress, BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19
-Data_015_733B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_ReturnToMap_SRAMRecordAddress_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_733B:: ; address name
     db $27, $C4, $4F, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -7515,7 +7529,8 @@ Data_015_7379:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep, BreedMenu_Case04_UpdatePagedListCursor, BreedMenu_Case04_BlankWordTableTargets_Case10, BreedMenu_Case04_BlankWordTableTargets_Case12 and 6 more
-Data_015_73A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_73A1:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -7554,7 +7569,8 @@ Data_015_7411:: ; address name
     db $B6, $F5, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 5
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
     db $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 7
-Data_015_7471:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7471:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -7581,9 +7597,11 @@ Data_015_74D5:: ; address name
     db $B6, $F8, $F9, $FA, $FB, $FC, $C3, $EA, $ED, $C3, $C3, $B7 ; id 1
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
     db $B6, $C7, $A7, $A8, $A9, $AA, $AB, $AC, $AD, $AE, $AF, $B7 ; id 3
-Data_015_7505:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7505:: ; address name
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; id 4
-Data_015_7511:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_DrawGoldBoxAndStep_Bank15_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7511:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
@@ -7616,7 +7634,8 @@ Data_015_7589:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by BreedMenu_Case04_ComputeBreedingChild, BreedMenu_Case04_TestBitInFieldAtArg3
-Data_015_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BreedMenu_Case04_ComputeBreedingChild_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_75C5:: ; address name
     db $FF, $FF, $DC, $00, $0F, $FF, $FF, $F1, $01, $FF, $FF, $3F, $36, $3F, $FF, $E2
     db $88, $07, $FF, $FF, $C3, $00, $FF, $FF, $FC, $40, $1F, $FF, $FE, $F8, $83, $FF
     db $FE, $63, $00, $7F, $FB, $F9, $F9, $0F, $FF, $FF, $C4, $30, $00, $00, $00, $00
@@ -8024,7 +8043,7 @@ Jump_015_7876::
 Jump_015_788D::
     ld a, c
     sla a
-    ld hl, Data_015_78BB
+    ld hl, HibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -8053,7 +8072,8 @@ Jump_015_78AF::
     ret
 
 ; address loaded by HibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
-Data_015_78BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_78BB:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8F, $40, $8A
 
 ; only called from HibernateMenu_Case05_Case03_Sub01 (E-0047)
@@ -8129,7 +8149,7 @@ Func_015_7917:: ; address name
     ld e, l
     ld d, h
     push de
-    ld hl, Data_015_794A
+    ld hl, GlyphCopyArgsForA_Bank15_Data
     ld a, [wGlyphListStart]
     sla a
     add_a_to_hl
@@ -8145,7 +8165,8 @@ Func_015_7917:: ; address name
     ret
 
 ; address loaded by GlyphCopyArgsForA_Bank15
-Data_015_794A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GlyphCopyArgsForA_Bank15_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_794A:: ; address name
     db $40, $8A, $50, $8A, $60, $8A, $E0, $8C, $F0, $8C
 
 ; wD09D = the family nibble of the record selected by wD7F1 (Func_015_7A43), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
@@ -8259,7 +8280,7 @@ Jump_015_7A01::
     pop bc
     ld a, c
     sla a
-    ld hl, Data_015_7A3B
+    ld hl, HibernateMenu_Case05_Case04_RecordAddressWithBank1Slot1D_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -8285,7 +8306,8 @@ Jump_015_7A01::
     ret
 
 ; address loaded by HibernateMenu_Case05_Case04_RecordAddressWithBank1Slot1D
-Data_015_7A3B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_Case05_Case04_RecordAddressWithBank1Slot1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_015_7A3B:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; HL = sB356 + $6F * B in SRAM bank 0, except record $1D, which is at sA000 in SRAM bank 1 (E-0122)

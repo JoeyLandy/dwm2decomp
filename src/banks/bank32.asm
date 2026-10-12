@@ -2280,11 +2280,11 @@ Jump_032_4DB3::
     ld a, [wBattleActor]
     cp a, $04
     jr c, Jump_032_4DD1
-    ld hl, Data_032_4E20
+    ld hl, PickRandomActionWhenUncontrolled_Data_4E20
     jr Jump_032_4DD4
 
 Jump_032_4DD1::
-    ld hl, Data_032_4E1C
+    ld hl, PickRandomActionWhenUncontrolled_Data_4E1C
 
 Jump_032_4DD4::
     ld a, [wRandomHi]
@@ -2328,11 +2328,13 @@ Jump_032_4DF7::
     ret
 
 ; address loaded by PickRandomActionWhenUncontrolled
-Data_032_4E1C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PickRandomActionWhenUncontrolled_Data_4E1C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_4E1C:: ; address name
     db $03, $C2, $C3, $C5
 
 ; address loaded by PickRandomActionWhenUncontrolled
-Data_032_4E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PickRandomActionWhenUncontrolled_Data_4E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_4E20:: ; address name
     db $08, $C2, $C3, $C4, $C5, $C6, $C7, $C8, $C6
 
 ; wDAD2 = 0, wDABE = 0, wD802 = $FF, wBattleSubStep = 0; unless wDABD is set, also wDABA = 0, wDABF = 0, wDAD1 = $FF, wC970 = 0 (E-0120)
@@ -2680,7 +2682,7 @@ Jump_032_5049::
     ld a, [wBattleActionId]
     ld c, a
     push hl
-    ld hl, Data_032_5078
+    ld hl, RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA_Data
 
 Jump_032_5051::
     ld a, [hl+]
@@ -2711,7 +2713,8 @@ Jump_032_5073::
     ret
 
 ; address loaded by RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA
-Data_032_5078:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_5078:: ; address name
     db $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13
     db $14, $15, $19, $1A, $26, $28, $2A, $2C, $2E, $2F, $30, $33, $3D, $3E, $3F, $40
     db $41, $42, $43, $44, $45, $46, $47, $49, $4A, $4B, $4D, $4E, $4F, $64, $65, $66
@@ -3650,7 +3653,7 @@ Func_032_55EE:: ; address name
     ret z
     ld b, a
     ld a, [wBattleActionId]
-    ld hl, Data_032_5688
+    ld hl, CheckLinkRuleViolation_Data
     add_a_to_hl
     ld a, [hl]
     or a, a
@@ -3716,7 +3719,8 @@ Jump_032_565F::
     ret
 
 ; address loaded by CheckLinkRuleViolation
-Data_032_5688:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckLinkRuleViolation_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_5688:: ; address name
     db $00
     ds $15, $40
     db $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10, $10
@@ -5155,7 +5159,7 @@ Func_032_604A:: ; address name
     push hl
     ld a, [wRandomLo]
     and a, $03
-    ld hl, Data_032_6094
+    ld hl, ResolveStep0EEffect_Case00_AdvanceRandom_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -5196,7 +5200,8 @@ Jump_032_6090::
     ret
 
 ; address loaded by ResolveStep0EEffect_Case00_AdvanceRandom
-Data_032_6094:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ResolveStep0EEffect_Case00_AdvanceRandom_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_6094:: ; address name
     db $00, $00, $00, $00, $00
 
 ; entry 1 of the `rst $00` table in ResolveStep0EEffect
@@ -6632,7 +6637,7 @@ Jump_032_685D::
 ClearBattleStatusBitsWithMaskD_Bank32:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_032_6863:: ; address name
     ld a, d
-    ld hl, Data_032_6878
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank32_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -6644,7 +6649,8 @@ Func_032_6863:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_Bank32
-Data_032_6878:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_Bank32_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_032_6878:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)

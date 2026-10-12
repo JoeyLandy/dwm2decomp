@@ -126,7 +126,7 @@ Jump_00C_4092:: ; address name
 
 Jump_00C_40A9::
     ld a, [wGridCursorX]
-    ld hl, Data_00C_58FE
+    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $BB
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -134,7 +134,7 @@ Jump_00C_40A9::
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
     ld a, [wGridCursorX]
-    ld hl, Data_00C_58FE
+    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $C3
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -179,7 +179,7 @@ Jump_00C_40FC::
     ld a, c
     add a, b
     add a, a
-    ld hl, Data_00C_5916
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -240,7 +240,7 @@ Jump_00C_4159::
     ld a, c
     add a, l
     add a, a
-    ld hl, Data_00C_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
     add_a_to_hl
     push de
     ld e, [hl]
@@ -374,7 +374,7 @@ Jump_00C_4233::
 Jump_00C_4236::
     call LibraryMenu_Case05_ReadGridCursorX_Sub03
     ld a, [wGridCursorY]
-    ld de, Data_00C_56D7
+    ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_4244
@@ -402,7 +402,7 @@ Jump_00C_4250::
 Jump_00C_425C::
     call LibraryMenu_Case05_ReadGridCursorX_Sub03
     ld a, [wGridCursorY]
-    ld de, Data_00C_56D7
+    ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_426A
@@ -449,7 +449,7 @@ Jump_00C_42A2::
     call QueueSoundEffect
     call LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C
     ld a, [wGridCursorX]
-    ld hl, Data_00C_58FE
+    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank0C
     ld a, [wGridCursorY]
@@ -527,7 +527,7 @@ Func_00C_4312:: ; address name
 Jump_00C_4314::
     ld a, [wGridCursorX]
     add a, a
-    ld hl, Data_00C_4331
+    ld hl, LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -544,7 +544,8 @@ Jump_00C_4314::
     ret
 
 ; address loaded by LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C
-Data_00C_4331:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_4331:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $61, $01
 
 ; entry 6 of the `rst $00` table in LibraryMenu
@@ -703,7 +704,7 @@ Jump_00C_4448:: ; address name
     ld bc, $0C0D
     call CopyRectTo20ByteRows_Bank0C
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_445F
@@ -714,7 +715,7 @@ Jump_00C_445F::
     add a, $E1
     ld [wWindowTileBuffer + $165], a
     ld a, [wGrid2CursorX]
-    ld hl, Data_00C_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
     ld b, $BB
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -722,7 +723,7 @@ Jump_00C_445F::
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
     ld a, [wGrid2CursorX]
-    ld hl, Data_00C_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
     ld b, $C3
     call StoreBAtWordTableEntry_Bank0C
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
@@ -768,7 +769,7 @@ Jump_00C_449D:: ; address name
 
 Jump_00C_44C3::
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_44CE
@@ -790,7 +791,7 @@ Jump_00C_44DA::
     ld [wGrid2CursorY], a
     push af
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_44E9
@@ -830,7 +831,7 @@ Jump_00C_451C::
     and a, a
     jr nz, Jump_00C_4530
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_452D
@@ -881,7 +882,7 @@ Jump_00C_4560::
 Jump_00C_4563::
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld de, Data_00C_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
     add a, e
     ld e, a
     jr nc, Jump_00C_456F
@@ -969,7 +970,7 @@ Func_00C_45DA:: ; address name
 Jump_00C_45E0::
     ld a, [wGrid2CursorX]
     add a, a
-    ld hl, Data_00C_45FD
+    ld hl, LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -986,7 +987,8 @@ Jump_00C_45E0::
     ret
 
 ; address loaded by LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
-Data_00C_45FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_45FD:: ; address name
     db $29, $00, $69, $00, $A9, $00, $E9, $00, $29, $01, $69, $01
 
 ; entry 13 of the `rst $00` table in LibraryMenu
@@ -1032,7 +1034,7 @@ Jump_00C_4609:: ; address name
 LibraryMenu_StoreBAtWordTableEntry_Bank0C::
 Jump_00C_4650:: ; address name
     ld a, [wGridCursorX]
-    ld hl, Data_00C_58FE
+    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $C3
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -1500,7 +1502,7 @@ Jump_00C_4A61::
     ld [wStringIndex], a
     ld a, c
     add a, a
-    ld de, Data_00C_4AA0
+    ld de, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_4A71
@@ -1535,7 +1537,8 @@ Jump_00C_4A71::
     ret
 
 ; address loaded by LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050
-Data_00C_4AA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_4AA0:: ; address name
     db $40, $94, $D0, $94, $60, $95
 
 ; entry 5 of the `rst $00` table in LibraryMenu_Case10
@@ -1706,7 +1709,7 @@ Jump_00C_4BCB::
     xor a, a
     ld [wGrid2CursorX], a
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_4BE1
@@ -1739,7 +1742,7 @@ Jump_00C_4BFC::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld hl, Data_00C_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1788,7 +1791,7 @@ Jump_00C_4C4F::
 
 Jump_00C_4C5B::
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_4C66
@@ -1817,7 +1820,7 @@ Jump_00C_4C82::
     push hl
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld hl, Data_00C_592E
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1901,7 +1904,7 @@ Jump_00C_4CFB:: ; address name
 
 Jump_00C_4D12::
     ld a, [wGridCursorX]
-    ld hl, Data_00C_58FE
+    ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $BC
     call StoreBAtWordTableEntry_Bank0C
     ld a, [wGridCursorY]
@@ -1913,7 +1916,7 @@ Jump_00C_4D12::
     call CopyRectTo20ByteRows_Bank0C
     ld a, [wGrid2CursorX]
     ld b, $BC
-    ld hl, Data_00C_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
     call StoreBAtWordTableEntry_Bank0C
     call ClearStringWindowAt2020
     call ClearStringWindowAt2200
@@ -2002,7 +2005,7 @@ LibraryMenu_Case10_StoreBAtWordTableEntry_Bank0C::
 Jump_00C_4DD6:: ; address name
     ld a, [wGrid2CursorX]
     ld b, $C3
-    ld hl, Data_00C_590A
+    ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140C
@@ -2145,7 +2148,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
 Func_00C_4EC7:: ; address name
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld de, Data_00C_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
     add a, e
     ld e, a
     jr nc, Jump_00C_4ED3
@@ -2182,7 +2185,7 @@ Jump_00C_4EE6::
     ld [wStringIndex], a
     ld a, c
     add a, a
-    ld de, Data_00C_4F68
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_4F06
@@ -2214,7 +2217,7 @@ Jump_00C_4F26::
     ld [wStringIndex], a
     ld a, c
     add a, a
-    ld de, Data_00C_4F68
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_4F39
@@ -2253,7 +2256,8 @@ Jump_00C_4F57::
     ret
 
 ; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
-Data_00C_4F68:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_4F68:: ; address name
     db $00, $92, $90, $92, $20, $93, $B0, $93, $40, $94, $D0, $94
 
 ; only called from routines of LibraryMenu (E-0098)
@@ -2267,7 +2271,7 @@ Func_00C_4F74:: ; address name
     ld b, a
     add a, a
     add a, b
-    ld de, Data_00C_4FAA
+    ld de, LibraryMenu_WriteWorkBuf_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_4F83
@@ -2304,7 +2308,8 @@ Jump_00C_4FA2::
     ret
 
 ; address loaded by LibraryMenu_WriteWorkBuf
-Data_00C_4FAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_WriteWorkBuf_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_4FAA:: ; address name
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $FF, $20, $90, $70, $90
     db $C0, $90, $10, $91, $60, $91, $B0, $91
 
@@ -2374,7 +2379,7 @@ Func_00C_501F:: ; address name
     inc hl
     push hl
     call GridIndexFromGridCursorXGridCursorY
-    ld de, Data_00C_5944
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944
     add a, e
     ld e, a
     jr nc, Jump_00C_5043
@@ -2398,7 +2403,7 @@ GridCellAddressFromGridCursorXAndGrid2CursorX::
 Func_00C_5050:: ; address name
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld de, Data_00C_5916
+    ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916
     add a, e
     ld e, a
     jr nc, Jump_00C_505C
@@ -2423,7 +2428,7 @@ ReadGridCellByteForGridCursorXGridCursorY::
 Func_00C_506C:: ; address name
     call GridIndexFromGridCursorXGridCursorY
     add a, a
-    ld hl, Data_00C_594F
+    ld hl, ReadGridCellByteForGridCursorXGridCursorY_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2488,7 +2493,7 @@ Jump_00C_50B6::
     ld a, [wArg1]
     and a, a
     jr z, Jump_00C_50D6
-    ld hl, Data_00C_510F
+    ld hl, LibraryMenu_HLToDecimalDigits_Data_510F
     pop af
     add_a_to_hl
     ld e, [hl]
@@ -2500,7 +2505,7 @@ Jump_00C_50B6::
     jr Jump_00C_50E4
 
 Jump_00C_50D6::
-    ld hl, Data_00C_5103
+    ld hl, LibraryMenu_HLToDecimalDigits_Data_5103
     pop af
     add_a_to_hl
     ld e, [hl]
@@ -2532,11 +2537,13 @@ Jump_00C_50E4::
     ret
 
 ; address loaded by LibraryMenu_HLToDecimalDigits
-Data_00C_5103:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_HLToDecimalDigits_Data_5103:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_5103:: ; address name
     db $26, $00, $66, $00, $A6, $00, $E6, $00, $26, $01, $66, $01
 
 ; address loaded by LibraryMenu_HLToDecimalDigits
-Data_00C_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_HLToDecimalDigits_Data_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_510F:: ; address name
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
 ; only called from routines of LibraryMenu (E-0098)
@@ -2993,7 +3000,7 @@ Func_00C_534A:: ; address name
     ld de, MonsterIconKindTable_536A
     add hl, de
     ld a, [hl]
-    ld hl, Data_00C_54DF
+    ld hl, LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -3389,7 +3396,8 @@ Data_00C_536A:: ; address name
     db $02 ; id 372 Darck
 
 ; address loaded by LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX
-Data_00C_54DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_54DF:: ; address name
     db $E9, $54, $EB, $54, $ED, $54, $EF, $54, $F1, $54, $7C, $80, $7D, $80, $7E, $80
     db $7E, $7E, $7F, $80
 
@@ -3403,7 +3411,7 @@ Func_00C_54F3:: ; address name
     add hl, de
     ld a, [hl]
     add a, a
-    ld hl, Data_00C_5513
+    ld hl, LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3420,38 +3428,47 @@ Jump_00C_550C::
     ret
 
 ; address loaded by LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02
-Data_00C_5513:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00C_5523
-    dw Data_00C_5527
-    dw Data_00C_552B
-    dw Data_00C_552F
-    dw Data_00C_5533
-    dw Data_00C_5537
-    dw Data_00C_553B
-    dw Data_00C_553F
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_5513:: ; address name
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry00
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry01
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry02
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry03
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry04
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry05
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry06
+    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry07
 
-Data_00C_5523:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5523:: ; address name
     db $81, $80, $80, $80
 
-Data_00C_5527:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5527:: ; address name
     db $82, $80, $80, $80
 
-Data_00C_552B:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_552B:: ; address name
     db $82, $81, $80, $80
 
-Data_00C_552F:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_552F:: ; address name
     db $82, $82, $80, $80
 
-Data_00C_5533:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5533:: ; address name
     db $82, $82, $81, $80
 
-Data_00C_5537:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5537:: ; address name
     db $82, $82, $82, $80
 
-Data_00C_553B:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_553B:: ; address name
     db $82, $82, $82, $81
 
-Data_00C_553F:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_553F:: ; address name
     db $82, $82, $82, $82
 
 ; writes six bytes from Data_00C_555C to the CGB background palette data (rBCPS = $80, auto-increment), waiting for VRAM access (E-0122)
@@ -3459,7 +3476,7 @@ Data_00C_553F:: ; heuristic: target of a monotone pointer table; C0
 ; reads: rSTAT
 WriteBGPalette0From555C::
 Func_00C_5543:: ; address name
-    ld hl, Data_00C_555C
+    ld hl, WriteBGPalette0From555C_Data
     ld b, $80
     ld c, $68
     ld a, b
@@ -3478,7 +3495,8 @@ Jump_00C_5550::
     ret
 
 ; address loaded by WriteBGPalette0From555C
-Data_00C_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteBGPalette0From555C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_555C:: ; address name
     db $86, $7D, $FF, $7F, $E1, $7F
 
 ; E-0206 (C1: LibraryMenu_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372).
@@ -3860,7 +3878,8 @@ Data_00C_5562:: ; address name
     db $06 ; id 372 Darck
 
 ; address loaded by LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc
-Data_00C_56D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_56D7:: ; address name
     db $05, $04
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -3930,72 +3949,89 @@ Data_00C_589A:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc, LibraryMenu_StoreBAtWordTableEntry_Bank0C, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C
-Data_00C_58FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_58FE:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
 ; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C, LibraryMenu_Case10_StoreBAtWordTableEntry_Bank0C
-Data_00C_590A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_590A:: ; address name
     db $81, $C3, $A9, $C3, $D1, $C3, $F9, $C3, $21, $C4, $49, $C4
 
 ; address loaded by LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, GridCellAddressFromGridCursorXAndGrid2CursorX
-Data_00C_5916:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_5916:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_5916:: ; address name
     db $01, $00, $24, $00, $47, $00, $6A, $00, $8D, $00, $B0, $00, $D3, $00, $F6, $00
     db $19, $01, $3C, $01, $5F, $01, $FF, $FF
 
 ; address loaded by LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08
-Data_00C_592E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_592E:: ; address name
     db $1B, $00, $43, $00, $67, $00, $85, $00, $A8, $00, $CA, $00, $F1, $00, $11, $01
     db $39, $01, $5C, $01, $75, $01
 
 ; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
-Data_00C_5944:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_5944:: ; address name
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
 ; address loaded by ReadGridCellByteForGridCursorXGridCursorY
-Data_00C_594F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00C_5965
-    dw Data_00C_596A
-    dw Data_00C_5970
-    dw Data_00C_5976
-    dw Data_00C_597B
-    dw Data_00C_5980
-    dw Data_00C_5985
-    dw Data_00C_598A
-    dw Data_00C_598F
-    dw Data_00C_5995
-    dw Data_00C_599B
+ReadGridCellByteForGridCursorXGridCursorY_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_594F:: ; address name
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry00
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry01
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry02
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry03
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry04
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry05
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry06
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry07
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry08
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09
+    dw ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A
 
-Data_00C_5965:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5965:: ; address name
     db $05, $05, $05, $05, $01
 
-Data_00C_596A:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_596A:: ; address name
     db $05, $05, $05, $05, $05, $00
 
-Data_00C_5970:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5970:: ; address name
     db $05, $05, $05, $05, $05, $01
 
-Data_00C_5976:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5976:: ; address name
     db $05, $05, $05, $05, $02
 
-Data_00C_597B:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_597B:: ; address name
     db $05, $05, $05, $05, $02
 
-Data_00C_5980:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5980:: ; address name
     db $05, $05, $05, $05, $01
 
-Data_00C_5985:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5985:: ; address name
     db $05, $05, $05, $05, $05
 
-Data_00C_598A:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_598A:: ; address name
     db $05, $05, $05, $05, $02
 
-Data_00C_598F:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_598F:: ; address name
     db $05, $05, $05, $05, $05, $01
 
-Data_00C_5995:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_5995:: ; address name
     db $05, $05, $05, $05, $05, $01
 
-Data_00C_599B:: ; heuristic: target of a monotone pointer table; C0
+ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A:: ; heuristic: target of a monotone pointer table; C0
+Data_00C_599B:: ; address name
     db $05, $05, $05, $03
 
 ; E-0211 (C1: LibraryMenu_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
@@ -5610,7 +5646,7 @@ ArenaMenu_RandomModulo52::
 Jump_00C_65F3:: ; address name
     ld a, [wAreaGraphicsIndex]
     add a, a
-    ld hl, Data_00C_75D2
+    ld hl, ArenaMenu_RandomModulo52_Data_75D2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5634,7 +5670,7 @@ Jump_00C_660B::
 Jump_00C_6618::
     ld a, [wAreaGraphicsIndex]
     add a, a
-    ld hl, Data_00C_7602
+    ld hl, ArenaMenu_RandomModulo52_Data_7602
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5989,14 +6025,14 @@ Jump_00C_688C::
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, Data_00C_68D1
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_68D1
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $F0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, Data_00C_784F
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F
     ld b, $BC
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -6015,7 +6051,8 @@ Jump_00C_688C::
     ret
 
 ; address loaded by ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
-Data_00C_68D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_68D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_68D1:: ; address name
     db $0C, $0B, $0A, $1C
 
 ; only called from ArenaMenu_Case02 (E-0047)
@@ -6057,7 +6094,7 @@ Func_00C_68F3:: ; address name
 Jump_00C_68F9::
     ld a, [wGridCursorX]
     sla a
-    ld hl, Data_00C_691A
+    ld hl, ArenaMenu_Case02_ReadGridCursorX_Sub03_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6075,7 +6112,8 @@ Jump_00C_68F9::
     ret
 
 ; address loaded by ArenaMenu_Case02_ReadGridCursorX_Sub03
-Data_00C_691A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_Case02_ReadGridCursorX_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_691A:: ; address name
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
 ; plays sound $6C, copies the 6 x 5 box Data_00C_7831 to wC412, draws it at the scroll position + $1CC, wD780 += 1 and wTwoChoiceCursor = 0 (E-0122)
@@ -6136,7 +6174,7 @@ Jump_00C_6978::
     jr nz, Jump_00C_695F
     ld a, [wGridCursorX]
     sla a
-    ld de, Data_00C_7871
+    ld de, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_698B
@@ -6213,7 +6251,7 @@ ArenaMenu_BGMapAddressAtScroll_Bank0C::
 Jump_00C_6A04:: ; address name
     call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Shared01
     ld c, $04
-    ld hl, Data_00C_784F
+    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F
     call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
@@ -6243,7 +6281,7 @@ Jump_00C_6A29:: ; address name
     call ArenaMenu_DispatchTalkEvent_Shared04
     ld a, [wGridCursorX]
     sla a
-    ld de, Data_00C_7871
+    ld de, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_6A39
@@ -6566,14 +6604,14 @@ Jump_00C_6C36::
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, Data_00C_6C7F
+    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_6C7F
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $F0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, Data_00C_7857
+    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_7857
     ld b, $BC
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -6593,7 +6631,8 @@ Jump_00C_6C36::
     ret
 
 ; address loaded by ArenaMenu_WriteTextBuf0AndScreenStateEtc
-Data_00C_6C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_6C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_6C7F:: ; address name
     db $0C, $0B, $0A, $1C
 
 ; only called from ArenaMenu_Case12 (E-0047)
@@ -6635,7 +6674,7 @@ Func_00C_6CA1:: ; address name
 Jump_00C_6CA7::
     ld a, [wGridCursorX]
     sla a
-    ld hl, Data_00C_6CC8
+    ld hl, ArenaMenu_Case12_ReadGridCursorX_Sub03_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6653,7 +6692,8 @@ Jump_00C_6CA7::
     ret
 
 ; address loaded by ArenaMenu_Case12_ReadGridCursorX_Sub03
-Data_00C_6CC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_Case12_ReadGridCursorX_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_6CC8:: ; address name
     db $A1, $00, $E1, $00, $21, $01, $61, $01
 
 ; entry 19 of the `rst $00` table in ArenaMenu
@@ -6709,7 +6749,7 @@ Jump_00C_6D0D:: ; address name
     ld [wGrid2CursorX], a
     ld a, [wGridCursorX]
     add a, a
-    ld hl, Data_00C_6D44
+    ld hl, ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data
     add_a_to_hl
     ld a, [hl]
     ld [wArenaByte86], a
@@ -6728,7 +6768,8 @@ Jump_00C_6D0D:: ; address name
     ret
 
 ; address loaded by ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc
-Data_00C_6D44:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_6D44:: ; address name
     db $E8, $03, $D0, $07, $B8, $0B, $88, $13
 
 ; entry 23 of the `rst $00` table in ArenaMenu
@@ -7161,7 +7202,7 @@ ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0::
 Func_00C_701C:: ; address name
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
-    ld hl, Data_00C_7037
+    ld hl, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Data
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
@@ -7170,7 +7211,8 @@ Func_00C_701C:: ; address name
     ret
 
 ; address loaded by ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0
-Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_7037:: ; address name
     db $0C, $0C, $0C, $0B, $0A, $1C
 
 ; wD588 += 1 and wD78C = wD7FC (E-0122)
@@ -7625,7 +7667,7 @@ Jump_00C_72AE::
 
 Jump_00C_72B0::
     sla a
-    ld de, Data_00C_72C0
+    ld de, PickTableEntryByPartyLevelTotal_Data
     add a, e
     ld e, a
     jr nc, Jump_00C_72BA
@@ -7640,7 +7682,8 @@ Jump_00C_72BA::
     ret
 
 ; address loaded by PickTableEntryByPartyLevelTotal
-Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PickTableEntryByPartyLevelTotal_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_72C0:: ; address name
     db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
@@ -7940,7 +7983,7 @@ Func_00C_744D:: ; address name
     ld [wBattleIntroKind], a
     ld a, $02
     ld [wEncounterKind], a
-    ld hl, Data_00C_787D
+    ld hl, ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -8089,7 +8132,7 @@ Func_00C_750F:: ; address name
     ld a, l
     and a, $03
     sla a
-    ld hl, Data_00C_7538
+    ld hl, ArenaMenu_Case27_RandomModulo52_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -8114,7 +8157,8 @@ Jump_00C_7533::
     ret
 
 ; address loaded by ArenaMenu_Case27_RandomModulo52
-Data_00C_7538:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_Case27_RandomModulo52_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_7538:: ; address name
     db $40, $75, $47, $75, $4E, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $5A, $5B, $5C, $5D
     db $5E, $5F, $60, $61
@@ -8160,7 +8204,7 @@ Jump_00C_757E::
 ; points at: wTextBuf1
 ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB::
 Func_00C_7587:: ; address name
-    ld de, Data_008_403C
+    ld de, ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB_Data
     ld b, $08
     call ReadFarPointerAtDEInBankB
     ld c, l
@@ -8212,13 +8256,15 @@ Func_00C_75BC:: ; address name
     ret
 
 ; address loaded by ArenaMenu_RandomModulo52
-Data_00C_75D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_RandomModulo52_Data_75D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_75D2:: ; address name
     db $DE, $75, $DE, $75, $DE, $75, $E7, $75, $F0, $75, $F9, $75, $19, $23, $2D, $37
     db $41, $4B, $5F, $64, $FF, $14, $1F, $2A, $35, $40, $4B, $5A, $64, $FF, $0F, $17
     db $1F, $27, $2F, $37, $50, $64, $FF, $0A, $15, $20, $2B, $36, $41, $50, $64, $FF
 
 ; address loaded by ArenaMenu_RandomModulo52
-Data_00C_7602:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_RandomModulo52_Data_7602:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_7602:: ; address name
     db $0E, $76, $0E, $76, $0E, $76, $16, $76, $1E, $76, $26, $76, $01, $53, $05, $0C
     db $24, $0B, $1C, $44, $02, $18, $0F, $10, $13, $15, $45, $FE, $03, $0D, $11, $12
     db $17, $2C, $FD, $FE, $23, $2C, $0D, $0E, $17, $FD, $1E, $FE
@@ -8320,20 +8366,24 @@ Data_00C_7831:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, ArenaMenu_BGMapAddressAtScroll_Bank0C
-Data_00C_784F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data_784F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_784F:: ; address name
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 
 ; address loaded by ArenaMenu_WriteTextBuf0AndScreenStateEtc
-Data_00C_7857:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data_7857:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_7857:: ; address name
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4, $8D, $C3, $8F, $C3, $91, $C3, $8D, $C3
     db $8F, $C3, $91, $C3, $B5, $C3, $B7, $C3, $B9, $C3
 
 ; address loaded by ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_SubtractArg1AmountFromGold
-Data_00C_7871:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_7871:: ; address name
     db $64, $00, $F4, $01, $E8, $03, $88, $13, $02, $04, $08, $10
 
 ; address loaded by ArenaGridBattle_WriteBattleIntroKindAndEncounterKind
-Data_00C_787D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00C_787D:: ; address name
     db $7F, $78, $85, $78, $8B, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00
 
@@ -8351,8 +8401,8 @@ Data_00C_7897:: ; address name
 GridEncounterList0::
 Data_00C_789F:: ; address name
     dw GridEncounters0 ; id 0
-    dw Data_00C_78AB ; id 1
-    dw Data_00C_78B1 ; id 2
+    dw GridEncounters0_01 ; id 1
+    dw GridEncounters0_02 ; id 2
 
 ; E-0236 (C1: the three records of GridEncounterList0).
 ; record: three encounter words copied to wEncounterMonsters
@@ -8361,11 +8411,13 @@ Data_00C_78A5:: ; address name
     dw $008A ; id 0 MonsterTable $08A: WindBeast
     dw $008B ; MonsterTable $08B: Gismo
     dw $008C ; MonsterTable $08C: PomPomBom
-Data_00C_78AB:: ; heuristic: grid encounter; C0
+GridEncounters0_01:: ; heuristic: grid encounter; C0
+Data_00C_78AB:: ; address name
     dw $008D ; id 1 MonsterTable $08D: Devipine
     dw $008E ; MonsterTable $08E: Gulpple
     dw $008F ; MonsterTable $08F: Eggplaton
-Data_00C_78B1:: ; heuristic: grid encounter; C0
+GridEncounters0_02:: ; heuristic: grid encounter; C0
+Data_00C_78B1:: ; address name
     dw $0090 ; id 2 MonsterTable $090: HammerMan
     dw $0091 ; MonsterTable $091: Stubsuck
     dw $0090 ; MonsterTable $090: HammerMan
@@ -8375,8 +8427,8 @@ Data_00C_78B1:: ; heuristic: grid encounter; C0
 GridEncounterList1::
 Data_00C_78B7:: ; address name
     dw GridEncounters1 ; id 0
-    dw Data_00C_78C3 ; id 1
-    dw Data_00C_78C9 ; id 2
+    dw GridEncounters1_01 ; id 1
+    dw GridEncounters1_02 ; id 2
 
 ; E-0236 (C1: the three records of GridEncounterList1).
 ; record: three encounter words copied to wEncounterMonsters
@@ -8385,11 +8437,13 @@ Data_00C_78BD:: ; address name
     dw $0092 ; id 0 MonsterTable $092: TreeBoy
     dw $0093 ; MonsterTable $093: FooHero
     dw $0092 ; MonsterTable $092: TreeBoy
-Data_00C_78C3:: ; heuristic: grid encounter; C0
+GridEncounters1_01:: ; heuristic: grid encounter; C0
+Data_00C_78C3:: ; address name
     dw $0094 ; id 1 MonsterTable $094: Mommonja
     dw $0095 ; MonsterTable $095: Drygon
     dw $0094 ; MonsterTable $094: Mommonja
-Data_00C_78C9:: ; heuristic: grid encounter; C0
+GridEncounters1_02:: ; heuristic: grid encounter; C0
+Data_00C_78C9:: ; address name
     dw $0096 ; id 2 MonsterTable $096: HerbMan
     dw $0097 ; MonsterTable $097: DanceVegi
     dw $0098 ; MonsterTable $098: MudDoll
@@ -8399,8 +8453,8 @@ Data_00C_78C9:: ; heuristic: grid encounter; C0
 GridEncounterList2::
 Data_00C_78CF:: ; address name
     dw GridEncounters2 ; id 0
-    dw Data_00C_78DB ; id 1
-    dw Data_00C_78E1 ; id 2
+    dw GridEncounters2_01 ; id 1
+    dw GridEncounters2_02 ; id 2
 
 ; E-0236 (C1: the three records of GridEncounterList2).
 ; record: three encounter words copied to wEncounterMonsters
@@ -8409,11 +8463,13 @@ Data_00C_78D5:: ; address name
     dw $0099 ; id 0 MonsterTable $099: Shadow
     dw $009A ; MonsterTable $09A: MadCondor
     dw $009B ; MonsterTable $09B: CloudKing
-Data_00C_78DB:: ; heuristic: grid encounter; C0
+GridEncounters2_01:: ; heuristic: grid encounter; C0
+Data_00C_78DB:: ; address name
     dw $009C ; id 1 MonsterTable $09C: Octoreach
     dw $009D ; MonsterTable $09D: Octogon
     dw $009E ; MonsterTable $09E: KingSquid
-Data_00C_78E1:: ; heuristic: grid encounter; C0
+GridEncounters2_02:: ; heuristic: grid encounter; C0
+Data_00C_78E1:: ; address name
     dw $009F ; id 2 MonsterTable $09F: MistyWing
     dw $00A0 ; MonsterTable $0A0: Copycat
     dw $00A1 ; MonsterTable $0A1: NiteWhip
@@ -8423,8 +8479,8 @@ Data_00C_78E1:: ; heuristic: grid encounter; C0
 GridEncounterList3::
 Data_00C_78E7:: ; address name
     dw GridEncounters3 ; id 0
-    dw Data_00C_78F3 ; id 1
-    dw Data_00C_78F9 ; id 2
+    dw GridEncounters3_01 ; id 1
+    dw GridEncounters3_02 ; id 2
 
 ; E-0236 (C1: the three records of GridEncounterList3).
 ; record: three encounter words copied to wEncounterMonsters
@@ -8433,11 +8489,13 @@ Data_00C_78ED:: ; address name
     dw $00A2 ; id 0 MonsterTable $0A2: Goopi
     dw $00A3 ; MonsterTable $0A3: Servant
     dw $00A2 ; MonsterTable $0A2: Goopi
-Data_00C_78F3:: ; heuristic: grid encounter; C0
+GridEncounters3_01:: ; heuristic: grid encounter; C0
+Data_00C_78F3:: ; address name
     dw $00A4 ; id 1 MonsterTable $0A4: ArmyCrab
     dw $00A5 ; MonsterTable $0A5: DarkCrab
     dw $00A4 ; MonsterTable $0A4: ArmyCrab
-Data_00C_78F9:: ; heuristic: grid encounter; C0
+GridEncounters3_02:: ; heuristic: grid encounter; C0
+Data_00C_78F9:: ; address name
     dw $00A6 ; id 2 MonsterTable $0A6: Orochi
     dw $00A7 ; MonsterTable $0A7: Serpentia
     dw $00A8 ; MonsterTable $0A8: GigaDraco

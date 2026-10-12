@@ -1372,7 +1372,7 @@ Jump_00E_5862::
 Jump_00E_58BB::
     push hl
     ld a, c
-    ld hl, Data_00E_6200
+    ld hl, ComputeBreedingChild_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -1380,7 +1380,7 @@ Jump_00E_58BB::
     add_a_to_hl
     push de
     ld a, c
-    ld de, Data_00E_6200
+    ld de, ComputeBreedingChild_Data
     add a, e
     ld e, a
     jr nc, Jump_00E_58D7
@@ -1586,7 +1586,7 @@ Func_00E_59E1:: ; address name
     push hl
     ld a, c
     add a, a
-    ld hl, Data_00E_5A6B
+    ld hl, AdjustStatForWCA2AAndWCACF_Data_5A6B
     add_a_to_hl
     push de
     ld e, [hl]
@@ -1618,7 +1618,7 @@ Jump_00E_5A05::
 
 Jump_00E_5A12::
     ld a, b
-    ld hl, Data_00E_5A8E
+    ld hl, AdjustStatForWCA2AAndWCACF_Data_5A8E
     add_a_to_hl
     ld a, [hl]
     ld b, a
@@ -1640,7 +1640,7 @@ Jump_00E_5A25::
     push de
     ld a, c
     add a, a
-    ld de, Data_00E_5A6B
+    ld de, AdjustStatForWCA2AAndWCACF_Data_5A6B
     add a, e
     ld e, a
     jr nc, Jump_00E_5A36
@@ -1679,7 +1679,7 @@ Jump_00E_5A4A::
 
 Jump_00E_5A57::
     ld a, b
-    ld de, Data_00E_5A8E
+    ld de, AdjustStatForWCA2AAndWCACF_Data_5A8E
     add a, e
     ld e, a
     jr nc, Jump_00E_5A60
@@ -1700,36 +1700,44 @@ Jump_00E_5A69::
     ret
 
 ; address loaded by AdjustStatForWCA2AAndWCACF
-Data_00E_5A6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00E_5A7B
-    dw Data_00E_5A7B
-    dw Data_00E_5A7E
-    dw Data_00E_5A7E
-    dw Data_00E_5A81
-    dw Data_00E_5A84
-    dw Data_00E_5A88
-    dw Data_00E_5A8B
+AdjustStatForWCA2AAndWCACF_Data_5A6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5A6B:: ; address name
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry04
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry05
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry06
+    dw AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry07
 
-Data_00E_5A7B:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A7B:: ; address name
     db $01, $02, $FF
 
-Data_00E_5A7E:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A7E:: ; address name
     db $03, $04, $FF
 
-Data_00E_5A81:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A81:: ; address name
     db $05, $06, $FF
 
-Data_00E_5A84:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A84:: ; address name
     db $07, $08, $14, $FF
 
-Data_00E_5A88:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A88:: ; address name
     db $09, $0A, $FF
 
-Data_00E_5A8B:: ; heuristic: target of a monotone pointer table; C0
+AdjustStatForWCA2AAndWCACF_Data_5A6B_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_00E_5A8B:: ; address name
     db $0B, $0C, $FF
 
 ; address loaded by AdjustStatForWCA2AAndWCACF
-Data_00E_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AdjustStatForWCA2AAndWCACF_Data_5A8E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5A8E:: ; address name
     db $00, $1E, $50, $1E, $50, $0A, $32, $0A, $32, $0A, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
@@ -2264,7 +2272,7 @@ Jump_00E_5DDB::
     cp a, $1C
     jr nc, Jump_00E_5DFF
     dec a
-    ld hl, Data_00E_5E02
+    ld hl, SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data
     add_a_to_hl
     ld a, [hl]
     cp a, c
@@ -2279,7 +2287,8 @@ Jump_00E_5DFF::
     jr Jump_00E_5DD9
 
 ; address loaded by SumFunc5DCDOfWC9F9AndWCA9E_Sub01
-Data_00E_5E02:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5E02:: ; address name
     db $00, $01, $02, $03, $04, $05, $06, $0E, $0F, $07, $10, $11, $12, $13, $14, $08
     db $09, $0A, $0B, $15, $16, $17, $18, $19, $1A, $0C, $0D
 
@@ -2305,11 +2314,11 @@ Func_00E_5E2D:: ; address name
     and a, $10
     and a, a
     jr nz, Jump_00E_5E3B
-    ld de, Data_00E_5E61
+    ld de, CopySixBytesByWCADDBit4Table_Data_5E61
     jr Jump_00E_5E3E
 
 Jump_00E_5E3B::
-    ld de, Data_00E_5E6D
+    ld de, CopySixBytesByWCADDBit4Table_Data_5E6D
 
 Jump_00E_5E3E::
     ld c, $00
@@ -2325,7 +2334,7 @@ Jump_00E_5E42::
     push hl
     ld a, c
     add a, a
-    ld hl, Data_00E_5E79
+    ld hl, CopySixBytesByWCADDBit4Table_Data_5E79
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2342,15 +2351,18 @@ Jump_00E_5E42::
     ret
 
 ; address loaded by CopySixBytesByWCADDBit4Table
-Data_00E_5E61:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopySixBytesByWCADDBit4Table_Data_5E61:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5E61:: ; address name
     db $91, $C9, $92, $C9, $36, $CA, $37, $CA, $F3, $C9, $98, $CA
 
 ; address loaded by CopySixBytesByWCADDBit4Table
-Data_00E_5E6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopySixBytesByWCADDBit4Table_Data_5E6D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5E6D:: ; address name
     db $36, $CA, $37, $CA, $91, $C9, $92, $C9, $98, $CA, $F3, $C9
 
 ; address loaded by CopySixBytesByWCADDBit4Table
-Data_00E_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopySixBytesByWCADDBit4Table_Data_5E79:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5E79:: ; address name
     db $EA, $CA, $EB, $CA, $EC, $CA, $ED, $CA, $68, $CB, $73, $CB
 
 ; copies the 10-byte player name wC60C to wCADF (E-0122)
@@ -2379,11 +2391,11 @@ Func_00E_5E94:: ; address name
     and a, $10
     and a, a
     jr nz, Jump_00E_5EA2
-    ld de, Data_00E_5ED0
+    ld de, CopyFourNamesByWCADDBit4Table_Data_5ED0
     jr Jump_00E_5EA5
 
 Jump_00E_5EA2::
-    ld de, Data_00E_5ED8
+    ld de, CopyFourNamesByWCADDBit4Table_Data_5ED8
 
 Jump_00E_5EA5::
     ld c, $00
@@ -2397,7 +2409,7 @@ Jump_00E_5EA9::
     ld a, [de]
     ld h, a
     push hl
-    ld hl, Data_00E_5EE0
+    ld hl, CopyFourNamesByWCADDBit4Table_Data_5EE0
     ld a, c
     add a, a
     add_a_to_hl
@@ -2424,15 +2436,18 @@ Jump_00E_5EC1::
     ret
 
 ; address loaded by CopyFourNamesByWCADDBit4Table
-Data_00E_5ED0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyFourNamesByWCADDBit4Table_Data_5ED0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5ED0:: ; address name
     db $87, $C9, $2C, $CA, $95, $C9, $3A, $CA
 
 ; address loaded by CopyFourNamesByWCADDBit4Table
-Data_00E_5ED8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyFourNamesByWCADDBit4Table_Data_5ED8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5ED8:: ; address name
     db $2C, $CA, $87, $C9, $3A, $CA, $95, $C9
 
 ; address loaded by CopyFourNamesByWCADDBit4Table
-Data_00E_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyFourNamesByWCADDBit4Table_Data_5EE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5EE0:: ; address name
     db $5E, $CB, $69, $CB, $EE, $CA, $F9, $CA
 
 ; computes a bonus from personality compatibility, matching parent fields and wD7F1, and adds it to the child stats at wCAD0 (offsets Data_00E_5F89) (E-0130)
@@ -2497,7 +2512,7 @@ Jump_00E_5F31::
     and a, a
     ret z
     ld b, $08
-    ld de, Data_00E_5F89
+    ld de, ApplyBreedingBonusToChildStats_Data
 
 Jump_00E_5F39::
     push de
@@ -2567,7 +2582,8 @@ Jump_00E_5F7C::
     ret
 
 ; address loaded by ApplyBreedingBonusToChildStats
-Data_00E_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ApplyBreedingBonusToChildStats_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_5F89:: ; address name
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
@@ -2603,7 +2619,7 @@ Func_00E_5F91:: ; address name
     add hl, de
     ld a, b
     and a, $03
-    ld de, Data_00E_6117
+    ld de, PersonalityPairValueToArg5_Data
     add a, e
     ld e, a
     jr nc, Jump_00E_5FCB
@@ -2732,7 +2748,8 @@ Data_00E_603F:: ; address name
     db $8A, $AA, $AA, $8A, $AA, $A2, $0B, $FF ; id 26
 
 ; address loaded by PersonalityPairValueToArg5
-Data_00E_6117:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PersonalityPairValueToArg5_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_6117:: ; address name
     db $C0, $30, $0C, $03
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
@@ -2885,7 +2902,7 @@ Func_00E_61C1:: ; address name
     and a, a
     jr z, Jump_00E_61F4
     and a, $03
-    ld hl, Data_00E_61FC
+    ld hl, RollWCADEFromSpeciesFlag_Data
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2909,11 +2926,13 @@ Jump_00E_61F6::
     ret
 
 ; address loaded by RollWCADEFromSpeciesFlag
-Data_00E_61FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RollWCADEFromSpeciesFlag_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_61FC:: ; address name
     db $00, $0A, $32, $5A
 
 ; address loaded by ComputeBreedingChild
-Data_00E_6200:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ComputeBreedingChild_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00E_6200:: ; address name
     db $5D, $5D, $61, $61, $63, $65, $67, $69
 
 ; E-0199 (C1: ComputeBreedingChild stage 1 reads the word at $6208 + 2 * parent A's species (record +$B) and walks the list's words: a species equal to parent B's matches; $FDxx moves to the next result; $FExx / $FCxx match when parent B / parent A has + (record +$6D) of at least xx and both parents are the same species; $FBxx moves on only when wArg1 = 2; $FFxx ends the list; a match takes result [count of moves] from BreedSpeciesResultTable)

@@ -1989,7 +1989,7 @@ Func_010_4AD0:: ; address name
     ld c, a
     sla a
     add a, c
-    ld de, Data_010_4AFF
+    ld de, ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Data
     add a, e
     ld e, a
     jr nc, Jump_010_4AE8
@@ -2016,7 +2016,8 @@ Jump_010_4AE8::
     ret
 
 ; address loaded by ScriptCommand09_Case01_WriteStringIndexAndStringCategory
-Data_010_4AFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_010_4AFF:: ; address name
     db $01, $40, $F0, $01, $40, $F0, $0E, $52, $1F, $01, $40, $1D, $86, $4C, $1B, $D0
     db $43, $F2, $01, $40, $0D, $01, $40, $0E, $01, $40, $0B, $90, $64, $33, $10, $5D
     db $24

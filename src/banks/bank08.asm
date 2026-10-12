@@ -49,10 +49,12 @@ Data_008_4032:: ; address name
     dw StringList_08_4044 ; id 0
     dw StringList_08_4242 ; id 1
     dw StringList_08_4258 ; id 2
-Data_008_4038:: ; heuristic: argument of a bank-switching copy helper; C0
+CopyNameStringFromBank08Database_Data_4038:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_008_4038:: ; address name
     dw StringList_08_4458 ; id 3
     dw StringList_08_4558 ; id 4
-Data_008_403C:: ; heuristic: argument of a bank-switching copy helper; C0
+ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB_Data:: ; heuristic: argument of a bank-switching copy helper; C0
+Data_008_403C:: ; address name
     dw StringList_08_4716 ; id 5
     dw StringList_08_47F6 ; id 6
     dw StringList_08_48D6 ; id 7

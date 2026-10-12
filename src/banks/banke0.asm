@@ -2071,37 +2071,45 @@ Func_0E0_4F86:: ; address name
     ld a, $E0
     call CopyRectFromBankToVRAM
     ret
-    dw Data_0E0_4FAE
-    dw Data_0E0_4FB2
-    dw Data_0E0_4FB6
-    dw Data_0E0_4FBA
-    dw Data_0E0_4FBE
-    dw Data_0E0_4FC2
-    dw Data_0E0_4FC6
-    dw Data_0E0_4FCA
+    dw PointerRun_E0_4F9E_Entry00
+    dw PointerRun_E0_4F9E_Entry01
+    dw PointerRun_E0_4F9E_Entry02
+    dw PointerRun_E0_4F9E_Entry03
+    dw PointerRun_E0_4F9E_Entry04
+    dw PointerRun_E0_4F9E_Entry05
+    dw PointerRun_E0_4F9E_Entry06
+    dw PointerRun_E0_4F9E_Entry07
 
-Data_0E0_4FAE:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FAE:: ; address name
     db $F5, $F6, $F7, $E0
 
-Data_0E0_4FB2:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FB2:: ; address name
     db $F5, $F6, $F7, $E1
 
-Data_0E0_4FB6:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FB6:: ; address name
     db $F5, $F6, $F7, $E2
 
-Data_0E0_4FBA:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FBA:: ; address name
     db $F5, $F6, $F7, $E3
 
-Data_0E0_4FBE:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FBE:: ; address name
     db $F8, $F9, $E0, $C3
 
-Data_0E0_4FC2:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FC2:: ; address name
     db $F8, $F9, $E1, $C3
 
-Data_0E0_4FC6:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FC6:: ; address name
     db $F8, $F9, $E2, $C3
 
-Data_0E0_4FCA:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_4F9E_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_4FCA:: ; address name
     db $F8, $F9, $E3, $C3
 
 ; DrawSkillRecordByte0DigitsForDebugValue0, Func_0E0_502B, then far-calls Func_03A_53B9 (E-0122)
@@ -3077,37 +3085,45 @@ Jump_0E0_59F4::
     call WriteVRAMByteInc
     ei
     ret
-    dw Data_0E0_5A15
-    dw Data_0E0_5A19
-    dw Data_0E0_5A1D
-    dw Data_0E0_5A21
-    dw Data_0E0_5A25
-    dw Data_0E0_5A29
-    dw Data_0E0_5A2D
-    dw Data_0E0_5A31
+    dw PointerRun_E0_5A05_Entry00
+    dw PointerRun_E0_5A05_Entry01
+    dw PointerRun_E0_5A05_Entry02
+    dw PointerRun_E0_5A05_Entry03
+    dw PointerRun_E0_5A05_Entry04
+    dw PointerRun_E0_5A05_Entry05
+    dw PointerRun_E0_5A05_Entry06
+    dw PointerRun_E0_5A05_Entry07
 
-Data_0E0_5A15:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A15:: ; address name
     db $80, $81, $82, $01
 
-Data_0E0_5A19:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A19:: ; address name
     db $80, $81, $82, $02
 
-Data_0E0_5A1D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A1D:: ; address name
     db $80, $81, $82, $03
 
-Data_0E0_5A21:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A21:: ; address name
     db $80, $81, $82, $04
 
-Data_0E0_5A25:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A25:: ; address name
     db $83, $84, $01, $C3
 
-Data_0E0_5A29:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A29:: ; address name
     db $83, $84, $02, $C3
 
-Data_0E0_5A2D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A2D:: ; address name
     db $83, $84, $03, $C3
 
-Data_0E0_5A31:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_E0_5A05_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_0E0_5A31:: ; address name
     db $83, $84, $04, $C3
 
 ; only called from RunDebugState_E0_Case0D_Case05 (E-0047)

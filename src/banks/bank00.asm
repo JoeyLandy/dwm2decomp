@@ -6323,7 +6323,7 @@ Jump_000_22A5::
     ld [bc], a
     inc bc
     ld [bc], a
-    ld de, Data_07E_545E
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_Data
     ld b, $7E
     ldh a, [hTemp2]
     ld l, a

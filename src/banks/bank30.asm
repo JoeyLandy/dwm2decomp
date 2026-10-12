@@ -840,12 +840,13 @@ Func_030_450B:: ; address name
     call GetActorSlotTacticLow2
     cp a, $03
     ret z
-    ld hl, Data_030_4519
+    ld hl, RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data
     call ReadBattleWordFromArray_Bank30
     jr Jump_030_451F
 
 ; address loaded by RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2
-Data_030_4519:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_4519:: ; address name
     db $68, $D9, $70, $D9, $78, $D9
 
 Jump_030_451F::
@@ -4018,123 +4019,123 @@ Data_030_5785:: ; address name
     dfar AIScore_EerieLite ; id 128
     dfar AIScore_Surge ; id 129
     dfar AIScore_UltraDown ; id 130
-    dw Data_030_5D83
+    dw PointerRun_30_590E_Entry00
     db $E2
-    dw Data_030_5DBC
+    dw PointerRun_30_5911_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5E46
+    dw PointerRun_30_5920_Entry00
     db $E2
-    dw Data_030_5E83
+    dw PointerRun_30_5923_Entry00
     db $E2
-    dw Data_030_5EC0
+    dw PointerRun_30_5926_Entry00
     db $E2
-    dw Data_030_5F0A
+    dw PointerRun_30_5929_Entry00
     db $E2
-    dw Data_030_5F94
+    dw PointerRun_30_592C_Entry00
     db $E2
-    dw Data_030_5F94
+    dw PointerRun_30_592C_Entry00
     db $E2
-    dw Data_030_5FE8
+    dw PointerRun_30_5932_Entry00
     db $E2
-    dw Data_030_5FE8
+    dw PointerRun_30_5932_Entry00
     db $E2
-    dw Data_030_6044
+    dw PointerRun_30_5938_Entry00
     db $E2
-    dw Data_030_6089
+    dw PointerRun_30_593B_Entry00
     db $E2
-    dw Data_030_60A6
+    dw PointerRun_30_593E_Entry00
     db $E2
-    dw Data_030_60D7
+    dw PointerRun_30_5941_Entry00
     db $E2
-    dw Data_030_6112
+    dw PointerRun_30_5944_Entry00
     db $E2
-    dw Data_030_6139
+    dw PointerRun_30_5947_Entry00
     db $E2
-    dw Data_030_6160
+    dw PointerRun_30_594A_Entry00
     db $E2
-    dw Data_030_6160
+    dw PointerRun_30_594A_Entry00
     db $E2
-    dw Data_030_618D
+    dw PointerRun_30_5950_Entry00
     db $E2
-    dw Data_030_61C2
+    dw PointerRun_30_5953_Entry00
     db $E2
-    dw Data_030_61CD
+    dw PointerRun_30_5956_Entry00
     db $E2
-    dw Data_030_61E0
+    dw PointerRun_30_5959_Entry00
     db $E2
-    dw Data_030_6249
+    dw PointerRun_30_595C_Entry00
     db $E2
-    dw Data_030_62A4
+    dw PointerRun_30_595F_Entry00
     db $E2
-    dw Data_030_6303
+    dw PointerRun_30_5962_Entry00
     db $E2
-    dw Data_030_6350
+    dw PointerRun_30_5965_Entry00
     db $E2
-    dw Data_030_6387
+    dw PointerRun_30_5968_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_6401
+    dw PointerRun_30_5983_Entry00
     db $E2
-    dw Data_030_641E
+    dw PointerRun_30_5986_Entry00
     db $E2
-    dw Data_030_6425
+    dw PointerRun_30_5989_Entry00
     db $E2
-    dw Data_030_6473
+    dw PointerRun_30_598C_Entry00
     db $E2
-    dw Data_030_648D
+    dw PointerRun_30_598F_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2, $FA, $63, $E2, $FA, $63, $E2, $BF, $64, $E2, $BF, $64, $E2, $FA, $63, $E2
     db $FA, $63, $E2, $BF, $64, $E2, $BF, $64, $E2, $01, $64, $E2, $1E, $64, $E2, $BF
     db $64, $E2, $BF, $64, $E2
-    dw Data_030_648D
+    dw PointerRun_30_598F_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C1
+    dw PointerRun_30_59DD_Entry00
     db $E2
 
 ; E-0174 (C1: UseAIScoreTableB stores this table's address in wBattleExpAward / +1 (the AI's routine-table pointer) and ScoreSkillForAI far-calls entry 3 * skill; all 131 entries point at named AIScore_* routines).
@@ -4272,123 +4273,123 @@ Data_030_59E0:: ; address name
     dfar AIScore_EerieLite ; id 128
     dfar AIScore_Surge ; id 129
     dfar AIScore_UltraDown ; id 130
-    dw Data_030_5D83
+    dw PointerRun_30_590E_Entry00
     db $E2
-    dw Data_030_5DBC
+    dw PointerRun_30_5911_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5DED
+    dw PointerRun_30_5914_Entry00
     db $E2
-    dw Data_030_5E46
+    dw PointerRun_30_5920_Entry00
     db $E2
-    dw Data_030_5E83
+    dw PointerRun_30_5923_Entry00
     db $E2
-    dw Data_030_5EC0
+    dw PointerRun_30_5926_Entry00
     db $E2
-    dw Data_030_5F0A
+    dw PointerRun_30_5929_Entry00
     db $E2
-    dw Data_030_5F94
+    dw PointerRun_30_592C_Entry00
     db $E2
-    dw Data_030_5F94
+    dw PointerRun_30_592C_Entry00
     db $E2
-    dw Data_030_5FE8
+    dw PointerRun_30_5932_Entry00
     db $E2
-    dw Data_030_5FE8
+    dw PointerRun_30_5932_Entry00
     db $E2
-    dw Data_030_6044
+    dw PointerRun_30_5938_Entry00
     db $E2
-    dw Data_030_6089
+    dw PointerRun_30_593B_Entry00
     db $E2
-    dw Data_030_60A6
+    dw PointerRun_30_593E_Entry00
     db $E2
-    dw Data_030_60D7
+    dw PointerRun_30_5941_Entry00
     db $E2
-    dw Data_030_6112
+    dw PointerRun_30_5944_Entry00
     db $E2
-    dw Data_030_6139
+    dw PointerRun_30_5947_Entry00
     db $E2
-    dw Data_030_6160
+    dw PointerRun_30_594A_Entry00
     db $E2
-    dw Data_030_6160
+    dw PointerRun_30_594A_Entry00
     db $E2
-    dw Data_030_618D
+    dw PointerRun_30_5950_Entry00
     db $E2
-    dw Data_030_61C2
+    dw PointerRun_30_5953_Entry00
     db $E2
-    dw Data_030_61CD
+    dw PointerRun_30_5956_Entry00
     db $E2
-    dw Data_030_61E0
+    dw PointerRun_30_5959_Entry00
     db $E2
-    dw Data_030_6249
+    dw PointerRun_30_595C_Entry00
     db $E2
-    dw Data_030_62A4
+    dw PointerRun_30_595F_Entry00
     db $E2
-    dw Data_030_6303
+    dw PointerRun_30_5962_Entry00
     db $E2
-    dw Data_030_6350
+    dw PointerRun_30_5965_Entry00
     db $E2
-    dw Data_030_6387
+    dw PointerRun_30_5968_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_63FA
+    dw PointerRun_30_596B_Entry00
     db $E2
-    dw Data_030_6401
+    dw PointerRun_30_5983_Entry00
     db $E2
-    dw Data_030_641E
+    dw PointerRun_30_5986_Entry00
     db $E2
-    dw Data_030_6425
+    dw PointerRun_30_5989_Entry00
     db $E2
-    dw Data_030_6473
+    dw PointerRun_30_598C_Entry00
     db $E2
-    dw Data_030_648D
+    dw PointerRun_30_598F_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2, $FA, $63, $E2, $FA, $63, $E2, $BF, $64, $E2, $BF, $64, $E2, $FA, $63, $E2
     db $FA, $63, $E2, $BF, $64, $E2, $BF, $64, $E2, $01, $64, $E2, $1E, $64, $E2, $BF
     db $64, $E2, $BF, $64, $E2
-    dw Data_030_648D
+    dw PointerRun_30_598F_Entry00
     db $E2
-    dw Data_030_64BF
+    dw PointerRun_30_5992_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C0
+    dw PointerRun_30_59C5_Entry00
     db $E2
-    dw Data_030_64C1
+    dw PointerRun_30_59DD_Entry00
     db $E2
 
 ; HL = wBattleATK, then ReadBattleWordFromArray_Bank30 (E-0122)
@@ -4496,7 +4497,7 @@ Jump_030_5CA9::
 ClearBattleStatusBitsWithMaskD_Bank30:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_030_5CAF:: ; address name
     ld a, d
-    ld hl, Data_030_5CC4
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank30_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -4508,7 +4509,8 @@ Func_030_5CAF:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_Bank30
-Data_030_5CC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_Bank30_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_030_5CC4:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
@@ -4655,104 +4657,138 @@ Jump_030_5D77::
     ret
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_030_5D83:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_590E_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5D83:: ; address name
     ds $39, $00
 
-Data_030_5DBC:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5911_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5DBC:: ; address name
     ds $31, $00
 
-Data_030_5DED:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5914_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5DED:: ; address name
     ds $59, $00
 
-Data_030_5E46:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5920_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5E46:: ; address name
     ds $3D, $00
 
-Data_030_5E83:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5923_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5E83:: ; address name
     ds $3D, $00
 
-Data_030_5EC0:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5926_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5EC0:: ; address name
     ds $4A, $00
 
-Data_030_5F0A:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5929_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5F0A:: ; address name
     ds $8A, $00
 
-Data_030_5F94:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_592C_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5F94:: ; address name
     ds $54, $00
 
-Data_030_5FE8:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5932_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_5FE8:: ; address name
     ds $5C, $00
 
-Data_030_6044:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5938_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6044:: ; address name
     ds $45, $00
 
-Data_030_6089:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_593B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6089:: ; address name
     ds $1D, $00
 
-Data_030_60A6:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_593E_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_60A6:: ; address name
     ds $31, $00
 
-Data_030_60D7:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5941_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_60D7:: ; address name
     ds $3B, $00
 
-Data_030_6112:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5944_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6112:: ; address name
     ds $27, $00
 
-Data_030_6139:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5947_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6139:: ; address name
     ds $27, $00
 
-Data_030_6160:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_594A_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6160:: ; address name
     ds $2D, $00
 
-Data_030_618D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5950_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_618D:: ; address name
     ds $35, $00
 
-Data_030_61C2:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5953_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_61C2:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_030_61CD:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5956_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_61CD:: ; address name
     ds $13, $00
 
-Data_030_61E0:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5959_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_61E0:: ; address name
     ds $69, $00
 
-Data_030_6249:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_595C_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6249:: ; address name
     ds $5B, $00
 
-Data_030_62A4:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_595F_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_62A4:: ; address name
     ds $5F, $00
 
-Data_030_6303:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5962_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6303:: ; address name
     ds $4D, $00
 
-Data_030_6350:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5965_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6350:: ; address name
     ds $37, $00
 
-Data_030_6387:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5968_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6387:: ; address name
     ds $73, $00
 
-Data_030_63FA:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_596B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_63FA:: ; address name
     db $00, $00, $00, $00, $00, $00, $00
 
-Data_030_6401:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5983_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6401:: ; address name
     ds $1D, $00
 
-Data_030_641E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5986_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_641E:: ; address name
     db $00, $00, $00, $00, $00, $00, $00
 
-Data_030_6425:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5989_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6425:: ; address name
     ds $4E, $00
 
-Data_030_6473:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_598C_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_6473:: ; address name
     ds $1A, $00
 
-Data_030_648D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_598F_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_648D:: ; address name
     ds $32, $00
 
-Data_030_64BF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_5992_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_64BF:: ; address name
     db $00
 
-Data_030_64C0:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_59C5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_64C0:: ; address name
     db $00
 
-Data_030_64C1:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_30_59DD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_030_64C1:: ; address name
     ds $1B3F, $00

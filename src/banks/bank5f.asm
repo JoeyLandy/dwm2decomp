@@ -857,7 +857,7 @@ Func_05F_6BCD:: ; address name
     ld d, a
     ld a, [wScriptParam0]
     srl a
-    ld hl, Data_05F_6BE8
+    ld hl, AddStepDeltaToPointedByte_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -867,7 +867,8 @@ Func_05F_6BCD:: ; address name
     ret
 
 ; address loaded by AddStepDeltaToPointedByte
-Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AddStepDeltaToPointedByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_6BE8:: ; address name
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
@@ -1158,7 +1159,7 @@ Func_05F_6D78:: ; address name
     ret z
     ld a, [wFarmLevel]
     and a, $03
-    ld hl, Data_05F_6DA8
+    ld hl, ClearArg5IfAtOrAboveLimitForFarmLevel_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -1170,7 +1171,8 @@ Func_05F_6D78:: ; address name
     ret
 
 ; address loaded by ClearArg5IfAtOrAboveLimitForFarmLevel
-Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearArg5IfAtOrAboveLimitForFarmLevel_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_6DA8:: ; address name
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
@@ -1555,7 +1557,7 @@ Jump_05F_6F8C::
     ld a, $1F
     sub a, c
     sla a
-    ld hl, Data_05F_7092
+    ld hl, SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data
     add_a_to_hl
     ld a, [hl+]
     ld c, a
@@ -1658,7 +1660,7 @@ Jump_05F_7032::
     dec [hl]
 
 Jump_05F_703D::
-    ld hl, Data_05F_7092
+    ld hl, SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data
     call ScriptStepMoveTwoObjectsByTable
     ret
 
@@ -1710,7 +1712,8 @@ Jump_05F_708D::
     ret
 
 ; address loaded by SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc, SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable
-Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_7092:: ; address name
     db $FE, $00, $FF, $00, $FE, $FF, $FF, $FF, $FF, $FF, $FF, $FE, $00, $FF, $00, $FE
     db $00, $FE, $00, $FF, $01, $FE, $01, $FF, $01, $FF, $02, $FF, $01, $00, $02, $00
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
@@ -1952,7 +1955,7 @@ Jump_05F_721B::
     ld c, a
     ld a, [hl]
     sub a, c
-    ld de, Data_05F_7240
+    ld de, RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data
     add a, e
     ld e, a
     jr nc, Jump_05F_722A
@@ -1977,7 +1980,8 @@ Jump_05F_7231::
     ret
 
 ; address loaded by RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
-Data_05F_7240:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_7240:: ; address name
     ds $11, $00
     db $01, $05, $08, $0A, $0C, $0D, $0E, $0E, $0F, $0F, $10, $10, $10, $11, $11, $11
     db $11, $10, $10, $10, $0F, $0F, $0E, $0E, $0D, $0C, $0A, $08, $05, $01
@@ -2771,7 +2775,7 @@ Jump_05F_774C::
 StartMessageFromTable7787::
 Func_05F_7761:: ; address name
     sla a
-    ld de, Data_05F_7787
+    ld de, StartMessageFromTable7787_Data
     add a, e
     ld e, a
     jr nc, Jump_05F_776B
@@ -2800,7 +2804,8 @@ Jump_05F_7775::
     ret
 
 ; address loaded by StartMessageFromTable7787
-Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StartMessageFromTable7787_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_7787:: ; address name
     db $26, $01, $27, $01, $28, $01, $29, $01, $2A, $01, $00, $00, $00, $00, $00, $00
     db $A8, $02, $A9, $02, $AA, $02, $AB, $02, $AC, $02, $00, $00, $00, $00, $00, $00
     db $A8, $02, $E9, $02, $AA, $02, $AB, $02, $EC, $02, $00, $00, $00, $00, $00, $00
@@ -3083,7 +3088,7 @@ Jump_05F_7927::
 Jump_05F_7933::
     ld a, [wScriptParam0]
     srl a
-    ld hl, Data_05F_7959
+    ld hl, ScriptSlideObjectY_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -3102,7 +3107,8 @@ Jump_05F_7933::
     ret
 
 ; address loaded by ScriptSlideObjectY
-Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ScriptSlideObjectY_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_05F_7959:: ; address name
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; implements script command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest with a Magic Key), wScriptParam1 = item, wMessageIndex/Group = story flag. If the flag is set it shows group-0 message $A1 + 3 * kind (empty); otherwise it adds the item (or a key entry for kind 3) and sets the flag, showing $A0 + 3 * kind, or $A2 + 3 * kind when there is no room (E-0038, E-0269)

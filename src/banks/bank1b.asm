@@ -524,7 +524,7 @@ Jump_01B_43CC::
 SendLinkByteForMenuOption_Bank1B:: ; heuristic: follows a terminator; C0
 Func_01B_43CF:: ; address name
     ld a, [wMenuOption]
-    ld de, Data_01B_43E1
+    ld de, SendLinkByteForMenuOption_Bank1B_Data
     and a, $0F
     add a, e
     ld e, a
@@ -537,7 +537,8 @@ Jump_01B_43DC::
     ret
 
 ; address loaded by SendLinkByteForMenuOption_Bank1B
-Data_01B_43E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SendLinkByteForMenuOption_Bank1B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_43E1:: ; address name
     db $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3
 
 ; entry 1 of the `rst $00` table in RunLinkSession
@@ -2053,7 +2054,7 @@ Func_01B_53AF:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld de, Data_01B_53C6
+    ld de, LoadPalette0FromData53C6_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
@@ -2062,7 +2063,8 @@ Func_01B_53AF:: ; address name
     ret
 
 ; address loaded by LoadPalette0FromData53C6
-Data_01B_53C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPalette0FromData53C6_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_53C6:: ; address name
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
 ; unless a fade is running, runs the routine for wD780 (jump table) (E-0122)
@@ -2371,7 +2373,7 @@ Jump_01B_5588:: ; address name
 Jump_01B_55D4::
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_01B_65DD
+    ld hl, RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
@@ -2411,7 +2413,7 @@ Jump_01B_5611:: ; address name
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_01B_65DD
+    ld hl, RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
     inc a
@@ -2478,7 +2480,7 @@ Jump_01B_5688::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_01B_65DD
+    ld hl, RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank1B
     ld hl, vTiles1
     ld a, l
@@ -2730,7 +2732,7 @@ Jump_01B_57F6:: ; address name
     and a, a
     ret nz
     ld c, $04
-    ld hl, Data_01B_65DD
+    ld hl, RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor_Data
     call EraseCEntriesOfWordTable_Bank1B
     ld a, $05
     ld [wScreenStep], a
@@ -2939,7 +2941,7 @@ Jump_01B_58F8:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld de, Data_01B_6607
+    ld de, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ld a, $02
     ld [wLinkSendByte], a
@@ -3398,7 +3400,7 @@ Jump_01B_5B3E:: ; address name
     ld hl, wWindowTileBuffer + $78
     ld bc, $0F01
     call CopyRectTo20ByteRows
-    ld de, Data_01B_64FB
+    ld de, RunScreenStateWhenNotFading_1B_Case01_BeginString_Bank1B_Cat0_Case12_Data
     ld hl, wWindowTileBuffer + $8C
     ld bc, $0F01
     call CopyRectTo20ByteRows
@@ -3498,7 +3500,7 @@ Jump_01B_5C06::
     jr z, Jump_01B_5BE5
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, Data_01B_65E5
+    ld hl, RunScreenStateWhenNotFading_1B_Case01_Case14_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
     inc a
@@ -3844,7 +3846,7 @@ Jump_01B_5E31::
 ; points at: wKeyList, wLinkPartnerName, wKeySeeds, wLinkExchangeBuffer
 RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21::
 Jump_01B_5E41:: ; address name
-    ld de, Data_01B_660A
+    ld de, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ld a, [wScreenStep]
     inc a
@@ -4446,7 +4448,7 @@ Jump_01B_61D7:: ; address name
     ret c
     xor a, a
     ld [wGlyphListStart], a
-    ld de, Data_01B_6607
+    ld de, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Data
     call DrawThreeTilesAtBGMap20FFromDE
     ret
 
@@ -4965,7 +4967,7 @@ Func_01B_645B:: ; address name
 Jump_01B_645D::
     ld a, [wTwoChoiceCursor]
     sla a
-    ld hl, Data_01B_647F
+    ld hl, UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -4984,7 +4986,8 @@ Jump_01B_645D::
     ret
 
 ; address loaded by UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap
-Data_01B_647F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_647F:: ; address name
     db $2D, $01, $6D, $01
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -4999,7 +5002,8 @@ Data_01B_6483:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
-Data_01B_64FB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_1B_Case01_BeginString_Bank1B_Cat0_Case12_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_64FB:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -5045,11 +5049,13 @@ Data_01B_65CE:: ; address name
     db $B6, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $C3, $B7 ; id 0
 
 ; address loaded by RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor, RunScreenStateWhenNotFading_1B_Case01_BGMapAddressAtScroll_Bank1B, RunScreenStateWhenNotFading_1B_Case01_WriteScreenStepAndLinkSendByteEtc, RunScreenStateWhenNotFading_1B_Case01_EraseCEntriesOfWordTable_Bank1B
-Data_01B_65DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_1B_Case01_ClampKeyListPageCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_65DD:: ; address name
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 
 ; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case14
-Data_01B_65E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_1B_Case01_Case14_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_65E5:: ; address name
     db $25, $C4, $4D, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -5063,11 +5069,13 @@ Data_01B_65E9:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE, RunScreenCounterStep_61A7_WriteTileBAtBGMap20FPlusGlyphListStart
-Data_01B_6607:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_6607:: ; address name
     db $BC, $BC, $BC
 
 ; address loaded by RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21
-Data_01B_660A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_660A:: ; address name
     db $A0, $A1, $A2
 
 ; only called from RunLinkSession4ScreenState_Case06 (E-0047)
@@ -5464,7 +5472,7 @@ Jump_01B_683D:: ; address name
     ret nz
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
@@ -5472,7 +5480,7 @@ Jump_01B_683D:: ; address name
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call SetDefaultStringWindow_Bank1B
     ld a, [wScreenStep]
@@ -5582,7 +5590,7 @@ Jump_01B_690D::
 Jump_01B_6918::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     call CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -5753,7 +5761,7 @@ Jump_01B_6A4F:: ; address name
     and a, a
     ret nz
     ld c, $05
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call EraseCEntriesOfWordTable_Bank1B
     jr Jump_01B_6A71
 
@@ -5764,11 +5772,11 @@ Jump_01B_6A4F:: ; address name
 EggServiceMenu_Bank1B_Case04_Case0A_EraseCEntriesOfWordTable_Bank1B::
 Func_01B_6A5E:: ; address name
     ld c, $05
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call EraseCEntriesOfWordTable_Bank1B
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
 
 Jump_01B_6A71::
@@ -6705,7 +6713,7 @@ Jump_01B_702D:: ; address name
     call CopyRectTo20ByteRows
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_01B_786F
+    ld hl, EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
     inc a
@@ -7599,7 +7607,7 @@ Jump_01B_755C::
     push bc
     ld a, c
     sla a
-    ld hl, Data_01B_75A8
+    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data_75A8
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7613,7 +7621,7 @@ Jump_01B_755C::
     ld a, [hl]
     ld b, a
     ld a, c
-    ld hl, Data_01B_75B0
+    ld hl, DrawPickedRecordsRecordNamesAndIcons_Data_75B0
     add_a_to_hl
     ld a, [hl]
     ld [wArg1], a
@@ -7631,11 +7639,13 @@ Jump_01B_75A7::
     ret
 
 ; address loaded by DrawPickedRecordsRecordNamesAndIcons
-Data_01B_75A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawPickedRecordsRecordNamesAndIcons_Data_75A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_75A8:: ; address name
     db $10, $91, $70, $91, $D0, $91, $30, $92
 
 ; address loaded by DrawPickedRecordsRecordNamesAndIcons
-Data_01B_75B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawPickedRecordsRecordNamesAndIcons_Data_75B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_75B0:: ; address name
     db $10, $16, $1C, $22
 
 ; with SRAM bank 0 enabled, copies the name of the record stored at WD789 cell 5 (CopyRecordNameToNameGlyphBuf, C = 1) and draws its glyphs at vTiles1 + $780 (E-0120)
@@ -7787,7 +7797,7 @@ Jump_01B_7688::
     ldh a, [hTemp0]
     and a, $0F
     sla a
-    ld de, Data_01B_7879
+    ld de, EggServiceMenu_Bank1B_WriteScreenStepAndRAMG2Etc_Data
     add a, e
     ld e, a
     jr nc, Jump_01B_76AC
@@ -7958,11 +7968,13 @@ Data_01B_7847:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_Case04_ShowStringA10_Bank1B, EggServiceMenu_Bank1B_Case04_EraseCEntriesOfWordTable_Bank1B, EggServiceMenu_Bank1B_Case04_Case0A_EraseCEntriesOfWordTable_Bank1B and 1 more
-Data_01B_786F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EggServiceMenu_Bank1B_Case04_SetDefaultStringWindow_Bank1B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_786F:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
 ; address loaded by EggServiceMenu_Bank1B_WriteScreenStepAndRAMG2Etc
-Data_01B_7879:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EggServiceMenu_Bank1B_WriteScreenStepAndRAMG2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01B_7879:: ; address name
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $80, $00
     db $40, $00, $20, $00, $10, $00
 

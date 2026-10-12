@@ -340,7 +340,8 @@ Data_04B_5E1C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $12DE1C, $41
 
 ; LZSS-compressed asset: 752 bytes expand to 770 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_04B_5E5D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Gfx_4B_5E5D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_04B_5E5D:: ; address name
     db $02, $03, $F0, $0F, $0D, $03, $9C, $04, $03, $90, $0F, $05, $03, $30, $08, $03
     db $3C, $1F, $05
 

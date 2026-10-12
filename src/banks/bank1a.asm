@@ -371,7 +371,8 @@ SkillRequirementTable::
 Data_01A_4FF8:: ; address name
     db $00 ; id 0
     dw 0, 0, 0, 0, 0, 0
-Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BattleEnd_Step3_Sub02_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_5005:: ; address name
     db $FF, $FF, $FF, $FF, $FF
     db $01 ; id 1
     dw 0, 7, 0, 0, 0, 36
@@ -1226,359 +1227,432 @@ Data_01A_5D89:: ; address name
     db $FF ; entry 74
 
 ; address loaded by AddSkillCToFreeSlotUnlessExcluded
-Data_01A_5D8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+AddSkillCToFreeSlotUnlessExcluded_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01A_5D8B:: ; address name
     db $DF, $5E
-    dw Data_01A_5EE0
+    dw PointerRun_1A_5D8D_Entry00
     db $5E, $5F, $5D, $5F
-    dw Data_01A_5EE1
+    dw PointerRun_1A_5D93_Entry00
     db $61, $5F, $60, $5F
-    dw Data_01A_5EE2
+    dw PointerRun_1A_5D99_Entry00
     db $64, $5F, $63, $5F
-    dw Data_01A_5EE3
+    dw PointerRun_1A_5D9F_Entry00
     db $67, $5F, $66, $5F
-    dw Data_01A_5EE4
+    dw PointerRun_1A_5DA5_Entry00
     db $6A, $5F, $69, $5F
-    dw Data_01A_5EE5
+    dw PointerRun_1A_5DAB_Entry00
     db $6D, $5F, $6C, $5F
-    dw Data_01A_5EE6
+    dw PointerRun_1A_5DB1_Entry00
     db $6F, $5F, $E7, $5E
-    dw Data_01A_5EE8
+    dw PointerRun_1A_5DB7_Entry00
     db $72, $5F, $71, $5F
-    dw Data_01A_5EE9
+    dw PointerRun_1A_5DBD_Entry00
     db $74, $5F, $EA, $5E
-    dw Data_01A_5F77
+    dw PointerRun_1A_5DC3_Entry00
     db $76, $5F, $EB, $5E
-    dw Data_01A_5F79
+    dw PointerRun_1A_5DC9_Entry00
     db $EC, $5E
-    dw Data_01A_5EED
+    dw PointerRun_1A_5DCD_Entry00
     db $EE, $5E
-    dw Data_01A_5EEF
+    dw PointerRun_1A_5DD1_Entry00
     db $F0, $5E
-    dw Data_01A_5EF1
+    dw PointerRun_1A_5DD5_Entry00
     db $7B, $5F
-    dw Data_01A_5EF2
+    dw PointerRun_1A_5DD9_Entry00
     db $7D, $5F
-    dw Data_01A_5EF3
+    dw PointerRun_1A_5DDD_Entry00
     db $7F, $5F
-    dw Data_01A_5EF4
+    dw PointerRun_1A_5DE1_Entry00
     db $81, $5F
-    dw Data_01A_5EF5
+    dw PointerRun_1A_5DE5_Entry00
     db $F6, $5E
-    dw Data_01A_5EF7
+    dw PointerRun_1A_5DE9_Entry00
     db $83, $5F
-    dw Data_01A_5EF8
+    dw PointerRun_1A_5DED_Entry00
     db $F9, $5E
-    dw Data_01A_5EFA
+    dw PointerRun_1A_5DF1_Entry00
     db $FB, $5E
-    dw Data_01A_5EFC
+    dw PointerRun_1A_5DF5_Entry00
     db $FD, $5E
-    dw Data_01A_5F85
-    dw Data_01A_5EFE
-    dw Data_01A_5EFF
-    dw Data_01A_5F00
-    dw Data_01A_5F01
-    dw Data_01A_5F02
-    dw Data_01A_5F03
-    dw Data_01A_5F04
-    dw Data_01A_5F05
-    dw Data_01A_5F06
-    dw Data_01A_5F89
+    dw PointerRun_1A_5DF9_Entry00
+    dw PointerRun_1A_5DF9_Entry01
+    dw PointerRun_1A_5DF9_Entry02
+    dw PointerRun_1A_5DF9_Entry03
+    dw PointerRun_1A_5DF9_Entry04
+    dw PointerRun_1A_5DF9_Entry05
+    dw PointerRun_1A_5DF9_Entry06
+    dw PointerRun_1A_5DF9_Entry07
+    dw PointerRun_1A_5DF9_Entry08
+    dw PointerRun_1A_5DF9_Entry09
+    dw PointerRun_1A_5DF9_Entry0A
     db $88, $5F, $87, $5F, $07, $5F, $8D, $5F, $8C, $5F, $8B, $5F
-    dw Data_01A_5F08
+    dw PointerRun_1A_5E1B_Entry00
     db $8F, $5F, $09, $5F
-    dw Data_01A_5F0A
+    dw PointerRun_1A_5E21_Entry00
     db $0B, $5F, $91, $5F
-    dw Data_01A_5F0C
+    dw PointerRun_1A_5E27_Entry00
     db $93, $5F, $0D, $5F
-    dw Data_01A_5F0E
+    dw PointerRun_1A_5E2D_Entry00
     db $0F, $5F, $10, $5F
-    dw Data_01A_5F11
+    dw PointerRun_1A_5E33_Entry00
     db $12, $5F, $13, $5F
-    dw Data_01A_5F14
+    dw PointerRun_1A_5E39_Entry00
     db $15, $5F, $16, $5F
-    dw Data_01A_5F17
+    dw PointerRun_1A_5E3F_Entry00
     db $18, $5F, $19, $5F
-    dw Data_01A_5F1A
+    dw PointerRun_1A_5E45_Entry00
     db $1B, $5F, $1C, $5F
-    dw Data_01A_5F1D
+    dw PointerRun_1A_5E4B_Entry00
     db $1E, $5F, $1F, $5F
-    dw Data_01A_5F20
+    dw PointerRun_1A_5E51_Entry00
     db $95, $5F, $21, $5F
-    dw Data_01A_5F22
+    dw PointerRun_1A_5E57_Entry00
     db $23, $5F, $24, $5F
-    dw Data_01A_5F25
+    dw PointerRun_1A_5E5D_Entry00
     db $26, $5F, $27, $5F
-    dw Data_01A_5F28
+    dw PointerRun_1A_5E63_Entry00
     db $29, $5F, $2A, $5F
-    dw Data_01A_5F2B
+    dw PointerRun_1A_5E69_Entry00
     db $2C, $5F, $2D, $5F
-    dw Data_01A_5F2E
+    dw PointerRun_1A_5E6F_Entry00
     db $2F, $5F, $97, $5F
-    dw Data_01A_5F30
+    dw PointerRun_1A_5E75_Entry00
     db $31, $5F, $99, $5F
-    dw Data_01A_5F32
+    dw PointerRun_1A_5E7B_Entry00
     db $33, $5F, $34, $5F
-    dw Data_01A_5F35
+    dw PointerRun_1A_5E81_Entry00
     db $36, $5F, $37, $5F
-    dw Data_01A_5F38
+    dw PointerRun_1A_5E87_Entry00
     db $39, $5F, $3A, $5F
-    dw Data_01A_5F3B
+    dw PointerRun_1A_5E8D_Entry00
     db $3C, $5F, $3D, $5F
-    dw Data_01A_5F3E
+    dw PointerRun_1A_5E93_Entry00
     db $3F, $5F, $9D, $5F
-    dw Data_01A_5F9C
+    dw PointerRun_1A_5E99_Entry00
     db $9B, $5F
-    dw Data_01A_5F40
+    dw PointerRun_1A_5E9D_Entry00
     db $41, $5F
-    dw Data_01A_5F42
+    dw PointerRun_1A_5EA1_Entry00
     db $9F, $5F
-    dw Data_01A_5F43
+    dw PointerRun_1A_5EA5_Entry00
     db $A1, $5F
-    dw Data_01A_5F44
+    dw PointerRun_1A_5EA9_Entry00
     db $45, $5F
-    dw Data_01A_5F46
+    dw PointerRun_1A_5EAD_Entry00
     db $47, $5F
-    dw Data_01A_5F48
+    dw PointerRun_1A_5EB1_Entry00
     db $49, $5F
-    dw Data_01A_5F4A
+    dw PointerRun_1A_5EB5_Entry00
     db $4B, $5F
-    dw Data_01A_5F4C
+    dw PointerRun_1A_5EB9_Entry00
     db $A3, $5F
-    dw Data_01A_5F4D
+    dw PointerRun_1A_5EBD_Entry00
     db $A5, $5F
-    dw Data_01A_5F4E
+    dw PointerRun_1A_5EC1_Entry00
     db $4F, $5F
-    dw Data_01A_5F50
+    dw PointerRun_1A_5EC5_Entry00
     db $51, $5F
-    dw Data_01A_5F52
+    dw PointerRun_1A_5EC9_Entry00
     db $53, $5F
-    dw Data_01A_5F54
+    dw PointerRun_1A_5ECD_Entry00
     db $55, $5F
-    dw Data_01A_5F56
+    dw PointerRun_1A_5ED1_Entry00
     db $57, $5F
-    dw Data_01A_5F58
+    dw PointerRun_1A_5ED5_Entry00
     db $59, $5F
-    dw Data_01A_5F5A
+    dw PointerRun_1A_5ED9_Entry00
     db $5B, $5F
-    dw Data_01A_5F5C
+    dw PointerRun_1A_5EDD_Entry00
     db $FF
 
-Data_01A_5EE0:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5D8D_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE0:: ; address name
     db $FF
 
-Data_01A_5EE1:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5D93_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE1:: ; address name
     db $FF
 
-Data_01A_5EE2:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5D99_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE2:: ; address name
     db $FF
 
-Data_01A_5EE3:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5D9F_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE3:: ; address name
     db $FF
 
-Data_01A_5EE4:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DA5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE4:: ; address name
     db $FF
 
-Data_01A_5EE5:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DAB_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE5:: ; address name
     db $FF
 
-Data_01A_5EE6:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DB1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE6:: ; address name
     db $FF, $FF
 
-Data_01A_5EE8:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DB7_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE8:: ; address name
     db $FF
 
-Data_01A_5EE9:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DBD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EE9:: ; address name
     db $FF, $FF, $FF, $FF
 
-Data_01A_5EED:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DCD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EED:: ; address name
     db $FF, $FF
 
-Data_01A_5EEF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DD1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EEF:: ; address name
     db $FF, $FF
 
-Data_01A_5EF1:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DD5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF1:: ; address name
     db $FF
 
-Data_01A_5EF2:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DD9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF2:: ; address name
     db $FF
 
-Data_01A_5EF3:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DDD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF3:: ; address name
     db $FF
 
-Data_01A_5EF4:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DE1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF4:: ; address name
     db $FF
 
-Data_01A_5EF5:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DE5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF5:: ; address name
     db $FF, $FF
 
-Data_01A_5EF7:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DE9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF7:: ; address name
     db $FF
 
-Data_01A_5EF8:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DED_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EF8:: ; address name
     db $FF, $FF
 
-Data_01A_5EFA:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EFA:: ; address name
     db $FF, $FF
 
-Data_01A_5EFC:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EFC:: ; address name
     db $FF, $FF
 
-Data_01A_5EFE:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EFE:: ; address name
     db $FF
 
-Data_01A_5EFF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5EFF:: ; address name
     db $FF
 
-Data_01A_5F00:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F00:: ; address name
     db $FF
 
-Data_01A_5F01:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F01:: ; address name
     db $FF
 
-Data_01A_5F02:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F02:: ; address name
     db $FF
 
-Data_01A_5F03:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F03:: ; address name
     db $FF
 
-Data_01A_5F04:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F04:: ; address name
     db $FF
 
-Data_01A_5F05:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F05:: ; address name
     db $FF
 
-Data_01A_5F06:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry09:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F06:: ; address name
     db $FF, $FF
 
-Data_01A_5F08:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E1B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F08:: ; address name
     db $FF, $FF
 
-Data_01A_5F0A:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E21_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F0A:: ; address name
     db $FF, $FF
 
-Data_01A_5F0C:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E27_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F0C:: ; address name
     db $FF, $FF
 
-Data_01A_5F0E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E2D_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F0E:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F11:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E33_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F11:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F14:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E39_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F14:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F17:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E3F_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F17:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F1A:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E45_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F1A:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F1D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E4B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F1D:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F20:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E51_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F20:: ; address name
     db $FF, $FF
 
-Data_01A_5F22:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E57_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F22:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F25:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E5D_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F25:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F28:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E63_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F28:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F2B:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E69_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F2B:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F2E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E6F_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F2E:: ; address name
     db $FF, $FF
 
-Data_01A_5F30:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E75_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F30:: ; address name
     db $FF, $FF
 
-Data_01A_5F32:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E7B_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F32:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F35:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E81_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F35:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F38:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E87_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F38:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F3B:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E8D_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F3B:: ; address name
     db $FF, $FF, $FF
 
-Data_01A_5F3E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E93_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F3E:: ; address name
     db $FF, $FF
 
-Data_01A_5F40:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E9D_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F40:: ; address name
     db $FF, $FF
 
-Data_01A_5F42:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EA1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F42:: ; address name
     db $FF
 
-Data_01A_5F43:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EA5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F43:: ; address name
     db $FF
 
-Data_01A_5F44:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EA9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F44:: ; address name
     db $FF, $FF
 
-Data_01A_5F46:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EAD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F46:: ; address name
     db $FF, $FF
 
-Data_01A_5F48:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EB1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F48:: ; address name
     db $FF, $FF
 
-Data_01A_5F4A:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EB5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F4A:: ; address name
     db $FF, $FF
 
-Data_01A_5F4C:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EB9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F4C:: ; address name
     db $FF
 
-Data_01A_5F4D:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EBD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F4D:: ; address name
     db $FF
 
-Data_01A_5F4E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EC1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F4E:: ; address name
     db $FF, $FF
 
-Data_01A_5F50:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EC5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F50:: ; address name
     db $FF, $FF
 
-Data_01A_5F52:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EC9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F52:: ; address name
     db $FF, $FF
 
-Data_01A_5F54:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5ECD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F54:: ; address name
     db $FF, $FF
 
-Data_01A_5F56:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5ED1_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F56:: ; address name
     db $FF, $FF
 
-Data_01A_5F58:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5ED5_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F58:: ; address name
     db $FF, $FF
 
-Data_01A_5F5A:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5ED9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F5A:: ; address name
     db $FF, $FF
 
-Data_01A_5F5C:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5EDD_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F5C:: ; address name
     db $FF, $02, $01, $FF, $05, $04, $FF, $08, $07, $FF, $0B, $0A, $FF, $0E, $0D, $FF
     db $11, $10, $FF, $13, $FF, $17, $16, $FF, $19, $FF, $1C
 
-Data_01A_5F77:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DC3_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F77:: ; address name
     db $1B, $FF
 
-Data_01A_5F79:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DC9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F79:: ; address name
     db $1E, $FF, $25, $FF, $27, $FF, $29, $FF, $2B, $FF, $2F, $FF
 
-Data_01A_5F85:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F85:: ; address name
     db $36, $FF, $42, $41
 
-Data_01A_5F89:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5DF9_Entry0A:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F89:: ; address name
     db $40, $FF, $46, $45, $44, $FF, $48, $FF, $4C, $FF, $4E, $FF, $63, $FF, $73, $FF
     db $76, $FF, $87
 
-Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_1A_5E99_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_01A_5F9C:: ; address name
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
 ; copies the record's eight skills to wD09D and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
@@ -2240,7 +2314,7 @@ Func_01A_62D0:: ; address name
     push hl
     push de
     push bc
-    ld hl, Data_01A_5005
+    ld hl, BattleEnd_Step3_Sub02_Sub02_Data
     ld b, $AA
     ld c, $00
 
@@ -2409,7 +2483,7 @@ Jump_01A_636A::
 AddSkillCToFreeSlotUnlessExcluded::
 Func_01A_636C:: ; address name
     ld b, $00
-    ld hl, Data_01A_5D8B
+    ld hl, AddSkillCToFreeSlotUnlessExcluded_Data
     add hl, bc
     add hl, bc
     ld a, [hl+]

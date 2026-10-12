@@ -95,7 +95,7 @@ Jump_084_406E:: ; address name
 ; reads: wKeyWorldGoalKind, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
 Jump_084_4072:: ; address name
-    ld hl, Data_084_41AE
+    ld hl, RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -122,7 +122,7 @@ Jump_084_408A::
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_NextRandomSeed::
 Jump_084_4091:: ; address name
-    ld hl, Data_084_41B8
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -160,7 +160,7 @@ Jump_084_40BB::
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
 RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
 Jump_084_40C2:: ; address name
-    ld hl, Data_084_41B8
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -215,7 +215,7 @@ Jump_084_40F3:: ; address name
     ld a, [wKeyWorldGoalKind]
     add a, a
     add a, a
-    ld hl, Data_084_41CA
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data
     add_a_to_hl
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -284,7 +284,7 @@ Jump_084_4156:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
-    ld hl, Data_084_41C2
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -328,19 +328,23 @@ Jump_084_41A9::
     ret
 
 ; address loaded by RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
-Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_41AE:: ; address name
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
 ; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
-Data_084_41B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunDebugAutomapCaseTemp0_NextRandomSeed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_41B8:: ; address name
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
 ; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
-Data_084_41C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_41C2:: ; address name
     db $05, $06, $07, $08, $09, $05, $07, $09
 
 ; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
-Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_41CA:: ; address name
     db $00, $0B, $00, $0B, $00, $02, $00, $02, $02, $03, $0B, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
@@ -1157,7 +1161,7 @@ Jump_084_481D::
     ldh a, [hMapId]
     ld d, a
     ld e, $00
-    ld hl, Data_084_4887
+    ld hl, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data
 
 Jump_084_4826::
     ld a, [hl]
@@ -1220,7 +1224,8 @@ Jump_084_4870::
     ret
 
 ; address loaded by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
-Data_084_4887:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_4887:: ; address name
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00, $FF
@@ -1482,7 +1487,7 @@ Func_084_4A89:: ; address name
     jr nz, Jump_084_4AFE
     ldh a, [hMapId]
     ld c, a
-    ld hl, Data_084_4ADC
+    ld hl, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data
     ld b, $00
 
 Jump_084_4A9B::
@@ -1532,7 +1537,8 @@ Jump_084_4ACE::
     jr Jump_084_4B46
 
 ; address loaded by RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc
-Data_084_4ADC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_4ADC:: ; address name
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00, $FF
@@ -1744,7 +1750,7 @@ Func_084_4C04:: ; address name
     bit 7, a
     jr nz, Jump_084_4C61
     ld a, b
-    ld de, Data_084_4C7F
+    ld de, RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data
     add a, e
     ld e, a
     jr nc, Jump_084_4C5F
@@ -1776,7 +1782,8 @@ Jump_084_4C61::
     ret
 
 ; address loaded by RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-Data_084_4C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_084_4C7F:: ; address name
     db $01, $01, $03, $02, $02
 
 ; when wC88E is set and key entry hFFC6 matches wC891, clears wC88E (E-0127)

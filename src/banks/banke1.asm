@@ -163,12 +163,13 @@ Data_0E1_5AA7:: ; address name
 ; 1 call site from 1 routine (e.g. DrawCGBMetaSpriteAt38_30)
 RunE15AC0For5ABE::
 Func_0E1_5AB7:: ; address name
-    ld de, Data_0E1_5ABE
+    ld de, RunE15AC0For5ABE_Data
     call RunE15AC0For5ABE_WaitOamNextEntry
     ret
 
 ; address loaded by RunE15AC0For5ABE
-Data_0E1_5ABE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunE15AC0For5ABE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0E1_5ABE:: ; address name
     db $3C, $5D
 
 ; only called from RunE15AC0For5ABE (E-0047)

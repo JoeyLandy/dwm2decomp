@@ -364,7 +364,8 @@ Data_048_5E49:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $121E49, $EB
 
 ; LZSS-compressed asset: 226 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_048_5F34:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+ScreenMap_48_5F34:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_048_5F34:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $121F34, $E2
 
 ; LZSS-compressed asset: 201 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -394,7 +395,8 @@ Data_048_62F8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1222F8, $6F
 
 ; LZSS-compressed asset: 110 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_048_6367:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+KeyWorldScreen_48_6367:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+Data_048_6367:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $122367, $6E
 
 ; LZSS-compressed asset: 93 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -455,7 +457,8 @@ Data_048_6830:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $122830, $97
 
 ; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_048_68C7:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+KeyWorldScreen_48_68C7:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+Data_048_68C7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1228C7, $97
 
 ; LZSS-compressed asset: 224 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -477,7 +480,8 @@ Data_048_6A9C:: ; address name
     db $2B, $03, $44, $00, $03, $44, $14, $03, $3C, $06, $03, $58, $14, $03, $E4, $02
 
 ; LZSS-compressed asset: 64 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_048_6ADC:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+KeyWorldScreen_48_6ADC:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+Data_048_6ADC:: ; address name
     db $68, $01, $03, $00, $00, $02, $02, $02, $02, $01, $03, $06, $01, $03, $02, $00
     db $03, $FB, $F7, $02, $03, $0A, $02, $03, $0F, $04, $03, $00, $04, $03, $1F, $09
     db $03, $FD, $F1, $01, $01, $03, $A0, $FF, $4D, $03, $A5, $0F, $4D, $03, $C4, $FF

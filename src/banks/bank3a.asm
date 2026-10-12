@@ -1272,7 +1272,7 @@ Jump_03A_494A::
     jr Jump_03A_4962
 
 Jump_03A_4959::
-    ld hl, Data_03A_49AF
+    ld hl, SelectEffectByEffectFlags_Data
     add_a_to_hl
     ld a, [hl]
 
@@ -1312,7 +1312,8 @@ Jump_03A_4970::
     ret
 
 ; address loaded by SelectEffectByEffectFlags
-Data_03A_49AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SelectEffectByEffectFlags_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_49AF:: ; address name
     db $00, $00, $00, $01, $01, $01, $02, $02, $01, $02, $01, $01, $01, $02, $01, $02
     db $02, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $00, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $01, $01, $00, $00, $01, $00
@@ -1423,7 +1424,7 @@ Jump_03A_4A66::
     ld a, [wBattleArg0]
     and a, $03
     add a, b
-    ld hl, Data_03A_4AD5
+    ld hl, SetEffectSpriteXForTargets_Data
     add_a_to_hl
     ld a, [hl]
     ld [wEffectSpriteX], a
@@ -1474,7 +1475,7 @@ Jump_03A_4AAA::
     ld a, c
     and a, $03
     add a, d
-    ld hl, Data_03A_4AD5
+    ld hl, SetEffectSpriteXForTargets_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -1490,7 +1491,8 @@ Jump_03A_4ACA::
     ret
 
 ; address loaded by SetEffectSpriteXForTargets
-Data_03A_4AD5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SetEffectSpriteXForTargets_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_4AD5:: ; address name
     db $20, $50, $80, $38, $68, $50
 
 ; runs the battle effect animation state wD800: loads the effect graphics, steps the effect sprite and its X positions, and ends the effect (E-0130)
@@ -1612,7 +1614,7 @@ Jump_03A_4BB5::
     ld a, [wBattleActionId]
     sub a, $D7
     sla a
-    ld hl, Data_03A_4C12
+    ld hl, RunBattleEffectAnimation_Data
     add_a_to_hl
     ld a, [hl+]
     ld [wEffectTileOffset], a
@@ -1646,7 +1648,8 @@ Jump_03A_4BB5::
     ret
 
 ; address loaded by RunBattleEffectAnimation
-Data_03A_4C12:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleEffectAnimation_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_4C12:: ; address name
     db $22, $00
 
 Jump_03A_4C14::
@@ -1747,7 +1750,7 @@ Jump_03A_4C9C:: ; address name
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, Data_03A_4D52
+    ld hl, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1772,7 +1775,7 @@ Jump_03A_4CC2:: ; address name
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, Data_03A_4D52
+    ld hl, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1885,7 +1888,8 @@ Func_03A_4D47:: ; address name
     ret
 
 ; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01
-Data_03A_4D52:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_4D52:: ; address name
     db $E7, $00, $E4, $00, $EA, $00, $E1, $00, $ED, $00
 
 ; E-0234 (C1: two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it to CopyVRAMRectToBuffer with C = 6; four words point at the four 36-byte blocks that follow).
@@ -2883,7 +2887,7 @@ Jump_03A_5215:: ; address name
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, Data_03A_4D52
+    ld hl, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -2908,7 +2912,7 @@ Jump_03A_523B:: ; address name
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, Data_03A_4D52
+    ld hl, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -3452,7 +3456,7 @@ Func_03A_55BB:: ; address name
     push hl
     ld a, [wDMGPaletteBGP]
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_55C9
@@ -3479,7 +3483,7 @@ Jump_03A_55CF::
     srl a
     srl a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_55EC
@@ -3505,7 +3509,7 @@ Jump_03A_55F2::
     ld a, [wDMGPaletteBGP]
     swap a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_560D
@@ -3533,7 +3537,7 @@ Jump_03A_5613::
     srl a
     srl a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_5632
@@ -3646,7 +3650,7 @@ Func_03A_56CC:: ; address name
     push hl
     ld a, [wDMGPaletteOBP0]
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_56DA
@@ -3673,7 +3677,7 @@ Jump_03A_56E0::
     srl a
     srl a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_56FD
@@ -3699,7 +3703,7 @@ Jump_03A_5703::
     ld a, [wDMGPaletteOBP0]
     swap a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_571E
@@ -3727,7 +3731,7 @@ Jump_03A_5724::
     srl a
     srl a
     and a, $03
-    ld de, Data_03A_575E
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
     jr nc, Jump_03A_5743
@@ -3761,7 +3765,8 @@ Jump_03A_575D::
     ret
 
 ; address loaded by UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT, UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
-Data_03A_575E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_575E:: ; address name
     db $02, $04, $00, $06
 
 ; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
@@ -8679,13 +8684,13 @@ Jump_03A_753D::
     cp a, $06
     jp z, Jump_03A_7584
     ld a, [wBattleActionId]
-    ld hl, Data_03A_7603
+    ld hl, BuildActionMessageNames_Data_7603
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_03A_76E7
+    ld hl, BuildActionMessageNames_Data_76E7
     dec d
     jr z, Jump_03A_7568
-    ld hl, Data_03A_76FE
+    ld hl, BuildActionMessageNames_Data_76FE
 
 Jump_03A_7568::
     add_a_to_hl
@@ -8700,7 +8705,7 @@ Jump_03A_7570::
     jr Jump_03A_75A4
 
 Jump_03A_757B::
-    ld hl, Data_03A_75C7
+    ld hl, BuildActionMessageNames_Data_75C7
     jr Jump_03A_75B7
 
 Jump_03A_7580::
@@ -8715,7 +8720,7 @@ Jump_03A_7584::
     jr Jump_03A_75A4
 
 Jump_03A_758F::
-    ld hl, Data_03A_75DB
+    ld hl, BuildActionMessageNames_Data_75DB
     jr Jump_03A_75B7
 
 Jump_03A_7594::
@@ -8726,7 +8731,7 @@ Jump_03A_7594::
     jr Jump_03A_75A4
 
 Jump_03A_759F::
-    ld hl, Data_03A_75EF
+    ld hl, BuildActionMessageNames_Data_75EF
     jr Jump_03A_75B7
 
 Jump_03A_75A4::
@@ -8750,22 +8755,26 @@ Jump_03A_75B7::
     ret
 
 ; address loaded by BuildActionMessageNames
-Data_03A_75C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_75C7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_75C7:: ; address name
     db $6C, $6E, $FF, $FF, $FF, $FF, $70, $FF, $80, $72, $FF, $FF, $76, $FF, $FF, $78
     db $FF, $81, $FF, $FF
 
 ; address loaded by BuildActionMessageNames
-Data_03A_75DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_75DB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_75DB:: ; address name
     db $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $74, $75, $FF, $FF, $82, $83
     db $FF, $7A, $FF, $FF
 
 ; address loaded by BuildActionMessageNames
-Data_03A_75EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_75EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_75EF:: ; address name
     db $6D, $6F, $FF, $FF, $FF, $FF, $71, $FF, $84, $73, $FF, $FF, $77, $FF, $FF, $79
     db $FF, $85, $FF, $FF
 
 ; address loaded by BuildActionMessageNames
-Data_03A_7603:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_7603:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_7603:: ; address name
     ds $3D, $00
     db $04, $04, $04, $01, $01, $01, $01, $01, $01, $01, $01, $04, $04, $11, $03, $10
     db $11, $06, $07
@@ -8779,12 +8788,14 @@ Data_03A_7603:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $15, $15, $15, $15
 
 ; address loaded by BuildActionMessageNames
-Data_03A_76E7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_76E7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_76E7:: ; address name
     db $36, $37, $38, $46, $47, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43
     db $44, $45, $48, $FF, $69, $6A, $6B
 
 ; address loaded by BuildActionMessageNames
-Data_03A_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildActionMessageNames_Data_76FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_76FE:: ; address name
     db $4D, $4F, $56, $4E, $50, $55, $51, $52, $54, $5F, $5A, $58, $5B, $59, $5C, $FF
     db $4D, $4E, $57, $53, $FF, $FF, $FF
 
@@ -8798,7 +8809,7 @@ Func_03A_7715:: ; address name
     call CopyMappedSlotNameToTextBuf1
     ld a, [wBattleActionId]
     sub a, $D0
-    ld hl, Data_03A_7738
+    ld hl, ShowSpecialActionMessage_Data
     add_a_to_hl
     ld a, [hl]
     ld [wStringIndex], a
@@ -8808,7 +8819,8 @@ Func_03A_7715:: ; address name
     ret
 
 ; address loaded by ShowSpecialActionMessage
-Data_03A_7738:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSpecialActionMessage_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_7738:: ; address name
     db $66, $66, $67, $67, $67, $67, $67, $67, $67, $68, $67, $67, $66, $67, $67, $67
     db $67, $67, $67, $67
 
@@ -9946,7 +9958,7 @@ Jump_03A_7CCA::
 ClearBattleStatusBitsWithMaskD_Bank3A:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_03A_7CD0:: ; address name
     ld a, d
-    ld hl, Data_03A_7CE5
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank3A_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -9958,7 +9970,8 @@ Func_03A_7CD0:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_Bank3A
-Data_03A_7CE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_Bank3A_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_03A_7CE5:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)

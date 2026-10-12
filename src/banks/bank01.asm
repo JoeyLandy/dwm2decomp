@@ -331,7 +331,7 @@ Jump_001_4472:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Data_01F_48F0
+    ld de, DebugResultsDisplay_Init_Data
     ld hl, vTiles1 + $7C0
     ld b, $1F
     ld c, $10
@@ -862,13 +862,13 @@ Func_001_4AA4:: ; address name
     ld a, [wIsCGB]
     or a, a
     ret z
-    ld de, Data_001_4ACC
+    ld de, LoadPalette0FromData4ACC_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
-    ld de, Data_001_4ACC
+    ld de, LoadPalette0FromData4ACC_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
@@ -877,7 +877,8 @@ Func_001_4AA4:: ; address name
     ret
 
 ; address loaded by LoadPalette0FromData4ACC
-Data_001_4ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPalette0FromData4ACC_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_4ACC:: ; address name
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
 ; per-frame routine for wGameMode = 0
@@ -2130,7 +2131,7 @@ Func_001_5344:: ; address name
 Jump_001_5347::
     push hl
     ld a, e
-    ld hl, Data_001_5364
+    ld hl, DebugSkillViewer_Update_WriteVRAMByte_Data
     add_a_to_hl
     ld a, d
     and a, [hl]
@@ -2150,7 +2151,8 @@ Jump_001_5357::
     ret
 
 ; address loaded by DebugSkillViewer_Update_WriteVRAMByte
-Data_001_5364:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugSkillViewer_Update_WriteVRAMByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_5364:: ; address name
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; only called from DebugShowMonsterRecord (E-0047)
@@ -2525,11 +2527,11 @@ Func_001_5535:: ; address name
     ld a, [wDebugCursor]
     cp a, $04
     jr nz, Jump_001_5541
-    ld de, Data_001_555C
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C
     jr Jump_001_5544
 
 Jump_001_5541::
-    ld de, Data_001_5560
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560
 
 Jump_001_5544::
     ld a, [wScreenByteBD]
@@ -2551,11 +2553,13 @@ Jump_001_554F::
     ret
 
 ; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-Data_001_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_555C:: ; address name
     db $86, $99, $A6, $99
 
 ; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-Data_001_5560:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_5560:: ; address name
     db $E6, $99, $06, $9A
 
 Jump_001_5564::
@@ -2586,7 +2590,7 @@ Jump_001_5590::
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, Data_001_75C5
+    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -3380,7 +3384,7 @@ DrawDebugFieldValueDebugCursor::
 Func_001_5AC0:: ; address name
     ld a, [wDebugCursor]
     sla a
-    ld de, Data_001_5B70
+    ld de, DrawDebugFieldValueDebugCursor_Data_5B70
     add a, e
     ld e, a
     jr nc, Jump_001_5ACD
@@ -3404,7 +3408,7 @@ Jump_001_5ACD::
     jr nz, Jump_001_5AF8
     ld a, [wDebugCursor]
     sla a
-    ld hl, Data_001_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3417,7 +3421,7 @@ Jump_001_5ACD::
 Jump_001_5AF8::
     ld a, [wDebugCursor]
     sla a
-    ld hl, Data_001_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3435,7 +3439,7 @@ Jump_001_5AF8::
 Jump_001_5B14::
     ld a, [wDebugCursor]
     sla a
-    ld hl, Data_001_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3469,7 +3473,7 @@ Func_001_5B2D:: ; address name
 Jump_001_5B45::
     ld a, [wDebugCursor]
     sla a
-    ld hl, Data_001_5B84
+    ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3497,12 +3501,14 @@ Jump_001_5B45::
     ret
 
 ; address loaded by DrawDebugFieldValueDebugCursor
-Data_001_5B70:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawDebugFieldValueDebugCursor_Data_5B70:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_5B70:: ; address name
     db $F9, $C5, $FB, $C5, $FC, $C5, $FE, $C5, $81, $D7, $83, $D7, $85, $D7, $82, $D7
     db $84, $D7, $86, $D7
 
 ; address loaded by DrawDebugFieldValueDebugCursor, PackTwoDigitsOfCAsBCD
-Data_001_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawDebugFieldValueDebugCursor_Data_5B84:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_5B84:: ; address name
     db $E6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $A2, $99, $C2, $99, $E2, $99
     db $02, $9A, $22, $9A
 
@@ -3626,7 +3632,7 @@ Jump_001_5C18::
     jr z, Jump_001_5C5B
     ld a, [wDebugState]
     and a, $1F
-    ld hl, Data_001_5DAD
+    ld hl, DebugAutomap_Update_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -3841,7 +3847,8 @@ Jump_001_5D9F::
     ret
 
 ; address loaded by DebugAutomap_Update
-Data_001_5DAD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugAutomap_Update_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_5DAD:: ; address name
     db $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA
 
 ; only called from DebugAutomap_Update (E-0047)
@@ -5361,7 +5368,7 @@ Jump_001_67C4::
 
 Jump_001_67C9::
     ld a, [wMenuState]
-    ld hl, Data_001_68D3
+    ld hl, DebugBattleSetupLoadWords_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5402,7 +5409,7 @@ Jump_001_6808::
 DrawDebugValueHexForMenuState::
 Func_001_6809:: ; address name
     ld a, [wMenuState]
-    ld hl, Data_001_68D3
+    ld hl, DebugBattleSetupLoadWords_Data
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -5425,7 +5432,7 @@ SubtractDEFromDebugLimit::
 Func_001_682B:: ; address name
     push hl
     ld a, [wMenuState]
-    ld hl, Data_001_68EB
+    ld hl, SubtractDEFromDebugLimit_Data
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -5466,7 +5473,7 @@ ClampDebugValueToTableLimit::
 Func_001_6857:: ; address name
     push hl
     ld a, [wMenuState]
-    ld hl, Data_001_68EB
+    ld hl, SubtractDEFromDebugLimit_Data
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -5557,12 +5564,14 @@ Func_001_68CA:: ; address name
     ret
 
 ; address loaded by DebugBattleSetupLoadWords, DrawDebugValueHexForMenuState
-Data_001_68D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugBattleSetupLoadWords_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_68D3:: ; address name
     db $87, $98, $A7, $98, $C7, $98, $E7, $98, $07, $99, $27, $99, $47, $99, $67, $99
     db $87, $99, $A7, $99, $C7, $99, $E7, $99
 
 ; address loaded by SubtractDEFromDebugLimit, ClampDebugValueToTableLimit
-Data_001_68EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SubtractDEFromDebugLimit_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_68EB:: ; address name
     db $02, $00, $AB, $02, $AB, $02, $AB, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
@@ -5590,7 +5599,7 @@ Func_001_6903:: ; address name
     ld [wStringIndex], a
     ld a, h
     ld [wStringCategory], a
-    ld hl, Data_001_6A6C
+    ld hl, DebugBattleSetupShowFieldString_Data_6A6C
     ld a, [wMenuState]
     dec a
     add a, a
@@ -5725,7 +5734,7 @@ Jump_001_6A0C::
     ld [wStringCategory], a
     ld a, [wMenuState]
     sub a, $06
-    ld hl, Data_001_6A72
+    ld hl, DebugBattleSetupShowFieldString_Data_6A72
     add_a_to_hl
     deref_hl
     ld de, $0901
@@ -5739,7 +5748,7 @@ Jump_001_6A46::
     push bc
     ld a, [wMenuState]
     sub a, $07
-    ld hl, Data_001_6A78
+    ld hl, DebugBattleSetupShowFieldString_Data_6A78
     add_a_to_hl
     deref_hl
     pop bc
@@ -5752,15 +5761,18 @@ Jump_001_6A46::
     ret
 
 ; address loaded by DebugBattleSetupShowFieldString
-Data_001_6A6C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugBattleSetupShowFieldString_Data_6A6C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_6A6C:: ; address name
     db $00, $92, $A0, $92, $30, $93
 
 ; address loaded by DebugBattleSetupShowFieldString
-Data_001_6A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugBattleSetupShowFieldString_Data_6A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_6A72:: ; address name
     db $E0, $94, $70, $95, $00, $96
 
 ; address loaded by DebugBattleSetupShowFieldString
-Data_001_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugBattleSetupShowFieldString_Data_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_6A78:: ; address name
     db $6B, $99, $AB, $99, $EB, $99
 
 ; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble), each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
@@ -6050,7 +6062,7 @@ Func_001_6C48:: ; address name
 
 Jump_001_6C82::
     push hl
-    ld hl, Data_001_70AA
+    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -6241,7 +6253,7 @@ Jump_001_6D33::
 
 Jump_001_6DD9::
     push hl
-    ld hl, Data_001_70B3
+    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -6332,7 +6344,7 @@ Func_001_6E46:: ; address name
     ld [rRAMB], a
     ldh a, [hTemp1]
     ld [wBattleArg1], a
-    ld hl, Data_001_7098
+    ld hl, CreateMonsterRecordOfKindTemp1_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -6386,7 +6398,7 @@ Func_001_6E91:: ; address name
 ; points at: wKeyList
 DebugBattleSetup_Update_Shared01_Sub02::
 Func_001_6E98:: ; address name
-    ld de, Data_001_6EB0
+    ld de, DebugBattleSetup_Update_Shared01_Sub02_Data
     ld hl, wKeyList
     ld b, $20
 
@@ -6408,7 +6420,8 @@ Jump_001_6EA0::
     ret
 
 ; address loaded by DebugBattleSetup_Update_Shared01_Sub02
-Data_001_6EB0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugBattleSetup_Update_Shared01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_6EB0:: ; address name
     ds $80, $FF
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -6435,54 +6448,67 @@ Data_001_6F30:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
 ; address loaded by CreateMonsterRecordOfKindTemp1
-Data_001_7098:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CreateMonsterRecordOfKindTemp1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_7098:: ; address name
     db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1B, $00, $7A, $02, $79, $02
     db $78, $02
 
 ; address loaded by CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
-Data_001_70AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_70AA:: ; address name
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
 ; address loaded by CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
-Data_001_70B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_001_70C5
-    dw Data_001_70CF
-    dw Data_001_70D9
-    dw Data_001_70E3
-    dw Data_001_70ED
-    dw Data_001_70F7
-    dw Data_001_7101
-    dw Data_001_710B
-    dw Data_001_7115
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_70B3:: ; address name
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07
+    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08
 
-Data_001_70C5:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70C5:: ; address name
     db $0B, $2C, $2C, $31, $32, $F0, $F0, $F0, $F0, $F0
 
-Data_001_70CF:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70CF:: ; address name
     db $0E, $2A, $2A, $F0, $F0, $F0, $F0, $F0, $F0, $F0
 
-Data_001_70D9:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70D9:: ; address name
     db $0E, $2A, $2A, $F0, $F0, $F0, $F0, $F0, $F0, $F0
 
-Data_001_70E3:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70E3:: ; address name
     db $20, $24, $35, $38, $0B, $F0, $F0, $F0, $F0, $F0
 
-Data_001_70ED:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70ED:: ; address name
     db $19, $28, $37, $2C, $0B, $F0, $F0, $F0, $F0, $F0
 
-Data_001_70F7:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_001_70F7:: ; address name
     db $1C, $34, $38, $2C, $3D, $F0, $F0, $F0, $F0, $F0
 
-Data_001_7101:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_001_7101:: ; address name
     db $15, $24, $30, $2C, $24, $F0, $F0, $F0, $F0, $F0
 
-Data_001_710B:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_001_710B:: ; address name
     db $1C, $24, $37, $30, $24, $F0, $F0, $F0, $F0, $F0
 
-Data_001_7115:: ; heuristic: target of a monotone pointer table; C0
+CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_001_7115:: ; address name
     db $0B, $35, $24, $25, $32, $F0, $F0, $F0, $F0, $F0
     ds $4A6, $00
 
 ; address loaded by DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
-Data_001_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_75C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_001_75C5:: ; address name
     ds $A3B, $00

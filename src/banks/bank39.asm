@@ -8278,7 +8278,7 @@ Jump_039_7253::
 ClearBattleStatusBitsWithMaskD_Bank39:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4075; C0
 Func_039_7259:: ; address name
     ld a, d
-    ld hl, Data_039_726E
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -8290,7 +8290,8 @@ Func_039_7259:: ; address name
     ret
 
 ; address loaded by ClearBattleStatusBitsWithMaskD_Bank39
-Data_039_726E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ClearBattleStatusBitsWithMaskD_Bank39_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_039_726E:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)

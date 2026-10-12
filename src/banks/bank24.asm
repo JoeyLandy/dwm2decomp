@@ -96,7 +96,7 @@ Jump_024_40B1::
     ld a, [wBattleScene]
     cp a, $80
     jr nz, Jump_024_40C2
-    ld de, Data_024_6F4E
+    ld de, GameMode6_Init_Data_6F4E
     ld b, $24
     jr Jump_024_40D3
 
@@ -104,7 +104,7 @@ Jump_024_40C2::
     and a, $01
     and a, a
     jr nz, Jump_024_40CE
-    ld de, Data_024_6CE4
+    ld de, GameMode6_Init_Data_6CE4
     ld b, $24
     jr Jump_024_40D3
 
@@ -222,7 +222,7 @@ Jump_024_4178:: ; address name
     jr Jump_024_418A
 
 Jump_024_4185::
-    ld de, Data_024_57B4
+    ld de, GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24_Data
     jr Jump_024_418D
 
 Jump_024_418A::
@@ -319,7 +319,7 @@ Jump_024_4219::
 ; writes: wScreenState
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24::
 Jump_024_4225:: ; address name
-    ld de, Data_024_58CA
+    ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $F0
     ld bc, $1406
     call CopyRectTo20ByteRowsJp_Bank24
@@ -608,7 +608,7 @@ Jump_024_43F1::
     call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
@@ -617,7 +617,7 @@ Jump_024_43F1::
     call DrawScreenBufferRectToBGMap_24
     xor a, a
     ld b, $C3
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -656,7 +656,7 @@ Jump_024_4438:: ; address name
 Jump_024_444C::
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -673,7 +673,7 @@ Jump_024_445F:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr nz, Jump_024_4474
-    ld de, Data_024_58CA
+    ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $F7
     ld bc, $0606
     call CopyRectTo20ByteRowsJp_Bank24
@@ -898,7 +898,7 @@ GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_459D:: ; address name
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -906,7 +906,7 @@ Jump_024_459D:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -979,7 +979,7 @@ Jump_024_460F::
 Jump_024_4621::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -999,12 +999,12 @@ Jump_024_463A:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wTwoChoiceCursor]
     ld b, $BB
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wBattleScene]
     cp a, $08
     jr nz, Jump_024_4666
-    ld de, Data_024_58CA
+    ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $F7
     ld bc, $0606
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1030,7 +1030,7 @@ Jump_024_4678::
     call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
     ld b, $C3
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     xor a, a
     ld [wScreenSubStep], a
@@ -1127,7 +1127,7 @@ Jump_024_4724:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
@@ -1136,7 +1136,7 @@ Jump_024_4724:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     sub a, $03
@@ -1358,7 +1358,7 @@ Jump_024_48A6::
 Jump_024_48AE::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -1374,7 +1374,7 @@ GameMode6_Update_Case05_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_48C8:: ; address name
     ld a, [wTwoChoiceCursor]
     ld b, $C3
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, $04
     ld [wScreenState], a
@@ -1501,7 +1501,7 @@ Jump_024_49AF:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, $01
     ld b, $BC
-    ld hl, Data_024_5AAA
+    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
@@ -1510,7 +1510,7 @@ Jump_024_49AF:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     sub a, $04
@@ -1665,7 +1665,7 @@ Jump_024_4AA4:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr nz, Jump_024_4AEC
-    ld de, Data_024_58CA
+    ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $F7
     ld bc, $0606
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1681,7 +1681,7 @@ Jump_024_4AEF::
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -1787,7 +1787,7 @@ GameMode6_Update_Case0E_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_4BB0:: ; address name
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -1884,7 +1884,7 @@ Jump_024_4C69::
     jr Jump_024_4C81
 
 Jump_024_4C75::
-    ld de, Data_024_58CA
+    ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $F7
     ld bc, $0606
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1896,7 +1896,7 @@ Jump_024_4C81::
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_024_5AAE
+    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -2011,7 +2011,7 @@ Func_024_4D36:: ; address name
     ld a, $B8
     ld [hl+], a
     ei
-    ld de, Data_024_6CA4
+    ld de, GameMode6_Update_Case00_Case00_WaitForVRAMAccess_Data_6CA4
     ld b, $08
 
 Jump_024_4D4B::
@@ -2023,7 +2023,7 @@ Jump_024_4D4B::
     inc de
     dec b
     jr nz, Jump_024_4D4B
-    ld de, Data_024_57D6
+    ld de, GameMode6_Update_Case00_Case00_WaitForVRAMAccess_Data_57D6
     ld hl, wWindowAttrBuffer + $7B
     ld b, $1C
 
@@ -2567,7 +2567,7 @@ Func_024_504C:: ; address name
     and a, $01
     and a, a
     jr nz, Jump_024_5058
-    ld de, Data_024_6CE4
+    ld de, GameMode6_Init_Data_6CE4
     ld b, $24
     jr Jump_024_505D
 
@@ -2742,12 +2742,12 @@ Func_024_5174:: ; address name
     ld d, $00
     ld a, [wScreenByteBD]
     dec a
-    ld hl, Data_024_5191
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_5191
     jr z, Jump_024_518A
     dec a
-    ld hl, Data_024_5197
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_5197
     jr z, Jump_024_518A
-    ld hl, Data_024_519D
+    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data_519D
 
 Jump_024_518A::
     add hl, de
@@ -2759,15 +2759,18 @@ Jump_024_518A::
     ret
 
 ; address loaded by GameMode6_Init_Sub01_ReadScreenByteBD
-Data_024_5191:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Init_Sub01_ReadScreenByteBD_Data_5191:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5191:: ; address name
     db $E7, $00, $00, $00, $00, $00
 
 ; address loaded by GameMode6_Init_Sub01_ReadScreenByteBD
-Data_024_5197:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Init_Sub01_ReadScreenByteBD_Data_5197:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5197:: ; address name
     db $E4, $00, $EA, $00, $00, $00
 
 ; address loaded by GameMode6_Init_Sub01_ReadScreenByteBD
-Data_024_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Init_Sub01_ReadScreenByteBD_Data_519D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_519D:: ; address name
     db $E1, $00, $E7, $00, $ED, $00
 
 ; a bare ret (E-0115)
@@ -2788,7 +2791,7 @@ Func_024_51A4:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     ret nz
-    ld hl, Data_024_51D3
+    ld hl, CopyAttributeBlock51D3ToWD25F_Data
     ld de, wWindowAttrBuffer + $F7
     ld a, $02
     ldh [rSVBK], a
@@ -2814,7 +2817,8 @@ Jump_024_51BC::
     ret
 
 ; address loaded by CopyAttributeBlock51D3ToWD25F
-Data_024_51D3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyAttributeBlock51D3ToWD25F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_51D3:: ; address name
     ds $24, $01
 
 ; only called from routines of GameMode6_Init (E-0098)
@@ -3575,7 +3579,7 @@ Func_024_568E:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_024_569B
-    ld hl, Data_024_5BE9
+    ld hl, GameMode6_Update_TestFlagBit_Data_5BE9
     jr Jump_024_569E
 
 Jump_024_569B::
@@ -3592,18 +3596,18 @@ Jump_024_569E::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_024_56BE
-    ld hl, Data_024_5BD1
+    ld hl, GameMode6_Update_TestFlagBit_Data_5BD1
     jr Jump_024_56C1
 
 Jump_024_56BE::
-    ld hl, Data_024_5BD7
+    ld hl, GameMode6_Update_TestFlagBit_Data_5BD7
 
 Jump_024_56C1::
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
     farcall DecompressGraphicsTemp0ToTemp4
-    ld hl, Data_024_5BDD
+    ld hl, GameMode6_Update_TestFlagBit_Data_5BDD
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
@@ -3611,7 +3615,7 @@ Jump_024_56C1::
     ld a, [wRecordBufB + $6E]
     and a, a
     jr nz, Jump_024_5762
-    ld hl, Data_024_5BE3
+    ld hl, GameMode6_Update_TestFlagBit_Data_5BE3
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_Bank24
@@ -3641,7 +3645,7 @@ Jump_024_5713::
     and a, $01
     and a, a
     jr nz, Jump_024_572A
-    ld hl, Data_024_5C19
+    ld hl, GameMode6_Update_TestFlagBit_Data_5C19
     jr Jump_024_572D
 
 Jump_024_572A::
@@ -3716,13 +3720,15 @@ Data_024_5792:: ; address name
     db $F0, $F1, $F2, $F3, $F4, $F5, $C3, $F6, $F7, $F8, $F9, $FA, $FB, $FC, $FD, $FE, $FF ; id 1
 
 ; address loaded by GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24
-Data_024_57B4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_57B4:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $E0, $E1, $E2, $E3, $E4, $E5, $E6, $E7, $C3, $C3, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $F0, $F1, $F2, $F3, $F4, $F5, $F6, $F7, $C3, $C3
     db $C3, $C3
 
 ; address loaded by GameMode6_Update_Case00_Case00_WaitForVRAMAccess
-Data_024_57D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case00_Case00_WaitForVRAMAccess_Data_57D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_57D6:: ; address name
     ds $1C, $07
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -3751,7 +3757,8 @@ Data_024_5814:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
 ; address loaded by GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case02_ReturnStub_51A3, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case0E_ShowInfoOKYesN and 1 more
-Data_024_58CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_58CA:: ; address name
     ds $78, $C3
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -3815,11 +3822,13 @@ Data_024_5A82:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg and 2 more
-Data_024_5AAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5AAA:: ; address name
     db $23, $C4, $4B, $C4
 
 ; address loaded by GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE, GameMode6_Update_Case04_Case08_UpdatePagedListCursor, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case05_UpdatePagedListCursor and 4 more
-Data_024_5AAE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5AAE:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -3866,23 +3875,28 @@ Data_024_5B85:: ; address name
     db $40, $41, $42, $43
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5BD1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5BD1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5BD1:: ; address name
     db $00, $00, $01, $04, $00, $80
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5BD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5BD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5BD7:: ; address name
     db $01, $00, $01, $01, $00, $80
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5BDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5BDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5BDD:: ; address name
     db $0C, $00, $01, $05, $00, $81
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5BE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5BE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5BE3:: ; address name
     db $00, $00, $00, $02, $00, $82
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5BE9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5BE9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5BE9:: ; address name
     db $00, $01, $00, $00, $A0, $40, $04, $03, $00, $00, $00, $A0, $40, $04, $00, $00
 
 ; E-0264 (derived: Func_024_578B copies these 16 bytes to wSpriteSlots)
@@ -3898,7 +3912,8 @@ Data_024_5C09:: ; address name
     db $00, $01, $0C, $00, $E0, $40, $05, $01, $10, $00, $00, $E0, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by GameMode6_Update_TestFlagBit
-Data_024_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_TestFlagBit_Data_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5C19:: ; address name
     db $00, $00, $00, $00, $D0, $40, $02, $01, $20, $00, $00, $D0, $40, $04, $00, $00
 
 ; E-0264 (derived: Func_024_578B copies these 16 bytes to wObject2)
@@ -4023,7 +4038,7 @@ Func_024_5CC9:: ; address name
 Jump_024_5CCB::
     ld a, [wTwoChoiceCursor]
     add a, a
-    ld hl, Data_024_5D0C
+    ld hl, GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4063,7 +4078,8 @@ Func_024_5CEB:: ; address name
     ret
 
 ; address loaded by GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
-Data_024_5D0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_5D0C:: ; address name
     db $2B, $01, $6B, $01
 
 ; ld de, this bank's string table / BeginStringDisplay
@@ -4459,7 +4475,7 @@ Jump_024_61E6::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_024_6C96
+    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     xor a, a
     ld [wChoiceCursor], a
@@ -4594,7 +4610,7 @@ Jump_024_62C9:: ; address name
     call DrawGoldPanel_Bank24
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_024_6C96
+    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -4602,7 +4618,7 @@ Jump_024_62C9:: ; address name
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_024_6C96
+    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     xor a, a
     ld [wScreenStep], a
@@ -4795,7 +4811,7 @@ Jump_024_6445:: ; address name
     call CopyRectTo20ByteRows_Bank24
     ld a, [wChoiceCursor]
     ld b, $BC
-    ld hl, Data_024_6C9E
+    ld hl, PriestMenu_Case02_QueueSoundEffect_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -5237,7 +5253,7 @@ Jump_024_673C:: ; address name
     ld c, $55
     call SRAMRecordAddress
     ld a, [wListCursor]
-    ld de, Data_024_67BD
+    ld de, PriestMenu_Case02_SRAMRecordAddress_Data
     add a, e
     ld e, a
     jr nc, Jump_024_6762
@@ -5298,7 +5314,8 @@ Jump_024_6797::
     ret
 
 ; address loaded by PriestMenu_Case02_SRAMRecordAddress
-Data_024_67BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_SRAMRecordAddress_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_67BD:: ; address name
     db $00, $FB, $FE
 
 ; entry 17 of the `rst $00` table in PriestMenu_Case02
@@ -5653,7 +5670,7 @@ Func_024_6987:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, Data_024_69C0
+    ld hl, PriestMenu_Case02_Case02_Sub01_Sub01_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5670,7 +5687,7 @@ Func_024_699A:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, Data_024_69C6
+    ld hl, PriestMenu_Case02_Case02_Sub01_Sub02_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5687,7 +5704,7 @@ Func_024_69AD:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, Data_024_69CC
+    ld hl, PriestMenu_Case02_Case02_Sub01_Sub03_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5698,15 +5715,18 @@ Func_024_69AD:: ; address name
     ret
 
 ; address loaded by PriestMenu_Case02_Case02_Sub01_Sub01
-Data_024_69C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_Case02_Sub01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_69C0:: ; address name
     db $F7, $C3, $1F, $C4, $47, $C4
 
 ; address loaded by PriestMenu_Case02_Case02_Sub01_Sub02
-Data_024_69C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_Case02_Sub01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_69C6:: ; address name
     db $F8, $C3, $20, $C4, $48, $C4
 
 ; address loaded by PriestMenu_Case02_Case02_Sub01_Sub03
-Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_Case02_Sub01_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_69CC:: ; address name
     db $F9, $C3, $21, $C4, $49, $C4
 
 ; only called from PriestMenu_Case02_Case03 (E-0047)
@@ -5829,7 +5849,7 @@ Func_024_6A68:: ; address name
 Jump_024_6A6A::
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, Data_024_6A8A
+    ld hl, PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5847,7 +5867,8 @@ Jump_024_6A6A::
     ret
 
 ; address loaded by PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
-Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_6A8A:: ; address name
     db $E1, $00, $21, $01, $61, $01
 
 ; only called from PriestMenu_Case02_Case04 (E-0047)
@@ -6074,21 +6095,25 @@ Data_024_6C49:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
 ; address loaded by PriestMenu_Case02_UpdateListCursorListCursor, PriestMenu_Case02_DrawGoldPanel_Bank24
-Data_024_6C96:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_UpdateListCursorListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_6C96:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3
 
 ; address loaded by PriestMenu_Case02_QueueSoundEffect
-Data_024_6C9E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PriestMenu_Case02_QueueSoundEffect_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_6C9E:: ; address name
     db $F1, $C3, $19, $C4, $41, $C4
 
 ; address loaded by GameMode6_Update_Case00_Case00_WaitForVRAMAccess
-Data_024_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode6_Update_Case00_Case00_WaitForVRAMAccess_Data_6CA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_024_6CA4:: ; address name
     ds $38, $00
     db $1F, $00, $FF, $7F, $00, $7E, $00, $00
 
 ; address loaded by GameMode6_Init, GameMode6_Update_Shared01_DecompressToVRAM
 ; LZSS-compressed asset: 303 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_024_6CE4:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+GameMode6_Init_Data_6CE4:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_024_6CE4:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $092CE4, $12F
 
 ; address loaded by GameMode6_Init, GameMode6_Update_Shared01_DecompressToVRAM
@@ -6099,11 +6124,12 @@ Data_024_6E13:: ; address name
 
 ; address loaded by GameMode6_Init
 ; LZSS-compressed asset: 247 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_024_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+GameMode6_Init_Data_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_024_6F4E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
 ; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
-; 1 call site from 1 routine (e.g. Func_01C_6AF7_ToStepItemDescriptionText)
+; 1 call site from 1 routine (e.g. ShopMenu_Shared01_ToStepItemDescriptionText)
 ; reads: wTextCounter6, wScreenState, wItemGridY, wItemGridX, wTextCounter2, wTextCounter1, wCursorBlinkB8, wTextCounter4, ...
 ; writes: wCursorBlinkB8, wTextCounter2, wTextCounter1, wTextCounter3, wTextCounter4, wTextCounter0
 ; points at: wItemGrid

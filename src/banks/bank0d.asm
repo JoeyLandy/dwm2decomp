@@ -639,7 +639,7 @@ Jump_00D_478A::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_00D_5097
+    ld hl, EggServiceMenu_Case05_UpdatePagedListCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenByteBD]
     and a, a
@@ -952,7 +952,7 @@ Jump_00D_49AA::
     push bc
     push de
     ld a, c
-    ld de, Data_00D_49FD
+    ld de, EggServiceMenu_Case05_Case12_GetListEntriesCell4AddressWithSRAM_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_49B6
@@ -1014,7 +1014,8 @@ Jump_00D_49F2::
     ret
 
 ; address loaded by EggServiceMenu_Case05_Case12_GetListEntriesCell4AddressWithSRAM
-Data_00D_49FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EggServiceMenu_Case05_Case12_GetListEntriesCell4AddressWithSRAM_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_49FD:: ; address name
     db $5D, $61, $63, $65, $67, $69
 
 ; entry 2 of the `rst $00` table in EggServiceMenu_Case05_Case12
@@ -1405,7 +1406,7 @@ EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D::
 Jump_00D_4C17:: ; address name
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_00D_5097
+    ld hl, EggServiceMenu_Case05_UpdatePagedListCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     ld de, TileRect_0D_50BD
     ld hl, wWindowTileBuffer + $110
@@ -1669,7 +1670,7 @@ Func_00D_4DA8:: ; address name
 Jump_00D_4DAA::
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, Data_00D_4DC7
+    ld hl, DrawArrowTileBCAtChoiceCursorEntry_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1686,7 +1687,8 @@ Jump_00D_4DAA::
     ret
 
 ; address loaded by DrawArrowTileBCAtChoiceCursorEntry
-Data_00D_4DC7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawArrowTileBCAtChoiceCursorEntry_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_4DC7:: ; address name
     db $2D, $01, $6D, $01
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
@@ -2111,7 +2113,8 @@ Data_00D_5022:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; address loaded by EggServiceMenu_Case05_UpdatePagedListCursor, EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D
-Data_00D_5097:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EggServiceMenu_Case05_UpdatePagedListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5097:: ; address name
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
 
 ; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
@@ -2775,7 +2778,7 @@ Func_00D_54E3:: ; address name
 Jump_00D_54E5::
     ld a, [wGridCursorX]
     sla a
-    ld hl, Data_00D_5504
+    ld hl, RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -2793,7 +2796,8 @@ Jump_00D_54E5::
     ret
 
 ; address loaded by RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D
-Data_00D_5504:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5504:: ; address name
     db $61, $00, $A1, $00, $E1, $00
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -3215,7 +3219,7 @@ Jump_00D_57F5:: ; address name
 Jump_00D_583D::
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_00D_62B0
+    ld hl, KeyAppraisalMenu_Case03_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -3255,7 +3259,7 @@ Jump_00D_5872:: ; address name
     call DrawScreenBufferRect_Bank0D
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_00D_62B0
+    ld hl, KeyAppraisalMenu_Case03_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenStep]
     inc a
@@ -3348,7 +3352,7 @@ Jump_00D_58D8::
 Jump_00D_591E::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_00D_62B0
+    ld hl, KeyAppraisalMenu_Case03_ClampKeyListPageCursor_Data
     call StoreBAtWordTableEntry_Bank0D
     ld de, wTextBuf0
     ld a, $01
@@ -3598,7 +3602,7 @@ Jump_00D_5AB4:: ; address name
 KeyAppraisalMenu_Case03_EraseCEntriesOfWordTable_Bank0D::
 Jump_00D_5AE3:: ; address name
     ld c, $04
-    ld hl, Data_00D_62B0
+    ld hl, KeyAppraisalMenu_Case03_ClampKeyListPageCursor_Data
     call EraseCEntriesOfWordTable_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -3922,15 +3926,15 @@ Func_00D_5CD9:: ; address name
     jr z, Jump_00D_5CEF
     cp a, $01
     jr z, Jump_00D_5CEA
-    ld hl, Data_00D_5D1E
+    ld hl, EraseCursorForArg5Layout_Data_5D1E
     jr Jump_00D_5CF2
 
 Jump_00D_5CEA::
-    ld hl, Data_00D_5D16
+    ld hl, EraseCursorForArg5Layout_Data_5D16
     jr Jump_00D_5CF2
 
 Jump_00D_5CEF::
-    ld hl, Data_00D_5D0E
+    ld hl, EraseCursorForArg5Layout_Data_5D0E
 
 Jump_00D_5CF2::
     ld a, [wListCursor]
@@ -3952,15 +3956,18 @@ Jump_00D_5CF2::
     ret
 
 ; address loaded by EraseCursorForArg5Layout
-Data_00D_5D0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EraseCursorForArg5Layout_Data_5D0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5D0E:: ; address name
     db $A6, $00, $C6, $00, $E6, $00, $06, $01
 
 ; address loaded by EraseCursorForArg5Layout
-Data_00D_5D16:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EraseCursorForArg5Layout_Data_5D16:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5D16:: ; address name
     db $A4, $00, $C4, $00, $E4, $00, $04, $01
 
 ; address loaded by EraseCursorForArg5Layout
-Data_00D_5D1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EraseCursorForArg5Layout_Data_5D1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5D1E:: ; address name
     db $A2, $00, $C2, $00, $E2, $00, $02, $01
 
 ; blanks the four mark positions and draws marks for the keys on the current page of wD789 (E-0130)
@@ -3972,11 +3979,11 @@ Func_00D_5D26:: ; address name
     ld a, [wArg5]
     and a, a
     jr nz, Jump_00D_5D31
-    ld de, Data_00D_5DDD
+    ld de, DrawKeyListPageMarks_Data_5DDD
     jr Jump_00D_5D34
 
 Jump_00D_5D31::
-    ld de, Data_00D_5DE5
+    ld de, DrawKeyListPageMarks_Data_5DE5
 
 Jump_00D_5D34::
     ld b, $04
@@ -4055,11 +4062,11 @@ Jump_00D_5DA3::
     ld a, [wArg5]
     and a, a
     jr nz, Jump_00D_5DAE
-    ld de, Data_00D_5DDD
+    ld de, DrawKeyListPageMarks_Data_5DDD
     jr Jump_00D_5DB8
 
 Jump_00D_5DAE::
-    ld de, Data_00D_5DE5
+    ld de, DrawKeyListPageMarks_Data_5DE5
     ld a, b
     cp a, $C3
     jr z, Jump_00D_5DB8
@@ -4101,11 +4108,13 @@ Jump_00D_5DDC::
     ret
 
 ; address loaded by DrawKeyListPageMarks
-Data_00D_5DDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawKeyListPageMarks_Data_5DDD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5DDD:: ; address name
     db $CD, $C3, $F5, $C3, $1D, $C4, $45, $C4
 
 ; address loaded by DrawKeyListPageMarks
-Data_00D_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawKeyListPageMarks_Data_5DE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_5DE5:: ; address name
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
 ; for the keys on the current page writes their names to wC8CF and draws them; generated keys (kind $FE) are shown as "Magic Key" (E-0130)
@@ -4715,7 +4724,8 @@ Data_00D_6292:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by KeyAppraisalMenu_Case03_ClampKeyListPageCursor, KeyAppraisalMenu_Case03_BGMapAddressAtScroll_Bank0D, KeyAppraisalMenu_Case03_UpdatePagedListCursor, KeyAppraisalMenu_Case03_EraseCEntriesOfWordTable_Bank0D
-Data_00D_62B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+KeyAppraisalMenu_Case03_ClampKeyListPageCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_62B0:: ; address name
     db $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
@@ -5329,11 +5339,11 @@ Jump_00D_6668:: ; address name
     ld a, [wListPageIndex]
     and a, a
     jr nz, Jump_00D_6678
-    ld de, Data_00D_6F71
+    ld de, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_6F71
     jr Jump_00D_6681
 
 Jump_00D_6673::
-    ld de, Data_00D_7043
+    ld de, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7043
     jr Jump_00D_6681
 
 Jump_00D_6678::
@@ -5357,7 +5367,7 @@ Jump_00D_6681::
 Jump_00D_669C::
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_00D_7106
+    ld hl, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7106
     call StoreBAtWordTableEntry_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -5395,7 +5405,7 @@ Jump_00D_66CE:: ; address name
     call DrawScreenBufferRect_Bank0D
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_00D_7106
+    ld hl, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7106
     call StoreBAtWordTableEntry_Bank0D
     ld a, [wScreenStep]
     inc a
@@ -5668,7 +5678,7 @@ Jump_00D_6891::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_00D_7106
+    ld hl, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7106
     call StoreBAtWordTableEntry_Bank0D
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5676,7 +5686,7 @@ Jump_00D_6891::
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld de, Data_00D_710E
+    ld de, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_68BE
@@ -5778,7 +5788,7 @@ Jump_00D_6956::
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld de, Data_00D_710E
+    ld de, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_6974
@@ -5827,11 +5837,11 @@ Func_00D_69B3:: ; address name
     ld a, [wListPageIndex]
     and a, a
     jr nz, Jump_00D_69C3
-    ld de, Data_00D_70AC
+    ld de, MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D_Data_70AC
     jr Jump_00D_69CC
 
 Jump_00D_69BE::
-    ld de, Data_00D_70CA
+    ld de, MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D_Data_70CA
     jr Jump_00D_69CC
 
 Jump_00D_69C3::
@@ -5858,7 +5868,7 @@ Jump_00D_69CC::
 MedalPrizeMenu_Case05_EraseCEntriesOfWordTable_Bank0D::
 Jump_00D_69E8:: ; address name
     ld c, $04
-    ld hl, Data_00D_7106
+    ld hl, MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7106
     call EraseCEntriesOfWordTable_Bank0D
     call BGMapAddressAtScroll_Bank0D
     ld bc, $140D
@@ -5977,7 +5987,7 @@ Jump_00D_6AA2:: ; address name
     ld l, a
     ld a, [hl]
     push hl
-    ld de, Data_00D_710E
+    ld de, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_6ABA
@@ -6341,7 +6351,7 @@ Func_00D_6CCC:: ; address name
     ld hl, sRecords
     ld c, $00
     ld a, [wFarmLevel]
-    ld de, Data_00D_6D06
+    ld de, MedalPrizeMenu_WriteRAMG2AndRAMB_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_6CE5
@@ -6375,7 +6385,8 @@ Jump_00D_6D00::
     ret
 
 ; address loaded by MedalPrizeMenu_WriteRAMG2AndRAMB
-Data_00D_6D06:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_WriteRAMG2AndRAMB_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_6D06:: ; address name
     db $0A, $14, $1E
 
 ; only called from routines of MedalPrizeMenu (E-0098)
@@ -6437,7 +6448,7 @@ Func_00D_6D3E:: ; address name
     ld a, [wListPageIndex]
     add a, a
     add a, a
-    ld de, Data_00D_710E
+    ld de, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
     add a, e
     ld e, a
     jr nc, Jump_00D_6D4B
@@ -6475,7 +6486,7 @@ Jump_00D_6D69::
     ld h, $00
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F_Bank15
-    ld de, Data_00D_6D9F
+    ld de, MedalPrizeMenu_ReadListPageIndexAndArenaByte37Etc_Data
     pop bc
     push bc
     ld a, c
@@ -6507,7 +6518,8 @@ Jump_00D_6D85::
     ret
 
 ; address loaded by MedalPrizeMenu_ReadListPageIndexAndArenaByte37Etc
-Data_00D_6D9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_ReadListPageIndexAndArenaByte37Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_6D9F:: ; address name
     db $D7, $C3, $FF, $C3, $27, $C4, $4F, $C4
 
 ; writes B at BGMapAddressAtScroll + the offset from Data_00D_6DC8[wD7AB] (WaitForVRAMAccess, interrupts off); BC kept (E-0120)
@@ -6518,7 +6530,7 @@ Func_00D_6DA7:: ; address name
     push bc
     ld a, [wListCursor]
     sla a
-    ld hl, Data_00D_6DC8
+    ld hl, WriteTileBAtCursorListCursor_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -6537,7 +6549,8 @@ Func_00D_6DA7:: ; address name
     ret
 
 ; address loaded by WriteTileBAtCursorListCursor
-Data_00D_6DC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteTileBAtCursorListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_6DC8:: ; address name
     db $A4, $00, $E4, $00, $24, $01, $64, $01
 
 ; only called from routines of MedalPrizeMenu (E-0098)
@@ -6741,7 +6754,8 @@ Data_00D_6ED8:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; address loaded by MedalPrizeMenu_Case05_ClampKeyListPageCursor
-Data_00D_6F71:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_6F71:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_6F71:: ; address name
     db $C3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $FD
     ds $14, $C3
     db $D0, $D1, $D2, $D3, $D4, $D5, $D6, $D7, $D8, $FD
@@ -6763,7 +6777,8 @@ Data_00D_6FDA:: ; address name
     db $C3, $D9, $DA, $DB, $DC, $DD, $DE, $F9, $FA, $FB, $C3, $C3, $C3, $C3, $C3 ; id 6
 
 ; address loaded by MedalPrizeMenu_Case05_ClampKeyListPageCursor
-Data_00D_7043:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7043:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_7043:: ; address name
     db $C3, $A4, $A5, $A6, $A7, $A8, $A9, $AA, $AB, $AC, $FD
     ds $14, $C3
     db $D0, $D1, $D2, $D3, $D4, $D5, $D6, $D7, $D8, $FD
@@ -6773,12 +6788,14 @@ Data_00D_7043:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D9, $DA, $DB, $DC, $DD, $DE, $F9, $FA, $FB, $C3, $C3, $C3, $C3, $C3
 
 ; address loaded by MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D
-Data_00D_70AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D_Data_70AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_70AC:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $B7, $FD, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3
     db $C3, $B7, $FD, $C3, $C3, $C3, $C3, $B7, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; address loaded by MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D
-Data_00D_70CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D_Data_70CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_70CA:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $B7, $FD, $C3, $C3, $C3, $C3, $B7, $C3, $C3, $C3, $C3
     db $C3, $B7, $C3, $C3, $C3, $C3, $C3, $B7, $B4, $B4, $B4, $B4, $B4, $B5
 
@@ -6793,11 +6810,13 @@ Data_00D_70E8:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by MedalPrizeMenu_Case05_ClampKeyListPageCursor, MedalPrizeMenu_Case05_BGMapAddressAtScroll_Bank0D, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc, MedalPrizeMenu_Case05_EraseCEntriesOfWordTable_Bank0D
-Data_00D_7106:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_Case05_ClampKeyListPageCursor_Data_7106:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_7106:: ; address name
     db $CC, $C3, $F4, $C3, $1C, $C4, $44, $C4
 
 ; address loaded by MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc, MedalPrizeMenu_Case05_UpdateTwoChoiceCursor_Bank1D, MedalPrizeMenu_Case05_SetArg5ToListEntriesCell4_Case0D, MedalPrizeMenu_ReadListPageIndexAndArenaByte37Etc
-Data_00D_710E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_710E:: ; address name
     db $03, $03, $04, $04, $05, $05, $0A
 
 ; far-calls CloseMenuE9 (E-0119)
@@ -7315,7 +7334,7 @@ Jump_00D_7472::
     jr nz, Jump_00D_7472
     ld a, [wScreenTableIndex]
     sla a
-    ld hl, Data_00D_7499
+    ld hl, NpcBreedMenu_Case04_WriteTwoChoiceCursorAndScreenSubStepEtc_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7329,7 +7348,8 @@ Jump_00D_7472::
     ret
 
 ; address loaded by NpcBreedMenu_Case04_WriteTwoChoiceCursorAndScreenSubStepEtc
-Data_00D_7499:: ; heuristic: pointer load in the same bank (bank assumed); C0
+NpcBreedMenu_Case04_WriteTwoChoiceCursorAndScreenSubStepEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_7499:: ; address name
     db $0E, $01, $18, $01, $1A, $01, $25, $01, $29, $01, $32, $00, $33, $00, $34, $00
     db $35, $00, $36, $00
 
@@ -7485,7 +7505,7 @@ Jump_00D_7597:: ; address name
     sla a
     add a, b
     push af
-    ld hl, Data_00D_75D7
+    ld hl, NpcBreedMenu_Case11_DecompressToVRAM_Data_75D7
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7496,7 +7516,7 @@ Jump_00D_7597:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     pop af
-    ld hl, Data_00D_7607
+    ld hl, NpcBreedMenu_Case11_DecompressToVRAM_Data_7607
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7515,13 +7535,15 @@ Jump_00D_7597:: ; address name
     ret
 
 ; address loaded by NpcBreedMenu_Case11_DecompressToVRAM
-Data_00D_75D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+NpcBreedMenu_Case11_DecompressToVRAM_Data_75D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_75D7:: ; address name
     db $82, $6B, $48, $A9, $49, $48, $82, $6B, $48, $A9, $49, $48, $82, $6B, $48, $A9
     db $49, $48, $A9, $49, $48, $A9, $49, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B
     db $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48
 
 ; address loaded by NpcBreedMenu_Case11_DecompressToVRAM
-Data_00D_7607:: ; heuristic: pointer load in the same bank (bank assumed); C0
+NpcBreedMenu_Case11_DecompressToVRAM_Data_7607:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00D_7607:: ; address name
     db $34, $6F, $48, $87, $4C, $48, $34, $6F, $48, $87, $4C, $48, $34, $6F, $48, $87
     db $4C, $48, $87, $4C, $48, $87, $4C, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F
     db $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48
@@ -7877,15 +7899,15 @@ Data_00D_78B8:: ; address name
 PresetMonsterRecordTable::
 Data_00D_78D6:: ; address name
     dw PresetMonsterRecords ; id 0
-    dw Data_00D_799B ; id 1
-    dw Data_00D_7A40 ; id 2
-    dw Data_00D_7AE5 ; id 3
-    dw Data_00D_7B8A ; id 4
-    dw Data_00D_7C2F ; id 5
-    dw Data_00D_7CD4 ; id 6
-    dw Data_00D_7D79 ; id 7
-    dw Data_00D_7E1E ; id 8
-    dw Data_00D_7EC3 ; id 9
+    dw PresetMonsterRecords_01 ; id 1
+    dw PresetMonsterRecords_02 ; id 2
+    dw PresetMonsterRecords_03 ; id 3
+    dw PresetMonsterRecords_04 ; id 4
+    dw PresetMonsterRecords_05 ; id 5
+    dw PresetMonsterRecords_06 ; id 6
+    dw PresetMonsterRecords_07 ; id 7
+    dw PresetMonsterRecords_08 ; id 8
+    dw PresetMonsterRecords_09 ; id 9
     dw PresetMonsterRecords ; id 10
     dw PresetMonsterRecords ; id 11
     dw PresetMonsterRecords ; id 12
@@ -7918,7 +7940,8 @@ Data_00D_78F6:: ; address name
     db $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_799B:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_01:: ; heuristic: preset monster record; C0
+Data_00D_799B:: ; address name
     db $01 ; id 1: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $011E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -7940,7 +7963,8 @@ Data_00D_799B:: ; heuristic: preset monster record; C0
     db $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7A40:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_02:: ; heuristic: preset monster record; C0
+Data_00D_7A40:: ; address name
     db $01 ; id 2: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $00BC ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -7962,7 +7986,8 @@ Data_00D_7A40:: ; heuristic: preset monster record; C0
     db $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7AE5:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_03:: ; heuristic: preset monster record; C0
+Data_00D_7AE5:: ; address name
     db $01 ; id 3: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0092 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -7984,7 +8009,8 @@ Data_00D_7AE5:: ; heuristic: preset monster record; C0
     db $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7B8A:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_04:: ; heuristic: preset monster record; C0
+Data_00D_7B8A:: ; address name
     db $01 ; id 4: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $005E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -8006,7 +8032,8 @@ Data_00D_7B8A:: ; heuristic: preset monster record; C0
     db $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7C2F:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_05:: ; heuristic: preset monster record; C0
+Data_00D_7C2F:: ; address name
     db $01 ; id 5: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0080 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -8028,7 +8055,8 @@ Data_00D_7C2F:: ; heuristic: preset monster record; C0
     db $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7CD4:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_06:: ; heuristic: preset monster record; C0
+Data_00D_7CD4:: ; address name
     db $01 ; id 6: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $010D ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -8050,7 +8078,8 @@ Data_00D_7CD4:: ; heuristic: preset monster record; C0
     db $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7D79:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_07:: ; heuristic: preset monster record; C0
+Data_00D_7D79:: ; address name
     db $01 ; id 7: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0033 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -8072,7 +8101,8 @@ Data_00D_7D79:: ; heuristic: preset monster record; C0
     db $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7E1E:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_08:: ; heuristic: preset monster record; C0
+Data_00D_7E1E:: ; address name
     db $01 ; id 8: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $010A ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
@@ -8094,7 +8124,8 @@ Data_00D_7E1E:: ; heuristic: preset monster record; C0
     db $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
     db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
     db $00 ; $A4: equipped item (E-0125)
-Data_00D_7EC3:: ; heuristic: preset monster record; C0
+PresetMonsterRecords_09:: ; heuristic: preset monster record; C0
+Data_00D_7EC3:: ; address name
     db $01 ; id 9: state: 0 empty, 1 or 2 in use (E-0104)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0133 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)

@@ -308,7 +308,7 @@ Func_0A3_414F:: ; address name
     cp a, $FF
     jr z, Jump_0A3_417D
     sla a
-    ld hl, Data_0A3_4181
+    ld hl, ActorFormationSlotToTemp0_Data
     add_a_to_hl
     ld a, [hl+]
     cp a, c
@@ -324,7 +324,8 @@ Jump_0A3_417D::
     ret
 
 ; address loaded by ActorFormationSlotToTemp0
-Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ActorFormationSlotToTemp0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A3_4181:: ; address name
     db $00, $01, $00, $02, $01, $02
 
 ; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
@@ -1174,7 +1175,7 @@ Func_0A3_4AAF:: ; address name
     ld b, a
     ld a, $0E
     call DivideBByA
-    ld hl, Data_0A3_4AFD
+    ld hl, ActionEffect_Chance_AdvanceRandom_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -1213,7 +1214,8 @@ Jump_0A3_4AF3::
     ret
 
 ; address loaded by ActionEffect_Chance_AdvanceRandom
-Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ActionEffect_Chance_AdvanceRandom_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A3_4AFD:: ; address name
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
 ; only called from BattleEnd_Step7_Case02 (E-0047)

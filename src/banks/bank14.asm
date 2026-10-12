@@ -329,7 +329,7 @@ Jump_014_41EE::
 Jump_014_41F8::
     ld a, c
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     push bc
     push hl
     call StoreBAtWordTableEntry_Bank14
@@ -410,7 +410,7 @@ Func_014_4261:: ; address name
 Jump_014_4263::
     ld a, [wGridCursorX]
     add a, a
-    ld hl, Data_014_4280
+    ld hl, HibernateMenu_Case02_BGMapAddressAtScroll_Bank14_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -427,7 +427,8 @@ Jump_014_4263::
     ret
 
 ; address loaded by HibernateMenu_Case02_BGMapAddressAtScroll_Bank14
-Data_014_4280:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_Case02_BGMapAddressAtScroll_Bank14_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_4280:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
 ; entry 3 of the `rst $00` table in HibernateMenu
@@ -776,7 +777,7 @@ Jump_014_450C:: ; address name
     push hl
     ld a, [wListCursor]
     add a, a
-    ld hl, Data_014_4586
+    ld hl, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -826,7 +827,8 @@ Jump_014_450C:: ; address name
     ret
 
 ; address loaded by HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C
-Data_014_4586:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_4586:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
 ; entry 62 of the `rst $00` table in HibernateMenu_Case05
@@ -857,7 +859,7 @@ Jump_014_45B8::
     call HibernateMenu_WriteSVBK
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -1045,7 +1047,7 @@ HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14::
 Jump_014_4718:: ; address name
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140B
@@ -1053,7 +1055,7 @@ Jump_014_4718:: ; address name
     call DrawScreenBufferRect_Bank14
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, [wScreenStep]
     inc a
@@ -1347,7 +1349,7 @@ Func_014_490F:: ; address name
 Jump_014_4911::
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, Data_014_492E
+    ld hl, HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1364,7 +1366,8 @@ Jump_014_4911::
     ret
 
 ; address loaded by HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14
-Data_014_492E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_492E:: ; address name
     db $2D, $01, $6D, $01
 
 ; copies box Data_014_4965 to wC410, runs Func_014_5925, blanks the cursor entry wD7AB of Data_014_5B1E and wD781 += 1 (E-0124)
@@ -1387,7 +1390,7 @@ Func_014_4932:: ; address name
     call CopyScreenBufferRectWithAttrs_Bank14
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, [wScreenStep]
     inc a
@@ -1419,7 +1422,7 @@ Jump_014_496D:: ; address name
     call CopyRectTo20ByteRows_Bank14
     ld a, [wGridCursorX]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140D
@@ -1772,7 +1775,7 @@ Jump_014_4C71::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a, a
@@ -1836,7 +1839,7 @@ Jump_014_4CD0:: ; address name
     call RunFunc5925At0280
     ld a, [wGridCursorX]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140B
@@ -2062,7 +2065,7 @@ Jump_014_4E66:: ; address name
 Jump_014_4E7A::
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call HibernateMenu_WriteSVBK
     ld a, $01
@@ -2106,7 +2109,7 @@ Func_014_4EBF:: ; address name
     ld c, $00
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld hl, wWindowTileBuffer + $112
-    ld de, Data_014_4F24
+    ld de, HibernateMenu_WriteSVBK_Data_4F24
     ld c, $04
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld a, [wIsCGB]
@@ -2120,7 +2123,7 @@ Func_014_4EBF:: ; address name
     ld c, $00
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ld hl, wWindowAttrBuffer + $112
-    ld de, Data_014_4F2A
+    ld de, HibernateMenu_WriteSVBK_Data_4F2A
     ld c, $04
     call HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ldh a, [rSVBK]
@@ -2145,11 +2148,13 @@ Jump_014_4EFD::
     ret
 
 ; address loaded by HibernateMenu_WriteSVBK
-Data_014_4F24:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_WriteSVBK_Data_4F24:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_4F24:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B5
 
 ; address loaded by HibernateMenu_WriteSVBK
-Data_014_4F2A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_WriteSVBK_Data_4F2A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_4F2A:: ; address name
     db $00, $00, $00, $00, $00, $00
 
 ; only called from HibernateMenu_Shared02 (E-0047)
@@ -2569,7 +2574,7 @@ Jump_014_5238::
     call EraseFiveEntriesOf5B1E
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -2595,7 +2600,7 @@ Jump_014_525C:: ; address name
     call RunFunc5925At0280
     ld a, [wGridCursorX]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     ld bc, $140B
@@ -2695,7 +2700,7 @@ Jump_014_5311::
 Jump_014_532E::
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ret
 
@@ -2708,7 +2713,7 @@ Jump_014_533A::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a, a
@@ -2992,7 +2997,7 @@ Jump_014_5536::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a, a
@@ -3126,7 +3131,7 @@ Jump_014_5623::
     call HibernateMenu_WriteSVBK
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -3654,7 +3659,7 @@ Jump_014_58F0::
     push bc
     ld a, c
     ld b, $C3
-    ld hl, Data_014_5B1E
+    ld hl, HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data
     call StoreBAtWordTableEntry_Bank14
     pop bc
     inc c
@@ -3925,7 +3930,8 @@ Data_014_5AC4:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; address loaded by HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14, DrawBox4965AndMenuAndStep and 10 more
-Data_014_5B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_5B1E:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $22, $C4, $4A, $C4, $80, $C3
     db $A8, $C3, $D0, $C3, $F8, $C3, $20, $C4
 
@@ -4216,7 +4222,7 @@ Jump_014_5DE0:: ; address name
     ld a, [wArg1]
     or a, a
     jr nz, Jump_014_5E44
-    ld hl, Data_014_5E9F
+    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E9F
     ld a, [wArg2]
     or a, a
     jr z, Jump_014_5E10
@@ -4226,11 +4232,11 @@ Jump_014_5E10::
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_Bank14
-    ld hl, Data_014_5E93
+    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E93
     ld a, [wArg2]
     or a, a
     jr z, Jump_014_5E24
-    ld hl, Data_014_5E99
+    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E99
 
 Jump_014_5E24::
     ld de, hTemp0
@@ -4304,15 +4310,18 @@ Func_014_5E8C:: ; address name
     ret
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-Data_014_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_5E93:: ; address name
     db $00, $00, $01, $04, $00, $80
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-Data_014_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_5E99:: ; address name
     db $01, $00, $01, $01, $00, $80
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-Data_014_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_5E9F:: ; address name
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
 ; E-0264 (derived: Func_014_5E8C copies these 16 bytes to wSpriteSlots)
@@ -4533,7 +4542,7 @@ Jump_014_600D::
 Jump_014_601A::
     call DrawBlankTileC3_6189
     ld a, [wNameEntryCursorY]
-    ld hl, Data_014_605E
+    ld hl, RunNameEntryStateWhenNotFading_Case01_Case00_Data
     add_a_to_hl
     ld b, [hl]
     ld a, [wNameEntryCursorX]
@@ -4568,7 +4577,8 @@ Jump_014_6051::
     ret
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case01_Case00
-Data_014_605E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_Case01_Case00_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_605E:: ; address name
     db $10, $10, $10, $0D, $0D
 
 Jump_014_6063::
@@ -4577,7 +4587,7 @@ Jump_014_6063::
     and a, a
     jr nz, Jump_014_607D
     ld a, [wNameEntryCursorY]
-    ld hl, Data_014_605E
+    ld hl, RunNameEntryStateWhenNotFading_Case01_Case00_Data
     add_a_to_hl
     ld a, [hl]
     ld [wNameEntryCursorX], a
@@ -5240,7 +5250,7 @@ Jump_014_6488:: ; address name
     ld a, [wNameEntrySubState]
     inc a
     ld [wNameEntrySubState], a
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $480
     ld b, $1F
     ld c, $10
@@ -5319,7 +5329,7 @@ Jump_014_64F8:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_7177
+    ld de, RunNameEntryStateWhenNotFading_Case02_DrawTileRectFromArg1Params_Data
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5769,7 +5779,7 @@ Jump_014_67B0:: ; address name
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, Data_01F_7087
+    ld de, RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_Case07_Data
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -5889,7 +5899,7 @@ Jump_014_6856::
 ; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList688A::
 Func_014_6875:: ; address name
-    ld de, Data_014_688A
+    ld de, IsHLByteInList688A_Data
 
 Jump_014_6878::
     ld a, [de]
@@ -5911,7 +5921,8 @@ Jump_014_6887::
     ret
 
 ; address loaded by IsHLByteInList688A
-Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+IsHLByteInList688A_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_688A:: ; address name
     db $3E, $3F, $40, $41, $42, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
@@ -5920,7 +5931,7 @@ Data_014_688A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 3 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList68CA::
 Func_014_68B5:: ; address name
-    ld de, Data_014_68CA
+    ld de, IsHLByteInList68CA_Data
 
 Jump_014_68B8::
     ld a, [de]
@@ -5942,7 +5953,8 @@ Jump_014_68C7::
     ret
 
 ; address loaded by IsHLByteInList68CA
-Data_014_68CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+IsHLByteInList68CA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_68CA:: ; address name
     db $3E, $3F, $40, $41, $42, $75, $76, $77, $78, $79, $FF
 
 ; only called from RunNameEntryStateWhenNotFading_Case05 (E-0047)
@@ -6054,7 +6066,7 @@ Func_014_695E:: ; address name
 Jump_014_6960::
     ld a, [wNameEntryMenuCursor]
     add a, a
-    ld hl, Data_014_697D
+    ld hl, RunNameEntryStateWhenNotFading_Case05_Sub01_BGMapAddressAtScroll_Bank14_6BCF_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6071,7 +6083,8 @@ Jump_014_6960::
     ret
 
 ; address loaded by RunNameEntryStateWhenNotFading_Case05_Sub01_BGMapAddressAtScroll_Bank14_6BCF
-Data_014_697D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_Case05_Sub01_BGMapAddressAtScroll_Bank14_6BCF_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_697D:: ; address name
     db $2F, $01, $6F, $01
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
@@ -6497,7 +6510,7 @@ Jump_014_6BA4::
     ld a, [wArg1]
     cp a, $03
     jr z, Jump_014_6BB0
-    ld de, Data_014_7003
+    ld de, RunNameEntryStateWhenNotFading_FillTilesFromRequest_Data
     jr Jump_014_6BB3
 
 Jump_014_6BB0::
@@ -6620,7 +6633,7 @@ Jump_014_6C33::
 ; reads: wNameEntryLength
 CopyTileForNameEntryLength::
 Func_014_6C3F:: ; address name
-    ld hl, Data_014_6C56
+    ld hl, CopyTileForNameEntryLength_Data_6C56
     ld a, [wNameEntryLength]
     add a, a
     add_a_to_hl
@@ -6628,16 +6641,18 @@ Func_014_6C3F:: ; address name
     inc hl
     ld h, [hl]
     ld l, e
-    ld de, Data_014_6C60
+    ld de, CopyTileForNameEntryLength_Data_6C60
     call CopyTileBytesToVRAM_Bank14
     ret
 
 ; address loaded by CopyTileForNameEntryLength
-Data_014_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyTileForNameEntryLength_Data_6C56:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_6C56:: ; address name
     db $00, $95, $10, $95, $20, $95, $30, $95, $40, $95
 
 ; address loaded by CopyTileForNameEntryLength
-Data_014_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyTileForNameEntryLength_Data_6C60:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_6C60:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
 ; only called from RunNameEntryStateWhenNotFading_Case01_Case03 (E-0047)
@@ -6883,7 +6898,8 @@ Data_014_6F4E:: ; address name
     db $06, $07, $08, $09, $00, $FF, $FF, $FF, $FF, $FF, $FF ; end
 
 ; address loaded by RunNameEntryStateWhenNotFading_FillTilesFromRequest
-Data_014_7003:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunNameEntryStateWhenNotFading_FillTilesFromRequest_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_014_7003:: ; address name
     db $05, $70, $0D, $70, $1C, $70, $2B, $70, $4D, $70
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Is ", $F9, "0 correct?", $F0, "Is ", $F9, "0 correct?", $F0, "A monster already", $F1

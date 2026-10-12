@@ -20,7 +20,7 @@ Jump_017_4012::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, Data_017_4055
+    ld de, SendSGBPaletteSetPacket_WaitSGBActive_Data
     add hl, de
     ld e, [hl]
     inc hl
@@ -74,86 +74,106 @@ Jump_017_403B::
     jr Jump_017_4026
 
 ; address loaded by SendSGBPaletteSetPacket_WaitSGBActive
-Data_017_4055:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SendSGBPaletteSetPacket_WaitSGBActive_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_017_4055:: ; address name
     db $FF, $40, $0F, $41
-    dw Data_017_407F
-    dw Data_017_408F
-    dw Data_017_409F
-    dw Data_017_40AF
-    dw Data_017_40BF
-    dw Data_017_40CF
-    dw Data_017_40DF
-    dw Data_017_40EF
-    dw Data_017_411F
-    dw Data_017_412F
-    dw Data_017_413F
-    dw Data_017_414F
-    dw Data_017_415F
-    dw Data_017_416F
-    dw Data_017_417F
-    dw Data_017_418F
-    dw Data_017_419F
-    dw Data_017_41AF
-    dw Data_017_41BF
+    dw PointerRun_17_4059_Entry00
+    dw PointerRun_17_4059_Entry01
+    dw PointerRun_17_4059_Entry02
+    dw PointerRun_17_4059_Entry03
+    dw PointerRun_17_4059_Entry04
+    dw PointerRun_17_4059_Entry05
+    dw PointerRun_17_4059_Entry06
+    dw PointerRun_17_4059_Entry07
+    dw PointerRun_17_4059_Entry08
+    dw PointerRun_17_4059_Entry09
+    dw PointerRun_17_4059_Entry0A
+    dw PointerRun_17_4059_Entry0B
+    dw PointerRun_17_4059_Entry0C
+    dw PointerRun_17_4059_Entry0D
+    dw PointerRun_17_4059_Entry0E
+    dw PointerRun_17_4059_Entry0F
+    dw PointerRun_17_4059_Entry10
+    dw PointerRun_17_4059_Entry11
+    dw PointerRun_17_4059_Entry12
 
-Data_017_407F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_017_5D79
+PointerRun_17_4059_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_017_407F:: ; address name
+    dw PointerRun_17_4059_Entry13
     db $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_408F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_017_408F:: ; address name
     db $79, $52, $08, $00, $0B, $A9, $E7, $9F, $01, $C0, $7E, $E8, $E8, $E8, $E8, $E0
 
-Data_017_409F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_017_409F:: ; address name
     db $79, $47, $08, $00, $0B, $C4, $D0, $16, $A5, $CB, $C9, $05, $D0, $10, $A2, $28
 
-Data_017_40AF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_017_40AF:: ; address name
     db $79, $3C, $08, $00, $0B, $F0, $12, $A5, $C9, $C9, $C8, $D0, $1C, $A5, $CA, $C9
 
-Data_017_40BF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_017_40BF:: ; address name
     db $79, $31, $08, $00, $0B, $0C, $A5, $CA, $C9, $7E, $D0, $06, $A5, $CB, $C9, $7E
 
-Data_017_40CF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_017_40CF:: ; address name
     db $79, $26, $08, $00, $0B, $39, $CD, $48, $0C, $D0, $34, $A5, $C9, $C9, $80, $D0
 
-Data_017_40DF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_017_40DF:: ; address name
     db $79, $1B, $08, $00, $0B, $EA, $EA, $EA, $EA, $EA, $A9, $01, $CD, $4F, $0C, $D0
 
-Data_017_40EF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_017_40EF:: ; address name
     db $79, $10, $08, $00, $0B, $4C, $20, $08, $EA, $EA, $EA, $EA, $EA, $60, $EA, $EA
     db $B9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $B9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_411F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_017_411F:: ; address name
     db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_412F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry09:: ; heuristic: target of a monotone pointer table; C0
+Data_017_412F:: ; address name
     db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_413F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0A:: ; heuristic: target of a monotone pointer table; C0
+Data_017_413F:: ; address name
     db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_414F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0B:: ; heuristic: target of a monotone pointer table; C0
+Data_017_414F:: ; address name
     db $A9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_415F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0C:: ; heuristic: target of a monotone pointer table; C0
+Data_017_415F:: ; address name
     db $51, $00, $00, $01, $00, $02, $00, $03, $00, $C0, $00, $00, $00, $00, $00, $00
 
-Data_017_416F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0D:: ; heuristic: target of a monotone pointer table; C0
+Data_017_416F:: ; address name
     db $A1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_417F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0E:: ; heuristic: target of a monotone pointer table; C0
+Data_017_417F:: ; address name
     db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_418F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry0F:: ; heuristic: target of a monotone pointer table; C0
+Data_017_418F:: ; address name
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_419F:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry10:: ; heuristic: target of a monotone pointer table; C0
+Data_017_419F:: ; address name
     db $C9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_41AF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry11:: ; heuristic: target of a monotone pointer table; C0
+Data_017_41AF:: ; address name
     db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry12:: ; heuristic: target of a monotone pointer table; C0
+Data_017_41BF:: ; address name
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wC51F] (also kept in wC577), attribute file wC520 | $80, loads the object palettes and sends it (E-0125)
@@ -353,7 +373,8 @@ SGBBorder0MapAndPalettes:: ; heuristic: stream decompressed by a call to Decompr
 Data_017_5B03:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05DB03, $276
 
-Data_017_5D79:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_17_4059_Entry13:: ; heuristic: target of a monotone pointer table; C0
+Data_017_5D79:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05DD79, $167
 
 ; Super Game Boy border set 1: border map and palettes ($880 bytes, packet set $0F); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)

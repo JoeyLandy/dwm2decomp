@@ -1268,7 +1268,7 @@ Jump_060_4B3B::
     call DivideBByA
     ld a, b
     add a, a
-    ld hl, Data_060_4C58
+    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data
     add_a_to_hl
     ld a, [hl+]
     ld b, a
@@ -1372,7 +1372,8 @@ Jump_060_4BF3::
     ds $5A, $88
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc
-Data_060_4C58:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_4C58:: ; address name
     db $00, $0F, $08, $0F, $08, $0F, $10, $1F, $10, $1F, $10, $1F, $10, $1F, $10, $1F
     db $10, $1F, $10, $1F
 
@@ -2194,7 +2195,7 @@ Jump_060_512B::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $3F
-    ld hl, Data_060_5177
+    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2241,7 +2242,8 @@ Jump_060_5174::
     jp Jump_060_50F4
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
-Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_5177:: ; address name
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F
     db $50, $51, $52, $53, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43
     db $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53
@@ -2590,7 +2592,7 @@ Func_060_5373:: ; address name
 
 Jump_060_5379::
     ld [wKeyWorldBand], a
-    ld hl, Data_060_53B3
+    ld hl, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data
     add_a_to_hl
     ld a, [hl]
     ld [wMapObjectCount], a
@@ -2629,7 +2631,8 @@ Jump_060_53A7::
     ret
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
-Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_53B3:: ; address name
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
@@ -2865,7 +2868,7 @@ Jump_060_54F5::
     jr nc, Jump_060_54F5
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, Data_060_555F
+    ld hl, RollKeyWorldObjectKind_Data
     add_a_to_hl
     xor a, a
     ld [de], a
@@ -2925,7 +2928,8 @@ Jump_060_555B::
     ret
 
 ; address loaded by RollKeyWorldObjectKind
-Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RollKeyWorldObjectKind_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_555F:: ; address name
     ds $13, $00
     db $5E
     ds $21, $00
@@ -3056,7 +3060,7 @@ Jump_060_59AB::
     jr nc, Jump_060_59AB
     ld c, a
     ld a, [wKeyWorldBand]
-    ld hl, Data_060_5A19
+    ld hl, FieldModeStateDispatch_NextRandomSeed_Data
     add_a_to_hl
     ld a, [hl]
     cp a, c
@@ -3123,7 +3127,8 @@ Jump_060_5A15::
     ret
 
 ; address loaded by FieldModeStateDispatch_NextRandomSeed
-Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_NextRandomSeed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_5A19:: ; address name
     ds $13, $00
     db $55
     ds $26, $00
@@ -3277,7 +3282,7 @@ Jump_060_5EBC::
 
 Jump_060_5EBE::
     sla a
-    ld hl, Data_060_5ED1
+    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc_Data
     add_a_to_hl
     ld a, [hl+]
     ld [wKeyWorldGoalPos], a
@@ -3286,7 +3291,8 @@ Jump_060_5EBE::
     ret
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc
-Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_5ED1:: ; address name
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
@@ -3370,7 +3376,7 @@ Jump_060_5F1C::
     ld c, a
     add a, a
     add a, c
-    ld de, Data_060_6245
+    ld de, RunRandomPatternCase_WriteTempA_Case03_Data
     add a, e
     ld e, a
     jr nc, Jump_060_5F5E
@@ -3466,7 +3472,7 @@ Jump_060_5FC8::
     ld c, a
     sla a
     add a, c
-    ld de, Data_060_61E5
+    ld de, RunRandomPatternCase_WriteTempA_Case02_Data
     add a, e
     ld e, a
     jr nc, Jump_060_5FF2
@@ -3541,7 +3547,7 @@ Jump_060_6038::
     ld c, a
     sla a
     add a, c
-    ld de, Data_060_616D
+    ld de, RunRandomPatternCase_WriteTempA_Data
     add a, e
     ld e, a
     jr nc, Jump_060_605E
@@ -3719,7 +3725,8 @@ Data_060_610D:: ; address name
     dfar KeyWorldChunkGroup02 ; id 29
     dfar KeyWorldChunkGroup01 ; id 30
     dfar KeyWorldChunkGroup00 ; id 31
-Data_060_616D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunRandomPatternCase_WriteTempA_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_616D:: ; address name
     dfar KeyWorldChunkGroup10 ; id 32
     dfar KeyWorldChunkGroup11 ; id 33
     dfar KeyWorldChunkGroup12 ; id 34
@@ -3760,7 +3767,8 @@ Data_060_616D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dfar KeyWorldChunkGroup20 ; id 69
     dfar KeyWorldChunkGroup20 ; id 70
     dfar KeyWorldChunkGroup20 ; id 71
-Data_060_61E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunRandomPatternCase_WriteTempA_Case02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_61E5:: ; address name
     dfar KeyWorldChunkGroup20 ; id 72
     dfar KeyWorldChunkGroup21 ; id 73
     dfar KeyWorldChunkGroup22 ; id 74
@@ -3793,7 +3801,8 @@ Data_060_61E5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dfar KeyWorldChunkGroup22 ; id 101
     dfar KeyWorldChunkGroup21 ; id 102
     dfar KeyWorldChunkGroup20 ; id 103
-Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunRandomPatternCase_WriteTempA_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_6245:: ; address name
     dfar KeyWorldChunkGroup30 ; id 104
     dfar KeyWorldChunkGroup31 ; id 105
     dfar KeyWorldChunkGroup32 ; id 106
@@ -3885,7 +3894,7 @@ Func_060_62F9:: ; address name
     call SetKeyWorldBandForA
     ld a, [wKeyWorldBand]
     and a, $0F
-    ld hl, Data_060_638D
+    ld hl, RefreshKeyWorldObjectsOnEntry_Data
     add_a_to_hl
     ld a, [hl]
     ld [wMapObjectCount], a
@@ -3957,7 +3966,8 @@ Jump_060_6382::
     ret
 
 ; address loaded by RefreshKeyWorldObjectsOnEntry
-Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RefreshKeyWorldObjectsOnEntry_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_638D:: ; address name
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
@@ -4343,7 +4353,7 @@ Jump_060_65C6::
 Jump_060_65D7::
     ldh a, [hMapId]
     ld c, a
-    ld hl, Data_060_663F
+    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F
     ld b, $00
 
 Jump_060_65DF::
@@ -4370,7 +4380,7 @@ Jump_060_65EF::
     ld [wWarpPending], a
     ld a, b
     push af
-    ld hl, Data_060_6634
+    ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_6634
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBand], a
@@ -4403,11 +4413,13 @@ Jump_060_661E::
     ret
 
 ; address loaded by FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc
-Data_060_6634:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_6634:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_6634:: ; address name
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0C, $0C
 
 ; address loaded by FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc
-Data_060_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_663F:: ; address name
     db $2B, $38, $39, $3A, $53, $5D, $82, $83, $AD, $AE, $FF
 
 ; DE += 2; writes the word at $669C + 16 * hFFC8 + 2 * Data_060_6677[hFFC9] at DE (E-0121)
@@ -4583,7 +4595,7 @@ Func_060_68EB:: ; address name
     ld a, [wKeyRandomHi]
     and a, $07
     ldh [hTemp0], a
-    ld hl, Data_060_690E
+    ld hl, WriteRandomEntryFromTable690E_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -4596,7 +4608,8 @@ Func_060_68EB:: ; address name
     ret
 
 ; address loaded by WriteRandomEntryFromTable690E
-Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteRandomEntryFromTable690E_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_060_690E:: ; address name
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; hFFC9 = hFFC6; picks hFFC7 from the chance row Data_060_6969[level / 10] and hFFC8 from row Data_060_6A09 + $3C * (level / 10) (E-0125)

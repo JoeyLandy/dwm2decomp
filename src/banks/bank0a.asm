@@ -560,7 +560,7 @@ Func_00A_42BC:: ; address name
     cp a, $20
     ret c
     ld c, a
-    ld hl, Data_00A_4374
+    ld hl, EnterStatusEffectFieldState_Data
 
 Jump_00A_42E8::
     ld a, [hl+]
@@ -661,20 +661,21 @@ Func_00A_4362:: ; address name
     ret
 
 ; address loaded by EnterStatusEffectFieldState
-Data_00A_4374:: ; heuristic: pointer load in the same bank (bank assumed); C0
+EnterStatusEffectFieldState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_4374:: ; address name
     db $21, $22, $23, $24, $25, $26, $29, $2A, $2B, $2D, $2E, $31, $32, $33, $34, $3C
     db $3D, $41, $45, $49, $4A, $4B, $4C, $4D, $4F
-    dw Data_00A_5150
+    dw RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
     dw $5852
     dw $5A59
-    dw Data_00A_5C5B
-    dw Data_00A_5E5D
+    dw PointerRun_0A_438D_Entry03
+    dw PointerRun_0A_438D_Entry04
     dw $605F
-    dw Data_00A_6861
-    dw Data_00A_7271
-    dw Data_00A_7978
-    dw Data_00A_7D7C
-    dw Data_00A_7F7E
+    dw PointerRun_0A_438D_Entry06
+    dw PointerRun_0A_438D_Entry07
+    dw PointerRun_0A_438D_Entry08
+    dw PointerRun_0A_438D_Entry09
+    dw PointerRun_0A_438D_Entry0A
     db $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9
     db $E2, $FF
 
@@ -1002,7 +1003,7 @@ Jump_00A_4677:: ; address name
     call DivideBByA
     ld a, b
     add a, a
-    ld de, Data_00A_46EE
+    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE
     add a, e
     ld e, a
     jr nc, Jump_00A_4699
@@ -1055,7 +1056,7 @@ Jump_00A_46D0::
     add a, a
     add a, c
     add a, a
-    ld de, Data_00A_4716
+    ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716
     add a, e
     ld e, a
     jr nc, Jump_00A_46DE
@@ -1077,13 +1078,15 @@ Jump_00A_46E3::
     jr Jump_00A_46C5
 
 ; address loaded by RunBattleIntroKindCase_ComputePartyStrengthForKey
-Data_00A_46EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_46EE:: ; address name
     db $AC, $00, $BC, $00, $CC, $00, $DC, $00, $EC, $00, $FC, $00, $0C, $01, $1C, $01
     db $2C, $01, $3C, $01, $1E, $02, $23, $02, $28, $02, $2D, $02, $32, $02, $37, $02
     db $3C, $02, $41, $02, $46, $02, $48, $02
 
 ; address loaded by RunBattleIntroKindCase_ComputePartyStrengthForKey
-Data_00A_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_4716:: ; address name
     db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $0E, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
 
@@ -1144,7 +1147,7 @@ Func_00A_476E:: ; address name
     ld a, $05
     call DivideBByA
     ld a, b
-    ld hl, Data_00A_478F
+    ld hl, PickRandomEncounterCountdownFromTable478F_Data
     add_a_to_hl
     ld a, [hl]
     add a, a
@@ -1152,7 +1155,8 @@ Func_00A_476E:: ; address name
     ret
 
 ; address loaded by PickRandomEncounterCountdownFromTable478F
-Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PickRandomEncounterCountdownFromTable478F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_478F:: ; address name
     db $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32, $34, $36, $38, $3A
     db $3C, $41, $46, $50, $50
 
@@ -1992,11 +1996,11 @@ Jump_00A_4D38::
     ret z
     dec a
     jr nz, Jump_00A_4D49
-    ld hl, Data_00A_5150
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
     jr Jump_00A_4D4C
 
 Jump_00A_4D49::
-    ld hl, Data_00A_514C
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
 
 Jump_00A_4D4C::
     call NextTableByte
@@ -2558,7 +2562,7 @@ Jump_00A_50D1:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
     and a, $03
-    ld hl, Data_00A_514C
+    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
     add_a_to_hl
     ld a, [hl]
     ld [wEncounterKind], a
@@ -2622,11 +2626,13 @@ Jump_00A_5116::
     ret
 
 ; address loaded by RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc, RunBattleIntroKindCase_NextTableByte
-Data_00A_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_514C:: ; address name
     db $00, $02, $01, $02
 
 ; address loaded by RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
-Data_00A_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_5150:: ; address name
     db $00, $01, $00, $01
 
 ; only called from RunBattleIntroKindCase_Case01 (E-0047)
@@ -3290,7 +3296,7 @@ Jump_00A_54B9:: ; address name
     ld [wTransitionCountB], a
 
 Jump_00A_54CA::
-    ld hl, Data_00A_55FA
+    ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3313,7 +3319,7 @@ Jump_00A_54ED::
     inc hl
     dec b
     jr nz, Jump_00A_54ED
-    ld hl, Data_00A_55FA
+    ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3332,7 +3338,7 @@ Jump_00A_550C::
     dec b
     jr nz, Jump_00A_550C
     push hl
-    ld hl, Data_00A_5603
+    ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_5603
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3353,7 +3359,7 @@ Jump_00A_5526::
     ld h, a
     dec b
     jr nz, Jump_00A_5526
-    ld hl, Data_00A_5603
+    ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_5603
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3553,11 +3559,13 @@ Func_00A_55EF:: ; address name
     ret
 
 ; address loaded by RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB
-Data_00A_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_55FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_55FA:: ; address name
     db $14, $12, $10, $0E, $0C, $0A, $08, $06, $04
 
 ; address loaded by RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB
-Data_00A_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_5603:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_00A_5603:: ; address name
     db $12, $10, $0E, $0C, $0A, $08, $06, $04, $02
 
 ; E-0202 (C1: RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 * wTransitionStage and DE = wTransitionCountA/B; each target adds a constant ($220, $1E0, $1A0, ...) to DE and returns it in HL; the nine targets were the INCBIN slice at $5597).
@@ -4666,7 +4674,8 @@ Data_00A_5B6B:: ; address name
     dw EncounterGroup_5D1D ; id 117
     dw EncounterGroup_5D1D ; id 118
     dw EncounterGroup_5D1D ; id 119
-Data_00A_5C5B:: ; heuristic: label inside a table; C0
+PointerRun_0A_438D_Entry03:: ; heuristic: label inside a table; C0
+Data_00A_5C5B:: ; address name
     dw EncounterGroup_5CEE ; id 120
     dw EncounterGroup_5CFD ; id 121
     dw EncounterGroup_5CEE ; id 122
@@ -5039,7 +5048,8 @@ Data_00A_5E2B:: ; address name
     dw EncounterGroup_5F56 ; id 22
     dw EncounterGroup_5F56 ; id 23
     dw EncounterGroup_5F4B ; id 24
-Data_00A_5E5D:: ; heuristic: label inside a table; C0
+PointerRun_0A_438D_Entry04:: ; heuristic: label inside a table; C0
+Data_00A_5E5D:: ; address name
     dw EncounterGroup_6019 ; id 25
     dw EncounterGroup_5F4B ; id 26
     dw EncounterGroup_5F4B ; id 27
@@ -6050,17 +6060,22 @@ Data_00A_63C7:: ; address name
     dw $01F6 ; MonsterTable $1F6: Skulpent
     ds $48D, $00
 
-Data_00A_6861:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_0A_438D_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_00A_6861:: ; address name
     ds $A10, $00
 
-Data_00A_7271:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_0A_438D_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_00A_7271:: ; address name
     ds $707, $00
 
-Data_00A_7978:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_0A_438D_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_00A_7978:: ; address name
     ds $404, $00
 
-Data_00A_7D7C:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_0A_438D_Entry09:: ; heuristic: target of a monotone pointer table; C0
+Data_00A_7D7C:: ; address name
     ds $202, $00
 
-Data_00A_7F7E:: ; heuristic: target of a monotone pointer table; C0
+PointerRun_0A_438D_Entry0A:: ; heuristic: target of a monotone pointer table; C0
+Data_00A_7F7E:: ; address name
     ds $82, $00

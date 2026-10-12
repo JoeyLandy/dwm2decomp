@@ -140,7 +140,7 @@ Jump_01C_40D4::
 InnMenu_ShowPrice::
 Jump_01C_40EA:: ; address name
     ld hl, wScreenSubStep
-    ld de, Data_01C_4158
+    ld de, InnMenu_ShowPrice_Data
     ld c, $00
 
 Jump_01C_40F2::
@@ -192,7 +192,8 @@ Jump_01C_413A::
     ret
 
 ; address loaded by InnMenu_ShowPrice
-Data_01C_4158:: ; heuristic: pointer load in the same bank (bank assumed); C0
+InnMenu_ShowPrice_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_4158:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
@@ -917,7 +918,7 @@ Func_01C_451D:: ; address name
 InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C::
 Func_01C_453B:: ; address name
     ld hl, wScreenSubStep
-    ld de, Data_01C_4598
+    ld de, InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C_Data
     ld c, $00
 
 Jump_01C_4543::
@@ -961,7 +962,8 @@ Jump_01C_458B::
     ret
 
 ; address loaded by InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C
-Data_01C_4598:: ; heuristic: pointer load in the same bank (bank assumed); C0
+InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_4598:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
@@ -1431,7 +1433,7 @@ Func_01C_4867:: ; address name
 Jump_01C_4869::
     ld a, [wListLastRow]
     add a, a
-    ld hl, Data_01C_4888
+    ld hl, ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1448,7 +1450,8 @@ Jump_01C_4869::
     ret
 
 ; address loaded by ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap
-Data_01C_4888:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_4888:: ; address name
     db $21, $00, $61, $00, $A1, $00
 
 ; buying: items from ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and SubtractArg1AmountFromGold (E-0276)
@@ -1482,7 +1485,7 @@ Jump_01C_488E:: ; address name
 ; writes: rVBK, wScreenStep
 ShopMenu_Buy_WriteVBKAndScreenStep::
 Jump_01C_48B4:: ; address name
-    ld hl, Data_01C_60AC
+    ld hl, ShopMenu_Buy_WriteVBKAndScreenStep_Data
     ld de, vBGMap1 + $300
 
 Jump_01C_48BA::
@@ -1898,7 +1901,7 @@ Jump_01C_4AFA::
     ld [wArg8], a
 
 Jump_01C_4B2F::
-    ld hl, Data_01C_62D9
+    ld hl, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_Data
     ld a, [wScreenCounter]
     add a, a
     add_a_to_hl
@@ -1981,7 +1984,7 @@ Jump_01C_4B95:: ; address name
     bit 0, a
     jp nz, Jump_01C_4C74
     call BlinkCursorSelectedRecord_Bank1C
-    call Func_01C_6AF7
+    call ShopMenu_WriteTextCounter6AndTextTimerEtc
     ld a, [wTextCounter0]
     cp a, $03
     ret c
@@ -2143,7 +2146,7 @@ Func_01C_4CA2:: ; address name
 Jump_01C_4CA4::
     ld a, [wItemGridX]
     add a, a
-    ld hl, Data_01C_4CC4
+    ld hl, DrawItemGridXCursorConfirmed_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2161,7 +2164,8 @@ Jump_01C_4CA4::
     ret
 
 ; address loaded by DrawItemGridXCursorConfirmed
-Data_01C_4CC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawItemGridXCursorConfirmed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_4CC4:: ; address name
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
 ; entry 7 of the `rst $00` table in ShopMenu_Buy
@@ -2316,7 +2320,7 @@ Jump_01C_4D50::
 
 Jump_01C_4DA7::
     ld hl, wScreenList
-    ld de, Data_01C_62E1
+    ld de, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08_Data
     ld bc, $000C
 
 Jump_01C_4DB0::
@@ -2642,7 +2646,7 @@ Jump_01C_4FAD::
 Jump_01C_4FAF::
     ld a, [wNumberEditPos]
     add a, a
-    ld hl, Data_01C_5008
+    ld hl, ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2664,7 +2668,7 @@ Jump_01C_4FAF::
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtTable5008::
 Func_01C_4FCF:: ; address name
-    ld hl, Data_01C_5008
+    ld hl, ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2681,7 +2685,7 @@ Func_01C_4FCF:: ; address name
     ld a, b
     ld [hl], a
     ei
-    ld hl, Data_01C_500A
+    ld hl, DrawNumberTensNumberOnesDigitsAtTable5008_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2701,11 +2705,13 @@ Func_01C_4FCF:: ; address name
     ret
 
 ; address loaded by ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF, DrawNumberTensNumberOnesDigitsAtTable5008, ShopMenu_Sell_Case08_BGMapAddressAtScroll_Bank1C_67AF, DrawNumberTensNumberOnesDigitsAtTable5008And5BE4
-Data_01C_5008:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_5008:: ; address name
     db $61, $01
 
 ; address loaded by DrawNumberTensNumberOnesDigitsAtTable5008
-Data_01C_500A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawNumberTensNumberOnesDigitsAtTable5008_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_500A:: ; address name
     db $62, $01
 
 ; only called from ShopMenu_Buy_Case09 (E-0047)
@@ -3138,7 +3144,7 @@ Func_01C_52C2:: ; address name
 Jump_01C_52C4::
     ld a, [wScreenByteD1]
     add a, a
-    ld hl, Data_01C_52E4
+    ld hl, ShopMenu_Buy_Case0C_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3156,7 +3162,8 @@ Jump_01C_52C4::
     ret
 
 ; address loaded by ShopMenu_Buy_Case0C_StepBGMapAddressBackOnScrollWrap
-Data_01C_52E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_Case0C_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_52E4:: ; address name
     db $2F, $01, $6F, $01
 
 ; clears two rectangles at scroll + $10E and + $140, wD781 = 6, clears wScriptCommandType and requests script $80 (E-0124)
@@ -3349,7 +3356,7 @@ Jump_01C_5400::
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld hl, wScreenList
-    ld de, Data_01C_5F5E
+    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
     ld bc, $0020
 
 Jump_01C_5415::
@@ -3812,7 +3819,7 @@ Jump_01C_56F2::
     ld [wScreenByteC1], a
 
 Jump_01C_56F7::
-    ld hl, Data_01C_62D9
+    ld hl, ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_Data
     ld a, [wScreenCounter]
     add a, a
     add_a_to_hl
@@ -3893,7 +3900,7 @@ Jump_01C_575B:: ; address name
     bit 0, a
     jp nz, Jump_01C_583C
     call BlinkCursorSelectedRecord_Bank1C
-    call Func_01C_6AF7
+    call ShopMenu_WriteTextCounter6AndTextTimerEtc
     ld a, [wTextCounter0]
     cp a, $03
     ret c
@@ -4190,7 +4197,7 @@ Jump_01C_58FD::
 
 Jump_01C_5954::
     ld hl, wScreenList
-    ld de, Data_01C_62ED
+    ld de, ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data
     ld bc, $0015
 
 Jump_01C_595D::
@@ -4542,7 +4549,7 @@ Jump_01C_5B87::
 Jump_01C_5B89::
     ld a, [wNumberEditPos]
     add a, a
-    ld hl, Data_01C_5008
+    ld hl, ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4564,7 +4571,7 @@ Jump_01C_5B89::
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtTable5008And5BE4::
 Func_01C_5BA9:: ; address name
-    ld hl, Data_01C_5008
+    ld hl, ShopMenu_Buy_Case09_BGMapAddressAtScroll_Bank1C_67AF_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4581,7 +4588,7 @@ Func_01C_5BA9:: ; address name
     ld a, b
     ld [hl], a
     ei
-    ld hl, Data_01C_5BE4
+    ld hl, DrawNumberTensNumberOnesDigitsAtTable5008And5BE4_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4602,7 +4609,8 @@ Func_01C_5BA9:: ; address name
     db $61, $01
 
 ; address loaded by DrawNumberTensNumberOnesDigitsAtTable5008And5BE4
-Data_01C_5BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawNumberTensNumberOnesDigitsAtTable5008And5BE4_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_5BE4:: ; address name
     db $62, $01
 
 ; only called from ShopMenu_Sell_Case08 (E-0047)
@@ -4907,7 +4915,7 @@ Func_01C_5DC6:: ; address name
 Jump_01C_5DC8::
     ld a, [wScreenByteD1]
     add a, a
-    ld hl, Data_01C_5DE8
+    ld hl, ShopMenu_Sell_Case0B_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4925,7 +4933,8 @@ Jump_01C_5DC8::
     ret
 
 ; address loaded by ShopMenu_Sell_Case0B_StepBGMapAddressBackOnScrollWrap
-Data_01C_5DE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Sell_Case0B_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_5DE8:: ; address name
     db $2F, $01, $6F, $01
 
 ; entry 12 of the `rst $00` table in ShopMenu_Sell
@@ -5011,7 +5020,7 @@ Jump_01C_5E6F::
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld hl, wScreenList
-    ld de, Data_01C_5F5E
+    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
     ld bc, $0020
 
 Jump_01C_5E84::
@@ -5167,7 +5176,8 @@ Func_01C_5F3E:: ; address name
     ret
 
 ; address loaded by ShopMenu_Buy_SubtractArg1AmountFromGold, ShopMenu_Sell_AddArg1ToGoldCapped99999, InitItemListScreenListAndCount, VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C and 1 more
-Data_01C_5F5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_SubtractArg1AmountFromGold_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_5F5E:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA, $B6, $AE, $AD, $EC, $AF, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
@@ -5209,7 +5219,8 @@ Data_01C_604A:: ; address name
     dw $FFFF
 
 ; address loaded by ShopMenu_Buy_WriteVBKAndScreenStep
-Data_01C_60AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_WriteVBKAndScreenStep_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_60AC:: ; address name
     db $B0
     ds $11, $B1
     db $B2, $B6, $C3, $F0, $F1, $F2, $F3, $F4, $F5, $F6, $F7, $C7, $C3, $C3, $C3, $C3
@@ -5419,15 +5430,18 @@ Data_01C_62C7:: ; address name
     dw vTiles1 + $5E0, vTiles1 + $2A0, vTiles1 + $4A0
 
 ; address loaded by ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05, ShopMenu_Sell_ComputeSellPrice
-Data_01C_62D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_62D9:: ; address name
     db $AE, $00, $EE, $00, $2E, $01, $6E, $01
 
 ; address loaded by ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08
-Data_01C_62E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_62E1:: ; address name
     db $B0, $B1, $B1, $B2, $B6, $C3, $C3, $B7, $B3, $B4, $B4, $B5
 
 ; address loaded by ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap
-Data_01C_62ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_62ED:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
@@ -6040,7 +6054,7 @@ Data_01C_679D:: ; address name
     db $F0
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 6 call sites from 4 routines (e.g. VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C, ClearRect147AndAskTwoChoice, VaultMenu_Store_CopyTileBytesToVRAM_Bank1C, Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C)
+; 6 call sites from 4 routines (e.g. VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C, ClearRect147AndAskTwoChoice, VaultMenu_Store_CopyTileBytesToVRAM_Bank1C, ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1C::
 Func_01C_679E:: ; address name
@@ -6568,7 +6582,7 @@ Jump_01C_6A14::
 InitItemListScreenListAndCount::
 Func_01C_6A22:: ; address name
     ld hl, wScreenList
-    ld de, Data_01C_5F5E
+    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
     ld bc, $0028
 
 Jump_01C_6A2B::
@@ -6697,10 +6711,12 @@ Func_01C_6ADB:: ; address name
     ld [wTextTimer], a
     ret
 
+; only called from routines of ShopMenu (E-0098)
 ; 2 call sites from 2 routines (e.g. ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C, ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C)
 ; reads: wJoypadPressedRepeat, wScreenState, wTextTimer, wTextCounter0, wScreenStep
 ; writes: wTextCounter6, wTextTimer, wTextCounter0
-Func_01C_6AF7::
+ShopMenu_WriteTextCounter6AndTextTimerEtc::
+Func_01C_6AF7:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jr nz, Jump_01C_6B38
@@ -6749,16 +6765,16 @@ Jump_01C_6B38::
     ld [wTextTimer], a
     ld a, [wTextCounter0]
     rst $00
-    dw Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C
-    dw Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01
-    dw Func_01C_6AF7_ToStepItemDescriptionText
-    dw Func_01C_6AF7_Return
+    dw ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C
+    dw ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01
+    dw ShopMenu_Shared01_ToStepItemDescriptionText
+    dw ShopMenu_Shared01_Return
 
 ; entry 0 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextCounter0
 ; writes: wTextCounter0
-Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C::
+ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C::
 Jump_01C_6B53:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01A0
@@ -6779,7 +6795,7 @@ Jump_01C_6B68::
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01
+    jp ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 20 x 5 tiles, one row per line
@@ -6801,7 +6817,7 @@ Data_01C_6BE1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextCounter0
 ; writes: wTextCounter0
-Func_01C_6AF7_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01::
+ShopMenu_Shared01_ClearRectSetTextCursorLoPlus1C1_Bank1C_Case01::
 Jump_01C_6BF1:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $01A0
@@ -6812,7 +6828,7 @@ Jump_01C_6BF1:: ; address name
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp Func_01C_6AF7_ToStepItemDescriptionText
+    jp ShopMenu_Shared01_ToStepItemDescriptionText
     db $C9
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -6827,14 +6843,14 @@ Data_01C_6C0C:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-Func_01C_6AF7_ToStepItemDescriptionText::
+ShopMenu_Shared01_ToStepItemDescriptionText::
 Jump_01C_6C70:: ; address name
     farcall StepItemDescriptionText
     ret
 
 ; entry 3 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-Func_01C_6AF7_Return::
+ShopMenu_Shared01_Return::
 Jump_01C_6C77:: ; address name
     ret
 
@@ -6999,7 +7015,7 @@ Jump_01C_6D4D:: ; address name
     rst $00
     dw VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Setup_ToCopyTileListFromBank1F_1C
-    dw VaultMenu_Setup_WriteScreenStep
+    dw VaultMenu_Setup_ToVaultMenu_Shared03AndStep
     dw VaultMenu_Setup_CopyFromBankWaitVRAM
     dw VaultMenu_Setup_ToInitItemListScreenListAndCount
     dw VaultMenu_Setup_DrawScreenListBoxAtWC370AndStep
@@ -7032,9 +7048,9 @@ Jump_01C_6D73:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-VaultMenu_Setup_WriteScreenStep::
+VaultMenu_Setup_ToVaultMenu_Shared03AndStep::
 Jump_01C_6D7D:: ; address name
-    farcall Func_01D_4A62
+    farcall VaultMenu_WriteSavedSpriteClipModeAndListPages
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -7256,7 +7272,7 @@ Func_01C_6F00:: ; address name
 Jump_01C_6F02::
     ld a, [wListLastRow]
     sla a
-    ld hl, Data_01C_6F21
+    ld hl, VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_67AF_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7274,7 +7290,8 @@ Jump_01C_6F02::
     ret
 
 ; address loaded by VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_67AF
-Data_01C_6F21:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_67AF_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01C_6F21:: ; address name
     db $21, $00, $61, $00, $A1, $00
 
 ; storing: moves items from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0276)
@@ -7733,7 +7750,7 @@ Func_01C_7196:: ; address name
 VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C::
 Jump_01C_71C6:: ; address name
     ld hl, wScreenList
-    ld de, Data_01C_5F5E
+    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
     ld bc, $0020
 
 Jump_01C_71CF::
@@ -7826,7 +7843,7 @@ Jump_01C_724B:: ; address name
 InitItemListScreenListAndDraw::
 Func_01C_7252:: ; address name
     ld hl, wScreenList
-    ld de, Data_01C_5F5E
+    ld de, ShopMenu_Buy_SubtractArg1AmountFromGold_Data
     ld bc, $0020
 
 Jump_01C_725B::

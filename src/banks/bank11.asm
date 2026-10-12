@@ -422,7 +422,7 @@ Func_011_4268:: ; address name
     ldh a, [hMapId]
     ld c, a
     ld b, $00
-    ld hl, Data_011_42AC
+    ld hl, WarpToLinkedMapForCurrentMap_Data_42AC
 
 Jump_011_4278::
     ld a, [hl+]
@@ -441,7 +441,7 @@ Jump_011_4286::
     ld a, b
     sla a
     add a, b
-    ld de, Data_011_42B8
+    ld de, WarpToLinkedMapForCurrentMap_Data_42B8
     add a, e
     ld e, a
     jr nc, Jump_011_4292
@@ -466,11 +466,13 @@ Jump_011_42A6::
     ret
 
 ; address loaded by WarpToLinkedMapForCurrentMap
-Data_011_42AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WarpToLinkedMapForCurrentMap_Data_42AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_011_42AC:: ; address name
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2, $FF
 
 ; address loaded by WarpToLinkedMapForCurrentMap
-Data_011_42B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WarpToLinkedMapForCurrentMap_Data_42B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_011_42B8:: ; address name
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00
@@ -612,7 +614,7 @@ Func_011_43BB:: ; address name
     jr c, Jump_011_43CC
     ld c, a
     ld b, $00
-    ld hl, Data_011_4480
+    ld hl, CheckMapExitTable4480_Data
 
 Jump_011_43C7::
     ld a, [hl]
@@ -704,7 +706,7 @@ Jump_011_442B::
     inc de
     ld a, [de]
     dec a
-    ld hl, Data_011_44AD
+    ld hl, CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -737,13 +739,15 @@ Jump_011_442B::
     ret
 
 ; address loaded by CheckMapExitTable4480
-Data_011_4480:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckMapExitTable4480_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_011_4480:: ; address name
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $B4, $03, $70, $44, $B4, $04
     db $A0, $44, $10, $05, $A8, $44, $00, $06, $B0, $44, $01, $07, $B8, $44, $44, $08
     db $C8, $44, $01, $09, $D1, $44, $00, $0A, $DA, $44, $00, $0B, $FF
 
 ; address loaded by CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
-Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_011_44AD:: ; address name
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2
 
 ; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (57:6E96) the game decompressed to $9000 on the emulator while hMapId was 56; the table has 256 words and ends where the first record begins; entries 30, 31 and 39 are not valid pointers and the system strings for map numbers 30, 31 and 39 (index 10 + number) read 'NO'; map 29 is the ship deck where a new game starts and the string at index 39 is 'Deck'). Records are 48 or 66 bytes; the first three far pointers (address and bank byte) name streams: the tileset for $9000 and, in later fields, the tile map for $C198 and the attribute map for $D000. E-0201: the complete map records at $59E4, $6248 and $62F0 (1 x 1 screens, found as trailing bytes of the records before them) have no entry here and are listed as extra records.

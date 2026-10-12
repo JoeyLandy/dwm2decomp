@@ -175,7 +175,7 @@ Jump_003_40BE::
     ld [hl+], a
     ld a, $00
     ld [hl+], a
-    ld de, Data_003_7BF5
+    ld de, PauseMenu_State4_Data
     ld b, $08
 
 Jump_003_413E::
@@ -1060,43 +1060,53 @@ Data_003_460B:: ; address name
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
 ; address loaded by PauseMenu_Items_Case00_UpdateMenuCursor, BuildScreenBlock0EWithCursor, PauseMenu_Skills_Case01_UpdateMenuCursor, PauseMenu_Skills_Case02_Case01_ClearScreenTileBuffer_Bank03 and 2 more
-Data_003_4617:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Items_Case00_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4617:: ; address name
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
 ; address loaded by PauseMenu_Items_Case01_UpdateMenuCursor, BuildScreenBlocks0EAnd0FWithCursor, BuildScreenBlock0EWithSubMenuCursor
-Data_003_461F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Items_Case01_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_461F:: ; address name
     db $A1, $98, $E1, $98
 
 ; address loaded by PauseMenu_Items_Case03_UpdateMenuCursor
-Data_003_4623:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Items_Case03_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4623:: ; address name
     db $21, $99, $61, $99
 
 ; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor_Case0E
-Data_003_4627:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4627:: ; address name
     db $01, $99, $41, $99
 
 ; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor
-Data_003_462B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case01_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_462B:: ; address name
     db $47, $99, $87, $99, $C7, $99, $07, $9A
 
 ; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_BuildScreenBlocks21To24, BuildScreenBlocks21To25WithCursor
-Data_003_4633:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4633:: ; address name
     db $61, $98, $A1, $98
 
 ; address loaded by PauseMenu_State3_Case02_UpdateMenuCursor
-Data_003_4637:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case02_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4637:: ; address name
     db $4A, $99, $8A, $99, $CA, $99, $0A, $9A
 
 ; address loaded by PauseMenu_State3_Case04_UpdateMenuCursor
-Data_003_463F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case04_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_463F:: ; address name
     db $64, $98, $A4, $98, $E4, $98
 
 ; address loaded by PauseMenu_Items_Case02_UpdateMenuCursor_Case1D, PauseMenu_State3_Case06_UpdateMenuCursor
-Data_003_4645:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Items_Case02_UpdateMenuCursor_Case1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4645:: ; address name
     db $2F, $99, $6F, $99
 
 ; address loaded by MenuCursorAddressMenuCursor
-Data_003_4649:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MenuCursorAddressMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4649:: ; address name
     db $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99, $8C, $99, $8E, $99, $90, $99
 
 ; runs the routine for wC0A4 (jump table of four screens) (E-0122)
@@ -2343,7 +2353,7 @@ Jump_003_4DD5::
 
 Jump_003_4DDD::
     ld a, b
-    ld hl, Data_003_4DF2
+    ld hl, ShowSkillNameAtSlotB_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -2353,7 +2363,8 @@ Jump_003_4DDD::
     ret
 
 ; address loaded by ShowSkillNameAtSlotB
-Data_003_4DF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSkillNameAtSlotB_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4DF2:: ; address name
     db $80, $93, $10, $94, $A0, $94, $30, $95, $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; only called from WithSRAMDrawMemberRecordByte0D (E-0047)
@@ -2475,7 +2486,7 @@ Func_003_4EB6:: ; address name
     ld [wStringCategory], a
     push hl
     push bc
-    ld hl, Data_003_4F5D
+    ld hl, ShowSpeciesNameAndIconForSlotB_Data_4F5D
     ld a, b
     add a, a
     add_a_to_hl
@@ -2487,7 +2498,7 @@ Func_003_4EB6:: ; address name
     ld [wWorkBuf], a
     pop bc
     ld a, b
-    ld hl, Data_003_4F61
+    ld hl, ShowSpeciesNameAndIconForSlotB_Data_4F61
     add_a_to_hl
     ld a, [hl]
     ld [wWorkBuf + $1], a
@@ -2504,7 +2515,7 @@ Func_003_4EFD:: ; address name
     push hl
     push bc
     ld a, b
-    ld hl, Data_003_4F63
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Data
     call DerefWordTableEntryA_Bank03
     pop bc
     pop hl
@@ -2519,13 +2530,13 @@ Func_003_4F0D:: ; address name
     push hl
     push bc
     ld a, b
-    ld hl, Data_003_4F67
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F67
     call DerefWordTableEntryA_Bank03
     pop bc
     pop hl
     push hl
     ld a, b
-    ld hl, Data_003_4F6B
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B
     add a, a
     add_a_to_hl
     deref_hl
@@ -2544,7 +2555,7 @@ Func_003_4F0D:: ; address name
     call HLToDecimalDigits
     pop bc
     ld a, b
-    ld hl, Data_003_4F6B
+    ld hl, WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B
     add a, a
     add_a_to_hl
     deref_hl
@@ -2566,23 +2577,28 @@ Jump_003_4F5B::
     ret
 
 ; address loaded by ShowSpeciesNameAndIconForSlotB
-Data_003_4F5D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSpeciesNameAndIconForSlotB_Data_4F5D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4F5D:: ; address name
     db $E0, $95, $20, $97
 
 ; address loaded by ShowSpeciesNameAndIconForSlotB
-Data_003_4F61:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowSpeciesNameAndIconForSlotB_Data_4F61:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4F61:: ; address name
     db $5D, $71
 
 ; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0
-Data_003_4F63:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4F63:: ; address name
     db $70, $96, $B0, $97
 
 ; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03
-Data_003_4F67:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F67:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4F67:: ; address name
     db $80, $95, $C0, $96
 
 ; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03
-Data_003_4F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WithSRAMDrawMemberRecordByte0D_Sub01_CopyTenBytesToTextBuf0_Sub03_Data_4F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_4F6B:: ; address name
     db $02, $C2, $22, $C3
 
 ; reads field $0B of SRAM record wC46D & $0F and decompresses its graphics to vTiles0 (DecompressGraphicsArg1ToArg4); then sets wD7F3-wD7F6 = $00, $90, $40, $00 and hFFB9 = 0 (E-0121)
@@ -2744,12 +2760,12 @@ Jump_003_5057::
     inc hl
     ld d, [hl]
     pop bc
-    ld hl, Data_003_518F
+    ld hl, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F
     ld a, c
     add_a_to_hl
     ld a, c
     ld c, [hl]
-    ld hl, Data_003_5192
+    ld hl, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_5192
     add a, a
     add_a_to_hl
     deref_hl
@@ -2762,12 +2778,12 @@ Jump_003_5057::
     jr z, Jump_003_50AC
     push bc
     ld a, c
-    ld hl, Data_003_518F
+    ld hl, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F
     add_a_to_hl
     ld a, [hl]
     ldh [hTemp0], a
     ld a, c
-    ld hl, Data_003_5198
+    ld hl, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_5198
     add a, a
     add_a_to_hl
     deref_hl
@@ -2811,7 +2827,7 @@ DrawRecordHPMPAndLevelForRowC::
 Func_003_50DD:: ; address name
     push bc
     ld a, c
-    ld hl, Data_003_519E
+    ld hl, DrawRecordHPMPAndLevelForRowC_Data
     add a, a
     add_a_to_hl
     ld a, [hl+]
@@ -2877,7 +2893,7 @@ ShowRecordSpeciesNameForRowC::
 Func_003_5137:: ; address name
     push bc
     ld a, c
-    ld hl, Data_003_51A4
+    ld hl, ShowRecordSpeciesNameForRowC_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -2909,7 +2925,7 @@ DrawRecordByte0EMarkTile::
 Func_003_5171:: ; address name
     push bc
     ld a, c
-    ld hl, Data_003_51AA
+    ld hl, DrawRecordByte0EMarkTile_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -2926,27 +2942,33 @@ Func_003_5171:: ; address name
     ret
 
 ; address loaded by PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize
-Data_003_518F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_518F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_518F:: ; address name
     db $01, $03, $05
 
 ; address loaded by PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize
-Data_003_5192:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_5192:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5192:: ; address name
     db $40, $91, $80, $93, $C0, $95
 
 ; address loaded by PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize
-Data_003_5198:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize_Data_5198:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5198:: ; address name
     db $00, $00, $80, $00, $00, $01
 
 ; address loaded by DrawRecordHPMPAndLevelForRowC
-Data_003_519E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordHPMPAndLevelForRowC_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_519E:: ; address name
     db $FA, $C1, $00, $C2, $06, $C2
 
 ; address loaded by ShowRecordSpeciesNameForRowC
-Data_003_51A4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+ShowRecordSpeciesNameForRowC_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_51A4:: ; address name
     db $00, $88, $90, $88, $20, $89
 
 ; address loaded by DrawRecordByte0EMarkTile
-Data_003_51AA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordByte0EMarkTile_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_51AA:: ; address name
     db $66, $C3, $86, $C3, $A6, $C3
 
 ; entry 2 of the `rst $00` table in Func_003_4FBB
@@ -3062,7 +3084,7 @@ Func_003_523E:: ; address name
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01_Sub01_FillVRAMRowsWithD)
 WriteSixteenTilesFrom5264AtTiles2140::
 Func_003_5253:: ; address name
-    ld de, Data_003_5264
+    ld de, WriteSixteenTilesFrom5264AtTiles2140_Data
     ld hl, vTiles2 + $140
     ld b, $10
 
@@ -3075,7 +3097,8 @@ Jump_003_525B::
     ret
 
 ; address loaded by WriteSixteenTilesFrom5264AtTiles2140
-Data_003_5264:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteSixteenTilesFrom5264AtTiles2140_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5264:: ; address name
     db $FF, $00, $FF, $10, $FF, $10, $FF, $FE, $FF, $7C, $FF, $38, $FF, $7C, $FF, $C6
 
 ; GameMode2_Update, wModeState 1: the ITEM list ('No items' at the start of a game) (E-0046)
@@ -3132,7 +3155,7 @@ Jump_003_52A3:: ; address name
     jr Jump_003_5328
 
 Jump_003_52AE::
-    ld de, Data_003_4617
+    ld de, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     ld hl, wMenuCursor
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -3235,7 +3258,7 @@ Jump_003_5348:: ; address name
 ; points at: wSubMenuCursor, wTemp0
 PauseMenu_Items_Case01_UpdateMenuCursor::
 Jump_003_535D:: ; address name
-    ld de, Data_003_461F
+    ld de, PauseMenu_Items_Case01_UpdateMenuCursor_Data
     ld hl, wSubMenuCursor
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
@@ -3766,7 +3789,7 @@ Jump_003_564A:: ; address name
 PauseMenu_Items_Case02_UpdateMenuCursor_Case1D::
 Jump_003_566D:: ; address name
     ld hl, wSubMenuCursor
-    ld de, Data_003_4645
+    ld de, PauseMenu_Items_Case02_UpdateMenuCursor_Case1D_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -3956,7 +3979,7 @@ Jump_003_575F:: ; address name
 ; points at: wSubMenuCursor2
 PauseMenu_Items_Case03_UpdateMenuCursor::
 Jump_003_5782:: ; address name
-    ld de, Data_003_4623
+    ld de, PauseMenu_Items_Case03_UpdateMenuCursor_Data
     ld hl, wSubMenuCursor2
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
@@ -3966,7 +3989,7 @@ Jump_003_5782:: ; address name
     call QueueSoundEffect
     ld a, [wSubMenuCursor2]
     and a, $01
-    ld hl, Data_003_4623
+    ld hl, PauseMenu_Items_Case03_UpdateMenuCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -4088,7 +4111,7 @@ Func_003_585D:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_003_4617
+    ld hl, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -4103,10 +4126,10 @@ Func_003_5874:: ; address name
     ld e, $1B
     farcall CopyBlockToTileBuffer
     ld a, [wItemId]
-    ld hl, Data_003_5C8B
+    ld hl, BuildItemScreenForWItemId_Data_5C8B
     add_a_to_hl
     ld a, [hl]
-    ld hl, Data_003_5CEE
+    ld hl, BuildItemScreenForWItemId_Data_5CEE
     add a, a
     add_a_to_hl
     deref_hl
@@ -4149,7 +4172,7 @@ Func_003_58CF:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, Data_003_461F
+    ld hl, PauseMenu_Items_Case01_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -4164,7 +4187,7 @@ Func_003_58E6:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, Data_003_461F
+    ld hl, PauseMenu_Items_Case01_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
@@ -4471,7 +4494,7 @@ Func_003_5AA7:: ; address name
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
-    ld hl, Data_003_5C8B
+    ld hl, BuildItemScreenForWItemId_Data_5C8B
     add_a_to_hl
     ld a, [hl]
     push af
@@ -4565,7 +4588,7 @@ Jump_003_5B32::
     ld [wStringIndex], a
     ld a, $07
     ld [wStringCategory], a
-    ld hl, Data_003_5C28
+    ld hl, DrawItemTargetStatPreview_Data
     ld b, $00
     add hl, bc
     ld a, [hl]
@@ -4743,7 +4766,8 @@ Func_003_5C22:: ; address name
     ret
 
 ; address loaded by DrawItemTargetStatPreview
-Data_003_5C28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawItemTargetStatPreview_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5C28:: ; address name
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
@@ -4789,69 +4813,80 @@ Data_003_5C43:: ; address name
     db $00, $00 ; id 35
 
 ; address loaded by BuildItemScreenForWItemId, DrawItemTargetStatPreview
-Data_003_5C8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildItemScreenForWItemId_Data_5C8B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5C8B:: ; address name
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
     ds $22, $00
     ds $23, $08
 
 ; address loaded by BuildItemScreenForWItemId
-Data_003_5CEE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_003_5D00
-    dw Data_003_5D28
-    dw Data_003_5D50
-    dw Data_003_5D78
-    dw Data_003_5DA0
-    dw Data_003_5DC8
-    dw Data_003_5DF0
-    dw Data_003_5E18
-    dw Data_003_5E40
+BuildItemScreenForWItemId_Data_5CEE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_5CEE:: ; address name
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry00
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry01
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry02
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry03
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry04
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry05
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry06
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry07
+    dw BuildItemScreenForWItemId_Data_5CEE_Entry08
 
 ; LZSS-compressed asset: 253 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5D00:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry00:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5D00:: ; address name
     db $41, $01, $0C, $03, $FB, $FC, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 258 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5D28:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry01:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5D28:: ; address name
     db $41, $01, $0C, $03, $FD, $FE, $ED
     ds $18, $C3
     db $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 261 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5D50:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry02:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5D50:: ; address name
     db $41, $01, $0C, $03, $F6, $F7, $F8, $F9, $FA, $0E, $0F, $10, $11, $12, $13, $C3
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $1A, $1B, $1C, $1D
     db $1E, $1F, $20, $21, $22, $C3, $C3, $C3
 
 ; LZSS-compressed asset: 273 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5D78:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry03:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5D78:: ; address name
     db $41, $01, $0C, $03, $0B, $0C, $0D, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 302 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5DA0:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry04:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5DA0:: ; address name
     db $41, $01, $0C, $03, $FF, $00, $01, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 305 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5DC8:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry05:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5DC8:: ; address name
     db $41, $01, $0C, $03, $02, $03, $04, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 311 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5DF0:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry06:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5DF0:: ; address name
     db $41, $01, $0C, $03, $05, $06, $07, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 320 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5E18:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry07:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5E18:: ; address name
     db $41, $01, $0C, $03, $08, $09, $0A, $ED
     ds $20, $C3
 
 ; LZSS-compressed asset: 324 bytes expand to 321 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
+BuildItemScreenForWItemId_Data_5CEE_Entry08:: ; heuristic: target of a monotone pointer table; C0
+Data_003_5E40:: ; address name
     db $41, $01, $0C, $03
     ds $24, $C3
 
@@ -5140,7 +5175,7 @@ Jump_003_5FFB::
 ; points at: wMenuCursor, wTemp1
 PauseMenu_Skills_Case01_UpdateMenuCursor::
 Jump_003_601D:: ; address name
-    ld de, Data_003_4617
+    ld de, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     ld hl, wMenuCursor
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
@@ -5452,13 +5487,13 @@ Jump_003_61EA:: ; address name
 PauseMenu_Skills_Case03_BeginStringDisplay_Bank37::
 Jump_003_6223:: ; address name
     ld a, [wInventorySlot]
-    ld hl, Data_003_6987
+    ld hl, PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Data_6987
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
     call nz, QueueSoundEffect
     ld a, [wInventorySlot]
-    ld hl, Data_003_69AF
+    ld hl, PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Data_69AF
     add_a_to_hl
     ld a, [hl]
     ld [wStringIndex], a
@@ -5598,7 +5633,7 @@ Jump_003_62DB::
 PauseMenu_Skills_Case03_QueueSoundEffect::
 Jump_003_630E:: ; address name
     ld a, [wInventorySlot]
-    ld hl, Data_003_699B
+    ld hl, PauseMenu_Skills_Case03_QueueSoundEffect_Data
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
@@ -5875,7 +5910,7 @@ Jump_003_64DA::
     call WriteDecimalDigitTiles
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_003_4617
+    ld hl, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wRecordBuffer]
     ld l, a
@@ -5904,7 +5939,7 @@ Func_003_650C:: ; address name
     call BuildRecordField5FValueScreen
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_003_4617
+    ld hl, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $10
     farcall CopyBlockToTileBuffer
@@ -5923,7 +5958,7 @@ Func_003_6526:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_003_4617
+    ld hl, PauseMenu_Items_Case00_UpdateMenuCursor_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld a, [wSubMenuCursor]
     and a, $03
@@ -6195,7 +6230,7 @@ Jump_003_66E5::
 LookupInventorySlotForRecordBuffer::
 Func_003_66EE:: ; address name
     ld a, [wRecordBuffer]
-    ld hl, Data_003_6700
+    ld hl, LookupInventorySlotForRecordBuffer_Data
     add_a_to_hl
     ld a, [hl]
     ld [wInventorySlot], a
@@ -6203,7 +6238,8 @@ Func_003_66EE:: ; address name
     ret
 
 ; address loaded by LookupInventorySlotForRecordBuffer
-Data_003_6700:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LookupInventorySlotForRecordBuffer_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_6700:: ; address name
     ds $16, $FF
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $FF, $0A, $FF, $FF, $0B
     ds $7D, $FF
@@ -6345,17 +6381,20 @@ Data_003_6956:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; address loaded by PauseMenu_Skills_Case03_BeginStringDisplay_Bank37
-Data_003_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Data_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_6987:: ; address name
     db $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $7A, $FF, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF
 
 ; address loaded by PauseMenu_Skills_Case03_QueueSoundEffect
-Data_003_699B:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Skills_Case03_QueueSoundEffect_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_699B:: ; address name
     db $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $85, $FF, $FF, $FF, $FF
     db $FF, $FF, $FF, $FF
 
 ; address loaded by PauseMenu_Skills_Case03_BeginStringDisplay_Bank37
-Data_003_69AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Data_69AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_69AF:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00
     db $03, $04, $05, $00
 
@@ -6742,7 +6781,7 @@ Jump_003_6BD7:: ; address name
     or a, a
     jr z, Jump_003_6C52
     ld hl, wMenuCursor
-    ld de, Data_003_462B
+    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     and a, $04
@@ -6794,7 +6833,7 @@ Jump_003_6C36::
     call QueueSoundEffect
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, Data_003_462B
+    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Data
     call WriteBCTileAtWordTableEntry_Bank03
     ld hl, wTemp1
     inc [hl]
@@ -6844,7 +6883,7 @@ Jump_003_6C6E:: ; address name
 PauseMenu_State3_Case01_UpdateMenuCursor_Case03::
 Jump_003_6C90:: ; address name
     ld hl, wSubMenuCursor
-    ld de, Data_003_4633
+    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -7143,7 +7182,7 @@ Jump_003_6DFB:: ; address name
 PauseMenu_State3_Case01_UpdateMenuCursor_Case0E::
 Jump_003_6E27:: ; address name
     ld hl, wSubMenuCursor2
-    ld de, Data_003_4627
+    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -7152,7 +7191,7 @@ Jump_003_6E27:: ; address name
     call QueueSoundEffect
     ld a, [wSubMenuCursor2]
     and a, $01
-    ld hl, Data_003_4627
+    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data
     call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wSubMenuCursor2]
     and a, $01
@@ -7283,7 +7322,7 @@ Jump_003_6EE2:: ; address name
 PauseMenu_State3_Case02_CopyRectToBGMap::
 Jump_003_6F00:: ; address name
     ld a, [wPauseMenuStep]
-    ld hl, Data_003_6FBB
+    ld hl, PauseMenu_State3_Case02_CopyRectToBGMap_Data
     add_a_to_hl
     ld a, [hl]
     ld hl, wScreenTileBuffer + $EE
@@ -7325,7 +7364,7 @@ Jump_003_6F00:: ; address name
 PauseMenu_State3_Case02_UpdateMenuCursor::
 Jump_003_6F48:: ; address name
     ld hl, wMenuCursor
-    ld de, Data_003_4637
+    ld de, PauseMenu_State3_Case02_UpdateMenuCursor_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -7392,7 +7431,8 @@ Jump_003_6F9C::
     ret
 
 ; address loaded by PauseMenu_State3_Case02_CopyRectToBGMap
-Data_003_6FBB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Case02_CopyRectToBGMap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_6FBB:: ; address name
     db $D0, $D5, $DA
 
 ; entry 3 of the `rst $00` table in PauseMenu_State3
@@ -7516,7 +7556,7 @@ Func_003_7052:: ; address name
 MenuCursorAddressMenuCursor::
 Func_003_705B:: ; address name
     ld a, [wMenuCursor]
-    ld hl, Data_003_4649
+    ld hl, MenuCursorAddressMenuCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7610,7 +7650,7 @@ Jump_003_70CA:: ; address name
 PauseMenu_State3_Case04_UpdateMenuCursor::
 Jump_003_70D9:: ; address name
     ld hl, wMenuCursor
-    ld de, Data_003_463F
+    ld de, PauseMenu_State3_Case04_UpdateMenuCursor_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressedRepeat]
     and a, $C0
@@ -7831,7 +7871,7 @@ Jump_003_7255::
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_ShowStringBank08AtTilesHL_Bank03)
 PauseMenu_State3_Shared02_Sub01::
 Func_003_7257:: ; address name
-    ld hl, Data_003_7395
+    ld hl, PauseMenu_State3_Shared02_Sub01_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -8040,7 +8080,8 @@ Jump_003_7394::
     ret
 
 ; address loaded by PauseMenu_State3_Shared02_Sub01
-Data_003_7395:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Shared02_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_7395:: ; address name
     db $D0, $D5, $DA
 
 ; entry 5 of the `rst $00` table in PauseMenu_State3
@@ -8335,7 +8376,7 @@ Jump_003_7571:: ; address name
 PauseMenu_State3_Case06_UpdateMenuCursor::
 Jump_003_75A4:: ; address name
     ld hl, wSubMenuCursor
-    ld de, Data_003_4645
+    ld de, PauseMenu_Items_Case02_UpdateMenuCursor_Case1D_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -8344,7 +8385,7 @@ Jump_003_75A4:: ; address name
     call QueueSoundEffect
     ld a, [wSubMenuCursor]
     and a, $01
-    ld hl, Data_003_4645
+    ld hl, PauseMenu_Items_Case02_UpdateMenuCursor_Case1D_Data
     call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wSubMenuCursor]
     and a, $01
@@ -8543,7 +8584,7 @@ Func_003_76D5:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $07
-    ld hl, Data_003_4633
+    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld hl, vBGMap0 + $80
     ld de, wScreenTileBuffer + $80
@@ -8563,7 +8604,7 @@ Func_003_7707:: ; address name
     call BuildScreenBlocks21To24
     ld a, [wSubMenuCursor]
     and a, $07
-    ld hl, Data_003_4633
+    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $25
     farcall CopyBlockToTileBuffer
@@ -8688,7 +8729,7 @@ Jump_003_77E0::
     push bc
     push de
     ld a, c
-    ld hl, Data_003_78B9
+    ld hl, PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8800,7 +8841,7 @@ Func_003_7880:: ; address name
 Jump_003_7899::
     push af
     ld a, c
-    ld hl, Data_003_78C3
+    ld hl, PauseMenu_State3_Shared06_Sub01_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8820,11 +8861,13 @@ Jump_003_78B4::
     ret
 
 ; address loaded by PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc
-Data_003_78B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_78B9:: ; address name
     db $40, $94, $00, $95, $C0, $95, $80, $96, $40, $97
 
 ; address loaded by PauseMenu_State3_Shared06_Sub01
-Data_003_78C3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State3_Shared06_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_78C3:: ; address name
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 
 ; only called from routines of PauseMenu_State3 (E-0098)
@@ -9378,6 +9421,7 @@ Jump_003_7BF1::
     ret
 
 ; address loaded by PauseMenu_State4
-Data_003_7BF5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PauseMenu_State4_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_003_7BF5:: ; address name
     db $11, $20, $FF, $7F, $7D, $3D
     ds $405, $00

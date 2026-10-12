@@ -35,7 +35,8 @@ Data_0F0_4018:: ; address name
     dw String_F0_4016_00_0C ; id 12
     dw String_F0_4016_00_0D ; id 13
     dw String_F0_4016_00_0E ; id 14
-Data_0F0_4036:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopyNameStringFromBank08Database_Data_4036:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_4036:: ; address name
     dw String_F0_4016_00_0F ; id 15
     dw String_F0_4016_00_10 ; id 16
     dw String_F0_4016_00_11 ; id 17
@@ -1129,7 +1130,7 @@ Jump_0F0_4EA4:: ; address name
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_0F0_6526
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
@@ -1243,7 +1244,7 @@ Jump_0F0_4F64:: ; address name
     call CopyRectTo20ByteRows_BankF0
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, Data_0F0_6526
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
@@ -1288,7 +1289,7 @@ Jump_0F0_4FBB:: ; address name
     call CopyRectTo20ByteRows_BankF0
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, Data_0F0_6522
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
@@ -1770,7 +1771,7 @@ Jump_0F0_527B:: ; address name
     ld a, [wGM2Mode]
     and a, a
     jr nz, Jump_0F0_5286
-    ld hl, Data_0F0_6A58
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table5_Case09_Data
     jr Jump_0F0_5289
 
 Jump_0F0_5286::
@@ -3224,7 +3225,7 @@ Func_0F0_5B06:: ; address name
     and a, a
     ret nz
     ld a, [wScreenStep]
-    ld hl, Data_0F0_5B39
+    ld hl, StepScreenStepOffsetTableEvery4Frames_Data
     add_a_to_hl
     ld a, [hl]
     cp a, $80
@@ -3247,7 +3248,8 @@ Jump_0F0_5B2A::
     ret
 
 ; address loaded by StepScreenStepOffsetTableEvery4Frames
-Data_0F0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StepScreenStepOffsetTableEvery4Frames_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_5B39:: ; address name
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
 ; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
@@ -3304,7 +3306,7 @@ Jump_0F0_5B6F:: ; address name
     call CopyRectTo20ByteRows_BankF0
     ld a, [wChoiceCursorF0]
     ld b, $BC
-    ld hl, Data_0F0_6522
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data
     call StoreBAtWordTableEntry_BankF0
     call BGMapAddressAtScroll_BankF0
     ld bc, $140D
@@ -3574,7 +3576,7 @@ Jump_0F0_5DA0:: ; address name
     ret nz
     ld a, [wChoiceCursorF0]
     ld b, $C3
-    ld hl, Data_0F0_6522
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data
     call StoreBAtWordTableEntry_BankF0
     xor a, a
     ld [wScreenState], a
@@ -3689,32 +3691,32 @@ Jump_0F0_5E63:: ; address name
 ; writes: wScreenStep
 RunLinkSession8Case03Steps_OrFromBankWaitVRAM::
 Jump_0F0_5E74:: ; address name
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $20
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $60
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $90
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $140
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $170
     ld b, $1F
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles2 + $1A0
     ld b, $1F
     ld c, $10
@@ -4025,7 +4027,7 @@ Jump_0F0_60A7:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call ShowString_BankF0
-    ld de, Data_01F_48E0
+    ld de, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM_Data
     ld hl, vTiles1 + $7F0
     ld b, $1F
     ld c, $10
@@ -4152,7 +4154,7 @@ Jump_0F0_6188:: ; address name
     farcall DrawRecordListPageMarks
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, Data_0F0_6526
+    ld hl, RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data
     call StoreBAtWordTableEntry_BankF0
     ld a, [wScreenStep]
     inc a
@@ -4717,11 +4719,13 @@ Data_0F0_6500:: ; address name
     dw rIE
 
 ; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table3_Case05, RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet, RunLinkSession8Case01Steps_LoadTileListSixPerCall
-Data_0F0_6522:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6522:: ; address name
     db $26, $C4, $4E, $C4
 
 ; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table3_Case01, RunLinkSession8Exchange_Case01_Sub01_Table3_Case04, RunLinkSession8Case03Steps_DrawRecordListPageMarks
-Data_0F0_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunLinkSession8Exchange_Case01_Sub01_Table3_Case01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6526:: ; address name
     db $80, $C3, $A8, $C3, $D0, $C3, $F8, $C3, $20, $C4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -4984,7 +4988,7 @@ Func_0F0_678F:: ; address name
 Jump_0F0_6791::
     ld a, [wArg2]
     add a, a
-    ld hl, Data_0F0_67C0
+    ld hl, DrawArrowTileBCAtArg2Entry_F0_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5016,7 +5020,8 @@ Jump_0F0_67A9::
     ret
 
 ; address loaded by DrawArrowTileBCAtArg2Entry_F0
-Data_0F0_67C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawArrowTileBCAtArg2Entry_F0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_67C0:: ; address name
     db $C6, $67, $CA, $67, $CE, $67, $2D, $01, $6D, $01, $2E, $01, $6E, $01, $2F, $01
     db $6F, $01
 
@@ -5052,7 +5057,7 @@ Func_0F0_67EE:: ; address name
     ld de, $0000
     call TestFlagBit
     jr c, Jump_0F0_67FB
-    ld hl, Data_0F0_6A08
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A08
     jr Jump_0F0_67FE
 
 Jump_0F0_67FB::
@@ -5065,7 +5070,7 @@ Jump_0F0_67FE::
     ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F0_6811
-    ld hl, Data_0F0_6A28
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A28
     jr Jump_0F0_6814
 
 Jump_0F0_6811::
@@ -5078,11 +5083,11 @@ Jump_0F0_6814::
     ld de, $0000
     call TestFlagBit
     jr c, Jump_0F0_6829
-    ld hl, Data_0F0_69EA
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69EA
     jr Jump_0F0_682C
 
 Jump_0F0_6829::
-    ld hl, Data_0F0_69F0
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F0
 
 Jump_0F0_682C::
     ld de, hTemp0
@@ -5092,11 +5097,11 @@ Jump_0F0_682C::
     ld a, [wBankF0BlockC7]
     and a, a
     jr nz, Jump_0F0_6845
-    ld hl, Data_0F0_69F6
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F6
     jr Jump_0F0_6848
 
 Jump_0F0_6845::
-    ld hl, Data_0F0_69FC
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69FC
 
 Jump_0F0_6848::
     ld de, hTemp0
@@ -5137,7 +5142,7 @@ Jump_0F0_6899::
     ld [wObject2 + $3], a
 
 Jump_0F0_68A5::
-    ld hl, Data_0F0_6A02
+    ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A02
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF0
@@ -5199,27 +5204,33 @@ Data_0F0_68E6:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_69EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69EA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_69EA:: ; address name
     db $00, $00, $01, $04, $00, $80
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_69F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_69F0:: ; address name
     db $01, $00, $01, $01, $00, $80
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_69F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69F6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_69F6:: ; address name
     db $00, $00, $01, $04, $00, $81
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_69FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_69FC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_69FC:: ; address name
     db $01, $00, $01, $01, $00, $81
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_6A02:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A02:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6A02:: ; address name
     db $00, $00, $00, $02, $00, $82
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_6A08:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A08:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6A08:: ; address name
     db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
 ; E-0264 (derived: Func_0F0_68DF copies these 16 bytes to wSpriteSlots)
@@ -5229,7 +5240,8 @@ Data_0F0_6A18:: ; address name
     db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_TestFlagBit
-Data_0F0_6A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6A28:: ; address name
     db $00, $01, $00, $00, $F0, $40, $04, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
 ; E-0264 (derived: Func_0F0_68DF copies these 16 bytes to wObject1)
@@ -5245,7 +5257,8 @@ Data_0F0_6A48:: ; address name
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table5_Case09
-Data_0F0_6A58:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunLinkSession8Exchange_Case01_Sub01_Table5_Case09_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_6A58:: ; address name
     ds $A6, $FF
 
 ; while wCE9E > 0 and some resistance at wCF41 is below 3: picks at random one of the lowest-level resistances (levels 0, then 1, 2) and raises it (E-0129)
@@ -6475,30 +6488,36 @@ Data_0F0_7047:: ; address name
 FamilyBandLists_Boss::
 Data_0F0_704B:: ; address name
     dw FamilyBandSpecies_Boss ; id 0
-    dw Data_0F0_705D ; id 1
-    dw Data_0F0_705F ; id 2
-    dw Data_0F0_7061 ; id 3
-    dw Data_0F0_7063 ; id 4
-    dw Data_0F0_7065 ; id 5
-    dw Data_0F0_7067 ; id 6
-    dw Data_0F0_7085 ; id 7
+    dw FamilyBandSpecies_Boss_01 ; id 1
+    dw FamilyBandSpecies_Boss_02 ; id 2
+    dw FamilyBandSpecies_Boss_03 ; id 3
+    dw FamilyBandSpecies_Boss_04 ; id 4
+    dw FamilyBandSpecies_Boss_05 ; id 5
+    dw FamilyBandSpecies_Boss_06 ; id 6
+    dw FamilyBandSpecies_Boss_15 ; id 7
 
 ; E-0256 (C1: the boss family's eight band pointers start at successive words of this one list, so each band's list is a tail of it; 30 words up to RandomModulo29_BankF0 at $7097).
 ; record: species ($FFFF skipped, $FEFE ends a list)
 FamilyBandSpecies_Boss::
 Data_0F0_705B:: ; address name
     dw $FFFF ; id 0
-Data_0F0_705D:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_01:: ; heuristic: family band species list; C0
+Data_0F0_705D:: ; address name
     dw $FFFF ; id 1
-Data_0F0_705F:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_02:: ; heuristic: family band species list; C0
+Data_0F0_705F:: ; address name
     dw $FFFF ; id 2
-Data_0F0_7061:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_03:: ; heuristic: family band species list; C0
+Data_0F0_7061:: ; address name
     dw $FFFF ; id 3
-Data_0F0_7063:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_04:: ; heuristic: family band species list; C0
+Data_0F0_7063:: ; address name
     dw $FFFF ; id 4
-Data_0F0_7065:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_05:: ; heuristic: family band species list; C0
+Data_0F0_7065:: ; address name
     dw $FFFF ; id 5
-Data_0F0_7067:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_06:: ; heuristic: family band species list; C0
+Data_0F0_7067:: ; address name
     dw $015F ; id 6 DracoLord
     dw $0160 ; id 7 DracoLord
     dw $0162 ; id 8 Hargon
@@ -6514,7 +6533,8 @@ Data_0F0_7067:: ; heuristic: family band species list; C0
     dw $016F ; id 18 DeathMore
     dw $0174 ; id 19 Darck
     dw $FEFE ; id 20
-Data_0F0_7085:: ; heuristic: family band species list; C0
+FamilyBandSpecies_Boss_15:: ; heuristic: family band species list; C0
+Data_0F0_7085:: ; address name
     dw $0161 ; id 21 LordDraco
     dw $0164 ; id 22 Genosidoh
     dw $0167 ; id 23 AsuraZoma
@@ -8344,11 +8364,11 @@ Func_0F0_7C96:: ; address name
     ld a, [hl-]
     and a, a
     jr nz, Jump_0F0_7CA1
-    ld de, Data_0F0_4036
+    ld de, CopyNameStringFromBank08Database_Data_4036
     jr Jump_0F0_7CA4
 
 Jump_0F0_7CA1::
-    ld de, Data_008_4038
+    ld de, CopyNameStringFromBank08Database_Data_4038
 
 Jump_0F0_7CA4::
     push hl
@@ -8404,7 +8424,7 @@ Func_0F0_7CD4:: ; address name
     push hl
     ld a, e
     and a, $07
-    ld hl, Data_0F0_7CFB
+    ld hl, TestBitDEOfBitArrayHL_Data
     add_a_to_hl
     ld a, [hl]
     ld d, a
@@ -8420,7 +8440,8 @@ Jump_0F0_7CF8::
     ret
 
 ; address loaded by TestBitDEOfBitArrayHL
-Data_0F0_7CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+TestBitDEOfBitArrayHL_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0F0_7CFB:: ; address name
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; [HL from Func_0F0_7CD4] |= D (E-0122)

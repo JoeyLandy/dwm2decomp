@@ -1616,7 +1616,7 @@ Jump_012_499B:: ; address name
 Talk00Event20_WriteMapIdAndMapScreenXEtc::
 Jump_012_49C8:: ; address name
     ld a, [wScreenTableIndex]
-    ld hl, Data_012_4A14
+    ld hl, Talk00Event20_WriteMapIdAndMapScreenXEtc_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -1652,7 +1652,8 @@ Jump_012_49F6::
     ret
 
 ; address loaded by Talk00Event20_WriteMapIdAndMapScreenXEtc
-Data_012_4A14:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Talk00Event20_WriteMapIdAndMapScreenXEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_4A14:: ; address name
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
 ; implements script command type 8D (SCRIPT_TALK00_17): the one command of the script DispatchTalkEvent_Case00_Sub01_Case17 starts (talk event category $00, group $17); its states are not yet read (a structural name); reached through ScriptCommand8D in bank $10 (E-0038, E-0246)
@@ -4875,7 +4876,7 @@ Jump_012_5E3C:: ; address name
 Jump_012_5E4F::
     ldh a, [hMapId]
     ld c, a
-    ld hl, Data_012_5E62
+    ld hl, Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data
 
 Jump_012_5E55::
     ld a, [hl+]
@@ -4890,7 +4891,8 @@ Jump_012_5E5C::
     ret
 
 ; address loaded by Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07
-Data_012_5E62:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Talk00Event01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_5E62:: ; address name
     db $30, $FF
 
 ; entry 3 of the `rst $00` table in Func_012_5DB6
@@ -7240,7 +7242,7 @@ Jump_012_6B4A::
     ld h, a
     ld a, $1E
     call DivideHLByA
-    ld hl, Data_012_6B7A
+    ld hl, DrawAnimatedMetaSprite1B_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hSpriteSubIndex], a
@@ -7256,7 +7258,8 @@ Jump_012_6B4A::
     ret
 
 ; address loaded by DrawAnimatedMetaSprite1B
-Data_012_6B7A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawAnimatedMetaSprite1B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_6B7A:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
@@ -7955,7 +7958,7 @@ Func_012_6F17:: ; address name
     and a, $7F
     cp a, $13
     jr nz, Jump_012_6F2F
-    ld hl, Data_012_6FF2
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FF2
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -7964,7 +7967,7 @@ Func_012_6F17:: ; address name
 Jump_012_6F2F::
     cp a, $1A
     jr nz, Jump_012_6F3F
-    ld hl, Data_012_6FF7
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FF7
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -7973,7 +7976,7 @@ Jump_012_6F2F::
 Jump_012_6F3F::
     cp a, $17
     jr nz, Jump_012_6F4F
-    ld hl, Data_012_6FFA
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FFA
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -7982,10 +7985,10 @@ Jump_012_6F3F::
 Jump_012_6F4F::
     cp a, $1F
     jr nz, Jump_012_6F68
-    ld hl, Data_012_6FFE
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_6FFE
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
-    ld hl, Data_012_700E
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_700E
     add_a_to_hl
     ld a, [hl]
     ldh [hSpriteSubIndex], a
@@ -7994,7 +7997,7 @@ Jump_012_6F4F::
 Jump_012_6F68::
     cp a, $1E
     jr nz, Jump_012_6F78
-    ld hl, Data_012_701E
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_701E
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -8003,7 +8006,7 @@ Jump_012_6F68::
 Jump_012_6F78::
     cp a, $18
     jr nz, Jump_012_6F88
-    ld hl, Data_012_7023
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_7023
     call DrawFieldSprites_Sub01_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
@@ -8012,7 +8015,7 @@ Jump_012_6F78::
 Jump_012_6F88::
     cp a, $20
     jr nz, Jump_012_6F95
-    ld hl, Data_012_7026
+    ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data_7026
     call DrawFieldSprites_Sub01_WriteObject5_Sub02
     ldh [hSpriteSubIndex], a
     ret
@@ -8089,35 +8092,43 @@ Jump_012_6FD9::
     ret
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_6FF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_6FF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_6FF2:: ; address name
     db $08, $08, $08, $08, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_6FF7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_6FF7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_6FF7:: ; address name
     db $08, $08, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_6FFA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_6FFA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_6FFA:: ; address name
     db $07, $07, $09, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_6FFE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_6FFE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_6FFE:: ; address name
     db $0E, $0E, $0E, $0E, $0E, $0E, $0E, $36, $0E, $0E, $0E, $40, $FF, $FF, $FF, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_700E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_700E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_700E:: ; address name
     db $00, $01, $02, $01, $02, $01, $02, $00, $03, $04, $05, $06, $FF, $FF, $FF, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_701E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_701E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_701E:: ; address name
     db $04, $07, $07, $04, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_7023:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_7023:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7023:: ; address name
     db $20, $20, $FF
 
 ; address loaded by DrawFieldSprites_WriteSpriteSubIndex
-Data_012_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawFieldSprites_WriteSpriteSubIndex_Data_7026:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7026:: ; address name
     db $00, $1E, $00, $05, $01, $04, $02, $05, $01, $04, $00, $05, $01, $04, $02, $05
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $FF, $FF
@@ -8132,43 +8143,43 @@ Data_012_704C:: ; address name
     db $0A, $00
     dw Tiles0Gfx_7E_4CED ; id 2
     db $00, $00
-    dw Data_07E_56C3 ; id 3
+    dw Gfx_7E_56C3 ; id 3
     db $1D, $00
     dw Tiles0Gfx_7E_4CED ; id 4
     db $00, $00
     dw Tiles0Plus600Gfx_7E_52BC ; id 5
     db $15, $00
-    dw Data_07E_51A8 ; id 6
+    dw Gfx_7E_51A8 ; id 6
     db $93, $00
-    dw Data_07E_52F9 ; id 7
+    dw Gfx_7E_52F9 ; id 7
     db $16, $00
-    dw Data_07E_4FE8 ; id 8
+    dw Gfx_7E_4FE8 ; id 8
     db $0D, $00
-    dw Data_07E_50EB ; id 9
+    dw Gfx_7E_50EB ; id 9
     db $11, $00
-    dw Data_07E_5027 ; id 10
+    dw Gfx_7E_5027 ; id 10
     db $0E, $00
-    dw Data_07E_5513 ; id 11
+    dw Gfx_7E_5513 ; id 11
     db $9A, $00
-    dw Data_07E_5370 ; id 12
+    dw Gfx_7E_5370 ; id 12
     db $97, $00
     dw Data_07E_5756 ; id 13
     db $1F, $00
     dw Data_07E_5756 ; id 14
     db $9F, $00
-    dw Data_07E_4F63 ; id 15
+    dw Gfx_7E_4F63 ; id 15
     db $0B, $00
-    dw Data_07E_4EF1 ; id 16
+    dw Gfx_7E_4EF1 ; id 16
     db $09, $00
     dw Tiles0Plus100Gfx_7E_5706 ; id 17
     db $9E, $00
-    dw Data_07E_541A ; id 18
+    dw Gfx_7E_541A ; id 18
     db $98, $00
     dw Tiles0Gfx_7E_4CED ; id 19
     db $00, $00
-    dw Data_07E_5870 ; id 20
+    dw Gfx_7E_5870 ; id 20
     db $20, $00
-    dw Data_07E_5870 ; id 21
+    dw Gfx_7E_5870 ; id 21
     db $A0, $00
 
 ; wC8FE = $FF; on town maps (or special maps of type 0) finds the wCC48 entry for the current screen and sets wC900, wC8FF and wC8FE from it (E-0128)
@@ -8322,7 +8333,7 @@ Jump_012_715E::
     jr nz, Jump_012_7174
     inc hl
     ld a, [hl]
-    ld hl, Data_012_71BB
+    ld hl, FindTriggerEntryForCurrentScreen_ScreenTriggers_Data
     add_a_to_hl
     ld a, [hl]
 
@@ -8377,7 +8388,8 @@ Jump_012_71A4::
     ret
 
 ; address loaded by FindTriggerEntryForCurrentScreen_ScreenTriggers
-Data_012_71BB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FindTriggerEntryForCurrentScreen_ScreenTriggers_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_71BB:: ; address name
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
     db $05, $00, $09, $09, $09, $09, $09, $09, $09, $0A, $06, $00, $01
@@ -8392,31 +8404,31 @@ Data_012_71E8:: ; address name
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
 Data_012_71EE:: ; address name
-    dfar Data_07E_4EF1 ; id 1: compressed sprite graphics
+    dfar Gfx_7E_4EF1 ; id 1: compressed sprite graphics
     db $48 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4D1A ; id 2: compressed sprite graphics
+    dfar Gfx_7E_4D1A ; id 2: compressed sprite graphics
     db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4D1A ; id 3: compressed sprite graphics
+    dfar Gfx_7E_4D1A ; id 3: compressed sprite graphics
     db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4D4F ; id 4: compressed sprite graphics
+    dfar Gfx_7E_4D4F ; id 4: compressed sprite graphics
     db $10 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4D8A ; id 5: compressed sprite graphics
+    dfar Gfx_7E_4D8A ; id 5: compressed sprite graphics
     db $18 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4DCC ; id 6: compressed sprite graphics
+    dfar Gfx_7E_4DCC ; id 6: compressed sprite graphics
     db $20 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4E06 ; id 7: compressed sprite graphics
+    dfar Gfx_7E_4E06 ; id 7: compressed sprite graphics
     db $28 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4E37 ; id 8: compressed sprite graphics
+    dfar Gfx_7E_4E37 ; id 8: compressed sprite graphics
     db $30 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Data_07E_4E79 ; id 9: compressed sprite graphics
+    dfar Gfx_7E_4E79 ; id 9: compressed sprite graphics
     db $38 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
     dfar Tiles0Gfx_7E_4EB3 ; id 10: compressed sprite graphics
@@ -8435,7 +8447,7 @@ Func_012_722A:: ; address name
     ld a, [wTriggerKind]
     cp a, $FF
     ret z
-    ld hl, Data_012_7308
+    ld hl, DrawTriggerMarkerSprite_Data_7308
     add_a_to_hl
     ld a, [hl+]
     ldh [hSpriteSetIndex], a
@@ -8497,7 +8509,7 @@ Jump_012_728D::
 Jump_012_729A::
     ld a, [wTriggerCell]
     add a, a
-    ld hl, Data_012_7313
+    ld hl, DrawTriggerMarkerSprite_Data_7313
     add_a_to_hl
     ldh a, [hScrollX]
     ld e, a
@@ -8571,11 +8583,13 @@ Jump_012_72FB::
     ret
 
 ; address loaded by DrawTriggerMarkerSprite
-Data_012_7308:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawTriggerMarkerSprite_Data_7308:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7308:: ; address name
     db $00, $09, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
 ; address loaded by DrawTriggerMarkerSprite
-Data_012_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawTriggerMarkerSprite_Data_7313:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7313:: ; address name
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
 
@@ -8815,7 +8829,7 @@ Jump_012_7479::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, Data_012_752E
+    ld de, FieldModeStateDispatch_Case05_WaitTextWindowState_Data
     add a, e
     ld e, a
     jr nc, Jump_012_74A2
@@ -8851,7 +8865,7 @@ Jump_012_74C9::
     inc hl
     inc hl
     ld a, [hl]
-    ld de, Data_012_752E
+    ld de, FieldModeStateDispatch_Case05_WaitTextWindowState_Data
     add a, e
     ld e, a
     jr nc, Jump_012_74D6
@@ -8904,7 +8918,8 @@ Jump_012_7508::
     ret
 
 ; address loaded by FieldModeStateDispatch_Case05_WaitTextWindowState
-Data_012_752E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_Case05_WaitTextWindowState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_752E:: ; address name
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; A = 1 when the player cell (B, C high nibbles) equals the trigger cell wC8FF (or its Data_012_7581 entry on special maps), else 0 (E-0127)
@@ -8952,7 +8967,7 @@ Jump_012_7565::
     jr z, Jump_012_754F
     ld a, [wTriggerCell]
     add a, a
-    ld hl, Data_012_7581
+    ld hl, IsPlayerOnTriggerCell_Data
     add_a_to_hl
     ld a, [hl+]
     cp a, b
@@ -8965,7 +8980,8 @@ Jump_012_7565::
     ret
 
 ; address loaded by IsPlayerOnTriggerCell
-Data_012_7581:: ; heuristic: pointer load in the same bank (bank assumed); C0
+IsPlayerOnTriggerCell_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7581:: ; address name
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
@@ -10152,7 +10168,7 @@ Jump_012_7C3B::
     ld a, [wRandomHi]
     and a, $03
     add a, a
-    ld hl, Data_012_7D56
+    ld hl, RunPendingFieldEventPendingFieldEvent_Data_7D56
     add_a_to_hl
     ld a, [hl+]
     ld [wSpriteSlots + $4], a
@@ -10197,7 +10213,7 @@ Jump_012_7CA1::
     ld [wSpriteSlotCount], a
     ld a, [wPendingFieldEvent]
     and a, $0F
-    ld hl, Data_012_7D46
+    ld hl, RunPendingFieldEventPendingFieldEvent_Data_7D46
     add_a_to_hl
     ld a, [hl]
     ld [wSpriteSlots + $2], a
@@ -10299,11 +10315,13 @@ Jump_012_7D43::
     ret
 
 ; address loaded by RunPendingFieldEventPendingFieldEvent
-Data_012_7D46:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunPendingFieldEventPendingFieldEvent_Data_7D46:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7D46:: ; address name
     db $12, $15, $3D, $3E, $10, $11, $17, $15, $14, $13, $57, $12, $15, $12, $14, $10
 
 ; address loaded by RunPendingFieldEventPendingFieldEvent
-Data_012_7D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunPendingFieldEventPendingFieldEvent_Data_7D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_012_7D56:: ; address name
     db $20, $20, $70, $60, $20, $60, $70, $20
 
 ; only called from ClearPendingFieldEventWhenFieldIdle (E-0047)

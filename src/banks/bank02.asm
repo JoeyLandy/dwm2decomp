@@ -26,7 +26,7 @@ Jump_002_401C::
     ld a, [wFadeMode]
     bit 7, a
     jr nz, Jump_002_402D
-    ld de, Data_002_7FFF
+    ld de, StartPaletteFade_WriteFadeLevelAndFadeDelayEtc_Data
     jr Jump_002_4030
 
 Jump_002_402D::
@@ -546,13 +546,13 @@ Func_002_42FA:: ; address name
     or a, a
     ret z
     ld hl, wBGPaletteBuffer
-    ld de, Data_002_4322
+    ld de, LoadPalette0FromData4322_Data
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
     ld hl, wOBJPaletteBuffer
-    ld de, Data_002_4322
+    ld de, LoadPalette0FromData4322_Data
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7F
@@ -560,7 +560,8 @@ Func_002_42FA:: ; address name
     ret
 
 ; address loaded by LoadPalette0FromData4322
-Data_002_4322:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPalette0FromData4322_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_4322:: ; address name
     db $00, $7C, $FF, $7F, $E0, $01, $00, $00
 
 ; only called from RunMenuStateMenuState_Case04 (E-0047)
@@ -882,7 +883,7 @@ Func_002_449A:: ; address name
     and a, $1F
     ld [wTextCounter4], a
     push hl
-    ld hl, Data_002_4510
+    ld hl, RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data
     ld a, [wScreenCounter]
     add_a_to_hl
     ld b, [hl]
@@ -931,7 +932,8 @@ Jump_002_44DA::
     ret
 
 ; address loaded by RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
-Data_002_4510:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_4510:: ; address name
     db $04, $08, $0C, $10, $14, $18, $1C, $20, $24
 
 Jump_002_4519::
@@ -952,7 +954,7 @@ Func_002_452C:: ; address name
     push hl
     ld a, [wDMGPaletteOBP0]
     and a, $03
-    ld de, Data_002_45C2
+    ld de, WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data
     add a, e
     ld e, a
     jr nc, Jump_002_453A
@@ -974,7 +976,7 @@ Jump_002_453A::
     srl a
     srl a
     and a, $03
-    ld de, Data_002_45C2
+    ld de, WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data
     add a, e
     ld e, a
     jr nc, Jump_002_455E
@@ -995,7 +997,7 @@ Jump_002_455E::
     ld a, [wDMGPaletteOBP0]
     swap a
     and a, $03
-    ld de, Data_002_45C2
+    ld de, WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data
     add a, e
     ld e, a
     jr nc, Jump_002_4580
@@ -1018,7 +1020,7 @@ Jump_002_4580::
     srl a
     srl a
     and a, $03
-    ld de, Data_002_45C2
+    ld de, WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data
     add a, e
     ld e, a
     jr nc, Jump_002_45A6
@@ -1047,7 +1049,8 @@ Jump_002_45C1::
     ret
 
 ; address loaded by WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0
-Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_45C2:: ; address name
     db $02, $04, $00, $06
 
 ; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)
@@ -1078,10 +1081,10 @@ Jump_002_45DB::
     ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    ld hl, Data_002_4AD6
+    ld hl, GameMode1_Init_Data_4AD6
     ld a, [hl]
     ld [wSGBPaletteSet], a
-    ld hl, Data_002_4AD7
+    ld hl, GameMode1_Init_Data_4AD7
     ld a, [hl]
     ld [wSGBAttrFile], a
     farcall SendSGBPaletteSetPacket
@@ -1746,11 +1749,13 @@ Jump_002_4AD3::
     ret
 
 ; address loaded by GameMode1_Init
-Data_002_4AD6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode1_Init_Data_4AD6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_4AD6:: ; address name
     db $00
 
 ; address loaded by GameMode1_Init
-Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+GameMode1_Init_Data_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_4AD7:: ; address name
     db $00
 
 ; per-frame routine for wGameMode = 1
@@ -2917,7 +2922,7 @@ Jump_002_51DE:: ; address name
     ret nc
     sla a
     sla a
-    ld hl, Data_002_5205
+    ld hl, RunFieldEventFieldEventKind_TestFlagBit_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -2931,7 +2936,8 @@ Jump_002_51DE:: ; address name
     jp Jump_002_52B8
 
 ; address loaded by RunFieldEventFieldEventKind_TestFlagBit
-Data_002_5205:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldEventFieldEventKind_TestFlagBit_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_5205:: ; address name
     db $C0, $91, $E0, $91, $D0, $91, $F0, $91, $20, $92, $60, $92, $30, $92, $70, $92
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $A0, $93, $90, $93, $B0, $93
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $A0, $94, $90, $94, $B0, $94
@@ -2947,7 +2953,7 @@ Jump_002_5235:: ; address name
     ret nc
     sla a
     sla a
-    ld hl, Data_002_5254
+    ld hl, RunFieldEventFieldEventKind_ReadFrameCounterLo_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -2961,7 +2967,8 @@ Jump_002_5235:: ; address name
     jr Jump_002_52B8
 
 ; address loaded by RunFieldEventFieldEventKind_ReadFrameCounterLo
-Data_002_5254:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldEventFieldEventKind_ReadFrameCounterLo_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_5254:: ; address name
     db $30, $93, $50, $93, $40, $93, $60, $93, $20, $94, $40, $94, $30, $94, $50, $94
     db $C0, $94, $E0, $94, $D0, $94, $F0, $94, $60, $95, $80, $95, $70, $95, $90, $95
     db $20, $96, $60, $96, $30, $96, $70, $96, $A0, $96, $E0, $96, $B0, $96, $F0, $96
@@ -2980,7 +2987,7 @@ Jump_002_5284:: ; address name
     ret nc
     sla a
     sla a
-    ld hl, Data_002_52A8
+    ld hl, RunFieldEventFieldEventKind_WaitMapScreenY_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -2994,7 +3001,8 @@ Jump_002_5284:: ; address name
     jp Jump_002_52B8
 
 ; address loaded by RunFieldEventFieldEventKind_WaitMapScreenY
-Data_002_52A8:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldEventFieldEventKind_WaitMapScreenY_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_52A8:: ; address name
     db $E0, $94, $00, $95, $F0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
 Jump_002_52B8::
@@ -3118,7 +3126,7 @@ Func_002_534A:: ; address name
     and a, $1F
     ld [wTextCounter4], a
     push hl
-    ld hl, Data_002_53C5
+    ld hl, RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc_Data
     ldh a, [hTemp0]
     add_a_to_hl
     ld a, [wMenuSubState]
@@ -3173,7 +3181,8 @@ Jump_002_539B::
     ret
 
 ; address loaded by RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
-Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_53C5:: ; address name
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
 ; only called from RunFieldEventFieldEventKind_Case0C (E-0047)
@@ -4307,7 +4316,7 @@ Jump_002_5AEE::
     jr z, Jump_002_5AD8
     ld a, [wTriggerCell]
     add a, a
-    ld hl, Data_002_5B0A
+    ld hl, UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data
     add_a_to_hl
     ld a, [hl+]
     cp a, b
@@ -4320,7 +4329,8 @@ Jump_002_5AEE::
     ret
 
 ; address loaded by UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
-Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_5B0A:: ; address name
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
@@ -4347,7 +4357,7 @@ Func_002_5B2A:: ; address name
     ld d, a
     ldh a, [hMapId]
     ld e, a
-    ld hl, Data_002_5B89
+    ld hl, FieldModeStateDispatch_Case00_WaitFadeState_Data
     ld b, $00
 
 Jump_002_5B4B::
@@ -4396,7 +4406,8 @@ Jump_002_5B81::
     jr Jump_002_5B4B
 
 ; address loaded by FieldModeStateDispatch_Case00_WaitFadeState
-Data_002_5B89:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_Case00_WaitFadeState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_5B89:: ; address name
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1A, $10, $70, $70
     db $85, $10, $50, $60, $FF
 
@@ -5809,7 +5820,7 @@ Jump_002_6442::
     ld l, e
     ld h, d
     ld b, $00
-    ld de, Data_002_64AB
+    ld de, FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState_Data
 
 Jump_002_6449::
     push hl
@@ -5880,7 +5891,8 @@ Jump_002_649F::
     ret
 
 ; address loaded by FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState
-Data_002_64AB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+FieldModeStateDispatch_Case02_Sub01_WriteMenuSubState_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_64AB:: ; address name
     db $01, $01, $06, $01, $01, $03, $06, $03
 
 ; only called from FieldModeStateDispatch_Case02_Sub01 (E-0047)
@@ -6352,7 +6364,7 @@ Func_002_6788:: ; address name
     and a, $03
     inc a
     ld b, a
-    ld hl, Data_002_6835
+    ld hl, BuildPartyStatusWindowRows_Data
     ld de, wPartyList
 
 Jump_002_679A::
@@ -6463,7 +6475,8 @@ Jump_002_6829::
     ret
 
 ; address loaded by BuildPartyStatusWindowRows
-Data_002_6835:: ; heuristic: pointer load in the same bank (bank assumed); C0
+BuildPartyStatusWindowRows_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6835:: ; address name
     db $54, $2B, $3F, $51, $5A, $31, $45, $57, $60, $37, $4B, $5D
 
 ; draws the 20 x 6 window wC364 at the scroll position + $180 (and its CGB attributes from wD1CC) (E-0127)
@@ -6763,7 +6776,7 @@ Jump_002_6A75:: ; address name
     jr z, Jump_002_6A92
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, Data_002_6B8C
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6776,7 +6789,7 @@ Jump_002_6A75:: ; address name
 Jump_002_6A92::
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, Data_002_6BA0
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6796,7 +6809,7 @@ Jump_002_6AA8:: ; address name
     jr z, Jump_002_6AC5
     push de
     ld hl, wWindowTileBuffer + $14
-    ld de, Data_002_6BA0
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0
     ld b, $03
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6809,7 +6822,7 @@ Jump_002_6AA8:: ; address name
 Jump_002_6AC5::
     push de
     ld hl, wWindowTileBuffer + $28
-    ld de, Data_002_6B8C
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C
     ld b, $01
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6831,7 +6844,7 @@ Jump_002_6ADB:: ; address name
     jr z, Jump_002_6B04
     push de
     ld hl, wWindowTileBuffer
-    ld de, Data_002_6BDC
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02_Data
     ld b, $05
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6954,13 +6967,15 @@ Jump_002_6B7F::
     ret
 
 ; address loaded by StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01
-Data_002_6B8C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6B8C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6B8C:: ; address name
     db $B6
     ds $12, $C3
     db $B7
 
 ; address loaded by StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01
-Data_002_6BA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data_6BA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6BA0:: ; address name
     db $B0
     ds $12, $B1
     db $B2, $B6
@@ -6970,7 +6985,8 @@ Data_002_6BA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B5
 
 ; address loaded by StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02
-Data_002_6BDC:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6BDC:: ; address name
     db $B0
     ds $12, $B1
     db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
@@ -7238,7 +7254,7 @@ Jump_002_6DB7::
     ld a, e
     and a, $0F
     ld e, a
-    ld hl, Data_002_6DDE
+    ld hl, RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data
     add hl, de
     push bc
     ld c, [hl]
@@ -7266,7 +7282,8 @@ Jump_002_6DD4::
     ret
 
 ; address loaded by RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc
-Data_002_6DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6DDE:: ; address name
     db $00, $60, $B6, $EC, $FF, $EC, $B6, $60, $00, $60, $B6, $EC, $FF, $EC, $B6, $60
 
 ; entry 4 of the `rst $00` table in RunMenuStateMenuState
@@ -7292,7 +7309,7 @@ Jump_002_6DEE:: ; address name
 
 Jump_002_6E0B::
     ld a, [wSubMenuCursor]
-    ld hl, Data_002_6E20
+    ld hl, RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc_Data
     add_a_to_hl
     ld a, [hl]
     ld [wDMGPaletteBGP], a
@@ -7300,7 +7317,8 @@ Jump_002_6E0B::
     jp Jump_002_6D75
 
 ; address loaded by RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc
-Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_6E20:: ; address name
     db $D2, $81, $40, $00, $00
 
 ; entry 5 of the `rst $00` table in RunMenuStateMenuState
@@ -8065,7 +8083,7 @@ CopySaveBlocksToSRAM::
 Func_002_72B0:: ; address name
     ld a, $01
     ld [rRAMB], a
-    ld hl, Data_002_75F7
+    ld hl, CopySaveBlocksToSRAM_Data
     ld de, sSaveData
 
 Jump_002_72BB::
@@ -8659,7 +8677,7 @@ CopySaveBlocksToSRAMWithSum::
 Func_002_7598:: ; address name
     ld a, $01
     ld [rRAMB], a
-    ld hl, Data_002_75F7
+    ld hl, CopySaveBlocksToSRAM_Data
     ld de, sSaveData
     xor a, a
     ldh [hTemp2], a
@@ -8721,7 +8739,8 @@ Jump_002_75DA::
     jr Jump_002_75A8
 
 ; address loaded by CopySaveBlocksToSRAM, CopySaveBlocksToSRAMWithSum
-Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+CopySaveBlocksToSRAM_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_75F7:: ; address name
     db $8A, $FF, $0E, $00, $0C, $C6, $91, $02, $D7, $CB, $6B, $00, $42, $CC, $B5, $00
     db $00, $00, $00, $00
 
@@ -8938,5 +8957,6 @@ Jump_002_7741::
     ds $8B9, $00
 
 ; address loaded by StartPaletteFade_WriteFadeLevelAndFadeDelayEtc
-Data_002_7FFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
+StartPaletteFade_WriteFadeLevelAndFadeDelayEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_002_7FFF:: ; address name
     db $00

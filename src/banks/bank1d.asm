@@ -11,7 +11,8 @@ Func_01D_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9, $CD
 
 ; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
-Data_01D_4010:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4010:: ; address name
     db $01, $40, $CD, $11, $26, $C9
 
 ; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
@@ -530,7 +531,7 @@ Data_01D_460B:: ; address name
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
 Func_01D_460F:: ; address name
-    call Func_01D_47AF
+    call VaultMenu_BlinkCursorBlinkEF_Bank1D_4801
     and a, a
     ret z
     cp a, $01
@@ -567,7 +568,7 @@ Jump_01D_4642::
     ret
 
 Jump_01D_464C::
-    call Func_01D_4A62
+    call VaultMenu_WriteSavedSpriteClipModeAndListPages
     ld a, [wSavedSpriteClipMode]
     and a, a
     jr z, Jump_01D_466C
@@ -650,7 +651,7 @@ Jump_01D_46D4::
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
 Func_01D_46E1:: ; address name
-    call Func_01D_47AF
+    call VaultMenu_BlinkCursorBlinkEF_Bank1D_4801
     and a, a
     ret z
     cp a, $01
@@ -762,10 +763,12 @@ Jump_01D_47A2::
     ld [wScreenStep], a
     jp Jump_01D_4714
 
+; only called from routines of VaultMenu (E-0098)
 ; 2 call sites from 2 routines (e.g. VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc, VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc)
 ; reads: wJoypadPressedRepeat, wScreenByteED
 ; writes: wScreenByteED
-Func_01D_47AF::
+VaultMenu_BlinkCursorBlinkEF_Bank1D_4801::
+Func_01D_47AF:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01D_47C8
@@ -811,7 +814,7 @@ Jump_01D_47F0::
     jr Jump_01D_47D6
 
 Jump_01D_47F3::
-    call Func_01D_4823
+    call VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D
     ld a, $69
     call QueueSoundEffect
     ld a, $01
@@ -822,7 +825,7 @@ Jump_01D_47FE::
     ret
 
 ; cycles wD7EF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 1 call site from 1 routine (e.g. Func_01D_47AF)
+; 1 call site from 1 routine (e.g. VaultMenu_BlinkCursorBlinkEF_Bank1D_4801)
 ; reads: wJoypadRepeatTimer, wCursorBlinkEF, wScreenByteED
 ; writes: wCursorBlinkEF
 BlinkCursorBlinkEF_Bank1D_4801::
@@ -841,7 +844,7 @@ Func_01D_4801:: ; address name
     ld [wCursorBlinkEF], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. Func_01D_47AF)
+; 1 call site from 1 routine (e.g. VaultMenu_BlinkCursorBlinkEF_Bank1D_4801)
 ; reads: wScreenByteED
 DrawCursorTileBB_481B_Bank1D::
 Func_01D_481B:: ; address name
@@ -849,22 +852,24 @@ Func_01D_481B:: ; address name
     jr Jump_01D_4825
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. Func_01D_47AF)
+; 2 call sites from 1 routine (e.g. VaultMenu_BlinkCursorBlinkEF_Bank1D_4801)
 ; reads: wScreenByteED
 DrawBlankTileC3_481F_Bank1D::
 Func_01D_481F:: ; address name
     ld b, $C3
     jr Jump_01D_4825
 
-; 1 call site from 1 routine (e.g. Func_01D_47AF)
+; only called from VaultMenu_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_BlinkCursorBlinkEF_Bank1D_4801)
 ; reads: wScreenByteED
-Func_01D_4823::
+VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D::
+Func_01D_4823:: ; address name
     ld b, $BC
 
 Jump_01D_4825::
     ld a, [wScreenByteED]
     add a, a
-    ld hl, Data_01D_4842
+    ld hl, VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -880,8 +885,9 @@ Jump_01D_4825::
     ei
     ret
 
-; address loaded by Func_01D_4823
-Data_01D_4842:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D
+VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4842:: ; address name
     db $61, $00, $A1, $00, $E1, $00
 
 ; draws rect $0088 (9 x 12) at vBGMap1 + $370 (Func_01D_5917) and wD781 += 1 (E-0122)
@@ -1127,10 +1133,12 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc, VaultMenu_Store_CountNonZeroItemGridBytes, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes, VaultMenu_Setup_WriteScreenStep)
+; only called from routines of VaultMenu (E-0098)
+; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc, VaultMenu_Store_CountNonZeroItemGridBytes, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes, VaultMenu_Setup_ToVaultMenu_Shared03AndStep)
 ; writes: wSavedSpriteClipMode, wListPages
 ; points at: wItemStorage, wInventory
-Func_01D_4A62::
+VaultMenu_WriteSavedSpriteClipModeAndListPages::
+Func_01D_4A62:: ; address name
     ld hl, wItemStorage
     ld c, $00
     ld b, $00
@@ -1206,7 +1214,7 @@ Func_01D_4AB1:: ; address name
 Jump_01D_4AB7::
     ld a, [wItemGridX]
     add a, a
-    ld hl, Data_01D_4AD4
+    ld hl, VaultMenu_Store_Shared03_ReadItemGridX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1223,7 +1231,8 @@ Jump_01D_4AB7::
     ret
 
 ; address loaded by VaultMenu_Store_Shared03_ReadItemGridX
-Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Shared03_ReadItemGridX_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4AD4:: ; address name
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
 ; only called from VaultMenu_Store_Case0A (E-0047)
@@ -1233,7 +1242,7 @@ Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; points at: wScreenList, wItemStorage, wItemGrid, wInventory
 VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
 Func_01D_4ADC:: ; address name
-    ld hl, Data_01D_4BE4
+    ld hl, VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc_Data
     ld de, wScreenList
     ld c, $00
 
@@ -1398,7 +1407,8 @@ Jump_01D_4BB1::
     ret
 
 ; address loaded by VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc
-Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4BE4:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
@@ -1635,7 +1645,7 @@ Func_01D_4D63:: ; address name
 Jump_01D_4D65::
     ld a, [wItemGridX]
     add a, a
-    ld hl, Data_01D_4D82
+    ld hl, VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1652,7 +1662,8 @@ Jump_01D_4D65::
     ret
 
 ; address loaded by VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D
-Data_01D_4D82:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4D82:: ; address name
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
 ; only called from VaultMenu_Store_Case0B_Sub01 (E-0047)
@@ -2036,7 +2047,7 @@ Jump_01D_4FC6::
 Jump_01D_4FC8::
     ld a, [wNumberEditPos]
     add a, a
-    ld hl, Data_01D_4FE5
+    ld hl, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2053,7 +2064,8 @@ Jump_01D_4FC8::
     ret
 
 ; address loaded by VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
-Data_01D_4FE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_4FE5:: ; address name
     db $61, $01, $62, $01
 
 ; writes wD7CA and wD7CB as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and + $162 (E-0120)
@@ -2241,7 +2253,7 @@ Jump_01D_50CF::
     jr c, Jump_01D_50C2
 
 Jump_01D_50DA::
-    call Func_01D_4A62
+    call VaultMenu_WriteSavedSpriteClipModeAndListPages
     ld a, [wListPages]
     cp a, $18
     jr c, Jump_01D_50EB
@@ -2464,7 +2476,7 @@ Func_01D_5297:: ; address name
 VaultMenu_Store_Number24ToPackedBCD::
 Func_01D_52BD:: ; address name
     ld hl, wScreenList
-    ld de, Data_01D_53A2
+    ld de, VaultMenu_Store_Number24ToPackedBCD_Data
     ld c, $00
 
 Jump_01D_52C5::
@@ -2606,7 +2618,8 @@ Jump_01D_536F::
     ret
 
 ; address loaded by VaultMenu_Store_Number24ToPackedBCD
-Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Number24ToPackedBCD_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_53A2:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
     db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
@@ -2618,7 +2631,7 @@ Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
 Func_01D_53BD:: ; address name
     ld hl, wScreenList
-    ld de, Data_01D_548D
+    ld de, VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D_Data
     ld c, $00
 
 Jump_01D_53C5::
@@ -2719,7 +2732,8 @@ Jump_01D_5461::
     jp Jump_01D_5427
 
 ; address loaded by VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D
-Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
+VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_548D:: ; address name
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; only called from VaultMenu_Store_Case15 (E-0047)
@@ -2728,7 +2742,7 @@ Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, wGoldHi, ...
 VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc::
 Func_01D_549D:: ; address name
-    call Func_01D_564B
+    call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a, a
     ret z
     cp a, $01
@@ -2869,7 +2883,7 @@ Jump_01D_5536::
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wGoldHi, wGoldMid, wGoldLo, wBankedGoldHi, ...
 VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc::
 Func_01D_5573:: ; address name
-    call Func_01D_564B
+    call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a, a
     ret z
     cp a, $01
@@ -3005,10 +3019,12 @@ Jump_01D_560E::
     ld [wScriptStartRequest], a
     ret
 
+; only called from routines of VaultMenu (E-0098)
 ; 2 call sites from 2 routines (e.g. VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc, VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wNumberEditPos, wCountTens, wThreeDigits, wCountOnes, wItemGrid
 ; writes: wNumberEditPos, wThreeDigits, wCountOnes
-Func_01D_564B::
+VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
+Func_01D_564B:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_01D_5671
@@ -3023,7 +3039,7 @@ Func_01D_564B::
     jp nz, Jump_01D_5822
     bit 5, a
     jp nz, Jump_01D_5834
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     ret
 
 Jump_01D_5671::
@@ -3090,8 +3106,8 @@ Jump_01D_56CA::
 Jump_01D_56D8::
     inc a
     ld [wThreeDigits], a
-    call Func_01D_5AA3
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteThreeDigits
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3106,15 +3122,15 @@ Jump_01D_56E4::
     jr c, Jump_01D_56FE
     xor a, a
     ld [wThreeDigits + $1], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
 Jump_01D_56FE::
     inc a
     ld [wThreeDigits + $1], a
-    call Func_01D_5AA3
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteThreeDigits
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3150,7 +3166,7 @@ Jump_01D_5725::
     jr c, Jump_01D_575C
     ld a, b
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3160,14 +3176,14 @@ Jump_01D_574C::
     jr c, Jump_01D_575C
     xor a, a
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
 Jump_01D_575C::
     inc a
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3198,7 +3214,7 @@ Jump_01D_5778::
 Jump_01D_5795::
     dec a
     ld [wThreeDigits], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3233,14 +3249,14 @@ Jump_01D_57CB::
     jr nz, Jump_01D_57DB
     ld a, $09
     ld [wThreeDigits + $1], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
 Jump_01D_57DB::
     dec a
     ld [wThreeDigits + $1], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3260,7 +3276,7 @@ Jump_01D_57E4::
     jr nz, Jump_01D_5819
     ld a, [wItemGrid]
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3270,14 +3286,14 @@ Jump_01D_5809::
     jr nz, Jump_01D_5819
     ld a, $09
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
 Jump_01D_5819::
     dec a
     ld [wThreeDigits + $2], a
-    call Func_01D_5878
+    call VaultMenu_Shared02_WriteCursorBlinkCD
     xor a, a
     ret
 
@@ -3328,11 +3344,13 @@ Jump_01D_5873::
     xor a, a
     ret
 
-; 13 call sites from 1 routine (e.g. Func_01D_564B)
+; only called from VaultMenu_Shared02 (E-0047)
+; 13 call sites from 1 routine (e.g. VaultMenu_WriteNumberEditPosAndThreeDigitsEtc)
 ; reads: wJoypadRepeatTimer, wCursorBlinkCD, wNumberEditPos
 ; writes: wCursorBlinkCD
 ; points at: wThreeDigits
-Func_01D_5878::
+VaultMenu_Shared02_WriteCursorBlinkCD::
+Func_01D_5878:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_01D_5892
@@ -3361,7 +3379,7 @@ Jump_01D_58A3::
 Jump_01D_58A5::
     ld a, [wNumberEditPos]
     add a, a
-    ld hl, Data_01D_58C2
+    ld hl, VaultMenu_Shared02_WriteCursorBlinkCD_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3377,12 +3395,13 @@ Jump_01D_58A5::
     ei
     ret
 
-; address loaded by Func_01D_5878
-Data_01D_58C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by VaultMenu_Shared02_WriteCursorBlinkCD
+VaultMenu_Shared02_WriteCursorBlinkCD_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_58C2:: ; address name
     db $6E, $00, $6F, $00, $70, $00
 
 ; writes the three bytes at wD7CE as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)
-; 8 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc, Func_01D_564B, Func_01D_5AA3, VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc)
+; 8 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc, VaultMenu_WriteNumberEditPosAndThreeDigitsEtc, VaultMenu_Shared02_WriteThreeDigits, VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc)
 ; points at: wThreeDigits
 DrawThreeDigitsAtScrollOffset6E::
 Func_01D_58C8:: ; address name
@@ -3601,7 +3620,7 @@ Jump_01D_59CD::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, Func_01D_4823, SaveBGMapRectWithAttrs, VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, ...)
+; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D, SaveBGMapRectWithAttrs, VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D::
 Func_01D_59CF:: ; address name
@@ -3766,10 +3785,12 @@ Func_01D_5A80:: ; address name
     add_a_to_hl
     ret
 
-; 2 call sites from 1 routine (e.g. Func_01D_564B)
+; only called from VaultMenu_Shared02 (E-0047)
+; 2 call sites from 1 routine (e.g. VaultMenu_WriteNumberEditPosAndThreeDigitsEtc)
 ; reads: wCountTens, wThreeDigits, wCountOnes, wItemGrid
 ; writes: wThreeDigits
-Func_01D_5AA3::
+VaultMenu_Shared02_WriteThreeDigits::
+Func_01D_5AA3:: ; address name
     ld a, [wCountTens]
     ld b, a
     ld a, [wThreeDigits]
@@ -3811,13 +3832,13 @@ Func_01D_5ADF:: ; address name
     ld a, [wScreenState]
     cp a, $03
     jr z, Jump_01D_5AF1
-    call Func_01D_4A62
+    call VaultMenu_WriteSavedSpriteClipModeAndListPages
     call CountNonZeroItemGridBytes
     ld a, [wSavedSpriteClipMode]
     jr Jump_01D_5AF8
 
 Jump_01D_5AF1::
-    call Func_01D_4A62
+    call VaultMenu_WriteSavedSpriteClipModeAndListPages
     call CountNonZeroItemGridBytes
     ld a, c
 
@@ -3927,7 +3948,7 @@ Func_01D_5B4D:: ; address name
 Jump_01D_5B98::
     push bc
     ld a, c
-    ld hl, Data_01D_5BE6
+    ld hl, DrawRecordStatsBoxForArg1_Data_5BE6
     add_a_to_hl
     ld c, [hl]
     ld a, b
@@ -3942,7 +3963,7 @@ Jump_01D_5B98::
     pop bc
     ld a, c
     add a, a
-    ld hl, Data_01D_5BEA
+    ld hl, DrawRecordStatsBoxForArg1_Data_5BEA
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3968,11 +3989,13 @@ Jump_01D_5B98::
     ret
 
 ; address loaded by DrawRecordStatsBoxForArg1
-Data_01D_5BE6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordStatsBoxForArg1_Data_5BE6:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_5BE6:: ; address name
     db $5B, $5D, $5F, $61
 
 ; address loaded by DrawRecordStatsBoxForArg1
-Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordStatsBoxForArg1_Data_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_5BEA:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
@@ -4999,7 +5022,7 @@ Func_01D_617F:: ; address name
     ld a, d
     and a, $0F
     ld d, a
-    ld hl, Data_01D_4010
+    ld hl, DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data
     add hl, de
     ld e, l
     ld d, h
@@ -5193,7 +5216,7 @@ Jump_01D_62B8::
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
-    ld hl, Data_01D_62F9
+    ld hl, DrawRecordListNameTiles_Bank1D_Data
     pop bc
     push bc
     ld a, c
@@ -5221,7 +5244,8 @@ Jump_01D_62B8::
     ret
 
 ; address loaded by DrawRecordListNameTiles_Bank1D
-Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListNameTiles_Bank1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_62F9:: ; address name
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
@@ -5324,15 +5348,15 @@ Jump_01D_6381::
     jr z, Jump_01D_639C
     cp a, $01
     jr z, Jump_01D_6397
-    ld hl, Data_01D_640A
+    ld hl, DrawRecordListPageMarks_Data_640A
     jr Jump_01D_639F
 
 Jump_01D_6397::
-    ld hl, Data_01D_6402
+    ld hl, DrawRecordListPageMarks_Data_6402
     jr Jump_01D_639F
 
 Jump_01D_639C::
-    ld hl, Data_01D_63FA
+    ld hl, DrawRecordListPageMarks_Data_63FA
 
 Jump_01D_639F::
     ld a, c
@@ -5363,15 +5387,15 @@ Jump_01D_63BC::
     jr z, Jump_01D_63D3
     cp a, $01
     jr z, Jump_01D_63CE
-    ld de, Data_01D_6422
+    ld de, DrawRecordListPageMarks_Data_6422
     jr Jump_01D_63D6
 
 Jump_01D_63CE::
-    ld de, Data_01D_641A
+    ld de, DrawRecordListPageMarks_Data_641A
     jr Jump_01D_63D6
 
 Jump_01D_63D3::
-    ld de, Data_01D_6412
+    ld de, DrawRecordListPageMarks_Data_6412
 
 Jump_01D_63D6::
     ld a, c
@@ -5407,27 +5431,33 @@ Jump_01D_63F5::
     ret
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_63FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_63FA:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_63FA:: ; address name
     db $32, $00, $72, $00, $B2, $00, $F2, $00
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_6402:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_6402:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6402:: ; address name
     db $B2, $00, $F2, $00, $32, $01, $72, $01
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_640A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_640A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_640A:: ; address name
     db $2B, $00, $6B, $00, $AB, $00, $EB, $00
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_6412:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_6412:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6412:: ; address name
     db $8A, $C3, $B2, $C3, $DA, $C3, $02, $C4
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_641A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_641A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_641A:: ; address name
     db $DA, $C3, $02, $C4, $2A, $C4, $52, $C4
 
 ; address loaded by DrawRecordListPageMarks
-Data_01D_6422:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawRecordListPageMarks_Data_6422:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6422:: ; address name
     db $83, $C3, $AB, $C3, $D3, $C3, $FB, $C3
 
 ; only called from routines of SwapMonstersMenu (E-0098)
@@ -5542,7 +5572,7 @@ Func_01D_64B0:: ; address name
 Jump_01D_64B2::
     ld a, [wChoiceCursorF0]
     add a, a
-    ld hl, Data_01D_64D2
+    ld hl, SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5560,7 +5590,8 @@ Jump_01D_64B2::
     ret
 
 ; address loaded by SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap
-Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_64D2:: ; address name
     db $28, $01, $68, $01
 
 ; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
@@ -5755,7 +5786,7 @@ Func_01D_65D0:: ; address name
 Jump_01D_65D2::
     ld a, [wTwoChoiceCursor]
     add a, a
-    ld hl, Data_01D_65F2
+    ld hl, DrawTwoChoiceCursorConfirmed_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5773,7 +5804,8 @@ Jump_01D_65D2::
     ret
 
 ; address loaded by DrawTwoChoiceCursorConfirmed
-Data_01D_65F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawTwoChoiceCursorConfirmed_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_65F2:: ; address name
     db $2F, $01, $6F, $01
 
 ; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
@@ -5896,7 +5928,7 @@ Func_01D_668C:: ; address name
 Jump_01D_668E::
     ld a, [wListCursor]
     add a, a
-    ld hl, Data_01D_66AE
+    ld hl, UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5914,7 +5946,8 @@ Jump_01D_668E::
     ret
 
 ; address loaded by UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap
-Data_01D_66AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_66AE:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
 ; row wD7AB runs 0..wD7B1 and page wD7AF runs 0..wD7B0 - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
@@ -6110,7 +6143,7 @@ Jump_01D_67C1::
     add a, a
     add a, c
     add a, a
-    ld hl, Data_01D_67EE
+    ld hl, UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_Data
     add_a_to_hl
     ld a, [wListCursor]
     add a, a
@@ -6131,7 +6164,8 @@ Jump_01D_67C1::
     ret
 
 ; address loaded by UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF
-Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
+UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_67EE:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $28, $00, $68, $00, $A8, $00
     db $E8, $00, $28, $01, $A8, $00, $E8, $00, $28, $01, $68, $01, $A8, $01, $A6, $00
     db $E6, $00, $26, $01, $66, $01, $A6, $01, $A4, $00, $E4, $00, $24, $01, $64, $01
@@ -6163,11 +6197,11 @@ Jump_01D_683E::
     ldh a, [hTemp0]
     and a, $10
     jr nz, Jump_01D_6851
-    ld de, Data_01D_6DE0
+    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE0
     jr Jump_01D_6854
 
 Jump_01D_6851::
-    ld de, Data_01D_6DE3
+    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE3
 
 Jump_01D_6854::
     pop bc
@@ -6193,7 +6227,7 @@ Jump_01D_685E::
     ld a, c
     add a, a
     add a, c
-    ld de, Data_01D_6890
+    ld de, LoadPartySpeciesSpriteGraphics_Data_6890
     add a, e
     ld e, a
     jr nc, Jump_01D_6877
@@ -6222,7 +6256,8 @@ Jump_01D_6885::
     ret
 
 ; address loaded by LoadPartySpeciesSpriteGraphics
-Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPartySpeciesSpriteGraphics_Data_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6890:: ; address name
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
@@ -6250,11 +6285,11 @@ Jump_01D_68AD::
     ldh a, [hTemp0]
     and a, $10
     jr nz, Jump_01D_68C0
-    ld de, Data_01D_6DE0
+    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE0
     jr Jump_01D_68C3
 
 Jump_01D_68C0::
-    ld de, Data_01D_6DE3
+    ld de, LoadPartySpeciesSpriteGraphics_Data_6DE3
 
 Jump_01D_68C3::
     pop bc
@@ -6284,7 +6319,7 @@ Jump_01D_68CD::
     ld a, c
     add a, a
     add a, a
-    ld hl, Data_01D_6909
+    ld hl, DrawPartySpeciesSprites_Data
     add_a_to_hl
     ld b, [hl]
     inc hl
@@ -6309,7 +6344,8 @@ Jump_01D_68FE::
     ret
 
 ; address loaded by DrawPartySpeciesSprites
-Data_01D_6909:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawPartySpeciesSprites_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6909:: ; address name
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
 ; decompresses the sprite graphics of species hFFC6/7 (far pointer Data_004_4EAA + 3 * id) to the VRAM address in wD7F4/5; on CGB copies its 8-byte palette from bank $27 into wOBJPaletteBuffer + wD7F3 (E-0127)
@@ -6648,7 +6684,7 @@ Jump_01D_6AE3::
     ld a, [wArg1]
     and a, a
     jr z, Jump_01D_6B03
-    ld hl, Data_01D_6B28
+    ld hl, MarkPartyMembersInRecordListPage_Data_6B28
     ld a, c
     add a, a
     add_a_to_hl
@@ -6667,7 +6703,7 @@ Jump_01D_6AE3::
 Jump_01D_6B03::
     ld a, c
     add a, a
-    ld hl, Data_01D_6B1E
+    ld hl, MarkPartyMembersInRecordListPage_Data_6B1E
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6685,11 +6721,13 @@ Jump_01D_6B10::
     jp Jump_01D_6AD6
 
 ; address loaded by MarkPartyMembersInRecordListPage
-Data_01D_6B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MarkPartyMembersInRecordListPage_Data_6B1E:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6B1E:: ; address name
     db $78, $C3, $A0, $C3, $C8, $C3, $F0, $C3, $18, $C4
 
 ; address loaded by MarkPartyMembersInRecordListPage
-Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+MarkPartyMembersInRecordListPage_Data_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6B28:: ; address name
     db $20, $00, $60, $00, $A0, $00, $E0, $00, $20, $01
 
 ; only called from SwapMonstersMenu_Case03 (E-0047)
@@ -6918,7 +6956,7 @@ Jump_01D_6C7C::
 ; points at: wScreenStep
 SetupTileMap6D84AtBGMap1::
 Func_01D_6C8A:: ; address name
-    ld hl, Data_01D_6D84
+    ld hl, SetupTileMap6D84AtBGMap1_Data
     ld a, $9C
     ld [wArg1], a
     xor a, a
@@ -6935,7 +6973,7 @@ Func_01D_6C8A:: ; address name
 ; points at: wScreenStep
 LoadTileList6DC4SixPerFrame::
 Func_01D_6C9F:: ; address name
-    ld hl, Data_01D_6DC4
+    ld hl, LoadTileList6DC4SixPerFrame_Data
     ld a, $9E
     ld [wArg1], a
     xor a, a
@@ -7029,7 +7067,7 @@ Data_01D_6D20:: ; address name
 LoadRecordCapacityFromFarmLevelTable::
 Func_01D_6D70:: ; address name
     ld a, [wFarmLevel]
-    ld de, Data_01D_6D81
+    ld de, LoadRecordCapacityFromFarmLevelTable_Data
     add a, e
     ld e, a
     jr nc, Jump_01D_6D7B
@@ -7042,27 +7080,32 @@ Jump_01D_6D7B::
     ret
 
 ; address loaded by LoadRecordCapacityFromFarmLevelTable
-Data_01D_6D81:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadRecordCapacityFromFarmLevelTable_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6D81:: ; address name
     db $0A, $14, $1E
 
 ; address loaded by SetupTileMap6D84AtBGMap1
-Data_01D_6D84:: ; heuristic: pointer load in the same bank (bank assumed); C0
+SetupTileMap6D84AtBGMap1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6D84:: ; address name
     db $40, $8A, $50, $8A, $60, $8A, $70, $8A, $80, $8A, $90, $8A, $A0, $8A, $B0, $8A
     db $C0, $8A, $D0, $8A, $E0, $8A, $F0, $8A, $E0, $8E, $F0, $8E, $00, $8F, $10, $8F
     db $20, $8F, $30, $8F, $40, $8F, $50, $8F, $60, $8F, $70, $8F, $80, $8F, $90, $8F
     db $A0, $8F, $B0, $8F, $C0, $8F, $D0, $8F, $E0, $8F, $F0, $8F, $B0, $8E, $FF, $FF
 
 ; address loaded by LoadTileList6DC4SixPerFrame
-Data_01D_6DC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadTileList6DC4SixPerFrame_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6DC4:: ; address name
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $F0, $8B, $A0, $8E, $B0, $8E, $C0, $8E, $D0, $8E, $FF, $FF
 
 ; address loaded by LoadPartySpeciesSpriteGraphics, DrawPartySpeciesSprites
-Data_01D_6DE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPartySpeciesSpriteGraphics_Data_6DE0:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6DE0:: ; address name
     db $0B, $1A, $1C
 
 ; address loaded by LoadPartySpeciesSpriteGraphics, DrawPartySpeciesSprites
-Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+LoadPartySpeciesSpriteGraphics_Data_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6DE3:: ; address name
     db $0B, $1C, $1A, $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0
     db $8C, $B0, $8C, $FF, $FF
 
@@ -7249,7 +7292,7 @@ Jump_01D_6ECA::
     call EnableSRAMBank0
     push hl
     ld a, [wPackByteE1]
-    ld hl, Data_01D_6F9A
+    ld hl, PackRecordFieldsToBank1Slot_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -7360,7 +7403,8 @@ Jump_01D_6F7C::
     jp Jump_01D_70C6
 
 ; address loaded by PackRecordFieldsToBank1Slot
-Data_01D_6F9A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+PackRecordFieldsToBank1Slot_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_01D_6F9A:: ; address name
     db $01, $0F, $1E, $29, $8E, $99
 
 Jump_01D_6FA0::

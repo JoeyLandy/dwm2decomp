@@ -21,6 +21,7 @@ interrupted run leaves the previous generated tree untouched.
 from __future__ import annotations
 
 import bisect
+import os
 import collections
 import json
 import re
@@ -1322,6 +1323,112 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def name_data_by_reader(self) -> None:
+        """E-0285: a data label that still has only an address name and that code loads (`ld rr, n`) is
+        named after the routine whose instructions load it: <Reader>_Data, or <Reader>_Data_AAAA when the
+        reader loads several. The address name stays as an alias; the label's comment lists all readers."""
+        import bisect
+        starts = {b: sorted(a for a in self.labels[b] if a in self.insn[b] and not
+                            self.labels[b][a].startswith("Jump_")) for b in range(self.nbanks)}
+        readers: dict[tuple[int, int], list[str]] = {}
+        for (b, pc), tgt in sorted(self.dref.items()):
+            lst = starts[b]
+            i = bisect.bisect_right(lst, pc) - 1
+            if i >= 0:
+                nm = self.labels[b][lst[i]]
+                if nm not in readers.setdefault(tgt, []):
+                    readers[tgt].append(nm)
+        used = {lab for b in range(self.nbanks) for lab in list(self.labels[b].values()) + list(self.dlabels[b].values())}
+        per_reader: dict[str, int] = {}
+        for (b, a), rs in readers.items():
+            if self.dlabels.get(b, {}).get(a, "").startswith("Data_"):
+                per_reader[rs[0]] = per_reader.get(rs[0], 0) + 1
+        named = 0
+        for (b, a), rs in sorted(readers.items()):
+            cur = self.dlabels.get(b, {}).get(a)
+            if not cur or not cur.startswith("Data_") or (b, a) in self.names or (b, a) in self.table_at:
+                continue
+            r0 = rs[0]
+            if r0.startswith(("Func_", "Data_")):
+                continue
+            new = f"{r0}_Data" if per_reader.get(r0, 0) == 1 else f"{r0}_Data_{a:04X}"
+            if new in used or len(new) > 90:
+                continue
+            used.add(new)
+            self.dalias.setdefault((b, a), cur)
+            self.dlabels[b][a] = new
+            named += 1
+        if hasattr(self, "_readers"):
+            del self._readers  # the comments list readers by their final names
+        log(f"data labels named after their reader: {named}")
+        # E-0286: targets of a monotone pointer run, after the run and the entry that points at them; streams found
+        # by tiling or in back-to-back runs, by kind (360-byte screen map, key-world screen, other graphics)
+        more = 0
+        for b in range(self.nbanks):
+            dt, dl = self.dtab[b], self.dlabels[b]
+            keys = sorted(dt)
+            runs, cur = [], []
+            for k in keys:
+                if cur and k != cur[-1] + 2:
+                    runs.append(cur)
+                    cur = []
+                cur.append(k)
+            if cur:
+                runs.append(cur)
+            for run in runs:
+                head = dl.get(run[0]) or self.labels[b].get(run[0]) or ""
+                stem_ = head if head and not head.startswith(("Data_", "Func_", "Jump_")) else f"PointerRun_{b:02X}_{run[0]:04X}"
+                for i, k in enumerate(run):
+                    t = dt[k]
+                    curl = dl.get(t)
+                    if not curl or not curl.startswith("Data_") or (b, t) in self.names or (b, t) in self.table_at:
+                        continue
+                    if not self.dreason.get((b, t), "target of a monotone pointer table").startswith(
+                            "target of a monotone pointer table"):
+                        continue
+                    new = f"{stem_}_Entry{i:02X}"
+                    if new in used:
+                        continue
+                    used.add(new)
+                    self.dalias.setdefault((b, t), curl)
+                    dl[t] = new
+                    more += 1
+            for a, curl in list(dl.items()):
+                if not curl.startswith("Data_") or (b, a) in self.names:
+                    continue
+                why = self.dreason.get((b, a), "")
+                st = self.streams.get((b, a))
+                if why.startswith("key-world screen map found by tiling"):
+                    new = f"KeyWorldScreen_{b:02X}_{a:04X}"
+                elif why.startswith("stream in a run of back-to-back") and st:
+                    new = f"{'ScreenMap' if st[0] == 360 else 'Gfx'}_{b:02X}_{a:04X}"
+                else:
+                    continue
+                if new in used:
+                    continue
+                used.add(new)
+                self.dalias.setdefault((b, a), curl)
+                dl[a] = new
+                more += 1
+        log(f"data labels named by pointer run or stream kind: {more}")
+        # E-0287: a label at a record boundary inside a laid-out table, after the table and the record's id
+        inner = 0
+        for (b, start), t in self.table_at.items():
+            dl = self.dlabels[b]
+            for i in range(1, t["count"]):
+                q = start + i * t["stride"]
+                curl = dl.get(q)
+                if not curl or not curl.startswith("Data_") or (b, q) in self.names:
+                    continue
+                new = f"{t['label']}_{t.get('id_base', 0) + i:02X}"
+                if new in used:
+                    continue
+                used.add(new)
+                self.dalias.setdefault((b, q), curl)
+                dl[q] = new
+                inner += 1
+        log(f"labels inside tables named by record: {inner}")
+
     def name_trampoline_cases(self) -> None:
         """E-0270/E-0272: name structural routines (Parent_CaseNN / _SubNN / _SharedNN) of a few
         single-purpose shapes after what their instructions do:
@@ -1742,6 +1849,7 @@ class Rom:
                     if r:
                         table_targets.add(r)
         used = {i["name"] for i in self.names.values()}
+        all_names = {lab for bb in range(self.nbanks) for lab in self.labels[bb].values()}
         total = 0
         for _round in range(3):
             plan: dict[tuple[int, int], list[tuple[int, int]]] = {}
@@ -1762,6 +1870,11 @@ class Rom:
                     # several callers that all belong to one named routine (its _SubNN, _CaseNN or
                     # _SharedNN helpers, or the routine itself): Root_SharedNN (E-0098)
                     roots = {SUFFIX_RE.sub("", self.labels[pb][pa]) for pb, pa in parents}
+                    if len(roots) > 1:  # e.g. VaultMenu_Store and VaultMenu_TakeOut: their common named root
+                        cp = os.path.commonprefix(sorted(roots))
+                        cp = cp if cp in roots else cp[:cp.rfind("_")] if "_" in cp else ""
+                        if cp and cp in all_names:
+                            roots = {cp}
                     if len(roots) == 1:
                         (root,) = roots
                         if not root.startswith(("Func_", "Jump_")) and (b, a) not in parents:
@@ -4387,6 +4500,7 @@ class Rom:
         self.rename_address_prefixed_children()
         self.name_trampoline_cases()
         self.name_trampoline_cases()  # E-0283: a second pass sees the targets the first pass named
+        self.name_data_by_reader()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

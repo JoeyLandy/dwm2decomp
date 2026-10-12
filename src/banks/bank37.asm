@@ -1677,7 +1677,7 @@ Jump_037_508B::
     jr z, Jump_037_50AE
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, Data_037_6516
+    ld hl, RunLinkSession5Exchange_Case01_Sub01_Case04_RunFunc5A5DAt024FAndDrawBox_Data
     call StoreBAtWordTableEntry_Bank37
     ld a, [wScreenStep]
     inc a
@@ -3222,7 +3222,7 @@ Func_037_5A33:: ; address name
 Jump_037_5A35::
     ld a, [wTwoChoiceCursor]
     sla a
-    ld hl, Data_037_5A57
+    ld hl, DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -3241,7 +3241,8 @@ Jump_037_5A35::
     ret
 
 ; address loaded by DrawArrowTileBCAtTwoChoiceEntry_Bank37
-Data_037_5A57:: ; heuristic: pointer load in the same bank (bank assumed); C0
+DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_037_5A57:: ; address name
     db $EC, $00, $2C, $01, $6C, $01
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
@@ -5453,6 +5454,7 @@ Data_037_64D7:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
 ; address loaded by RunLinkSession5Exchange_Case01_Sub01_Case04_RunFunc5A5DAt024FAndDrawBox
-Data_037_6516:: ; heuristic: pointer load in the same bank (bank assumed); C0
+RunLinkSession5Exchange_Case01_Sub01_Case04_RunFunc5A5DAt024FAndDrawBox_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_037_6516:: ; address name
     db $FC, $C3, $24, $C4, $4C, $C4
     ds $1AE4, $00
