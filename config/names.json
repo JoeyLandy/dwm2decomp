@@ -7589,5 +7589,6 @@
   "F0:7E5D": {"name": "KeyWorldDoorItem_ModuloBPlusOne", "note": "DE = (L mod B) + 1", "evidence": "E-0305 (C2)"},
   "F2:41BA": {"name": "GameMode8_Update_CopyStringMaxC", "note": "copies a string from HL to DE, at most C bytes, ending it with $F0", "evidence": "E-0305 (C2)"},
   "F2:648E": {"name": "VaultMenu_Store_MapItemsToInventory", "note": "for each item in the list at DE finds its inventory slot and records it in wWorkBuf", "evidence": "E-0305 (C1)"},
-  "F2:6692": {"name": "GreatLogTalkEvents_ClearArenaData", "note": "clears $20F bytes from wArenaEntry", "evidence": "E-0305 (C2)"}
+  "F2:6692": {"name": "GreatLogTalkEvents_ClearArenaData", "note": "clears $20F bytes from wArenaEntry", "evidence": "E-0305 (C2)"},
+  "16:5CFB": {"name": "JoinChanceByClass", "note": "join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS", "evidence": "E-0306 (C1)", "data": true}
 }

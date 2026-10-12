@@ -847,7 +847,7 @@ Jump_0F0_4D0F:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScreenStep, wSaveByte16
+; reads: wScreenStep, wPlayerId
 ; writes: wScreenStep, wBankF0ByteA3, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
 ; points at: wPlayerName, wLinkRecvBuffer, wLinkPartnerName
 RunLinkSession8Exchange_Case01_Sub01_Table2_Case02::
@@ -862,17 +862,17 @@ Jump_0F0_4D21:: ; address name
 .loop:
     ld a, [hl]
     cp a, $F0
-    jr z, .read_save_byte16
+    jr z, .read_player_id
     ld [de], a
     inc hl
     inc de
     dec c
     jr nz, .loop
 
-.read_save_byte16:
+.read_player_id:
     ld a, $F0
     ld [de], a
-    ld a, [wSaveByte16]
+    ld a, [wPlayerId]
     ld [wBankF0ByteA3], a
     ld hl, $000C
     ld a, l
@@ -8459,7 +8459,7 @@ Func_0F0_7D03:: ; address name
 
 ; only called from KeyWorldDoorItem_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor)
-; reads: wSaveByte16
+; reads: wPlayerId
 ; points at: wGM2TimerFrames, wGM2Mode, wPlayerName, wGM2Byte
 KeyWorldDoorItem_Case04_RandomModulo29_BankF0::
 Func_0F0_7D0A:: ; address name
@@ -8506,15 +8506,15 @@ Func_0F0_7D0A:: ; address name
     inc de
     dec c
     jr nz, .loop3
-    jr .read_save_byte16
+    jr .read_player_id
 
 .skip:
     ld a, $F0
     ld [hl+], a
 
-.read_save_byte16:
+.read_player_id:
     ld hl, wGM2Byte
-    ld a, [wSaveByte16]
+    ld a, [wPlayerId]
     ld [hl+], a
     ld a, $FF
     ld [hl+], a

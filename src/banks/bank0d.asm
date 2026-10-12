@@ -7934,7 +7934,7 @@ Data_00D_78F6:: ; address name
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -7964,7 +7964,7 @@ Data_00D_799B:: ; address name
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -7994,7 +7994,7 @@ Data_00D_7A40:: ; address name
     db $05 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8024,7 +8024,7 @@ Data_00D_7AE5:: ; address name
     db $04 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8054,7 +8054,7 @@ Data_00D_7B8A:: ; address name
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8084,7 +8084,7 @@ Data_00D_7C2F:: ; address name
     db $03 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8114,7 +8114,7 @@ Data_00D_7CD4:: ; address name
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8144,7 +8144,7 @@ Data_00D_7D79:: ; address name
     db $01 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8174,7 +8174,7 @@ Data_00D_7E1E:: ; address name
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28
@@ -8204,7 +8204,7 @@ Data_00D_7EC3:: ; address name
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28

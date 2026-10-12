@@ -273,7 +273,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "byte 8, values 0-7: copied to battler byte $4D (meaning not established; E-0298)"
+          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)"
         },
         {
           "type": "db",
@@ -18167,7 +18167,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$19"
+          "name": "$19: master id (C1, E-0306)"
         },
         {
           "type": "words",
@@ -18940,7 +18940,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$19"
+          "name": "$19: master id (C1, E-0306)"
         },
         {
           "type": "words",
@@ -19588,7 +19588,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "byte 8, values 0-7: copied to battler byte $4D (meaning not established; E-0298)"
+          "name": "join-chance class 0-7 (battler byte $4D; 7 = never joins; C1, E-0306)"
         },
         {
           "type": "db",
@@ -19723,8 +19723,18 @@
         },
         {
           "type": "db",
-          "size": 5,
-          "name": "bytes 1-5"
+          "size": 3,
+          "name": "bytes 1-3"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "join-chance class (7 = never; C1, E-0306)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 5"
         },
         {
           "type": "db",

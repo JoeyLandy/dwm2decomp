@@ -4,7 +4,7 @@ SECTION "Bank 19", ROMX[$4000], BANK[$19]
 ; only called from GameMode4_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init)
 ; reads: wBattleKind, wDataBank, wLinkMode, wBattlerRecordSlot4, wBattlerRecordSlot5, wBattlerRecordSlot6
-; writes: wDataBankSave, wBattleKind, rRAMG, rRAMB, wBattleInitA1, wBattleInitA2, wBattleInitA3
+; writes: wDataBankSave, wBattleKind, rRAMG, rRAMB, wFoeJoinClass1, wFoeJoinClass2, wFoeJoinClass3
 ; points at: wEffectAnimState, wBattlePhase, wListPageSize, wWorkBuf
 GameMode4_Init_FillBytes::
 Func_019_4001:: ; address name
@@ -40,12 +40,12 @@ Func_019_4001:: ; address name
     ld [rRAMB], a
     call GameMode4_Init_Sub01_ReadBattlePartyCount
     call GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC
-    ld a, [wBattlerRecordSlot4 + $4D]
-    ld [wBattleInitA1], a
-    ld a, [wBattlerRecordSlot5 + $4D]
-    ld [wBattleInitA2], a
-    ld a, [wBattlerRecordSlot6 + $4D]
-    ld [wBattleInitA3], a
+    ld a, [wBattlerRecordSlot4 + BATTLER_JOIN_CLASS]
+    ld [wFoeJoinClass1], a
+    ld a, [wBattlerRecordSlot5 + BATTLER_JOIN_CLASS]
+    ld [wFoeJoinClass2], a
+    ld a, [wBattlerRecordSlot6 + BATTLER_JOIN_CLASS]
+    ld [wFoeJoinClass3], a
     ld a, $00
     ld [rRAMG], a
     jr .call_game_mode4_init_sub01_write_species_id

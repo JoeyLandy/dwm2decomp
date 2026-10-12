@@ -3021,7 +3021,7 @@ Data_024_52ED:: ; address name
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
-    db $00 ; $19
+    db $00 ; $19: master id (C1, E-0306)
     dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
     db $00 ; $28

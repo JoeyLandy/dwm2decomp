@@ -989,7 +989,7 @@ Data_00E_5662:: ; address name
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
 ; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, RunLinkSession4ScreenState_ResetAndSignal_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild, BreedMenu_ChooseParents_ComputeBreedingChild, ...)
-; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
+; reads: wArg6, wArg7, wArg5, wPlayerId, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB
 ComputeBreedingChild::
@@ -1351,8 +1351,8 @@ Func_00E_5688:: ; address name
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    ld a, [wSaveByte16]
-    ld hl, wChildRecord + $19
+    ld a, [wPlayerId]
+    ld hl, wChildRecord + MON_MASTER_ID
     ld [hl], a
     ld a, $01
     ld hl, wChildRecord + MON_LEVEL

@@ -1942,9 +1942,9 @@
     "evidence": "E-0133"
   },
   "C616": {
-    "name": "wSaveByte16",
-    "note": "save-data byte before the gold; set in link mode, read by ComputeBreedingChild",
-    "evidence": "E-0133"
+    "name": "wPlayerId",
+    "note": "a random byte chosen when a new player is set up (GameMode5_Update_NewPlayerSetup copies wRandomLo after name entry); ComputeBreedingChild stores it in the child record ($19, MON_MASTER_ID) and the link code sends it (C1: the player's id; was wSaveByte16)",
+    "evidence": "E-0133, E-0306"
   },
   "C61A": {
     "name": "wBankedGoldLo",
@@ -4531,19 +4531,19 @@
     "size": "2"
   },
   "D8A1": {
-    "name": "wBattleInitA1",
-    "note": "set by GameMode4_Init_Sub01, read at the battle end",
-    "evidence": "E-0137"
+    "name": "wFoeJoinClass1",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 1, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA1)",
+    "evidence": "E-0137, E-0306"
   },
   "D8A2": {
-    "name": "wBattleInitA2",
-    "note": "set by GameMode4_Init_Sub01",
-    "evidence": "E-0137"
+    "name": "wFoeJoinClass2",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 2, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA2)",
+    "evidence": "E-0137, E-0306"
   },
   "D8A3": {
-    "name": "wBattleInitA3",
-    "note": "set by GameMode4_Init_Sub01",
-    "evidence": "E-0137"
+    "name": "wFoeJoinClass3",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 3, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA3)",
+    "evidence": "E-0137, E-0306"
   },
   "D8A7": {
     "name": "wSlotDamageFlags",

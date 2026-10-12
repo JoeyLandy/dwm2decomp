@@ -7,6 +7,7 @@
     "0D": {"const": "MON_FAMILY", "note": "low nibble = family", "evidence": "E-0122"},
     "0E": {"const": "MON_SEX", "note": "bit 0 = sex (C1): after the first parent is chosen, breeding steps back when no other listed record has a different bit 0; the record list draws mark tile $CC + bit 0 when byte $6E is 2", "evidence": "E-0291"},
     "0F": {"size": 10, "text": true, "const": "MON_MASTER_NAME", "note": "the master's name, 10 bytes: ComputeBreedingChild stores the player name here (CopyPlayerNameToWCADF) and copies each parent's into the child's parent master names (E-0297); called 'second name' in E-0034", "evidence": "E-0034, E-0297"},
+    "19": {"const": "MON_MASTER_ID", "note": "the id of the player who bred it: ComputeBreedingChild stores wPlayerId here (C1)", "evidence": "E-0306"},
     "1A": {"size": 2, "const": "MON_PARENT1_SPECIES", "note": "species word of the first parent (from its $0B; CopySixBytesByWCADDBit4Table, the order swapped by bit 4 of $0D)", "evidence": "E-0297"},
     "1C": {"size": 2, "const": "MON_PARENT2_SPECIES", "note": "species word of the second parent", "evidence": "E-0297"},
     "1E": {"size": 10, "text": true, "const": "MON_PARENT1_MASTER", "note": "master name of the first parent (from its $0F; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
@@ -60,6 +61,7 @@
       "25": {"size": 2, "const": "BATTLER_DEF", "note": "DEF word (GetBaseDEF)", "evidence": "E-0124"},
       "27": {"size": 2, "const": "BATTLER_AGL", "note": "AGL word (GetBaseAGL)", "evidence": "E-0124"},
       "29": {"size": 2, "const": "BATTLER_INT", "note": "INT word (GetBaseINT)", "evidence": "E-0124"},
+      "4D": {"const": "BATTLER_JOIN_CLASS", "note": "MonsterTable byte 8 for a wild monster; copied to wFoeJoinClass1-3 for the three foes, 7 stops the defeated monster from joining", "evidence": "E-0306"},
       "2D": {"size": 4, "const": "BATTLER_PERSONALITY", "note": "personality bytes (MonsterTable bytes 22, 23, 25, 24 in that order)", "evidence": "E-0298"}
     }
   },
@@ -68,6 +70,7 @@
     "buffers": ["wSpeciesRecord"],
     "fields": {
       "00": {"const": "SPECIES_FAMILY", "note": "family (StringTable_MonsterFamilies index)", "evidence": "E-0069"},
+      "04": {"const": "SPECIES_JOIN_CLASS", "note": "join-chance class 0-7: after a battle BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc compares (random mod 200) with the chance table entry for it; 7 = never joins", "evidence": "E-0306"},
       "06": {"const": "SPECIES_MAX_LEVEL", "note": "base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it", "evidence": "E-0299"},
       "07": {"const": "SPECIES_EXP_CURVE", "note": "the ExpTable row (EXP curve)", "evidence": "E-0148"},
       "08": {"size": 3, "const": "SPECIES_SKILLS", "note": "three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF", "evidence": "E-0299"},

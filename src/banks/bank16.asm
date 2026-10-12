@@ -4806,7 +4806,7 @@ Func_016_5B33:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc)
 ; reads: wLinkMode, wBattleKind, wDisplaySlot, wRandomLo, wRandomHi, wSpeciesRecord, wBattleEndFlag, wBattleMeter
 ; writes: wBattleFoeCount, wSpeciesIdLo, wSpeciesIdHi, wDisplaySlot
-; points at: wBattleInitA1, wBattleMonsterId
+; points at: wFoeJoinClass1, wBattleMonsterId
 BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc::
 Func_016_5B7E:: ; address name
     ld a, $01
@@ -4831,7 +4831,7 @@ Func_016_5B7E:: ; address name
     cp a, $07
     jp nc, .set_display_slot_to_FF
     and a, $03
-    ld hl, wBattleInitA1
+    ld hl, wFoeJoinClass1
     add_a_to_hl
     ld a, [hl]
     cp a, $07
@@ -4856,10 +4856,10 @@ Func_016_5B7E:: ; address name
     ld a, $C8
     call DivideHLByA
     ld b, a
-    ld a, [wSpeciesRecord + $4]
+    ld a, [wSpeciesRecord + SPECIES_JOIN_CLASS]
     cp a, $07
     jp z, .set_display_slot_to_FF
-    ld hl, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5CFB
+    ld hl, JoinChanceByClass
     add_a_to_hl
     ld a, [hl]
     cp a, b
@@ -4876,7 +4876,7 @@ Func_016_5B7E:: ; address name
     ld b, a
     ld a, [wDisplaySlot]
     and a, $03
-    ld hl, wBattleInitA1
+    ld hl, wFoeJoinClass1
     add_a_to_hl
     ld a, [hl]
     add a, e
@@ -5018,8 +5018,9 @@ Func_016_5B7E:: ; address name
 .return:
     ret
 
+; join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS
 ; address loaded by BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
-BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5CFB:: ; heuristic: pointer load in the same bank (bank assumed); C0
+JoinChanceByClass:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_5CFB:: ; address name
     db $64, $32, $18, $0A, $06, $02, $01, $00
 

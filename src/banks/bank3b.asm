@@ -614,7 +614,7 @@ Jump_03B_437F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleKind, wBattleTarget
 ; writes: wEffectFlags, wBattleResolveStep
-; points at: wBattleResolveStep, wBattleInitA1, wBattleStatus
+; points at: wBattleResolveStep, wFoeJoinClass1, wBattleStatus
 RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
 Jump_03B_438A:: ; address name
     ld hl, wBattleResolveStep
@@ -640,7 +640,7 @@ Jump_03B_438A:: ; address name
     jr c, .next
     ld a, c
     and a, $03
-    ld hl, wBattleInitA1
+    ld hl, wFoeJoinClass1
     add_a_to_hl
     ld a, [hl]
     cp a, $07

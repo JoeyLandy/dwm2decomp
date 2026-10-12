@@ -4496,7 +4496,7 @@ Jump_007_68DE:: ; address name
 ; entry 5 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wRandomLo, wArg5
-; writes: wSaveByte16
+; writes: wPlayerId
 ; points at: wArg1, wNameGlyphBuf, wPlayerName, wLinkScreenSubState
 GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading::
 Jump_007_68E3:: ; address name
@@ -4512,7 +4512,7 @@ Jump_007_68E3:: ; address name
     farcall RunNameEntryStateWhenNotFading
     call NextTableByte
     ld a, [wRandomLo]
-    ld [wSaveByte16], a
+    ld [wPlayerId], a
     ld a, [wArg5]
     cp a, $FF
     ret nz

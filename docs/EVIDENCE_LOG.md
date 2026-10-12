@@ -2431,6 +2431,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0306 — Player id, master id, and the join-chance classes
+
+- Kind: STATIC (C1).
+- **wPlayerId (was wSaveByte16, $C616).** GameMode5_Update_NewPlayerSetup copies wRandomLo into it after the player's name entry, so it is chosen once per new player. ComputeBreedingChild stores it in the child record at $19, and the link code sends it (bank $F0). It reads as the player's id.
+  - Record byte $19 is therefore MON_MASTER_ID: the id of the player who bred the monster.
+- **Join-chance classes.** BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc runs before BattleEnd_AskToJoin and decides whether the defeated monster may join:
+  - Nothing joins in link battles or battle kinds 3-5 and 8 and above.
+  - Nothing joins when the foe's wFoeJoinClass entry is 7.
+  - Nothing joins when species byte 4 is 7.
+  - Otherwise the monster may join when (random mod 200) is below JoinChanceByClass[species byte 4]. That table, at 16:$5CFB, holds 100, 50, 24, 10, 6, 2, 1, 0.
+- **Names given.**
+  - Species byte 4: SPECIES_JOIN_CLASS.
+  - MonsterTable byte 8, copied to battler byte $4D: BATTLER_JOIN_CLASS. GameMode4_Init_Sub01 copies it for the three foes into wFoeJoinClass1-3 (were wBattleInitA1-3).
+  - The table layouts name these bytes.
+- **Not read.** Record bytes $28 and $33. Two `ld c, $28` loads turned out to be arguments to a list helper, not record offsets.
+- Binary verification: build/run424 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0305 — No structural label left: a shape fallback and 70 helpers named by reading
 
 - Kind: TOOL + STATIC (C1/C2 per name).
