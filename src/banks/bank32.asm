@@ -5628,9 +5628,9 @@ Jump_032_62CF:: ; address name
 Jump_032_62F1::
     ld a, [wBattleSubStep2]
     rst $00
-    dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_CarryUnlessBattleSlotOutSlotEmpty
+    dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case00
     dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case01
-    dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_RunEffectSubStep_63C2
+    dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case02
     dw ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case03
 
 ; entry 0 of the `rst $00` table in Func_032_627C
@@ -5638,7 +5638,7 @@ Jump_032_62F1::
 ; reads: wBattleActor, wBattleActionId, wSavedActorByte, wSavedActorSlot
 ; writes: wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep2, wSavedActorByte, wEffectSubStep
 ; points at: wBattleSubStep2
-ResolveStep0EEffect_Case04_Case02_Sub01_Table2_CarryUnlessBattleSlotOutSlotEmpty::
+ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case00::
 Jump_032_62FD:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5755,7 +5755,7 @@ Jump_032_63AB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
-ResolveStep0EEffect_Case04_Case02_Sub01_Table2_RunEffectSubStep_63C2::
+ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case02::
 Jump_032_63AC:: ; address name
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -5767,7 +5767,7 @@ Jump_032_63AC:: ; address name
     ret
 
 ; runs the routine for wCFCE (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case04_Case02_Sub01_Table2_RunEffectSubStep_63C2)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case04_Case02_Sub01_Table2_Case02)
 ; reads: wEffectSubStep
 RunEffectSubStep_63C2::
 Func_032_63C2:: ; address name

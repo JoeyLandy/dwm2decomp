@@ -385,7 +385,7 @@ Data_087_40A0:: ; address name
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_WaitTextWindowState_Shared03::
+FieldModeStateDispatch_WaitTextWindowState_WaitTextWindowState::
 Func_087_42A0:: ; address name
     ld a, [wTextWindowState]
     and a, $03
@@ -789,7 +789,7 @@ Jump_087_44FC::
     jp Jump_087_4420
 
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_WaitTextWindowState)
 ; reads: wKeyWorldFloor
 FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
 Func_087_4507:: ; address name
@@ -1063,7 +1063,7 @@ Data_087_4539:: ; address name
     dw $0000 ; id 231
 
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_WaitTextWindowState)
 ; reads: wSpriteSlotCount, hTemp1, hTemp0
 ; writes: hTemp0, hTemp1
 FieldModeStateDispatch_Shared03_WaitSpriteSlotCount::

@@ -265,7 +265,7 @@ Data_07E_4E79:: ; heuristic: stream in a run of back-to-back compressed streams;
     db $E3, $FE, $1F, $03, $3C, $0F, $71, $1F, $67, $3E, $7F, $18, $3C, $02, $FF, $F1
     db $07, $FC, $7E, $F8, $FC, $80, $C0, $02, $A0, $F5
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04, RunGameMode2State_CopyScrollToHardware
+; address loaded by RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware, RunGameMode2State_CopyScrollToHardware
 ; LZSS-compressed asset: 62 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Gfx_7E_4EB3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_4EB3:: ; address name
@@ -439,14 +439,14 @@ Data_07E_5B0E:: ; address name
     db $00, $01, $01, $50, $50, $F8, $A8, $F8, $88, $F8, $A8, $D8, $D8, $01, $A0, $FF
     db $4D, $01, $69, $0F, $4D, $01, $C9, $0F, $23
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
+; address loaded by RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware
 ; LZSS-compressed asset: 31 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Plus100Gfx_7E_5B27:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_5B27:: ; address name
     db $00, $01, $01, $10, $10, $38, $28, $7C, $44, $FE, $82, $FE, $82, $7C, $44, $38
     db $28, $10, $10, $01, $A0, $FF, $4D, $01, $6F, $0F, $4D, $01, $CF, $0F, $1D
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
+; address loaded by RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware
 ; LZSS-compressed asset: 29 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Plus200Gfx_7E_5B46:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_5B46:: ; address name

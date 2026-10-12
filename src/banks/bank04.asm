@@ -865,9 +865,9 @@ Jump_004_4574::
     dw UpdateSpriteSlots_Case00
     dw UpdateSpriteSlots_Return
     dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
-    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03
+    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo
     dw UpdateSpriteSlots_WriteTemp0AndTemp1
-    dw UpdateSpriteSlots_WriteTemp0AndTemp1_Case05
+    dw UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1
 
 Jump_004_4585::
     pop hl
@@ -1083,7 +1083,7 @@ Jump_004_465C::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1125,7 +1125,7 @@ Jump_004_46B9::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1158,7 +1158,7 @@ Jump_004_4704:: ; address name
 ; entry 3 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wRandomLo
-UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03::
+UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo::
 Jump_004_4705:: ; address name
     pop hl
     push hl
@@ -1294,7 +1294,7 @@ Jump_004_4784::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jp z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jp nz, Jump_004_4845
     pop hl
@@ -1322,7 +1322,7 @@ Jump_004_47CD::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1352,7 +1352,7 @@ Jump_004_47F4::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1382,7 +1382,7 @@ Jump_004_481C::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1407,7 +1407,7 @@ Jump_004_4846::
     jp Jump_004_45A7
 
 ; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
-; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03)
+; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo)
 ; reads: wPendingFieldEvent
 RunPendingFieldEventType0AOrOther::
 Func_004_4852:: ; address name
@@ -1439,7 +1439,7 @@ Jump_004_4863:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_WriteTemp0AndTemp1_Case05::
+UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1::
 Jump_004_486E:: ; address name
     ld hl, $48FA
     ld a, l
@@ -1666,10 +1666,10 @@ Jump_004_49AC::
     ret
 
 ; only called from routines of UpdateSpriteSlots (E-0098)
-; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
+; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
 ; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wPartyCount
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01::
+UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01::
 Func_004_49B0:: ; address name
     push bc
     ld a, c
@@ -2058,7 +2058,7 @@ Func_004_4B7E:: ; address name
     ret
 
 ; unless bit 1 of hFF8C is set, hFF99 += 1 (+3 more with bit 2); then runs the routine for hFF8B (jump table of three) (E-0124)
-; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_Case04)
+; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites)
 ; reads: hPlayerStateFlags, hPlayerAnimCounter, hPlayerSpriteMode
 ; writes: hPlayerAnimCounter
 ; points at: hPlayerAnimCounter
@@ -3902,7 +3902,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg080E_ImFromThePortInThe
     dw TalkMsg080F_YoureNotSupposedToGoNear
     dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04
+    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case14
     dw TalkScript5B9B_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
@@ -3914,7 +3914,7 @@ Func_004_58C2:: ; address name
     dw TalkScript5BA8_HowMayOurChurchServeYou
     dw TalkMsg0821_AllSortsOfPeopleComeHere
     dw TalkMsg0822_IWentToPolonaAWhile
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case20
+    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case20
     dw TalkMsg0824_ThereIsALighthouseToThe
     dw TalkMsg0825_MyShipSankInTheEastern
     dw TalkMsg0826_TheOldManInTheTaverns
@@ -3926,7 +3926,7 @@ Func_004_58C2:: ; address name
     dw TalkScript5BB6_HeroTriedToCheckTheChest
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal_Flag0063
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case2C
+    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case2C
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
     dw TalkScript5BC4
@@ -3958,7 +3958,7 @@ Func_004_58C2:: ; address name
     dw TalkScript5C9E_ItNagsAndNagsThatWe
     dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case4A
     dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case4C
+    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case4C
     dw DispatchTalkEvent_Case03_Sub01_SetSpriteSlotsPlus7
     dw ChestItem_LogTwig
     dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal
@@ -3988,7 +3988,7 @@ Func_004_58C2:: ; address name
     dw BarrelItem_INTseed
     dw TalkMsg0862_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case6A
+    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A
     dw TalkMsg00FF_Composing
     dw TalkScript5D44_ThickSuctionCuppedTentacles
     dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case6D
@@ -4276,7 +4276,7 @@ Jump_004_5B16::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5B94: 'Welcome to our inn!'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04::
+DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case14::
 Jump_004_5B1D:: ; address name
     ld hl, Script_5B94
     call StartScriptAtHL_B04
@@ -4396,7 +4396,7 @@ Jump_004_5B92:: ; address name
 ; entry 32 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case20::
+DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case20::
 Jump_004_5B99:: ; address name
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4537,7 +4537,7 @@ Jump_004_5C2C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5BBD: 'Welcome to our inn!'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case2C::
+DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case2C::
 Jump_004_5C3D:: ; address name
     ld hl, Script_5BBD
     call StartScriptAtHL_B04
@@ -5080,7 +5080,7 @@ Jump_004_5F01::
 ; entry 76 of the `rst $00` table in Func_004_58C2
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CCA: '0 checked the crate. There was'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case4C::
+DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case4C::
 Jump_004_5F12:: ; address name
     ld hl, Script_5CCA
     call StartScriptAtHL_B04
@@ -5454,7 +5454,7 @@ Jump_004_60D8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; starts Script_5CCF
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_StartScriptAtHL_B04_Case6A::
+DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A::
 Jump_004_60DF:: ; address name
     ld hl, Script_5CCF
     call StartScriptAtHL_B04
@@ -5553,7 +5553,7 @@ Func_004_612B:: ; address name
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case27
     dw TalkMsg015A_HisMajestyIsHonestAndMost
-    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_WaitStoryFlagsPlus61
+    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29
     dw TalkMsg015F_HeroCheckedTheDresserThere
     dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2B
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
@@ -6280,7 +6280,7 @@ Jump_004_6580::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; starts Script_5B71
-DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_WaitStoryFlagsPlus61::
+DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29::
 Jump_004_6587:: ; address name
     ld a, [wStoryFlags + $61]
     bit 3, a
@@ -6857,9 +6857,9 @@ Func_004_6892:: ; address name
     dw TalkScript515B
     dw TalkScript515D
     dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case24
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case25
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24
+    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25
     dw DispatchTalkEvent_Case00_Sub01_SetFollowerDelay
     dw DispatchTalkEvent_Case00_Sub01_Return
 
@@ -7014,7 +7014,7 @@ Jump_004_6953:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23::
 Jump_004_696C:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7037,7 +7037,7 @@ Jump_004_696C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case24::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24::
 Jump_004_698B:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7062,7 +7062,7 @@ Jump_004_698B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay
 ; starts Script_57DC
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_WaitFollowerDelay_Case25::
+DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25::
 Jump_004_69AC:: ; address name
     ld a, [wFollowerDelay]
     or a, a

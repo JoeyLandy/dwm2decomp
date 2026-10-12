@@ -2431,6 +2431,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0283 — A second naming pass
+
+- Kind: TOOL.
+- The shape, string, main-call and RAM rules (E-0270 to E-0282) now act only on bare structural labels: a root followed only by CaseNN/SubNN/SharedNN parts. Already descriptive names are never compounded.
+- The rules run twice, so a step whose only call went to a routine named in the first pass is named in the second. The second pass renames about 230 more.
+- Bare structural labels: 754, of which 200 are dispatchers (`ld a, [state] / rst $00`). Their numbered cases are the state values, and they keep their numbers. The rest are steps that call only unnamed code or touch more RAM than two symbols.
+- Binary verification: build/run365 PASS, 0 differing bytes; tests OK.
+
 ### E-0282 — Remaining helpers named by the RAM they touch
 
 - Kind: TOOL (from build_xrefs' RAM use, which follows a routine's own branches to its returns but not into callees; C2 for the listed accesses).

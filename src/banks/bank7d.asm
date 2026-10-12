@@ -453,7 +453,7 @@ Data_07D_7975:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F7975, $15F
 
 ; compressed sprite graphics number $49 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, SceneWarubouFood2_RunMessageBox
+; address loaded by RunSceneScriptSubStep_AddStepDeltaToPointedByte_AddStepDeltaToPointedByte, SceneWarubouFood2_RunMessageBox
 ; LZSS-compressed asset: 185 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx49:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07D_7AD4:: ; address name

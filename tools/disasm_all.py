@@ -1334,6 +1334,9 @@ class Rom:
         used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
         renamed = 0
 
+        def bare(lab: str) -> bool:  # a root followed only by CaseNN/SubNN/SharedNN parts (not yet descriptive)
+            return re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab) ==                 re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab)
+
         def stem(addr: int) -> str:
             nm = self.sym_name(addr, True) or f"w{addr:04X}"
             nm = re.sub(r"[^A-Za-z0-9]", "", nm.replace(" + $", "Plus"))
@@ -1342,7 +1345,7 @@ class Rom:
         for b in range(self.nbanks):
             ins = self.insn[b]
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
                     continue
                 seq, pc = [], a
@@ -1417,7 +1420,7 @@ class Rom:
             order = sorted(a for a, v in ins.items() if v[0] != "dw")
             k_of = {a: k for k, a in enumerate(order)}
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys or a not in k_of:
                     continue
                 quotes, k = [], k_of[a]
@@ -1466,7 +1469,7 @@ class Rom:
         for b in range(self.nbanks):
             ins = self.insn[b]
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
                     continue
                 seq, pc, ok = [], a, False
@@ -1524,7 +1527,7 @@ class Rom:
         for b in range(self.nbanks):
             ins = self.insn[b]
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
                     continue
                 seq, pc = [], a
@@ -1573,7 +1576,7 @@ class Rom:
         for b in range(self.nbanks):
             ins = self.insn[b]
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
                     continue
                 seq, pc = [], a
@@ -1628,7 +1631,7 @@ class Rom:
         by_ram = 0
         for b in range(self.nbanks):
             for a, lab in list(self.labels[b].items()):
-                m = pat.match(lab)
+                m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys:
                     continue
                 core = re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab)
@@ -4368,6 +4371,7 @@ class Rom:
         self.name_single_caller_helpers()
         self.rename_address_prefixed_children()
         self.name_trampoline_cases()
+        self.name_trampoline_cases()  # E-0283: a second pass sees the targets the first pass named
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

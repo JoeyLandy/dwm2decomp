@@ -684,7 +684,7 @@ Jump_01C_440B::
     ret
 
 ; compares the 24-bit value wD7F3:wD7F2:wD7F1 (wD7F3 most significant) with wGoldHi:wGoldMid:wGoldLo: wD7F1 = $FF when it is greater, 0 when it is less or equal (the low byte is overwritten with the result) (E-0073)
-; 10 call sites from 9 routines (e.g. InnMenu_Pay, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17, ...)
+; 10 call sites from 9 routines (e.g. InnMenu_Pay, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_UpdateTwoChoiceCursor_Bank1D_Case17, ...)
 ; reads: wGoldHi, wArg3, wGoldMid, wArg2, wGoldLo, wArg1
 ; writes: wArg1
 IsAmountInArg1AboveGold::
@@ -1028,21 +1028,21 @@ CloseShopMenu::
 Func_01C_4605:: ; address name
     ld a, [wGridCursorY]
     rst $00
-    dw CloseShopMenu_Case00
-    dw CloseShopMenu_Case01
+    dw CloseShopMenu_ToCloseShopMenu_Case00_CopyBytesDEToHL_Bank1C
+    dw CloseShopMenu_ToCloseShopMenu_Case01_SetGlyphListPos
     dw CloseShopMenu_DecompressToVRAM
     dw CloseShopMenu_DrawRecordListNameTiles_Bank1D
 
 ; entry 0 of the `rst $00` table in CloseShopMenu
 ; no direct call (reached through a table, a jump or a vector)
-CloseShopMenu_Case00::
+CloseShopMenu_ToCloseShopMenu_Case00_CopyBytesDEToHL_Bank1C::
 Jump_01C_4611:: ; address name
     call CloseShopMenu_Case00_CopyBytesDEToHL_Bank1C
     ret
 
 ; entry 1 of the `rst $00` table in CloseShopMenu
 ; no direct call (reached through a table, a jump or a vector)
-CloseShopMenu_Case01::
+CloseShopMenu_ToCloseShopMenu_Case01_SetGlyphListPos::
 Jump_01C_4615:: ; address name
     call CloseShopMenu_Case01_SetGlyphListPos
     ret
@@ -1287,7 +1287,7 @@ Jump_01C_4785:: ; address name
     ret
 
 Jump_01C_47A0::
-    call ShopMenu_ChooseAction_ReadListLastRow_Sub03
+    call ShopMenu_ChooseAction_ReadListLastRow_ReadListLastRow
     ld a, [wListLastRow]
     and a, a
     jr nz, Jump_01C_47BB
@@ -1307,7 +1307,7 @@ Jump_01C_47BB::
     jr Jump_01C_47AB
 
 Jump_01C_47BE::
-    call ShopMenu_ChooseAction_ReadListLastRow_Sub03
+    call ShopMenu_ChooseAction_ReadListLastRow_ReadListLastRow
     ld a, [wListLastRow]
     cp a, $02
     jr c, Jump_01C_47CB
@@ -1401,7 +1401,7 @@ Func_01C_4845:: ; address name
     cp a, $10
     jr c, ShopMenu_ChooseAction_ReadListLastRow
     cp a, $18
-    jr c, ShopMenu_ChooseAction_ReadListLastRow_Sub03
+    jr c, ShopMenu_ChooseAction_ReadListLastRow_ReadListLastRow
     xor a, a
     ld [wScreenByteB3], a
 
@@ -1416,7 +1416,7 @@ Func_01C_485F:: ; address name
 ; only called from ShopMenu_ChooseAction (E-0047)
 ; 2 call sites from 1 routine (e.g. ShopMenu_ChooseAction)
 ; reads: wListLastRow
-ShopMenu_ChooseAction_ReadListLastRow_Sub03::
+ShopMenu_ChooseAction_ReadListLastRow_ReadListLastRow::
 Func_01C_4863:: ; address name
     ld b, $C3
     jr Jump_01C_4869
@@ -1466,7 +1466,7 @@ Jump_01C_488E:: ; address name
     dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case05
     dw ShopMenu_Buy_BlinkCursorSelectedRecord_Bank1C
     dw ShopMenu_Buy_ResetTextCounter0Counters
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08
+    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap
     dw ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C_4F87
     dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_Case0A
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap
@@ -1474,7 +1474,7 @@ Jump_01C_488E:: ; address name
     dw DrawTwoBoxesAndRequestScript80
     dw ShopMenu_Buy_SubtractArg1AmountFromGold
     dw ShopMenu_Buy_DrawTwoBoxesAndRequestScript80
-    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10
+    dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap_Case10
 
 ; entry 0 of the `rst $00` table in ShopMenu_Buy
 ; no direct call (reached through a table, a jump or a vector)
@@ -2209,7 +2209,7 @@ Jump_01C_4CF3::
 ; reads: wIsCGB, wNumberTens, wNumberOnes, wScreenStep
 ; writes: wNumberTens, wNumberOnes, wScreenByte8D, wScreenCountPlusOne, wScreenStep
 ; points at: wScreenList
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08::
+ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap::
 Jump_01C_4D13:: ; address name
     xor a, a
     ld [wNumberTens], a
@@ -3198,7 +3198,7 @@ Jump_01C_5317:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemGridY
 ; writes: wScreenStep, wItemGridX, wItemGridY
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case10::
+ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap_Case10::
 Jump_01C_5320:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $00A2
@@ -5422,7 +5422,7 @@ Data_01C_62C7:: ; address name
 Data_01C_62D9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AE, $00, $EE, $00, $2E, $01, $6E, $01
 
-; address loaded by ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08
+; address loaded by ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap
 Data_01C_62E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B2, $B6, $C3, $C3, $B7, $B3, $B4, $B4, $B5
 
@@ -6125,7 +6125,7 @@ Func_01C_67D0:: ; address name
     ret
 
 ; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1 (E-0124)
-; 13 call sites from 13 routines (e.g. ShopMenu_Buy_SubtractArg1AmountFromGold, DrawTwoBoxesAndRequestScript80, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Case08, ...)
+; 13 call sites from 13 routines (e.g. ShopMenu_Buy_SubtractArg1AmountFromGold, DrawTwoBoxesAndRequestScript80, ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C_52A0, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_StepBGMapAddressBackOnScrollWrap, ...)
 ; writes: wTextCursorLo, wTextCursorHi
 ClearRectSetTextCursorLoPlus1C1_Bank1C::
 Func_01C_6806:: ; address name
@@ -6634,7 +6634,7 @@ Func_01C_6A71:: ; address name
     ret
 
 ; only called from CloseShopMenu_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. CloseShopMenu_Case01)
+; 1 call site from 1 routine (e.g. CloseShopMenu_ToCloseShopMenu_Case01_SetGlyphListPos)
 ; writes: wGlyphListPos, wScreenCounter, wScreenState, wScreenStep, wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wGridCursorY
 CloseShopMenu_Case01_SetGlyphListPos::
@@ -6654,7 +6654,7 @@ Func_01C_6A8E:: ; address name
     ret
 
 ; only called from CloseShopMenu_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. CloseShopMenu_Case00)
+; 1 call site from 1 routine (e.g. CloseShopMenu_ToCloseShopMenu_Case00_CopyBytesDEToHL_Bank1C)
 ; reads: wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wGridCursorY
 CloseShopMenu_Case00_CopyBytesDEToHL_Bank1C::
@@ -7284,27 +7284,27 @@ VaultMenu_Store::
 Jump_01C_6F27:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw VaultMenu_Store_Case00
+    dw VaultMenu_Store_ToVaultMenu_Store_Case00_WaitForVRAMAccess
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
     dw VaultMenu_Store_Case03
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
-    dw VaultMenu_Store_Case07
-    dw VaultMenu_Store_Case08
-    dw VaultMenu_Store_Case09
+    dw VaultMenu_Store_ToVaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D
+    dw VaultMenu_Store_ToVaultMenu_Store_Case08_HLToDecimalDigits
+    dw VaultMenu_Store_WriteGlyphListPos_Case09
     dw VaultMenu_Store_Case0A
-    dw VaultMenu_Store_Case0B
+    dw VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C
-    dw VaultMenu_Store_Case0D
+    dw VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
-    dw VaultMenu_Store_Case13
-    dw VaultMenu_Store_Case14
+    dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
+    dw VaultMenu_Store_ToVaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D
     dw VaultMenu_Store_Case15
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
@@ -7312,7 +7312,7 @@ Jump_01C_6F27:: ; address name
 
 ; entry 0 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case00::
+VaultMenu_Store_ToVaultMenu_Store_Case00_WaitForVRAMAccess::
 Jump_01C_6F5D:: ; address name
     farcall VaultMenu_Store_Case00_WaitForVRAMAccess
     ret
@@ -7404,7 +7404,7 @@ Jump_01C_6FBC:: ; address name
 ; reads: wScreenState, wItemGridY, wScreenCounter, wCursorBlinkB8, wGlyphListPos, wScreenStep
 ; writes: wCursorBlinkB8, wGlyphListPos, wScreenCounter, wScreenStep
 ; points at: wItemStorage, wItemGrid
-VaultMenu_Store_Case09::
+VaultMenu_Store_WriteGlyphListPos_Case09::
 Jump_01C_6FD5:: ; address name
     call VaultMenu_Store_WriteGlyphListPos
     ld a, [wScreenState]
@@ -7548,14 +7548,14 @@ Jump_01C_70B7::
 
 ; entry 7 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case07::
+VaultMenu_Store_ToVaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
 Jump_01C_70B8:: ; address name
     farcall VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D
     ret
 
 ; entry 8 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case08::
+VaultMenu_Store_ToVaultMenu_Store_Case08_HLToDecimalDigits::
 Jump_01C_70BF:: ; address name
     farcall VaultMenu_Store_Case08_HLToDecimalDigits
     ret
@@ -7569,7 +7569,7 @@ Jump_01C_70C6:: ; address name
 
 ; entry 11 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0B::
+VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 Jump_01C_70CD:: ; address name
     farcall VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
     ret
@@ -7601,7 +7601,7 @@ Jump_01C_70D4:: ; address name
 
 ; entry 13 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0D::
+VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 Jump_01C_7103:: ; address name
     farcall VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     ret
@@ -7663,7 +7663,7 @@ Jump_01C_715C:: ; address name
 
 ; entry 19 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case13::
+VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD::
 Jump_01C_7163:: ; address name
     farcall VaultMenu_Store_Number24ToPackedBCD
     ret
@@ -7689,7 +7689,7 @@ Jump_01C_716A:: ; address name
 
 ; entry 20 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case14::
+VaultMenu_Store_ToVaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
 Jump_01C_7188:: ; address name
     farcall VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D
     ret
@@ -7778,27 +7778,27 @@ VaultMenu_TakeOut::
 Jump_01C_720E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw VaultMenu_Store_Case00
+    dw VaultMenu_Store_ToVaultMenu_Store_Case00_WaitForVRAMAccess
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
     dw VaultMenu_TakeOut_Case03
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
-    dw VaultMenu_Store_Case07
-    dw VaultMenu_Store_Case08
-    dw VaultMenu_Store_Case09
+    dw VaultMenu_Store_ToVaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D
+    dw VaultMenu_Store_ToVaultMenu_Store_Case08_HLToDecimalDigits
+    dw VaultMenu_Store_WriteGlyphListPos_Case09
     dw VaultMenu_Store_Case0A
-    dw VaultMenu_Store_Case0B
+    dw VaultMenu_Store_ToVaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case0C
-    dw VaultMenu_Store_Case0D
+    dw VaultMenu_Store_ToVaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_Case10
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
-    dw VaultMenu_Store_Case13
-    dw VaultMenu_Store_Case14
+    dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
+    dw VaultMenu_Store_ToVaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D
     dw VaultMenu_TakeOut_Case15
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
@@ -7881,7 +7881,7 @@ Jump_01C_7297::
     ret
 
 ; only called from routines of VaultMenu_Store (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case09, VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep)
+; 2 call sites from 2 routines (e.g. VaultMenu_Store_WriteGlyphListPos_Case09, VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep)
 ; reads: wScreenCounter, wGlyphListPos
 ; writes: wGlyphListPos
 VaultMenu_Store_WriteGlyphListPos::

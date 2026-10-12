@@ -638,7 +638,7 @@ Func_003_43D6:: ; address name
     ld de, $0501
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
-; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, PauseMenu_State3_ShowStringBank08AtTilesHL_Bank03, PauseMenu_Skills_SRAMRecordAddressMapped_Shared02, DrawItemTargetStatPreview, ...)
+; 11 call sites from 8 routines (e.g. ShowSelectedItemDescription, PauseMenu_State3_ShowStringBank08AtTilesHL_Bank03, PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped, DrawItemTargetStatPreview, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHL_Bank03::
@@ -771,7 +771,7 @@ Jump_003_447E::
 Jump_003_4491::
     ld [hl], b
     ld a, b
-    call UpdateMenuCursor_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_WaitForVRAMAccess_WaitForVRAMAccess
     xor a, a
     ld [wFrameCounterLo], a
     jr Jump_003_44EF
@@ -797,7 +797,7 @@ Jump_003_449C::
     pop de
     pop af
     ld [hl], a
-    call UpdateMenuCursor_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_WaitForVRAMAccess_WaitForVRAMAccess
 
 Jump_003_44BE::
     set 7, [hl]
@@ -816,7 +816,7 @@ Jump_003_44CB::
     jr z, Jump_003_44E1
     ld a, [hl]
     and a, $0F
-    call UpdateMenuCursor_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_WaitForVRAMAccess_WaitForVRAMAccess
     jr Jump_003_44EF
 
 Jump_003_44E1::
@@ -857,7 +857,7 @@ Jump_003_44F6::
 
 ; only called from UpdateMenuCursor (E-0047)
 ; 3 call sites from 1 routine (e.g. UpdateMenuCursor)
-UpdateMenuCursor_WaitForVRAMAccess_Sub02::
+UpdateMenuCursor_WaitForVRAMAccess_WaitForVRAMAccess::
 Func_003_4506:: ; address name
     add a, a
     add a, e
@@ -3289,7 +3289,7 @@ Jump_003_538D:: ; address name
     dw PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage
     dw PauseMenu_Items_Case02_BuildScreenBlock0EWithSubMenuCursorAndStep
     dw PauseMenu_Items_Case02_BeginStringDisplay_Bank37
-    dw PauseMenu_Items_Case02_CheckItemUsable_WaitTextFlags
+    dw PauseMenu_Items_Case02_CheckItemUsable_Case16
     dw PauseMenu_Items_Case02_ShowButNothingHappened
     dw PauseMenu_Items_Case02_WaitTextFlags_Case18
     dw PauseMenu_Items_Case02_ApplyItemEffect_Case19
@@ -3300,7 +3300,7 @@ Jump_003_538D:: ; address name
     dw PauseMenu_Items_Case02_RunPauseMenuScreen
     dw PauseMenu_Items_Case02_WaitTextFlags_Case1F
     dw PauseMenu_Items_Case02_ShowYourProgressHasBeen
-    dw PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_WaitTextFlags
+    dw PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_Case21
 
 ; entry 0 of the `rst $00` table in PauseMenu_Items_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -3611,7 +3611,7 @@ Jump_003_5585::
 ; reads: wTextFlags, wItemId, wItemRecordByte0A
 ; writes: rRAMG, rRAMB
 ; points at: wTemp1
-PauseMenu_Items_Case02_CheckItemUsable_WaitTextFlags::
+PauseMenu_Items_Case02_CheckItemUsable_Case16::
 Jump_003_5591:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3860,7 +3860,7 @@ Jump_003_56EB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMapType, wPendingFieldEvent, wItemMenuByte6D, wItemMenuByte6E
 ; writes: wSpriteSlotCount, wScreenSavedFlag, wTemp0, wTemp1, wPauseMenuScreen
-PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_WaitTextFlags::
+PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_Case21::
 Jump_003_5700:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4856,7 +4856,7 @@ Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
     ds $24, $C3
 
 ; wMenuPage = 0, wC46E = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wC0A0/1 (E-0124)
-; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_ResetInventoryMenuToFirstPage, PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_WaitTextFlags, PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage, PauseMenu_Items_Case03_ToResetInventoryMenuToFirstPage, ...)
+; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_ResetInventoryMenuToFirstPage, PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage_Case21, PauseMenu_Items_Case02_ResetInventoryMenuToFirstPage, PauseMenu_Items_Case03_ToResetInventoryMenuToFirstPage, ...)
 ; writes: wMenuPage, wMenuCursor, wTemp0, wTemp1
 ; points at: wMenuPage
 ResetInventoryMenuToFirstPage::
@@ -4971,7 +4971,7 @@ Jump_003_5EF0:: ; address name
     call PauseMenu_Skills_SRAMRecordAddressMapped
     call PauseMenu_Skills_CopyRectToBGMap
     call ShowRecordSkillPageNames_Bank03
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     ld a, $00
     ld [rRAMG], a
     call CopyTileBufferToBGMap
@@ -5093,11 +5093,11 @@ Jump_003_5FBD:: ; address name
     ld a, $00
     ld [rRAMB], a
     call BuildRecordField5FValueScreen
-    call PauseMenu_Skills_SRAMRecordAddressMapped_Shared02
+    call PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped
     ld a, $00
     ld [rRAMG], a
     call PauseMenu_Skills_CopyRectToBGMap
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     call CopyTileBufferToBGMap
     ld a, $0A
     ld [rRAMG], a
@@ -5125,7 +5125,7 @@ Jump_003_5FFB::
     call PauseMenu_Skills_CopyRectToBGMap
     call SetMenuRowsForPage_Bank03
     call ShowRecordSkillPageNames_Bank03
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     ld a, $00
     ld [rRAMG], a
     call CopyTileBufferToBGMap
@@ -5153,7 +5153,7 @@ Jump_003_601D:: ; address name
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call PauseMenu_Skills_SRAMRecordAddressMapped_Shared02
+    call PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped
     ld a, $00
     ld [rRAMG], a
     ld hl, vBGMap0 + $206
@@ -5172,9 +5172,9 @@ Jump_003_6052::
     ld [rRAMB], a
     res 7, [hl]
     call SetMenuRowsForPage_Bank03
-    call PauseMenu_Skills_SRAMRecordAddressMapped_Shared02
+    call PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped
     call ShowRecordSkillPageNames_Bank03
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     ld hl, vBGMap0 + $206
     ld bc, $0301
     ld de, wWindowTileBuffer + $9E
@@ -5231,7 +5231,7 @@ PauseMenu_Skills_Case01_BuildRecordField5FValueScreenWithCursorAndStep::
 Jump_003_60C6:: ; address name
     call BuildRecordField5FValueScreenWithCursor
     call PauseMenu_Skills_CopyRectToBGMap
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     call CopyTileBufferToBGMap
     ld hl, wTemp1
     inc [hl]
@@ -5289,7 +5289,7 @@ Jump_003_6103:: ; address name
     jr z, Jump_003_611B
     call BuildRecordField5FValueScreenWithCursor
     call PauseMenu_Skills_CopyRectToBGMap
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     call CopyTileBufferToBGMap
     ld hl, wTemp0
     inc [hl]
@@ -5316,7 +5316,7 @@ Jump_003_6120:: ; address name
     ld a, $00
     ld [rRAMG], a
     call PauseMenu_Skills_CopyRectToBGMap
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     call CopyTileBufferToBGMap
     ld a, [wPartyCount]
     ld [wMenuRowCount], a
@@ -5402,11 +5402,11 @@ Jump_003_61CE:: ; address name
     dw PauseMenu_Skills_Case03_CopyTileBufferToBGMap
     dw PauseMenu_Skills_Case03_BeginStringDisplay_Bank37
     dw PauseMenu_Skills_Case03_WaitTextFlags
-    dw PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_WaitTextFlags
+    dw PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Case03
     dw PauseMenu_Skills_Case03_WaitTextFlags_Case04
     dw PauseMenu_Skills_Case03_SRAMRecordAddressMapped
     dw PauseMenu_Skills_Case03_QueueSoundEffect
-    dw PauseMenu_Skills_Case03_Case07
+    dw PauseMenu_Skills_Case03_Case07_WaitItemId_Case07
     dw PauseMenu_Skills_Case03_WaitTextFlags_Case08
     dw PauseMenu_Skills_Case03_CopyStringHLToDE
     dw PauseMenu_Skills_Case03_ShowHeroReturnedWithAn
@@ -5420,7 +5420,7 @@ Jump_003_61CE:: ; address name
 PauseMenu_Skills_Case03_CopyTileBufferToBGMap::
 Jump_003_61EA:: ; address name
     call PauseMenu_Skills_CopyRectToBGMap
-    call PauseMenu_Skills_CopyRectToBGMap_Shared05
+    call PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap
     call CopyTileBufferToBGMap
     ld a, $0A
     ld [rRAMG], a
@@ -5504,7 +5504,7 @@ Jump_003_6253:: ; address name
 ; reads: wTextFlags, wItemMessage
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
-PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_WaitTextFlags::
+PauseMenu_Skills_Case03_BeginStringDisplay_Bank37_Case03::
 Jump_003_6286:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5612,7 +5612,7 @@ Jump_003_630E:: ; address name
 ; reads: wItemId, wItemMessage
 ; writes: rRAMG, rRAMB, wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_Skills_Case03_Case07::
+PauseMenu_Skills_Case03_Case07_WaitItemId_Case07::
 Jump_003_6324:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -6012,7 +6012,7 @@ Func_003_6595:: ; address name
 ; 3 call sites from 2 routines (e.g. PauseMenu_Skills_Case01_UpdateMenuCursor, PauseMenu_Skills_Case01_BuildRecordField5FValueScreen)
 ; reads: wMenuSelectedMember, wMenuCursor, wMenuPage, wRecordBufferData
 ; writes: wStringIndex, wRecordBuffer, wItemId, wStringCategory
-PauseMenu_Skills_SRAMRecordAddressMapped_Shared02::
+PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped::
 Func_003_65E3:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
@@ -6492,7 +6492,7 @@ Jump_003_6A5A::
 ; only called from routines of PauseMenu_Skills (E-0098)
 ; 8 call sites from 7 routines (e.g. PauseMenu_Skills_Case00_UpdateMenuCursor, PauseMenu_Skills_Case01_BuildRecordField5FValueScreenWithCursorAndStep, PauseMenu_Skills_Case01_UpdateMenuCursor, PauseMenu_Skills_Case01_BuildRecordField5FValueScreen, ...)
 ; reads: wMenuSelectedMember, wMenuItemCount, wMenuPageCount, wMenuPage
-PauseMenu_Skills_CopyRectToBGMap_Shared05::
+PauseMenu_Skills_CopyRectToBGMap_CopyRectToBGMap::
 Func_003_6A60:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
@@ -6691,7 +6691,7 @@ Jump_003_6B67:: ; address name
     dw PauseMenu_State3_Case01_BuildScreenBlocks21To25WithCursor
     dw PauseMenu_State3_Case01_UpdateMenuCursor_Case0E
     dw PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep_Case0F
-    dw PauseMenu_State3_Case01_TestListEntryBit7_WaitTextFlags
+    dw PauseMenu_State3_Case01_TestListEntryBit7_Case10
 
 ; entry 0 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -7205,7 +7205,7 @@ Jump_003_6E88:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wTemp1, hTemp0, wMenuPage, wMenuCursor
-PauseMenu_State3_Case01_TestListEntryBit7_WaitTextFlags::
+PauseMenu_State3_Case01_TestListEntryBit7_Case10::
 Jump_003_6E9D:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7226,7 +7226,7 @@ Jump_003_6EAF::
     ret
 
 ; index = wMenuPage * 4 + (wC46E & 7): A = wD0A7[index], Z clear when its bit 7 is set (E-0117)
-; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_WaitTextFlags, PauseMenu_State3_Case01_TestListEntryBit7, PauseMenu_State3_Case01_UpdateMenuCursor_Case03)
+; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, PauseMenu_State3_Case01_TestListEntryBit7, PauseMenu_State3_Case01_UpdateMenuCursor_Case03)
 ; reads: wMenuPage, wMenuCursor
 TestListEntryBit7::
 Func_003_6EBF:: ; address name

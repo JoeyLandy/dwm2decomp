@@ -437,7 +437,7 @@ Jump_031_42B2::
     jr nz, Jump_031_429D
     ld a, $00
     ld [wStringCategory], a
-    call BattlePhase0_Step3_Sub01
+    call BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattlePhase
     dec [hl]
@@ -456,7 +456,7 @@ Jump_031_42D4::
 ; 1 call site from 1 routine (e.g. BattlePhase0_Step3)
 ; reads: wBattlePictureIds, wBattleFoeCount, wStringIndex
 ; points at: wTextBuf0
-BattlePhase0_Step3_Sub01::
+BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01::
 Func_031_42D5:: ; address name
     ld a, [wBattlePictureIds]
     ld e, a
@@ -549,7 +549,7 @@ Jump_031_4364::
     ret
 
 ; only called from BattlePhase0_Step3_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattlePhase0_Step3_Sub01)
+; 1 call site from 1 routine (e.g. BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01)
 ; reads: wStringCategory, wStringIndex
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
@@ -583,11 +583,11 @@ Jump_031_4384::
     ld [wStringIndex], a
     ret
 
-; address loaded by BattlePhase0_Step3_Sub01
+; address loaded by BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
 Data_031_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $32, $31, $36, $37, $28, $35, $36, $F0
 
-; address loaded by BattlePhase0_Step3_Sub01
+; address loaded by BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
 Data_031_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $16, $32, $31, $36, $37, $28, $35, $36, $F0
 
@@ -704,7 +704,7 @@ BattleEnd_Step1::
 Jump_031_440E:: ; address name
     ld a, $01
     ld [wBattleKindFlags], a
-    call BattleEnd_Step1_Sub02
+    call BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02
     ld a, [wBattleScene]
     and a, $01
     jr z, Jump_031_4421
@@ -1426,7 +1426,7 @@ Jump_031_4840:: ; address name
     rst $00
     dw BattleEnd_Step6_QueueMusic
     dw BattleEnd_Step6_WaitFadeState
-    dw BattleEnd_Step6_QueueMusic_Case02
+    dw BattleEnd_Step6_QueueMusic_QueueMusic
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step6
 ; no direct call (reached through a table, a jump or a vector)
@@ -1474,7 +1474,7 @@ Jump_031_486E:: ; address name
 ; reads: wCurrentMusic, wBattleKind
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wNewRecordByte0D, wScreenState, wFieldInitStage
 ; points at: wTransitionByteCD, wBGFillFlag
-BattleEnd_Step6_QueueMusic_Case02::
+BattleEnd_Step6_QueueMusic_QueueMusic::
 Jump_031_4878:: ; address name
     ld a, [wCurrentMusic]
     ld hl, wTransitionByteCD
@@ -1512,7 +1512,7 @@ Jump_031_4893::
     ret
 
 ; copies hPlayerFacing to the three follower directions and hPlayerX/hPlayerY to the three follower positions (the facing-preserving form of ResetFollowersToPlayer) (E-0118)
-; 1 call site from 1 routine (e.g. BattleEnd_Step6_QueueMusic_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step6_QueueMusic_QueueMusic)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFollowerRecords
 SetFollowersToPlayer::
@@ -1966,10 +1966,10 @@ Jump_031_4B2E:: ; address name
     dw RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep
     dw RunBattleSetup_Case00_Case05
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345FarAndStep
-    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags
+    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far
     dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_WaitTextFlags
+    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A
     dw RunBattleSetup_Case00_ShowRetireNow
     dw RunBattleSetup_Case00_LoadCursorTileAndRect7826
     dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D
@@ -2323,7 +2323,7 @@ Jump_031_4D3D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleResolveStep
-RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags::
+RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07::
 Jump_031_4D4E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2590,7 +2590,7 @@ Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wTextFlags, wBattlePartyCount
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wSlotMarks
-RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_WaitTextFlags::
+RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
 Jump_031_4EE6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2779,7 +2779,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case07
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep
     dw RunBattleSetup_Case01_ShowItHasNoUsable
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D
@@ -2791,8 +2791,8 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31AndStep
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case17
     dw RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1A
@@ -2802,9 +2802,9 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1E
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11
     dw RunBattleSetup_Case01_Case20
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_DrawWC338RowsToBGMapRow13
-    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13_Case23
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_Case21
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case23
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -3205,7 +3205,7 @@ Jump_031_52CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A::
 Jump_031_52E7:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3683,7 +3683,7 @@ Jump_031_55E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_FillWC278WithC3_Bank31_WaitTextFlags_Case16::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16::
 Jump_031_55F2:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3697,7 +3697,7 @@ Jump_031_55F2:: ; address name
 ; entry 23 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case17::
 Jump_031_5602:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld a, $10
@@ -4029,7 +4029,7 @@ Jump_031_580D::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_DrawWC338RowsToBGMapRow13::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_Case21::
 Jump_031_580E:: ; address name
     call DrawWC338RowsToBGMapRow13
     xor a, a
@@ -4042,7 +4042,7 @@ Jump_031_580E:: ; address name
 ; entry 35 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13_Case23::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case23::
 Jump_031_5820:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld a, $18
@@ -6392,7 +6392,7 @@ Func_031_6564:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wDataBankSave, wBattleKind, wBattleScene, wLinkRole
 ; writes: wDataBank, wDataBankSave, wBattleScene
-BattleEnd_Step1_Sub02::
+BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02::
 Func_031_656B:: ; address name
     ld a, [wDataBankSave]
     ld [wDataBank], a
@@ -6481,7 +6481,7 @@ Jump_031_65FB::
     ret
 
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 7 call sites from 1 routine (e.g. BattleEnd_Step1_Sub02)
+; 7 call sites from 1 routine (e.g. BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02)
 ; points at: wBattleSlotOut, wBattleStatus
 BattleEnd_Step1_Sub02_AddAx9ToHL::
 Func_031_65FF:: ; address name
@@ -6507,7 +6507,7 @@ Jump_031_6618::
     ret
 
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02)
 ; points at: wBattleSlotOut
 BattleEnd_Step1_Sub02_Sub02::
 Func_031_6620:: ; address name
@@ -8683,7 +8683,7 @@ Jump_031_7221::
     ret
 
 ; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
-; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, ...)
+; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, ...)
 FillWC278WithC3_Bank31::
 Func_031_722A:: ; address name
     ld hl, wScreenTileBuffer + $E0
@@ -8795,7 +8795,7 @@ Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
-; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, ...)
+; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
 ; reads: wBattleFoeCount
 LayoutTileBlocksForBattleFoeCount::
 Func_031_72CC:: ; address name
@@ -9106,7 +9106,7 @@ Func_031_746F:: ; address name
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
-; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far, RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, ...)
+; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
 DrawWC338RowsToBGMapRow13::
 Func_031_7479:: ; address name
     ld de, wWindowTileBuffer + $38
@@ -9116,7 +9116,7 @@ Func_031_7479:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31_WaitTextFlags, RunBattleSetup_Case00_FillWC278WithC3_Bank31)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_FillWC278WithC3_Bank31)
 RunBattleSetup_CopyRectRecord73ADToScreenBuffer::
 Func_031_7486:: ; address name
     farcall CopyRectRecord73ADToScreenBuffer
@@ -10415,13 +10415,13 @@ Jump_031_7C1C::
     pop hl
     ret
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus240Gfx_31_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7C1E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus5F0Gfx_31_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7DFB:: ; address name

@@ -1066,23 +1066,23 @@ Jump_037_4CA9:: ; address name
 Jump_037_4CC1::
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_WaitTextFlags
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_WaitTextFlags
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37_Case09
-    dw RunLinkSession5Exchange_Case01_Sub01_Table2_BreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case01
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case01
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case09
+    dw RunLinkSession5Exchange_Case01_Sub01_Table2_Case03
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37::
+RunLinkSession5Exchange_Case01_Sub01_Table2_Case00::
 Jump_037_4CDB:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1100,7 +1100,7 @@ Jump_037_4CDB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep, wLinkSendByte
-RunLinkSession5Exchange_Case01_Sub01_Table2_WaitTextFlags::
+RunLinkSession5Exchange_Case01_Sub01_Table2_Case01::
 Jump_037_4CF1:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1116,7 +1116,7 @@ Jump_037_4CF1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37_Case02::
+RunLinkSession5Exchange_Case01_Sub01_Table2_Case02::
 Jump_037_4D03:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -1134,7 +1134,7 @@ Jump_037_4D03:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wSelectedRecord, wScreenSubStep
-RunLinkSession5Exchange_Case01_Sub01_Table2_BreedMenu::
+RunLinkSession5Exchange_Case01_Sub01_Table2_Case03::
 Jump_037_4D1A:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1149,7 +1149,7 @@ Jump_037_4D1A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunLinkSession5Exchange_Case01_Sub01_Table2_ShowStringIndexA_Bank37_Case09::
+RunLinkSession5Exchange_Case01_Sub01_Table2_Case09::
 Jump_037_4D2D:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2852,7 +2852,7 @@ Jump_037_57D0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_FillTilesFromRequest
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_SetArg5ToListEntriesCell5
     dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_BreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
@@ -2873,7 +2873,7 @@ Jump_037_57E8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_BreedMenu::
+RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09::
 Jump_037_57FC:: ; address name
     ld a, [wScreenState]
     push af

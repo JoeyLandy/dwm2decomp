@@ -103,7 +103,7 @@ Jump_0F2_40B0::
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_SetObject5_Case08
+    dw GameMode8_Update_SetObject5_SetObject5
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_Case0B
@@ -207,7 +207,7 @@ Jump_0F2_412E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
-GameMode8_Update_SetObject5_Case08::
+GameMode8_Update_SetObject5_SetObject5::
 Jump_0F2_414F:: ; address name
     ld a, $00
     ld [wObject5], a
@@ -1245,7 +1245,7 @@ Func_0F2_4BFC:: ; address name
 RunF24C3DAnd4D72::
 Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
+    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB
     ret
 
 ; only called from RunF24C3DAnd4D72 (E-0047)
@@ -1428,7 +1428,7 @@ Data_0F2_4D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. RunF24C3DAnd4D72)
 ; reads: wRecordBufB, hTemp1
 ; writes: wArg1, wArg5, wArg2, wArg3, wArg4
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
+RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB::
 Func_0F2_4D72:: ; address name
     ld a, [wRecordBufB + $D]
     and a, $10
@@ -1542,7 +1542,7 @@ Jump_0F2_4E25::
     ret
 
 ; BC = wCCCD when the byte at DE is $98 (the ??? placeholder), else wCDCC (E-0122)
-; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
+; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB)
 ; points at: wNameBufAlt, wNameBufUnknown
 PickNameBufferForFirstByte_BankF2::
 Func_0F2_4E26:: ; address name
@@ -1558,16 +1558,16 @@ Jump_0F2_4E30::
 Jump_0F2_4E33::
     ret
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
+; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB
 Data_0F2_4E34:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1A, $98, $1A, $1C, $A3, $1C
 
-; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
+; address loaded by RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB
 Data_0F2_4E3A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1C, $A3, $1C, $1A, $98, $1A
 
 ; A = byte offset: hFFC6/hFFC7 = the word at wCA2B + A (E-0079)
-; 5 call sites from 3 routines (e.g. DrawRecordBufBSpeciesSprites, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
+; 5 call sites from 3 routines (e.g. DrawRecordBufBSpeciesSprites, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB)
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
 LoadTemp0WordFromRecordBufB::
@@ -1708,7 +1708,7 @@ Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB, hTemp1, hTemp0
 ; writes: hTemp0, wArg1, wArg2
 ; points at: wArg3
@@ -2069,7 +2069,7 @@ Func_0F2_50A4:: ; address name
     ret
 
 ; hFFC6/7 = the word wCA2B[wD7F5], far-calls DrawSpeciesAndFamilyIconForTemp0 and continues at Jump_0F2_50F8 (E-0126)
-; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
+; 2 call sites from 1 routine (e.g. RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB)
 ; reads: wArg5, wArg1, wArg2, wArg3, wDigits
 ; writes: hTemp0, hTemp1
 ; points at: wRecordBufB
@@ -2175,7 +2175,7 @@ Func_0F2_514D:: ; address name
     ret
 
 ; copies 16 bytes from HL to DE, each written with interrupts off after rSTAT bit 1 clears (the same effect as CopyTileBytesToVRAM, with a counter kept on the stack); HL and DE advance (E-0076)
-; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02)
+; 7 call sites from 2 routines (e.g. DrawWCA3ANameAtTiles2290, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_LoadTemp0WordFromRecordBufB)
 ; reads: rSTAT
 CopyTileBytesToVRAMCounted_BankF2::
 Func_0F2_516E:: ; address name

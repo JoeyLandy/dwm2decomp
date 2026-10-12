@@ -30,7 +30,7 @@ Jump_016_401E::
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_CheckItemUsable, PauseMenu_Items_Case02_CheckItemUsable_WaitTextFlags, PauseMenu_Items_Case02_ShowButItCouldntBe)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_CheckItemUsable, PauseMenu_Items_Case02_CheckItemUsable_Case16, PauseMenu_Items_Case02_ShowButItCouldntBe)
 ; reads: wItemId
 CheckItemUsable::
 Func_016_4025:: ; address name
@@ -3241,7 +3241,7 @@ Func_016_53DA:: ; address name
     ret
 
 ; only called from PauseMenu_Skills_Case03_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_WaitItemId_Case07)
 ; reads: wItemId, wInventorySlot
 PauseMenu_Skills_Case03_Case07_WaitItemId::
 Func_016_53E6:: ; address name
@@ -5038,14 +5038,14 @@ Func_016_5D13:: ; address name
     rst $00
     dw BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix
     dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02
     dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
     dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte
     dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep
     dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags_Case09
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09
     dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F
     dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
     dw BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex
@@ -5126,7 +5126,7 @@ Jump_016_5D8C:: ; address name
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02::
 Jump_016_5DA0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5241,7 +5241,7 @@ Jump_016_5E3B:: ; address name
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_WaitTextFlags_Case09::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09::
 Jump_016_5E48:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6508,7 +6508,7 @@ Data_016_66EB:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66EF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $98, $E1, $98, $21, $99, $61, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
+; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
 Data_016_66F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $98, $61, $98, $A1, $98, $E1, $98, $21, $99
 
@@ -7377,7 +7377,7 @@ Func_016_6C16:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
     dw BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6
     dw BattleEnd_Step5_Case04_Sub01_SetBattleStep
@@ -7385,7 +7385,7 @@ Func_016_6C16:: ; address name
     dw BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB
     dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16
     dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A
     dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case0B
     dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C
@@ -7458,7 +7458,7 @@ Jump_016_6C7A::
 ; reads: wTextFlags
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags::
+BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01::
 Jump_016_6C9E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7645,7 +7645,7 @@ Jump_016_6D8D:: ; address name
 ; reads: wTextFlags, wMenuSubState
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_WaitTextFlags_Case09::
+BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09::
 Jump_016_6DA6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -9810,7 +9810,7 @@ Jump_016_7A55::
     ret
 
 ; writes the $B0 bytes at Data_016_7ACD (the eleven family icon tiles) to VRAM from tile wD09E; corrected in E-0124 (E-0122)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_Case04)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode)
 LoadAllFamilyIconTiles::
 Func_016_7A5B:: ; address name
     ld de, FamilyIconTiles

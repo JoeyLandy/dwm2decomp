@@ -75,7 +75,7 @@ Jump_01E_4062:: ; address name
     ret
 
 ; implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244)
-; 18 call sites from 18 routines (e.g. EggServiceMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu_Case0C, ScriptCommandE8, ...)
+; 18 call sites from 18 routines (e.g. EggServiceMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu_SwapMonstersMenu, ScriptCommandE8, ...)
 ; reads: wScreenState
 SwapMonstersMenu::
 Func_01E_4069:: ; address name
@@ -83,7 +83,7 @@ Func_01E_4069:: ; address name
     rst $00
     dw SwapMonstersMenu_CopyBytesDEToHL_Bank1E
     dw SwapMonstersMenu_Case01
-    dw SwapMonstersMenu_Case02
+    dw SwapMonstersMenu_Case02_WriteGridCursorY_Case02
     dw SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries_Case03
     dw SwapMonstersMenu_Case04
     dw SwapMonstersMenu_Case05
@@ -210,7 +210,7 @@ Jump_01E_4100:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, wGridCursorX
-SwapMonstersMenu_Case02::
+SwapMonstersMenu_Case02_WriteGridCursorY_Case02::
 Jump_01E_412A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -313,7 +313,7 @@ Jump_01E_41D0::
     ret
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 3 call sites from 1 routine (e.g. SwapMonstersMenu_Case02)
+; 3 call sites from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
 SwapMonstersMenu_Case02_WriteGridCursorY::
@@ -332,7 +332,7 @@ Func_01E_41DF:: ; address name
     ld [wGridCursorY], a
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_ReadGridCursorX::
 Func_01E_41F9:: ; address name
@@ -340,7 +340,7 @@ Func_01E_41F9:: ; address name
     jr Jump_01E_4203
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 2 call sites from 1 routine (e.g. SwapMonstersMenu_Case02)
+; 2 call sites from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_ReadGridCursorX_Sub03::
 Func_01E_41FD:: ; address name
@@ -348,7 +348,7 @@ Func_01E_41FD:: ; address name
     jr Jump_01E_4203
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap::
 Func_01E_4201:: ; address name
@@ -403,7 +403,7 @@ Jump_01E_4234:: ; address name
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E_Case0B
     dw SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E
+    dw SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_Case0E
     dw SwapMonstersMenu_Case04_StoreTemp0BytesToSRAMRecord
     dw SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable
     dw SwapMonstersMenu_Case04_CopyFromBankWaitVRAM
@@ -428,7 +428,7 @@ Jump_01E_4234:: ; address name
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E_Case0B
     dw SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E_Case27
+    dw SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_Case27
     dw SwapMonstersMenu_Case04_CopyRecordNameToNameGlyphBuf
     dw SwapMonstersMenu_Case04_StoreTemp0BytesToSRAMRecord_Case29
     dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
@@ -1107,7 +1107,7 @@ Data_01E_4718:: ; address name
 ; entry 14 of the `rst $00` table in SwapMonstersMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E::
+SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_Case0E::
 Jump_01E_4720:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1697,7 +1697,7 @@ Jump_01E_4B05:: ; address name
 ; entry 39 of the `rst $00` table in SwapMonstersMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E_Case27::
+SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_Case27::
 Jump_01E_4B42:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1930,7 +1930,7 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E_Case0B
     dw SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E
+    dw SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_Case2E
     dw SwapMonstersMenu_Case05_DrawBox4718AndMenuAndStep_1E
     dw SwapMonstersMenu_Case05_ListRecordsState1WithByte6EClear
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E
@@ -1954,7 +1954,7 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case04_CopyRectTo20ByteRows_Bank1E_Case0B
     dw SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E_Case46
+    dw SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_Case46
     dw SwapMonstersMenu_Case05_CopyRecordNameToNameGlyphBuf
     dw SwapMonstersMenu_Case05_StoreTemp0BytesToSRAMRecord_Case48
     dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
@@ -2136,7 +2136,7 @@ Jump_01E_4E0E:: ; address name
 ; entry 46 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E::
+SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_Case2E::
 Jump_01E_4E4B:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2362,7 +2362,7 @@ Jump_01E_4FAC:: ; address name
 ; entry 70 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E_Case46::
+SwapMonstersMenu_Case05_BGMapAddressAtScroll_Bank1E_Case46::
 Jump_01E_4FBB:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -7775,7 +7775,7 @@ Jump_01E_740A::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 41 call sites from 29 routines (e.g. SwapMonstersMenu_Case02, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable, SwapMonstersMenu_Case04_UpdateListCursorListCursor, ...)
+; 41 call sites from 29 routines (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable, SwapMonstersMenu_Case04_UpdateListCursorListCursor, ...)
 StoreBAtWordTableEntry_Bank1E::
 Func_01E_741A:: ; address name
     push bc
@@ -7954,7 +7954,7 @@ Jump_01E_74B6::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 only when HL = $9800 (E-0062)
-; 38 call sites from 33 routines (e.g. CloseMenuE9_CopyBytesDEToHL_Bank1E, SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_BGMapAddressAtScroll_Bank1E_Case27, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, ...)
+; 38 call sites from 33 routines (e.g. CloseMenuE9_CopyBytesDEToHL_Bank1E, SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_Case04_BGMapAddressAtScroll_Bank1E_Case27, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer

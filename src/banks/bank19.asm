@@ -502,7 +502,7 @@ Jump_019_433F::
     ret
 
 ; C = wD868, then falls into Func_019_434D (E-0126)
-; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
+; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_BattlerRecordAddress_BankA0)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills

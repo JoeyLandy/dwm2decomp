@@ -3721,7 +3721,7 @@ Jump_005_5225::
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hTemp0, hTemp1
-AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_5228:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -8911,7 +8911,7 @@ Func_005_6CA5:: ; address name
     ret
 
 ; only called from routines of AIScore_TwinHits (E-0098)
-; 2 call sites from 2 routines (e.g. AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05, AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05, AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_ReadSlotAIModeIndexed_Bank05)
 ; reads: wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0

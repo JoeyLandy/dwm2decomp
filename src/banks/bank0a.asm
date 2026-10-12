@@ -5,7 +5,7 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_FieldStateCommonUpdate)
 ; reads: wMenuState, wMenuSubState, wStatusFieldStep, wMapType
 ; writes: wMenuState, rRAMG, wTalkEventGroup, wTalkEventIndex, wModeState
-FieldModeStateDispatch_Case07_Sub01::
+FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01::
 Func_00A_4001:: ; address name
     call FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect
     ld a, [wMenuState]
@@ -19,12 +19,12 @@ Func_00A_4001:: ; address name
     or a, a
     jr nz, Jump_00A_4021
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags
+    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
     jr Jump_00A_4027
 
 Jump_00A_4021::
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02
-    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags
+    call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
 
 Jump_00A_4027::
     xor a, a
@@ -53,10 +53,10 @@ Jump_00A_404F::
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
+; 2 call sites from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01)
 ; reads: wStatusStepFlags, wPartyCount, hTemp0, hTemp1
 ; points at: wPartyList
-FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_WaitStatusStepFlags::
+FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01::
 Func_00A_4055:: ; address name
     ld a, [wStatusStepFlags]
     and a, $01
@@ -119,7 +119,7 @@ Func_00A_409B:: ; address name
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01)
 ; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep
 ; writes: wStatusFieldStep
 ; points at: wPartyList
@@ -203,7 +203,7 @@ Jump_00A_410A::
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01)
 ; reads: wPartyCount, hTemp0, hTemp1, wStatusFieldStep, wMapType, hMapId
 ; writes: wFieldStepFlags, wStatusFieldStep
 ; points at: wPartyList
@@ -303,7 +303,7 @@ Jump_00A_4190::
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01)
 ; reads: wMenuState, wIsCGB
 ; writes: wBGPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wBGPaletteBuffer, wBGPaletteCopy

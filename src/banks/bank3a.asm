@@ -2459,29 +2459,29 @@ Func_03A_5028:: ; address name
     dw RunEffectStep_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
-    dw RunEffectStep_SetDMGPaletteBGP_Case09
+    dw RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP
     dw RunEffectStep_SetDMGPaletteBGP
 
 ; entry 9 of the `rst $00` table in RunEffectStep
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP
-RunEffectStep_SetDMGPaletteBGP_Case09::
+RunEffectStep_SetDMGPaletteBGP_SetDMGPaletteBGP::
 Jump_03A_5062:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -3116,7 +3116,7 @@ Jump_03A_53B2::
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
 ; reads: wDebugValue0, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-DrawSkillByte0AndRun502BAnd53B9_Sub01::
+DrawSkillByte0AndRun502BAnd53B9_Sub01_WriteVRAMByte_Sub01::
 Func_03A_53B9:: ; address name
     ld hl, vBGMap0 + $1CE
     ld a, l
@@ -3155,7 +3155,7 @@ Func_03A_53B9:: ; address name
     ld hl, ActionEffectTable_Flag5
 
 ; only called from DrawSkillByte0AndRun502BAnd53B9_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9_Sub01)
+; 2 call sites from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9_Sub01_WriteVRAMByte_Sub01)
 ; reads: wDebugValue0, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 DrawSkillByte0AndRun502BAnd53B9_Sub01_WriteVRAMByte::
 Func_03A_540A:: ; address name
@@ -5459,7 +5459,7 @@ Jump_03A_6390::
     ret
 
 ; returns A = 0 for action $BD while wDABA & $7F is non-zero; otherwise runs Func_03A_63B2 and, without carry, Func_03A_63D2 (E-0122)
-; 5 call sites from 5 routines (e.g. RunBattleActions_CheckActionBDOrRun63B2And63D2, RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_Case09_ShowHeroDroppedDead, RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08, ...)
+; 5 call sites from 5 routines (e.g. RunBattleActions_CheckActionBDOrRun63B2And63D2, RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_Case09_ShowHeroDroppedDead, RunActionResolveStep_CheckActionBDOrRun63B2And63D2_CheckActionBDOrRun63B2And63D2, ...)
 ; reads: wBattleActionId, wDefeatFlagsBA
 CheckActionBDOrRun63B2And63D2::
 Func_03A_639A:: ; address name
@@ -6098,7 +6098,7 @@ Jump_03A_670B::
 ; points at: wBattleTargetChoice
 RunBattleStep4_Case03_Sub01::
 Func_03A_6711:: ; address name
-    call RunBattleStep4_Case03_Sub01_Sub01
+    call RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01
     ret z
     ld a, c
     ld [wBattleTarget], a
@@ -6118,7 +6118,7 @@ Func_03A_6711:: ; address name
 ; reads: wDefeatFlagsBA, wBattleActionId, wBattleActor
 ; writes: wDefeatFlagsBA, wSavedActorSlot, wSavedActorByte, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase, wBattleScreenFlags
-RunBattleStep4_Case03_Sub01_Sub01::
+RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01::
 Func_03A_6731:: ; address name
     ld a, [wDefeatFlagsBA]
     bit 7, a
@@ -6167,7 +6167,7 @@ Jump_03A_6783::
     ret
 
 ; only called from RunBattleStep4_Case03_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case03_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01)
 ; reads: wRecordBufferData, wBattleTarget, wBattleActionId
 ; points at: wDefeatFlagsBA
 RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
@@ -6227,7 +6227,7 @@ Jump_03A_67D3::
     ret
 
 ; only called from RunBattleStep4_Case03_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case03_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01)
 ; reads: wBattleTarget, wRecordBufferData, wBattleActionId
 ; points at: wDefeatFlagsBA
 RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
@@ -6571,8 +6571,8 @@ Func_03A_69AA:: ; address name
     dw RunActionResolveStep_ToRunBattleSubStep_6662
     dw RunActionResolveStep_AddDoubleAToHL_Bank3A
     dw RunActionResolveStep_RunDefeatStepMinus1Step
-    dw RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08
-    dw RunActionResolveStep_Case09
+    dw RunActionResolveStep_CheckActionBDOrRun63B2And63D2_CheckActionBDOrRun63B2And63D2
+    dw RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A_Case09
 
 ; entry 0 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
@@ -6981,7 +6981,7 @@ Jump_03A_6C52:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDefeatFlagsBA, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep
-RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08::
+RunActionResolveStep_CheckActionBDOrRun63B2And63D2_CheckActionBDOrRun63B2And63D2::
 Jump_03A_6C5E:: ; address name
     call CheckActionBDOrRun63B2And63D2
     jr c, Jump_03A_6C68
@@ -7000,7 +7000,7 @@ Jump_03A_6C68::
 
 ; entry 9 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-RunActionResolveStep_Case09::
+RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A_Case09::
 Jump_03A_6C76:: ; address name
     call RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A
     ret
@@ -7096,7 +7096,7 @@ Jump_03A_6CC9::
     ret
 
 ; only called from RunActionResolveStep_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. RunActionResolveStep_Case09)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A_Case09)
 ; reads: wBattleStep, wFollowUpAction, wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wResolveByte81, wResolveMsgFlags
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wResolveByte81, wFollowUpAction
 ; points at: wBattleStatus6, wBattleStep, wBattleSubPhase

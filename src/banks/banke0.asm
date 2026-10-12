@@ -647,15 +647,15 @@ Jump_0E0_452D::
     call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
     call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
     inc hl
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
     dec hl
     call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
     ret
@@ -673,7 +673,7 @@ Func_0E0_455F:: ; address name
 
 Jump_0E0_4566::
     call WordAtDEToPackedBCD
-    jr DrawSlotHPMPStats_BankE0_Sub03
+    jr DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
@@ -700,7 +700,7 @@ Jump_0E0_4571::
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 9 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub03::
+DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03::
 Func_0E0_4583:: ; address name
     ld b, $00
     push hl
@@ -765,7 +765,7 @@ Jump_0E0_45BD::
     inc hl
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03)
 ; reads: hTemp1, hTemp0
 DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte::
 Func_0E0_45BE:: ; address name
@@ -2110,7 +2110,7 @@ DrawSkillByte0AndRun502BAnd53B9::
 Func_0E0_4FCE:: ; address name
     call DrawSkillRecordByte0DigitsForDebugValue0
     call DrawSkillByte0AndRun502BAnd53B9_LoadSkillRecord
-    farcall DrawSkillByte0AndRun502BAnd53B9_Sub01
+    farcall DrawSkillByte0AndRun502BAnd53B9_Sub01_WriteVRAMByte_Sub01
     ret
 
 ; loads skill wC5F9's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
@@ -6301,22 +6301,22 @@ Jump_0E0_6FF7::
     jr z, Jump_0E0_7007
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest
+    dw DebugStaffRoll_Update_Sub01_Table2_Case00
     dw DebugStaffRoll_Update_Sub01_Table2_Case01
-    dw DebugStaffRoll_Update_Sub01_Table2_WaitFadeState
+    dw DebugStaffRoll_Update_Sub01_Table2_Case02
 
 Jump_0E0_7007::
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest
-    dw DebugStaffRoll_Update_Sub01_Table3_StartPaletteFade
-    dw DebugStaffRoll_Update_Sub01_Table3_WaitFadeState
+    dw DebugStaffRoll_Update_Sub01_Table3_Case00
+    dw DebugStaffRoll_Update_Sub01_Table3_Case01
+    dw DebugStaffRoll_Update_Sub01_Table3_Case02
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wIsCGB, wSGBActive
 ; writes: wWorkBuf, wStringCategory, wStringIndex, rVBK
-DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest::
+DebugStaffRoll_Update_Sub01_Table2_Case00::
 Jump_0E0_7011:: ; address name
     ld a, [wWorkBuf + $4]
     or a, a
@@ -6783,7 +6783,7 @@ Jump_0E0_732E::
 ; reads: wFadeState, wWorkBuf
 ; writes: wWorkBuf
 ; points at: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table2_WaitFadeState::
+DebugStaffRoll_Update_Sub01_Table2_Case02::
 Jump_0E0_733E:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -6810,7 +6810,7 @@ Jump_0E0_7351::
 ; reads: wIsCGB, wSGBActive
 ; writes: wStringCategory, wStringIndex, rVBK, wWorkBuf
 ; points at: wBGPaletteBuffer
-DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest::
+DebugStaffRoll_Update_Sub01_Table3_Case00::
 Jump_0E0_735E:: ; address name
     ld hl, vTiles2 + $7F0
     ld de, $0101
@@ -6872,7 +6872,7 @@ Jump_0E0_73C7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table3_StartPaletteFade::
+DebugStaffRoll_Update_Sub01_Table3_Case01::
 Jump_0E0_73DC:: ; address name
     ld a, [wWorkBuf + $5]
     sub a, $01
@@ -6895,7 +6895,7 @@ Jump_0E0_73DC:: ; address name
 ; reads: wFadeState
 ; writes: wWorkBuf
 ; points at: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table3_WaitFadeState::
+DebugStaffRoll_Update_Sub01_Table3_Case02::
 Jump_0E0_73FC:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -6909,7 +6909,7 @@ Jump_0E0_73FC:: ; address name
     ret
 
 ; A = first tile, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive tile numbers with WriteVRAMByteInc (interrupts off per byte), adding DE to the row start after each row; A ends past the last tile (E-0077)
-; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
+; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
 FillVRAMRectWithTileSequence::
 Func_0E0_740E:: ; address name
     push bc
@@ -7225,7 +7225,7 @@ Func_0E0_757C:: ; address name
     ret
 
 ; writes A over a B x C rectangle of the BG map at HL, wrapping columns and rows (E-0125)
-; 6 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
+; 6 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
 FillBGMapRectWithAWrapped::
 Func_0E0_758B:: ; address name
     push bc
@@ -7274,7 +7274,7 @@ Jump_0E0_758D::
     ret
 
 ; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $7641 to wC4FF (E-0128)
-; 7 call sites from 7 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest, DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM, ...)
+; 7 call sites from 7 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00, DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM, ...)
 ; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: rBGP, rOBP0, rOBP1, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, ...
 ; points at: wDMGPaletteBGP, wDMGPaletteBytes
@@ -7406,7 +7406,7 @@ Jump_0E0_76EE::
     ret
 
 ; Func_0E0_76E0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
+; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
 ShowString_BankE0::
 Func_0E0_76F5:: ; address name
     call BeginStringDisplay_BankE0

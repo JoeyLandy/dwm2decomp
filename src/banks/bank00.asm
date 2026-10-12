@@ -734,7 +734,7 @@ Jump_000_0530::
     db $CD, $CC, $0B, $C9
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
-; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, GameMode5_Update_LinkExchangeJoypadPerFrame_ReadLinkScreenState, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_ReadLinkScreenState, GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, ...)
 ; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
 ; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
@@ -1206,7 +1206,7 @@ Func_000_07D8:: ; address name
     ret
 
 ; rSCX = hScrollX, rSCY = hScrollY
-; 3 call sites from 3 routines (e.g. VBlankHandler, RunGameMode2State_CopyScrollToHardware_Case04, RunGameMode2State_CopyScrollToHardware)
+; 3 call sites from 3 routines (e.g. VBlankHandler, RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware, RunGameMode2State_CopyScrollToHardware)
 ; reads: hScrollX, hScrollY, hWindowX, hWindowY
 ; writes: rSCX, rSCY, rWX, rWY
 CopyScrollToHardware::
@@ -1771,7 +1771,7 @@ Jump_000_0B0C::
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_WaitFadeState, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest, RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_WaitFadeState, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_Case00, RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ReadWordTableEntry_Bank00::
 Func_000_0B0D:: ; address name
     add a, a
@@ -2087,7 +2087,7 @@ Jump_000_0C4E::
     ret
 
 ; C2 static reading (E-0016): takes the lock byte $FFD6 (spins while it is non-zero), calls Func_000_0C69, then clears the lock.
-; 34 call sites from 21 routines (e.g. SGBTransferCompressed, GameMode5_Init_SendSGBPaletteSetPacket_Case06, GameMode5_Init_SendSGBPaletteSetPacket_Case04, GameMode5_Init_SendSGBPaletteSetPacket_Case03, ...)
+; 34 call sites from 21 routines (e.g. SGBTransferCompressed, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket_Case06, GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket, ...)
 ; reads: hDecompressLock
 ; writes: hDecompressLock
 DecompressToRAMLocked::
@@ -6868,7 +6868,7 @@ Jump_000_256A::
     and a, $03
     rst $00
     dw ComputeSpriteScrollOffsets_WriteSVBK
-    dw ComputeSpriteScrollOffsets_WriteSVBK_Case01
+    dw ComputeSpriteScrollOffsets_WriteSVBK_WriteSVBK
     dw ComputeSpriteScrollOffsets_Case02
     dw ComputeSpriteScrollOffsets_Case03
 
@@ -6887,7 +6887,7 @@ Jump_000_2582:: ; address name
 ; entry 1 of the `rst $00` table in ComputeSpriteScrollOffsets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rSVBK
-ComputeSpriteScrollOffsets_WriteSVBK_Case01::
+ComputeSpriteScrollOffsets_WriteSVBK_WriteSVBK::
 Jump_000_2589:: ; address name
     jr ComputeSpriteScrollOffsets_WriteSVBK
 
@@ -8469,7 +8469,7 @@ Func_000_2E81:: ; address name
     ret
 
 ; HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest
-; 47 call sites from 30 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_SendSGBPaletteSetPacket_Case06, ...)
+; 47 call sites from 30 routines (e.g. GameMode0_Init, DebugSkillViewer_Update, PauseMenu_State4, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket_Case06, ...)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 FillTilesRequest::
 Func_000_2E98:: ; address name

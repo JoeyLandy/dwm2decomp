@@ -193,7 +193,7 @@ Jump_024_414C::
     dw GameMode6_Update_Return
     dw GameMode6_Update_Return
     dw GameMode6_Update_SwapMonstersMenu
-    dw GameMode6_Update_SwapMonstersMenu_Case0D
+    dw GameMode6_Update_SwapMonstersMenu_SwapMonstersMenu
     dw GameMode6_Update_Case0E
     dw GameMode6_Update_Case0F
 
@@ -574,7 +574,7 @@ Jump_024_4394:: ; address name
 ; writes: wScreenStep, wTwoChoiceCursor
 GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor::
 Jump_024_43C3:: ; address name
-    call GameMode6_Update_Case02_Case08_Sub01
+    call GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -1608,7 +1608,7 @@ Jump_024_4A5D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
-GameMode6_Update_SwapMonstersMenu_Case0D::
+GameMode6_Update_SwapMonstersMenu_SwapMonstersMenu::
 Jump_024_4A79:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -3911,7 +3911,7 @@ Data_024_5C29:: ; address name
 ; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
-GameMode6_Update_Case02_Case08_Sub01::
+GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01::
 Func_024_5C39:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -3979,7 +3979,7 @@ Jump_024_5CA1::
     ret
 
 ; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
 GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter::
@@ -3998,7 +3998,7 @@ Func_024_5CA7:: ; address name
     ld [wScreenCounter], a
 
 ; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01)
 ; reads: wTwoChoiceCursor
 GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor::
 Func_024_5CC1:: ; address name
@@ -4006,7 +4006,7 @@ Func_024_5CC1:: ; address name
     jr Jump_024_5CCB
 
 ; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
+; 2 call sites from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01)
 ; reads: wTwoChoiceCursor
 GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor_Sub03::
 Func_024_5CC5:: ; address name
@@ -4014,7 +4014,7 @@ Func_024_5CC5:: ; address name
     jr Jump_024_5CCB
 
 ; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01)
+; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter_Sub01)
 ; reads: wTwoChoiceCursor
 GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap::
 Func_024_5CC9:: ; address name
@@ -4376,7 +4376,7 @@ Jump_024_615B:: ; address name
     dw PriestMenu_Case02_Case06
     dw PriestMenu_Case02_QueueSoundEffect
     dw PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D
-    dw PriestMenu_Case02_Case09
+    dw PriestMenu_Case02_PriestMenu_BGMapAddressAtScroll_Bank24_6866
     dw PriestMenu_Case02_SubtractArg1AmountFromGold
     dw PriestMenu_Case02_QueueMusic
     dw PriestMenu_Case02_WriteScreenCounterAndScreenStep
@@ -4384,7 +4384,7 @@ Jump_024_615B:: ; address name
     dw PriestMenu_Case02_WriteScreenCounterAndScreenStep
     dw PriestMenu_Case02_FillTilesFromRequest
     dw PriestMenu_Case02_SRAMRecordAddress
-    dw PriestMenu_Case02_Case11
+    dw PriestMenu_Case02_PriestMenu_LoadSRAMRecordByte
 
 ; entry 0 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -4538,7 +4538,7 @@ Jump_024_6269:: ; address name
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 PriestMenu_Case02_Case03::
 Jump_024_628C:: ; address name
-    call PriestMenu_Case02_Case03_Sub01
+    call PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4889,7 +4889,7 @@ Jump_024_650A::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenSubStep
-PriestMenu_Case02_Case09::
+PriestMenu_Case02_PriestMenu_BGMapAddressAtScroll_Bank24_6866::
 Jump_024_6513:: ; address name
     call PriestMenu_BGMapAddressAtScroll_Bank24_6866
     ld a, [wScreenSubStep]
@@ -5304,7 +5304,7 @@ Data_024_67BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 17 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep
-PriestMenu_Case02_Case11::
+PriestMenu_Case02_PriestMenu_LoadSRAMRecordByte::
 Jump_024_67C0:: ; address name
     ld b, $80
     call PriestMenu_LoadSRAMRecordByte
@@ -5548,7 +5548,7 @@ Data_024_68EB:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
 ; only called from routines of PriestMenu (E-0098)
-; 6 call sites from 2 routines (e.g. PriestMenu_Case02_Case11, PriestMenu_Case02_UpdateListCursorListCursor)
+; 6 call sites from 2 routines (e.g. PriestMenu_Case02_PriestMenu_LoadSRAMRecordByte, PriestMenu_Case02_UpdateListCursorListCursor)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
@@ -5713,7 +5713,7 @@ Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wPartyCount, wChoiceCursor
 ; writes: wMenuInputResult, wChoiceCursor, wCursorBlinkAE
-PriestMenu_Case02_Case03_Sub01::
+PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01::
 Func_024_69D2:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5785,7 +5785,7 @@ Jump_024_6A40::
     ret
 
 ; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
 PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE::
@@ -5804,7 +5804,7 @@ Func_024_6A46:: ; address name
     ld [wCursorBlinkAE], a
 
 ; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01)
 ; reads: wChoiceCursor
 PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor::
 Func_024_6A60:: ; address name
@@ -5812,7 +5812,7 @@ Func_024_6A60:: ; address name
     jr Jump_024_6A6A
 
 ; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
+; 2 call sites from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01)
 ; reads: wChoiceCursor
 PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor_Sub03::
 Func_024_6A64:: ; address name
@@ -5820,7 +5820,7 @@ Func_024_6A64:: ; address name
     jr Jump_024_6A6A
 
 ; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE_Sub01)
 ; reads: wChoiceCursor
 PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap::
 Func_024_6A68:: ; address name
@@ -5915,7 +5915,7 @@ Jump_024_6AE0::
     ret
 
 ; only called from routines of PriestMenu (E-0098)
-; 3 call sites from 2 routines (e.g. PriestMenu_Case02_Case09, PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D)
+; 3 call sites from 2 routines (e.g. PriestMenu_Case02_PriestMenu_BGMapAddressAtScroll_Bank24_6866, PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
 PriestMenu_BGMapAddressAtScroll_Bank24_6866::

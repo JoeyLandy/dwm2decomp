@@ -340,20 +340,20 @@ Func_00D_45D1:: ; address name
     dw EggServiceMenu_ListRecordsInUseWithByte6ESet
     dw EggServiceMenu_Return
     dw EggServiceMenu_Case05
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
+    dw EggServiceMenu_Return_Return
     dw EggServiceMenu_SwapMonstersMenu
-    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Return
     dw EggServiceMenu_Case0F
 
 ; entry 6 of the `rst $00` table in EggServiceMenu
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Return_Case06::
+EggServiceMenu_Return_Return::
 Jump_00D_45F5:: ; address name
     ret
 
@@ -2415,7 +2415,7 @@ Jump_00D_5280:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RenameMenu_Case04::
 Jump_00D_52A7:: ; address name
-    call RenameMenu_Case04_Sub01
+    call RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01
     ret
 
 ; entry 5 of the `rst $00` table in RenameMenu
@@ -2634,7 +2634,7 @@ Jump_00D_53BB:: ; address name
 ; 1 call site from 1 routine (e.g. RenameMenu_Case04)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenState, wPartyCount, wGridCursorX
 ; writes: wTwoChoiceCursor, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, wScriptCommandType, wScriptStartRequest, wNameEntryState, ...
-RenameMenu_Case04_Sub01::
+RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01::
 Func_00D_5412:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -2731,7 +2731,7 @@ Jump_00D_54A6::
     ret
 
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01)
+; 3 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
 RenameMenu_Case04_Sub01_WriteGridCursorY::
@@ -2750,7 +2750,7 @@ Func_00D_54C1:: ; address name
     ld [wGridCursorY], a
 
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RenameMenu_Case04_Sub01)
+; 1 call site from 1 routine (e.g. RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01)
 ; reads: wGridCursorX
 RenameMenu_Case04_Sub01_ReadGridCursorX::
 Func_00D_54DB:: ; address name
@@ -2758,7 +2758,7 @@ Func_00D_54DB:: ; address name
     jr Jump_00D_54E5
 
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01)
+; 2 call sites from 1 routine (e.g. RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01)
 ; reads: wGridCursorX
 RenameMenu_Case04_Sub01_ReadGridCursorX_Sub03::
 Func_00D_54DF:: ; address name
@@ -2766,7 +2766,7 @@ Func_00D_54DF:: ; address name
     jr Jump_00D_54E5
 
 ; only called from RenameMenu_Case04_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RenameMenu_Case04_Sub01)
+; 1 call site from 1 routine (e.g. RenameMenu_Case04_Sub01_WriteGridCursorY_Sub01)
 ; reads: wGridCursorX
 RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D::
 Func_00D_54E3:: ; address name
@@ -5251,7 +5251,7 @@ Jump_00D_65D0:: ; address name
     dw MedalPrizeMenu_Case05_CopyRectTo20ByteRows_Bank0D_Case08
     dw MedalPrizeMenu_Case05_UpdateTwoChoiceCursor_Bank1D
     dw MedalPrizeMenu_Case05_EraseCEntriesOfWordTable_Bank0D
-    dw MedalPrizeMenu_Case05_Case0B
+    dw MedalPrizeMenu_Case05_MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D
     dw MedalPrizeMenu_Case05_SetArg5ToListEntriesCell4
     dw MedalPrizeMenu_Case05_SetArg5ToListEntriesCell4_Case0D
     dw MedalPrizeMenu_Case05_SetArg5ToListEntriesCell4_Case0E
@@ -5820,7 +5820,7 @@ Jump_00D_6999::
     ret
 
 ; only called from routines of MedalPrizeMenu (E-0098)
-; 2 call sites from 2 routines (e.g. MedalPrizeMenu_Case05_Case0B, MedalPrizeMenu_Case05_UpdateTwoChoiceCursor_Bank1D)
+; 2 call sites from 2 routines (e.g. MedalPrizeMenu_Case05_MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D, MedalPrizeMenu_Case05_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wListPageIndex, wArenaByte37
 MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D::
 Func_00D_69B3:: ; address name
@@ -5876,7 +5876,7 @@ Jump_00D_69E8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-MedalPrizeMenu_Case05_Case0B::
+MedalPrizeMenu_Case05_MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_6A0B:: ; address name
     call MedalPrizeMenu_CopyRectTo20ByteRows_Bank0D
     ld a, [wScreenStep]
@@ -6826,7 +6826,7 @@ Func_00D_711C:: ; address name
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
-    dw NpcBreedMenu_SwapMonstersMenu_Case0C
+    dw NpcBreedMenu_SwapMonstersMenu_SwapMonstersMenu
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
@@ -7434,7 +7434,7 @@ Jump_00D_7532::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
-NpcBreedMenu_SwapMonstersMenu_Case0C::
+NpcBreedMenu_SwapMonstersMenu_SwapMonstersMenu::
 Jump_00D_755C:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]

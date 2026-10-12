@@ -951,7 +951,7 @@ Func_0A1_4519:: ; address name
     dw RunGameMode2State_CopyScrollToHardware
     dw RunGameMode2State_WriteGameMode2State
     dw RunGameMode2State_UploadBGPalettes
-    dw RunGameMode2State_CopyScrollToHardware_Case04
+    dw RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware
     dw RunGameMode2State_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest
     dw RunGameMode2State_ToEnterGameMode1WithDefaultPalettes
 
@@ -960,7 +960,7 @@ Func_0A1_4519:: ; address name
 ; reads: wMapType, wIsCGB
 ; writes: hScrollX, hScrollY, wOBJPaletteUploadRequest, wBGPaletteUploadRequest
 ; points at: wDMGPaletteBGP, wOBJPaletteBuffer, wBGPaletteBuffer, wGameMode2State
-RunGameMode2State_CopyScrollToHardware_Case04::
+RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware::
 Jump_0A1_452D:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -1037,7 +1037,7 @@ Jump_0A1_45C0::
     ret
 
 ; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
+; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware)
 ; reads: hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, hTemp9, hTemp6
 ; writes: hTemp9, hTempA, hTemp8, hTemp6
 RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01::
@@ -1416,7 +1416,7 @@ Func_0A1_47C5:: ; address name
     ret
 
 ; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
+; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp7, hTempA, hTemp3, hTemp8, hTemp4, ...
 ; writes: hTemp9, hTempA, hTemp8, hTemp6
 RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX::
@@ -3698,7 +3698,7 @@ Jump_0A1_55A1::
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_ReadKeyWorldFloor
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_ReadKeyWorldFloor
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_ReadKeyWorldFloor
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_SetSpriteXYFromCellA
 
 ; entry 1 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
@@ -3741,7 +3741,7 @@ Jump_0A1_55D5:: ; address name
 ; entry 7 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoalScreen
-SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07::
+SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_SetSpriteXYFromCellA::
 Jump_0A1_55E9:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
@@ -3764,7 +3764,7 @@ Jump_0A1_5606::
     ret
 
 ; hSpriteOriginX = 8 * wC945 + (A >> 4) * 8 + 6 and hSpriteOriginY = 8 * wC946 + (A & $0F) * 8 + 6 (E-0124)
-; 4 call sites from 3 routines (e.g. SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_ReadKeyWorldFloor, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA)
+; 4 call sites from 3 routines (e.g. SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_SetSpriteXYFromCellA, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_ReadKeyWorldFloor, SetSpriteYFromCursorCellY_SetSpriteXYFromCellA)
 ; reads: wCursorCellX, wCursorCellY
 ; writes: hSpriteOriginX, hSpriteOriginY, hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 SetSpriteXYFromCellA::
@@ -4065,7 +4065,7 @@ Func_0A1_5764:: ; address name
     ret
 
 ; fills the $400 bytes of vBGMap0 with tile $57 (E-0122)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
+; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware)
 FillBGMap0With57::
 Func_0A1_578E:: ; address name
     ld hl, vBGMap0
@@ -4081,7 +4081,7 @@ Jump_0A1_5794::
     ret
 
 ; only called from RunGameMode2State_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_Case04)
+; 1 call site from 1 routine (e.g. RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware)
 ; reads: wIsCGB
 RunGameMode2State_Case04_WriteVRAMByteInc::
 Func_0A1_579F:: ; address name

@@ -71,9 +71,9 @@ Func_084_405C:: ; address name
     dw RunDebugAutomapCaseTemp0_Return
     dw RunDebugAutomapCaseTemp0_Case01
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_NextRandomSeed
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_NextRandomSeed
     dw RunDebugAutomapCaseTemp0_Case06
 
 ; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -158,7 +158,7 @@ Jump_084_40BB::
 ; entry 3 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
+RunDebugAutomapCaseTemp0_NextRandomSeed_NextRandomSeed::
 Jump_084_40C2:: ; address name
     ld hl, Data_084_41B8
     ld a, [wKeyWorldGoalKind]
@@ -266,7 +266,7 @@ Jump_084_4150::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05::
+RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_NextRandomSeed::
 Jump_084_4156:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -331,11 +331,11 @@ Jump_084_41A9::
 Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_NextRandomSeed
 Data_084_41B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_NextRandomSeed
 Data_084_41C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $06, $07, $08, $09, $05, $07, $09
 
@@ -346,7 +346,7 @@ Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
 ; only called from routines of RunDebugAutomapCaseTemp0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_Case05, RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0)
+; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_WriteTemp0)
 ; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
 ; writes: hTemp2, hTemp3, wKeyWorldByte46
 ; points at: wKeyWorldRoomTable
