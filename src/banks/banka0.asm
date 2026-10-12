@@ -2464,7 +2464,7 @@ Func_0A0_4F70:: ; address name
     ret
 
 ; unless wC52B is set (text busy), runs the routine for wBattlePhase (jump table of four) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkExchangeState_4544_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession7Exchange_Case01)
 ; reads: wTextFlags, wBattlePhase
 RunBattlePhaseWhenTextIdle_A0::
 Func_0A0_4F8E:: ; address name

@@ -609,7 +609,7 @@ Func_003_4389:: ; address name
     ret
 
 ; HL = the word at HL + 2 * A; falls through (E-0122)
-; 2 call sites from 2 routines (e.g. WithSRAMRun4E02_Sub01_Sub03, WithSRAMRun4E02_Sub01_Sub02)
+; 2 call sites from 2 routines (e.g. WithSRAMDrawMemberRecordByte0D_Sub01_Sub03, WithSRAMDrawMemberRecordByte0D_Sub01_Sub02)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DerefWordTableEntryA_Bank03::
@@ -619,7 +619,7 @@ Func_003_43C3:: ; address name
     deref_hl
 
 ; wStringCategory = 8, wStringIndex = 5, then falls into the window setup and display (E-0122)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case05_Case00, WithSRAMDraw4ACEAnd4BE8_Sub01, WithSRAMRun4E02_Sub01)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case05_Case00, WithSRAMDraw4ACEAnd4BE8_Sub01, WithSRAMDrawMemberRecordByte0D_Sub01)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SelectString5Category8ThenShow::
@@ -629,11 +629,11 @@ Func_003_43CC:: ; address name
     ld a, $05
     ld [wStringIndex], a
 
-; only called from WithSRAMRun4E02_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. WithSRAMRun4E02_Sub01)
+; only called from WithSRAMDrawMemberRecordByte0D_Sub01 (E-0047)
+; 3 call sites from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D_Sub01)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-WithSRAMRun4E02_Sub01_Sub01::
+WithSRAMDrawMemberRecordByte0D_Sub01_Sub01::
 Func_003_43D6:: ; address name
     ld de, $0501
 
@@ -675,7 +675,7 @@ Func_003_43D9:: ; address name
     ret
 
 ; copies 10 bytes from HL to wC130 and writes $F0 after them; HL advances; BC kept (E-0101)
-; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case05_Case00, WithSRAMDraw4ACEAnd4BE8_Sub01, WithSRAMRun4E02_Sub01_Sub03, WithSRAMRun4E02_Sub01_Sub02)
+; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case05_Case00, WithSRAMDraw4ACEAnd4BE8_Sub01, WithSRAMDrawMemberRecordByte0D_Sub01_Sub03, WithSRAMDrawMemberRecordByte0D_Sub01_Sub02)
 ; points at: wTextBuf0
 CopyTenBytesToTextBuf0::
 Func_003_4414:: ; address name
@@ -1530,7 +1530,7 @@ Jump_003_4861:: ; address name
     call LoadScreenBlocks00_09_0A
 
 Jump_003_486A::
-    call WithSRAMRun4E02
+    call WithSRAMDrawMemberRecordByte0D
     ld hl, vBGMap0 + $21
     ld bc, $1311
     ld de, wScreenTileBuffer + $21
@@ -1858,16 +1858,16 @@ Func_003_4AAC:: ; address name
     ld [rRAMG], a
     ret
 
-; with SRAM bank 0 enabled runs Func_003_4E02 (E-0122)
+; with SRAM bank 0 enabled, reads byte $0D of the selected member's record (wMenuSelectedMember) and draws species name and icon (ShowSpeciesNameAndIconForSlotB) from it and the following word unless it is $FFFF (E-0122, E-0259)
 ; 1 call site from 1 routine (e.g. PauseMenu_Main_Case03_Case01)
 ; writes: rRAMG, rRAMB
-WithSRAMRun4E02::
+WithSRAMDrawMemberRecordByte0D::
 Func_003_4ABD:: ; address name
     ld a, $0A
     ld [rRAMG], a
     xor a, a
     ld [rRAMB], a
-    call WithSRAMRun4E02_Sub01
+    call WithSRAMDrawMemberRecordByte0D_Sub01
     xor a, a
     ld [rRAMG], a
     ret
@@ -2356,12 +2356,12 @@ Jump_003_4DDD::
 Data_003_4DF2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $93, $10, $94, $A0, $94, $30, $95, $C0, $95, $50, $96, $E0, $96, $70, $97
 
-; only called from WithSRAMRun4E02 (E-0047)
-; 1 call site from 1 routine (e.g. WithSRAMRun4E02)
+; only called from WithSRAMDrawMemberRecordByte0D (E-0047)
+; 1 call site from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D)
 ; reads: wMenuSelectedMember, wMenuLastPageRows
 ; writes: wMenuLastPageRows, wScreenTileBuffer, wWindowTileBuffer
 ; points at: wTextBuf0
-WithSRAMRun4E02_Sub01::
+WithSRAMDrawMemberRecordByte0D_Sub01::
 Func_003_4E02:: ; address name
     ld c, $0D
     ld a, [wMenuSelectedMember]
@@ -2391,11 +2391,11 @@ Func_003_4E02:: ; address name
     call ShowSpeciesNameAndIconForSlotB
     ld a, [wMenuLastPageRows]
     ld b, a
-    call WithSRAMRun4E02_Sub01_Sub02
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub02
     ld a, [wMenuLastPageRows]
     xor a, $01
     ld b, a
-    call WithSRAMRun4E02_Sub01_Sub02
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub02
     ld a, l
     add a, $5A
     ld l, a
@@ -2404,11 +2404,11 @@ Func_003_4E02:: ; address name
     ld h, a
     ld a, [wMenuLastPageRows]
     ld b, a
-    call WithSRAMRun4E02_Sub01_Sub03
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub03
     ld a, [wMenuLastPageRows]
     xor a, $01
     ld b, a
-    call WithSRAMRun4E02_Sub01_Sub03
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub03
     ld a, [wMenuLastPageRows]
     add a, $CC
     ld [wScreenTileBuffer + $6E], a
@@ -2453,15 +2453,15 @@ Jump_003_4E6F::
     ld hl, vTiles2 + $580
     call SelectString5Category8ThenShow
     ld hl, vTiles2 + $670
-    call WithSRAMRun4E02_Sub01_Sub01
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub01
     ld hl, vTiles2 + $6C0
-    call WithSRAMRun4E02_Sub01_Sub01
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub01
     ld hl, vTiles2 + $7B0
-    call WithSRAMRun4E02_Sub01_Sub01
+    call WithSRAMDrawMemberRecordByte0D_Sub01_Sub01
     ret
 
 ; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from Data_003_4F5D[B], loads the species record, sets wD09D = family, wD09E = Data_003_4F61[B] and far-calls Func_016_7A48 (E-0121)
-; 2 call sites from 1 routine (e.g. WithSRAMRun4E02_Sub01)
+; 2 call sites from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D_Sub01)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wStringIndex, wSpeciesIdHi, wStringCategory, wWorkBuf
 ShowSpeciesNameAndIconForSlotB::
@@ -2495,9 +2495,9 @@ Func_003_4EB6:: ; address name
     pop hl
     ret
 
-; only called from WithSRAMRun4E02_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. WithSRAMRun4E02_Sub01)
-WithSRAMRun4E02_Sub01_Sub02::
+; only called from WithSRAMDrawMemberRecordByte0D_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D_Sub01)
+WithSRAMDrawMemberRecordByte0D_Sub01_Sub02::
 Func_003_4EFD:: ; address name
     call CopyTenBytesToTextBuf0
     inc hl
@@ -2510,10 +2510,10 @@ Func_003_4EFD:: ; address name
     pop hl
     ret
 
-; only called from WithSRAMRun4E02_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. WithSRAMRun4E02_Sub01)
+; only called from WithSRAMDrawMemberRecordByte0D_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. WithSRAMDrawMemberRecordByte0D_Sub01)
 ; reads: wDigits
-WithSRAMRun4E02_Sub01_Sub03::
+WithSRAMDrawMemberRecordByte0D_Sub01_Sub03::
 Func_003_4F0D:: ; address name
     call CopyTenBytesToTextBuf0
     push hl
@@ -2573,15 +2573,15 @@ Data_003_4F5D:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_4F61:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5D, $71
 
-; address loaded by WithSRAMRun4E02_Sub01_Sub02
+; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_Sub02
 Data_003_4F63:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $70, $96, $B0, $97
 
-; address loaded by WithSRAMRun4E02_Sub01_Sub03
+; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_Sub03
 Data_003_4F67:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $80, $95, $C0, $96
 
-; address loaded by WithSRAMRun4E02_Sub01_Sub03
+; address loaded by WithSRAMDrawMemberRecordByte0D_Sub01_Sub03
 Data_003_4F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $C2, $22, $C3
 

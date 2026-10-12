@@ -105,7 +105,7 @@ Jump_031_40C9::
     call IncrementPlayTime_Bank31
 
 ; runs BattlePhase0, BattlePhaseFight or BattlePhaseEnd for wBattlePhase (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkExchangeState_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession1Exchange_Case01)
 ; reads: wBattlePhase
 RunBattlePhase::
 Func_031_40CC:: ; address name
@@ -1325,7 +1325,7 @@ Jump_031_4793:: ; address name
     ld a, [wBattleSubStep]
     cp a, $03
     call z, BuildAndDrawBattleScreen
-    farcall RunBattleSubStep_6A4E
+    farcall RunBattleEndStep5SubSteps
     ld a, [wBattleScreenFlags]
     or a, a
     call nz, LoadBattleMonsterPictureAndTitle
@@ -5220,7 +5220,7 @@ Jump_031_5EF6:: ; address name
     ret
 
 ; up/down toggles bit 0 and left/right bit 1 of [HL] (sound $69); otherwise blinks the entry every 16 frames through bit 6 (E-0125)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case06, RunBattleSubStep_6E67_Case05)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case06, RunBattleEndStep4SubSteps_Case05)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
 ToggleEntryBitsByJoypadAndBlink::
@@ -5328,7 +5328,7 @@ Jump_031_5F9D::
     ret
 
 ; up/down/left/right move the battle command cursor entry wCFD5 within wCFD3, wCFD6, wCFD7, blinking it, with sound $69 (E-0131)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case02, RunBattleSetup_Case02_Case02, RunBattleSubStep_6E67_Case02)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case02, RunBattleSetup_Case02_Case02, RunBattleEndStep4SubSteps_Case02)
 ; reads: wJoypadPressedRepeat, wCommandCursor, wCommandPageCount, wCommandCursorMax, wFrameCounterLo, wListLastPageSize
 ; writes: wFrameCounterLo, wCommandCursor
 MoveBattleCommandCursor::
@@ -6052,11 +6052,11 @@ Data_031_63AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_63B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C1, $01, $01, $02
 
-; address loaded by RunBattleSubStep_6E67_Case02, RunBattleSubStep_6E67_Case03
+; address loaded by RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case03
 Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $00, $69, $00, $A9, $00, $E9, $00
 
-; address loaded by RunBattleSetup_Case00_Case0D, RunBattleSubStep_6E67_Case05
+; address loaded by RunBattleSetup_Case00_Case0D, RunBattleEndStep4SubSteps_Case05
 Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
@@ -7241,7 +7241,7 @@ Jump_031_69FA::
 ; no direct call (reached through a table, a jump or a vector)
 BattleEnd_Step4_Sub02_Case03_Case02::
 Jump_031_6A06:: ; address name
-    call RunBattleSubStep_6E67
+    call RunBattleEndStep4SubSteps
     ret
 
 ; entry 4 of the `rst $00` table in Func_031_67AA
@@ -7965,7 +7965,7 @@ Func_031_6D96:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
-; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_Case01, BattleEnd_Step4_Sub02_Case03_Case01, RunBattleSubStep_6E67_Case05, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_Case01, BattleEnd_Step4_Sub02_Case03_Case01, RunBattleEndStep4SubSteps_Case05, ...)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank31::
 Func_031_6DDD:: ; address name
@@ -8092,25 +8092,25 @@ Jump_031_6E62::
 ; runs the routine for wBattleSubStep (jump table of seven) (E-0122)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case02)
 ; reads: wBattleSubStep
-RunBattleSubStep_6E67::
+RunBattleEndStep4SubSteps::
 Func_031_6E67:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleSubStep_6E67_Case00
-    dw RunBattleSubStep_6E67_Case01
-    dw RunBattleSubStep_6E67_Case02
-    dw RunBattleSubStep_6E67_Case03
-    dw RunBattleSubStep_6E67_Case04
-    dw RunBattleSubStep_6E67_Case05
-    dw RunBattleSubStep_6E67_Case06
+    dw RunBattleEndStep4SubSteps_Case00
+    dw RunBattleEndStep4SubSteps_Case01
+    dw RunBattleEndStep4SubSteps_Case02
+    dw RunBattleEndStep4SubSteps_Case03
+    dw RunBattleEndStep4SubSteps_Case04
+    dw RunBattleEndStep4SubSteps_Case05
+    dw RunBattleEndStep4SubSteps_Case06
 
-; entry 0 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 0 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep, wCommandCursorMax, wCommandPageCount, wCommandCursor, wListLastPageSize, wMenuState
 ; points at: wBattleSubPhase, wScreenTileBuffer, wBattleSubStep
-RunBattleSubStep_6E67_Case00::
+RunBattleEndStep4SubSteps_Case00::
 Jump_031_6E79:: ; address name
-    call RunBattleSubStep_6E67_Case00_Sub01
+    call RunBattleEndStep4SubSteps_Case00_Sub01
     cp a, $09
     jr nc, Jump_031_6ECA
     ld hl, wBattleSubPhase
@@ -8178,19 +8178,19 @@ Jump_031_6EDB::
     ld [wMenuState], a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 1 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleArg0, wCommandPageCount
 ; writes: rRAMG, rRAMB, wScreenTileBuffer
 ; points at: wBattleSubStep
-RunBattleSubStep_6E67_Case01::
+RunBattleEndStep4SubSteps_Case01::
 Jump_031_6EF7:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
     call FillWC278WithC3_Bank31
     call DrawWC278RowsToBGMapRow7
-    call RunBattleSubStep_6E67_Shared01
+    call RunBattleEndStep4SubSteps_Shared01
     farcall CopyRectRecords77B6And79CBAndPlaySound6C
     ld a, $0A
     ld [rRAMG], a
@@ -8222,11 +8222,11 @@ Jump_031_6EF7:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 2 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCommandCursor, wMenuState, wJoypadPressedRepeat
 ; points at: wMenuState, wWorkBuf, wTextBuf2, wBattleSubStep, wCommandCursor
-RunBattleSubStep_6E67_Case02::
+RunBattleEndStep4SubSteps_Case02::
 Jump_031_6F57:: ; address name
     ld de, Data_031_63BD
     ld hl, wMenuState
@@ -8268,16 +8268,16 @@ Jump_031_6F9C::
     ret z
     ld hl, wCommandCursor
     res 7, [hl]
-    call RunBattleSubStep_6E67_Shared01
+    call RunBattleEndStep4SubSteps_Shared01
     call DrawWC39EThreeTilesAtBGMap206
     call DrawCommandCursorPageNumber
     ret
 
-; entry 3 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 3 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState
 ; points at: wBattleSubStep
-RunBattleSubStep_6E67_Case03::
+RunBattleEndStep4SubSteps_Case03::
 Jump_031_6FB1:: ; address name
     ld a, [wMenuState]
     and a, $0F
@@ -8303,12 +8303,12 @@ Jump_031_6FB1:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 4 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wWindowTileBuffer, wMenuSubState
 ; points at: wBattleSubStep
-RunBattleSubStep_6E67_Case04::
+RunBattleEndStep4SubSteps_Case04::
 Jump_031_6FE9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8326,12 +8326,12 @@ Jump_031_6FE9:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 5 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSubState, wCommandCursor, wMenuState
 ; writes: wBattleSubStep
 ; points at: wMenuSubState, wWorkBuf, wBattleSubStep
-RunBattleSubStep_6E67_Case05::
+RunBattleEndStep4SubSteps_Case05::
 Jump_031_700F:: ; address name
     ld de, Data_031_63C5
     ld hl, wMenuSubState
@@ -8371,11 +8371,11 @@ Jump_031_7054::
     ld [wBattleSubStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunBattleSubStep_6E67
+; entry 6 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleSubStep
-RunBattleSubStep_6E67_Case06::
+RunBattleEndStep4SubSteps_Case06::
 Jump_031_705A:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8384,10 +8384,10 @@ Jump_031_705A:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; only called from RunBattleSubStep_6E67_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSubStep_6E67_Case00)
+; only called from RunBattleEndStep4SubSteps_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleEndStep4SubSteps_Case00)
 ; points at: wWorkBuf
-RunBattleSubStep_6E67_Case00_Sub01::
+RunBattleEndStep4SubSteps_Case00_Sub01::
 Func_031_7064:: ; address name
     ld hl, wBattlerRecords + $4
     ld bc, $0038
@@ -8424,12 +8424,12 @@ Jump_031_708E::
     pop af
     ret
 
-; only called from routines of RunBattleSubStep_6E67 (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSubStep_6E67_Case02, RunBattleSubStep_6E67_Case01)
+; only called from routines of RunBattleEndStep4SubSteps (E-0098)
+; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case01)
 ; reads: wCommandCursor
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wStringIndex, wStringCategory
 ; points at: wWorkBuf
-RunBattleSubStep_6E67_Shared01::
+RunBattleEndStep4SubSteps_Shared01::
 Func_031_7096:: ; address name
     ld hl, $0901
     ld a, l
@@ -8485,12 +8485,12 @@ Jump_031_70D2::
     ld [wTextWindowTileHi], a
     ret
 
-; address loaded by RunBattleSubStep_6E67_Shared01
+; address loaded by RunBattleEndStep4SubSteps_Shared01
 Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; shows the name (category 9) of skill wD09D[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wC39E (E-0128)
-; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleSubStep_6E67_Case01)
+; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleEndStep4SubSteps_Case01)
 ; reads: wCommandCursor, wMenuState, wRecordBuffer, wBattleArg0, wRecordBufferData
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wRecordBuffer, rRAMG, ...
 ; points at: wWorkBuf
@@ -8570,7 +8570,7 @@ Jump_031_717E::
     ret
 
 ; runs Func_031_7105, then writes the three bytes at wC39E to vBGMap0 + $206 (E-0122)
-; 2 call sites from 1 routine (e.g. RunBattleSubStep_6E67_Case02)
+; 2 call sites from 1 routine (e.g. RunBattleEndStep4SubSteps_Case02)
 DrawWC39EThreeTilesAtBGMap206::
 Func_031_719E:: ; address name
     call ShowSelectedSkillNameAndCost
@@ -8587,7 +8587,7 @@ Func_031_719E:: ; address name
     ret
 
 ; writes tile $E1 + (wCFD5 & $0F) at vBGMap0 + $10F (E-0115)
-; 2 call sites from 2 routines (e.g. RunBattleSubStep_6E67_Case02, RunBattleSubStep_6E67_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case01)
 ; reads: wCommandCursor
 DrawCommandCursorPageNumber::
 Func_031_71B6:: ; address name
@@ -10415,12 +10415,12 @@ Jump_031_7C1C::
     pop hl
     ret
 
-; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_Case04, RunBattleSubStep_6A4E_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_031_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $0C7DFB, $97

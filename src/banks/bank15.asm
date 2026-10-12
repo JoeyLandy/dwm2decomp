@@ -5376,7 +5376,7 @@ Func_015_6403:: ; address name
     ret
 
 ; outside link battles only sets wD782 = 2; otherwise copies the row Data_015_727D when wD782 is set, sets wD782 = 2 and draws the box at scroll + $1CC (E-0124)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2C, KeyAppraisalMenu_Case03_Case0B, RunLinkExchangeState_457B_Case01_Sub01_Table4_Case03)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2C, KeyAppraisalMenu_Case03_Case0B, RunLinkSession8Exchange_Case01_Sub01_Table4_Case03)
 ; reads: wLinkMode, wScreenSubStep
 ; writes: wScreenSubStep
 DrawBottomBoxForLinkAndSetScreenSubStep::
@@ -5410,7 +5410,7 @@ Jump_015_644D::
     ret
 
 ; copies the 20 x 11 rectangle Data_015_70C5 into wC364, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119)
-; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, KeyAppraisalMenu_Case03_Case09, RunLinkExchangeState_457B_Case01_Sub01_Table4_Case01)
+; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, KeyAppraisalMenu_Case03_Case09, RunLinkSession8Exchange_Case01_Sub01_Table4_Case01)
 CopyRect70C5ToWC364AndDraw::
 Func_015_645F:: ; address name
     ld de, TileRect_15_70C5
@@ -6232,7 +6232,7 @@ Func_015_6866:: ; address name
     ret
 
 ; record wD7F1 (bank 0): writes tile $CC + (field $0E & 1) at the address in wD7F2/3 and, three tiles on, field $56 as two digits with leading blanks (E-0121)
-; 5 call sites from 5 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_Case04_Case04, NpcBreedMenu_Case04_Case04, RunLinkExchangeState_44D6_Case01_Sub01_Case04_Case04, ...)
+; 5 call sites from 5 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_Case04_Case04, NpcBreedMenu_Case04_Case04, RunLinkSession5Exchange_Case01_Sub01_Case04_Case04, ...)
 ; reads: wArg1, wArg2, wArg3, hTemp0, wDigits
 ; writes: rRAMG2, rRAMB
 DrawRecordField0EMarkAndField56Digits::
@@ -6304,7 +6304,7 @@ Jump_015_68F2::
     ret
 
 ; TestBitInFieldAtArg3, then ORs its mask into the byte, setting bit wD7F1/wD7F2 of the field at wD7F3/wD7F4 (E-0114)
-; 5 call sites from 5 routines (e.g. BreedMenu_Case04_Case36, RunLinkScreenState_6C12_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case17, StoreReceivedRecordIntoSRAM, ...)
+; 5 call sites from 5 routines (e.g. BreedMenu_Case04_Case36, RunLinkSession4ScreenState_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case17, StoreReceivedRecordIntoSRAM, ...)
 SetBitInFieldAtArg3::
 Func_015_68F3:: ; address name
     call TestBitInFieldAtArg3
@@ -6660,7 +6660,7 @@ Func_015_6ACA:: ; address name
     ret
 
 ; clears the text tiles and, when the save is valid, shows the save details (player name, play time, party) from SRAM in the window (E-0131)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2B, KeyAppraisalMenu_Case03_Case0A, RunLinkExchangeState_457B_Case01_Sub01_Table4_Case02)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2B, KeyAppraisalMenu_Case03_Case0A, RunLinkSession8Exchange_Case01_Sub01_Table4_Case02)
 ; reads: hTemp0, wDigits
 ; writes: wStringCategory, wStringIndex, wScreenSubStep, rRAMG2, rRAMB, wNameGlyphBuf, wArg3, wArg4, ...
 ; points at: wTextWindowTileLo, sSavedPlayerName, wNameGlyphBuf, wDigits, sSaveData, sSavedMapType, sSavedKeyIndex, sSavedKeyList, ...

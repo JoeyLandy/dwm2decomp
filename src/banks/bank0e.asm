@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case04_Case16, RunLinkExchangeState_44D6_Case01_Sub01_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_Case16, RunScreenStateWhenNotFading_F1_Case0E_Case08, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08, RunScreenStateWhenNotFading_F1_Case04_Case16, RunScreenStateWhenNotFading_F1_Case0E_Case08, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -988,7 +988,7 @@ Data_00E_5662:: ; address name
     db $F0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
-; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunLinkScreenState_6C12_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case14, BreedMenu_Case04_Case1C, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunLinkSession4ScreenState_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case14, BreedMenu_Case04_Case1C, ...)
 ; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB

@@ -714,7 +714,7 @@ Func_004_4470:: ; address name
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case02, ArenaMenu_Case1A_Sub01, ArenaMenu_Shared03, ...)
+; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunGameMode5Case01SubStates_Case02_Case00_Case02, ArenaMenu_Case1A_Sub01, ArenaMenu_Shared03, ...)
 ; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ClearBit1OfPlayerAndObjectFlags::

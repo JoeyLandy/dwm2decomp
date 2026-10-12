@@ -378,7 +378,7 @@ Jump_0A1_41C2::
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleCommandEntry_BankA1_Case02::
 Jump_0A1_41C3:: ; address name
-    farcall RunBattleResolveStep_43C4
+    farcall RunCommandEntryResolveStep
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleCommandEntry_BankA1
@@ -1244,7 +1244,7 @@ Func_0A1_46DF:: ; address name
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call RunMapType_A1_4744
+    call RunGameMode2MapTypeState
     ld a, [wKeyWorldWidth]
     ldh [hTemp3], a
     ld a, [wKeyWorldHeight]
@@ -1303,32 +1303,32 @@ Jump_0A1_4733::
 ; runs the routine for wCC44 & 7 (jump table) (E-0122)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub01_Sub02)
 ; reads: wMapType
-RunMapType_A1_4744::
+RunGameMode2MapTypeState::
 Func_0A1_4744:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw RunMapType_A1_4744_Case00
-    dw RunMapType_A1_4744_Case01
-    dw RunMapType_A1_4744_Case01
-    dw RunMapType_A1_4744_Case03
-    dw RunMapType_A1_4744_Case03
-    dw RunMapType_A1_4744_Case03
-    dw RunMapType_A1_4744_Case03
-    dw RunMapType_A1_4744_Case07
+    dw RunGameMode2MapTypeState_Case00
+    dw RunGameMode2MapTypeState_Case01
+    dw RunGameMode2MapTypeState_Case01
+    dw RunGameMode2MapTypeState_Case03
+    dw RunGameMode2MapTypeState_Case03
+    dw RunGameMode2MapTypeState_Case03
+    dw RunGameMode2MapTypeState_Case03
+    dw RunGameMode2MapTypeState_Case07
 
-; entry 0 of the `rst $00` table in RunMapType_A1_4744
+; entry 0 of the `rst $00` table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
-RunMapType_A1_4744_Case00::
+RunGameMode2MapTypeState_Case00::
 Jump_0A1_475A:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in RunMapType_A1_4744
+; entry 1 of the `rst $00` table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wKeyWorldAreaExits
-RunMapType_A1_4744_Case01::
+RunGameMode2MapTypeState_Case01::
 Jump_0A1_475B:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -1345,12 +1345,12 @@ Jump_0A1_4772::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 3 of the `rst $00` table in RunMapType_A1_4744
+; entry 3 of the `rst $00` table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; points at: wKeyWorldFloorInfo
-RunMapType_A1_4744_Case03::
+RunGameMode2MapTypeState_Case03::
 Jump_0A1_4775:: ; address name
     ld a, [wKeyWorldFloor]
     and a, $07
@@ -1361,11 +1361,11 @@ Jump_0A1_4775:: ; address name
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-; entry 7 of the `rst $00` table in RunMapType_A1_4744
+; entry 7 of the `rst $00` table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, wKeyWorldGoalCell, wKeyWorldGoal, wKeyWorldGoalScreen, wKeyWorldGoalPos, wKeyWorldGoalPos2
 ; writes: hPlayerX, hPlayerY
-RunMapType_A1_4744_Case07::
+RunGameMode2MapTypeState_Case07::
 Jump_0A1_4787:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
@@ -1399,7 +1399,7 @@ Jump_0A1_47B4::
     ret
 
 ; hMapScreenX = A >> 4, hMapScreenY = A & $0F, hPlayerX = hPlayerY = $40 (E-0118)
-; 2 call sites from 1 routine (e.g. RunMapType_A1_4744_Case07)
+; 2 call sites from 1 routine (e.g. RunGameMode2MapTypeState_Case07)
 ; writes: hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 SetMapScreenFromAAndCenterPlayer::
 Func_0A1_47C5:: ; address name

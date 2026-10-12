@@ -143,7 +143,7 @@ Jump_024_40EA::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 6
-; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, RunLinkExchangeState_457B_Case01_Sub01_Case0A_Case21)
+; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, RunLinkSession8Exchange_Case01_Sub01_Case0A_Case21)
 ; reads: wFadeState, wTextFlags, wScreenState, wScreenStep, wScreenSubStep
 GameMode6_Update::
 Func_024_4117:: ; address name

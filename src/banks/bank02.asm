@@ -8155,7 +8155,7 @@ Jump_002_732A::
     ret
 
 ; with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
-; 9 call sites from 9 routines (e.g. GameMode5_Update_Case02, RunLinkScreenState_6C12_Case08_Case04_Sub01, RunScreenStateWhenNotFading_1B_Case01_Case22, GameMode6_Init, ...)
+; 9 call sites from 9 routines (e.g. GameMode5_Update_Case02, RunLinkSession4ScreenState_Case08_Case04_Sub01, RunScreenStateWhenNotFading_1B_Case01_Case22, GameMode6_Init, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps::
@@ -8713,7 +8713,7 @@ Data_002_75F7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00
 
 ; SRAM bank 1: C = $FF when sBB00 is not $55 or the checksum of the four saved blocks plus $9753 differs from sBF98; otherwise loads them and returns with C unchanged (E-0127)
-; 1 call site from 1 routine (e.g. RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0C)
+; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C)
 ; reads: sSaveSignature, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
@@ -8797,7 +8797,7 @@ Func_002_7674:: ; address name
     ret
 
 ; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
+; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot

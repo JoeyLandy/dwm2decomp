@@ -1550,7 +1550,7 @@
   },
   "C582": {
     "name": "wLinkExchangeState",
-    "note": "state of the per-frame link exchange (RunLinkExchangeState dispatches on it)",
+    "note": "state of the per-frame link exchange (RunLinkSession1Exchange dispatches on it)",
     "evidence": "E-0133"
   },
   "C583": {
@@ -1658,7 +1658,7 @@
   },
   "C597": {
     "name": "wLinkRecvBuffer",
-    "note": "start of the link receive area (RunLinkScreenState_6C12 points the transfer buffer here)",
+    "note": "start of the link receive area (RunLinkSession4ScreenState points the transfer buffer here)",
     "evidence": "E-0133"
   },
   "C598": {
@@ -3054,7 +3054,7 @@
   },
   "CEC1": {
     "name": "wRollState",
-    "note": "state byte of the bank-$F0 roll (RollCounterChanceAndRun72C8)",
+    "note": "state byte of the bank-$F0 roll (RollCounterChanceAndRunEvent)",
     "evidence": "E-0135"
   },
   "CEC2": {
@@ -3470,7 +3470,7 @@
   },
   "D05A": {
     "name": "wLinkSeedCopy",
-    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case0D)",
+    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D)",
     "evidence": "E-0136",
     "size": "B"
   },
@@ -3618,7 +3618,7 @@
   },
   "D0E7": {
     "name": "wLinkMenuCounter",
-    "note": "counter of the RunLinkScreenSubStateSubState_5B14 screen",
+    "note": "counter of the RunGameMode5Case00SubStates screen",
     "evidence": "E-0136"
   },
   "D0E8": {
@@ -4791,7 +4791,7 @@
   },
   "DAE0": {
     "name": "wResolveBytesE0",
-    "note": "bytes cleared by RunBattleResolveStep_43C4_Case01",
+    "note": "bytes cleared by RunCommandEntryResolveStep_Case01",
     "evidence": "E-0137"
   },
   "DAE8": {

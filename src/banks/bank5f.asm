@@ -847,7 +847,7 @@ Jump_05F_6BC2::
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
-; 66 call sites from 54 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case0B, RunScriptSubStep_7363_Case08, ...)
+; 66 call sites from 54 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case0B, RunSceneScriptSubStep_Case08, ...)
 ; reads: wStepPtrLo, wStepPtrHi, wScriptParam0
 AddStepDeltaToPointedByte::
 Func_05F_6BCD:: ; address name
@@ -2125,33 +2125,33 @@ Jump_05F_7345:: ; address name
 ; runs the routine for wC92D (jump table of eighteen) (E-0124)
 ; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case0C, SceneShield2_Case12, SceneMermaidKingdom_Case2D, SceneRivalDefeated_Case1F)
 ; reads: wScriptSubStep
-RunScriptSubStep_7363::
+RunSceneScriptSubStep::
 Func_05F_7363:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw RunScriptSubStep_7363_Case00
-    dw RunScriptSubStep_7363_Case01
-    dw RunScriptSubStep_7363_Case02
-    dw RunScriptSubStep_7363_Case03
-    dw RunScriptSubStep_7363_Case04
-    dw RunScriptSubStep_7363_Case05
-    dw RunScriptSubStep_7363_Case06
-    dw RunScriptSubStep_7363_Case07
-    dw RunScriptSubStep_7363_Case08
-    dw RunScriptSubStep_7363_Case09
-    dw RunScriptSubStep_7363_Case0A
-    dw RunScriptSubStep_7363_Case0B
-    dw RunScriptSubStep_7363_Case0C
-    dw RunScriptSubStep_7363_Case0D
-    dw RunScriptSubStep_7363_Case0E
-    dw RunScriptSubStep_7363_Case0F
-    dw RunScriptSubStep_7363_Case09
-    dw RunScriptSubStep_7363_Case11
+    dw RunSceneScriptSubStep_Case00
+    dw RunSceneScriptSubStep_Case01
+    dw RunSceneScriptSubStep_Case02
+    dw RunSceneScriptSubStep_Case03
+    dw RunSceneScriptSubStep_Case04
+    dw RunSceneScriptSubStep_Case05
+    dw RunSceneScriptSubStep_Case06
+    dw RunSceneScriptSubStep_Case07
+    dw RunSceneScriptSubStep_Case08
+    dw RunSceneScriptSubStep_Case09
+    dw RunSceneScriptSubStep_Case0A
+    dw RunSceneScriptSubStep_Case0B
+    dw RunSceneScriptSubStep_Case0C
+    dw RunSceneScriptSubStep_Case0D
+    dw RunSceneScriptSubStep_Case0E
+    dw RunSceneScriptSubStep_Case0F
+    dw RunSceneScriptSubStep_Case09
+    dw RunSceneScriptSubStep_Case11
 
-; entry 17 of the `rst $00` table in RunScriptSubStep_7363
+; entry 17 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-RunScriptSubStep_7363_Case11::
+RunSceneScriptSubStep_Case11::
 Jump_05F_738B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2191,12 +2191,12 @@ Func_05F_73A8:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in RunScriptSubStep_7363
+; entry 15 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wSpriteSlots, wScriptTemp4
 ; writes: wStepPtrLo, wStepPtrHi, wSpriteSlots, wScriptParam0, hTemp0, wPartyCount
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0F::
+RunSceneScriptSubStep_Case0F::
 Jump_05F_73B2:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2259,11 +2259,11 @@ Jump_05F_7402::
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in RunScriptSubStep_7363
+; entry 14 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0E::
+RunSceneScriptSubStep_Case0E::
 Jump_05F_742F:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2274,12 +2274,12 @@ Jump_05F_742F:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in RunScriptSubStep_7363
+; entry 13 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0D::
+RunSceneScriptSubStep_Case0D::
 Jump_05F_743D:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2302,12 +2302,12 @@ Jump_05F_743D:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in RunScriptSubStep_7363
+; entry 12 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wScriptParam0
 ; writes: hTemp0, wScriptParam1, wScriptParam0, wObject5
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0C::
+RunSceneScriptSubStep_Case0C::
 Jump_05F_746F:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2355,12 +2355,12 @@ Jump_05F_74AA::
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in RunScriptSubStep_7363
+; entry 11 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0, wScriptParam1
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0B::
+RunSceneScriptSubStep_Case0B::
 Jump_05F_74CD:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2391,17 +2391,17 @@ Jump_05F_74F6::
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in RunScriptSubStep_7363
+; entry 10 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wScriptParam0
 ; writes: wObject5, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case0A::
+RunSceneScriptSubStep_Case0A::
 Jump_05F_750C:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
     and a, $03
-    jr z, RunScriptSubStep_7363_Case0A
+    jr z, RunSceneScriptSubStep_Case0A
     dec a
     dec a
     add a, $40
@@ -2421,11 +2421,11 @@ Jump_05F_750C:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunScriptSubStep_7363
+; entry 9 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptSubStep
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case09::
+RunSceneScriptSubStep_Case09::
 Jump_05F_753A:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2441,12 +2441,12 @@ Jump_05F_753A:: ; address name
     ld [wScriptSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in RunScriptSubStep_7363
+; entry 8 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case08::
+RunSceneScriptSubStep_Case08::
 Jump_05F_7554:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2476,12 +2476,12 @@ Jump_05F_7554:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunScriptSubStep_7363
+; entry 7 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wSpriteSlots
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0, wSpriteSlots
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case07::
+RunSceneScriptSubStep_Case07::
 Jump_05F_7593:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2512,11 +2512,11 @@ Jump_05F_75C3::
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunScriptSubStep_7363
+; entry 6 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case06::
+RunSceneScriptSubStep_Case06::
 Jump_05F_75D2:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2531,12 +2531,12 @@ Jump_05F_75D2:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunScriptSubStep_7363
+; entry 5 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case05::
+RunSceneScriptSubStep_Case05::
 Jump_05F_75EC:: ; address name
     ld de, wObject5 + $5
     ld a, e
@@ -2560,12 +2560,12 @@ Jump_05F_75EC:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunScriptSubStep_7363
+; entry 4 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: wObject5, wScriptTemp4, wPartyCount
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case04::
+RunSceneScriptSubStep_Case04::
 Jump_05F_7617:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2580,12 +2580,12 @@ Jump_05F_7617:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunScriptSubStep_7363
+; entry 3 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case03::
+RunSceneScriptSubStep_Case03::
 Jump_05F_7631:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2612,12 +2612,12 @@ Jump_05F_7646::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunScriptSubStep_7363
+; entry 2 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wBGPaletteUploadRequest, wScriptParam0
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wScriptSubStep
-RunScriptSubStep_7363_Case02::
+RunSceneScriptSubStep_Case02::
 Jump_05F_766C:: ; address name
     ld a, [wScriptParam0]
     srl a
@@ -2681,12 +2681,12 @@ Jump_05F_76BE::
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunScriptSubStep_7363
+; entry 1 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: hPlayerFacing, wSpriteSlots
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptSubStep
-RunScriptSubStep_7363_Case01::
+RunSceneScriptSubStep_Case01::
 Jump_05F_76D6:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2710,11 +2710,11 @@ Jump_05F_76F6::
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in RunScriptSubStep_7363
+; entry 0 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0, wScriptMsgSelect, wObject5
 ; points at: wScriptSubStep
-RunScriptSubStep_7363_Case00::
+RunSceneScriptSubStep_Case00::
 Jump_05F_7700:: ; address name
     ld a, $01
     ldh [hTemp0], a
@@ -2765,7 +2765,7 @@ Jump_05F_774C::
     ret
 
 ; starts the message whose index and group are at Data_05F_7787 + 2 * A + 16 * wC92E (wMessageState = 0) (E-0124)
-; 7 call sites from 7 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case08, RunScriptSubStep_7363_Case05, ...)
+; 7 call sites from 7 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case08, RunSceneScriptSubStep_Case05, ...)
 ; reads: wScriptMsgSelect
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageFromTable7787::
@@ -2807,7 +2807,7 @@ Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $34, $05, $35, $05, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; wC928 = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
-; 5 call sites from 5 routines (e.g. RunScriptSubStep_7363_Case0E, RunScriptSubStep_7363_Case09, RunScriptSubStep_7363_Case06, RunScriptSubStep_7363_Case04, ...)
+; 5 call sites from 5 routines (e.g. RunSceneScriptSubStep_Case0E, RunSceneScriptSubStep_Case09, RunSceneScriptSubStep_Case06, RunSceneScriptSubStep_Case04, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
 RunMessageBoxCarryWhenIdle_Bank5F::

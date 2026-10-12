@@ -7129,7 +7129,7 @@ Jump_012_6ABC::
     ret
 
 ; decompresses Data_07E_5595 to vTiles0 + $300 (or + $700 when hFFC6 is set), wC949 = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
-; 2 call sites from 2 routines (e.g. RunScriptSubStep_7363_Case00, SceneWarubouFood2_Case0F)
+; 2 call sites from 2 routines (e.g. RunSceneScriptSubStep_Case00, SceneWarubouFood2_Case0F)
 ; reads: hTemp0, wIsCGB
 ; writes: wSpriteFloatY, wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
@@ -7181,7 +7181,7 @@ Jump_012_6B15::
     ret
 
 ; wC949 -= 2, and when the result is $C0 or more it becomes $30 (E-0117)
-; 11 call sites from 11 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case0C, RunScriptSubStep_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case0C, RunSceneScriptSubStep_Case0B, ...)
 ; reads: wSpriteFloatY
 ; writes: wSpriteFloatY
 CycleSpriteFloatYDown::
@@ -7197,7 +7197,7 @@ Func_012_6B22:: ; address name
     ret
 
 ; draws metasprite set $1B with a frame from Data_012_6B7A chosen by the frame counter / 30, at ($48, wC949 + $10) (E-0125)
-; 11 call sites from 11 routines (e.g. RunScriptSubStep_7363_Case0F, RunScriptSubStep_7363_Case0D, RunScriptSubStep_7363_Case0C, RunScriptSubStep_7363_Case0B, ...)
+; 11 call sites from 11 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case0C, RunSceneScriptSubStep_Case0B, ...)
 ; reads: hTemp0, wFrameCounterLo, wFrameCounterHi, wSpriteFloatY
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSubIndex, hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY
 DrawAnimatedMetaSprite1B::

@@ -262,7 +262,7 @@ Jump_0F1_4183::
 
 Jump_0F1_4187::
     ld [wArg1], a
-    farcall RollCounterChanceAndRun72C8
+    farcall RollCounterChanceAndRunEvent
     ld a, $FF
     ld [wCounterPtr0Lo], a
     ld a, $69
@@ -1584,7 +1584,7 @@ Jump_0F1_4AC5::
     ret
 
 ; unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)
-; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, EggServiceMenu_Bank1B_Case0D, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case0D)
+; 3 call sites from 3 routines (e.g. RunLinkSession2Exchange_Case01, EggServiceMenu_Bank1B_Case0D, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0D)
 ; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_F1::
 Func_0F1_4AD0:: ; address name
@@ -3627,7 +3627,7 @@ Jump_0F1_56DC:: ; address name
     ret
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart_BankF1::
@@ -3791,7 +3791,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, EggServiceMenu_Bank1B_Case05_Case07, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, EggServiceMenu_Bank1B_Case05_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::

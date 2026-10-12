@@ -1,12 +1,12 @@
 SECTION "Bank 1B", ROMX[$4000], BANK[$1B]
     db $1B
 
-; only called from ComputeSpriteScrollOffsets (E-0047)
+; unless wLinkStatus bit 7 is set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial transfer; 1-8: RunLinkSessionNExchange when wLinkMode is set and wLinkRole bit 0 is set); called from ComputeSpriteScrollOffsets (E-0259)
 ; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets)
 ; reads: wLinkStatus, wLinkSession, wScreenStep, rSB, wLinkScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, ...
 ; writes: wLinkStatus, wGlyphListPos, wScreenCounter, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
 ; points at: wGameMode
-ComputeSpriteScrollOffsets_Sub01::
+RunLinkSession::
 Func_01B_4001:: ; address name
     ld a, [wLinkStatus]
     bit 7, a
@@ -18,25 +18,25 @@ Func_01B_4001:: ; address name
 Jump_01B_400E::
     ld a, [wLinkSession]
     and a, a
-    jr z, ComputeSpriteScrollOffsets_Sub01_Case00
+    jr z, RunLinkSession_Case00
     ld a, [wLinkSession]
     rst $00
-    dw ComputeSpriteScrollOffsets_Sub01_Case00
-    dw ComputeSpriteScrollOffsets_Sub01_Case01
-    dw ComputeSpriteScrollOffsets_Sub01_Case02
-    dw ComputeSpriteScrollOffsets_Sub01_Case03
-    dw ComputeSpriteScrollOffsets_Sub01_Case04
-    dw ComputeSpriteScrollOffsets_Sub01_Case05
-    dw ComputeSpriteScrollOffsets_Sub01_Case06
-    dw ComputeSpriteScrollOffsets_Sub01_Case07
-    dw ComputeSpriteScrollOffsets_Sub01_Case08
+    dw RunLinkSession_Case00
+    dw RunLinkSession_Case01
+    dw RunLinkSession_Case02
+    dw RunLinkSession_Case03
+    dw RunLinkSession_Case04
+    dw RunLinkSession_Case05
+    dw RunLinkSession_Case06
+    dw RunLinkSession_Case07
+    dw RunLinkSession_Case08
 
-; entry 0 of the `rst $00` table in Func_01B_4001
+; entry 0 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, rSB, wLinkScreenSubState, wLinkTimerLo, wMenuState, wGridCursorX, wLinkRole, wMapType, ...
 ; writes: wGlyphListPos, wScreenCounter, wLinkStatus, wScreenState, wSubMenuCursor2, wGridCursorY, wLinkRole, wJoypadReadFlag, ...
 ; points at: wGameMode
-ComputeSpriteScrollOffsets_Sub01_Case00::
+RunLinkSession_Case00::
 Jump_01B_402A:: ; address name
     ld a, $FF
     ld [wGlyphListPos], a
@@ -441,7 +441,7 @@ Jump_01B_4357::
     ret
 
 ; zeroes the first two bytes of each of six $20-byte sound channel slots from wSoundChannelSlots (E-0118)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case00)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case00)
 ; writes: wSoundChannelSlots, wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
 ClearSoundChannelSlots::
 Func_01B_4362:: ; address name
@@ -461,7 +461,7 @@ Func_01B_4362:: ; address name
     ret
 
 ; busy-waits $80 iterations (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case00)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case00)
 ShortDelayLoop::
 Func_01B_4388:: ; address name
     push bc
@@ -477,7 +477,7 @@ Jump_01B_438C::
     ret
 
 ; A = 0 when the link state allows continuing (wD06B = 1 in mode 5 state 1 with wD06A and wD06C clear), else $FF; wD783 = A on entry (E-0125)
-; 6 call sites from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case00)
+; 6 call sites from 1 routine (e.g. RunLinkSession_Case00)
 ; reads: wLinkTimerLo, wLinkScreenSubState, wGameMode, wModeState, wLinkScreenState, wLinkScreenFlag
 ; writes: wScreenCounter
 LinkCheckScreenCounterState::
@@ -540,10 +540,10 @@ Jump_01B_43DC::
 Data_01B_43E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3
 
-; entry 1 of the `rst $00` table in Func_01B_4001
+; entry 1 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case01::
+RunLinkSession_Case01::
 Jump_01B_43E9:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -551,32 +551,32 @@ Jump_01B_43E9:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_43F9
-    call RunLinkExchangeState
+    call RunLinkSession1Exchange
 
 Jump_01B_43F9::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case01)
 ; reads: wLinkExchangeState
-RunLinkExchangeState::
+RunLinkSession1Exchange::
 Func_01B_43FA:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_Case00
-    dw RunLinkExchangeState_Case01
+    dw RunLinkSession1Exchange_Case00
+    dw RunLinkSession1Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState
+; entry 0 of the `rst $00` table in RunLinkSession1Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_Case00::
+RunLinkSession1Exchange_Case00::
 Jump_01B_4402:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState
+; entry 1 of the `rst $00` table in RunLinkSession1Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_Case01::
+RunLinkSession1Exchange_Case01::
 Jump_01B_4406:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -589,10 +589,10 @@ Jump_01B_4406:: ; address name
     res 1, [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_01B_4001
+; entry 2 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case02::
+RunLinkSession_Case02::
 Jump_01B_4420:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -600,32 +600,32 @@ Jump_01B_4420:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_4430
-    call RunLinkExchangeState_4431
+    call RunLinkSession2Exchange
 
 Jump_01B_4430::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case02)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case02)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_4431::
+RunLinkSession2Exchange::
 Func_01B_4431:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_4431_Case00
-    dw RunLinkExchangeState_4431_Case01
+    dw RunLinkSession2Exchange_Case00
+    dw RunLinkSession2Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_4431
+; entry 0 of the `rst $00` table in RunLinkSession2Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_4431_Case00::
+RunLinkSession2Exchange_Case00::
 Jump_01B_4439:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_4431
+; entry 1 of the `rst $00` table in RunLinkSession2Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_4431_Case01::
+RunLinkSession2Exchange_Case01::
 Jump_01B_443D:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -638,10 +638,10 @@ Jump_01B_443D:: ; address name
     res 1, [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_01B_4001
+; entry 3 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case03::
+RunLinkSession_Case03::
 Jump_01B_4457:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -649,32 +649,32 @@ Jump_01B_4457:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_4467
-    call RunLinkExchangeState_4468
+    call RunLinkSession3Exchange
 
 Jump_01B_4467::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case03)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case03)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_4468::
+RunLinkSession3Exchange::
 Func_01B_4468:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_4468_Case00
-    dw RunLinkExchangeState_4468_Case01
+    dw RunLinkSession3Exchange_Case00
+    dw RunLinkSession3Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_4468
+; entry 0 of the `rst $00` table in RunLinkSession3Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_4468_Case00::
+RunLinkSession3Exchange_Case00::
 Jump_01B_4470:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_4468
+; entry 1 of the `rst $00` table in RunLinkSession3Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_4468_Case01::
+RunLinkSession3Exchange_Case01::
 Jump_01B_4474:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -687,10 +687,10 @@ Jump_01B_4474:: ; address name
     res 1, [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_01B_4001
+; entry 4 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case04::
+RunLinkSession_Case04::
 Jump_01B_448E:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -698,32 +698,32 @@ Jump_01B_448E:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_449E
-    call RunLinkExchangeState_449F
+    call RunLinkSession4Exchange
 
 Jump_01B_449E::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case04)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case04)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_449F::
+RunLinkSession4Exchange::
 Func_01B_449F:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_449F_Case00
-    dw RunLinkExchangeState_449F_Case01
+    dw RunLinkSession4Exchange_Case00
+    dw RunLinkSession4Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_449F
+; entry 0 of the `rst $00` table in RunLinkSession4Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_449F_Case00::
+RunLinkSession4Exchange_Case00::
 Jump_01B_44A7:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_449F
+; entry 1 of the `rst $00` table in RunLinkSession4Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_449F_Case01::
+RunLinkSession4Exchange_Case01::
 Jump_01B_44AB:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -731,15 +731,15 @@ Jump_01B_44AB:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkScreenState_6C12
+    farcall RunLinkSession4ScreenState
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
 
-; entry 5 of the `rst $00` table in Func_01B_4001
+; entry 5 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case05::
+RunLinkSession_Case05::
 Jump_01B_44C5:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -747,32 +747,32 @@ Jump_01B_44C5:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_44D5
-    call RunLinkExchangeState_44D6
+    call RunLinkSession5Exchange
 
 Jump_01B_44D5::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case05)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case05)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_44D6::
+RunLinkSession5Exchange::
 Func_01B_44D6:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_44D6_Case00
-    dw RunLinkExchangeState_44D6_Case01
+    dw RunLinkSession5Exchange_Case00
+    dw RunLinkSession5Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_44D6
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_44D6_Case00::
+RunLinkSession5Exchange_Case00::
 Jump_01B_44DE:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_44D6
+; entry 1 of the `rst $00` table in RunLinkSession5Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_44D6_Case01::
+RunLinkSession5Exchange_Case01::
 Jump_01B_44E2:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -780,15 +780,15 @@ Jump_01B_44E2:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkExchangeState_44D6_Case01_Sub01
+    farcall RunLinkSession5Exchange_Case01_Sub01
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
 
-; entry 6 of the `rst $00` table in Func_01B_4001
+; entry 6 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case06::
+RunLinkSession_Case06::
 Jump_01B_44FC:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -796,32 +796,32 @@ Jump_01B_44FC:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_450C
-    call RunLinkExchangeState_450D
+    call RunLinkSession6Exchange
 
 Jump_01B_450C::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case06)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case06)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_450D::
+RunLinkSession6Exchange::
 Func_01B_450D:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_450D_Case00
-    dw RunLinkExchangeState_450D_Case01
+    dw RunLinkSession6Exchange_Case00
+    dw RunLinkSession6Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_450D
+; entry 0 of the `rst $00` table in RunLinkSession6Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_450D_Case00::
+RunLinkSession6Exchange_Case00::
 Jump_01B_4515:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_450D
+; entry 1 of the `rst $00` table in RunLinkSession6Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_450D_Case01::
+RunLinkSession6Exchange_Case01::
 Jump_01B_4519:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -829,15 +829,15 @@ Jump_01B_4519:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkExchangeState_450D_Case01_Sub01
+    farcall RunLinkSession6Exchange_Case01_Sub01
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_01B_4001
+; entry 7 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case07::
+RunLinkSession_Case07::
 Jump_01B_4533:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -845,32 +845,32 @@ Jump_01B_4533:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_4543
-    call RunLinkExchangeState_4544
+    call RunLinkSession7Exchange
 
 Jump_01B_4543::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case07)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case07)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_4544::
+RunLinkSession7Exchange::
 Func_01B_4544:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_4544_Case00
-    dw RunLinkExchangeState_4544_Case01
+    dw RunLinkSession7Exchange_Case00
+    dw RunLinkSession7Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_4544
+; entry 0 of the `rst $00` table in RunLinkSession7Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_4544_Case00::
+RunLinkSession7Exchange_Case00::
 Jump_01B_454C:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_4544
+; entry 1 of the `rst $00` table in RunLinkSession7Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_4544_Case01::
+RunLinkSession7Exchange_Case01::
 Jump_01B_4550:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -883,10 +883,10 @@ Jump_01B_4550:: ; address name
     res 1, [hl]
     ret
 
-; entry 8 of the `rst $00` table in Func_01B_4001
+; entry 8 of the `rst $00` table in RunLinkSession
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRole
-ComputeSpriteScrollOffsets_Sub01_Case08::
+RunLinkSession_Case08::
 Jump_01B_456A:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -894,32 +894,32 @@ Jump_01B_456A:: ; address name
     ld a, [wLinkRole]
     bit 0, a
     jr z, Jump_01B_457A
-    call RunLinkExchangeState_457B
+    call RunLinkSession8Exchange
 
 Jump_01B_457A::
     ret
 
 ; runs the routine for wC582 (jump table of two) (E-0122)
-; 1 call site from 1 routine (e.g. ComputeSpriteScrollOffsets_Sub01_Case08)
+; 1 call site from 1 routine (e.g. RunLinkSession_Case08)
 ; reads: wLinkExchangeState
-RunLinkExchangeState_457B::
+RunLinkSession8Exchange::
 Func_01B_457B:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkExchangeState_457B_Case00
-    dw RunLinkExchangeState_457B_Case01
+    dw RunLinkSession8Exchange_Case00
+    dw RunLinkSession8Exchange_Case01
 
-; entry 0 of the `rst $00` table in RunLinkExchangeState_457B
+; entry 0 of the `rst $00` table in RunLinkSession8Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkExchangeState_457B_Case00::
+RunLinkSession8Exchange_Case00::
 Jump_01B_4583:: ; address name
     call LinkSendStepWithBuffer
     ret
 
-; entry 1 of the `rst $00` table in RunLinkExchangeState_457B
+; entry 1 of the `rst $00` table in RunLinkSession8Exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wVBlankFlags
-RunLinkExchangeState_457B_Case01::
+RunLinkSession8Exchange_Case01::
 Jump_01B_4587:: ; address name
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -927,7 +927,7 @@ Jump_01B_4587:: ; address name
     res 7, [hl]
     ret nz
     call RunFrameTickFadeAndCounter_Bank1B
-    farcall RunLinkExchangeState_457B_Case01_Sub01
+    farcall RunLinkSession8Exchange_Case01_Sub01
     ld hl, wVBlankFlags
     res 1, [hl]
     ret
@@ -1068,7 +1068,7 @@ Jump_01B_4676::
     ret
 
 ; link: sends $F9 when not connected; otherwise reads the received byte, polls the joypad and sends the queued byte or the next byte of the transfer buffer wC590 (E-0128)
-; 8 call sites from 8 routines (e.g. RunLinkExchangeState_Case00, RunLinkExchangeState_4431_Case00, RunLinkExchangeState_4468_Case00, RunLinkExchangeState_449F_Case00, ...)
+; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_Case00, RunLinkSession2Exchange_Case00, RunLinkSession3Exchange_Case00, RunLinkSession4Exchange_Case00, ...)
 ; reads: wLinkRole, wVBlankFlags, wLinkSendByte, rSB, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, ...
 ; writes: wLinkExchangeState, wSerialReceived, wLinkMessage, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, ...
 ; points at: wLinkBufferCountLo, wVBlankFlags
@@ -1153,7 +1153,7 @@ Jump_01B_471E::
     jp StartSerialTransferInternalClock
 
 ; link: reads the received byte; stores it in the transfer buffer wC590 while bytes remain, else as the remote joypad; handles the $F3 resync (E-0128)
-; 8 call sites from 8 routines (e.g. RunLinkExchangeState_Case01, RunLinkExchangeState_4431_Case01, RunLinkExchangeState_4468_Case01, RunLinkExchangeState_449F_Case01, ...)
+; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_Case01, RunLinkSession2Exchange_Case01, RunLinkSession3Exchange_Case01, RunLinkSession4Exchange_Case01, ...)
 ; reads: wLinkRole, wLinkReady, rSB, wLinkSendByte, wSerialReceived, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, ...
 ; writes: wSerialReceived, wLinkMessage, wLinkExchangeState, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, wJoypadHeld, ...
 ; points at: wVBlankFlags, wLinkBufferCountLo
@@ -1236,7 +1236,7 @@ Jump_01B_47B6::
     ret
 
 ; calls Func_000_2620 when wC52B is non-zero, then StepFade; adds 1 to the 16-bit wFrameCounterLo/Hi and clears wC58D and wC58E (E-0073)
-; 10 call sites from 10 routines (e.g. RunLinkExchangeState_Case01, RunLinkExchangeState_4431_Case01, RunLinkExchangeState_4468_Case01, RunLinkExchangeState_449F_Case01, ...)
+; 10 call sites from 10 routines (e.g. RunLinkSession1Exchange_Case01, RunLinkSession2Exchange_Case01, RunLinkSession3Exchange_Case01, RunLinkSession4Exchange_Case01, ...)
 ; reads: wTextFlags, wFrameCounterLo, wFrameCounterHi
 ; writes: wFrameCounterLo, wFrameCounterHi, wLinkFrameCounterLo, wLinkFrameCounterHi
 RunFrameTickFadeAndCounter_Bank1B::
@@ -2066,7 +2066,7 @@ Data_01B_53C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
 ; unless a fade is running, runs the routine for wD780 (jump table) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkExchangeState_4468_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession3Exchange_Case01)
 ; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_1B::
 Func_01B_53CE:: ; address name
@@ -5070,12 +5070,12 @@ Data_01B_6607:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_01B_660A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A0, $A1, $A2
 
-; only called from RunLinkScreenState_6C12_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunLinkScreenState_6C12_Case06)
+; only called from RunLinkSession4ScreenState_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_Case06)
 ; reads: wTextWindowState
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScreenState
-RunLinkScreenState_6C12_Case06_Sub01::
+RunLinkSession4ScreenState_Case06_Sub01::
 Func_01B_660D:: ; address name
     ld hl, wScreenState
     ld bc, $006F
@@ -5116,7 +5116,7 @@ Jump_01B_6650::
     ret
 
 ; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkScreenState_6C12_Case07, GameMode6_Update_Case04_Case04, GameMode6_Update_Case0F_Case03, GameMode6_Update_Case0F_Case07)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case07, GameMode6_Update_Case04_Case04, GameMode6_Update_Case0F_Case03, GameMode6_Update_Case0F_Case07)
 ; reads: wScreenState
 EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
@@ -5332,7 +5332,7 @@ Jump_01B_6753:: ; address name
     ret
 
 ; runs Func_01B_7399 and Func_01E_7163; with two or more pages draws the bracket and page-of-pages indicators; wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. RunLinkExchangeState_450D_Case01_Sub01_Table2_Case04_Case02)
+; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case02)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 DrawRecordListPageIndicators_1B::
@@ -5404,7 +5404,7 @@ Func_01B_67A5:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case04, CallClearAndDrawListEntriesCell5Name, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case0E_Case04)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case04, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearAndDrawListEntriesCell5NameAtTiles1780::
@@ -7000,7 +7000,7 @@ Func_01B_71FE:: ; address name
     ret
 
 ; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case00, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case0E_Case00, RunLinkExchangeState_450D_Case01_Sub01_Table2_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
 ; reads: wPickCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wPickCount
 ClearRecordPanelTiles::

@@ -2109,7 +2109,7 @@ Jump_016_4A61::
     push af
     call CompactInventory
     pop af
-    call CallFunc4A98KeepA
+    call ApplyEquipmentEffectKeepA
     ld l, a
     ld h, $05
     ld de, wTextBuf3
@@ -2118,60 +2118,60 @@ Jump_016_4A61::
     ldh [hTemp0], a
     ret
 
-; calls Func_016_4A98 preserving A (E-0122)
+; preserving A, runs the routine for item A - $40 (a jump table over the equipment items; EquipItemOnRecordTargetRecord calls it) (E-0122, E-0259)
 ; 1 call site from 1 routine (e.g. EquipItemOnRecordTargetRecord)
-CallFunc4A98KeepA::
+ApplyEquipmentEffectKeepA::
 Func_016_4A92:: ; address name
     push af
-    call CallFunc4A98KeepA_Sub01
+    call ApplyEquipmentEffectKeepA_Sub01
     pop af
     ret
 
-; only called from CallFunc4A98KeepA (E-0047)
-; 1 call site from 1 routine (e.g. CallFunc4A98KeepA)
-CallFunc4A98KeepA_Sub01::
+; only called from ApplyEquipmentEffectKeepA (E-0047)
+; 1 call site from 1 routine (e.g. ApplyEquipmentEffectKeepA)
+ApplyEquipmentEffectKeepA_Sub01::
 Func_016_4A98:: ; address name
     sub a, $40
     rst $00
-    dw CallFunc4A98KeepA_Sub01_Case00
-    dw CallFunc4A98KeepA_Sub01_Case01
-    dw CallFunc4A98KeepA_Sub01_Case02
-    dw CallFunc4A98KeepA_Sub01_Case03
-    dw CallFunc4A98KeepA_Sub01_Case04
-    dw CallFunc4A98KeepA_Sub01_Case05
-    dw CallFunc4A98KeepA_Sub01_Case06
-    dw CallFunc4A98KeepA_Sub01_Case07
-    dw CallFunc4A98KeepA_Sub01_Case08
-    dw CallFunc4A98KeepA_Sub01_Case09
-    dw CallFunc4A98KeepA_Sub01_Case0A
-    dw CallFunc4A98KeepA_Sub01_Case0B
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case0C
-    dw CallFunc4A98KeepA_Sub01_Case13
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case14
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case1A
-    dw CallFunc4A98KeepA_Sub01_Case22
+    dw ApplyEquipmentEffectKeepA_Sub01_Case00
+    dw ApplyEquipmentEffectKeepA_Sub01_Case01
+    dw ApplyEquipmentEffectKeepA_Sub01_Case02
+    dw ApplyEquipmentEffectKeepA_Sub01_Case03
+    dw ApplyEquipmentEffectKeepA_Sub01_Case04
+    dw ApplyEquipmentEffectKeepA_Sub01_Case05
+    dw ApplyEquipmentEffectKeepA_Sub01_Case06
+    dw ApplyEquipmentEffectKeepA_Sub01_Case07
+    dw ApplyEquipmentEffectKeepA_Sub01_Case08
+    dw ApplyEquipmentEffectKeepA_Sub01_Case09
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0B
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
+    dw ApplyEquipmentEffectKeepA_Sub01_Case13
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Case22
 
 ; entry 0 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case00::
+ApplyEquipmentEffectKeepA_Sub01_Case00::
 Jump_016_4AE1:: ; address name
     ld a, $1E
     ld c, $5D
@@ -2180,7 +2180,7 @@ Jump_016_4AE1:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case01::
+ApplyEquipmentEffectKeepA_Sub01_Case01::
 Jump_016_4AE9:: ; address name
     ld a, $50
     ld c, $5D
@@ -2189,7 +2189,7 @@ Jump_016_4AE9:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case02::
+ApplyEquipmentEffectKeepA_Sub01_Case02::
 Jump_016_4AF1:: ; address name
     ld a, $1E
     ld c, $61
@@ -2198,7 +2198,7 @@ Jump_016_4AF1:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case03::
+ApplyEquipmentEffectKeepA_Sub01_Case03::
 Jump_016_4AF9:: ; address name
     ld a, $50
     ld c, $61
@@ -2207,7 +2207,7 @@ Jump_016_4AF9:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case04::
+ApplyEquipmentEffectKeepA_Sub01_Case04::
 Jump_016_4B01:: ; address name
     ld a, $0A
     ld c, $63
@@ -2216,7 +2216,7 @@ Jump_016_4B01:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case05::
+ApplyEquipmentEffectKeepA_Sub01_Case05::
 Jump_016_4B09:: ; address name
     ld a, $32
     ld c, $63
@@ -2225,7 +2225,7 @@ Jump_016_4B09:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case06::
+ApplyEquipmentEffectKeepA_Sub01_Case06::
 Jump_016_4B11:: ; address name
     ld a, $0A
     ld c, $65
@@ -2234,7 +2234,7 @@ Jump_016_4B11:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case07::
+ApplyEquipmentEffectKeepA_Sub01_Case07::
 Jump_016_4B19:: ; address name
     ld a, $32
     ld c, $65
@@ -2243,7 +2243,7 @@ Jump_016_4B19:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case08::
+ApplyEquipmentEffectKeepA_Sub01_Case08::
 Jump_016_4B21:: ; address name
     ld a, $0A
     ld c, $67
@@ -2252,7 +2252,7 @@ Jump_016_4B21:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case09::
+ApplyEquipmentEffectKeepA_Sub01_Case09::
 Jump_016_4B29:: ; address name
     ld a, $32
     ld c, $67
@@ -2261,7 +2261,7 @@ Jump_016_4B29:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case0A::
+ApplyEquipmentEffectKeepA_Sub01_Case0A::
 Jump_016_4B31:: ; address name
     ld a, $32
     ld c, $69
@@ -2270,7 +2270,7 @@ Jump_016_4B31:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case0B::
+ApplyEquipmentEffectKeepA_Sub01_Case0B::
 Jump_016_4B39:: ; address name
     ld a, $64
     ld c, $69
@@ -2279,13 +2279,13 @@ Jump_016_4B39:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case0C::
+ApplyEquipmentEffectKeepA_Sub01_Case0C::
 Jump_016_4B41:: ; address name
     ret
 
 ; entry 19 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case13::
+ApplyEquipmentEffectKeepA_Sub01_Case13::
 Jump_016_4B42:: ; address name
     ld a, $05
     ld c, $65
@@ -2294,19 +2294,19 @@ Jump_016_4B42:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case14::
+ApplyEquipmentEffectKeepA_Sub01_Case14::
 Jump_016_4B4A:: ; address name
     ret
 
 ; entry 26 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case1A::
+ApplyEquipmentEffectKeepA_Sub01_Case1A::
 Jump_016_4B4B:: ; address name
     ret
 
 ; entry 34 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-CallFunc4A98KeepA_Sub01_Case22::
+ApplyEquipmentEffectKeepA_Sub01_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
@@ -2383,7 +2383,7 @@ Jump_016_4B8F::
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
-; 9 call sites from 9 routines (e.g. CallFunc4A98KeepA_Sub01_Case13, CallFunc4A98KeepA_Sub01_Case0B, CallFunc4A98KeepA_Sub01_Case0A, CallFunc4A98KeepA_Sub01_Case09, ...)
+; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_Case13, ApplyEquipmentEffectKeepA_Sub01_Case0B, ApplyEquipmentEffectKeepA_Sub01_Case0A, ApplyEquipmentEffectKeepA_Sub01_Case09, ...)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordFloor1::
@@ -2425,7 +2425,7 @@ Jump_016_4BBF::
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
-; 4 call sites from 4 routines (e.g. CallFunc4A98KeepA_Sub01_Case03, CallFunc4A98KeepA_Sub01_Case02, CallFunc4A98KeepA_Sub01_Case01, CallFunc4A98KeepA_Sub01_Case00)
+; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_Case03, ApplyEquipmentEffectKeepA_Sub01_Case02, ApplyEquipmentEffectKeepA_Sub01_Case01, ApplyEquipmentEffectKeepA_Sub01_Case00)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordPairFloor1::
@@ -4661,7 +4661,7 @@ Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, MedalPrizeMenu_Case05_Case0E_Sub01, ...)
+; 8 call sites from 8 routines (e.g. RunBattleEndStep5SubSteps_Case01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, MedalPrizeMenu_Case05_Case0E_Sub01, ...)
 ; reads: wSpeciesFlagCount
 ; writes: wSpeciesFlagCount
 SetSpeciesFlag::
@@ -7029,7 +7029,7 @@ Jump_016_6A01::
     ret
 
 ; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
-; 3 call sites from 3 routines (e.g. RunBattleSubStep_6A4E_Case00, BattleEnd_Step5_Case01_Case01_Sub01_Case04, BattleEnd_Step5_Case01_Case01_Sub01_Case00)
+; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_Case00, BattleEnd_Step5_Case01_Case01_Sub01_Case04, BattleEnd_Step5_Case01_Case01_Sub01_Case00)
 ; reads: wDisplaySlot
 ; points at: wSlotNameSuffix
 CopyBattleMonsterNameWithLetterSuffix::
@@ -7082,21 +7082,21 @@ Func_016_6A36:: ; address name
 ; runs the routine for wBattleSubStep (jump table of five) (E-0122)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case03)
 ; reads: wBattleSubStep
-RunBattleSubStep_6A4E::
+RunBattleEndStep5SubSteps::
 Func_016_6A4E:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleSubStep_6A4E_Case00
-    dw RunBattleSubStep_6A4E_Case01
-    dw RunBattleSubStep_6A4E_Case02
-    dw RunBattleSubStep_6A4E_Case03
-    dw RunBattleSubStep_6A4E_Case04
+    dw RunBattleEndStep5SubSteps_Case00
+    dw RunBattleEndStep5SubSteps_Case01
+    dw RunBattleEndStep5SubSteps_Case02
+    dw RunBattleEndStep5SubSteps_Case03
+    dw RunBattleEndStep5SubSteps_Case04
 
-; entry 0 of the `rst $00` table in RunBattleSubStep_6A4E
+; entry 0 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wTextBuf0, wBattleSubStep
-RunBattleSubStep_6A4E_Case00::
+RunBattleEndStep5SubSteps_Case00::
 Jump_016_6A5C:: ; address name
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
@@ -7107,12 +7107,12 @@ Jump_016_6A5C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattleSubStep_6A4E
+; entry 1 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wDisplaySlot
 ; writes: wArg1, wArg2, wArg3, wArg4, wSpeciesIdLo, wArg5, wSpeciesIdHi, wTextWindowTileLo, ...
 ; points at: wNameEntryState, wSlotNameSuffix, wRecordBufA, wScreenTileBuffer, wBattleSubStep
-RunBattleSubStep_6A4E_Case01::
+RunBattleEndStep5SubSteps_Case01::
 Jump_016_6A6F:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7169,12 +7169,12 @@ Jump_016_6A6F:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattleSubStep_6A4E
+; entry 2 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDisplaySlot, wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5
 ; points at: wSlotNameSuffix, wRecordBufA, wBattleScreenFlags, wNameGlyphBuf, wBattleSubStep
-RunBattleSubStep_6A4E_Case02::
+RunBattleEndStep5SubSteps_Case02::
 Jump_016_6AE3:: ; address name
     ld a, $01
     ld [wArg1], a
@@ -7231,21 +7231,21 @@ Jump_016_6B47::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunBattleSubStep_6A4E
+; entry 3 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-RunBattleSubStep_6A4E_Case03::
+RunBattleEndStep5SubSteps_Case03::
 Jump_016_6B52:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattleSubStep_6A4E
+; entry 4 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFarmLevel, wPartyCount
 ; writes: rRAMG, rRAMB, wBattleSubStep, wWorkBuf
 ; points at: sRecords, wBattleSubPhase
-RunBattleSubStep_6A4E_Case04::
+RunBattleEndStep5SubSteps_Case04::
 Jump_016_6B57:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7316,7 +7316,7 @@ Jump_016_6BCC::
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 2 call sites from 1 routine (e.g. RunBattleSubStep_6A4E_Case04)
+; 2 call sites from 1 routine (e.g. RunBattleEndStep5SubSteps_Case04)
 CopyBBytesDEToHL_Bank16::
 Func_016_6BD9:: ; address name
     ld a, [de]
@@ -7327,7 +7327,7 @@ Func_016_6BD9:: ; address name
     ret
 
 ; HL = a record flag byte, C = battle slot: unless bit 7 is set, marks the slot present (wBattleSlotOut = 0), clears its status byte 0 and sets status bit 0 when flag bit 2 is set and status bit 5 when flag bit 0 is set (E-0118)
-; 3 call sites from 1 routine (e.g. RunBattleSubStep_6A4E_Case04)
+; 3 call sites from 1 routine (e.g. RunBattleEndStep5SubSteps_Case04)
 ; points at: wBattleSlotOut, wBattleStatus
 InitSlotFromRecordFlags::
 Func_016_6BE0:: ; address name
@@ -9349,7 +9349,7 @@ Jump_016_777A::
     ret
 
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at Jump_016_77A6 (E-0127)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case00)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_Sub01, RunGameMode5Case01SubStates_Case02_Case00_Case00)
 ; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wTitlePlayerName, wTitlePartySummary

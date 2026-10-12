@@ -348,10 +348,10 @@ class NestedDispatchCases(unittest.TestCase):
 
     def test_table_in_a_case_belongs_to_the_case(self):
         text = (BANKS / "bank37.asm").read_text(encoding="utf-8")
-        start = text.index("RunLinkExchangeState_44D6_Case01_Sub01_Case0D::")  # parent Func_037_4AFD (E-0245 prefix)
+        start = text.index("RunLinkSession5Exchange_Case01_Sub01_Case0D::")  # parent Func_037_4AFD (E-0245 prefix)
         body = text[start:text.index("\n\n", start)]
         self.assertIn("rst $00", body)
-        self.assertIn("dw RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case04", body)
+        self.assertIn("dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04", body)
 
 
 class InlineTableTrim(unittest.TestCase):

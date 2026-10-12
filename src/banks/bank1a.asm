@@ -3170,7 +3170,7 @@ Data_01A_6616:: ; address name
     db $12, $14, $11, $0A, $0C, $12, $13, $10, $14, $0E, $0E
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7345 (E-0079)
-; 9 call sites from 9 routines (e.g. BuildBattleMenuScreen_733F, RunBattleSubStep_6E67_Case00, RunBattleSubStep_6E67_Case03, ClearWindowAndCopyRect7345Far, ...)
+; 9 call sites from 9 routines (e.g. BuildBattleMenuScreen_733F, RunBattleEndStep4SubSteps_Case00, RunBattleEndStep4SubSteps_Case03, ClearWindowAndCopyRect7345Far, ...)
 CopyRectRecord7345ToScreenBuffer::
 Func_01A_7276:: ; address name
     ld hl, TileRect_1A_7345
@@ -3260,7 +3260,7 @@ Func_01A_72C2:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_77B6 and Data_01A_79CB, then QueueSoundEffect $6C (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSubStep_6E67_Case01)
+; 1 call site from 1 routine (e.g. RunBattleEndStep4SubSteps_Case01)
 CopyRectRecords77B6And79CBAndPlaySound6C::
 Func_01A_72C9:: ; address name
     ld hl, TileRect_1A_77B6

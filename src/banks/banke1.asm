@@ -63,17 +63,17 @@ Data_0E1_49BE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_49D2:: ; heuristic: argument of a bank-switching copy helper; C0
     db $0F, $3E, $BF, $73, $D7, $56, $00, $00
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
 ; LZSS-compressed asset: 1165 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_49DA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3849DA, $48D
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
 ; LZSS-compressed asset: 1438 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_4E67:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $384E67, $59E
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case04
+; address loaded by RunGameMode5Case00SubStates_Case04
 ; LZSS-compressed asset: 887 bytes expand to 1152 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_5405:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $385405, $377
@@ -93,37 +93,37 @@ Data_0E1_582B:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_58C3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3858C3, $4C
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case04
+; address loaded by RunGameMode5Case00SubStates_Case04
 ; LZSS-compressed asset: 101 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_590F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $38590F, $65
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case04
+; address loaded by RunGameMode5Case00SubStates_Case04
 ; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_5974:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
     db $1F, $1F, $35
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case06
+; address loaded by RunGameMode5Case00SubStates_Case06
 ; LZSS-compressed asset: 112 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_5987:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $385987, $70
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case06
+; address loaded by RunGameMode5Case00SubStates_Case06
 ; LZSS-compressed asset: 48 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0E1_59F7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $00, $04, $00, $03, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
     db $00, $20, $1F, $4D, $00, $80, $1F, $4D, $00, $E0, $1F, $4D, $00, $40, $2F, $4D
     db $00, $A0, $2F, $4D, $00, $00, $3F, $4D, $00, $60, $3F, $4D, $00, $A0, $3F, $2C
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
 Data_0E1_5A27:: ; heuristic: argument of a bank-switching copy helper; C0
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
     db $33, $05, $FF, $03, $BD, $21, $AA, $04, $33, $05, $FF, $7F, $1F, $13, $AA, $04
     db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
     db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case04
+; address loaded by RunGameMode5Case00SubStates_Case04
 Data_0E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
     db $33, $05, $FF, $03, $BD, $21, $AA, $04, $33, $05, $FF, $7F, $1F, $13, $AA, $04

@@ -1130,7 +1130,7 @@ Jump_00A_475C::
     ret
 
 ; draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122)
-; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case02, StartScriptedEncounterTemp0, SetModeState3AndSaveScreen, ...)
+; 5 call sites from 5 routines (e.g. TickRandomEncounterCounter, RunGameMode5Case01SubStates_Case02_Case00_Case02, StartScriptedEncounterTemp0, SetModeState3AndSaveScreen, ...)
 ; reads: wKeyRandomHi
 ; writes: wEncounterCountdown
 PickRandomEncounterCountdownFromTable478F::

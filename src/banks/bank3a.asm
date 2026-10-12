@@ -5165,7 +5165,7 @@ Jump_03A_619A:: ; address name
     xor a, a
     ld [wRecordBuffer + $1], a
     farcall LoadSkillRecord
-    call RunBattleResolveStep_69AA
+    call RunActionResolveStep
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleActions
@@ -5459,7 +5459,7 @@ Jump_03A_6390::
     ret
 
 ; returns A = 0 for action $BD while wDABA & $7F is non-zero; otherwise runs Func_03A_63B2 and, without carry, Func_03A_63D2 (E-0122)
-; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, RunBattleActions_Case09_Case03, RunBattleResolveStep_69AA_Case08, ...)
+; 5 call sites from 5 routines (e.g. RunBattleActions_Case07, RunBattleActions_Case06, RunBattleActions_Case09_Case03, RunActionResolveStep_Case08, ...)
 ; reads: wBattleActionId, wDefeatFlagsBA
 CheckActionBDOrRun63B2And63D2::
 Func_03A_639A:: ; address name
@@ -6431,7 +6431,7 @@ Jump_03A_68FB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunBattleStep4_Case02::
 Jump_03A_6902:: ; address name
-    call RunBattleResolveStep_69AA
+    call RunActionResolveStep
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleStep4
@@ -6559,27 +6559,27 @@ Jump_03A_6984::
 ; runs the routine for wBattleResolveStep (jump table of ten) (E-0122)
 ; 2 call sites from 2 routines (e.g. RunBattleStep4_Case02, RunBattleActions_Case02)
 ; reads: wBattleResolveStep
-RunBattleResolveStep_69AA::
+RunActionResolveStep::
 Func_03A_69AA:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleResolveStep_69AA_Case00
-    dw RunBattleResolveStep_69AA_Case01
-    dw RunBattleResolveStep_69AA_Case02
-    dw RunBattleResolveStep_69AA_Case03
-    dw RunBattleResolveStep_69AA_Case04
-    dw RunBattleResolveStep_69AA_Case05
-    dw RunBattleResolveStep_69AA_Case06
-    dw RunBattleResolveStep_69AA_Case07
-    dw RunBattleResolveStep_69AA_Case08
-    dw RunBattleResolveStep_69AA_Case09
+    dw RunActionResolveStep_Case00
+    dw RunActionResolveStep_Case01
+    dw RunActionResolveStep_Case02
+    dw RunActionResolveStep_Case03
+    dw RunActionResolveStep_Case04
+    dw RunActionResolveStep_Case05
+    dw RunActionResolveStep_Case06
+    dw RunActionResolveStep_Case07
+    dw RunActionResolveStep_Case08
+    dw RunActionResolveStep_Case09
 
-; entry 0 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 0 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wRecordBufferData, wFollowUpAction, wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wBattleActor, wEffectFlags, ...
 ; writes: wBattleDamageLo, wBattleDamageHi, wBattleArg0, wEffectFlags, wBattleSubStep, wBattleTarget, wBattleActor
 ; points at: wBattleResolveStep, wBattleStatus2, wBattleMP, wBattleStatus, wSlotMarks, wBattleStatus7, wSlotFlags854, wBattleActor
-RunBattleResolveStep_69AA_Case00::
+RunActionResolveStep_Case00::
 Jump_03A_69C2:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6587,19 +6587,19 @@ Jump_03A_69C2:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 0, [hl]
-    jp z, RunBattleResolveStep_69AA_Case01
+    jp z, RunActionResolveStep_Case01
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, RunBattleResolveStep_69AA_Case01
+    jp c, RunActionResolveStep_Case01
     ld a, [wRecordBufferData + $7]
     bit 0, a
-    jr z, RunBattleResolveStep_69AA_Case01
+    jr z, RunActionResolveStep_Case01
     ld a, [wFollowUpAction]
     bit 2, a
     jr z, Jump_03A_69F2
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, RunBattleResolveStep_69AA_Case01
+    jr z, RunActionResolveStep_Case01
 
 Jump_03A_69F2::
     ld a, [wBattleTarget]
@@ -6609,7 +6609,7 @@ Jump_03A_69F2::
     call GetBattleMP_Bank3A
     pop bc
     call CompareHLToBC
-    jr z, RunBattleResolveStep_69AA_Case01
+    jr z, RunActionResolveStep_Case01
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wBattleDamageHi]
@@ -6665,12 +6665,12 @@ Jump_03A_6A3A::
     ld [wBattleDamageHi], a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 1 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wRecordBufferData, wResolveMsgFlags, wFollowUpAction, wBattleActor, wBattleDamageLo, wBattleDamageHi, wEffectFlags, ...
 ; writes: wBattleArg0, wBattleDamageLo, wBattleDamageHi, wEffectFlags, wBattleSubStep, wBattleTarget, wBattleActor
 ; points at: wBattleResolveStep, wBattleStatus, wSlotMarks, wBattleStatus7, wSlotFlags854, wBattleActor
-RunBattleResolveStep_69AA_Case01::
+RunActionResolveStep_Case01::
 Jump_03A_6A60:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6695,7 +6695,7 @@ Jump_03A_6A60:: ; address name
     pop hl
     jr nc, Jump_03A_6AB6
     bit 7, [hl]
-    jr z, RunBattleResolveStep_69AA_Case02
+    jr z, RunActionResolveStep_Case02
     ld a, [hl]
     and a, $73
     ld [hl], a
@@ -6712,14 +6712,14 @@ Jump_03A_6A60:: ; address name
 Jump_03A_6AB6::
     ld hl, wBattleResolveStep
     inc [hl]
-    jr RunBattleResolveStep_69AA_Case03
+    jr RunActionResolveStep_Case03
 
-; entry 2 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 2 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wFollowUpAction, wRecordBufferData, wBattleActor, wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wEffectFlags, ...
 ; writes: wBattleArg0, wBattleDamageLo, wBattleDamageHi, wEffectFlags, wBattleSubStep, wBattleTarget, wBattleActor
 ; points at: wBattleResolveStep, wBattleStatus, wSlotMarks, wBattleStatus7, wSlotFlags854, wBattleActor
-RunBattleResolveStep_69AA_Case02::
+RunActionResolveStep_Case02::
 Jump_03A_6ABC:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6728,7 +6728,7 @@ Jump_03A_6ABC:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     bit 4, [hl]
-    jr z, RunBattleResolveStep_69AA_Case03
+    jr z, RunActionResolveStep_Case03
     res 4, [hl]
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
@@ -6740,29 +6740,29 @@ Jump_03A_6ABC:: ; address name
     farcall ShowBattleText
     ret
 
-; entry 3 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 3 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowUpAction, wBattleTarget, wRecordBufferData, wBattleActor, wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wEffectFlags, ...
 ; writes: wBattleArg0, wBattleDamageLo, wBattleDamageHi, wEffectFlags, wBattleSubStep, wBattleTarget, wBattleActor
 ; points at: wBattleResolveStep, wBattleStatus7, wSlotFlags854, wBattleActor
-RunBattleResolveStep_69AA_Case03::
+RunActionResolveStep_Case03::
 Jump_03A_6AEC:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     call CheckActionBDOrRun63B2And63D2
-    jr nc, RunBattleResolveStep_69AA_Case04
+    jr nc, RunActionResolveStep_Case04
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 4 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowUpAction, wBattleTarget, wRecordBufferData, wBattleActor, wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wEffectFlags, ...
 ; writes: wBattleArg0, wBattleDamageLo, wBattleDamageHi, wEffectFlags, wBattleSubStep, wBattleTarget, wBattleActor
 ; points at: wBattleStatus7, wSlotFlags854, wBattleActor, wBattleResolveStep
-RunBattleResolveStep_69AA_Case04::
+RunActionResolveStep_Case04::
 Jump_03A_6AFE:: ; address name
     ld a, [wFollowUpAction]
     or a, a
@@ -6895,19 +6895,19 @@ Jump_03A_6BE8::
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 5 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleResolveStep_69AA_Case05::
+RunActionResolveStep_Case05::
 Jump_03A_6BF1:: ; address name
     farcall RunBattleSubStep_6662
     ret
 
-; entry 6 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 6 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDefeatByteD1, wBattleActor, wBattleStep, wFollowUpAction, wBattleTarget, wDefeatStep
 ; writes: wBattleTarget, wDefeatByteD1, wFollowUpAction, wBattleActor, wDefeatFlagsBA
 ; points at: wBattleResolveStep, wBattleTargetChoice, wSavedActorTarget, wBattleActionChoice
-RunBattleResolveStep_69AA_Case06::
+RunActionResolveStep_Case06::
 Jump_03A_6BF8:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6927,10 +6927,10 @@ Jump_03A_6BF8:: ; address name
 Jump_03A_6C17::
     ld a, [wBattleStep]
     cp a, $04
-    jr z, RunBattleResolveStep_69AA_Case07
+    jr z, RunActionResolveStep_Case07
     ld a, [wFollowUpAction]
     or a, a
-    jr z, RunBattleResolveStep_69AA_Case07
+    jr z, RunActionResolveStep_Case07
     xor a, a
     ld [wFollowUpAction], a
     ld hl, wSavedActorTarget
@@ -6942,13 +6942,13 @@ Jump_03A_6C17::
     ld [wDefeatFlagsBA], a
     ld a, [wBattleActor]
     ld de, wBattleActionChoice
-    call RunBattleResolveStep_69AA_Case06_Sub01
+    call RunActionResolveStep_Case06_Sub01
     ld a, [wBattleTarget]
     ld de, wBattleActionChoice
 
-; only called from RunBattleResolveStep_69AA_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case06)
-RunBattleResolveStep_69AA_Case06_Sub01::
+; only called from RunActionResolveStep_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case06)
+RunActionResolveStep_Case06_Sub01::
 Func_03A_6C46:: ; address name
     add a, a
     add a, e
@@ -6964,11 +6964,11 @@ Jump_03A_6C4C::
     ld [de], a
     ret
 
-; entry 7 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 7 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDefeatStep
 ; points at: wBattleResolveStep
-RunBattleResolveStep_69AA_Case07::
+RunActionResolveStep_Case07::
 Jump_03A_6C52:: ; address name
     ld a, [wDefeatStep]
     or a, a
@@ -6977,11 +6977,11 @@ Jump_03A_6C52:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 8 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDefeatFlagsBA, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep
-RunBattleResolveStep_69AA_Case08::
+RunActionResolveStep_Case08::
 Jump_03A_6C5E:: ; address name
     call CheckActionBDOrRun63B2And63D2
     jr c, Jump_03A_6C68
@@ -6998,15 +6998,15 @@ Jump_03A_6C68::
     ld [wBattleResolveStep], a
     ret
 
-; entry 9 of the `rst $00` table in RunBattleResolveStep_69AA
+; entry 9 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleResolveStep_69AA_Case09::
+RunActionResolveStep_Case09::
 Jump_03A_6C76:: ; address name
-    call RunBattleResolveStep_69AA_Case09_Sub01
+    call RunActionResolveStep_Case09_Sub01
     ret
 
 ; carry when wC5E7 is below $40 (a foe target outside link battles) or $80 (otherwise) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case01)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case01)
 ; reads: wLinkMode, wBattleTarget, wRandomLo
 RollRandomBelowTargetThreshold::
 Func_03A_6C7A:: ; address name
@@ -7028,7 +7028,7 @@ Jump_03A_6C8E::
     ret
 
 ; runs the routine for wDABE - 1 (jump table of ten) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case07)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case07)
 ; reads: wDefeatStep
 RunDefeatStepMinus1Step::
 Func_03A_6C93:: ; address name
@@ -7095,12 +7095,12 @@ Jump_03A_6CC9::
     ld [wDefeatStep], a
     ret
 
-; only called from RunBattleResolveStep_69AA_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case09)
+; only called from RunActionResolveStep_Case09 (E-0047)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case09)
 ; reads: wBattleStep, wFollowUpAction, wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wResolveByte81, wResolveMsgFlags
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wResolveByte81, wFollowUpAction
 ; points at: wBattleStatus6, wBattleStep, wBattleSubPhase
-RunBattleResolveStep_69AA_Case09_Sub01::
+RunActionResolveStep_Case09_Sub01::
 Func_03A_6CD4:: ; address name
     ld a, [wBattleStep]
     cp a, $04
@@ -7564,7 +7564,7 @@ Data_03A_6EA5:: ; address name
     db $D6 ; id 63
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
-; 22 call sites from 14 routines (e.g. RunBattleResolveStep_43C4_Case01, RunBattleActions_Case00_Sub01_Case00_Case01, RunBattleActions_Case00_Sub01_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
+; 22 call sites from 14 routines (e.g. RunCommandEntryResolveStep_Case01, RunBattleActions_Case00_Sub01_Case00_Case01, RunBattleActions_Case00_Sub01_Case00_Case03, ShowActorStatusRecoveryMessage, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
@@ -9868,7 +9868,7 @@ Func_03A_7C66:: ; address name
     jr Jump_03A_7C89
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case00)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank3A::
 Func_03A_7C6B:: ; address name
@@ -9877,7 +9877,7 @@ Func_03A_7C6B:: ; address name
     db $21, $BF, $D8, $18, $14
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case00)
 ; points at: wBattleMP
 GetBattleMP_Bank3A::
 Func_03A_7C75:: ; address name
@@ -9892,7 +9892,7 @@ Jump_03A_7C89::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 4 call sites from 4 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case06, RunBattleResolveStep_69AA_Case04, RunBattleResolveStep_69AA_Case00)
+; 4 call sites from 4 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunActionResolveStep_Case06, RunActionResolveStep_Case04, RunActionResolveStep_Case00)
 AddDoubleAToHL_Bank3A::
 Func_03A_7C93:: ; address name
     add a, a
@@ -9974,7 +9974,7 @@ Func_03A_7CEC:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case00)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case00)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3A::
 Func_03A_7CF9:: ; address name
@@ -9986,7 +9986,7 @@ Func_03A_7CF9:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunBattleResolveStep_69AA_Case02, RunBattleResolveStep_69AA_Case01)
+; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_Sub02, RunActionResolveStep_Case02, RunActionResolveStep_Case01)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3A::
 Func_03A_7D06:: ; address name
@@ -10057,7 +10057,7 @@ Jump_03A_7D65::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, RunBattleResolveStep_69AA_Case09_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleActions_Case05, RunActionResolveStep_Case09_Sub01)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank3A::
 Func_03A_7D6A:: ; address name

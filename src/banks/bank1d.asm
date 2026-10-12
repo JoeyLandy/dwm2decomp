@@ -3988,7 +3988,7 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, SwapMonstersMenu_Case09_Case20_Case00, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case20_Case00, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
 CallFunc6899PreservingArg1AndTemp0::
@@ -4041,7 +4041,7 @@ Jump_01D_5C2E::
     ret
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, SwapMonstersMenu_Case09_Case15_Case00, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case15_Case00, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
@@ -5576,7 +5576,7 @@ Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $01, $68, $01
 
 ; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_Case07, RunScreenStep_F0_5DE8_Case07)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_Case07, RunLinkSession8Case03Steps_Case07)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wListPageIndex, wMenuInputResult, wListCursor
 HandleListCursorInput_1D::
@@ -6150,7 +6150,7 @@ Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case09_Case1E, RunScreenStep_F0_5DE8_Case04)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case09_Case1E, RunLinkSession8Case03Steps_Case04)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wArg3
@@ -6941,7 +6941,7 @@ Func_01D_6C8A:: ; address name
     jr Jump_01D_6CB2
 
 ; copies tiles listed in Data_01D_6DC4 to vBGMap1 + $200 onward six per call; at the $FF end resets the counters and wD781 += 1 (E-0127)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_Case15, RunScreenStep_F0_5B50_Case00)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_Case15, RunLinkSession8Case01Steps_Case00)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
@@ -7011,7 +7011,7 @@ Jump_01D_6CF9::
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case1B_Case00, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case08_Case1B, RunScreenStep_F0_5DE8_Case04)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case1B_Case00, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case08_Case1B, RunLinkSession8Case03Steps_Case04)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Tiles_1D_6D20

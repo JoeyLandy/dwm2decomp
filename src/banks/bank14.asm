@@ -4004,7 +4004,7 @@ Data_014_5C9A:: ; address name
     dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
 ; unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122)
-; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case06_Case05, RenameMenu_Case05, BreedMenu_Case06, RunBattleSubStep_6A4E_Case02, ...)
+; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case06_Case05, RenameMenu_Case05, BreedMenu_Case06, RunBattleEndStep5SubSteps_Case02, ...)
 ; reads: wFadeState, wNameEntryState
 RunNameEntryStateWhenNotFading::
 Func_014_5CA8:: ; address name
@@ -8528,7 +8528,7 @@ Jump_014_7E89::
     ret
 
 ; clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
-; 19 call sites from 18 routines (e.g. RunLinkScreenState_6C12_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case17, HibernateMenu_Case05_Case3F, HibernateMenu_Case04_Case16, ...)
+; 19 call sites from 18 routines (e.g. RunLinkSession4ScreenState_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case17, HibernateMenu_Case05_Case3F, HibernateMenu_Case04_Case16, ...)
 ; reads: wArg1, wArg2, wPartyCount
 ; writes: rRAMG2, rRAMB, wArg3, wArg5, wArg6, wArg7, wPartyCount
 ; points at: sRecords, sRecord1, wPartyList

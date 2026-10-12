@@ -2430,6 +2430,23 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0259 — Dispatchers named by caller instead of address
+
+- Kind: OBSERVATION (reading; C1) and naming.
+- **RunLinkSession (1B:$4001).** It was a structural `ComputeSpriteScrollOffsets_Sub01`. Unless wLinkStatus bit 7 is set, it runs the routine for wLinkSession: 0 waits for the serial transfer, and 1-8 each run their own exchange state machine when wLinkMode is set and wLinkRole bit 0 is set. These are renamed from RunLinkExchangeState / _4431 ... _457B to RunLinkSession1Exchange ... RunLinkSession8Exchange.
+- **Renamed by caller or role** (E-0122/E-0124 named them by state variable and address):
+  - RunLinkSession4ScreenState (was RunLinkScreenState_6C12); RunLinkSession8Case01Steps / Case03Steps (RunScreenStep_F0_5B50/5DE8);
+  - RunSceneScriptSubStep (RunScriptSubStep_7363, used by four cutscene commands);
+  - RunGameMode5Case00SubStates / Case01SubStates (RunLinkScreenSubStateSubState_5B14/60E9);
+  - CheckWarpsByMapType, LoadMapHeaderByMapType, RunGameMode2MapTypeState (RunMapType_596F/420D/A1_4744);
+  - RunCommandEntryResolveStep, RunActionResolveStep (RunBattleResolveStep_43C4/69AA);
+  - RunBattleEndStep4SubSteps / Step5SubSteps (RunBattleSubStep_6E67/6A4E);
+  - ApplyEquipmentEffectKeepA (CallFunc4A98KeepA: item - $40 jump table from EquipItemOnRecordTargetRecord);
+  - WithSRAMDrawMemberRecordByte0D (WithSRAMRun4E02);
+  - RollCounterChanceAndRunEvent (RollCounterChanceAndRun72C8).
+  - Their structural children follow. Config references are updated by build/rename_names.py.
+- Binary verification: build/run334 PASS, 0 differing bytes; tests OK.
+
 ### E-0258 — Battle text quoted in code
 
 - Kind: TOOL (C1 quotes).

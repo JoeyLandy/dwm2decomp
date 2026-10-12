@@ -2763,7 +2763,7 @@ Jump_00F_50BE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 SceneDarckDefeated_Case0C::
 Jump_00F_50D2:: ; address name
-    farcall RunScriptSubStep_7363
+    farcall RunSceneScriptSubStep
     ret
 
 ; entry 11 of the `rst $00` table in SceneDarckDefeated
@@ -3882,7 +3882,7 @@ Jump_00F_585B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 SceneShield2_Case12::
 Jump_00F_5889:: ; address name
-    farcall RunScriptSubStep_7363
+    farcall RunSceneScriptSubStep
     ret
 
 ; entry 17 of the `rst $00` table in SceneShield2
@@ -6540,7 +6540,7 @@ Jump_00F_6866:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 SceneMermaidKingdom_Case2D::
 Jump_00F_6894:: ; address name
-    farcall RunScriptSubStep_7363
+    farcall RunSceneScriptSubStep
     ret
 
 ; entry 44 of the `rst $00` table in SceneMermaidKingdom
@@ -8350,7 +8350,7 @@ Jump_00F_7369:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 SceneRivalDefeated_Case1F::
 Jump_00F_7397:: ; address name
-    farcall RunScriptSubStep_7363
+    farcall RunSceneScriptSubStep
     ret
 
 ; entry 30 of the `rst $00` table in SceneRivalDefeated

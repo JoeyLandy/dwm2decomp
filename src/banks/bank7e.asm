@@ -204,7 +204,7 @@ Data_07E_4CAD:: ; heuristic: argument of a bank-switching copy helper; C0
     dw $0000, $027F, $001F, $0000 ; id 36
     dw $0000, $6BFF, $027F, $0000 ; id 37
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case00
+; address loaded by RunGameMode5Case00SubStates_Case00
 ; LZSS-compressed asset: 45 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_4CED:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $40, $00, $02, $02, $FF, $FA, $01, $01, $00, $00, $1C, $1C, $6E, $72, $BE, $EA
@@ -368,7 +368,7 @@ Data_07E_5640:: ; heuristic: stream in a run of back-to-back compressed streams;
 Data_07E_56C3:: ; heuristic: stream in a run of back-to-back compressed streams; C0
     INCBIN "dwm2-cobi-us.gbc", $1F96C3, $43
 
-; address loaded by RunLinkScreenSubStateSubState_5B14_Case00
+; address loaded by RunGameMode5Case00SubStates_Case00
 ; LZSS-compressed asset: 80 bytes expand to 96 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_07E_5706:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $1F9706, $50

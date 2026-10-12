@@ -6629,7 +6629,7 @@ Func_01E_6D42:: ; address name
     ret
 
 ; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or '???' when unknown (E-0131)
-; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunScreenStep_F0_5DE8_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunLinkSession8Case03Steps_Case05_Sub01)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1, wArg2, wArg3
 DrawRecordParentNames::
@@ -7001,9 +7001,9 @@ Jump_01E_6FC9::
     ld [wArg7], a
     jr Jump_01E_6FBA
 
-; only called from RunScreenStep_F0_5DE8_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunScreenStep_F0_5DE8_Case05)
-RunScreenStep_F0_5DE8_Case05_Sub01::
+; only called from RunLinkSession8Case03Steps_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunLinkSession8Case03Steps_Case05)
+RunLinkSession8Case03Steps_Case05_Sub01::
 Func_01E_6FE3:: ; address name
     ld b, e
     call DrawRecordParentNames
@@ -7011,7 +7011,7 @@ Func_01E_6FE3:: ; address name
     ret
 
 ; for record B draws the species names and marks named by the field lists $70D7 or $70DD (by bit 4 of field $0D), or a blank tile for missing entries (E-0130)
-; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunScreenStep_F0_5DE8_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunLinkSession8Case03Steps_Case05_Sub01)
 ; reads: hTemp0, hTemp1, rSTAT
 ; writes: rRAMG2, rRAMB, wArg1, wArg5, wArg2, wArg3, wArg4
 DrawRecordFamilyEntries_6FEB::

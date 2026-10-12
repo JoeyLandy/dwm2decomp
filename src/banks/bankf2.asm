@@ -904,7 +904,7 @@ Data_0F2_48D1:: ; address name
     db $F0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case01, RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1C, RunScreenStateWhenNotFading_F1_Case0D_Case01, RunScreenStateWhenNotFading_F1_Case0D_Case1C)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
@@ -1071,7 +1071,7 @@ Func_0F2_4AF3:: ; address name
     ret
 
 ; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case12, RunScreenStateWhenNotFading_F1_Case0D_Case12)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case12, RunScreenStateWhenNotFading_F1_Case0D_Case12)
 ShowPersonalityNameAndWCA3AName::
 Func_0F2_4AFE:: ; address name
     call ShowCombinedPersonalityName
@@ -1079,7 +1079,7 @@ Func_0F2_4AFE:: ; address name
     ret
 
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
 ; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
 ; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
 ; points at: hTemp2
@@ -1184,7 +1184,7 @@ Jump_0F2_4BB6::
     jr Jump_0F2_4BA8
 
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case14, RunScreenStateWhenNotFading_F1_Case0D_Case14)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case14, RunScreenStateWhenNotFading_F1_Case0D_Case14)
 ; reads: wRecordBufB
 ; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowWCACFCategory11StringAtTiles2320::
@@ -1209,7 +1209,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_Case1A)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_Case1A)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
@@ -1237,7 +1237,7 @@ Func_0F2_4BFC:: ; address name
     ret
 
 ; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1F, RunScreenStateWhenNotFading_F1_Case0D_Case1F)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1F, RunScreenStateWhenNotFading_F1_Case0D_Case1F)
 RunF24C3DAnd4D72::
 Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_Sub01
@@ -1625,7 +1625,7 @@ Jump_0F2_4E68::
     ret
 
 ; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1E, RunScreenStateWhenNotFading_F1_Case0D_Case1E)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1E, RunScreenStateWhenNotFading_F1_Case0D_Case1E)
 ; reads: wRecordBufB, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1, wArg1, wArg2
 ; points at: wRecordBufB, wArg3
@@ -1704,7 +1704,7 @@ Data_0F2_4ED4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three species words of wCA2B draws their sprite parts at the positions in Data_0F2_4F35 (E-0127)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkScreenState_6C12_Case08_Case04, GameMode5_Update_Case05_Sub01)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, GameMode5_Update_Case05_Sub01)
 ; reads: wRecordBufB, hTemp1, hTemp0
 ; writes: hTemp0, wArg1, wArg2
 ; points at: wArg3
@@ -1788,7 +1788,7 @@ Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
 ; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
-; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case16, RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case16, ...)
+; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case16, ...)
 ; reads: hTemp1, hTemp0, wDigits, wRecordBufB
 ; writes: hTemp0, hTemp1
 DrawLevelAndStatusRowForWCA81::
@@ -1932,7 +1932,7 @@ Func_0F2_4FF9:: ; address name
     ret
 
 ; runs Func_0F2_4F47, DrawFiveRecordBufBStatsColumn and DrawFourRecordBufBStatsDigits (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case04, RunScreenStateWhenNotFading_F1_Case0D_Case04)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04, RunScreenStateWhenNotFading_F1_Case0D_Case04)
 DrawRecordBufBStatsScreen::
 Func_0F2_5002:: ; address name
     call DrawLevelAndStatusRowForWCA81
@@ -2084,7 +2084,7 @@ Func_0F2_50C6:: ; address name
     jp Jump_0F2_50F8
 
 ; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkExchangeState_44D6_Case01_Sub01_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case13, RunScreenStateWhenNotFading_F1_Case0D_Case13)
 ; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
 ; writes: wWorkBuf
 ; points at: wRecordBufB

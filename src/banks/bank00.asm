@@ -734,7 +734,7 @@ Jump_000_0530::
     db $CD, $CC, $0B, $C9
 
 ; in link mode: counts frames (resetting the game after an overflow), saves the joypad state and starts the next serial transfer of the queued byte or the joypad (E-0128)
-; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, RunLinkScreenState_6C12_Case08_Case04, ...)
+; 8 call sites from 8 routines (e.g. GameMode5_Update_Case04, GameMode5_Update_Case03, GameMode5_Update_Case02, RunLinkSession4ScreenState_Case08_Case04, ...)
 ; reads: wLinkMode, wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkRole, wLinkSession, wVBlankFlags, wJoypadHeld, wJoypadHeldPrev, ...
 ; writes: wLinkFrameCounterLo, wLinkFrameCounterHi, wLinkSavedJoypadHeld, wLinkSavedJoypadHeldPrev, wLinkExchangeState, wLinkTimeoutLo, wLinkTimeoutHi, rVBK, ...
 ; points at: wLinkBufferCountLo, wGameMode, wScreenShakeTimer
@@ -1184,7 +1184,7 @@ Func_000_07AA:: ; address name
     db $C9, $AF, $E0, $0F, $F0, $FF, $E6, $F7, $E0, $FF, $C9
 
 ; waits until rSC bit 7 (transfer in progress) clears (E-0108)
-; 3 call sites from 2 routines (e.g. ClearSGBPacketBuffer_Sub02, ComputeSpriteScrollOffsets_Sub01_Case00)
+; 3 call sites from 2 routines (e.g. ClearSGBPacketBuffer_Sub02, RunLinkSession_Case00)
 ; reads: rSC
 WaitSerialTransferDone::
 Func_000_07D1:: ; address name
@@ -1771,7 +1771,7 @@ Jump_000_0B0C::
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 5 call sites from 4 routines (e.g. RunLinkScreenSubStateSubState_5B14_Case07, RunLinkScreenSubStateSubState_5B14_Case01, DebugStaffRoll_Update_Sub01_Table2_Case00, RunDebugState_E0_Case0D_Case02_Sub01)
+; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_Case07, RunGameMode5Case00SubStates_Case01, DebugStaffRoll_Update_Sub01_Table2_Case00, RunDebugState_E0_Case0D_Case02_Sub01)
 ReadWordTableEntry_Bank00::
 Func_000_0B0D:: ; address name
     add a, a
@@ -4950,7 +4950,7 @@ Jump_000_1B95::
     ret
 
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
-; 4 call sites from 4 routines (e.g. RunMapType_420D_Case07, RunMapType_420D_Case06, RunMapType_420D_Case03, RunMapType_420D_Case02)
+; 4 call sites from 4 routines (e.g. LoadMapHeaderByMapType_Case07, LoadMapHeaderByMapType_Case06, LoadMapHeaderByMapType_Case03, LoadMapHeaderByMapType_Case02)
 ; reads: hTemp0
 ; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, wEncounterRate, wMapMoveType, ...
 LoadSpecialMapHeader::
@@ -5014,7 +5014,7 @@ Func_000_1BAD:: ; address name
     ld [rROMB0], a
     ret
 
-; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunMapType_420D) (E-0128)
+; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use LoadMapHeaderByMapType) (E-0128)
 ; 3 call sites from 3 routines (e.g. InitFieldScreen, LibraryMenu_Case06, BreedMenu_Case07_Case02)
 ; reads: wMapType, hMapId
 ; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, ...
@@ -5023,7 +5023,7 @@ Func_000_1C0C:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_000_1C1A
-    farcall RunMapType_420D
+    farcall LoadMapHeaderByMapType
     ret
 
 Jump_000_1C1A::
@@ -6848,7 +6848,7 @@ Jump_000_255B::
     push bc
     push de
     push hl
-    farcall ComputeSpriteScrollOffsets_Sub01
+    farcall RunLinkSession
     pop hl
     pop de
     pop bc

@@ -6412,7 +6412,7 @@
           }
         ]
       },
-      "note": "E-0195 (C1: CheckKeyWorldWarpTable and RunMapType_596F_Case03_Sub01 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
+      "note": "E-0195 (C1: CheckKeyWorldWarpTable and CheckWarpsByMapType_Case03_Sub01 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
     },
     {
       "bank": "04",

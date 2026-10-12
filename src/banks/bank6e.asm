@@ -451,7 +451,7 @@ Data_06E_7480:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1BB480, $64
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 5 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
-; address loaded by RunMapType_420D_Case01
+; address loaded by LoadMapHeaderByMapType_Case01
 ; LZSS-compressed asset: 764 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MapType5Tiles5:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_06E_74E4:: ; address name

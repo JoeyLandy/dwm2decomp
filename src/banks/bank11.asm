@@ -204,7 +204,7 @@ Jump_011_4105::
     ld c, $01
     ret
 
-; special maps use RunMapType_596F; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
+; special maps use CheckWarpsByMapType; otherwise checks the map exit table, then the warp list Data_011_67A6[hMapId] against the player position and warps on a match (E-0131)
 ; 3 call sites from 3 routines (e.g. FieldModeStateDispatch_Case07, UpdatePlayerMovement_Sub01, RunFieldActionRequestActionIfBit7_Case03)
 ; reads: wMapType, hMapId, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wWarpDestY
 ; writes: hPlayerStateFlags, wWarpDestFacing, wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, ...
@@ -214,7 +214,7 @@ Func_011_4130:: ; address name
     ld a, [wMapType]
     bit 7, a
     jr z, Jump_011_413E
-    farcall RunMapType_596F
+    farcall CheckWarpsByMapType
     ret
 
 Jump_011_413E::

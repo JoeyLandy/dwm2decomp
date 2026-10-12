@@ -6227,7 +6227,7 @@ Func_032_6622:: ; address name
     ret
 
 ; runs the routine for wBattleSubStep (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleResolveStep_69AA_Case05)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case05)
 ; reads: wBattleSubStep
 RunBattleSubStep_6662::
 Func_032_6662:: ; address name
