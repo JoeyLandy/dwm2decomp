@@ -4661,7 +4661,7 @@ Data_016_5AA7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, ScriptCommandF3_Run_Case05_Case0E_Sub01, ...)
+; 8 call sites from 8 routines (e.g. RunBattleSubStep_6A4E_Case01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, MedalPrizeMenu_Case05_Case0E_Sub01, ...)
 ; reads: wSpeciesFlagCount
 ; writes: wSpeciesFlagCount
 SetSpeciesFlag::
@@ -7864,7 +7864,7 @@ Jump_016_6F01::
 ; points at: wBattleScreenFlags, wBattleSubStep
 Func_016_6C16_Case0E::
 Jump_016_6F30:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -9792,7 +9792,7 @@ Data_016_7A42:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $62, $C2, $A2, $C2, $E2, $C2
 
 ; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
-; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, ScriptCommandF6_Run_Case10_Case04, ScriptCommandF6_Run_Case10_Case06_Sub02, ...)
+; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, LibraryMenu_Case10_Case04, LibraryMenu_Case10_Case06_Sub02, ...)
 ; reads: wWorkBuf
 LoadFamilyIconTileForWorkBuf::
 Func_016_7A48:: ; address name
@@ -9819,7 +9819,7 @@ Func_016_7A5B:: ; address name
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, Func_003_4208_Case00, PauseMenu_State3_Case00_Case00, ScriptCommandF6_Run_Case08, ...)
+; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, Func_003_4208_Case00, PauseMenu_State3_Case00_Case00, LibraryMenu_Case08, ...)
 ; reads: wPartyCount
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::

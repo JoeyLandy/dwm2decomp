@@ -184,3 +184,26 @@ MACRO deref_hl
     ld h, [hl]
     ld l, a
 ENDM
+
+; Script command types named from what they do (config/script_commands.json); `script_command` takes one of these.
+DEF SCRIPT_INN EQU $E0 ; InnMenu: the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings) (E-0244)
+DEF SCRIPT_INN_CLOSE EQU $E1 ; CloseInnMenu: ends the inn session and clears wMessageMode (E-0244)
+DEF SCRIPT_SHOP EQU $E2 ; ShopMenu: the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2) (E-0244)
+DEF SCRIPT_SHOP_CLOSE EQU $E3 ; CloseShopMenu: ends the shop session ('Thank you! Please come again.' between its two calls) and clears wMessageMode (E-0244)
+DEF SCRIPT_VAULT EQU $E5 ; VaultMenu: the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0244)
+DEF SCRIPT_VAULT_CLOSE EQU $E6 ; CloseVaultMenu: ends the Vault session (runs CloseShopMenu's code) (E-0244)
+DEF SCRIPT_SWAP_MONSTERS EQU $E8 ; SwapMonstersMenu: Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings) (E-0244)
+DEF SCRIPT_MENU_CLOSE EQU $E9 ; CloseMenuE9: ends a menu session (runs CloseBreedMenu's code); follows the swap and NPC breeding menus (E-0244)
+DEF SCRIPT_HIBERNATE EQU $EB ; HibernateMenu: monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode 4, bank $1D strings) (E-0244)
+DEF SCRIPT_HIBERNATE_CLOSE EQU $EC ; CloseHibernateMenu: ends the hibernation session and clears wMessageMode (E-0244)
+DEF SCRIPT_BREED EQU $ED ; BreedMenu: breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings) (E-0244)
+DEF SCRIPT_BREED_CLOSE EQU $EE ; CloseBreedMenu: ends the breeding (and medal prize) session and clears wMessageMode (E-0244)
+DEF SCRIPT_EGG_SERVICE EQU $EF ; EggServiceMenu: egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings) (E-0244)
+DEF SCRIPT_RENAME EQU $F0 ; RenameMenu: the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6) (E-0244)
+DEF SCRIPT_RENAME_CLOSE EQU $F1 ; CloseRenameMenu: ends the renaming session (runs CloseBreedMenu's code) (E-0244)
+DEF SCRIPT_KEY_APPRAISAL EQU $F2 ; KeyAppraisalMenu: Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings) (E-0244)
+DEF SCRIPT_MEDAL_PRIZES EQU $F3 ; MedalPrizeMenu: the TinyMedal prize exchange: 'Which prize do you want?', 'I'll trade for 0 TinyMedals. OK?' (mode 7) (E-0244)
+DEF SCRIPT_NPC_BREED EQU $F4 ; NpcBreedMenu: breeding with a townsperson's monster picked by wScreenTableIndex: 'Who will breed with my SpikyBoy?' (mode 8, message bank $0E, + 16 * wScreenTableIndex) (E-0244)
+DEF SCRIPT_LIBRARY EQU $F6 ; LibraryMenu: the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings) (E-0244)
+DEF SCRIPT_ARENA EQU $F7 ; ArenaMenu: the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, bank $33 strings) (E-0244)
+DEF SCRIPT_PRIEST EQU $F8 ; PriestMenu: the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings) (E-0244)

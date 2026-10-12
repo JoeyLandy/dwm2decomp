@@ -2902,7 +2902,7 @@ Data_019_4E60:: ; address name
     d24 6200812, 6300237, 6399740, 6499322, 6598984, 6698727, 6798552, 6898460, 6998452, 7098529, 7198692
 
 ; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
-; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, ScriptCommandE8_Run_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
+; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, SwapMonstersMenu_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
 LoadTable4E60EntryToTemp2::

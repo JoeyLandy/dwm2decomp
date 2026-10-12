@@ -1584,7 +1584,7 @@ Jump_0F1_4AC5::
     ret
 
 ; unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)
-; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, ScriptCommandEF_Run_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
+; 3 call sites from 3 routines (e.g. RunLinkExchangeState_4431_Case01, EggServiceMenu_Bank1B_Case0D, Func_033_5215_Table2_Case0D)
 ; reads: wFadeState, wScreenState
 RunScreenStateWhenNotFading_F1::
 Func_0F1_4AD0:: ; address name
@@ -1618,7 +1618,7 @@ Func_0F1_4AD0:: ; address name
 ; writes: wScreenState
 RunScreenStateWhenNotFading_F1_Case00::
 Jump_0F1_4AFD:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -1812,7 +1812,7 @@ Jump_0F1_4BE5:: ; address name
     ret
 
 Jump_0F1_4C01::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
@@ -1836,7 +1836,7 @@ Jump_0F1_4C08:: ; address name
     ret
 
 Jump_0F1_4C24::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld a, [wMenuInputResult]
     cp a, $FE
     ret nz
@@ -1856,7 +1856,7 @@ Jump_0F1_4C40:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 16 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case04
@@ -1870,7 +1870,7 @@ Jump_0F1_4C4C:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld a, $09
     call BeginString_Bank0E_Cat0
     ret
@@ -1948,7 +1948,7 @@ Jump_0F1_4CB7:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     xor a, a
     ld [wSelectedRecord], a
     ld [wScreenSubStep], a
@@ -1974,7 +1974,7 @@ Jump_0F1_4CCA:: ; address name
     ret
 
 Jump_0F1_4CE2::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -2815,7 +2815,7 @@ Jump_0F1_5235::
 ; writes: wScreenStep, wScreenSubStep, wScreenState
 RunScreenStateWhenNotFading_F1_Case0C::
 Jump_0F1_5242:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -2849,7 +2849,7 @@ Jump_0F1_525E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunScreenStateWhenNotFading_F1_Case11_Case02::
 Jump_0F1_5276:: ; address name
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
@@ -3570,7 +3570,7 @@ Jump_0F1_56B7:: ; address name
     push af
     ld a, $11
     ld [wScreenState], a
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     pop af
     ret
 
@@ -3584,7 +3584,7 @@ Jump_0F1_56C8:: ; address name
     push af
     ld a, $11
     ld [wScreenState], a
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     pop af
     ld [wScreenState], a
     ret
@@ -3791,7 +3791,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, ScriptCommandEF_Run_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_Case04_Case18, EggServiceMenu_Bank1B_Case05_Case07, Func_033_5215_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::
@@ -4422,7 +4422,7 @@ Jump_0F1_5BF8::
     ret
 
 ; copies the $40 bytes at Data_0F1_5E04 to wBGPaletteBuffer (E-0122)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case01)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case01)
 ; points at: wBGPaletteBuffer
 LoadBGPalettesFrom5E04::
 Func_0F1_5C05:: ; address name
@@ -4438,23 +4438,23 @@ Jump_0F1_5C0D::
     jr nz, Jump_0F1_5C0D
     ret
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01
+; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 304 bytes expand to 544 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5C14:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3C5C14, $130
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01
+; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 88 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5D44:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $3C5D44, $58
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01
+; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 32 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5D9C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $64, $00, $00, $9C, $80, $00, $01, $02, $90, $91, $00, $09, $04, $92, $9D, $00
     db $00, $04, $00, $15, $07, $00, $13, $0F, $16, $9E, $9F, $A0, $00, $52, $0C, $A1
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01
+; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 50 bytes expand to 260 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $04, $01, $03, $01, $03, $00, $0F, $01, $03, $EE, $FF, $01, $03, $F8, $FD, $03
@@ -4462,7 +4462,7 @@ Data_0F1_5DBC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $06, $03, $9E, $07, $03, $09, $0B, $02, $02, $02, $02, $03, $A8, $0F, $11, $03
     db $A4, $0C
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01
+; address loaded by LibraryMenu_Case10_Case01
 ; LZSS-compressed asset: 22 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F1_5DEE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     db $64, $00, $02, $01, $02, $F9, $F4, $02, $08, $08, $02, $EE, $FF, $00, $02, $14

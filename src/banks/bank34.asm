@@ -2,7 +2,7 @@ SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
 ; wCFE6/wCFE7 = monster id: copies its 26-byte MonsterTable record to wCFEC (ids at or above $250 come from bank $A2 through Func_0A2_402D)
-; 20 call sites from 20 routines (e.g. DebugShowMonsterRecord, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, ScriptCommandF3_Run_Case05_Case0E_Sub01, ...)
+; 20 call sites from 20 routines (e.g. DebugShowMonsterRecord, CreateMonsterRecordOfKindTemp1_Sub01_Sub01, GameMode5_Update_Case01_Case06_Case06_Sub01, MedalPrizeMenu_Case05_Case0E_Sub01, ...)
 ; points at: wRecordBuffer
 LoadMonsterRecord::
 Func_034_4001:: ; address name

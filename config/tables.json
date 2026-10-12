@@ -2838,7 +2838,7 @@
           "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2853,7 +2853,7 @@
           "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2868,7 +2868,7 @@
           "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "0C",
@@ -2883,7 +2883,7 @@
           "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
         }
       ],
-      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
+      "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
     },
     {
       "bank": "A1",
@@ -3267,7 +3267,7 @@
         }
       ],
       "record": "20 x 18 tiles, one row per line",
-      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
     },
     {
       "bank": "1F",
@@ -3385,7 +3385,7 @@
         }
       ],
       "record": "20 x 18 tiles, one row per line",
-      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
     },
     {
       "bank": "1F",
@@ -3503,7 +3503,7 @@
         }
       ],
       "record": "20 x 18 tiles, one row per line",
-      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
+      "note": "E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found)."
     },
     {
       "bank": "00",
@@ -8368,7 +8368,7 @@
         }
       ],
       "record": "32 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList0 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8401,7 +8401,7 @@
         }
       ],
       "record": "9 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList1 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8434,7 +8434,7 @@
         }
       ],
       "record": "10 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList2 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8467,7 +8467,7 @@
         }
       ],
       "record": "6 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList3 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8500,7 +8500,7 @@
         }
       ],
       "record": "32 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList4 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -8533,7 +8533,7 @@
         }
       ],
       "record": "15 VRAM tile addresses, then $FFFF",
-      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to ScriptCommandE8_Run_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
+      "note": "E-0200 (C1: passed in HL, with GlyphCopySrcList5 in DE, to SwapMonstersMenu_Shared05, which copies 16 bytes from bank $1F at each source to each destination until a destination of $FFFF)."
     },
     {
       "bank": "1E",
@@ -12538,7 +12538,7 @@
           "name": "class 0-7"
         }
       ],
-      "note": "E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372)."
+      "note": "E-0206 (C1: LibraryMenu_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372)."
     },
     {
       "bank": "0C",
@@ -12554,7 +12554,7 @@
           "name": "index into Data_00C_54DF"
         }
       ],
-      "note": "E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
+      "note": "E-0206 (C1: LibraryMenu_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174)."
     },
     {
       "bank": "19",
@@ -12614,7 +12614,7 @@
         ],
         "record": "24-bit number"
       },
-      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ScriptCommandE2_Run_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
+      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
     },
     {
       "bank": "00",
@@ -12937,7 +12937,7 @@
           "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
         }
       ],
-      "note": "E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word ScriptCommandF6_Run_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
+      "note": "E-0211 (C1: LibraryMenu_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
     },
     {
       "bank": "0C",
@@ -12954,7 +12954,7 @@
           "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
         }
       ],
-      "note": "E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
+      "note": "E-0211 (C1: LibraryMenu_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words)."
     },
     {
       "bank": "0C",
@@ -12988,7 +12988,7 @@
           "name": "monster id, or $FExx = any monster of family xx ($FEFE = none)"
         }
       ],
-      "note": "E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ScriptCommandF7_Run ($659F); no reader found)."
+      "note": "E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ArenaMenu ($659F); no reader found)."
     },
     {
       "bank": "31",
@@ -14231,7 +14231,7 @@
           "name": "79 VRAM destinations, then $FFFF"
         }
       ],
-      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Shared05 copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; ScriptCommandEC_Run_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall)."
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Shared05 copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; CloseHibernateMenu_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall)."
     },
     {
       "bank": "14",
@@ -14292,7 +14292,7 @@
           "name": "27 VRAM destinations, then $FFFF"
         }
       ],
-      "note": "E-0224 (C1: ScriptCommandEB_Run_Case01_Case01 passes $5A28 with sources Data_014_5A84 to ScriptCommandEB_Run_Shared04, which copies one tile per destination until $FFFF)."
+      "note": "E-0224 (C1: HibernateMenu_Case01_Case01 passes $5A28 with sources Data_014_5A84 to HibernateMenu_Shared04, which copies one tile per destination until $FFFF)."
     },
     {
       "bank": "14",
@@ -14343,7 +14343,7 @@
         }
       ],
       "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
-      "note": "E-0226 (C1: ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState = 3))."
+      "note": "E-0226 (C1: VaultMenu_Case03_Case00_Sub01 copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState = 3))."
     },
     {
       "bank": "1D",
@@ -14378,7 +14378,7 @@
         }
       ],
       "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
-      "note": "E-0226 (C1: ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
+      "note": "E-0226 (C1: VaultMenu_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
     },
     {
       "bank": "1D",
@@ -18004,7 +18004,7 @@
           "reason": "preset monster record"
         }
       ],
-      "note": "E-0235 (C1: ScriptCommandF4_Run_Case04_Case13 reads the word at $78D6 + 2 * wScreenTableIndex and copies $A5 bytes from it to wRecordBufB; the first ten words point at ten consecutive records and the last six repeat the first)."
+      "note": "E-0235 (C1: NpcBreedMenu_Case04_Case13 reads the word at $78D6 + 2 * wScreenTableIndex and copies $A5 bytes from it to wRecordBufB; the first ten words point at ten consecutive records and the last six repeat the first)."
     },
     {
       "bank": "0D",
@@ -18404,7 +18404,7 @@
           "name": "item numbers in order, $FF ends the list"
         }
       ],
-      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
+      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
     },
     {
       "bank": "F2",
@@ -18420,7 +18420,7 @@
           "name": "item numbers in order, $FF ends the list"
         }
       ],
-      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
+      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
     },
     {
       "bank": "1C",
@@ -18435,7 +18435,7 @@
           "name": "percentage"
         }
       ],
-      "note": "E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0)."
+      "note": "E-0237 (C1: ShopMenu_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0)."
     },
     {
       "bank": "1C",
@@ -18451,7 +18451,7 @@
           "name": "value"
         }
       ],
-      "note": "E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE)."
+      "note": "E-0237 (C1: ShopMenu_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE)."
     },
     {
       "bank": "A0",
@@ -18565,7 +18565,7 @@
           "reason": "tile destination list"
         }
       ],
-      "note": "E-0238 (C1: ScriptCommandE2_Run_Case03_Case03 and four other sites read the word at $6289 + 2 * wScreenCounter, then the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at $4910 there (CopyFromBankWaitVRAM, 16 bytes))."
+      "note": "E-0238 (C1: ShopMenu_Case03_Case03 and four other sites read the word at $6289 + 2 * wScreenCounter, then the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at $4910 there (CopyFromBankWaitVRAM, 16 bytes))."
     },
     {
       "bank": "1C",

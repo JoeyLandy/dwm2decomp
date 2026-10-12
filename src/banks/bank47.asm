@@ -299,7 +299,7 @@ Data_047_624B:: ; heuristic: map screen stream; C0
     INCBIN "dwm2-cobi-us.gbc", $11E24B, $4F
 
 ; compressed tileset of map $0D (the first map record using it)
-; address loaded by ScriptCommandED_Run_Case0F_Case00
+; address loaded by BreedMenu_Case0F_Case00
 ; LZSS-compressed asset: 1352 bytes expand to 1616 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map0DTileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_047_629A:: ; address name

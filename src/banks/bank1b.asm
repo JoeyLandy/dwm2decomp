@@ -1292,7 +1292,7 @@ Func_01B_480C:: ; address name
     db $11, $21, $48, $CD, $FE, $25, $C9
 
 ; Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 12 call sites from 10 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case00, RunScreenStateWhenNotFading_1B_Case01_Case12_Sub01, ScriptCommandEF_Run_Bank1B_Case04_Case09, ScriptCommandEF_Run_Bank1B_Case05_Case06, ...)
+; 12 call sites from 10 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case00, RunScreenStateWhenNotFading_1B_Case01_Case12_Sub01, EggServiceMenu_Bank1B_Case04_Case09, EggServiceMenu_Bank1B_Case05_Case06, ...)
 ShowString_Bank1B_481A::
 Func_01B_481A:: ; address name
     call BeginStringDisplay_Bank1B_480C
@@ -1539,7 +1539,7 @@ Data_01B_4C83:: ; heuristic: string; C0
     db $F9, $00, $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank1B_4C94, DebugMessageTest_Update_Case16, ScriptCommandED_Run_Case04_Case2C, ScriptCommandED_Run_Case04_Case36)
+; 4 call sites from 4 routines (e.g. ShowString_Bank1B_4C94, DebugMessageTest_Update_Case16, BreedMenu_Case04_Case2C, BreedMenu_Case04_Case36)
 BeginStringDisplay_Bank1B_4C86::
 Func_01B_4C86:: ; address name
     ld de, StringCategories_1B_4C9B
@@ -1548,7 +1548,7 @@ Func_01B_4C86:: ; address name
     db $11, $9B, $4C, $CD, $FE, $25, $C9
 
 ; Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, ScriptCommandED_Run_Case0F_Case07, ShowSaveFileInfoWindow)
+; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, BreedMenu_Case0F_Case07, ShowSaveFileInfoWindow)
 ShowString_Bank1B_4C94::
 Func_01B_4C94:: ; address name
     call BeginStringDisplay_Bank1B_4C86
@@ -4613,7 +4613,7 @@ Func_01B_6308:: ; address name
     ret
 
 ; stores tile $C3 at the addresses of entries 0 to C - 1 of the word table at HL (E-0122)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case0A, ScriptCommandEF_Run_Bank1B_Case04_Case0B, ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case0A, EggServiceMenu_Bank1B_Case04_Case0B, EggServiceMenu_Bank1B_Case04_Case0A_Sub01)
 EraseCEntriesOfWordTable_Bank1B::
 Func_01B_6318:: ; address name
     ld a, c
@@ -4664,7 +4664,7 @@ Func_01B_632C:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case02, DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case02, DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_Case0E_Case01)
 StoreC5BEC6AtHLStride2_Bank1B::
 Func_01B_634F:: ; address name
     ld a, $C5
@@ -5040,35 +5040,35 @@ Jump_01B_6650::
     jr nz, Jump_01B_6650
     ret
 
-; the same instruction sequence as ScriptCommandEF_Run (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
+; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
 ; 4 call sites from 4 routines (e.g. RunLinkScreenState_6C12_Case07, GameMode6_Update_Case04_Case04, GameMode6_Update_Case0F_Case03, GameMode6_Update_Case0F_Case07)
 ; reads: wScreenState
-ScriptCommandEF_Run_Bank1B::
+EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case01
-    dw ScriptCommandEF_Run_Bank1B_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case04
-    dw ScriptCommandEF_Run_Bank1B_Case05
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case0D
-    dw ScriptCommandEF_Run_Bank1B_Case0E
-    dw ScriptCommandEF_Run_Bank1B_Case0F
+    dw EggServiceMenu_Bank1B_Case00
+    dw EggServiceMenu_Bank1B_Case01
+    dw EggServiceMenu_Bank1B_Case02
+    dw EggServiceMenu_Bank1B_Case03
+    dw EggServiceMenu_Bank1B_Case04
+    dw EggServiceMenu_Bank1B_Case05
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case06
+    dw EggServiceMenu_Bank1B_Case0D
+    dw EggServiceMenu_Bank1B_Case0E
+    dw EggServiceMenu_Bank1B_Case0F
 
-; entry 0 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: hSpriteHideTile, wStringCategory, wScreenState
-ScriptCommandEF_Run_Bank1B_Case00::
+EggServiceMenu_Bank1B_Case00::
 Jump_01B_6682:: ; address name
     ld a, $C0
     ldh [hSpriteHideTile], a
@@ -5081,11 +5081,11 @@ Jump_01B_6682:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenState
 ; writes: wScreenState
-ScriptCommandEF_Run_Bank1B_Case01::
+EggServiceMenu_Bank1B_Case01::
 Jump_01B_6698:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5096,24 +5096,24 @@ Jump_01B_6698:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case02::
+EggServiceMenu_Bank1B_Case02::
 Jump_01B_66A6:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case02_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case02_Case01
-    dw ScriptCommandEF_Run_Bank1B_Case02_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case02_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case02_Case04
+    dw EggServiceMenu_Bank1B_Case02_Case00
+    dw EggServiceMenu_Bank1B_Case02_Case01
+    dw EggServiceMenu_Bank1B_Case02_Case02
+    dw EggServiceMenu_Bank1B_Case02_Case03
+    dw EggServiceMenu_Bank1B_Case02_Case04
 
-; entry 0 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case02
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case02_Case00::
+EggServiceMenu_Bank1B_Case02_Case00::
 Jump_01B_66B4:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -5125,11 +5125,11 @@ Jump_01B_66B4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case02
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case02_Case01::
+EggServiceMenu_Bank1B_Case02_Case01::
 Jump_01B_66C6:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5141,11 +5141,11 @@ Jump_01B_66C6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case02
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case02_Case02::
+EggServiceMenu_Bank1B_Case02_Case02::
 Jump_01B_66D8:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5157,11 +5157,11 @@ Jump_01B_66D8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case02
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case02_Case03::
+EggServiceMenu_Bank1B_Case02_Case03::
 Jump_01B_66EA:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -5173,12 +5173,12 @@ Jump_01B_66EA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case02
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
-ScriptCommandEF_Run_Bank1B_Case02_Case04::
+EggServiceMenu_Bank1B_Case02_Case04::
 Jump_01B_66FC:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -5201,59 +5201,59 @@ Jump_01B_6708::
     ld [wModeChangeRequest], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandEF_Run_Bank1B_Case03::
+EggServiceMenu_Bank1B_Case03::
 Jump_01B_671F:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04::
+EggServiceMenu_Bank1B_Case04::
 Jump_01B_6727:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case01
+    dw EggServiceMenu_Bank1B_Case04_Case00
+    dw EggServiceMenu_Bank1B_Case04_Case01
     dw DrawRecordListPageIndicators_1B
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case01
+    dw EggServiceMenu_Bank1B_Case04_Case01
     dw DrawListEntriesCell5RecordPanel
     dw ClearAndDrawListEntriesCell5NameAtTiles1780
     dw DrawRuleBoxByWD04CBit7
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case07
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case08
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case09
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case0A
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case0B
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case0C
-    dw ScriptCommandEF_Run_Bank1B_Case04_Case0D
+    dw EggServiceMenu_Bank1B_Case04_Case07
+    dw EggServiceMenu_Bank1B_Case04_Case08
+    dw EggServiceMenu_Bank1B_Case04_Case09
+    dw EggServiceMenu_Bank1B_Case04_Case0A
+    dw EggServiceMenu_Bank1B_Case04_Case0B
+    dw EggServiceMenu_Bank1B_Case04_Case0C
+    dw EggServiceMenu_Bank1B_Case04_Case0D
 
-; entry 1 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-ScriptCommandEF_Run_Bank1B_Case04_Case01::
+EggServiceMenu_Bank1B_Case04_Case01::
 Jump_01B_6747:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
-ScriptCommandEF_Run_Bank1B_Case04_Case00::
+EggServiceMenu_Bank1B_Case04_Case00::
 Jump_01B_6753:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; runs Func_01B_7399 and Func_01E_7163; with two or more pages draws the bracket and page-of-pages indicators; wD781 += 1 (E-0124)
@@ -5291,7 +5291,7 @@ Jump_01B_679D::
     ret
 
 ; for the record at WD789 cell 5: draws its graphics (Func_01B_7460 with wD7F1 = $C7), copies two rectangles to wC434 and wC440, draws its details at wC443 (Func_01B_7487) and wD781 += 1 (E-0121)
-; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case03, CallDrawListEntriesCell5RecordPanel)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case03, CallDrawListEntriesCell5RecordPanel)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
 DrawListEntriesCell5RecordPanel::
@@ -5329,7 +5329,7 @@ Func_01B_67A5:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case04, CallClearAndDrawListEntriesCell5Name, Func_033_5215_Table2_Case0E_Case04)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case04, CallClearAndDrawListEntriesCell5Name, Func_033_5215_Table2_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearAndDrawListEntriesCell5NameAtTiles1780::
@@ -5352,7 +5352,7 @@ Func_01B_67F0:: ; address name
     ret
 
 ; copies box Data_01B_7757 (10 x 7) or Data_01B_779D (10 x 9, when bit 7 of wD04C is set) to wC36E, then wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case05)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case0E_Case05)
 ; reads: wLinkRules, wScreenStep
 ; writes: wScreenStep
 DrawRuleBoxByWD04CBit7::
@@ -5378,11 +5378,11 @@ Jump_01B_6835::
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wListCursor, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04_Case07::
+EggServiceMenu_Bank1B_Case04_Case07::
 Jump_01B_683D:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5405,11 +5405,11 @@ Jump_01B_683D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wMenuInputResult, wListCursor, wScreenStep, wPickCount, wSelectedRecord
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wMenuInputResult, wPickCount, wListCursor, wListPageIndex
-ScriptCommandEF_Run_Bank1B_Case04_Case08::
+EggServiceMenu_Bank1B_Case04_Case08::
 Jump_01B_686F:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -5498,8 +5498,8 @@ Jump_01B_68F6::
     ret
 
 Jump_01B_690D::
-    call ScriptCommandEF_Run_Bank1B_Shared01
-    call ScriptCommandEF_Run_Bank1B_Shared02
+    call EggServiceMenu_Bank1B_Shared01
+    call EggServiceMenu_Bank1B_Shared02
     cp a, $FF
     jr z, Jump_01B_6918
     ret
@@ -5525,11 +5525,11 @@ Jump_01B_693A::
     call ShowStringA10_Bank1B
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04_Case09::
+EggServiceMenu_Bank1B_Case04_Case09::
 Jump_01B_6940:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5576,11 +5576,11 @@ Jump_01B_6940:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wArg5, wChoiceCursor, wScreenState, wScreenStep, wPickCount, wArg6
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wArg5, wScreenByteB2, wScreenByteB3, wLinkSceneByte4C, ...
-ScriptCommandEF_Run_Bank1B_Case04_Case0A::
+EggServiceMenu_Bank1B_Case04_Case0A::
 Jump_01B_69A9:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -5631,11 +5631,11 @@ Jump_01B_69E7::
     ret
 
 Jump_01B_6A06::
-    call ScriptCommandEF_Run_Bank1B_Shared01
+    call EggServiceMenu_Bank1B_Shared01
     ld a, [wPickCount]
     cp a, $03
     jr c, Jump_01B_6A46
-    call ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub02
+    call EggServiceMenu_Bank1B_Case04_Case0A_Sub02
     cp a, $FF
     jr nz, Jump_01B_6A18
     ret
@@ -5650,7 +5650,7 @@ Jump_01B_6A18::
     ld [wLinkSceneByte4C], a
     ld a, $04
     ld [wPickCount], a
-    call ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01
+    call EggServiceMenu_Bank1B_Case04_Case0A_Sub01
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -5668,11 +5668,11 @@ Jump_01B_6A46::
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 11 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04_Case0B::
+EggServiceMenu_Bank1B_Case04_Case0B::
 Jump_01B_6A4F:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5682,11 +5682,11 @@ Jump_01B_6A4F:: ; address name
     call EraseCEntriesOfWordTable_Bank1B
     jr Jump_01B_6A71
 
-; only called from ScriptCommandEF_Run_Bank1B_Case04_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case0A)
+; only called from EggServiceMenu_Bank1B_Case04_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case04_Case0A)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01::
+EggServiceMenu_Bank1B_Case04_Case0A_Sub01::
 Func_01B_6A5E:: ; address name
     ld c, $05
     ld hl, Data_01B_786F
@@ -5697,7 +5697,7 @@ Func_01B_6A5E:: ; address name
     call StoreBAtWordTableEntry_Bank1B
 
 Jump_01B_6A71::
-    call ScriptCommandEF_Run_Bank1B_Shared03
+    call EggServiceMenu_Bank1B_Shared03
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -5707,16 +5707,16 @@ Jump_01B_6A71::
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPickCount, wScreenStep
 ; writes: wPickCount, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case04_Case0C::
+EggServiceMenu_Bank1B_Case04_Case0C::
 Jump_01B_6A89:: ; address name
-    call ScriptCommandEF_Run_Bank1B_Shared02
+    call EggServiceMenu_Bank1B_Shared02
     cp a, $FF
     ret nz
-    call ScriptCommandEF_Run_Bank1B_Shared03
+    call EggServiceMenu_Bank1B_Shared03
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
     ld de, $01CC
@@ -5731,11 +5731,11 @@ Jump_01B_6A89:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case04
+; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-ScriptCommandEF_Run_Bank1B_Case04_Case0D::
+EggServiceMenu_Bank1B_Case04_Case0D::
 Jump_01B_6AB3:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -5999,41 +5999,41 @@ Jump_01B_6C4D::
     ld [wScreenSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05::
+EggServiceMenu_Bank1B_Case05::
 Jump_01B_6C61:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case01
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case04
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case05
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case07
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case08
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case09
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case0A
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case0C
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case0D
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case0F
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case10
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case11
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case0A
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case05_Case15
+    dw EggServiceMenu_Bank1B_Case05_Case00
+    dw EggServiceMenu_Bank1B_Case05_Case01
+    dw EggServiceMenu_Bank1B_Case05_Case02
+    dw EggServiceMenu_Bank1B_Case05_Case03
+    dw EggServiceMenu_Bank1B_Case05_Case04
+    dw EggServiceMenu_Bank1B_Case05_Case05
+    dw EggServiceMenu_Bank1B_Case05_Case06
+    dw EggServiceMenu_Bank1B_Case05_Case07
+    dw EggServiceMenu_Bank1B_Case05_Case08
+    dw EggServiceMenu_Bank1B_Case05_Case09
+    dw EggServiceMenu_Bank1B_Case05_Case0A
+    dw EggServiceMenu_Bank1B_Case05_Case02
+    dw EggServiceMenu_Bank1B_Case05_Case0C
+    dw EggServiceMenu_Bank1B_Case05_Case0D
+    dw EggServiceMenu_Bank1B_Case05_Case02
+    dw EggServiceMenu_Bank1B_Case05_Case0F
+    dw EggServiceMenu_Bank1B_Case05_Case10
+    dw EggServiceMenu_Bank1B_Case05_Case11
+    dw EggServiceMenu_Bank1B_Case05_Case0A
+    dw EggServiceMenu_Bank1B_Case05_Case02
+    dw EggServiceMenu_Bank1B_Case05_Case03
+    dw EggServiceMenu_Bank1B_Case05_Case15
 
-; entry 17 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 17 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case11::
+EggServiceMenu_Bank1B_Case05_Case11::
 Jump_01B_6C91:: ; address name
     ld a, $09
     call ShowStringA10_Bank1B
@@ -6042,11 +6042,11 @@ Jump_01B_6C91:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case09::
+EggServiceMenu_Bank1B_Case05_Case09::
 Jump_01B_6C9E:: ; address name
     ld a, $0C
     call ShowStringA10_Bank1B
@@ -6055,11 +6055,11 @@ Jump_01B_6C9E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case0A::
+EggServiceMenu_Bank1B_Case05_Case0A::
 Jump_01B_6CAB:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6069,11 +6069,11 @@ Jump_01B_6CAB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case00::
+EggServiceMenu_Bank1B_Case05_Case00::
 Jump_01B_6CB8:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6084,12 +6084,12 @@ Jump_01B_6CB8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPackWork, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
 ; points at: wRecordBufA, sRecords
-ScriptCommandEF_Run_Bank1B_Case05_Case01::
+EggServiceMenu_Bank1B_Case05_Case01::
 Jump_01B_6CC8:: ; address name
     ld a, [wPackWork]
     cp a, $FF
@@ -6130,11 +6130,11 @@ Jump_01B_6D03::
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-ScriptCommandEF_Run_Bank1B_Case05_Case02::
+EggServiceMenu_Bank1B_Case05_Case02::
 Jump_01B_6D11:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -6143,11 +6143,11 @@ Jump_01B_6D11:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-ScriptCommandEF_Run_Bank1B_Case05_Case03::
+EggServiceMenu_Bank1B_Case05_Case03::
 Jump_01B_6D1E:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6173,12 +6173,12 @@ Jump_01B_6D3F::
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
 ; points at: wRecordBufA, wRecordBufB
-ScriptCommandEF_Run_Bank1B_Case05_Case04::
+EggServiceMenu_Bank1B_Case05_Case04::
 Jump_01B_6D4B:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -6204,11 +6204,11 @@ Jump_01B_6D4B:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 16 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkReady, wLinkSendByte, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case10::
+EggServiceMenu_Bank1B_Case05_Case10::
 Jump_01B_6D7E:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -6222,11 +6222,11 @@ Jump_01B_6D7E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkReady, wLinkSendByte, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case05::
+EggServiceMenu_Bank1B_Case05_Case05::
 Jump_01B_6D96:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -6242,11 +6242,11 @@ Jump_01B_6D96:: ; address name
     call ShowStringA10_Bank1B
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case06::
+EggServiceMenu_Bank1B_Case05_Case06::
 Jump_01B_6DB3:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6284,11 +6284,11 @@ Jump_01B_6DB3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wLinkRules, wScreenStep, wRecordBufB, wScreenState, wListCursor, ...
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, ...
-ScriptCommandEF_Run_Bank1B_Case05_Case07::
+EggServiceMenu_Bank1B_Case05_Case07::
 Jump_01B_6E09:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -6381,11 +6381,11 @@ Jump_01B_6E8E::
     ld [wScreenSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case05_Case08::
+EggServiceMenu_Bank1B_Case05_Case08::
 Jump_01B_6EB9:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6395,11 +6395,11 @@ Jump_01B_6EB9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-ScriptCommandEF_Run_Bank1B_Case05_Case0C::
+EggServiceMenu_Bank1B_Case05_Case0C::
 Jump_01B_6EC6:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6425,19 +6425,19 @@ Jump_01B_6EE7::
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkRole, wScreenStep
 ; writes: wLinkSceneByte4B, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wScreenStep
 ; points at: wBattlerRecords, wBattlerRecordSlot4
-ScriptCommandEF_Run_Bank1B_Case05_Case0D::
+EggServiceMenu_Bank1B_Case05_Case0D::
 Jump_01B_6EF3:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, Jump_01B_6F1F
     xor a, a
     ld [wLinkSceneByte4B], a
-    call ScriptCommandEF_Run_Bank1B_Case05_Case0D_Sub01
+    call EggServiceMenu_Bank1B_Case05_Case0D_Sub01
     ld hl, wBattlerRecords
     ld a, l
     ld [wLinkTimeoutLo], a
@@ -6456,7 +6456,7 @@ Jump_01B_6EF3:: ; address name
 Jump_01B_6F1F::
     ld a, $01
     ld [wLinkSceneByte4B], a
-    call ScriptCommandEF_Run_Bank1B_Case05_Case0D_Sub01
+    call EggServiceMenu_Bank1B_Case05_Case0D_Sub01
     ld hl, wBattlerRecordSlot4
     ld a, l
     ld [wLinkTimeoutLo], a
@@ -6472,11 +6472,11 @@ Jump_01B_6F1F::
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkSendByte, wLinkReady
-ScriptCommandEF_Run_Bank1B_Case05_Case0F::
+EggServiceMenu_Bank1B_Case05_Case0F::
 Jump_01B_6F45:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6495,10 +6495,10 @@ Jump_01B_6F45:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 21 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case05
+; entry 21 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wModeChangeRequest, wLinkSession, wLinkExchangeState, wLinkSendByte, ...
-ScriptCommandEF_Run_Bank1B_Case05_Case15::
+EggServiceMenu_Bank1B_Case05_Case15::
 Jump_01B_6F68:: ; address name
     ld a, $04
     ld [wGameMode], a
@@ -6518,13 +6518,13 @@ Jump_01B_6F68:: ; address name
     ld [wLinkMessage], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wScreenState
 ; writes: wScreenStep, wScreenSubStep, wScreenState
-ScriptCommandEF_Run_Bank1B_Case06::
+EggServiceMenu_Bank1B_Case06::
 Jump_01B_6F8F:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -6536,11 +6536,11 @@ Jump_01B_6F8F:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wItemGridX, wItemGridY
 ; writes: wListCursor, wListPageIndex
-ScriptCommandEF_Run_Bank1B_Case0D::
+EggServiceMenu_Bank1B_Case0D::
 Jump_01B_6FAB:: ; address name
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
@@ -6552,27 +6552,27 @@ Jump_01B_6FAB:: ; address name
     ld [wListPageIndex], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 14 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0E::
+EggServiceMenu_Bank1B_Case0E::
 Jump_01B_6FC4:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case01
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case04
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case05
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case07
+    dw EggServiceMenu_Bank1B_Case0E_Case00
+    dw EggServiceMenu_Bank1B_Case0E_Case01
+    dw EggServiceMenu_Bank1B_Case0E_Case02
+    dw EggServiceMenu_Bank1B_Case0E_Case03
+    dw EggServiceMenu_Bank1B_Case0E_Case04
+    dw EggServiceMenu_Bank1B_Case0E_Case05
+    dw EggServiceMenu_Bank1B_Case0E_Case06
+    dw EggServiceMenu_Bank1B_Case0E_Case07
 
-; entry 6 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0E_Case06::
+EggServiceMenu_Bank1B_Case0E_Case06::
 Jump_01B_6FD8:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
@@ -6601,27 +6601,27 @@ Jump_01B_6FD8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandEF_Run_Bank1B
+; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0F::
+EggServiceMenu_Bank1B_Case0F::
 Jump_01B_7019:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case00
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case01
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case02
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case03
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case04
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case05
-    dw ScriptCommandEF_Run_Bank1B_Case0F_Case06
-    dw ScriptCommandEF_Run_Bank1B_Case0E_Case07
+    dw EggServiceMenu_Bank1B_Case0E_Case00
+    dw EggServiceMenu_Bank1B_Case0E_Case01
+    dw EggServiceMenu_Bank1B_Case0E_Case02
+    dw EggServiceMenu_Bank1B_Case0E_Case03
+    dw EggServiceMenu_Bank1B_Case0E_Case04
+    dw EggServiceMenu_Bank1B_Case0E_Case05
+    dw EggServiceMenu_Bank1B_Case0F_Case06
+    dw EggServiceMenu_Bank1B_Case0E_Case07
 
-; entry 0 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0E_Case00::
+EggServiceMenu_Bank1B_Case0E_Case00::
 Jump_01B_702D:: ; address name
     call ClearRecordPanelTiles
     ld de, TileRect_1B_7928
@@ -6637,11 +6637,11 @@ Jump_01B_702D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0E_Case01::
+EggServiceMenu_Bank1B_Case0E_Case01::
 Jump_01B_704F:: ; address name
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
@@ -6663,10 +6663,10 @@ Jump_01B_7076::
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-ScriptCommandEF_Run_Bank1B_Case0E_Case02::
+EggServiceMenu_Bank1B_Case0E_Case02::
 Jump_01B_707E:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -6674,32 +6674,32 @@ Jump_01B_707E:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandEF_Run_Bank1B_Case0E_Case03::
+EggServiceMenu_Bank1B_Case0E_Case03::
 Jump_01B_708F:: ; address name
     call DrawListEntriesCell5RecordPanel
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandEF_Run_Bank1B_Case0E_Case04::
+EggServiceMenu_Bank1B_Case0E_Case04::
 Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandEF_Run_Bank1B_Case0E_Case05::
+EggServiceMenu_Bank1B_Case0E_Case05::
 Jump_01B_7097:: ; address name
     call DrawRuleBoxByWD04CBit7
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0F
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPickCount, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-ScriptCommandEF_Run_Bank1B_Case0F_Case06::
+EggServiceMenu_Bank1B_Case0F_Case06::
 Jump_01B_709B:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -6752,11 +6752,11 @@ Jump_01B_70EA::
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandEF_Run_Bank1B_Case0E
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ScriptCommandEF_Run_Bank1B_Case0E_Case07::
+EggServiceMenu_Bank1B_Case0E_Case07::
 Jump_01B_710B:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
@@ -6788,12 +6788,12 @@ Jump_01B_710B:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from ScriptCommandEF_Run_Bank1B_Case05_Case0D (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case05_Case0D)
+; only called from EggServiceMenu_Bank1B_Case05_Case0D (E-0047)
+; 2 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_Case05_Case0D)
 ; reads: wLinkRole
 ; writes: rRAMG2, rRAMB
 ; points at: wBattlerRecords, wBattlerRecordSlot4, wPickedRecords
-ScriptCommandEF_Run_Bank1B_Case05_Case0D_Sub01::
+EggServiceMenu_Bank1B_Case05_Case0D_Sub01::
 Func_01B_7152:: ; address name
     ld hl, wBattlerRecords
     ld a, [wLinkRole]
@@ -6914,7 +6914,7 @@ Jump_01B_71E5::
     ret
 
 ; copies E bytes from BC to HL; BC and HL advance, E = 0 (E-0115)
-; 4 call sites from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case05_Case0D_Sub01)
+; 4 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_Case05_Case0D_Sub01)
 CopyEBytesBCToHL::
 Func_01B_71FE:: ; address name
     ld a, [bc]
@@ -6925,7 +6925,7 @@ Func_01B_71FE:: ; address name
     ret
 
 ; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)
-; 3 call sites from 3 routines (e.g. ScriptCommandEF_Run_Bank1B_Case0E_Case00, Func_033_5215_Table2_Case0E_Case00, Func_033_5215_Table2_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case00, Func_033_5215_Table2_Case0E_Case00, Func_033_5215_Table2_Case0F_Case00)
 ; reads: wPickCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wPickCount
 ClearRecordPanelTiles::
@@ -6990,11 +6990,11 @@ Func_01B_7205:: ; address name
     call DrawPickedRecordsRecordNamesAndIcons
     ret
 
-; only called from ScriptCommandEF_Run_Bank1B_Case04_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case0A)
+; only called from EggServiceMenu_Bank1B_Case04_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case04_Case0A)
 ; reads: wArg5, wArg6, wPartyCount
 ; points at: wPartyList
-ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub02::
+EggServiceMenu_Bank1B_Case04_Case0A_Sub02::
 Func_01B_728A:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -7044,11 +7044,11 @@ Jump_01B_72C3::
     jr nz, Jump_01B_72C3
     ret
 
-; only called from routines of ScriptCommandEF_Run_Bank1B (E-0098)
-; 3 call sites from 2 routines (e.g. ScriptCommandEF_Run_Bank1B_Shared02, ScriptCommandEF_Run_Bank1B_Shared02_Sub01)
+; only called from routines of EggServiceMenu_Bank1B (E-0098)
+; 3 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Shared02, EggServiceMenu_Bank1B_Shared02_Sub01)
 ; writes: rRAMG2, rRAMB
 ; points at: wPickedRecords
-ScriptCommandEF_Run_Bank1B_Shared04::
+EggServiceMenu_Bank1B_Shared04::
 Func_01B_72CA:: ; address name
     ld hl, wPickedRecords
     add_a_to_hl
@@ -7063,12 +7063,12 @@ Func_01B_72CA:: ; address name
     ld [rRAMB], a
     ret
 
-; only called from ScriptCommandEF_Run_Bank1B_Shared02 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandEF_Run_Bank1B_Shared02)
+; only called from EggServiceMenu_Bank1B_Shared02 (E-0047)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Shared02)
 ; reads: wPickCount, hTemp0
 ; writes: rRAMG2, rRAMB
 ; points at: wArg1, wPickedRecords
-ScriptCommandEF_Run_Bank1B_Shared02_Sub01::
+EggServiceMenu_Bank1B_Shared02_Sub01::
 Func_01B_72E7:: ; address name
     ld a, [wPickCount]
     and a, a
@@ -7087,7 +7087,7 @@ Jump_01B_72F3::
     push bc
     ld a, c
     ld c, $0D
-    call ScriptCommandEF_Run_Bank1B_Shared04
+    call EggServiceMenu_Bank1B_Shared04
     pop bc
     push bc
     ld hl, wArg1
@@ -7162,10 +7162,10 @@ Jump_01B_736A::
     call DrawScreenBufferRectToBGMap_1B
     ret
 
-; only called from routines of ScriptCommandEF_Run_Bank1B (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01)
+; only called from routines of EggServiceMenu_Bank1B (E-0098)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case04_Case0A_Sub01)
 ; reads: wLinkRules
-ScriptCommandEF_Run_Bank1B_Shared03::
+EggServiceMenu_Bank1B_Shared03::
 Func_01B_7377:: ; address name
     ld a, [wLinkRules + $9]
     bit 7, a
@@ -7186,7 +7186,7 @@ Jump_01B_7398::
     ret
 
 ; lists in wD789 the stored records (state 1, or 2 unless wD7DC is 3) whose field $6E is clear and that are not already chosen in wD7DD; count in wD7A9 (E-0130)
-; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, ScriptCommandEF_Run_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
+; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_Case0E_Case01, Func_01B_6A5E_Case00)
 ; reads: wPickCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
@@ -7309,7 +7309,7 @@ Jump_01B_7424::
     ret
 
 ; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)
-; 32 call sites from 17 routines (e.g. ScriptCommandEF_Run_Bank1B_Case00, ScriptCommandEF_Run_Bank1B_Case02_Case01, ScriptCommandEF_Run_Bank1B_Case04_Case0D, ScriptCommandEF_Run_Bank1B_Shared02, ...)
+; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_Case00, EggServiceMenu_Bank1B_Case02_Case01, EggServiceMenu_Bank1B_Case04_Case0D, EggServiceMenu_Bank1B_Shared02, ...)
 ; writes: wStringIndex, wStringCategory
 ShowStringA10_Bank1B::
 Func_01B_7439:: ; address name
@@ -7321,7 +7321,7 @@ Func_01B_7439:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, ScriptCommandEF_Run_Bank1B_Case04_Case07, ScriptCommandEF_Run_Bank1B_Case05_Case06, ScriptCommandEF_Run_Bank1B_Case0E_Case06)
+; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_Case04_Case07, EggServiceMenu_Bank1B_Case05_Case06, EggServiceMenu_Bank1B_Case0E_Case06)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank1B::
 Func_01B_7449:: ; address name
@@ -7415,7 +7415,7 @@ Func_01B_7487:: ; address name
     ret
 
 ; clears the 6-tile rows of vTiles2 + $100-$220 from row wD7DC onward, then restores the default window (E-0127)
-; 4 call sites from 4 routines (e.g. ScriptCommandEF_Run_Bank1B_Case00, ClearRecordPanelTiles, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case08)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_Case00, ClearRecordPanelTiles, EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case04_Case08)
 ; reads: wPickCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
 ClearTileRowsFromPickCount::
@@ -7473,7 +7473,7 @@ Jump_01B_7533::
     ret
 
 ; for up to wD7DC records listed at wD7DD draws each name at Data_01B_75A8[n] and loads its family icon into tile Data_01B_75B0[n] (E-0128)
-; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case05_Case00)
+; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case05_Case00)
 ; reads: wPickCount
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1
 ; points at: wPickedRecords
@@ -7590,11 +7590,11 @@ Func_01B_75B4:: ; address name
     ld [rRAMB], a
     ret
 
-; only called from routines of ScriptCommandEF_Run_Bank1B (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case0A, ScriptCommandEF_Run_Bank1B_Case04_Case08)
+; only called from routines of EggServiceMenu_Bank1B (E-0098)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case04_Case0A, EggServiceMenu_Bank1B_Case04_Case08)
 ; reads: wArg5, wArg6, wPickCount
 ; points at: wPickedRecords
-ScriptCommandEF_Run_Bank1B_Shared01::
+EggServiceMenu_Bank1B_Shared01::
 Func_01B_75E4:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -7613,11 +7613,11 @@ Jump_01B_75FD::
     ld [de], a
     ret
 
-; only called from routines of ScriptCommandEF_Run_Bank1B (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case0C, ScriptCommandEF_Run_Bank1B_Case04_Case08)
+; only called from routines of EggServiceMenu_Bank1B (E-0098)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case04_Case08)
 ; reads: wPickCount, wLinkRules, hTemp0, wScreenStep, wArg5, wArg6
 ; writes: wScreenStep, rRAMG2, rRAMB, rRAMG
-ScriptCommandEF_Run_Bank1B_Shared02::
+EggServiceMenu_Bank1B_Shared02::
 Func_01B_7600:: ; address name
     ld a, [wPickCount]
     cp a, $03
@@ -7638,7 +7638,7 @@ Jump_01B_761D::
     push de
     ld a, c
     ld c, $56
-    call ScriptCommandEF_Run_Bank1B_Shared04
+    call EggServiceMenu_Bank1B_Shared04
     pop de
     ldh a, [hTemp0]
     add a, e
@@ -7708,7 +7708,7 @@ Jump_01B_7688::
     jr nz, Jump_01B_76CB
     ld a, [wPickCount]
     ld c, $0D
-    call ScriptCommandEF_Run_Bank1B_Shared04
+    call EggServiceMenu_Bank1B_Shared04
     ldh a, [hTemp0]
     and a, $0F
     sla a
@@ -7743,7 +7743,7 @@ Jump_01B_76BD::
     ret
 
 Jump_01B_76CB::
-    call ScriptCommandEF_Run_Bank1B_Shared02_Sub01
+    call EggServiceMenu_Bank1B_Shared02_Sub01
     cp a, $FF
     jr nz, Jump_01B_76E0
     ld a, $13
@@ -7759,7 +7759,7 @@ Jump_01B_76E0::
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
-; 4 call sites from 4 routines (e.g. ScriptCommandEF_Run_Bank1B_Case04_Case08, ScriptCommandEF_Run_Bank1B_Case0F_Case06, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case05_Case05)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_Case04_Case08, EggServiceMenu_Bank1B_Case0F_Case06, GameMode6_Update_Case04_Case08_Case00, GameMode6_Update_Case05_Case05)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wNameGlyphBuf, wTextBuf0
@@ -7882,11 +7882,11 @@ Data_01B_7847:: ; address name
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ScriptCommandEF_Run_Bank1B_Case04_Case07, ScriptCommandEF_Run_Bank1B_Case04_Case08, ScriptCommandEF_Run_Bank1B_Case04_Case0B, ScriptCommandEF_Run_Bank1B_Case04_Case0A_Sub01 and 1 more
+; address loaded by EggServiceMenu_Bank1B_Case04_Case07, EggServiceMenu_Bank1B_Case04_Case08, EggServiceMenu_Bank1B_Case04_Case0B, EggServiceMenu_Bank1B_Case04_Case0A_Sub01 and 1 more
 Data_01B_786F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
-; address loaded by ScriptCommandEF_Run_Bank1B_Shared02
+; address loaded by EggServiceMenu_Bank1B_Shared02
 Data_01B_7879:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $80, $00
     db $40, $00, $20, $00, $10, $00

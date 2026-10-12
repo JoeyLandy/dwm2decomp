@@ -1,0 +1,131 @@
+{
+  "_comment": "Script command types (wScriptCommandType) with names: the constant script lines use, the name of the implementation routine (the ScriptCommandXX_Run it replaces), and the evidence. Meanings are C1 readings of the messages the scripts show around the command and of the code (see the evidence entry).",
+  "commands": {
+    "E0": {
+      "const": "SCRIPT_INN",
+      "routine": "InnMenu",
+      "note": "the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings)",
+      "evidence": "E-0244"
+    },
+    "E1": {
+      "const": "SCRIPT_INN_CLOSE",
+      "routine": "CloseInnMenu",
+      "note": "ends the inn session and clears wMessageMode",
+      "evidence": "E-0244"
+    },
+    "E2": {
+      "const": "SCRIPT_SHOP",
+      "routine": "ShopMenu",
+      "note": "the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2)",
+      "evidence": "E-0244"
+    },
+    "E3": {
+      "const": "SCRIPT_SHOP_CLOSE",
+      "routine": "CloseShopMenu",
+      "note": "ends the shop session ('Thank you! Please come again.' between its two calls) and clears wMessageMode",
+      "evidence": "E-0244"
+    },
+    "E5": {
+      "const": "SCRIPT_VAULT",
+      "routine": "VaultMenu",
+      "note": "the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2)",
+      "evidence": "E-0244"
+    },
+    "E6": {
+      "const": "SCRIPT_VAULT_CLOSE",
+      "routine": "CloseVaultMenu",
+      "note": "ends the Vault session (runs CloseShopMenu's code)",
+      "evidence": "E-0244"
+    },
+    "E8": {
+      "const": "SCRIPT_SWAP_MONSTERS",
+      "routine": "SwapMonstersMenu",
+      "note": "Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings)",
+      "evidence": "E-0244"
+    },
+    "E9": {
+      "const": "SCRIPT_MENU_CLOSE",
+      "routine": "CloseMenuE9",
+      "note": "ends a menu session (runs CloseBreedMenu's code); follows the swap and NPC breeding menus",
+      "evidence": "E-0244"
+    },
+    "EB": {
+      "const": "SCRIPT_HIBERNATE",
+      "routine": "HibernateMenu",
+      "note": "monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode 4, bank $1D strings)",
+      "evidence": "E-0244"
+    },
+    "EC": {
+      "const": "SCRIPT_HIBERNATE_CLOSE",
+      "routine": "CloseHibernateMenu",
+      "note": "ends the hibernation session and clears wMessageMode",
+      "evidence": "E-0244"
+    },
+    "ED": {
+      "const": "SCRIPT_BREED",
+      "routine": "BreedMenu",
+      "note": "breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings)",
+      "evidence": "E-0244"
+    },
+    "EE": {
+      "const": "SCRIPT_BREED_CLOSE",
+      "routine": "CloseBreedMenu",
+      "note": "ends the breeding (and medal prize) session and clears wMessageMode",
+      "evidence": "E-0244"
+    },
+    "EF": {
+      "const": "SCRIPT_EGG_SERVICE",
+      "routine": "EggServiceMenu",
+      "note": "egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings)",
+      "evidence": "E-0244"
+    },
+    "F0": {
+      "const": "SCRIPT_RENAME",
+      "routine": "RenameMenu",
+      "note": "the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6)",
+      "evidence": "E-0244"
+    },
+    "F1": {
+      "const": "SCRIPT_RENAME_CLOSE",
+      "routine": "CloseRenameMenu",
+      "note": "ends the renaming session (runs CloseBreedMenu's code)",
+      "evidence": "E-0244"
+    },
+    "F2": {
+      "const": "SCRIPT_KEY_APPRAISAL",
+      "routine": "KeyAppraisalMenu",
+      "note": "Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings)",
+      "evidence": "E-0244"
+    },
+    "F3": {
+      "const": "SCRIPT_MEDAL_PRIZES",
+      "routine": "MedalPrizeMenu",
+      "note": "the TinyMedal prize exchange: 'Which prize do you want?', 'I'll trade for 0 TinyMedals. OK?' (mode 7)",
+      "evidence": "E-0244"
+    },
+    "F4": {
+      "const": "SCRIPT_NPC_BREED",
+      "routine": "NpcBreedMenu",
+      "note": "breeding with a townsperson's monster picked by wScreenTableIndex: 'Who will breed with my SpikyBoy?' (mode 8, message bank $0E, + 16 * wScreenTableIndex)",
+      "evidence": "E-0244"
+    },
+    "F6": {
+      "const": "SCRIPT_LIBRARY",
+      "routine": "LibraryMenu",
+      "note": "the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings)",
+      "evidence": "E-0244"
+    },
+    "F7": {
+      "const": "SCRIPT_ARENA",
+      "routine": "ArenaMenu",
+      "note": "the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, bank $33 strings)",
+      "evidence": "E-0244"
+    },
+    "F8": {
+      "const": "SCRIPT_PRIEST",
+      "routine": "PriestMenu",
+      "note": "the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings)",
+      "evidence": "E-0244"
+    }
+  }
+}

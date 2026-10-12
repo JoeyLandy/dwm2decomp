@@ -1290,7 +1290,7 @@ Jump_031_474A:: ; address name
 ; points at: wBattleSubPhase, wBattleSubStep
 BattleEnd_Step5_Case02::
 Jump_031_4751:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz

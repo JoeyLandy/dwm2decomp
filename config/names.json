@@ -2020,108 +2020,108 @@
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:4075": {
-    "name": "ScriptCommandE0_Run",
-    "note": "implements script command type E0; reached through ScriptCommandE0 in bank $10 (E-0038)",
+    "name": "InnMenu",
+    "note": "implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:4001": {
-    "name": "ScriptCommandE1_Run",
-    "note": "implements script command type E1; reached through ScriptCommandE1 in bank $10 (E-0038)",
+    "name": "CloseInnMenu",
+    "note": "implements script command type E1 (SCRIPT_INN_CLOSE): ends the inn session and clears wMessageMode; reached through ScriptCommandE1 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:4696": {
-    "name": "ScriptCommandE2_Run",
-    "note": "implements script command type E2; reached through ScriptCommandE2 in bank $10 (E-0038)",
+    "name": "ShopMenu",
+    "note": "implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through ScriptCommandE2 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:4605": {
-    "name": "ScriptCommandE3_Run",
-    "note": "implements script command type E3; reached through ScriptCommandE3 in bank $10 (E-0038)",
+    "name": "CloseShopMenu",
+    "note": "implements script command type E3 (SCRIPT_SHOP_CLOSE): ends the shop session ('Thank you! Please come again.' between its two calls) and clears wMessageMode; reached through ScriptCommandE3 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:6CEF": {
-    "name": "ScriptCommandE5_Run",
-    "note": "implements script command type E5; reached through ScriptCommandE5 in bank $10 (E-0038)",
+    "name": "VaultMenu",
+    "note": "implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1C:6CEB": {
-    "name": "ScriptCommandE6_Run",
-    "note": "implements script command type E6; reached through ScriptCommandE6 in bank $10 (E-0038)",
+    "name": "CloseVaultMenu",
+    "note": "implements script command type E6 (SCRIPT_VAULT_CLOSE): ends the Vault session (runs CloseShopMenu's code); reached through ScriptCommandE6 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1E:4069": {
-    "name": "ScriptCommandE8_Run",
-    "note": "implements script command type E8; reached through ScriptCommandE8 in bank $10 (E-0038)",
+    "name": "SwapMonstersMenu",
+    "note": "implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "1E:4001": {
-    "name": "ScriptCommandE9_Run",
-    "note": "implements script command type E9; reached through ScriptCommandE9 in bank $10 (E-0038)",
+    "name": "CloseMenuE9",
+    "note": "implements script command type E9 (SCRIPT_MENU_CLOSE): ends a menu session (runs CloseBreedMenu's code); follows the swap and NPC breeding menus; reached through ScriptCommandE9 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "14:40CC": {
-    "name": "ScriptCommandEB_Run",
-    "note": "implements script command type EB; reached through ScriptCommandEB in bank $10 (E-0038)",
+    "name": "HibernateMenu",
+    "note": "implements script command type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode 4, bank $1D strings); reached through ScriptCommandEB in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "14:4001": {
-    "name": "ScriptCommandEC_Run",
-    "note": "implements script command type EC; reached through ScriptCommandEC in bank $10 (E-0038)",
+    "name": "CloseHibernateMenu",
+    "note": "implements script command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode; reached through ScriptCommandEC in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "15:40FA": {
-    "name": "ScriptCommandED_Run",
-    "note": "implements script command type ED; reached through ScriptCommandED in bank $10 (E-0038)",
+    "name": "BreedMenu",
+    "note": "implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "15:4001": {
-    "name": "ScriptCommandEE_Run",
-    "note": "implements script command type EE; reached through ScriptCommandEE in bank $10 (E-0038)",
+    "name": "CloseBreedMenu",
+    "note": "implements script command type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode; reached through ScriptCommandEE in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:45D1": {
-    "name": "ScriptCommandEF_Run",
-    "note": "implements script command type EF; reached through ScriptCommandEF in bank $10 (E-0038)",
+    "name": "EggServiceMenu",
+    "note": "implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:5159": {
-    "name": "ScriptCommandF0_Run",
-    "note": "implements script command type F0; reached through ScriptCommandF0 in bank $10 (E-0038)",
+    "name": "RenameMenu",
+    "note": "implements script command type F0 (SCRIPT_RENAME): the Christener's renaming: 'Pick the monster to rename.' (runs EggServiceMenu's first state, so mode 6); reached through ScriptCommandF0 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:50E5": {
-    "name": "ScriptCommandF1_Run",
-    "note": "implements script command type F1; reached through ScriptCommandF1 in bank $10 (E-0038)",
+    "name": "CloseRenameMenu",
+    "note": "implements script command type F1 (SCRIPT_RENAME_CLOSE): ends the renaming session (runs CloseBreedMenu's code); reached through ScriptCommandF1 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:55BE": {
-    "name": "ScriptCommandF2_Run",
-    "note": "implements script command type F2; reached through ScriptCommandF2 in bank $10 (E-0038)",
+    "name": "KeyAppraisalMenu",
+    "note": "implements script command type F2 (SCRIPT_KEY_APPRAISAL): Magic Key appraisal: 'Which Magic Key should I appraise?', 'Appraisal will cost 0G. OK?' (mode 7, bank $0D strings); reached through ScriptCommandF2 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:6310": {
-    "name": "ScriptCommandF3_Run",
-    "note": "implements script command type F3; reached through ScriptCommandF3 in bank $10 (E-0038)",
+    "name": "MedalPrizeMenu",
+    "note": "implements script command type F3 (SCRIPT_MEDAL_PRIZES): the TinyMedal prize exchange: 'Which prize do you want?', 'I'll trade for 0 TinyMedals. OK?' (mode 7); reached through ScriptCommandF3 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0D:711C": {
-    "name": "ScriptCommandF4_Run",
-    "note": "implements script command type F4; reached through ScriptCommandF4 in bank $10 (E-0038)",
+    "name": "NpcBreedMenu",
+    "note": "implements script command type F4 (SCRIPT_NPC_BREED): breeding with a townsperson's monster picked by wScreenTableIndex: 'Who will breed with my SpikyBoy?' (mode 8, message bank $0E, + 16 * wScreenTableIndex); reached through ScriptCommandF4 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0C:4001": {
-    "name": "ScriptCommandF6_Run",
-    "note": "implements script command type F6; reached through ScriptCommandF6 in bank $10 (E-0038)",
+    "name": "LibraryMenu",
+    "note": "implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "0C:659F": {
-    "name": "ScriptCommandF7_Run",
-    "note": "implements script command type F7; reached through ScriptCommandF7 in bank $10 (E-0038)",
+    "name": "ArenaMenu",
+    "note": "implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, bank $33 strings); reached through ScriptCommandF7 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "24:60DB": {
-    "name": "ScriptCommandF8_Run",
-    "note": "implements script command type F8; reached through ScriptCommandF8 in bank $10 (E-0038)",
+    "name": "PriestMenu",
+    "note": "implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244)",
     "evidence": "structure of the stub (farcall and ret) (E-0038)"
   },
   "00:1FE3": {
@@ -3499,7 +3499,7 @@
   "F1:4870": {"name": "UpdateMenuCursor_BankF1", "note": "the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
   "F1:42D9": {"name": "ShowSelectedItemDescription_BankF1", "note": "the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
   "05:6312": {"name": "HPBandOfSlotTemp0_6312", "note": "the same instruction sequence as HPBandOfSlotTemp0 (bank $05) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
-  "1B:665E": {"name": "ScriptCommandEF_Run_Bank1B", "note": "the same instruction sequence as ScriptCommandEF_Run (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
+  "1B:665E": {"name": "EggServiceMenu_Bank1B", "note": "the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
   "F0:6384": {"name": "DrawPageOfPagesAtScrollOffset_BankF0", "note": "the same instruction sequence as DrawPageOfPagesAtScrollOffset (bank $1E) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
   "A1:413F": {"name": "RunBattleCommandEntry_BankA1", "note": "the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
   "A0:5E07": {"name": "RunBattleSetup_BankA0", "note": "the same instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)", "evidence": "structural comparison (E-0107)"},
@@ -3842,7 +3842,7 @@
   "0A:4362": {"name": "ToggleStatusStepFlagsLowBitOnce", "note": "when wC88C bit 7 is clear: wC88C = ((wC88C + 1) & 1) | $80 (E-0119)", "evidence": "reading (E-0119)"},
   "0D:4B18": {"name": "GetListEntriesCell4AddressWithSRAM", "note": "enables SRAM (bank 0), far-calls SetArg5ToListEntriesCell4 and returns HL = wD7F5 (high) / wD7F6 (low) (E-0119)", "evidence": "reading (E-0119)"},
   "0D:4B30": {"name": "EndScriptCommandAndIncScreenSubStep", "note": "wD782 += 1, wScriptCommandType = 0, wScriptStartRequest = $80 (E-0119)", "evidence": "reading (E-0119)"},
-  "0D:7115": {"name": "ScriptCommandE9_RunFar", "note": "far-calls ScriptCommandE9_Run (E-0119)", "evidence": "reading (E-0119)"},
+  "0D:7115": {"name": "ScriptCommandE9_RunFar", "note": "far-calls CloseMenuE9 (E-0119)", "evidence": "reading (E-0119)"},
   "16:53CE": {"name": "SetWD08D12IfItemRefused", "note": "when wItemId is $FF (refused): wD08D = $12 (E-0119)", "evidence": "reading (E-0119)"},
   "16:53DA": {"name": "SetWD08D14IfItemRefused", "note": "when wItemId is $FF (refused): wD08D = $14 (E-0119)", "evidence": "reading (E-0119)"},
   "16:6917": {"name": "DrawListPageDigitIfLong", "note": "when wD7A9 is 5 or more: wC320 = $E1 + wCFD1 (the page number tile) (E-0119)", "evidence": "reading (E-0119)"},

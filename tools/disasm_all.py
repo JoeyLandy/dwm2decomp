@@ -292,6 +292,7 @@ class Rom:
         self.dlabels: dict[int, dict[int, str]] = {b: {} for b in range(self.nbanks)}
         self.notes: dict[tuple[int, int], str] = {}  # config/annotations.json, by (bank, address)
         self.names: dict[tuple[int, int], dict] = {}  # config/names.json: evidence-backed routine names
+        self.script_commands: dict[int, dict] = {}  # config/script_commands.json (E-0244)
         self.dispatch: dict[tuple[int, int], list] = {}  # rst $00 table start -> [(bank, target)]
         self.families: list[dict] = []  # config/name_families.json: names for copies of library routines
         self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
@@ -3172,8 +3173,8 @@ class Rom:
     # between F6 calls, so 9 is kept.
     MESSAGE_MODE_SET = {0xE0: 1, 0xE2: 2, 0xE5: 2, 0xE8: 3, 0xEB: 4, 0xED: 5, 0xEF: 6, 0xF2: 7, 0xF3: 7,
                         0xF4: 8, 0xF6: 9, 0xF7: 10, 0xF8: 11, 0xE1: 0, 0xE3: 0, 0xEC: 0, 0xEE: 0,
-                        # through the implementations they call: F0 runs ScriptCommandEF_Run in its
-                        # first state; F1 and E9 run ScriptCommandEE_Run, E6 ScriptCommandE3_Run
+                        # through the implementations they call: F0 runs EggServiceMenu (EF) in its
+                        # first state; F1 and E9 run CloseBreedMenu (EE), E6 CloseShopMenu (E3)
                         0xF0: 6, 0xF1: 0, 0xE9: 0, 0xE6: 0}
 
     def script_message_modes(self, code: dict, entries: set, data_entries: set) -> dict:
@@ -3346,6 +3347,8 @@ class Rom:
                 out.append(f"    {macro} ${arg[0]:02X}")
             elif arg:
                 out.append(f"    script_op ${op:02X}, " + ", ".join(f"${v:02X}" for v in arg))
+            elif op in self.script_commands:  # E-0244: a named command type (config/script_commands.json)
+                out.append(f"    script_command {self.script_commands[op]['const']}")
             else:
                 out.append(f"    script_command ${op:02X}")
 
@@ -4064,6 +4067,11 @@ def main() -> int:
         for r in json.loads(regions_path.read_text(encoding="utf-8"))["regions"]:
             rom.data_regions.setdefault(int(r["bank"], 16), []).append((int(r["start"], 16), int(r["end"], 16)))
         log(f"loaded {sum(len(v) for v in rom.data_regions.values())} proven data regions")
+    commands_path = ROOT / "config/script_commands.json"
+    if commands_path.exists():
+        rom.script_commands = {int(k, 16): v for k, v in
+                               json.loads(commands_path.read_text(encoding="utf-8"))["commands"].items()}
+        log(f"loaded {len(rom.script_commands)} named script command types")
     tables_path = ROOT / "config/tables.json"
     if tables_path.exists():
         for t in json.loads(tables_path.read_text(encoding="utf-8"))["tables"]:
@@ -4095,7 +4103,12 @@ def main() -> int:
         tot_code += code
         if code:
             reached.append((b, code))
-    (ROOT / "src/macros.inc").write_text(MACROS_INC, encoding="utf-8", newline="\n")
+    consts = "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['routine']}: {v['note']} ({v['evidence']})\n"
+                     for k, v in sorted(rom.script_commands.items()))
+    (ROOT / "src/macros.inc").write_text(
+        MACROS_INC + ("\n; Script command types named from what they do (config/script_commands.json); "
+                      "`script_command` takes one of these.\n" + consts if consts else ""),
+        encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
     rom.write_ram_inc(ROOT / "src/ram.asm")

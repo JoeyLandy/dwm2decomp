@@ -1560,7 +1560,7 @@ Jump_033_5609:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case04
@@ -2517,7 +2517,7 @@ Jump_033_5BE9:: ; address name
 ; writes: wScreenStep, wScreenSubStep, wScreenState
 Func_033_5215_Table2_Case06::
 Jump_033_5C1A:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -3718,7 +3718,7 @@ Func_033_6490:: ; address name
     db $11, $A5, $64, $CD, $FE, $25, $C9
 
 ; Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case00)
+; 3 call sites from 1 routine (e.g. ArenaMenu_Case00)
 ShowString_Bank33_649E::
 Func_033_649E:: ; address name
     call BeginStringDisplay_Bank33_6490

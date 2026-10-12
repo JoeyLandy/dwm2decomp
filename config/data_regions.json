@@ -131,7 +131,7 @@
       "bank": "1E",
       "start": "44EF",
       "end": "4517",
-      "reason": "tile map bytes ($B0-$B7, $C3 runs) ahead of ScriptCommandE8_Run_Case04_Case0C; decoded as `or a, r` runs and a `jp` made of tile bytes (E-0126)"
+      "reason": "tile map bytes ($B0-$B7, $C3 runs) ahead of SwapMonstersMenu_Case04_Case0C; decoded as `or a, r` runs and a `jp` made of tile bytes (E-0126)"
     },
     {
       "bank": "30",

@@ -714,7 +714,7 @@ Func_004_4470:: ; address name
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
-; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case02, ScriptCommandF7_Run_Case1A_Sub01, ScriptCommandF7_Run_Shared03, ...)
+; 15 call sites from 15 routines (e.g. FieldModeStateDispatch_Case02_Sub01, RunLinkScreenSubStateSubState_60E9_Case02_Case00_Case02, ArenaMenu_Case1A_Sub01, ArenaMenu_Shared03, ...)
 ; reads: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ; writes: hPlayerStateFlags, wSpriteSlots, wObject1, wObject2, wObject3, wObject4
 ClearBit1OfPlayerAndObjectFlags::
@@ -1883,7 +1883,7 @@ Data_004_4A46:: ; address name
     db $14 ; id 97
 
 ; hFF8B = sprite mode from story flags $19F, $25 and 2 and bit 3 of hFF8C, then loads the matching player and follower sprite graphics (E-0128)
-; 34 call sites from 34 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, ResetLeadRecordFields55And5B, ScriptCommandF6_Run_Case06, ...)
+; 34 call sites from 34 routines (e.g. InitFieldScreen, RunFieldReturnPhase_Case02, ResetLeadRecordFields55And5B, LibraryMenu_Case06, ...)
 ; reads: hPlayerStateFlags, hPlayerSpriteMode
 ; writes: hPlayerSpriteMode, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5
 LoadPlayerAndFollowerSpriteGraphics::

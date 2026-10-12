@@ -2430,6 +2430,24 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0244 — The menu script commands named
+
+- Kind: OBSERVATION (C1: the messages the scripts show around each command, quoted under the E-0242/E-0243 message modes, plus the tables and routines the implementations use).
+- **config/script_commands.json** names 21 command types. The generator writes a `DEF SCRIPT_* EQU $XX` constant for each into src/macros.inc, and `script_command` lines use the constant. The implementations, which were ScriptCommandXX_Run, are renamed together with their structural children and every reference in config:
+  - E0/E1 InnMenu/CloseInnMenu ("It's 0G a night");
+  - E2/E3 ShopMenu/CloseShopMenu (ShopItemListTable, ItemValueTable);
+  - E5/E6 VaultMenu/CloseVaultMenu (item storage);
+  - E8 SwapMonstersMenu (Cobi: "What'll you switch it with?") and E9 CloseMenuE9;
+  - EB/EC HibernateMenu/CloseHibernateMenu;
+  - ED/EE BreedMenu/CloseBreedMenu;
+  - EF EggServiceMenu (appraise and bless eggs);
+  - F0/F1 RenameMenu/CloseRenameMenu (the Christener);
+  - F2 KeyAppraisalMenu; F3 MedalPrizeMenu (TinyMedals);
+  - F4 NpcBreedMenu ("Who will breed with my SpikyBoy?", one partner per wScreenTableIndex);
+  - F6 LibraryMenu; F7 ArenaMenu; F8 PriestMenu (revival).
+- These cover 429 of the 633 `script_command` lines. The remaining 204 lines use about 150 types, most of them once each: cutscene steps (object choreography, item and key hand-overs), which keep their numbers.
+- Binary verification: build/run309 PASS, 0 differing bytes; tests OK.
+
 ### E-0243 — Message quotes were one string off; message modes through $E7 and the closing commands
 
 - Kind: OBSERVATION (reading of BeginStringDisplay/LookupString use by the message banks; C2 for the lookup) and TOOL. **Correction** to E-0153 and every message quote since.

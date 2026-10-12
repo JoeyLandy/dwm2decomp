@@ -3422,7 +3422,7 @@
   },
   "D298": {
     "of": "D168",
-    "note": "attribute bytes written by ScriptCommandF6_Run_Case10_Case01 with rSVBK = 2",
+    "note": "attribute bytes written by LibraryMenu_Case10_Case01 with rSVBK = 2",
     "evidence": "E-0136"
   },
   "D2D0": {
@@ -3757,12 +3757,12 @@
   },
   "D586": {
     "name": "wArenaByte86",
-    "note": "arena byte set by ScriptCommandF7_Run_Case15",
+    "note": "arena byte set by ArenaMenu_Case15",
     "evidence": "E-0136"
   },
   "D587": {
     "name": "wArenaByte87",
-    "note": "arena byte set by ScriptCommandF7_Run_Case15",
+    "note": "arena byte set by ArenaMenu_Case15",
     "evidence": "E-0136"
   },
   "D588": {
@@ -3893,7 +3893,7 @@
   },
   "D79C": {
     "name": "wScreenBlock9C",
-    "note": "bytes written by ScriptCommandF6_Run_Case10_Case01",
+    "note": "bytes written by LibraryMenu_Case10_Case01",
     "evidence": "E-0136"
   },
   "D7A2": {

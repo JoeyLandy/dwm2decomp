@@ -1,37 +1,37 @@
 SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
     db $0C
 
-; implements script command type F6; reached through ScriptCommandF6 in bank $10 (E-0038)
+; implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?' (mode 9, bank $0B strings); reached through ScriptCommandF6 in bank $10 (E-0038, E-0244)
 ; 1 call site from 1 routine (e.g. ScriptCommandF6)
 ; reads: wScreenState
-ScriptCommandF6_Run::
+LibraryMenu::
 Func_00C_4001:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw ScriptCommandF6_Run_Case00
-    dw ScriptCommandF6_Run_Case01
-    dw ScriptCommandF6_Run_Case02
-    dw ScriptCommandF6_Run_Case03
-    dw ScriptCommandF6_Run_Case04
-    dw ScriptCommandF6_Run_Case05
-    dw ScriptCommandF6_Run_Case06
-    dw ScriptCommandF6_Run_Case07
-    dw ScriptCommandF6_Run_Case08
-    dw ScriptCommandF6_Run_Case09
-    dw ScriptCommandF6_Run_Case0A
-    dw ScriptCommandF6_Run_Case0B
-    dw ScriptCommandF6_Run_Case0C
-    dw ScriptCommandF6_Run_Case0D
-    dw ScriptCommandF6_Run_Case0E
-    dw ScriptCommandF6_Run_Case0F
-    dw ScriptCommandF6_Run_Case10
+    dw LibraryMenu_Case00
+    dw LibraryMenu_Case01
+    dw LibraryMenu_Case02
+    dw LibraryMenu_Case03
+    dw LibraryMenu_Case04
+    dw LibraryMenu_Case05
+    dw LibraryMenu_Case06
+    dw LibraryMenu_Case07
+    dw LibraryMenu_Case08
+    dw LibraryMenu_Case09
+    dw LibraryMenu_Case0A
+    dw LibraryMenu_Case0B
+    dw LibraryMenu_Case0C
+    dw LibraryMenu_Case0D
+    dw LibraryMenu_Case0E
+    dw LibraryMenu_Case0F
+    dw LibraryMenu_Case10
 
-; entry 0 of the `rst $00` table in ScriptCommandF6_Run
+; entry 0 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wMessageMode, wScreenState, wScriptCommandType, wScriptStartRequest
 ; points at: wScreenState
-ScriptCommandF6_Run_Case00::
+LibraryMenu_Case00::
 Jump_00C_4027:: ; address name
     ld hl, wScreenState
     ld bc, $0020
@@ -54,13 +54,13 @@ Jump_00C_402D::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF6_Run
+; entry 1 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hSpriteWindowClipMode, hSpriteHideTile, rSTAT, wScreenState
 ; writes: hScrollY, hScrollX, wScreenByte99, wScreenByte9A, hSpriteHideTile, hSpriteWindowClipMode, hFieldDrawFlags, wScreenState
-ScriptCommandF6_Run_Case01::
+LibraryMenu_Case01::
 Jump_00C_404A:: ; address name
-    call ScriptCommandF6_Run_Shared06
+    call LibraryMenu_Shared06
     xor a, a
     ldh [hScrollY], a
     ldh [hScrollX], a
@@ -90,17 +90,17 @@ Jump_00C_406F::
     ld a, b
     or a, c
     jr nz, Jump_00C_406E
-    call ScriptCommandF6_Run_Shared05
+    call LibraryMenu_Shared05
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandF6_Run
+; entry 2 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF6_Run_Case02::
+LibraryMenu_Case02::
 Jump_00C_4087:: ; address name
     call ClearStringWindowAt2020
     ld a, [wScreenState]
@@ -108,11 +108,11 @@ Jump_00C_4087:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandF6_Run
+; entry 3 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wGridCursorX, wScreenState
 ; writes: wWindowTileBuffer, wScreenState
-ScriptCommandF6_Run_Case03::
+LibraryMenu_Case03::
 Jump_00C_4092:: ; address name
     ld de, TileRect_0C_56D9
     ld hl, wWindowTileBuffer + $64
@@ -143,18 +143,18 @@ Jump_00C_40A9::
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call ScriptCommandF6_Run_Shared02
+    call LibraryMenu_Shared02
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandF6_Run
+; entry 4 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wArg5, wScreenState
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
 ; points at: wMonsterLibraryBuf, wScreenCountPlusOne
-ScriptCommandF6_Run_Case04::
+LibraryMenu_Case04::
 Jump_00C_40E6:: ; address name
     call BGMapAddressAtScroll_Bank0C
     ld de, $0182
@@ -288,10 +288,10 @@ Jump_00C_41A4::
 Jump_00C_41AA::
     xor a, a
     ld [wArg1], a
-    call ScriptCommandF6_Run_Shared04
+    call LibraryMenu_Shared04
     ld a, $01
     ld [wArg1], a
-    call ScriptCommandF6_Run_Shared04
+    call LibraryMenu_Shared04
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -307,12 +307,12 @@ Jump_00C_41AA::
     ld [wTextWindowWidth], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandF6_Run
+; entry 5 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenState, wGridCursorY, wGridCursorX
 ; writes: wScreenState, wTwoChoiceCursor, hSpriteWindowClipMode, hSpriteHideTile, wScriptCommandType, wScriptStartRequest, wWindowTileBuffer, wGridCursorX, ...
 ; points at: wScreenCountPlusOne
-ScriptCommandF6_Run_Case05::
+LibraryMenu_Case05::
 Jump_00C_41D7:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 4, a
@@ -328,7 +328,7 @@ Jump_00C_41D7:: ; address name
     jp nz, Jump_00C_4278
     bit 1, a
     jp nz, Jump_00C_42D3
-    call ScriptCommandF6_Run_Case05_Sub01
+    call LibraryMenu_Case05_Sub01
     ret
 
 Jump_00C_41FB::
@@ -352,7 +352,7 @@ Jump_00C_4206::
     ld [wGridCursorX], a
 
 Jump_00C_4218::
-    call ScriptCommandF6_Run_Case05_Sub02
+    call LibraryMenu_Case05_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -372,7 +372,7 @@ Jump_00C_4233::
     jr Jump_00C_4206
 
 Jump_00C_4236::
-    call ScriptCommandF6_Run_Case05_Sub03
+    call LibraryMenu_Case05_Sub03
     ld a, [wGridCursorY]
     ld de, Data_00C_56D7
     add a, e
@@ -394,13 +394,13 @@ Jump_00C_424F::
 
 Jump_00C_4250::
     ld [wGridCursorX], a
-    call ScriptCommandF6_Run_Case05_Sub02
+    call LibraryMenu_Case05_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_425C::
-    call ScriptCommandF6_Run_Case05_Sub03
+    call LibraryMenu_Case05_Sub03
     ld a, [wGridCursorY]
     ld de, Data_00C_56D7
     add a, e
@@ -435,7 +435,7 @@ Jump_00C_4278::
     ld a, [hl]
     and a, a
     jr nz, Jump_00C_42A2
-    call ScriptCommandF6_Run_Case05_Sub04
+    call LibraryMenu_Case05_Sub04
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -447,7 +447,7 @@ Jump_00C_4278::
 Jump_00C_42A2::
     ld a, $69
     call QueueSoundEffect
-    call ScriptCommandF6_Run_Case05_Sub04
+    call LibraryMenu_Case05_Sub04
     ld a, [wGridCursorX]
     ld hl, Data_00C_58FE
     ld b, $BC
@@ -482,45 +482,45 @@ Jump_00C_42D3::
     ld [wScriptStartRequest], a
     ret
 
-; only called from ScriptCommandF6_Run_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case05)
+; only called from LibraryMenu_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wJoypadRepeatTimer, wGlyphListStart, wGridCursorX
 ; writes: wGlyphListStart
-ScriptCommandF6_Run_Case05_Sub01::
+LibraryMenu_Case05_Sub01::
 Func_00C_42F0:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF6_Run_Case05_Sub02
+    jr c, LibraryMenu_Case05_Sub02
     ld a, [wGlyphListStart]
     inc a
     ld [wGlyphListStart], a
     cp a, $10
-    jr c, ScriptCommandF6_Run_Case05_Sub02
+    jr c, LibraryMenu_Case05_Sub02
     cp a, $18
-    jr c, ScriptCommandF6_Run_Case05_Sub03
+    jr c, LibraryMenu_Case05_Sub03
     xor a, a
     ld [wGlyphListStart], a
 
-; only called from ScriptCommandF6_Run_Case05 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case05)
+; only called from LibraryMenu_Case05 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wGridCursorX
-ScriptCommandF6_Run_Case05_Sub02::
+LibraryMenu_Case05_Sub02::
 Func_00C_430A:: ; address name
     ld b, $BB
     jr Jump_00C_4314
 
-; only called from ScriptCommandF6_Run_Case05 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case05)
+; only called from LibraryMenu_Case05 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wGridCursorX
-ScriptCommandF6_Run_Case05_Sub03::
+LibraryMenu_Case05_Sub03::
 Func_00C_430E:: ; address name
     ld b, $C3
     jr Jump_00C_4314
 
-; only called from ScriptCommandF6_Run_Case05 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case05)
+; only called from LibraryMenu_Case05 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case05)
 ; reads: wGridCursorX
-ScriptCommandF6_Run_Case05_Sub04::
+LibraryMenu_Case05_Sub04::
 Func_00C_4312:: ; address name
     ld b, $BC
 
@@ -543,17 +543,17 @@ Jump_00C_4314::
     ei
     ret
 
-; address loaded by ScriptCommandF6_Run_Case05_Sub04
+; address loaded by LibraryMenu_Case05_Sub04
 Data_00C_4331:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $61, $01
 
-; entry 6 of the `rst $00` table in ScriptCommandF6_Run
+; entry 6 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: hMapId, wOBJPaletteUploadRequest, wScreenState
-ScriptCommandF6_Run_Case06::
+LibraryMenu_Case06::
 Jump_00C_433D:: ; address name
-    call ScriptCommandF6_Run_Shared06
+    call LibraryMenu_Shared06
     ld a, $11
     ldh [hMapId], a
     call LoadMapHeader
@@ -566,12 +566,12 @@ Jump_00C_433D:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandF6_Run
+; entry 7 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenByte99, wScreenByte9A, wScreenState
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-ScriptCommandF6_Run_Case07::
+LibraryMenu_Case07::
 Jump_00C_4360:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -621,18 +621,18 @@ Jump_00C_437E::
     ld [wScriptStartRequest], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandF6_Run
+; entry 8 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMessageMode, wScriptCommandType, wScriptStartRequest
 ; points at: wScreenState, wTextBuf0
-ScriptCommandF6_Run_Case08::
+LibraryMenu_Case08::
 Jump_00C_43CE:: ; address name
     ld hl, $2940
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
-    call ScriptCommandF6_Run_Case08_Sub01
-    call ScriptCommandF6_Run_Case08_Sub01
-    call ScriptCommandF6_Run_Case08_Sub01
+    call LibraryMenu_Case08_Sub01
+    call LibraryMenu_Case08_Sub01
+    call LibraryMenu_Case08_Sub01
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -666,9 +666,9 @@ Jump_00C_440E::
     ld [wScriptStartRequest], a
     ret
 
-; only called from ScriptCommandF6_Run_Case08 (E-0047)
-; 3 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case08)
-ScriptCommandF6_Run_Case08_Sub01::
+; only called from LibraryMenu_Case08 (E-0047)
+; 3 call sites from 1 routine (e.g. LibraryMenu_Case08)
+LibraryMenu_Case08_Sub01::
 Func_00C_4424:: ; address name
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
@@ -680,11 +680,11 @@ Func_00C_4424:: ; address name
     call CopyTileBytesToVRAM_Bank0C
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommandF6_Run
+; entry 9 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF6_Run_Case09::
+LibraryMenu_Case09::
 Jump_00C_443D:: ; address name
     call ClearStringWindowAt2200
     ld a, [wScreenState]
@@ -692,11 +692,11 @@ Jump_00C_443D:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandF6_Run
+; entry 10 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGrid2CursorX, wScreenState
 ; writes: wWindowTileBuffer, wScreenState
-ScriptCommandF6_Run_Case0A::
+LibraryMenu_Case0A::
 Jump_00C_4448:: ; address name
     ld de, TileRect_0C_574E
     ld hl, wWindowTileBuffer + $6C
@@ -725,29 +725,29 @@ Jump_00C_445F::
     ld hl, Data_00C_590A
     ld b, $C3
     call StoreBAtWordTableEntry_Bank0C
-    call ScriptCommandF6_Run_Shared01
+    call LibraryMenu_Shared01
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandF6_Run
+; entry 11 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF6_Run_Case0B::
+LibraryMenu_Case0B::
 Jump_00C_4492:: ; address name
-    call ScriptCommandF6_Run_Shared03
+    call LibraryMenu_Shared03
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandF6_Run
+; entry 12 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenState, wGrid2CursorX, wGrid2CursorY
 ; writes: wScreenState, wTwoChoiceCursor, wGrid2CursorX, wGrid2CursorY, wScriptCommandType, wScriptStartRequest
-ScriptCommandF6_Run_Case0C::
+LibraryMenu_Case0C::
 Jump_00C_449D:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 4, a
@@ -763,7 +763,7 @@ Jump_00C_449D:: ; address name
     jp nz, Jump_00C_4563
     bit 1, a
     jp nz, Jump_00C_459F
-    call ScriptCommandF6_Run_Case0C_Sub01
+    call LibraryMenu_Case0C_Sub01
     ret
 
 Jump_00C_44C3::
@@ -817,7 +817,7 @@ Jump_00C_44E9::
     ret
 
 Jump_00C_450B::
-    call ScriptCommandF6_Run_Case0C_Sub02
+    call LibraryMenu_Case0C_Sub02
     ld a, [wScreenState]
     sub a, $03
     ld [wScreenState], a
@@ -845,7 +845,7 @@ Jump_00C_4530::
     jr Jump_00C_44DA
 
 Jump_00C_4533::
-    call ScriptCommandF6_Run_Case0C_Sub03
+    call LibraryMenu_Case0C_Sub03
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -859,13 +859,13 @@ Jump_00C_4543::
 
 Jump_00C_4544::
     ld [wGrid2CursorX], a
-    call ScriptCommandF6_Run_Case0C_Sub02
+    call LibraryMenu_Case0C_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_4550::
-    call ScriptCommandF6_Run_Case0C_Sub03
+    call LibraryMenu_Case0C_Sub03
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -897,7 +897,7 @@ Jump_00C_456F::
     call GridIndexFromGrid2CursorXGrid2CursorY
     pop hl
     add_a_to_hl
-    call ScriptCommandF6_Run_Shared08
+    call LibraryMenu_Shared08
     and a, a
     jr z, Jump_00C_459B
     ld a, $69
@@ -912,7 +912,7 @@ Jump_00C_456F::
     ret
 
 Jump_00C_459B::
-    call ScriptCommandF6_Run_Case0C_Sub02
+    call LibraryMenu_Case0C_Sub02
     ret
 
 Jump_00C_459F::
@@ -930,37 +930,37 @@ Jump_00C_459F::
     ld [wScriptStartRequest], a
     ret
 
-; only called from ScriptCommandF6_Run_Case0C (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case0C)
+; only called from LibraryMenu_Case0C (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wJoypadRepeatTimer, wListEntries, wGrid2CursorX
 ; writes: wListEntries
-ScriptCommandF6_Run_Case0C_Sub01::
+LibraryMenu_Case0C_Sub01::
 Func_00C_45BC:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF6_Run_Case0C_Sub02
+    jr c, LibraryMenu_Case0C_Sub02
     ld a, [wListEntries]
     inc a
     ld [wListEntries], a
     cp a, $10
-    jr c, ScriptCommandF6_Run_Case0C_Sub02
+    jr c, LibraryMenu_Case0C_Sub02
     cp a, $18
-    jr c, ScriptCommandF6_Run_Case0C_Sub03
+    jr c, LibraryMenu_Case0C_Sub03
     xor a, a
     ld [wListEntries], a
 
-; only called from ScriptCommandF6_Run_Case0C (E-0047)
-; 3 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case0C)
+; only called from LibraryMenu_Case0C (E-0047)
+; 3 call sites from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wGrid2CursorX
-ScriptCommandF6_Run_Case0C_Sub02::
+LibraryMenu_Case0C_Sub02::
 Func_00C_45D6:: ; address name
     ld b, $BB
     jr Jump_00C_45E0
 
-; only called from ScriptCommandF6_Run_Case0C (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case0C)
+; only called from LibraryMenu_Case0C (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case0C)
 ; reads: wGrid2CursorX
-ScriptCommandF6_Run_Case0C_Sub03::
+LibraryMenu_Case0C_Sub03::
 Func_00C_45DA:: ; address name
     ld b, $C3
     jr Jump_00C_45E0
@@ -985,15 +985,15 @@ Jump_00C_45E0::
     ei
     ret
 
-; address loaded by ScriptCommandF6_Run_Case0C_Sub03
+; address loaded by LibraryMenu_Case0C_Sub03
 Data_00C_45FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $00, $69, $00, $A9, $00, $E9, $00, $29, $01, $69, $01
 
-; entry 13 of the `rst $00` table in ScriptCommandF6_Run
+; entry 13 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wArg1, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
-ScriptCommandF6_Run_Case0D::
+LibraryMenu_Case0D::
 Jump_00C_4609:: ; address name
     ld de, TileRect_0C_57EA
     ld hl, wWindowTileBuffer + $6C
@@ -1001,7 +1001,7 @@ Jump_00C_4609:: ; address name
     call CopyRectTo20ByteRows_Bank0C
     ld a, $01
     ld [wArg1], a
-    call ScriptCommandF6_Run_Shared04
+    call LibraryMenu_Shared04
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -1025,11 +1025,11 @@ Jump_00C_4609:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommandF6_Run
+; entry 14 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX
 ; writes: wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF6_Run_Case0E::
+LibraryMenu_Case0E::
 Jump_00C_4650:: ; address name
     ld a, [wGridCursorX]
     ld hl, Data_00C_58FE
@@ -1047,48 +1047,48 @@ Jump_00C_4650:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandF6_Run
+; entry 15 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF6_Run_Case0F::
+LibraryMenu_Case0F::
 Jump_00C_4676:: ; address name
-    call ScriptCommandF6_Run_Shared06
-    call ScriptCommandF6_Run_Shared05
+    call LibraryMenu_Shared06
+    call LibraryMenu_Shared05
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommandF6_Run
+; entry 16 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandF6_Run_Case10::
+LibraryMenu_Case10::
 Jump_00C_4684:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandF6_Run_Case10_Case00
-    dw ScriptCommandF6_Run_Case10_Case01
-    dw ScriptCommandF6_Run_Case10_Case02
-    dw ScriptCommandF6_Run_Case10_Case03
-    dw ScriptCommandF6_Run_Case10_Case04
-    dw ScriptCommandF6_Run_Case10_Case05
-    dw ScriptCommandF6_Run_Case10_Case06
-    dw ScriptCommandF6_Run_Case10_Case07
-    dw ScriptCommandF6_Run_Case10_Case08
-    dw ScriptCommandF6_Run_Case10_Case09
-    dw ScriptCommandF6_Run_Case10_Case0A
-    dw ScriptCommandF6_Run_Case10_Case0B
-    dw ScriptCommandF6_Run_Case10_Case0C
-    dw ScriptCommandF6_Run_Case10_Case0D
+    dw LibraryMenu_Case10_Case00
+    dw LibraryMenu_Case10_Case01
+    dw LibraryMenu_Case10_Case02
+    dw LibraryMenu_Case10_Case03
+    dw LibraryMenu_Case10_Case04
+    dw LibraryMenu_Case10_Case05
+    dw LibraryMenu_Case10_Case06
+    dw LibraryMenu_Case10_Case07
+    dw LibraryMenu_Case10_Case08
+    dw LibraryMenu_Case10_Case09
+    dw LibraryMenu_Case10_Case0A
+    dw LibraryMenu_Case10_Case0B
+    dw LibraryMenu_Case10_Case0C
+    dw LibraryMenu_Case10_Case0D
 
-; entry 0 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 0 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep, wScreenSubStep
-ScriptCommandF6_Run_Case10_Case00::
+LibraryMenu_Case10_Case00::
 Jump_00C_46A4:: ; address name
-    call ScriptCommandF6_Run_Shared07
+    call LibraryMenu_Shared07
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1146,12 +1146,12 @@ Data_00C_4718:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $FF, $FF, $FF, $FF, $60, $FF, $60, $FF, $60 ; id 4
     db $FF, $60, $FF, $60, $FF, $60, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00 ; id 5
 
-; entry 1 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 1 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, rSVBK, wBGPaletteUploadRequest, wScreenStep, wScreenSubStep
 ; points at: wWindowTileBuffer, wWindowAttrBuffer, wScreenBlock9C
-ScriptCommandF6_Run_Case10_Case01::
+LibraryMenu_Case10_Case01::
 Jump_00C_4778:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -1232,12 +1232,12 @@ Jump_00C_47E9::
     ld hl, wWindowTileBuffer + $3D
     ld bc, $1201
     call CopyRectTo20ByteRows_Bank0C
-    call ScriptCommandF6_Run_Case10_Case01_Sub01
+    call LibraryMenu_Case10_Case01_Sub01
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $108
     ld bc, $0201
     call CopyRectTo20ByteRows_Bank0C
-    call ScriptCommandF6_Run_Case10_Case01_Sub02
+    call LibraryMenu_Case10_Case01_Sub02
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $130
     ld bc, $0401
@@ -1326,11 +1326,11 @@ Data_00C_48F6:: ; address name
     db $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD, $BE, $BF, $C0, $C1, $C2, $C3, $C4, $C5 ; id 0
     db $7E, $7F
 
-; entry 2 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 2 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
-ScriptCommandF6_Run_Case10_Case02::
+LibraryMenu_Case10_Case02::
 Jump_00C_490A:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -1413,11 +1413,11 @@ Jump_00C_497A::
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 3 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wScreenStep
-ScriptCommandF6_Run_Case10_Case03::
+LibraryMenu_Case10_Case03::
 Jump_00C_49B5:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
@@ -1435,12 +1435,12 @@ Jump_00C_49B5:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 4 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wWorkBuf, wArg1, ...
 ; points at: wArg5
-ScriptCommandF6_Run_Case10_Case04::
+LibraryMenu_Case10_Case04::
 Jump_00C_49DA:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1534,19 +1534,19 @@ Jump_00C_4A71::
     ld [wScreenStep], a
     ret
 
-; address loaded by ScriptCommandF6_Run_Case10_Case04
+; address loaded by LibraryMenu_Case10_Case04
 Data_00C_4AA0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $94, $D0, $94, $60, $95
 
-; entry 5 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 5 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-ScriptCommandF6_Run_Case10_Case05::
+LibraryMenu_Case10_Case05::
 Jump_00C_4AA6:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    call ScriptCommandF6_Run_Shared08
+    call LibraryMenu_Shared08
     cp a, $FF
     jr z, Jump_00C_4B0A
     ld de, Data_01F_4990
@@ -1591,11 +1591,11 @@ Jump_00C_4B0A::
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 6 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandF6_Run_Case10_Case06::
+LibraryMenu_Case10_Case06::
 Jump_00C_4B12:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1605,7 +1605,7 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
-    call ScriptCommandF6_Run_Case10_Case06_Sub02
+    call LibraryMenu_Case10_Case06_Sub02
     pop hl
     push hl
     sla l
@@ -1613,7 +1613,7 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
-    call ScriptCommandF6_Run_Case10_Case06_Sub02
+    call LibraryMenu_Case10_Case06_Sub02
     pop hl
     push hl
     sla l
@@ -1621,24 +1621,24 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
-    call ScriptCommandF6_Run_Case10_Case06_Sub01
+    call LibraryMenu_Case10_Case06_Sub01
     pop hl
     sla l
     rl h
     ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
-    call ScriptCommandF6_Run_Case10_Case06_Sub01
+    call LibraryMenu_Case10_Case06_Sub01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 7 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-ScriptCommandF6_Run_Case10_Case07::
+LibraryMenu_Case10_Case07::
 Jump_00C_4B5C:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1664,12 +1664,12 @@ Jump_00C_4B5C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 8 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wGridCursorX, wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wGrid2CursorX, wGrid2CursorY
 ; writes: wScreenStep, wGrid2CursorY, wGrid2CursorX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenSubStep
 ; points at: wScreenCountPlusOne
-ScriptCommandF6_Run_Case10_Case08::
+LibraryMenu_Case10_Case08::
 Jump_00C_4B95:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     ld a, [wGridCursorY]
@@ -1756,12 +1756,12 @@ Jump_00C_4BFC::
 
 Jump_00C_4C1C::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    call ScriptCommandF6_Run_Shared08
+    call LibraryMenu_Shared08
     and a, a
     jr z, Jump_00C_4BCB
     ld a, $69
     call QueueSoundEffect
-    call ScriptCommandF6_Run_Shared07
+    call LibraryMenu_Shared07
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1834,12 +1834,12 @@ Jump_00C_4C82::
 
 Jump_00C_4CA2::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    call ScriptCommandF6_Run_Shared08
+    call LibraryMenu_Shared08
     and a, a
     jr z, Jump_00C_4C4F
     ld a, $69
     call QueueSoundEffect
-    call ScriptCommandF6_Run_Shared07
+    call LibraryMenu_Shared07
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1866,28 +1866,28 @@ Jump_00C_4CDA::
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 9 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandF6_Run_Case10_Case09::
+LibraryMenu_Case10_Case09::
 Jump_00C_4CE2:: ; address name
-    call ScriptCommandF6_Run_Shared06
+    call LibraryMenu_Shared06
     ld b, $46
     ld de, Data_046_4001
     ld hl, vTiles1
     call DecompressToVRAM
-    call ScriptCommandF6_Run_Shared05
+    call LibraryMenu_Shared05
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 10 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wGridCursorX, wGrid2CursorX, wScreenStep
 ; writes: wWindowTileBuffer, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wBGPaletteUploadRequest, wScreenStep
-ScriptCommandF6_Run_Case10_Case0A::
+LibraryMenu_Case10_Case0A::
 Jump_00C_4CFB:: ; address name
     ld de, TileRect_0C_56D9
     ld hl, wWindowTileBuffer + $64
@@ -1936,30 +1936,30 @@ Jump_00C_4D12::
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 11 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandF6_Run_Case10_Case0B::
+LibraryMenu_Case10_Case0B::
 Jump_00C_4D6B:: ; address name
     call WriteBGPalette0From555C
-    call ScriptCommandF6_Run_Shared02
-    call ScriptCommandF6_Run_Shared01
+    call LibraryMenu_Shared02
+    call LibraryMenu_Shared01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 12 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
 ; points at: wWindowTileBuffer
-ScriptCommandF6_Run_Case10_Case0C::
+LibraryMenu_Case10_Case0C::
 Jump_00C_4D7C:: ; address name
     ld a, $01
     ld [wArg1], a
-    call ScriptCommandF6_Run_Shared04
+    call LibraryMenu_Shared04
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -1974,7 +1974,7 @@ Jump_00C_4D7C:: ; address name
     ld bc, $1405
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call ScriptCommandF6_Run_Shared03
+    call LibraryMenu_Shared03
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1994,11 +1994,11 @@ Jump_00C_4D7C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandF6_Run_Case10
+; entry 13 of the `rst $00` table in LibraryMenu_Case10
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGrid2CursorX
 ; writes: wScreenStep, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
-ScriptCommandF6_Run_Case10_Case0D::
+LibraryMenu_Case10_Case0D::
 Jump_00C_4DD6:: ; address name
     ld a, [wGrid2CursorX]
     ld b, $C3
@@ -2028,10 +2028,10 @@ Jump_00C_4DD6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; only called from ScriptCommandF6_Run_Case10_Case06 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case06)
+; only called from LibraryMenu_Case10_Case06 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case10_Case06)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ScriptCommandF6_Run_Case10_Case06_Sub01::
+LibraryMenu_Case10_Case06_Sub01::
 Func_00C_4E16:: ; address name
     push de
     inc hl
@@ -2085,11 +2085,11 @@ Jump_00C_4E5A::
     farcall ShowString_Bank0B
     ret
 
-; only called from ScriptCommandF6_Run_Case10_Case06 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case06)
+; only called from LibraryMenu_Case10_Case06 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_Case10_Case06)
 ; reads: wArg5
 ; writes: wArg6, wArg7, wWorkBuf
-ScriptCommandF6_Run_Case10_Case06_Sub02::
+LibraryMenu_Case10_Case06_Sub02::
 Func_00C_4E75:: ; address name
     push af
     inc hl
@@ -2137,11 +2137,11 @@ Jump_00C_4EA4::
     call CopyFromBankWaitVRAM
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0A, ScriptCommandF6_Run_Case10_Case0B)
+; only called from routines of LibraryMenu (E-0098)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case0A, LibraryMenu_Case10_Case0B)
 ; reads: wGrid2CursorY
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ScriptCommandF6_Run_Shared01::
+LibraryMenu_Shared01::
 Func_00C_4EC7:: ; address name
     call GridIndexFromGridCursorXGridCursorY
     add a, a
@@ -2168,7 +2168,7 @@ Jump_00C_4ED3::
 Jump_00C_4EE6::
     push hl
     push bc
-    call ScriptCommandF6_Run_Shared08
+    call LibraryMenu_Shared08
     and a, a
     jr z, Jump_00C_4F26
     pop bc
@@ -2252,15 +2252,15 @@ Jump_00C_4F57::
     jp c, Jump_00C_4EE6
     ret
 
-; address loaded by ScriptCommandF6_Run_Shared01
+; address loaded by LibraryMenu_Shared01
 Data_00C_4F68:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $92, $90, $92, $20, $93, $B0, $93, $40, $94, $D0, $94
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case03, ScriptCommandF6_Run_Case10_Case0B)
+; only called from routines of LibraryMenu (E-0098)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case03, LibraryMenu_Case10_Case0B)
 ; reads: wGridCursorY
 ; writes: wWorkBuf
-ScriptCommandF6_Run_Shared02::
+LibraryMenu_Shared02::
 Func_00C_4F74:: ; address name
     ld a, [wGridCursorY]
     add a, a
@@ -2303,13 +2303,13 @@ Jump_00C_4FA2::
     jr c, Jump_00C_4F85
     ret
 
-; address loaded by ScriptCommandF6_Run_Shared02
+; address loaded by LibraryMenu_Shared02
 Data_00C_4FAA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $FF, $20, $90, $70, $90
     db $C0, $90, $10, $91, $60, $91, $B0, $91
 
 ; with the pointer from Func_00C_5050 draws sub-indices 0, 4 and 2 (Func_01D_6A36) at Y = $10, $24 and $38, X = $6C (E-0121)
-; 5 call sites from 5 routines (e.g. ScriptCommandF6_Run_Case10_Case08, ScriptCommandF6_Run_Case10_Case07, ScriptCommandF6_Run_Case10_Case06, ScriptCommandF6_Run_Case10_Case05, ...)
+; 5 call sites from 5 routines (e.g. LibraryMenu_Case10_Case08, LibraryMenu_Case10_Case07, LibraryMenu_Case10_Case06, LibraryMenu_Case10_Case05, ...)
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, hSpriteSubIndex
 DrawThreeMetaSpritePartsFor5050::
 Func_00C_4FC2:: ; address name
@@ -2352,10 +2352,10 @@ Func_00C_4FC2:: ; address name
     farcall DrawThreeMetaSpritePartsFor5050_Sub01
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0B, ScriptCommandF6_Run_Case10_Case0C)
+; only called from routines of LibraryMenu (E-0098)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case0B, LibraryMenu_Case10_Case0C)
 ; reads: wGrid2CursorY
-ScriptCommandF6_Run_Shared03::
+LibraryMenu_Shared03::
 Func_00C_501F:: ; address name
     call BGMapAddressAtScroll_Bank0C
     ld de, $018F
@@ -2393,7 +2393,7 @@ Jump_00C_5043::
     ret
 
 ; HL = the word Data_00C_5916[GridIndexFromGridCursorXGridCursorY] + GridIndexFromGrid2CursorXGrid2CursorY (E-0124)
-; 15 call sites from 10 routines (e.g. ScriptCommandF6_Run_Case10_Case08, DrawThreeMetaSpritePartsFor5050, ScriptCommandF6_Run_Case10_Case07, ScriptCommandF6_Run_Case10_Case06, ...)
+; 15 call sites from 10 routines (e.g. LibraryMenu_Case10_Case08, DrawThreeMetaSpritePartsFor5050, LibraryMenu_Case10_Case07, LibraryMenu_Case10_Case06, ...)
 GridCellAddressFromGridCursorXAndGrid2CursorX::
 Func_00C_5050:: ; address name
     call GridIndexFromGridCursorXGridCursorY
@@ -2417,7 +2417,7 @@ Jump_00C_505C::
     ret
 
 ; A = the byte at Data_00C_594F[GridIndexFromGridCursorXGridCursorY] + wD78B (E-0122)
-; 6 call sites from 3 routines (e.g. ScriptCommandF6_Run_Case0C, ScriptCommandF6_Run_Shared01, ScriptCommandF6_Run_Case10_Case08)
+; 6 call sites from 3 routines (e.g. LibraryMenu_Case0C, LibraryMenu_Shared01, LibraryMenu_Case10_Case08)
 ; reads: wGrid2CursorY
 ReadGridCellByteForGridCursorXGridCursorY::
 Func_00C_506C:: ; address name
@@ -2438,12 +2438,12 @@ Jump_00C_5083::
     ld a, [de]
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 4 call sites from 3 routines (e.g. ScriptCommandF6_Run_Case0D, ScriptCommandF6_Run_Case04, ScriptCommandF6_Run_Case10_Case0C)
+; only called from routines of LibraryMenu (E-0098)
+; 4 call sites from 3 routines (e.g. LibraryMenu_Case0D, LibraryMenu_Case04, LibraryMenu_Case10_Case0C)
 ; reads: wGridCursorY, wDigits, wArg1
 ; writes: wDigits
 ; points at: wScreenCountPlusOne
-ScriptCommandF6_Run_Shared04::
+LibraryMenu_Shared04::
 Func_00C_5085:: ; address name
     ld a, [wGridCursorY]
     add a, a
@@ -2531,19 +2531,19 @@ Jump_00C_50E4::
     jr c, Jump_00C_50A2
     ret
 
-; address loaded by ScriptCommandF6_Run_Shared04
+; address loaded by LibraryMenu_Shared04
 Data_00C_5103:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $26, $00, $66, $00, $A6, $00, $E6, $00, $26, $01, $66, $01
 
-; address loaded by ScriptCommandF6_Run_Shared04
+; address loaded by LibraryMenu_Shared04
 Data_00C_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 3 call sites from 3 routines (e.g. ScriptCommandF6_Run_Case0F, ScriptCommandF6_Run_Case01, ScriptCommandF6_Run_Case10_Case09)
+; only called from routines of LibraryMenu (E-0098)
+; 3 call sites from 3 routines (e.g. LibraryMenu_Case0F, LibraryMenu_Case01, LibraryMenu_Case10_Case09)
 ; reads: wIsCGB
 ; writes: rSVBK
-ScriptCommandF6_Run_Shared05::
+LibraryMenu_Shared05::
 Func_00C_511B:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -2577,7 +2577,7 @@ Jump_00C_5144::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 14 call sites from 4 routines (e.g. ScriptCommandF6_Run_Shared06, ScriptCommandF6_Run_Case08, ScriptCommandF6_Run_Case08_Sub01, ScriptCommandF6_Run_Case10_Case00)
+; 14 call sites from 4 routines (e.g. LibraryMenu_Shared06, LibraryMenu_Case08, LibraryMenu_Case08_Sub01, LibraryMenu_Case10_Case00)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank0C::
 Func_00C_5145:: ; address name
@@ -2599,7 +2599,7 @@ Jump_00C_5148::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 40 call sites from 31 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
+; 40 call sites from 31 routines (e.g. ArenaMenu_Case26, RedrawFullScreenBoxes_0C, ArenaMenu_Case19, ArenaMenu_Case18, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank0C::
 Func_00C_5156:: ; address name
@@ -2620,10 +2620,10 @@ Func_00C_5156:: ; address name
     add_a_to_hl
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 4 call sites from 4 routines (e.g. ScriptCommandF6_Run_Case0F, ScriptCommandF6_Run_Case06, ScriptCommandF6_Run_Case01, ScriptCommandF6_Run_Case10_Case09)
+; only called from routines of LibraryMenu (E-0098)
+; 4 call sites from 4 routines (e.g. LibraryMenu_Case0F, LibraryMenu_Case06, LibraryMenu_Case01, LibraryMenu_Case10_Case09)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
-ScriptCommandF6_Run_Shared06::
+LibraryMenu_Shared06::
 Func_00C_5177:: ; address name
     ld hl, Tiles_0C_51AB
     ld de, vTiles1 + $430
@@ -2654,7 +2654,7 @@ Data_00C_51AB:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 23 call sites from 13 routines (e.g. ScriptCommandF7_Run_Shared02, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ...)
+; 23 call sites from 13 routines (e.g. ArenaMenu_Shared02, ArenaMenu_Case18, ArenaMenu_Case11, ArenaMenu_Case10, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0C::
@@ -2712,7 +2712,7 @@ Jump_00C_51E3::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (row 14, column 1 of the drawn area) when wStringIndex is $18 or $12, otherwise $99C1 (E-0062)
-; 29 call sites from 22 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case18, ...)
+; 29 call sites from 22 routines (e.g. ArenaMenu_Case26, RedrawFullScreenBoxes_0C, ArenaMenu_Case19, ArenaMenu_Case18, ...)
 ; reads: wStringIndex, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -2769,9 +2769,9 @@ Jump_00C_5226::
     ldh [rVBK], a
     ret
 
-; only called from ScriptCommandF7_Run_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case05)
-ScriptCommandF7_Run_Case05_Sub01::
+; only called from ArenaMenu_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case05)
+ArenaMenu_Case05_Sub01::
 Func_00C_5247:: ; address name
     ld a, c
     ld b, a
@@ -2792,7 +2792,7 @@ Jump_00C_524B::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 12 call sites from 9 routines (e.g. ScriptCommandF7_Run_Case12, ScriptCommandF7_Run_Case05_Sub01, ScriptCommandF7_Run_Case02, ScriptCommandF6_Run_Case0E, ...)
+; 12 call sites from 9 routines (e.g. ArenaMenu_Case12, ArenaMenu_Case05_Sub01, ArenaMenu_Case02, LibraryMenu_Case0E, ...)
 StoreBAtWordTableEntry_Bank0C::
 Func_00C_525B:: ; address name
     push bc
@@ -2807,7 +2807,7 @@ Func_00C_525B:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $20 and size word $1702, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case02, ScriptCommandF6_Run_Case10_Case0A)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case02, LibraryMenu_Case10_Case0A)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2020::
 Func_00C_5269:: ; address name
@@ -2825,7 +2825,7 @@ Func_00C_5269:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $200 and size word $5301, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case09, ScriptCommandF6_Run_Case10_Case0A)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case09, LibraryMenu_Case10_Case0A)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2200::
 Func_00C_5283:: ; address name
@@ -2842,10 +2842,10 @@ Func_00C_5283:: ; address name
     call FillTilesFromRequest
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 3 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case10_Case08, ScriptCommandF6_Run_Case10_Case00)
+; only called from routines of LibraryMenu (E-0098)
+; 3 call sites from 2 routines (e.g. LibraryMenu_Case10_Case08, LibraryMenu_Case10_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-ScriptCommandF6_Run_Shared07::
+LibraryMenu_Shared07::
 Func_00C_529D:: ; address name
     ld hl, vTiles2
     ld a, l
@@ -2872,7 +2872,7 @@ Func_00C_529D:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ArenaMenu_Case00, LibraryMenu_Case07)
 CopyBytesDEToHL_Bank0C::
 Func_00C_52D0:: ; address name
     ld a, [de]
@@ -2885,7 +2885,7 @@ Func_00C_52D0:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case00, ScriptCommandF6_Run_Case07)
+; 4 call sites from 4 routines (e.g. CopyScreenBufferRectWithAttrs_0C, RedrawFullScreenBoxes_0C, ArenaMenu_Case00, LibraryMenu_Case07)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank0C::
 Func_00C_52D9:: ; address name
@@ -2906,7 +2906,7 @@ Jump_00C_52DD::
     ret
 
 ; A = 6 * wD787 + wD786 (row-major index in a 6-column grid: wD786 column, wD787 row); BC kept (E-0072)
-; 15 call sites from 8 routines (e.g. ScriptCommandF6_Run_Case0C, ReadGridCellByteForGridCursorXGridCursorY, ScriptCommandF6_Run_Shared03, ScriptCommandF6_Run_Case0A, ...)
+; 15 call sites from 8 routines (e.g. LibraryMenu_Case0C, ReadGridCellByteForGridCursorXGridCursorY, LibraryMenu_Shared03, LibraryMenu_Case0A, ...)
 ; reads: wGridCursorY, wGridCursorX
 GridIndexFromGridCursorXGridCursorY::
 Func_00C_52EC:: ; address name
@@ -2923,7 +2923,7 @@ Func_00C_52EC:: ; address name
     ret
 
 ; A = 6 * wD78B + wD78A (row-major index in a 6-column grid); BC kept (E-0117)
-; 2 call sites from 2 routines (e.g. ScriptCommandF6_Run_Case0C, GridCellAddressFromGridCursorXAndGrid2CursorX)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case0C, GridCellAddressFromGridCursorXAndGrid2CursorX)
 ; reads: wGrid2CursorY, wGrid2CursorX
 GridIndexFromGrid2CursorXGrid2CursorY::
 Func_00C_52FB:: ; address name
@@ -2939,12 +2939,12 @@ Func_00C_52FB:: ; address name
     pop bc
     ret
 
-; only called from routines of ScriptCommandF6_Run (E-0098)
-; 5 call sites from 4 routines (e.g. ScriptCommandF6_Run_Case0C, ScriptCommandF6_Run_Shared01, ScriptCommandF6_Run_Case10_Case08, ScriptCommandF6_Run_Case10_Case05)
+; only called from routines of LibraryMenu (E-0098)
+; 5 call sites from 4 routines (e.g. LibraryMenu_Case0C, LibraryMenu_Shared01, LibraryMenu_Case10_Case08, LibraryMenu_Case10_Case05)
 ; reads: wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wMonsterLibraryBuf
-ScriptCommandF6_Run_Shared08::
+LibraryMenu_Shared08::
 Func_00C_530A:: ; address name
     push hl
     ld a, l
@@ -2984,10 +2984,10 @@ Jump_00C_5346::
     ld a, $FE
     ret
 
-; only called from ScriptCommandF6_Run_Case10_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case01)
+; only called from LibraryMenu_Case10_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case01)
 ; points at: wScreenBlock9C
-ScriptCommandF6_Run_Case10_Case01_Sub01::
+LibraryMenu_Case10_Case01_Sub01::
 Func_00C_534A:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterIconKindTable_536A
@@ -3010,7 +3010,7 @@ Jump_00C_5363::
     jr nz, Jump_00C_5363
     ret
 
-; E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174).
+; E-0206 (C1: LibraryMenu_Case10_Case01_Sub01 reads the byte at $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that Data_00C_54DF[value] points to into wScreenBlock9C; 373 bytes, one per monster id up to $174).
 ; record: index into Data_00C_54DF
 MonsterIconKindTable_536A::
 Data_00C_536A:: ; address name
@@ -3388,15 +3388,15 @@ Data_00C_536A:: ; address name
     db $03 ; id 371 Orgodemir
     db $02 ; id 372 Darck
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01_Sub01
+; address loaded by LibraryMenu_Case10_Case01_Sub01
 Data_00C_54DF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E9, $54, $EB, $54, $ED, $54, $EF, $54, $F1, $54, $7C, $80, $7D, $80, $7E, $80
     db $7E, $7E, $7F, $80
 
-; only called from ScriptCommandF6_Run_Case10_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case01)
+; only called from LibraryMenu_Case10_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case01)
 ; points at: wScreenBlock9C
-ScriptCommandF6_Run_Case10_Case01_Sub02::
+LibraryMenu_Case10_Case01_Sub02::
 Func_00C_54F3:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterClassByteTable_5562
@@ -3419,7 +3419,7 @@ Jump_00C_550C::
     jr nz, Jump_00C_550C
     ret
 
-; address loaded by ScriptCommandF6_Run_Case10_Case01_Sub02
+; address loaded by LibraryMenu_Case10_Case01_Sub02
 Data_00C_5513:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dw Data_00C_5523
     dw Data_00C_5527
@@ -3455,7 +3455,7 @@ Data_00C_553F:: ; heuristic: target of a monotone pointer table; C0
     db $82, $82, $82, $82
 
 ; writes six bytes from Data_00C_555C to the CGB background palette data (rBCPS = $80, auto-increment), waiting for VRAM access (E-0122)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case0B)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case0B)
 ; reads: rSTAT
 WriteBGPalette0From555C::
 Func_00C_5543:: ; address name
@@ -3481,7 +3481,7 @@ Jump_00C_5550::
 Data_00C_555C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $86, $7D, $FF, $7F, $E1, $7F
 
-; E-0206 (C1: ScriptCommandF6_Run_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372).
+; E-0206 (C1: LibraryMenu_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that Data_00C_5513[class] points to into wScreenBlock9C; the same 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366, 367, 372).
 ; record: class 0-7
 MonsterClassByteTable_5562::
 Data_00C_5562:: ; address name
@@ -3859,7 +3859,7 @@ Data_00C_5562:: ; address name
     db $07 ; id 371 Orgodemir
     db $06 ; id 372 Darck
 
-; address loaded by ScriptCommandF6_Run_Case05
+; address loaded by LibraryMenu_Case05
 Data_00C_56D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $04
 
@@ -3929,25 +3929,25 @@ Data_00C_589A:: ; address name
     db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ScriptCommandF6_Run_Case03, ScriptCommandF6_Run_Case05, ScriptCommandF6_Run_Case0E, ScriptCommandF6_Run_Case10_Case0A
+; address loaded by LibraryMenu_Case03, LibraryMenu_Case05, LibraryMenu_Case0E, LibraryMenu_Case10_Case0A
 Data_00C_58FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
-; address loaded by ScriptCommandF6_Run_Case0A, ScriptCommandF6_Run_Case10_Case0A, ScriptCommandF6_Run_Case10_Case0D
+; address loaded by LibraryMenu_Case0A, LibraryMenu_Case10_Case0A, LibraryMenu_Case10_Case0D
 Data_00C_590A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $C3, $A9, $C3, $D1, $C3, $F9, $C3, $21, $C4, $49, $C4
 
-; address loaded by ScriptCommandF6_Run_Case04, ScriptCommandF6_Run_Case0C, ScriptCommandF6_Run_Shared01, GridCellAddressFromGridCursorXAndGrid2CursorX
+; address loaded by LibraryMenu_Case04, LibraryMenu_Case0C, LibraryMenu_Shared01, GridCellAddressFromGridCursorXAndGrid2CursorX
 Data_00C_5916:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $00, $24, $00, $47, $00, $6A, $00, $8D, $00, $B0, $00, $D3, $00, $F6, $00
     db $19, $01, $3C, $01, $5F, $01, $FF, $FF
 
-; address loaded by ScriptCommandF6_Run_Case04, ScriptCommandF6_Run_Case10_Case08
+; address loaded by LibraryMenu_Case04, LibraryMenu_Case10_Case08
 Data_00C_592E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1B, $00, $43, $00, $67, $00, $85, $00, $A8, $00, $CA, $00, $F1, $00, $11, $01
     db $39, $01, $5C, $01, $75, $01
 
-; address loaded by ScriptCommandF6_Run_Case0A, ScriptCommandF6_Run_Case0C, ScriptCommandF6_Run_Case10_Case08, ScriptCommandF6_Run_Shared03
+; address loaded by LibraryMenu_Case0A, LibraryMenu_Case0C, LibraryMenu_Case10_Case08, LibraryMenu_Shared03
 Data_00C_5944:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
 
@@ -3998,7 +3998,7 @@ Data_00C_5995:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_599B:: ; heuristic: target of a monotone pointer table; C0
     db $05, $05, $05, $03
 
-; E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word ScriptCommandF6_Run_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
+; E-0211 (C1: LibraryMenu_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $599F + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
 MonsterPedigreeTableA::
 Data_00C_599F:: ; address name
@@ -4776,7 +4776,7 @@ Data_00C_5C9F:: ; address name
     dw $FEFE ; id 382 Kagebou none
     dw $FEFE ; id 383 ? none
 
-; E-0211 (C1: ScriptCommandF6_Run_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
+; E-0211 (C1: LibraryMenu_Case10_Case06 takes the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX (page base from Data_00C_5916 plus the grid position) and reads the word at $5F9F + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the monster: for all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's species (C2 for those entries); 384 words).
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
 MonsterPedigreeTableB::
 Data_00C_5F9F:: ; address name
@@ -5165,7 +5165,7 @@ Data_00C_5F9F:: ; address name
     dw $FEFE ; id 382 Kagebou none
     dw $FEFE ; id 383 ? none
 
-; E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ScriptCommandF7_Run ($659F); no reader found).
+; E-0211 (C1: the partner of MonsterPedigreeTableA_Alt, a variant of MonsterPedigreeTableB; 384 words end at ArenaMenu ($659F); no reader found).
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
 MonsterPedigreeTableB_Alt::
 Data_00C_629F:: ; address name
@@ -5554,59 +5554,59 @@ Data_00C_629F:: ; address name
     dw $FEFE ; id 382 Kagebou none
     dw $FEFE ; id 383 ? none
 
-; implements script command type F7; reached through ScriptCommandF7 in bank $10 (E-0038)
+; implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, bank $33 strings); reached through ScriptCommandF7 in bank $10 (E-0038, E-0244)
 ; 1 call site from 1 routine (e.g. ScriptCommandF7)
 ; reads: wScreenState
-ScriptCommandF7_Run::
+ArenaMenu::
 Func_00C_659F:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw ScriptCommandF7_Run_Case00
-    dw ScriptCommandF7_Run_Case01
-    dw ScriptCommandF7_Run_Case02
+    dw ArenaMenu_Case00
+    dw ArenaMenu_Case01
+    dw ArenaMenu_Case02
     dw ShowTwoChoiceBoxAtWC412
-    dw ScriptCommandF7_Run_Case04
-    dw ScriptCommandF7_Run_Case05
-    dw ScriptCommandF7_Run_Case06
-    dw ScriptCommandF7_Run_Case07
-    dw ScriptCommandF7_Run_Case08
-    dw ScriptCommandF7_Run_Case06
-    dw ScriptCommandF7_Run_Case0A
-    dw ScriptCommandF7_Run_Case0B
-    dw ScriptCommandF7_Run_Case0C
-    dw ScriptCommandF7_Run_Case0D
-    dw ScriptCommandF7_Run_Case0E
-    dw ScriptCommandF7_Run_Case0F
-    dw ScriptCommandF7_Run_Case10
-    dw ScriptCommandF7_Run_Case11
-    dw ScriptCommandF7_Run_Case12
-    dw ScriptCommandF7_Run_Case13
-    dw ScriptCommandF7_Run_Case14
-    dw ScriptCommandF7_Run_Case15
+    dw ArenaMenu_Case04
+    dw ArenaMenu_Case05
+    dw ArenaMenu_Case06
+    dw ArenaMenu_Case07
+    dw ArenaMenu_Case08
+    dw ArenaMenu_Case06
+    dw ArenaMenu_Case0A
+    dw ArenaMenu_Case0B
+    dw ArenaMenu_Case0C
+    dw ArenaMenu_Case0D
+    dw ArenaMenu_Case0E
+    dw ArenaMenu_Case0F
+    dw ArenaMenu_Case10
+    dw ArenaMenu_Case11
+    dw ArenaMenu_Case12
+    dw ArenaMenu_Case13
+    dw ArenaMenu_Case14
+    dw ArenaMenu_Case15
     dw ShowTwoChoiceBoxAtWC412
-    dw ScriptCommandF7_Run_Case17
-    dw ScriptCommandF7_Run_Case18
-    dw ScriptCommandF7_Run_Case19
-    dw ScriptCommandF7_Run_Case1A
-    dw ScriptCommandF7_Run_Case1B
-    dw ScriptCommandF7_Run_Case1C
-    dw ScriptCommandF7_Run_Case06
-    dw ScriptCommandF7_Run_Case1E
-    dw ScriptCommandF7_Run_Case08
-    dw ScriptCommandF7_Run_Case06
-    dw ScriptCommandF7_Run_Case21
-    dw ScriptCommandF7_Run_Case22
-    dw ScriptCommandF7_Run_Case23
-    dw ScriptCommandF7_Run_Case24
+    dw ArenaMenu_Case17
+    dw ArenaMenu_Case18
+    dw ArenaMenu_Case19
+    dw ArenaMenu_Case1A
+    dw ArenaMenu_Case1B
+    dw ArenaMenu_Case1C
+    dw ArenaMenu_Case06
+    dw ArenaMenu_Case1E
+    dw ArenaMenu_Case08
+    dw ArenaMenu_Case06
+    dw ArenaMenu_Case21
+    dw ArenaMenu_Case22
+    dw ArenaMenu_Case23
+    dw ArenaMenu_Case24
     dw ShowTwoChoiceBoxAtWC412
-    dw ScriptCommandF7_Run_Case26
-    dw ScriptCommandF7_Run_Case27
+    dw ArenaMenu_Case26
+    dw ArenaMenu_Case27
 
-; entry 39 of the `rst $00` table in ScriptCommandF7_Run
+; entry 39 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wAreaGraphicsIndex, hTemp0
 ; writes: wArg1, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wAreaGraphicsIndex
-ScriptCommandF7_Run_Case27::
+ArenaMenu_Case27::
 Jump_00C_65F3:: ; address name
     ld a, [wAreaGraphicsIndex]
     add a, a
@@ -5652,7 +5652,7 @@ Jump_00C_662D::
     cp a, $FD
     jr z, Jump_00C_6655
     ld [wArg1], a
-    call ScriptCommandF7_Run_Case27_Sub02
+    call ArenaMenu_Case27_Sub02
     jp Jump_00C_6663
 
 Jump_00C_663F::
@@ -5664,17 +5664,17 @@ Jump_00C_663F::
     jr Jump_00C_6663
 
 Jump_00C_664E::
-    call ScriptCommandF7_Run_Shared06
+    call ArenaMenu_Shared06
     ld a, $03
     jr Jump_00C_6663
 
 Jump_00C_6655::
-    call ScriptCommandF7_Run_Case27_Sub01
-    call ScriptCommandF7_Run_Case27_Sub02
+    call ArenaMenu_Case27_Sub01
+    call ArenaMenu_Case27_Sub02
     jp Jump_00C_6663
 
 Jump_00C_665E::
-    call ScriptCommandF7_Run_Shared06
+    call ArenaMenu_Shared06
     ld a, $03
 
 Jump_00C_6663::
@@ -5687,11 +5687,11 @@ Jump_00C_6663::
     ld [wAreaGraphicsIndex], a
     ret
 
-; entry 38 of the `rst $00` table in ScriptCommandF7_Run
+; entry 38 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenState
 ; writes: wScreenState, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor, wArg1, wArg2
-ScriptCommandF7_Run_Case26::
+ArenaMenu_Case26::
 Jump_00C_6674:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -5741,12 +5741,12 @@ Jump_00C_66C0::
     ld [wScriptStartRequest], a
     ret
 
-; entry 0 of the `rst $00` table in ScriptCommandF7_Run
+; entry 0 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wArenaRank, wScreenTableIndex, wScreenState
 ; writes: wMessageMode, wScreenState, wTwoChoiceCursor, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, ...
 ; points at: wScreenState, wScreenTileBuffer, wScreenAttrBuffer
-ScriptCommandF7_Run_Case00::
+ArenaMenu_Case00::
 Jump_00C_66D7:: ; address name
     ld hl, wScreenState
     ld b, $6F
@@ -5880,18 +5880,18 @@ Jump_00C_67C5::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF7_Run
+; entry 1 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF7_Run_Case01::
+ArenaMenu_Case01::
 Jump_00C_67E5:: ; address name
     ld de, TileRect_0C_762E
     ld hl, wWindowTileBuffer + $B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call ScriptCommandF7_Run_Case01_Sub01
-    call ScriptCommandF7_Run_Shared02
+    call ArenaMenu_Case01_Sub01
+    call ArenaMenu_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -5901,11 +5901,11 @@ Jump_00C_67E5:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandF7_Run
+; entry 2 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wArenaRank, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wTextBuf0, wScreenState, wGridCursorX
-ScriptCommandF7_Run_Case02::
+ArenaMenu_Case02::
 Jump_00C_680B:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5917,11 +5917,11 @@ Jump_00C_680B:: ; address name
     jr nz, Jump_00C_684F
     bit 0, a
     jr nz, Jump_00C_685E
-    call ScriptCommandF7_Run_Case02_Sub01
+    call ArenaMenu_Case02_Sub01
     ret
 
 Jump_00C_6825::
-    call ScriptCommandF7_Run_Case02_Sub03
+    call ArenaMenu_Case02_Sub03
     ld a, [wGridCursorX]
     and a, a
     jr nz, Jump_00C_6832
@@ -5933,13 +5933,13 @@ Jump_00C_6832::
 
 Jump_00C_6833::
     ld [wGridCursorX], a
-    call ScriptCommandF7_Run_Case02_Sub02
+    call ArenaMenu_Case02_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_683F::
-    call ScriptCommandF7_Run_Case02_Sub03
+    call ArenaMenu_Case02_Sub03
     ld a, [wGridCursorX]
     cp a, $03
     jr c, Jump_00C_684C
@@ -5960,7 +5960,7 @@ Jump_00C_684F::
     ret
 
 Jump_00C_685E::
-    call ScriptCommandF7_Run_Case02_Sub02
+    call ArenaMenu_Case02_Sub02
     ld a, [wArenaRank]
     dec a
     ld b, a
@@ -6014,41 +6014,41 @@ Jump_00C_688C::
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by ScriptCommandF7_Run_Case02
+; address loaded by ArenaMenu_Case02
 Data_00C_68D1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0B, $0A, $1C
 
-; only called from ScriptCommandF7_Run_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case02)
+; only called from ArenaMenu_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-ScriptCommandF7_Run_Case02_Sub01::
+ArenaMenu_Case02_Sub01::
 Func_00C_68D5:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF7_Run_Case02_Sub02
+    jr c, ArenaMenu_Case02_Sub02
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, ScriptCommandF7_Run_Case02_Sub02
+    jr c, ArenaMenu_Case02_Sub02
     cp a, $18
-    jr c, ScriptCommandF7_Run_Case02_Sub03
+    jr c, ArenaMenu_Case02_Sub03
     xor a, a
     ld [wGridCursorY], a
 
-; only called from ScriptCommandF7_Run_Case02 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case02)
+; only called from ArenaMenu_Case02 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wGridCursorX
-ScriptCommandF7_Run_Case02_Sub02::
+ArenaMenu_Case02_Sub02::
 Func_00C_68EF:: ; address name
     ld b, $BB
     jr Jump_00C_68F9
 
-; only called from ScriptCommandF7_Run_Case02 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case02)
+; only called from ArenaMenu_Case02 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case02)
 ; reads: wGridCursorX
-ScriptCommandF7_Run_Case02_Sub03::
+ArenaMenu_Case02_Sub03::
 Func_00C_68F3:: ; address name
     ld b, $C3
     jr Jump_00C_68F9
@@ -6074,12 +6074,12 @@ Jump_00C_68F9::
     ei
     ret
 
-; address loaded by ScriptCommandF7_Run_Case02_Sub03
+; address loaded by ArenaMenu_Case02_Sub03
 Data_00C_691A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
 ; plays sound $6C, copies the 6 x 5 box Data_00C_7831 to wC412, draws it at the scroll position + $1CC, wD780 += 1 and wTwoChoiceCursor = 0 (E-0122)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case0B)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case0B)
 ; reads: wScreenState
 ; writes: wScreenState, wTwoChoiceCursor
 ShowTwoChoiceBoxAtWC412::
@@ -6101,11 +6101,11 @@ Func_00C_6922:: ; address name
     ld [wTwoChoiceCursor], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandF7_Run
+; entry 4 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wGridCursorX, wArg1, wScreenState
 ; writes: wArg3, wArg2, wArg1, wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case04::
+ArenaMenu_Case04::
 Jump_00C_694B:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6118,7 +6118,7 @@ Jump_00C_694B:: ; address name
     ret
 
 Jump_00C_695F::
-    call ScriptCommandF7_Run_Shared01
+    call ArenaMenu_Shared01
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6182,10 +6182,10 @@ Jump_00C_69BF::
     ld [wScriptStartRequest], a
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case0C, ScriptCommandF7_Run_Case05, ScriptCommandF7_Run_Case04)
+; only called from routines of ArenaMenu (E-0098)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case0C, ArenaMenu_Case05, ArenaMenu_Case04)
 ; writes: wArg1, wArg2
-ScriptCommandF7_Run_Shared01::
+ArenaMenu_Shared01::
 Func_00C_69D5:: ; address name
     ld b, $00
     ld c, $05
@@ -6206,15 +6206,15 @@ Func_00C_69D5:: ; address name
     call DrawScreenBufferRect_Bank0C
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandF7_Run
+; entry 5 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState
-ScriptCommandF7_Run_Case05::
+ArenaMenu_Case05::
 Jump_00C_6A04:: ; address name
-    call ScriptCommandF7_Run_Shared01
+    call ArenaMenu_Shared01
     ld c, $04
     ld hl, Data_00C_784F
-    call ScriptCommandF7_Run_Case05_Sub01
+    call ArenaMenu_Case05_Sub01
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -6223,24 +6223,24 @@ Jump_00C_6A04:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandF7_Run
+; entry 6 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF7_Run_Case06::
+ArenaMenu_Case06::
 Jump_00C_6A21:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandF7_Run
+; entry 7 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenState, wScreenCountPlusOne
 ; writes: wArg3, wArg2, wArg1, wScreenState, wScreenTableIndex, wRecordCapacity, wAreaGraphicsIndex
-ScriptCommandF7_Run_Case07::
+ArenaMenu_Case07::
 Jump_00C_6A29:: ; address name
-    call ScriptCommandF7_Run_Shared04
+    call ArenaMenu_Shared04
     ld a, [wGridCursorX]
     sla a
     ld de, Data_00C_7871
@@ -6273,11 +6273,11 @@ Jump_00C_6A39::
     call RedrawFullScreenBoxes_0C
     ret
 
-; entry 8 of the `rst $00` table in ScriptCommandF7_Run
+; entry 8 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wRecordCapacity, wScreenState, wArenaRank
 ; writes: wScriptCommandType, wScriptStartRequest, wScreenState, wArenaRank, wTwoChoiceCursor, wAreaGraphicsIndex, wScreenTableIndex, wRecordCapacity
-ScriptCommandF7_Run_Case08::
+ArenaMenu_Case08::
 Jump_00C_6A6A:: ; address name
     ld a, [wBattleScene]
     and a, a
@@ -6327,26 +6327,26 @@ Jump_00C_6AAF::
     ld [wScreenState], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandF7_Run
+; entry 10 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandF7_Run_Case0A::
+ArenaMenu_Case0A::
 Jump_00C_6AC4:: ; address name
-    call ScriptCommandF7_Run_Shared04
+    call ArenaMenu_Shared04
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandF7_Run
+; entry 11 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandF7_Run_Case0B::
+ArenaMenu_Case0B::
 Jump_00C_6AC8:: ; address name
-    call ScriptCommandF7_Run_Shared02
+    call ArenaMenu_Shared02
     call ShowTwoChoiceBoxAtWC412
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandF7_Run
+; entry 12 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenState
 ; writes: wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case0C::
+ArenaMenu_Case0C::
 Jump_00C_6ACF:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6371,7 +6371,7 @@ Jump_00C_6AF2::
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, Jump_00C_6AE3
-    call ScriptCommandF7_Run_Shared01
+    call ArenaMenu_Shared01
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
@@ -6383,22 +6383,22 @@ Jump_00C_6AF2::
     ld [wScriptStartRequest], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandF7_Run
+; entry 13 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF7_Run_Case0D::
+ArenaMenu_Case0D::
 Jump_00C_6B10:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 14 of the `rst $00` table in ScriptCommandF7_Run
+; entry 14 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case0E::
+ArenaMenu_Case0E::
 Jump_00C_6B18:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6412,11 +6412,11 @@ Jump_00C_6B18:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandF7_Run
+; entry 15 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wArg1, wArg2, wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case0F::
+ArenaMenu_Case0F::
 Jump_00C_6B2E:: ; address name
     ld b, $00
     ld c, $03
@@ -6449,17 +6449,17 @@ Jump_00C_6B2E:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommandF7_Run
+; entry 16 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case10::
+ArenaMenu_Case10::
 Jump_00C_6B78:: ; address name
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call ScriptCommandF7_Run_Shared02
+    call ArenaMenu_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -6468,7 +6468,7 @@ Jump_00C_6B78:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call ScriptCommandF7_Run_Shared05
+    call ArenaMenu_Shared05
     ld a, [wScreenState]
     inc a
     inc a
@@ -6479,17 +6479,17 @@ Jump_00C_6B78:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 17 of the `rst $00` table in ScriptCommandF7_Run
+; entry 17 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF7_Run_Case11::
+ArenaMenu_Case11::
 Jump_00C_6BB4:: ; address name
     ld de, TileRect_0C_76D6
     ld hl, wWindowTileBuffer + $B4
     ld bc, $1109
     call CopyRectTo20ByteRows_Bank0C
-    call ScriptCommandF7_Run_Shared02
+    call ArenaMenu_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -6503,11 +6503,11 @@ Jump_00C_6BB4:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 18 of the `rst $00` table in ScriptCommandF7_Run
+; entry 18 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTextBuf0, wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wGridCursorX
-ScriptCommandF7_Run_Case12::
+ArenaMenu_Case12::
 Jump_00C_6BE3:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -6519,11 +6519,11 @@ Jump_00C_6BE3:: ; address name
     jr nz, Jump_00C_6C27
     bit 0, a
     jr nz, Jump_00C_6C36
-    call ScriptCommandF7_Run_Case12_Sub01
+    call ArenaMenu_Case12_Sub01
     ret
 
 Jump_00C_6BFD::
-    call ScriptCommandF7_Run_Case12_Sub03
+    call ArenaMenu_Case12_Sub03
     ld a, [wGridCursorX]
     and a, a
     jr nz, Jump_00C_6C0A
@@ -6535,13 +6535,13 @@ Jump_00C_6C0A::
 
 Jump_00C_6C0B::
     ld [wGridCursorX], a
-    call ScriptCommandF7_Run_Case12_Sub02
+    call ArenaMenu_Case12_Sub02
     ld a, $69
     call QueueSoundEffect
     ret
 
 Jump_00C_6C17::
-    call ScriptCommandF7_Run_Case12_Sub03
+    call ArenaMenu_Case12_Sub03
     ld a, [wGridCursorX]
     cp a, $03
     jr c, Jump_00C_6C24
@@ -6562,7 +6562,7 @@ Jump_00C_6C27::
     ret
 
 Jump_00C_6C36::
-    call ScriptCommandF7_Run_Case12_Sub02
+    call ArenaMenu_Case12_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
@@ -6592,41 +6592,41 @@ Jump_00C_6C36::
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by ScriptCommandF7_Run_Case12
+; address loaded by ArenaMenu_Case12
 Data_00C_6C7F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0B, $0A, $1C
 
-; only called from ScriptCommandF7_Run_Case12 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case12)
+; only called from ArenaMenu_Case12 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
-ScriptCommandF7_Run_Case12_Sub01::
+ArenaMenu_Case12_Sub01::
 Func_00C_6C83:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF7_Run_Case12_Sub02
+    jr c, ArenaMenu_Case12_Sub02
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp a, $10
-    jr c, ScriptCommandF7_Run_Case12_Sub02
+    jr c, ArenaMenu_Case12_Sub02
     cp a, $18
-    jr c, ScriptCommandF7_Run_Case12_Sub03
+    jr c, ArenaMenu_Case12_Sub03
     xor a, a
     ld [wGridCursorY], a
 
-; only called from ScriptCommandF7_Run_Case12 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case12)
+; only called from ArenaMenu_Case12 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wGridCursorX
-ScriptCommandF7_Run_Case12_Sub02::
+ArenaMenu_Case12_Sub02::
 Func_00C_6C9D:: ; address name
     ld b, $BB
     jr Jump_00C_6CA7
 
-; only called from ScriptCommandF7_Run_Case12 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case12)
+; only called from ArenaMenu_Case12 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case12)
 ; reads: wGridCursorX
-ScriptCommandF7_Run_Case12_Sub03::
+ArenaMenu_Case12_Sub03::
 Func_00C_6CA1:: ; address name
     ld b, $C3
     jr Jump_00C_6CA7
@@ -6652,14 +6652,14 @@ Jump_00C_6CA7::
     ei
     ret
 
-; address loaded by ScriptCommandF7_Run_Case12_Sub03
+; address loaded by ArenaMenu_Case12_Sub03
 Data_00C_6CC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $E1, $00, $21, $01, $61, $01
 
-; entry 19 of the `rst $00` table in ScriptCommandF7_Run
+; entry 19 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1, wArg2, wScreenState, wGrid2CursorX, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case13::
+ArenaMenu_Case13::
 Jump_00C_6CD0:: ; address name
     ld b, $00
     ld c, $05
@@ -6684,22 +6684,22 @@ Jump_00C_6CD0:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 20 of the `rst $00` table in ScriptCommandF7_Run
+; entry 20 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ScriptCommandF7_Run_Case14::
+ArenaMenu_Case14::
 Jump_00C_6D05:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-; entry 21 of the `rst $00` table in ScriptCommandF7_Run
+; entry 21 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenState
 ; writes: wScreenArea, wGrid2CursorX, wArenaByte86, wArenaByte87, wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case15::
+ArenaMenu_Case15::
 Jump_00C_6D0D:: ; address name
     ld a, [wGridCursorX]
     inc a
@@ -6727,15 +6727,15 @@ Jump_00C_6D0D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by ScriptCommandF7_Run_Case15
+; address loaded by ArenaMenu_Case15
 Data_00C_6D44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E8, $03, $D0, $07, $B8, $0B, $88, $13
 
-; entry 23 of the `rst $00` table in ScriptCommandF7_Run
+; entry 23 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wArenaByte86, wArenaByte87, wArg1, wScreenState
 ; writes: wArg1, wArg2, wArg3, wTwoChoiceCursor, wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case17::
+ArenaMenu_Case17::
 Jump_00C_6D4C:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6797,10 +6797,10 @@ Jump_00C_6DAF::
     ld [wScriptStartRequest], a
     ret
 
-; entry 24 of the `rst $00` table in ScriptCommandF7_Run
+; entry 24 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1, wArg2, wScreenState, wGrid2CursorX, wScreenArea, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case18::
+ArenaMenu_Case18::
 Jump_00C_6DC5:: ; address name
     ld b, $00
     ld c, $05
@@ -6819,7 +6819,7 @@ Jump_00C_6DC5:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank0C
-    call ScriptCommandF7_Run_Shared05
+    call ArenaMenu_Shared05
     ld a, $11
     ld [wScreenState], a
     xor a, a
@@ -6831,11 +6831,11 @@ Jump_00C_6DC5:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 25 of the `rst $00` table in ScriptCommandF7_Run
+; entry 25 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaByte87, wArenaByte86, wScreenState
 ; writes: wArg3, wArg2, wArg1, wScreenState, wScriptCommandType, wScriptStartRequest
-ScriptCommandF7_Run_Case19::
+ArenaMenu_Case19::
 Jump_00C_6E0C:: ; address name
     xor a, a
     ld [wArg3], a
@@ -6844,7 +6844,7 @@ Jump_00C_6E0C:: ; address name
     ld a, [wArenaByte86]
     ld [wArg1], a
     farcall SubtractArg1AmountFromGold
-    call ScriptCommandF7_Run_Shared02
+    call ArenaMenu_Shared02
     call BGMapAddressAtScroll_Bank0C
     ld bc, $140D
     ld de, $01CC
@@ -6858,15 +6858,15 @@ Jump_00C_6E0C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 26 of the `rst $00` table in ScriptCommandF7_Run
+; entry 26 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenArea, wScreenState
 ; writes: wAreaGraphicsIndex, wScreenState, wScreenTableIndex
-ScriptCommandF7_Run_Case1A::
+ArenaMenu_Case1A::
 Jump_00C_6E42:: ; address name
     ld a, [wScreenArea]
     ld [wAreaGraphicsIndex], a
-    call ScriptCommandF7_Run_Case1A_Sub01
+    call ArenaMenu_Case1A_Sub01
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6874,11 +6874,11 @@ Jump_00C_6E42:: ; address name
     call RedrawFullScreenBoxes_0C
     ret
 
-; entry 27 of the `rst $00` table in ScriptCommandF7_Run
+; entry 27 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wArenaRound, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenTableIndex, wScreenState, wRecordCapacity, wArg3, wArg2, ...
-ScriptCommandF7_Run_Case1B::
+ArenaMenu_Case1B::
 Jump_00C_6E59:: ; address name
     ld a, [wBattleScene]
     and a, a
@@ -6901,7 +6901,7 @@ Jump_00C_6E59:: ; address name
     ret
 
 Jump_00C_6E85::
-    call ScriptCommandF7_Run_Case1B_Sub01
+    call ArenaMenu_Case1B_Sub01
     xor a, a
 
 Jump_00C_6E89::
@@ -6925,20 +6925,20 @@ Jump_00C_6EA2::
     ld a, $02
     jr Jump_00C_6E89
 
-; entry 28 of the `rst $00` table in ScriptCommandF7_Run
+; entry 28 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandF7_Run_Case1C::
+ArenaMenu_Case1C::
 Jump_00C_6EB0:: ; address name
-    call ScriptCommandF7_Run_Case1C_Sub01
+    call ArenaMenu_Case1C_Sub01
     ret
 
-; entry 30 of the `rst $00` table in ScriptCommandF7_Run
+; entry 30 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wScreenCountPlusOne, wGridCursorX
 ; writes: wScreenState, wScreenTableIndex, wRecordCapacity, wAreaGraphicsIndex
-ScriptCommandF7_Run_Case1E::
+ArenaMenu_Case1E::
 Jump_00C_6EB4:: ; address name
-    call ScriptCommandF7_Run_Shared03
+    call ArenaMenu_Shared03
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6952,18 +6952,18 @@ Jump_00C_6EB4:: ; address name
     call RedrawFullScreenBoxes_0C
     ret
 
-; entry 33 of the `rst $00` table in ScriptCommandF7_Run
+; entry 33 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommandF7_Run_Case21::
+ArenaMenu_Case21::
 Jump_00C_6ED3:: ; address name
-    call ScriptCommandF7_Run_Shared03
+    call ArenaMenu_Shared03
     ret
 
-; entry 34 of the `rst $00` table in ScriptCommandF7_Run
+; entry 34 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wArenaRank, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenState
-ScriptCommandF7_Run_Case22::
+ArenaMenu_Case22::
 Jump_00C_6ED7:: ; address name
     ld a, [wBattleScene]
     and a, a
@@ -7010,11 +7010,11 @@ Jump_00C_6F17::
     ld [wScriptStartRequest], a
     ret
 
-; entry 35 of the `rst $00` table in ScriptCommandF7_Run
+; entry 35 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenState
-ScriptCommandF7_Run_Case23::
+ArenaMenu_Case23::
 Jump_00C_6F26:: ; address name
     ld a, [wBattleScene]
     and a, a
@@ -7025,7 +7025,7 @@ Jump_00C_6F2E::
     jr Jump_00C_6F49
 
 Jump_00C_6F30::
-    call ScriptCommandF7_Run_Case23_Sub01
+    call ArenaMenu_Case23_Sub01
     xor a, a
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -7048,12 +7048,12 @@ Jump_00C_6F49::
     ld [wScriptStartRequest], a
     ret
 
-; entry 36 of the `rst $00` table in ScriptCommandF7_Run
+; entry 36 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wGameFlags836, hTemp0
 ; writes: hTemp1, wGameFlags836, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wTalkEventByte92
 ; points at: wTextBuf0, wPlayerName
-ScriptCommandF7_Run_Case24::
+ArenaMenu_Case24::
 Jump_00C_6F5E:: ; address name
     ld a, [wArenaRank]
     cp a, $01
@@ -7113,7 +7113,7 @@ Jump_00C_6FBC::
     ret
 
 ; runs Func_00C_72CC for the bottom box, copies $64 bytes of tiles (and CGB attributes) and draws the two screen-buffer rectangles at scroll + $1CC and + $1A0 (E-0125)
-; 4 call sites from 4 routines (e.g. ScriptCommandF7_Run_Case1E, ScriptCommandF7_Run_Case1A, ScriptCommandF7_Run_Case07, ScriptCommandF4_Run_Case04_Case18)
+; 4 call sites from 4 routines (e.g. ArenaMenu_Case1E, ArenaMenu_Case1A, ArenaMenu_Case07, NpcBreedMenu_Case04_Case18)
 ; reads: wIsCGB
 ; writes: wArg1, wArg2
 ; points at: wWindowTileBuffer, wWindowAttrBuffer
@@ -7153,11 +7153,11 @@ Jump_00C_6FFF::
     call DrawScreenBufferRect_Bank0C
     ret
 
-; only called from ScriptCommandF7_Run_Case23 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case23)
+; only called from ArenaMenu_Case23 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case23)
 ; reads: wAreaGraphicsIndex
 ; writes: wTextBuf0
-ScriptCommandF7_Run_Case23_Sub01::
+ArenaMenu_Case23_Sub01::
 Func_00C_701C:: ; address name
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
@@ -7169,12 +7169,12 @@ Func_00C_701C:: ; address name
     ld [wTextBuf0 + $1], a
     ret
 
-; address loaded by ScriptCommandF7_Run_Case23_Sub01
+; address loaded by ArenaMenu_Case23_Sub01
 Data_00C_7037:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0C, $0C, $0C, $0B, $0A, $1C
 
 ; wD588 += 1 and wD78C = wD7FC (E-0122)
-; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case1B, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case1B, ScriptCommand96_Run_Case0D, ScriptCommand96_Run_Case05)
 ; reads: wArenaRound, wAreaGraphicsIndex
 ; writes: wArenaRound, wScreenArea
 IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
@@ -7187,7 +7187,7 @@ Func_00C_703D:: ; address name
     ret
 
 ; wD78E = wD7FF + 1 (and stored back to wD7FF), wD786 = wD7FC, wTwoChoiceCursor = 1 (E-0122)
-; 5 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case08, ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
+; 5 call sites from 3 routines (e.g. ArenaMenu_Case08, ScriptCommand95_Run_Case0E, ScriptCommand95_Run_Case06)
 ; reads: wRecordCapacity, wAreaGraphicsIndex, wScreenCountPlusOne
 ; writes: wScreenCountPlusOne, wGridCursorX, wTwoChoiceCursor, wRecordCapacity
 SetupScreenCountPlusOneFromRecordCapacity::
@@ -7203,10 +7203,10 @@ Func_00C_704B:: ; address name
     ld [wRecordCapacity], a
     ret
 
-; only called from ScriptCommandF7_Run_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case01)
+; only called from ArenaMenu_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case01)
 ; reads: wArenaRank
-ScriptCommandF7_Run_Case01_Sub01::
+ArenaMenu_Case01_Sub01::
 Func_00C_7064:: ; address name
     ld hl, wWindowTileBuffer + $C9
     ld a, [wArenaRank]
@@ -7240,12 +7240,12 @@ Jump_00C_708B::
     ld [hl], a
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 5 call sites from 5 routines (e.g. ScriptCommandF7_Run_Case19, ScriptCommandF7_Run_Case11, ScriptCommandF7_Run_Case10, ScriptCommandF7_Run_Case0B, ...)
+; only called from routines of ArenaMenu (E-0098)
+; 5 call sites from 5 routines (e.g. ArenaMenu_Case19, ArenaMenu_Case11, ArenaMenu_Case10, ArenaMenu_Case0B, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
 ; points at: wArg3
-ScriptCommandF7_Run_Shared02::
+ArenaMenu_Shared02::
 Func_00C_7098:: ; address name
     ld de, TileRect_0C_777E
     ld hl, wWindowTileBuffer + $70
@@ -7274,11 +7274,11 @@ Jump_00C_70C7::
     jr c, Jump_00C_70C7
     ret
 
-; only called from ScriptCommandF7_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Shared05)
+; only called from ArenaMenu_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Shared05)
 ; reads: wPartyCount
 ; points at: wArenaEntry
-ScriptCommandF7_Run_Shared05_Sub01::
+ArenaMenu_Shared05_Sub01::
 Func_00C_70D3:: ; address name
     ld hl, $0000
     ld de, wArenaEntry
@@ -7311,12 +7311,12 @@ Jump_00C_70DB::
     ld l, $FF
     ret
 
-; only called from ScriptCommandF7_Run_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Shared05)
+; only called from ArenaMenu_Shared05 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Shared05)
 ; reads: hTemp0, wPartyCount
 ; writes: wArenaEntry, rRAMG2, rRAMB
 ; points at: wPartyList, wArenaEntry
-ScriptCommandF7_Run_Shared05_Sub02::
+ArenaMenu_Shared05_Sub02::
 Func_00C_70FE:: ; address name
     xor a, a
     ld [wArenaEntry], a
@@ -7535,7 +7535,7 @@ Jump_00C_7231::
     ret
 
 ; HL += the word in hFFC6/hFFC7; clobbers A (E-0073)
-; 12 call sites from 1 routine (e.g. ScriptCommandF7_Run_Shared05_Sub02)
+; 12 call sites from 1 routine (e.g. ArenaMenu_Shared05_Sub02)
 ; reads: hTemp0, hTemp1
 AddTemp0WordToHL::
 Func_00C_7246:: ; address name
@@ -7644,7 +7644,7 @@ Data_00C_72C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $90, $01, $58, $02, $20, $03, $B0, $04, $78, $05, $78, $05
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL for rows B to C, with CGB attributes (E-0128)
-; 7 call sites from 6 routines (e.g. ScriptCommandF7_Run_Case26, RedrawFullScreenBoxes_0C, ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case13, ...)
+; 7 call sites from 6 routines (e.g. ArenaMenu_Case26, RedrawFullScreenBoxes_0C, ArenaMenu_Case18, ArenaMenu_Case13, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_0C::
@@ -7822,7 +7822,7 @@ Jump_00C_737E::
     ret
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $52 (E-0117)
-; 3 call sites from 3 routines (e.g. ScriptCommandF7_Run_Case27, ScriptCommandF7_Run_Case27_Sub01, ScriptCommand96_Run_Shared01_Sub01)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case27, ArenaMenu_Case27_Sub01, ScriptCommand96_Run_Shared01_Sub01)
 ; reads: wRandomLo
 RandomModulo52::
 Func_00C_73B3:: ; address name
@@ -7838,18 +7838,18 @@ Func_00C_73B3:: ; address name
     call DivideHLByA
     ret
 
-; only called from ScriptCommandF7_Run_Case1B (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1B)
-ScriptCommandF7_Run_Case1B_Sub01::
+; only called from ArenaMenu_Case1B (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case1B)
+ArenaMenu_Case1B_Sub01::
 Func_00C_73C6:: ; address name
     ret
 
-; only called from ScriptCommandF7_Run_Case1A (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1A)
+; only called from ArenaMenu_Case1A (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case1A)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wArenaRound
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wArenaList2, wEncounterMonsters
-ScriptCommandF7_Run_Case1A_Sub01::
+ArenaMenu_Case1A_Sub01::
 Func_00C_73C7:: ; address name
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7881,11 +7881,11 @@ Func_00C_73F5:: ; address name
     ld [wEncounterKind], a
     call ScriptCommand96_Run_Shared01_Sub01
 
-; only called from ScriptCommandF7_Run_Case1C (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case1C)
+; only called from ArenaMenu_Case1C (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case1C)
 ; reads: wArenaRound
 ; points at: wArenaList2, wEncounterMonsters
-ScriptCommandF7_Run_Case1C_Sub01::
+ArenaMenu_Case1C_Sub01::
 Func_00C_7402:: ; address name
     ld a, [wArenaRound]
     sla a
@@ -7905,12 +7905,12 @@ Jump_00C_7418::
     jr nz, Jump_00C_7418
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case21, ScriptCommandF7_Run_Case1E)
+; only called from routines of ArenaMenu (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaMenu_Case21, ArenaMenu_Case1E)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScreenCountPlusOne
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wEncounterMonsters
-ScriptCommandF7_Run_Shared03::
+ArenaMenu_Shared03::
 Func_00C_741F:: ; address name
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7968,12 +7968,12 @@ Jump_00C_7471::
     jr nz, Jump_00C_7471
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case0A, ScriptCommandF7_Run_Case07)
+; only called from routines of ArenaMenu (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaMenu_Case0A, ArenaMenu_Case07)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wGridCursorX, wScreenCountPlusOne
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wEncounterMonsters
-ScriptCommandF7_Run_Shared04::
+ArenaMenu_Shared04::
 Func_00C_7478:: ; address name
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -8034,13 +8034,13 @@ Jump_00C_74D4::
     jr nz, Jump_00C_74D4
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case18, ScriptCommandF7_Run_Case10)
+; only called from routines of ArenaMenu (E-0098)
+; 2 call sites from 2 routines (e.g. ArenaMenu_Case18, ArenaMenu_Case10)
 ; writes: wTwoChoiceCursor
-ScriptCommandF7_Run_Shared05::
+ArenaMenu_Shared05::
 Func_00C_74DB:: ; address name
-    call ScriptCommandF7_Run_Shared05_Sub02
-    call ScriptCommandF7_Run_Shared05_Sub01
+    call ArenaMenu_Shared05_Sub02
+    call ArenaMenu_Shared05_Sub01
     ld a, l
     cp a, $50
     jr nc, Jump_00C_74FA
@@ -8078,10 +8078,10 @@ Jump_00C_750B::
     ld [wTwoChoiceCursor], a
     ret
 
-; only called from ScriptCommandF7_Run_Case27 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF7_Run_Case27)
+; only called from ArenaMenu_Case27 (E-0047)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case27)
 ; writes: wArg1
-ScriptCommandF7_Run_Case27_Sub01::
+ArenaMenu_Case27_Sub01::
 Func_00C_750F:: ; address name
     ld b, $1F
     call RandomModulo52
@@ -8113,18 +8113,18 @@ Jump_00C_7533::
     ld [wArg1], a
     ret
 
-; address loaded by ScriptCommandF7_Run_Case27_Sub01
+; address loaded by ArenaMenu_Case27_Sub01
 Data_00C_7538:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $40, $75, $47, $75, $4E, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $5A, $5B, $5C, $5D
     db $5E, $5F, $60, $61
 
-; only called from ScriptCommandF7_Run_Case27 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case27)
+; only called from ArenaMenu_Case27 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case27)
 ; reads: wArg1
 ; writes: wArg1
 ; points at: wInventory
-ScriptCommandF7_Run_Case27_Sub02::
+ArenaMenu_Case27_Sub02::
 Func_00C_755C:: ; address name
     ld hl, wInventory
     ld c, $18
@@ -8140,25 +8140,25 @@ Jump_00C_7561::
     jr nz, Jump_00C_7561
     ld a, [wArg1]
     push af
-    call ScriptCommandF7_Run_Shared06
+    call ArenaMenu_Shared06
     pop af
     ld [wArg1], a
-    call ScriptCommandF7_Run_Case27_Sub02_Sub01
+    call ArenaMenu_Case27_Sub02_Sub01
     ld a, $02
     ret
 
 Jump_00C_757E::
     ld a, [wArg1]
     ld [hl], a
-    call ScriptCommandF7_Run_Case27_Sub02_Sub01
+    call ArenaMenu_Case27_Sub02_Sub01
     xor a, a
     ret
 
-; only called from ScriptCommandF7_Run_Case27_Sub02 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF7_Run_Case27_Sub02)
+; only called from ArenaMenu_Case27_Sub02 (E-0047)
+; 2 call sites from 1 routine (e.g. ArenaMenu_Case27_Sub02)
 ; reads: wArg1
 ; points at: wTextBuf1
-ScriptCommandF7_Run_Case27_Sub02_Sub01::
+ArenaMenu_Case27_Sub02_Sub01::
 Func_00C_7587:: ; address name
     ld de, Data_008_403C
     ld b, $08
@@ -8196,10 +8196,10 @@ Jump_00C_75B8::
     ld [hl+], a
     ret
 
-; only called from routines of ScriptCommandF7_Run (E-0098)
-; 3 call sites from 2 routines (e.g. ScriptCommandF7_Run_Case27_Sub02, ScriptCommandF7_Run_Case27)
+; only called from routines of ArenaMenu (E-0098)
+; 3 call sites from 2 routines (e.g. ArenaMenu_Case27_Sub02, ArenaMenu_Case27)
 ; writes: wArg1, wArg2, wArg3
-ScriptCommandF7_Run_Shared06::
+ArenaMenu_Shared06::
 Func_00C_75BC:: ; address name
     ld hl, $1770
     ld a, l
@@ -8211,13 +8211,13 @@ Func_00C_75BC:: ; address name
     farcall AddArg1ToGoldCapped99999
     ret
 
-; address loaded by ScriptCommandF7_Run_Case27
+; address loaded by ArenaMenu_Case27
 Data_00C_75D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $DE, $75, $DE, $75, $DE, $75, $E7, $75, $F0, $75, $F9, $75, $19, $23, $2D, $37
     db $41, $4B, $5F, $64, $FF, $14, $1F, $2A, $35, $40, $4B, $5A, $64, $FF, $0F, $17
     db $1F, $27, $2F, $37, $50, $64, $FF, $0A, $15, $20, $2B, $36, $41, $50, $64, $FF
 
-; address loaded by ScriptCommandF7_Run_Case27
+; address loaded by ArenaMenu_Case27
 Data_00C_7602:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0E, $76, $0E, $76, $0E, $76, $16, $76, $1E, $76, $26, $76, $01, $53, $05, $0C
     db $24, $0B, $1C, $44, $02, $18, $0F, $10, $13, $15, $45, $FE, $03, $0D, $11, $12
@@ -8319,16 +8319,16 @@ Data_00C_7831:: ; address name
     db $B6, $C3, $AE, $AF, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ScriptCommandF7_Run_Case02, ScriptCommandF7_Run_Case05
+; address loaded by ArenaMenu_Case02, ArenaMenu_Case05
 Data_00C_784F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 
-; address loaded by ScriptCommandF7_Run_Case12
+; address loaded by ArenaMenu_Case12
 Data_00C_7857:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C9, $C3, $F1, $C3, $19, $C4, $41, $C4, $8D, $C3, $8F, $C3, $91, $C3, $8D, $C3
     db $8F, $C3, $91, $C3, $B5, $C3, $B7, $C3, $B9, $C3
 
-; address loaded by ScriptCommandF7_Run_Case04, ScriptCommandF7_Run_Case07
+; address loaded by ArenaMenu_Case04, ArenaMenu_Case07
 Data_00C_7871:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $64, $00, $F4, $01, $E8, $03, $88, $13, $02, $04, $08, $10
 
@@ -8440,7 +8440,7 @@ Data_00C_7905:: ; address name
     dw ArenaEncounterList2 ; id 4
     dw ArenaEncounterList3 ; id 5
 
-; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList0::
 Data_00C_7911:: ; address name
@@ -8450,7 +8450,7 @@ Data_00C_7911:: ; address name
     dw $0152, $0153, $0154, $0155, $0156, $0157, $0158, $0159
     dw $015A, $015B, $015C, $015D, $015E, $015F, $0160, $0161
 
-; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList1::
 Data_00C_7961:: ; address name
@@ -8460,7 +8460,7 @@ Data_00C_7961:: ; address name
     dw $0164, $0165, $0166, $0167, $0168, $0169, $016A, $016B
     dw $016C, $016D, $016E, $016F, $0170, $0171, $0172, $0173
 
-; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList2::
 Data_00C_79B1:: ; address name
@@ -8470,7 +8470,7 @@ Data_00C_79B1:: ; address name
     dw $0236, $0237, $0238, $0239, $023A, $023B, $023C, $023D
     dw $023E, $023F, $0240, $0241, $0242, $0243, $0244, $0245
 
-; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ScriptCommandF7_Run_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
+; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList3::
 Data_00C_7A01:: ; address name
@@ -8482,7 +8482,7 @@ Data_00C_7A01:: ; address name
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0C_7A51:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7A5C, Script_0C_7A59, Script_0C_7A56
 Script_0C_7A56:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A5F
@@ -8491,27 +8491,27 @@ Script_0C_7A59:: ; heuristic: event script entry or jump target; C0
 Script_0C_7A5C:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A75
 Script_0C_7A5F:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
-    script_command $F7
+    script_command SCRIPT_ARENA
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7A6E, Script_0C_7A6B, Script_0C_7A65
 Script_0C_7A65:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0025 ; 'Too bad you didn't make it.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7A6B:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A5F
 Script_0C_7A6E:: ; heuristic: event script entry or jump target; C0
     script_message $4020 ; 'Congratulations! You did it! You e'
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_jump Script_0C_7ADB
 Script_0C_7A75:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7A8D, Script_0C_7A87, Script_0C_7A81, Script_0C_7A7B
 Script_0C_7A7B:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8003 ; 'Train some more, and see you'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7A81:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'You can't try that Class yet.'
@@ -8521,7 +8521,7 @@ Script_0C_7A87:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A75
 Script_0C_7A8D:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'Let me confirm that-the 0 Class?'
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7A9E, Script_0C_7A98, Script_0C_7A95
 Script_0C_7A95:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7A75
@@ -8531,8 +8531,8 @@ Script_0C_7A98:: ; heuristic: event script entry or jump target; C0
 Script_0C_7A9E:: ; heuristic: event script entry or jump target; C0
     script_message $C005 ; 'Good luck! I'll cheer for you!'
 Script_0C_7AA1:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
-    script_command $F7
+    script_command SCRIPT_ARENA
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7AAD, Script_0C_7AAA, Script_0C_7AA7
 Script_0C_7AA7:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7AEB
@@ -8541,12 +8541,12 @@ Script_0C_7AAA:: ; heuristic: event script entry or jump target; C0
 Script_0C_7AAD:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7AB0
 Script_0C_7AB0:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7AC8, Script_0C_7AC2, Script_0C_7ABC, Script_0C_7AB6
 Script_0C_7AB6:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0024 ; 'Congratulations! You did it! You e'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ABC:: ; heuristic: event script entry or jump target; C0
     script_message $4023 ; 'Congratulations! You did it! You e'
@@ -8557,58 +8557,58 @@ Script_0C_7AC2:: ; heuristic: event script entry or jump target; C0
 Script_0C_7AC8:: ; heuristic: event script entry or jump target; C0
     script_message $4021 ; 'Congratulations! You did it! You e'
 Script_0C_7ACB:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7ACF, Script_0C_7AD5
 Script_0C_7ACF:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $802A ; '0 received the Magic Key.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AD5:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $802B ; 'Oh, but your key ring is'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7ADB:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7ADF, Script_0C_7AE5
 Script_0C_7ADF:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $802D ; '0 received the Pirate Key.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AE5:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $802B ; 'Oh, but your key ring is'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AEB:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7AF5, Script_0C_7AEF
 Script_0C_7AEF:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0026 ; 'Too bad you didn't make it.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7AF5:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0025 ; 'Too bad you didn't make it.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
     db $00, $0B, $C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0C_7AFE:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B08, Script_0C_7B02
 Script_0C_7B02:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8009 ; 'Oh The crowd wanted to see'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B08:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
-    script_command $F7
+    script_command SCRIPT_ARENA
+    script_command SCRIPT_ARENA
 Script_0C_7B0A:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7B2F, Script_0C_7B29, Script_0C_7B23, Script_0C_7B1D, Script_0C_7B17, Script_0C_7B11
 Script_0C_7B11:: ; heuristic: event script entry or jump target; C0
@@ -8629,31 +8629,31 @@ Script_0C_7B29:: ; heuristic: event script entry or jump target; C0
 Script_0C_7B2F:: ; heuristic: event script entry or jump target; C0
     script_message $C00C ; 'The S Class should be good.'
 Script_0C_7B32:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B3C, Script_0C_7B36
 Script_0C_7B36:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8009 ; 'Oh The crowd wanted to see'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B3C:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_message $C012 ; 'Is 0 Class OK?'
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B50, Script_0C_7B49, Script_0C_7B45
 Script_0C_7B45:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_jump Script_0C_7B0A
 Script_0C_7B49:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'You need more gold to register.'
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_jump Script_0C_7B0A
 Script_0C_7B50:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_message $C013 ; 'I hope you do well!'
 Script_0C_7B54:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
-    script_command $F7
+    script_command SCRIPT_ARENA
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B60, Script_0C_7B5D, Script_0C_7B5A
 Script_0C_7B5A:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B99
@@ -8662,123 +8662,123 @@ Script_0C_7B5D:: ; heuristic: event script entry or jump target; C0
 Script_0C_7B60:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7B63
 Script_0C_7B63:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_message $402F ; 'Congratulations! You did it! You e'
     script_message $C031 ; 'Do you want the right chest?'
 Script_0C_7B6A:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B7B, Script_0C_7B6E
 Script_0C_7B6E:: ; heuristic: event script entry or jump target; C0
     script_message $C030 ; 'Do you want the left chest?'
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B7B, Script_0C_7B75
 Script_0C_7B75:: ; heuristic: event script entry or jump target; C0
     script_message $C031 ; 'Do you want the right chest?'
     script_jump Script_0C_7B6A
 Script_0C_7B7B:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7B81, Script_0C_7B87, Script_0C_7B8D, Script_0C_7B93
 Script_0C_7B81:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8032 ; 'Your prize is one G!'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B87:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8033 ; 'Your prize is a Magic Key!'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B8D:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8034 ; 'Oh, but you have no room.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B93:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $8035 ; 'Oh, but your key ring is'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7B99:: ; heuristic: event script entry or jump target; C0
-    script_command $F7
+    script_command SCRIPT_ARENA
     script_choice_jump Script_0C_7BA3, Script_0C_7B9D
 Script_0C_7B9D:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0029 ; 'You lost? That's too bad. Try'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7BA3:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message $0028 ; 'You lost? That's too bad. Try'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0C_7BA9:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BB0, Script_0C_7BAD
 Script_0C_7BAD:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BBA
 Script_0C_7BB0:: ; heuristic: event script entry or jump target; C0
     script_message $C011 ; 'Ah, you have some TinyMedals? Let'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BBA, Script_0C_7BB7
 Script_0C_7BB7:: ; heuristic: event script entry or jump target; C0
     script_message $C012 ; 'But, I can't take this many.'
 Script_0C_7BBA:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BC1, Script_0C_7BBE
 Script_0C_7BBE:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7C41
 Script_0C_7BC1:: ; heuristic: event script entry or jump target; C0
     script_message $C013 ; 'I have 0 of your TinyMedals.'
     script_message $C015 ; 'Want to trade medals for prizes?'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BD1, Script_0C_7BCB
 Script_0C_7BCB:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $8014 ; 'I hope you'll find many medals!'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0C_7BD1:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'Which prize do you want?'
 Script_0C_7BD4:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
-    script_command $F3
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
+    script_command SCRIPT_MEDAL_PRIZES
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BE4, Script_0C_7BE1, Script_0C_7BDB
 Script_0C_7BDB:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $8014 ; 'I hope you'll find many medals!'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
 Script_0C_7BE1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BD4
 Script_0C_7BE4:: ; heuristic: event script entry or jump target; C0
     script_message $C017 ; 'I'll trade for 0 TinyMedals. OK?'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7BF7, Script_0C_7BF0, Script_0C_7BEC
 Script_0C_7BEC:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'That requires more TinyMedals.'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
 Script_0C_7BF0:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'Which prize do you want?'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BD4
 Script_0C_7BF7:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C12, Script_0C_7C0B, Script_0C_7C04, Script_0C_7BFD
 Script_0C_7BFD:: ; heuristic: event script entry or jump target; C0
     script_message $C01B ; 'You have no more room for'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C04:: ; heuristic: event script entry or jump target; C0
     script_message $C01A ; 'Your key ring is already full.'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C0B:: ; heuristic: event script entry or jump target; C0
     script_message $C019 ; 'You don't have any room for'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C12:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C1F, Script_0C_7C16
 Script_0C_7C16:: ; heuristic: event script entry or jump target; C0
     script_message $C01C ; 'Fine, we shall trade.'
@@ -8787,26 +8787,26 @@ Script_0C_7C16:: ; heuristic: event script entry or jump target; C0
 Script_0C_7C1F:: ; heuristic: event script entry or jump target; C0
     script_message $C01C ; 'Fine, we shall trade.'
 Script_0C_7C22:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_choice_jump Script_0C_7C3D, Script_0C_7C36, Script_0C_7C2F, Script_0C_7C28
 Script_0C_7C28:: ; heuristic: event script entry or jump target; C0
     script_message $C020 ; 'You have no more room for'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C2F:: ; heuristic: event script entry or jump target; C0
     script_message $C01F ; 'You can't hold any more keys.'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C36:: ; heuristic: event script entry or jump target; C0
     script_message $C01E ; 'You can't take any more items.'
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C3D:: ; heuristic: event script entry or jump target; C0
-    script_command $F3
+    script_command SCRIPT_MEDAL_PRIZES
     script_jump Script_0C_7BF0
 Script_0C_7C41:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $8024 ; 'At minimum, you must have three'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
     ds $3B9, $00

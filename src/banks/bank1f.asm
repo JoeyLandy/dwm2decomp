@@ -842,14 +842,14 @@ Data_01F_59F2:: ; heuristic: string; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_1F_5A3A:: ; heuristic: event script entry or jump target; C0
 Data_01F_5A3A:: ; address name
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5A3B:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A51, Script_1F_5A4E, Script_1F_5A4B, Script_1F_5A48, Script_1F_5A42
 Script_1F_5A42:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message_unless_flag0 $801D ; flag 0 set: 'Cobi Come back anytime, sis!'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_1F_5A48:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B96
@@ -858,38 +858,38 @@ Script_1F_5A4B:: ; heuristic: event script entry or jump target; C0
 Script_1F_5A4E:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5AC5
 Script_1F_5A51:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A55, Script_1F_5A58
 Script_1F_5A55:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5A80
 Script_1F_5A58:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi Which one's staying here?'
 Script_1F_5A5B:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A66, Script_1F_5A5F
 Script_1F_5A5F:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A3B
 Script_1F_5A66:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi So this one is staying'
 Script_1F_5A69:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A7C, Script_1F_5A75, Script_1F_5A6E
 Script_1F_5A6E:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C002 ; flag 0 set: 'Cobi Which one's staying here?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5B
 Script_1F_5A75:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C004 ; flag 0 set: 'Cobi Check up on the others'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A5F
 Script_1F_5A7C:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A69
 Script_1F_5A80:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A87, Script_1F_5A8D
 Script_1F_5A87:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
@@ -897,7 +897,7 @@ Script_1F_5A87:: ; heuristic: event script entry or jump target; C0
 Script_1F_5A8D:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
 Script_1F_5A90:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5A9A, Script_1F_5A94
 Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
@@ -905,7 +905,7 @@ Script_1F_5A94:: ; heuristic: event script entry or jump target; C0
 Script_1F_5A9A:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
 Script_1F_5A9D:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AA7, Script_1F_5AA1
 Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
@@ -913,23 +913,23 @@ Script_1F_5AA1:: ; heuristic: event script entry or jump target; C0
 Script_1F_5AA7:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C009 ; flag 0 set: 'Cobi So you'll take this one?'
 Script_1F_5AAA:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AC1, Script_1F_5AB6, Script_1F_5AAF
 Script_1F_5AAF:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5A9D
 Script_1F_5AB6:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi I switched 0.'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AC1:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AAA
 Script_1F_5AC5:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5ACA, Script_1F_5AD3, Script_1F_5AD6
 Script_1F_5ACA:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C010 ; flag 0 set: 'Cobi You haven't left any here.'
@@ -940,7 +940,7 @@ Script_1F_5AD3:: ; heuristic: event script entry or jump target; C0
 Script_1F_5AD6:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi Which one will you take?'
 Script_1F_5AD9:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AE3, Script_1F_5ADD
 Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
@@ -948,26 +948,26 @@ Script_1F_5ADD:: ; heuristic: event script entry or jump target; C0
 Script_1F_5AE3:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi Is this the one you'll'
 Script_1F_5AE6:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5AFD, Script_1F_5AF2, Script_1F_5AEB
 Script_1F_5AEB:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00D ; flag 0 set: 'Cobi Which one will you take?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AD9
 Script_1F_5AF2:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C00F ; flag 0 set: 'Cobi It's eager to go, 0.'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5AFD:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5AE6
 Script_1F_5B01:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C011 ; flag 0 set: 'Cobi You can't take any more.'
     script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
 Script_1F_5B07:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B11, Script_1F_5B0B
 Script_1F_5B0B:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
@@ -975,30 +975,30 @@ Script_1F_5B0B:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B11:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
 Script_1F_5B14:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B1F, Script_1F_5B18
 Script_1F_5B18:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C007 ; flag 0 set: 'Cobi Switch with one on the'
     script_jump Script_1F_5B07
 Script_1F_5B1F:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C003 ; flag 0 set: 'Cobi So this one is staying'
 Script_1F_5B22:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B35, Script_1F_5B2E, Script_1F_5B27
 Script_1F_5B27:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B14
 Script_1F_5B2E:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
     script_jump Script_1F_5B39
 Script_1F_5B35:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B22
 Script_1F_5B39:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B43, Script_1F_5B3D
 Script_1F_5B3D:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00C ; flag 0 set: 'Cobi What'll you switch it with?'
@@ -1006,26 +1006,26 @@ Script_1F_5B3D:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B43:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C00E ; flag 0 set: 'Cobi Is this the one you'll'
 Script_1F_5B46:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B5D, Script_1F_5B52, Script_1F_5B4B
 Script_1F_5B4B:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C008 ; flag 0 set: 'Cobi What'll you switch it with?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B39
 Script_1F_5B52:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C00A ; flag 0 set: 'Cobi I switched 0.'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B5D:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B46
 Script_1F_5B61:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5B62:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C012 ; flag 0 set: 'Cobi What do you want to'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B6B, Script_1F_5B6E, Script_1F_5B71, Script_1F_5B7E
 Script_1F_5B6B:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B81
@@ -1035,7 +1035,7 @@ Script_1F_5B71:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi We don't have any of'
     script_jump Script_1F_5B62
 Script_1F_5B77:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
@@ -1043,22 +1043,22 @@ Script_1F_5B7E:: ; heuristic: event script entry or jump target; C0
 Script_1F_5B81:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C015 ; flag 0 set: 'Cobi Which one will you check?'
 Script_1F_5B84:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5B8B, Script_1F_5B88
 Script_1F_5B88:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B62
 Script_1F_5B8B:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B84
 Script_1F_5B8F:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C016 ; flag 0 set: 'Cobi Which egg will you check?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5B62
 Script_1F_5B96:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
 Script_1F_5B97:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C017 ; flag 0 set: 'Cobi What do you want to'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BA7, Script_1F_5BAA, Script_1F_5BAD, Script_1F_5BBA, Script_1F_5BA1
 Script_1F_5BA1:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
@@ -1071,7 +1071,7 @@ Script_1F_5BAD:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C013 ; flag 0 set: 'Cobi We don't have any of'
     script_jump Script_1F_5B97
 Script_1F_5BB3:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
@@ -1079,60 +1079,60 @@ Script_1F_5BBA:: ; heuristic: event script entry or jump target; C0
 Script_1F_5BBD:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi Which one will you release?'
 Script_1F_5BC0:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BC7, Script_1F_5BC4
 Script_1F_5BC4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BC7:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi It'll be gone forever. Sure?'
 Script_1F_5BCA:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BE5, Script_1F_5BDA, Script_1F_5BD3, Script_1F_5BD0
 Script_1F_5BD0:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
 Script_1F_5BD3:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C018 ; flag 0 set: 'Cobi Which one will you release?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BC0
 Script_1F_5BDA:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C01C ; flag 0 set: '0 was released in the wild.'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5BE5:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BCA
 Script_1F_5BE9:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi Which egg will you release?'
 Script_1F_5BEC:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5BF3, Script_1F_5BF0
 Script_1F_5BF0:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5B97
 Script_1F_5BF3:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C01A ; flag 0 set: 'Cobi It'll be gone forever. Sure?'
 Script_1F_5BF6:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_choice_jump Script_1F_5C11, Script_1F_5C06, Script_1F_5BFF, Script_1F_5BFC
 Script_1F_5BFC:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C006 ; flag 0 set: 'Cobi No, you can't go off'
 Script_1F_5BFF:: ; heuristic: event script entry or jump target; C0
     script_message_unless_flag0 $C019 ; flag 0 set: 'Cobi Which egg will you release?'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BEC
 Script_1F_5C06:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C01B ; flag 0 set: 'The egg was released.'
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_message_unless_flag0 $C005 ; flag 0 set: 'Cobi Do you need anything else?'
     script_jump Script_1F_5A3B
 Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
-    script_command $E8
+    script_command SCRIPT_SWAP_MONSTERS
     script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. ScriptCommandEB_Run_Case05_Case20, ScriptCommandED_Run_Case04_Case03, ScriptCommandED_Run_Case07_Case0E, ScriptCommandED_Run_Case12_Case06, ...)
+; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_Case20, BreedMenu_Case04_Case03, BreedMenu_Case07_Case0E, BreedMenu_Case12_Case06, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries
@@ -1417,7 +1417,7 @@ Jump_01F_5D89::
     ret
 
 ; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB, unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186, correcting E-0129)
-; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ...)
+; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, LibraryMenu_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ...)
 ; reads: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, rSTAT, wIsCGB, ...
 ; writes: rVBK
 FillTileRectWithArg1Tile::
@@ -1516,7 +1516,7 @@ Jump_01F_5DFF::
     ret
 
 ; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
-; address loaded by ScriptCommandF6_Run_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, ScriptCommandED_Run_Case0B_Case00 and 6 more
+; address loaded by LibraryMenu_Shared06, RunNameEntryStateWhenNotFading_Case00_Case00, RunNameEntryStateWhenNotFading_Case06_Case00, BreedMenu_Case0B_Case00 and 6 more
 BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithArg1Tile; C0
 Data_01F_5E12:: ; address name
     db $C3
@@ -1552,7 +1552,7 @@ Data_01F_5E37:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B6, $F6, $F7, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; id 16
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_5F9F::
 Data_01F_5F9F:: ; address name
@@ -1575,7 +1575,7 @@ Data_01F_5F9F:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_6107::
 Data_01F_6107:: ; address name
@@ -1598,7 +1598,7 @@ Data_01F_6107:: ; address name
     db $B6, $6E, $6F, $70, $71, $72, $73, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; E-0187 (C1: the same box layout as TileRect_1F_5E37, which ScriptCommandE8_Run_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
+; E-0187 (C1: the same box layout as TileRect_1F_5E37, which SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found).
 ; record: 20 x 18 tiles, one row per line
 TileScreen_1F_626F::
 Data_01F_626F:: ; address name
@@ -2628,14 +2628,14 @@ Jump_01F_77CF::
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_1F_77D4:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
 Script_1F_77D5:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_77F4, Script_1F_77EE, Script_1F_77E8, Script_1F_77E2, Script_1F_77DC
 Script_1F_77DC:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $8005 ; 'May the gods go with you.'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
 Script_1F_77E2:: ; heuristic: event script entry or jump target; C0
     script_message $C003 ; 'But none appear to be cursed'
@@ -2652,7 +2652,7 @@ Script_1F_77F7:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'Do you need any other help?'
     script_jump Script_1F_77D5
 Script_1F_77FD:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_780E, Script_1F_7808, Script_1F_7802
 Script_1F_7802:: ; heuristic: event script entry or jump target; C0
     script_message $C008 ; 'Who should be freed of a'
@@ -2663,13 +2663,13 @@ Script_1F_7808:: ; heuristic: event script entry or jump target; C0
 Script_1F_780E:: ; heuristic: event script entry or jump target; C0
     script_message $C006 ; 'Which monster should be revived?'
 Script_1F_7811:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7819, Script_1F_7815
 Script_1F_7815:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
 Script_1F_7819:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7831, Script_1F_782B, Script_1F_7825, Script_1F_781F
 Script_1F_781F:: ; heuristic: event script entry or jump target; C0
     script_message $C00B ; 'But that monster is not cursed.'
@@ -2681,19 +2681,19 @@ Script_1F_782B:: ; heuristic: event script entry or jump target; C0
     script_message $C009 ; 'Surely you jest. That one is'
     script_jump Script_1F_77FD
 Script_1F_7831:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_message $C00C ; 'I must ask for a small'
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7845, Script_1F_783E, Script_1F_783A
 Script_1F_783A:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_jump Script_1F_77FD
 Script_1F_783E:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'Oh, my, my How deplorable! You'
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
 Script_1F_7845:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7856, Script_1F_7850, Script_1F_784A
 Script_1F_784A:: ; heuristic: event script entry or jump target; C0
     script_message $C00F ; 'Gods, I beg you, free 0'
@@ -2704,7 +2704,7 @@ Script_1F_7850:: ; heuristic: event script entry or jump target; C0
 Script_1F_7856:: ; heuristic: event script entry or jump target; C0
     script_message $C00D ; 'Gods, the spirits of earth! Please'
 Script_1F_7859:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_786A, Script_1F_7864, Script_1F_785E
 Script_1F_785E:: ; heuristic: event script entry or jump target; C0
     script_message $C012 ; '0 was freed from the curse.'
@@ -2715,25 +2715,25 @@ Script_1F_7864:: ; heuristic: event script entry or jump target; C0
 Script_1F_786A:: ; heuristic: event script entry or jump target; C0
     script_message $C010 ; '0 was revived!'
 Script_1F_786D:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_choice_jump Script_1F_7877, Script_1F_7871
 Script_1F_7871:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $8013 ; 'No one else seems to need'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
 Script_1F_7877:: ; heuristic: event script entry or jump target; C0
-    script_command $F8
+    script_command SCRIPT_PRIEST
     script_jump Script_1F_77F7
 Script_1F_787B:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
 Script_1F_787C:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_choice_jump Script_1F_7890, Script_1F_7887, Script_1F_7881
 Script_1F_7881:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_message $8002 ; 'Come back if you need to'
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_end
 Script_1F_7887:: ; heuristic: event script entry or jump target; C0
     script_message $C005 ; 'That family is a mystery still'
@@ -2742,16 +2742,16 @@ Script_1F_7887:: ; heuristic: event script entry or jump target; C0
 Script_1F_7890:: ; heuristic: event script entry or jump target; C0
     script_message $C003 ; 'Which species will you check?'
 Script_1F_7893:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_choice_jump Script_1F_789F, Script_1F_7897
 Script_1F_7897:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_message $C004 ; 'Which family will you check?'
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_jump Script_1F_787C
 Script_1F_789F:: ; heuristic: event script entry or jump target; C0
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_message $C003 ; 'Which species will you check?'
-    script_command $F6
+    script_command SCRIPT_LIBRARY
     script_jump Script_1F_7893
     ds $759, $00

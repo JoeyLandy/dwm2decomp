@@ -1159,19 +1159,19 @@ Data_096_6EF6:: ; heuristic: target of a monotone pointer table; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_96_6EF7:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
 Script_96_6EF8:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F06, Script_96_6F03, Script_96_6EFD
 Script_96_6EFD:: ; heuristic: event script entry or jump target; C0
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_message $800A ; 'Please come see me when you'
-    script_command $EE
+    script_command SCRIPT_BREED_CLOSE
     script_end
 Script_96_6F03:: ; heuristic: event script entry or jump target; C0
     script_jump Script_96_6FBA
 Script_96_6F06:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F13, Script_96_6F0A
 Script_96_6F0A:: ; heuristic: event script entry or jump target; C0
     script_message $C006 ; 'Um You don't have any eggs'
@@ -1180,33 +1180,33 @@ Script_96_6F0A:: ; heuristic: event script entry or jump target; C0
 Script_96_6F13:: ; heuristic: event script entry or jump target; C0
     script_message $C002 ; 'Which egg should I appraise?'
 Script_96_6F16:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F21, Script_96_6F1A
 Script_96_6F1A:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'How else may I serve you?'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6EF8
 Script_96_6F21:: ; heuristic: event script entry or jump target; C0
     script_message $C003 ; 'It will cost 20G. It that'
 Script_96_6F24:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F30, Script_96_6F34, Script_96_6F29
 Script_96_6F29:: ; heuristic: event script entry or jump target; C0
     script_message $C002 ; 'Which egg should I appraise?'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6F16
 Script_96_6F30:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6F24
 Script_96_6F34:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F3E, Script_96_6F38
 Script_96_6F38:: ; heuristic: event script entry or jump target; C0
     script_message $C005 ; 'Um You don't have enough gold'
     script_jump Script_96_6FEF
 Script_96_6F3E:: ; heuristic: event script entry or jump target; C0
     script_message $C00B ; 'OK, I'll evaluate this egg now'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F47, Script_96_6F4D, Script_96_6F53, Script_96_6F59
 Script_96_6F47:: ; heuristic: event script entry or jump target; C0
     script_message $C00C ; 'It's fine. There's nothing wrong.'
@@ -1220,7 +1220,7 @@ Script_96_6F53:: ; heuristic: event script entry or jump target; C0
 Script_96_6F59:: ; heuristic: event script entry or jump target; C0
     script_message $C00F ; 'Oh, my! This egg is incredible!'
 Script_96_6F5C:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F62, Script_96_6F68, Script_96_6F6E, Script_96_6F74
 Script_96_6F62:: ; heuristic: event script entry or jump target; C0
     script_message $C010 ; 'Don't expect too many skills.'
@@ -1234,7 +1234,7 @@ Script_96_6F6E:: ; heuristic: event script entry or jump target; C0
 Script_96_6F74:: ; heuristic: event script entry or jump target; C0
     script_message $C013 ; 'It knows a great variety of'
 Script_96_6F77:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F7D, Script_96_6F83, Script_96_6F89, Script_96_6F8F
 Script_96_6F7D:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'Its growth may be a bit'
@@ -1248,7 +1248,7 @@ Script_96_6F89:: ; heuristic: event script entry or jump target; C0
 Script_96_6F8F:: ; heuristic: event script entry or jump target; C0
     script_message $C017 ; 'Its growth can't be faulted.'
 Script_96_6F92:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6F97, Script_96_6F9D, Script_96_6FA3
 Script_96_6F97:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'It appears to be a hard'
@@ -1259,7 +1259,7 @@ Script_96_6F9D:: ; heuristic: event script entry or jump target; C0
 Script_96_6FA3:: ; heuristic: event script entry or jump target; C0
     script_message $C01A ; 'I can tell this one is'
 Script_96_6FA6:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6FAA, Script_96_6FB0
 Script_96_6FAA:: ; heuristic: event script entry or jump target; C0
     script_message $C01B ; 'No doubt at all-it's male.'
@@ -1267,37 +1267,37 @@ Script_96_6FAA:: ; heuristic: event script entry or jump target; C0
 Script_96_6FB0:: ; heuristic: event script entry or jump target; C0
     script_message $C01C ; 'No doubt at all-it's female.'
 Script_96_6FB3:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_message $C01D ; 'That's the best I could do'
     script_jump Script_96_6FEF
 Script_96_6FBA:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6FC1, Script_96_6FBE
 Script_96_6FBE:: ; heuristic: event script entry or jump target; C0
     script_jump Script_96_6F0A
 Script_96_6FC1:: ; heuristic: event script entry or jump target; C0
     script_message $C007 ; 'Which egg should I bless?'
 Script_96_6FC4:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6FCF, Script_96_6FC8
 Script_96_6FC8:: ; heuristic: event script entry or jump target; C0
     script_message $C004 ; 'How else may I serve you?'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6EF8
 Script_96_6FCF:: ; heuristic: event script entry or jump target; C0
     script_message $C008 ; 'It will cost 0G. Is that'
 Script_96_6FD2:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6FDE, Script_96_6FE2, Script_96_6FD7
 Script_96_6FD7:: ; heuristic: event script entry or jump target; C0
     script_message $C007 ; 'Which egg should I bless?'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6FC4
 Script_96_6FDE:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6FD2
 Script_96_6FE2:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_choice_jump Script_96_6FEC, Script_96_6FE6
 Script_96_6FE6:: ; heuristic: event script entry or jump target; C0
     script_message $C005 ; 'Um You don't have enough gold'
@@ -1305,29 +1305,29 @@ Script_96_6FE6:: ; heuristic: event script entry or jump target; C0
 Script_96_6FEC:: ; heuristic: event script entry or jump target; C0
     script_message $C009 ; 'Egg, egg, toss and scramble 0'
 Script_96_6FEF:: ; heuristic: event script entry or jump target; C0
-    script_command $EF
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
+    script_command SCRIPT_EGG_SERVICE
     script_message $C004 ; 'How else may I serve you?'
-    script_command $EF
+    script_command SCRIPT_EGG_SERVICE
     script_jump Script_96_6EF8
 Script_96_6FF8:: ; heuristic: event script entry or jump target; C0
-    script_command $F0
-    script_command $F0
+    script_command SCRIPT_RENAME
+    script_command SCRIPT_RENAME
     script_choice_jump Script_96_7003, Script_96_6FFD
 Script_96_6FFD:: ; heuristic: event script entry or jump target; C0
-    script_command $F1
+    script_command SCRIPT_RENAME_CLOSE
     script_message $8022 ; 'Come here for renaming monsters.'
-    script_command $F1
+    script_command SCRIPT_RENAME_CLOSE
     script_end
 Script_96_7003:: ; heuristic: event script entry or jump target; C0
     script_message $C023 ; 'Pick the monster to rename.'
 Script_96_7006:: ; heuristic: event script entry or jump target; C0
-    script_command $F0
+    script_command SCRIPT_RENAME
     script_choice_jump Script_96_700D, Script_96_700A
 Script_96_700A:: ; heuristic: event script entry or jump target; C0
     script_jump Script_96_6FFD
 Script_96_700D:: ; heuristic: event script entry or jump target; C0
-    script_command $F0
+    script_command SCRIPT_RENAME
     script_jump Script_96_7006
 
 ; only called from DebugMessageTest_Update_Case1C_Sub01 (E-0047)

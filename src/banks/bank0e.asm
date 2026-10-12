@@ -881,7 +881,7 @@ Data_00E_5662:: ; heuristic: string; C0
     db $F0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
-; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunLinkScreenState_6C12_Case08_Case04_Sub01, ScriptCommandF4_Run_Case04_Case14, ScriptCommandED_Run_Case04_Case1C, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01, RunLinkScreenState_6C12_Case08_Case04_Sub01, NpcBreedMenu_Case04_Case14, BreedMenu_Case04_Case1C, ...)
 ; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB
@@ -1830,7 +1830,7 @@ Func_00E_5C11:: ; address name
     ret
 
 ; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case04)
 ; reads: wArg1, wArg2, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg5, wArg6, wArg7
 LoadSpeciesBytes8To10ToArg5::
@@ -2678,7 +2678,7 @@ Func_00E_6138:: ; address name
     ret
 
 ; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
-; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForTemp0, DebugToggleArg1Marker, ScriptCommandF6_Run_Case10_Case06_Sub02)
+; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForTemp0, DebugToggleArg1Marker, LibraryMenu_Case10_Case06_Sub02)
 ; reads: wArg6, wArg7
 ; writes: wArg5
 FamilyForSpeciesIdArg6::
@@ -2764,7 +2764,7 @@ Jump_00E_61BD::
     ret
 
 ; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
-; 2 call sites from 2 routines (e.g. ComputeBreedingChild, ScriptCommandF3_Run_Case05_Case0E_Sub01)
+; 2 call sites from 2 routines (e.g. ComputeBreedingChild, MedalPrizeMenu_Case05_Case0E_Sub01)
 ; reads: wChildRecord, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 RollWCADEFromSpeciesFlag::
@@ -9498,30 +9498,30 @@ Data_00E_7F75:: ; address name
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0E_7F8B:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_message_by_screen $C003 ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7F8F:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_choice_jump Script_0E_7F99, Script_0E_7F93
 Script_0E_7F93:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message_by_screen $8002 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0E_7F99:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C005 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
 Script_0E_7F9D:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0E_7FA8, Script_0E_7FAC, Script_0E_7FA1
 Script_0E_7FA1:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C004 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_jump Script_0E_7F8F
 Script_0E_7FA8:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_jump Script_0E_7F9D
 Script_0E_7FAC:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_choice_jump Script_0E_7FC1, Script_0E_7FB7, Script_0E_7FB1
 Script_0E_7FB1:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C006 ; screen 0: 'Its accessory is in the Vault.'
@@ -9530,17 +9530,17 @@ Script_0E_7FB7:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C007 ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7FBA:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C003 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_jump Script_0E_7F8F
 Script_0E_7FC1:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_choice_jump Script_0E_7FC5, Script_0E_7FC8
 Script_0E_7FC5:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0E_7FCB
 Script_0E_7FC8:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C00C ; screen 0: 'Is it OK to save the'
 Script_0E_7FCB:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_choice_jump Script_0E_7FD5, Script_0E_7FCF
 Script_0E_7FCF:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C008 ; screen 0: 'Its accessory is in the Vault.'
@@ -9548,19 +9548,19 @@ Script_0E_7FCF:: ; heuristic: event script entry or jump target; C0
 Script_0E_7FD5:: ; heuristic: event script entry or jump target; C0
     script_message_by_screen $C00B ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7FD8:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_choice_jump Script_0E_7FE2, Script_0E_7FDC
 Script_0E_7FDC:: ; heuristic: event script entry or jump target; C0
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_message_by_screen $8002 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
 Script_0E_7FE2:: ; heuristic: event script entry or jump target; C0
-    script_command $F4
+    script_command SCRIPT_NPC_BREED
     script_message_by_screen $C009 ; screen 0: 'Its accessory is in the Vault.'
-    script_command $F4
-    script_command $E9
+    script_command SCRIPT_NPC_BREED
+    script_command SCRIPT_MENU_CLOSE
     script_message_by_screen $000A ; screen 0: 'Its accessory is in the Vault.'
-    script_command $E9
+    script_command SCRIPT_MENU_CLOSE
     script_end
     ds $13, $00

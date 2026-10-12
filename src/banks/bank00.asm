@@ -1832,7 +1832,7 @@ Jump_000_0B34::
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, DrawNameGlyphBufGlyphsOverlaying8DAnd8E, RunNameEntryStateWhenNotFading_Case01_Case04, ScriptCommandEB_Run_Case05_Case03_Sub01_Sub01, ...)
+; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, DrawNameGlyphBufGlyphsOverlaying8DAnd8E, RunNameEntryStateWhenNotFading_Case01_Case04, HibernateMenu_Case05_Case03_Sub01_Sub01, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 OrFromBankWaitVRAM::
@@ -4372,7 +4372,7 @@ Jump_000_1870::
     jr Jump_000_1870
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
-; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF7_Run_Case27_Sub02_Sub01, DecompressGraphicsArg1ToArg4, LoadSpeciesSpriteGraphicsAndPalette, ...)
+; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ArenaMenu_Case27_Sub02_Sub01, DecompressGraphicsArg1ToArg4, LoadSpeciesSpriteGraphicsAndPalette, ...)
 ; writes: rROMB0
 ReadByteInBank::
 Func_000_1872:: ; address name
@@ -4387,7 +4387,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 44 routines (e.g. ScriptCommandEF_Run_Case0F_Case02, ScriptCommandEC_Run_Case02, ScriptCommandEB_Run_Case05_Case3C, ScriptCommandEB_Run_Case05_Case05, ...)
+; 103 call sites from 44 routines (e.g. EggServiceMenu_Case0F_Case02, CloseHibernateMenu_Case02, HibernateMenu_Case05_Case3C, HibernateMenu_Case05_Case05, ...)
 ; reads: rSTAT, wTextWindowTileLo
 ; writes: wTextWindowTileLo
 FillTilesBxC::
@@ -4473,7 +4473,7 @@ Jump_000_18D5::
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
-; 10 call sites from 8 routines (e.g. ScriptCommandF7_Run_Case27_Sub02_Sub01, ScriptCommandE2_Run_Case03_Case09_Sub02, ScriptCommandE2_Run_Shared02, ReadF2FarPointerForScreenTableIndex, ...)
+; 10 call sites from 8 routines (e.g. ArenaMenu_Case27_Sub02_Sub01, ShopMenu_Case03_Case09_Sub02, ShopMenu_Shared02, ReadF2FarPointerForScreenTableIndex, ...)
 ; writes: rROMB0
 ReadFarPointerAtDEInBankB::
 Func_000_18D6:: ; address name
@@ -4614,7 +4614,7 @@ Jump_000_19A4::
     ret
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
-; 4 call sites from 4 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case00, ScriptCommand77_Run_Case01, ScriptCommandED_Run_Case07_Case02)
+; 4 call sites from 4 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case00, ScriptCommand77_Run_Case01, BreedMenu_Case07_Case02)
 ; reads: wMapType, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -5015,7 +5015,7 @@ Func_000_1BAD:: ; address name
     ret
 
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use RunMapType_420D) (E-0128)
-; 3 call sites from 3 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case06, ScriptCommandED_Run_Case07_Case02)
+; 3 call sites from 3 routines (e.g. InitFieldScreen, LibraryMenu_Case06, BreedMenu_Case07_Case02)
 ; reads: wMapType, hMapId
 ; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, ...
 LoadMapHeader::
@@ -5674,7 +5674,7 @@ Func_000_1F89:: ; address name
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
-; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, ScriptCommandE8_Run_Case09_Case13_Sub01)
+; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, SwapMonstersMenu_Case09_Case13_Sub01)
 ; writes: hTemp0, hTemp1, hTemp2
 LoadRecordThreeBytesToTemp0::
 Func_000_1F95:: ; address name
@@ -5690,7 +5690,7 @@ Func_000_1F95:: ; address name
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, ScriptCommandEB_Run_Case05_Case32_Sub01, ...)
+; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, Func_004_58C2_Case13, ScriptCommand87_Run_Case01, HibernateMenu_Case05_Case32_Sub01, ...)
 ; points at: wNameGlyphBuf
 CopyRecordNameToNameGlyphBuf::
 Func_000_1FA4:: ; address name
@@ -5747,7 +5747,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
-; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, Func_003_4FBB_Case01, ScriptCommandF6_Run_Case10_Case02, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, Func_003_4FBB_Case01, LibraryMenu_Case10_Case02, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wBGPaletteBuffer
@@ -5879,7 +5879,7 @@ Jump_000_2087::
     ret
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
-; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, ScriptCommandF6_Run_Case10_Case02, ScriptCommandE8_Run_Case0D_Case06, ScriptCommandE8_Run_Case09_Case05, ...)
+; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, LibraryMenu_Case10_Case02, SwapMonstersMenu_Case0D_Case06, SwapMonstersMenu_Case09_Case05, ...)
 ; reads: hTemp0
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::
@@ -6761,7 +6761,7 @@ Func_000_24E5:: ; address name
     ret
 
 ; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
-; 73 call sites from 57 routines (e.g. ScriptCommandF7_Run_Case12_Sub03, ScriptCommandF7_Run_Case02_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, ScriptCommandED_Run_Case04_Case0E_Sub01, ...)
+; 73 call sites from 57 routines (e.g. ArenaMenu_Case12_Sub03, ArenaMenu_Case02_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, BreedMenu_Case04_Case0E_Sub01, ...)
 ; reads: hScrollX
 StepBGMapAddressBackOnScrollWrap::
 Func_000_24F8:: ; address name

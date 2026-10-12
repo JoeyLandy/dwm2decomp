@@ -1206,7 +1206,7 @@ Jump_002_46F7::
     ret
 
 ; copies the player name to wC130 with a terminator, then a two-tile suffix ($58 $87 when story flag 0 is set, else $87 $60) (E-0124)
-; 10 call sites from 10 routines (e.g. InitFieldScreen, ScriptCommandF6_Run_Case08, ScriptCommandF7_Run_Case23, ScriptCommandF7_Run_Case23_Sub01, ...)
+; 10 call sites from 10 routines (e.g. InitFieldScreen, LibraryMenu_Case08, ArenaMenu_Case23, ArenaMenu_Case23_Sub01, ...)
 ; writes: wTextBuf0
 ; points at: wPlayerName, wTextBuf0
 WritePlayerNameWithFlag0SuffixToTextBuf0::
@@ -4850,7 +4850,7 @@ Jump_002_5E6C::
     ret
 
 ; calls Func_002_5E85 and falls into it, running it twice (E-0126)
-; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_Case02, RefreshRecordListAndNameTiles, ScriptCommandF8_Run_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
+; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_Case02, RefreshRecordListAndNameTiles, PriestMenu_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 RunFunc5E85Twice::
@@ -8171,7 +8171,7 @@ Func_002_7333:: ; address name
     jr Jump_002_7359
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wC8C3) (E-0124)
-; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_Case02, ScriptCommandF2_Run_Case03_Case0E, ScriptCommandED_Run_Case04_Case36)
+; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_Case02, KeyAppraisalMenu_Case03_Case0E, BreedMenu_Case04_Case36)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps_7347::

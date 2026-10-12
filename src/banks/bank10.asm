@@ -6224,126 +6224,126 @@ Script_65B8:: ; heuristic: event script entry or jump target; C0
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE0:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65BF:: ; address name
-    farcall ScriptCommandE0_Run
+    farcall InnMenu
     ret
 
 ; runs one frame of script command type E1 (entry 224 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE1:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65C6:: ; address name
-    farcall ScriptCommandE1_Run
+    farcall CloseInnMenu
     ret
 
 ; runs one frame of script command type E2 (entry 225 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE2:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65CD:: ; address name
-    farcall ScriptCommandE2_Run
+    farcall ShopMenu
     ret
 
 ; runs one frame of script command type E3 (entry 226 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE3:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65D4:: ; address name
-    farcall ScriptCommandE3_Run
+    farcall CloseShopMenu
     ret
 
 ; runs one frame of script command type E5 (entry 228 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE5:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65DB:: ; address name
-    farcall ScriptCommandE5_Run
+    farcall VaultMenu
     ret
 
 ; runs one frame of script command type E6 (entry 229 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE6:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65E2:: ; address name
-    farcall ScriptCommandE6_Run
+    farcall CloseVaultMenu
     ret
 
 ; runs one frame of script command type E8 (entry 231 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE8:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65E9:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ret
 
 ; runs one frame of script command type E9 (entry 232 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE9:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65F0:: ; address name
-    farcall ScriptCommandE9_Run
+    farcall CloseMenuE9
     ret
 
 ; runs one frame of script command type EB (entry 234 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEB:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65F7:: ; address name
-    farcall ScriptCommandEB_Run
+    farcall HibernateMenu
     ret
 
 ; runs one frame of script command type EC (entry 235 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEC:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_65FE:: ; address name
-    farcall ScriptCommandEC_Run
+    farcall CloseHibernateMenu
     ret
 
 ; runs one frame of script command type ED (entry 236 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6605:: ; address name
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; runs one frame of script command type EE (entry 237 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEE:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_660C:: ; address name
-    farcall ScriptCommandEE_Run
+    farcall CloseBreedMenu
     ret
 
 ; runs one frame of script command type EF (entry 238 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandEF:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6613:: ; address name
-    farcall ScriptCommandEF_Run
+    farcall EggServiceMenu
     ret
 
 ; runs one frame of script command type F0 (entry 239 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF0:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_661A:: ; address name
-    farcall ScriptCommandF0_Run
+    farcall RenameMenu
     ret
 
 ; runs one frame of script command type F1 (entry 240 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF1:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6621:: ; address name
-    farcall ScriptCommandF1_Run
+    farcall CloseRenameMenu
     ret
 
 ; runs one frame of script command type F2 (entry 241 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF2:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6628:: ; address name
-    farcall ScriptCommandF2_Run
+    farcall KeyAppraisalMenu
     ret
 
 ; runs one frame of script command type F3 (entry 242 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF3:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_662F:: ; address name
-    farcall ScriptCommandF3_Run
+    farcall MedalPrizeMenu
     ret
 
 ; runs one frame of script command type F4 (entry 243 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF4:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6636:: ; address name
-    farcall ScriptCommandF4_Run
+    farcall NpcBreedMenu
     ret
 
 ; far-calls ScriptCommandE9_RunFar (E-0126)
@@ -6357,29 +6357,29 @@ Func_010_663D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF6:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6644:: ; address name
-    farcall ScriptCommandF6_Run
+    farcall LibraryMenu
     ret
 
 ; runs one frame of script command type F7 (entry 246 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF7:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_664B:: ; address name
-    farcall ScriptCommandF7_Run
+    farcall ArenaMenu
     ret
 
 ; runs one frame of script command type F8 (entry 247 of ScriptCommandHandlers)
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandF8:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_6652:: ; address name
-    farcall ScriptCommandF8_Run
+    farcall PriestMenu
     ret
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6659:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
-    script_command $E2
+    script_command SCRIPT_SHOP
+    script_command SCRIPT_SHOP
 Script_665B:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_667D, Script_667A, Script_6674, Script_6662, Script_666B
 Script_6662:: ; heuristic: event script entry or jump target; C0
     script_message $C007 ; 'You have no more room for'
@@ -6390,95 +6390,95 @@ Script_666B:: ; heuristic: event script entry or jump target; C0
     script_message $C008 ; 'Is there anything else?'
     script_jump Script_665B
 Script_6674:: ; heuristic: event script entry or jump target; C0
-    script_command $E3
+    script_command SCRIPT_SHOP_CLOSE
     script_message $8012 ; 'Thank you! Please come again.'
-    script_command $E3
+    script_command SCRIPT_SHOP_CLOSE
     script_end
 Script_667A:: ; heuristic: event script entry or jump target; C0
     script_jump Script_66C9
 Script_667D:: ; heuristic: event script entry or jump target; C0
     script_message $C006 ; 'What would you like to buy?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_668F, Script_6688, Script_6685
 Script_6685:: ; heuristic: event script entry or jump target; C0
     script_message $C013 ; 'You can't carry any more items.'
 Script_6688:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C008 ; 'Is there anything else?'
     script_jump Script_665B
 Script_668F:: ; heuristic: event script entry or jump target; C0
     script_message $C009 ; 'How many would you like to'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_6699, Script_6696
 Script_6696:: ; heuristic: event script entry or jump target; C0
     script_jump Script_667D
 Script_6699:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C014 ; 'That comes to 0G. OK?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66A6, Script_66AD, Script_66B4, Script_66A3
 Script_66A3:: ; heuristic: event script entry or jump target; C0
     script_jump Script_668F
 Script_66A6:: ; heuristic: event script entry or jump target; C0
     script_message $C00C ; 'Oh? You're short some gold.'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_667D
 Script_66AD:: ; heuristic: event script entry or jump target; C0
     script_message $C00D ; 'You can't carry any more items.'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_667D
 Script_66B4:: ; heuristic: event script entry or jump target; C0
     script_message $C00B ; 'Thank you!'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66BF, Script_66BB
 Script_66BB:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_667D
 Script_66BF:: ; heuristic: event script entry or jump target; C0
     script_message $C013 ; 'You can't carry any more items.'
     script_message $C008 ; 'Is there anything else?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_665B
 Script_66C9:: ; heuristic: event script entry or jump target; C0
     script_message $C00E ; 'What would you like to sell?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66DE, Script_66D1, Script_66D7
 Script_66D1:: ; heuristic: event script entry or jump target; C0
     script_message $C010 ; 'Sorry, but I can't price that.'
     script_jump Script_66C9
 Script_66D7:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C008 ; 'Is there anything else?'
     script_jump Script_665B
 Script_66DE:: ; heuristic: event script entry or jump target; C0
     script_message $C011 ; 'How many will you sell?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66E8, Script_66E5
 Script_66E5:: ; heuristic: event script entry or jump target; C0
     script_jump Script_66C9
 Script_66E8:: ; heuristic: event script entry or jump target; C0
     script_message $C014 ; 'That comes to 0G. OK?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66F2, Script_66EF
 Script_66EF:: ; heuristic: event script entry or jump target; C0
     script_jump Script_66DE
 Script_66F2:: ; heuristic: event script entry or jump target; C0
     script_message $C00B ; 'Thank you!'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_66FD, Script_66F9
 Script_66F9:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_66C9
 Script_66FD:: ; heuristic: event script entry or jump target; C0
     script_message $C00F ; 'You have no items to sell.'
     script_message $C008 ; 'Is there anything else?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_665B
 Script_6707:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
-    script_command $E2
+    script_command SCRIPT_SHOP
+    script_command SCRIPT_SHOP
 Script_6709:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_672B, Script_6728, Script_6722, Script_6710, Script_6719
 Script_6710:: ; heuristic: event script entry or jump target; C0
     script_message $C033 ; 'You can't carry any more items.'
@@ -6489,95 +6489,95 @@ Script_6719:: ; heuristic: event script entry or jump target; C0
     script_message $C034 ; 'Is there anything else?'
     script_jump Script_6709
 Script_6722:: ; heuristic: event script entry or jump target; C0
-    script_command $E3
+    script_command SCRIPT_SHOP_CLOSE
     script_message $803E ; 'Thank you! Please come again!'
-    script_command $E3
+    script_command SCRIPT_SHOP_CLOSE
     script_end
 Script_6728:: ; heuristic: event script entry or jump target; C0
     script_jump Script_6777
 Script_672B:: ; heuristic: event script entry or jump target; C0
     script_message $C032 ; 'What would you like to buy?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_673D, Script_6736, Script_6733
 Script_6733:: ; heuristic: event script entry or jump target; C0
     script_message $C03F ; 'You can't carry any more items.'
 Script_6736:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C034 ; 'Is there anything else?'
     script_jump Script_6709
 Script_673D:: ; heuristic: event script entry or jump target; C0
     script_message $C035 ; 'How many would you like?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_6747, Script_6744
 Script_6744:: ; heuristic: event script entry or jump target; C0
     script_jump Script_672B
 Script_6747:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C040 ; 'That will be 0G. OK?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_6754, Script_675B, Script_6762, Script_6751
 Script_6751:: ; heuristic: event script entry or jump target; C0
     script_jump Script_673D
 Script_6754:: ; heuristic: event script entry or jump target; C0
     script_message $C038 ; 'You don't have enough gold.'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_672B
 Script_675B:: ; heuristic: event script entry or jump target; C0
     script_message $C039 ; 'You can't hold that many items.'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_672B
 Script_6762:: ; heuristic: event script entry or jump target; C0
     script_message $C037 ; 'Thank you!'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_676D, Script_6769
 Script_6769:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_672B
 Script_676D:: ; heuristic: event script entry or jump target; C0
     script_message $C03F ; 'You can't carry any more items.'
     script_message $C034 ; 'Is there anything else?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_6709
 Script_6777:: ; heuristic: event script entry or jump target; C0
     script_message $C03A ; 'What would you like to sell?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_678C, Script_677F, Script_6785
 Script_677F:: ; heuristic: event script entry or jump target; C0
     script_message $C03C ; 'I can't put a price on'
     script_jump Script_6777
 Script_6785:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_message $C034 ; 'Is there anything else?'
     script_jump Script_6709
 Script_678C:: ; heuristic: event script entry or jump target; C0
     script_message $C03D ; 'How many will you sell?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_6796, Script_6793
 Script_6793:: ; heuristic: event script entry or jump target; C0
     script_jump Script_6777
 Script_6796:: ; heuristic: event script entry or jump target; C0
     script_message $C040 ; 'That will be 0G. OK?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_67A0, Script_679D
 Script_679D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_678C
 Script_67A0:: ; heuristic: event script entry or jump target; C0
     script_message $C037 ; 'Thank you!'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_choice_jump Script_67AB, Script_67A7
 Script_67A7:: ; heuristic: event script entry or jump target; C0
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_6777
 Script_67AB:: ; heuristic: event script entry or jump target; C0
     script_message $C03B ; 'You have nothing to sell me.'
     script_message $C034 ; 'Is there anything else?'
-    script_command $E2
+    script_command SCRIPT_SHOP
     script_jump Script_6709
 Script_67B5:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
-    script_command $E5
+    script_command SCRIPT_VAULT
+    script_command SCRIPT_VAULT
 Script_67B7:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_67BC, Script_67BF, Script_67C2
 Script_67BC:: ; heuristic: event script entry or jump target; C0
     script_jump Script_67C5
@@ -6586,28 +6586,28 @@ Script_67BF:: ; heuristic: event script entry or jump target; C0
 Script_67C2:: ; heuristic: event script entry or jump target; C0
     script_jump Script_6905
 Script_67C5:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C016 ; 'What should we store for you?'
 Script_67C9:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_67D2, Script_67D9, Script_67E3, Script_67EA, Script_67F1, Script_67F4, Script_67F7
 Script_67D2:: ; heuristic: event script entry or jump target; C0
     script_message $C017 ; 'You don't have any items.'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_67DD
 Script_67D9:: ; heuristic: event script entry or jump target; C0
     script_message $C019 ; 'Sorry, but you filled the Vault.'
-    script_command $E5
+    script_command SCRIPT_VAULT
 Script_67DD:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
     script_jump Script_67FB
 Script_67E3:: ; heuristic: event script entry or jump target; C0
     script_message $C01E ; 'You don't have enough to store.'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_67DD
 Script_67EA:: ; heuristic: event script entry or jump target; C0
     script_message $C019 ; 'Sorry, but you filled the Vault.'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_67DD
 Script_67F1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_67FF
@@ -6615,16 +6615,16 @@ Script_67F4:: ; heuristic: event script entry or jump target; C0
     script_jump Script_6848
 Script_67F7:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
+    script_command SCRIPT_VAULT
 Script_67FB:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_67B7
 Script_67FF:: ; heuristic: event script entry or jump target; C0
     script_message $C01A ; 'What item should I store for'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_681B, Script_680F, Script_6808, Script_6815
 Script_6808:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C016 ; 'What should we store for you?'
     script_jump Script_67C9
 Script_680F:: ; heuristic: event script entry or jump target; C0
@@ -6635,7 +6635,7 @@ Script_6815:: ; heuristic: event script entry or jump target; C0
     script_jump Script_67FF
 Script_681B:: ; heuristic: event script entry or jump target; C0
     script_message $C01B ; 'How many should I store?'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_682C, Script_6826, Script_6823
 Script_6823:: ; heuristic: event script entry or jump target; C0
     script_jump Script_67FF
@@ -6644,14 +6644,14 @@ Script_6826:: ; heuristic: event script entry or jump target; C0
     script_jump Script_681B
 Script_682C:: ; heuristic: event script entry or jump target; C0
     script_message $C01C ; 'OK, I'll put that away for'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_6834, Script_683F, Script_6845
 Script_6834:: ; heuristic: event script entry or jump target; C0
     script_message $C017 ; 'You don't have any items.'
 Script_6837:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
-    script_command $E5
+    script_command SCRIPT_VAULT
+    script_command SCRIPT_VAULT
     script_jump Script_67B7
 Script_683F:: ; heuristic: event script entry or jump target; C0
     script_message $C019 ; 'Sorry, but you filled the Vault.'
@@ -6659,10 +6659,10 @@ Script_683F:: ; heuristic: event script entry or jump target; C0
 Script_6845:: ; heuristic: event script entry or jump target; C0
     script_jump Script_67FF
 Script_6848:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
 Script_6849:: ; heuristic: event script entry or jump target; C0
     script_message $C01F ; 'How much do you want to'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_685D, Script_6851, Script_6857
 Script_6851:: ; heuristic: event script entry or jump target; C0
     script_message $C01D ; 'I can't store that much.'
@@ -6671,35 +6671,35 @@ Script_6857:: ; heuristic: event script entry or jump target; C0
     script_message $C016 ; 'What should we store for you?'
     script_jump Script_67C9
 Script_685D:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C01C ; 'OK, I'll put that away for'
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
-    script_command $E5
+    script_command SCRIPT_VAULT
+    script_command SCRIPT_VAULT
     script_jump Script_67B7
 Script_6869:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C020 ; 'What will you be taking out?'
 Script_686D:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_6876, Script_687D, Script_6887, Script_688E, Script_6895, Script_6898, Script_689B
 Script_6876:: ; heuristic: event script entry or jump target; C0
     script_message $C021 ; 'I don't have any of your'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_6881
 Script_687D:: ; heuristic: event script entry or jump target; C0
     script_message $C022 ; 'You can't carry any more items.'
-    script_command $E5
+    script_command SCRIPT_VAULT
 Script_6881:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
     script_jump Script_67FB
 Script_6887:: ; heuristic: event script entry or jump target; C0
     script_message $C026 ; 'You can't carry that much.'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_6881
 Script_688E:: ; heuristic: event script entry or jump target; C0
     script_message $C027 ; 'I don't have any of your'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_6881
 Script_6895:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68A2
@@ -6707,14 +6707,14 @@ Script_6898:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68E4
 Script_689B:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_jump Script_67FB
 Script_68A2:: ; heuristic: event script entry or jump target; C0
     script_message $C023 ; 'What do you want back?'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_68B7, Script_68B1, Script_68AA
 Script_68AA:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C020 ; 'What will you be taking out?'
     script_jump Script_686D
 Script_68B1:: ; heuristic: event script entry or jump target; C0
@@ -6722,7 +6722,7 @@ Script_68B1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68A2
 Script_68B7:: ; heuristic: event script entry or jump target; C0
     script_message $C024 ; 'How many do you want back?'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_68C8, Script_68C2, Script_68BF
 Script_68BF:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68A2
@@ -6731,14 +6731,14 @@ Script_68C2:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68B7
 Script_68C8:: ; heuristic: event script entry or jump target; C0
     script_message $C025 ; 'Here you go.'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_68D0, Script_68DB, Script_68E1
 Script_68D0:: ; heuristic: event script entry or jump target; C0
     script_message $C022 ; 'You can't carry any more items.'
 Script_68D3:: ; heuristic: event script entry or jump target; C0
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
-    script_command $E5
+    script_command SCRIPT_VAULT
+    script_command SCRIPT_VAULT
     script_jump Script_67B7
 Script_68DB:: ; heuristic: event script entry or jump target; C0
     script_message $C02E ; 'I don't have any more items.'
@@ -6746,10 +6746,10 @@ Script_68DB:: ; heuristic: event script entry or jump target; C0
 Script_68E1:: ; heuristic: event script entry or jump target; C0
     script_jump Script_68A2
 Script_68E4:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
 Script_68E5:: ; heuristic: event script entry or jump target; C0
     script_message $C028 ; 'How much gold will you withdraw?'
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_choice_jump Script_68F9, Script_68ED, Script_68F3
 Script_68ED:: ; heuristic: event script entry or jump target; C0
     script_message $C026 ; 'You can't carry that much.'
@@ -6758,35 +6758,35 @@ Script_68F3:: ; heuristic: event script entry or jump target; C0
     script_message $C020 ; 'What will you be taking out?'
     script_jump Script_686D
 Script_68F9:: ; heuristic: event script entry or jump target; C0
-    script_command $E5
+    script_command SCRIPT_VAULT
     script_message $C025 ; 'Here you go.'
     script_message $C018 ; 'Is there anything else?'
-    script_command $E5
-    script_command $E5
+    script_command SCRIPT_VAULT
+    script_command SCRIPT_VAULT
     script_jump Script_67B7
 Script_6905:: ; heuristic: event script entry or jump target; C0
-    script_command $E6
+    script_command SCRIPT_VAULT_CLOSE
     script_message $802D ; 'Come again anytime!'
-    script_command $E6
+    script_command SCRIPT_VAULT_CLOSE
     script_end
 Script_690B:: ; heuristic: event script entry or jump target; C0
-    script_command $E0
-    script_command $E0
+    script_command SCRIPT_INN
+    script_command SCRIPT_INN
     script_message $C000 ; 'It's 0G a night. Will you'
     script_skip_if_no Script_6917
     script_message $8002 ; 'Please come stay another time.'
-    script_command $E1
+    script_command SCRIPT_INN_CLOSE
     script_end
 Script_6917:: ; heuristic: event script entry or jump target; C0
-    script_command $E0
+    script_command SCRIPT_INN
     script_skip_if_no Script_691F
     script_message $8003 ; 'Sorry, but you lack the money.'
-    script_command $E1
+    script_command SCRIPT_INN_CLOSE
     script_end
 Script_691F:: ; heuristic: event script entry or jump target; C0
     script_message $C001 ; 'Well then, have a good rest.'
-    script_command $E0
+    script_command SCRIPT_INN
     script_message $8004 ; 'Good morning and farewell!'
-    script_command $E1
+    script_command SCRIPT_INN_CLOSE
     script_end
     ds $16D8, $00

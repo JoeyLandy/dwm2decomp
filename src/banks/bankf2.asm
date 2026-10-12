@@ -610,7 +610,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. ScriptCommandEF_Run_Case0F_Case07, ScriptCommandF0_Run_Case06_Case03)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Case0F_Case07, RenameMenu_Case06_Case03)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2
@@ -2163,7 +2163,7 @@ Jump_0F2_5172::
     ret
 
 ; reorders the three bytes wArg5-7 by the permutation MonsterArgOrderTable[wArg2:wArg1] (byte k says where wArg5 + k goes among wArg1-3), then copies the result back to wArg5-7 (E-0171)
-; 1 call site from 1 routine (e.g. ScriptCommandF6_Run_Case10_Case04)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case04)
 ; reads: wArg1, wArg2, wArg3
 ; writes: wArg5, wArg6, wArg7
 ; points at: wArg1, wArg5
@@ -2596,7 +2596,7 @@ Data_0F2_51C3:: ; address name
     db $00, $01, $02 ; id 382 Kagebou
     db $00, $01, $02 ; id 383 ?
 
-; E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ScriptCommandE2_Run_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed).
+; E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed).
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
 Data_0F2_5643:: ; address name
@@ -3825,19 +3825,19 @@ Func_0F2_6333:: ; address name
     ret
     db $CD, $55, $63, $CD, $46, $63, $C9
 
-; only called from ScriptCommandF2_Run_Case03_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05)
+; only called from KeyAppraisalMenu_Case03_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05)
 ; writes: wScreenStep
-ScriptCommandF2_Run_Case03_Case05_Sub01::
+KeyAppraisalMenu_Case03_Case05_Sub01::
 Func_0F2_633B:: ; address name
-    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01
     call CopyWD09EToKeyList
     xor a, a
     ld [wScreenStep], a
     ret
 
 ; copies $C0 bytes from wD09E to wKeyList (E-0122)
-; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01)
 ; points at: wKeyList
 CopyWD09EToKeyList::
 Func_0F2_6346:: ; address name
@@ -3853,12 +3853,12 @@ Jump_0F2_634E::
     jr nz, Jump_0F2_634E
     ret
 
-; only called from ScriptCommandF2_Run_Case03_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01)
+; only called from KeyAppraisalMenu_Case03_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01)
 ; reads: wWorkBuf
 ; writes: wKeyGenCount, wWorkBuf
 ; points at: wKeyList
-ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01::
+KeyAppraisalMenu_Case03_Case05_Sub01_Sub01::
 Func_0F2_6355:: ; address name
     ld hl, wWorkBuf + $1
     ld c, $C0
@@ -3877,9 +3877,9 @@ Jump_0F2_635A::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02
     ld hl, wKeyList
-    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01
     ret
 
 Jump_0F2_637F::
@@ -3887,17 +3887,17 @@ Jump_0F2_637F::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01
     ld hl, wKeyList
-    call ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02
+    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02
     ret
 
-; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
+; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_Sub01)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub01::
+KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub01::
 Func_0F2_6393:: ; address name
     ld b, $00
     ld c, $20
@@ -3971,12 +3971,12 @@ Jump_0F2_63E3::
     jr nz, Jump_0F2_6397
     ret
 
-; only called from ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01)
+; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_Sub01)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-ScriptCommandF2_Run_Case03_Case05_Sub01_Sub01_Sub02::
+KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_Sub02::
 Func_0F2_63EF:: ; address name
     ld b, $00
     ld c, $20
@@ -4046,7 +4046,7 @@ Jump_0F2_643C::
     ret
 
 ; in state 3 continues at Jump_0F2_6470; otherwise runs Func_0F2_64C7 (E-0126)
-; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, ScriptCommandE5_Run_Case03_Case0B_Sub01, ScriptCommandE5_Run_Case03_Case0E_Sub02)
+; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, VaultMenu_Case03_Case0B_Sub01, VaultMenu_Case03_Case0E_Sub02)
 ; reads: wScreenState, wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
 ; points at: wWorkBuf, wInventory, wItemGrid
@@ -4058,11 +4058,11 @@ Func_0F2_6449:: ; address name
     call Run64C7UnlessScreenStateIs3_Sub01
     ret
 
-; only called from ScriptCommandE5_Run_Case03_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E)
+; only called from VaultMenu_Case03_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E)
 ; reads: wCounterPtr0Lo
 ; points at: wWorkBuf
-ScriptCommandE5_Run_Case03_Case0E_Sub03::
+VaultMenu_Case03_Case0E_Sub03::
 Func_0F2_6454:: ; address name
     ld hl, wWorkBuf
     ld b, $18
@@ -4082,7 +4082,7 @@ Jump_0F2_6469::
     ld de, ItemOrderListA
 
 Jump_0F2_646C::
-    call ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01
+    call VaultMenu_Case03_Case0E_Sub03_Sub01
     ret
 
 Jump_0F2_6470::
@@ -4108,10 +4108,10 @@ Jump_0F2_6487::
 Jump_0F2_648B::
     ld [wCounterPtr0Lo], a
 
-; only called from ScriptCommandE5_Run_Case03_Case0E_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0E_Sub03)
+; only called from VaultMenu_Case03_Case0E_Sub03 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E_Sub03)
 ; points at: wInventory, wWorkBuf, wItemGrid
-ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01::
+VaultMenu_Case03_Case0E_Sub03_Sub01::
 Func_0F2_648E:: ; address name
     ld b, $00
 
@@ -4249,7 +4249,7 @@ Jump_0F2_651F::
     jr nz, Jump_0F2_651F
     ret
 
-; E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
+; E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
 ; record: item numbers in order, $FF ends the list
 ItemOrderListA::
 Data_0F2_6526:: ; address name
@@ -4262,7 +4262,7 @@ Data_0F2_6526:: ; address name
     db $60, $61, $62, $22, $23, $24, $25, $26, $27, $30, $31, $32 ; id 6
     db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
 
-; E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
+; E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to VaultMenu_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
 ; record: item numbers in order, $FF ends the list
 ItemOrderListB::
 Data_0F2_6586:: ; address name

@@ -7419,7 +7419,7 @@ Jump_007_7AC2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 RunLinkScreenState_6C12_Case07::
 Jump_007_7ACD:: ; address name
-    farcall ScriptCommandEF_Run_Bank1B
+    farcall EggServiceMenu_Bank1B
     ret
 
 ; draws a tile at wC200, wC266, wC2A6, wC2E6, wC326 or wC366 (or 6/3 past it) depending on wD09D-wD0A2, then runs the four panel routines Func_007_7B30, 7B9D, 7C07 and 7C5F (E-0121)

@@ -682,7 +682,7 @@ Func_037_4AFD:: ; address name
 ; writes: wScreenState
 Func_037_4AFD_Case00::
 Jump_037_4B2A:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -913,7 +913,7 @@ Jump_037_4C33:: ; address name
     ret
 
 Jump_037_4C54::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 8 of the `rst $00` table in Func_037_4AFD_Case04
@@ -939,7 +939,7 @@ Jump_037_4C5B:: ; address name
     ret
 
 Jump_037_4C7C::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld a, [wMenuInputResult]
     cp a, $FE
     ret nz
@@ -961,7 +961,7 @@ Jump_037_4C9D:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 16 of the `rst $00` table in Func_037_4AFD_Case04
@@ -975,7 +975,7 @@ Jump_037_4CA9:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld a, $09
     call ShowStringIndexA_Bank37
     ret
@@ -1056,7 +1056,7 @@ Jump_037_4D1A:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     xor a, a
     ld [wSelectedRecord], a
     ld [wScreenSubStep], a
@@ -1100,7 +1100,7 @@ Jump_037_4D43:: ; address name
     ret
 
 Jump_037_4D5B::
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ld de, Data_01F_4510
     ld hl, vTiles1 + $6E0
     ld b, $1F
@@ -1978,7 +1978,7 @@ Jump_037_52F2::
 ; writes: wScreenStep, wScreenSubStep, wScreenState
 Func_037_4AFD_Case0C::
 Jump_037_5301:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -2012,7 +2012,7 @@ Jump_037_531D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 Func_037_4AFD_Case11_Case02::
 Jump_037_5335:: ; address name
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case11
@@ -2796,7 +2796,7 @@ Jump_037_57FC:: ; address name
     push af
     ld a, $11
     ld [wScreenState], a
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     pop af
     ret
 
@@ -2810,7 +2810,7 @@ Jump_037_580D:: ; address name
     push af
     ld a, $11
     ld [wScreenState], a
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     pop af
     ld [wScreenState], a
     ret

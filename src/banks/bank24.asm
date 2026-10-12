@@ -869,14 +869,14 @@ Jump_024_4567:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Case04_Case00::
 Jump_024_4587:: ; address name
-    farcall ScriptCommandED_Run
+    farcall BreedMenu
     ret
 
 ; entry 4 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Case04_Case04::
 Jump_024_458E:: ; address name
-    farcall ScriptCommandEF_Run_Bank1B
+    farcall EggServiceMenu_Bank1B
     ret
 
 ; entry 6 of the `rst $00` table in GameMode6_Update_Case04
@@ -1592,7 +1592,7 @@ Jump_024_4A5C:: ; address name
 ; writes: wScreenStep, wScreenSubStep, wScreenState
 GameMode6_Update_Case0C::
 Jump_024_4A5D:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -1610,7 +1610,7 @@ Jump_024_4A5D:: ; address name
 ; writes: wScreenStep, wScreenSubStep, wScreenState
 GameMode6_Update_Case0D::
 Jump_024_4A79:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, [wScreenStep]
     cp a, $0A
     ret nz
@@ -1944,7 +1944,7 @@ Jump_024_4CD2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 GameMode6_Update_Case0F_Case03::
 Jump_024_4CE3:: ; address name
-    farcall ScriptCommandEF_Run_Bank1B
+    farcall EggServiceMenu_Bank1B
     ret
 
 ; entry 5 of the `rst $00` table in GameMode6_Update_Case0F
@@ -1979,7 +1979,7 @@ Jump_024_4CF2:: ; address name
     xor a, a
     ld [wStringCategory], a
     farcall ShowString_Bank33_7045
-    farcall ScriptCommandEF_Run_Bank1B
+    farcall EggServiceMenu_Bank1B
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
@@ -4062,7 +4062,7 @@ Func_024_5D10:: ; address name
     db $11, $25, $5D, $CD, $FE, $25, $C9
 
 ; Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case01_Case00)
+; 1 call site from 1 routine (e.g. PriestMenu_Case01_Case00)
 ShowString_Bank24::
 Func_024_5D1E:: ; address name
     call BeginStringDisplay_Bank24
@@ -4227,44 +4227,44 @@ Data_024_60CD:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "RviD-oxUncurt", $F0
 
-; implements script command type F8; reached through ScriptCommandF8 in bank $10 (E-0038)
+; implements script command type F8 (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24 strings); reached through ScriptCommandF8 in bank $10 (E-0038, E-0244)
 ; 1 call site from 1 routine (e.g. ScriptCommandF8)
 ; reads: wScreenState
-ScriptCommandF8_Run::
+PriestMenu::
 Func_024_60DB:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw ScriptCommandF8_Run_Case00
-    dw ScriptCommandF8_Run_Case01
-    dw ScriptCommandF8_Run_Case02
+    dw PriestMenu_Case00
+    dw PriestMenu_Case01
+    dw PriestMenu_Case02
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run
+; entry 0 of the `rst $00` table in PriestMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMessageMode
-ScriptCommandF8_Run_Case00::
+PriestMenu_Case00::
 Jump_024_60E5:: ; address name
-    farcall ScriptCommandE8_Run
+    farcall SwapMonstersMenu
     ld a, $0B
     ld [wMessageMode], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run
+; entry 1 of the `rst $00` table in PriestMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandF8_Run_Case01::
+PriestMenu_Case01::
 Jump_024_60F1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandF8_Run_Case01_Case00
-    dw ScriptCommandF8_Run_Case01_Case01
-    dw ScriptCommandF8_Run_Case01_Case02
+    dw PriestMenu_Case01_Case00
+    dw PriestMenu_Case01_Case01
+    dw PriestMenu_Case01_Case02
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case01
+; entry 0 of the `rst $00` table in PriestMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wScreenStep
 ; points at: wTextWindowTileLo
-ScriptCommandF8_Run_Case01_Case00::
+PriestMenu_Case01_Case00::
 Jump_024_60FB:: ; address name
     ld hl, wTextWindowTileLo
     xor a, a
@@ -4292,11 +4292,11 @@ Jump_024_60FB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case01
+; entry 1 of the `rst $00` table in PriestMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandF8_Run_Case01_Case01::
+PriestMenu_Case01_Case01::
 Jump_024_612C:: ; address name
     ld de, TileRect_24_6B8B
     ld hl, wWindowTileBuffer + $64
@@ -4308,11 +4308,11 @@ Jump_024_612C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandF8_Run_Case01
+; entry 2 of the `rst $00` table in PriestMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-ScriptCommandF8_Run_Case01_Case02::
+PriestMenu_Case01_Case02::
 Jump_024_6143:: ; address name
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140B
@@ -4325,37 +4325,37 @@ Jump_024_6143:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommandF8_Run
+; entry 2 of the `rst $00` table in PriestMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-ScriptCommandF8_Run_Case02::
+PriestMenu_Case02::
 Jump_024_615B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw ScriptCommandF8_Run_Case02_Case00
-    dw ScriptCommandF8_Run_Case02_Case01
-    dw ScriptCommandF8_Run_Case02_Case02
-    dw ScriptCommandF8_Run_Case02_Case03
-    dw ScriptCommandF8_Run_Case02_Case04
-    dw ScriptCommandF8_Run_Case02_Case05
-    dw ScriptCommandF8_Run_Case02_Case06
-    dw ScriptCommandF8_Run_Case02_Case07
-    dw ScriptCommandF8_Run_Case02_Case08
-    dw ScriptCommandF8_Run_Case02_Case09
-    dw ScriptCommandF8_Run_Case02_Case0A
-    dw ScriptCommandF8_Run_Case02_Case0B
-    dw ScriptCommandF8_Run_Case02_Case0C
-    dw ScriptCommandF8_Run_Case02_Case0D
-    dw ScriptCommandF8_Run_Case02_Case0C
-    dw ScriptCommandF8_Run_Case02_Case0F
-    dw ScriptCommandF8_Run_Case02_Case10
-    dw ScriptCommandF8_Run_Case02_Case11
+    dw PriestMenu_Case02_Case00
+    dw PriestMenu_Case02_Case01
+    dw PriestMenu_Case02_Case02
+    dw PriestMenu_Case02_Case03
+    dw PriestMenu_Case02_Case04
+    dw PriestMenu_Case02_Case05
+    dw PriestMenu_Case02_Case06
+    dw PriestMenu_Case02_Case07
+    dw PriestMenu_Case02_Case08
+    dw PriestMenu_Case02_Case09
+    dw PriestMenu_Case02_Case0A
+    dw PriestMenu_Case02_Case0B
+    dw PriestMenu_Case02_Case0C
+    dw PriestMenu_Case02_Case0D
+    dw PriestMenu_Case02_Case0C
+    dw PriestMenu_Case02_Case0F
+    dw PriestMenu_Case02_Case10
+    dw PriestMenu_Case02_Case11
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 0 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wListCursor, wScreenStep
 ; writes: wMenuInputResult, wListCount, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep, wChoiceCursor
-ScriptCommandF8_Run_Case02_Case00::
+PriestMenu_Case02_Case00::
 Jump_024_6183:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -4394,7 +4394,7 @@ Jump_024_61AF::
 
 Jump_024_61BF::
     ld b, $80
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_61E6
     ld a, $01
@@ -4402,7 +4402,7 @@ Jump_024_61BF::
 
 Jump_024_61CC::
     ld b, $04
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_61E6
     ld a, $02
@@ -4410,7 +4410,7 @@ Jump_024_61CC::
 
 Jump_024_61D9::
     ld b, $01
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_61E6
     ld a, $03
@@ -4434,11 +4434,11 @@ Jump_024_61E6::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 1 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Case02_Case01::
+PriestMenu_Case02_Case01::
 Jump_024_620A:: ; address name
     ld a, [wListCursor]
     ld [wTwoChoiceCursor], a
@@ -4477,17 +4477,17 @@ Tiles_24_6259::
 Data_024_6259:: ; address name
     db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60 ; entry 0
 
-; entry 2 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 2 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ScriptCommandF8_Run_Case02_Case02::
+PriestMenu_Case02_Case02::
 Jump_024_6269:: ; address name
     ld de, TileRect_24_6C49
     ld hl, wWindowTileBuffer + $DC
     ld bc, $0B07
     call CopyRectTo20ByteRows_Bank24
-    call ScriptCommandF8_Run_Case02_Case02_Sub01
+    call PriestMenu_Case02_Case02_Sub01
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
     ld de, $01CC
@@ -4497,13 +4497,13 @@ Jump_024_6269:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 3 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Case02_Case03::
+PriestMenu_Case02_Case03::
 Jump_024_628C:: ; address name
-    call ScriptCommandF8_Run_Case02_Case03_Sub01
+    call PriestMenu_Case02_Case03_Sub01
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4537,11 +4537,11 @@ Jump_024_62B3::
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 4 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor
 ; writes: wArg1, wArg2, wScreenStep, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Case02_Case04::
+PriestMenu_Case02_Case04::
 Jump_024_62C9:: ; address name
     ld b, $00
     ld c, $07
@@ -4551,7 +4551,7 @@ Jump_024_62C9:: ; address name
     ld [wArg1], a
     ld a, $0B
     ld [wArg2], a
-    call ScriptCommandF8_Run_Case02_Case04_Sub01
+    call PriestMenu_Case02_Case04_Sub01
     ld de, TileRect_24_6B8B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0A09
@@ -4577,12 +4577,12 @@ Jump_024_62C9:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 5 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wChoiceCursor, hTemp0, wScreenStep
 ; writes: rRAMG, rRAMB, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wPartyList
-ScriptCommandF8_Run_Case02_Case05::
+PriestMenu_Case02_Case05::
 Jump_024_631E:: ; address name
     ld a, [wListCursor]
     and a, a
@@ -4639,12 +4639,12 @@ Jump_024_636E::
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 6 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep, wChoiceCursor, hTemp0
 ; writes: wListEntries, wGrid2CursorX, wGrid2CursorY, wTextBuf0, wScreenStep, wScriptCommandType, wScriptStartRequest, rRAMG, ...
 ; points at: wPartyList, wArg4, wTextBuf0
-ScriptCommandF8_Run_Case02_Case06::
+PriestMenu_Case02_Case06::
 Jump_024_637B:: ; address name
     ld a, [wListCursor]
     and a, a
@@ -4746,11 +4746,11 @@ Jump_024_642B::
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 7 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursor, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-ScriptCommandF8_Run_Case02_Case07::
+PriestMenu_Case02_Case07::
 Jump_024_6445:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -4783,11 +4783,11 @@ Data_024_6479:: ; address name
     db $B6, $C3, $A5, $F5, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 8 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 8 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wGrid2CursorY, wGrid2CursorX, wListEntries, wArg1, wScreenStep
 ; writes: wArg3, wArg2, wArg1, wTwoChoiceCursor, wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest
-ScriptCommandF8_Run_Case02_Case08::
+PriestMenu_Case02_Case08::
 Jump_024_6497:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -4800,7 +4800,7 @@ Jump_024_6497:: ; address name
     ret
 
 Jump_024_64AB::
-    call ScriptCommandF8_Run_Shared02
+    call PriestMenu_Shared02
     xor a, a
     ld [wScreenSubStep], a
     ld a, $02
@@ -4830,7 +4830,7 @@ Jump_024_64C8::
     ld a, [wArg1]
     cp a, $FF
     jr z, Jump_024_650A
-    call ScriptCommandF8_Run_Shared02
+    call PriestMenu_Shared02
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -4850,13 +4850,13 @@ Jump_024_650A::
     ld a, $01
     jr Jump_024_64B4
 
-; entry 9 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 9 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenSubStep
-ScriptCommandF8_Run_Case02_Case09::
+PriestMenu_Case02_Case09::
 Jump_024_6513:: ; address name
-    call ScriptCommandF8_Run_Shared02
+    call PriestMenu_Shared02
     ld a, [wScreenSubStep]
     and a, a
     jr nz, Jump_024_652B
@@ -4875,11 +4875,11 @@ Jump_024_652B::
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 10 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wScreenStep, wListCursor, wGrid2CursorX, wListEntries
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenSubStep, wArg3, wArg2, wArg1
-ScriptCommandF8_Run_Case02_Case0A::
+PriestMenu_Case02_Case0A::
 Jump_024_6535:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -4901,7 +4901,7 @@ Jump_024_6541::
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectNoOrigin_Bank24
-    call ScriptCommandF8_Run_Shared03
+    call PriestMenu_Shared03
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -4942,12 +4942,12 @@ Jump_024_659A::
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 11 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep, wScreenCounter, wGlyphListPos
 ; writes: hSpriteWindowClipMode, wScreenSubStep, wScreenStep, wScreenCounter, wGlyphListPos
 ; points at: wScreenTileBuffer, wWindowTileBuffer, wScreenAttrBuffer, wWindowAttrBuffer
-ScriptCommandF8_Run_Case02_Case0B::
+PriestMenu_Case02_Case0B::
 Jump_024_65B1:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -5026,12 +5026,12 @@ Jump_024_662A::
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 15 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteWindowClipMode, wScreenStep
 ; points at: wTextWindowTileLo, wWindowTileBuffer
-ScriptCommandF8_Run_Case02_Case0F::
+PriestMenu_Case02_Case0F::
 Jump_024_6655:: ; address name
     ld hl, wTextWindowTileLo
     xor a, a
@@ -5059,12 +5059,12 @@ Jump_024_6655:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 12 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenStep
 ; writes: wScreenCounter, wScreenStep
 ; points at: wScreenCounter
-ScriptCommandF8_Run_Case02_Case0C::
+PriestMenu_Case02_Case0C::
 Jump_024_668D:: ; address name
     ld hl, wScreenCounter
     inc [hl]
@@ -5078,22 +5078,22 @@ Jump_024_668D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 13 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-ScriptCommandF8_Run_Case02_Case0D::
+PriestMenu_Case02_Case0D::
 Jump_024_66A3:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw ScriptCommandF8_Run_Case02_Case0D_Case00
-    dw ScriptCommandF8_Run_Case02_Case0D_Case01
+    dw PriestMenu_Case02_Case0D_Case00
+    dw PriestMenu_Case02_Case0D_Case01
 
-; entry 0 of the `rst $00` table in ScriptCommandF8_Run_Case02_Case0D
+; entry 0 of the `rst $00` table in PriestMenu_Case02_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenSubStep
 ; writes: wScreenSubStep
 ; points at: wBGPaletteBuffer, wBGPaletteCopy
-ScriptCommandF8_Run_Case02_Case0D_Case00::
+PriestMenu_Case02_Case0D_Case00::
 Jump_024_66AB:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -5109,12 +5109,12 @@ Jump_024_66BD::
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in ScriptCommandF8_Run_Case02_Case0D
+; entry 1 of the `rst $00` table in PriestMenu_Case02_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wIsCGB, wScreenStep, wListCursor
 ; writes: wBGPaletteUploadRequest, wScreenCounter, wScreenSubStep, wScreenStep
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer
-ScriptCommandF8_Run_Case02_Case0D_Case01::
+PriestMenu_Case02_Case0D_Case01::
 Jump_024_66C5:: ; address name
     ld a, [wScreenCounter]
     sra a
@@ -5183,12 +5183,12 @@ Jump_024_6717::
     farcall RestartMapMusic
     ret
 
-; entry 16 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 16 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursor, wListCursor, wScreenStep
 ; writes: rRAMG, rRAMB, wScreenStep, wOBJPaletteUploadRequest, wScriptCommandType, wScriptStartRequest
 ; points at: wPartyList
-ScriptCommandF8_Run_Case02_Case10::
+PriestMenu_Case02_Case10::
 Jump_024_673C:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5249,7 +5249,7 @@ Jump_024_6797::
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
-    call ScriptCommandF8_Run_Shared03
+    call PriestMenu_Shared03
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5262,25 +5262,25 @@ Jump_024_6797::
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by ScriptCommandF8_Run_Case02_Case10
+; address loaded by PriestMenu_Case02_Case10
 Data_024_67BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FB, $FE
 
-; entry 17 of the `rst $00` table in ScriptCommandF8_Run_Case02
+; entry 17 of the `rst $00` table in PriestMenu_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep
-ScriptCommandF8_Run_Case02_Case11::
+PriestMenu_Case02_Case11::
 Jump_024_67C0:: ; address name
     ld b, $80
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_67EA
     ld b, $04
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_67EA
     ld b, $01
-    call ScriptCommandF8_Run_Shared01
+    call PriestMenu_Shared01
     cp a, $FF
     jr z, Jump_024_67EA
     ld a, $01
@@ -5303,7 +5303,7 @@ Jump_024_67EA::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. ScriptCommandF8_Run_Case01_Case01, DrawGoldPanel_Bank24, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case07, ...)
+; 6 call sites from 6 routines (e.g. PriestMenu_Case01_Case01, DrawGoldPanel_Bank24, PriestMenu_Case02_Case0F, PriestMenu_Case02_Case07, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank24::
@@ -5361,7 +5361,7 @@ Jump_024_6825::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 are not written (E-0062)
-; 9 call sites from 8 routines (e.g. ScriptCommandF8_Run_Case01_Case02, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case0A, ...)
+; 9 call sites from 8 routines (e.g. PriestMenu_Case01_Case02, PriestMenu_Case02_Case0F, PriestMenu_Case02_Case0B, PriestMenu_Case02_Case0A, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -5400,7 +5400,7 @@ Func_024_6837:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 10 call sites from 9 routines (e.g. ScriptCommandF8_Run_Case01_Case02, ScriptCommandF8_Run_Case02_Case0F, ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case0A, ...)
+; 10 call sites from 9 routines (e.g. PriestMenu_Case01_Case02, PriestMenu_Case02_Case0F, PriestMenu_Case02_Case0B, PriestMenu_Case02_Case0A, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24_6866::
 Func_024_6866:: ; address name
@@ -5422,7 +5422,7 @@ Func_024_6866:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Shared02_Sub01, ScriptCommandF8_Run_Case02_Case04_Sub01)
+; 4 call sites from 3 routines (e.g. PriestMenu_Case02_Case0B, PriestMenu_Shared02_Sub01, PriestMenu_Case02_Case04_Sub01)
 CopyBytesDEToHL_Bank24::
 Func_024_6887:: ; address name
     ld a, [de]
@@ -5435,7 +5435,7 @@ Func_024_6887:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case0B, ScriptCommandF8_Run_Case02_Case04_Sub01)
+; 3 call sites from 2 routines (e.g. PriestMenu_Case02_Case0B, PriestMenu_Case02_Case04_Sub01)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank24::
 Func_024_6890:: ; address name
@@ -5456,7 +5456,7 @@ Jump_024_6894::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 4 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case02_Case07, ScriptCommandF8_Run_Case02_Case04, ScriptCommandF8_Run_Case02_Case00)
+; 4 call sites from 3 routines (e.g. PriestMenu_Case02_Case07, PriestMenu_Case02_Case04, PriestMenu_Case02_Case00)
 StoreBAtWordTableEntry_Bank24::
 Func_024_68A2:: ; address name
     push bc
@@ -5471,7 +5471,7 @@ Func_024_68A2:: ; address name
     ret
 
 ; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)
-; 3 call sites from 3 routines (e.g. ScriptCommandF8_Run_Case01_Case01, ScriptCommandF8_Run_Case02_Case0A, ScriptCommandF8_Run_Case02_Case04)
+; 3 call sites from 3 routines (e.g. PriestMenu_Case01_Case01, PriestMenu_Case02_Case0A, PriestMenu_Case02_Case04)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
 ; points at: wArg3
@@ -5512,12 +5512,12 @@ Data_024_68EB:: ; address name
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
-; only called from routines of ScriptCommandF8_Run (E-0098)
-; 6 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case11, ScriptCommandF8_Run_Case02_Case00)
+; only called from routines of PriestMenu (E-0098)
+; 6 call sites from 2 routines (e.g. PriestMenu_Case02_Case11, PriestMenu_Case02_Case00)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
-ScriptCommandF8_Run_Shared01::
+PriestMenu_Shared01::
 Func_024_6903:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5564,12 +5564,12 @@ Jump_024_6937::
     ld a, $FF
     ret
 
-; only called from ScriptCommandF8_Run_Case02_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02)
+; only called from PriestMenu_Case02_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
-ScriptCommandF8_Run_Case02_Case02_Sub01::
+PriestMenu_Case02_Case02_Sub01::
 Func_024_6944:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5591,13 +5591,13 @@ Jump_024_6956::
     push de
     ldh a, [hTemp0]
     bit 0, a
-    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01
+    call nz, PriestMenu_Case02_Case02_Sub01_Sub01
     ldh a, [hTemp0]
     bit 2, a
-    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02
+    call nz, PriestMenu_Case02_Case02_Sub01_Sub02
     ldh a, [hTemp0]
     bit 7, a
-    call nz, ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03
+    call nz, PriestMenu_Case02_Case02_Sub01_Sub03
     pop de
     pop bc
     pop hl
@@ -5611,9 +5611,9 @@ Jump_024_6956::
     ld [rRAMB], a
     ret
 
-; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
-ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01::
+; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_Sub01)
+PriestMenu_Case02_Case02_Sub01_Sub01::
 Func_024_6987:: ; address name
     push de
     ld a, e
@@ -5628,9 +5628,9 @@ Func_024_6987:: ; address name
     pop de
     ret
 
-; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
-ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02::
+; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_Sub01)
+PriestMenu_Case02_Case02_Sub01_Sub02::
 Func_024_699A:: ; address name
     push de
     ld a, e
@@ -5645,9 +5645,9 @@ Func_024_699A:: ; address name
     pop de
     ret
 
-; only called from ScriptCommandF8_Run_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case02_Sub01)
-ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03::
+; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_Sub01)
+PriestMenu_Case02_Case02_Sub01_Sub03::
 Func_024_69AD:: ; address name
     push de
     ld a, e
@@ -5662,23 +5662,23 @@ Func_024_69AD:: ; address name
     pop de
     ret
 
-; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub01
+; address loaded by PriestMenu_Case02_Case02_Sub01_Sub01
 Data_024_69C0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F7, $C3, $1F, $C4, $47, $C4
 
-; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub02
+; address loaded by PriestMenu_Case02_Case02_Sub01_Sub02
 Data_024_69C6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F8, $C3, $20, $C4, $48, $C4
 
-; address loaded by ScriptCommandF8_Run_Case02_Case02_Sub01_Sub03
+; address loaded by PriestMenu_Case02_Case02_Sub01_Sub03
 Data_024_69CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F9, $C3, $21, $C4, $49, $C4
 
-; only called from ScriptCommandF8_Run_Case02_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03)
+; only called from PriestMenu_Case02_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wPartyCount, wChoiceCursor
 ; writes: wMenuInputResult, wChoiceCursor, wCursorBlinkAE
-ScriptCommandF8_Run_Case02_Case03_Sub01::
+PriestMenu_Case02_Case03_Sub01::
 Func_024_69D2:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5690,13 +5690,13 @@ Func_024_69D2:: ; address name
     jr nz, Jump_024_6A32
     bit 1, a
     jr nz, Jump_024_6A40
-    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub01
+    call PriestMenu_Case02_Case03_Sub01_Sub01
     xor a, a
     ld [wMenuInputResult], a
     ret
 
 Jump_024_69F0::
-    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
+    call PriestMenu_Case02_Case03_Sub01_Sub03
     ld a, [wChoiceCursor]
     and a, a
     jr nz, Jump_024_6A02
@@ -5711,7 +5711,7 @@ Jump_024_6A02::
     jr Jump_024_6A20
 
 Jump_024_6A08::
-    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
+    call PriestMenu_Case02_Case03_Sub01_Sub03
     ld a, [wPartyCount]
     dec a
     ld b, a
@@ -5729,7 +5729,7 @@ Jump_024_6A1C::
 Jump_024_6A20::
     xor a, a
     ld [wCursorBlinkAE], a
-    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
+    call PriestMenu_Case02_Case03_Sub01_Sub02
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5739,7 +5739,7 @@ Jump_024_6A20::
 Jump_024_6A32::
     ld a, $69
     call QueueSoundEffect
-    call ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04
+    call PriestMenu_Case02_Case03_Sub01_Sub04
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5749,45 +5749,45 @@ Jump_024_6A40::
     ld [wMenuInputResult], a
     ret
 
-; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
+; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
-ScriptCommandF8_Run_Case02_Case03_Sub01_Sub01::
+PriestMenu_Case02_Case03_Sub01_Sub01::
 Func_024_6A46:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
+    jr c, PriestMenu_Case02_Case03_Sub01_Sub02
     ld a, [wCursorBlinkAE]
     inc a
     ld [wCursorBlinkAE], a
     cp a, $10
-    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02
+    jr c, PriestMenu_Case02_Case03_Sub01_Sub02
     cp a, $18
-    jr c, ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03
+    jr c, PriestMenu_Case02_Case03_Sub01_Sub03
     xor a, a
     ld [wCursorBlinkAE], a
 
-; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
+; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
 ; reads: wChoiceCursor
-ScriptCommandF8_Run_Case02_Case03_Sub01_Sub02::
+PriestMenu_Case02_Case03_Sub01_Sub02::
 Func_024_6A60:: ; address name
     ld b, $BB
     jr Jump_024_6A6A
 
-; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
+; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
 ; reads: wChoiceCursor
-ScriptCommandF8_Run_Case02_Case03_Sub01_Sub03::
+PriestMenu_Case02_Case03_Sub01_Sub03::
 Func_024_6A64:: ; address name
     ld b, $C3
     jr Jump_024_6A6A
 
-; only called from ScriptCommandF8_Run_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case03_Sub01)
+; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_Sub01)
 ; reads: wChoiceCursor
-ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04::
+PriestMenu_Case02_Case03_Sub01_Sub04::
 Func_024_6A68:: ; address name
     ld b, $BC
 
@@ -5811,15 +5811,15 @@ Jump_024_6A6A::
     ei
     ret
 
-; address loaded by ScriptCommandF8_Run_Case02_Case03_Sub01_Sub04
+; address loaded by PriestMenu_Case02_Case03_Sub01_Sub04
 Data_024_6A8A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E1, $00, $21, $01, $61, $01
 
-; only called from ScriptCommandF8_Run_Case02_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case04)
+; only called from PriestMenu_Case02_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case04)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-ScriptCommandF8_Run_Case02_Case04_Sub01::
+PriestMenu_Case02_Case04_Sub01::
 Func_024_6A90:: ; address name
     push bc
     push hl
@@ -5876,19 +5876,19 @@ Jump_024_6AD1::
 
 Jump_024_6AE0::
     dec c
-    jr nz, ScriptCommandF8_Run_Case02_Case04_Sub01
+    jr nz, PriestMenu_Case02_Case04_Sub01
     ret
 
-; only called from routines of ScriptCommandF8_Run (E-0098)
-; 3 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case09, ScriptCommandF8_Run_Case02_Case08)
+; only called from routines of PriestMenu (E-0098)
+; 3 call sites from 2 routines (e.g. PriestMenu_Case02_Case09, PriestMenu_Case02_Case08)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
-ScriptCommandF8_Run_Shared02::
+PriestMenu_Shared02::
 Func_024_6AE4:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $AE
     ld c, $00
-    call ScriptCommandF8_Run_Shared02_Sub01
+    call PriestMenu_Shared02_Sub01
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_024_6B0C
@@ -5898,7 +5898,7 @@ Func_024_6AE4:: ; address name
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $00
-    call ScriptCommandF8_Run_Shared02_Sub01
+    call PriestMenu_Shared02_Sub01
     ldh a, [rSVBK]
     res 1, a
     ldh [rSVBK], a
@@ -5910,9 +5910,9 @@ Jump_024_6B0C::
     call DrawScreenBufferRectNoOrigin_Bank24
     ret
 
-; only called from ScriptCommandF8_Run_Shared02 (E-0047)
-; 2 call sites from 1 routine (e.g. ScriptCommandF8_Run_Shared02)
-ScriptCommandF8_Run_Shared02_Sub01::
+; only called from PriestMenu_Shared02 (E-0047)
+; 2 call sites from 1 routine (e.g. PriestMenu_Shared02)
+PriestMenu_Shared02_Sub01::
 Func_024_6B19:: ; address name
     push hl
     push de
@@ -5934,15 +5934,15 @@ Jump_024_6B33::
     inc c
     ld a, c
     cp a, $05
-    jr c, ScriptCommandF8_Run_Shared02_Sub01
+    jr c, PriestMenu_Shared02_Sub01
     ret
 
-; only called from routines of ScriptCommandF8_Run (E-0098)
-; 2 call sites from 2 routines (e.g. ScriptCommandF8_Run_Case02_Case10, ScriptCommandF8_Run_Case02_Case0A)
+; only called from routines of PriestMenu (E-0098)
+; 2 call sites from 2 routines (e.g. PriestMenu_Case02_Case10, PriestMenu_Case02_Case0A)
 ; reads: wChoiceCursor
 ; writes: rRAMG, rRAMB, wNameGlyphBuf
 ; points at: wPartyList, wNameGlyphBuf, wTextBuf0
-ScriptCommandF8_Run_Shared03::
+PriestMenu_Shared03::
 Func_024_6B3A:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5981,7 +5981,7 @@ Jump_024_6B76::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 3 call sites from 1 routine (e.g. ScriptCommandF8_Run_Case02_Case01)
+; 3 call sites from 1 routine (e.g. PriestMenu_Case02_Case01)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24::
 Func_024_6B7A:: ; address name
@@ -6038,11 +6038,11 @@ Data_024_6C49:: ; address name
     db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $C3, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
-; address loaded by ScriptCommandF8_Run_Case02_Case00, ScriptCommandF8_Run_Case02_Case04
+; address loaded by PriestMenu_Case02_Case00, PriestMenu_Case02_Case04
 Data_024_6C96:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3
 
-; address loaded by ScriptCommandF8_Run_Case02_Case07
+; address loaded by PriestMenu_Case02_Case07
 Data_024_6C9E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F1, $C3, $19, $C4, $41, $C4
 
