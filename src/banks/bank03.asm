@@ -6324,25 +6324,25 @@ Data_003_6921:: ; address name
 ; record: offset $0120 (row 9, column 0); 9 x 5 tiles
 TileRect_03_6925::
 Data_003_6925:: ; address name
-    dw $0120 ; entry 0
-    db $09, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $09, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)
 ; record: offset $0120 (row 9, column 0); 9 x 5 tiles
 TileRect_03_6956::
 Data_003_6956:: ; address name
-    dw $0120 ; entry 0
-    db $09, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $F5, $F6, $ED, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $09, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F5, $F6, $ED, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; address loaded by PauseMenu_Skills_Case03_Case01
 Data_003_6987:: ; heuristic: pointer load in the same bank (bank assumed); C0

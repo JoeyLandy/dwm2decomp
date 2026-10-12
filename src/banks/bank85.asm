@@ -2326,30 +2326,30 @@ Jump_085_4E61::
 ; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute map
 ScreenAnimationTable::
 Data_085_4E7A:: ; address name
-    dw Map2FScreens0_Y1X0 ; id 0
-    dw Map2FAttrs0_Y1X0
-    dw Data_093_5B36
-    dw Data_093_6153
-    dw Data_093_5B36 ; id 1
-    dw Data_093_6153
-    dw Data_093_5BE9
-    dw Data_093_6194
-    dw Data_093_5BE9 ; id 2
-    dw Data_093_6194
-    dw Data_093_5C99
-    dw Data_093_61CF
-    dw Data_093_5C99 ; id 3
-    dw Data_093_61CF
-    dw Data_093_5D4B
-    dw Data_093_6208
-    dw Data_093_5D4B ; id 4
-    dw Data_093_6208
-    dw Data_093_5DF5
-    dw Data_093_623C
-    dw Data_093_5DF5 ; id 5
-    dw Data_093_623C
-    dw Map2FScreens4_Y1X0
-    dw Map2FAttrs4_Y1X0
+    dw Map2FScreens0_Y1X0 ; id 0: frame 0 tile map (bank $93)
+    dw Map2FAttrs0_Y1X0 ; frame 0 attribute map
+    dw Data_093_5B36 ; frame 1 tile map
+    dw Data_093_6153 ; frame 1 attribute map
+    dw Data_093_5B36 ; id 1: frame 0 tile map (bank $93)
+    dw Data_093_6153 ; frame 0 attribute map
+    dw Data_093_5BE9 ; frame 1 tile map
+    dw Data_093_6194 ; frame 1 attribute map
+    dw Data_093_5BE9 ; id 2: frame 0 tile map (bank $93)
+    dw Data_093_6194 ; frame 0 attribute map
+    dw Data_093_5C99 ; frame 1 tile map
+    dw Data_093_61CF ; frame 1 attribute map
+    dw Data_093_5C99 ; id 3: frame 0 tile map (bank $93)
+    dw Data_093_61CF ; frame 0 attribute map
+    dw Data_093_5D4B ; frame 1 tile map
+    dw Data_093_6208 ; frame 1 attribute map
+    dw Data_093_5D4B ; id 4: frame 0 tile map (bank $93)
+    dw Data_093_6208 ; frame 0 attribute map
+    dw Data_093_5DF5 ; frame 1 tile map
+    dw Data_093_623C ; frame 1 attribute map
+    dw Data_093_5DF5 ; id 5: frame 0 tile map (bank $93)
+    dw Data_093_623C ; frame 0 attribute map
+    dw Map2FScreens4_Y1X0 ; frame 1 tile map
+    dw Map2FAttrs4_Y1X0 ; frame 1 attribute map
 
 ; entry 0 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)

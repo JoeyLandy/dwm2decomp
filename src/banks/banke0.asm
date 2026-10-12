@@ -1940,24 +1940,24 @@ Jump_0E0_4D89:: ; address name
 ; record: 20 x 18 tiles, one row per line
 DebugScreenLayout_E0_4D95::
 Data_0E0_4D95:: ; address name
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0
-    db $B6, $C3, $C3, $80, $81, $82, $01, $C3, $C3, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $C3, $C3, $B7
-    db $B6, $C3, $C3, $8B, $8C, $C3, $C3, $C3, $C3, $ED, $EE, $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $85, $86, $87, $C3, $C3, $88, $89, $8A, $89, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $02, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $03, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $04, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $02, $AF, $01, $01, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $04, $AF, $0B, $0D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; entry 0: row 0
+    db $B6, $C3, $C3, $80, $81, $82, $01, $C3, $C3, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $8B, $8C, $C3, $C3, $C3, $C3, $ED, $EE, $EF, $F0, $F1, $F2, $F3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $85, $86, $87, $C3, $C3, $88, $89, $8A, $89, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $02, $AF, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $03, $AF, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $04, $AF, $C3, $C3, $C3, $C3, $B7 ; row 7
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 9
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
+    db $B6, $C3, $C3, $AF, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
+    db $B6, $C3, $02, $AF, $01, $01, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
+    db $B6, $C3, $04, $AF, $0B, $0D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
+    db $B6, $C3, $C3, $C3, $C3, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $C3, $C3, $C3, $C3, $B7 ; row 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; wC5FF = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wC0A0/1 and reads the tile there into wMenuRowCount (E-0121)
 ; 3 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)

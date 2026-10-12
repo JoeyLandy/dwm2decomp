@@ -8392,26 +8392,36 @@ Data_012_71E8:: ; address name
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
 Data_012_71EE:: ; address name
-    dfar Data_07E_4EF1 ; id 1
-    db $48, $00, $00
-    dfar Data_07E_4D1A ; id 2
-    db $08, $00, $00
-    dfar Data_07E_4D1A ; id 3
-    db $08, $00, $00
-    dfar Data_07E_4D4F ; id 4
-    db $10, $00, $00
-    dfar Data_07E_4D8A ; id 5
-    db $18, $00, $00
-    dfar Data_07E_4DCC ; id 6
-    db $20, $00, $00
-    dfar Data_07E_4E06 ; id 7
-    db $28, $00, $00
-    dfar Data_07E_4E37 ; id 8
-    db $30, $00, $00
-    dfar Data_07E_4E79 ; id 9
-    db $38, $00, $00
-    dfar Data_07E_4EB3 ; id 10
-    db $40, $00, $00
+    dfar Data_07E_4EF1 ; id 1: compressed sprite graphics
+    db $48 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4D1A ; id 2: compressed sprite graphics
+    db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4D1A ; id 3: compressed sprite graphics
+    db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4D4F ; id 4: compressed sprite graphics
+    db $10 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4D8A ; id 5: compressed sprite graphics
+    db $18 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4DCC ; id 6: compressed sprite graphics
+    db $20 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4E06 ; id 7: compressed sprite graphics
+    db $28 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4E37 ; id 8: compressed sprite graphics
+    db $30 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4E79 ; id 9: compressed sprite graphics
+    db $38 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
+    dfar Data_07E_4EB3 ; id 10: compressed sprite graphics
+    db $40 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
+    db $00, $00 ; not read here
 
 ; unless bit 7 of wC468 is set or no trigger is active (wC8FE = $FF), draws the trigger marker sprite (Data_012_7308) at the trigger cell wC8FF (E-0130)
 ; 2 call sites from 2 routines (e.g. RunFunc722AAnd6EB7, FieldModeStateDispatch_Case07)

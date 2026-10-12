@@ -68,7 +68,7 @@ class GeneratedTables(unittest.TestCase):
         for t in CFG:
             f = f"bank{int(t['bank'], 16):02x}.asm"
             self.assertIn(f"{t['label']}::", text[f], t["label"])
-        ids = sum(len(re.findall(r"; id \d+$", text[f"bank{b:02x}.asm"], re.M)) for b in (0x40, 0x41, 0x42, 0x43))
+        ids = sum(len(re.findall(r"; id \d+(:|$)", text[f"bank{b:02x}.asm"], re.M)) for b in (0x40, 0x41, 0x42, 0x43))
         self.assertEqual(ids, sum(t["count"] for t in CFG if t["label"].startswith("SoundRecords_")))
 
     def test_sound_tracks_are_emitted_as_events(self):

@@ -5,62 +5,90 @@ SECTION "Bank 40", ROMX[$4000], BANK[$40]
 ; record: channel-state slot offset (added to $DC00); copied to slot byte +2 (meaning unverified); track stream (stored at slot +3/+4, with this bank at +5)
 SoundRecords_Bank40::
 Data_040_4001:: ; address name
-    db $00, $00 ; id 0
-    dw SoundTrack_40_00
-    db $20, $01 ; id 1
-    dw SoundTrack_40_00
-    db $40, $00 ; id 2
-    dw SoundTrack_40_00
-    db $60, $01 ; id 3
-    dw SoundTrack_40_00
-    db $80, $02 ; id 4
-    dw SoundTrack_40_00
-    db $A0, $03 ; id 5
-    dw SoundTrack_40_00
-    db $40, $00 ; id 6
-    dw SoundTrack_40_06
-    db $60, $01 ; id 7
-    dw SoundTrack_40_07
-    db $80, $02 ; id 8
-    dw SoundTrack_40_08
-    db $40, $00 ; id 9
-    dw SoundTrack_40_09
-    db $60, $01 ; id 10
-    dw SoundTrack_40_0A
-    db $80, $02 ; id 11
-    dw SoundTrack_40_0B
-    db $40, $00 ; id 12
-    dw SoundTrack_40_0C
-    db $60, $01 ; id 13
-    dw SoundTrack_40_0D
-    db $80, $02 ; id 14
-    dw SoundTrack_40_0E
-    db $40, $00 ; id 15
-    dw SoundTrack_40_0F
-    db $60, $01 ; id 16
-    dw SoundTrack_40_10
-    db $80, $02 ; id 17
-    dw SoundTrack_40_11
-    db $A0, $03 ; id 18
-    dw SoundTrack_40_12
-    db $40, $00 ; id 19
-    dw SoundTrack_40_13
-    db $60, $01 ; id 20
-    dw SoundTrack_40_14
-    db $80, $02 ; id 21
-    dw SoundTrack_40_15
-    db $40, $00 ; id 22
-    dw SoundTrack_40_16
-    db $60, $01 ; id 23
-    dw SoundTrack_40_17
-    db $80, $02 ; id 24
-    dw SoundTrack_40_18
-    db $40, $00 ; id 25
-    dw SoundTrack_40_19
-    db $60, $01 ; id 26
-    dw SoundTrack_40_1A
-    db $80, $02 ; id 27
-    dw SoundTrack_40_1B
+    db $00 ; id 0: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $20 ; id 1: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 2: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 3: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 4: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $A0 ; id 5: channel-state slot offset (added to $DC00)
+    db $03 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_00 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 6: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_06 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 7: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_07 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 8: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_08 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 9: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_09 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 10: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0A ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 11: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0B ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 12: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0C ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 13: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0D ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 14: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0E ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 15: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_0F ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 16: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_10 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 17: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_11 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $A0 ; id 18: channel-state slot offset (added to $DC00)
+    db $03 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_12 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 19: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_13 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 20: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_14 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 21: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_15 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 22: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_16 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 23: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_17 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 24: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_18 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $40 ; id 25: channel-state slot offset (added to $DC00)
+    db $00 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_19 ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $60 ; id 26: channel-state slot offset (added to $DC00)
+    db $01 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_1A ; track stream (stored at slot +3/+4, with this bank at +5)
+    db $80 ; id 27: channel-state slot offset (added to $DC00)
+    db $02 ; copied to slot byte +2 (meaning unverified)
+    dw SoundTrack_40_1B ; track stream (stored at slot +3/+4, with this bank at +5)
 
 ; sound track, 1 events after the header (E-0019: grammar C2, meaning C0)
 SoundTrack_40_00:: ; heuristic: track stream of a sound record; C0

@@ -150,624 +150,624 @@ Data_033_405F:: ; address name
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_40C5::
 Data_033_40C5:: ; address name
-    dw $0000 ; entry 0
-    db $08, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $A4, $A5, $A6, $A7, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $08, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $A4, $A5, $A6, $A7, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 13 tiles
 TileRect_33_4111::
 Data_033_4111:: ; address name
-    dw $0008 ; entry 0
-    db $0C, $0D
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $AE, $A8, $AB, $C3, $C3, $ED, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $EE, $A9, $A6, $C3, $C3, $ED, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $AE, $BF, $AC, $C3, $C3, $ED, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A4, $A5, $A8, $C3, $C3, $ED, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $EF, $AC, $EE, $C3, $C3, $ED, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0008 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $0D ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $AE, $A8, $AB, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $EE, $A9, $A6, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $AE, $BF, $AC, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $C3, $A4, $A5, $A8, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
+    db $B6, $C3, $EF, $AC, $EE, $C3, $C3, $ED, $C3, $C3, $C3, $B7 ; row 11
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 12
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0161 (row 11, column 1); 6 x 6 tiles
 TileRect_33_41B1::
 Data_033_41B1:: ; address name
-    dw $0161 ; entry 0
-    db $06, $06
-    db $5C, $5D, $5E, $5F, $60, $61
-    db $62, $63, $64, $65, $66, $67
-    db $68, $69, $6A, $6B, $6C, $6D
-    db $6E, $6F, $70, $71, $72, $73
-    db $74, $75, $76, $77, $78, $79
-    db $7A, $7B, $7C, $7D, $7E, $7F
+    dw $0161 ; entry 0: offset into wScreenTileBuffer
+    db $06, $06 ; width, rows
+    db $5C, $5D, $5E, $5F, $60, $61 ; row 0
+    db $62, $63, $64, $65, $66, $67 ; row 1
+    db $68, $69, $6A, $6B, $6C, $6D ; row 2
+    db $6E, $6F, $70, $71, $72, $73 ; row 3
+    db $74, $75, $76, $77, $78, $79 ; row 4
+    db $7A, $7B, $7C, $7D, $7E, $7F ; row 5
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $01A8 (row 13, column 8); 12 x 5 tiles
 TileRect_33_41D9::
 Data_033_41D9:: ; address name
-    dw $01A8 ; entry 0
-    db $0C, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $F9, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $FB, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $01A8 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F9, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $FB, $FA, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 11 tiles
 TileRect_33_4219::
 Data_033_4219:: ; address name
-    dw $0008 ; entry 0
-    db $0C, $0B
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $EC, $ED, $47, $48, $49, $4A, $4B, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0008 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $0B ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $EC, $EC, $ED, $47, $48, $49, $4A, $4B, $C3, $C3, $B7 ; row 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 10
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
 TileRect_33_42A1::
 Data_033_42A1:: ; address name
-    dw $0160 ; entry 0
-    db $08, $07
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $35, $36, $37, $38, $39, $3A, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    dw $0160 ; entry 0: offset into wScreenTileBuffer
+    db $08, $07 ; width, rows
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 0
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 1
+    db $B6, $35, $36, $37, $38, $39, $3A, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $B7 ; row 4
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 5
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0168 (row 11, column 8); 12 x 7 tiles
 TileRect_33_42DD::
 Data_033_42DD:: ; address name
-    dw $0168 ; entry 0
-    db $0C, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $A5, $CF, $F1, $F2, $C3, $AC, $CF, $F3, $CF, $F4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0168 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $A5, $CF, $F1, $F2, $C3, $AC, $CF, $F3, $CF, $F4, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $FD, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 18 tiles
 TileRect_33_4335::
 Data_033_4335:: ; address name
-    dw $0008 ; entry 0
-    db $0C, $12
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $41, $42, $43, $44, $45, $46, $47, $48, $49, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0008 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $12 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $41, $42, $43, $44, $45, $46, $47, $48, $49, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $B7 ; row 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7 ; row 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
+    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; row 11
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
+    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7 ; row 13
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 14
+    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; row 15
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
 TileRect_33_4411::
 Data_033_4411:: ; address name
-    dw $0160 ; entry 0
-    db $08, $07
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
-    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3
+    dw $0160 ; entry 0: offset into wScreenTileBuffer
+    db $08, $07 ; width, rows
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 0
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 1
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 2
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 3
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 4
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 5
+    db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 18 tiles
 TileRect_33_444D::
 Data_033_444D:: ; address name
-    dw $0008 ; entry 0
-    db $0C, $12
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $F5, $F6, $DF, $CF, $ED, $58, $59, $5A, $5B, $5C, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $5D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $EC, $ED, $67, $68, $69, $6A, $6B, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $EC, $F6, $F2, $CF, $ED, $6C, $6D, $6E, $6F, $70, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $71, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $EC, $ED, $7B, $7C, $7D, $7E, $7F, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0008 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $12 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $F5, $F6, $DF, $CF, $ED, $58, $59, $5A, $5B, $5C, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $5D, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $EC, $EC, $ED, $67, $68, $69, $6A, $6B, $C3, $C3, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 9
+    db $B6, $EC, $F6, $F2, $CF, $ED, $6C, $6D, $6E, $6F, $70, $B7 ; row 10
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
+    db $B6, $71, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
+    db $B6, $72, $73, $74, $75, $76, $77, $78, $79, $7A, $C3, $B7 ; row 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
+    db $B6, $EC, $EC, $ED, $7B, $7C, $7D, $7E, $7F, $C3, $C3, $B7 ; row 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0183 (row 12, column 3); 2 x 4 tiles
 TileRect_33_4529::
 Data_033_4529:: ; address name
-    dw $0183 ; entry 0
-    db $02, $04
-    db $C3, $0F
-    db $11, $10
-    db $12, $10
-    db $C3, $13
+    dw $0183 ; entry 0: offset into wScreenTileBuffer
+    db $02, $04 ; width, rows
+    db $C3, $0F ; row 0
+    db $11, $10 ; row 1
+    db $12, $10 ; row 2
+    db $C3, $13 ; row 3
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 7 x 13 tiles
 TileRect_33_4535::
 Data_033_4535:: ; address name
-    dw $0000 ; entry 0
-    db $07, $0D
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $ED, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5
-    db $C3, $14, $15, $16, $17, $18, $19
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F
-    db $C3, $20, $21, $22, $23, $24, $25
-    db $C3, $26, $27, $28, $29, $2A, $2B
-    db $C3, $2C, $2D, $2E, $2F, $30, $31
-    db $C3, $32, $33, $34, $35, $36, $37
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $07, $0D ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $ED, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $C3, $14, $15, $16, $17, $18, $19 ; row 7
+    db $C3, $1A, $1B, $1C, $1D, $1E, $1F ; row 8
+    db $C3, $20, $21, $22, $23, $24, $25 ; row 9
+    db $C3, $26, $27, $28, $29, $2A, $2B ; row 10
+    db $C3, $2C, $2D, $2E, $2F, $30, $31 ; row 11
+    db $C3, $32, $33, $34, $35, $36, $37 ; row 12
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 13 x 13 tiles
 TileRect_33_4594::
 Data_033_4594:: ; address name
-    dw $0000 ; entry 0
-    db $0D, $0D
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43
-    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49
-    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F
-    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55
-    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $0D, $0D ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D ; row 7
+    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43 ; row 8
+    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49 ; row 9
+    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F ; row 10
+    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55 ; row 11
+    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B ; row 12
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 20 x 13 tiles
 TileRect_33_4641::
 Data_033_4641:: ; address name
-    dw $0000 ; entry 0
-    db $14, $0D
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D, $5C, $5D, $5E, $5F, $60, $61, $C3
-    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43, $62, $63, $64, $65, $66, $67, $C3
-    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49, $68, $69, $6A, $6B, $6C, $6D, $C3
-    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F, $6E, $6F, $70, $71, $72, $73, $C3
-    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55, $74, $75, $76, $77, $78, $79, $C3
-    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B, $7A, $7B, $7C, $7D, $7E, $7F, $C3
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $14, $0D ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
+    db $C3, $14, $15, $16, $17, $18, $19, $38, $39, $3A, $3B, $3C, $3D, $5C, $5D, $5E, $5F, $60, $61, $C3 ; row 7
+    db $C3, $1A, $1B, $1C, $1D, $1E, $1F, $3E, $3F, $40, $41, $42, $43, $62, $63, $64, $65, $66, $67, $C3 ; row 8
+    db $C3, $20, $21, $22, $23, $24, $25, $44, $45, $46, $47, $48, $49, $68, $69, $6A, $6B, $6C, $6D, $C3 ; row 9
+    db $C3, $26, $27, $28, $29, $2A, $2B, $4A, $4B, $4C, $4D, $4E, $4F, $6E, $6F, $70, $71, $72, $73, $C3 ; row 10
+    db $C3, $2C, $2D, $2E, $2F, $30, $31, $50, $51, $52, $53, $54, $55, $74, $75, $76, $77, $78, $79, $C3 ; row 11
+    db $C3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5A, $5B, $7A, $7B, $7C, $7D, $7E, $7F, $C3 ; row 12
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $01A4 (row 13, column 4); 12 x 5 tiles
 TileRect_33_4749::
 Data_033_4749:: ; address name
-    dw $01A4 ; entry 0
-    db $0C, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $C3, $B7
-    db $B6, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $C3, $B7
-    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $01A4 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $C3, $B7 ; row 1
+    db $B6, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $C3, $B7 ; row 2
+    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 6 x 3 tiles
 TileRect_33_4789::
 Data_033_4789:: ; address name
-    dw $0000 ; entry 0
-    db $06, $03
-    db $B0, $B1, $B1, $B1, $B1, $B2
-    db $B6, $A4, $A8, $A9, $EC, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $06, $03 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $A4, $A8, $A9, $EC, $B7 ; row 1
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 2
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0008 (row 0, column 8); 12 x 9 tiles
 TileRect_33_479F::
 Data_033_479F:: ; address name
-    dw $0008 ; entry 0
-    db $0C, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0008 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $65, $66, $67, $68, $69, $6A, $6B, $6C, $6D, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $6E, $6F, $70, $71, $72, $73, $74, $75, $76, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $77, $78, $79, $7A, $7B, $7C, $7D, $7E, $7F, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0140 (row 10, column 0); 20 x 7 tiles
 TileRect_33_480F::
 Data_033_480F:: ; address name
-    dw $0140 ; entry 0
-    db $14, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0140 ; entry 0: offset into wScreenTileBuffer
+    db $14, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0040 (row 2, column 0); 7 x 7 tiles
 TileRect_33_489F::
 Data_033_489F:: ; address name
-    dw $0040 ; entry 0
-    db $07, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $EE, $EF, $F0, $F1, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $F2, $F3, $F5, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $F1, $F4, $F3, $F3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0040 ; entry 0: offset into wScreenTileBuffer
+    db $07, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $EE, $EF, $F0, $F1, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $F2, $F3, $F5, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $F1, $F4, $F3, $F3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0040 (row 2, column 0); 7 x 7 tiles
 TileRect_33_48D4::
 Data_033_48D4:: ; address name
-    dw $0040 ; entry 0
-    db $07, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $EE, $EF, $F0, $F1, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $F2, $F3, $F4, $F5, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $F6, $F7, $F8, $F9, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0040 ; entry 0: offset into wScreenTileBuffer
+    db $07, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $EE, $EF, $F0, $F1, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $F2, $F3, $F4, $F5, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $F6, $F7, $F8, $F9, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0100 (row 8, column 0); 6 x 5 tiles
 TileRect_33_4909::
 Data_033_4909:: ; address name
-    dw $0100 ; entry 0
-    db $06, $05
-    db $B0, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $CE, $CF, $DF, $B7
-    db $B6, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A5, $F4, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B5
+    dw $0100 ; entry 0: offset into wScreenTileBuffer
+    db $06, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
 TileRect_33_492B::
 Data_033_492B:: ; address name
-    dw $01A0 ; entry 0
-    db $14, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $01A0 ; entry 0: offset into wScreenTileBuffer
+    db $14, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4993::
 Data_033_4993:: ; address name
-    dw $0000 ; entry 0
-    db $08, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $EE, $EF, $A7, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $08, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $EE, $EF, $A7, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0120 (row 9, column 0); 14 x 5 tiles
 TileRect_33_49DF::
 Data_033_49DF:: ; address name
-    dw $0120 ; entry 0
-    db $0E, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $0E, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4A29::
 Data_033_4A29:: ; address name
-    dw $0000 ; entry 0
-    db $08, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $AA, $AB, $A4, $AC, $AC, $AA, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $08, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $AA, $AB, $A4, $AC, $AC, $AA, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0120 (row 9, column 0); 20 x 9 tiles
 TileRect_33_4A75::
 Data_033_4A75:: ; address name
-    dw $0120 ; entry 0
-    db $14, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0120 ; entry 0: offset into wScreenTileBuffer
+    db $14, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $B7 ; row 5
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 6
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
 TileRect_33_4B2D::
 Data_033_4B2D:: ; address name
-    dw $0000 ; entry 0
-    db $08, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $F0, $F1, $F2, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $08, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $F0, $F1, $F2, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $D0, $D1, $D2, $D3, $D4, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $D5, $D6, $D7, $D8, $D9, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 13 x 15 tiles
 TileRect_33_4B79::
 Data_033_4B79:: ; address name
-    dw $0000 ; entry 0
-    db $0D, $0F
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $C3, $C3, $AD, $AC, $AE, $A5, $C3, $C3, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $AB, $CF, $FA, $DF, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $AD, $F2, $F0, $F3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A8, $CF, $F9, $F7, $C3, $AA, $F5, $CF, $CF, $F1, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $EE, $CF, $FB, $A7, $F6, $F1, $CF, $F6, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A4, $F3, $FC, $F4, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $EF, $F4, $F8, $F6, $F3, $F0, $F2, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $0D, $0F ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $C3, $C3, $AD, $AC, $AE, $A5, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $AB, $CF, $FA, $DF, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $AD, $F2, $F0, $F3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $A8, $CF, $F9, $F7, $C3, $AA, $F5, $CF, $CF, $F1, $B7 ; row 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $C3, $EE, $CF, $FB, $A7, $F6, $F1, $CF, $F6, $C3, $C3, $B7 ; row 9
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
+    db $B6, $C3, $A4, $F3, $FC, $F4, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 12
+    db $B6, $C3, $EF, $F4, $F8, $F6, $F3, $F0, $F2, $C3, $C3, $C3, $B7 ; row 13
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 14
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0006 (row 0, column 6); 14 x 7 tiles
 TileRect_33_4C40::
 Data_033_4C40:: ; address name
-    dw $0006 ; entry 0
-    db $0E, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $35, $36, $37, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0006 ; entry 0: offset into wScreenTileBuffer
+    db $0E, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2A, $2B, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $2C, $2D, $2E, $2F, $30, $31, $32, $33, $34, $35, $36, $37, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $38, $39, $3A, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0125 (row 9, column 5); 15 x 9 tiles
 TileRect_33_4CA6::
 Data_033_4CA6:: ; address name
-    dw $0125 ; entry 0
-    db $0F, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $68, $69, $6A, $6B, $6C, $6D, $6E, $6F, $70, $71, $72, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0125 ; entry 0: offset into wScreenTileBuffer
+    db $0F, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $C3, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $C3, $5C, $5D, $5E, $5F, $60, $61, $62, $63, $64, $65, $66, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $C3, $68, $69, $6A, $6B, $6C, $6D, $6E, $6F, $70, $71, $72, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 7 x 7 tiles
 TileRect_33_4D31::
 Data_033_4D31:: ; address name
-    dw $0000 ; entry 0
-    db $07, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $FD, $02, $FE, $FF, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C3, $00, $DF, $CF, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $FF, $F4, $DF, $DF, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $07, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $FD, $02, $FE, $FF, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C3, $00, $DF, $CF, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $FF, $F4, $DF, $DF, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $00E0 (row 7, column 0); 6 x 5 tiles
 TileRect_33_4D66::
 Data_033_4D66:: ; address name
-    dw $00E0 ; entry 0
-    db $06, $05
-    db $B0, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $CE, $CF, $DF, $B7
-    db $B6, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A5, $F4, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B5
+    dw $00E0 ; entry 0: offset into wScreenTileBuffer
+    db $06, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $00CD (row 6, column 13); 7 x 3 tiles
 TileRect_33_4D88::
 Data_033_4D88:: ; address name
-    dw $00CD ; entry 0
-    db $07, $03
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $00CD ; entry 0: offset into wScreenTileBuffer
+    db $07, $03 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $B7 ; row 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; row 2
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0129 (row 9, column 9); 11 x 9 tiles
 TileRect_33_4DA1::
 Data_033_4DA1:: ; address name
-    dw $0129 ; entry 0
-    db $0B, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $01, $0A, $F0, $F6, $07, $CF, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $04, $08, $F9, $CF, $F1, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $05, $CF, $FC, $CF, $F3, $06, $CF, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $01, $F4, $09, $09, $F0, $F3, $F1, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0129 ; entry 0: offset into wScreenTileBuffer
+    db $0B, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $01, $0A, $F0, $F6, $07, $CF, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $04, $08, $F9, $CF, $F1, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $05, $CF, $FC, $CF, $F3, $06, $CF, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $01, $F4, $09, $09, $F0, $F3, $F1, $C3, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0042 (row 2, column 2); 18 x 7 tiles
 TileRect_33_4E08::
 Data_033_4E08:: ; address name
-    dw $0042 ; entry 0
-    db $12, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0042 ; entry 0: offset into wScreenTileBuffer
+    db $12, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7, $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0128 (row 9, column 8); 12 x 9 tiles
 TileRect_33_4E8A::
 Data_033_4E8A:: ; address name
-    dw $0128 ; entry 0
-    db $0C, $09
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $CC, $EA, $ED, $C3, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $C7, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $02, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $04, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0128 ; entry 0: offset into wScreenTileBuffer
+    db $0C, $09 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $CC, $EA, $ED, $C3, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $C7, $20, $21, $22, $23, $24, $25, $26, $27, $28, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $02, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $04, $03, $ED, $C3, $C3, $C3, $BE, $C3, $C3, $C3, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0020 (row 1, column 0); 20 x 11 tiles
 TileRect_33_4EFA::
 Data_033_4EFA:: ; address name
-    dw $0020 ; entry 0
-    db $14, $0B
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $05, $06, $07, $08, $09, $0A, $ED, $20, $21, $22, $23, $24, $C3, $C3, $C3, $ED, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $25, $26, $27, $28, $29, $2A, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $37, $38, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $39, $3A, $C3, $C3, $B7
-    db $B6, $2B, $2C, $2D, $2E, $2F, $30, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $31, $32, $33, $34, $35, $36, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $47, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0020 ; entry 0: offset into wScreenTileBuffer
+    db $14, $0B ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $05, $06, $07, $08, $09, $0A, $ED, $20, $21, $22, $23, $24, $C3, $C3, $C3, $ED, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $25, $26, $27, $28, $29, $2A, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $37, $38, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $39, $3A, $C3, $C3, $B7 ; row 4
+    db $B6, $2B, $2C, $2D, $2E, $2F, $30, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $31, $32, $33, $34, $35, $36, $C3, $EA, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 8
+    db $B6, $3B, $3C, $3D, $3E, $3F, $40, $41, $42, $43, $44, $45, $46, $47, $C3, $C3, $C3, $C3, $C3, $B7 ; row 9
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 10
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $010E (row 8, column 14); 6 x 5 tiles
 TileRect_33_4FDA::
 Data_033_4FDA:: ; address name
-    dw $010E ; entry 0
-    db $06, $05
-    db $B0, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $CE, $CF, $DF, $B7
-    db $B6, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $A5, $F4, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B5
+    dw $010E ; entry 0: offset into wScreenTileBuffer
+    db $06, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $A5, $F4, $C3, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0121 (row 9, column 1); 18 x 5 tiles
 TileRect_33_4FFC::
 Data_033_4FFC:: ; address name
-    dw $0121 ; entry 0
-    db $12, $05
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $A6, $F0, $DF, $F7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $AA, $F2, $F4, $0B, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $E1, $C3, $E2, $C3, $E3, $C3, $E4, $C3, $E5, $C3, $E6, $C3, $E7, $C3, $E8, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0121 ; entry 0: offset into wScreenTileBuffer
+    db $12, $05 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $A6, $F0, $DF, $F7, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $AA, $F2, $F4, $0B, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $E1, $C3, $E2, $C3, $E3, $C3, $E4, $C3, $E5, $C3, $E6, $C3, $E7, $C3, $E8, $B7 ; row 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
 
 ; E-0232 (C1: a record of ScreenBlockTable).
 ; record: offset $0000 (row 0, column 0); 20 x 18 tiles
 TileRect_33_505A::
 Data_033_505A:: ; address name
-    dw $0000 ; entry 0
-    db $14, $12
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $04, $F0, $DF, $F7, $CF, $F6, $ED, $30, $31, $32, $33, $34, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $A8, $13, $14, $CF, $ED, $C3, $C3, $C3, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $A6, $F0, $F6, $14, $ED, $04, $A7, $A5, $C3, $C3, $C3, $A9, $BF, $BF, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $AA, $F2, $CF, $CF, $F5, $ED, $04, $A7, $A5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $C3, $C3, $01, $F0, $F7, $CF, $12, $F4, $F6, $13, $CF, $DF, $ED, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $20, $C3, $C3, $C3, $21, $C3, $C3, $C3, $22, $C3, $C3, $C3, $23, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $24, $C3, $C3, $C3, $25, $C3, $C3, $C3, $26, $C3, $C3, $C3, $27, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $C3, $28, $C3, $C3, $C3, $29, $C3, $C3, $C3, $2A, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $14, $12 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $04, $F0, $DF, $F7, $CF, $F6, $ED, $30, $31, $32, $33, $34, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 2
+    db $B6, $C3, $C3, $A8, $13, $14, $CF, $ED, $C3, $C3, $C3, $ED, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $C3, $C3, $A6, $F0, $F6, $14, $ED, $04, $A7, $A5, $C3, $C3, $C3, $A9, $BF, $BF, $C3, $C3, $B7 ; row 5
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 6
+    db $B6, $C3, $AA, $F2, $CF, $CF, $F5, $ED, $04, $A7, $A5, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 7
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 8
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 9
+    db $B6, $C3, $C3, $01, $F0, $F7, $CF, $12, $F4, $F6, $13, $CF, $DF, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; row 10
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 11
+    db $B6, $C3, $20, $C3, $C3, $C3, $21, $C3, $C3, $C3, $22, $C3, $C3, $C3, $23, $C3, $C3, $C3, $C3, $B7 ; row 12
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 13
+    db $B6, $C3, $24, $C3, $C3, $C3, $25, $C3, $C3, $C3, $26, $C3, $C3, $C3, $27, $C3, $C3, $C3, $C3, $B7 ; row 14
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 15
+    db $B6, $C3, $28, $C3, $C3, $C3, $29, $C3, $C3, $C3, $2A, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 16
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; only called from GameMode5_Update_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case05)

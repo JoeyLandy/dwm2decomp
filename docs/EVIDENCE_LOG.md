@@ -2441,6 +2441,9 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - HP, max HP, MP and max MP at $5B-$62 (E-0122); personality axes $6F-$72 (E-0034); equipped item $A4 (E-0125).
   - The other bytes keep their offsets as names.
 - **Tool.** A table marked `"field_comments": true` prints each field on its own line, ending with the field's name (after the id tag on the first). This is turned on for the monster records, SpeciesRecords, CartridgeHeader, KeyListMapDestinationTable and MapExitWarpTable.
+- **Default.** Field comments are now on by default for any table, configured or derived, with 32 records or fewer and three or more distinctly named fields; the far-pointer bank bytes are ignored in that check. This covers map records ("tileset", "palettes", "variant 0 screens" ...), sound bank and record tables, key-world tilesets and area layouts, among others. Pointer lines (`dw`/`dfar`) carry the comment too.
+  - Three tests that pinned exact lines now accept a trailing comment.
+  - build/run340 PASS, 0 differing bytes; tests OK.
 - Binary verification: build/run339 PASS, 0 differing bytes; tests OK.
 
 ### E-0261 — Bank $1C item name copy; a target-naming table option

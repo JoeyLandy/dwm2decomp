@@ -10836,14 +10836,14 @@ Jump_000_3DFB::
 ; record: first sound id of this range; record array in that bank; ROM bank holding the records and tracks
 SoundBankTable::
 Data_000_3E13:: ; address name
-    db $00 ; entry 0
-    dfar SoundRecords_Bank40
-    db $1C ; entry 1
-    dfar SoundRecords_Bank41
-    db $31 ; entry 2
-    dfar SoundRecords_Bank42
-    db $A8 ; entry 3
-    dfar SoundRecords_Bank43
+    db $00 ; entry 0: first sound id of this range
+    dfar SoundRecords_Bank40 ; record array in that bank
+    db $1C ; entry 1: first sound id of this range
+    dfar SoundRecords_Bank41 ; record array in that bank
+    db $31 ; entry 2: first sound id of this range
+    dfar SoundRecords_Bank42 ; record array in that bank
+    db $A8 ; entry 3: first sound id of this range
+    dfar SoundRecords_Bank43 ; record array in that bank
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)

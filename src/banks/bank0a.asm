@@ -3805,57 +3805,57 @@ Data_00A_5773:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_57F3::
 Data_00A_57F3:: ; address name
-    db $01 ; entry 0
-    db $07, $03, $07, $00, $00, $00
-    dw $0002, $0003
+    db $01 ; entry 0: wEncounterKind + 1
+    db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_57FE::
 Data_00A_57FE:: ; address name
-    db $01 ; entry 0
-    db $0B, $04, $08, $0B, $00, $00
-    dw $0002, $0003, $0005
+    db $01 ; entry 0: wEncounterKind + 1
+    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0005 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_580B::
 Data_00A_580B:: ; address name
-    db $01 ; entry 0
-    db $0C, $05, $0A, $0C, $00, $00
-    dw $0002, $0003, $0004
+    db $01 ; entry 0: wEncounterKind + 1
+    db $0C, $05, $0A, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0004 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5818::
 Data_00A_5818:: ; address name
-    db $01 ; entry 0
-    db $10, $05, $0A, $0C, $10, $00
-    dw $0002, $0003, $0004, $0005
+    db $01 ; entry 0: wEncounterKind + 1
+    db $10, $05, $0A, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0004, $0005 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5827::
 Data_00A_5827:: ; address name
-    db $02 ; entry 0
-    db $0D, $02, $04, $09, $0D, $00
-    dw $0002, $0003, $0005, $0006
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0D, $02, $04, $09, $0D, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0005, $0006 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5836::
 Data_00A_5836:: ; address name
-    db $02 ; entry 0
-    db $0E, $02, $04, $09, $0E, $00
-    dw $0002, $0003, $0005, $0004
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0E, $02, $04, $09, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0005, $0004 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5845::
 Data_00A_5845:: ; address name
-    db $02 ; entry 0
-    db $14, $02, $04, $09, $0E, $14
-    dw $0002, $0003, $0005, $0004, $0006
+    db $02 ; entry 0: wEncounterKind + 1
+    db $14, $02, $04, $09, $0E, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003, $0005, $0004, $0006 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -3882,25 +3882,25 @@ Data_00A_5856:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5876::
 Data_00A_5876:: ; address name
-    db $02 ; entry 0
-    db $08, $04, $08, $00, $00, $00
-    dw $0180, $0181
+    db $02 ; entry 0: wEncounterKind + 1
+    db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0180, $0181 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5881::
 Data_00A_5881:: ; address name
-    db $02 ; entry 0
-    db $0B, $03, $06, $0B, $00, $00
-    dw $0180, $0181, $0184
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0B, $03, $06, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0180, $0181, $0184 ; encounter words
 
 ; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_588E::
 Data_00A_588E:: ; address name
-    db $02 ; entry 0
-    db $0C, $05, $0A, $0C, $00, $00
-    dw $0180, $0181, $0186
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0C, $05, $0A, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0180, $0181, $0186 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group).
 ; record: one screen, row by row (8 per row): its encounter group
@@ -3975,153 +3975,153 @@ Data_00A_589B:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_591B::
 Data_00A_591B:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $0009, $000A, $000C
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000A, $000C ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5928::
 Data_00A_5928:: ; address name
-    db $03 ; entry 0
-    db $12, $03, $07, $0B, $0F, $12
-    dw $0009, $000A, $000B, $000C, $0010
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $03, $07, $0B, $0F, $12 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000A, $000B, $000C, $0010 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5939::
 Data_00A_5939:: ; address name
-    db $03 ; entry 0
-    db $12, $03, $07, $0B, $10, $12
-    dw $0009, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $03, $07, $0B, $10, $12 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_594A::
 Data_00A_594A:: ; address name
-    db $03 ; entry 0
-    db $17, $05, $0A, $0D, $12, $17
-    dw $0277, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $17, $05, $0A, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $0277, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_595B::
 Data_00A_595B:: ; address name
-    db $03 ; entry 0
-    db $0F, $03, $06, $0A, $0F, $00
-    dw $018B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0F, $03, $06, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_596A::
 Data_00A_596A:: ; address name
-    db $03 ; entry 0
-    db $15, $05, $08, $0D, $12, $15
-    dw $018B, $0014, $0010, $0011, $0012
+    db $03 ; entry 0: wEncounterKind + 1
+    db $15, $05, $08, $0D, $12, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $018B, $0014, $0010, $0011, $0012 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_597B::
 Data_00A_597B:: ; address name
-    db $03 ; entry 0
-    db $10, $03, $07, $0C, $10, $00
-    dw $0014, $0187, $0188, $0012
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $03, $07, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0014, $0187, $0188, $0012 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_598A::
 Data_00A_598A:: ; address name
-    db $03 ; entry 0
-    db $16, $05, $0A, $0C, $11, $16
-    dw $0014, $0187, $000F, $0188, $0012
+    db $03 ; entry 0: wEncounterKind + 1
+    db $16, $05, $0A, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $0014, $0187, $000F, $0188, $0012 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_599B::
 Data_00A_599B:: ; address name
-    db $03 ; entry 0
-    db $17, $03, $08, $0D, $12, $17
-    dw $0013, $0014, $0187, $0188, $0012
+    db $03 ; entry 0: wEncounterKind + 1
+    db $17, $03, $08, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $0013, $0014, $0187, $0188, $0012 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59AC::
 Data_00A_59AC:: ; address name
-    db $03 ; entry 0
-    db $14, $03, $07, $0C, $0F, $14
-    dw $018D, $0187, $0189, $0188, $018A
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $03, $07, $0C, $0F, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $018D, $0187, $0189, $0188, $018A ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_59BD::
 Data_00A_59BD:: ; address name
-    db $03 ; entry 0
-    db $0E, $04, $09, $0E, $00, $00
-    dw $018B, $0189, $018A
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018B, $0189, $018A ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_59CA::
 Data_00A_59CA:: ; address name
-    db $03 ; entry 0
-    db $0E, $04, $09, $0E, $00, $00
-    dw $018D, $018C, $018E
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018D, $018C, $018E ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_59D7::
 Data_00A_59D7:: ; address name
-    db $03 ; entry 0
-    db $0E, $05, $0A, $0C, $0E, $00
-    dw $0009, $000B, $0189, $018A
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $05, $0A, $0C, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $0189, $018A ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59E6::
 Data_00A_59E6:: ; address name
-    db $03 ; entry 0
-    db $10, $01, $03, $04, $0A, $10
-    dw $0277, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $01, $03, $04, $0A, $10 ; limit for the random 0-127, then rising slot thresholds
+    dw $0277, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_59F7::
 Data_00A_59F7:: ; address name
-    db $03 ; entry 0
-    db $13, $02, $03, $04, $0C, $13
-    dw $0009, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $02, $03, $04, $0C, $13 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A08::
 Data_00A_5A08:: ; address name
-    db $03 ; entry 0
-    db $13, $01, $03, $04, $0B, $13
-    dw $0009, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $01, $03, $04, $0B, $13 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A19::
 Data_00A_5A19:: ; address name
-    db $03 ; entry 0
-    db $13, $01, $03, $05, $0A, $13
-    dw $0009, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $01, $03, $05, $0A, $13 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A2A::
 Data_00A_5A2A:: ; address name
-    db $03 ; entry 0
-    db $10, $01, $03, $05, $07, $10
-    dw $0009, $000B, $000C, $0010, $0011
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $01, $03, $05, $07, $10 ; limit for the random 0-127, then rising slot thresholds
+    dw $0009, $000B, $000C, $0010, $0011 ; encounter words
 
 ; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5A3B::
 Data_00A_5A3B:: ; address name
-    db $03 ; entry 0
-    db $12, $04, $08, $0B, $0E, $12
-    dw $001D, $001F, $0018, $0020, $0021
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $04, $08, $0B, $0E, $12 ; limit for the random 0-127, then rising slot thresholds
+    dw $001D, $001F, $0018, $0020, $0021 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -4148,17 +4148,17 @@ Data_00A_5A4C:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5A6C::
 Data_00A_5A6C:: ; address name
-    db $03 ; entry 0
-    db $0F, $03, $05, $0A, $0F, $00
-    dw $0022, $0015, $0017, $0018
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0022, $0015, $0017, $0018 ; encounter words
 
 ; E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5A7B::
 Data_00A_5A7B:: ; address name
-    db $02 ; entry 0
-    db $0F, $03, $05, $0A, $0F, $00
-    dw $0022, $0015, $0017, $0018
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0022, $0015, $0017, $0018 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -4185,9 +4185,9 @@ Data_00A_5A8A:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5AAA::
 Data_00A_5AAA:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $0024, $0025, $0027
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0024, $0025, $0027 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -4210,9 +4210,9 @@ Data_00A_5AB7:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5ACF::
 Data_00A_5ACF:: ; address name
-    db $03 ; entry 0
-    db $12, $03, $08, $0D, $12, $00
-    dw $0023, $0024, $0025, $0027
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $03, $08, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0023, $0024, $0025, $0027 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -4232,9 +4232,9 @@ Data_00A_5ADE:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5AF0::
 Data_00A_5AF0:: ; address name
-    db $03 ; entry 0
-    db $0F, $03, $05, $0A, $0F, $00
-    dw $018D, $0023, $0019, $001E
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0F, $03, $05, $0A, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $018D, $0023, $0019, $001E ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -4249,9 +4249,9 @@ Data_00A_5AFF:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B07::
 Data_00A_5B07:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $0013, $0026, $0016
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0013, $0026, $0016 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -4266,9 +4266,9 @@ Data_00A_5B14:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B1C::
 Data_00A_5B1C:: ; address name
-    db $03 ; entry 0
-    db $0A, $02, $06, $0A, $00, $00
-    dw $000F, $0012, $0016
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $02, $06, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $000F, $0012, $0016 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -4282,17 +4282,17 @@ Data_00A_5B29:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5B2F::
 Data_00A_5B2F:: ; address name
-    db $02 ; entry 0
-    db $08, $04, $08, $00, $00, $00
-    dw $0026, $000E
+    db $02 ; entry 0: wEncounterKind + 1
+    db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0026, $000E ; encounter words
 
 ; E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5B3A::
 Data_00A_5B3A:: ; address name
-    db $02 ; entry 0
-    db $08, $04, $08, $00, $00, $00
-    dw $0026, $000E
+    db $02 ; entry 0: wEncounterKind + 1
+    db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0026, $000E ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -4306,9 +4306,9 @@ Data_00A_5B45:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B4B::
 Data_00A_5B4B:: ; address name
-    db $02 ; entry 0
-    db $0B, $04, $08, $0B, $00, $00
-    dw $0026, $000E, $000D
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0026, $000E, $000D ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -4322,9 +4322,9 @@ Data_00A_5B58:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5B5E::
 Data_00A_5B5E:: ; address name
-    db $03 ; entry 0
-    db $0B, $04, $08, $0B, $00, $00
-    dw $0026, $000E, $000D
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0B, $04, $08, $0B, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0026, $000E, $000D ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group).
 ; record: one screen, row by row (12 per row): its encounter group
@@ -4480,113 +4480,113 @@ Data_00A_5C5B:: ; heuristic: label inside a table; C0
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5C8B::
 Data_00A_5C8B:: ; address name
-    db $01 ; entry 0
-    db $07, $03, $07, $00, $00, $00
-    dw $0002, $0003
+    db $01 ; entry 0: wEncounterKind + 1
+    db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5C96::
 Data_00A_5C96:: ; address name
-    db $03 ; entry 0
-    db $0E, $04, $09, $0E, $00, $00
-    dw $0036, $003C, $0191
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $04, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0036, $003C, $0191 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5CA3::
 Data_00A_5CA3:: ; address name
-    db $03 ; entry 0
-    db $15, $04, $09, $0E, $11, $15
-    dw $0038, $002B, $003B, $0036, $003C
+    db $03 ; entry 0: wEncounterKind + 1
+    db $15, $04, $09, $0E, $11, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $0038, $002B, $003B, $0036, $003C ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CB4::
 Data_00A_5CB4:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $09, $0D, $12, $00
-    dw $002A, $002B, $003B, $0036
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $09, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002A, $002B, $003B, $0036 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CC3::
 Data_00A_5CC3:: ; address name
-    db $03 ; entry 0
-    db $12, $04, $08, $0D, $12, $00
-    dw $002B, $003B, $0036, $0191
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $04, $08, $0D, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002B, $003B, $0036, $0191 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5CD2::
 Data_00A_5CD2:: ; address name
-    db $03 ; entry 0
-    db $0C, $02, $07, $0C, $00, $00
-    dw $0040, $0036, $0191
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $02, $07, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0040, $0036, $0191 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CDF::
 Data_00A_5CDF:: ; address name
-    db $03 ; entry 0
-    db $10, $04, $09, $0D, $10, $00
-    dw $002A, $002D, $0036, $0034
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $04, $09, $0D, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002A, $002D, $0036, $0034 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5CEE::
 Data_00A_5CEE:: ; address name
-    db $03 ; entry 0
-    db $12, $04, $09, $0E, $12, $00
-    dw $0028, $002D, $0034, $003E
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $04, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0028, $002D, $0034, $003E ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5CFD::
 Data_00A_5CFD:: ; address name
-    db $03 ; entry 0
-    db $15, $03, $07, $0D, $11, $15
-    dw $0028, $002D, $0038, $003B, $003E
+    db $03 ; entry 0: wEncounterKind + 1
+    db $15, $03, $07, $0D, $11, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $0028, $002D, $0038, $003B, $003E ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D0E::
 Data_00A_5D0E:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $0A, $0E, $12, $00
-    dw $002C, $0037, $0034, $003E
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $0A, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002C, $0037, $0034, $003E ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5D1D::
 Data_00A_5D1D:: ; address name
-    db $03 ; entry 0
-    db $15, $04, $07, $0B, $10, $15
-    dw $0029, $0033, $0037, $0039, $0192
+    db $03 ; entry 0: wEncounterKind + 1
+    db $15, $04, $07, $0B, $10, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $0029, $0033, $0037, $0039, $0192 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D2E::
 Data_00A_5D2E:: ; address name
-    db $03 ; entry 0
-    db $11, $03, $08, $0D, $11, $00
-    dw $0033, $003A, $003D, $0192
+    db $03 ; entry 0: wEncounterKind + 1
+    db $11, $03, $08, $0D, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0033, $003A, $003D, $0192 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5D3D::
 Data_00A_5D3D:: ; address name
-    db $03 ; entry 0
-    db $15, $05, $0A, $0E, $12, $15
-    dw $003F, $0040, $0037, $0029, $0033
+    db $03 ; entry 0: wEncounterKind + 1
+    db $15, $05, $0A, $0E, $12, $15 ; limit for the random 0-127, then rising slot thresholds
+    dw $003F, $0040, $0037, $0029, $0033 ; encounter words
 
 ; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D4E::
 Data_00A_5D4E:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $0A, $0F, $12, $00
-    dw $0040, $0193, $0194, $0195
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $0A, $0F, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0040, $0193, $0194, $0195 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -4613,17 +4613,17 @@ Data_00A_5D5D:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D7D::
 Data_00A_5D7D:: ; address name
-    db $03 ; entry 0
-    db $13, $04, $09, $0E, $13, $00
-    dw $002E, $002F, $0030, $0031
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $04, $09, $0E, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002E, $002F, $0030, $0031 ; encounter words
 
 ; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5D8C::
 Data_00A_5D8C:: ; address name
-    db $03 ; entry 0
-    db $13, $04, $09, $0E, $13, $00
-    dw $002E, $002F, $0030, $0031
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $04, $09, $0E, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $002E, $002F, $0030, $0031 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -4650,9 +4650,9 @@ Data_00A_5D9B:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5DBB::
 Data_00A_5DBB:: ; address name
-    db $03 ; entry 0
-    db $10, $04, $08, $0C, $10, $00
-    dw $0041, $0196, $0197, $0035
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $04, $08, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0041, $0196, $0197, $0035 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 8 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -4671,9 +4671,9 @@ Data_00A_5DCA:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5DDA::
 Data_00A_5DDA:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $0042, $0043, $0198
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0042, $0043, $0198 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -4706,9 +4706,9 @@ Data_00A_5DF7:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5DFF::
 Data_00A_5DFF:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $09, $0C, $00, $00
-    dw $019E, $019F, $01A0
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $09, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $019E, $019F, $01A0 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -4732,9 +4732,9 @@ Data_00A_5E14:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5E1C::
 Data_00A_5E1C:: ; address name
-    db $03 ; entry 0
-    db $0E, $01, $05, $0A, $0E, $00
-    dw $019D, $019E, $019F, $01A0
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $01, $05, $0A, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $019D, $019E, $019F, $01A0 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group).
 ; record: one screen, row by row (12 per row): its encounter group
@@ -4890,121 +4890,121 @@ Data_00A_5E5D:: ; heuristic: label inside a table; C0
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_5F4B::
 Data_00A_5F4B:: ; address name
-    db $01 ; entry 0
-    db $07, $03, $07, $00, $00, $00
-    dw $0002, $0003
+    db $01 ; entry 0: wEncounterKind + 1
+    db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0002, $0003 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5F56::
 Data_00A_5F56:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $0048, $0049, $0045
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0048, $0049, $0045 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F63::
 Data_00A_5F63:: ; address name
-    db $03 ; entry 0
-    db $10, $04, $08, $0C, $10, $00
-    dw $0056, $01A7, $004A, $0047
+    db $03 ; entry 0: wEncounterKind + 1
+    db $10, $04, $08, $0C, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0056, $01A7, $004A, $0047 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5F72::
 Data_00A_5F72:: ; address name
-    db $03 ; entry 0
-    db $17, $05, $0A, $0F, $14, $17
-    dw $0056, $01A7, $004A, $0047, $0055
+    db $03 ; entry 0: wEncounterKind + 1
+    db $17, $05, $0A, $0F, $14, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $0056, $01A7, $004A, $0047, $0055 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F83::
 Data_00A_5F83:: ; address name
-    db $03 ; entry 0
-    db $13, $06, $0C, $12, $13, $00
-    dw $0056, $004A, $0052, $0058
+    db $03 ; entry 0: wEncounterKind + 1
+    db $13, $06, $0C, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0056, $004A, $0052, $0058 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5F92::
 Data_00A_5F92:: ; address name
-    db $03 ; entry 0
-    db $14, $06, $0C, $12, $14, $00
-    dw $005E, $01A9, $0052, $0058
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $06, $0C, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005E, $01A9, $0052, $0058 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FA1::
 Data_00A_5FA1:: ; address name
-    db $02 ; entry 0
-    db $10, $03, $06, $0B, $10, $00
-    dw $005E, $01A9, $01A8, $004D
+    db $02 ; entry 0: wEncounterKind + 1
+    db $10, $03, $06, $0B, $10, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005E, $01A9, $01A8, $004D ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FB0::
 Data_00A_5FB0:: ; address name
-    db $02 ; entry 0
-    db $13, $06, $0C, $12, $13, $00
-    dw $01A8, $005C, $004D, $0053
+    db $02 ; entry 0: wEncounterKind + 1
+    db $13, $06, $0C, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01A8, $005C, $004D, $0053 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FBF::
 Data_00A_5FBF:: ; address name
-    db $02 ; entry 0
-    db $14, $06, $0C, $12, $14, $00
-    dw $01A8, $005C, $004D, $0058
+    db $02 ; entry 0: wEncounterKind + 1
+    db $14, $06, $0C, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01A8, $005C, $004D, $0058 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_5FCE::
 Data_00A_5FCE:: ; address name
-    db $03 ; entry 0
-    db $16, $04, $09, $0E, $13, $16
-    dw $0055, $005D, $004D, $005C, $01A8
+    db $03 ; entry 0: wEncounterKind + 1
+    db $16, $04, $09, $0E, $13, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $0055, $005D, $004D, $005C, $01A8 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FDF::
 Data_00A_5FDF:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $0A, $0E, $12, $00
-    dw $01AA, $006F, $0059, $0062
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $0A, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01AA, $006F, $0059, $0062 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_5FEE::
 Data_00A_5FEE:: ; address name
-    db $02 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $006E, $004C, $0068
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $006E, $004C, $0068 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_5FFB::
 Data_00A_5FFB:: ; address name
-    db $03 ; entry 0
-    db $14, $06, $09, $0E, $14, $00
-    dw $005B, $0065, $0054, $0046
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $06, $09, $0E, $14, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005B, $0065, $0054, $0046 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_600A::
 Data_00A_600A:: ; address name
-    db $03 ; entry 0
-    db $0F, $03, $08, $0D, $0F, $00
-    dw $0065, $0046, $0054, $0058
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0F, $03, $08, $0D, $0F, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0065, $0046, $0054, $0058 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6019::
 Data_00A_6019:: ; address name
-    db $02 ; entry 0
-    db $0D, $02, $03, $0A, $0D, $00
-    dw $0058, $004B, $0051, $01AD
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0D, $02, $03, $0A, $0D, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0058, $004B, $0051, $01AD ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5019,9 +5019,9 @@ Data_00A_6028:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6030::
 Data_00A_6030:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $004E, $004F, $0050
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $004E, $004F, $0050 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5036,9 +5036,9 @@ Data_00A_603D:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6045::
 Data_00A_6045:: ; address name
-    db $03 ; entry 0
-    db $0C, $04, $08, $0C, $00, $00
-    dw $004E, $004F, $0050
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0C, $04, $08, $0C, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $004E, $004F, $0050 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5053,9 +5053,9 @@ Data_00A_6052:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_605A::
 Data_00A_605A:: ; address name
-    db $03 ; entry 0
-    db $16, $04, $08, $0C, $11, $16
-    dw $004E, $004F, $0050, $0057, $0066
+    db $03 ; entry 0: wEncounterKind + 1
+    db $16, $04, $08, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $004E, $004F, $0050, $0057, $0066 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5070,9 +5070,9 @@ Data_00A_606B:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_6073::
 Data_00A_6073:: ; address name
-    db $03 ; entry 0
-    db $16, $04, $08, $0C, $11, $16
-    dw $004E, $004F, $0050, $0051, $0057
+    db $03 ; entry 0: wEncounterKind + 1
+    db $16, $04, $08, $0C, $11, $16 ; limit for the random 0-127, then rising slot thresholds
+    dw $004E, $004F, $0050, $0051, $0057 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group).
 ; record: one screen, row by row (1 per row): its encounter group
@@ -5084,9 +5084,9 @@ Data_00A_6084:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_6086::
 Data_00A_6086:: ; address name
-    db $03 ; entry 0
-    db $14, $04, $08, $0C, $10, $14
-    dw $01A1, $01A2, $01A3, $01A4, $01A5
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01A1, $01A2, $01A3, $01A4, $01A5 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5106,9 +5106,9 @@ Data_00A_6097:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_60A9::
 Data_00A_60A9:: ; address name
-    db $03 ; entry 0
-    db $14, $04, $08, $0C, $10, $14
-    dw $01A1, $01A2, $01A3, $01A4, $01A5
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01A1, $01A2, $01A3, $01A4, $01A5 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5128,9 +5128,9 @@ Data_00A_60BA:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_60CC::
 Data_00A_60CC:: ; address name
-    db $03 ; entry 0
-    db $14, $04, $08, $0C, $10, $14
-    dw $01A1, $01A2, $01A3, $01A4, $01A5
+    db $03 ; entry 0: wEncounterKind + 1
+    db $14, $04, $08, $0C, $10, $14 ; limit for the random 0-127, then rising slot thresholds
+    dw $01A1, $01A2, $01A3, $01A4, $01A5 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5145,9 +5145,9 @@ Data_00A_60DD:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_60E5::
 Data_00A_60E5:: ; address name
-    db $03 ; entry 0
-    db $0E, $05, $09, $0E, $00, $00
-    dw $005F, $0068, $0069
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $05, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005F, $0068, $0069 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5162,9 +5162,9 @@ Data_00A_60F2:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_60FA::
 Data_00A_60FA:: ; address name
-    db $03 ; entry 0
-    db $0E, $05, $09, $0E, $00, $00
-    dw $005F, $0068, $0069
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $05, $09, $0E, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005F, $0068, $0069 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5179,9 +5179,9 @@ Data_00A_6107:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_610F::
 Data_00A_610F:: ; address name
-    db $03 ; entry 0
-    db $17, $04, $09, $0D, $12, $17
-    dw $005F, $0067, $0068, $0069, $006A
+    db $03 ; entry 0: wEncounterKind + 1
+    db $17, $04, $09, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $005F, $0067, $0068, $0069, $006A ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5196,9 +5196,9 @@ Data_00A_6120:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
 EncounterGroup_6128::
 Data_00A_6128:: ; address name
-    db $03 ; entry 0
-    db $17, $04, $09, $0D, $12, $17
-    dw $005F, $0067, $0068, $0069, $006A
+    db $03 ; entry 0: wEncounterKind + 1
+    db $17, $04, $09, $0D, $12, $17 ; limit for the random 0-127, then rising slot thresholds
+    dw $005F, $0067, $0068, $0069, $006A ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5221,9 +5221,9 @@ Data_00A_6139:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6151::
 Data_00A_6151:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $09, $0E, $12, $00
-    dw $0059, $005A, $0060, $0062
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0059, $005A, $0060, $0062 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5243,9 +5243,9 @@ Data_00A_6160:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6172::
 Data_00A_6172:: ; address name
-    db $03 ; entry 0
-    db $11, $04, $09, $0E, $11, $00
-    dw $005A, $0060, $0061, $0063
+    db $03 ; entry 0: wEncounterKind + 1
+    db $11, $04, $09, $0E, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005A, $0060, $0061, $0063 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5265,9 +5265,9 @@ Data_00A_6181:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6193::
 Data_00A_6193:: ; address name
-    db $03 ; entry 0
-    db $12, $05, $09, $0E, $12, $00
-    dw $0057, $0059, $0060, $0062
+    db $03 ; entry 0: wEncounterKind + 1
+    db $12, $05, $09, $0E, $12, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0057, $0059, $0060, $0062 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5284,9 +5284,9 @@ Data_00A_61A2:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_61AE::
 Data_00A_61AE:: ; address name
-    db $03 ; entry 0
-    db $11, $04, $09, $0E, $11, $00
-    dw $005A, $0060, $0061, $0063
+    db $03 ; entry 0: wEncounterKind + 1
+    db $11, $04, $09, $0E, $11, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $005A, $0060, $0061, $0063 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group).
 ; record: one screen, row by row (4 per row): its encounter group
@@ -5313,17 +5313,17 @@ Data_00A_61BD:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_61DD::
 Data_00A_61DD:: ; address name
-    db $03 ; entry 0
-    db $0E, $04, $07, $0B, $0E, $00
-    dw $0070, $0071, $0072, $01AE
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $04, $07, $0B, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0070, $0071, $0072, $01AE ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_61EC::
 Data_00A_61EC:: ; address name
-    db $03 ; entry 0
-    db $0E, $04, $07, $0B, $0E, $00
-    dw $0070, $0071, $0072, $01AE
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0E, $04, $07, $0B, $0E, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0070, $0071, $0072, $01AE ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5346,9 +5346,9 @@ Data_00A_61FB:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6213::
 Data_00A_6213:: ; address name
-    db $03 ; entry 0
-    db $0A, $04, $08, $0A, $00, $00
-    dw $0070, $0071, $0265
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $08, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0070, $0071, $0265 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 6 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 36 words, up to its first group).
 ; record: one screen, row by row (6 per row): its encounter group
@@ -5395,41 +5395,41 @@ Data_00A_6220:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6268::
 Data_00A_6268:: ; address name
-    db $03 ; entry 0
-    db $0A, $04, $07, $0A, $00, $00
-    dw $01D7, $01D9, $01DB
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01D7, $01D9, $01DB ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6275::
 Data_00A_6275:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $05, $08, $0A, $00
-    dw $01D7, $01D8, $01D9, $01DB
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $05, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01D7, $01D8, $01D9, $01DB ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6284::
 Data_00A_6284:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $05, $07, $0A, $00
-    dw $01D8, $01DB, $01DD, $01DE
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $05, $07, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01D8, $01DB, $01DD, $01DE ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6293::
 Data_00A_6293:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $07, $0A, $00, $00
-    dw $01DB, $01DC, $01DD
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01DB, $01DC, $01DD ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_62A0::
 Data_00A_62A0:: ; address name
-    db $02 ; entry 0
-    db $0A, $04, $0A, $00, $00, $00
-    dw $01D8, $01DD
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $0A, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01D8, $01DD ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5452,9 +5452,9 @@ Data_00A_62AB:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_62C3::
 Data_00A_62C3:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $05, $07, $0A, $00
-    dw $01DC, $01DD, $01E0, $01E1
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $05, $07, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01DC, $01DD, $01E0, $01E1 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group).
 ; record: one screen, row by row (3 per row): its encounter group
@@ -5471,9 +5471,9 @@ Data_00A_62D2:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_62DE::
 Data_00A_62DE:: ; address name
-    db $02 ; entry 0
-    db $0A, $04, $07, $0A, $00, $00
-    dw $01E3, $01E4, $01E5
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01E3, $01E4, $01E5 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5488,9 +5488,9 @@ Data_00A_62EB:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_62F3::
 Data_00A_62F3:: ; address name
-    db $03 ; entry 0
-    db $0A, $06, $08, $0A, $00, $00
-    dw $01E6, $01E7, $01E8
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $06, $08, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01E6, $01E7, $01E8 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 5 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 25 words, up to its first group).
 ; record: one screen, row by row (5 per row): its encounter group
@@ -5526,49 +5526,49 @@ Data_00A_6300:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6332::
 Data_00A_6332:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $07, $0A, $00, $00
-    dw $01EF, $01F2, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01EF, $01F2, $01F7 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_633F::
 Data_00A_633F:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $06, $08, $0A, $00
-    dw $01EF, $01F2, $01F4, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $06, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01EF, $01F2, $01F4, $01F7 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_634E::
 Data_00A_634E:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $06, $08, $0A, $00
-    dw $01ED, $01EE, $01EF, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $06, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ED, $01EE, $01EF, $01F7 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_635D::
 Data_00A_635D:: ; address name
-    db $03 ; entry 0
-    db $0A, $04, $07, $0A, $00, $00
-    dw $01ED, $01EE, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01ED, $01EE, $01F7 ; encounter words
 
 ; E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
 EncounterGroup_636A::
 Data_00A_636A:: ; address name
-    db $02 ; entry 0
-    db $0A, $06, $0A, $00, $00, $00
-    dw $01F1, $01F2
+    db $02 ; entry 0: wEncounterKind + 1
+    db $0A, $06, $0A, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01F1, $01F2 ; encounter words
 
 ; E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_Case00_Sub01; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold).
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_6375::
 Data_00A_6375:: ; address name
-    db $03 ; entry 0
-    db $0A, $04, $06, $0A, $00, $00
-    dw $0216, $0217, $0218
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $06, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $0216, $0217, $0218 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group).
 ; record: one screen, row by row (1 per row): its encounter group
@@ -5580,9 +5580,9 @@ Data_00A_6382:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_6384::
 Data_00A_6384:: ; address name
-    db $03 ; entry 0
-    db $0A, $02, $04, $08, $0A, $00
-    dw $01F0, $01F2, $01F4, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $02, $04, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01F0, $01F2, $01F4, $01F7 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5597,9 +5597,9 @@ Data_00A_6393:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
 EncounterGroup_639B::
 Data_00A_639B:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $05, $08, $0A, $00
-    dw $01F0, $01F4, $01F6, $01F7
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $05, $08, $0A, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01F0, $01F4, $01F6, $01F7 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5614,9 +5614,9 @@ Data_00A_63AA:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_63B2::
 Data_00A_63B2:: ; address name
-    db $03 ; entry 0
-    db $0A, $04, $07, $0A, $00, $00
-    dw $01F0, $01F5, $01F6
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $04, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01F0, $01F5, $01F6 ; encounter words
 
 ; E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group).
 ; record: one screen, row by row (2 per row): its encounter group
@@ -5631,9 +5631,9 @@ Data_00A_63BF:: ; address name
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
 EncounterGroup_63C7::
 Data_00A_63C7:: ; address name
-    db $03 ; entry 0
-    db $0A, $03, $07, $0A, $00, $00
-    dw $01EF, $01F5, $01F6
+    db $03 ; entry 0: wEncounterKind + 1
+    db $0A, $03, $07, $0A, $00, $00 ; limit for the random 0-127, then rising slot thresholds
+    dw $01EF, $01F5, $01F6 ; encounter words
     ds $48D, $00
 
 Data_00A_6861:: ; heuristic: target of a monotone pointer table; C0

@@ -2976,9 +2976,9 @@ Data_004_534B:: ; address name
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_534F::
 Data_004_534F:: ; address name
-    db $02 ; entry 0
-    db $85, $01, $00, $00, $00, $40, $20, $05, $00, $50, $00
-    db $86, $01, $01, $00, $00, $60, $50, $06, $03, $60, $01
+    db $02 ; entry 0: object count
+    db $85, $01, $00, $00, $00, $40, $20, $05, $00, $50, $00 ; object 0
+    db $86, $01, $01, $00, $00, $60, $50, $06, $03, $60, $01 ; object 1
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -2991,10 +2991,10 @@ Data_004_5366:: ; address name
 ; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_536A::
 Data_004_536A:: ; address name
-    db $03 ; entry 0
-    db $85, $01, $01, $00, $00, $30, $20, $05, $00, $50, $02
-    db $86, $01, $01, $00, $00, $60, $60, $06, $00, $60, $03
-    db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $FA
+    db $03 ; entry 0: object count
+    db $85, $01, $01, $00, $00, $30, $20, $05, $00, $50, $02 ; object 0
+    db $86, $01, $01, $00, $00, $60, $60, $06, $00, $60, $03 ; object 1
+    db $87, $01, $06, $00, $00, $70, $10, $07, $00, $70, $FA ; object 2
 
 ; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
@@ -3016,9 +3016,9 @@ Data_004_5394:: ; address name
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5398::
 Data_004_5398:: ; address name
-    db $02 ; entry 0
-    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC
-    db $86, $01, $02, $00, $00, $20, $40, $06, $00, $60, $00
+    db $02 ; entry 0: object count
+    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $86, $01, $02, $00, $00, $20, $40, $06, $00, $60, $00 ; object 1
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3031,11 +3031,11 @@ Data_004_53AF:: ; address name
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_53B3::
 Data_004_53B3:: ; address name
-    db $04 ; entry 0
-    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC
-    db $86, $01, $03, $00, $02, $40, $20, $06, $01, $60, $01
-    db $87, $01, $04, $00, $00, $60, $50, $07, $00, $70, $02
-    db $84, $01, $05, $00, $00, $20, $60, $04, $01, $40, $03
+    db $04 ; entry 0: object count
+    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $86, $01, $03, $00, $02, $40, $20, $06, $01, $60, $01 ; object 1
+    db $87, $01, $04, $00, $00, $60, $50, $07, $00, $70, $02 ; object 2
+    db $84, $01, $05, $00, $00, $20, $60, $04, $01, $40, $03 ; object 3
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3062,11 +3062,11 @@ Data_004_53F0:: ; address name
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_53F4::
 Data_004_53F4:: ; address name
-    db $04 ; entry 0
-    db $85, $01, $03, $00, $00, $20, $40, $05, $03, $50, $05
-    db $86, $01, $05, $00, $02, $40, $70, $06, $01, $60, $06
-    db $87, $01, $02, $00, $00, $50, $30, $07, $00, $70, $07
-    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA
+    db $04 ; entry 0: object count
+    db $85, $01, $03, $00, $00, $20, $40, $05, $03, $50, $05 ; object 0
+    db $86, $01, $05, $00, $02, $40, $70, $06, $01, $60, $06 ; object 1
+    db $87, $01, $02, $00, $00, $50, $30, $07, $00, $70, $07 ; object 2
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA ; object 3
 
 ; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 4 screens, up to the next structure).
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
@@ -3088,9 +3088,9 @@ Data_004_5429:: ; address name
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_542D::
 Data_004_542D:: ; address name
-    db $02 ; entry 0
-    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC
-    db $86, $01, $04, $00, $00, $20, $40, $06, $00, $60, $04
+    db $02 ; entry 0: object count
+    db $85, $01, $08, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $86, $01, $04, $00, $00, $20, $40, $06, $00, $60, $04 ; object 1
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3103,11 +3103,11 @@ Data_004_5444:: ; address name
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5448::
 Data_004_5448:: ; address name
-    db $04 ; entry 0
-    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC
-    db $86, $01, $03, $00, $00, $70, $50, $06, $01, $60, $05
-    db $87, $01, $02, $00, $02, $30, $60, $07, $01, $70, $07
-    db $84, $01, $07, $00, $00, $40, $20, $04, $00, $40, $FD
+    db $04 ; entry 0: object count
+    db $85, $01, $02, $00, $00, $E0, $E0, $05, $00, $50, $FC ; object 0
+    db $86, $01, $03, $00, $00, $70, $50, $06, $01, $60, $05 ; object 1
+    db $87, $01, $02, $00, $02, $30, $60, $07, $01, $70, $07 ; object 2
+    db $84, $01, $07, $00, $00, $40, $20, $04, $00, $40, $FD ; object 3
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3120,9 +3120,9 @@ Data_004_5475:: ; address name
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5479::
 Data_004_5479:: ; address name
-    db $02 ; entry 0
-    db $85, $01, $03, $00, $00, $70, $50, $05, $01, $50, $01
-    db $86, $01, $05, $00, $02, $30, $60, $06, $01, $60, $06
+    db $02 ; entry 0: object count
+    db $85, $01, $03, $00, $00, $70, $50, $05, $01, $50, $01 ; object 0
+    db $86, $01, $05, $00, $02, $30, $60, $06, $01, $60, $06 ; object 1
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3135,11 +3135,11 @@ Data_004_5490:: ; address name
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5494::
 Data_004_5494:: ; address name
-    db $04 ; entry 0
-    db $85, $01, $02, $00, $00, $70, $30, $05, $00, $50, $00
-    db $86, $01, $04, $00, $00, $40, $70, $06, $02, $60, $02
-    db $87, $01, $05, $00, $02, $40, $40, $07, $01, $70, $03
-    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA
+    db $04 ; entry 0: object count
+    db $85, $01, $02, $00, $00, $70, $30, $05, $00, $50, $00 ; object 0
+    db $86, $01, $04, $00, $00, $40, $70, $06, $02, $60, $02 ; object 1
+    db $87, $01, $05, $00, $02, $40, $40, $07, $01, $70, $03 ; object 2
+    db $84, $01, $06, $00, $00, $60, $10, $04, $00, $40, $FA ; object 3
 
 ; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
@@ -3159,9 +3159,9 @@ Data_004_54C5:: ; address name
 ; record: count 2, then 2 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_54C9::
 Data_004_54C9:: ; address name
-    db $02 ; entry 0
-    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD
-    db $86, $01, $04, $00, $00, $60, $70, $06, $03, $60, $00
+    db $02 ; entry 0: object count
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD ; object 0
+    db $86, $01, $04, $00, $00, $60, $70, $06, $03, $60, $00 ; object 1
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3174,11 +3174,11 @@ Data_004_54E0:: ; address name
 ; record: count 4, then 4 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_54E4::
 Data_004_54E4:: ; address name
-    db $04 ; entry 0
-    db $85, $01, $03, $00, $00, $60, $30, $05, $03, $50, $01
-    db $86, $01, $02, $00, $00, $20, $60, $06, $02, $60, $02
-    db $87, $01, $05, $00, $02, $40, $70, $07, $01, $70, $03
-    db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $FA
+    db $04 ; entry 0: object count
+    db $85, $01, $03, $00, $00, $60, $30, $05, $03, $50, $01 ; object 0
+    db $86, $01, $02, $00, $00, $20, $60, $06, $02, $60, $02 ; object 1
+    db $87, $01, $05, $00, $02, $40, $70, $07, $01, $70, $03 ; object 2
+    db $84, $01, $06, $00, $00, $20, $20, $04, $00, $40, $FA ; object 3
 
 ; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 2 screens, up to the next structure).
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0
@@ -3198,10 +3198,10 @@ Data_004_5515:: ; address name
 ; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_5519::
 Data_004_5519:: ; address name
-    db $03 ; entry 0
-    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD
-    db $86, $01, $02, $00, $00, $30, $60, $06, $00, $60, $02
-    db $87, $01, $05, $00, $00, $60, $70, $07, $00, $70, $03
+    db $03 ; entry 0: object count
+    db $85, $01, $02, $00, $00, $50, $30, $05, $00, $50, $FD ; object 0
+    db $86, $01, $02, $00, $00, $30, $60, $06, $00, $60, $02 ; object 1
+    db $87, $01, $05, $00, $00, $60, $70, $07, $00, $70, $03 ; object 2
 
 ; E-0196 (C1: a marker of $FFFF clears wSpriteSlotCount; otherwise the next word points at the list).
 ; record: marker word; pointer to the object list
@@ -3214,10 +3214,10 @@ Data_004_553B:: ; address name
 ; record: count 3, then 3 object records of 11 bytes (the map object layout of E-0176)
 KeyWorldObjectList_553F::
 Data_004_553F:: ; address name
-    db $03 ; entry 0
-    db $85, $01, $03, $00, $02, $60, $60, $05, $01, $50, $01
-    db $86, $01, $04, $00, $00, $60, $30, $06, $00, $60, $00
-    db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $FA
+    db $03 ; entry 0: object count
+    db $85, $01, $03, $00, $02, $60, $60, $05, $01, $50, $01 ; object 0
+    db $86, $01, $04, $00, $00, $60, $30, $06, $00, $60, $00 ; object 1
+    db $87, $01, $06, $00, $00, $20, $20, $07, $00, $70, $FA ; object 2
 
 ; E-0196 (C1: SetupKeyWorldObjectsForMapType_Sub01 reads the word at the grid + 2 * (hMapScreenY * wMapWidthScreens + hMapScreenX); 1 screens, up to the next structure).
 ; record: one screen, row by row (wMapWidthScreens per row): its object entry or 0

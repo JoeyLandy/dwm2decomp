@@ -3690,7 +3690,9 @@ class Rom:
                 tag += f" '{gb_text.BYTE_TO_TEXT[t['id_base'] + i]}'"  # glyph number = text byte (E-0169)
             run: list[int] = []
             tagged = False
-            fc = t.get("field_comments")  # E-0262: each field on its own line, ending with its name
+            fc = t.get("field_comments",  # E-0262: each field on its own line, ending with its name; by default
+                       t["count"] <= 32 and len(fields) >= 3 and (lambda ns: len(set(ns)) == len(ns))(
+                           [f["name"] for f in fields if f["name"] not in ("its ROM bank", "ROM bank of that data")]))
 
             def suffix(f: dict | None) -> str:
                 if not fc or f is None:
@@ -3755,10 +3757,10 @@ class Rom:
                     nxt = fi + 1
                     if (nm and f.get("bank_from") == nxt and nxt < len(fields) and fields[nxt]["type"] == "db"
                             and sizes[nxt] == 1 and (q + sz) not in dl):
-                        out.append(f"    dfar {nm}" + ("" if tagged else tag))  # address and bank in one line
+                        out.append(f"    dfar {nm}" + suffix(f))  # address and bank in one line
                         skip_bank = nxt
                     else:
-                        out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
+                        out.append(f"    dw {nm or f'${tgt:04X}'}" + suffix(f))
                     tagged = True
                 else:
                     if f.get("line") or fc:

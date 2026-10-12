@@ -396,7 +396,7 @@ class DerivedLayouts(unittest.TestCase):
     def test_map_record_uses_far_pointers(self):
         text = (BANKS / "bank11.asm").read_text(encoding="utf-8")
         self.assertIn("MapRecord1D::\n", text)
-        self.assertIn("    dfar Map1DScreens0\n    dfar Map1DAttrs0\n", text)
+        self.assertRegex(text, r"    dfar Map1DScreens0( ;[^\n]*)?\n    dfar Map1DAttrs0( ;[^\n]*)?\n")  # E-0262 field comments
 
     def test_breeding_tables_name_species_and_codes(self):
         """E-0199: breeding rule lists show partners and rule codes; family rows end at $7F8B."""
@@ -415,8 +415,8 @@ class DerivedLayouts(unittest.TestCase):
 
     def test_world_map_screen_cells_fill_bank_5d(self):
         """E-0185: 11 grids of width * height screens, 25 cells each, end at $7692."""
-        self.assertIn("    db $88 ; id 0\n    dfar WorldMapScreenCells0\n",
-                      (BANKS / "banka1.asm").read_text(encoding="utf-8"))
+        self.assertRegex((BANKS / "banka1.asm").read_text(encoding="utf-8"),
+                         r"    db \$88 ; id 0[^\n]*\n    dfar WorldMapScreenCells0( ;[^\n]*)?\n")  # E-0262 field comments
         text = (BANKS / "bank5d.asm").read_text(encoding="utf-8")
         self.assertEqual(text.count("INCBIN"), 2)  # the two compressed streams
         self.assertIn("WorldMapScreenCells10::\n", text)

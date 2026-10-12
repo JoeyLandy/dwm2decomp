@@ -9338,43 +9338,43 @@ Jump_031_756C::
 ; record: offset $0000; 8 x 7 tiles
 TileRect_31_757C::
 Data_031_757C:: ; address name
-    dw $0000 ; entry 0
-    db $08, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $08, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles)).
 ; record: offset $0000; 14 x 7 tiles
 TileRect_31_75B8::
 Data_031_75B8:: ; address name
-    dw $0000 ; entry 0
-    db $0E, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $0E, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles)).
 ; record: offset $0000; 20 x 7 tiles
 TileRect_31_761E::
 Data_031_761E:: ; address name
-    dw $0000 ; entry 0
-    db $14, $07
-    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2
-    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7
-    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA
-    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7
-    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7
-    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
+    dw $0000 ; entry 0: offset into wScreenTileBuffer
+    db $14, $07 ; width, rows
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; row 0
+    db $B6, $D0, $D1, $D2, $D3, $D4, $C3, $D5, $D6, $D7, $D8, $D9, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $B7 ; row 1
+    db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $B9, $BA ; row 2
+    db $B6, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $EB, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
+    db $B6, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $EC, $C3, $C3, $C3, $C3, $C3, $B7 ; row 4
+    db $B6, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $EA, $AF, $C3, $C3, $C3, $C3, $B7 ; row 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
 ; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_Step4_Sub02_Case02_Case00, ...)

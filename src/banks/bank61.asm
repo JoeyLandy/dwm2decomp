@@ -504,30 +504,30 @@ Jump_061_42D7::
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 MapType5TilesetTable::
 Data_061_42DD:: ; address name
-    dfar MapType5Tiles0 ; id 0
-    dfar MapType5Palettes0
-    dfar MapType5Tiles1 ; id 1
-    dfar MapType5Palettes1
-    dfar MapType5Tiles2 ; id 2
-    dfar MapType5Palettes2
-    dfar MapType5Tiles3 ; id 3
-    dfar MapType5Palettes3
-    dfar MapType5Tiles4 ; id 4
-    dfar MapType5Palettes4
-    dfar MapType5Tiles5 ; id 5
-    dfar MapType5Palettes5
-    dfar MapType5Tiles6 ; id 6
-    dfar MapType5Palettes6
-    dfar MapType5Tiles7 ; id 7
-    dfar MapType5Palettes7
-    dfar MapType5Tiles8 ; id 8
-    dfar MapType5Palettes8
-    dfar MapType5Tiles9 ; id 9
-    dfar MapType5Palettes9
-    dfar MapType5Tiles10 ; id 10
-    dfar MapType5Palettes10
-    dfar MapType5Tiles11 ; id 11
-    dfar MapType5Palettes11
+    dfar MapType5Tiles0 ; id 0: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes0 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles1 ; id 1: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes1 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles2 ; id 2: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes2 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles3 ; id 3: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes3 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles4 ; id 4: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes4 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles5 ; id 5: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes5 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles6 ; id 6: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes6 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles7 ; id 7: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes7 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles8 ; id 8: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes8 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles9 ; id 9: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes9 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles10 ; id 10: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes10 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar MapType5Tiles11 ; id 11: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar MapType5Palettes11 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
 ; entry 1 of the `rst $00` table in LoadMapHeaderByMapType
 ; no direct call (reached through a table, a jump or a vector)
@@ -2228,26 +2228,26 @@ Jump_061_5723::
 ; record: compressed BG tiles decompressed to vTiles2 (128 tiles); ROM bank of the tiles; $40-byte CGB BG palette set copied to wBGPaletteBuffer; ROM bank of the palettes
 KeyWorldTilesetTable::
 Data_061_5728:: ; address name
-    dfar KeyWorldTiles0 ; id 0
-    dfar KeyWorldPalettes0
-    dfar KeyWorldTiles1 ; id 1
-    dfar KeyWorldPalettes1
-    dfar KeyWorldTiles2 ; id 2
-    dfar KeyWorldPalettes2
-    dfar KeyWorldTiles3 ; id 3
-    dfar KeyWorldPalettes3
-    dfar KeyWorldTiles4 ; id 4
-    dfar KeyWorldPalettes4
-    dfar KeyWorldTiles5 ; id 5
-    dfar KeyWorldPalettes5
-    dfar KeyWorldTiles6 ; id 6
-    dfar KeyWorldPalettes6
-    dfar KeyWorldTiles7 ; id 7
-    dfar KeyWorldPalettes7
-    dfar KeyWorldTiles8 ; id 8
-    dfar KeyWorldPalettes8
-    dfar KeyWorldTiles9 ; id 9
-    dfar KeyWorldPalettes9
+    dfar KeyWorldTiles0 ; id 0: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes0 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles1 ; id 1: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes1 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles2 ; id 2: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes2 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles3 ; id 3: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes3 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles4 ; id 4: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes4 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles5 ; id 5: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes5 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles6 ; id 6: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes6 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles7 ; id 7: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes7 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles8 ; id 8: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes8 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
+    dfar KeyWorldTiles9 ; id 9: compressed BG tiles decompressed to vTiles2 (128 tiles)
+    dfar KeyWorldPalettes9 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
 ; only called from CheckWarpAtPlayer (E-0047)
 ; 1 call site from 1 routine (e.g. CheckWarpAtPlayer)
@@ -4294,41 +4294,75 @@ KeyWorldWarps06::
 ; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps00::
 Data_061_6667:: ; address name
-    db $FE, $00, $00, $02, $FF, $FF, $FF, $40, $40 ; id 0
+    db $FE, $00, $00, $02, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
 ; E-0157 (derived: list for entry $20 of KeyWorldWarpListTable; 9 record(s), then $80)
 ; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps20::
 Data_061_6671:: ; address name
-    db $FE, $00, $FF, $00, $FF, $FF, $FF, $40, $40 ; id 0
-    db $FE, $00, $00, $FF, $FF, $FF, $FF, $40, $40 ; id 1
-    db $FE, $00, $01, $FF, $FF, $FF, $FF, $40, $40 ; id 2
-    db $FE, $00, $02, $00, $FF, $FF, $FF, $40, $40 ; id 3
-    db $FE, $00, $FF, $01, $FF, $FF, $FF, $40, $40 ; id 4
-    db $FE, $00, $02, $01, $FF, $FF, $FF, $40, $40 ; id 5
-    db $FE, $00, $00, $02, $FF, $FF, $FF, $40, $40 ; id 6
-    db $FE, $00, $01, $02, $FF, $FF, $FF, $40, $40 ; id 7
-    db $FD, $01, $40, $30, $F2, $00, $00, $04, $08 ; id 8
+    db $FE, $00, $FF, $00, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $00, $FF, $FF ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $01, $FF, $FF ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $02, $00, $FF ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $FF, $01, $FF ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $02, $01, $FF ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $00, $02, $FF ; id 6: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $01, $02, $FF ; id 7: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FD, $01, $40, $30, $F2 ; id 8: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $00, $00 ; not read here
+    db $04, $08 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
 ; E-0157 (derived: list for entry $40 of KeyWorldWarpListTable; 6 record(s), then $80)
 ; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps40::
 Data_061_66C3:: ; address name
-    db $FE, $00, $FF, $00, $FF, $FF, $FF, $40, $40 ; id 0
-    db $FE, $00, $00, $FF, $FF, $FF, $FF, $40, $40 ; id 1
-    db $FE, $00, $01, $FF, $FF, $FF, $FF, $40, $40 ; id 2
-    db $FE, $00, $02, $00, $FF, $FF, $FF, $40, $40 ; id 3
-    db $FE, $00, $00, $01, $FF, $FF, $FF, $40, $40 ; id 4
-    db $FE, $00, $01, $01, $FF, $FF, $FF, $40, $40 ; id 5
+    db $FE, $00, $FF, $00, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $00, $FF, $FF ; id 1: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $01, $FF, $FF ; id 2: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $02, $00, $FF ; id 3: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $00, $01, $FF ; id 4: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
+    db $FE, $00, $01, $01, $FF ; id 5: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
 ; E-0157 (derived: list for entry $54 of KeyWorldWarpListTable; 1 record(s), then $80)
 ; record: kind ($FE/$FF = warp, $FD and others skipped; stored in wWarpDestFacing), byte 1, screen X, screen Y, $FF (other values end the search), 2 bytes, destination X, destination Y
 KeyWorldWarps54::
 Data_061_66FA:: ; address name
-    db $FE, $00, $00, $01, $FF, $FF, $FF, $40, $40 ; id 0
+    db $FE, $00, $00, $01, $FF ; id 0: kind, byte 1 (not read), screen X, screen Y, $FF
+    db $FF, $FF ; not read here
+    db $40, $40 ; wWarpDestX, wWarpDestY
     db $80 ; end
 
 ; E-0157 (derived: list for entry $63 of KeyWorldWarpListTable; 0 record(s), then $80)

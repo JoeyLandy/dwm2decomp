@@ -1710,28 +1710,28 @@ Jump_0A1_4954::
 ; record: size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid
 WorldMapScreenCellTable::
 Data_0A1_497C:: ; address name
-    db $88 ; id 0
-    dfar WorldMapScreenCells0
-    db $88 ; id 1
-    dfar WorldMapScreenCells1
-    db $CC ; id 2
-    dfar WorldMapScreenCells2
-    db $CC ; id 3
-    dfar WorldMapScreenCells3
-    db $43 ; id 4
-    dfar WorldMapScreenCells4
-    db $66 ; id 5
-    dfar WorldMapScreenCells5
-    db $32 ; id 6
-    dfar WorldMapScreenCells6
-    db $55 ; id 7
-    dfar WorldMapScreenCells7
-    db $12 ; id 8
-    dfar WorldMapScreenCells8
-    db $12 ; id 9
-    dfar WorldMapScreenCells9
-    db $21 ; id 10
-    dfar WorldMapScreenCells10
+    db $88 ; id 0: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells0 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $88 ; id 1: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells1 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $CC ; id 2: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells2 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $CC ; id 3: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells3 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $43 ; id 4: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells4 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $66 ; id 5: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells5 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $32 ; id 6: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells6 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $55 ; id 7: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells7 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $12 ; id 8: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells8 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $12 ; id 9: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells9 ; screen cell grid: 25 bytes (5 x 5) per screen
+    db $21 ; id 10: size: width in screens (high nibble), height in screens (low nibble)
+    dfar WorldMapScreenCells10 ; screen cell grid: 25 bytes (5 x 5) per screen
 
 ; only called from RunGameMode2State_Case04_Sub02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case04_Sub02_Sub01)
@@ -3331,28 +3331,39 @@ Jump_0A1_5333::
 ; record: tile rectangle in bank $5D; rows, width; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 WorldMapViewTable::
 Data_0A1_533C:: ; address name
-    dw WorldMapView0 ; id 0
-    db $08, $08, $20, $00, $00, $00
-    dw WorldMapView1 ; id 1
-    db $08, $08, $30, $00, $00, $00
-    dw WorldMapView2 ; id 2
-    db $0C, $0C, $48, $00, $00, $00
-    dw WorldMapView3 ; id 3
-    db $0C, $0C, $70, $00, $00, $00
-    dw WorldMapView4 ; id 4
-    db $03, $04, $A0, $00, $00, $00
-    dw WorldMapView5 ; id 5
-    db $06, $06, $A8, $00, $00, $00
-    dw WorldMapView6 ; id 6
-    db $02, $03, $B0, $00, $00, $00
-    dw WorldMapView7 ; id 7
-    db $05, $05, $B8, $00, $00, $00
-    dw WorldMapView8 ; id 8
-    db $02, $01, $C8, $00, $00, $00
-    dw WorldMapView9 ; id 9
-    db $02, $01, $D1, $00, $00, $00
-    dw WorldMapView10 ; id 10
-    db $01, $02, $DA, $00, $00, $00
+    dw WorldMapView0 ; id 0: tile rectangle in bank $5D
+    db $08, $08 ; rows, width
+    db $20, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView1 ; id 1: tile rectangle in bank $5D
+    db $08, $08 ; rows, width
+    db $30, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView2 ; id 2: tile rectangle in bank $5D
+    db $0C, $0C ; rows, width
+    db $48, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView3 ; id 3: tile rectangle in bank $5D
+    db $0C, $0C ; rows, width
+    db $70, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView4 ; id 4: tile rectangle in bank $5D
+    db $03, $04 ; rows, width
+    db $A0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView5 ; id 5: tile rectangle in bank $5D
+    db $06, $06 ; rows, width
+    db $A8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView6 ; id 6: tile rectangle in bank $5D
+    db $02, $03 ; rows, width
+    db $B0, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView7 ; id 7: tile rectangle in bank $5D
+    db $05, $05 ; rows, width
+    db $B8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView8 ; id 8: tile rectangle in bank $5D
+    db $02, $01 ; rows, width
+    db $C8, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView9 ; id 9: tile rectangle in bank $5D
+    db $02, $01 ; rows, width
+    db $D1, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
+    dw WorldMapView10 ; id 10: tile rectangle in bank $5D
+    db $01, $02 ; rows, width
+    db $DA, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 
 ; only called from RunGameMode2State_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02)

@@ -5,198 +5,198 @@ SECTION "Bank 68", ROMX[$4000], BANK[$68]
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup44::
 Data_068_4001:: ; address name
-    dfar KeyWorldScreenHeader_66_54FD ; id 0
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_65_431E
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_47D4
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld12_0_Y3X2_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld31_1_Y2X2_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorldScreenHeader_66_5658 ; id 1
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_5A34
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_6636
-    dfar KeyWorldScreenHeader_64_5218
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld3C_0_Y3X2_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld3C_2_Y0X3_Attrs
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorldScreenHeader_63_60DA ; id 3
-    dfar KeyWorldScreenHeader_64_544D
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_63_6148
-    dfar KeyWorldScreenHeader_62_68C2
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_6744
-    dfar KeyWorldScreenHeader_64_5284
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_62_5485
-    dfar KeyWorldScreenHeader_62_613E
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_6C81
-    dfar KeyWorld40_2_Y2X2_Attrs
-    dfar KeyWorld30_1_Y2X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld12_1_Y0X1_Attrs
-    dfar KeyWorld40_5_Y0X0_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld40_5_Y1X0_Attrs
-    dfar KeyWorld3C_1_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld12_0_Y3X1_Attrs
-    dfar KeyWorld44_3_Y3X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld03_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_66_5560 ; id 4
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_64_5A34
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_63_5F99
-    dfar KeyWorldScreenHeader_64_6145
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_472D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld3C_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld12_1_Y1X1_Attrs
-    dfar KeyWorld3C_3_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld30_3_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_65_5737 ; id 5
-    dfar KeyWorldScreenHeader_64_5394
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_63_5437
-    dfar KeyWorldScreenHeader_63_47D4
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld30_0_Y2X3_Attrs
-    dfar KeyWorld12_1_Y1X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld3C_3_Y0X1_Attrs
-    dfar KeyWorld31_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_431E ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_47D4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_0_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld31_1_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5658 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5A34 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6636 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5218 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3C_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld3C_2_Y0X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_63_60DA ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_544D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6148 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_68C2 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6744 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5284 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5485 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_613E ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6C81 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld40_2_Y2X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld30_1_Y2X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld12_1_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld40_5_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld40_5_Y1X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld3C_1_Y2X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld12_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld44_3_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld03_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5560 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5A34 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5F99 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6145 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_472D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3C_0_Y3X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_1_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld3C_3_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld30_3_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_5737 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5394 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5437 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_47D4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld30_0_Y2X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld12_1_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3C_3_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld31_1_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -208,198 +208,198 @@ Data_068_4241:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup45::
 Data_068_4247:: ; address name
-    dfar KeyWorldScreenHeader_66_5560 ; id 0
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_43CA
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6AEC
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_64_73B7
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld11_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld1E_1_Y2X1_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_65_751D ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_743F
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4CD6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_64_720E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld3A_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_65_6693 ; id 3
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6C81
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld03_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_62_76AE ; id 4
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_65_75A3 ; id 5
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_63_74A4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld0D_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5560 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_43CA ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6AEC ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_73B7 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld11_1_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld1E_1_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_751D ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_743F ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4CD6 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_720E ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3A_0_Y1X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6693 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6C81 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld03_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_76AE ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_75A3 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_74A4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0D_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -411,198 +411,198 @@ Data_068_4487:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup46::
 Data_068_448D:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_64_7848 ; id 2
-    dfar KeyWorldScreenHeader_64_73B7
-    dfar KeyWorldScreenHeader_65_743F
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld1E_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_65_60A2
-    dfar KeyWorldScreenHeader_62_70C1
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld16_0_Y2X1_Attrs
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_64_7848 ; id 4
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_423A ; id 5
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_63_6B43
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld20_1_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7848 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_73B7 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_743F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld1E_1_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_60A2 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_70C1 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld16_0_Y2X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7848 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_423A ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6B43 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld20_1_Y1X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -614,198 +614,198 @@ Data_068_46CD:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup47::
 Data_068_46D3:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_643F
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_60A2
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_65_55E2
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_63_5F99
-    dfar KeyWorldScreenHeader_64_6272
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld16_0_Y2X1_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld47_0_Y2X3_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld12_1_Y1X1_Attrs
-    dfar KeyWorld30_0_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_65_6693 ; id 1
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_64_5AD4
-    dfar KeyWorldScreenHeader_64_59BA
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_64_6145
-    dfar KeyWorldScreenHeader_63_531D
-    dfar KeyWorldScreenHeader_63_453F
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_63_47D4
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld30_3_Y0X0_Attrs
-    dfar KeyWorld23_0_Y1X2_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld3C_3_Y0X0_Attrs
-    dfar KeyWorld32_0_Y3X3_Attrs
-    dfar KeyWorld12_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld31_1_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_62_7517 ; id 2
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_62_5FBC
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_544D
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_63_5E57
-    dfar KeyWorldScreenHeader_64_5394
-    dfar KeyWorld10_0_Y1X0_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld47_2_Y0X2_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld30_1_Y2X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld41_2_Y1X1_Attrs
-    dfar KeyWorld12_1_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_62_41C9 ; id 3
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_62_7985 ; id 4
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_65_5056
-    dfar KeyWorldScreenHeader_63_472D
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_63_5E57
-    dfar KeyWorldScreenHeader_64_6272
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld47_4_Y0X2_Attrs
-    dfar KeyWorld30_3_Y1X1_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld41_2_Y1X1_Attrs
-    dfar KeyWorld30_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_62_70C1 ; id 5
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_643F ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_60A2 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_55E2 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5F99 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6272 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld07_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld16_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld47_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld12_1_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld30_0_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6693 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5AD4 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_59BA ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6145 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_531D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_453F ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_47D4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld30_3_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld23_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3C_3_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld32_0_Y3X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld12_1_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld31_1_Y2X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_7517 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5FBC ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_544D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5E57 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5394 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld10_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld47_2_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld30_1_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld41_2_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld12_1_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_41C9 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_7985 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5056 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_472D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5E57 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6272 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld47_4_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld30_3_Y1X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld41_2_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld30_0_Y3X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_70C1 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -817,102 +817,102 @@ Data_068_4913:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup48::
 Data_068_4919:: ; address name
-    dfar KeyWorldScreenHeader_66_55DC ; id 0
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_66_5560 ; id 1
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_63_7626
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld1A_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_65_65EA ; id 2
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_64_6AEC
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld11_1_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5560 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7626 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld1A_0_Y3X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_65EA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6AEC ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -924,102 +924,102 @@ Data_068_4A39:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup49::
 Data_068_4A3C:: ; address name
-    dfar KeyWorldScreenHeader_66_54FD ; id 0
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_63_7626
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld1A_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_65_6546 ; id 1
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_7878
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_64_48DA
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld1D_1_Y2X3_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld00_0_Y2X1_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_66_5705 ; id 2
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_64_720E
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld3A_0_Y1X3_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7626 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld1A_0_Y3X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6546 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7878 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_48DA ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld1D_1_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5705 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_720E ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3A_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1031,102 +1031,102 @@ Data_068_4B5C:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4A::
 Data_068_4B5F:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_66_57D9 ; id 1
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_62_70C1
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_65_64CA ; id 2
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_7878
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_64_5AD4
-    dfar KeyWorldScreenHeader_65_445B
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_54F8
-    dfar KeyWorldScreenHeader_63_48FA
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld1D_1_Y2X3_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld30_3_Y0X0_Attrs
-    dfar KeyWorld32_1_Y2X0_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld30_3_Y1X0_Attrs
-    dfar KeyWorld30_1_Y3X0_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_57D9 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_70C1 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_64CA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7878 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5AD4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_445B ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_54F8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_48FA ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld1D_1_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld30_3_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld32_1_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld30_3_Y1X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld30_1_Y3X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1138,102 +1138,102 @@ Data_068_4C7F:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4B::
 Data_068_4C82:: ; address name
-    dfar KeyWorldScreenHeader_66_54FD ; id 0
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_643F
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_64_594F
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_531D
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X1_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld34_2_Y0X3_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld32_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_65_7878 ; id 1
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorld1D_1_Y2X3_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_65_6546 ; id 2
-    dfar KeyWorldScreenHeader_65_7878
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld1D_1_Y2X3_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
+    dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_643F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_594F ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_531D ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld07_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld34_2_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld32_0_Y3X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_7878 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld1D_1_Y2X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6546 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7878 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld1D_1_Y2X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1245,198 +1245,198 @@ Data_068_4DA2:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4C::
 Data_068_4DA5:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_64_58E6
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_64F3
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld40_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld42_3_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_65_65EA ; id 1
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_62_662E
-    dfar KeyWorldScreenHeader_64_5A34
-    dfar KeyWorldScreenHeader_64_5AD4
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld30_2_Y0X3_Attrs
-    dfar KeyWorld3C_0_Y3X2_Attrs
-    dfar KeyWorld30_3_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_65_64CA ; id 2
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_64_594F
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_6073
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_63_5E57
-    dfar KeyWorldScreenHeader_64_54EA
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld34_2_Y0X3_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld41_2_Y1X2_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld41_2_Y1X1_Attrs
-    dfar KeyWorld3F_3_Y1X2_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_64_7B56 ; id 3
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_65_56B8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_6145
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_44A8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld3C_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld3C_3_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld00_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_64_61C5 ; id 4
-    dfar KeyWorldScreenHeader_63_65BE
-    dfar KeyWorldScreenHeader_64_6073
-    dfar KeyWorldScreenHeader_65_4D49
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_472D
-    dfar KeyWorldScreenHeader_64_47BD
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorld4C_4_Y0X0_Attrs
-    dfar KeyWorld34_2_Y1X3_Attrs
-    dfar KeyWorld41_2_Y1X2_Attrs
-    dfar KeyWorld4C_4_Y0X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld30_3_Y1X1_Attrs
-    dfar KeyWorld20_1_Y2X1_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_65_5587 ; id 5
-    dfar KeyWorldScreenHeader_64_5218
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_7878
-    dfar KeyWorldScreenHeader_63_557A
-    dfar KeyWorldScreenHeader_65_4FAD
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_453F
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorld40_4_Y0X3_Attrs
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld1D_1_Y2X3_Attrs
-    dfar KeyWorld23_0_Y2X2_Attrs
-    dfar KeyWorld4C_5_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld12_1_Y2X2_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_58E6 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_64F3 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld40_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld42_3_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_65EA ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_662E ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5A34 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5AD4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld30_2_Y0X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld3C_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld30_3_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_64CA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_594F ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6073 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5E57 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_54EA ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld34_2_Y0X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld41_2_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld41_2_Y1X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld3F_3_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7B56 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_56B8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6145 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_44A8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3C_0_Y3X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld3C_3_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_61C5 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_65BE ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6073 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4D49 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_472D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_47BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld4C_4_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld34_2_Y1X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld41_2_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld4C_4_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld30_3_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld20_1_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_5587 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5218 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7878 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_557A ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4FAD ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_453F ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld40_4_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld1D_1_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld23_0_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld4C_5_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld12_1_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1448,198 +1448,198 @@ Data_068_4FE5:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4D::
 Data_068_4FEB:: ; address name
-    dfar KeyWorldScreenHeader_66_55DC ; id 0
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_66_5705 ; id 1
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_65_60A2
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_64_59BA
-    dfar KeyWorldScreenHeader_65_40C4
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorld12_0_Y2X1_Header
-    dfar KeyWorldScreenHeader_63_52A2
-    dfar KeyWorldScreenHeader_63_453F
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld16_0_Y2X1_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld23_0_Y1X2_Attrs
-    dfar KeyWorld15_1_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld12_0_Y2X1_Attrs
-    dfar KeyWorld30_2_Y1X3_Attrs
-    dfar KeyWorld12_1_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_65_6546 ; id 2
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_66_5705 ; id 3
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_64_66F6 ; id 4
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_63_6FC0
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_4CD6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld02_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld16_1_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld02_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_62_406A ; id 5
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_66_4CD6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_55DC ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5705 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_60A2 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_59BA ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_40C4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorld12_0_Y2X1_Header ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_52A2 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_453F ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld16_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld23_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld15_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld12_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld30_2_Y1X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld12_1_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6546 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5705 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_66F6 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6FC0 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4CD6 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y2X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld16_1_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y2X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_406A ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4CD6 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y2X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1651,198 +1651,198 @@ Data_068_522B:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4E::
 Data_068_5231:: ; address name
-    dfar KeyWorldScreenHeader_66_5658 ; id 0
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7517
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y1X0_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_62_5485
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_65_55E2
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_64F3
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld12_0_Y3X1_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld47_0_Y2X3_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld42_3_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_65_64CA ; id 2
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_62_70C1
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_64_5284
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_62_6784
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld3C_1_Y2X0_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld4E_2_Y3X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_66_5477 ; id 3
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 4
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_65_56B8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorld12_0_Y2X1_Header
-    dfar KeyWorldScreenHeader_63_531D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld3C_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld12_0_Y2X1_Attrs
-    dfar KeyWorld32_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_65_5B98 ; id 5
-    dfar KeyWorldScreenHeader_62_68C2
-    dfar KeyWorldScreenHeader_65_4291
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_63_64F3
-    dfar KeyWorldScreenHeader_64_6272
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_64_48DA
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld42_1_Y3X0_Attrs
-    dfar KeyWorld40_5_Y0X0_Attrs
-    dfar KeyWorld23_0_Y1X3_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld42_3_Y0X0_Attrs
-    dfar KeyWorld30_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld00_0_Y2X1_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5658 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7517 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld10_0_Y1X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5485 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_55E2 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_64F3 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld12_0_Y3X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld47_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld42_3_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_64CA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_70C1 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5284 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6784 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3C_1_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld4E_2_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5477 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_56B8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorld12_0_Y2X1_Header ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_531D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3C_0_Y3X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld32_0_Y3X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_5B98 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_68C2 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4291 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_64F3 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6272 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_48DA ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld42_1_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld40_5_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld23_0_Y1X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld42_3_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld30_0_Y3X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -1854,198 +1854,198 @@ Data_068_5471:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup4F::
 Data_068_5477:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_64_7139
-    dfar KeyWorldScreenHeader_63_76CB
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld0C_0_Y1X2_Attrs
-    dfar KeyWorld0E_0_Y1X1_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorldScreenHeader_65_6736 ; id 1
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_63_76CB
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld0E_0_Y1X1_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_589C ; id 3
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_64_6AEC
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld11_1_Y2X2_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_62_406A ; id 4
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_63_73F8
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_64_6F23
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld3E_1_Y3X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld18_0_Y3X1_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_66_4DE4 ; id 5
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_63_7793
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld1B_1_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7139 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_76CB ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0C_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld0E_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6736 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_76CB ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0E_0_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_589C ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6AEC ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_406A ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_73F8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6F23 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3E_1_Y3X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld18_0_Y3X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_4DE4 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7793 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld1B_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -2057,198 +2057,198 @@ Data_068_56B7:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup50::
 Data_068_56BD:: ; address name
-    dfar KeyWorldScreenHeader_66_54FD ; id 0
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_743F
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_65_6C81
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_6CE1
-    dfar KeyWorldScreenHeader_65_5BD1
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld03_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld10_1_Y0X2_Attrs
-    dfar KeyWorld29_1_Y2X2_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorldScreenHeader_65_64CA ; id 2
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_62_70C1
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_63_5E57
-    dfar KeyWorldScreenHeader_62_68C2
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_6272
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld41_2_Y1X1_Attrs
-    dfar KeyWorld40_5_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld30_0_Y3X3_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorldScreenHeader_66_5560 ; id 3
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_63_5DED
-    dfar KeyWorldScreenHeader_62_694C
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorld12_0_Y2X1_Header
-    dfar KeyWorldScreenHeader_63_53B1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld30_2_Y0X2_Attrs
-    dfar KeyWorld3F_3_Y0X1_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld12_0_Y2X1_Attrs
-    dfar KeyWorld31_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_64_59BA ; id 4
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_64_59BA
-    dfar KeyWorldScreenHeader_63_52A2
-    dfar KeyWorldScreenHeader_65_4FAD
-    dfar KeyWorldScreenHeader_65_5587
-    dfar KeyWorldScreenHeader_64_60D8
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_52A2
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorld23_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld23_0_Y1X2_Attrs
-    dfar KeyWorld30_2_Y1X3_Attrs
-    dfar KeyWorld4C_5_Y1X1_Attrs
-    dfar KeyWorld40_4_Y0X3_Attrs
-    dfar KeyWorld50_4_Y1X3_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld30_2_Y1X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_5E91 ; id 5
-    dfar KeyWorldScreenHeader_63_453F
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_4CD6
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld50_5_Y0X0_Attrs
-    dfar KeyWorld12_1_Y2X2_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld02_0_Y2X3_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_54FD ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_743F ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6C81 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6CE1 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5BD1 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld03_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_1_Y0X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld29_1_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_64CA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_70C1 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5E57 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_68C2 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6272 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld41_2_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld40_5_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld30_0_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5560 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5DED ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_694C ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorld12_0_Y2X1_Header ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_53B1 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld30_2_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3F_3_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld31_1_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_59BA ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_59BA ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_52A2 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4FAD ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5587 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_60D8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_52A2 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld23_0_Y1X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld23_0_Y1X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld30_2_Y1X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld4C_5_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld40_4_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld50_4_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld30_2_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_5E91 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_453F ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4CD6 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld50_5_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld12_1_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -2260,198 +2260,198 @@ Data_068_58FD:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup51::
 Data_068_5903:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_65_68B7 ; id 1
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_64_6FCF
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld0B_0_Y2X1_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_743F
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_62_75B0 ; id 3
-    dfar KeyWorldScreenHeader_64_6659
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_64_720E
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld20_0_Y1X3_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld3A_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_774A ; id 4
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_60A2
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld16_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 5
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_63_73F8
-    dfar KeyWorldScreenHeader_64_6F23
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld3E_1_Y3X0_Attrs
-    dfar KeyWorld18_0_Y3X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_68B7 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6FCF ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0B_0_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_743F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_75B0 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6659 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_720E ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld20_0_Y1X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3A_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_774A ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_60A2 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld16_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_73F8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6F23 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld3E_1_Y3X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld18_0_Y3X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -2463,198 +2463,198 @@ Data_068_5B43:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup52::
 Data_068_5B49:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_5C32
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld52_0_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_65_751D ; id 1
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_6FCF
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorldScreenHeader_66_5658 ; id 2
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_64_5AD4
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_5437
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld30_3_Y0X0_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld3C_3_Y0X1_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_63_73F8
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld3E_1_Y3X0_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_62_43CA ; id 5
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_63_6FC0
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld02_0_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld16_1_Y1X1_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5C32 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld52_0_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_751D ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6FCF ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld0B_0_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5658 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5AD4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5437 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld30_3_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld3C_3_Y0X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_73F8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld3E_1_Y3X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_43CA ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6FC0 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld16_1_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -2666,198 +2666,198 @@ Data_068_5D89:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup53::
 Data_068_5D8F:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_62_5485
-    dfar KeyWorldScreenHeader_64_5B93
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_6744
-    dfar KeyWorldScreenHeader_62_6784
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld12_0_Y3X1_Attrs
-    dfar KeyWorld31_1_Y1X1_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld40_5_Y1X0_Attrs
-    dfar KeyWorld4E_2_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_65_75A3 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_76ED
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_65_4291
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld23_0_Y1X3_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorldScreenHeader_65_6546 ; id 2
-    dfar KeyWorldScreenHeader_65_643F
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_64_66F6
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y2X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_64_7848 ; id 3
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_63_60DA
-    dfar KeyWorldScreenHeader_65_5B98
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_54F8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld40_2_Y2X2_Attrs
-    dfar KeyWorld42_1_Y3X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld30_3_Y1X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_6807 ; id 4
-    dfar KeyWorldScreenHeader_63_6B43
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_64_5B93
-    dfar KeyWorldScreenHeader_63_6636
-    dfar KeyWorldScreenHeader_64_5284
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_54F8
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_64_66F6
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorld06_0_Y3X1_Header
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorld40_2_Y2X3_Attrs
-    dfar KeyWorld20_1_Y1X0_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld31_1_Y1X1_Attrs
-    dfar KeyWorld3C_2_Y0X3_Attrs
-    dfar KeyWorld3C_1_Y2X0_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld30_3_Y1X0_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld02_0_Y2X1_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld06_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_64_5B93 ; id 5
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_63_531D
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld31_1_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld32_0_Y3X3_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5485 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5B93 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6744 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6784 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld12_0_Y3X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld31_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld40_5_Y1X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld4E_2_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_75A3 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_76ED ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4291 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y0X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld23_0_Y1X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6546 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_643F ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_66F6 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld07_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y2X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7848 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_60DA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5B98 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_54F8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld40_2_Y2X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld42_1_Y3X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld30_3_Y1X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_6807 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6B43 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5B93 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6636 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5284 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_54F8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_66F6 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorld06_0_Y3X1_Header ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld40_2_Y2X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld20_1_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld31_1_Y1X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3C_2_Y0X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld3C_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld30_3_Y1X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld06_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_5B93 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_531D ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld31_1_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld32_0_Y3X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -2869,294 +2869,294 @@ Data_068_5FCF:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup54::
 Data_068_5FD5:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_77A4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_62_70C1
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_64_5B93
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_54F8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld1C_1_Y0X1_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld31_1_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld30_3_Y1X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_64_58E6
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_63_6744
-    dfar KeyWorldScreenHeader_62_668A
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld40_0_Y2X2_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld40_5_Y1X0_Attrs
-    dfar KeyWorld3C_1_Y3X0_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorldScreenHeader_65_64CA ; id 2
-    dfar KeyWorldScreenHeader_65_643F
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_63_6BCD
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_5218
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_64_460E
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X1_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld08_0_Y1X1_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld1E_0_Y2X1_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorldScreenHeader_62_7626 ; id 3
-    dfar KeyWorldScreenHeader_64_66F6
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_64_7945
-    dfar KeyWorldScreenHeader_64_6F23
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld02_0_Y2X1_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld18_0_Y3X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_63_6047 ; id 4
-    dfar KeyWorldScreenHeader_64_6145
-    dfar KeyWorldScreenHeader_63_453F
-    dfar KeyWorldScreenHeader_65_6C81
-    dfar KeyWorldScreenHeader_64_4734
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_64_66F6
-    dfar KeyWorldScreenHeader_66_4CD6
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_65_5BD1
-    dfar KeyWorld34_1_Y2X1_Attrs
-    dfar KeyWorld3C_3_Y0X0_Attrs
-    dfar KeyWorld12_1_Y2X2_Attrs
-    dfar KeyWorld03_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y2X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y2X3_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld29_1_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_64_7945 ; id 5
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_63_7545
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_62_5337
-    dfar KeyWorldScreenHeader_65_431E
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld02_0_Y3X0_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld0B_0_Y2X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld12_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_77EB
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y2X0_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_4F98 ; id 7
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_62_5519
-    dfar KeyWorldScreenHeader_64_5A34
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_63_60DA
-    dfar KeyWorldScreenHeader_64_60D8
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_63_6EFF
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld1E_0_Y1X1_Attrs
-    dfar KeyWorld3C_0_Y3X2_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld40_2_Y2X2_Attrs
-    dfar KeyWorld50_4_Y1X3_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_5E91 ; id 8
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld50_5_Y0X0_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_77A4 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_70C1 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5B93 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_54F8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld1C_1_Y0X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld31_1_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld30_3_Y1X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_58E6 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6744 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_668A ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld40_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld40_5_Y1X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld3C_1_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_64CA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_643F ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6BCD ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5218 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_460E ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld07_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld08_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld1E_0_Y2X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_7626 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_66F6 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7945 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6F23 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld18_0_Y3X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_63_6047 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6145 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_453F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6C81 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4734 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_66F6 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4CD6 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5BD1 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld34_1_Y2X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld3C_3_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld12_1_Y2X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld03_0_Y1X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_0_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld29_1_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7945 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7545 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5337 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_431E ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0B_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld12_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_77EB ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y2X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_4F98 ; id 7: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5519 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5A34 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_60DA ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_60D8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6EFF ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld1E_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3C_0_Y3X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld40_2_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld50_4_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_5E91 ; id 8: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld50_5_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -3168,294 +3168,294 @@ Data_068_6335:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup55::
 Data_068_633E:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_65_40C4
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_65_4D49
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_63_5E57
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld15_1_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld4C_4_Y0X3_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld41_2_Y1X1_Attrs
-    dfar KeyWorldScreenHeader_65_6546 ; id 1
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_6808
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_64_594F
-    dfar KeyWorldScreenHeader_64_5A34
-    dfar KeyWorldScreenHeader_64_5B93
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_64_6073
-    dfar KeyWorldScreenHeader_63_5437
-    dfar KeyWorldScreenHeader_63_54F8
-    dfar KeyWorldScreenHeader_65_50F6
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld06_0_Y0X1_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld34_2_Y0X3_Attrs
-    dfar KeyWorld3C_0_Y3X2_Attrs
-    dfar KeyWorld31_1_Y1X1_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld41_2_Y1X2_Attrs
-    dfar KeyWorld3C_3_Y0X1_Attrs
-    dfar KeyWorld30_3_Y1X0_Attrs
-    dfar KeyWorld55_1_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_65_643F ; id 2
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_63_5EAF
-    dfar KeyWorldScreenHeader_64_5218
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5587
-    dfar KeyWorldScreenHeader_64_51A5
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorld07_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld3F_3_Y0X0_Attrs
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld40_4_Y0X3_Attrs
-    dfar KeyWorld40_1_Y3X2_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorldScreenHeader_64_7848 ; id 3
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_65_57D0
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_5437
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_64_697E
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld55_3_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld3C_3_Y0X1_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld14_1_Y1X2_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_64_5218 ; id 4
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_63_45E3
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld15_1_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorldScreenHeader_63_66AF ; id 5
-    dfar KeyWorldScreenHeader_64_5310
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_63_60DA
-    dfar KeyWorldScreenHeader_64_5394
-    dfar KeyWorldScreenHeader_62_6EDC
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_65_5852
-    dfar KeyWorldScreenHeader_62_694C
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_6DE3
-    dfar KeyWorldScreenHeader_65_5B98
-    dfar KeyWorldScreenHeader_64_6311
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_6F70
-    dfar KeyWorld40_2_Y3X3_Attrs
-    dfar KeyWorld12_1_Y0X2_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld40_2_Y2X2_Attrs
-    dfar KeyWorld12_1_Y1X2_Attrs
-    dfar KeyWorld17_1_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld42_1_Y2X0_Attrs
-    dfar KeyWorld3F_3_Y0X1_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y1X3_Attrs
-    dfar KeyWorld42_1_Y3X0_Attrs
-    dfar KeyWorld40_5_Y1X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld08_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 7
-    dfar KeyWorldScreenHeader_62_7517
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_65_55E2
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_64_47BD
-    dfar KeyWorldScreenHeader_63_52A2
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y1X0_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld47_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld20_1_Y2X1_Attrs
-    dfar KeyWorld30_2_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorldScreenHeader_65_5B98 ; id 8
-    dfar KeyWorldScreenHeader_62_68C2
-    dfar KeyWorldScreenHeader_65_416D
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_63_6744
-    dfar KeyWorldScreenHeader_64_6272
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_64_4843
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld42_1_Y3X0_Attrs
-    dfar KeyWorld40_5_Y0X0_Attrs
-    dfar KeyWorld3C_1_Y3X2_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld40_5_Y1X0_Attrs
-    dfar KeyWorld30_0_Y3X3_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld36_0_Y2X1_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_40C4 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4D49 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5E57 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld15_1_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld4C_4_Y0X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld41_2_Y1X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_6546 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6808 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_594F ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5A34 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5B93 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6073 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5437 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_54F8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_50F6 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld06_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld34_2_Y0X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3C_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld31_1_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld41_2_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld3C_3_Y0X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld30_3_Y1X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld55_1_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_643F ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5EAF ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5218 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5587 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_51A5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld07_0_Y0X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld3F_3_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld40_4_Y0X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld40_1_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_7848 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_57D0 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5437 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_697E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld55_3_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld3C_3_Y0X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld14_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_5218 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_45E3 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld15_1_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_63_66AF ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5310 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_60DA ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5394 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6EDC ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5852 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_694C ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6DE3 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5B98 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6311 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6F70 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld40_2_Y3X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld12_1_Y0X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld40_2_Y2X2_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld12_1_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_1_Y0X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld42_1_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3F_3_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld00_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld42_1_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld40_5_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld08_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 7: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7517 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_55E2 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_47BD ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_52A2 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld10_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld47_0_Y2X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld20_1_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld30_2_Y1X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_5B98 ; id 8: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_68C2 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_416D ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6744 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6272 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_4843 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld42_1_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld40_5_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld3C_1_Y3X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld40_5_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld30_0_Y3X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld36_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -3467,294 +3467,294 @@ Data_068_669E:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup56::
 Data_068_66A7:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_528E
-    dfar KeyWorldScreenHeader_65_40C4
-    dfar KeyWorldScreenHeader_62_7985
-    dfar KeyWorldScreenHeader_62_5166
-    dfar KeyWorldScreenHeader_65_564B
-    dfar KeyWorldScreenHeader_64_51A5
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_64_454F
-    dfar KeyWorldScreenHeader_63_65BE
-    dfar KeyWorldScreenHeader_64_5218
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld10_0_Y1X1_Attrs
-    dfar KeyWorld15_1_Y1X2_Attrs
-    dfar KeyWorld04_0_Y2X0_Attrs
-    dfar KeyWorld23_0_Y1X1_Attrs
-    dfar KeyWorld56_0_Y2X2_Attrs
-    dfar KeyWorld40_1_Y3X2_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld31_1_Y2X0_Attrs
-    dfar KeyWorld34_2_Y1X3_Attrs
-    dfar KeyWorld34_1_Y2X2_Attrs
-    dfar KeyWorldScreenHeader_65_77A4 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_64_6828
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_62_702C
-    dfar KeyWorldScreenHeader_65_64CA
-    dfar KeyWorldScreenHeader_63_7626
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorld11_1_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld10_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X2_Attrs
-    dfar KeyWorld1A_0_Y3X2_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_65_65EA ; id 2
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_63_7545
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld0B_0_Y2X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
-    dfar KeyWorldScreenHeader_64_79CF ; id 3
-    dfar KeyWorldScreenHeader_63_6D0B
-    dfar KeyWorldScreenHeader_64_460E
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_66_5705
-    dfar KeyWorldScreenHeader_63_74A4
-    dfar KeyWorldScreenHeader_66_4546
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_74B6
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld08_0_Y2X2_Attrs
-    dfar KeyWorld1E_0_Y2X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y0X0_Attrs
-    dfar KeyWorld0D_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld03_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorldScreenHeader_62_423A ; id 4
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_6E4E
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorldScreenHeader_64_72E0
-    dfar KeyWorldScreenHeader_65_6546
-    dfar KeyWorldScreenHeader_65_5BD1
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_65_5FE5
-    dfar KeyWorldScreenHeader_62_5209
-    dfar KeyWorldScreenHeader_65_4041
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld0B_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y0X1_Attrs
-    dfar KeyWorld29_1_Y2X2_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld10_1_Y0X1_Attrs
-    dfar KeyWorld40_1_Y2X1_Attrs
-    dfar KeyWorld10_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_62_75B0 ; id 5
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_63_73F8
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld3E_1_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_5F42
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_62_53C7
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_64_47BD
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_78B1
-    dfar KeyWorld06_0_Y3X1_Header
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld39_1_Y1X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld20_1_Y2X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_0_Y3X0_Attrs
-    dfar KeyWorld06_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_62_5337 ; id 7
-    dfar KeyWorldScreenHeader_65_43BD
-    dfar KeyWorldScreenHeader_63_5F99
-    dfar KeyWorldScreenHeader_62_668A
-    dfar KeyWorldScreenHeader_62_6083
-    dfar KeyWorldScreenHeader_63_4867
-    dfar KeyWorldScreenHeader_64_46A7
-    dfar KeyWorldScreenHeader_63_64F3
-    dfar KeyWorldScreenHeader_63_472D
-    dfar KeyWorldScreenHeader_64_6A43
-    dfar KeyWorldScreenHeader_63_6DB3
-    dfar KeyWorldScreenHeader_64_460E
-    dfar KeyWorldScreenHeader_66_478E
-    dfar KeyWorldScreenHeader_66_505C
-    dfar KeyWorldScreenHeader_64_7B56
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorld12_0_Y1X1_Attrs
-    dfar KeyWorld00_0_Y1X2_Attrs
-    dfar KeyWorld12_1_Y1X1_Attrs
-    dfar KeyWorld3C_1_Y3X0_Attrs
-    dfar KeyWorld40_2_Y1X3_Attrs
-    dfar KeyWorld1E_0_Y2X2_Attrs
-    dfar KeyWorld12_1_Y2X1_Attrs
-    dfar KeyWorld42_3_Y0X0_Attrs
-    dfar KeyWorld30_3_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X2_Attrs
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld1E_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y2X2_Attrs
-    dfar KeyWorld10_1_Y3X3_Attrs
-    dfar KeyWorld04_0_Y3X0_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorldScreenHeader_65_445B ; id 8
-    dfar KeyWorldScreenHeader_62_5519
-    dfar KeyWorldScreenHeader_65_41F0
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_62_694C
-    dfar KeyWorldScreenHeader_65_5852
-    dfar KeyWorldScreenHeader_64_5284
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_63_557A
-    dfar KeyWorldScreenHeader_63_5437
-    dfar KeyWorldScreenHeader_63_468C
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorldScreenHeader_66_46C5
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4D7D
-    dfar KeyWorld32_1_Y2X0_Attrs
-    dfar KeyWorld1E_0_Y1X1_Attrs
-    dfar KeyWorld1E_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld3F_3_Y0X1_Attrs
-    dfar KeyWorld42_1_Y2X0_Attrs
-    dfar KeyWorld3C_1_Y2X0_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld23_0_Y2X2_Attrs
-    dfar KeyWorld3C_3_Y0X1_Attrs
-    dfar KeyWorld10_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorld04_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y3X3_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_528E ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_40C4 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7985 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5166 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_564B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_51A5 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_454F ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_65BE ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5218 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld10_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld15_1_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y2X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld23_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld56_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld40_1_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld31_1_Y2X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld34_2_Y1X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld34_1_Y2X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_77A4 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6828 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_702C ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_64CA ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7626 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld11_1_Y0X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld10_1_Y2X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld1A_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_65EA ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7545 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0B_0_Y2X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_79CF ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6D0B ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_460E ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5705 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_74A4 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4546 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_74B6 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld08_0_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld1E_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld04_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld0D_0_Y1X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld05_0_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld03_0_Y0X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_423A ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6E4E ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_72E0 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6546 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5BD1 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5FE5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5209 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_4041 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld10_0_Y3X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld0B_0_Y1X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld00_0_Y0X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld29_1_Y2X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld10_1_Y0X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld40_1_Y2X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_75B0 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_73F8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3E_1_Y3X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5F42 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_53C7 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_47BD ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_78B1 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorld06_0_Y3X1_Header ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y1X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld39_1_Y1X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld20_1_Y2X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld10_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld06_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_62_5337 ; id 7: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_43BD ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5F99 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_668A ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6083 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_4867 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_46A7 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_64F3 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_472D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6A43 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6DB3 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_460E ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_478E ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_505C ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7B56 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld12_0_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld00_0_Y1X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld12_1_Y1X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld3C_1_Y3X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld40_2_Y1X3_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld1E_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld12_1_Y2X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld42_3_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld30_3_Y1X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y2X2_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld1E_0_Y2X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld02_0_Y2X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld10_1_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld04_0_Y3X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_65_445B ; id 8: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_5519 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_41F0 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_694C ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5852 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_5284 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_557A ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_5437 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_468C ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_46C5 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4D7D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld32_1_Y2X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld1E_0_Y1X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld1E_0_Y1X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3F_3_Y0X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld42_1_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld3C_1_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld23_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld3C_3_Y0X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld10_0_Y2X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X3_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order
@@ -3766,294 +3766,294 @@ Data_068_6A07:: ; address name
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup57::
 Data_068_6A10:: ; address name
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 0
-    dfar KeyWorldScreenHeader_66_589C
-    dfar KeyWorldScreenHeader_65_68B7
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_43CA
-    dfar KeyWorldScreenHeader_65_6C81
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_64_7848
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_63_6FC0
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld10_1_Y0X0_Attrs
-    dfar KeyWorld06_0_Y0X2_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld02_0_Y1X1_Attrs
-    dfar KeyWorld03_0_Y1X2_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld05_0_Y3X0_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld16_1_Y1X1_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 1
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 2
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_6693
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_65_5E8C
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6E8B
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y0X1_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y0X1_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld02_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 3
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_77CC
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_54FD
-    dfar KeyWorldScreenHeader_65_6736
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_75B0
-    dfar KeyWorldScreenHeader_62_4365
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5477
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld08_0_Y2X1_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y0X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y1X0_Attrs
-    dfar KeyWorld02_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y0X0_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorldScreenHeader_64_6F23 ; id 4
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_66_5658
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_63_73F8
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_63_6C79
-    dfar KeyWorldScreenHeader_65_6D0D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_62_7626
-    dfar KeyWorldScreenHeader_62_6D6B
-    dfar KeyWorldScreenHeader_65_65EA
-    dfar KeyWorldScreenHeader_65_7641
-    dfar KeyWorldScreenHeader_62_7517
-    dfar KeyWorld18_0_Y3X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld0B_0_Y0X0_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld3E_1_Y3X0_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld13_0_Y2X1_Attrs
-    dfar KeyWorld04_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld02_0_Y2X0_Attrs
-    dfar KeyWorld08_0_Y1X2_Attrs
-    dfar KeyWorld04_0_Y0X2_Attrs
-    dfar KeyWorld00_0_Y0X3_Attrs
-    dfar KeyWorld10_0_Y1X0_Attrs
-    dfar KeyWorldScreenHeader_64_6828 ; id 5
-    dfar KeyWorldScreenHeader_66_4E6E
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_65_751D
-    dfar KeyWorldScreenHeader_62_774A
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_62_6F90
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_62_423A
-    dfar KeyWorldScreenHeader_62_41C9
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld0A_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld07_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld1C_1_Y1X2_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y1X2_Attrs
-    dfar KeyWorld11_1_Y1X1_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorldScreenHeader_66_5CC8 ; id 6
-    dfar KeyWorldScreenHeader_62_78C0
-    dfar KeyWorldScreenHeader_64_68E4
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_4F98
-    dfar KeyWorldScreenHeader_66_5560
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_57D9
-    dfar KeyWorldScreenHeader_65_5D1D
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7C14
-    dfar KeyWorldScreenHeader_66_4917
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld04_0_Y1X0_Attrs
-    dfar KeyWorld10_0_Y3X2_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld03_0_Y2X2_Attrs
-    dfar KeyWorld01_0_Y1X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld17_1_Y2X1_Attrs
-    dfar KeyWorld24_1_Y2X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld07_0_Y3X2_Attrs
-    dfar KeyWorld00_0_Y3X2_Attrs
-    dfar KeyWorldScreenHeader_63_6EFF ; id 7
-    dfar KeyWorldScreenHeader_64_6AEC
-    dfar KeyWorldScreenHeader_64_706F
-    dfar KeyWorldScreenHeader_63_7626
-    dfar KeyWorldScreenHeader_65_5DD4
-    dfar KeyWorldScreenHeader_65_7023
-    dfar KeyWorldScreenHeader_64_79CF
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_62_42B3
-    dfar KeyWorldScreenHeader_65_70BD
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_66_55DC
-    dfar KeyWorldScreenHeader_66_4859
-    dfar KeyWorldScreenHeader_66_5115
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorldScreenHeader_64_7A7D
-    dfar KeyWorld14_1_Y1X1_Attrs
-    dfar KeyWorld11_1_Y2X2_Attrs
-    dfar KeyWorld17_0_Y3X1_Attrs
-    dfar KeyWorld1A_0_Y3X2_Attrs
-    dfar KeyWorld13_0_Y1X1_Attrs
-    dfar KeyWorld06_0_Y2X3_Attrs
-    dfar KeyWorld01_0_Y3X0_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld04_0_Y2X1_Attrs
-    dfar KeyWorld05_0_Y1X1_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld01_0_Y0X1_Attrs
-    dfar KeyWorld00_0_Y3X1_Attrs
-    dfar KeyWorld05_0_Y3X3_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
-    dfar KeyWorld00_0_Y3X0_Attrs
-    dfar KeyWorldScreenHeader_63_6DB3 ; id 8
-    dfar KeyWorld01_0_Y2X1_Header
-    dfar KeyWorldScreenHeader_62_6E33
-    dfar KeyWorldScreenHeader_65_75A3
-    dfar KeyWorldScreenHeader_62_76AE
-    dfar KeyWorldScreenHeader_62_406A
-    dfar KeyWorldScreenHeader_62_40EE
-    dfar KeyWorldScreenHeader_65_6D65
-    dfar KeyWorldScreenHeader_65_5C71
-    dfar KeyWorldScreenHeader_62_43CA
-    dfar KeyWorldScreenHeader_64_6797
-    dfar KeyWorldScreenHeader_66_4EF7
-    dfar KeyWorldScreenHeader_66_45B4
-    dfar KeyWorldScreenHeader_66_4635
-    dfar KeyWorldScreenHeader_66_4DE4
-    dfar KeyWorldScreenHeader_66_5CC8
-    dfar KeyWorld27_0_Y1X3_Attrs
-    dfar KeyWorld01_0_Y2X1_Attrs
-    dfar KeyWorld05_0_Y2X1_Attrs
-    dfar KeyWorld02_0_Y0X3_Attrs
-    dfar KeyWorld00_0_Y1X0_Attrs
-    dfar KeyWorld04_0_Y2X2_Attrs
-    dfar KeyWorld04_0_Y1X2_Attrs
-    dfar KeyWorld00_0_Y2X3_Attrs
-    dfar KeyWorld05_0_Y2X2_Attrs
-    dfar KeyWorld02_0_Y1X1_Attrs
-    dfar KeyWorld0F_0_Y1X2_Attrs
-    dfar KeyWorld08_0_Y3X3_Attrs
-    dfar KeyWorld0A_0_Y1X2_Attrs
-    dfar KeyWorld05_0_Y3X1_Attrs
-    dfar KeyWorld01_0_Y3X2_Attrs
-    dfar KeyWorld01_0_Y0X0_Attrs
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 0: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_589C ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_68B7 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_43CA ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6C81 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7848 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6FC0 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld10_1_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld06_0_Y0X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld02_0_Y1X1_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld03_0_Y1X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld05_0_Y3X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld16_1_Y1X1_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 1: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 2: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6693 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5E8C ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6E8B ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld17_1_Y0X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X3_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 3: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_77CC ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_54FD ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6736 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_75B0 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_4365 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5477 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld08_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld00_0_Y0X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y0X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld02_0_Y1X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y1X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld02_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_6F23 ; id 4: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5658 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_73F8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_6C79 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D0D ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7626 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6D6B ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_65EA ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7641 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_7517 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld18_0_Y3X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld0B_0_Y0X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld3E_1_Y3X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld13_0_Y2X1_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y1X3_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld02_0_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld08_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld04_0_Y0X2_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y0X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld10_0_Y1X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_64_6828 ; id 5: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4E6E ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_751D ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_774A ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6F90 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_423A ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_41C9 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld0A_0_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y2X3_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld07_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y2X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld1C_1_Y1X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld11_1_Y1X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_66_5CC8 ; id 6: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_78C0 ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_68E4 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4F98 ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5560 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_57D9 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5D1D ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7C14 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4917 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld04_0_Y1X0_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld10_0_Y3X2_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld03_0_Y2X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y1X0_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld17_1_Y2X1_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld24_1_Y2X0_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld07_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X2_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_63_6EFF ; id 7: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6AEC ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_706F ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_63_7626 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5DD4 ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_7023 ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_79CF ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_42B3 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_70BD ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_55DC ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4859 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5115 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_7A7D ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld14_1_Y1X1_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld11_1_Y2X2_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld17_0_Y3X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld1A_0_Y3X2_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld13_0_Y1X1_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld06_0_Y2X3_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld01_0_Y3X0_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld04_0_Y2X1_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld05_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld01_0_Y0X1_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld00_0_Y3X1_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X3_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld00_0_Y3X0_Attrs ; screen 15: compressed attribute map
+    dfar KeyWorldScreenHeader_63_6DB3 ; id 8: screen 0: 8-byte header, then the compressed tile map
+    dfar KeyWorld01_0_Y2X1_Header ; screen 1: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_6E33 ; screen 2: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_75A3 ; screen 3: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_76AE ; screen 4: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_406A ; screen 5: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_40EE ; screen 6: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_6D65 ; screen 7: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_65_5C71 ; screen 8: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_62_43CA ; screen 9: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_64_6797 ; screen 10: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4EF7 ; screen 11: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_45B4 ; screen 12: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4635 ; screen 13: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_4DE4 ; screen 14: 8-byte header, then the compressed tile map
+    dfar KeyWorldScreenHeader_66_5CC8 ; screen 15: 8-byte header, then the compressed tile map
+    dfar KeyWorld27_0_Y1X3_Attrs ; screen 0: compressed attribute map
+    dfar KeyWorld01_0_Y2X1_Attrs ; screen 1: compressed attribute map
+    dfar KeyWorld05_0_Y2X1_Attrs ; screen 2: compressed attribute map
+    dfar KeyWorld02_0_Y0X3_Attrs ; screen 3: compressed attribute map
+    dfar KeyWorld00_0_Y1X0_Attrs ; screen 4: compressed attribute map
+    dfar KeyWorld04_0_Y2X2_Attrs ; screen 5: compressed attribute map
+    dfar KeyWorld04_0_Y1X2_Attrs ; screen 6: compressed attribute map
+    dfar KeyWorld00_0_Y2X3_Attrs ; screen 7: compressed attribute map
+    dfar KeyWorld05_0_Y2X2_Attrs ; screen 8: compressed attribute map
+    dfar KeyWorld02_0_Y1X1_Attrs ; screen 9: compressed attribute map
+    dfar KeyWorld0F_0_Y1X2_Attrs ; screen 10: compressed attribute map
+    dfar KeyWorld08_0_Y3X3_Attrs ; screen 11: compressed attribute map
+    dfar KeyWorld0A_0_Y1X2_Attrs ; screen 12: compressed attribute map
+    dfar KeyWorld05_0_Y3X1_Attrs ; screen 13: compressed attribute map
+    dfar KeyWorld01_0_Y3X2_Attrs ; screen 14: compressed attribute map
+    dfar KeyWorld01_0_Y0X0_Attrs ; screen 15: compressed attribute map
 
 ; E-0146 (derived: a permutation of the sub-chunk numbers)
 ; record: sub-chunk order

@@ -1907,90 +1907,90 @@ Data_01B_5190:: ; address name
 ; record: 84 $F0-terminated words, the same as RejectedNameList (14:$70F0) without padding
 RejectedNameListCopy_1B::
 Data_01B_51B6:: ; address name
-    db "Ass", $F0 ; entry 0
-    db "ASS", $F0
-    db "Dink", $F0
-    db "DINK", $F0
-    db "Dork", $F0
-    db "DORK", $F0
-    db "Cunt", $F0
-    db "CUNT", $F0
-    db "Kunt", $F0
-    db "KUNT", $F0
-    db "Fuck", $F0
-    db "FUCK", $F0
-    db "Shit", $F0
-    db "SHIT", $F0
-    db "Sex", $F0
-    db "SEX", $F0
-    db "Poop", $F0
-    db "POOP", $F0
-    db "Dong", $F0
-    db "DONG", $F0
-    db "Pene", $F0
-    db "PENE", $F0
-    db "Clit", $F0
-    db "CLIT", $F0
-    db "Twat", $F0
-    db "TWAT", $F0
-    db "Snot", $F0
-    db "SNOT", $F0
-    db "Fag", $F0
-    db "FAG", $F0
-    db "Homo", $F0
-    db "HOMO", $F0
-    db "Poon", $F0
-    db "POON", $F0
-    db "Piss", $F0
-    db "PISS", $F0
-    db "Prick", $F0
-    db "PRICK", $F0
-    db "Fukk", $F0
-    db "FUKK", $F0
-    db "Coon", $F0
-    db "COON", $F0
-    db "Nazi", $F0
-    db "NAZI", $F0
-    db "Niga", $F0
-    db "NIGA", $F0
-    db "Nigga", $F0
-    db "NIGGA", $F0
-    db "Jap", $F0
-    db "JAP", $F0
-    db "Jew", $F0
-    db "JEW", $F0
-    db "Wop", $F0
-    db "WOP", $F0
-    db "Spic", $F0
-    db "SPIC", $F0
-    db "Butt", $F0
-    db "BUTT", $F0
-    db "Perv", $F0
-    db "PERV", $F0
-    db "Dumb", $F0
-    db "DUMB", $F0
-    db "Dolt", $F0
-    db "DOLT", $F0
-    db "Anus", $F0
-    db "ANUS", $F0
-    db "Anal", $F0
-    db "ANAL", $F0
-    db "Jerk", $F0
-    db "JERK", $F0
-    db "Puke", $F0
-    db "PUKE", $F0
-    db "Snot", $F0
-    db "SNOT", $F0
-    db "Barf", $F0
-    db "BARF", $F0
-    db "Pus", $F0
-    db "PUS", $F0
-    db "Pussy", $F0
-    db "PUSSY", $F0
-    db "Bung", $F0
-    db "BUNG", $F0
-    db "Suck", $F0
-    db "SUCK", $F0
+    db "Ass", $F0 ; entry 0: word 0
+    db "ASS", $F0 ; word 1
+    db "Dink", $F0 ; word 2
+    db "DINK", $F0 ; word 3
+    db "Dork", $F0 ; word 4
+    db "DORK", $F0 ; word 5
+    db "Cunt", $F0 ; word 6
+    db "CUNT", $F0 ; word 7
+    db "Kunt", $F0 ; word 8
+    db "KUNT", $F0 ; word 9
+    db "Fuck", $F0 ; word 10
+    db "FUCK", $F0 ; word 11
+    db "Shit", $F0 ; word 12
+    db "SHIT", $F0 ; word 13
+    db "Sex", $F0 ; word 14
+    db "SEX", $F0 ; word 15
+    db "Poop", $F0 ; word 16
+    db "POOP", $F0 ; word 17
+    db "Dong", $F0 ; word 18
+    db "DONG", $F0 ; word 19
+    db "Pene", $F0 ; word 20
+    db "PENE", $F0 ; word 21
+    db "Clit", $F0 ; word 22
+    db "CLIT", $F0 ; word 23
+    db "Twat", $F0 ; word 24
+    db "TWAT", $F0 ; word 25
+    db "Snot", $F0 ; word 26
+    db "SNOT", $F0 ; word 27
+    db "Fag", $F0 ; word 28
+    db "FAG", $F0 ; word 29
+    db "Homo", $F0 ; word 30
+    db "HOMO", $F0 ; word 31
+    db "Poon", $F0 ; word 32
+    db "POON", $F0 ; word 33
+    db "Piss", $F0 ; word 34
+    db "PISS", $F0 ; word 35
+    db "Prick", $F0 ; word 36
+    db "PRICK", $F0 ; word 37
+    db "Fukk", $F0 ; word 38
+    db "FUKK", $F0 ; word 39
+    db "Coon", $F0 ; word 40
+    db "COON", $F0 ; word 41
+    db "Nazi", $F0 ; word 42
+    db "NAZI", $F0 ; word 43
+    db "Niga", $F0 ; word 44
+    db "NIGA", $F0 ; word 45
+    db "Nigga", $F0 ; word 46
+    db "NIGGA", $F0 ; word 47
+    db "Jap", $F0 ; word 48
+    db "JAP", $F0 ; word 49
+    db "Jew", $F0 ; word 50
+    db "JEW", $F0 ; word 51
+    db "Wop", $F0 ; word 52
+    db "WOP", $F0 ; word 53
+    db "Spic", $F0 ; word 54
+    db "SPIC", $F0 ; word 55
+    db "Butt", $F0 ; word 56
+    db "BUTT", $F0 ; word 57
+    db "Perv", $F0 ; word 58
+    db "PERV", $F0 ; word 59
+    db "Dumb", $F0 ; word 60
+    db "DUMB", $F0 ; word 61
+    db "Dolt", $F0 ; word 62
+    db "DOLT", $F0 ; word 63
+    db "Anus", $F0 ; word 64
+    db "ANUS", $F0 ; word 65
+    db "Anal", $F0 ; word 66
+    db "ANAL", $F0 ; word 67
+    db "Jerk", $F0 ; word 68
+    db "JERK", $F0 ; word 69
+    db "Puke", $F0 ; word 70
+    db "PUKE", $F0 ; word 71
+    db "Snot", $F0 ; word 72
+    db "SNOT", $F0 ; word 73
+    db "Barf", $F0 ; word 74
+    db "BARF", $F0 ; word 75
+    db "Pus", $F0 ; word 76
+    db "PUS", $F0 ; word 77
+    db "Pussy", $F0 ; word 78
+    db "PUSSY", $F0 ; word 79
+    db "Bung", $F0 ; word 80
+    db "BUNG", $F0 ; word 81
+    db "Suck", $F0 ; word 82
+    db "SUCK", $F0 ; word 83
 
 ; C1 static reading (E-0197): not reached from any traced code, pointer or far call found; the bytes after the word list at $51B6 decode as one routine: clear $6F bytes from wScreenState, decompress bank $46 $4001 to $8800, far-call F1:$4AA8, LoadPalette0FromData53C6, then wait on wC8CB and jp $077A
 ; clears $6F bytes from wScreenState, decompresses bank $46 $4001 to $8800, far-calls F1:$4AA8 and LoadPalette0FromData53C6, waits on wC8CB and jumps to $077A; no caller found (E-0197)
