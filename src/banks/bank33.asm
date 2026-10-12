@@ -804,7 +804,7 @@ Jump_033_51ED::
     ret
 
 Jump_033_51F4::
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_033_51FB::

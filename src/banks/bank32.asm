@@ -3367,7 +3367,7 @@ RunBattleActions_Case00_Sub01_Case03::
 Jump_032_5474:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
-    farcall ShowActionBattleTextFrom6DAA
+    farcall ShowActionBattleTextFromActionBattleTextTable
     ld a, $80
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
@@ -4005,7 +4005,7 @@ Jump_032_58DA:: ; address name
     ld a, [wResolveFlagB2]
     bit 0, a
     jr nz, Jump_032_58F2
-    farcall ShowActionBattleTextFrom6DAA
+    farcall ShowActionBattleTextFromActionBattleTextTable
     ld a, $80
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
@@ -4825,7 +4825,7 @@ Jump_032_5E0B::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ret
 
 ; only called from RecomputeTargetMaxHPAndMP (E-0047)

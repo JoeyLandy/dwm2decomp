@@ -1430,7 +1430,7 @@ Jump_002_4846::
 
 Jump_002_48AE::
     farcall FullyHealParty
-    call RunFunc5E85Twice
+    call RunMoveIncapacitatedPartyMembersBackTwice
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
     jp RunFieldReturnPhase_Case00
@@ -4853,12 +4853,12 @@ Jump_002_5E6C::
 ; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_Case02, RefreshRecordListAndNameTiles, PriestMenu_Case02_Case10, RefreshRecordListAndNameTiles_BankF1)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
-RunFunc5E85Twice::
+RunMoveIncapacitatedPartyMembersBackTwice::
 Func_002_5E82:: ; address name
     call MoveIncapacitatedPartyMembersBack
 
 ; reorders the party list so a member with bit 7 of field $55 set moves behind one without it (second/third and first/second pairs) (E-0127)
-; 23 call sites from 12 routines (e.g. InitFieldScreen, RunFunc5E85Twice, SceneThreeItems_Case22, Talk00Event1A_Case05, ...)
+; 23 call sites from 12 routines (e.g. InitFieldScreen, RunMoveIncapacitatedPartyMembersBackTwice, SceneThreeItems_Case22, Talk00Event1A_Case05, ...)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 MoveIncapacitatedPartyMembersBack::

@@ -3589,7 +3589,7 @@ Jump_037_5BF5::
     inc de
 
 Jump_037_5C07::
-    call MapAndCompactSkillList63D3
+    call MapAndCompactSkillListLinkSkillMapTable_A
     ld b, $12
     call CopyBBytesHLToDE_Bank37
     call ScaleStatWordsToLinkFormat
@@ -3647,7 +3647,7 @@ Func_037_5C4E:: ; address name
     ld [hl+], a
     inc de
     call ConvertEightBytesAndPadF0
-    call AppendTable5FC7WordForByteAtDE
+    call AppendLinkCodeToSpeciesWordForByteAtDE
     ld a, c
     ld [wSpeciesIdLo], a
     ld a, b
@@ -3669,8 +3669,8 @@ Func_037_5C4E:: ; address name
     jr Jump_037_5C95
 
 Jump_037_5C80::
-    call AppendTable5FC7WordForByteAtDE
-    call AppendTable5FC7WordForByteAtDE
+    call AppendLinkCodeToSpeciesWordForByteAtDE
+    call AppendLinkCodeToSpeciesWordForByteAtDE
     call CallFunc4001InBank81KeepRegs
     call ConvertEightBytesAndPadF0
     ld a, [de]
@@ -3682,7 +3682,7 @@ Jump_037_5C80::
     inc de
 
 Jump_037_5C95::
-    call MapAndCompactSkillList62F5
+    call MapAndCompactSkillListLinkSkillMapTable_B
     ld b, $12
     call CopyBBytesHLToDE_Bank37
     call ScaleStatWordsForDisplay_5F4A
@@ -3983,7 +3983,7 @@ Jump_037_5DE9::
 
 ; maps $21 bytes through Data_037_63D3 and compacts the 8- and $19-entry lists, dropping $FE/$FF entries (E-0127)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWorkBuf)
-MapAndCompactSkillList63D3::
+MapAndCompactSkillListLinkSkillMapTable_A::
 Func_037_5DEB:: ; address name
     ld b, $21
     push hl
@@ -4182,7 +4182,7 @@ Jump_037_5EC2::
 
 ; reads a byte index at DE (DE += 1) and appends the word at $5FC7 + 2 * index to [HL]; HL ends after the word, C = low byte (E-0121)
 ; 3 call sites from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
-AppendTable5FC7WordForByteAtDE::
+AppendLinkCodeToSpeciesWordForByteAtDE::
 Func_037_5ED0:: ; address name
     ld a, [de]
     inc de
@@ -4222,7 +4222,7 @@ Func_037_5EE7:: ; address name
 
 ; maps $21 bytes through Data_037_62F5 and compacts the 8- and $19-entry lists, dropping $FF entries (E-0127)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToRecordBufB)
-MapAndCompactSkillList62F5::
+MapAndCompactSkillListLinkSkillMapTable_B::
 Func_037_5EF7:: ; address name
     ld b, $21
     push hl
@@ -5018,7 +5018,7 @@ Data_037_6175:: ; address name
     db $6D ; id 382 Kagebou
     db $00 ; id 383 ?
 
-; E-0217 (C1: MapAndCompactSkillList62F5, from UnpackLinkRecordToRecordBufB, maps $21 skill bytes through $62F5 + byte (except $FF) and compacts the lists, dropping $FE/$FF; 222 entries end at LinkSkillMapTable_A).
+; E-0217 (C1: MapAndCompactSkillListLinkSkillMapTable_B, from UnpackLinkRecordToRecordBufB, maps $21 skill bytes through $62F5 + byte (except $FF) and compacts the lists, dropping $FE/$FF; 222 entries end at LinkSkillMapTable_A).
 ; record: mapped skill ($FE/$FF = dropped)
 LinkSkillMapTable_B::
 Data_037_62F5:: ; address name
@@ -5245,7 +5245,7 @@ Data_037_62F5:: ; address name
     db $35 ; id 220
     db $8F ; id 221
 
-; E-0217 (C1: MapAndCompactSkillList63D3, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back).
+; E-0217 (C1: MapAndCompactSkillListLinkSkillMapTable_A, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back).
 ; record: mapped skill ($FE = dropped)
 LinkSkillMapTable_A::
 Data_037_63D3:: ; address name

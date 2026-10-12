@@ -619,7 +619,7 @@ Func_0A0_4301:: ; address name
     ld a, [hl]
     ld [de], a
     inc de
-    call ApplyTable4387IncrementsForA0DTo13
+    call ApplyIncrementOffsetRowsA0ForA0DTo13
     ld a, $FF
     ld [de], a
     inc de
@@ -639,7 +639,7 @@ Func_0A0_4344:: ; address name
 ; for A in $0D-$13 increments (capped at 3) each byte listed in Data_0A0_4387 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode7_Init_Sub01_Sub05_Sub01)
 ; writes: hTemp0, hTemp1
-ApplyTable4387IncrementsForA0DTo13::
+ApplyIncrementOffsetRowsA0ForA0DTo13::
 Func_0A0_434B:: ; address name
     or a, a
     ret z
@@ -677,7 +677,7 @@ Jump_0A0_436F::
     jr Jump_0A0_4368
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (the bank-$A0 copy of IncrementTableByteCappedAt3) (E-0118)
-; 1 call site from 1 routine (e.g. ApplyTable4387IncrementsForA0DTo13)
+; 1 call site from 1 routine (e.g. ApplyIncrementOffsetRowsA0ForA0DTo13)
 ; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3_BankA0::
 Func_0A0_4378:: ; address name
@@ -694,7 +694,7 @@ Func_0A0_4378:: ; address name
     ld [hl], a
     ret
 
-; E-0236 (C1: ApplyTable4387IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
+; E-0236 (C1: ApplyIncrementOffsetRowsA0ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
 ; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding
 IncrementOffsetRows_A0::
 Data_0A0_4387:: ; address name
@@ -844,7 +844,7 @@ Jump_0A0_4489::
     jr Jump_0A0_449F
 
 Jump_0A0_4499::
-    farcall SetCFromBattleArg0ThenRun434D
+    farcall SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
 Jump_0A0_449F::
     pop bc
@@ -952,7 +952,7 @@ Jump_0A0_4550::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     pop bc
     farcall SetSlotAIModeFromINT
     ret
@@ -1017,7 +1017,7 @@ Jump_0A0_45A0::
     jr Jump_0A0_45B9
 
 Jump_0A0_45B3::
-    farcall SetCFromBattleArg0ThenRun434D
+    farcall SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
 Jump_0A0_45B9::
     pop bc
@@ -1126,7 +1126,7 @@ Jump_0A0_466B::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     pop bc
     farcall SetSlotAIModeFromINT
     ret

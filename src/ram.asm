@@ -445,7 +445,7 @@ DEF wKeyWorldFlags EQU $CD07 ; key-world flags (bit 7 = boss or cleared state) (
 DEF wKeyWorldGoalScreen EQU $CD08 ; screen of the key-world goal (x and y nibbles) (E-0135)
 DEF wKeyWorldGoalPos EQU $CD09 ; goal position bytes (E-0135)
 DEF wKeyWorldGoalPos2 EQU $CD0A ; goal position bytes (E-0135)
-DEF wKeyWorldGoalKind EQU $CD0B ; kind of the key-world goal object (PickRandomNonzeroFromTable4CC1) (E-0135)
+DEF wKeyWorldGoalKind EQU $CD0B ; kind of the key-world goal object (PickRandomNonzeroFromKeyWorldGoalKindRows) (E-0135)
 DEF wKeyWorldAreaCount EQU $CD0C ; number of areas (E-0135)
 DEF wKeyWorldWidth EQU $CD0D ; key-world width in screens (E-0135)
 DEF wKeyWorldHeight EQU $CD0E ; key-world height in screens (E-0135)

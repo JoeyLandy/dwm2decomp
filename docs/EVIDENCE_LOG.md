@@ -2430,6 +2430,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0260 — Names that spelled a callee's or table's address
+
+- Kind: naming (TOOL-assisted, reviewed by hand).
+- build/propose_names.py replaces a hex address in a configured name with the current label at that address (same bank, or bank 0 below $4000).
+- 15 proposals were kept after review, for example:
+  - ShowActionBattleTextFrom6DAA -> ShowActionBattleTextFromActionBattleTextTable;
+  - RunFunc5E85Twice -> RunMoveIncapacitatedPartyMembersBackTwice;
+  - MapAndCompactSkillList63D3/62F5 -> ...LinkSkillMapTable_A/_B;
+  - InvertedResultOfFunc4E48 -> InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate.
+- Rejected proposals:
+  - tokens that are numbers, not addresses (GoldAtLeast10000, message and talk-event ids);
+  - matches running across a word boundary ("4D1A" in "...74D1And");
+  - a name whose address is in another bank ("Func4001InBank81").
+- Binary verification: build/run335 PASS, 0 differing bytes; tests OK.
+
 ### E-0259 — Dispatchers named by caller instead of address
 
 - Kind: OBSERVATION (reading; C1) and naming.

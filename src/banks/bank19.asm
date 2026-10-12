@@ -506,7 +506,7 @@ Jump_019_433F::
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills
-SetCFromBattleArg0ThenRun434D::
+SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord::
 Func_019_4349:: ; address name
     ld a, [wBattleArg0]
     ld c, a
@@ -831,7 +831,7 @@ Jump_019_44B3::
 ; HL = the word wD868, DE = the word wD86A, then falls into Func_019_44C9 (E-0126)
 ; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
 ; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
-LoadBattleArg0PointersThenRun44C9::
+LoadBattleArg0PointersThenRunPackResistanceFieldsToDE::
 Func_019_44B9:: ; address name
     ld a, [wBattleArg0]
     ld l, a
@@ -1117,7 +1117,7 @@ Jump_019_45EC::
     ld h, a
     ld a, [hl]
     ld [de], a
-    call ApplyTable4641IncrementsForA0DTo13
+    call ApplyIncrementOffsetRows19ForA0DTo13
     inc de
     ld a, $FF
     ld [de], a
@@ -1127,7 +1127,7 @@ Jump_019_45EC::
 ; for A in $0D-$13 increments (capped at 3) each byte listed in Data_019_4641 row A - $0D, relative to DE (E-0125)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_Sub01)
 ; writes: hTemp0, hTemp1
-ApplyTable4641IncrementsForA0DTo13::
+ApplyIncrementOffsetRows19ForA0DTo13::
 Func_019_4605:: ; address name
     or a, a
     ret z
@@ -1165,7 +1165,7 @@ Jump_019_4629::
     jr Jump_019_4622
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
-; 1 call site from 1 routine (e.g. ApplyTable4641IncrementsForA0DTo13)
+; 1 call site from 1 routine (e.g. ApplyIncrementOffsetRows19ForA0DTo13)
 ; reads: hTemp0, hTemp1
 IncrementTableByteCappedAt3::
 Func_019_4632:: ; address name
@@ -1182,7 +1182,7 @@ Func_019_4632:: ; address name
     ld [hl], a
     ret
 
-; E-0236 (C1: ApplyTable4641IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
+; E-0236 (C1: ApplyIncrementOffsetRows19ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
 ; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding
 IncrementOffsetRows_19::
 Data_019_4641:: ; address name
@@ -2246,7 +2246,7 @@ Jump_019_4C2E::
     jr Jump_019_4C3E
 
 Jump_019_4C3B::
-    call SetCFromBattleArg0ThenRun434D
+    call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
 Jump_019_4C3E::
     pop bc
@@ -2410,7 +2410,7 @@ Jump_019_4D29::
     jr Jump_019_4D3C
 
 Jump_019_4D39::
-    call SetCFromBattleArg0ThenRun434D
+    call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
 Jump_019_4D3C::
     pop bc

@@ -4492,7 +4492,7 @@ Jump_01E_5F4D::
     ld a, [wGameMode]
     cp a, $05
     ret z
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_01E_5F5A::

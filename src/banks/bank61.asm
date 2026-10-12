@@ -1230,7 +1230,7 @@ Jump_061_468E::
 ; 1 call site from 1 routine (e.g. WriteRandomEntryFromTable690E)
 ; reads: wKeyWorldFloor, wKeyWorldArea, hTemp0
 ; writes: hTemp0
-LookupTable4818NibblePairForTemp0::
+LookupKeyWorldScreenSpotRecordsNibblePairForTemp0::
 Func_061_4706:: ; address name
     push hl
     ld a, [wKeyWorldFloor]
@@ -1423,7 +1423,7 @@ Data_061_4810:: ; address name
     db $23 ; id 6
     db $32 ; id 7
 
-; E-0195 (C1: LookupTable4818NibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418).
+; E-0195 (C1: LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418).
 ; record: eight spots as (X, Y) byte pairs; all-zero records are unused
 KeyWorldScreenSpotRecords::
 Data_061_4818:: ; address name

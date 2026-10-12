@@ -3991,7 +3991,7 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case20_Case00, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
-CallFunc6899PreservingArg1AndTemp0::
+CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
 Func_01D_5BF2:: ; address name
     ld hl, wRecordBuffer
     ld de, wArg1
@@ -4276,7 +4276,7 @@ Data_01D_5D7E:: ; address name
     dfar AreaPalettes1 ; id 1
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB
-; 67 call sites from 58 routines (e.g. CallFunc6899PreservingArg1AndTemp0, DrawListEntriesCell5SpeciesSprite, ShowCategory11StringOfListEntriesCell5Record, ShowSpeciesCategory13StringOfListEntriesCell5Record, ...)
+; 67 call sites from 58 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, DrawListEntriesCell5SpeciesSprite, ShowCategory11StringOfListEntriesCell5Record, ShowSpeciesCategory13StringOfListEntriesCell5Record, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
 ; points at: wListEntries
@@ -6238,7 +6238,7 @@ Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
-; 5 call sites from 5 routines (e.g. CallFunc6899PreservingArg1AndTemp0, PauseMenu_Main_Case03_Case02, SwapMonstersMenu_Case0D_Case07, SwapMonstersMenu_Case08_Case20, ...)
+; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_Case02, SwapMonstersMenu_Case0D_Case07, SwapMonstersMenu_Case08_Case20, ...)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 DrawPartySpeciesSprites::

@@ -2003,7 +2003,7 @@ Jump_036_4D33::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ret
 
 ; entry 2 of the `rst $00` table in Func_036_4A38
@@ -3927,7 +3927,7 @@ Jump_036_57BD::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld a, [wBattleTarget]
     call ActionEffect_Transform_Sub01_Sub04
     ld a, [wBattleActor]
@@ -4751,7 +4751,7 @@ Jump_036_5D0B::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld hl, wRecordBufferData
     ld de, wTemp0
     ld bc, $0004
@@ -5210,7 +5210,7 @@ Jump_036_5FE1::
     ld [wBattleArg2], a
     ld a, d
     ld [wBattleArg3], a
-    farcall LoadBattleArg0PointersThenRun44C9
+    farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld hl, wRecordBufferData
     ld de, wTemp0
     ld bc, $0004

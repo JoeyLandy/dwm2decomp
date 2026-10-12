@@ -133,7 +133,7 @@ Jump_0E2_40E8::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_40F8::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4108
@@ -194,7 +194,7 @@ Jump_0E2_4159::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4169::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4179
@@ -1555,7 +1555,7 @@ Jump_0E2_4ADF::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AEF::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4AFF
@@ -1674,7 +1674,7 @@ Jump_0E2_4BC4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4BD4::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4BE4
@@ -1764,7 +1764,7 @@ Jump_0E2_4C69::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4C79::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4C89
@@ -1856,7 +1856,7 @@ Jump_0E2_4D0F::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4D1F::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4D2F
@@ -1935,7 +1935,7 @@ Jump_0E2_4DA4::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4DB4::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4DC4
@@ -1996,7 +1996,7 @@ Jump_0E2_4E15::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4E25::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4E35
@@ -2085,7 +2085,7 @@ Jump_0E2_4EBA::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4ED0::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4EE0
@@ -2184,7 +2184,7 @@ Jump_0E2_4F7D::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4F8D::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_4F9D
@@ -2799,7 +2799,7 @@ Jump_0E2_53C2::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_53D2::
-    farcall InvertedResultOfFunc4E48
+    farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
     jr nz, Jump_0E2_53E2

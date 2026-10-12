@@ -4901,7 +4901,7 @@ Jump_007_6B8E::
     ret
 
 Jump_007_6B95::
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_007_6B9C::
@@ -4970,7 +4970,7 @@ Jump_007_6BEA::
     ret
 
 Jump_007_6BF1::
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_007_6BF8::
@@ -7993,7 +7993,7 @@ Jump_007_7DBC::
     ret
 
 Jump_007_7DC3::
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_007_7DCA::

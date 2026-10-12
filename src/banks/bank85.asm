@@ -4654,7 +4654,7 @@ Jump_085_5C08::
     ldh [hTemp0], a
     ld de, hTemp0
     ld c, $00
-    farcall CopyMonsterTableBytesFrom4075
+    farcall CopyMonsterTableBytesFromMonsterTable
     pop bc
     push bc
     ld a, b

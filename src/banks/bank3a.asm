@@ -7207,7 +7207,7 @@ Jump_03A_6D71::
 ; 2 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_Case03, RunBattleStep4_Case00_Sub01_Case02)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
-ShowActionBattleTextFrom6DAA::
+ShowActionBattleTextFromActionBattleTextTable::
 Func_03A_6D76:: ; address name
     ld a, [wBattleActionId]
     ld hl, ActionBattleTextTable
@@ -7218,14 +7218,14 @@ Func_03A_6D76:: ; address name
     ld d, a
     ld a, [wBattleActionId]
     cp a, $CF
-    call z, ShowActionBattleTextFrom6DAA_Sub01
+    call z, ShowActionBattleTextFromActionBattleTextTable_Sub01
     jp ShowBattleText
 
-; only called from ShowActionBattleTextFrom6DAA (E-0047)
-; 1 call site from 1 routine (e.g. ShowActionBattleTextFrom6DAA)
+; only called from ShowActionBattleTextFromActionBattleTextTable (E-0047)
+; 1 call site from 1 routine (e.g. ShowActionBattleTextFromActionBattleTextTable)
 ; reads: wRandomLo
 ; writes: wEffectByte6F
-ShowActionBattleTextFrom6DAA_Sub01::
+ShowActionBattleTextFromActionBattleTextTable_Sub01::
 Func_03A_6D91:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -7242,7 +7242,7 @@ Jump_03A_6DA2::
     ld d, $D6
     ret
 
-; E-0210 (C1: ShowActionBattleTextFrom6DAA reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFrom6DAA_Sub01); 232 bytes end at ShowActionBattleText ($6E92)).
+; E-0210 (C1: ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFromActionBattleTextTable_Sub01); 232 bytes end at ShowActionBattleText ($6E92)).
 ; record: battle text index ($FF = none)
 ActionBattleTextTable::
 Data_03A_6DAA:: ; address name

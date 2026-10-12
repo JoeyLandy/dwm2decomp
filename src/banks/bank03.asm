@@ -527,7 +527,7 @@ Jump_003_4315::
 ; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case00_Case00, PauseMenu_Items_Case00_Case00)
 RefreshRecordListAndNameTiles::
 Func_003_432F:: ; address name
-    farcall RunFunc5E85Twice
+    farcall RunMoveIncapacitatedPartyMembersBackTwice
     call LoadRecordListNameTiles
     ret
 

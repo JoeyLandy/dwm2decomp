@@ -1212,7 +1212,7 @@ Jump_060_4AF2::
     ld [hl+], a
     dec b
     jr nz, Jump_060_4AF2
-    call PickRandomNonzeroFromTable4CC1
+    call PickRandomNonzeroFromKeyWorldGoalKindRows
     ld a, [wPartyStrength]
     ld l, a
     ld h, $00
@@ -1401,7 +1401,7 @@ Func_060_4C6C:: ; address name
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub02)
 ; reads: wKeyRandomLo, wCurrentKeyIndex
 ; writes: wKeyWorldGoalKind
-PickRandomNonzeroFromTable4CC1::
+PickRandomNonzeroFromKeyWorldGoalKindRows::
 Func_060_4C85:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -1431,12 +1431,12 @@ Func_060_4C85:: ; address name
     add_a_to_hl
     ld a, [hl]
     or a, a
-    jr z, PickRandomNonzeroFromTable4CC1
+    jr z, PickRandomNonzeroFromKeyWorldGoalKindRows
     dec a
     ld [wKeyWorldGoalKind], a
     ret
 
-; E-0192 (C1: PickRandomNonzeroFromTable4CC1 reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes).
+; E-0192 (C1: PickRandomNonzeroFromKeyWorldGoalKindRows reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes).
 ; record: four choices of wKeyWorldGoalKind + 1 (0 = no choice; drawn again)
 KeyWorldGoalKindRows::
 Data_060_4CC1:: ; address name
@@ -4389,7 +4389,7 @@ Jump_060_661E::
     push de
     push bc
     call FieldModeStateDispatch_Shared05
-    call WriteTable669CWordForTemp2Temp3
+    call WriteKeyContentsWordRowsEntryForTemp2Temp3
     ld hl, hTemp3
     inc [hl]
     pop bc
@@ -4413,7 +4413,7 @@ Data_060_663F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; DE += 2; writes the word at $669C + 16 * hFFC8 + 2 * Data_060_6677[hFFC9] at DE (E-0121)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04_Sub02)
 ; reads: hTemp2, hTemp3
-WriteTable669CWordForTemp2Temp3::
+WriteKeyContentsWordRowsEntryForTemp2Temp3::
 Func_060_664A:: ; address name
     inc de
     inc de
@@ -4445,13 +4445,13 @@ Func_060_664A:: ; address name
     ld [de], a
     ret
 
-; E-0192 (C1: WriteTable669CWordForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them).
+; E-0192 (C1: WriteKeyContentsWordRowsEntryForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them).
 ; record: 37 bytes, each a word index 0-7 within a row
 KeyContentsColumnPicks::
 Data_060_6677:: ; address name
     db $00, $02, $04, $06, $07, $01, $03, $05, $02, $06, $00, $07, $04, $05, $03, $01, $02, $07, $00, $05, $06, $03, $01, $04, $00, $05, $02, $06, $03, $07, $04, $01, $05, $00, $03, $06, $02 ; entry 0
 
-; E-0192 (C1: WriteTable669CWordForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C).
+; E-0192 (C1: WriteKeyContentsWordRowsEntryForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C).
 ; record: eight two-byte values (copied as a pair to DE)
 KeyContentsWordRows::
 Data_060_669C:: ; address name
@@ -4589,7 +4589,7 @@ Func_060_68EB:: ; address name
     ld [de], a
     inc de
     push de
-    farcall LookupTable4818NibblePairForTemp0
+    farcall LookupKeyWorldScreenSpotRecordsNibblePairForTemp0
     pop de
     ldh a, [hTemp0]
     ld [de], a

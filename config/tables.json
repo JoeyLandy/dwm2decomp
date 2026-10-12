@@ -3676,7 +3676,7 @@
         }
       ],
       "record": "four choices of wKeyWorldGoalKind + 1 (0 = no choice; drawn again)",
-      "note": "E-0192 (C1: PickRandomNonzeroFromTable4CC1 reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes)."
+      "note": "E-0192 (C1: PickRandomNonzeroFromKeyWorldGoalKindRows reads the byte at $4CC1 + 4 * (byte 1 of the current key's entry at wC708) + (random & 3), repeating until it is non-zero, and stores it minus 1 in wKeyWorldGoalKind; 56 rows, the same count as KeyWorldBandRows, which the same byte indexes)."
     },
     {
       "bank": "60",
@@ -3736,7 +3736,7 @@
         }
       ],
       "record": "37 bytes, each a word index 0-7 within a row",
-      "note": "E-0192 (C1: WriteTable669CWordForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them)."
+      "note": "E-0192 (C1: WriteKeyContentsWordRowsEntryForTemp2Temp3 reads the byte at $6677 + hTemp3 and uses it as the word index in row hTemp2 of KeyContentsWordRows; the first 32 bytes are four permutations of 0-7; the table ends where the rows begin, and a larger hTemp3 would read into them)."
     },
     {
       "bank": "60",
@@ -3752,7 +3752,7 @@
         }
       ],
       "record": "eight two-byte values (copied as a pair to DE)",
-      "note": "E-0192 (C1: WriteTable669CWordForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C)."
+      "note": "E-0192 (C1: WriteKeyContentsWordRowsEntryForTemp2Temp3 copies the two bytes at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] to DE + 2; rows 0-9 hold values, rows 10-28 are zero, and the 29 rows end at the code at $686C)."
     },
     {
       "bank": "84",
@@ -6374,7 +6374,7 @@
         }
       ],
       "record": "eight spots as (X, Y) byte pairs; all-zero records are unused",
-      "note": "E-0195 (C1: LookupTable4818NibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418)."
+      "note": "E-0195 (C1: LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 reads the pair at $4818 + 16 * [$CE2C + 2 * floor state byte 1 + 2 * wKeyWorldArea] + 2 * hTemp0 and packs it into one byte of nibbles; Func_061_462F reads byte $4819 + 16 * n + 2 * B the same way; 192 records end at the code at $5418)."
     },
     {
       "bank": "61",
@@ -12886,7 +12886,7 @@
           "name": "battle text index ($FF = none)"
         }
       ],
-      "note": "E-0210 (C1: ShowActionBattleTextFrom6DAA reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFrom6DAA_Sub01); 232 bytes end at ShowActionBattleText ($6E92))."
+      "note": "E-0210 (C1: ShowActionBattleTextFromActionBattleTextTable reads the byte at $6DAA + wBattleActionId and, unless it is $FF, passes it in D to ShowBattleText (action $CF first runs ShowActionBattleTextFromActionBattleTextTable_Sub01); 232 bytes end at ShowActionBattleText ($6E92))."
     },
     {
       "bank": "3A",
@@ -13498,7 +13498,7 @@
           "name": "mapped skill ($FE/$FF = dropped)"
         }
       ],
-      "note": "E-0217 (C1: MapAndCompactSkillList62F5, from UnpackLinkRecordToRecordBufB, maps $21 skill bytes through $62F5 + byte (except $FF) and compacts the lists, dropping $FE/$FF; 222 entries end at LinkSkillMapTable_A)."
+      "note": "E-0217 (C1: MapAndCompactSkillListLinkSkillMapTable_B, from UnpackLinkRecordToRecordBufB, maps $21 skill bytes through $62F5 + byte (except $FF) and compacts the lists, dropping $FE/$FF; 222 entries end at LinkSkillMapTable_A)."
     },
     {
       "bank": "37",
@@ -13513,7 +13513,7 @@
           "name": "mapped skill ($FE = dropped)"
         }
       ],
-      "note": "E-0217 (C1: MapAndCompactSkillList63D3, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back)."
+      "note": "E-0217 (C1: MapAndCompactSkillListLinkSkillMapTable_A, from UnpackLinkRecordToWorkBuf, maps $21 skill bytes through $63D3 + byte and compacts the lists; 170 entries end at TileRect_37_647D; for 155 of them LinkSkillMapTable_B maps the result back)."
     },
     {
       "bank": "39",
@@ -18106,7 +18106,7 @@
           "name": "offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding"
         }
       ],
-      "note": "E-0236 (C1: ApplyTable4387IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
+      "note": "E-0236 (C1: ApplyIncrementOffsetRowsA0ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
     },
     {
       "bank": "19",
@@ -18122,7 +18122,7 @@
           "name": "offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding"
         }
       ],
-      "note": "E-0236 (C1: ApplyTable4641IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
+      "note": "E-0236 (C1: ApplyIncrementOffsetRows19ForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
     },
     {
       "bank": "E1",

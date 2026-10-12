@@ -2904,7 +2904,7 @@
   },
   "CD0B": {
     "name": "wKeyWorldGoalKind",
-    "note": "kind of the key-world goal object (PickRandomNonzeroFromTable4CC1)",
+    "note": "kind of the key-world goal object (PickRandomNonzeroFromKeyWorldGoalKindRows)",
     "evidence": "E-0135"
   },
   "CD0C": {

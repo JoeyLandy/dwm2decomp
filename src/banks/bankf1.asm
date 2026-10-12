@@ -1178,7 +1178,7 @@ Jump_0F1_484C::
 ; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case00_Case00)
 RefreshRecordListAndNameTiles_BankF1::
 Func_0F1_4866:: ; address name
-    farcall RunFunc5E85Twice
+    farcall RunMoveIncapacitatedPartyMembersBackTwice
     call LoadRecordListNameTiles
     ret
 
@@ -4322,7 +4322,7 @@ Jump_0F1_5B56::
 Jump_0F1_5B5D::
     ld a, $01
     ldh [hSpriteWindowClipMode], a
-    farcall CallFunc6899PreservingArg1AndTemp0
+    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
 Jump_0F1_5B68::

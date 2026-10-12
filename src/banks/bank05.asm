@@ -3029,7 +3029,7 @@ Jump_005_4E45::
     ret
 
 ; C = $00 when an occupied foe's wD2C1 word is at least Func_005_4E7C for it, else $FF (E-0125)
-; 12 call sites from 12 routines (e.g. InvertedResultOfFunc4E48, AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, ...)
+; 12 call sites from 12 routines (e.g. InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate, AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, ...)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
 FailIfFoeAIDamageEstimatesAtLeastEstimate::
@@ -4346,7 +4346,7 @@ Jump_005_557B::
 
 ; C = $FF when Func_005_4E48 returns C = 0, else $00 (E-0122)
 ; 11 call sites from 11 routines (e.g. AIScore_Blaze, AIScore_Firebal, AIScore_BigBang, AIScore_FireAir, ...)
-InvertedResultOfFunc4E48::
+InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate::
 Func_005_557E:: ; address name
     call FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
