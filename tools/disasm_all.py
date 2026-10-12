@@ -1819,7 +1819,7 @@ class Rom:
                     text = v[1]
                     sym = self.symbolize(text, (), (b, pc)) if "[$C529]" in text else text
                     note = self.message_word_note(b, pc + v[0], text) or self.string_index_note(b, pc, sym) \
-                        or self.battle_text_note(b, pc + v[0], text)
+                        or self.battle_text_note(b, pc + v[0], text) or self.string_arg_note(b, pc, text)
                     if note:
                         quotes.append(note)
                     k += 1
@@ -5257,7 +5257,8 @@ class Rom:
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
                 out.append(f"    {text}" + self.message_word_note(bank, pc + n, text)
-                           + self.string_index_note(bank, pc, text) + self.battle_text_note(bank, pc + n, text))
+                           + self.string_index_note(bank, pc, text) + self.battle_text_note(bank, pc + n, text)
+                           + self.string_arg_note(bank, pc, text))
             pc += n
         return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
 
@@ -5354,6 +5355,10 @@ class Rom:
                 if not nxt or not (0 <= nxt[0] < self.nbanks):
                     return ""
                 tb, ta = nxt
+        return self.string_quote(tb, ta, idx, cat)
+
+    def string_quote(self, tb: int, ta: int, idx: int, cat: int | None) -> str:
+        """The quote note for string idx of category cat shown by the displayer at tb:ta, or ""."""
         name = self.labels[tb].get(ta, "")
         if not self.STRING_CALLEE.search(name):
             return ""
@@ -5370,6 +5375,74 @@ class Rom:
         else:
             quote = None
         return f" ; '{quote}'" if quote else ""
+
+    def string_arg_note(self, bank: int, pc: int, text: str) -> str:
+        """E-0294: `ld a, $NN` followed by a call to a wrapper that stores A (plus an optional `add a, $KK`)
+        in wStringIndex, sets the category (`xor a` / `ld a, $CC` then `ld [wStringCategory], a`) or leaves
+        it (then a constant store in the caller's previous few instructions counts), and then calls or
+        far-calls a string displayer, quotes the string (ShowStringA10_Bank1B, BeginString_Bank0E_Cat0 ...)."""
+        m = re.match(r"ld a, \$([0-9A-F]{2})$", text)
+        if not m:
+            return ""
+        ins = self.insn[bank]
+        v = ins.get(pc)
+        nx = ins.get(pc + v[0]) if v else None
+        if not nx or nx[0] == "dw" or nx[2] not in ("call", "jp") or nx[3] is None:
+            return ""
+        w = self.resolve(bank, nx[3])
+        if not w or not (0 <= w[0] < self.nbanks):
+            return ""
+        tb, q = w
+        t_ins = self.insn[tb]
+        idx, cat = int(m.group(1), 16), None
+        seq, k = [], q
+        for _ in range(8):
+            u = t_ins.get(k)
+            if not u or u[0] == "dw":
+                return ""
+            seq.append(u)
+            if u[2] in ("call", "jp") and u[3] is not None or u[1] == "rst $10":
+                break
+            k += u[0]
+        texts = [u[1] for u in seq]
+        j = 0
+        ma = re.match(r"add a, \$([0-9A-F]{2})$", texts[0])
+        if ma:
+            idx, j = (idx + int(ma.group(1), 16)) & 0xFF, 1
+        if j >= len(texts) or texts[j] not in ("ld [$C529], a", "ld [wStringIndex], a"):
+            return ""
+        j += 1
+        if j + 1 < len(texts) and texts[j + 1] in ("ld [$C528], a", "ld [wStringCategory], a"):
+            mc = re.match(r"ld a, \$([0-9A-F]{2})$", texts[j])
+            cat = 0 if texts[j] == "xor a, a" else (int(mc.group(1), 16) if mc else None)
+            if cat is None:
+                return ""
+            j += 2
+        else:  # the category is the caller's: a constant store just before
+            order = getattr(self, "_order", {}).get(bank)
+            if order is None:
+                self._order = getattr(self, "_order", {})
+                order = self._order[bank] = sorted(a for a, vv in ins.items() if vv[0] != "dw")
+            kk = bisect.bisect_left(order, pc)
+            prev = [ins[a][1] for a in order[max(0, kk - 6):kk]]
+            for t0, t1 in zip(prev, prev[1:]):
+                if t1 in ("ld [$C528], a", "ld [wStringCategory], a"):
+                    mc = re.match(r"ld a, \$([0-9A-F]{2})$", t0)
+                    cat = int(mc.group(1), 16) if mc else (0 if t0 == "xor a, a" else None)
+        last = seq[-1]
+        if last[1] == "rst $10":
+            hl = re.search(r"ld hl, \$([0-9A-F]{4})", " ".join(texts[-3:-1]))
+            bb = re.search(r"ld b, \$([0-9A-F]{2})", " ".join(texts[-3:-1]))
+            if not (hl and bb):
+                return ""
+            d = (int(bb.group(1), 16), int(hl.group(1), 16))
+        elif last[2] in ("call", "jp") and last[3] is not None:
+            d = self.resolve(tb, last[3])
+        else:
+            return ""
+        if not d or not (0 <= d[0] < self.nbanks):
+            return ""
+        return self.string_quote(d[0], d[1], idx, cat)
 
     def category_string(self, bank: int, table: int, cat: int, idx: int) -> str | None:
         """First words of string idx of category cat in the LookupString table at bank:table."""

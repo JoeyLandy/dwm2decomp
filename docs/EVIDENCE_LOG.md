@@ -2431,6 +2431,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0294 — Strings passed in A to index wrappers are quoted
+
+- Kind: TOOL.
+- **New note.** string_arg_note quotes `ld a, $NN` when it is followed by a call to a wrapper with this shape:
+  - the wrapper stores A in wStringIndex, after an optional `add a, $KK`;
+  - it then sets the category (`xor a` or `ld a, $CC`, then `ld [wStringCategory], a`), or leaves it unset, in which case a constant store among the caller's previous six instructions counts;
+  - finally it calls or far-calls a string displayer.
+
+  This covers ShowStringA10_Bank1B (index + $10), BeginString_Bank1B_Cat0, BeginString_Bank0E_Cat0, BeginString_BankF0_Cat0 and ShowStringIndexA_Bank37. The tail of string_index_note became string_quote, shared by both notes.
+- **Effect.** 126 more string displays are quoted. Examples from LinkKeyTrade: 'Starting key trade', 'Please choose the key to trade.', 'That key cannot be traded.', "Keys can't have the same name." The Parent_Show<words> rule (E-0274) uses the new note too: 228 → 290 steps named after the string they show.
+- **Counts.** Structural labels the generator leaves unnamed: 243 → 182.
+- Binary verification: build/run399 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0293 — Command $82 is GreatLogFieldEvents (correction); 54 more dispatchers and five helpers named
 
 - Kind: STATIC (C1 names) and a correction.

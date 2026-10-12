@@ -835,16 +835,16 @@ Func_033_5215:: ; address name
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
     dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep
-    dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5
-    dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case03
+    dw RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero
+    dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_Case06
-    dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case07
+    dw RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A
-    dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B
+    dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D
 
@@ -915,12 +915,12 @@ Jump_033_5287:: ; address name
 ; reads: wFadeState
 ; writes: wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5::
+RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero::
 Jump_033_52A8:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
-    ld a, $19
+    ld a, $19 ; 'For Team Mode, 1000G is charged.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -933,7 +933,7 @@ Jump_033_52A8:: ; address name
 ; reads: wLinkMessage, wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi, wLinkScreenSubState
 ; writes: wLinkSendByte, wLinkScreenState, wScreenState, wLinkScreenSubState, wGoldHi, wGoldMid, wGoldLo
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case03::
+RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe::
 Jump_033_52BB:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -944,7 +944,7 @@ Jump_033_52BB:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -961,7 +961,7 @@ Jump_033_52BB:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $09
+    ld a, $09 ; 'You refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -975,7 +975,7 @@ Jump_033_52BB:: ; address name
     ld a, [wGoldHi]
     sbc a, $00
     jr nc, .set_gold_hi
-    ld a, $00
+    ld a, $00 ; 'Not enough money. Please wait.'
     call BeginString_Bank07_Cat5
     ld a, [wLinkScreenSubState]
     add a, $08
@@ -990,7 +990,7 @@ Jump_033_52BB:: ; address name
     ld [wGoldMid], a
     ld a, c
     ld [wGoldLo], a
-    ld a, $0C
+    ld a, $0C ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1021,12 +1021,12 @@ Jump_033_5338:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
 .call_begin_string_bank07_cat5:
-    ld a, $07
+    ld a, $07 ; 'You paid the 1000G battle fee.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1035,7 +1035,7 @@ Jump_033_5338:: ; address name
     ret
 
 .call_begin_string_bank07_cat52:
-    ld a, $01
+    ld a, $01 ; 'Your pal doesn't have enough gold.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1067,7 +1067,7 @@ Jump_033_538A:: ; address name
     ld a, [wLinkScreenFlag]
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_Case06_WaitTextFlags
-    dw RunLinkSession6Exchange_Case01_Sub01_Case06_BeginString_Bank07_Cat5AndStep
+    dw RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor
     dw RunLinkSession6Exchange_Case01_Sub01_Case06_SetLinkScreenSubState
 
 ; entry 0 of the `rst $00` table in Func_033_5215_Case06
@@ -1096,13 +1096,13 @@ Jump_033_5394:: ; address name
 ; entry 1 of the `rst $00` table in Func_033_5215_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenFlag
-RunLinkSession6Exchange_Case01_Sub01_Case06_BeginString_Bank07_Cat5AndStep::
+RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor::
 Jump_033_53AC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
     ld de, $0000
     call DrawScreenBufferRectToBGMap_33
-    ld a, $08
+    ld a, $08 ; 'Choose a monster for the Team'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenFlag
     inc [hl]
@@ -1128,7 +1128,7 @@ Jump_033_53C2:: ; address name
 ; reads: wTextFlags, wTextYesNoResult, wGoldLo, wGoldMid, wGoldHi
 ; writes: wLinkSendByte, wGoldHi, wGoldMid, wGoldLo
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case07::
+RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay::
 Jump_033_53D4:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -1136,7 +1136,7 @@ Jump_033_53D4:: ; address name
     ld a, [wTextYesNoResult]
     and a, $01
     jr z, .read_gold_lo
-    ld a, $05
+    ld a, $05 ; 'You refused to pay the battle'
     call BeginString_Bank07_Cat5
     ld a, $40
     ld [wLinkSendByte], a
@@ -1156,7 +1156,7 @@ Jump_033_53D4:: ; address name
     ld a, [wGoldHi]
     sbc a, $00
     jr nc, .set_gold_hi
-    ld a, $04
+    ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $30
     ld [wLinkSendByte], a
@@ -1172,7 +1172,7 @@ Jump_033_53D4:: ; address name
     ld [wGoldMid], a
     ld a, c
     ld [wGoldLo], a
-    ld a, $02
+    ld a, $02 ; 'You paid for both combatants.'
     call BeginString_Bank07_Cat5
     ld a, $20
     ld [wLinkSendByte], a
@@ -1205,7 +1205,7 @@ Jump_033_5433:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -1236,7 +1236,7 @@ Jump_033_545B:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -1260,7 +1260,7 @@ Jump_033_5483:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkScreenState, wScreenState
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B::
+RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo::
 Jump_033_5497:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1274,7 +1274,7 @@ Jump_033_5497:: ; address name
     cp a, $40
     ret nz
     ld [wLinkSendByte], a
-    ld a, $06
+    ld a, $06 ; 'Your pal refused to pay the'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1284,7 +1284,7 @@ Jump_033_5497:: ; address name
 
 .set_link_send_byte:
     ld [wLinkSendByte], a
-    ld a, $04
+    ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1294,7 +1294,7 @@ Jump_033_5497:: ; address name
 
 .set_link_send_byte2:
     ld [wLinkSendByte], a
-    ld a, $03
+    ld a, $03 ; 'Your pal paid your battle fee.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1302,7 +1302,7 @@ Jump_033_5497:: ; address name
 
 .set_link_send_byte3:
     ld [wLinkSendByte], a
-    ld a, $04
+    ld a, $04 ; 'Insufficient gold for Team Mode.'
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -1317,7 +1317,7 @@ Jump_033_5497:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -1347,7 +1347,7 @@ Jump_033_5502:: ; address name
     ld [wLinkScreenState], a
     ld a, $02
     ld [wScreenState], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -1379,7 +1379,7 @@ Jump_033_552A:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
-; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08, ...)
+; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank07_Cat5::
 Func_033_5550:: ; address name
@@ -1450,7 +1450,7 @@ Jump_033_558F:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, $0C
+    ld a, $0C ; 'Please wait.'
     call ShowStringA10_Bank33
     ld hl, wScreenStep
     inc [hl]
@@ -1643,7 +1643,7 @@ Jump_033_5676:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -1683,7 +1683,7 @@ Jump_033_5676:: ; address name
 .set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
-    ld a, $09
+    ld a, $09 ; 'You refused the Team Mode.'
     call BeginString_Bank07_Cat5
     xor a, a
     ld [wScreenStep], a
@@ -1701,7 +1701,7 @@ Jump_033_5676:: ; address name
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     ld hl, wScreenStep
     inc [hl]
-    ld a, $02
+    ld a, $02 ; 'Pick 0 for the team?'
     call ShowStringA10_Bank33
     ret
 
@@ -1762,7 +1762,7 @@ Jump_033_574F:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -1825,7 +1825,7 @@ Jump_033_57B2:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_33
-    ld a, $08
+    ld a, $08 ; 'Choose a monster for the Team'
     call BeginString_Bank07_Cat5
     ld a, [wScreenStep]
     sub a, $03
@@ -1844,7 +1844,7 @@ Jump_033_57DC:: ; address name
     call DrawScreenBufferRectToBGMap_33
     ld hl, wPickCount
     inc [hl]
-    ld a, $0C
+    ld a, $0C ; 'Please wait.'
     call ShowStringA10_Bank33
     call FinishPickedRecordsEntryAndStep_33
     ret
@@ -1908,7 +1908,7 @@ Jump_033_5839:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2139,7 +2139,7 @@ Jump_033_59B9:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectToBGMap_33
-    ld a, $0D
+    ld a, $0D ; 'Battle in Team Mode?'
     call BeginString_Bank07_Cat5
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -2162,7 +2162,7 @@ Jump_033_59D3:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2182,7 +2182,7 @@ Jump_033_59D3:: ; address name
 .set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
-    ld a, $09
+    ld a, $09 ; 'You refused the Team Mode.'
     call BeginString_Bank07_Cat5
     xor a, a
     ld [wScreenStep], a
@@ -2232,7 +2232,7 @@ Jump_033_5A58:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
     call CopyBytes
-    ld a, $0E
+    ld a, $0E ; 'The battle results will be recorded.'
     call BeginString_Bank07_Cat5
     xor a, a
     ld [wLinkSendByte], a
@@ -2255,7 +2255,7 @@ Jump_033_5A72:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2268,7 +2268,7 @@ Jump_033_5A72:: ; address name
     ld a, [wTextYesNoResult]
     and a, $01
     jr z, .done
-    ld a, $0D
+    ld a, $0D ; 'Battle in Team Mode?'
     call BeginString_Bank07_Cat5
     ld hl, wScreenStep
     dec [hl]
@@ -2288,7 +2288,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09::
 Jump_033_5AAF:: ; address name
     ld hl, wScreenStep
     inc [hl]
-    ld a, $0C
+    ld a, $0C ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -2328,7 +2328,7 @@ Jump_033_5AC8:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $0A
+    ld a, $0A ; 'Your pal refused the Team Mode.'
     call BeginString_Bank07_Cat5
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2339,7 +2339,7 @@ Jump_033_5AC8:: ; address name
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
-    ld a, $1A
+    ld a, $1A ; 'Saving Please wait.'
     call BeginString_Bank07_Cat5
     ret
 
@@ -3247,7 +3247,7 @@ Func_033_60C3:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_BeginString_Bank07_Cat5AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank33::
 Func_033_60D3:: ; address name
@@ -3282,7 +3282,7 @@ Func_033_60D3:: ; address name
     ret
 
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_BeginString_Bank07_Cat5AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer

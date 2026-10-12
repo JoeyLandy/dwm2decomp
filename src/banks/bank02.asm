@@ -8197,7 +8197,7 @@ Func_002_730E:: ; address name
     ret
 
 ; with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
-; 9 call sites from 9 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, LinkKeyTrade_RunSaveGameSteps, GameMode6_Init, ...)
+; 9 call sites from 9 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, LinkKeyTrade_ShowPleaseWait, GameMode6_Init, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps::

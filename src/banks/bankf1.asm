@@ -1610,7 +1610,7 @@ Func_0F1_4AD0:: ; address name
     rst $00
     dw RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_BeginString_Bank0E_Cat0AndStep
+    dw RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding
     dw RunScreenStateWhenNotFading_F1_Case03
     dw RunScreenStateWhenNotFading_F1_LinkBreed
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
@@ -1672,14 +1672,14 @@ Jump_0F1_4B0B:: ; address name
 ; reads: wScreenState
 ; writes: wScreenState, wStringCategory, wLinkSendByte
 ; points at: wLinkScreenState
-RunScreenStateWhenNotFading_F1_BeginString_Bank0E_Cat0AndStep::
+RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding::
 Jump_0F1_4B2E:: ; address name
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     xor a, a
     ld [wStringCategory], a
-    ld a, $01
+    ld a, $01 ; 'Ready to start breeding.'
     call BeginString_Bank0E_Cat0
     xor a, a
     ld [wLinkSendByte], a
@@ -1694,21 +1694,21 @@ RunScreenStateWhenNotFading_F1_Case03::
 Jump_0F1_4B47:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0
+    dw RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0_Case02
+    dw RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags_Case03
 
 ; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0::
+RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait::
 Jump_0F1_4B53:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, $07
+    ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenStep]
     inc a
@@ -1735,14 +1735,14 @@ Jump_0F1_4B65:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0_Case02::
+RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor::
 Jump_0F1_4B77:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
     ld [wLinkSendByte], a
-    ld a, $09
+    ld a, $09 ; 'Choose the monster for breeding.'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenStep]
     inc a
@@ -1780,28 +1780,28 @@ Jump_0F1_4B9F:: ; address name
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0A
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_LinkBreed_Case0B
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0C
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0E
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case0E
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu_Case10
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5_Case11
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case12
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case14
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_Case15
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case16
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed
     dw RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18
     dw RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript
     dw RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case1C
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ComputeBreedingChild
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case1C
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case1E
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case13
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_Case20
@@ -1810,7 +1810,7 @@ Jump_0F1_4B9F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage
 ; writes: wScreenStep, wLinkSendByte
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0E::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case0E::
 Jump_0F1_4BE5:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1820,7 +1820,7 @@ Jump_0F1_4BE5:: ; address name
     jr nz, .call_breed_menu
     ld a, $09
     ld [wScreenStep], a
-    ld a, $03
+    ld a, $03 ; 'Your pal refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -1834,7 +1834,7 @@ Jump_0F1_4BE5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wMenuInputResult
 ; writes: wScreenStep, wLinkSendByte
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding::
 Jump_0F1_4C08:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1844,7 +1844,7 @@ Jump_0F1_4C08:: ; address name
     jr nz, .call_breed_menu
     ld a, $09
     ld [wScreenStep], a
-    ld a, $03
+    ld a, $03 ; 'Your pal refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -1857,7 +1857,7 @@ Jump_0F1_4C08:: ; address name
     ret nz
     ld a, $09
     ld [wScreenStep], a
-    ld a, $02
+    ld a, $02 ; 'You refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -1877,7 +1877,7 @@ Jump_0F1_4C40:: ; address name
 ; entry 16 of the `rst $00` table in RunScreenStateWhenNotFading_F1_LinkBreed
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wTextFlags, wScreenSubStep
-RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu_Case10::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor::
 Jump_0F1_4C4C:: ; address name
     ld a, [wSelectedRecord]
     cp a, $FF
@@ -1886,27 +1886,27 @@ Jump_0F1_4C4C:: ; address name
     and a, a
     ret nz
     farcall BreedMenu
-    ld a, $09
+    ld a, $09 ; 'Choose the monster for breeding.'
     call BeginString_Bank0E_Cat0
     ret
 
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0
+    dw RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02
+    dw RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0
+    dw RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait
     dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02
+    dw RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
 
 ; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0::
+RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait::
 Jump_0F1_4C78:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1916,7 +1916,7 @@ Jump_0F1_4C78:: ; address name
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
-    ld a, $07
+    ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
     ret
 
@@ -1940,14 +1940,14 @@ Jump_0F1_4C8E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02::
+RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor::
 Jump_0F1_4CA0:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
     ret nz
     xor a, a
     ld [wLinkSendByte], a
-    ld a, $09
+    ld a, $09 ; 'Choose the monster for breeding.'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenSubStep]
     inc a
@@ -1973,7 +1973,7 @@ Jump_0F1_4CB7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0C::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK::
 Jump_0F1_4CCA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1981,7 +1981,7 @@ Jump_0F1_4CCA:: ; address name
     ld a, [wScreenSubStep]
     and a, a
     jr nz, .call_breed_menu
-    ld a, $04
+    ld a, $04 ; 'Is this one OK for breeding?'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenSubStep]
     inc a
@@ -2049,7 +2049,7 @@ Jump_0F1_4D49:: ; address name
     ret nz
 
 ; runs Func_0F1_58FA (C = 5, HL = $0278, DE = $00AC, wD7F1/2 = 0/8), wD781 += 1 and clears wD7B4 (E-0122)
-; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case12)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep, wSelectedRecord
 RunFunc58FAAt0278AndStep_BankF1::
@@ -2074,7 +2074,7 @@ Func_0F1_4D4E:: ; address name
 ; reads: wTextFlags, wArg5, wArg6, hTemp0, wScreenStep, wPartyCount, wListCursor, wListPageIndex
 ; writes: rRAMG2, rRAMB, wScreenStep, wSelectedRecord, wItemGridX, wItemGridY
 ; points at: wPartyList
-RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5_Case11::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo::
 Jump_0F1_4D6F:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2102,7 +2102,7 @@ Jump_0F1_4D6F:: ; address name
     dec a
     dec a
     ld [wScreenStep], a
-    ld a, $05
+    ld a, $05 ; 'This one is too young to'
     call BeginString_Bank0E_Cat0
     ret
 
@@ -2129,7 +2129,7 @@ Jump_0F1_4D6F:: ; address name
     dec a
     dec a
     ld [wScreenStep], a
-    ld a, $06
+    ld a, $06 ; 'Choose from the farm's roster.'
     call BeginString_Bank0E_Cat0
     ret
 
@@ -2157,7 +2157,7 @@ Jump_0F1_4D6F:: ; address name
 ; reads: wTextFlags, wSelectedRecord
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wRecordBufA
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case12::
+RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
 Jump_0F1_4DFA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2182,7 +2182,7 @@ Jump_0F1_4DFA:: ; address name
     jr nz, .loop
     xor a, a
     ld [rRAMG2], a
-    ld a, $07
+    ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
     call RunFunc58FAAt0278AndStep_BankF1
     call BGMapAddressAtScroll_BankF1
@@ -2212,7 +2212,7 @@ Jump_0F1_4E38:: ; address name
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, ...
 ; points at: wRecordBufA, wRecordBufB
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case14::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14::
 Jump_0F1_4E4A:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2221,7 +2221,7 @@ Jump_0F1_4E4A:: ; address name
     ret nz
     ld a, $09
     ld [wScreenStep], a
-    ld a, $03
+    ld a, $03 ; 'Your pal refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2272,7 +2272,7 @@ Jump_0F1_4E95:: ; address name
 ; reads: wTextFlags, wRecordBufA, wRecordBufB, wArg5, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wSelectedRecord, wLinkSendByte, wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case16::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed::
 Jump_0F1_4EA7:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2285,7 +2285,7 @@ Jump_0F1_4EA7:: ; address name
     and a, $01
     cp a, b
     jr nz, .call_personality_pair_value_to_arg5
-    ld a, $08
+    ld a, $08 ; 'Identical genders can't breed.'
     call BeginString_Bank0E_Cat0
     ld a, $10
     ld [wScreenStep], a
@@ -2302,7 +2302,7 @@ Jump_0F1_4EA7:: ; address name
     jr nz, .cp_02
 
 .loop:
-    ld a, $0A
+    ld a, $0A ; 'The couple is incompatible.'
     call BeginString_Bank0E_Cat0
     ld a, $10
     ld [wScreenStep], a
@@ -2352,7 +2352,7 @@ Jump_0F1_4EA7:: ; address name
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    ld a, $0B
+    ld a, $0B ; 'Proceed with breeding?'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenStep]
     inc a
@@ -2363,7 +2363,7 @@ Jump_0F1_4EA7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wArg5, wScreenStep
 ; writes: wArg1, wScreenStep
-RunScreenStateWhenNotFading_F1_LinkBreed_ComputeBreedingChild::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach::
 Jump_0F1_4F4C:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2377,7 +2377,7 @@ Jump_0F1_4F4C:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld a, $0D
+    ld a, $0D ; 'The monsters like each other. Breeding'
     call BeginString_Bank0E_Cat0
     ret
 
@@ -2420,7 +2420,7 @@ Jump_0F1_4F6F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wLinkMessage, wTwoChoiceCursor, wScreenStep, wScreenState, wListCursor, wListPageIndex
 ; writes: wScreenStep, wLinkSendByte, wScreenSubStep, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, wListCursor, ...
-RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18::
 Jump_0F1_4FAA:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2431,7 +2431,7 @@ Jump_0F1_4FAA:: ; address name
     call RunFunc58FAAt024FAndDrawBox_BankF1
     ld a, $09
     ld [wScreenStep], a
-    ld a, $03
+    ld a, $03 ; 'Your pal refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2451,7 +2451,7 @@ Jump_0F1_4FAA:: ; address name
     call RunFunc58FAAt024FAndDrawBox_BankF1
     ld a, $09
     ld [wScreenStep], a
-    ld a, $02
+    ld a, $02 ; 'You refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2465,7 +2465,7 @@ Jump_0F1_4FAA:: ; address name
     jr z, .read_screen_state
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1_Data
+    ld hl, RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_Data
     call StoreBAtWordTableEntry_BankF1
     ld a, [wScreenStep]
     inc a
@@ -2513,14 +2513,14 @@ Jump_0F1_5037:: ; address name
     ld a, [wTwoChoiceCursor]
     and a, a
     jr z, .return
-    ld a, $16
+    ld a, $16 ; 'Accessories will be in the Vault.'
     call BeginString_Bank0E_Cat0
 
 .return:
     ret
 
 .call_begin_string_bank0_e_cat0:
-    ld a, $0C
+    ld a, $0C ; 'Is it OK to record the'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenSubStep]
     inc a
@@ -2585,7 +2585,7 @@ Jump_0F1_50C3:: ; address name
     ret
 
 .loop:
-    ld a, $0B
+    ld a, $0B ; 'Proceed with breeding?'
     call BeginString_Bank0E_Cat0
     ld a, $17
     ld [wScreenStep], a
@@ -2600,7 +2600,7 @@ Jump_0F1_50C3:: ; address name
     ld [wScreenStep], a
     xor a, a
     ld [wScreenSubStep], a
-    ld a, $07
+    ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
     ret
 
@@ -2695,7 +2695,7 @@ Jump_0F1_50FF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case1C::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case1C::
 Jump_0F1_51A4:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2704,7 +2704,7 @@ Jump_0F1_51A4:: ; address name
     ret nz
     ld a, $09
     ld [wScreenStep], a
-    ld a, $03
+    ld a, $03 ; 'Your pal refused breeding.'
     call BeginString_Bank0E_Cat0
     ld a, $FE
     ld [wLinkSendByte], a
@@ -2738,12 +2738,12 @@ Jump_0F1_51CA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wScreenSubStep
-RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case0A::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowPleaseWait::
 Jump_0F1_51DC:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld a, $07
+    ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
     ld a, [wScreenStep]
     inc a
@@ -3776,7 +3776,7 @@ Func_0F1_57FB:: ; address name
     ret
 
 ; runs Func_0F1_58FA (C = 7, HL = $024F, DE = $0083, wD7F1/2 = 0/9), then draws the box at scroll + $1CC (E-0122)
-; 2 call sites from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1)
+; 2 call sites from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18)
 ; writes: wArg1, wArg2
 RunFunc58FAAt024FAndDrawBox_BankF1::
 Func_0F1_5812:: ; address name
@@ -3795,7 +3795,7 @@ Func_0F1_5812:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
-; 26 call sites from 19 routines (e.g. RunScreenStateWhenNotFading_F1_BeginString_Bank0E_Cat0AndStep, RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0_Case02, RunScreenStateWhenNotFading_F1_Case03_BeginString_Bank0E_Cat0, RunScreenStateWhenNotFading_F1_LinkBreed_ComputeBreedingChild, ...)
+; 26 call sites from 19 routines (e.g. RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding, RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor, RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait, RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank0E_Cat0::
 Func_0F1_5834:: ; address name
@@ -3806,7 +3806,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1, EggServiceMenu_Bank1B_Case05_ShowStringA10_Bank1B_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18, EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::
@@ -4124,7 +4124,7 @@ Func_0F1_5990:: ; address name
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
-; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript, RunFunc58FAAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect, RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case12)
+; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript, RunFunc58FAAt024FAndDrawBox_BankF1, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect, RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4193,7 +4193,7 @@ Func_0F1_5A07:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1)
+; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18)
 StoreBAtWordTableEntry_BankF1::
 Func_0F1_5A28:: ; address name
     push bc
@@ -4239,8 +4239,8 @@ Data_0F1_5A90:: ; address name
     db $B6, $C3, $C3, $68, $69, $6A, $6B, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
-; address loaded by RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1
-RunScreenStateWhenNotFading_F1_LinkBreed_RunFunc58FAAt024FAndDrawBox_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F1_5ACF:: ; address name
     db $FC, $C3, $24, $C4, $4C, $C4
 

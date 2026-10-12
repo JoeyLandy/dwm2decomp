@@ -1040,7 +1040,7 @@ Jump_0F0_4E11:: ; address name
     ld [wScreenSubStep], a
     ld a, $05
     ld [wScreenState], a
-    ld a, $07
+    ld a, $07 ; 'OK to save the egg trade'
     call BeginString_BankF0_Cat0
     ret
 
@@ -1050,7 +1050,7 @@ Jump_0F0_4E11:: ; address name
     ld [wScreenSubStep], a
     ld a, $04
     ld [wScreenState], a
-    ld a, $08
+    ld a, $08 ; 'Please wait'
     call BeginString_BankF0_Cat0
     ld a, $BD
     ld [wLinkSendByte], a
@@ -1111,7 +1111,7 @@ Jump_0F0_4E71:: ; address name
 ; points at: wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case00::
 Jump_0F0_4E9A:: ; address name
-    ld a, $06
+    ld a, $06 ; 'Is it OK to transfer the'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
     inc [hl]
@@ -1214,7 +1214,7 @@ Jump_0F0_4F22:: ; address name
     ret
 
 .call_begin_string_bank_f0_cat0:
-    ld a, $07
+    ld a, $07 ; 'OK to save the egg trade'
     call BeginString_BankF0_Cat0
     xor a, a
     ld [wScreenStep], a
@@ -1225,7 +1225,7 @@ Jump_0F0_4F22:: ; address name
     ret
 
 .call_begin_string_bank_f0_cat02:
-    ld a, $05
+    ld a, $05 ; 'Choose the egg to be transferred.'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
     inc [hl]
@@ -1597,7 +1597,7 @@ Jump_0F0_5176:: ; address name
     xor a, a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
-    ld a, $08
+    ld a, $08 ; 'Please wait'
     call BeginString_BankF0_Cat0
     ld hl, wScreenState
     inc [hl]
@@ -1609,7 +1609,7 @@ Jump_0F0_5176:: ; address name
     ld [wScreenSubStep], a
     ld a, $04
     ld [wScreenState], a
-    ld a, $08
+    ld a, $08 ; 'Please wait'
     call BeginString_BankF0_Cat0
     ld a, $BD
     ld [wLinkSendByte], a
@@ -2036,14 +2036,14 @@ Jump_0F0_5402:: ; address name
     ret
 
 .call_begin_string_bank_f0_cat0:
-    ld a, $16
+    ld a, $16 ; 'm already has a Dream Egg.'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
     inc [hl]
     ret
 
 .call_begin_string_bank_f0_cat02:
-    ld a, $13
+    ld a, $13 ; 'm has no Dream Egg to'
     call BeginString_BankF0_Cat0
     ld hl, wScreenStep
     inc [hl]
@@ -2054,7 +2054,7 @@ Jump_0F0_5402:: ; address name
 ; writes: wScreenSubStep, wScreenStep, wScreenState
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case06::
 Jump_0F0_5433:: ; address name
-    ld a, $12
+    ld a, $12 ; 'Please wait'
     call BeginString_BankF0_Cat0
     xor a, a
     ld [wScreenSubStep], a
@@ -2217,7 +2217,7 @@ Jump_0F0_54FA:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A
-    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 12 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
@@ -2364,14 +2364,14 @@ Jump_0F0_55B6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex::
+RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg::
 Jump_0F0_55DC:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
     call CopyStringMaxBToDE
-    ld a, $09
+    ld a, $09 ; '0 received your egg.'
     call BeginString_BankF0_Cat0
     ld hl, wScreenSubStep
     inc [hl]
@@ -2398,7 +2398,7 @@ Jump_0F0_55FB:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex
+    dw RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 10 of the `rst $00` table in Func_0F0_4CA0_Case08
@@ -2430,14 +2430,14 @@ Jump_0F0_5619:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex::
+RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom::
 Jump_0F0_563F:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
     call CopyStringMaxBToDE
-    ld a, $0A
+    ld a, $0A ; 'Obtained an egg from 0.'
     call BeginString_BankF0_Cat0
     ld hl, wScreenSubStep
     inc [hl]
@@ -2468,7 +2468,7 @@ Jump_0F0_565E:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
     dw RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex
+    dw RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 14 of the `rst $00` table in Func_0F0_4CA0_Case09
@@ -2539,14 +2539,14 @@ Func_0F0_56C2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex::
+RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith::
 Jump_0F0_56D9:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
     ld de, wTextBuf0
     ld b, $0A
     call CopyStringMaxBToDE
-    ld a, $0B
+    ld a, $0B ; 'Eggs were traded with 0.'
     call BeginString_BankF0_Cat0
     ld hl, wScreenSubStep
     inc [hl]
@@ -2592,9 +2592,9 @@ Jump_0F0_56F8:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectScene_WriteObject2AndSpriteSlotsEtc
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0
+    dw RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe
     dw RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0
-    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20
+    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0
     dw RunLinkSession8Exchange_ObjectScene_GameMode6_Update
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
@@ -2602,7 +2602,7 @@ Jump_0F0_56F8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteEE, wScreenSubStep
 ; writes: wScreenSubStep
-RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20::
+RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
 Jump_0F0_5742:: ; address name
     ld a, [wScreenByteEE]
     and a, a
@@ -2918,13 +2918,13 @@ Jump_0F0_590A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wLinkByteE8, wLinkByteE9, wLinkByteEA, wLinkByteEB
 ; points at: wBankF0ByteA8, wTextBuf1, wScreenSubStep
-RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
+RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe::
 Jump_0F0_593A:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0ByteA8
     ld de, wTextBuf1
     call CopyNameStringFromBank08Database
-    ld a, $0C
+    ld a, $0C ; 'G hatched from the egg that'
     call BeginString_BankF0_Cat0
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -2977,7 +2977,7 @@ Jump_0F0_5967:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E
+    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 8 of the `rst $00` table in Func_0F0_4CA0_Case0B
@@ -3136,7 +3136,7 @@ Jump_0F0_5A73:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wBankF0ByteC8, wTextBuf1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E::
+RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe::
 Jump_0F0_5AA3:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
@@ -3146,7 +3146,7 @@ Jump_0F0_5AA3:: ; address name
     ld hl, wBankF0ByteC8
     ld de, wTextBuf1
     call CopyNameStringFromBank08Database
-    ld a, $0D
+    ld a, $0D ; 'G hatched from the egg that'
     call BeginString_BankF0_Cat0
     xor a, a
     ldh [hSpriteWindowClipMode], a
@@ -3175,7 +3175,7 @@ Jump_0F0_5ACE:: ; address name
 ; writes: wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Case0C_ToBeginString_BankF0_Cat0AndStep::
 Jump_0F0_5ADA:: ; address name
-    ld a, $08
+    ld a, $08 ; 'Please wait'
     call BeginString_BankF0_Cat0
     ld a, [wScreenStep]
     inc a
@@ -3253,7 +3253,7 @@ Data_0F0_5B39:: ; address name
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
 ; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
-; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
+; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom, RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith, RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe)
 CopyStringMaxBToDE::
 Func_0F0_5B42:: ; address name
     ld a, [hl+]
@@ -3285,7 +3285,7 @@ Func_0F0_5B50:: ; address name
     dw RunLinkSession8Case01Steps_UpdatePagedListCursor
     dw RunLinkSession8Case01Steps_CopyScreenBufferRectWithAttrs_F0
     dw RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0
-    dw RunLinkSession8Case01Steps_LoadTileListSixPerCall
+    dw RunLinkSession8Case01Steps_ShowChooseTheKindOf
 
 ; entry 0 of the `rst $00` table in RunLinkSession8Case01Steps
 ; no direct call (reached through a table, a jump or a vector)
@@ -3559,7 +3559,7 @@ Jump_0F0_5D58:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wChoiceCursorF0
 ; writes: wArg1, wArg2, wArg3, wArg4, wScreenState, wScreenSubStep, wScreenStep
-RunLinkSession8Case01Steps_LoadTileListSixPerCall::
+RunLinkSession8Case01Steps_ShowChooseTheKindOf::
 Jump_0F0_5DA0:: ; address name
     ld a, $9E
     ld [wArg1], a
@@ -3581,14 +3581,14 @@ Jump_0F0_5DA0:: ; address name
     xor a, a
     ld [wScreenState], a
     ld [wScreenSubStep], a
-    ld a, $04
+    ld a, $04 ; 'Choose the kind of egg to'
     call BeginString_BankF0_Cat0
     ld a, $07
     ld [wScreenStep], a
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_48A0
-; 19 call sites from 15 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Table2_Case07, RunLinkSession8Exchange_Case01_Sub01_Table2_Case05, RunLinkSession8Case01Steps_LoadTileListSixPerCall, RunLinkSession8Exchange_Case01_Sub01_Table3_Case03, ...)
+; 19 call sites from 15 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Table2_Case07, RunLinkSession8Exchange_Case01_Sub01_Table2_Case05, RunLinkSession8Case01Steps_ShowChooseTheKindOf, RunLinkSession8Exchange_Case01_Sub01_Table3_Case03, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_BankF0_Cat0::
 Func_0F0_5DDD:: ; address name
@@ -4237,7 +4237,7 @@ Func_0F0_6214:: ; address name
     ret
 
 ; clears the default window, wC8CB = 1, wC8CC = 0, hFFB9 = 2, then repeatedly far-calls Func_002_69D0 until wC8CB & 3 = 0 (E-0122)
-; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom, RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith, RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0, ...)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 RunTextUntilTextWindowStateDone_BankF0::
@@ -4720,7 +4720,7 @@ Data_0F0_6500:: ; address name
     dw vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
     dw rIE
 
-; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table3_Case05, RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet, RunLinkSession8Case01Steps_LoadTileListSixPerCall
+; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table3_Case05, RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet, RunLinkSession8Case01Steps_ShowChooseTheKindOf
 RunLinkSession8Exchange_Case01_Sub01_Table3_Case05_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F0_6522:: ; address name
     db $26, $C4, $4E, $C4
@@ -4864,7 +4864,7 @@ Func_0F0_66EC:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. RunLinkSession8Case01Steps_LoadTileListSixPerCall, RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05, RunLinkSession8Exchange_Case01_Sub01_Table3_Case04, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession8Case01Steps_ShowChooseTheKindOf, RunLinkSession8Case01Steps_ListRecordsInUseWithByte6ESet, RunLinkSession8Exchange_Case01_Sub01_Table3_Case05, RunLinkSession8Exchange_Case01_Sub01_Table3_Case04, ...)
 StoreBAtWordTableEntry_BankF0::
 Func_0F0_66FB:: ; address name
     push bc
@@ -8359,7 +8359,7 @@ Func_0F0_7C81:: ; address name
     ret
 
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1] (Data_0F0_4036 or Data_008_4038) from bank 8 to HL (E-0125)
-; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
+; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe, RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe)
 CopyNameStringFromBank08Database::
 Func_0F0_7C96:: ; address name
     push de
