@@ -2446,6 +2446,12 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - build/name_by_label.py adds names.json entries for routines found by their current label.
 - Binary verification: build/run357 PASS, 0 differing bytes; tests OK.
 
+### E-0275 — Register-preset entries
+
+- Kind: TOOL.
+- A structural entry that only loads one register with a constant, then falls through or `jr`s into named code, is named <Target>With<R><n>, for example WriteTileBAtBGMap20FPlusGlyphListStartWithBC3. Entries into address-named local code (most of the 54 found) keep their structural names. 2 renamed.
+- Binary verification: build/run356 PASS, 0 differing bytes; tests OK.
+
 ### E-0274 — Steps named after the string they show
 
 - Kind: TOOL (C1 names from the E-0243, E-0248, E-0257 and E-0258 quotes).
