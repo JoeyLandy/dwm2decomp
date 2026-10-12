@@ -57,7 +57,7 @@ Known limits: code reached only through other banked-call forms, computed `jp hl
 
 ## Readability state (2026-10-12, after E-0308)
 
-Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run433). Tests: 179 run, 3 skipped. The figures below are measured from the generated `src/`:
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run435). Tests: 186 run, 3 skipped. The figures below are measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
@@ -74,7 +74,7 @@ Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/ru
 
 Most names are C1 readings of what the code does, and many describe mechanics rather than confirmed game meaning. Open questions:
 - Answered since E-0308: MON_SEX bit 0 is 0 male, 1 female (E-0311); MON_EGG is 0 none, 1 unappraised egg, 2 appraised egg (E-0311); gifts go to an Egg whose record is wGiftRecord: they raise its max HP and shift its family scores, which pick its species (E-0312).
-- Confirming the C1 readings in play. tests/test_readings_behaviour.py executes three of them in tools/sm83.py (battle result rank, child sex roll, gift effect; E-0314), which corrected the battle result counters; most other names remain C1.
+- Confirming the C1 readings in play. tests/test_readings_behaviour.py and tests/test_helpers_behaviour.py execute ten of them in tools/sm83.py (E-0314, E-0315). Execution corrected the battle result counters and found two palette-step quirks; most other names remain C1.
 
 ## Readability state (2026-10-12, after E-0291) (superseded above)
 
