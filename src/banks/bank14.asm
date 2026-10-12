@@ -6664,7 +6664,7 @@ Jump_014_6C85::
     cp a, $07
     jp nc, Jump_014_6CC0
     ld b, a
-    ld hl, Data_014_7439
+    ld hl, DefaultMonsterNameTable
     ld a, [wArg3]
     and a, $0F
     add a, a
@@ -6711,7 +6711,7 @@ Jump_014_6CC0::
     pop bc
     ld a, b
     add a, l
-    ld de, Data_014_791F
+    ld de, NameEntrySuggestionTable
     ld l, a
     ld h, $00
     sla l
@@ -7021,1220 +7021,1305 @@ Data_014_70F0:: ; address name
     db "SUCK", $F0, $00, $00, $00, $00, $00 ; id 83
     db $FF ; end
 
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01, CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01
-Data_014_7439:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_014_744F
-    dw Data_014_74BF
-    dw Data_014_752F
-    dw Data_014_759F
-    dw Data_014_760F
-    dw Data_014_767F
-    dw Data_014_76EF
-    dw Data_014_775F
-    dw Data_014_77CF
-    dw Data_014_783F
-    dw Data_014_78AF
-
-Data_014_744F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_746B
-    dw Data_014_7471
-    dw Data_014_7477
-    dw Data_014_747D
-    dw Data_014_7483
-    dw Data_014_7489
-    dw Data_014_748F
-    dw Data_014_7495
-    dw Data_014_749B
-    dw Data_014_74A1
-    dw Data_014_74A7
-    dw Data_014_74AD
-    dw Data_014_74B3
-    dw Data_014_74B9
-
-Data_014_746B:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $2F, $2C, $25, $9F, $F0
-
-Data_014_7471:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $24, $35, $26, $28, $F0
-
-Data_014_7477:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $32, $31, $32, $9F, $F0
-
-Data_014_747D:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $2F, $28, $36, $F0
-
-Data_014_7483:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $24, $25, $25, $24, $F0
-
-Data_014_7489:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $28, $35, $2C, $32, $F0
-
-Data_014_748F:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $31, $28, $32, $9F, $F0
-
-Data_014_7495:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $2F, $24, $35, $2C, $F0
-
-Data_014_749B:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $37, $28, $35, $24, $F0
-
-Data_014_74A1:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $35, $2F, $24, $F0
-
-Data_014_74A7:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $2C, $2E, $32, $35, $F0
-
-Data_014_74AD:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $2C, $33, $33, $9F, $F0
-
-Data_014_74B3:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $28, $37, $37, $2C, $F0
-
-Data_014_74B9:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $2B, $24, $2F, $32, $F0
-
-Data_014_74BF:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_74DB
-    dw Data_014_74E1
-    dw Data_014_74E7
-    dw Data_014_74ED
-    dw Data_014_74F3
-    dw Data_014_74F9
-    dw Data_014_74FF
-    dw Data_014_7505
-    dw Data_014_750B
-    dw Data_014_7511
-    dw Data_014_7517
-    dw Data_014_751D
-    dw Data_014_7523
-    dw Data_014_7529
-
-Data_014_74DB:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $32, $35, $35, $3C, $F0
-
-Data_014_74E1:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $25, $28, $2F, $F0
-
-Data_014_74E7:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $24, $2F, $28, $37, $F0
-
-Data_014_74ED:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $32, $35, $33, $32, $F0
-
-Data_014_74F3:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $28, $2D, $28, $37, $F0
-
-Data_014_74F9:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $32, $35, $24, $27, $F0
-
-Data_014_74FF:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $24, $35, $32, $31, $F0
-
-Data_014_7505:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $32, $38, $2A, $28, $F0
-
-Data_014_750B:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $3D, $24, $35, $2C, $F0
-
-Data_014_7511:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $2B, $24, $25, $32, $F0
-
-Data_014_7517:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $35, $2C, $36, $36, $F0
-
-Data_014_751D:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $38, $31, $24, $35, $F0
-
-Data_014_7523:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $38, $27, $2C, $9F, $F0
-
-Data_014_7529:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $38, $3C, $9F, $9F, $F0
-
-Data_014_752F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_754B
-    dw Data_014_7551
-    dw Data_014_7557
-    dw Data_014_755D
-    dw Data_014_7563
-    dw Data_014_7569
-    dw Data_014_756F
-    dw Data_014_7575
-    dw Data_014_757B
-    dw Data_014_7581
-    dw Data_014_7587
-    dw Data_014_758D
-    dw Data_014_7593
-    dw Data_014_7599
-
-Data_014_754B:: ; heuristic: target of a monotone pointer table; C0
-    db $1E, $3A, $2C, $31, $2A, $F0
-
-Data_014_7551:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $39, $28, $35, $9F, $F0
-
-Data_014_7557:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $32, $27, $30, $24, $F0
-
-Data_014_755D:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $2C, $27, $2C, $28, $F0
-
-Data_014_7563:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $35, $2A, $2A, $F0
-
-Data_014_7569:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $2A, $24, $30, $2C, $F0
-
-Data_014_756F:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $24, $35, $35, $32, $F0
-
-Data_014_7575:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $2C, $2E, $2C, $37, $F0
-
-Data_014_757B:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $28, $36, $36, $24, $F0
-
-Data_014_7581:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $24, $35, $30, $24, $F0
-
-Data_014_7587:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $24, $31, $31, $38, $F0
-
-Data_014_758D:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $28, $39, $35, $2C, $F0
-
-Data_014_7593:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $24, $39, $28, $2F, $F0
-
-Data_014_7599:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $38, $35, $35, $2C, $F0
-
-Data_014_759F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_75BB
-    dw Data_014_75C1
-    dw Data_014_75C7
-    dw Data_014_75CD
-    dw Data_014_75D3
-    dw Data_014_75D9
-    dw Data_014_75DF
-    dw Data_014_75E5
-    dw Data_014_75EB
-    dw Data_014_75F1
-    dw Data_014_75F7
-    dw Data_014_75FD
-    dw Data_014_7603
-    dw Data_014_7609
-
-Data_014_75BB:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $37, $37, $24, $F0
-
-Data_014_75C1:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $28, $31, $2D, $3C, $F0
-
-Data_014_75C7:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $31, $2A, $3C, $9F, $F0
-
-Data_014_75CD:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $32, $39, $3C, $31, $F0
-
-Data_014_75D3:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $28, $2C, $37, $9F, $F0
-
-Data_014_75D9:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $3C, $35, $32, $31, $F0
-
-Data_014_75DF:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $2C, $2F, $36, $28, $F0
-
-Data_014_75E5:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $2E, $2C, $31, $F0
-
-Data_014_75EB:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $28, $35, $35, $9F, $F0
-
-Data_014_75F1:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $24, $30, $24, $35, $F0
-
-Data_014_75F7:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $26, $2C, $36, $F0
-
-Data_014_75FD:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $24, $2E, $2C, $9F, $F0
-
-Data_014_7603:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $24, $2F, $2F, $2C, $F0
-
-Data_014_7609:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $32, $2E, $32, $9F, $F0
-
-Data_014_760F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_762B
-    dw Data_014_7631
-    dw Data_014_7637
-    dw Data_014_763D
-    dw Data_014_7643
-    dw Data_014_7649
-    dw Data_014_764F
-    dw Data_014_7655
-    dw Data_014_765B
-    dw Data_014_7661
-    dw Data_014_7667
-    dw Data_014_766D
-    dw Data_014_7673
-    dw Data_014_7679
-
-Data_014_762B:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $24, $31, $2C, $30, $F0
-
-Data_014_7631:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $28, $2F, $35, $2C, $F0
-
-Data_014_7637:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $24, $2C, $30, $9F, $F0
-
-Data_014_763D:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $24, $35, $3D, $3D, $F0
-
-Data_014_7643:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $2C, $37, $24, $9F, $F0
-
-Data_014_7649:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $28, $3C, $32, $37, $F0
-
-Data_014_764F:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $33, $33, $24, $F0
-
-Data_014_7655:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $24, $39, $28, $31, $F0
-
-Data_014_765B:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $24, $35, $24, $27, $F0
-
-Data_014_7661:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $3C, $24, $30, $9F, $F0
-
-Data_014_7667:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $38, $30, $30, $3C, $F0
-
-Data_014_766D:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $33, $38, $2F, $F0
-
-Data_014_7673:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $24, $31, $3C, $2F, $F0
-
-Data_014_7679:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $32, $33, $2F, $24, $F0
-
-Data_014_767F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_769B
-    dw Data_014_76A1
-    dw Data_014_76A7
-    dw Data_014_76AD
-    dw Data_014_76B3
-    dw Data_014_76B9
-    dw Data_014_76BF
-    dw Data_014_76C5
-    dw Data_014_76CB
-    dw Data_014_76D1
-    dw Data_014_76D7
-    dw Data_014_76DD
-    dw Data_014_76E3
-    dw Data_014_76E9
-
-Data_014_769B:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $25, $2C, $2C, $9F, $F0
-
-Data_014_76A1:: ; heuristic: target of a monotone pointer table; C0
-    db $1E, $2F, $35, $2C, $2E, $F0
-
-Data_014_76A7:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $28, $35, $37, $2B, $F0
-
-Data_014_76AD:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $35, $38, $31, $37, $F0
-
-Data_014_76B3:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $2F, $24, $37, $2B, $F0
-
-Data_014_76B9:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $24, $30, $2B, $24, $F0
-
-Data_014_76BF:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $32, $24, $2B, $30, $F0
-
-Data_014_76C5:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $35, $32, $31, $F0
-
-Data_014_76CB:: ; heuristic: target of a monotone pointer table; C0
-    db $1A, $38, $2C, $2C, $9F, $F0
-
-Data_014_76D1:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $32, $2E, $2C, $36, $F0
-
-Data_014_76D7:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $38, $27, $27, $2C, $F0
-
-Data_014_76DD:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $2B, $28, $35, $35, $F0
-
-Data_014_76E3:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2F, $2C, $36, $36, $F0
-
-Data_014_76E9:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $38, $39, $35, $2C, $F0
-
-Data_014_76EF:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_770B
-    dw Data_014_7711
-    dw Data_014_7717
-    dw Data_014_771D
-    dw Data_014_7723
-    dw Data_014_7729
-    dw Data_014_772F
-    dw Data_014_7735
-    dw Data_014_773B
-    dw Data_014_7741
-    dw Data_014_7747
-    dw Data_014_774D
-    dw Data_014_7753
-    dw Data_014_7759
-
-Data_014_770B:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $24, $30, $2C, $24, $F0
-
-Data_014_7711:: ; heuristic: target of a monotone pointer table; C0
-    db $1A, $38, $25, $28, $9F, $F0
-
-Data_014_7717:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $2C, $2A, $2A, $9F, $F0
-
-Data_014_771D:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $24, $3B, $32, $31, $F0
-
-Data_014_7723:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2B, $28, $2F, $9F, $F0
-
-Data_014_7729:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $24, $38, $36, $36, $F0
-
-Data_014_772F:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $31, $26, $2B, $32, $F0
-
-Data_014_7735:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $3C, $24, $31, $9F, $F0
-
-Data_014_773B:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $35, $35, $2C, $36, $F0
-
-Data_014_7741:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $28, $35, $2C, $2A, $F0
-
-Data_014_7747:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $2C, $26, $32, $F0
-
-Data_014_774D:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $24, $2F, $32, $35, $F0
-
-Data_014_7753:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2E, $31, $28, $36, $F0
-
-Data_014_7759:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $2C, $39, $28, $2F, $F0
-
-Data_014_775F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_777B
-    dw Data_014_7781
-    dw Data_014_7787
-    dw Data_014_778D
-    dw Data_014_7793
-    dw Data_014_7799
-    dw Data_014_779F
-    dw Data_014_77A5
-    dw Data_014_77AB
-    dw Data_014_77B1
-    dw Data_014_77B7
-    dw Data_014_77BD
-    dw Data_014_77C3
-    dw Data_014_77C9
-
-Data_014_777B:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $2F, $28, $3C, $9F, $F0
-
-Data_014_7781:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $28, $35, $32, $31, $F0
-
-Data_014_7787:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $32, $31, $24, $27, $F0
-
-Data_014_778D:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $32, $25, $32, $36, $F0
-
-Data_014_7793:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $38, $31, $24, $36, $F0
-
-Data_014_7799:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $38, $33, $28, $2F, $F0
-
-Data_014_779F:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $35, $32, $2F, $32, $F0
-
-Data_014_77A5:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $38, $30, $2C, $9F, $F0
-
-Data_014_77AB:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $3C, $24, $35, $9F, $F0
-
-Data_014_77B1:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $32, $3D, $24, $35, $F0
-
-Data_014_77B7:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $3C, $35, $2C, $28, $F0
-
-Data_014_77BD:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2C, $31, $24, $9F, $F0
-
-Data_014_77C3:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $3C, $35, $24, $31, $F0
-
-Data_014_77C9:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $31, $27, $32, $F0
-
-Data_014_77CF:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_77EB
-    dw Data_014_77F1
-    dw Data_014_77F7
-    dw Data_014_77FD
-    dw Data_014_7803
-    dw Data_014_7809
-    dw Data_014_780F
-    dw Data_014_7815
-    dw Data_014_781B
-    dw Data_014_7821
-    dw Data_014_7827
-    dw Data_014_782D
-    dw Data_014_7833
-    dw Data_014_7839
-
-Data_014_77EB:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $2B, $28, $35, $2C, $F0
-
-Data_014_77F1:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $28, $36, $37, $24, $F0
-
-Data_014_77F7:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $31, $39, $24, $35, $F0
-
-Data_014_77FD:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $3C, $31, $2A, $9F, $F0
-
-Data_014_7803:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $2F, $3C, $39, $24, $F0
-
-Data_014_7809:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $35, $2C, $27, $3D, $F0
-
-Data_014_780F:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $3A, $24, $31, $9F, $F0
-
-Data_014_7815:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $36, $36, $24, $9F, $F0
-
-Data_014_781B:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $28, $39, $39, $2C, $F0
-
-Data_014_7821:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $33, $24, $2F, $2F, $F0
-
-Data_014_7827:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $2C, $27, $27, $24, $F0
-
-Data_014_782D:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $35, $35, $2C, $F0
-
-Data_014_7833:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $2B, $2C, $31, $24, $F0
-
-Data_014_7839:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $32, $32, $35, $2C, $F0
-
-Data_014_783F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_785B
-    dw Data_014_7861
-    dw Data_014_7867
-    dw Data_014_786D
-    dw Data_014_7873
-    dw Data_014_7879
-    dw Data_014_787F
-    dw Data_014_7885
-    dw Data_014_788B
-    dw Data_014_7891
-    dw Data_014_7897
-    dw Data_014_789D
-    dw Data_014_78A3
-    dw Data_014_78A9
-
-Data_014_785B:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $3D, $24, $2E, $9F, $F0
-
-Data_014_7861:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $24, $2F, $2F, $2C, $F0
-
-Data_014_7867:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $32, $27, $24, $9F, $F0
-
-Data_014_786D:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $39, $2C, $9F, $9F, $F0
-
-Data_014_7873:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $28, $31, $3C, $9F, $F0
-
-Data_014_7879:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $24, $3A, $24, $2B, $F0
-
-Data_014_787F:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $24, $39, $2C, $31, $F0
-
-Data_014_7885:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $3C, $24, $26, $2C, $F0
-
-Data_014_788B:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $3D, $38, $35, $F0
-
-Data_014_7891:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $35, $2F, $2F, $F0
-
-Data_014_7897:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $24, $36, $2C, $3D, $F0
-
-Data_014_789D:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $24, $27, $28, $24, $F0
-
-Data_014_78A3:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $38, $24, $9F, $9F, $F0
-
-Data_014_78A9:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $32, $39, $2C, $31, $F0
-
-Data_014_78AF:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_014_78CB
-    dw Data_014_78D1
-    dw Data_014_78D7
-    dw Data_014_78DD
-    dw Data_014_78E3
-    dw Data_014_78E9
-    dw Data_014_78EF
-    dw Data_014_78F5
-    dw Data_014_78FB
-    dw Data_014_7901
-    dw Data_014_7907
-    dw Data_014_790D
-    dw Data_014_7913
-    dw Data_014_7919
-
-Data_014_78CB:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $28, $39, $31, $3D, $F0
-
-Data_014_78D1:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $24, $27, $28, $3D, $F0
-
-Data_014_78D7:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $2E, $35, $32, $F0
-
-Data_014_78DD:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $36, $2E, $35, $32, $F0
-
-Data_014_78E3:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $35, $2C, $32, $F0
-
-Data_014_78E9:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $24, $36, $2C, $36, $F0
-
-Data_014_78EF:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2E, $38, $2F, $2F, $F0
-
-Data_014_78F5:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $28, $27, $24, $2B, $F0
-
-Data_014_78FB:: ; heuristic: target of a monotone pointer table; C0
-    db $1E, $2F, $33, $2B, $9F, $F0
-
-Data_014_7901:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $3C, $2F, $2F, $9F, $F0
-
-Data_014_7907:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $28, $39, $9F, $9F, $F0
-
-Data_014_790D:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $28, $36, $2C, $2F, $F0
-
-Data_014_7913:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $3C, $24, $2F, $2F, $F0
-
-Data_014_7919:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $24, $2F, $37, $3D, $F0
-
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case03_Sub01
-Data_014_791F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_014_7A37
-    dw Data_014_7A3D
-    dw Data_014_7A43
-    dw Data_014_7A49
-    dw Data_014_7A4F
-    dw Data_014_7A55
-    dw Data_014_7A5B
-    dw Data_014_7A61
-    dw Data_014_7A67
-    dw Data_014_7A6D
-    dw Data_014_7A73
-    dw Data_014_7A79
-    dw Data_014_7A7F
-    dw Data_014_7A85
-    dw Data_014_7A8B
-    dw Data_014_7A91
-    dw Data_014_7A97
-    dw Data_014_7A9D
-    dw Data_014_7AA3
-    dw Data_014_7AA9
-    dw Data_014_7AAF
-    dw Data_014_7AB5
-    dw Data_014_7ABB
-    dw Data_014_7AC1
-    dw Data_014_7AC7
-    dw Data_014_7ACD
-    dw Data_014_7AD3
-    dw Data_014_7AD9
-    dw Data_014_7ADF
-    dw Data_014_7AE5
-    dw Data_014_7AEB
-    dw Data_014_7AF1
-    dw Data_014_7AF7
-    dw Data_014_7AFD
-    dw Data_014_7B03
-    dw Data_014_7B09
-    dw Data_014_7B0F
-    dw Data_014_7B15
-    dw Data_014_7B1B
-    dw Data_014_7B21
-    dw Data_014_7B27
-    dw Data_014_7B2D
-    dw Data_014_7B33
-    dw Data_014_7B39
-    dw Data_014_7B3F
-    dw Data_014_7B45
-    dw Data_014_7B4B
-    dw Data_014_7B51
-    dw Data_014_7B57
-    dw Data_014_7B5D
-    dw Data_014_7B63
-    dw Data_014_7B69
-    dw Data_014_7B6F
-    dw Data_014_7B75
-    dw Data_014_7B7B
-    dw Data_014_7B81
-    dw Data_014_7B87
-    dw Data_014_7B8D
-    dw Data_014_7B93
-    dw Data_014_7B99
-    dw Data_014_7B9F
-    dw Data_014_7BA5
-    dw Data_014_7BAB
-    dw Data_014_7BB1
-    dw Data_014_7BB7
-    dw Data_014_7BBD
-    dw Data_014_7BC3
-    dw Data_014_7BC9
-    dw Data_014_7BCF
-    dw Data_014_7BD5
-    dw Data_014_7BDB
-    dw Data_014_7BE1
-    dw Data_014_7BE7
-    dw Data_014_7BED
-    dw Data_014_7BF3
-    dw Data_014_7BF9
-    dw Data_014_7BFF
-    dw Data_014_7C05
-    dw Data_014_7C0B
-    dw Data_014_7C11
-    dw Data_014_7C17
-    dw Data_014_7C1D
-    dw Data_014_7C23
-    dw Data_014_7C29
-    dw Data_014_7C2F
-    dw Data_014_7C35
-    dw Data_014_7C3B
-    dw Data_014_7C41
-    dw Data_014_7C47
-    dw Data_014_7C4D
-    dw Data_014_7C53
-    dw Data_014_7C59
-    dw Data_014_7C5F
-    dw Data_014_7C65
-    dw Data_014_7C6B
-    dw Data_014_7C71
-    dw Data_014_7C77
-    dw Data_014_7C7D
-    dw Data_014_7C83
-    dw Data_014_7C89
-    dw Data_014_7C8F
-    dw Data_014_7C95
-    dw Data_014_7C9B
-    dw Data_014_7CA1
-    dw Data_014_7CA7
-    dw Data_014_7CAD
-    dw Data_014_7CB3
-    dw Data_014_7CB9
-    dw Data_014_7CBF
-    dw Data_014_7CC5
-    dw Data_014_7CCB
-    dw Data_014_7CD1
-    dw Data_014_7CD7
-    dw Data_014_7CDD
-    dw Data_014_7CE3
-    dw Data_014_7CE9
-    dw Data_014_7CEF
-    dw Data_014_7CF5
-    dw Data_014_7CFB
-    dw Data_014_7D01
-    dw Data_014_7D07
-    dw Data_014_7D0D
-    dw Data_014_7D13
-    dw Data_014_7D19
-    dw Data_014_7D1F
-    dw Data_014_7D25
-    dw Data_014_7D2B
-    dw Data_014_7D31
-    dw Data_014_7D37
-    dw Data_014_7D3D
-    dw Data_014_7D43
-    dw Data_014_7D49
-    dw Data_014_7D4F
-    dw Data_014_7D55
-    dw Data_014_7D5B
-    dw Data_014_7D61
-    dw Data_014_7D67
-    dw Data_014_7D6D
-    dw Data_014_7D73
-    dw Data_014_7D79
-
-Data_014_7A37:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $3C, $2E, $28, $31, $F0
-
-Data_014_7A3D:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $2C, $9F, $9F, $9F, $F0
-
-Data_014_7A43:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $3C, $31, $31, $9F, $F0
-
-Data_014_7A49:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $3D, $38, $9F, $F0
-
-Data_014_7A4F:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $32, $35, $27, $2C, $F0
-
-Data_014_7A55:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $3C, $30, $25, $32, $F0
-
-Data_014_7A5B:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $2B, $28, $36, $37, $F0
-
-Data_014_7A61:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $28, $35, $35, $32, $F0
-
-Data_014_7A67:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2F, $3C, $24, $2B, $F0
-
-Data_014_7A6D:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $28, $35, $32, $2F, $F0
-
-Data_014_7A73:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $24, $35, $28, $2F, $F0
-
-Data_014_7A79:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $24, $35, $32, $31, $F0
-
-Data_014_7A7F:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2F, $37, $2B, $32, $F0
-
-Data_014_7A85:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $31, $32, $31, $F0
-
-Data_014_7A8B:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2F, $29, $28, $35, $F0
-
-Data_014_7A91:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $32, $37, $38, $30, $F0
-
-Data_014_7A97:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $38, $31, $31, $32, $F0
-
-Data_014_7A9D:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $28, $2C, $25, $9F, $F0
-
-Data_014_7AA3:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $32, $35, $30, $24, $F0
-
-Data_014_7AA9:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $38, $2E, $2E, $38, $F0
-
-Data_014_7AAF:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $28, $37, $37, $38, $F0
-
-Data_014_7AB5:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2C, $27, $3D, $24, $F0
-
-Data_014_7ABB:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $24, $2E, $2E, $9F, $F0
-
-Data_014_7AC1:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $38, $2F, $32, $9F, $F0
-
-Data_014_7AC7:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $2F, $2A, $24, $31, $F0
-
-Data_014_7ACD:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $28, $29, $37, $2C, $F0
-
-Data_014_7AD3:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $36, $2B, $24, $31, $F0
-
-Data_014_7AD9:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $32, $26, $2E, $32, $F0
-
-Data_014_7ADF:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $2F, $37, $2B, $32, $F0
-
-Data_014_7AE5:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $3D, $28, $35, $F0
-
-Data_014_7AEB:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $3C, $27, $28, $9F, $F0
-
-Data_014_7AF1:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $35, $32, $35, $24, $F0
-
-Data_014_7AF7:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $24, $35, $2F, $2C, $F0
-
-Data_014_7AFD:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $29, $29, $36, $2C, $F0
-
-Data_014_7B03:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $33, $37, $24, $F0
-
-Data_014_7B09:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $24, $36, $36, $9F, $F0
-
-Data_014_7B0F:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $28, $2C, $2E, $9F, $F0
-
-Data_014_7B15:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $38, $31, $31, $9F, $F0
-
-Data_014_7B1B:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $38, $31, $2C, $24, $F0
-
-Data_014_7B21:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $38, $2F, $9F, $9F, $F0
-
-Data_014_7B27:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2C, $28, $2F, $2F, $F0
-
-Data_014_7B2D:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $32, $2F, $37, $32, $F0
-
-Data_014_7B33:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $38, $2F, $32, $9F, $F0
-
-Data_014_7B39:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $2C, $2E, $2C, $2F, $F0
-
-Data_014_7B3F:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $28, $39, $2C, $31, $F0
-
-Data_014_7B45:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $28, $37, $2B, $24, $F0
-
-Data_014_7B4B:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $24, $2C, $36, $36, $F0
-
-Data_014_7B51:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $38, $31, $32, $31, $F0
-
-Data_014_7B57:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $24, $2E, $38, $2F, $F0
-
-Data_014_7B5D:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $2C, $35, $38, $24, $F0
-
-Data_014_7B63:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $32, $35, $25, $2C, $F0
-
-Data_014_7B69:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $2C, $37, $28, $3C, $F0
-
-Data_014_7B6F:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $39, $2C, $31, $9F, $F0
-
-Data_014_7B75:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $38, $2F, $32, $28, $F0
-
-Data_014_7B7B:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $38, $27, $2C, $9F, $F0
-
-Data_014_7B81:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $37, $2B, $3C, $9F, $F0
-
-Data_014_7B87:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $38, $38, $9F, $9F, $F0
-
-Data_014_7B8D:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $24, $35, $35, $2C, $F0
-
-Data_014_7B93:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $24, $25, $38, $9F, $F0
-
-Data_014_7B99:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $28, $2B, $27, $24, $F0
-
-Data_014_7B9F:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $35, $37, $32, $F0
-
-Data_014_7BA5:: ; heuristic: target of a monotone pointer table; C0
-    db $0B, $2C, $24, $9F, $9F, $F0
-
-Data_014_7BAB:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $37, $24, $2B, $F0
-
-Data_014_7BB1:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $32, $31, $36, $38, $F0
-
-Data_014_7BB7:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $2F, $2E, $9F, $F0
-
-Data_014_7BBD:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $24, $2C, $3D, $9F, $F0
-
-Data_014_7BC3:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $28, $2C, $2F, $9F, $F0
-
-Data_014_7BC9:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $3D, $31, $24, $F0
-
-Data_014_7BCF:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2C, $2E, $2E, $24, $F0
-
-Data_014_7BD5:: ; heuristic: target of a monotone pointer table; C0
-    db $0D, $28, $35, $3D, $32, $F0
-
-Data_014_7BDB:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $28, $3C, $9F, $F0
-
-Data_014_7BE1:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $3C, $36, $37, $2C, $F0
-
-Data_014_7BE7:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $24, $30, $24, $31, $F0
-
-Data_014_7BED:: ; heuristic: target of a monotone pointer table; C0
-    db $12, $24, $31, $24, $9F, $F0
-
-Data_014_7BF3:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $2E, $2E, $32, $F0
-
-Data_014_7BF9:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $32, $33, $24, $3D, $F0
-
-Data_014_7BFF:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $2F, $24, $30, $F0
-
-Data_014_7C05:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $3C, $24, $35, $9F, $F0
-
-Data_014_7C0B:: ; heuristic: target of a monotone pointer table; C0
-    db $23, $32, $31, $2C, $24, $F0
-
-Data_014_7C11:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $2F, $2C, $31, $F0
-
-Data_014_7C17:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $31, $38, $2F, $2F, $F0
-
-Data_014_7C1D:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $24, $38, $2F, $2C, $F0
-
-Data_014_7C23:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $24, $35, $2C, $31, $F0
-
-Data_014_7C29:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $3C, $2F, $2E, $2C, $F0
-
-Data_014_7C2F:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2F, $29, $38, $24, $F0
-
-Data_014_7C35:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $38, $35, $2C, $2F, $F0
-
-Data_014_7C3B:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $24, $30, $28, $31, $F0
-
-Data_014_7C41:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $2C, $2A, $2A, $9F, $F0
-
-Data_014_7C47:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $2C, $30, $30, $28, $F0
-
-Data_014_7C4D:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $32, $2B, $30, $2C, $F0
-
-Data_014_7C53:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $2C, $36, $28, $37, $F0
-
-Data_014_7C59:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $24, $37, $38, $24, $F0
-
-Data_014_7C5F:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $28, $2F, $24, $F0
-
-Data_014_7C65:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $38, $37, $37, $2C, $F0
-
-Data_014_7C6B:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $3C, $30, $28, $28, $F0
-
-Data_014_7C71:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $31, $31, $2C, $36, $F0
-
-Data_014_7C77:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $2E, $2E, $2C, $F0
-
-Data_014_7C7D:: ; heuristic: target of a monotone pointer table; C0
-    db $13, $28, $30, $31, $2C, $F0
-
-Data_014_7C83:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $2B, $24, $24, $35, $F0
-
-Data_014_7C89:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $29, $2C, $31, $F0
-
-Data_014_7C8F:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2C, $24, $31, $31, $F0
-
-Data_014_7C95:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $24, $2F, $2C, $31, $F0
-
-Data_014_7C9B:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $24, $33, $2F, $2C, $F0
-
-Data_014_7CA1:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $38, $2F, $37, $3C, $F0
-
-Data_014_7CA7:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $26, $2B, $24, $2C, $F0
-
-Data_014_7CAD:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $3C, $2F, $27, $24, $F0
-
-Data_014_7CB3:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $2B, $24, $35, $32, $F0
-
-Data_014_7CB9:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $2F, $2F, $2E, $F0
-
-Data_014_7CBF:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $2F, $27, $24, $F0
-
-Data_014_7CC5:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $32, $31, $31, $2C, $F0
-
-Data_014_7CCB:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $38, $31, $27, $2C, $F0
-
-Data_014_7CD1:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $32, $30, $28, $37, $F0
-
-Data_014_7CD7:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $28, $2F, $24, $31, $F0
-
-Data_014_7CDD:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $32, $38, $35, $24, $F0
-
-Data_014_7CE3:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $32, $31, $28, $3D, $F0
-
-Data_014_7CE9:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $2F, $2F, $24, $31, $F0
-
-Data_014_7CEF:: ; heuristic: target of a monotone pointer table; C0
-    db $0E, $35, $2C, $36, $36, $F0
-
-Data_014_7CF5:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $38, $2F, $32, $28, $F0
-
-Data_014_7CFB:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $2F, $32, $35, $24, $F0
-
-Data_014_7D01:: ; heuristic: target of a monotone pointer table; C0
-    db $17, $2C, $37, $2B, $28, $F0
-
-Data_014_7D07:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $38, $3A, $30, $2C, $F0
-
-Data_014_7D0D:: ; heuristic: target of a monotone pointer table; C0
-    db $22, $38, $35, $35, $32, $F0
-
-Data_014_7D13:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $24, $2C, $3D, $28, $F0
-
-Data_014_7D19:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $28, $2F, $28, $31, $F0
-
-Data_014_7D1F:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $28, $35, $28, $31, $F0
-
-Data_014_7D25:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $28, $2F, $24, $2B, $F0
-
-Data_014_7D2B:: ; heuristic: target of a monotone pointer table; C0
-    db $16, $2C, $31, $37, $32, $F0
-
-Data_014_7D31:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $2C, $37, $37, $32, $F0
-
-Data_014_7D37:: ; heuristic: target of a monotone pointer table; C0
-    db $15, $38, $30, $24, $31, $F0
-
-Data_014_7D3D:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $28, $31, $31, $2C, $F0
-
-Data_014_7D43:: ; heuristic: target of a monotone pointer table; C0
-    db $1D, $28, $35, $3C, $2F, $F0
-
-Data_014_7D49:: ; heuristic: target of a monotone pointer table; C0
-    db $14, $35, $2C, $30, $9F, $F0
-
-Data_014_7D4F:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $37, $26, $2B, $9F, $F0
-
-Data_014_7D55:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $35, $2F, $28, $9F, $F0
-
-Data_014_7D5B:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $2B, $28, $36, $9F, $F0
-
-Data_014_7D61:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $2C, $3D, $24, $9F, $F0
-
-Data_014_7D67:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $28, $36, $37, $2F, $F0
-
-Data_014_7D6D:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $2F, $30, $30, $32, $F0
-
-Data_014_7D73:: ; heuristic: target of a monotone pointer table; C0
-    db $0F, $32, $35, $37, $28, $F0
-
-Data_014_7D79:: ; heuristic: target of a monotone pointer table; C0
-    db $1C, $32, $29, $29, $2C, $F0
+; E-0254 (C1: the code before Jump_014_6CB4 indexes it with wArg3 & $0F (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n; CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01 indexes it with wWorkBuf and wWorkBuf + 1 and copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names).
+; record: 14 name pointers for this family
+DefaultMonsterNameTable::
+Data_014_7439:: ; address name
+    dw DefaultMonsterNames_Slime ; id 0
+    dw DefaultMonsterNames_Dragon ; id 1
+    dw DefaultMonsterNames_Beast ; id 2
+    dw DefaultMonsterNames_Bird ; id 3
+    dw DefaultMonsterNames_Plant ; id 4
+    dw DefaultMonsterNames_Bug ; id 5
+    dw DefaultMonsterNames_Demon ; id 6
+    dw DefaultMonsterNames_Zombie ; id 7
+    dw DefaultMonsterNames_Material ; id 8
+    dw DefaultMonsterNames_Water ; id 9
+    dw DefaultMonsterNames_Boss ; id 10
+
+; E-0254 (C1: family 0 (Slime) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Slime::
+Data_014_744F:: ; address name
+    dw DefaultMonsterNameStrings_Slime ; id 0
+    dw DefaultName_Slime_01 ; id 1
+    dw DefaultName_Slime_02 ; id 2
+    dw DefaultName_Slime_03 ; id 3
+    dw DefaultName_Slime_04 ; id 4
+    dw DefaultName_Slime_05 ; id 5
+    dw DefaultName_Slime_06 ; id 6
+    dw DefaultName_Slime_07 ; id 7
+    dw DefaultName_Slime_08 ; id 8
+    dw DefaultName_Slime_09 ; id 9
+    dw DefaultName_Slime_0A ; id 10
+    dw DefaultName_Slime_0B ; id 11
+    dw DefaultName_Slime_0C ; id 12
+    dw DefaultName_Slime_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Slime).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Slime::
+DefaultName_Slime_00:: ; heuristic: default monster name; C0
+Data_014_746B:: ; address name
+    db "Slib", $9F, $F0 ; id 0
+DefaultName_Slime_01:: ; heuristic: default monster name; C0
+Data_014_7471:: ; address name
+    db "Darce", $F0 ; id 1
+DefaultName_Slime_02:: ; heuristic: default monster name; C0
+Data_014_7477:: ; address name
+    db "Bono", $9F, $F0 ; id 2
+DefaultName_Slime_03:: ; heuristic: default monster name; C0
+Data_014_747D:: ; address name
+    db "Miles", $F0 ; id 3
+DefaultName_Slime_04:: ; heuristic: default monster name; C0
+Data_014_7483:: ; address name
+    db "Rabba", $F0 ; id 4
+DefaultName_Slime_05:: ; heuristic: default monster name; C0
+Data_014_7489:: ; address name
+    db "Terio", $F0 ; id 5
+DefaultName_Slime_06:: ; heuristic: default monster name; C0
+Data_014_748F:: ; address name
+    db "Oneo", $9F, $F0 ; id 6
+DefaultName_Slime_07:: ; heuristic: default monster name; C0
+Data_014_7495:: ; address name
+    db "Slari", $F0 ; id 7
+DefaultName_Slime_08:: ; heuristic: default monster name; C0
+Data_014_749B:: ; address name
+    db "Stera", $F0 ; id 8
+DefaultName_Slime_09:: ; heuristic: default monster name; C0
+Data_014_74A1:: ; address name
+    db "Purla", $F0 ; id 9
+DefaultName_Slime_0A:: ; heuristic: default monster name; C0
+Data_014_74A7:: ; address name
+    db "Cikor", $F0 ; id 10
+DefaultName_Slime_0B:: ; heuristic: default monster name; C0
+Data_014_74AD:: ; address name
+    db "Ripp", $9F, $F0 ; id 11
+DefaultName_Slime_0C:: ; heuristic: default monster name; C0
+Data_014_74B3:: ; address name
+    db "Petti", $F0 ; id 12
+DefaultName_Slime_0D:: ; heuristic: default monster name; C0
+Data_014_74B9:: ; address name
+    db "Chalo", $F0 ; id 13
+
+; E-0254 (C1: family 1 (Dragon) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Dragon::
+Data_014_74BF:: ; address name
+    dw DefaultMonsterNameStrings_Dragon ; id 0
+    dw DefaultName_Dragon_01 ; id 1
+    dw DefaultName_Dragon_02 ; id 2
+    dw DefaultName_Dragon_03 ; id 3
+    dw DefaultName_Dragon_04 ; id 4
+    dw DefaultName_Dragon_05 ; id 5
+    dw DefaultName_Dragon_06 ; id 6
+    dw DefaultName_Dragon_07 ; id 7
+    dw DefaultName_Dragon_08 ; id 8
+    dw DefaultName_Dragon_09 ; id 9
+    dw DefaultName_Dragon_0A ; id 10
+    dw DefaultName_Dragon_0B ; id 11
+    dw DefaultName_Dragon_0C ; id 12
+    dw DefaultName_Dragon_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Dragon).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Dragon::
+DefaultName_Dragon_00:: ; heuristic: default monster name; C0
+Data_014_74DB:: ; address name
+    db "Horry", $F0 ; id 0
+DefaultName_Dragon_01:: ; heuristic: default monster name; C0
+Data_014_74E1:: ; address name
+    db "Kabel", $F0 ; id 1
+DefaultName_Dragon_02:: ; heuristic: default monster name; C0
+Data_014_74E7:: ; address name
+    db "Galet", $F0 ; id 2
+DefaultName_Dragon_03:: ; heuristic: default monster name; C0
+Data_014_74ED:: ; address name
+    db "Porpo", $F0 ; id 3
+DefaultName_Dragon_04:: ; heuristic: default monster name; C0
+Data_014_74F3:: ; address name
+    db "Kejet", $F0 ; id 4
+DefaultName_Dragon_05:: ; heuristic: default monster name; C0
+Data_014_74F9:: ; address name
+    db "Dorad", $F0 ; id 5
+DefaultName_Dragon_06:: ; heuristic: default monster name; C0
+Data_014_74FF:: ; address name
+    db "Baron", $F0 ; id 6
+DefaultName_Dragon_07:: ; heuristic: default monster name; C0
+Data_014_7505:: ; address name
+    db "Rouge", $F0 ; id 7
+DefaultName_Dragon_08:: ; heuristic: default monster name; C0
+Data_014_750B:: ; address name
+    db "Azari", $F0 ; id 8
+DefaultName_Dragon_09:: ; heuristic: default monster name; C0
+Data_014_7511:: ; address name
+    db "Chabo", $F0 ; id 9
+DefaultName_Dragon_0A:: ; heuristic: default monster name; C0
+Data_014_7517:: ; address name
+    db "Triss", $F0 ; id 10
+DefaultName_Dragon_0B:: ; heuristic: default monster name; C0
+Data_014_751D:: ; address name
+    db "Runar", $F0 ; id 11
+DefaultName_Dragon_0C:: ; heuristic: default monster name; C0
+Data_014_7523:: ; address name
+    db "Rudi", $9F, $F0 ; id 12
+DefaultName_Dragon_0D:: ; heuristic: default monster name; C0
+Data_014_7529:: ; address name
+    db "Vuy", $9F, $9F, $F0 ; id 13
+
+; E-0254 (C1: family 2 (Beast) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Beast::
+Data_014_752F:: ; address name
+    dw DefaultMonsterNameStrings_Beast ; id 0
+    dw DefaultName_Beast_01 ; id 1
+    dw DefaultName_Beast_02 ; id 2
+    dw DefaultName_Beast_03 ; id 3
+    dw DefaultName_Beast_04 ; id 4
+    dw DefaultName_Beast_05 ; id 5
+    dw DefaultName_Beast_06 ; id 6
+    dw DefaultName_Beast_07 ; id 7
+    dw DefaultName_Beast_08 ; id 8
+    dw DefaultName_Beast_09 ; id 9
+    dw DefaultName_Beast_0A ; id 10
+    dw DefaultName_Beast_0B ; id 11
+    dw DefaultName_Beast_0C ; id 12
+    dw DefaultName_Beast_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Beast).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Beast::
+DefaultName_Beast_00:: ; heuristic: default monster name; C0
+Data_014_754B:: ; address name
+    db "Uwing", $F0 ; id 0
+DefaultName_Beast_01:: ; heuristic: default monster name; C0
+Data_014_7551:: ; address name
+    db "Iver", $9F, $F0 ; id 1
+DefaultName_Beast_02:: ; heuristic: default monster name; C0
+Data_014_7557:: ; address name
+    db "Rodma", $F0 ; id 2
+DefaultName_Beast_03:: ; heuristic: default monster name; C0
+Data_014_755D:: ; address name
+    db "Didie", $F0 ; id 3
+DefaultName_Beast_04:: ; heuristic: default monster name; C0
+Data_014_7563:: ; address name
+    db "Margg", $F0 ; id 4
+DefaultName_Beast_05:: ; heuristic: default monster name; C0
+Data_014_7569:: ; address name
+    db "Ogami", $F0 ; id 5
+DefaultName_Beast_06:: ; heuristic: default monster name; C0
+Data_014_756F:: ; address name
+    db "Carro", $F0 ; id 6
+DefaultName_Beast_07:: ; heuristic: default monster name; C0
+Data_014_7575:: ; address name
+    db "Nikit", $F0 ; id 7
+DefaultName_Beast_08:: ; heuristic: default monster name; C0
+Data_014_757B:: ; address name
+    db "Messa", $F0 ; id 8
+DefaultName_Beast_09:: ; heuristic: default monster name; C0
+Data_014_7581:: ; address name
+    db "Larma", $F0 ; id 9
+DefaultName_Beast_0A:: ; heuristic: default monster name; C0
+Data_014_7587:: ; address name
+    db "Jannu", $F0 ; id 10
+DefaultName_Beast_0B:: ; heuristic: default monster name; C0
+Data_014_758D:: ; address name
+    db "Fevri", $F0 ; id 11
+DefaultName_Beast_0C:: ; heuristic: default monster name; C0
+Data_014_7593:: ; address name
+    db "Javel", $F0 ; id 12
+DefaultName_Beast_0D:: ; heuristic: default monster name; C0
+Data_014_7599:: ; address name
+    db "Gurri", $F0 ; id 13
+
+; E-0254 (C1: family 3 (Bird) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Bird::
+Data_014_759F:: ; address name
+    dw DefaultMonsterNameStrings_Bird ; id 0
+    dw DefaultName_Bird_01 ; id 1
+    dw DefaultName_Bird_02 ; id 2
+    dw DefaultName_Bird_03 ; id 3
+    dw DefaultName_Bird_04 ; id 4
+    dw DefaultName_Bird_05 ; id 5
+    dw DefaultName_Bird_06 ; id 6
+    dw DefaultName_Bird_07 ; id 7
+    dw DefaultName_Bird_08 ; id 8
+    dw DefaultName_Bird_09 ; id 9
+    dw DefaultName_Bird_0A ; id 10
+    dw DefaultName_Bird_0B ; id 11
+    dw DefaultName_Bird_0C ; id 12
+    dw DefaultName_Bird_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Bird).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Bird::
+DefaultName_Bird_00:: ; heuristic: default monster name; C0
+Data_014_75BB:: ; address name
+    db "Patta", $F0 ; id 0
+DefaultName_Bird_01:: ; heuristic: default monster name; C0
+Data_014_75C1:: ; address name
+    db "Venjy", $F0 ; id 1
+DefaultName_Bird_02:: ; heuristic: default monster name; C0
+Data_014_75C7:: ; address name
+    db "Angy", $9F, $F0 ; id 2
+DefaultName_Bird_03:: ; heuristic: default monster name; C0
+Data_014_75CD:: ; address name
+    db "Rovyn", $F0 ; id 3
+DefaultName_Bird_04:: ; heuristic: default monster name; C0
+Data_014_75D3:: ; address name
+    db "Leit", $9F, $F0 ; id 4
+DefaultName_Bird_05:: ; heuristic: default monster name; C0
+Data_014_75D9:: ; address name
+    db "Cyron", $F0 ; id 5
+DefaultName_Bird_06:: ; heuristic: default monster name; C0
+Data_014_75DF:: ; address name
+    db "Nilse", $F0 ; id 6
+DefaultName_Bird_07:: ; heuristic: default monster name; C0
+Data_014_75E5:: ; address name
+    db "Pakin", $F0 ; id 7
+DefaultName_Bird_08:: ; heuristic: default monster name; C0
+Data_014_75EB:: ; address name
+    db "Aerr", $9F, $F0 ; id 8
+DefaultName_Bird_09:: ; heuristic: default monster name; C0
+Data_014_75F1:: ; address name
+    db "Samar", $F0 ; id 9
+DefaultName_Bird_0A:: ; heuristic: default monster name; C0
+Data_014_75F7:: ; address name
+    db "Kacis", $F0 ; id 10
+DefaultName_Bird_0B:: ; heuristic: default monster name; C0
+Data_014_75FD:: ; address name
+    db "Taki", $9F, $F0 ; id 11
+DefaultName_Bird_0C:: ; heuristic: default monster name; C0
+Data_014_7603:: ; address name
+    db "Ralli", $F0 ; id 12
+DefaultName_Bird_0D:: ; heuristic: default monster name; C0
+Data_014_7609:: ; address name
+    db "Moko", $9F, $F0 ; id 13
+
+; E-0254 (C1: family 4 (Plant) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Plant::
+Data_014_760F:: ; address name
+    dw DefaultMonsterNameStrings_Plant ; id 0
+    dw DefaultName_Plant_01 ; id 1
+    dw DefaultName_Plant_02 ; id 2
+    dw DefaultName_Plant_03 ; id 3
+    dw DefaultName_Plant_04 ; id 4
+    dw DefaultName_Plant_05 ; id 5
+    dw DefaultName_Plant_06 ; id 6
+    dw DefaultName_Plant_07 ; id 7
+    dw DefaultName_Plant_08 ; id 8
+    dw DefaultName_Plant_09 ; id 9
+    dw DefaultName_Plant_0A ; id 10
+    dw DefaultName_Plant_0B ; id 11
+    dw DefaultName_Plant_0C ; id 12
+    dw DefaultName_Plant_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Plant).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Plant::
+DefaultName_Plant_00:: ; heuristic: default monster name; C0
+Data_014_762B:: ; address name
+    db "Ganim", $F0 ; id 0
+DefaultName_Plant_01:: ; heuristic: default monster name; C0
+Data_014_7631:: ; address name
+    db "Belri", $F0 ; id 1
+DefaultName_Plant_02:: ; heuristic: default monster name; C0
+Data_014_7637:: ; address name
+    db "Taim", $9F, $F0 ; id 2
+DefaultName_Plant_03:: ; heuristic: default monster name; C0
+Data_014_763D:: ; address name
+    db "Sarzz", $F0 ; id 3
+DefaultName_Plant_04:: ; heuristic: default monster name; C0
+Data_014_7643:: ; address name
+    db "Cita", $9F, $F0 ; id 4
+DefaultName_Plant_05:: ; heuristic: default monster name; C0
+Data_014_7649:: ; address name
+    db "Peyot", $F0 ; id 5
+DefaultName_Plant_06:: ; heuristic: default monster name; C0
+Data_014_764F:: ; address name
+    db "Muppa", $F0 ; id 6
+DefaultName_Plant_07:: ; heuristic: default monster name; C0
+Data_014_7655:: ; address name
+    db "Laven", $F0 ; id 7
+DefaultName_Plant_08:: ; heuristic: default monster name; C0
+Data_014_765B:: ; address name
+    db "Sarad", $F0 ; id 8
+DefaultName_Plant_09:: ; heuristic: default monster name; C0
+Data_014_7661:: ; address name
+    db "Gyam", $9F, $F0 ; id 9
+DefaultName_Plant_0A:: ; heuristic: default monster name; C0
+Data_014_7667:: ; address name
+    db "Gummy", $F0 ; id 10
+DefaultName_Plant_0B:: ; heuristic: default monster name; C0
+Data_014_766D:: ; address name
+    db "Pupul", $F0 ; id 11
+DefaultName_Plant_0C:: ; heuristic: default monster name; C0
+Data_014_7673:: ; address name
+    db "Vanyl", $F0 ; id 12
+DefaultName_Plant_0D:: ; heuristic: default monster name; C0
+Data_014_7679:: ; address name
+    db "Popla", $F0 ; id 13
+
+; E-0254 (C1: family 5 (Bug) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Bug::
+Data_014_767F:: ; address name
+    dw DefaultMonsterNameStrings_Bug ; id 0
+    dw DefaultName_Bug_01 ; id 1
+    dw DefaultName_Bug_02 ; id 2
+    dw DefaultName_Bug_03 ; id 3
+    dw DefaultName_Bug_04 ; id 4
+    dw DefaultName_Bug_05 ; id 5
+    dw DefaultName_Bug_06 ; id 6
+    dw DefaultName_Bug_07 ; id 7
+    dw DefaultName_Bug_08 ; id 8
+    dw DefaultName_Bug_09 ; id 9
+    dw DefaultName_Bug_0A ; id 10
+    dw DefaultName_Bug_0B ; id 11
+    dw DefaultName_Bug_0C ; id 12
+    dw DefaultName_Bug_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Bug).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Bug::
+DefaultName_Bug_00:: ; heuristic: default monster name; C0
+Data_014_769B:: ; address name
+    db "Abii", $9F, $F0 ; id 0
+DefaultName_Bug_01:: ; heuristic: default monster name; C0
+Data_014_76A1:: ; address name
+    db "Ulrik", $F0 ; id 1
+DefaultName_Bug_02:: ; heuristic: default monster name; C0
+Data_014_76A7:: ; address name
+    db "Werth", $F0 ; id 2
+DefaultName_Bug_03:: ; heuristic: default monster name; C0
+Data_014_76AD:: ; address name
+    db "Grunt", $F0 ; id 3
+DefaultName_Bug_04:: ; heuristic: default monster name; C0
+Data_014_76B3:: ; address name
+    db "Glath", $F0 ; id 4
+DefaultName_Bug_05:: ; heuristic: default monster name; C0
+Data_014_76B9:: ; address name
+    db "Gamha", $F0 ; id 5
+DefaultName_Bug_06:: ; heuristic: default monster name; C0
+Data_014_76BF:: ; address name
+    db "Moahm", $F0 ; id 6
+DefaultName_Bug_07:: ; heuristic: default monster name; C0
+Data_014_76C5:: ; address name
+    db "Maron", $F0 ; id 7
+DefaultName_Bug_08:: ; heuristic: default monster name; C0
+Data_014_76CB:: ; address name
+    db "Quii", $9F, $F0 ; id 8
+DefaultName_Bug_09:: ; heuristic: default monster name; C0
+Data_014_76D1:: ; address name
+    db "Kokis", $F0 ; id 9
+DefaultName_Bug_0A:: ; heuristic: default monster name; C0
+Data_014_76D7:: ; address name
+    db "Juddi", $F0 ; id 10
+DefaultName_Bug_0B:: ; heuristic: default monster name; C0
+Data_014_76DD:: ; address name
+    db "Sherr", $F0 ; id 11
+DefaultName_Bug_0C:: ; heuristic: default monster name; C0
+Data_014_76E3:: ; address name
+    db "Pliss", $F0 ; id 12
+DefaultName_Bug_0D:: ; heuristic: default monster name; C0
+Data_014_76E9:: ; address name
+    db "Guvri", $F0 ; id 13
+
+; E-0254 (C1: family 6 (Demon) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Demon::
+Data_014_76EF:: ; address name
+    dw DefaultMonsterNameStrings_Demon ; id 0
+    dw DefaultName_Demon_01 ; id 1
+    dw DefaultName_Demon_02 ; id 2
+    dw DefaultName_Demon_03 ; id 3
+    dw DefaultName_Demon_04 ; id 4
+    dw DefaultName_Demon_05 ; id 5
+    dw DefaultName_Demon_06 ; id 6
+    dw DefaultName_Demon_07 ; id 7
+    dw DefaultName_Demon_08 ; id 8
+    dw DefaultName_Demon_09 ; id 9
+    dw DefaultName_Demon_0A ; id 10
+    dw DefaultName_Demon_0B ; id 11
+    dw DefaultName_Demon_0C ; id 12
+    dw DefaultName_Demon_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Demon).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Demon::
+DefaultName_Demon_00:: ; heuristic: default monster name; C0
+Data_014_770B:: ; address name
+    db "Damia", $F0 ; id 0
+DefaultName_Demon_01:: ; heuristic: default monster name; C0
+Data_014_7711:: ; address name
+    db "Qube", $9F, $F0 ; id 1
+DefaultName_Demon_02:: ; heuristic: default monster name; C0
+Data_014_7717:: ; address name
+    db "Rigg", $9F, $F0 ; id 2
+DefaultName_Demon_03:: ; heuristic: default monster name; C0
+Data_014_771D:: ; address name
+    db "Jaxon", $F0 ; id 3
+DefaultName_Demon_04:: ; heuristic: default monster name; C0
+Data_014_7723:: ; address name
+    db "Phel", $9F, $F0 ; id 4
+DefaultName_Demon_05:: ; heuristic: default monster name; C0
+Data_014_7729:: ; address name
+    db "Fauss", $F0 ; id 5
+DefaultName_Demon_06:: ; heuristic: default monster name; C0
+Data_014_772F:: ; address name
+    db "Ancho", $F0 ; id 6
+DefaultName_Demon_07:: ; heuristic: default monster name; C0
+Data_014_7735:: ; address name
+    db "Iyan", $9F, $F0 ; id 7
+DefaultName_Demon_08:: ; heuristic: default monster name; C0
+Data_014_773B:: ; address name
+    db "Irris", $F0 ; id 8
+DefaultName_Demon_09:: ; heuristic: default monster name; C0
+Data_014_7741:: ; address name
+    db "Kerig", $F0 ; id 9
+DefaultName_Demon_0A:: ; heuristic: default monster name; C0
+Data_014_7747:: ; address name
+    db "Kaico", $F0 ; id 10
+DefaultName_Demon_0B:: ; heuristic: default monster name; C0
+Data_014_774D:: ; address name
+    db "Calor", $F0 ; id 11
+DefaultName_Demon_0C:: ; heuristic: default monster name; C0
+Data_014_7753:: ; address name
+    db "Aknes", $F0 ; id 12
+DefaultName_Demon_0D:: ; heuristic: default monster name; C0
+Data_014_7759:: ; address name
+    db "Nivel", $F0 ; id 13
+
+; E-0254 (C1: family 7 (Zombie) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Zombie::
+Data_014_775F:: ; address name
+    dw DefaultMonsterNameStrings_Zombie ; id 0
+    dw DefaultName_Zombie_01 ; id 1
+    dw DefaultName_Zombie_02 ; id 2
+    dw DefaultName_Zombie_03 ; id 3
+    dw DefaultName_Zombie_04 ; id 4
+    dw DefaultName_Zombie_05 ; id 5
+    dw DefaultName_Zombie_06 ; id 6
+    dw DefaultName_Zombie_07 ; id 7
+    dw DefaultName_Zombie_08 ; id 8
+    dw DefaultName_Zombie_09 ; id 9
+    dw DefaultName_Zombie_0A ; id 10
+    dw DefaultName_Zombie_0B ; id 11
+    dw DefaultName_Zombie_0C ; id 12
+    dw DefaultName_Zombie_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Zombie).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Zombie::
+DefaultName_Zombie_00:: ; heuristic: default monster name; C0
+Data_014_777B:: ; address name
+    db "Gley", $9F, $F0 ; id 0
+DefaultName_Zombie_01:: ; heuristic: default monster name; C0
+Data_014_7781:: ; address name
+    db "Veron", $F0 ; id 1
+DefaultName_Zombie_02:: ; heuristic: default monster name; C0
+Data_014_7787:: ; address name
+    db "Donad", $F0 ; id 2
+DefaultName_Zombie_03:: ; heuristic: default monster name; C0
+Data_014_778D:: ; address name
+    db "Fobos", $F0 ; id 3
+DefaultName_Zombie_04:: ; heuristic: default monster name; C0
+Data_014_7793:: ; address name
+    db "Junas", $F0 ; id 4
+DefaultName_Zombie_05:: ; heuristic: default monster name; C0
+Data_014_7799:: ; address name
+    db "Dupel", $F0 ; id 5
+DefaultName_Zombie_06:: ; heuristic: default monster name; C0
+Data_014_779F:: ; address name
+    db "Drolo", $F0 ; id 6
+DefaultName_Zombie_07:: ; heuristic: default monster name; C0
+Data_014_77A5:: ; address name
+    db "Tumi", $9F, $F0 ; id 7
+DefaultName_Zombie_08:: ; heuristic: default monster name; C0
+Data_014_77AB:: ; address name
+    db "Kyar", $9F, $F0 ; id 8
+DefaultName_Zombie_09:: ; heuristic: default monster name; C0
+Data_014_77B1:: ; address name
+    db "Rozar", $F0 ; id 9
+DefaultName_Zombie_0A:: ; heuristic: default monster name; C0
+Data_014_77B7:: ; address name
+    db "Kyrie", $F0 ; id 10
+DefaultName_Zombie_0B:: ; heuristic: default monster name; C0
+Data_014_77BD:: ; address name
+    db "Pina", $9F, $F0 ; id 11
+DefaultName_Zombie_0C:: ; heuristic: default monster name; C0
+Data_014_77C3:: ; address name
+    db "Myran", $F0 ; id 12
+DefaultName_Zombie_0D:: ; heuristic: default monster name; C0
+Data_014_77C9:: ; address name
+    db "Pando", $F0 ; id 13
+
+; E-0254 (C1: family 8 (Material) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Material::
+Data_014_77CF:: ; address name
+    dw DefaultMonsterNameStrings_Material ; id 0
+    dw DefaultName_Material_01 ; id 1
+    dw DefaultName_Material_02 ; id 2
+    dw DefaultName_Material_03 ; id 3
+    dw DefaultName_Material_04 ; id 4
+    dw DefaultName_Material_05 ; id 5
+    dw DefaultName_Material_06 ; id 6
+    dw DefaultName_Material_07 ; id 7
+    dw DefaultName_Material_08 ; id 8
+    dw DefaultName_Material_09 ; id 9
+    dw DefaultName_Material_0A ; id 10
+    dw DefaultName_Material_0B ; id 11
+    dw DefaultName_Material_0C ; id 12
+    dw DefaultName_Material_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Material).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Material::
+DefaultName_Material_00:: ; heuristic: default monster name; C0
+Data_014_77EB:: ; address name
+    db "Kheri", $F0 ; id 0
+DefaultName_Material_01:: ; heuristic: default monster name; C0
+Data_014_77F1:: ; address name
+    db "Nesta", $F0 ; id 1
+DefaultName_Material_02:: ; heuristic: default monster name; C0
+Data_014_77F7:: ; address name
+    db "Anvar", $F0 ; id 2
+DefaultName_Material_03:: ; heuristic: default monster name; C0
+Data_014_77FD:: ; address name
+    db "Vyng", $9F, $F0 ; id 3
+DefaultName_Material_04:: ; heuristic: default monster name; C0
+Data_014_7803:: ; address name
+    db "Olyva", $F0 ; id 4
+DefaultName_Material_05:: ; heuristic: default monster name; C0
+Data_014_7809:: ; address name
+    db "Fridz", $F0 ; id 5
+DefaultName_Material_06:: ; heuristic: default monster name; C0
+Data_014_780F:: ; address name
+    db "Iwan", $9F, $F0 ; id 6
+DefaultName_Material_07:: ; heuristic: default monster name; C0
+Data_014_7815:: ; address name
+    db "Yssa", $9F, $F0 ; id 7
+DefaultName_Material_08:: ; heuristic: default monster name; C0
+Data_014_781B:: ; address name
+    db "Revvi", $F0 ; id 8
+DefaultName_Material_09:: ; heuristic: default monster name; C0
+Data_014_7821:: ; address name
+    db "Opall", $F0 ; id 9
+DefaultName_Material_0A:: ; heuristic: default monster name; C0
+Data_014_7827:: ; address name
+    db "Jidda", $F0 ; id 10
+DefaultName_Material_0B:: ; heuristic: default monster name; C0
+Data_014_782D:: ; address name
+    db "Murri", $F0 ; id 11
+DefaultName_Material_0C:: ; heuristic: default monster name; C0
+Data_014_7833:: ; address name
+    db "Thina", $F0 ; id 12
+DefaultName_Material_0D:: ; heuristic: default monster name; C0
+Data_014_7839:: ; address name
+    db "Yoori", $F0 ; id 13
+
+; E-0254 (C1: family 9 (Water) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Water::
+Data_014_783F:: ; address name
+    dw DefaultMonsterNameStrings_Water ; id 0
+    dw DefaultName_Water_01 ; id 1
+    dw DefaultName_Water_02 ; id 2
+    dw DefaultName_Water_03 ; id 3
+    dw DefaultName_Water_04 ; id 4
+    dw DefaultName_Water_05 ; id 5
+    dw DefaultName_Water_06 ; id 6
+    dw DefaultName_Water_07 ; id 7
+    dw DefaultName_Water_08 ; id 8
+    dw DefaultName_Water_09 ; id 9
+    dw DefaultName_Water_0A ; id 10
+    dw DefaultName_Water_0B ; id 11
+    dw DefaultName_Water_0C ; id 12
+    dw DefaultName_Water_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Water).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Water::
+DefaultName_Water_00:: ; heuristic: default monster name; C0
+Data_014_785B:: ; address name
+    db "Izak", $9F, $F0 ; id 0
+DefaultName_Water_01:: ; heuristic: default monster name; C0
+Data_014_7861:: ; address name
+    db "Walli", $F0 ; id 1
+DefaultName_Water_02:: ; heuristic: default monster name; C0
+Data_014_7867:: ; address name
+    db "Soda", $9F, $F0 ; id 2
+DefaultName_Water_03:: ; heuristic: default monster name; C0
+Data_014_786D:: ; address name
+    db "Evi", $9F, $9F, $F0 ; id 3
+DefaultName_Water_04:: ; heuristic: default monster name; C0
+Data_014_7873:: ; address name
+    db "Reny", $9F, $F0 ; id 4
+DefaultName_Water_05:: ; heuristic: default monster name; C0
+Data_014_7879:: ; address name
+    db "Jawah", $F0 ; id 5
+DefaultName_Water_06:: ; heuristic: default monster name; C0
+Data_014_787F:: ; address name
+    db "Tavin", $F0 ; id 6
+DefaultName_Water_07:: ; heuristic: default monster name; C0
+Data_014_7885:: ; address name
+    db "Cyaci", $F0 ; id 7
+DefaultName_Water_08:: ; heuristic: default monster name; C0
+Data_014_788B:: ; address name
+    db "Mizur", $F0 ; id 8
+DefaultName_Water_09:: ; heuristic: default monster name; C0
+Data_014_7891:: ; address name
+    db "Purll", $F0 ; id 9
+DefaultName_Water_0A:: ; heuristic: default monster name; C0
+Data_014_7897:: ; address name
+    db "Oasiz", $F0 ; id 10
+DefaultName_Water_0B:: ; heuristic: default monster name; C0
+Data_014_789D:: ; address name
+    db "Nadea", $F0 ; id 11
+DefaultName_Water_0C:: ; heuristic: default monster name; C0
+Data_014_78A3:: ; address name
+    db "Lua", $9F, $9F, $F0 ; id 12
+DefaultName_Water_0D:: ; heuristic: default monster name; C0
+Data_014_78A9:: ; address name
+    db "Dovin", $F0 ; id 13
+
+; E-0254 (C1: family 10 (Boss) of DefaultMonsterNameTable).
+; record: name
+DefaultMonsterNames_Boss::
+Data_014_78AF:: ; address name
+    dw DefaultMonsterNameStrings_Boss ; id 0
+    dw DefaultName_Boss_01 ; id 1
+    dw DefaultName_Boss_02 ; id 2
+    dw DefaultName_Boss_03 ; id 3
+    dw DefaultName_Boss_04 ; id 4
+    dw DefaultName_Boss_05 ; id 5
+    dw DefaultName_Boss_06 ; id 6
+    dw DefaultName_Boss_07 ; id 7
+    dw DefaultName_Boss_08 ; id 8
+    dw DefaultName_Boss_09 ; id 9
+    dw DefaultName_Boss_0A ; id 10
+    dw DefaultName_Boss_0B ; id 11
+    dw DefaultName_Boss_0C ; id 12
+    dw DefaultName_Boss_0D ; id 13
+
+; E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Boss).
+; record: name, then $F0 (and padding)
+DefaultMonsterNameStrings_Boss::
+DefaultName_Boss_00:: ; heuristic: default monster name; C0
+Data_014_78CB:: ; address name
+    db "Hevnz", $F0 ; id 0
+DefaultName_Boss_01:: ; heuristic: default monster name; C0
+Data_014_78D1:: ; address name
+    db "Hadez", $F0 ; id 1
+DefaultName_Boss_02:: ; heuristic: default monster name; C0
+Data_014_78D7:: ; address name
+    db "Makro", $F0 ; id 2
+DefaultName_Boss_03:: ; heuristic: default monster name; C0
+Data_014_78DD:: ; address name
+    db "Oskro", $F0 ; id 3
+DefaultName_Boss_04:: ; heuristic: default monster name; C0
+Data_014_78E3:: ; address name
+    db "Mirio", $F0 ; id 4
+DefaultName_Boss_05:: ; heuristic: default monster name; C0
+Data_014_78E9:: ; address name
+    db "Fasis", $F0 ; id 5
+DefaultName_Boss_06:: ; heuristic: default monster name; C0
+Data_014_78EF:: ; address name
+    db "Akull", $F0 ; id 6
+DefaultName_Boss_07:: ; heuristic: default monster name; C0
+Data_014_78F5:: ; address name
+    db "Ledah", $F0 ; id 7
+DefaultName_Boss_08:: ; heuristic: default monster name; C0
+Data_014_78FB:: ; address name
+    db "Ulph", $9F, $F0 ; id 8
+DefaultName_Boss_09:: ; heuristic: default monster name; C0
+Data_014_7901:: ; address name
+    db "Wyll", $9F, $F0 ; id 9
+DefaultName_Boss_0A:: ; heuristic: default monster name; C0
+Data_014_7907:: ; address name
+    db "Wev", $9F, $9F, $F0 ; id 10
+DefaultName_Boss_0B:: ; heuristic: default monster name; C0
+Data_014_790D:: ; address name
+    db "Sesil", $F0 ; id 11
+DefaultName_Boss_0C:: ; heuristic: default monster name; C0
+Data_014_7913:: ; address name
+    db "Syall", $F0 ; id 12
+DefaultName_Boss_0D:: ; heuristic: default monster name; C0
+Data_014_7919:: ; address name
+    db "Waltz", $F0 ; id 13
+
+; E-0254 (C1: the routine ending at $6CE9 copies the name at word [$791F + 2 * (70 * (wArg2 & 1) + B)] to wNameEntryText (CopyF0StringAndRedrawNameEntry); 140 words, two sets of 70).
+; record: suggested name
+NameEntrySuggestionTable::
+Data_014_791F:: ; address name
+    dw NameEntrySuggestions ; id 0
+    dw SuggestedName_01 ; id 1
+    dw SuggestedName_02 ; id 2
+    dw SuggestedName_03 ; id 3
+    dw SuggestedName_04 ; id 4
+    dw SuggestedName_05 ; id 5
+    dw SuggestedName_06 ; id 6
+    dw SuggestedName_07 ; id 7
+    dw SuggestedName_08 ; id 8
+    dw SuggestedName_09 ; id 9
+    dw SuggestedName_0A ; id 10
+    dw SuggestedName_0B ; id 11
+    dw SuggestedName_0C ; id 12
+    dw SuggestedName_0D ; id 13
+    dw SuggestedName_0E ; id 14
+    dw SuggestedName_0F ; id 15
+    dw SuggestedName_10 ; id 16
+    dw SuggestedName_11 ; id 17
+    dw SuggestedName_12 ; id 18
+    dw SuggestedName_13 ; id 19
+    dw SuggestedName_14 ; id 20
+    dw SuggestedName_15 ; id 21
+    dw SuggestedName_16 ; id 22
+    dw SuggestedName_17 ; id 23
+    dw SuggestedName_18 ; id 24
+    dw SuggestedName_19 ; id 25
+    dw SuggestedName_1A ; id 26
+    dw SuggestedName_1B ; id 27
+    dw SuggestedName_1C ; id 28
+    dw SuggestedName_1D ; id 29
+    dw SuggestedName_1E ; id 30
+    dw SuggestedName_1F ; id 31
+    dw SuggestedName_20 ; id 32
+    dw SuggestedName_21 ; id 33
+    dw SuggestedName_22 ; id 34
+    dw SuggestedName_23 ; id 35
+    dw SuggestedName_24 ; id 36
+    dw SuggestedName_25 ; id 37
+    dw SuggestedName_26 ; id 38
+    dw SuggestedName_27 ; id 39
+    dw SuggestedName_28 ; id 40
+    dw SuggestedName_29 ; id 41
+    dw SuggestedName_2A ; id 42
+    dw SuggestedName_2B ; id 43
+    dw SuggestedName_2C ; id 44
+    dw SuggestedName_2D ; id 45
+    dw SuggestedName_2E ; id 46
+    dw SuggestedName_2F ; id 47
+    dw SuggestedName_30 ; id 48
+    dw SuggestedName_31 ; id 49
+    dw SuggestedName_32 ; id 50
+    dw SuggestedName_33 ; id 51
+    dw SuggestedName_34 ; id 52
+    dw SuggestedName_35 ; id 53
+    dw SuggestedName_36 ; id 54
+    dw SuggestedName_37 ; id 55
+    dw SuggestedName_38 ; id 56
+    dw SuggestedName_39 ; id 57
+    dw SuggestedName_3A ; id 58
+    dw SuggestedName_3B ; id 59
+    dw SuggestedName_3C ; id 60
+    dw SuggestedName_3D ; id 61
+    dw SuggestedName_3E ; id 62
+    dw SuggestedName_3F ; id 63
+    dw SuggestedName_40 ; id 64
+    dw SuggestedName_41 ; id 65
+    dw SuggestedName_42 ; id 66
+    dw SuggestedName_43 ; id 67
+    dw SuggestedName_44 ; id 68
+    dw SuggestedName_45 ; id 69
+    dw SuggestedName_46 ; id 70
+    dw SuggestedName_47 ; id 71
+    dw SuggestedName_48 ; id 72
+    dw SuggestedName_49 ; id 73
+    dw SuggestedName_4A ; id 74
+    dw SuggestedName_4B ; id 75
+    dw SuggestedName_4C ; id 76
+    dw SuggestedName_4D ; id 77
+    dw SuggestedName_4E ; id 78
+    dw SuggestedName_4F ; id 79
+    dw SuggestedName_50 ; id 80
+    dw SuggestedName_51 ; id 81
+    dw SuggestedName_52 ; id 82
+    dw SuggestedName_53 ; id 83
+    dw SuggestedName_54 ; id 84
+    dw SuggestedName_55 ; id 85
+    dw SuggestedName_56 ; id 86
+    dw SuggestedName_57 ; id 87
+    dw SuggestedName_58 ; id 88
+    dw SuggestedName_59 ; id 89
+    dw SuggestedName_5A ; id 90
+    dw SuggestedName_5B ; id 91
+    dw SuggestedName_5C ; id 92
+    dw SuggestedName_5D ; id 93
+    dw SuggestedName_5E ; id 94
+    dw SuggestedName_5F ; id 95
+    dw SuggestedName_60 ; id 96
+    dw SuggestedName_61 ; id 97
+    dw SuggestedName_62 ; id 98
+    dw SuggestedName_63 ; id 99
+    dw SuggestedName_64 ; id 100
+    dw SuggestedName_65 ; id 101
+    dw SuggestedName_66 ; id 102
+    dw SuggestedName_67 ; id 103
+    dw SuggestedName_68 ; id 104
+    dw SuggestedName_69 ; id 105
+    dw SuggestedName_6A ; id 106
+    dw SuggestedName_6B ; id 107
+    dw SuggestedName_6C ; id 108
+    dw SuggestedName_6D ; id 109
+    dw SuggestedName_6E ; id 110
+    dw SuggestedName_6F ; id 111
+    dw SuggestedName_70 ; id 112
+    dw SuggestedName_71 ; id 113
+    dw SuggestedName_72 ; id 114
+    dw SuggestedName_73 ; id 115
+    dw SuggestedName_74 ; id 116
+    dw SuggestedName_75 ; id 117
+    dw SuggestedName_76 ; id 118
+    dw SuggestedName_77 ; id 119
+    dw SuggestedName_78 ; id 120
+    dw SuggestedName_79 ; id 121
+    dw SuggestedName_7A ; id 122
+    dw SuggestedName_7B ; id 123
+    dw SuggestedName_7C ; id 124
+    dw SuggestedName_7D ; id 125
+    dw SuggestedName_7E ; id 126
+    dw SuggestedName_7F ; id 127
+    dw SuggestedName_80 ; id 128
+    dw SuggestedName_81 ; id 129
+    dw SuggestedName_82 ; id 130
+    dw SuggestedName_83 ; id 131
+    dw SuggestedName_84 ; id 132
+    dw SuggestedName_85 ; id 133
+    dw SuggestedName_86 ; id 134
+    dw SuggestedName_87 ; id 135
+    dw SuggestedName_88 ; id 136
+    dw SuggestedName_89 ; id 137
+    dw SuggestedName_8A ; id 138
+    dw SuggestedName_8B ; id 139
+
+; E-0254 (C1: the 140 six-byte names of NameEntrySuggestionTable, $7A37-$7D7F).
+; record: name, then $F0 (and padding)
+NameEntrySuggestions::
+SuggestedName_00:: ; heuristic: name entry suggestion; C0
+Data_014_7A37:: ; address name
+    db "Ryken", $F0 ; id 0
+SuggestedName_01:: ; heuristic: name entry suggestion; C0
+Data_014_7A3D:: ; address name
+    db "Li", $9F, $9F, $9F, $F0 ; id 1
+SuggestedName_02:: ; heuristic: name entry suggestion; C0
+Data_014_7A43:: ; address name
+    db "Pynn", $9F, $F0 ; id 2
+SuggestedName_03:: ; heuristic: name entry suggestion; C0
+Data_014_7A49:: ; address name
+    db "Pazu", $9F, $F0 ; id 3
+SuggestedName_04:: ; heuristic: name entry suggestion; C0
+Data_014_7A4F:: ; address name
+    db "Kordi", $F0 ; id 4
+SuggestedName_05:: ; heuristic: name entry suggestion; C0
+Data_014_7A55:: ; address name
+    db "Symbo", $F0 ; id 5
+SuggestedName_06:: ; heuristic: name entry suggestion; C0
+Data_014_7A5B:: ; address name
+    db "Whest", $F0 ; id 6
+SuggestedName_07:: ; heuristic: name entry suggestion; C0
+Data_014_7A61:: ; address name
+    db "Zerro", $F0 ; id 7
+SuggestedName_08:: ; heuristic: name entry suggestion; C0
+Data_014_7A67:: ; address name
+    db "Alyah", $F0 ; id 8
+SuggestedName_09:: ; heuristic: name entry suggestion; C0
+Data_014_7A6D:: ; address name
+    db "Cerol", $F0 ; id 9
+SuggestedName_0A:: ; heuristic: name entry suggestion; C0
+Data_014_7A73:: ; address name
+    db "Varel", $F0 ; id 10
+SuggestedName_0B:: ; heuristic: name entry suggestion; C0
+Data_014_7A79:: ; address name
+    db "Garon", $F0 ; id 11
+SuggestedName_0C:: ; heuristic: name entry suggestion; C0
+Data_014_7A7F:: ; address name
+    db "Altho", $F0 ; id 12
+SuggestedName_0D:: ; heuristic: name entry suggestion; C0
+Data_014_7A85:: ; address name
+    db "Munon", $F0 ; id 13
+SuggestedName_0E:: ; heuristic: name entry suggestion; C0
+Data_014_7A8B:: ; address name
+    db "Alfer", $F0 ; id 14
+SuggestedName_0F:: ; heuristic: name entry suggestion; C0
+Data_014_7A91:: ; address name
+    db "Totum", $F0 ; id 15
+SuggestedName_10:: ; heuristic: name entry suggestion; C0
+Data_014_7A97:: ; address name
+    db "Junno", $F0 ; id 16
+SuggestedName_11:: ; heuristic: name entry suggestion; C0
+Data_014_7A9D:: ; address name
+    db "Weib", $9F, $F0 ; id 17
+SuggestedName_12:: ; heuristic: name entry suggestion; C0
+Data_014_7AA3:: ; address name
+    db "Torma", $F0 ; id 18
+SuggestedName_13:: ; heuristic: name entry suggestion; C0
+Data_014_7AA9:: ; address name
+    db "Hukku", $F0 ; id 19
+SuggestedName_14:: ; heuristic: name entry suggestion; C0
+Data_014_7AAF:: ; address name
+    db "Gettu", $F0 ; id 20
+SuggestedName_15:: ; heuristic: name entry suggestion; C0
+Data_014_7AB5:: ; address name
+    db "Pidza", $F0 ; id 21
+SuggestedName_16:: ; heuristic: name entry suggestion; C0
+Data_014_7ABB:: ; address name
+    db "Nakk", $9F, $F0 ; id 22
+SuggestedName_17:: ; heuristic: name entry suggestion; C0
+Data_014_7AC1:: ; address name
+    db "Sulo", $9F, $F0 ; id 23
+SuggestedName_18:: ; heuristic: name entry suggestion; C0
+Data_014_7AC7:: ; address name
+    db "Olgan", $F0 ; id 24
+SuggestedName_19:: ; heuristic: name entry suggestion; C0
+Data_014_7ACD:: ; address name
+    db "Sefti", $F0 ; id 25
+SuggestedName_1A:: ; heuristic: name entry suggestion; C0
+Data_014_7AD3:: ; address name
+    db "Oshan", $F0 ; id 26
+SuggestedName_1B:: ; heuristic: name entry suggestion; C0
+Data_014_7AD9:: ; address name
+    db "Nocko", $F0 ; id 27
+SuggestedName_1C:: ; heuristic: name entry suggestion; C0
+Data_014_7ADF:: ; address name
+    db "Oltho", $F0 ; id 28
+SuggestedName_1D:: ; heuristic: name entry suggestion; C0
+Data_014_7AE5:: ; address name
+    db "Mazer", $F0 ; id 29
+SuggestedName_1E:: ; heuristic: name entry suggestion; C0
+Data_014_7AEB:: ; address name
+    db "Hyde", $9F, $F0 ; id 30
+SuggestedName_1F:: ; heuristic: name entry suggestion; C0
+Data_014_7AF1:: ; address name
+    db "Orora", $F0 ; id 31
+SuggestedName_20:: ; heuristic: name entry suggestion; C0
+Data_014_7AF7:: ; address name
+    db "Varli", $F0 ; id 32
+SuggestedName_21:: ; heuristic: name entry suggestion; C0
+Data_014_7AFD:: ; address name
+    db "Offsi", $F0 ; id 33
+SuggestedName_22:: ; heuristic: name entry suggestion; C0
+Data_014_7B03:: ; address name
+    db "Kapta", $F0 ; id 34
+SuggestedName_23:: ; heuristic: name entry suggestion; C0
+Data_014_7B09:: ; address name
+    db "Jass", $9F, $F0 ; id 35
+SuggestedName_24:: ; heuristic: name entry suggestion; C0
+Data_014_7B0F:: ; address name
+    db "Zeik", $9F, $F0 ; id 36
+SuggestedName_25:: ; heuristic: name entry suggestion; C0
+Data_014_7B15:: ; address name
+    db "Yunn", $9F, $F0 ; id 37
+SuggestedName_26:: ; heuristic: name entry suggestion; C0
+Data_014_7B1B:: ; address name
+    db "Junia", $F0 ; id 38
+SuggestedName_27:: ; heuristic: name entry suggestion; C0
+Data_014_7B21:: ; address name
+    db "Vul", $9F, $9F, $F0 ; id 39
+SuggestedName_28:: ; heuristic: name entry suggestion; C0
+Data_014_7B27:: ; address name
+    db "Piell", $F0 ; id 40
+SuggestedName_29:: ; heuristic: name entry suggestion; C0
+Data_014_7B2D:: ; address name
+    db "Bolto", $F0 ; id 41
+SuggestedName_2A:: ; heuristic: name entry suggestion; C0
+Data_014_7B33:: ; address name
+    db "Vulo", $9F, $F0 ; id 42
+SuggestedName_2B:: ; heuristic: name entry suggestion; C0
+Data_014_7B39:: ; address name
+    db "Jikil", $F0 ; id 43
+SuggestedName_2C:: ; heuristic: name entry suggestion; C0
+Data_014_7B3F:: ; address name
+    db "Sevin", $F0 ; id 44
+SuggestedName_2D:: ; heuristic: name entry suggestion; C0
+Data_014_7B45:: ; address name
+    db "Betha", $F0 ; id 45
+SuggestedName_2E:: ; heuristic: name entry suggestion; C0
+Data_014_7B4B:: ; address name
+    db "Raiss", $F0 ; id 46
+SuggestedName_2F:: ; heuristic: name entry suggestion; C0
+Data_014_7B51:: ; address name
+    db "Kunon", $F0 ; id 47
+SuggestedName_30:: ; heuristic: name entry suggestion; C0
+Data_014_7B57:: ; address name
+    db "Zakul", $F0 ; id 48
+SuggestedName_31:: ; heuristic: name entry suggestion; C0
+Data_014_7B5D:: ; address name
+    db "Kirua", $F0 ; id 49
+SuggestedName_32:: ; heuristic: name entry suggestion; C0
+Data_014_7B63:: ; address name
+    db "Corbi", $F0 ; id 50
+SuggestedName_33:: ; heuristic: name entry suggestion; C0
+Data_014_7B69:: ; address name
+    db "Fitey", $F0 ; id 51
+SuggestedName_34:: ; heuristic: name entry suggestion; C0
+Data_014_7B6F:: ; address name
+    db "Evin", $9F, $F0 ; id 52
+SuggestedName_35:: ; heuristic: name entry suggestion; C0
+Data_014_7B75:: ; address name
+    db "Kuloe", $F0 ; id 53
+SuggestedName_36:: ; heuristic: name entry suggestion; C0
+Data_014_7B7B:: ; address name
+    db "Tudi", $9F, $F0 ; id 54
+SuggestedName_37:: ; heuristic: name entry suggestion; C0
+Data_014_7B81:: ; address name
+    db "Ithy", $9F, $F0 ; id 55
+SuggestedName_38:: ; heuristic: name entry suggestion; C0
+Data_014_7B87:: ; address name
+    db "Ruu", $9F, $9F, $F0 ; id 56
+SuggestedName_39:: ; heuristic: name entry suggestion; C0
+Data_014_7B8D:: ; address name
+    db "Garri", $F0 ; id 57
+SuggestedName_3A:: ; heuristic: name entry suggestion; C0
+Data_014_7B93:: ; address name
+    db "Dabu", $9F, $F0 ; id 58
+SuggestedName_3B:: ; heuristic: name entry suggestion; C0
+Data_014_7B99:: ; address name
+    db "Vehda", $F0 ; id 59
+SuggestedName_3C:: ; heuristic: name entry suggestion; C0
+Data_014_7B9F:: ; address name
+    db "Karto", $F0 ; id 60
+SuggestedName_3D:: ; heuristic: name entry suggestion; C0
+Data_014_7BA5:: ; address name
+    db "Bia", $9F, $9F, $F0 ; id 61
+SuggestedName_3E:: ; heuristic: name entry suggestion; C0
+Data_014_7BAB:: ; address name
+    db "Mutah", $F0 ; id 62
+SuggestedName_3F:: ; heuristic: name entry suggestion; C0
+Data_014_7BB1:: ; address name
+    db "Monsu", $F0 ; id 63
+SuggestedName_40:: ; heuristic: name entry suggestion; C0
+Data_014_7BB7:: ; address name
+    db "Pulk", $9F, $F0 ; id 64
+SuggestedName_41:: ; heuristic: name entry suggestion; C0
+Data_014_7BBD:: ; address name
+    db "Saiz", $9F, $F0 ; id 65
+SuggestedName_42:: ; heuristic: name entry suggestion; C0
+Data_014_7BC3:: ; address name
+    db "Zeil", $9F, $F0 ; id 66
+SuggestedName_43:: ; heuristic: name entry suggestion; C0
+Data_014_7BC9:: ; address name
+    db "Kazna", $F0 ; id 67
+SuggestedName_44:: ; heuristic: name entry suggestion; C0
+Data_014_7BCF:: ; address name
+    db "Pikka", $F0 ; id 68
+SuggestedName_45:: ; heuristic: name entry suggestion; C0
+Data_014_7BD5:: ; address name
+    db "Derzo", $F0 ; id 69
+SuggestedName_46:: ; heuristic: name entry suggestion; C0
+Data_014_7BDB:: ; address name
+    db "Muey", $9F, $F0 ; id 70
+SuggestedName_47:: ; heuristic: name entry suggestion; C0
+Data_014_7BE1:: ; address name
+    db "Mysti", $F0 ; id 71
+SuggestedName_48:: ; heuristic: name entry suggestion; C0
+Data_014_7BE7:: ; address name
+    db "Saman", $F0 ; id 72
+SuggestedName_49:: ; heuristic: name entry suggestion; C0
+Data_014_7BED:: ; address name
+    db "Iana", $9F, $F0 ; id 73
+SuggestedName_4A:: ; heuristic: name entry suggestion; C0
+Data_014_7BF3:: ; address name
+    db "Mikko", $F0 ; id 74
+SuggestedName_4B:: ; heuristic: name entry suggestion; C0
+Data_014_7BF9:: ; address name
+    db "Topaz", $F0 ; id 75
+SuggestedName_4C:: ; heuristic: name entry suggestion; C0
+Data_014_7BFF:: ; address name
+    db "Pulam", $F0 ; id 76
+SuggestedName_4D:: ; heuristic: name entry suggestion; C0
+Data_014_7C05:: ; address name
+    db "Nyar", $9F, $F0 ; id 77
+SuggestedName_4E:: ; heuristic: name entry suggestion; C0
+Data_014_7C0B:: ; address name
+    db "Zonia", $F0 ; id 78
+SuggestedName_4F:: ; heuristic: name entry suggestion; C0
+Data_014_7C11:: ; address name
+    db "Pulin", $F0 ; id 79
+SuggestedName_50:: ; heuristic: name entry suggestion; C0
+Data_014_7C17:: ; address name
+    db "Knull", $F0 ; id 80
+SuggestedName_51:: ; heuristic: name entry suggestion; C0
+Data_014_7C1D:: ; address name
+    db "Rauli", $F0 ; id 81
+SuggestedName_52:: ; heuristic: name entry suggestion; C0
+Data_014_7C23:: ; address name
+    db "Carin", $F0 ; id 82
+SuggestedName_53:: ; heuristic: name entry suggestion; C0
+Data_014_7C29:: ; address name
+    db "Mylki", $F0 ; id 83
+SuggestedName_54:: ; heuristic: name entry suggestion; C0
+Data_014_7C2F:: ; address name
+    db "Alfua", $F0 ; id 84
+SuggestedName_55:: ; heuristic: name entry suggestion; C0
+Data_014_7C35:: ; address name
+    db "Furil", $F0 ; id 85
+SuggestedName_56:: ; heuristic: name entry suggestion; C0
+Data_014_7C3B:: ; address name
+    db "Hamen", $F0 ; id 86
+SuggestedName_57:: ; heuristic: name entry suggestion; C0
+Data_014_7C41:: ; address name
+    db "Ligg", $9F, $F0 ; id 87
+SuggestedName_58:: ; heuristic: name entry suggestion; C0
+Data_014_7C47:: ; address name
+    db "Limme", $F0 ; id 88
+SuggestedName_59:: ; heuristic: name entry suggestion; C0
+Data_014_7C4D:: ; address name
+    db "Hohmi", $F0 ; id 89
+SuggestedName_5A:: ; heuristic: name entry suggestion; C0
+Data_014_7C53:: ; address name
+    db "Liset", $F0 ; id 90
+SuggestedName_5B:: ; heuristic: name entry suggestion; C0
+Data_014_7C59:: ; address name
+    db "Katua", $F0 ; id 91
+SuggestedName_5C:: ; heuristic: name entry suggestion; C0
+Data_014_7C5F:: ; address name
+    db "Paela", $F0 ; id 92
+SuggestedName_5D:: ; heuristic: name entry suggestion; C0
+Data_014_7C65:: ; address name
+    db "Putti", $F0 ; id 93
+SuggestedName_5E:: ; heuristic: name entry suggestion; C0
+Data_014_7C6B:: ; address name
+    db "Mymee", $F0 ; id 94
+SuggestedName_5F:: ; heuristic: name entry suggestion; C0
+Data_014_7C71:: ; address name
+    db "Annis", $F0 ; id 95
+SuggestedName_60:: ; heuristic: name entry suggestion; C0
+Data_014_7C77:: ; address name
+    db "Makki", $F0 ; id 96
+SuggestedName_61:: ; heuristic: name entry suggestion; C0
+Data_014_7C7D:: ; address name
+    db "Jemni", $F0 ; id 97
+SuggestedName_62:: ; heuristic: name entry suggestion; C0
+Data_014_7C83:: ; address name
+    db "Chaar", $F0 ; id 98
+SuggestedName_63:: ; heuristic: name entry suggestion; C0
+Data_014_7C89:: ; address name
+    db "Mafin", $F0 ; id 99
+SuggestedName_64:: ; heuristic: name entry suggestion; C0
+Data_014_7C8F:: ; address name
+    db "Piann", $F0 ; id 100
+SuggestedName_65:: ; heuristic: name entry suggestion; C0
+Data_014_7C95:: ; address name
+    db "Malin", $F0 ; id 101
+SuggestedName_66:: ; heuristic: name entry suggestion; C0
+Data_014_7C9B:: ; address name
+    db "Capli", $F0 ; id 102
+SuggestedName_67:: ; heuristic: name entry suggestion; C0
+Data_014_7CA1:: ; address name
+    db "Multy", $F0 ; id 103
+SuggestedName_68:: ; heuristic: name entry suggestion; C0
+Data_014_7CA7:: ; address name
+    db "Schai", $F0 ; id 104
+SuggestedName_69:: ; heuristic: name entry suggestion; C0
+Data_014_7CAD:: ; address name
+    db "Hylda", $F0 ; id 105
+SuggestedName_6A:: ; heuristic: name entry suggestion; C0
+Data_014_7CB3:: ; address name
+    db "Sharo", $F0 ; id 106
+SuggestedName_6B:: ; heuristic: name entry suggestion; C0
+Data_014_7CB9:: ; address name
+    db "Millk", $F0 ; id 107
+SuggestedName_6C:: ; heuristic: name entry suggestion; C0
+Data_014_7CBF:: ; address name
+    db "Milda", $F0 ; id 108
+SuggestedName_6D:: ; heuristic: name entry suggestion; C0
+Data_014_7CC5:: ; address name
+    db "Konni", $F0 ; id 109
+SuggestedName_6E:: ; heuristic: name entry suggestion; C0
+Data_014_7CCB:: ; address name
+    db "Sundi", $F0 ; id 110
+SuggestedName_6F:: ; heuristic: name entry suggestion; C0
+Data_014_7CD1:: ; address name
+    db "Komet", $F0 ; id 111
+SuggestedName_70:: ; heuristic: name entry suggestion; C0
+Data_014_7CD7:: ; address name
+    db "Melan", $F0 ; id 112
+SuggestedName_71:: ; heuristic: name entry suggestion; C0
+Data_014_7CDD:: ; address name
+    db "Moura", $F0 ; id 113
+SuggestedName_72:: ; heuristic: name entry suggestion; C0
+Data_014_7CE3:: ; address name
+    db "Monez", $F0 ; id 114
+SuggestedName_73:: ; heuristic: name entry suggestion; C0
+Data_014_7CE9:: ; address name
+    db "Ellan", $F0 ; id 115
+SuggestedName_74:: ; heuristic: name entry suggestion; C0
+Data_014_7CEF:: ; address name
+    db "Eriss", $F0 ; id 116
+SuggestedName_75:: ; heuristic: name entry suggestion; C0
+Data_014_7CF5:: ; address name
+    db "Suloe", $F0 ; id 117
+SuggestedName_76:: ; heuristic: name entry suggestion; C0
+Data_014_7CFB:: ; address name
+    db "Flora", $F0 ; id 118
+SuggestedName_77:: ; heuristic: name entry suggestion; C0
+Data_014_7D01:: ; address name
+    db "Nithe", $F0 ; id 119
+SuggestedName_78:: ; heuristic: name entry suggestion; C0
+Data_014_7D07:: ; address name
+    db "Yuwmi", $F0 ; id 120
+SuggestedName_79:: ; heuristic: name entry suggestion; C0
+Data_014_7D0D:: ; address name
+    db "Yurro", $F0 ; id 121
+SuggestedName_7A:: ; heuristic: name entry suggestion; C0
+Data_014_7D13:: ; address name
+    db "Paize", $F0 ; id 122
+SuggestedName_7B:: ; heuristic: name entry suggestion; C0
+Data_014_7D19:: ; address name
+    db "Celen", $F0 ; id 123
+SuggestedName_7C:: ; heuristic: name entry suggestion; C0
+Data_014_7D1F:: ; address name
+    db "Heren", $F0 ; id 124
+SuggestedName_7D:: ; heuristic: name entry suggestion; C0
+Data_014_7D25:: ; address name
+    db "Velah", $F0 ; id 125
+SuggestedName_7E:: ; heuristic: name entry suggestion; C0
+Data_014_7D2B:: ; address name
+    db "Minto", $F0 ; id 126
+SuggestedName_7F:: ; heuristic: name entry suggestion; C0
+Data_014_7D31:: ; address name
+    db "Ritto", $F0 ; id 127
+SuggestedName_80:: ; heuristic: name entry suggestion; C0
+Data_014_7D37:: ; address name
+    db "Luman", $F0 ; id 128
+SuggestedName_81:: ; heuristic: name entry suggestion; C0
+Data_014_7D3D:: ; address name
+    db "Venni", $F0 ; id 129
+SuggestedName_82:: ; heuristic: name entry suggestion; C0
+Data_014_7D43:: ; address name
+    db "Teryl", $F0 ; id 130
+SuggestedName_83:: ; heuristic: name entry suggestion; C0
+Data_014_7D49:: ; address name
+    db "Krim", $9F, $F0 ; id 131
+SuggestedName_84:: ; heuristic: name entry suggestion; C0
+Data_014_7D4F:: ; address name
+    db "Atch", $9F, $F0 ; id 132
+SuggestedName_85:: ; heuristic: name entry suggestion; C0
+Data_014_7D55:: ; address name
+    db "Arle", $9F, $F0 ; id 133
+SuggestedName_86:: ; heuristic: name entry suggestion; C0
+Data_014_7D5B:: ; address name
+    db "Phes", $9F, $F0 ; id 134
+SuggestedName_87:: ; heuristic: name entry suggestion; C0
+Data_014_7D61:: ; address name
+    db "Riza", $9F, $F0 ; id 135
+SuggestedName_88:: ; heuristic: name entry suggestion; C0
+Data_014_7D67:: ; address name
+    db "Pestl", $F0 ; id 136
+SuggestedName_89:: ; heuristic: name entry suggestion; C0
+Data_014_7D6D:: ; address name
+    db "Almmo", $F0 ; id 137
+SuggestedName_8A:: ; heuristic: name entry suggestion; C0
+Data_014_7D73:: ; address name
+    db "Forte", $F0 ; id 138
+SuggestedName_8B:: ; heuristic: name entry suggestion; C0
+Data_014_7D79:: ; address name
+    db "Soffi", $F0 ; id 139
 
 ; only called from routines of HibernateMenu (E-0098)
 ; 4 call sites from 4 routines (e.g. HibernateMenu_Case05_Case3F, HibernateMenu_Case05_Case13, HibernateMenu_Case04_Case42, HibernateMenu_Case07_Case12)
@@ -8645,7 +8730,7 @@ Func_014_7F9C:: ; address name
     ld a, [wWorkBuf]
     ld c, a
     ld b, $00
-    ld hl, Data_014_7439
+    ld hl, DefaultMonsterNameTable
     add hl, bc
     add hl, bc
     deref_hl

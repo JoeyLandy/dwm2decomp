@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0254 — Default monster names by family; name entry suggestions
+
+- Kind: OBSERVATION (reading; C1).
+- **DefaultMonsterNameTable (14:$7439, 11 words) and DefaultMonsterNames_<family> / DefaultMonsterNameStrings_<family>.** The table is indexed by the family as in StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Demon, 7 Zombie, 8 Material, 9 Water, 10 "????".
+  - Each family block is 14 name pointers, then 14 six-byte names ($F0-terminated, padded).
+  - The name entry screen copies name 7 * wArg2 + B (B < 7) of family wArg3 & $0F to wNameEntryText.
+  - CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01 copies one (family wWorkBuf, name wWorkBuf + 1) into a new record.
+  - The names are labelled DefaultName_<family>_NN.
+- **NameEntrySuggestionTable (14:$791F, 140 words) and NameEntrySuggestions ($7A37-$7D7F).** For B >= 7, the name entry screen copies name 70 * (wArg2 & 1) + B - 7. The names are labelled SuggestedName_NN.
+- This replaces about 300 monotone-pointer-table guesses.
+- Binary verification: build/run327 PASS, 0 differing bytes; tests OK.
+
 ### E-0253 — Species records laid out and labelled by monster
 
 - Kind: OBSERVATION (C1) and TOOL.

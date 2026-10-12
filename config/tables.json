@@ -19475,6 +19475,381 @@
       ],
       "record": "family; bytes 1-6; EXP curve; bytes 8-46",
       "note": "E-0253 (C1: the 324 records SpeciesRecordPointers points at, 47 bytes each and contiguous up to $7EB7; each is labelled SpeciesRecord_<monster> after the first id that uses it; byte 0 is the family (E-0069) and byte 7 the EXP curve (E-0148); the other bytes are not read here)."
+    },
+    {
+      "bank": "14",
+      "addr": "7439",
+      "label": "DefaultMonsterNameTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "14 name pointers for this family",
+          "reason": "default monster name list"
+        }
+      ],
+      "note": "E-0254 (C1: the code before Jump_014_6CB4 indexes it with wArg3 & $0F (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6 Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n; CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01 indexes it with wWorkBuf and wWorkBuf + 1 and copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names)."
+    },
+    {
+      "bank": "14",
+      "addr": "744F",
+      "label": "DefaultMonsterNames_Slime",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 0 (Slime) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "746B",
+      "label": "DefaultMonsterNameStrings_Slime",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Slime)."
+    },
+    {
+      "bank": "14",
+      "addr": "74BF",
+      "label": "DefaultMonsterNames_Dragon",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 1 (Dragon) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "74DB",
+      "label": "DefaultMonsterNameStrings_Dragon",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Dragon)."
+    },
+    {
+      "bank": "14",
+      "addr": "752F",
+      "label": "DefaultMonsterNames_Beast",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 2 (Beast) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "754B",
+      "label": "DefaultMonsterNameStrings_Beast",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Beast)."
+    },
+    {
+      "bank": "14",
+      "addr": "759F",
+      "label": "DefaultMonsterNames_Bird",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 3 (Bird) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "75BB",
+      "label": "DefaultMonsterNameStrings_Bird",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Bird)."
+    },
+    {
+      "bank": "14",
+      "addr": "760F",
+      "label": "DefaultMonsterNames_Plant",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 4 (Plant) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "762B",
+      "label": "DefaultMonsterNameStrings_Plant",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Plant)."
+    },
+    {
+      "bank": "14",
+      "addr": "767F",
+      "label": "DefaultMonsterNames_Bug",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 5 (Bug) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "769B",
+      "label": "DefaultMonsterNameStrings_Bug",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Bug)."
+    },
+    {
+      "bank": "14",
+      "addr": "76EF",
+      "label": "DefaultMonsterNames_Demon",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 6 (Demon) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "770B",
+      "label": "DefaultMonsterNameStrings_Demon",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Demon)."
+    },
+    {
+      "bank": "14",
+      "addr": "775F",
+      "label": "DefaultMonsterNames_Zombie",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 7 (Zombie) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "777B",
+      "label": "DefaultMonsterNameStrings_Zombie",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Zombie)."
+    },
+    {
+      "bank": "14",
+      "addr": "77CF",
+      "label": "DefaultMonsterNames_Material",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 8 (Material) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "77EB",
+      "label": "DefaultMonsterNameStrings_Material",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Material)."
+    },
+    {
+      "bank": "14",
+      "addr": "783F",
+      "label": "DefaultMonsterNames_Water",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 9 (Water) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "785B",
+      "label": "DefaultMonsterNameStrings_Water",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Water)."
+    },
+    {
+      "bank": "14",
+      "addr": "78AF",
+      "label": "DefaultMonsterNames_Boss",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "name",
+          "reason": "default monster name"
+        }
+      ],
+      "note": "E-0254 (C1: family 10 (Boss) of DefaultMonsterNameTable)."
+    },
+    {
+      "bank": "14",
+      "addr": "78CB",
+      "label": "DefaultMonsterNameStrings_Boss",
+      "count": 14,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 14 six-byte names of DefaultMonsterNames_Boss)."
+    },
+    {
+      "bank": "14",
+      "addr": "791F",
+      "label": "NameEntrySuggestionTable",
+      "count": 140,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "suggested name",
+          "reason": "name entry suggestion"
+        }
+      ],
+      "note": "E-0254 (C1: the routine ending at $6CE9 copies the name at word [$791F + 2 * (70 * (wArg2 & 1) + B)] to wNameEntryText (CopyF0StringAndRedrawNameEntry); 140 words, two sets of 70)."
+    },
+    {
+      "bank": "14",
+      "addr": "7A37",
+      "label": "NameEntrySuggestions",
+      "count": 140,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "text",
+          "size": 6,
+          "name": "name, then $F0 (and padding)"
+        }
+      ],
+      "note": "E-0254 (C1: the 140 six-byte names of NameEntrySuggestionTable, $7A37-$7D7F)."
     }
   ]
 }

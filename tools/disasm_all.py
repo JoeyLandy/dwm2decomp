@@ -3151,6 +3151,17 @@ class Rom:
                 give(sp["bank"], self._u16(sp["bank"], sp["addr"] + 2 * i),
                      f"SpeciesRecord_{nm}" if nm else f"SpeciesRecord_{i:03X}")
         log(f"species records named: {named - before}")
+        before = named
+        for t in self.schemas:  # E-0254: default monster names, by family and index
+            m = re.match(r"^DefaultMonsterNames_(\w+)$", t["label"])
+            if m:
+                for i in range(t["count"]):
+                    give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"DefaultName_{m.group(1)}_{i:02X}")
+        ns = next((t for t in self.schemas if t["label"] == "NameEntrySuggestionTable"), None)
+        if ns:
+            for i in range(ns["count"]):
+                give(ns["bank"], self._u16(ns["bank"], ns["addr"] + 2 * i), f"SuggestedName_{i:02X}")
+        log(f"default monster names named: {named - before}")
 
     def prepare_tracks(self) -> None:
         """Decode the sound track regions named by tables flagged "tracks" (E-0019).
