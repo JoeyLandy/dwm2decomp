@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0276 — Menu states named: shop, Vault, inn
+
+- Kind: OBSERVATION (reading; C1).
+- Naming a menu's top-level states renames their whole subtrees (the generated cases follow the parent).
+- **ShopMenu.** Init, Setup and ChooseAction (Up/Down/A/B), then:
+  - Buy: ShopItemListTable, IsAmountInArg1AboveGold, SubtractArg1AmountFromGold;
+  - Sell: inventory items priced by ComputeSellPrice (was ShopMenu_Shared03: ItemValueTable * ShopPercentTable / 100) and paid with AddArg1ToGoldCapped99999.
+- **VaultMenu.** Init, Setup and ChooseAction, then Store (RemoveItemCountFromInventory into wItemStorage) and TakeOut.
+- **InnMenu.** The states in order:
+  - Init, ShowPrice, Pay (IsAmountInArg1AboveGold), FadeOut, WaitFade;
+  - RestoreParty: for each party record whose byte $55 bit 7 is clear, HP = max HP and MP = max MP;
+  - Morning (after $90 frames: SGB palette set, fade in, refresh objects), RestartMusic.
+- build/name_by_label.py adds names.json entries for routines found by their current label.
+- Binary verification: build/run357 PASS, 0 differing bytes; tests OK.
+
 ### E-0274 — Steps named after the string they show
 
 - Kind: TOOL (C1 names from the E-0243, E-0248, E-0257 and E-0258 quotes).

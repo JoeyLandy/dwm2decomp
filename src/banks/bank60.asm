@@ -3856,7 +3856,7 @@ Data_060_6245:: ; heuristic: pointer load in the same bank (bank assumed); C0
     dfar KeyWorldChunkGroup57 ; id 163
 
 ; on key-world maps with bit 7 of wC893 set: sets the object count wCC47 from the band of the key level and drops objects for which Func_060_53E5 fails; marks the wC890 object (E-0129)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Case07)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Morning)
 ; reads: wMapType, wKeyWorldRefresh, wCurrentKeyIndex, wKeyWorldBand, wMapObjectCount, wKeyWorldActive, wKeyWorldKey, wKeyWorldSlot, ...
 ; writes: wKeyWorldRefresh, wMapObjectCount, hTemp0
 ; points at: wMapObjects
@@ -3961,7 +3961,7 @@ Data_060_638D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; on town maps with bit 7 of wC893 set: sets the object count and band for the map, drops listed objects and marks the wC890 one (E-0130)
-; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Case07)
+; 2 call sites from 2 routines (e.g. InitFieldScreen, InnMenu_Morning)
 ; reads: wMapType, wKeyWorldRefresh, hMapId
 ; writes: wMapObjectCount, wKeyWorldBand, hTemp0
 SetupTownObjectsForMap::

@@ -4473,7 +4473,7 @@ Jump_000_18D5::
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
-; 10 call sites from 8 routines (e.g. ArenaMenu_Case27_Sub02_Sub01, ShopMenu_Case03_Case09_Sub02, ShopMenu_Shared02, ReadF2FarPointerForScreenTableIndex, ...)
+; 10 call sites from 8 routines (e.g. ArenaMenu_Case27_Sub02_Sub01, ShopMenu_Buy_Case09_Sub02, ShopMenu_Buy_Shared01, ReadF2FarPointerForScreenTableIndex, ...)
 ; writes: rROMB0
 ReadFarPointerAtDEInBankB::
 Func_000_18D6:: ; address name

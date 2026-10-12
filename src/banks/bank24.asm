@@ -6103,7 +6103,7 @@ Data_024_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
 ; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
-; 1 call site from 1 routine (e.g. ShopMenu_Shared01_ToStepItemDescriptionText)
+; 1 call site from 1 routine (e.g. Func_01C_6AF7_ToStepItemDescriptionText)
 ; reads: wTextCounter6, wScreenState, wItemGridY, wItemGridX, wTextCounter2, wTextCounter1, wCursorBlinkB8, wTextCounter4, ...
 ; writes: wCursorBlinkB8, wTextCounter2, wTextCounter1, wTextCounter3, wTextCounter4, wTextCounter0
 ; points at: wItemGrid

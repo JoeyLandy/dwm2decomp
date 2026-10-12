@@ -8306,7 +8306,7 @@ Jump_01E_7684::
     ret
 
 ; the same 57 bytes as UnpackBCDToDigitsArg1 (15:6676)
-; 6 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case13_Sub01, ArenaMenu_Shared02, ShopMenu_Case03_Case05, DrawWCA83ExpAndToNextLevel)
+; 6 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case13_Sub01, ArenaMenu_Shared02, ShopMenu_Buy_Case05, DrawWCA83ExpAndToNextLevel)
 ; points at: hTemp3, wArg1
 UnpackBCDToDigitsArg1_Bank1E::
 Func_01E_768E:: ; address name

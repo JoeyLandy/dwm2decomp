@@ -411,11 +411,11 @@ Script_1D_44B0:: ; heuristic: event script entry or jump target; C0
     script_message $C002 ; 'Do you need me for anything'
     script_jump Script_1D_4336
 
-; only called from VaultMenu_Case03_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case00)
+; only called from VaultMenu_Store_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case00)
 ; reads: wScreenState, wScreenStep
 ; writes: wScreenStep
-VaultMenu_Case03_Case00_Sub01::
+VaultMenu_Store_Case00_Sub01::
 Func_01D_44BA:: ; address name
     ld a, [wScreenState]
     cp a, $03
@@ -468,7 +468,7 @@ Data_01D_4547:: ; address name
     db $7F ; end
 
 ; copies three tiles from bank $1F to vTiles2 + $7A0-$7C0, then draws the 4 x 1 rows Data_01D_4603, 4607 and 460B at scroll + $62, $A2 and $E2 (E-0121)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case02)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case02)
 LoadThreeTilesAndDrawRows4603To460B::
 Func_01D_45AB:: ; address name
     ld hl, vTiles2 + $7A0
@@ -524,13 +524,13 @@ TileRect_1D_460B::
 Data_01D_460B:: ; address name
     db $A9, $A4, $EB, $AD ; id 0
 
-; only called from VaultMenu_Case04_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case04_Case03)
+; only called from VaultMenu_TakeOut_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case03)
 ; reads: wScreenStep, wScreenByteED, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
-VaultMenu_Case04_Case03_Sub01::
+VaultMenu_TakeOut_Case03_Sub01::
 Func_01D_460F:: ; address name
-    call VaultMenu_Shared03
+    call Func_01D_47AF
     and a, a
     ret z
     cp a, $01
@@ -567,7 +567,7 @@ Jump_01D_4642::
     ret
 
 Jump_01D_464C::
-    call VaultMenu_Shared06
+    call Func_01D_4A62
     ld a, [wSavedSpriteClipMode]
     and a, a
     jr z, Jump_01D_466C
@@ -644,13 +644,13 @@ Jump_01D_46D4::
     ld [wScreenStep], a
     jp Jump_01D_4642
 
-; only called from VaultMenu_Case03_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case03)
+; only called from VaultMenu_Store_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case03)
 ; reads: wScreenStep, wScreenByteED, wGoldHi, wGoldMid, wGoldLo, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, ...
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
-VaultMenu_Case03_Case03_Sub01::
+VaultMenu_Store_Case03_Sub01::
 Func_01D_46E1:: ; address name
-    call VaultMenu_Shared03
+    call Func_01D_47AF
     and a, a
     ret z
     cp a, $01
@@ -690,7 +690,7 @@ Jump_01D_471E::
     ld a, [wListPages]
     and a, a
     jr z, Jump_01D_473B
-    call VaultMenu_Case03_Case03_Sub01_Sub01
+    call VaultMenu_Store_Case03_Sub01_Sub01
     cp a, $FF
     jr z, Jump_01D_4749
     ld a, $04
@@ -762,12 +762,10 @@ Jump_01D_47A2::
     ld [wScreenStep], a
     jp Jump_01D_4714
 
-; only called from routines of VaultMenu (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Case04_Case03_Sub01, VaultMenu_Case03_Case03_Sub01)
+; 2 call sites from 2 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_Case03_Sub01)
 ; reads: wJoypadPressedRepeat, wScreenByteED
 ; writes: wScreenByteED
-VaultMenu_Shared03::
-Func_01D_47AF:: ; address name
+Func_01D_47AF::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, Jump_01D_47C8
@@ -813,7 +811,7 @@ Jump_01D_47F0::
     jr Jump_01D_47D6
 
 Jump_01D_47F3::
-    call VaultMenu_Shared03_Sub01
+    call Func_01D_4823
     ld a, $69
     call QueueSoundEffect
     ld a, $01
@@ -824,7 +822,7 @@ Jump_01D_47FE::
     ret
 
 ; cycles wD7EF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Shared03)
+; 1 call site from 1 routine (e.g. Func_01D_47AF)
 ; reads: wJoypadRepeatTimer, wCursorBlinkEF, wScreenByteED
 ; writes: wCursorBlinkEF
 BlinkCursorBlinkEF_Bank1D_4801::
@@ -843,7 +841,7 @@ Func_01D_4801:: ; address name
     ld [wCursorBlinkEF], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Shared03)
+; 1 call site from 1 routine (e.g. Func_01D_47AF)
 ; reads: wScreenByteED
 DrawCursorTileBB_481B_Bank1D::
 Func_01D_481B:: ; address name
@@ -851,18 +849,16 @@ Func_01D_481B:: ; address name
     jr Jump_01D_4825
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Shared03)
+; 2 call sites from 1 routine (e.g. Func_01D_47AF)
 ; reads: wScreenByteED
 DrawBlankTileC3_481F_Bank1D::
 Func_01D_481F:: ; address name
     ld b, $C3
     jr Jump_01D_4825
 
-; only called from VaultMenu_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Shared03)
+; 1 call site from 1 routine (e.g. Func_01D_47AF)
 ; reads: wScreenByteED
-VaultMenu_Shared03_Sub01::
-Func_01D_4823:: ; address name
+Func_01D_4823::
     ld b, $BC
 
 Jump_01D_4825::
@@ -884,12 +880,12 @@ Jump_01D_4825::
     ei
     ret
 
-; address loaded by VaultMenu_Shared03_Sub01
+; address loaded by Func_01D_4823
 Data_01D_4842:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $00, $A1, $00, $E1, $00
 
 ; draws rect $0088 (9 x 12) at vBGMap1 + $370 (Func_01D_5917) and wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_ToDrawRect0088AtBGMap1370AndStep)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawRect0088AtBGMap1370AndStep::
@@ -904,7 +900,7 @@ Func_01D_4848:: ; address name
     ret
 
 ; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs Func_01C_689A and Func_0F2_6449; wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case06)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case06)
 ; reads: wScreenState, wScreenStep
 ; writes: wScreenStep
 DrawRect0140AtBGMap13E0AndStep::
@@ -925,15 +921,15 @@ Jump_01D_487B::
     ld [wScreenStep], a
     ret
 
-; only called from VaultMenu_Case03_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case07)
+; only called from VaultMenu_Store_Case07 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case07)
 ; reads: wSavedSpriteSlotCount, wIsCGB, wScreenStep
 ; writes: wArg1, wScreenStep
-VaultMenu_Case03_Case07_Sub01::
+VaultMenu_Store_Case07_Sub01::
 Func_01D_4883:: ; address name
     ld a, $01
     ld [wArg1], a
-    call VaultMenu_Shared05
+    call VaultMenu_Store_Shared03
     ld a, [wSavedSpriteSlotCount]
     cp a, $02
     jr c, Jump_01D_48A5
@@ -1036,15 +1032,15 @@ Data_01D_4968:: ; address name
     db $B6, $C3, $D8, $D9, $DA, $DB, $DC, $DD, $DE, $AA, $CA, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; only called from VaultMenu_Case03_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case08)
+; only called from VaultMenu_Store_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case08)
 ; reads: wDigits, wSavedSpriteSlotCount, wItemGridY, wScreenStep
 ; writes: wArg1, wDigits, wScreenStep, wScreenCounter, wGlyphListPos
-VaultMenu_Case03_Case08_Sub01::
+VaultMenu_Store_Case08_Sub01::
 Func_01D_49D4:: ; address name
     xor a, a
     ld [wArg1], a
-    call VaultMenu_Shared05
+    call VaultMenu_Store_Shared03
     call HLToDecimalDigits
     ld a, [wDigits + $1]
     and a, a
@@ -1109,7 +1105,7 @@ Jump_01D_4A3F::
     ret
 
 ; C = the number of non-zero bytes among the $18 bytes at wD7D5 (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Shared05)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Shared03)
 ; points at: wItemGrid
 CountNonZeroItemGridBytes::
 Func_01D_4A4E:: ; address name
@@ -1131,12 +1127,10 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; only called from routines of VaultMenu (E-0098)
-; 5 call sites from 4 routines (e.g. VaultMenu_Case04_Case03_Sub01, VaultMenu_Shared05, VaultMenu_Case03_Case0E_Sub01, VaultMenu_Case01_ToVaultMenu_Shared06AndStep)
+; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_Shared03, VaultMenu_Store_Case0E_Sub01, VaultMenu_Setup_Case02)
 ; writes: wSavedSpriteClipMode, wListPages
 ; points at: wItemStorage, wInventory
-VaultMenu_Shared06::
-Func_01D_4A62:: ; address name
+Func_01D_4A62::
     ld hl, wItemStorage
     ld c, $00
     ld b, $00
@@ -1192,7 +1186,7 @@ Func_01D_4A9A:: ; address name
     cp a, $10
     jr c, Jump_01D_4AAD
     cp a, $18
-    jr c, VaultMenu_Shared05_Sub01
+    jr c, VaultMenu_Store_Shared03_Sub01
     xor a, a
     ld [wSelectedRecord], a
 
@@ -1200,10 +1194,10 @@ Jump_01D_4AAD::
     ld b, $BB
     jr Jump_01D_4AB7
 
-; only called from VaultMenu_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Shared05)
+; only called from VaultMenu_Store_Shared03 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Shared03)
 ; reads: wItemGridX
-VaultMenu_Shared05_Sub01::
+VaultMenu_Store_Shared03_Sub01::
 Func_01D_4AB1:: ; address name
     ld b, $C3
     jr Jump_01D_4AB7
@@ -1228,16 +1222,16 @@ Jump_01D_4AB7::
     ei
     ret
 
-; address loaded by VaultMenu_Shared05_Sub01
+; address loaded by VaultMenu_Store_Shared03_Sub01
 Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
-; only called from VaultMenu_Case03_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0A)
+; only called from VaultMenu_Store_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0A)
 ; reads: wScreenState, wItemGridY, wItemGridX, wDigits, wIsCGB, wScreenStep
 ; writes: wDigits, wScreenByte93, wScreenByte94, wScreenStep
 ; points at: wScreenList, wItemStorage, wItemGrid, wInventory
-VaultMenu_Case03_Case0A_Sub01::
+VaultMenu_Store_Case0A_Sub01::
 Func_01D_4ADC:: ; address name
     ld hl, Data_01D_4BE4
     ld de, wScreenList
@@ -1403,16 +1397,16 @@ Jump_01D_4BB1::
     ld [wScreenStep], a
     ret
 
-; address loaded by VaultMenu_Case03_Case0A_Sub01
+; address loaded by VaultMenu_Store_Case0A_Sub01
 Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
-; only called from VaultMenu_Case03_Case0B (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0B)
+; only called from VaultMenu_Store_Case0B (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B)
 ; reads: wJoypadPressedRepeat, wScreenStep, wScreenState, wChoiceCursorF0, wItemGridX, wSavedSpriteSlotCount, wItemGridY
 ; writes: wScreenStep, wItemGridX, wItemGridY, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wNumberTens, wNumberOnes, ...
-VaultMenu_Case03_Case0B_Sub01::
+VaultMenu_Store_Case0B_Sub01::
 Func_01D_4BF9:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -1541,11 +1535,11 @@ Jump_01D_4CC0::
 Jump_01D_4CD3::
     ld a, $69
     call QueueSoundEffect
-    call VaultMenu_Case03_Case0B_Sub01_Sub01
+    call VaultMenu_Store_Case0B_Sub01_Sub01
     ld a, [wScreenState]
     cp a, $04
     jr z, Jump_01D_4D0A
-    call VaultMenu_Case03_Case0B_Sub01_Sub02
+    call VaultMenu_Store_Case0B_Sub01_Sub02
     and a, a
     jr z, Jump_01D_4D0A
     cp a, $FE
@@ -1597,7 +1591,7 @@ Jump_01D_4D30::
     ret
 
 ; cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wJoypadRepeatTimer, wSelectedRecord, wItemGridX
 ; writes: wSelectedRecord
 BlinkCursorSelectedRecord_Bank1D_4D41::
@@ -1616,7 +1610,7 @@ Func_01D_4D41:: ; address name
     ld [wSelectedRecord], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wItemGridX
 DrawCursorTileBB_4D5B_Bank1D::
 Func_01D_4D5B:: ; address name
@@ -1624,17 +1618,17 @@ Func_01D_4D5B:: ; address name
     jr Jump_01D_4D65
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wItemGridX
 DrawBlankTileC3_4D5F_Bank1D::
 Func_01D_4D5F:: ; address name
     ld b, $C3
     jr Jump_01D_4D65
 
-; only called from VaultMenu_Case03_Case0B_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; only called from VaultMenu_Store_Case0B_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wItemGridX
-VaultMenu_Case03_Case0B_Sub01_Sub01::
+VaultMenu_Store_Case0B_Sub01_Sub01::
 Func_01D_4D63:: ; address name
     ld b, $BC
 
@@ -1657,15 +1651,15 @@ Jump_01D_4D65::
     ei
     ret
 
-; address loaded by VaultMenu_Case03_Case0B_Sub01_Sub01
+; address loaded by VaultMenu_Store_Case0B_Sub01_Sub01
 Data_01D_4D82:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
-; only called from VaultMenu_Case03_Case0B_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; only called from VaultMenu_Store_Case0B_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wItemGridY, wItemGridX
 ; points at: wItemGrid, wItemStorage
-VaultMenu_Case03_Case0B_Sub01_Sub02::
+VaultMenu_Store_Case0B_Sub01_Sub02::
 Func_01D_4D8A:: ; address name
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -1709,11 +1703,11 @@ Jump_01D_4DC5::
     xor a, a
     ret
 
-; only called from VaultMenu_Case03_Case0D (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0D)
+; only called from VaultMenu_Store_Case0D (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D)
 ; reads: wJoypadPressedRepeat, wNumberTens, wNumberOnes, wScreenState, wScreenStep, wNumberEditPos, wCountOnes, wCountTens
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep, wNumberTens, wNumberOnes, wNumberEditPos
-VaultMenu_Case03_Case0D_Sub01::
+VaultMenu_Store_Case0D_Sub01::
 Func_01D_4DC7:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 1, a
@@ -1752,7 +1746,7 @@ Jump_01D_4DE9::
     ret
 
 Jump_01D_4E0D::
-    call VaultMenu_Case03_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_Sub01
     ld a, [wNumberEditPos]
     cp a, $01
     jr nz, Jump_01D_4E1A
@@ -1770,7 +1764,7 @@ Jump_01D_4E1B::
     ret
 
 Jump_01D_4E27::
-    call VaultMenu_Case03_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_Sub01
     ld a, [wNumberEditPos]
     and a, a
     jr nz, Jump_01D_4E34
@@ -1953,7 +1947,7 @@ Jump_01D_4F45::
     ret
 
 Jump_01D_4F4D::
-    call VaultMenu_Case03_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_Sub01
     ld a, [wNumberTens]
     and a, a
     jr nz, Jump_01D_4F5B
@@ -1973,7 +1967,7 @@ Jump_01D_4F5B::
     jr Jump_01D_4F75
 
 Jump_01D_4F6F::
-    call VaultMenu_Case03_Case0D_Sub01_Sub02
+    call VaultMenu_Store_Case0D_Sub01_Sub02
     and a, a
     jr z, Jump_01D_4F84
 
@@ -1999,28 +1993,28 @@ Jump_01D_4F84::
     ret
 
 ; cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 10 call sites from 1 routine (e.g. VaultMenu_Case03_Case0D_Sub01)
+; 10 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
 ; reads: wJoypadRepeatTimer, wCursorBlinkCD, wNumberEditPos, wNumberTens, wNumberOnes
 ; writes: wCursorBlinkCD
 BlinkCursorBlinkCD_Bank1D_4F99::
 Func_01D_4F99:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, VaultMenu_Case03_Case0D_Sub01_Sub01
+    jr c, VaultMenu_Store_Case0D_Sub01_Sub01
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
     cp a, $10
-    jr c, VaultMenu_Case03_Case0D_Sub01_Sub01
+    jr c, VaultMenu_Store_Case0D_Sub01_Sub01
     cp a, $18
     jr c, Jump_01D_4FC6
     xor a, a
     ld [wCursorBlinkCD], a
 
-; only called from VaultMenu_Case03_Case0D_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. VaultMenu_Case03_Case0D_Sub01)
+; only called from VaultMenu_Store_Case0D_Sub01 (E-0047)
+; 3 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
 ; reads: wNumberEditPos, wNumberTens, wNumberOnes
-VaultMenu_Case03_Case0D_Sub01_Sub01::
+VaultMenu_Store_Case0D_Sub01_Sub01::
 Func_01D_4FB3:: ; address name
     ld a, [wNumberEditPos]
     and a, a
@@ -2058,12 +2052,12 @@ Jump_01D_4FC8::
     ei
     ret
 
-; address loaded by VaultMenu_Case03_Case0D_Sub01_Sub01
+; address loaded by VaultMenu_Store_Case0D_Sub01_Sub01
 Data_01D_4FE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $01, $62, $01
 
 ; writes wD7CA and wD7CB as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and + $162 (E-0120)
-; 6 call sites from 2 routines (e.g. VaultMenu_Case03_Case0B_Sub01, VaultMenu_Case03_Case0D_Sub01)
+; 6 call sites from 2 routines (e.g. VaultMenu_Store_Case0B_Sub01, VaultMenu_Store_Case0D_Sub01)
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtScroll161::
 Func_01D_4FE9:: ; address name
@@ -2092,7 +2086,7 @@ Func_01D_4FE9:: ; address name
     ret
 
 ; A = $FF when wD7B0 + TenTimesNumberTensPlusNumberOnes exceeds $18, else 0 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0D_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
 ; reads: wListPages
 CheckListPagesPlusNumberAtMost18::
 Func_01D_5012:: ; address name
@@ -2109,12 +2103,12 @@ Jump_01D_5022::
     xor a, a
     ret
 
-; only called from VaultMenu_Case03_Case0D_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0D_Sub01)
+; only called from VaultMenu_Store_Case0D_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
 ; reads: wItemGridY, wItemGridX, wTextCounter1
 ; writes: wTextCounter1, wTextCounter3
 ; points at: wItemGrid, wItemStorage
-VaultMenu_Case03_Case0D_Sub01_Sub02::
+VaultMenu_Store_Case0D_Sub01_Sub02::
 Func_01D_5024:: ; address name
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -2181,12 +2175,12 @@ Jump_01D_5083::
     ld a, $FF
     ret
 
-; only called from VaultMenu_Case03_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E)
+; only called from VaultMenu_Store_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
 ; reads: wItemGridY, wItemGridX, wListPages, wCounterPtr0Lo, wScreenStep, wSavedSpriteClipMode
 ; writes: wTwoChoiceCursor, wTextCounter1, wTextCounter3, wCounterPtr0Lo, wScreenStep
 ; points at: wItemStorage, wInventory
-VaultMenu_Case03_Case0E_Sub01::
+VaultMenu_Store_Case0E_Sub01::
 Func_01D_508B:: ; address name
     ld hl, wItemStorage
     ld a, [wItemGridY]
@@ -2247,7 +2241,7 @@ Jump_01D_50CF::
     jr c, Jump_01D_50C2
 
 Jump_01D_50DA::
-    call VaultMenu_Shared06
+    call Func_01D_4A62
     ld a, [wListPages]
     cp a, $18
     jr c, Jump_01D_50EB
@@ -2268,12 +2262,12 @@ Jump_01D_50F9::
     ld [wTwoChoiceCursor], a
     jp Jump_01D_5168
 
-; only called from VaultMenu_Case03_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E)
+; only called from VaultMenu_Store_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
 ; reads: wCounterPtr0Lo, wScreenStep, wTextCounter3
 ; writes: wTwoChoiceCursor, wTextCounter1, wTextCounter3, wCounterPtr0Lo, wScreenStep
 ; points at: wInventory, wItemStorage
-VaultMenu_Case03_Case0E_Sub02::
+VaultMenu_Store_Case0E_Sub02::
 Func_01D_5101:: ; address name
     ld hl, wInventory
     ld c, $00
@@ -2401,11 +2395,11 @@ Jump_01D_524C::
     jr nz, Jump_01D_524C
     ret
 
-; only called from VaultMenu_Case03_Case0F (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0F)
+; only called from VaultMenu_Store_Case0F (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0F)
 ; reads: wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest, wItemGridX, wItemGridY
-VaultMenu_Case03_Case0F_Sub01::
+VaultMenu_Store_Case0F_Sub01::
 Func_01D_5259:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $02
@@ -2441,7 +2435,7 @@ Jump_01D_5271::
     ret
 
 ; draws rect $0147 (3 x 13) at vBGMap1 + $370, wD781 += 1, clears wD7CD-wD7D0 and sets wD7CC = 2 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_ToDrawRect0147AndResetNumberEditPos)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos)
 ; reads: wScreenStep
 ; writes: wScreenStep, wCursorBlinkCD, wThreeDigits, wNumberEditPos
 DrawRect0147AndResetNumberEditPos::
@@ -2462,12 +2456,12 @@ Func_01D_5297:: ; address name
     ld [wNumberEditPos], a
     ret
 
-; only called from routines of VaultMenu (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Case03_ToVaultMenu_Shared02, VaultMenu_Case03_Case17)
+; only called from routines of VaultMenu_Store (E-0098)
+; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case13, VaultMenu_Store_Case17)
 ; reads: hTemp2, hTemp1, hTemp0, wIsCGB, wScreenStep
 ; writes: wDigits, wScreenByteBD, wListEntries2, wScreenByteBF, wScreenByteC0, wScreenByteC1, wTextCounter0, wScreenStep
 ; points at: wScreenList, wBankedGoldLo, wScreenByteBD, wScreenByte93
-VaultMenu_Shared02::
+VaultMenu_Store_Shared02::
 Func_01D_52BD:: ; address name
     ld hl, wScreenList
     ld de, Data_01D_53A2
@@ -2611,17 +2605,17 @@ Jump_01D_536F::
     ld [wScreenStep], a
     ret
 
-; address loaded by VaultMenu_Shared02
+; address loaded by VaultMenu_Store_Shared02
 Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
     db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; only called from VaultMenu_Case03_Case14 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case14)
+; only called from VaultMenu_Store_Case14 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case14)
 ; reads: wThreeDigits, wScreenState, hTemp2, hTemp1, wScreenStep, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo
 ; writes: wGrid2CursorX, wGrid2CursorY, wScreenArea, wDigits, wCountTens, wCountOnes, wItemGrid, wScreenStep, ...
 ; points at: wScreenList, wGoldLo, wBankedGoldLo
-VaultMenu_Case03_Case14_Sub01::
+VaultMenu_Store_Case14_Sub01::
 Func_01D_53BD:: ; address name
     ld hl, wScreenList
     ld de, Data_01D_548D
@@ -2724,17 +2718,17 @@ Jump_01D_5461::
     ld [wItemGrid], a
     jp Jump_01D_5427
 
-; address loaded by VaultMenu_Case03_Case14_Sub01
+; address loaded by VaultMenu_Store_Case14_Sub01
 Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; only called from VaultMenu_Case03_Case15 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case15)
+; only called from VaultMenu_Store_Case15 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case15)
 ; reads: wScreenStep, wThreeDigits, wBankedGoldLo, wBankedGoldMid, wBankedGoldHi, wGoldLo, wGoldMid, wGoldHi
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, wGoldHi, ...
-VaultMenu_Case03_Case15_Sub01::
+VaultMenu_Store_Case15_Sub01::
 Func_01D_549D:: ; address name
-    call VaultMenu_Shared04
+    call Func_01D_564B
     and a, a
     ret z
     cp a, $01
@@ -2869,13 +2863,13 @@ Jump_01D_5536::
     ld [wScriptStartRequest], a
     ret
 
-; only called from VaultMenu_Case04_Case15 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case04_Case15)
+; only called from VaultMenu_TakeOut_Case15 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case15)
 ; reads: wScreenStep, wThreeDigits, wGoldLo, wGoldMid, wGoldHi, wBankedGoldLo, wBankedGoldMid, wBankedGoldHi
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wGoldHi, wGoldMid, wGoldLo, wBankedGoldHi, ...
-VaultMenu_Case04_Case15_Sub01::
+VaultMenu_TakeOut_Case15_Sub01::
 Func_01D_5573:: ; address name
-    call VaultMenu_Shared04
+    call Func_01D_564B
     and a, a
     ret z
     cp a, $01
@@ -3011,12 +3005,10 @@ Jump_01D_560E::
     ld [wScriptStartRequest], a
     ret
 
-; only called from routines of VaultMenu (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Case04_Case15_Sub01, VaultMenu_Case03_Case15_Sub01)
+; 2 call sites from 2 routines (e.g. VaultMenu_TakeOut_Case15_Sub01, VaultMenu_Store_Case15_Sub01)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wNumberEditPos, wCountTens, wThreeDigits, wCountOnes, wItemGrid
 ; writes: wNumberEditPos, wThreeDigits, wCountOnes
-VaultMenu_Shared04::
-Func_01D_564B:: ; address name
+Func_01D_564B::
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, Jump_01D_5671
@@ -3031,7 +3023,7 @@ Func_01D_564B:: ; address name
     jp nz, Jump_01D_5822
     bit 5, a
     jp nz, Jump_01D_5834
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     ret
 
 Jump_01D_5671::
@@ -3098,8 +3090,8 @@ Jump_01D_56CA::
 Jump_01D_56D8::
     inc a
     ld [wThreeDigits], a
-    call VaultMenu_Shared04_Sub02
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5AA3
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3114,15 +3106,15 @@ Jump_01D_56E4::
     jr c, Jump_01D_56FE
     xor a, a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
 Jump_01D_56FE::
     inc a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared04_Sub02
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5AA3
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3158,7 +3150,7 @@ Jump_01D_5725::
     jr c, Jump_01D_575C
     ld a, b
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3168,14 +3160,14 @@ Jump_01D_574C::
     jr c, Jump_01D_575C
     xor a, a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
 Jump_01D_575C::
     inc a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3206,7 +3198,7 @@ Jump_01D_5778::
 Jump_01D_5795::
     dec a
     ld [wThreeDigits], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3241,14 +3233,14 @@ Jump_01D_57CB::
     jr nz, Jump_01D_57DB
     ld a, $09
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
 Jump_01D_57DB::
     dec a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3268,7 +3260,7 @@ Jump_01D_57E4::
     jr nz, Jump_01D_5819
     ld a, [wItemGrid]
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3278,14 +3270,14 @@ Jump_01D_5809::
     jr nz, Jump_01D_5819
     ld a, $09
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
 Jump_01D_5819::
     dec a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared04_Sub01
+    call Func_01D_5878
     xor a, a
     ret
 
@@ -3336,13 +3328,11 @@ Jump_01D_5873::
     xor a, a
     ret
 
-; only called from VaultMenu_Shared04 (E-0047)
-; 13 call sites from 1 routine (e.g. VaultMenu_Shared04)
+; 13 call sites from 1 routine (e.g. Func_01D_564B)
 ; reads: wJoypadRepeatTimer, wCursorBlinkCD, wNumberEditPos
 ; writes: wCursorBlinkCD
 ; points at: wThreeDigits
-VaultMenu_Shared04_Sub01::
-Func_01D_5878:: ; address name
+Func_01D_5878::
     ld a, [wJoypadRepeatTimer]
     cp a, $14
     jr c, Jump_01D_5892
@@ -3387,12 +3377,12 @@ Jump_01D_58A5::
     ei
     ret
 
-; address loaded by VaultMenu_Shared04_Sub01
+; address loaded by Func_01D_5878
 Data_01D_58C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6E, $00, $6F, $00, $70, $00
 
 ; writes the three bytes at wD7CE as digit tiles ($E0 + digit) at the BG map entry BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess (E-0104)
-; 8 call sites from 4 routines (e.g. VaultMenu_Case04_Case15_Sub01, VaultMenu_Shared04, VaultMenu_Shared04_Sub02, VaultMenu_Case03_Case15_Sub01)
+; 8 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case15_Sub01, Func_01D_564B, Func_01D_5AA3, VaultMenu_Store_Case15_Sub01)
 ; points at: wThreeDigits
 DrawThreeDigitsAtScrollOffset6E::
 Func_01D_58C8:: ; address name
@@ -3419,7 +3409,7 @@ Jump_01D_58D4::
     ret
 
 ; takes the byte at wC635 + 8 * wD7B6 + 2 * wD7B5 + 1 and stores its value / 10 in wD7D3 and value mod 10 in wD7D4 (E-0120)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0B_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
 ; reads: wItemGridY, wItemGridX
 ; writes: wCountOnes, wCountTens
 ; points at: wItemStorage
@@ -3516,10 +3506,10 @@ Jump_01D_594A::
     pop hl
     ret
 
-; only called from VaultMenu_Case03_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case03_Sub01)
+; only called from VaultMenu_Store_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case03_Sub01)
 ; points at: wItemStorage, wInventory
-VaultMenu_Case03_Case03_Sub01_Sub01::
+VaultMenu_Store_Case03_Sub01_Sub01::
 Func_01D_5965:: ; address name
     ld hl, wItemStorage
     ld de, wInventory
@@ -3611,7 +3601,7 @@ Jump_01D_59CD::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Shared03_Sub01, SaveBGMapRectWithAttrs, VaultMenu_Case03_Case07_Sub01, ...)
+; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, Func_01D_4823, SaveBGMapRectWithAttrs, VaultMenu_Store_Case07_Sub01, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D::
 Func_01D_59CF:: ; address name
@@ -3682,7 +3672,7 @@ Func_01D_59F0:: ; address name
     ret
 
 ; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wC554 = HL + $21 (E-0124; a copy, not a clear: E-0226)
-; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Case03_Case07_Sub01, VaultMenu_Case03_Case0A_Sub01, VaultMenu_Case03_Case14_Sub01, ...)
+; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Store_Case07_Sub01, VaultMenu_Store_Case0A_Sub01, VaultMenu_Store_Case14_Sub01, ...)
 ; writes: wTextCursorLo, wTextCursorHi
 DrawRectSetTextCursorLoPlus21_Bank1D::
 Func_01D_5A32:: ; address name
@@ -3754,7 +3744,7 @@ Jump_01D_5A7F::
     ret
 
 ; HL = 10 * wD7CA + wD7CB (E-0120)
-; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Case03_Case0D_Sub01_Sub02, VaultMenu_Case03_Case0E_Sub01)
+; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_Sub02, VaultMenu_Store_Case0E_Sub01)
 ; reads: wNumberTens, wNumberOnes
 TenTimesNumberTensPlusNumberOnes::
 Func_01D_5A80:: ; address name
@@ -3776,12 +3766,10 @@ Func_01D_5A80:: ; address name
     add_a_to_hl
     ret
 
-; only called from VaultMenu_Shared04 (E-0047)
-; 2 call sites from 1 routine (e.g. VaultMenu_Shared04)
+; 2 call sites from 1 routine (e.g. Func_01D_564B)
 ; reads: wCountTens, wThreeDigits, wCountOnes, wItemGrid
 ; writes: wThreeDigits
-VaultMenu_Shared04_Sub02::
-Func_01D_5AA3:: ; address name
+Func_01D_5AA3::
     ld a, [wCountTens]
     ld b, a
     ld a, [wThreeDigits]
@@ -3814,22 +3802,22 @@ Jump_01D_5AC9::
 Jump_01D_5ADE::
     ret
 
-; only called from routines of VaultMenu (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Case03_Case07_Sub01, VaultMenu_Case03_Case08_Sub01)
+; only called from routines of VaultMenu_Store (E-0098)
+; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case07_Sub01, VaultMenu_Store_Case08_Sub01)
 ; reads: wScreenState, wSavedSpriteClipMode, wItemGridY, wItemGridX, wArg1
 ; writes: wSavedSpriteSlotCount, wItemGridY, wChoiceCursorF0, wItemGridX
-VaultMenu_Shared05::
+VaultMenu_Store_Shared03::
 Func_01D_5ADF:: ; address name
     ld a, [wScreenState]
     cp a, $03
     jr z, Jump_01D_5AF1
-    call VaultMenu_Shared06
+    call Func_01D_4A62
     call CountNonZeroItemGridBytes
     ld a, [wSavedSpriteClipMode]
     jr Jump_01D_5AF8
 
 Jump_01D_5AF1::
-    call VaultMenu_Shared06
+    call Func_01D_4A62
     call CountNonZeroItemGridBytes
     ld a, c
 
@@ -3877,7 +3865,7 @@ Jump_01D_5B25::
     ld a, [wArg1]
     and a, a
     jr nz, Jump_01D_5B3E
-    call VaultMenu_Shared05_Sub01
+    call VaultMenu_Store_Shared03_Sub01
 
 Jump_01D_5B3E::
     pop hl

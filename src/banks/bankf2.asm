@@ -4082,7 +4082,7 @@ Jump_0F2_643C::
     ret
 
 ; in state 3 continues at Jump_0F2_6470; otherwise runs Func_0F2_64C7 (E-0126)
-; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, VaultMenu_Case03_Case0B_Sub01, VaultMenu_Case03_Case0E_Sub02)
+; 3 call sites from 3 routines (e.g. DrawRect0140AtBGMap13E0AndStep, VaultMenu_Store_Case0B_Sub01, VaultMenu_Store_Case0E_Sub02)
 ; reads: wScreenState, wCounterPtr0Lo
 ; writes: wCounterPtr0Lo
 ; points at: wWorkBuf, wInventory, wItemGrid
@@ -4094,11 +4094,11 @@ Func_0F2_6449:: ; address name
     call Run64C7UnlessScreenStateIs3_Sub01
     ret
 
-; only called from VaultMenu_Case03_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E)
+; only called from VaultMenu_Store_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E)
 ; reads: wCounterPtr0Lo
 ; points at: wWorkBuf
-VaultMenu_Case03_Case0E_Sub03::
+VaultMenu_Store_Case0E_Sub03::
 Func_0F2_6454:: ; address name
     ld hl, wWorkBuf
     ld b, $18
@@ -4118,7 +4118,7 @@ Jump_0F2_6469::
     ld de, ItemOrderListA
 
 Jump_0F2_646C::
-    call VaultMenu_Case03_Case0E_Sub03_Sub01
+    call VaultMenu_Store_Case0E_Sub03_Sub01
     ret
 
 Jump_0F2_6470::
@@ -4144,10 +4144,10 @@ Jump_0F2_6487::
 Jump_0F2_648B::
     ld [wCounterPtr0Lo], a
 
-; only called from VaultMenu_Case03_Case0E_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case0E_Sub03)
+; only called from VaultMenu_Store_Case0E_Sub03 (E-0047)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0E_Sub03)
 ; points at: wInventory, wWorkBuf, wItemGrid
-VaultMenu_Case03_Case0E_Sub03_Sub01::
+VaultMenu_Store_Case0E_Sub03_Sub01::
 Func_0F2_648E:: ; address name
     ld b, $00
 
