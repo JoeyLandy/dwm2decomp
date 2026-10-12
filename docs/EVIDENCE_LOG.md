@@ -2436,6 +2436,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **What an encounter word is.** LoadMonsterAndSpeciesForListEntryC (bank $19) takes word C of wEncounterMonsters as wMonsterId and loads that MonsterTable record (LoadMonsterRecord; ids from $250 come from MonsterTableA2). It then uses the record's first word (the picture number, E-0041) as wSpeciesId for LoadSpeciesRecord. So an encounter word is a MonsterTable id; random picks add 0-9 to a base (bank $0A).
 - **Tool.** A new word-note kind `monster_table` follows the id to its record's species and names it ("MonsterTable $08A: WindBeast"). It applies to ScriptedEncounterTable, the EncounterGroup lists, ArenaEncounterList0-3 and GridEncounters0-3 (120 fields).
 - `script_encounter n` lines list the three words of ScriptedEncounterTable record n. How many of them are fought is not read here; repeated $0001 (Slime) words may be filler.
+- MonsterTable and MonsterTableA2 rows are tagged with the species of their first word (`id_names: monster_table`), for example `; id 1 Slime` and `; id 592 GoldSlime` (build/run343 PASS).
 - Binary verification: build/run342 PASS, 0 differing bytes; tests OK.
 
 ### E-0262 — Monster record fields; per-field comments

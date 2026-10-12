@@ -3700,6 +3700,9 @@ class Rom:
             tag = f" ; id {t['id_base'] + i}" if "id_base" in t else f" ; entry {i}"
             if t.get("id_names") == "monster" and 0 < t["id_base"] + i < 0x200:
                 tag += f" {self.monster_name(t['id_base'] + i)}"
+            if t.get("id_names") == "monster_table":  # E-0263: the record's species (its first word)
+                sp = vals[0] | (raws[0][1] << 8 if len(raws[0]) > 1 else 0)
+                tag += f" {self.monster_name(sp)}" if 0 < sp < 0x180 else ""
             if t.get("id_names") == "charmap" and (t["id_base"] + i) in gb_text.BYTE_TO_TEXT:
                 tag += f" '{gb_text.BYTE_TO_TEXT[t['id_base'] + i]}'"  # glyph number = text byte (E-0169)
             run: list[int] = []
