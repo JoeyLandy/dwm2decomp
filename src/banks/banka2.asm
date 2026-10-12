@@ -181,7 +181,7 @@ Data_0A2_4070:: ; address name
 ; writes: wStringCategory
 BeginStringDisplay_BankE0_Sub01::
 Func_0A2_49E2:: ; address name
-    ld de, Data_0A2_49F8
+    ld de, StringCategories_A2_49F8
     ld a, [wStringCategory]
     sub a, $01
     ld [wStringCategory], a
@@ -189,96 +189,115 @@ Func_0A2_49E2:: ; address name
     ret
     db $CD, $E2, $49, $CD, $11, $26, $C9
 
-; address loaded by BeginStringDisplay_BankE0_Sub01
-Data_0A2_49F8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_0A2_49FC
-    dw Data_0A2_4A3E
+; E-0217 (derived: string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word wStringCategory, then word wStringIndex of that list)
+; record: string list
+StringCategories_A2_49F8::
+Data_0A2_49F8:: ; address name
+    dw StringList_A2_49FC ; id 0
+    dw StringList_A2_4A3E ; id 1
 
-Data_0A2_49FC:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0A2_4A40
-    dw Data_0A2_4A4F
-    dw Data_0A2_4A88
-    dw Data_0A2_4A99
-    dw Data_0A2_4AAB
-    dw Data_0A2_4ADF
-    dw Data_0A2_4AE0
-    dw Data_0A2_4AF2
-    dw Data_0A2_4B03
-    dw Data_0A2_4B14
-    dw Data_0A2_4B4A
-    dw Data_0A2_4BAB
-    dw Data_0A2_4BBB
-    dw Data_0A2_4BCD
-    dw Data_0A2_4BDC
-    dw Data_0A2_4BED
-    dw Data_0A2_4BEE
-    dw Data_0A2_4C10
-    dw Data_0A2_4C55
-    dw Data_0A2_4C77
-    dw Data_0A2_4CCF
-    dw Data_0A2_4D23
-    dw Data_0A2_4D71
-    dw Data_0A2_4DC7
-    dw Data_0A2_4E1F
-    dw Data_0A2_4E74
-    dw Data_0A2_4ECA
-    dw Data_0A2_4F1F
-    dw Data_0A2_4F42
-    dw Data_0A2_4F53
-    dw Data_0A2_4F75
-    dw Data_0A2_4F85
-    dw Data_0A2_4FCA
+; E-0217 (derived: category list of StringCategories_A2_49F8; one pointer per wStringIndex)
+; record: string
+StringList_A2_49FC::
+Data_0A2_49FC:: ; address name
+    dw String_A2_00_00 ; id 0
+    dw String_A2_00_01 ; id 1
+    dw String_A2_00_02 ; id 2
+    dw String_A2_00_03 ; id 3
+    dw String_A2_00_04 ; id 4
+    dw String_A2_00_05 ; id 5
+    dw String_A2_00_06 ; id 6
+    dw String_A2_00_07 ; id 7
+    dw String_A2_00_08 ; id 8
+    dw String_A2_00_09 ; id 9
+    dw String_A2_00_0A ; id 10
+    dw String_A2_00_0B ; id 11
+    dw String_A2_00_0C ; id 12
+    dw String_A2_00_0D ; id 13
+    dw String_A2_00_0E ; id 14
+    dw String_A2_00_0F ; id 15
+    dw String_A2_00_10 ; id 16
+    dw String_A2_00_11 ; id 17
+    dw String_A2_00_12 ; id 18
+    dw String_A2_00_13 ; id 19
+    dw String_A2_00_14 ; id 20
+    dw String_A2_00_15 ; id 21
+    dw String_A2_00_16 ; id 22
+    dw String_A2_00_17 ; id 23
+    dw String_A2_00_18 ; id 24
+    dw String_A2_00_19 ; id 25
+    dw String_A2_00_1A ; id 26
+    dw String_A2_00_1B ; id 27
+    dw String_A2_00_1C ; id 28
+    dw String_A2_00_1D ; id 29
+    dw String_A2_00_1E ; id 30
+    dw String_A2_00_1F ; id 31
+    dw String_A2_00_20 ; id 32
 
-Data_0A2_4A3E:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0A2_4FCB
+; E-0217 (derived: category list of StringCategories_A2_49F8; one pointer per wStringIndex)
+; record: string
+StringList_A2_4A3E::
+Data_0A2_4A3E:: ; address name
+    dw String_A2_01_00 ; id 0
 
-Data_0A2_4A40:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_00:: ; heuristic: string; C0
+Data_0A2_4A40:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    YUJI HORII", $F0
 
-Data_0A2_4A4F:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_01:: ; heuristic: string; C0
+Data_0A2_4A4F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    YUJI HORII", $F1
     db "       ENIX", $F1
     db "       TOSE", $F1
     db "FUMINORI ISHIKAWA", $F0
 
-Data_0A2_4A88:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_02:: ; heuristic: string; C0
+Data_0A2_4A88:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  AKIRA TORIYAMA", $F0
 
-Data_0A2_4A99:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_03:: ; heuristic: string; C0
+Data_0A2_4A99:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  KOICHI SUGIYAMA", $F0
 
-Data_0A2_4AAB:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_04:: ; heuristic: string; C0
+Data_0A2_4AAB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   NOB OGASAWARA", $F1
     db "   LYNN OGASAWARA", $F1
     db "   KAI OGASAWARA", $F0
 
-Data_0A2_4ADF:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_05:: ; heuristic: string; C0
+Data_0A2_4ADF:: ; address name
     db $F0
 
-Data_0A2_4AE0:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_06:: ; heuristic: string; C0
+Data_0A2_4AE0:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  MITSURU G TORII", $F0
 
-Data_0A2_4AF2:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_07:: ; heuristic: string; C0
+Data_0A2_4AF2:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   JOHN LAURENCE", $F0
 
-Data_0A2_4B03:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_08:: ; heuristic: string; C0
+Data_0A2_4B03:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  JON WEISNEWSKI", $F0
 
-Data_0A2_4B14:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_09:: ; heuristic: string; C0
+Data_0A2_4B14:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  MASAKO KOMIYAMA", $F1
     db "   YURIKO MIZUTA", $F1
     db "  MASANOBU YOSHIDA", $F0
 
-Data_0A2_4B4A:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0A:: ; heuristic: string; C0
+Data_0A2_4B4A:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   CHRIS CHYMIY", $F1
     db "   SHAWN CONARD", $F1
@@ -287,43 +306,52 @@ Data_0A2_4B4A:: ; heuristic: target of a monotone pointer table; C0
     db "  JERRY PRITCHARD", $F1
     db "   AARON SCHMITT", $F0
 
-Data_0A2_4BAB:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0B:: ; heuristic: string; C0
+Data_0A2_4BAB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   ANDREW STEIN", $F0
 
-Data_0A2_4BBB:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0C:: ; heuristic: string; C0
+Data_0A2_4BBB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  MISUZU MCMILLAN", $F0
 
-Data_0A2_4BCD:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0D:: ; heuristic: string; C0
+Data_0A2_4BCD:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "     YURI KATO", $F0
 
-Data_0A2_4BDC:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0E:: ; heuristic: string; C0
+Data_0A2_4BDC:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  PAUL HANDELMAN", $F0
 
-Data_0A2_4BED:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_0F:: ; heuristic: string; C0
+Data_0A2_4BED:: ; address name
     db $F0
 
-Data_0A2_4BEE:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_10:: ; heuristic: string; C0
+Data_0A2_4BEE:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    NAOKI OISHI", $F1
     db " TAKASHI KAMIMURA", $F0
 
-Data_0A2_4C10:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_11:: ; heuristic: string; C0
+Data_0A2_4C10:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   KENJIRO KANO", $F1
     db "   TOMOYUKI IWAI", $F1
     db "  NORIKO NAKANONE", $F1
     db "  KAZUNORI OHWADA", $F0
 
-Data_0A2_4C55:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_12:: ; heuristic: string; C0
+Data_0A2_4C55:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   HIROSHI SATO", $F1
     db "  HIDEKI YONEYAMA", $F0
 
-Data_0A2_4C77:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_13:: ; heuristic: string; C0
+Data_0A2_4C77:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db " TAKATOSHI AKIYAMA", $F1
     db " SEIICHI MORIUCHI", $F1
@@ -331,7 +359,8 @@ Data_0A2_4C77:: ; heuristic: target of a monotone pointer table; C0
     db " SATOSHI FUKUSHIMA", $F1
     db "     YUMI TOGO", $F0
 
-Data_0A2_4CCF:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_14:: ; heuristic: string; C0
+Data_0A2_4CCF:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  HIDEYUKI NUKUI", $F1
     db "  HIROSHI KONDOU", $F1
@@ -339,7 +368,8 @@ Data_0A2_4CCF:: ; heuristic: target of a monotone pointer table; C0
     db "  KAZUHIRO NOMURA", $F1
     db "   TOMOE SUZUKI", $F0
 
-Data_0A2_4D23:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_15:: ; heuristic: string; C0
+Data_0A2_4D23:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "     KAN IKEDA", $F1
     db "   YOUKO KAGAYA", $F1
@@ -347,7 +377,8 @@ Data_0A2_4D23:: ; heuristic: target of a monotone pointer table; C0
     db "     MIKA ENDO", $F1
     db "   SAKIKO IKEDA", $F0
 
-Data_0A2_4D71:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_16:: ; heuristic: string; C0
+Data_0A2_4D71:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  TETUYA FUJIMOTO", $F1
     db "  MINORU KAKIZAWA", $F1
@@ -355,7 +386,8 @@ Data_0A2_4D71:: ; heuristic: target of a monotone pointer table; C0
     db "    NAOMI OZAWA", $F1
     db "    KOJI NUMATA", $F0
 
-Data_0A2_4DC7:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_17:: ; heuristic: string; C0
+Data_0A2_4DC7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  ATUSHI TAKEUCHI", $F1
     db "   TOMOHIRO ASO", $F1
@@ -363,7 +395,8 @@ Data_0A2_4DC7:: ; heuristic: target of a monotone pointer table; C0
     db " KENICHI YAMAMOTO", $F1
     db " TEPPEI KOBAYASHI", $F0
 
-Data_0A2_4E1F:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_18:: ; heuristic: string; C0
+Data_0A2_4E1F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    JIRO KIMURA", $F1
     db "  YASUNORI HOSONO", $F1
@@ -371,7 +404,8 @@ Data_0A2_4E1F:: ; heuristic: target of a monotone pointer table; C0
     db "    RYO YONAGA", $F1
     db "   SHINGO NOGUKI", $F0
 
-Data_0A2_4E74:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_19:: ; heuristic: string; C0
+Data_0A2_4E74:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  YUJIRO KUMAKURA", $F1
     db "    NAOKI SIRAI", $F1
@@ -379,7 +413,8 @@ Data_0A2_4E74:: ; heuristic: target of a monotone pointer table; C0
     db " KATUHIKO YOKOYAMA", $F1
     db " RYUICHI NAKASHIMA", $F0
 
-Data_0A2_4ECA:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_1A:: ; heuristic: string; C0
+Data_0A2_4ECA:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   MASASHI KONNO", $F1
     db " MIKIHIRO HAYASHI", $F1
@@ -387,37 +422,44 @@ Data_0A2_4ECA:: ; heuristic: target of a monotone pointer table; C0
     db "   MASAYUKI TADA", $F1
     db "    KAYO NAKATA", $F0
 
-Data_0A2_4F1F:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_1B:: ; heuristic: string; C0
+Data_0A2_4F1F:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "   NAOYA MATSUDA", $F1
     db " YOSHITO TANIUCHI", $F0
 
-Data_0A2_4F42:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_1C:: ; heuristic: string; C0
+Data_0A2_4F42:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  TAICHI INUZUKA", $F0
 
-Data_0A2_4F53:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_1D:: ; heuristic: string; C0
+Data_0A2_4F53:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "  YUKINOBU CHIDA", $F1
     db "   KOUJI TAGUCHI", $F0
 
-Data_0A2_4F75:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_1E:: ; heuristic: string; C0
+Data_0A2_4F75:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "    KEIJI HONDA", $F0
 
-Data_0A2_4F85:: ; heuristic: target of a monotone pointer table; C0
-    db $90, $B8, $02, $00, $00, $01, $F1, $90, $90, $0A, $1B, $16, $18, $1B, $90, $19
-    db $1B, $18, $13, $0E, $0C, $1D, $F1, $90, $B8, $02, $00, $00, $01, $F1, $90, $90
-    db $0B, $12, $1B, $0D, $90, $1C, $1D, $1E, $0D, $12, $18, $F1, $90, $B8, $02, $00
-    db $00, $01
+String_A2_00_1F:: ; heuristic: string; C0
+Data_0A2_4F85:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F1
+    db " ", $B8, "2001", $F1
+    db "  ARMOR PROJECT", $F1
+    db " ", $B8, "2001", $F1
+    db "  BIRD STUDIO", $F1
+    db " ", $B8, "2001", $F1
     db "  KOICHI SUGIYAMA", $F1
 
-Data_0A2_4FCA:: ; heuristic: target of a monotone pointer table; C0
+String_A2_00_20:: ; heuristic: string; C0
+Data_0A2_4FCA:: ; address name
     db $F0
 
-Data_0A2_4FCB:: ; heuristic: target of a monotone pointer table; C0
+String_A2_01_00:: ; heuristic: string; C0
+Data_0A2_4FCB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "DRAGON WARRIOR", $F1
     db "  MONSTERS 2", $F0

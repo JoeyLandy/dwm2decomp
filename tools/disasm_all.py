@@ -2521,7 +2521,7 @@ class Rom:
                 v = ins[a]
                 if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in users:
                     continue
-                for x in reversed(order[max(0, k - 3):k]):
+                for x in reversed(order[max(0, k - 4):k]):  # E-0251: 4 (bank $95 subtracts 9 from the category first)
                     if ins[x][2] in SETUP_BARRIER:
                         break
                     if (m := ld_de.match(ins[x][1])):
@@ -3109,6 +3109,20 @@ class Rom:
                 for i in range(t["count"]):
                     give(t["bank"], self._u16(t["bank"], t["addr"] + 4 * i + 2), f"SoundTrack_{t['bank']:02X}_{i:02X}")
         log(f"sound tracks named by record: {named - before}")
+        # E-0251: key-world rooms (E-0141): record n at $4181 + $63 * n, its 4 x 4 screens' tile and attribute maps
+        before = named
+        kr = next((t for t in self.schemas if t["label"] == "KeyWorldRooms"), None)
+        if kr:
+            b, top = kr["bank"], kr["addr"]
+            for n in range(kr["count"]):
+                r = top + 0x63 * n
+                give(b, r, f"KeyWorldRoom{n:02X}")
+                for i in range(16):
+                    for off, part in ((3 + 3 * i, "Tiles"), (3 + 0x30 + 3 * i, "Attrs")):
+                        tgt, tb = self._u16(b, r + off), self.data[b * BANK + r + off + 2 - self.base(b)]
+                        if tgt and 0 < tb < self.nbanks:
+                            give(tb, tgt, f"KeyWorldRoom{n:02X}_Y{i // 4}X{i % 4}_{part}")
+        log(f"key-world rooms named: {named - before}")
 
     def prepare_tracks(self) -> None:
         """Decode the sound track regions named by tables flagged "tracks" (E-0019).

@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0251 — Key-world rooms labelled; the bank $95 string extension derived
+
+- Kind: TOOL (derived from E-0141 and E-0217; C2 for the positions).
+- **Key-world rooms.** Record n of KeyWorldRooms ($4181 + $63 * n) is labelled KeyWorldRoomNN. Its 16 tile maps and 16 attribute maps are labelled KeyWorldRoomNN_Y<row>X<column>_Tiles/_Attrs.
+- **String tables.** add_string_table_schemas now looks four instructions back for the `ld de` before BeginStringDisplay/CopyStringToBuffer, instead of three. This finds bank $95's category table Data_095_4675, which BeginStringDisplay_Bank08_Sub01 and CopyStringToBuffer_Bank08_Sub01 use after subtracting 9 from wStringCategory.
+  - There are now 51 derived string tables.
+  - Bank $95's strings (skill descriptions, tactics, targets, ...) are labelled String_95_CC_II. The game's category number is CC + 9.
+- Address-named data labels went from 3,652 to 2,845.
+- Binary verification: build/run322 PASS, 0 differing bytes; tests OK.
+
 ### E-0250 — Map screens, key-world screens and sound tracks labelled by position
 
 - Kind: TOOL (derived from E-0142, E-0144, E-0146 and E-0019 layouts; C2 for the positions).

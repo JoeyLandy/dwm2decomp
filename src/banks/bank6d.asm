@@ -21,35 +21,43 @@ Data_06D_43AB:: ; address name
     dw $0000, $0000, $0000, $0000 ; entry 7
 
 ; LZSS-compressed asset: 171 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_43EB:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom08_Y1X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_43EB:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B43EB, $AB
 
 ; LZSS-compressed asset: 208 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_4496:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom07_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_4496:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B4496, $D0
 
 ; LZSS-compressed asset: 238 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_4566:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom08_Y2X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_4566:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B4566, $EE
 
 ; LZSS-compressed asset: 187 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_4654:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom0B_Y2X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_4654:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B4654, $BB
 
 ; LZSS-compressed asset: 221 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_470F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom10_Y2X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_470F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B470F, $DD
 
 ; LZSS-compressed asset: 233 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_47EC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom10_Y2X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_47EC:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B47EC, $E9
 
 ; LZSS-compressed asset: 215 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_48D5:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom11_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_48D5:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B48D5, $D7
 
 ; LZSS-compressed asset: 227 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_49AC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom16_Y2X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_49AC:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B49AC, $E3
 
 ; LZSS-compressed asset: 241 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -77,46 +85,56 @@ Data_06D_4EB6:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $1B4EB6, $D1
 
 ; LZSS-compressed asset: 246 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_4F87:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom29_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_4F87:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B4F87, $F6
 
 ; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_507D:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom30_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_507D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B507D, $C0
 
 ; LZSS-compressed asset: 59 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_513D:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom08_Y1X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_513D:: ; address name
     db $68, $01, $00, $02, $00, $00, $03, $01, $01, $01, $01, $00, $00, $04, $00, $00
     db $0F, $4D, $00, $18, $04, $00, $78, $04, $00, $72, $0E, $00, $82, $0F, $03, $00
     db $0A, $00, $00, $9E, $0C, $00, $AC, $06, $00, $84, $0F, $13, $00, $14, $0F, $1D
     db $00, $06, $00, $00, $10, $1F, $11, $00, $08, $0F, $0D
 
 ; LZSS-compressed asset: 68 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5178:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom07_Y1X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_5178:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5178, $44
 
 ; LZSS-compressed asset: 82 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_51BC:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom08_Y2X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_51BC:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B51BC, $52
 
 ; LZSS-compressed asset: 68 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_520E:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom0B_Y2X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_520E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B520E, $44
 
 ; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5252:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom10_Y2X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_5252:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5252, $4C
 
 ; LZSS-compressed asset: 98 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_529E:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom10_Y2X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_529E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B529E, $62
 
 ; LZSS-compressed asset: 94 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5300:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom11_Y1X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_5300:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5300, $5E
 
 ; LZSS-compressed asset: 88 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_535E:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom16_Y2X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_535E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B535E, $58
 
 ; LZSS-compressed asset: 103 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -144,11 +162,13 @@ Data_06D_5571:: ; heuristic: key-world screen map found by tiling a gap after an
     INCBIN "dwm2-cobi-us.gbc", $1B5571, $4E
 
 ; LZSS-compressed asset: 96 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_55BF:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom29_Y1X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_55BF:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B55BF, $60
 
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_561F:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom30_Y1X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_561F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B561F, $4A
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 1 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
@@ -171,35 +191,43 @@ Data_06D_59F6:: ; address name
     dw $0000, $0000, $0000, $0000 ; entry 7
 
 ; LZSS-compressed asset: 162 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5A36:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom01_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5A36:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5A36, $A2
 
 ; LZSS-compressed asset: 193 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5AD8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom06_Y1X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5AD8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5AD8, $C1
 
 ; LZSS-compressed asset: 235 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5B99:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom08_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5B99:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5B99, $EB
 
 ; LZSS-compressed asset: 236 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5C84:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom08_Y0X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5C84:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5C84, $EC
 
 ; LZSS-compressed asset: 242 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5D70:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom1D_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5D70:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5D70, $F2
 
 ; LZSS-compressed asset: 237 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5E62:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom09_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5E62:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5E62, $ED
 
 ; LZSS-compressed asset: 236 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_5F4F:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom0A_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_5F4F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B5F4F, $EC
 
 ; LZSS-compressed asset: 237 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_603B:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom0A_Y0X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_603B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B603B, $ED
 
 ; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -227,46 +255,56 @@ Data_06D_6558:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $1B6558, $BB
 
 ; LZSS-compressed asset: 244 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6613:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom06_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_6613:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6613, $F4
 
 ; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6707:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom05_Y0X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_6707:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6707, $C0
 
 ; LZSS-compressed asset: 68 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_67C7:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom01_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_67C7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B67C7, $44
 
 ; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_680B:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom06_Y1X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_680B:: ; address name
     db $68, $01, $00, $02, $00, $00, $0F, $42, $03, $03, $01, $01, $01, $01, $03, $03
     db $00, $4A, $0F, $07, $00, $58, $00, $00, $5A, $00, $00, $7E, $02, $00, $78, $02
     db $00, $78, $0F, $07, $00, $9A, $0F, $37, $00, $00, $04, $00, $EC, $08, $00, $F0
     db $0F, $4D, $00, $00, $00
 
 ; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6840:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom08_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_6840:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6840, $4C
 
 ; LZSS-compressed asset: 91 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_688C:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom08_Y0X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_688C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B688C, $5B
 
 ; LZSS-compressed asset: 81 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_68E7:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom1D_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_68E7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B68E7, $51
 
 ; LZSS-compressed asset: 82 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6938:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom09_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_6938:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6938, $52
 
 ; LZSS-compressed asset: 70 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_698A:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom0A_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_698A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B698A, $46
 
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_69D0:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom0A_Y0X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_69D0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B69D0, $4A
 
 ; LZSS-compressed asset: 69 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -294,11 +332,13 @@ Data_06D_6BCC:: ; heuristic: key-world screen map found by tiling a gap after an
     INCBIN "dwm2-cobi-us.gbc", $1B6BCC, $47
 
 ; LZSS-compressed asset: 82 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6C13:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom06_Y1X2_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_6C13:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6C13, $52
 
 ; LZSS-compressed asset: 67 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_6C65:: ; heuristic: key-world room screen attribute map; C0
+KeyWorldRoom05_Y0X1_Attrs:: ; heuristic: key-world room screen attribute map; C0
+Data_06D_6C65:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B6C65, $43
 
 ; compressed BG tiles (2048 bytes, 128 tiles): entry 2 of MapType5TilesetTable, decompressed to vTiles2 by LoadMapType5TilesetAndHeader
@@ -325,35 +365,43 @@ Data_06D_7039:: ; address name
     dw $0000, $0000, $0000, $0000 ; entry 7
 
 ; LZSS-compressed asset: 179 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_7079:: ; heuristic: key-world room screen tile map; C0
+KeyWorldRoom01_Y3X1_Tiles:: ; heuristic: key-world room screen tile map; C0
+Data_06D_7079:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B7079, $B3
 
 ; LZSS-compressed asset: 204 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_712C:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom00_Y3X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_712C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B712C, $CC
 
 ; LZSS-compressed asset: 213 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_71F8:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom02_Y2X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_71F8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B71F8, $D5
 
 ; LZSS-compressed asset: 273 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_72CD:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom03_Y2X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_72CD:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B72CD, $111
 
 ; LZSS-compressed asset: 238 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_73DE:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom08_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_73DE:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B73DE, $EE
 
 ; LZSS-compressed asset: 273 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_74CC:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom09_Y3X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_74CC:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B74CC, $111
 
 ; LZSS-compressed asset: 265 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_75DD:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom0A_Y3X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_75DD:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B75DD, $109
 
 ; LZSS-compressed asset: 233 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_76E6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom0A_Y3X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_76E6:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B76E6, $E9
 
 ; LZSS-compressed asset: 178 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -373,7 +421,8 @@ Data_06D_7A60:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $1B7A60, $D9
 
 ; LZSS-compressed asset: 218 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_7B39:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom8B_Y3X1_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_7B39:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B7B39, $DA
 
 ; LZSS-compressed asset: 213 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -385,6 +434,7 @@ Data_06D_7CE8:: ; heuristic: stream in a run of back-to-back compressed streams;
     INCBIN "dwm2-cobi-us.gbc", $1B7CE8, $DE
 
 ; LZSS-compressed asset: 206 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_06D_7DC6:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+KeyWorldRoom22_Y1X2_Tiles:: ; heuristic: stream in a run of back-to-back compressed streams; C0
+Data_06D_7DC6:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1B7DC6, $CE
     ds $16C, $00
