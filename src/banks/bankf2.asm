@@ -2,7 +2,7 @@ SECTION "Bank F2", ROMX[$4000], BANK[$F2]
     db $F2
 
 ; start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case08)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode8_Init)
 ; reads: wSaveStep, wTextWindowState
 ; writes: wSaveStep, wSaveRecordIndex, hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
 ; points at: wScreenState
@@ -77,7 +77,7 @@ Jump_0F2_4075::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 8
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case08)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode8_Update)
 ; reads: wFadeState, wScreenSubStep, wTextFlags
 GameMode8_Update::
 Func_0F2_40A2:: ; address name
@@ -605,7 +605,7 @@ Func_0F2_43C3:: ; address name
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_BankF2, DebugMessageTest_Update_Case1E)
+; 2 call sites from 2 routines (e.g. ShowString_BankF2, DebugMessageTest_Update_ToBeginStringDisplay_BankF2)
 BeginStringDisplay_BankF2::
 Func_0F2_43D0:: ; address name
     ld de, StringCategories_F2_43E5

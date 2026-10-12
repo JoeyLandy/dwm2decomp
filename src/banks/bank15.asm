@@ -2,7 +2,7 @@ SECTION "Bank 15", ROMX[$4000], BANK[$15]
     db $15
 
 ; implements script command type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode; reached through ScriptCommandEE in bank $10 (E-0038, E-0244)
-; 4 call sites from 4 routines (e.g. CloseRenameMenu_Case00, ScriptCommandEE, CloseMenuE9_Case01, CloseMenuE9_Case03)
+; 4 call sites from 4 routines (e.g. CloseRenameMenu_ToCloseBreedMenu, ScriptCommandEE, CloseMenuE9_ToCloseBreedMenu, CloseMenuE9_Case03)
 ; reads: wScreenList
 CloseBreedMenu::
 Func_015_4001:: ; address name
@@ -151,7 +151,7 @@ Jump_015_40D3::
     ret
 
 ; implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244)
-; 27 call sites from 27 routines (e.g. EggServiceMenu_Case05_Case00, NpcBreedMenu_Case04_Case00, NpcBreedMenu_Case04_Case0C, NpcBreedMenu_Case11_Case02, ...)
+; 27 call sites from 27 routines (e.g. EggServiceMenu_Case05_ToBreedMenu, NpcBreedMenu_Case04_ToBreedMenu, NpcBreedMenu_Case04_Case0C, NpcBreedMenu_Case11_ToBreedMenu, ...)
 ; reads: wScreenState
 BreedMenu::
 Func_015_40FA:: ; address name
@@ -159,7 +159,7 @@ Func_015_40FA:: ; address name
     rst $00
     dw BreedMenu_Case00
     dw BreedMenu_Case01
-    dw BreedMenu_Case02
+    dw BreedMenu_ToHandleThreeOptionMenuInput_15
     dw BreedMenu_Case03
     dw BreedMenu_Case04
     dw BreedMenu_Case05
@@ -309,7 +309,7 @@ Jump_015_41BD:: ; address name
 
 ; entry 2 of the `rst $00` table in BreedMenu
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case02::
+BreedMenu_ToHandleThreeOptionMenuInput_15::
 Jump_015_41E1:: ; address name
     call HandleThreeOptionMenuInput_15
     ret
@@ -2558,7 +2558,7 @@ Jump_015_50FB:: ; address name
     ret
 
 ; clears four tile rows, sets the default window ($8800, $1202) and wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. BreedMenu_Case0F_Case02)
+; 1 call site from 1 routine (e.g. BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
@@ -3378,7 +3378,7 @@ Jump_015_56B0:: ; address name
     dw BreedMenu_Case07_Case0B
     dw BreedMenu_Case07_Case0C
     dw BreedMenu_Case07_Case0D
-    dw BreedMenu_Case07_Case0E
+    dw BreedMenu_Case07_ToDrawRecordListPageNames
     dw BreedMenu_Case07_Case0F
     dw BreedMenu_Case07_Case10
     dw BreedMenu_Case07_Case11
@@ -3965,7 +3965,7 @@ Jump_015_5ACA:: ; address name
 
 ; entry 14 of the `rst $00` table in BreedMenu_Case07
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case07_Case0E::
+BreedMenu_Case07_ToDrawRecordListPageNames::
 Jump_015_5AF5:: ; address name
     farcall DrawRecordListPageNames
     ret
@@ -4745,7 +4745,7 @@ Jump_015_6028:: ; address name
     rst $00
     dw BreedMenu_Case0F_Case00
     dw BreedMenu_Case0F_Case01
-    dw BreedMenu_Case0F_Case02
+    dw BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep
     dw BreedMenu_Case05_Case0D
     dw BreedMenu_Case0F_Case04
     dw LoadTile4990AndRun6320
@@ -4788,7 +4788,7 @@ Jump_015_6063:: ; address name
 
 ; entry 2 of the `rst $00` table in BreedMenu_Case0F
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case0F_Case02::
+BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep::
 Jump_015_6070:: ; address name
     call ClearTileRowsAndResetWindowAndStep
     ret
@@ -4971,7 +4971,7 @@ Jump_015_61B6:: ; address name
     dw BreedMenu_Case0F_Case00
     dw BreedMenu_Case0F_Case01
     dw BreedMenu_Case10_Case02
-    dw BreedMenu_Case07_Case0E
+    dw BreedMenu_Case07_ToDrawRecordListPageNames
     dw BreedMenu_Case07_Case0F
     dw BreedMenu_Case07_Case10
     dw BreedMenu_Case07_Case11
@@ -5081,7 +5081,7 @@ Jump_015_625C:: ; address name
     dw BreedMenu_Case12_Case03
     dw BreedMenu_Case12_Case04
     dw BreedMenu_Case05_Case0A
-    dw BreedMenu_Case12_Case06
+    dw BreedMenu_Case12_ToDrawRecordListPageNames
     dw BreedMenu_Case12_Case07
     dw BreedMenu_Case04_Case1C
     dw BreedMenu_Case12_Case09
@@ -5163,7 +5163,7 @@ Jump_015_62D9:: ; address name
     dw BreedMenu_Case0F_Case01
     dw BreedMenu_Case11_Case02
     dw BreedMenu_Case12_Case03
-    dw BreedMenu_Case12_Case06
+    dw BreedMenu_Case12_ToDrawRecordListPageNames
     dw BreedMenu_Case04_Case04
     dw BreedMenu_Case04_Case05
     dw BreedMenu_Case04_Case06
@@ -5227,7 +5227,7 @@ Jump_015_6336:: ; address name
 
 ; entry 6 of the `rst $00` table in BreedMenu_Case12
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case12_Case06::
+BreedMenu_Case12_ToDrawRecordListPageNames::
 Jump_015_6359:: ; address name
     farcall DrawRecordListPageNames
     ret
@@ -5424,7 +5424,7 @@ Func_015_645F:: ; address name
     ret
 
 ; up/down moves wD786 over three options with sound $69; A chooses (option 2 cancels), sets wTwoChoiceCursor and requests script $80; B cancels (E-0129)
-; 2 call sites from 2 routines (e.g. BreedMenu_Case02, EggServiceMenu_Case02)
+; 2 call sites from 2 routines (e.g. BreedMenu_ToHandleThreeOptionMenuInput_15, EggServiceMenu_Case02)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wThreeOptionResult, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, ...
 HandleThreeOptionMenuInput_15::

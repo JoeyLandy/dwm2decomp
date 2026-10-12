@@ -2660,7 +2660,7 @@ Func_012_4FEA:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw Talk00Event09_Case00
-    dw Talk00Event09_Case01
+    dw Talk00Event09_ToScriptStepFlashScreenNegative
     dw Talk00Event09_Case02
     dw Talk00Event09_Case03
     dw Talk00Event09_Case04
@@ -2780,7 +2780,7 @@ Jump_012_5080::
 
 ; entry 1 of the `rst $00` table in Talk00Event09
 ; no direct call (reached through a table, a jump or a vector)
-Talk00Event09_Case01::
+Talk00Event09_ToScriptStepFlashScreenNegative::
 Jump_012_5090:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -3836,7 +3836,7 @@ Func_012_5854:: ; address name
     dw Talk09Event00_Case00
     dw Talk09Event00_Case01
     dw Talk09Event00_Case02
-    dw Talk09Event00_Case03
+    dw Talk09Event00_ToScriptStepFlashScreenNegative
     dw Talk09Event00_Case04
     dw Talk09Event00_Case05
     dw Talk09Event00_Case06
@@ -3953,7 +3953,7 @@ Jump_012_58E4:: ; address name
 
 ; entry 3 of the `rst $00` table in Talk09Event00
 ; no direct call (reached through a table, a jump or a vector)
-Talk09Event00_Case03::
+Talk09Event00_ToScriptStepFlashScreenNegative::
 Jump_012_58EF:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -4402,7 +4402,7 @@ Jump_012_5B8C::
     ret
 
 ; wScriptParam1 = wScriptParam0 / 6 (capped at 4), draws the script sprite, and advances wScriptStep after $1E frames (E-0125)
-; 1 call site from 1 routine (e.g. SceneStrongestMaster_Case02)
+; 1 call site from 1 routine (e.g. SceneStrongestMaster_ToScriptStepAnimateSpriteBySteps)
 ; reads: wScriptParam0
 ; writes: wScriptParam1
 ; points at: wScriptStep
@@ -4493,7 +4493,7 @@ Func_012_5BD9:: ; address name
     ret
 
 ; QueueSoundEffect $83, then wScriptStep += 1 (E-0114)
-; 1 call site from 1 routine (e.g. SceneStrongestMaster_Case01)
+; 1 call site from 1 routine (e.g. SceneStrongestMaster_ToPlaySound83AndAdvanceScriptStep)
 ; points at: wScriptStep
 PlaySound83AndAdvanceScriptStep::
 Func_012_5C27:: ; address name
@@ -5481,7 +5481,7 @@ Jump_012_61D7::
     ret
 
 ; script step: first frame sets the follower targets from the leader; later frames step the followers until the wC921 counter reaches $11, then advances wScriptStep (E-0122)
-; 7 call sites from 7 routines (e.g. SceneWallExit_Case04, SceneKamehaFlees_Case00, SceneKamehaStole_Case00, GatherFollowers_Case00, ...)
+; 7 call sites from 7 routines (e.g. SceneWallExit_ToScriptStepMoveFollowersToLeader, SceneKamehaFlees_Case00, SceneKamehaStole_ToScriptStepMoveFollowersToLeader, GatherFollowers_Case00, ...)
 ; reads: wScriptParam0
 ; points at: wScriptParam0, wScriptStep
 ScriptStepMoveFollowersToLeader::
@@ -6060,7 +6060,7 @@ Jump_012_6504::
     ret
 
 ; for 30 frames alternates every 4 frames between the normal palettes and their inverse (DMG palettes $D2/$E2 and $2D/$1D), then advances wScriptStep (E-0127)
-; 7 call sites from 7 routines (e.g. SceneThreeItems_Case21, SceneShield_Case01, SceneExplosion_Case07, Talk00Event09_Case01, ...)
+; 7 call sites from 7 routines (e.g. SceneThreeItems_ToScriptStepFlashScreenNegative, SceneShield_ToScriptStepFlashScreenNegative, SceneExplosion_Case07, Talk00Event09_ToScriptStepFlashScreenNegative, ...)
 ; reads: wScriptParam0, wIsCGB
 ; writes: wBGPaletteUploadRequest, wScriptParam0
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wScriptStep

@@ -9,7 +9,7 @@ Func_01E_4001:: ; address name
     ld a, [wScreenList]
     rst $00
     dw CloseMenuE9_Case00
-    dw CloseMenuE9_Case01
+    dw CloseMenuE9_ToCloseBreedMenu
     dw CloseMenuE9_Case02
     dw CloseMenuE9_Case03
 
@@ -44,7 +44,7 @@ Jump_01E_402B::
 
 ; entry 1 of the `rst $00` table in CloseMenuE9
 ; no direct call (reached through a table, a jump or a vector)
-CloseMenuE9_Case01::
+CloseMenuE9_ToCloseBreedMenu::
 Jump_01E_403F:: ; address name
     farcall CloseBreedMenu
     ret
@@ -148,14 +148,14 @@ SwapMonstersMenu_Case01::
 Jump_01E_40D1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case01_Case00
+    dw SwapMonstersMenu_Case01_ToSetupTileMap6D84AtBGMap1
     dw SwapMonstersMenu_Case01_Case01
     dw SwapMonstersMenu_Case01_Case02
     dw SwapMonstersMenu_Case01_Case03
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case01_Case00::
+SwapMonstersMenu_Case01_ToSetupTileMap6D84AtBGMap1::
 Jump_01E_40DD:: ; address name
     farcall SetupTileMap6D84AtBGMap1
     ret
@@ -2481,7 +2481,7 @@ Jump_01E_506C:: ; address name
     dw SwapMonstersMenu_Case04_Case21
     dw SwapMonstersMenu_Case06_Case13
     dw SwapMonstersMenu_Case06_Case14
-    dw SwapMonstersMenu_Case06_Case15
+    dw SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame
     dw SwapMonstersMenu_Case06_Case16
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case06_Case18
@@ -2939,7 +2939,7 @@ Jump_01E_540F:: ; address name
 
 ; entry 21 of the `rst $00` table in SwapMonstersMenu_Case06
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case06_Case15::
+SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame::
 Jump_01E_5429:: ; address name
     farcall LoadTileList6DC4SixPerFrame
     ret
@@ -3262,7 +3262,7 @@ Jump_01E_568E:: ; address name
     dw SwapMonstersMenu_Case04_Case20
     dw SwapMonstersMenu_Case04_Case21
     dw SwapMonstersMenu_Case04_Case30
-    dw SwapMonstersMenu_Case06_Case15
+    dw SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame
     dw SwapMonstersMenu_Case06_Case16
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case06_Case18

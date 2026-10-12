@@ -2,7 +2,7 @@ SECTION "Bank 37", ROMX[$4000], BANK[$37]
     db $37
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 17 call sites from 17 routines (e.g. DebugMessageTest_Update_Case10, PauseMenu_Items_Case02_Case07, PauseMenu_Items_Case02_Case09, PauseMenu_Items_Case02_Case0B, ...)
+; 17 call sites from 17 routines (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank37, PauseMenu_Items_Case02_Case07, PauseMenu_Items_Case02_Case09, PauseMenu_Items_Case02_Case0B, ...)
 BeginStringDisplay_Bank37::
 Func_037_4001:: ; address name
     ld de, StringCategories_37_4016
@@ -2082,18 +2082,18 @@ Jump_037_531D:: ; address name
     rst $00
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case00
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
     dw RunLinkSession5Exchange_Case01_Sub01_Case04_Case04
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case06
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case07
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
 
 ; entry 2 of the `rst $00` table in Func_037_4AFD_Case11
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession5Exchange_Case01_Sub01_Case11_Case02::
+RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu::
 Jump_037_5335:: ; address name
     farcall BreedMenu
     ret
@@ -2195,7 +2195,7 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case02
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case03
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case05
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case06
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case07
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
@@ -2319,7 +2319,7 @@ Jump_037_5471:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case05::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps::
 Jump_037_547F:: ; address name
     farcall DrawWCA36MonsterPictureInTwoSteps
     ret

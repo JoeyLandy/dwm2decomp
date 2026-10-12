@@ -2,7 +2,7 @@ SECTION "Bank 03", ROMX[$4000], BANK[$03]
     db $03
 
 ; start-up for wGameMode = 2; forcing this mode on the emulator shows: monster status panel (incomplete when forced) (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case02)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode2_Init)
 ; writes: wDataBankSave, wTextCursorLo, wTextCursorHi
 GameMode2_Init::
 Func_003_4001:: ; address name
@@ -17,7 +17,7 @@ Func_003_4001:: ; address name
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 2
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case02)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode2_Update)
 ; reads: wGameMode2State, wModeState, wIsCGB, hScrollY, hScrollX, wScriptTemp4, wStoryFlags, wSpriteSlotCount
 ; writes: wSpriteSlotCount, wBGPaletteUploadRequest, rVBK, hScrollX, hScrollY, wMenuSelectedMember, wMenuCursor, wSubMenuCursor, ...
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wGameMode2State, wTemp0, wWorkBuf
@@ -532,7 +532,7 @@ Func_003_432F:: ; address name
     ret
 
 ; clears the object flag bits, saves the player position to wC8C8/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
-; 12 call sites from 12 routines (e.g. PauseMenu_Main_Case04, PauseMenu_State3_Case00_Case01, PauseMenu_State3_Case01_Case06, PauseMenu_State3_Case01_Case01, ...)
+; 12 call sites from 12 routines (e.g. PauseMenu_Main_ToExitPauseMenuToField, PauseMenu_State3_Case00_Case01, PauseMenu_State3_Case01_Case06, PauseMenu_State3_Case01_Case01, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, rRAMG, wBGPaletteUploadRequest, wFieldInitStage, wGameMode
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wFieldInitStage
@@ -1173,7 +1173,7 @@ Jump_003_4692:: ; address name
     dw PauseMenu_Main_Case01
     dw PauseMenu_Main_Case02
     dw PauseMenu_Main_Case03
-    dw PauseMenu_Main_Case04
+    dw PauseMenu_Main_ToExitPauseMenuToField
 
 ; entry 0 of the `rst $00` table in PauseMenu_Main
 ; no direct call (reached through a table, a jump or a vector)
@@ -1606,7 +1606,7 @@ Jump_003_48EA::
 
 ; entry 4 of the `rst $00` table in PauseMenu_Main
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Main_Case04::
+PauseMenu_Main_ToExitPauseMenuToField::
 Jump_003_48EB:: ; address name
     call ExitPauseMenuToField
     ret
@@ -3897,7 +3897,7 @@ Jump_003_572D:: ; address name
     dw PauseMenu_Items_Case03_Case03
     dw PauseMenu_Items_Case03_Case04
     dw PauseMenu_Items_Case03_Case05
-    dw PauseMenu_Items_Case03_Case06
+    dw PauseMenu_Items_Case03_ToResetInventoryMenuToFirstPage
 
 ; entry 0 of the `rst $00` table in PauseMenu_Items_Case03
 ; no direct call (reached through a table, a jump or a vector)
@@ -4039,7 +4039,7 @@ Jump_003_580A:: ; address name
 
 ; entry 6 of the `rst $00` table in PauseMenu_Items_Case03
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Items_Case03_Case06::
+PauseMenu_Items_Case03_ToResetInventoryMenuToFirstPage::
 Jump_003_581A:: ; address name
     call ResetInventoryMenuToFirstPage
     ret
@@ -4856,7 +4856,7 @@ Data_003_5E40:: ; heuristic: target of a monotone pointer table; C0
     ds $24, $C3
 
 ; wMenuPage = 0, wC46E = 0, sets up the inventory pages, clamps the page, runs Func_003_592E and clears wC0A0/1 (E-0124)
-; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_Case01, PauseMenu_Items_Case02_Case21, PauseMenu_Items_Case02_Case0A, PauseMenu_Items_Case03_Case06, ...)
+; 5 call sites from 5 routines (e.g. PauseMenu_State4_Sub01_Case01, PauseMenu_Items_Case02_Case21, PauseMenu_Items_Case02_Case0A, PauseMenu_Items_Case03_ToResetInventoryMenuToFirstPage, ...)
 ; writes: wMenuPage, wMenuCursor, wTemp0, wTemp1
 ; points at: wMenuPage
 ResetInventoryMenuToFirstPage::

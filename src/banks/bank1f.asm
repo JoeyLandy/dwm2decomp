@@ -510,7 +510,7 @@ Data_01F_51FE:: ; address name
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case17)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1F)
 BeginStringDisplay_Bank1F::
 Func_01F_520E:: ; address name
     ld de, StringCategories_1F_5223
@@ -1247,7 +1247,7 @@ Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_Case20, BreedMenu_Case04_Case03, BreedMenu_Case07_Case0E, BreedMenu_Case12_Case06, ...)
+; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_ToDrawRecordListPageNames, BreedMenu_Case04_Case03, BreedMenu_Case07_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries
@@ -2207,7 +2207,7 @@ Data_01F_73CC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
 ; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case05, RunScreenStateWhenNotFading_F1_Case0D_Case05)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps, RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA36MonsterPictureInTwoSteps)
 ; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
 DrawWCA36MonsterPictureInTwoSteps::

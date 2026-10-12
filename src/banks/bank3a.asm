@@ -5108,7 +5108,7 @@ Data_03A_6107:: ; address name
     db $96, $FF ; id 39
 
 ; battle fight step 3: returns while a message is being drawn; in link mode calls Func_03A_4ADB; otherwise one of 6 sub-steps by wBattleSubPhase, which execute the chosen actions through RunBattleResolveStep
-; 2 call sites from 2 routines (e.g. BattleFight_Step3, RunBattlePhaseWhenTextIdle_A0_Case01_Case03)
+; 2 call sites from 2 routines (e.g. BattleFight_Step3, RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleActions)
 ; reads: wTextFlags, wEffectId, wLinkMode, wBattleSubPhase
 RunBattleActions::
 Func_03A_6157:: ; address name
@@ -5129,7 +5129,7 @@ Jump_03A_6172::
     ld a, [wBattleSubPhase]
     rst $00
     dw RunBattleActions_Case00
-    dw RunBattleActions_Case01
+    dw RunBattleActions_ToRunBattleResolveStep
     dw RunBattleActions_Case02
     dw RunBattleActions_Case03
     dw RunActionSpecificPostStep
@@ -5149,7 +5149,7 @@ Jump_03A_618C:: ; address name
 
 ; entry 1 of the `rst $00` table in RunBattleActions
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case01::
+RunBattleActions_ToRunBattleResolveStep::
 Jump_03A_6193:: ; address name
     farcall RunBattleResolveStep
     ret
@@ -5220,7 +5220,7 @@ Jump_03A_61F4::
     ret
 
 ; after an action: actions $4E/$4F with wDABA clear the actor's wD812 bit 0 (text $81); $B9 clears it (text $86); $D6 stores the actor in wC982; $15 and $D6 jump to resolve step $0E; otherwise wBattleSubPhase += 1 (E-0127)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case04)
+; 1 call site from 1 routine (e.g. RunBattleStep4_ToRunActionSpecificPostStep)
 ; reads: wBattleActionId, wBattleActor, wDefeatFlagsBA
 ; writes: wSavedActorSlot, wSavedActorByte, wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase, wBattleScreenFlags, wBattleStatus6
@@ -6386,7 +6386,7 @@ Jump_03A_68A9::
     jr Jump_03A_6899
 
 ; battle fight step 4: the same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle)
-; 2 call sites from 2 routines (e.g. BattleFight_Step4, RunBattlePhaseWhenTextIdle_A0_Case01_Case04)
+; 2 call sites from 2 routines (e.g. BattleFight_Step4, RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleStep4)
 ; reads: wTextFlags, wEffectId, wLinkMode, wBattleSubPhase
 RunBattleStep4::
 Func_03A_68C9:: ; address name
@@ -6407,10 +6407,10 @@ Jump_03A_68E4::
     ld a, [wBattleSubPhase]
     rst $00
     dw RunBattleStep4_Case00
-    dw RunBattleStep4_Case01
-    dw RunBattleStep4_Case02
+    dw RunBattleStep4_ToRunBattleResolveStep
+    dw RunBattleStep4_ToRunActionResolveStep
     dw RunBattleStep4_Case03
-    dw RunBattleStep4_Case04
+    dw RunBattleStep4_ToRunActionSpecificPostStep
     dw RunBattleStep4_Case05
 
 ; entry 0 of the `rst $00` table in RunBattleStep4
@@ -6422,14 +6422,14 @@ Jump_03A_68F4:: ; address name
 
 ; entry 1 of the `rst $00` table in RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case01::
+RunBattleStep4_ToRunBattleResolveStep::
 Jump_03A_68FB:: ; address name
     farcall RunBattleResolveStep
     ret
 
 ; entry 2 of the `rst $00` table in RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case02::
+RunBattleStep4_ToRunActionResolveStep::
 Jump_03A_6902:: ; address name
     call RunActionResolveStep
     ret
@@ -6480,7 +6480,7 @@ Jump_03A_6940::
 
 ; entry 4 of the `rst $00` table in RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case04::
+RunBattleStep4_ToRunActionSpecificPostStep::
 Jump_03A_6944:: ; address name
     call RunActionSpecificPostStep
     ret
@@ -6557,7 +6557,7 @@ Jump_03A_6984::
     ret
 
 ; runs the routine for wBattleResolveStep (jump table of ten) (E-0122)
-; 2 call sites from 2 routines (e.g. RunBattleStep4_Case02, RunBattleActions_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleStep4_ToRunActionResolveStep, RunBattleActions_Case02)
 ; reads: wBattleResolveStep
 RunActionResolveStep::
 Func_03A_69AA:: ; address name
@@ -6568,7 +6568,7 @@ Func_03A_69AA:: ; address name
     dw RunActionResolveStep_Case02
     dw RunActionResolveStep_Case03
     dw RunActionResolveStep_Case04
-    dw RunActionResolveStep_Case05
+    dw RunActionResolveStep_ToRunBattleSubStep_6662
     dw RunActionResolveStep_Case06
     dw RunActionResolveStep_Case07
     dw RunActionResolveStep_Case08
@@ -6897,7 +6897,7 @@ Jump_03A_6BE8::
 
 ; entry 5 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-RunActionResolveStep_Case05::
+RunActionResolveStep_ToRunBattleSubStep_6662::
 Jump_03A_6BF1:: ; address name
     farcall RunBattleSubStep_6662
     ret
@@ -8480,7 +8480,7 @@ Jump_03A_744F::
     ret
 
 Jump_03A_7465::
-    call BattleTextPrepBE_Sub01
+    call BattleTextPrepBE_ToWriteMonstersWordToTextBuf0
     ld a, $90
     ld [hl+], a
     ld a, $3A
@@ -8905,7 +8905,7 @@ Jump_03A_7784::
 
 Jump_03A_77BE::
     call CopyTargetNameToTextBuf0
-    jr BattleTextPrepBE_Sub01
+    jr BattleTextPrepBE_ToWriteMonstersWordToTextBuf0
 
 ; E = 1: copies the target's name to wC130; otherwise the target side's name followed by the word 'monsters' (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8920,7 +8920,7 @@ Jump_03A_77C8::
 
 ; only called from BattleTextPrepBE (E-0047)
 ; 1 call site from 1 routine (e.g. BattleTextPrepBE)
-BattleTextPrepBE_Sub01::
+BattleTextPrepBE_ToWriteMonstersWordToTextBuf0::
 Func_03A_77CB:: ; address name
     call WriteMonstersWordToTextBuf0
     ret
@@ -9718,7 +9718,7 @@ Jump_03A_7B77::
     ret
 
 ; writes the glyphs of 'Monsters' (decoded with the charmap) and $F0 to wC130 (E-0113)
-; 4 call sites from 4 routines (e.g. BattleText0HookTargetNameAndGroupWord, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE, BattleTextPrepBE_Sub01)
+; 4 call sites from 4 routines (e.g. BattleText0HookTargetNameAndGroupWord, CopyTargetOrSideNameToTextBuf0_784A, CopyTargetOrSideNameToTextBuf0_78DE, BattleTextPrepBE_ToWriteMonstersWordToTextBuf0)
 ; points at: wTextBuf0
 WriteMonstersWordToTextBuf0::
 Func_03A_7B82:: ; address name

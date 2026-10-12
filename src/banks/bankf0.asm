@@ -2,7 +2,7 @@ SECTION "Bank F0", ROMX[$4000], BANK[$F0]
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case15)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001)
 BeginStringDisplay_BankF0_4001::
 Func_0F0_4001:: ; address name
     ld de, StringCategories_F0_4016
@@ -500,7 +500,7 @@ Data_0F0_4887:: ; address name
     db $F9, "0G. OK?", $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_Case18, PauseMenu_State4_Sub02_Case02_Case02, ...)
+; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0, PauseMenu_State4_Sub02_Case02_Case02, ...)
 BeginStringDisplay_BankF0_48A0::
 Func_0F0_48A0:: ; address name
     ld de, StringCategories_F0_48B5
@@ -774,7 +774,7 @@ Jump_0F0_4CB7::
     dw RunLinkSession8Exchange_Case01_Sub01_Case00
     dw RunLinkSession8Exchange_Case01_Sub01_Case01
     dw RunLinkSession8Exchange_Case01_Sub01_Case02
-    dw RunLinkSession8Exchange_Case01_Sub01_Case03
+    dw RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps
     dw RunLinkSession8Exchange_Case01_Sub01_Case04
     dw RunLinkSession8Exchange_Case01_Sub01_Case05
     dw RunLinkSession8Exchange_Case01_Sub01_Case06
@@ -1304,7 +1304,7 @@ Jump_0F0_4FBB:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession8Exchange_Case01_Sub01_Case03::
+RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps::
 Jump_0F0_4FED:: ; address name
     call RunLinkSession8Case03Steps
     ret
@@ -3274,7 +3274,7 @@ RunLinkSession8Case01Steps::
 Func_0F0_5B50:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession8Case01Steps_Case00
+    dw RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame
     dw RunLinkSession8Case01Steps_Case01
     dw RunLinkSession8Case01Steps_Case02
     dw RunLinkSession8Case01Steps_Case03
@@ -3287,7 +3287,7 @@ Func_0F0_5B50:: ; address name
 
 ; entry 0 of the `rst $00` table in RunLinkSession8Case01Steps
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession8Case01Steps_Case00::
+RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame::
 Jump_0F0_5B68:: ; address name
     farcall LoadTileList6DC4SixPerFrame
     ret
@@ -3597,7 +3597,7 @@ Func_0F0_5DDD:: ; address name
     ret
 
 ; runs the routine for wD781 (jump table of seventeen) (E-0124)
-; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Case03)
+; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps)
 ; reads: wScreenStep
 RunLinkSession8Case03Steps::
 Func_0F0_5DE8:: ; address name

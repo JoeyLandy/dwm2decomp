@@ -3624,7 +3624,7 @@ Jump_032_55E7:: ; address name
     ret
 
 ; in link battles with rules on: an action forbidden by the wD044/wD045 rules (Data_032_5688) ends the battle with music 2 and a message for the side that broke it (E-0128)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case00_Sub01_Case06)
+; 1 call site from 1 routine (e.g. RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation)
 ; reads: wLinkMode, wLinkRules, wDefeatFlagsBA, wBattleActionId, wBattleActor, wLinkRole, wDataBankSave
 ; writes: wBattleScene, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
 ; points at: wBattleResolveStep, wLinkRuleWork57, wBattleInitByte58
@@ -3887,7 +3887,7 @@ Func_032_5820:: ; address name
     dw RunBattleStep4_Case00_Sub01_Case03
     dw RunBattleStep4_Case00_Sub01_Case04
     dw RunBattleStep4_Case00_Sub01_Case05
-    dw RunBattleStep4_Case00_Sub01_Case06
+    dw RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation
     dw RunBattleStep4_Case00_Sub01_Case07
 
 ; entry 0 of the `rst $00` table in Func_032_5820
@@ -4177,7 +4177,7 @@ Jump_032_59C1:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_032_5820
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case00_Sub01_Case06::
+RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation::
 Jump_032_59CB:: ; address name
     call CheckLinkRuleViolation
     ret
@@ -5425,7 +5425,7 @@ Jump_032_61C6::
     ret
 
 ; wBattleSubStep2 = 0, wBattleSubStep = 1 (E-0071)
-; 3 call sites from 3 routines (e.g. SkipTurnIfActorAbsent, ResolveStep0EEffect_Case04_Case03, ResolveStep0EEffect_Case09_Case03)
+; 3 call sites from 3 routines (e.g. SkipTurnIfActorAbsent, ResolveStep0EEffect_Case04_ToSetBattleSubStep1, ResolveStep0EEffect_Case09_ToSetBattleSubStep1)
 ; writes: wBattleSubStep2, wBattleSubStep
 SetBattleSubStep1::
 Func_032_61D9:: ; address name
@@ -5445,7 +5445,7 @@ Jump_032_61E3:: ; address name
     dw ResolveStep0EEffect_Case04_Case00
     dw ResolveStep0EEffect_Case04_Case01
     dw ResolveStep0EEffect_Case04_Case02
-    dw ResolveStep0EEffect_Case04_Case03
+    dw ResolveStep0EEffect_Case04_ToSetBattleSubStep1
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect_Case04
 ; no direct call (reached through a table, a jump or a vector)
@@ -5600,7 +5600,7 @@ Jump_032_62B8::
 
 ; entry 3 of the `rst $00` table in ResolveStep0EEffect_Case04
 ; no direct call (reached through a table, a jump or a vector)
-ResolveStep0EEffect_Case04_Case03::
+ResolveStep0EEffect_Case04_ToSetBattleSubStep1::
 Jump_032_62CB:: ; address name
     call SetBattleSubStep1
     ret
@@ -5874,7 +5874,7 @@ Jump_032_643D:: ; address name
     dw ResolveStep0EEffect_Case09_Case00
     dw ResolveStep0EEffect_Case09_Case01
     dw ResolveStep0EEffect_Case09_Case02
-    dw ResolveStep0EEffect_Case09_Case03
+    dw ResolveStep0EEffect_Case09_ToSetBattleSubStep1
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect_Case09
 ; no direct call (reached through a table, a jump or a vector)
@@ -6079,7 +6079,7 @@ Jump_032_656A::
 
 ; entry 3 of the `rst $00` table in ResolveStep0EEffect_Case09
 ; no direct call (reached through a table, a jump or a vector)
-ResolveStep0EEffect_Case09_Case03::
+ResolveStep0EEffect_Case09_ToSetBattleSubStep1::
 Jump_032_657D:: ; address name
     call SetBattleSubStep1
     ret
@@ -6227,7 +6227,7 @@ Func_032_6622:: ; address name
     ret
 
 ; runs the routine for wBattleSubStep (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. RunActionResolveStep_Case05)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_ToRunBattleSubStep_6662)
 ; reads: wBattleSubStep
 RunBattleSubStep_6662::
 Func_032_6662:: ; address name
@@ -6423,7 +6423,7 @@ Func_032_6755:: ; address name
     ret
 
 ; runs the routine for wBattleSubStep2 (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_Case09)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764)
 ; reads: wBattleSubStep2
 RunBattleSubStep2_6764::
 Func_032_6764:: ; address name

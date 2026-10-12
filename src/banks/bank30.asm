@@ -13,7 +13,7 @@ Func_030_4001:: ; address name
     rst $00
     dw RunBattleCommandEntry_Case00
     dw RunBattleCommandEntry_Case01
-    dw RunBattleCommandEntry_Case02
+    dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_Case03
     dw RunBattleCommandEntry_Case04
     dw RunBattleCommandEntry_Case05
@@ -167,7 +167,7 @@ Jump_030_40E2::
 
 ; entry 2 of the `rst $00` table in RunBattleCommandEntry
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleCommandEntry_Case02::
+RunBattleCommandEntry_ToRunCommandEntryResolveStep::
 Jump_030_40E3:: ; address name
     call RunCommandEntryResolveStep
     ret
@@ -634,7 +634,7 @@ Jump_030_43BF::
     ret
 
 ; runs the routine for wBattleResolveStep (jump table of four) (E-0122)
-; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case02, RunBattleCommandEntry_BankA1_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_ToRunCommandEntryResolveStep, RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep)
 ; reads: wBattleResolveStep
 RunCommandEntryResolveStep::
 Func_030_43C4:: ; address name

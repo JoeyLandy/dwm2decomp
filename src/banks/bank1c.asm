@@ -1188,7 +1188,7 @@ Jump_01C_46F4:: ; address name
     rst $00
     dw ShopMenu_Case01_Case00
     dw ShopMenu_Case01_Case01
-    dw ShopMenu_Case01_Case02
+    dw ShopMenu_Case01_ToInitItemListScreenListAndCount
     dw ShopMenu_Case01_Case03
     dw ShopMenu_Case01_Case04
 
@@ -1211,7 +1211,7 @@ Jump_01C_4706:: ; address name
 
 ; entry 2 of the `rst $00` table in ShopMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-ShopMenu_Case01_Case02::
+ShopMenu_Case01_ToInitItemListScreenListAndCount::
 Jump_01C_4710:: ; address name
     call InitItemListScreenListAndCount
     ret
@@ -6561,7 +6561,7 @@ Jump_01C_6A14::
     ret
 
 ; copies $28 bytes from Data_01C_5F5E to wD788, runs Func_01C_4395, counts the inventory items into wD7B0 and its digits into wD7A5/6, wD781 += 1 (E-0125)
-; 2 call sites from 2 routines (e.g. ShopMenu_Case01_Case02, VaultMenu_Case01_Case04)
+; 2 call sites from 2 routines (e.g. ShopMenu_Case01_ToInitItemListScreenListAndCount, VaultMenu_Case01_ToInitItemListScreenListAndCount)
 ; reads: wDigits
 ; writes: wListPages, wItemCountTens, wItemCountOnes
 ; points at: wScreenList, wScreenBlock92, wInventory, wScreenStep
@@ -6753,7 +6753,7 @@ Jump_01C_6B38::
     rst $00
     dw ShopMenu_Shared01_Case00
     dw ShopMenu_Shared01_Case01
-    dw ShopMenu_Shared01_Case02
+    dw ShopMenu_Shared01_ToStepItemDescriptionText
     dw ShopMenu_Shared01_Case03
 
 ; entry 0 of the `rst $00` table in Func_01C_6AF7
@@ -6814,7 +6814,7 @@ Jump_01C_6BF1:: ; address name
     ld a, [wTextCounter0]
     inc a
     ld [wTextCounter0], a
-    jp ShopMenu_Shared01_Case02
+    jp ShopMenu_Shared01_ToStepItemDescriptionText
     db $C9
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
@@ -6829,7 +6829,7 @@ Data_01C_6C0C:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-ShopMenu_Shared01_Case02::
+ShopMenu_Shared01_ToStepItemDescriptionText::
 Jump_01C_6C70:: ; address name
     farcall StepItemDescriptionText
     ret
@@ -7003,7 +7003,7 @@ Jump_01C_6D4D:: ; address name
     dw VaultMenu_Case01_Case01
     dw VaultMenu_Case01_Case02
     dw VaultMenu_Case01_Case03
-    dw VaultMenu_Case01_Case04
+    dw VaultMenu_Case01_ToInitItemListScreenListAndCount
     dw VaultMenu_Case01_Case05
 
 ; entry 0 of the `rst $00` table in VaultMenu_Case01
@@ -7075,7 +7075,7 @@ Jump_01C_6D8B:: ; address name
 
 ; entry 4 of the `rst $00` table in VaultMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Case01_Case04::
+VaultMenu_Case01_ToInitItemListScreenListAndCount::
 Jump_01C_6DC7:: ; address name
     call InitItemListScreenListAndCount
     ret
@@ -7291,7 +7291,7 @@ Jump_01C_6F27:: ; address name
     dw VaultMenu_Case03_Case02
     dw VaultMenu_Case03_Case03
     dw VaultMenu_Case03_Case04
-    dw VaultMenu_Case03_Case05
+    dw VaultMenu_Case03_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Case03_Case06
     dw VaultMenu_Case03_Case07
     dw VaultMenu_Case03_Case08
@@ -7303,9 +7303,9 @@ Jump_01C_6F27:: ; address name
     dw VaultMenu_Case03_Case0E
     dw VaultMenu_Case03_Case0F
     dw VaultMenu_Case03_Case10
-    dw VaultMenu_Case03_Case11
+    dw VaultMenu_Case03_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Case03_Case12
-    dw VaultMenu_Case03_Case13
+    dw VaultMenu_Case03_ToVaultMenu_Shared02
     dw VaultMenu_Case03_Case14
     dw VaultMenu_Case03_Case15
     dw ClearRect147AndAskTwoChoice
@@ -7379,7 +7379,7 @@ Jump_01C_6F9A:: ; address name
 
 ; entry 5 of the `rst $00` table in VaultMenu_Case03
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Case03_Case05::
+VaultMenu_Case03_ToDrawRect0088AtBGMap1370AndStep::
 Jump_01C_6FB5:: ; address name
     farcall DrawRect0088AtBGMap1370AndStep
     ret
@@ -7658,14 +7658,14 @@ Jump_01C_7132:: ; address name
 
 ; entry 17 of the `rst $00` table in VaultMenu_Case03
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Case03_Case11::
+VaultMenu_Case03_ToDrawRect0147AndResetNumberEditPos::
 Jump_01C_715C:: ; address name
     farcall DrawRect0147AndResetNumberEditPos
     ret
 
 ; entry 19 of the `rst $00` table in VaultMenu_Case03
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Case03_Case13::
+VaultMenu_Case03_ToVaultMenu_Shared02::
 Jump_01C_7163:: ; address name
     farcall VaultMenu_Shared02
     ret
@@ -7785,7 +7785,7 @@ Jump_01C_720E:: ; address name
     dw VaultMenu_Case03_Case02
     dw VaultMenu_Case04_Case03
     dw VaultMenu_Case03_Case04
-    dw VaultMenu_Case03_Case05
+    dw VaultMenu_Case03_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Case03_Case06
     dw VaultMenu_Case03_Case07
     dw VaultMenu_Case03_Case08
@@ -7797,9 +7797,9 @@ Jump_01C_720E:: ; address name
     dw VaultMenu_Case03_Case0E
     dw VaultMenu_Case03_Case0F
     dw VaultMenu_Case03_Case10
-    dw VaultMenu_Case03_Case11
+    dw VaultMenu_Case03_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Case03_Case12
-    dw VaultMenu_Case03_Case13
+    dw VaultMenu_Case03_ToVaultMenu_Shared02
     dw VaultMenu_Case03_Case14
     dw VaultMenu_Case04_Case15
     dw ClearRect147AndAskTwoChoice

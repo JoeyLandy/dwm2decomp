@@ -2,7 +2,7 @@ SECTION "Bank 24", ROMX[$4000], BANK[$24]
     db $24
 
 ; start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case06)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode6_Init)
 ; reads: wLinkRules, wBattleScene, wRecordBufA, wTextWindowState, wLinkSceneByte4C, wSaveStep
 ; writes: hScrollY, hScrollX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wBattlerRecords, wTextWindowState, ...
 ; points at: wScreenState
@@ -143,7 +143,7 @@ Jump_024_40EA::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 6
-; 2 call sites from 2 routines (e.g. RunGameModeUpdate_Case06, RunLinkSession8Exchange_Case01_Sub01_Case0A_Case21)
+; 2 call sites from 2 routines (e.g. RunGameModeUpdate_ToGameMode6_Update, RunLinkSession8Exchange_Case01_Sub01_Case0A_Case21)
 ; reads: wFadeState, wTextFlags, wScreenState, wScreenStep, wScreenSubStep
 GameMode6_Update::
 Func_024_4117:: ; address name
@@ -349,7 +349,7 @@ Jump_024_424D:: ; address name
     dw GameMode6_Update_Case02_Case03
     dw GameMode6_Update_Case02_Case04
     dw GameMode6_Update_Case02_Case05
-    dw GameMode6_Update_Case02_Case06
+    dw GameMode6_Update_Case02_ToGameMode6_Update_Shared04
     dw GameMode6_Update_Case02_Case07
     dw GameMode6_Update_Case02_Case08
     dw GameMode6_Update_Case02_Case09
@@ -538,7 +538,7 @@ Jump_024_437D::
 
 ; entry 6 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case02_Case06::
+GameMode6_Update_Case02_ToGameMode6_Update_Shared04::
 Jump_024_4390:: ; address name
     call GameMode6_Update_Shared04
     ret
@@ -850,16 +850,16 @@ GameMode6_Update_Case04::
 Jump_024_4567:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case04_Case00
-    dw GameMode6_Update_Case04_Case00
-    dw GameMode6_Update_Case04_Case00
-    dw GameMode6_Update_Case04_Case00
-    dw GameMode6_Update_Case04_Case04
-    dw GameMode6_Update_Case04_Case04
+    dw GameMode6_Update_Case04_ToBreedMenu
+    dw GameMode6_Update_Case04_ToBreedMenu
+    dw GameMode6_Update_Case04_ToBreedMenu
+    dw GameMode6_Update_Case04_ToBreedMenu
+    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case04_Case06
     dw GameMode6_Update_Case04_Case07
     dw GameMode6_Update_Case04_Case08
-    dw GameMode6_Update_Case04_Case04
+    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case04_Case0A
     dw GameMode6_Update_Case04_Case0B
     dw GameMode6_Update_Case04_Case0C
@@ -867,14 +867,14 @@ Jump_024_4567:: ; address name
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case04_Case00::
+GameMode6_Update_Case04_ToBreedMenu::
 Jump_024_4587:: ; address name
     farcall BreedMenu
     ret
 
 ; entry 4 of the `rst $00` table in GameMode6_Update_Case04
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case04_Case04::
+GameMode6_Update_Case04_ToEggServiceMenu_Bank1B::
 Jump_024_458E:: ; address name
     farcall EggServiceMenu_Bank1B
     ret
@@ -1839,10 +1839,10 @@ Jump_024_4C18:: ; address name
     dw GameMode6_Update_Case0F_Case00
     dw GameMode6_Update_Case0F_Case01
     dw GameMode6_Update_Case0F_Case02
-    dw GameMode6_Update_Case0F_Case03
-    dw GameMode6_Update_Case0F_Case03
+    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_Case05
-    dw GameMode6_Update_Case0F_Case03
+    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_Case07
 
 ; entry 0 of the `rst $00` table in GameMode6_Update_Case0F
@@ -1942,7 +1942,7 @@ Jump_024_4CD2:: ; address name
 
 ; entry 3 of the `rst $00` table in GameMode6_Update_Case0F
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case0F_Case03::
+GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B::
 Jump_024_4CE3:: ; address name
     farcall EggServiceMenu_Bank1B
     ret
@@ -2106,7 +2106,7 @@ Func_024_4DA8:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_Case01, GameMode6_Update_Case02_Case06, GameMode6_Update_Case02_Case02, GameMode6_Update_Case03_Case03, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_Case01, GameMode6_Update_Case02_ToGameMode6_Update_Shared04, GameMode6_Update_Case02_Case02, GameMode6_Update_Case03_Case03, ...)
 ; reads: wBattleScene
 ; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
@@ -4067,7 +4067,7 @@ Data_024_5D0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2B, $01, $6B, $01
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank24, DebugMessageTest_Update_Case1B)
+; 2 call sites from 2 routines (e.g. ShowString_Bank24, DebugMessageTest_Update_ToBeginStringDisplay_Bank24)
 BeginStringDisplay_Bank24::
 Func_024_5D10:: ; address name
     ld de, StringCategories_24_5D25
@@ -6103,7 +6103,7 @@ Data_024_6F4E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
     INCBIN "dwm2-cobi-us.gbc", $092F4E, $F7
 
 ; draws the next glyph of the description of the item at wD7D5[4 * wD7B6 + wD7B5] (text table Data_024_7158), handling the $F0 and $F1 control bytes (E-0131)
-; 1 call site from 1 routine (e.g. ShopMenu_Shared01_Case02)
+; 1 call site from 1 routine (e.g. ShopMenu_Shared01_ToStepItemDescriptionText)
 ; reads: wTextCounter6, wScreenState, wItemGridY, wItemGridX, wTextCounter2, wTextCounter1, wCursorBlinkB8, wTextCounter4, ...
 ; writes: wCursorBlinkB8, wTextCounter2, wTextCounter1, wTextCounter3, wTextCounter4, wTextCounter0
 ; points at: wItemGrid

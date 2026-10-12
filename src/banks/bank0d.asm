@@ -2,7 +2,7 @@ SECTION "Bank 0D", ROMX[$4000], BANK[$0D]
     db $0D
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank0D, DebugMessageTest_Update_Case19, KeyAppraisalMenu_Case03_Case0B)
+; 3 call sites from 3 routines (e.g. ShowString_Bank0D, DebugMessageTest_Update_ToBeginStringDisplay_Bank0D, KeyAppraisalMenu_Case03_Case0B)
 BeginStringDisplay_Bank0D::
 Func_00D_4001:: ; address name
     ld de, StringCategories_0D_4016
@@ -328,7 +328,7 @@ Data_00D_45CB:: ; address name
     db "Darck", $F0
 
 ; implements script command type EF (SCRIPT_EGG_SERVICE): egg appraisal and blessing: 'Which egg should I appraise?', 'Which egg should I bless?' (mode 6, bank $F2 strings); reached through ScriptCommandEF in bank $10 (E-0038, E-0244)
-; 2 call sites from 2 routines (e.g. RenameMenu_Case00, ScriptCommandEF)
+; 2 call sites from 2 routines (e.g. RenameMenu_ToEggServiceMenu, ScriptCommandEF)
 ; reads: wScreenState
 EggServiceMenu::
 Func_00D_45D1:: ; address name
@@ -554,21 +554,21 @@ EggServiceMenu_Case05::
 Jump_00D_4710:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
     dw EggServiceMenu_Case05_Case06
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
     dw EggServiceMenu_Case05_Case0C
-    dw EggServiceMenu_Case05_Case00
-    dw EggServiceMenu_Case05_Case00
+    dw EggServiceMenu_Case05_ToBreedMenu
+    dw EggServiceMenu_Case05_ToBreedMenu
     dw EggServiceMenu_Case05_Case0F
     dw DrawBox5022WithPageIndicator
     dw EggServiceMenu_Case05_Case11
@@ -576,7 +576,7 @@ Jump_00D_4710:: ; address name
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Case05_Case00::
+EggServiceMenu_Case05_ToBreedMenu::
 Jump_00D_473A:: ; address name
     farcall BreedMenu
     ret
@@ -2143,14 +2143,14 @@ CloseRenameMenu::
 Func_00D_50E5:: ; address name
     ld a, [wScreenList]
     rst $00
-    dw CloseRenameMenu_Case00
+    dw CloseRenameMenu_ToCloseBreedMenu
     dw CloseRenameMenu_Case01
-    dw CloseRenameMenu_Case00
-    dw CloseRenameMenu_Case00
+    dw CloseRenameMenu_ToCloseBreedMenu
+    dw CloseRenameMenu_ToCloseBreedMenu
 
 ; entry 0 of the `rst $00` table in CloseRenameMenu
 ; no direct call (reached through a table, a jump or a vector)
-CloseRenameMenu_Case00::
+CloseRenameMenu_ToCloseBreedMenu::
 Jump_00D_50F1:: ; address name
     farcall CloseBreedMenu
     ret
@@ -2209,7 +2209,7 @@ RenameMenu::
 Func_00D_5159:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw RenameMenu_Case00
+    dw RenameMenu_ToEggServiceMenu
     dw RenameMenu_Case01
     dw RenameMenu_Case02
     dw RenameMenu_Case03
@@ -2219,7 +2219,7 @@ Func_00D_5159:: ; address name
 
 ; entry 0 of the `rst $00` table in RenameMenu
 ; no direct call (reached through a table, a jump or a vector)
-RenameMenu_Case00::
+RenameMenu_ToEggServiceMenu::
 Jump_00D_516B:: ; address name
     farcall EggServiceMenu
     ret
@@ -6860,23 +6860,23 @@ NpcBreedMenu_Case04::
 Jump_00D_7159:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_Case04
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_Case09
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_Case0C
-    dw NpcBreedMenu_Case04_Case00
-    dw NpcBreedMenu_Case04_Case00
+    dw NpcBreedMenu_Case04_ToBreedMenu
+    dw NpcBreedMenu_Case04_ToBreedMenu
     dw RunFunc4ED5At0278AndStep_0D
-    dw NpcBreedMenu_Case04_Case00
+    dw NpcBreedMenu_Case04_ToBreedMenu
     dw NpcBreedMenu_Case04_Case11
     dw NpcBreedMenu_Case04_Case12
     dw NpcBreedMenu_Case04_Case13
@@ -6891,7 +6891,7 @@ Jump_00D_7159:: ; address name
 
 ; entry 0 of the `rst $00` table in NpcBreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
-NpcBreedMenu_Case04_Case00::
+NpcBreedMenu_Case04_ToBreedMenu::
 Jump_00D_7195:: ; address name
     farcall BreedMenu
     ret
@@ -7457,18 +7457,18 @@ Jump_00D_7578:: ; address name
     rst $00
     dw NpcBreedMenu_Case11_Case00
     dw NpcBreedMenu_Case11_Case01
-    dw NpcBreedMenu_Case11_Case02
-    dw NpcBreedMenu_Case11_Case02
-    dw NpcBreedMenu_Case11_Case02
+    dw NpcBreedMenu_Case11_ToBreedMenu
+    dw NpcBreedMenu_Case11_ToBreedMenu
+    dw NpcBreedMenu_Case11_ToBreedMenu
     dw NpcBreedMenu_Case04_Case04
     dw NpcBreedMenu_Case11_Case06
     dw NpcBreedMenu_Case11_Case07
-    dw NpcBreedMenu_Case11_Case02
-    dw NpcBreedMenu_Case11_Case02
+    dw NpcBreedMenu_Case11_ToBreedMenu
+    dw NpcBreedMenu_Case11_ToBreedMenu
 
 ; entry 2 of the `rst $00` table in NpcBreedMenu_Case11
 ; no direct call (reached through a table, a jump or a vector)
-NpcBreedMenu_Case11_Case02::
+NpcBreedMenu_Case11_ToBreedMenu::
 Jump_00D_7590:: ; address name
     farcall BreedMenu
     ret

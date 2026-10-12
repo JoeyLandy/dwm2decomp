@@ -1051,7 +1051,7 @@ Data_002_45C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $02, $04, $00, $06
 
 ; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player sprite (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case01)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode1_Init)
 ; reads: hMapId, hMapScreenX, hMapScreenY, wSaveStateFlag, wFieldInitStage
 ; writes: rIF, wSGBPaletteSet, wSGBAttrFile, wFieldTransitionStep, wFieldInitStage, wLCDCShadow
 GameMode1_Init::
@@ -1754,7 +1754,7 @@ Data_002_4AD7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00
 
 ; per-frame routine for wGameMode = 1
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case01)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode1_Update)
 ; reads: wFieldInitStage, wModeState, wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive
 ; writes: wJoypadHeld, wJoypadHeldPrev, wJoypadPressed, wJoypadPressedRepeat, wJoypadRepeatTimer, wFieldFrameFlag, wFieldInitStage
 ; points at: wDMGPaletteBGP, wDMGPaletteBytes, wOBJPaletteBuffer

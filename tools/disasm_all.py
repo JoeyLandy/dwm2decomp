@@ -1322,6 +1322,53 @@ class Rom:
                         pc += n
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
+    def name_trampoline_cases(self) -> None:
+        """E-0270: a structural routine (Parent_CaseNN / _SubNN / _SharedNN) whose whole body is one call or
+        far call and `ret`, or one `jp`, only forwards to that routine; it becomes Parent_To<Target>."""
+        pat = re.compile(r"^(\w+?)_(?:Case|Sub|Shared)[0-9A-F]{2}$")
+        used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+        renamed = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                seq, pc = [], a
+                for _ in range(4):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw":
+                        break
+                    seq.append((pc, v))
+                    if v[2] in ("ret", "jp"):
+                        break
+                    pc += v[0]
+                target = None
+                kinds = [v[2] for _, v in seq]
+                if kinds[:2] == ["call", "ret"] and seq[0][1][3] is not None:
+                    target = self.resolve(b, seq[0][1][3])
+                elif kinds[:1] == ["jp"] and seq[0][1][3] is not None:
+                    target = self.resolve(b, seq[0][1][3])
+                elif len(seq) == 4 and seq[2][1][1] == "rst $10" and kinds[3] == "ret":
+                    hl = next((re.match(r"ld hl, \$([0-9A-F]{4})$", v[1]) for _, v in seq[:2]
+                               if v[1].startswith("ld hl,")), None)
+                    bb = next((re.match(r"ld b, \$([0-9A-F]{2})$", v[1]) for _, v in seq[:2]
+                               if v[1].startswith("ld b,")), None)
+                    if hl and bb:
+                        target = (int(bb.group(1), 16), int(hl.group(1), 16))
+                if not target or not 0 <= target[0] < self.nbanks:
+                    continue
+                tname = self.labels[target[0]].get(target[1])
+                if not tname or tname.startswith(("Func_", "Jump_")) or pat.match(tname) and tname.startswith(m.group(1)):
+                    continue
+                new = f"{m.group(1)}_To{tname}"
+                if new in used or len(new) > 80:
+                    continue
+                used.add(new)
+                self.labels[b][a] = new
+                renamed += 1
+        log(f"trampoline cases named after their target: {renamed}")
+
     def rename_address_prefixed_children(self) -> None:
         """E-0245: structural names (`_CaseNN`, `_SubNN`, `_SharedNN`) are derived before
         name_single_caller_helpers names some parents, so their children keep the parent's address
@@ -3948,6 +3995,7 @@ class Rom:
             log(f"code entries from structured tables: {n}")
 
     def run(self) -> None:
+        self.config_name_keys = set(self.names)  # names config/names.json gives (E-0270 leaves them alone)
         for v in VECTORS:
             self.add_entry(0, v, "Func")
         for b, a, why in getattr(self, "code_entries", []):  # config/code_entries.json (E-0175)
@@ -4003,6 +4051,7 @@ class Rom:
         self.build_xrefs()
         self.name_single_caller_helpers()
         self.rename_address_prefixed_children()
+        self.name_trampoline_cases()
         log(f"cross-references: {len(self.callers)} routines are called, "
             f"{sum(len(v) for v in self.callers.values())} call sites")
 

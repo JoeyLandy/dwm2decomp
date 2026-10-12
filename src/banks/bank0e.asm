@@ -794,7 +794,7 @@ Data_00E_5350:: ; address name
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank0E, DebugMessageTest_Update_Case1D, ShowStringIndexA_Bank37, BeginString_Bank0E_Cat0)
+; 4 call sites from 4 routines (e.g. ShowString_Bank0E, DebugMessageTest_Update_ToBeginStringDisplay_Bank0E, ShowStringIndexA_Bank37, BeginString_Bank0E_Cat0)
 BeginStringDisplay_Bank0E::
 Func_00E_5370:: ; address name
     ld de, StringCategories_0E_5385

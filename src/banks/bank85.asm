@@ -1796,9 +1796,9 @@ Func_085_4B0F:: ; address name
     dw SceneWatchOut_Case01
     dw SceneLimboMonster2_Case03
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster2_Case05
-    dw SceneLimboMonster2_Case05
-    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_Case08
     dw SceneLimboMonster2_Case09
     dw SceneLimboMonster2_Case09
@@ -1966,9 +1966,9 @@ Func_085_4C24:: ; address name
     dw SceneWatchOut_Case01
     dw SceneLimboMonster_Case03
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster2_Case05
-    dw SceneLimboMonster2_Case05
-    dw SceneLimboMonster2_Case05
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
+    dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_Case08
     dw SceneLimboMonster_Case09
     dw SceneLimboMonster_Case09
@@ -2107,7 +2107,7 @@ Jump_085_4D03::
 
 ; entry 5 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
-SceneLimboMonster2_Case05::
+SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
 Jump_085_4D29:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret

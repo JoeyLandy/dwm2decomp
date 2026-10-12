@@ -2836,18 +2836,18 @@ Jump_0F1_525E:: ; address name
     rst $00
     dw RunScreenStateWhenNotFading_F1_Case11_Case00
     dw ShowString0EAndStep_BankF1
-    dw RunScreenStateWhenNotFading_F1_Case11_Case02
-    dw RunScreenStateWhenNotFading_F1_Case11_Case02
-    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_Case04_Case04
     dw RunScreenStateWhenNotFading_F1_Case11_Case06
     dw RunScreenStateWhenNotFading_F1_Case11_Case07
-    dw RunScreenStateWhenNotFading_F1_Case11_Case02
-    dw RunScreenStateWhenNotFading_F1_Case11_Case02
+    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
 
 ; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
 ; no direct call (reached through a table, a jump or a vector)
-RunScreenStateWhenNotFading_F1_Case11_Case02::
+RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu::
 Jump_0F1_5276:: ; address name
     farcall BreedMenu
     ret
@@ -2930,7 +2930,7 @@ Jump_0F1_52D8:: ; address name
     dw RunScreenStateWhenNotFading_F1_Case0D_Case02
     dw RunScreenStateWhenNotFading_F1_Case0D_Case03
     dw RunScreenStateWhenNotFading_F1_Case0D_Case04
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case05
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA36MonsterPictureInTwoSteps
     dw RunScreenStateWhenNotFading_F1_Case0D_Case06
     dw RunScreenStateWhenNotFading_F1_Case0D_Case07
     dw RunScreenStateWhenNotFading_F1_Case0D_Case08
@@ -3045,7 +3045,7 @@ Jump_0F1_5379:: ; address name
 
 ; entry 5 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunScreenStateWhenNotFading_F1_Case0D_Case05::
+RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA36MonsterPictureInTwoSteps::
 Jump_0F1_5387:: ; address name
     farcall DrawWCA36MonsterPictureInTwoSteps
     ret

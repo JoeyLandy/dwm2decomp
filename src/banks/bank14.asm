@@ -198,14 +198,14 @@ HibernateMenu_Case01::
 Jump_014_412B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case01_Case00
+    dw HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1
     dw HibernateMenu_Case01_Case01
     dw HibernateMenu_Case01_Case02
     dw HibernateMenu_Case01_Case03
 
 ; entry 0 of the `rst $00` table in HibernateMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-HibernateMenu_Case01_Case00::
+HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1::
 Jump_014_4137:: ; address name
     farcall SetupTileMap6D84AtBGMap1
     ret
@@ -697,7 +697,7 @@ Jump_014_4446:: ; address name
     dw HibernateMenu_Case05_Case00
     dw ClearTilesAndDrawRect5B36AndStep
     dw HibernateMenu_Case05_Case1F
-    dw HibernateMenu_Case05_Case20
+    dw HibernateMenu_Case05_ToDrawRecordListPageNames
     dw HibernateMenu_Case05_Case21
     dw HibernateMenu_Case05_Case05
     dw HibernateMenu_Case05_Case23
@@ -1676,7 +1676,7 @@ Jump_014_4BDB::
 
 ; entry 32 of the `rst $00` table in HibernateMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
-HibernateMenu_Case05_Case20::
+HibernateMenu_Case05_ToDrawRecordListPageNames::
 Jump_014_4BE3:: ; address name
     farcall DrawRecordListPageNames
     ret
@@ -1907,7 +1907,7 @@ Jump_014_4D64:: ; address name
     dw HibernateMenu_Case05_Case00
     dw ClearTilesAndDrawRect5B36AndStep
     dw HibernateMenu_Case05_Case1F
-    dw HibernateMenu_Case05_Case20
+    dw HibernateMenu_Case05_ToDrawRecordListPageNames
     dw HibernateMenu_Case05_Case21
     dw HibernateMenu_Case05_Case05
     dw HibernateMenu_Case05_Case23
@@ -1958,7 +1958,7 @@ Jump_014_4D64:: ; address name
     dw HibernateMenu_Case05_Case00
     dw ClearTilesAndDrawRect5B36AndStep
     dw HibernateMenu_Case05_Case1F
-    dw HibernateMenu_Case05_Case20
+    dw HibernateMenu_Case05_ToDrawRecordListPageNames
     dw HibernateMenu_Case05_Case21
     dw HibernateMenu_Case05_Case05
     dw HibernateMenu_Case05_Case23
@@ -2898,7 +2898,7 @@ Jump_014_5492:: ; address name
     dw HibernateMenu_Case05_Case00
     dw ClearTilesAndDrawRect5B36AndStep
     dw HibernateMenu_Case05_Case1F
-    dw HibernateMenu_Case05_Case20
+    dw HibernateMenu_Case05_ToDrawRecordListPageNames
     dw HibernateMenu_Case06_Case04
     dw HibernateMenu_Case05_Case05
     dw HibernateMenu_Case05_Case23

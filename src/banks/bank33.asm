@@ -3709,7 +3709,7 @@ Data_033_6438:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, DebugMessageTest_Update_Case1A)
+; 2 call sites from 2 routines (e.g. ShowString_Bank33_649E, DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490)
 BeginStringDisplay_Bank33_6490::
 Func_033_6490:: ; address name
     ld de, StringCategories_33_64A5
@@ -4123,7 +4123,7 @@ Data_033_6FD6:: ; address name
     db $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, DebugMessageTest_Update_Case1F, ShowStringAInDefaultWindow_Bank24)
+; 3 call sites from 3 routines (e.g. ShowString_Bank33_7045, DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037, ShowStringAInDefaultWindow_Bank24)
 BeginStringDisplay_Bank33_7037::
 Func_033_7037:: ; address name
     ld de, StringCategories_33_704C

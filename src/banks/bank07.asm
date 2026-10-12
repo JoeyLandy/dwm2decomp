@@ -2,7 +2,7 @@ SECTION "Bank 07", ROMX[$4000], BANK[$07]
     db $07
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 20 call sites from 20 routines (e.g. ShowString_Bank07, DebugMessageTest_Update_Case0E, ShowStringHL_Bank07, RunGameMode5Case01SubStates_Case01, ...)
+; 20 call sites from 20 routines (e.g. ShowString_Bank07, DebugMessageTest_Update_ToBeginStringDisplay_Bank07, ShowStringHL_Bank07, RunGameMode5Case01SubStates_Case01, ...)
 BeginStringDisplay_Bank07::
 Func_007_4001:: ; address name
     ld de, $4016
@@ -527,7 +527,7 @@ Data_007_482A:: ; address name
     db $F0
 
 ; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case05)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode5_Init)
 ; reads: wModeState
 ; writes: wTextCursorLo, wTextCursorHi, wLinkReady
 ; points at: wMenuState, wTextWindowTileLo, wLinkScreenState
@@ -1501,7 +1501,7 @@ Jump_007_4F38::
     ret
 
 ; per-frame routine for wGameMode = 5
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case05)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode5_Update)
 ; reads: wModeState
 GameMode5_Update::
 Func_007_4F7B:: ; address name
@@ -5008,7 +5008,7 @@ Func_007_6C12:: ; address name
     dw RunLinkSession4ScreenState_Case04
     dw RunLinkSession4ScreenState_Case05
     dw RunLinkSession4ScreenState_Case06
-    dw RunLinkSession4ScreenState_Case07
+    dw RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B
     dw RunLinkSession4ScreenState_Case08
 
 ; entry 0 of the `rst $00` table in RunLinkSession4ScreenState
@@ -7483,7 +7483,7 @@ Jump_007_7AC2:: ; address name
 
 ; entry 7 of the `rst $00` table in RunLinkSession4ScreenState
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession4ScreenState_Case07::
+RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B::
 Jump_007_7ACD:: ; address name
     farcall EggServiceMenu_Bank1B
     ret

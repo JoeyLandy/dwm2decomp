@@ -274,7 +274,7 @@ Jump_0A1_413D::
     ret
 
 ; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_Case02)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleCommandEntry_BankA1)
 ; reads: wTextFlags, wBattleSubPhase
 RunBattleCommandEntry_BankA1::
 Func_0A1_413F:: ; address name
@@ -285,7 +285,7 @@ Func_0A1_413F:: ; address name
     rst $00
     dw RunBattleCommandEntry_BankA1_Case00
     dw RunBattleCommandEntry_BankA1_Case01
-    dw RunBattleCommandEntry_BankA1_Case02
+    dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_BankA1_Case03
     dw RunBattleCommandEntry_BankA1_Case04
     dw RunBattleCommandEntry_BankA1_Case05
@@ -376,7 +376,7 @@ Jump_0A1_41C2::
 
 ; entry 2 of the `rst $00` table in RunBattleCommandEntry_BankA1
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleCommandEntry_BankA1_Case02::
+RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep::
 Jump_0A1_41C3:: ; address name
     farcall RunCommandEntryResolveStep
     ret
@@ -953,7 +953,7 @@ Func_0A1_4519:: ; address name
     dw RunGameMode2State_Case00
     dw RunGameMode2State_Case04
     dw RunGameMode2State_Case05
-    dw RunGameMode2State_Case06
+    dw RunGameMode2State_ToEnterGameMode1WithDefaultPalettes
 
 ; entry 4 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
@@ -2887,7 +2887,7 @@ Jump_0A1_50AE::
 
 ; entry 6 of the `rst $00` table in RunGameMode2State
 ; no direct call (reached through a table, a jump or a vector)
-RunGameMode2State_Case06::
+RunGameMode2State_ToEnterGameMode1WithDefaultPalettes::
 Jump_0A1_50BB:: ; address name
     call EnterGameMode1WithDefaultPalettes
     ret
@@ -4179,7 +4179,7 @@ Data_0A1_5808:: ; address name
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 11
 
 ; wC5E0 = 3, wDataBankSave = $40, far-calls Func_002_4628, sets the default DMG palette bytes ($D2, $D2, $E2) and wGameMode = 1 (E-0118)
-; 1 call site from 1 routine (e.g. RunGameMode2State_Case06)
+; 1 call site from 1 routine (e.g. RunGameMode2State_ToEnterGameMode1WithDefaultPalettes)
 ; writes: wFieldInitStage, wDataBankSave, wGameMode
 ; points at: wDMGPaletteBGP
 EnterGameMode1WithDefaultPalettes::

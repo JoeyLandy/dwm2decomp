@@ -493,101 +493,101 @@ Jump_05F_6A07::
     ld [wStringCategory], a
     ld a, h
     rst $00
-    dw ShowMessageHL_Case00
-    dw ShowMessageHL_Case01
-    dw ShowMessageHL_Case02
-    dw ShowMessageHL_Case03
-    dw ShowMessageHL_Case04
-    dw ShowMessageHL_Case05
-    dw ShowMessageHL_Case06
-    dw ShowMessageHL_Case06
-    dw ShowMessageHL_Case08
-    dw ShowMessageHL_Case09
-    dw ShowMessageHL_Case09
-    dw ShowMessageHL_Case0B
-    dw ShowMessageHL_Case0C
-    dw ShowMessageHL_Case0D
+    dw ShowMessageHL_ToBeginStringDisplay_Bank28
+    dw ShowMessageHL_ToBeginStringDisplay_Bank29
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2A
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2B
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2C
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2D
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2E
+    dw ShowMessageHL_ToBeginStringDisplay_Bank2E
+    dw ShowMessageHL_ToBeginStringDisplay_Bank7C
+    dw ShowMessageHL_ToBeginStringDisplay_Bank80
+    dw ShowMessageHL_ToBeginStringDisplay_Bank80
+    dw ShowMessageHL_ToBeginStringDisplay_Bank82
+    dw ShowMessageHL_ToBeginStringDisplay_Bank86
+    dw ShowMessageHL_ToBeginStringDisplay_Bank89
 
 ; entry 0 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case00::
+ShowMessageHL_ToBeginStringDisplay_Bank28::
 Jump_05F_6A31:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
 ; entry 1 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case01::
+ShowMessageHL_ToBeginStringDisplay_Bank29::
 Jump_05F_6A38:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 2 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case02::
+ShowMessageHL_ToBeginStringDisplay_Bank2A::
 Jump_05F_6A3F:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 3 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case03::
+ShowMessageHL_ToBeginStringDisplay_Bank2B::
 Jump_05F_6A46:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 4 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case04::
+ShowMessageHL_ToBeginStringDisplay_Bank2C::
 Jump_05F_6A4D:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 5 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case05::
+ShowMessageHL_ToBeginStringDisplay_Bank2D::
 Jump_05F_6A54:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 6 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case06::
+ShowMessageHL_ToBeginStringDisplay_Bank2E::
 Jump_05F_6A5B:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 8 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case08::
+ShowMessageHL_ToBeginStringDisplay_Bank7C::
 Jump_05F_6A62:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 9 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case09::
+ShowMessageHL_ToBeginStringDisplay_Bank80::
 Jump_05F_6A69:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case0B::
+ShowMessageHL_ToBeginStringDisplay_Bank82::
 Jump_05F_6A70:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case0C::
+ShowMessageHL_ToBeginStringDisplay_Bank86::
 Jump_05F_6A77:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
 ; entry 13 of the `rst $00` table in ShowMessageHL
 ; no direct call (reached through a table, a jump or a vector)
-ShowMessageHL_Case0D::
+ShowMessageHL_ToBeginStringDisplay_Bank89::
 Jump_05F_6A7E:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
@@ -1717,7 +1717,7 @@ Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $02, $00, $01, $FF, $02, $FF, $01, $FF, $01, $FE, $01, $FF, $00, $FE, $00
 
 ; runs the routine for wC92D (jump table of eight) (E-0122)
-; 2 call sites from 2 routines (e.g. SceneCheerYuna_Case0F, SceneMonsterInspection_Case07)
+; 2 call sites from 2 routines (e.g. SceneCheerYuna_ToRunScriptSubStep, SceneMonsterInspection_ToRunScriptSubStep)
 ; reads: wScriptSubStep
 RunScriptSubStep::
 Func_05F_70D2:: ; address name
@@ -2123,7 +2123,7 @@ Jump_05F_7345:: ; address name
     ret
 
 ; runs the routine for wC92D (jump table of eighteen) (E-0124)
-; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case0C, SceneShield2_Case12, SceneMermaidKingdom_Case2D, SceneRivalDefeated_Case1F)
+; 4 call sites from 4 routines (e.g. SceneDarckDefeated_ToRunSceneScriptSubStep, SceneShield2_ToRunSceneScriptSubStep, SceneMermaidKingdom_ToRunSceneScriptSubStep, SceneRivalDefeated_ToRunSceneScriptSubStep)
 ; reads: wScriptSubStep
 RunSceneScriptSubStep::
 Func_05F_7363:: ; address name

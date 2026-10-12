@@ -520,7 +520,7 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_Case06
     dw RunBattleActions_Case08_Sub01_Case07
     dw RunBattleActions_Case08_Sub01_Case08
-    dw RunBattleActions_Case08_Sub01_Case09
+    dw RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764
     dw RunBattleActions_Case08_Sub01_Case0A
     dw RunBattleActions_Case08_Sub01_Case0B
     dw RunBattleActions_Case08_Sub01_Case0C
@@ -957,7 +957,7 @@ Jump_03B_459E::
 
 ; entry 9 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case08_Sub01_Case09::
+RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764::
 Jump_03B_459F:: ; address name
     farcall RunBattleSubStep2_6764
     ret

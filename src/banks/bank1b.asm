@@ -563,12 +563,12 @@ RunLinkSession1Exchange::
 Func_01B_43FA:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession1Exchange_Case00
+    dw RunLinkSession1Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession1Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession1Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession1Exchange_Case00::
+RunLinkSession1Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_4402:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -612,12 +612,12 @@ RunLinkSession2Exchange::
 Func_01B_4431:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession2Exchange_Case00
+    dw RunLinkSession2Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession2Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession2Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession2Exchange_Case00::
+RunLinkSession2Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_4439:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -661,12 +661,12 @@ RunLinkSession3Exchange::
 Func_01B_4468:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession3Exchange_Case00
+    dw RunLinkSession3Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession3Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession3Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession3Exchange_Case00::
+RunLinkSession3Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_4470:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -710,12 +710,12 @@ RunLinkSession4Exchange::
 Func_01B_449F:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession4Exchange_Case00
+    dw RunLinkSession4Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession4Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession4Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession4Exchange_Case00::
+RunLinkSession4Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_44A7:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -759,12 +759,12 @@ RunLinkSession5Exchange::
 Func_01B_44D6:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession5Exchange_Case00
+    dw RunLinkSession5Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession5Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession5Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession5Exchange_Case00::
+RunLinkSession5Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_44DE:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -808,12 +808,12 @@ RunLinkSession6Exchange::
 Func_01B_450D:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession6Exchange_Case00
+    dw RunLinkSession6Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession6Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession6Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession6Exchange_Case00::
+RunLinkSession6Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_4515:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -857,12 +857,12 @@ RunLinkSession7Exchange::
 Func_01B_4544:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession7Exchange_Case00
+    dw RunLinkSession7Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession7Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession7Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession7Exchange_Case00::
+RunLinkSession7Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_454C:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -906,12 +906,12 @@ RunLinkSession8Exchange::
 Func_01B_457B:: ; address name
     ld a, [wLinkExchangeState]
     rst $00
-    dw RunLinkSession8Exchange_Case00
+    dw RunLinkSession8Exchange_ToLinkSendStepWithBuffer
     dw RunLinkSession8Exchange_Case01
 
 ; entry 0 of the `rst $00` table in RunLinkSession8Exchange
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession8Exchange_Case00::
+RunLinkSession8Exchange_ToLinkSendStepWithBuffer::
 Jump_01B_4583:: ; address name
     call LinkSendStepWithBuffer
     ret
@@ -1068,7 +1068,7 @@ Jump_01B_4676::
     ret
 
 ; link: sends $F9 when not connected; otherwise reads the received byte, polls the joypad and sends the queued byte or the next byte of the transfer buffer wC590 (E-0128)
-; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_Case00, RunLinkSession2Exchange_Case00, RunLinkSession3Exchange_Case00, RunLinkSession4Exchange_Case00, ...)
+; 8 call sites from 8 routines (e.g. RunLinkSession1Exchange_ToLinkSendStepWithBuffer, RunLinkSession2Exchange_ToLinkSendStepWithBuffer, RunLinkSession3Exchange_ToLinkSendStepWithBuffer, RunLinkSession4Exchange_ToLinkSendStepWithBuffer, ...)
 ; reads: wLinkRole, wVBlankFlags, wLinkSendByte, rSB, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, ...
 ; writes: wLinkExchangeState, wSerialReceived, wLinkMessage, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, ...
 ; points at: wLinkBufferCountLo, wVBlankFlags
@@ -1283,7 +1283,7 @@ Jump_01B_47F5::
     ret
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, DebugMessageTest_Update_Case21, BeginString_Bank1B_Cat0, ShowStringA10_Bank1B, ...)
+; 5 call sites from 5 routines (e.g. ShowString_Bank1B_481A, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C, BeginString_Bank1B_Cat0, ShowStringA10_Bank1B, ...)
 BeginStringDisplay_Bank1B_480C::
 Func_01B_480C:: ; address name
     ld de, StringCategories_1B_4821
@@ -1576,7 +1576,7 @@ Data_01B_4C83:: ; address name
     db $F9, $00, $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 4 call sites from 4 routines (e.g. ShowString_Bank1B_4C94, DebugMessageTest_Update_Case16, BreedMenu_Case04_Case2C, BreedMenu_Case04_Case36)
+; 4 call sites from 4 routines (e.g. ShowString_Bank1B_4C94, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86, BreedMenu_Case04_Case2C, BreedMenu_Case04_Case36)
 BeginStringDisplay_Bank1B_4C86::
 Func_01B_4C86:: ; address name
     ld de, StringCategories_1B_4C9B
@@ -5116,7 +5116,7 @@ Jump_01B_6650::
     ret
 
 ; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case07, GameMode6_Update_Case04_Case04, GameMode6_Update_Case0F_Case03, GameMode6_Update_Case0F_Case07)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_Case07)
 ; reads: wScreenState
 EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
@@ -5366,7 +5366,7 @@ Jump_01B_679D::
     ret
 
 ; for the record at WD789 cell 5: draws its graphics (Func_01B_7460 with wD7F1 = $C7), copies two rectangles to wC434 and wC440, draws its details at wC443 (Func_01B_7487) and wD781 += 1 (E-0121)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case03, CallDrawListEntriesCell5RecordPanel)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel, CallDrawListEntriesCell5RecordPanel)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
 DrawListEntriesCell5RecordPanel::
@@ -5404,7 +5404,7 @@ Func_01B_67A5:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case04, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearAndDrawListEntriesCell5NameAtTiles1780::
@@ -5427,7 +5427,7 @@ Func_01B_67F0:: ; address name
     ret
 
 ; copies box Data_01B_7757 (10 x 7) or Data_01B_779D (10 x 9, when bit 7 of wD04C is set) to wC36E, then wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case0E_Case05)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7)
 ; reads: wLinkRules, wScreenStep
 ; writes: wScreenStep
 DrawRuleBoxByWD04CBit7::
@@ -6637,9 +6637,9 @@ Jump_01B_6FC4:: ; address name
     dw EggServiceMenu_Bank1B_Case0E_Case00
     dw EggServiceMenu_Bank1B_Case0E_Case01
     dw EggServiceMenu_Bank1B_Case0E_Case02
-    dw EggServiceMenu_Bank1B_Case0E_Case03
-    dw EggServiceMenu_Bank1B_Case0E_Case04
-    dw EggServiceMenu_Bank1B_Case0E_Case05
+    dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
+    dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_Case0E_Case06
     dw EggServiceMenu_Bank1B_Case0E_Case07
 
@@ -6686,9 +6686,9 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_Case0E_Case00
     dw EggServiceMenu_Bank1B_Case0E_Case01
     dw EggServiceMenu_Bank1B_Case0E_Case02
-    dw EggServiceMenu_Bank1B_Case0E_Case03
-    dw EggServiceMenu_Bank1B_Case0E_Case04
-    dw EggServiceMenu_Bank1B_Case0E_Case05
+    dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
+    dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_Case0F_Case06
     dw EggServiceMenu_Bank1B_Case0E_Case07
 
@@ -6751,21 +6751,21 @@ Jump_01B_707E:: ; address name
 
 ; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_Case03::
+EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel::
 Jump_01B_708F:: ; address name
     call DrawListEntriesCell5RecordPanel
     ret
 
 ; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_Case04::
+EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780::
 Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_Case05::
+EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7::
 Jump_01B_7097:: ; address name
     call DrawRuleBoxByWD04CBit7
     ret

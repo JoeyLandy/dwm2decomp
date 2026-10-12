@@ -2431,6 +2431,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0270 — Trampoline cases named after their target
+
+- Kind: TOOL (structural naming from the instructions; C2 for what each does).
+- name_trampoline_cases renames structural routines (Parent_CaseNN / _SubNN / _SharedNN) that only forward: one `call` then `ret`, one `jp`, or a far call (`ld hl` / `ld b` / `rst $10`) then `ret`. The new name is Parent_To<Target>, for example RunGameModeInit_ToGameMode0_Init and DebugMessageTest_Update_ToBeginStringDisplay_Bank28.
+- It skips names from config/names.json, address-named targets, and targets that are siblings in the same family. 163 routines are renamed.
+- Binary verification: build/run351 PASS, 0 differing bytes; tests OK.
+
 ### E-0269 — One-time treasures (script command $0A); a correction to E-0081
 
 - Kind: OBSERVATION (reading plus ROM text; C1). **Correction** to E-0081.

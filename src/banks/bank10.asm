@@ -2036,101 +2036,101 @@ Jump_010_4B2D::
     ld [wStringCategory], a
     ld a, h
     rst $00
-    dw ScriptCommand09_Case01_Sub01_Case00
-    dw ScriptCommand09_Case01_Sub01_Case01
-    dw ScriptCommand09_Case01_Sub01_Case02
-    dw ScriptCommand09_Case01_Sub01_Case03
-    dw ScriptCommand09_Case01_Sub01_Case04
-    dw ScriptCommand09_Case01_Sub01_Case05
-    dw ScriptCommand09_Case01_Sub01_Case06
-    dw ScriptCommand09_Case01_Sub01_Case06
-    dw ScriptCommand09_Case01_Sub01_Case08
-    dw ScriptCommand09_Case01_Sub01_Case09
-    dw ScriptCommand09_Case01_Sub01_Case09
-    dw ScriptCommand09_Case01_Sub01_Case0B
-    dw ScriptCommand09_Case01_Sub01_Case0C
-    dw ScriptCommand09_Case01_Sub01_Case0D
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank28
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank29
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2A
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2B
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2C
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2D
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2E
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2E
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank7C
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank80
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank80
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank82
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank86
+    dw ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank89
 
 ; entry 0 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case00::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank28::
 Jump_010_4B53:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
 ; entry 1 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case01::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank29::
 Jump_010_4B5A:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 2 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case02::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2A::
 Jump_010_4B61:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 3 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case03::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2B::
 Jump_010_4B68:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 4 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case04::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2C::
 Jump_010_4B6F:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 5 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case05::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2D::
 Jump_010_4B76:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 6 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case06::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank2E::
 Jump_010_4B7D:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 8 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case08::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank7C::
 Jump_010_4B84:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 9 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case09::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank80::
 Jump_010_4B8B:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case0B::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank82::
 Jump_010_4B92:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case0C::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank86::
 Jump_010_4B99:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
 ; entry 13 of the `rst $00` table in Func_010_4AD0
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand09_Case01_Sub01_Case0D::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank89::
 Jump_010_4BA0:: ; address name
     farcall BeginStringDisplay_Bank89
     ret

@@ -175,7 +175,7 @@ Func_00F_40E9:: ; address name
     dw SceneHomecoming_Case06
     dw SceneHomecoming_Case07
     dw SceneHomecoming_Case08
-    dw SceneHomecoming_Case09
+    dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
     dw SceneHomecoming_Case0A
     dw SceneHomecoming_Case0A
     dw SceneHomecoming_Case03
@@ -739,7 +739,7 @@ Jump_00F_447A:: ; address name
 
 ; entry 9 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
-SceneHomecoming_Case09::
+SceneHomecoming_ToScriptStepSetObjectBit2AndWait::
 Jump_00F_448C:: ; address name
     farcall ScriptStepSetObjectBit2AndWait
     ret
@@ -929,7 +929,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case09
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_Case0B
-    dw SceneDarckDefeated_Case0C
+    dw SceneDarckDefeated_ToRunSceneScriptSubStep
     dw SceneDarckDefeated_Case0D
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case0F
@@ -2766,7 +2766,7 @@ Jump_00F_50BE:: ; address name
 
 ; entry 12 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
-SceneDarckDefeated_Case0C::
+SceneDarckDefeated_ToRunSceneScriptSubStep::
 Jump_00F_50D2:: ; address name
     farcall RunSceneScriptSubStep
     ret
@@ -3148,7 +3148,7 @@ Func_00F_5404:: ; address name
     dw SceneThreeItems_Case1E
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case20
-    dw SceneThreeItems_Case21
+    dw SceneThreeItems_ToScriptStepFlashScreenNegative
     dw SceneThreeItems_Case22
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Case00
@@ -3371,7 +3371,7 @@ Jump_00F_55A7:: ; address name
 
 ; entry 33 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
-SceneThreeItems_Case21::
+SceneThreeItems_ToScriptStepFlashScreenNegative::
 Jump_00F_55AC:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -3807,7 +3807,7 @@ Func_00F_57EA:: ; address name
     dw SceneShield2_Case0F
     dw SceneHomecoming_Case03
     dw SceneShield2_Case11
-    dw SceneShield2_Case12
+    dw SceneShield2_ToRunSceneScriptSubStep
     dw SceneShield2_Case13
     dw SceneShield2_Case14
     dw SceneHomecoming_Case03
@@ -3885,7 +3885,7 @@ Jump_00F_585B:: ; address name
 
 ; entry 18 of the `rst $00` table in SceneShield2
 ; no direct call (reached through a table, a jump or a vector)
-SceneShield2_Case12::
+SceneShield2_ToRunSceneScriptSubStep::
 Jump_00F_5889:: ; address name
     farcall RunSceneScriptSubStep
     ret
@@ -4139,7 +4139,7 @@ Func_00F_59E6:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneShield_Case00
-    dw SceneShield_Case01
+    dw SceneShield_ToScriptStepFlashScreenNegative
     dw SceneShield_Case02
     dw SceneHomecoming_Case03
     dw SceneShield_Case04
@@ -4288,7 +4288,7 @@ Jump_00F_5A9C::
 
 ; entry 1 of the `rst $00` table in SceneShield
 ; no direct call (reached through a table, a jump or a vector)
-SceneShield_Case01::
+SceneShield_ToScriptStepFlashScreenNegative::
 Jump_00F_5AB2:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -5006,7 +5006,7 @@ Func_00F_5F06:: ; address name
     dw SceneCheerYuna_Case0C
     dw SceneHomecoming_Case03
     dw SceneCheerYuna_Case0E
-    dw SceneCheerYuna_Case0F
+    dw SceneCheerYuna_ToRunScriptSubStep
     dw SceneCheerYuna_Case10
 
 ; entry 16 of the `rst $00` table in SceneCheerYuna
@@ -5022,7 +5022,7 @@ Jump_00F_5F2C:: ; address name
 
 ; entry 15 of the `rst $00` table in SceneCheerYuna
 ; no direct call (reached through a table, a jump or a vector)
-SceneCheerYuna_Case0F::
+SceneCheerYuna_ToRunScriptSubStep::
 Jump_00F_5F36:: ; address name
     farcall RunScriptSubStep
     ret
@@ -5683,9 +5683,9 @@ Func_00F_631F:: ; address name
     dw SceneWallExit_Case01
     dw SceneHomecoming_Case03
     dw SceneWallExit_Case03
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_Case07
     dw SceneWallExit_Case08
     dw SceneWallExit_Case09
@@ -5976,11 +5976,11 @@ Func_00F_64F3:: ; address name
     dw SceneReportToKing_Case06
     dw SceneHomecoming_Case03
     dw SceneReportToKing_Case08
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_Case0A
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_Case0C
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_Case0E
     dw SceneReportToKing_Case0F
     dw SceneReportToKing_Case10
@@ -6243,9 +6243,9 @@ Func_00F_6681:: ; address name
     dw SceneSpiritEnvoy_Case04
     dw SceneReportToKing_Case01
     dw SceneSpiritEnvoy_Case06
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneSpiritEnvoy_Case0A
 
 ; entry 10 of the `rst $00` table in SceneSpiritEnvoy
@@ -6419,9 +6419,9 @@ Func_00F_67BA:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMermaidKingdom_Case00
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
-    dw SceneWallExit_Case04
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
+    dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidKingdom_Case04
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case06
@@ -6463,7 +6463,7 @@ Func_00F_67BA:: ; address name
     dw SceneMermaidKingdom_Case2A
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case2C
-    dw SceneMermaidKingdom_Case2D
+    dw SceneMermaidKingdom_ToRunSceneScriptSubStep
     dw SceneMermaidKingdom_Case2E
     dw SceneMermaidKingdom_Case2F
     dw SceneHomecoming_Case03
@@ -6543,7 +6543,7 @@ Jump_00F_6866:: ; address name
 
 ; entry 45 of the `rst $00` table in SceneMermaidKingdom
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidKingdom_Case2D::
+SceneMermaidKingdom_ToRunSceneScriptSubStep::
 Jump_00F_6894:: ; address name
     farcall RunSceneScriptSubStep
     ret
@@ -7262,7 +7262,7 @@ Jump_00F_6CAB:: ; address name
 
 ; entry 4 of the `rst $00` table in SceneWallExit
 ; no direct call (reached through a table, a jump or a vector)
-SceneWallExit_Case04::
+SceneWallExit_ToScriptStepMoveFollowersToLeader::
 Jump_00F_6D00:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
@@ -8273,7 +8273,7 @@ Func_00F_72D9:: ; address name
     dw SceneRivalDefeated_Case1C
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case1E
-    dw SceneRivalDefeated_Case1F
+    dw SceneRivalDefeated_ToRunSceneScriptSubStep
     dw SceneRivalDefeated_Case20
     dw SceneRivalDefeated_Case21
     dw SceneHomecoming_Case03
@@ -8353,7 +8353,7 @@ Jump_00F_7369:: ; address name
 
 ; entry 31 of the `rst $00` table in SceneRivalDefeated
 ; no direct call (reached through a table, a jump or a vector)
-SceneRivalDefeated_Case1F::
+SceneRivalDefeated_ToRunSceneScriptSubStep::
 Jump_00F_7397:: ; address name
     farcall RunSceneScriptSubStep
     ret
@@ -8924,7 +8924,7 @@ Func_00F_772E:: ; address name
     dw SceneMonsterInspection_Case04
     dw SceneMonsterInspection_Case05
     dw SceneMonsterInspection_Case06
-    dw SceneMonsterInspection_Case07
+    dw SceneMonsterInspection_ToRunScriptSubStep
     dw SceneMonsterInspection_Case08
     dw SceneMonsterInspection_Case09
 
@@ -9052,7 +9052,7 @@ Jump_00F_77F1:: ; address name
 
 ; entry 7 of the `rst $00` table in SceneMonsterInspection
 ; no direct call (reached through a table, a jump or a vector)
-SceneMonsterInspection_Case07::
+SceneMonsterInspection_ToRunScriptSubStep::
 Jump_00F_7806:: ; address name
     farcall RunScriptSubStep
     ret

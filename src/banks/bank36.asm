@@ -2,7 +2,7 @@ SECTION "Bank 36", ROMX[$4000], BANK[$36]
     db $36
 
 ; jumps through a 16-entry table indexed by wBattleResolveStep (wCFCB): one step of resolving a battle action; the steps advance wBattleResolveStep and use wBattleSubStep (wCFCC) and wBattleSubStep2 (wCFCD) for nested state
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case01, RunBattleStep4_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleActions_ToRunBattleResolveStep, RunBattleStep4_ToRunBattleResolveStep)
 ; reads: wBattleResolveStep
 RunBattleResolveStep::
 Func_036_4001:: ; address name

@@ -2,7 +2,7 @@ SECTION "Bank E0", ROMX[$4000], BANK[$E0]
     db $E0
 
 ; runs the routine for wC5FE (jump table of six) (E-0122)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0C)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ToRunDebugSubState_E0)
 ; reads: wDebugSubState
 RunDebugSubState_E0::
 Func_0E0_4001:: ; address name
@@ -515,7 +515,7 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_Case01
     dw RunDebugState_E0_Case02
     dw RunDebugState_E0_Case03
-    dw RunDebugState_E0_Case04
+    dw RunDebugState_E0_ToDrawTileMap4946AndStep
     dw RunDebugState_E0_Case05
     dw RunDebugState_E0_Case06
     dw DrawTileMap4946AndStep
@@ -523,7 +523,7 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_Case09
     dw RunDebugState_E0_Case0A
     dw RunDebugState_E0_Case0B
-    dw RunDebugState_E0_Case0C
+    dw RunDebugState_E0_ToRunDebugSubState_E0
     dw RunDebugState_E0_Case0D
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0
@@ -1001,7 +1001,7 @@ Jump_0E0_4710::
 
 ; entry 4 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugState_E0_Case04::
+RunDebugState_E0_ToDrawTileMap4946AndStep::
 Jump_0E0_4724:: ; address name
     call DrawTileMap4946AndStep
     ret
@@ -1153,7 +1153,7 @@ Jump_0E0_47F9:: ; address name
     ret
 
 ; writes the 20 x 16 tile map $4946 to vBGMap0 + $20, then wC5FD += 1 (E-0124)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case04)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ToDrawTileMap4946AndStep)
 ; points at: wDebugState
 DrawTileMap4946AndStep::
 Func_0E0_4804:: ; address name
@@ -1756,7 +1756,7 @@ Jump_0E0_4C92::
 
 ; entry 12 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugState_E0_Case0C::
+RunDebugState_E0_ToRunDebugSubState_E0::
 Jump_0E0_4C96:: ; address name
     call RunDebugSubState_E0
     ret

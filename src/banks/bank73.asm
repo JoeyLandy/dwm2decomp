@@ -115,7 +115,7 @@ Jump_073_4098:: ; address name
     dw Talk08Event_Case0C_Case02
     dw Talk08Event_Case0B_Case05
     dw Talk08Event_Case0C_Case01
-    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
     dw Talk08Event_Case0B_Case08
     dw Talk08Event_Case0B_Case09
     dw ScriptStepBlinkSpritesThenEnd
@@ -992,7 +992,7 @@ Jump_073_45D0:: ; address name
     dw Talk08Event_Case0C_Case01
     dw Talk08Event_Case08_Case02
     dw Talk08Event_Case08_Case03
-    dw Talk08Event_Case08_Case04
+    dw Talk08Event_Case08_ToScriptStepFlashScreenNegative
     dw Talk08Event_Case08_Case05
     dw Talk08Event_Case0C_Case01
     dw ScriptStepBlinkSpritesThenEnd
@@ -1048,7 +1048,7 @@ Jump_073_4629::
 
 ; entry 4 of the `rst $00` table in Talk08Event_Case08
 ; no direct call (reached through a table, a jump or a vector)
-Talk08Event_Case08_Case04::
+Talk08Event_Case08_ToScriptStepFlashScreenNegative::
 Jump_073_4635:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -2161,7 +2161,7 @@ Jump_073_4D20:: ; address name
     dw Talk08Event_Case0C_Case01
     dw Talk08Event_Case02_Case02
     dw Talk08Event_Case08_Case03
-    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
     dw Talk08Event_Case02_Case05
     dw Talk08Event_Case0B_Case09
     dw Talk08Event_Case0C_Case01
@@ -2311,7 +2311,7 @@ Jump_073_4E03:: ; address name
     rst $00
     dw Talk08Event_Case00_Case00
     dw Talk08Event_Case08_Case03
-    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
     dw Talk08Event_Case0B_Case08
     dw Talk08Event_Case0B_Case09
     dw Talk08Event_Case0C_Case01
@@ -2354,7 +2354,7 @@ Jump_073_4E37::
 
 ; entry 7 of the `rst $00` table in Talk08Event_Case0B
 ; no direct call (reached through a table, a jump or a vector)
-Talk08Event_Case0B_Case07::
+Talk08Event_Case0B_ToScriptStepFlashScreenNegative::
 Jump_073_4E41:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
@@ -3948,9 +3948,9 @@ SceneKamehaStole::
 Func_073_5761:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneKamehaStole_Case00
-    dw SceneKamehaStole_Case00
-    dw SceneKamehaStole_Case00
+    dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
+    dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
+    dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
     dw SceneKamehaStole_Case03
     dw SceneKamehaStole_Case04
     dw SceneKamehaStole_Case05
@@ -4116,7 +4116,7 @@ Jump_073_5845::
 
 ; entry 0 of the `rst $00` table in SceneKamehaStole
 ; no direct call (reached through a table, a jump or a vector)
-SceneKamehaStole_Case00::
+SceneKamehaStole_ToScriptStepMoveFollowersToLeader::
 Jump_073_5873:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
@@ -5595,8 +5595,8 @@ Func_073_6126:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneStrongestMaster_Case00
-    dw SceneStrongestMaster_Case01
-    dw SceneStrongestMaster_Case02
+    dw SceneStrongestMaster_ToPlaySound83AndAdvanceScriptStep
+    dw SceneStrongestMaster_ToScriptStepAnimateSpriteBySteps
     dw SceneStrongestMaster_Case03
 
 ; entry 3 of the `rst $00` table in SceneStrongestMaster
@@ -5650,14 +5650,14 @@ Jump_073_6132:: ; address name
 
 ; entry 2 of the `rst $00` table in SceneStrongestMaster
 ; no direct call (reached through a table, a jump or a vector)
-SceneStrongestMaster_Case02::
+SceneStrongestMaster_ToScriptStepAnimateSpriteBySteps::
 Jump_073_6181:: ; address name
     farcall ScriptStepAnimateSpriteBySteps
     ret
 
 ; entry 1 of the `rst $00` table in SceneStrongestMaster
 ; no direct call (reached through a table, a jump or a vector)
-SceneStrongestMaster_Case01::
+SceneStrongestMaster_ToPlaySound83AndAdvanceScriptStep::
 Jump_073_6188:: ; address name
     farcall PlaySound83AndAdvanceScriptStep
     ret
@@ -7466,9 +7466,9 @@ Func_073_6AFF:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMermaidSong2_Case00
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
     dw SceneMermaidSong2_Case05
     dw Talk0886_NsDancingLuredA
@@ -7533,9 +7533,9 @@ Func_073_6B5B:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMermaidSong2_Case00
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
     dw SceneDancing_Case05
     dw SceneDancing_Case06
@@ -7589,9 +7589,9 @@ Func_073_6B98:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMermaidSong2_Case00
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
-    dw SceneMermaidSong2_Case01
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
+    dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
     dw SceneMermaidSong2_Case05
     dw Talk0886_NsDancingLuredA
@@ -7823,7 +7823,7 @@ Jump_073_6CD1:: ; address name
 
 ; entry 1 of the `rst $00` table in SceneMermaidSong2
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidSong2_Case01::
+SceneMermaidSong2_ToScriptStepMoveFollowersToLeader::
 Jump_073_6D1B:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ret
@@ -7979,7 +7979,7 @@ Func_073_6E17:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMonstersInTow_Case00
-    dw Talk08Event_Case0B_Case07
+    dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
     dw SceneMonstersInTow_Case02
     dw SceneMonstersInTow_Case03
 
@@ -8852,7 +8852,7 @@ Jump_073_733B:: ; address name
     ret
 
 ; sets bit 2 of the objects at wCB9C and wCBAC, wCBCF = $80, runs Func_073_736B and advances wScriptStep once wScriptParam0 is 0 (E-0122)
-; 1 call site from 1 routine (e.g. SceneHomecoming_Case09)
+; 1 call site from 1 routine (e.g. SceneHomecoming_ToScriptStepSetObjectBit2AndWait)
 ; reads: wScriptParam0
 ; writes: wObject5
 ; points at: wScriptStep

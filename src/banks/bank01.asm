@@ -2,7 +2,7 @@ SECTION "Bank 01", ROMX[$4000], BANK[$01]
     db $01
 
 ; start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case00)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode0_Init)
 ; writes: wDebugCursor, wDebugValue0, wDebugValue1, wDebugValue2, wDebugValue3, wDebugState, wDebugSubState, wDebugCounter, ...
 GameMode0_Init::
 Func_001_4001:: ; address name
@@ -881,7 +881,7 @@ Data_001_4ACC:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $4D, $5E, $FF, $7F, $F2, $66, $00, $00
 
 ; per-frame routine for wGameMode = 0
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case00)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode0_Update)
 ; reads: wModeState
 GameMode0_Update::
 Func_001_4AD4:: ; address name
@@ -929,233 +929,233 @@ Jump_001_4AF0:: ; address name
     ld [wTextWindowTileHi], a
     ld a, [wTemp0]
     rst $00
-    dw DebugMessageTest_Update_Case00
-    dw DebugMessageTest_Update_Case01
-    dw DebugMessageTest_Update_Case02
-    dw DebugMessageTest_Update_Case03
-    dw DebugMessageTest_Update_Case04
-    dw DebugMessageTest_Update_Case05
-    dw DebugMessageTest_Update_Case06
-    dw DebugMessageTest_Update_Case07
-    dw DebugMessageTest_Update_Case08
-    dw DebugMessageTest_Update_Case09
-    dw DebugMessageTest_Update_Case0A
-    dw DebugMessageTest_Update_Case0B
-    dw DebugMessageTest_Update_Case0C
-    dw DebugMessageTest_Update_Case0D
-    dw DebugMessageTest_Update_Case0E
-    dw DebugMessageTest_Update_Case0F
-    dw DebugMessageTest_Update_Case10
-    dw DebugMessageTest_Update_Case11
-    dw DebugMessageTest_Update_Case12
-    dw DebugMessageTest_Update_Case13
-    dw DebugMessageTest_Update_Case14
-    dw DebugMessageTest_Update_Case15
-    dw DebugMessageTest_Update_Case16
-    dw DebugMessageTest_Update_Case17
-    dw DebugMessageTest_Update_Case18
-    dw DebugMessageTest_Update_Case19
-    dw DebugMessageTest_Update_Case1A
-    dw DebugMessageTest_Update_Case1B
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank08
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank09
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank28
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank29
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2A
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2B
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2C
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2D
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2E
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank7C
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank80
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank82
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank86
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank89
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank07
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank2F
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank37
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank88
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank83
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1D
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank8A
+    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1F
+    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0D
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank24
     dw DebugMessageTest_Update_Case1C
-    dw DebugMessageTest_Update_Case1D
-    dw DebugMessageTest_Update_Case1E
-    dw DebugMessageTest_Update_Case1F
-    dw DebugMessageTest_Update_Case20
-    dw DebugMessageTest_Update_Case21
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0E
+    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF2
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0B
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C
 
 ; entry 0 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case00::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank08::
 Jump_001_4B68:: ; address name
     farcall BeginStringDisplay_Bank08
     ret
 
 ; entry 1 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case01::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank09::
 Jump_001_4B6F:: ; address name
     farcall BeginStringDisplay_Bank09
     ret
 
 ; entry 2 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case02::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank28::
 Jump_001_4B76:: ; address name
     farcall BeginStringDisplay_Bank28
     ret
 
 ; entry 3 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case03::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank29::
 Jump_001_4B7D:: ; address name
     farcall BeginStringDisplay_Bank29
     ret
 
 ; entry 4 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case04::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2A::
 Jump_001_4B84:: ; address name
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; entry 5 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case05::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2B::
 Jump_001_4B8B:: ; address name
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; entry 6 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case06::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2C::
 Jump_001_4B92:: ; address name
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; entry 7 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case07::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2D::
 Jump_001_4B99:: ; address name
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; entry 8 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case08::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2E::
 Jump_001_4BA0:: ; address name
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; entry 9 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case09::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank7C::
 Jump_001_4BA7:: ; address name
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; entry 10 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0A::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank80::
 Jump_001_4BAE:: ; address name
     farcall BeginStringDisplay_Bank80
     ret
 
 ; entry 11 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0B::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank82::
 Jump_001_4BB5:: ; address name
     farcall BeginStringDisplay_Bank82
     ret
 
 ; entry 12 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0C::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank86::
 Jump_001_4BBC:: ; address name
     farcall BeginStringDisplay_Bank86
     ret
 
 ; entry 13 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0D::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank89::
 Jump_001_4BC3:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
 
 ; entry 14 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0E::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank07::
 Jump_001_4BCA:: ; address name
     farcall BeginStringDisplay_Bank07
     ret
 
 ; entry 15 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case0F::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank2F::
 Jump_001_4BD1:: ; address name
     farcall BeginStringDisplay_Bank2F
     ret
 
 ; entry 16 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case10::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank37::
 Jump_001_4BD8:: ; address name
     farcall BeginStringDisplay_Bank37
     ret
 
 ; entry 17 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case11::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank88::
 Jump_001_4BDF:: ; address name
     farcall BeginStringDisplay_Bank88
     ret
 
 ; entry 18 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case12::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank83::
 Jump_001_4BE6:: ; address name
     farcall BeginStringDisplay_Bank83
     ret
 
 ; entry 19 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case13::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1D::
 Jump_001_4BED:: ; address name
     farcall BeginStringDisplay_Bank1D
     ret
 
 ; entry 20 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case14::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank8A::
 Jump_001_4BF4:: ; address name
     farcall BeginStringDisplay_Bank8A
     ret
 
 ; entry 21 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case15::
+DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001::
 Jump_001_4BFB:: ; address name
     farcall BeginStringDisplay_BankF0_4001
     ret
 
 ; entry 22 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case16::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86::
 Jump_001_4C02:: ; address name
     farcall BeginStringDisplay_Bank1B_4C86
     ret
 
 ; entry 23 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case17::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1F::
 Jump_001_4C09:: ; address name
     farcall BeginStringDisplay_Bank1F
     ret
 
 ; entry 24 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case18::
+DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0::
 Jump_001_4C10:: ; address name
     farcall BeginStringDisplay_BankF0_48A0
     ret
 
 ; entry 25 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case19::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank0D::
 Jump_001_4C17:: ; address name
     farcall BeginStringDisplay_Bank0D
     ret
 
 ; entry 26 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1A::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490::
 Jump_001_4C1E:: ; address name
     farcall BeginStringDisplay_Bank33_6490
     ret
 
 ; entry 27 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1B::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank24::
 Jump_001_4C25:: ; address name
     farcall BeginStringDisplay_Bank24
     ret
@@ -1169,35 +1169,35 @@ Jump_001_4C2C:: ; address name
 
 ; entry 29 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1D::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank0E::
 Jump_001_4C33:: ; address name
     farcall BeginStringDisplay_Bank0E
     ret
 
 ; entry 30 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1E::
+DebugMessageTest_Update_ToBeginStringDisplay_BankF2::
 Jump_001_4C3A:: ; address name
     farcall BeginStringDisplay_BankF2
     ret
 
 ; entry 31 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1F::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037::
 Jump_001_4C41:: ; address name
     farcall BeginStringDisplay_Bank33_7037
     ret
 
 ; entry 32 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case20::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank0B::
 Jump_001_4C48:: ; address name
     farcall BeginStringDisplay_Bank0B
     ret
 
 ; entry 33 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case21::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C::
 Jump_001_4C4F:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
@@ -1358,7 +1358,7 @@ Jump_001_4D54::
     jr Jump_001_4DBC
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wTemp0, wMenuState, wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub01::
 Func_001_4D6E:: ; address name
@@ -1381,7 +1381,7 @@ Jump_001_4D79::
     jr Jump_001_4DBC
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wTemp1, wMenuState, wTemp0, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub02::
 Func_001_4D93:: ; address name
@@ -1401,7 +1401,7 @@ Jump_001_4D9E::
     jr Jump_001_4DBC
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wMenuRowCount, wMenuState, wTemp0, wTemp1
 DebugMessageTest_Update_Case21_Sub03::
 Func_001_4DB1:: ; address name
@@ -1438,7 +1438,7 @@ Jump_001_4DEC::
     ret
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
+; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wMenuState, wTemp0, wTemp1, wMenuRowCount
 ; points at: wTemp0
 DebugMessageTest_Update_Case21_Sub04::
@@ -1491,7 +1491,7 @@ Jump_001_4E30::
     ret
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
-; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_Case21)
+; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wMenuState
 ; writes: wTemp1, wMenuRowCount
 DebugMessageTest_Update_Case21_Sub05::

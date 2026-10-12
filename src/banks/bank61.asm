@@ -2259,12 +2259,12 @@ Func_061_5764:: ; address name
     rst $00
     dw CheckWarpAtPlayer_Sub01_Case00
     dw CheckWarpAtPlayer_Sub01_Case01
-    dw CheckWarpAtPlayer_Sub01_Case02
-    dw CheckWarpAtPlayer_Sub01_Case03
-    dw CheckWarpAtPlayer_Sub01_Case04
-    dw CheckWarpAtPlayer_Sub01_Case05
+    dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
+    dw CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable
+    dw CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83
+    dw CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14
     dw CheckWarpAtPlayer_Sub01_Case00
-    dw CheckWarpAtPlayer_Sub01_Case07
+    dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
 
 ; entry 0 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
@@ -2282,41 +2282,41 @@ Jump_061_577D:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case02::
+CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
 Jump_061_5780:: ; address name
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
 ; entry 3 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case03::
+CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable::
 Jump_061_5784:: ; address name
     call CheckKeyWorldWarpTable
     ret
 
 ; entry 4 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case04::
+CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83::
 Jump_061_5788:: ; address name
     call WarpToScreen01Event83
     ret
 
 ; entry 5 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case05::
+CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14::
 Jump_061_578C:: ; address name
     call WarpByWCD89EntryAtScreen14
     ret
 
 ; entry 7 of the `rst $00` table in Func_061_5764
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpAtPlayer_Sub01_Case07::
+CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1::
 Jump_061_5790:: ; address name
     call CallF4268OnScreenY1
     ret
 
 ; C = 0 unless hMapScreenY = 1, in which case far-calls Func_011_4268 (E-0122)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case07)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1)
 ; reads: hMapScreenY
 CallF4268OnScreenY1::
 Func_061_5794:: ; address name
@@ -2331,7 +2331,7 @@ Jump_061_579D::
     ret
 
 ; when wCC43 is 0, the wCD89 entry is 5 and the player is at screen (1, 4): warps to the stored screen and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case05)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByWCD89EntryAtScreen14)
 ; reads: wKeyWorldArea, wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 WarpByWCD89EntryAtScreen14::
@@ -2389,7 +2389,7 @@ Jump_061_57AD::
     ret
 
 ; on map screen row 1: warps to screen (0, 1) at ($40, $38), shifts the wCDAD entry, plays sound $60, wCC44 = $83 and starts the transition; C = 1 (E-0125)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case04)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wModeState, wFieldTransitionStep, ...
 WarpToScreen01Event83::
@@ -2436,7 +2436,7 @@ Jump_061_5810::
     ret
 
 ; on screen row 1: warps to the screen in the wCD78 entry of wCC45 and starts the transition; C = 1 (E-0127)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case02)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1)
 ; reads: hMapScreenY, wKeyWorldFloor, hPlayerStateFlags
 ; writes: hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wKeyWorldAreaExits
@@ -2493,7 +2493,7 @@ Jump_061_587C::
     ret
 
 ; checks the warp list Data_061_6566[wCDAC entry] against the current screen and warps when one matches; C = 0 when none (E-0130)
-; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_Case03)
+; 1 call site from 1 routine (e.g. CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable)
 ; reads: wKeyWorldFloor, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wWarpDestFacing, wWarpDestX, wWarpDestY, hMapScreenX, hMapScreenY, wModeState, wFieldTransitionStep, hPlayerStateFlags, ...
 ; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
@@ -2623,7 +2623,7 @@ Func_061_596F:: ; address name
     and a, $07
     rst $00
     dw CheckWarpsByMapType_Case00
-    dw CheckWarpsByMapType_Case01
+    dw CheckWarpsByMapType_ToReturnStub_5CCF
     dw CheckWarpsByMapType_Case02
     dw CheckWarpsByMapType_Case03
     dw CheckWarpsByMapType_Case04
@@ -2654,7 +2654,7 @@ Jump_061_5986:: ; address name
 
 ; entry 1 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case01::
+CheckWarpsByMapType_ToReturnStub_5CCF::
 Jump_061_5996:: ; address name
     call ReturnStub_5CCF
     ret
@@ -3175,7 +3175,7 @@ Jump_061_5CCB::
     ret
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case01)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_ToReturnStub_5CCF)
 ReturnStub_5CCF::
 Func_061_5CCF:: ; address name
     ret

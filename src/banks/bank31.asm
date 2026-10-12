@@ -2,7 +2,7 @@ SECTION "Bank 31", ROMX[$4000], BANK[$31]
     db $31
 
 ; start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle screen; reached from the debug battle setup (Start) and from encounters (E-0042)
-; 1 call site from 1 routine (e.g. RunGameModeInit_Case04)
+; 1 call site from 1 routine (e.g. RunGameModeInit_ToGameMode4_Init)
 ; reads: wSGBActive, wIsCGB
 ; writes: wSGBPaletteSet, wSGBAttrFile, hScrollX, hScrollXHi, hScrollY, hScrollYHi, rVBK, wTextCursorLo, ...
 GameMode4_Init::
@@ -81,7 +81,7 @@ Jump_031_404B::
     jp Jump_000_077A
 
 ; per-frame routine for wGameMode = 4, the battle: in link mode (wC58A) it serves the serial link, otherwise IncrementPlayTime_Bank31 and the phase machine Func_031_40CC (wCFC8 = phase (1 fight, 2 after), wCFC9 = step)
-; 1 call site from 1 routine (e.g. RunGameModeUpdate_Case04)
+; 1 call site from 1 routine (e.g. RunGameModeUpdate_ToGameMode4_Update)
 ; reads: wLinkMode, wEffectId, wEffectAnimState, wBattlePhase
 GameMode4_Update::
 Func_031_40A5:: ; address name
@@ -7134,7 +7134,7 @@ Jump_031_6966:: ; address name
     rst $00
     dw BattleEnd_Step4_Sub02_Case03_Case00
     dw BattleEnd_Step4_Sub02_Case03_Case01
-    dw BattleEnd_Step4_Sub02_Case03_Case02
+    dw BattleEnd_Step4_Sub02_Case03_ToRunBattleEndStep4SubSteps
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case03
 ; no direct call (reached through a table, a jump or a vector)
@@ -7239,7 +7239,7 @@ Jump_031_69FA::
 
 ; entry 2 of the `rst $00` table in Func_031_67AA_Case03
 ; no direct call (reached through a table, a jump or a vector)
-BattleEnd_Step4_Sub02_Case03_Case02::
+BattleEnd_Step4_Sub02_Case03_ToRunBattleEndStep4SubSteps::
 Jump_031_6A06:: ; address name
     call RunBattleEndStep4SubSteps
     ret
@@ -8090,7 +8090,7 @@ Jump_031_6E62::
     ret
 
 ; runs the routine for wBattleSubStep (jump table of seven) (E-0122)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_ToRunBattleEndStep4SubSteps)
 ; reads: wBattleSubStep
 RunBattleEndStep4SubSteps::
 Func_031_6E67:: ; address name

@@ -2,7 +2,7 @@ SECTION "Bank 1D", ROMX[$4000], BANK[$1D]
     db $1D
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case13)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1D)
 BeginStringDisplay_Bank1D::
 Func_01D_4001:: ; address name
     ld de, StringCategories_1D_4016
@@ -889,7 +889,7 @@ Data_01D_4842:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $00, $A1, $00, $E1, $00
 
 ; draws rect $0088 (9 x 12) at vBGMap1 + $370 (Func_01D_5917) and wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case05)
+; 1 call site from 1 routine (e.g. VaultMenu_Case03_ToDrawRect0088AtBGMap1370AndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawRect0088AtBGMap1370AndStep::
@@ -2441,7 +2441,7 @@ Jump_01D_5271::
     ret
 
 ; draws rect $0147 (3 x 13) at vBGMap1 + $370, wD781 += 1, clears wD7CD-wD7D0 and sets wD7CC = 2 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Case03_Case11)
+; 1 call site from 1 routine (e.g. VaultMenu_Case03_ToDrawRect0147AndResetNumberEditPos)
 ; reads: wScreenStep
 ; writes: wScreenStep, wCursorBlinkCD, wThreeDigits, wNumberEditPos
 DrawRect0147AndResetNumberEditPos::
@@ -2463,7 +2463,7 @@ Func_01D_5297:: ; address name
     ret
 
 ; only called from routines of VaultMenu (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Case03_Case13, VaultMenu_Case03_Case17)
+; 2 call sites from 2 routines (e.g. VaultMenu_Case03_ToVaultMenu_Shared02, VaultMenu_Case03_Case17)
 ; reads: hTemp2, hTemp1, hTemp0, wIsCGB, wScreenStep
 ; writes: wDigits, wScreenByteBD, wListEntries2, wScreenByteBF, wScreenByteC0, wScreenByteC1, wTextCounter0, wScreenStep
 ; points at: wScreenList, wBankedGoldLo, wScreenByteBD, wScreenByte93
@@ -6924,7 +6924,7 @@ Jump_01D_6C7C::
     ret
 
 ; HL = Data_01D_6D84, wD7F1/2 = $9C/0, DE = vBGMap1, wD784 = 0, then continues at Jump_01D_6CB2 (E-0126)
-; 2 call sites from 2 routines (e.g. HibernateMenu_Case01_Case00, SwapMonstersMenu_Case01_Case00)
+; 2 call sites from 2 routines (e.g. HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1, SwapMonstersMenu_Case01_ToSetupTileMap6D84AtBGMap1)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
@@ -6941,7 +6941,7 @@ Func_01D_6C8A:: ; address name
     jr Jump_01D_6CB2
 
 ; copies tiles listed in Data_01D_6DC4 to vBGMap1 + $200 onward six per call; at the $FF end resets the counters and wD781 += 1 (E-0127)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_Case15, RunLinkSession8Case01Steps_Case00)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame, RunLinkSession8Case01Steps_ToLoadTileList6DC4SixPerFrame)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep

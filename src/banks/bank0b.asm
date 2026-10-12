@@ -2,7 +2,7 @@ SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
     db $0B
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 2 call sites from 2 routines (e.g. ShowString_Bank0B, DebugMessageTest_Update_Case20)
+; 2 call sites from 2 routines (e.g. ShowString_Bank0B, DebugMessageTest_Update_ToBeginStringDisplay_Bank0B)
 BeginStringDisplay_Bank0B::
 Func_00B_4001:: ; address name
     ld de, StringCategories_0B_4016

@@ -373,33 +373,33 @@ RunGameModeInit::
 Func_000_0355:: ; address name
     ld a, [wGameMode]
     rst $00
-    dw RunGameModeInit_Case00
-    dw RunGameModeInit_Case01
-    dw RunGameModeInit_Case02
+    dw RunGameModeInit_ToGameMode0_Init
+    dw RunGameModeInit_ToGameMode1_Init
+    dw RunGameModeInit_ToGameMode2_Init
     dw RunGameModeInit_Case03
-    dw RunGameModeInit_Case04
-    dw RunGameModeInit_Case05
-    dw RunGameModeInit_Case06
-    dw RunGameModeInit_Case07
-    dw RunGameModeInit_Case08
+    dw RunGameModeInit_ToGameMode4_Init
+    dw RunGameModeInit_ToGameMode5_Init
+    dw RunGameModeInit_ToGameMode6_Init
+    dw RunGameModeInit_ToGameMode7_Init
+    dw RunGameModeInit_ToGameMode8_Init
 
 ; entry 0 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case00::
+RunGameModeInit_ToGameMode0_Init::
 Jump_000_036B:: ; address name
     farcall GameMode0_Init
     ret
 
 ; entry 1 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case01::
+RunGameModeInit_ToGameMode1_Init::
 Jump_000_0372:: ; address name
     farcall GameMode1_Init
     ret
 
 ; entry 2 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case02::
+RunGameModeInit_ToGameMode2_Init::
 Jump_000_0379:: ; address name
     farcall GameMode2_Init
     ret
@@ -412,35 +412,35 @@ Jump_000_0380:: ; address name
 
 ; entry 4 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case04::
+RunGameModeInit_ToGameMode4_Init::
 Jump_000_0381:: ; address name
     farcall GameMode4_Init
     ret
 
 ; entry 5 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case05::
+RunGameModeInit_ToGameMode5_Init::
 Jump_000_0388:: ; address name
     farcall GameMode5_Init
     ret
 
 ; entry 6 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case06::
+RunGameModeInit_ToGameMode6_Init::
 Jump_000_038F:: ; address name
     farcall GameMode6_Init
     ret
 
 ; entry 7 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case07::
+RunGameModeInit_ToGameMode7_Init::
 Jump_000_0396:: ; address name
     farcall GameMode7_Init
     ret
 
 ; entry 8 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case08::
+RunGameModeInit_ToGameMode8_Init::
 Jump_000_039D:: ; address name
     farcall GameMode8_Init
     ret
@@ -605,33 +605,33 @@ Func_000_048A:: ; address name
 Jump_000_049E::
     ld a, [wGameMode]
     rst $00
-    dw RunGameModeUpdate_Case00
-    dw RunGameModeUpdate_Case01
-    dw RunGameModeUpdate_Case02
+    dw RunGameModeUpdate_ToGameMode0_Update
+    dw RunGameModeUpdate_ToGameMode1_Update
+    dw RunGameModeUpdate_ToGameMode2_Update
     dw RunGameModeUpdate_Case03
-    dw RunGameModeUpdate_Case04
-    dw RunGameModeUpdate_Case05
-    dw RunGameModeUpdate_Case06
-    dw RunGameModeUpdate_Case07
-    dw RunGameModeUpdate_Case08
+    dw RunGameModeUpdate_ToGameMode4_Update
+    dw RunGameModeUpdate_ToGameMode5_Update
+    dw RunGameModeUpdate_ToGameMode6_Update
+    dw RunGameModeUpdate_ToGameMode7_Update
+    dw RunGameModeUpdate_ToGameMode8_Update
 
 ; entry 0 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case00::
+RunGameModeUpdate_ToGameMode0_Update::
 Jump_000_04B4:: ; address name
     farcall GameMode0_Update
     ret
 
 ; entry 1 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case01::
+RunGameModeUpdate_ToGameMode1_Update::
 Jump_000_04BB:: ; address name
     farcall GameMode1_Update
     ret
 
 ; entry 2 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case02::
+RunGameModeUpdate_ToGameMode2_Update::
 Jump_000_04C2:: ; address name
     farcall GameMode2_Update
     ret
@@ -644,35 +644,35 @@ Jump_000_04C9:: ; address name
 
 ; entry 4 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case04::
+RunGameModeUpdate_ToGameMode4_Update::
 Jump_000_04CA:: ; address name
     farcall GameMode4_Update
     ret
 
 ; entry 5 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case05::
+RunGameModeUpdate_ToGameMode5_Update::
 Jump_000_04D1:: ; address name
     farcall GameMode5_Update
     ret
 
 ; entry 6 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case06::
+RunGameModeUpdate_ToGameMode6_Update::
 Jump_000_04D8:: ; address name
     farcall GameMode6_Update
     ret
 
 ; entry 7 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case07::
+RunGameModeUpdate_ToGameMode7_Update::
 Jump_000_04DF:: ; address name
     farcall GameMode7_Update
     ret
 
 ; entry 8 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case08::
+RunGameModeUpdate_ToGameMode8_Update::
 Jump_000_04E6:: ; address name
     farcall GameMode8_Update
     ret
@@ -7528,7 +7528,7 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case05
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case06
+    dw StepStringDisplayUntilDone_Sub01_Sub02_ToAcknowledgeTextPrompt
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case07
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case08
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case09
@@ -7587,7 +7587,7 @@ Jump_000_29A8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextYesNoResult
 ; points at: wTextControl, wTextFlags
-StepStringDisplayUntilDone_Sub01_Sub02_Case06::
+StepStringDisplayUntilDone_Sub01_Sub02_ToAcknowledgeTextPrompt::
 Jump_000_29BA:: ; address name
     jp AcknowledgeTextPrompt
 
