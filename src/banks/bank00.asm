@@ -4016,7 +4016,7 @@ Jump_000_16CD::
     ret
 
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
-; 88 call sites from 64 routines (e.g. DivideHLByBC, AIScore_BiAttack_Sub02_Sub01, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotTemp0, ...)
+; 88 call sites from 64 routines (e.g. DivideHLByBC, AIScore_BiAttack_Sub02_Sub01, AIScore_Meditate_Conditions_Sub01, HPBandOfSlotTemp0, ...)
 DivideHLByA::
 Func_000_16D1:: ; address name
     ld d, $10

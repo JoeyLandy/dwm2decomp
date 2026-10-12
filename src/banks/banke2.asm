@@ -5,7 +5,7 @@ SECTION "Bank E2", ROMX[$4000], BANK[$E2]
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Skill00:: ; heuristic: follows a terminator; C0
 Func_0E2_4001:: ; address name
-    farcall AIScore_Skill00_Sub01
+    farcall AIScore_Skill00_Conditions
     ld a, c
     and a, a
     ret z
@@ -265,7 +265,7 @@ Jump_0E2_41DF::
 ; 1 call site from 1 routine (e.g. AIScoreB_Beat)
 AIScore_Beat::
 Func_0E2_41E0:: ; address name
-    farcall AIScore_Beat_Sub01
+    farcall AIScore_Beat_Conditions
     ld a, c
     and a, a
     ret z
@@ -533,7 +533,7 @@ Func_0E2_43BE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Vivify:: ; heuristic: follows a terminator; C0
 Func_0E2_43C8:: ; address name
-    farcall AIScore_Vivify_Sub01
+    farcall AIScore_Vivify_Conditions
     ld a, c
     and a, a
     ret z
@@ -554,7 +554,7 @@ Jump_0E2_43E8::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Farewell:: ; heuristic: follows a terminator; C0
 Func_0E2_43E9:: ; address name
-    farcall AIScore_Farewell_Sub01
+    farcall AIScore_Farewell_Conditions
     ld a, c
     and a, a
     ret z
@@ -585,7 +585,7 @@ Jump_0E2_441F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Antidote:: ; heuristic: follows a terminator; C0
 Func_0E2_4420:: ; address name
-    farcall AIScore_Antidote_Sub01
+    farcall AIScore_Antidote_Conditions
     ld a, c
     and a, a
     ret z
@@ -598,7 +598,7 @@ Func_0E2_4420:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DeChaos:: ; heuristic: follows a terminator; C0
 Func_0E2_4433:: ; address name
-    farcall AIScore_DeChaos_Sub01
+    farcall AIScore_DeChaos_Conditions
     ld a, c
     and a, a
     ret z
@@ -611,7 +611,7 @@ Func_0E2_4433:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_NumbOff:: ; heuristic: follows a terminator; C0
 Func_0E2_4446:: ; address name
-    farcall AIScore_NumbOff_Sub01
+    farcall AIScore_NumbOff_Conditions
     ld a, c
     and a, a
     ret z
@@ -624,7 +624,7 @@ Func_0E2_4446:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CurseOff:: ; heuristic: follows a terminator; C0
 Func_0E2_4459:: ; address name
-    farcall AIScore_CurseOff_Sub01
+    farcall AIScore_CurseOff_Conditions
     ld a, c
     and a, a
     ret z
@@ -637,7 +637,7 @@ Func_0E2_4459:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Upper:: ; heuristic: follows a terminator; C0
 Func_0E2_446C:: ; address name
-    farcall AIScore_Upper_Sub01
+    farcall AIScore_Upper_Conditions
     ld a, c
     and a, a
     ret z
@@ -650,7 +650,7 @@ Func_0E2_446C:: ; address name
 
 Jump_0E2_4485::
     call WeighWD044RuleBit5
-    call AIScore_Upper_Sub02
+    call AIScore_Upper_Sub01
     farcall SetCToZero
     ld a, c
     and a, a
@@ -665,7 +665,7 @@ Jump_0E2_449B::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sap:: ; heuristic: follows a terminator; C0
 Func_0E2_449C:: ; address name
-    farcall AIScore_Sap_Sub01
+    farcall AIScore_Sap_Conditions
     ld a, c
     and a, a
     ret z
@@ -718,7 +718,7 @@ Jump_0E2_44F3::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_450A::
-    call AIScore_Sap_Sub02
+    call AIScore_Sap_Sub01
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
@@ -745,7 +745,7 @@ Jump_0E2_4535::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Speed:: ; heuristic: follows a terminator; C0
 Func_0E2_4536:: ; address name
-    farcall AIScore_Speed_Sub01
+    farcall AIScore_Speed_Conditions
     ld a, c
     and a, a
     ret z
@@ -774,7 +774,7 @@ Jump_0E2_4563::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Slow:: ; heuristic: follows a terminator; C0
 Func_0E2_4567:: ; address name
-    farcall AIScore_Slow_Sub01
+    farcall AIScore_Slow_Conditions
     ld a, c
     and a, a
     ret z
@@ -923,7 +923,7 @@ Jump_0E2_4671::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Surround:: ; heuristic: follows a terminator; C0
 Func_0E2_4674:: ; address name
-    farcall AIScore_Surround_Sub01
+    farcall AIScore_Surround_Conditions
     ld a, c
     and a, a
     ret z
@@ -1012,7 +1012,7 @@ Jump_0E2_4720::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sleep:: ; heuristic: follows a terminator; C0
 Func_0E2_4721:: ; address name
-    farcall AIScore_Sleep_Sub01
+    farcall AIScore_Sleep_Conditions
     ld a, c
     and a, a
     ret z
@@ -1071,7 +1071,7 @@ Jump_0E2_478D::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TakeMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_478E:: ; address name
-    farcall AIScore_TakeMagic_Sub01
+    farcall AIScore_TakeMagic_Conditions
     ld a, c
     and a, a
     ret z
@@ -1090,7 +1090,7 @@ Jump_0E2_47A7::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RobMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_47AB:: ; address name
-    farcall AIScore_RobMagic_Sub01
+    farcall AIScore_RobMagic_Conditions
     ld a, c
     and a, a
     ret z
@@ -1111,7 +1111,7 @@ Jump_0E2_47CA::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_StopSpell:: ; heuristic: follows a terminator; C0
 Func_0E2_47CE:: ; address name
-    farcall AIScore_StopSpell_Sub01
+    farcall AIScore_StopSpell_Conditions
     ld a, c
     and a, a
     ret z
@@ -1252,7 +1252,7 @@ Jump_0E2_48CB::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MagicBack:: ; heuristic: follows a terminator; C0
 Func_0E2_48CF:: ; address name
-    farcall AIScore_MagicBack_Sub01
+    farcall AIScore_MagicBack_Conditions
     ld a, c
     and a, a
     ret z
@@ -1280,7 +1280,7 @@ Jump_0E2_48FC::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Barrier:: ; heuristic: follows a terminator; C0
 Func_0E2_48FD:: ; address name
-    farcall AIScore_Barrier_Sub01
+    farcall AIScore_Barrier_Conditions
     ld a, c
     and a, a
     ret z
@@ -1301,7 +1301,7 @@ Jump_0E2_491A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MagicWall:: ; heuristic: follows a terminator; C0
 Func_0E2_491E:: ; address name
-    farcall AIScore_MagicWall_Sub01
+    farcall AIScore_MagicWall_Conditions
     ld a, c
     and a, a
     ret z
@@ -2231,7 +2231,7 @@ Jump_0E2_4FE0::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SlimeBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_4FE1:: ; address name
-    farcall AIScore_SlimeBlow_Sub01
+    farcall AIScore_SlimeBlow_Conditions
     ld a, c
     and a, a
     ret z
@@ -2302,7 +2302,7 @@ Jump_0E2_5067::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DrakSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_5068:: ; address name
-    farcall AIScore_DrakSlash_Sub01
+    farcall AIScore_DrakSlash_Conditions
     ld a, c
     and a, a
     ret z
@@ -2314,7 +2314,7 @@ Func_0E2_5068:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BeastCut:: ; heuristic: follows a terminator; C0
 Func_0E2_507A:: ; address name
-    farcall AIScore_BeastCut_Sub01
+    farcall AIScore_BeastCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2326,7 +2326,7 @@ Func_0E2_507A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BirdBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_508C:: ; address name
-    farcall AIScore_BirdBlow_Sub01
+    farcall AIScore_BirdBlow_Conditions
     ld a, c
     and a, a
     ret z
@@ -2338,7 +2338,7 @@ Func_0E2_508C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BugBlow:: ; heuristic: follows a terminator; C0
 Func_0E2_509E:: ; address name
-    farcall AIScore_BugBlow_Sub01
+    farcall AIScore_BugBlow_Conditions
     ld a, c
     and a, a
     ret z
@@ -2350,7 +2350,7 @@ Func_0E2_509E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Shears:: ; heuristic: follows a terminator; C0
 Func_0E2_50B0:: ; address name
-    farcall AIScore_Shears_Sub01
+    farcall AIScore_Shears_Conditions
     ld a, c
     and a, a
     ret z
@@ -2362,7 +2362,7 @@ Func_0E2_50B0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DevilCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50C2:: ; address name
-    farcall AIScore_DevilCut_Sub01
+    farcall AIScore_DevilCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2374,7 +2374,7 @@ Func_0E2_50C2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ZombieCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50D4:: ; address name
-    farcall AIScore_ZombieCut_Sub01
+    farcall AIScore_ZombieCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2386,7 +2386,7 @@ Func_0E2_50D4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_CleanCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50E6:: ; address name
-    farcall AIScore_CleanCut_Sub01
+    farcall AIScore_CleanCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2398,7 +2398,7 @@ Func_0E2_50E6:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_AquaCut:: ; heuristic: follows a terminator; C0
 Func_0E2_50F8:: ; address name
-    farcall AIScore_AquaCut_Sub01
+    farcall AIScore_AquaCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2410,7 +2410,7 @@ Func_0E2_50F8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MetalCut:: ; heuristic: follows a terminator; C0
 Func_0E2_510A:: ; address name
-    farcall AIScore_MetalCut_Sub01
+    farcall AIScore_MetalCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2422,7 +2422,7 @@ Func_0E2_510A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonHit:: ; heuristic: follows a terminator; C0
 Func_0E2_511C:: ; address name
-    farcall AIScore_PoisonHit_Sub01
+    farcall AIScore_PoisonHit_Conditions
     ld a, c
     and a, a
     ret z
@@ -2505,7 +2505,7 @@ Jump_0E2_51B6::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Paralyze:: ; heuristic: follows a terminator; C0
 Func_0E2_51B7:: ; address name
-    farcall AIScore_Paralyze_Sub01
+    farcall AIScore_Paralyze_Conditions
     ld a, c
     and a, a
     ret z
@@ -2517,7 +2517,7 @@ Func_0E2_51B7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_NapAttack:: ; heuristic: follows a terminator; C0
 Func_0E2_51C9:: ; address name
-    farcall AIScore_NapAttack_Sub01
+    farcall AIScore_NapAttack_Conditions
     ld a, c
     and a, a
     ret z
@@ -2549,7 +2549,7 @@ Jump_0E2_51F5::
 ; 1 call site from 1 routine (e.g. AIScoreB_SquallHit)
 AIScore_SquallHit::
 Func_0E2_51F6:: ; address name
-    farcall AIScore_SquallHit_Sub01
+    farcall AIScore_SquallHit_Conditions
     ld a, c
     and a, a
     ret z
@@ -2698,7 +2698,7 @@ Jump_0E2_530D::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_RainSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_530E:: ; address name
-    farcall AIScore_RainSlash_Sub01
+    farcall AIScore_RainSlash_Conditions
     ld a, c
     and a, a
     ret z
@@ -2761,7 +2761,7 @@ Jump_0E2_5384::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MultiCut:: ; heuristic: follows a terminator; C0
 Func_0E2_5385:: ; address name
-    farcall AIScore_MultiCut_Sub01
+    farcall AIScore_MultiCut_Conditions
     ld a, c
     and a, a
     ret z
@@ -2850,7 +2850,7 @@ Jump_0E2_5423::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ChargeUp:: ; heuristic: follows a terminator; C0
 Func_0E2_5426:: ; address name
-    farcall AIScore_ChargeUp_Sub01
+    farcall AIScore_ChargeUp_Conditions
     ld a, c
     and a, a
     ret z
@@ -2881,7 +2881,7 @@ Jump_0E2_5459::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PsycheUp:: ; heuristic: follows a terminator; C0
 Func_0E2_545D:: ; address name
-    farcall AIScore_PsycheUp_Sub01
+    farcall AIScore_PsycheUp_Conditions
     ld a, c
     and a, a
     ret z
@@ -2936,7 +2936,7 @@ Jump_0E2_54C0::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_HighJump:: ; heuristic: follows a terminator; C0
 Func_0E2_54C4:: ; address name
-    farcall AIScore_HighJump_Sub01
+    farcall AIScore_HighJump_Conditions
     ld a, c
     and a, a
     ret z
@@ -3121,7 +3121,7 @@ Jump_0E2_561A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TwinSlash:: ; heuristic: follows a terminator; C0
 Func_0E2_561B:: ; address name
-    farcall AIScore_TwinSlash_Sub01
+    farcall AIScore_TwinSlash_Conditions
     ld a, c
     and a, a
     ret z
@@ -3438,7 +3438,7 @@ Jump_0E2_5873::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SleepAir:: ; heuristic: follows a terminator; C0
 Func_0E2_5876:: ; address name
-    farcall AIScore_SleepAir_Sub01
+    farcall AIScore_SleepAir_Conditions
     ld a, c
     and a, a
     ret z
@@ -3497,7 +3497,7 @@ Jump_0E2_58DE::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PalsyAir:: ; heuristic: follows a terminator; C0
 Func_0E2_58DF:: ; address name
-    farcall AIScore_PalsyAir_Sub01
+    farcall AIScore_PalsyAir_Conditions
     ld a, c
     and a, a
     ret z
@@ -3507,7 +3507,7 @@ Func_0E2_58DF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonGas:: ; heuristic: follows a terminator; C0
 Func_0E2_58EA:: ; address name
-    farcall AIScore_PoisonGas_Sub01
+    farcall AIScore_PoisonGas_Conditions
     ld a, c
     and a, a
     ret z
@@ -3517,7 +3517,7 @@ Func_0E2_58EA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PoisonAir:: ; heuristic: follows a terminator; C0
 Func_0E2_58F5:: ; address name
-    farcall AIScore_PoisonAir_Sub01
+    farcall AIScore_PoisonAir_Conditions
     ld a, c
     and a, a
     ret z
@@ -3527,7 +3527,7 @@ Func_0E2_58F5:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Curse:: ; heuristic: follows a terminator; C0
 Func_0E2_5900:: ; address name
-    farcall AIScore_Curse_Sub01
+    farcall AIScore_Curse_Conditions
     ld a, c
     and a, a
     ret z
@@ -3546,7 +3546,7 @@ Jump_0E2_5919::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_OddDance:: ; heuristic: follows a terminator; C0
 Func_0E2_591F:: ; address name
-    farcall AIScore_OddDance_Sub01
+    farcall AIScore_OddDance_Conditions
     ld a, c
     and a, a
     ret z
@@ -3589,7 +3589,7 @@ Jump_0E2_596F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_PaniDance:: ; heuristic: follows a terminator; C0
 Func_0E2_5970:: ; address name
-    farcall AIScore_PaniDance_Sub01
+    farcall AIScore_PaniDance_Conditions
     ld a, c
     and a, a
     ret z
@@ -3650,7 +3650,7 @@ Jump_0E2_59E4::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_KODance:: ; heuristic: follows a terminator; C0
 Func_0E2_59E5:: ; address name
-    farcall AIScore_KODance_Sub01
+    farcall AIScore_KODance_Conditions
     ld a, c
     and a, a
     ret z
@@ -3730,7 +3730,7 @@ Func_0E2_5A68:: ; address name
 ; 1 call site from 1 routine (e.g. AIScoreB_LureDance)
 AIScore_LureDance::
 Func_0E2_5A72:: ; address name
-    farcall AIScore_LureDance_Sub01
+    farcall AIScore_LureDance_Conditions
     ld a, c
     and a, a
     ret z
@@ -3791,7 +3791,7 @@ Jump_0E2_5AE0::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_LifeDance:: ; heuristic: follows a terminator; C0
 Func_0E2_5AE6:: ; address name
-    farcall AIScore_LifeDance_Sub01
+    farcall AIScore_LifeDance_Conditions
     ld a, c
     and a, a
     ret z
@@ -3839,7 +3839,7 @@ Jump_0E2_5B3C::
 ; reads: wBattleActor
 AIScore_Hustle:: ; heuristic: follows a terminator; C0
 Func_0E2_5B3D:: ; address name
-    farcall AIScore_Hustle_Sub01
+    farcall AIScore_Hustle_Conditions
     ld a, c
     and a, a
     ret z
@@ -3910,7 +3910,7 @@ Jump_0E2_5BC3::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SideStep:: ; heuristic: follows a terminator; C0
 Func_0E2_5BC4:: ; address name
-    farcall AIScore_SideStep_Sub01
+    farcall AIScore_SideStep_Conditions
     ld a, c
     and a, a
     ret z
@@ -3963,7 +3963,7 @@ Jump_0E2_5C24::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SandStorm:: ; heuristic: follows a terminator; C0
 Func_0E2_5C25:: ; address name
-    farcall AIScore_SandStorm_Sub01
+    farcall AIScore_SandStorm_Conditions
     ld a, c
     and a, a
     ret z
@@ -4048,7 +4048,7 @@ Jump_0E2_5CC1::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Radiant:: ; heuristic: follows a terminator; C0
 Func_0E2_5CC2:: ; address name
-    farcall AIScore_Radiant_Sub01
+    farcall AIScore_Radiant_Conditions
     ld a, c
     and a, a
     ret z
@@ -4058,7 +4058,7 @@ Func_0E2_5CC2:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_EerieLite:: ; heuristic: follows a terminator; C0
 Func_0E2_5CCE:: ; address name
-    farcall AIScore_EerieLite_Sub01
+    farcall AIScore_EerieLite_Conditions
     ld a, c
     and a, a
     ret z
@@ -4117,7 +4117,7 @@ Jump_0E2_5D3C::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Surge:: ; heuristic: follows a terminator; C0
 Func_0E2_5D3D:: ; address name
-    farcall AIScore_Surge_Sub01
+    farcall AIScore_Surge_Conditions
     ld a, c
     and a, a
     ret z
@@ -4138,7 +4138,7 @@ Jump_0E2_5D5C::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_UltraDown:: ; heuristic: follows a terminator; C0
 Func_0E2_5D60:: ; address name
-    farcall AIScore_UltraDown_Sub01
+    farcall AIScore_UltraDown_Conditions
     ld a, c
     and a, a
     ret z
@@ -4159,7 +4159,7 @@ Jump_0E2_5D7F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DeMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_5D83:: ; address name
-    farcall AIScore_DeMagic_Sub01
+    farcall AIScore_DeMagic_Conditions
     ld a, c
     and a, a
     ret z
@@ -4190,7 +4190,7 @@ Jump_0E2_5DB8::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_ThickFog:: ; heuristic: follows a terminator; C0
 Func_0E2_5DBC:: ; address name
-    farcall AIScore_ThickFog_Sub01
+    farcall AIScore_ThickFog_Conditions
     ld a, c
     and a, a
     ret z
@@ -4219,7 +4219,7 @@ Jump_0E2_5DEC::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TatsuCall:: ; heuristic: follows a terminator; C0
 Func_0E2_5DED:: ; address name
-    farcall AIScore_TatsuCall_Sub01
+    farcall AIScore_TatsuCall_Conditions
     ld a, c
     and a, a
     ret z
@@ -4266,7 +4266,7 @@ Jump_0E2_5E45::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SuckAir:: ; heuristic: follows a terminator; C0
 Func_0E2_5E46:: ; address name
-    farcall AIScore_SuckAir_Sub01
+    farcall AIScore_SuckAir_Conditions
     ld a, c
     and a, a
     ret z
@@ -4301,7 +4301,7 @@ Jump_0E2_5E82::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Focus:: ; heuristic: follows a terminator; C0
 Func_0E2_5E83:: ; address name
-    farcall AIScore_Focus_Sub01
+    farcall AIScore_Focus_Conditions
     ld a, c
     and a, a
     ret z
@@ -4461,7 +4461,7 @@ Func_0E2_5F8A:: ; address name
 ; 1 call site from 1 routine (e.g. AIScoreB_LegSweep)
 AIScore_LegSweep::
 Func_0E2_5F94:: ; address name
-    farcall AIScore_LegSweep_Sub01
+    farcall AIScore_LegSweep_Conditions
     ld a, c
     and a, a
     ret z
@@ -4560,7 +4560,7 @@ Jump_0E2_603E::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Geyser:: ; heuristic: follows a terminator; C0
 Func_0E2_6044:: ; address name
-    farcall AIScore_Geyser_Sub01
+    farcall AIScore_Geyser_Conditions
     ld a, c
     and a, a
     ret z
@@ -4599,7 +4599,7 @@ Jump_0E2_6088::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_DanceShut:: ; heuristic: follows a terminator; C0
 Func_0E2_6089:: ; address name
-    farcall AIScore_DanceShut_Sub01
+    farcall AIScore_DanceShut_Conditions
     ld a, c
     and a, a
     ret z
@@ -4618,7 +4618,7 @@ Jump_0E2_60A2::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MouthShut:: ; heuristic: follows a terminator; C0
 Func_0E2_60A6:: ; address name
-    farcall AIScore_MouthShut_Sub01
+    farcall AIScore_MouthShut_Conditions
     ld a, c
     and a, a
     ret z
@@ -4648,14 +4648,14 @@ Jump_0E2_60D3::
 ; reads: wBattleActor
 AIScore_StrongD:: ; heuristic: follows a terminator; C0
 Func_0E2_60D7:: ; address name
-    farcall AIScore_StrongD_Sub01
+    farcall AIScore_StrongD_Conditions
     ld a, c
     and a, a
     ret z
     call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
-    call AIScore_StrongD_Sub02
+    call AIScore_StrongD_Sub01
     farcall SetCToZero
     ld a, c
     and a, a
@@ -4681,7 +4681,7 @@ Jump_0E2_610E::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Dodge:: ; heuristic: follows a terminator; C0
 Func_0E2_6112:: ; address name
-    farcall AIScore_Dodge_Sub01
+    farcall AIScore_Dodge_Conditions
     ld a, c
     and a, a
     ret z
@@ -4728,14 +4728,14 @@ Jump_0E2_615C::
 ; reads: wBattleActor
 AIScore_Cover:: ; heuristic: follows a terminator; C0
 Func_0E2_6160:: ; address name
-    farcall AIScore_Cover_Sub01
+    farcall AIScore_Cover_Conditions
     ld a, c
     and a, a
     ret z
     call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
-    call AIScore_Cover_Sub02
+    call AIScore_Cover_Sub01
     farcall SetCToZero
     ld a, c
     and a, a
@@ -4753,11 +4753,11 @@ Jump_0E2_6189::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_TailWind:: ; heuristic: follows a terminator; C0
 Func_0E2_618D:: ; address name
-    farcall AIScore_TailWind_Sub01
+    farcall AIScore_TailWind_Conditions
     ld a, c
     and a, a
     ret z
-    call AIScore_TailWind_Sub02
+    call AIScore_TailWind_Sub01
     ret z
 
 Jump_0E2_619A::
@@ -4786,7 +4786,7 @@ Jump_0E2_61BE::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_StormWind:: ; heuristic: follows a terminator; C0
 Func_0E2_61C2:: ; address name
-    farcall AIScore_StormWind_Sub01
+    farcall AIScore_StormWind_Conditions
     ld a, c
     and a, a
     ret z
@@ -4797,12 +4797,12 @@ Func_0E2_61C2:: ; address name
 ; reads: wBattleActor
 AIScore_AquaWall:: ; heuristic: follows a terminator; C0
 Func_0E2_61CD:: ; address name
-    farcall AIScore_AquaWall_Sub01
+    farcall AIScore_AquaWall_Conditions
     ld a, c
     and a, a
     ret z
     ld a, [wBattleActor]
-    call AIScore_AquaWall_Sub02
+    call AIScore_AquaWall_Sub01
     call WeighWD044RuleBit5
     ret
 
@@ -4868,7 +4868,7 @@ Jump_0E2_6248::
 ; reads: wBattleActor
 AIScore_SuckAll:: ; heuristic: follows a terminator; C0
 Func_0E2_6249:: ; address name
-    farcall AIScore_SuckAll_Sub01
+    farcall AIScore_SuckAll_Conditions
     ld a, c
     and a, a
     ret z
@@ -4891,7 +4891,7 @@ Jump_0E2_6266::
 
 Jump_0E2_6276::
     ld a, [wBattleActor]
-    call AIScore_SuckAll_Sub02
+    call AIScore_SuckAll_Sub01
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
@@ -4917,7 +4917,7 @@ Jump_0E2_62A3::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Imitate:: ; heuristic: follows a terminator; C0
 Func_0E2_62A4:: ; address name
-    farcall AIScore_Imitate_Sub01
+    farcall AIScore_Imitate_Conditions
     ld a, c
     and a, a
     ret z
@@ -4969,12 +4969,12 @@ Jump_0E2_6302::
 ; reads: wBattleActor
 AIScore_Meditate:: ; heuristic: follows a terminator; C0
 Func_0E2_6303:: ; address name
-    farcall AIScore_Meditate_Sub01
+    farcall AIScore_Meditate_Conditions
     ld a, c
     and a, a
     ret z
     ld a, [wBattleActor]
-    call AIScore_Meditate_Sub02
+    call AIScore_Meditate_Sub01
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
@@ -5010,7 +5010,7 @@ Jump_0E2_634F::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_LifeSong:: ; heuristic: follows a terminator; C0
 Func_0E2_6350:: ; address name
-    farcall AIScore_LifeSong_Sub01
+    farcall AIScore_LifeSong_Conditions
     ld a, c
     and a, a
     ret z
@@ -5042,7 +5042,7 @@ Jump_0E2_6386::
 ; reads: wBattleActor
 AIScore_LoveRain:: ; heuristic: follows a terminator; C0
 Func_0E2_6387:: ; address name
-    farcall AIScore_LoveRain_Sub01
+    farcall AIScore_LoveRain_Conditions
     ld a, c
     and a, a
     ret z
@@ -5136,7 +5136,7 @@ AIScore_Guard:: ; heuristic: follows a terminator; C0
 Func_0E2_6425:: ; address name
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
-    farcall AIScore_Guard_Sub01
+    farcall AIScore_Guard_Conditions
     ld a, c
     and a, a
     ret z
@@ -5224,7 +5224,7 @@ Jump_0E2_64BE::
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
-; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub01, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore, wAISkillScore2
 AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
@@ -5258,7 +5258,7 @@ Jump_0E2_64F4::
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
-; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub02, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub01, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore2, wAISkillScore
 AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
@@ -5337,7 +5337,7 @@ Func_0E2_654B:: ; address name
 ; only called from AIScore_StrongD (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_StrongD)
 ; writes: hTemp0
-AIScore_StrongD_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_StrongD_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_656D:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5386,7 +5386,7 @@ Jump_0E2_65B7::
 ; only called from AIScore_AquaWall (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_AquaWall)
 ; writes: hTemp0
-AIScore_AquaWall_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_65B8:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5435,7 +5435,7 @@ Jump_0E2_6602::
 ; only called from AIScore_SuckAll (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SuckAll)
 ; writes: hTemp0
-AIScore_SuckAll_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_SuckAll_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_6603:: ; address name
     and a, $04
     ld c, a
@@ -5447,7 +5447,7 @@ Jump_0E2_6608::
     jr c, Jump_0E2_6615
     ldh [hTemp0], a
     push bc
-    call AIScore_SuckAll_Sub02_Sub01
+    call AIScore_SuckAll_Sub01_Sub01
     pop bc
 
 Jump_0E2_6615::
@@ -5456,9 +5456,9 @@ Jump_0E2_6615::
     jr nz, Jump_0E2_6608
     ret
 
-; only called from AIScore_SuckAll_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_SuckAll_Sub02)
-AIScore_SuckAll_Sub02_Sub01::
+; only called from AIScore_SuckAll_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_SuckAll_Sub01)
+AIScore_SuckAll_Sub01_Sub01::
 Func_0E2_661A:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5478,7 +5478,7 @@ Jump_0E2_6633::
 ; only called from AIScore_Meditate (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Meditate)
 ; writes: hTemp0
-AIScore_Meditate_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_Meditate_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_6634:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5662,7 +5662,7 @@ Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; only called from AIScore_Cover (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Cover)
 ; writes: hTemp0
-AIScore_Cover_Sub02::
+AIScore_Cover_Sub01::
 Func_0E2_672D:: ; address name
     and a, $04
     ld c, a
@@ -5674,7 +5674,7 @@ Jump_0E2_6732::
     jr c, Jump_0E2_673F
     ldh [hTemp0], a
     push bc
-    call AIScore_Cover_Sub02_Sub01
+    call AIScore_Cover_Sub01_Sub01
     pop bc
 
 Jump_0E2_673F::
@@ -5683,10 +5683,10 @@ Jump_0E2_673F::
     jr nz, Jump_0E2_6732
     ret
 
-; only called from AIScore_Cover_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Cover_Sub02)
+; only called from AIScore_Cover_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. AIScore_Cover_Sub01)
 ; reads: wBattleActor
-AIScore_Cover_Sub02_Sub01::
+AIScore_Cover_Sub01_Sub01::
 Func_0E2_6744:: ; address name
     push bc
     farcall HPBandOfSlotTemp0
@@ -5707,17 +5707,17 @@ Jump_0E2_675A::
     call AccumulateBank6WordToDA6E
     ret
 
-; address loaded by AIScore_Cover_Sub02_Sub01
+; address loaded by AIScore_Cover_Sub01_Sub01
 Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $20, $1F, $1E, $1D, $1D
 
-; address loaded by AIScore_Cover_Sub02_Sub01
+; address loaded by AIScore_Cover_Sub01_Sub01
 Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AA, $AB, $AC, $AD, $AE
 
 ; only called from AIScore_Upper (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Upper)
-AIScore_Upper_Sub02::
+AIScore_Upper_Sub01::
 Func_0E2_6773:: ; address name
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -5736,9 +5736,9 @@ Jump_0E2_678B::
 
 ; only called from AIScore_Sap (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sap)
-AIScore_Sap_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_Sap_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_678C:: ; address name
-    farcall AIScore_Sap_Sub02_Sub01
+    farcall AIScore_Sap_Sub01_Sub01
     ld a, c
     and a, a
     jr nz, Jump_0E2_679E
@@ -5777,7 +5777,7 @@ Func_0E2_67A5:: ; address name
 ; only called from AIScore_TailWind (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TailWind)
 ; reads: wBattleTurn
-AIScore_TailWind_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_TailWind_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_67C0:: ; address name
     ld a, [wBattleTurn]
     ld c, a
@@ -5795,7 +5795,7 @@ AIScoreGuardSkill_67CF::
 Func_0E2_67CF:: ; address name
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
-    jr AIScore_TailWind_Sub02
+    jr AIScore_TailWind_Sub01
 
 ; WeighWD044RuleBit4, then adds score word $29 to wDA6E when Func_005_5758 fails and again when Func_005_5CF1 fails (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Vivify, AIScore_Farewell)

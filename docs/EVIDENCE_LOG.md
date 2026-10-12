@@ -2431,6 +2431,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0279 — AI skill score conditions
+
+- Kind: OBSERVATION (reading; C1).
+- Each AIScore_<skill>_Sub01 starts with a call and then calls check routines in turn, testing C after each (`ld a, c / and a, a`). All 80 reach ResetAISkillScore on a failing branch. They are renamed AIScore_<skill>_Conditions, and the notes list the checks.
+- Structural labels go from 3,946 to 3,866.
+- Binary verification: build/run360 PASS, 0 differing bytes; tests OK.
+
 ### E-0278 — Branch-free steps named after their main call
 
 - Kind: TOOL (structural naming from the instructions; C2 for what is called).
