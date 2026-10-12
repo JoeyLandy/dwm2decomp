@@ -2835,7 +2835,8 @@
           "type": "words",
           "size": 80,
           "per_line": 8,
-          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)",
+          "names": "monster_table"
         }
       ],
       "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
@@ -2850,7 +2851,8 @@
           "type": "words",
           "size": 80,
           "per_line": 8,
-          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)",
+          "names": "monster_table"
         }
       ],
       "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
@@ -2865,7 +2867,8 @@
           "type": "words",
           "size": 80,
           "per_line": 8,
-          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)",
+          "names": "monster_table"
         }
       ],
       "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
@@ -2880,7 +2883,8 @@
           "type": "words",
           "size": 80,
           "per_line": 8,
-          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)"
+          "name": "40 encounter words (entries 0-38 are drawn; entry 39 is not reached)",
+          "names": "monster_table"
         }
       ],
       "note": "E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList)."
@@ -8598,7 +8602,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "three encounter words copied to wEncounterMonsters"
+          "name": "three encounter words copied to wEncounterMonsters",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind; unread byte; three encounter words (wEncounterMonsters)",
@@ -8641,7 +8646,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -8668,7 +8674,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -8695,7 +8702,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -8722,7 +8730,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -8749,7 +8758,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -8776,7 +8786,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -8803,7 +8814,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -8846,7 +8858,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -8873,7 +8886,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -8900,7 +8914,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -8943,7 +8958,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -8970,7 +8986,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -8997,7 +9014,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9024,7 +9042,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9051,7 +9070,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9078,7 +9098,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9105,7 +9126,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9132,7 +9154,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9159,7 +9182,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9186,7 +9210,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9213,7 +9238,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9240,7 +9266,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9267,7 +9294,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9294,7 +9322,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9321,7 +9350,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9348,7 +9378,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9375,7 +9406,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9402,7 +9434,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9429,7 +9462,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9472,7 +9506,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9499,7 +9534,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9542,7 +9578,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9585,7 +9622,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9628,7 +9666,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -9671,7 +9710,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9714,7 +9754,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9757,7 +9798,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -9784,7 +9826,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -9827,7 +9870,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9870,7 +9914,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9913,7 +9958,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -9940,7 +9986,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -9967,7 +10014,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -9994,7 +10042,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10021,7 +10070,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10048,7 +10098,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -10075,7 +10126,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10102,7 +10154,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10129,7 +10182,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -10156,7 +10210,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10183,7 +10238,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -10210,7 +10266,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10237,7 +10294,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -10264,7 +10322,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10307,7 +10366,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10334,7 +10394,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10377,7 +10438,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10420,7 +10482,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -10495,7 +10558,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -10554,7 +10618,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10597,7 +10662,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -10624,7 +10690,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -10651,7 +10718,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10678,7 +10746,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -10705,7 +10774,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10732,7 +10802,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10759,7 +10830,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10786,7 +10858,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10813,7 +10886,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10840,7 +10914,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -10867,7 +10942,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10894,7 +10970,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -10921,7 +10998,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10948,7 +11026,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -10975,7 +11054,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11018,7 +11098,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11061,7 +11142,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11104,7 +11186,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11147,7 +11230,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11190,7 +11274,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11233,7 +11318,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11276,7 +11362,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11319,7 +11406,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11362,7 +11450,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11405,7 +11494,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11448,7 +11538,8 @@
         {
           "type": "words",
           "size": 10,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
@@ -11491,7 +11582,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11534,7 +11626,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11577,7 +11670,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11620,7 +11714,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11663,7 +11758,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11690,7 +11786,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11733,7 +11830,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11776,7 +11874,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11803,7 +11902,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11830,7 +11930,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11857,7 +11958,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -11884,7 +11986,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -11927,7 +12030,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -11970,7 +12074,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12013,7 +12118,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12056,7 +12162,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12083,7 +12190,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -12110,7 +12218,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -12137,7 +12246,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12164,7 +12274,8 @@
         {
           "type": "words",
           "size": 4,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
@@ -12191,7 +12302,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12234,7 +12346,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -12277,7 +12390,8 @@
         {
           "type": "words",
           "size": 8,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
@@ -12320,7 +12434,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -12363,7 +12478,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "encounter words"
+          "name": "encounter words",
+          "names": "monster_table"
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
@@ -18250,7 +18366,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "three encounter words copied to wEncounterMonsters"
+          "name": "three encounter words copied to wEncounterMonsters",
+          "names": "monster_table"
         }
       ],
       "note": "E-0236 (C1: the three records of GridEncounterList0)."
@@ -18280,7 +18397,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "three encounter words copied to wEncounterMonsters"
+          "name": "three encounter words copied to wEncounterMonsters",
+          "names": "monster_table"
         }
       ],
       "note": "E-0236 (C1: the three records of GridEncounterList1)."
@@ -18310,7 +18428,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "three encounter words copied to wEncounterMonsters"
+          "name": "three encounter words copied to wEncounterMonsters",
+          "names": "monster_table"
         }
       ],
       "note": "E-0236 (C1: the three records of GridEncounterList2)."
@@ -18340,7 +18459,8 @@
         {
           "type": "words",
           "size": 6,
-          "name": "three encounter words copied to wEncounterMonsters"
+          "name": "three encounter words copied to wEncounterMonsters",
+          "names": "monster_table"
         }
       ],
       "note": "E-0236 (C1: the three records of GridEncounterList3)."

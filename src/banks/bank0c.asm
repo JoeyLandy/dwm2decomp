@@ -8358,11 +8358,17 @@ Data_00C_789F:: ; address name
 ; record: three encounter words copied to wEncounterMonsters
 GridEncounters0::
 Data_00C_78A5:: ; address name
-    dw $008A, $008B, $008C ; id 0
+    dw $008A ; id 0 MonsterTable $08A: WindBeast
+    dw $008B ; MonsterTable $08B: Gismo
+    dw $008C ; MonsterTable $08C: PomPomBom
 Data_00C_78AB:: ; heuristic: grid encounter; C0
-    dw $008D, $008E, $008F ; id 1
+    dw $008D ; id 1 MonsterTable $08D: Devipine
+    dw $008E ; MonsterTable $08E: Gulpple
+    dw $008F ; MonsterTable $08F: Eggplaton
 Data_00C_78B1:: ; heuristic: grid encounter; C0
-    dw $0090, $0091, $0090 ; id 2
+    dw $0090 ; id 2 MonsterTable $090: HammerMan
+    dw $0091 ; MonsterTable $091: Stubsuck
+    dw $0090 ; MonsterTable $090: HammerMan
 
 ; E-0236 (C1: list 1 of GridEncounterTable).
 ; record: three encounter words for this wScreenCountPlusOne
@@ -8376,11 +8382,17 @@ Data_00C_78B7:: ; address name
 ; record: three encounter words copied to wEncounterMonsters
 GridEncounters1::
 Data_00C_78BD:: ; address name
-    dw $0092, $0093, $0092 ; id 0
+    dw $0092 ; id 0 MonsterTable $092: TreeBoy
+    dw $0093 ; MonsterTable $093: FooHero
+    dw $0092 ; MonsterTable $092: TreeBoy
 Data_00C_78C3:: ; heuristic: grid encounter; C0
-    dw $0094, $0095, $0094 ; id 1
+    dw $0094 ; id 1 MonsterTable $094: Mommonja
+    dw $0095 ; MonsterTable $095: Drygon
+    dw $0094 ; MonsterTable $094: Mommonja
 Data_00C_78C9:: ; heuristic: grid encounter; C0
-    dw $0096, $0097, $0098 ; id 2
+    dw $0096 ; id 2 MonsterTable $096: HerbMan
+    dw $0097 ; MonsterTable $097: DanceVegi
+    dw $0098 ; MonsterTable $098: MudDoll
 
 ; E-0236 (C1: list 2 of GridEncounterTable).
 ; record: three encounter words for this wScreenCountPlusOne
@@ -8394,11 +8406,17 @@ Data_00C_78CF:: ; address name
 ; record: three encounter words copied to wEncounterMonsters
 GridEncounters2::
 Data_00C_78D5:: ; address name
-    dw $0099, $009A, $009B ; id 0
+    dw $0099 ; id 0 MonsterTable $099: Shadow
+    dw $009A ; MonsterTable $09A: MadCondor
+    dw $009B ; MonsterTable $09B: CloudKing
 Data_00C_78DB:: ; heuristic: grid encounter; C0
-    dw $009C, $009D, $009E ; id 1
+    dw $009C ; id 1 MonsterTable $09C: Octoreach
+    dw $009D ; MonsterTable $09D: Octogon
+    dw $009E ; MonsterTable $09E: KingSquid
 Data_00C_78E1:: ; heuristic: grid encounter; C0
-    dw $009F, $00A0, $00A1 ; id 2
+    dw $009F ; id 2 MonsterTable $09F: MistyWing
+    dw $00A0 ; MonsterTable $0A0: Copycat
+    dw $00A1 ; MonsterTable $0A1: NiteWhip
 
 ; E-0236 (C1: list 3 of GridEncounterTable).
 ; record: three encounter words for this wScreenCountPlusOne
@@ -8412,11 +8430,17 @@ Data_00C_78E7:: ; address name
 ; record: three encounter words copied to wEncounterMonsters
 GridEncounters3::
 Data_00C_78ED:: ; address name
-    dw $00A2, $00A3, $00A2 ; id 0
+    dw $00A2 ; id 0 MonsterTable $0A2: Goopi
+    dw $00A3 ; MonsterTable $0A3: Servant
+    dw $00A2 ; MonsterTable $0A2: Goopi
 Data_00C_78F3:: ; heuristic: grid encounter; C0
-    dw $00A4, $00A5, $00A4 ; id 1
+    dw $00A4 ; id 1 MonsterTable $0A4: ArmyCrab
+    dw $00A5 ; MonsterTable $0A5: DarkCrab
+    dw $00A4 ; MonsterTable $0A4: ArmyCrab
 Data_00C_78F9:: ; heuristic: grid encounter; C0
-    dw $00A6, $00A7, $00A8 ; id 2
+    dw $00A6 ; id 2 MonsterTable $0A6: Orochi
+    dw $00A7 ; MonsterTable $0A7: Serpentia
+    dw $00A8 ; MonsterTable $0A8: GigaDraco
 
 ; E-0183 (C1: ArenaRounds_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list).
 ; record: number of usable entries in the list (39 each)
@@ -8444,41 +8468,181 @@ Data_00C_7905:: ; address name
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList0::
 Data_00C_7911:: ; address name
-    dw $0104, $0105, $0106, $0107, $0108, $0109, $010A, $010B ; entry 0
-    dw $010C, $010D, $010E, $010F, $0110, $0111, $0112, $0113
-    dw $0114, $0115, $0116, $0117, $0118, $0119, $011A, $011B
-    dw $0152, $0153, $0154, $0155, $0156, $0157, $0158, $0159
-    dw $015A, $015B, $015C, $015D, $015E, $015F, $0160, $0161
+    dw $0104 ; entry 0 MonsterTable $104: Lipsy
+    dw $0105 ; MonsterTable $105: MultiEyes
+    dw $0106 ; MonsterTable $106: Shadow
+    dw $0107 ; MonsterTable $107: CaptDead
+    dw $0108 ; MonsterTable $108: CurseLamp
+    dw $0109 ; MonsterTable $109: Angleron
+    dw $010A ; MonsterTable $10A: Gamanian
+    dw $010B ; MonsterTable $10B: WhaleMage
+    dw $010C ; MonsterTable $10C: SpotKing
+    dw $010D ; MonsterTable $10D: SkyDragon
+    dw $010E ; MonsterTable $10E: Tonguella
+    dw $010F ; MonsterTable $10F: Saccer
+    dw $0110 ; MonsterTable $110: Wyvern
+    dw $0111 ; MonsterTable $111: AquaHawk
+    dw $0112 ; MonsterTable $112: Garudian
+    dw $0113 ; MonsterTable $113: Eyeder
+    dw $0114 ; MonsterTable $114: ArcDemon
+    dw $0115 ; MonsterTable $115: Lionex
+    dw $0116 ; MonsterTable $116: GateGuard
+    dw $0117 ; MonsterTable $117: Centasaur
+    dw $0118 ; MonsterTable $118: Roboster
+    dw $0119 ; MonsterTable $119: Eggplaton
+    dw $011A ; MonsterTable $11A: Clawster
+    dw $011B ; MonsterTable $11B: MerTiger
+    dw $0152 ; MonsterTable $152: DragonKid
+    dw $0153 ; MonsterTable $153: DuckKite
+    dw $0154 ; MonsterTable $154: WingTree
+    dw $0155 ; MonsterTable $155: GiantSlug
+    dw $0156 ; MonsterTable $156: Gophecada
+    dw $0157 ; MonsterTable $157: RotRaven
+    dw $0158 ; MonsterTable $158: Chamelgon
+    dw $0159 ; MonsterTable $159: MadPecker
+    dw $015A ; MonsterTable $15A: MadPlant
+    dw $015B ; MonsterTable $15B: FaceTree
+    dw $015C ; MonsterTable $15C: BeanMan
+    dw $015D ; MonsterTable $15D: Catapila
+    dw $015E ; MonsterTable $15E: Facer
+    dw $015F ; MonsterTable $15F: Voodoll
+    dw $0160 ; MonsterTable $160: Golem
+    dw $0161 ; MonsterTable $161: RogueWave
 
 ; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList1::
 Data_00C_7961:: ; address name
-    dw $0136, $0137, $0138, $0139, $013A, $013B, $013C, $013D ; entry 0
-    dw $013E, $013F, $0140, $0141, $0142, $0143, $0144, $0145
-    dw $0146, $0147, $0148, $0149, $014A, $014B, $0162, $0163
-    dw $0164, $0165, $0166, $0167, $0168, $0169, $016A, $016B
-    dw $016C, $016D, $016E, $016F, $0170, $0171, $0172, $0173
+    dw $0136 ; entry 0 MonsterTable $136: Skeletor
+    dw $0137 ; MonsterTable $137: StoneMan
+    dw $0138 ; MonsterTable $138: FishRider
+    dw $0139 ; MonsterTable $139: AxeShark
+    dw $013A ; MonsterTable $13A: Aquadon
+    dw $013B ; MonsterTable $13B: Digong
+    dw $013C ; MonsterTable $13C: MetalKing
+    dw $013D ; MonsterTable $13D: Serpentia
+    dw $013E ; MonsterTable $13E: Coatol
+    dw $013F ; MonsterTable $13F: Orochi
+    dw $0140 ; MonsterTable $140: BattleRex
+    dw $0141 ; MonsterTable $141: WhipBird
+    dw $0142 ; MonsterTable $142: Shantak
+    dw $0143 ; MonsterTable $143: Rosevine
+    dw $0144 ; MonsterTable $144: Grendal
+    dw $0145 ; MonsterTable $145: Akubar
+    dw $0146 ; MonsterTable $146: Jamirus
+    dw $0147 ; MonsterTable $147: LampGenie
+    dw $0148 ; MonsterTable $148: WhiteKing
+    dw $0149 ; MonsterTable $149: Niterich
+    dw $014A ; MonsterTable $14A: KingSquid
+    dw $014B ; MonsterTable $14B: Grakos
+    dw $0162 ; MonsterTable $162: BoxSlime
+    dw $0163 ; MonsterTable $163: SlimeBorg
+    dw $0164 ; MonsterTable $164: DarkHorn
+    dw $0165 ; MonsterTable $165: ManEater
+    dw $0166 ; MonsterTable $166: Snapper
+    dw $0167 ; MonsterTable $167: GhosTree
+    dw $0168 ; MonsterTable $168: SkulRider
+    dw $0169 ; MonsterTable $169: Gigantes
+    dw $016A ; MonsterTable $16A: Skulpent
+    dw $016B ; MonsterTable $16B: Aquarella
+    dw $016C ; MonsterTable $16C: GoldSlime
+    dw $016D ; MonsterTable $16D: GranSlime
+    dw $016E ; MonsterTable $16E: Divinegon
+    dw $016F ; MonsterTable $16F: KingLeo
+    dw $0170 ; MonsterTable $170: RainHawk
+    dw $0171 ; MonsterTable $171: Durran
+    dw $0172 ; MonsterTable $172: Lazamanus
+    dw $0173 ; MonsterTable $173: GoldGolem
 
 ; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList2::
 Data_00C_79B1:: ; address name
-    dw $021E, $021F, $0220, $0221, $0222, $0223, $0224, $0225 ; entry 0
-    dw $0226, $0227, $0228, $0229, $022A, $022B, $022C, $022D
-    dw $022E, $022F, $0230, $0231, $0232, $0233, $0234, $0235
-    dw $0236, $0237, $0238, $0239, $023A, $023B, $023C, $023D
-    dw $023E, $023F, $0240, $0241, $0242, $0243, $0244, $0245
+    dw $021E ; entry 0 MonsterTable $21E: Phoenix
+    dw $021F ; MonsterTable $21F: Shantak
+    dw $0220 ; MonsterTable $220: Blizzardy
+    dw $0221 ; MonsterTable $221: Skullgon
+    dw $0222 ; MonsterTable $222: Akubar
+    dw $0223 ; MonsterTable $223: DarkHorn
+    dw $0224 ; MonsterTable $224: Serpentia
+    dw $0225 ; MonsterTable $225: SuperTen
+    dw $0226 ; MonsterTable $226: Unicorn
+    dw $0227 ; MonsterTable $227: KiteHawk
+    dw $0228 ; MonsterTable $228: FoxFire
+    dw $0229 ; MonsterTable $229: MetalDrak
+    dw $022A ; MonsterTable $22A: AxeShark
+    dw $022B ; MonsterTable $22B: StoneMan
+    dw $022C ; MonsterTable $22C: MedusaEye
+    dw $022D ; MonsterTable $22D: MadHornet
+    dw $022E ; MonsterTable $22E: Oniono
+    dw $022F ; MonsterTable $22F: TailEater
+    dw $0230 ; MonsterTable $230: BeastNite
+    dw $0231 ; MonsterTable $231: MimeSlime
+    dw $0232 ; MonsterTable $232: MadDragon
+    dw $0233 ; MonsterTable $233: WingSnake
+    dw $0234 ; MonsterTable $234: Orochi
+    dw $0235 ; MonsterTable $235: Trumpeter
+    dw $0236 ; MonsterTable $236: Wyvern
+    dw $0237 ; MonsterTable $237: Devipine
+    dw $0238 ; MonsterTable $238: Snapper
+    dw $0239 ; MonsterTable $239: StagBug
+    dw $023A ; MonsterTable $23A: ArmyCrab
+    dw $023B ; MonsterTable $23B: ArcDemon
+    dw $023C ; MonsterTable $23C: 1EyeClown
+    dw $023D ; MonsterTable $23D: MadKnight
+    dw $023E ; MonsterTable $23E: CaptDead
+    dw $023F ; MonsterTable $23F: Servant
+    dw $0240 ; MonsterTable $240: LavaMan
+    dw $0241 ; MonsterTable $241: BombCrag
+    dw $0242 ; MonsterTable $242: RushFish
+    dw $0243 ; MonsterTable $243: WhaleMage
+    dw $0244 ; MonsterTable $244: SpotKing
+    dw $0245 ; MonsterTable $245: SlimeBorg
 
 ; E-0183 (C1: the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in wArenaList).
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)
 ArenaEncounterList3::
 Data_00C_7A01:: ; address name
-    dw $01FF, $0200, $0201, $0202, $0203, $0204, $0246, $0247 ; entry 0
-    dw $0248, $0249, $024A, $024B, $024C, $024D, $024E, $024F
-    dw $0250, $0251, $0252, $0253, $0254, $0255, $0256, $0257
-    dw $0267, $0268, $0269, $026A, $026B, $026C, $026D, $026E
-    dw $026F, $0270, $0271, $0272, $0273, $0274, $0275, $0276
+    dw $01FF ; entry 0 MonsterTable $1FF: Bubblemon
+    dw $0200 ; MonsterTable $200: RogueNite
+    dw $0201 ; MonsterTable $201: Puppetor
+    dw $0202 ; MonsterTable $202: Exaucers
+    dw $0203 ; MonsterTable $203: WhaleMage
+    dw $0204 ; MonsterTable $204: MedusaEye
+    dw $0246 ; MonsterTable $246: LizardMan
+    dw $0247 ; MonsterTable $247: GreatDrak
+    dw $0248 ; MonsterTable $248: MadCat
+    dw $0249 ; MonsterTable $249: Emyu
+    dw $024A ; MonsterTable $24A: HornBeet
+    dw $024B ; MonsterTable $24B: Ogre
+    dw $024C ; MonsterTable $24C: PutrePup
+    dw $024D ; MonsterTable $24D: Roboster2
+    dw $024E ; MonsterTable $24E: GoldGolem
+    dw $024F ; MonsterTable $24F: WhiteKing
+    dw $0250 ; MonsterTable $250: GoldSlime
+    dw $0251 ; MonsterTable $251: Divinegon
+    dw $0252 ; MonsterTable $252: KingLeo
+    dw $0253 ; MonsterTable $253: RainHawk
+    dw $0254 ; MonsterTable $254: Rosevine
+    dw $0255 ; MonsterTable $255: Armorpion
+    dw $0256 ; MonsterTable $256: Durran
+    dw $0257 ; MonsterTable $257: Aquadon
+    dw $0267 ; MonsterTable $267: MetalKing
+    dw $0268 ; MonsterTable $268: Serpentia
+    dw $0269 ; MonsterTable $269: IronTurt
+    dw $026A ; MonsterTable $26A: ZapBird
+    dw $026B ; MonsterTable $26B: FooHero
+    dw $026C ; MonsterTable $26C: GoatHorn
+    dw $026D ; MonsterTable $26D: Inverzon
+    dw $026E ; MonsterTable $26E: Voodoll
+    dw $026F ; MonsterTable $26F: AxeShark
+    dw $0270 ; MonsterTable $270: Digong
+    dw $0271 ; MonsterTable $271: Swordgon
+    dw $0272 ; MonsterTable $272: GigaDraco
+    dw $0273 ; MonsterTable $273: SuperTen
+    dw $0274 ; MonsterTable $274: BigRoost
+    dw $0275 ; MonsterTable $275: GhosTree
+    dw $0276 ; MonsterTable $276: WarMantis
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0C_7A51:: ; heuristic: event script entry or jump target; C0

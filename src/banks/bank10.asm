@@ -4208,7 +4208,7 @@ Script_56EE:: ; heuristic: event script entry or jump target; C0
     script_message $8B65 ; 'As a pro master, you can'
     script_end
 Script_56F2:: ; heuristic: event script entry or jump target; C0
-    script_encounter $1A
+    script_encounter $1A ; encounter words: Slime, Slime, Slime
     script_end
 Script_56F5:: ; heuristic: event script entry or jump target; C0
     script_walk 2, 3, 2
@@ -4713,7 +4713,7 @@ Script_5A95:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5AAB:: ; heuristic: event script entry or jump target; C0
     script_message $0175 ; 'I'm making a new home for'
-    script_encounter $16
+    script_encounter $16 ; encounter words: Beavern, Slime, Slime
     script_message $0176 ; 'Gaah! You're too strong! You win!'
     script_face $80, 2
     script_slide_y $80
@@ -4782,13 +4782,13 @@ Script_5B37:: ; heuristic: event script entry or jump target; C0
 Script_5B3C:: ; heuristic: event script entry or jump target; C0
     script_message $0196 ; 'Heh, you have monsters in tow?'
     script_set_flag $0059
-    script_encounter $00
+    script_encounter $00 ; encounter words: CurseLamp, Slime, Slime
     script_message $0198 ; 'You defeated my monster? Urggh Time'
     script_command SCRIPT_SCENE_RIVAL_DEFEATED
     script_end
 Script_5B49:: ; heuristic: event script entry or jump target; C0
     script_message $0197 ; 'You again! You're determined! But it'
-    script_encounter $00
+    script_encounter $00 ; encounter words: CurseLamp, Slime, Slime
     script_message $0198 ; 'You defeated my monster? Urggh Time'
     script_command SCRIPT_SCENE_RIVAL_DEFEATED
     script_end
@@ -4892,13 +4892,13 @@ Script_5BC4:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5BE8:: ; heuristic: event script entry or jump target; C0
     script_message $0838 ; 'Who are you? This is our'
-    script_encounter $01
+    script_encounter $01 ; encounter words: HoodSquid, Slime, Slime
     script_command SCRIPT_SCENE_WATCH_OUT
     script_set_flag $0066
     script_end
 Script_5BF2:: ; heuristic: event script entry or jump target; C0
     script_message $0839 ; 'You can keep trying, but you're'
-    script_encounter $01
+    script_encounter $01 ; encounter words: HoodSquid, Slime, Slime
     script_command SCRIPT_SCENE_WATCH_OUT
     script_set_flag $0066
     script_end
@@ -4990,32 +4990,32 @@ Script_5C88:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5C8A:: ; heuristic: event script entry or jump target; C0
     script_message $0859 ; 'How could we die before enjoying'
-    script_encounter $17
+    script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
     script_set_flag $0071
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C94:: ; heuristic: event script entry or jump target; C0
     script_message $085A ; 'The treasures are ours No one'
-    script_encounter $17
+    script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
     script_set_flag $0072
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5C9E:: ; heuristic: event script entry or jump target; C0
     script_message $085C ; 'It nags and nags that we'
-    script_encounter $17
+    script_encounter $17 ; encounter words: BoneSlave, Slime, Slime
     script_set_flag $0073
     script_command SCRIPT_SCENE_PIRATE_GHOSTS
     script_end
 Script_5CA8:: ; heuristic: event script entry or jump target; C0
     script_message $085E ; 'Who disturbs us in our sleep'
-    script_encounter $02
+    script_encounter $02 ; encounter words: BoneSlave, CaptDead, BoneSlave
     script_message $0860 ; 'Child We have lost Finally, we'
     script_command SCRIPT_GIVE_ITEM_BLINK
     script_set_flag $0075
     script_end
 Script_5CB5:: ; heuristic: event script entry or jump target; C0
     script_message $085F ; 'You seem to not understand The'
-    script_encounter $02
+    script_encounter $02 ; encounter words: BoneSlave, CaptDead, BoneSlave
     script_message $0860 ; 'Child We have lost Finally, we'
     script_command SCRIPT_GIVE_ITEM_BLINK
     script_set_flag $0075
@@ -5090,7 +5090,7 @@ Script_5D3F:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5D44:: ; heuristic: event script entry or jump target; C0
     script_message $0893 ; 'Thick, suction- cupped tentacles snaked out'
-    script_encounter $1E
+    script_encounter $1E ; encounter words: KingSquid, Slime, Slime
     script_set_flag $00F4
     script_end
 Script_5D4D:: ; heuristic: event script entry or jump target; C0
@@ -5545,12 +5545,12 @@ Data_010_6048:: ; address name
 Script_604F:: ; heuristic: event script entry or jump target; C0
     script_message $0433 ; 'Kweeeeeh!'
     script_command SCRIPT_SCENE_MADCONDOR_CRY
-    script_encounter $05
+    script_encounter $05 ; encounter words: MadCondor, Slime, Slime
     script_set_flag $00A8
     script_end
 Script_6059:: ; heuristic: event script entry or jump target; C0
     script_message $0433 ; 'Kweeeeeh!'
-    script_encounter $05
+    script_encounter $05 ; encounter words: MadCondor, Slime, Slime
     script_set_flag $00A8
     script_end
 Script_6062:: ; heuristic: event script entry or jump target; C0
@@ -5589,7 +5589,7 @@ Script_6091:: ; heuristic: event script entry or jump target; C0
 Script_6096:: ; heuristic: event script entry or jump target; C0
     script_message $045D ; 'You can take this treasure, but'
     script_set_flag $00AD
-    script_encounter $06
+    script_encounter $06 ; encounter words: Metabble, Slime, Slime
     script_message $045F ; 'Heh, you're not half bad! As'
     script_walk 0, 0, 2
     script_walk 0, 3, 2
@@ -5599,7 +5599,7 @@ Script_6096:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_60B0:: ; heuristic: event script entry or jump target; C0
     script_message $045E ; 'I'm up for your challenge anytime!'
-    script_encounter $06
+    script_encounter $06 ; encounter words: Metabble, Slime, Slime
     script_message $045F ; 'Heh, you're not half bad! As'
     script_walk 0, 0, 2
     script_walk 0, 3, 2
@@ -5609,7 +5609,7 @@ Script_60B0:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_60C7:: ; heuristic: event script entry or jump target; C0
     script_message $0460 ; 'Let the power of justice smite'
-    script_encounter $07
+    script_encounter $07 ; encounter words: Skeletor, Slime, Slime
     script_command SCRIPT_SCENE_JUSTICE_2
     script_end
 Script_60CE:: ; heuristic: event script entry or jump target; C0
@@ -5634,7 +5634,7 @@ Script_60DD:: ; heuristic: event script entry or jump target; C0
 Script_60EA:: ; heuristic: event script entry or jump target; C0
     script_message $0466 ; 'You overcame the traps I laid'
     script_set_flag $00B3
-    script_encounter $08
+    script_encounter $08 ; encounter words: Niterich, Slime, Slime
     script_message $0468 ; 'You e beaten me fairly Take'
     script_command SCRIPT_SCENE_BEATEN_FAIRLY
     script_set_flag $00B4
@@ -5644,7 +5644,7 @@ Script_60EA:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6103:: ; heuristic: event script entry or jump target; C0
     script_message $0467 ; 'Wahahahah! Here again, are you? I'
-    script_encounter $08
+    script_encounter $08 ; encounter words: Niterich, Slime, Slime
     script_message $0468 ; 'You e beaten me fairly Take'
     script_command SCRIPT_SCENE_BEATEN_FAIRLY
     script_set_flag $00B4
@@ -5737,14 +5737,14 @@ Script_61B3:: ; heuristic: event script entry or jump target; C0
     script_face $80, 0
     script_message $0554 ; 'My work is done I am'
     script_set_flag $00D2
-    script_encounter $1D
+    script_encounter $1D ; encounter words: Centasaur, GigaDraco, Garudian
     script_message $0556 ; 'N No How could my monsters'
     script_command SCRIPT_SCENE_DARCK_TAUNT
     script_set_flag $00D3
     script_end
 Script_61DC:: ; heuristic: event script entry or jump target; C0
     script_message $0555 ; 'You seem to still not realize'
-    script_encounter $1D
+    script_encounter $1D ; encounter words: Centasaur, GigaDraco, Garudian
     script_message $0556 ; 'N No How could my monsters'
     script_command SCRIPT_SCENE_DARCK_TAUNT
     script_set_flag $00D3
@@ -5752,13 +5752,13 @@ Script_61DC:: ; heuristic: event script entry or jump target; C0
 Script_61E9:: ; heuristic: event script entry or jump target; C0
     script_message $0557 ; 'Darck Fawahahah! You chased your treasures'
     script_set_flag $00D0
-    script_encounter $0A
+    script_encounter $0A ; encounter words: Darck, Slime, Slime
     script_message $0559 ; 'Darck Wha What? How could I'
     script_command SCRIPT_SCENE_DARCK_DEFEATED
     script_end
 Script_61F6:: ; heuristic: event script entry or jump target; C0
     script_message $0558 ; 'Darck Fwahahahah! Bravo! Splendid! You e'
-    script_encounter $0A
+    script_encounter $0A ; encounter words: Darck, Slime, Slime
     script_message $0559 ; 'Darck Wha What? How could I'
     script_command SCRIPT_SCENE_DARCK_DEFEATED
     script_end
@@ -5826,14 +5826,14 @@ Script_626A:: ; heuristic: event script entry or jump target; C0
 Script_6290:: ; heuristic: event script entry or jump target; C0
     script_message $0724 ; 'That's what we'll do, kid. You're'
     script_set_flag $014A
-    script_encounter $09
+    script_encounter $09 ; encounter words: ArrowDog, ArrowDog, Slime
     script_message $0754 ; 'Too strong Arroooh!'
     script_command SCRIPT_SCENE_TOO_STRONG
     script_set_flag $014B
     script_end
 Script_62A0:: ; heuristic: event script entry or jump target; C0
     script_message $0727 ; 'You e come back again, ruff?'
-    script_encounter $09
+    script_encounter $09 ; encounter words: ArrowDog, ArrowDog, Slime
     script_message $0754 ; 'Too strong Arroooh!'
     script_command SCRIPT_SCENE_TOO_STRONG
     script_set_flag $014B
@@ -5847,7 +5847,7 @@ Script_62AD:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_62BD:: ; heuristic: event script entry or jump target; C0
     script_message $4739 ; 'The human in the forest again?'
-    script_encounter $0B
+    script_encounter $0B ; encounter words: AgDevil, Slime, Slime
     script_message $073B ; 'Wh-what? I Lost to a child?'
     script_command SCRIPT_KEY_BOSS_BEATEN
     script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
@@ -5878,7 +5878,7 @@ Script_62BD:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6313:: ; heuristic: event script entry or jump target; C0
     script_message $073A ; 'What, you again? Rude, rude, rude!'
-    script_encounter $0B
+    script_encounter $0B ; encounter words: AgDevil, Slime, Slime
     script_message $073B ; 'Wh-what? I Lost to a child?'
     script_command SCRIPT_KEY_BOSS_BEATEN
     script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
@@ -5966,12 +5966,12 @@ Script_63C5:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_63DB:: ; heuristic: event script entry or jump target; C0
     script_message $0767 ; '0 peered into the barrel. A'
-    script_encounter $1F
+    script_encounter $1F ; encounter words: Shadow, Slime, Slime
     script_set_flag $015D
     script_end
 Script_63E4:: ; heuristic: event script entry or jump target; C0
     script_message $0767 ; '0 peered into the barrel. A'
-    script_encounter $1F
+    script_encounter $1F ; encounter words: Shadow, Slime, Slime
     script_set_flag $015E
     script_end
 Script_63ED:: ; heuristic: event script entry or jump target; C0
@@ -6070,14 +6070,14 @@ Script_648E:: ; heuristic: event script entry or jump target; C0
 Script_6496:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01BA
     script_message $07B9 ; 'You're going to regret seeing us.'
-    script_encounter $11
+    script_encounter $11 ; encounter words: Pixy, Pixy, Slime
     script_message $07BC ; 'Please! Mercy! Spare us! Take back'
     script_command SCRIPT_SCENE_MERCY
     script_set_flag $01BB
     script_end
 Script_64A6:: ; heuristic: event script entry or jump target; C0
     script_message $07BB ; 'We'll smash you as often as'
-    script_encounter $11
+    script_encounter $11 ; encounter words: Pixy, Pixy, Slime
     script_message $07BC ; 'Please! Mercy! Spare us! Take back'
     script_command SCRIPT_SCENE_MERCY
     script_set_flag $01BB
@@ -6127,7 +6127,7 @@ Script_6501:: ; heuristic: event script entry or jump target; C0
 Script_6509:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01C2
     script_message $0CDE ; 'What is it, you little brat?'
-    script_encounter $12
+    script_encounter $12 ; encounter words: Copycat, StoneMan, WhipBird
     script_message $0CE0 ; 'But No! I lost to this'
     script_command SCRIPT_KEY_BOSS_BEATEN_2
     script_walk 1, 2, 2
@@ -6140,7 +6140,7 @@ Script_6509:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_652C:: ; heuristic: event script entry or jump target; C0
     script_message $0CDF ; 'What is it, you little brat?'
-    script_encounter $12
+    script_encounter $12 ; encounter words: Copycat, StoneMan, WhipBird
     script_message $0CE0 ; 'But No! I lost to this'
     script_command SCRIPT_KEY_BOSS_BEATEN_2
     script_walk 1, 2, 2
@@ -6165,7 +6165,7 @@ Script_6558:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6564:: ; heuristic: event script entry or jump target; C0
     script_message $8CF6 ; 'Milayou Great! No holding back!'
-    script_encounter $13
+    script_encounter $13 ; encounter words: MetalKing, RainHawk, Coatol
     script_message $0CF9 ; 'Milayou I lost But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
@@ -6178,7 +6178,7 @@ Script_6578:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6581:: ; heuristic: event script entry or jump target; C0
     script_message $8CF6 ; 'Milayou Great! No holding back!'
-    script_encounter $13
+    script_encounter $13 ; encounter words: MetalKing, RainHawk, Coatol
     script_message $0CF9 ; 'Milayou I lost But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
@@ -6186,7 +6186,7 @@ Script_6581:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6595:: ; heuristic: event script entry or jump target; C0
     script_message $0C48 ; '0 checked the treasure chest. The'
-    script_encounter $32
+    script_encounter $32 ; encounter words: Mimic, Slime, Slime
     script_command SCRIPT_SET_FLAG_REDRAW
     script_end
 Script_659C:: ; heuristic: event script entry or jump target; C0

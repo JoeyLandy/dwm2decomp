@@ -3591,7 +3591,12 @@ class Rom:
                 out.append(f"    {'script_hold_dpad' if op == 4 else 'script_face'} ${arg[0]:02X}, {arg[1]}")
             elif op in (0x0B, 0x0C, 0x0D):
                 macro = {0x0B: "script_slide_y", 0x0C: "script_hide_object", 0x0D: "script_encounter"}[op]
-                out.append(f"    {macro} ${arg[0]:02X}")
+                note = ""
+                if op == 0x0D and arg[0] < 51:  # E-0263: the foes of ScriptedEncounterTable record n (0A:$481C)
+                    foes = [self.word_note("monster_table", self._u16(0x0A, 0x481C + 8 * arg[0] + 2 + 2 * k))
+                            .split(": ", 1)[-1] for k in range(3)]
+                    note = " ; encounter words: " + ", ".join(foes)  # how many are fought is not read here
+                out.append(f"    {macro} ${arg[0]:02X}{note}")
             elif arg:
                 out.append(f"    script_op ${op:02X}, " + ", ".join(f"${v:02X}" for v in arg))
             elif op in self.script_commands:  # E-0244: a named command type (config/script_commands.json)
@@ -3652,6 +3657,15 @@ class Rom:
                      0xFB: "next result when wArg1 = 2, else end of list"}
             if hi in codes:
                 return codes[hi]
+        if kind == "monster_table":  # E-0263: a MonsterTable id; its record's first word is the species
+            if v < 0x250:
+                o = 0x34 * BANK + 0x4075 + 26 * v - BANK
+            elif v < 0x250 + 93:
+                o = 0xA2 * BANK + 0x4056 + 26 * (v - 0x250 + 1) - BANK
+            else:
+                return ""
+            sp = self.data[o] | self.data[o + 1] << 8
+            return f"MonsterTable ${v:03X}: {self.monster_name(sp)}" if 0 < sp < 0x180 else f"MonsterTable ${v:03X}"
         if kind == "message":  # E-0214: a message word, quoted like script messages
             text = self.message_preview(v) if v else None
             return f"'{text}'" if text else ("none" if v == 0 else "")
