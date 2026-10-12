@@ -55,23 +55,22 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-12, after E-0244)
+## Readability state (2026-10-12, after E-0256)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run309; 160 tests, 3 skipped). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run330; 160 tests, 3 skipped). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
 | Routines with only an address name (`tools/rank_unnamed.py`) | 0 |
-| `call`/`farcall` operands that reach a named routine | 100% |
 | RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 |
-| Code labels | 9,450: 5,495 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps, now prefixed by named parents such as `ShopMenu_Case03`), 151 still spelling a RAM address (E-0155), the rest descriptive |
-| `INCBIN` without an asset comment | 0 (build/measure2.py, E-0240/E-0241): every remaining `INCBIN` is an annotated compressed asset (LZSS stream with its expanded size, SGB transfer, ...). The cartridge header is laid out field by field (E-0239) |
-| Data decoded field by field | as listed under E-0138 to E-0232, plus (E-0233 to E-0241): debug menu names, tactic offsets, effect tile blocks, glyph tile destination lists, preset and default monster records, MonsterTableA2 (ids $250-$2AC), action handler masks and the action-id effect table, key-world return destinations, arena messages, shop item lists, item values and shop percentages, item sort orders, skill replacement pairs, OBJ palettes, field and trigger sprite records, sound test tables, map exit warps, sequence frame lists, tile upload runs |
-| Event scripts | 3,580 script lines. Every opcode with inline bytes has a named macro (`script_walk`, `script_wait`, `script_face`, `script_encounter`, ..., E-0242). 21 menu command types are named constants (`SCRIPT_SHOP`, `SCRIPT_BREED`, `SCRIPT_LIBRARY`, ..., E-0244), covering 429 of 633 `script_command` lines. About 150 one-off cutscene command types keep their numbers |
-| Message quotes | read on LookupString's two levels (E-0243; they were one string off before) and under the wMessageMode the script's menu command set (E-0242) |
+| Code labels | 9,450: 5,495 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), all prefixed by a named parent (E-0245: no `Func_BBB_AAAA_CaseNN` left); 151 still spelling a RAM address (E-0155) |
+| `INCBIN` without an asset comment | 0 (build/measure2.py, E-0240/E-0241) |
+| Data labels with only an address name | 1,325 (from 12,533 before E-0249). Labelled by identity: 6,175 strings (`Message_GG_II` = message word $GGII, `MessageBank0E_II`, `String_BB_CC_II`); 2,352 map screen streams and 732 key-world chunk screens by position; key-world rooms; 218 sound tracks; species records, item descriptions and default names by monster, item and family (E-0249 to E-0256). Most of the rest are same-bank loads whose comment names their readers |
+| Event scripts | 3,580 script lines. Every opcode with inline bytes has a named macro (E-0242). All 176 command types used are named constants: menus (`SCRIPT_SHOP`, `SCRIPT_BREED`, ...), actions (`SCRIPT_GIVE_MONSTER`, `SCRIPT_TAKE_ITEM`, ...), cutscene steps `SCRIPT_SCENE_*` named after their scene, and key-world talk events `SCRIPT_TALKGG_CC` (E-0244 to E-0246) |
+| Message quotes | read on LookupString's two levels (E-0243; they were one string off before), under the script's wMessageMode (E-0242), and in code: 1,354 `ld hl, $XXXX` message words before message calls, plus the first message of every script a routine starts (E-0248) |
 | Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
 
-Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Not yet done: names for the one-off cutscene command types; meanings for most `_CaseNN` state-machine steps; many record fields (the SRAM monster record beyond its names, MonsterTable bytes 6-9).
+Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning. Not yet done: meanings for most `_CaseNN` state-machine steps; many record fields (the SRAM monster record beyond its names, species records beyond family and EXP curve, MonsterTable bytes 6-9, object slot bytes 0 and $F); the states of the key-world talk-event commands; message quotes for key-world talk events (they use the wMapType bit-7 path).
 
 ## Readability state (2026-10-09, after E-0027)
 
