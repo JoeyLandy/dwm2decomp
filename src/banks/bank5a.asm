@@ -158,8 +158,7 @@ Data_05A_49A2:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 1219 bytes expand to 1856 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MapB0Tileset:: ; heuristic: map tileset stream; C0
 Data_05A_49C4:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $1689C4, $4C1
-    dw Data_05A_54B8
+    INCBIN "dwm2-cobi-us.gbc", $1689C4, $4C3
 
 ; E-0142 (derived: 6 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -250,10 +249,7 @@ Data_05A_5365:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 1045 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MapB1Tileset:: ; heuristic: map tileset stream; C0
 Data_05A_53A2:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $1693A2, $116
-
-Data_05A_54B8:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1694B8, $2FF
+    INCBIN "dwm2-cobi-us.gbc", $1693A2, $415
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
@@ -292,25 +288,7 @@ Data_05A_58E1:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 707 bytes expand to 896 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MapB3Tileset:: ; heuristic: map tileset stream; C0
 Data_05A_5935:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $169935, $119
-
-Data_05A_5A4E:: ; heuristic: target of a monotone pointer table; C0
-    db $FF
-
-Data_05A_5A4F:: ; heuristic: target of a monotone pointer table; C0
-    db $0F
-
-Data_05A_5A50:: ; heuristic: target of a monotone pointer table; C0
-    db $DF
-
-Data_05A_5A51:: ; heuristic: target of a monotone pointer table; C0
-    db $FF
-
-Data_05A_5A52:: ; heuristic: target of a monotone pointer table; C0
-    db $FD
-
-Data_05A_5A53:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $169A53, $1A5
+    INCBIN "dwm2-cobi-us.gbc", $169935, $2C3
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours

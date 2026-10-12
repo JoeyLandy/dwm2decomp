@@ -5550,14 +5550,7 @@ Data_0F0_6D79:: ; heuristic: target of a monotone pointer table; C0
     db $41, $00, $FE, $FE
 
 Data_0F0_6D7D:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6D8D
-    dw Data_0F0_6D9B
-    dw Data_0F0_6DA9
-    dw Data_0F0_6DB7
-    dw Data_0F0_6DC5
-    dw Data_0F0_6DCF
-    dw Data_0F0_6DD5
-    dw Data_0F0_6DD9
+    db $8D, $6D, $9B, $6D, $A9, $6D, $B7, $6D, $C5, $6D, $CF, $6D, $D5, $6D, $D9, $6D
 
 ; LZSS-compressed asset: 75 bytes expand to 72 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6D8D:: ; heuristic: target of a monotone pointer table; C0
@@ -5596,14 +5589,7 @@ Data_0F0_6DD9:: ; heuristic: target of a monotone pointer table; C0
     db $64, $00, $FE, $FE
 
 Data_0F0_6DDD:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6DED
-    dw Data_0F0_6DF3
-    dw Data_0F0_6DFD
-    dw Data_0F0_6E0B
-    dw Data_0F0_6E19
-    dw Data_0F0_6E23
-    dw Data_0F0_6E29
-    dw Data_0F0_6E2F
+    db $ED, $6D, $F3, $6D, $FD, $6D, $0B, $6E, $19, $6E, $23, $6E, $29, $6E, $2F, $6E
 
 ; LZSS-compressed asset: 109 bytes expand to 106 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6DED:: ; heuristic: target of a monotone pointer table; C0
@@ -5638,14 +5624,7 @@ Data_0F0_6E2F:: ; heuristic: target of a monotone pointer table; C0
     db $82, $00, $FE, $FE
 
 Data_0F0_6E33:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6E43
-    dw Data_0F0_6E4D
-    dw Data_0F0_6E55
-    dw Data_0F0_6E61
-    dw Data_0F0_6E71
-    dw Data_0F0_6E77
-    dw Data_0F0_6E7D
-    dw Data_0F0_6E81
+    db $43, $6E, $4D, $6E, $55, $6E, $61, $6E, $71, $6E, $77, $6E, $7D, $6E, $81, $6E
 
 ; LZSS-compressed asset: 148 bytes expand to 145 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6E43:: ; heuristic: target of a monotone pointer table; C0
@@ -5680,14 +5659,7 @@ Data_0F0_6E81:: ; heuristic: target of a monotone pointer table; C0
     db $A3, $00, $A4, $00, $A5, $00, $FE, $FE
 
 Data_0F0_6E89:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6E99
-    dw Data_0F0_6EA3
-    dw Data_0F0_6EAB
-    dw Data_0F0_6EB7
-    dw Data_0F0_6EC7
-    dw Data_0F0_6ECD
-    dw Data_0F0_6ED5
-    dw Data_0F0_6ED9
+    db $99, $6E, $A3, $6E, $AB, $6E, $B7, $6E, $C7, $6E, $CD, $6E, $D5, $6E, $D9, $6E
 
 ; LZSS-compressed asset: 179 bytes expand to 176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6E99:: ; heuristic: target of a monotone pointer table; C0
@@ -5722,14 +5694,7 @@ Data_0F0_6ED9:: ; heuristic: target of a monotone pointer table; C0
     db $C8, $00, $FE, $FE
 
 Data_0F0_6EDD:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6EED
-    dw Data_0F0_6EF3
-    dw Data_0F0_6EF9
-    dw Data_0F0_6EFF
-    dw Data_0F0_6F0B
-    dw Data_0F0_6F17
-    dw Data_0F0_6F29
-    dw Data_0F0_6F33
+    db $ED, $6E, $F3, $6E, $F9, $6E, $FF, $6E, $0B, $6F, $17, $6F, $29, $6F, $33, $6F
 
 ; LZSS-compressed asset: 214 bytes expand to 211 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6EED:: ; heuristic: target of a monotone pointer table; C0
@@ -5765,14 +5730,7 @@ Data_0F0_6F33:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $00, $FE, $FE
 
 Data_0F0_6F37:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6F47
-    dw Data_0F0_6F4B
-    dw Data_0F0_6F55
-    dw Data_0F0_6F67
-    dw Data_0F0_6F75
-    dw Data_0F0_6F79
-    dw Data_0F0_6F7F
-    dw Data_0F0_6F89
+    db $47, $6F, $4B, $6F, $55, $6F, $67, $6F, $75, $6F, $79, $6F, $7F, $6F, $89, $6F
 
 ; LZSS-compressed asset: 121 bytes expand to 246 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6F47:: ; heuristic: target of a monotone pointer table; C0
@@ -5789,10 +5747,8 @@ Data_0F0_6F55:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 254 bytes expand to 251 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6F67:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $00, $FC, $00, $03, $01, $06, $01, $09, $01, $0E, $01, $FE, $FE
-
-Data_0F0_6F75:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $01, $FE, $FE
+    db $FB, $00, $FC, $00, $03, $01, $06, $01, $09, $01, $0E, $01, $FE, $FE, $0A, $01
+    db $FE, $FE
 
 ; LZSS-compressed asset: 250 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6F79:: ; heuristic: target of a monotone pointer table; C0
@@ -5807,14 +5763,7 @@ Data_0F0_6F89:: ; heuristic: target of a monotone pointer table; C0
     db $0C, $01, $FE, $FE
 
 Data_0F0_6F8D:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6F9D
-    dw Data_0F0_6FA9
-    dw Data_0F0_6FB1
-    dw Data_0F0_6FBB
-    dw Data_0F0_6FCB
-    dw Data_0F0_6FD9
-    dw Data_0F0_6FE5
-    dw Data_0F0_6FE9
+    db $9D, $6F, $A9, $6F, $B1, $6F, $BB, $6F, $CB, $6F, $D9, $6F, $E5, $6F, $E9, $6F
 
 ; LZSS-compressed asset: 286 bytes expand to 283 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6F9D:: ; heuristic: target of a monotone pointer table; C0
@@ -5838,24 +5787,14 @@ Data_0F0_6FCB:: ; heuristic: target of a monotone pointer table; C0
 
 ; LZSS-compressed asset: 296 bytes expand to 293 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6FD9:: ; heuristic: target of a monotone pointer table; C0
-    db $25, $01, $2A, $01, $2D, $01, $2E, $01, $33, $01, $FE, $FE
-
-Data_0F0_6FE5:: ; heuristic: target of a monotone pointer table; C0
-    db $35, $01, $FE, $FE
+    db $25, $01, $2A, $01, $2D, $01, $2E, $01, $33, $01, $FE, $FE, $35, $01, $FE, $FE
 
 ; LZSS-compressed asset: 207 bytes expand to 310 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6FE9:: ; heuristic: target of a monotone pointer table; C0
     db $36, $01, $FE, $FE
 
 Data_0F0_6FED:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6FFD
-    dw Data_0F0_7005
-    dw Data_0F0_700F
-    dw Data_0F0_701B
-    dw Data_0F0_7029
-    dw Data_0F0_7035
-    dw Data_0F0_7041
-    dw Data_0F0_7047
+    db $FD, $6F, $05, $70, $0F, $70, $1B, $70, $29, $70, $35, $70, $41, $70, $47, $70
 
 ; LZSS-compressed asset: 319 bytes expand to 316 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_0F0_6FFD:: ; heuristic: target of a monotone pointer table; C0
@@ -5890,40 +5829,7 @@ Data_0F0_7047:: ; heuristic: target of a monotone pointer table; C0
     db $59, $01, $FE, $FE
 
 Data_0F0_704B:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_705B
-    dw Data_0F0_705D
-    dw Data_0F0_705F
-    dw Data_0F0_7061
-    dw Data_0F0_7063
-    dw Data_0F0_7065
-    dw Data_0F0_7067
-    dw Data_0F0_7085
-
-Data_0F0_705B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_705D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_705F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_7061:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_7063:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_7065:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_0F0_7067:: ; heuristic: target of a monotone pointer table; C0
-    db $5F, $01, $60, $01, $62, $01, $63, $01, $65, $01, $66, $01, $68, $01, $6A, $01
-    db $6B, $01, $6C, $01, $6D, $01, $6E, $01, $6F, $01, $74, $01, $FE, $FE
-
-Data_0F0_7085:: ; heuristic: target of a monotone pointer table; C0
-    db $61, $01, $64, $01, $67, $01, $69, $01, $70, $01, $71, $01, $72, $01, $73, $01
-    db $FE, $FE
+    INCBIN "dwm2-cobi-us.gbc", $3C304B, $4C
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
 ; 14 call sites from 4 routines (e.g. ScriptCommand86_Run_Case04_Sub01, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRun72C8)

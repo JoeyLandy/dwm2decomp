@@ -1453,13 +1453,7 @@ Data_05E_5656:: ; heuristic: label inside a table; C0
 ; LZSS-compressed asset: 835 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map49Tileset:: ; heuristic: map tileset stream; C0
 Data_05E_5F2A:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $179F2A, $131
-
-Data_05E_605B:: ; heuristic: target of a monotone pointer table; C0
-    db $73, $00, $84, $80
-
-Data_05E_605F:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17A05F, $20E
+    INCBIN "dwm2-cobi-us.gbc", $179F2A, $343
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
@@ -1531,22 +1525,7 @@ Data_05E_6509:: ; address name
 ; LZSS-compressed asset: 1466 bytes expand to 1776 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map58Tileset:: ; heuristic: map tileset stream; C0
 Data_05E_6549:: ; address name
-    db $F0, $06, $16, $00, $87, $00, $5E, $00
-
-Data_05E_6551:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17A551, $200
-
-Data_05E_6751:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17A751, $218
-
-Data_05E_6969:: ; heuristic: target of a monotone pointer table; C0
-    db $DB
-
-Data_05E_696A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17A96A, $100
-
-Data_05E_6A6A:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17AA6A, $99
+    INCBIN "dwm2-cobi-us.gbc", $17A549, $5BA
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
@@ -1615,16 +1594,7 @@ Data_05E_6FDC:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 1160 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map59Tileset:: ; heuristic: map tileset stream; C0
 Data_05E_7026:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $17B026, $57
-
-Data_05E_707D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17B07D, $F5
-
-Data_05E_7172:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17B172, $2DF
-
-Data_05E_7451:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17B451, $5D
+    INCBIN "dwm2-cobi-us.gbc", $17B026, $488
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
@@ -1679,10 +1649,7 @@ Data_05E_764D:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 664 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map5FTileset:: ; heuristic: map tileset stream; C0
 Data_05E_7687:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $17B687, $1F1
-
-Data_05E_7878:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $17B878, $A7
+    INCBIN "dwm2-cobi-us.gbc", $17B687, $298
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours

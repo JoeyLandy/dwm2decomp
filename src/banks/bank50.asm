@@ -178,17 +178,11 @@ Data_050_42AA:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 203 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4369:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $140369, $54
-
-Data_050_43BD:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1403BD, $77
+    INCBIN "dwm2-cobi-us.gbc", $140369, $CB
 
 ; LZSS-compressed asset: 177 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4434:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    INCBIN "dwm2-cobi-us.gbc", $140434, $4A
-
-Data_050_447E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $14047E, $67
+    INCBIN "dwm2-cobi-us.gbc", $140434, $B1
 
 ; LZSS-compressed asset: 121 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_44E5:: ; heuristic: stream in a run of back-to-back compressed streams; C0
@@ -196,29 +190,15 @@ Data_050_44E5:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 196 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_455E:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $02, $28, $29, $28, $29, $06, $07, $40, $41, $02, $06, $00, $42
-
-Data_050_456D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $14056D, $B5
+    INCBIN "dwm2-cobi-us.gbc", $14055E, $C4
 
 ; LZSS-compressed asset: 167 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4622:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $00, $42, $43, $42, $43, $40, $41, $40, $41, $24, $25, $04, $05, $28
-    db $29, $00, $0C, $02, $52, $53, $52, $53, $50, $51, $50, $51, $34, $35, $14
-
-Data_050_4641:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $140641, $88
+    INCBIN "dwm2-cobi-us.gbc", $140622, $A7
 
 ; LZSS-compressed asset: 200 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_46C9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $02, $28, $29, $06, $07, $2A, $2B, $02, $04, $02, $42, $43, $02, $0C
-    db $02, $38
-
-Data_050_46DB:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1406DB, $A6
-
-Data_050_4781:: ; heuristic: target of a monotone pointer table; C0
-    db $0A, $18, $02, $F0, $00, $02, $C8, $0A, $02, $2A, $12, $02, $DC, $0A, $54, $55
+    INCBIN "dwm2-cobi-us.gbc", $1406C9, $C8
 
 ; LZSS-compressed asset: 187 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4791:: ; heuristic: stream in a run of back-to-back compressed streams; C0
@@ -230,29 +210,15 @@ Data_050_484C:: ; heuristic: stream in a run of back-to-back compressed streams;
 
 ; LZSS-compressed asset: 204 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_48DD:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $04, $28, $29, $04, $00, $00, $00, $01, $02, $03, $04, $08, $06, $38
-    db $39, $04, $14, $00, $10, $11, $12, $13, $04, $1C, $06, $04, $02, $02, $26, $27
-    db $40, $41, $04, $30, $00, $2A, $2B, $04, $36, $00, $04, $16, $02, $36
-
-Data_050_490B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $14090B, $9E
+    INCBIN "dwm2-cobi-us.gbc", $1408DD, $CC
 
 ; LZSS-compressed asset: 168 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_49A9:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $00, $02, $03, $04, $05, $28, $29, $00, $04, $0A, $12, $13, $14, $15
-    db $38, $39, $00, $18, $0A, $2A, $2B, $24, $25, $00, $00, $0C, $3A, $3B
-
-Data_050_49C7:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $1409C7, $8A
+    INCBIN "dwm2-cobi-us.gbc", $1409A9, $A8
 
 ; LZSS-compressed asset: 241 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4A51:: ; heuristic: stream in a run of back-to-back compressed streams; C0
-    db $68, $01, $24, $28, $29, $24, $00, $02, $00, $01, $02, $03, $24, $0A, $02, $04
-    db $05, $38, $39, $24, $14, $02, $10, $11, $12, $13, $24, $1E, $02, $14, $15, $24
-    db $04, $04, $26, $27, $2A, $2B, $2C, $2D, $40, $41, $40, $41, $08, $09, $24, $18
-
-Data_050_4A81:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $140A81, $C1
+    INCBIN "dwm2-cobi-us.gbc", $140A51, $F1
 
 ; LZSS-compressed asset: 222 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_050_4B42:: ; heuristic: stream in a run of back-to-back compressed streams; C0

@@ -1895,6 +1895,49 @@ class Rom:
                         labels += 1
         log(f"tile-byte pointer runs undone: {dropped} words, {labels} labels")
 
+    def drop_stream_pointer_runs(self) -> None:
+        """E-0240: a heuristic `dw` word strictly inside a compressed stream with its own evidence
+        (a decompress call, a far-pointer table, a map or key-world table; not one found only by a
+        run of back-to-back streams or a monotone pointer table) is stream bytes. The word goes
+        back to bytes, and target labels only such words created are removed, as for tile runs."""
+        weak = ("run of back-to-back", "monotone pointer")
+        spans: dict[int, list[tuple[int, int]]] = {}
+        for (b, a), (size, used) in self.streams.items():
+            why = self.dreason.get((b, a), "")
+            # a 360-byte screen in a back-to-back run is strong too (the size is the evidence)
+            if not any(w in why for w in weak) or ("back-to-back" in why and size == 360):
+                spans.setdefault(b, []).append((a, a + used))
+        dropped = labels = 0
+        for b, sp in spans.items():
+            dt = self.dtab[b]
+            gone = [k for k in dt if any(lo < k and k + 2 <= hi for lo, hi in sp)]
+            if not gone:
+                continue
+            targets = {dt[k] for k in gone}
+            for k in gone:
+                del dt[k]
+                dropped += 1
+            still = set(dt.values()) | {t for (bb, _), (tb, t) in self.dref.items() if tb == b}
+            for t in targets:
+                if t in still or (b, t) in self.table_at or (b, t) in self.streams or \
+                        (b, t) in getattr(self, "script_at", {}) or (b, t) in self.names:
+                    continue
+                if self.dreason.get((b, t), "target of a monotone pointer table").startswith(
+                        "target of a monotone pointer table") and t in self.dlabels[b]:
+                    del self.dlabels[b][t]
+                    labels += 1
+        # labels left inside such a stream with nothing pointing at them any more
+        for b, sp in spans.items():
+            still = set(self.dtab[b].values()) | {t for (bb, _), (tb, t) in self.dref.items() if tb == b}
+            for t in [t for t in self.dlabels[b] if any(lo < t < hi for lo, hi in sp)]:
+                if t in still or (b, t) in self.table_at or (b, t) in self.streams or (b, t) in self.names:
+                    continue
+                if self.dreason.get((b, t), "target of a monotone pointer table").startswith(
+                        "target of a monotone pointer table"):
+                    del self.dlabels[b][t]
+                    labels += 1
+        log(f"pointer words inside streams undone: {dropped} words, {labels} labels")
+
     def data_readers(self, bank: int, addr: int) -> list[str]:
         """Names of the routines whose instructions load the address of data label (bank, addr)
         (from the resolved `ld rr, n` references), nearest named code label first (E-0162)."""
@@ -3377,6 +3420,7 @@ class Rom:
         self.prepare_tracks()
         self.prepare_scripts()
         self.drop_tile_pointer_runs()
+        self.drop_stream_pointer_runs()
         self.expand_families(self.families)
         self.name_dispatch_cases()
         self.apply_names()

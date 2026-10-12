@@ -2430,6 +2430,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0240 — MonsterTableA2, sequence frame lists (bank $32), pointer words inside streams; a stricter measure
+
+- Kind: OBSERVATION (reading; C1) and TOOL.
+- **MonsterTableA2 (A2:$4070, 93 x 26).** CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_Sub01 read $4056 + 26 * (id - $250 + 1) for ids from $250 (E-0033), so id $250 starts at $4070. The records run up to the code at $49E2 with the MonsterTable layout. This removes 12 false "back-to-back" streams.
+- **SequenceFrameTable (32:$40A6, 60 words) and SequenceFrames* ($411E-$4ADC).** LookupSequencePtrLoFrameWord takes list [seq + 2] and entry [seq + 3].
+  - Each entry is a frame byte and a timer byte. Low byte $FE steps back B entries; $FFFF ends the sequence.
+  - The LZSS comments on these lists were false pointer-run streams; declaring the table removes them.
+- **Tool.** drop_stream_pointer_runs undoes heuristic `dw` words, and removes the target labels only they created or that are left unreferenced, strictly inside a compressed stream that has its own evidence. A stream counts as having evidence when it was found from a decompress call or a layout table, or when it is a 360-byte screen in a back-to-back run. Such labels had cut streams into unannotated INCBIN pieces:
+  - SGBBorder2TilesA (18:$49C1);
+  - Map49Tileset and Map58Tileset (bank $5E);
+  - key-world screens in bank $50.
+  - In total, 132 words and 74 labels were undone.
+- **Measure.** measure_data counted an INCBIN as identified when any exported candidate stream overlapped it, including overlapping phantom candidates. build/measure2.py instead counts only slices introduced by an asset comment.
+  - By that rule, unidentified bytes were 5,590 before this entry and 384 after it: F0:$70C5-$7245 (values 0-7, no reader found yet).
+- Binary verification: build/run302 PASS, 0 differing bytes; tests OK.
+
 ### E-0239 — Action-id effect table (bank $3B), cartridge header, prompt window, glyph tile tables (bank $1D), trigger sprites, remaining small layouts
 
 - Kind: OBSERVATION (reading; C1, code entries C0), HARDWARE (header layout) and a correction.

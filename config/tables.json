@@ -19271,6 +19271,134 @@
         }
       ],
       "note": "E-0239 (C1: record 0 of the 6-byte records ScriptCommand84_Run_Case04_Sub01_Sub01 reads at $71E8 + 6 * wTriggerKind (TriggerSpriteTable holds 1-10); all six bytes are zero)."
+    },
+    {
+      "bank": "A2",
+      "addr": "4070",
+      "label": "MonsterTableA2",
+      "count": 93,
+      "id_base": 592,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "picture number: index into MonsterPictureTable, MonsterAttributeMapTable and MonsterPaletteTable (at most $0179; ids 1, 2, 3 = Slime, SpotSlime, CactiBall use pictures 10, 2, 145)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 1 (SkillTable index, $FF = none)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 2"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 3"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "skill id 4"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "16-bit value, up to $E8EE (meaning not established)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 8, values 0-7"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 9, values 0-99"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base HP"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base MP"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base ATK"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base DEF"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base AGL"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "base INT"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 22: personality axis copied to save-record offset $6F (graded with weight 9 by PersonalityIndexOfRecord)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 23: personality axis copied to offset $70 (weight 1)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 24: copied to offset $71 (not used by PersonalityIndexOfRecord)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "byte 25: personality axis copied to offset $72 (weight 3)"
+        }
+      ],
+      "note": "E-0240 (C1: CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_Sub01 read the 26-byte record at $4056 + 26 * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93 records up to the code at $49E2, the same layout as MonsterTable)."
+    },
+    {
+      "bank": "32",
+      "addr": "40A6",
+      "label": "SequenceFrameTable",
+      "count": 60,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "frame list of this sequence",
+          "reason": "sequence frame list"
+        }
+      ],
+      "lists": {
+        "until": "4ADC",
+        "size": 2,
+        "label": "SequenceFrames",
+        "fields": [
+          {
+            "type": "db",
+            "size": 2,
+            "name": "frame ($F8-$FE control: $FE = back B steps), timer B; $FF $FF ends"
+          }
+        ],
+        "record": "frame, timer"
+      },
+      "note": "E-0240 (C1: LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq + 3] of that list; TickSequencePtrLoSequence_Sub01 ends the sequence at $FFFF, steps back B entries when the low byte is $FE, and otherwise stores the word at seq + 4 (frame, then the timer CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to $4ADC, each ending with $FFFF)."
     }
   ]
 }

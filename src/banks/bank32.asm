@@ -120,7 +120,7 @@ Func_032_4083:: ; address name
     inc bc
     ld a, [bc]
     add a, a
-    ld hl, Data_032_40A6
+    ld hl, SequenceFrameTable
     add_a_to_hl
     deref_hl
     inc bc
@@ -132,392 +132,1617 @@ Func_032_4083:: ; address name
     ld c, a
     ret
 
-; address loaded by LookupSequencePtrLoFrameWord
-Data_032_40A6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_032_411E
-    dw Data_032_4132
-    dw Data_032_415E
-    dw Data_032_4190
-    dw Data_032_41B0
-    dw Data_032_41D0
-    dw Data_032_4212
-    dw Data_032_4228
-    dw Data_032_424C
-    dw Data_032_4292
-    dw Data_032_42B0
-    dw Data_032_42CE
-    dw Data_032_4310
-    dw Data_032_433A
-    dw Data_032_4358
-    dw Data_032_4396
-    dw Data_032_43B6
-    dw Data_032_43E4
-    dw Data_032_4424
-    dw Data_032_443E
-    dw Data_032_4452
-    dw Data_032_446C
-    dw Data_032_4484
-    dw Data_032_449A
-    dw Data_032_44AA
-    dw Data_032_44BA
-    dw Data_032_44D6
-    dw Data_032_4502
-    dw Data_032_4516
-    dw Data_032_4556
-    dw Data_032_4566
-    dw Data_032_459C
-    dw Data_032_45D6
-    dw Data_032_4610
-    dw Data_032_4646
-    dw Data_032_4656
-    dw Data_032_4668
-    dw Data_032_4696
-    dw Data_032_46C6
-    dw Data_032_4704
-    dw Data_032_4742
-    dw Data_032_4766
-    dw Data_032_47A4
-    dw Data_032_47E4
-    dw Data_032_4802
-    dw Data_032_481A
-    dw Data_032_4836
-    dw Data_032_4870
-    dw Data_032_48AC
-    dw Data_032_48D2
-    dw Data_032_48FA
-    dw Data_032_490E
-    dw Data_032_4952
-    dw Data_032_4994
-    dw Data_032_49C6
-    dw Data_032_4A06
-    dw Data_032_4A2A
-    dw Data_032_4A6A
-    dw Data_032_4A8C
-    dw Data_032_4AC4
+; E-0240 (C1: LookupSequencePtrLoFrameWord reads the word at $40A6 + 2 * [seq + 2], then the word at 2 * [seq + 3] of that list; TickSequencePtrLoSequence_Sub01 ends the sequence at $FFFF, steps back B entries when the low byte is $FE, and otherwise stores the word at seq + 4 (frame, then the timer CountDownSequencePtrLoFrameTimer counts down); 60 lists from $411E to $4ADC, each ending with $FFFF).
+; record: frame list of this sequence
+SequenceFrameTable::
+Data_032_40A6:: ; address name
+    dw SequenceFrames000 ; id 0
+    dw SequenceFrames001 ; id 1
+    dw SequenceFrames002 ; id 2
+    dw SequenceFrames003 ; id 3
+    dw SequenceFrames004 ; id 4
+    dw SequenceFrames005 ; id 5
+    dw SequenceFrames006 ; id 6
+    dw SequenceFrames007 ; id 7
+    dw SequenceFrames008 ; id 8
+    dw SequenceFrames009 ; id 9
+    dw SequenceFrames00A ; id 10
+    dw SequenceFrames00B ; id 11
+    dw SequenceFrames00C ; id 12
+    dw SequenceFrames00D ; id 13
+    dw SequenceFrames00E ; id 14
+    dw SequenceFrames00F ; id 15
+    dw SequenceFrames010 ; id 16
+    dw SequenceFrames011 ; id 17
+    dw SequenceFrames012 ; id 18
+    dw SequenceFrames013 ; id 19
+    dw SequenceFrames014 ; id 20
+    dw SequenceFrames015 ; id 21
+    dw SequenceFrames016 ; id 22
+    dw SequenceFrames017 ; id 23
+    dw SequenceFrames018 ; id 24
+    dw SequenceFrames019 ; id 25
+    dw SequenceFrames01A ; id 26
+    dw SequenceFrames01B ; id 27
+    dw SequenceFrames01C ; id 28
+    dw SequenceFrames01D ; id 29
+    dw SequenceFrames01E ; id 30
+    dw SequenceFrames01F ; id 31
+    dw SequenceFrames020 ; id 32
+    dw SequenceFrames021 ; id 33
+    dw SequenceFrames022 ; id 34
+    dw SequenceFrames023 ; id 35
+    dw SequenceFrames024 ; id 36
+    dw SequenceFrames025 ; id 37
+    dw SequenceFrames026 ; id 38
+    dw SequenceFrames027 ; id 39
+    dw SequenceFrames028 ; id 40
+    dw SequenceFrames029 ; id 41
+    dw SequenceFrames02A ; id 42
+    dw SequenceFrames02B ; id 43
+    dw SequenceFrames02C ; id 44
+    dw SequenceFrames02D ; id 45
+    dw SequenceFrames02E ; id 46
+    dw SequenceFrames02F ; id 47
+    dw SequenceFrames030 ; id 48
+    dw SequenceFrames031 ; id 49
+    dw SequenceFrames032 ; id 50
+    dw SequenceFrames033 ; id 51
+    dw SequenceFrames034 ; id 52
+    dw SequenceFrames035 ; id 53
+    dw SequenceFrames036 ; id 54
+    dw SequenceFrames037 ; id 55
+    dw SequenceFrames038 ; id 56
+    dw SequenceFrames039 ; id 57
+    dw SequenceFrames03A ; id 58
+    dw SequenceFrames03B ; id 59
 
-; LZSS-compressed asset: 1104 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_411E:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $05, $02, $05, $03, $05, $04, $02, $05, $02, $06, $02, $07, $02
-    db $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $00 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames000::
+Data_032_411E:: ; address name
+    db $00, $05 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $05 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $1F, $02 ; id 8
+    db $FF, $FF ; id 9
 
-Data_032_4132:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $02, $05, $02, $06, $02, $07, $02
-    db $1F, $08, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $09, $03, $0A, $03
-    db $0B, $02, $0C, $02, $0D, $02, $0E, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $01 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames001::
+Data_032_4132:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $1F, $08 ; id 8
+    db $08, $03 ; id 9
+    db $09, $03 ; id 10
+    db $0A, $03 ; id 11
+    db $0B, $03 ; id 12
+    db $0C, $03 ; id 13
+    db $09, $03 ; id 14
+    db $0A, $03 ; id 15
+    db $0B, $02 ; id 16
+    db $0C, $02 ; id 17
+    db $0D, $02 ; id 18
+    db $0E, $02 ; id 19
+    db $1F, $02 ; id 20
+    db $FF, $FF ; id 21
 
-; LZSS-compressed asset: 423 bytes expand to 520 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_415E:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $02, $09, $05, $0A, $05, $0B, $05, $0C, $02, $0D, $02, $0E, $02, $0F, $02
-    db $1F, $08, $00, $01, $01, $01, $02, $01, $03, $01, $04, $03, $05, $03, $06, $03
-    db $07, $03, $04, $03, $05, $03, $06, $03, $07, $03, $02, $02, $00, $02, $1F, $02
-    db $FF, $FF
+; E-0199 (derived: list for entry $02 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames002::
+Data_032_415E:: ; address name
+    db $08, $02 ; id 0
+    db $09, $05 ; id 1
+    db $0A, $05 ; id 2
+    db $0B, $05 ; id 3
+    db $0C, $02 ; id 4
+    db $0D, $02 ; id 5
+    db $0E, $02 ; id 6
+    db $0F, $02 ; id 7
+    db $1F, $08 ; id 8
+    db $00, $01 ; id 9
+    db $01, $01 ; id 10
+    db $02, $01 ; id 11
+    db $03, $01 ; id 12
+    db $04, $03 ; id 13
+    db $05, $03 ; id 14
+    db $06, $03 ; id 15
+    db $07, $03 ; id 16
+    db $04, $03 ; id 17
+    db $05, $03 ; id 18
+    db $06, $03 ; id 19
+    db $07, $03 ; id 20
+    db $02, $02 ; id 21
+    db $00, $02 ; id 22
+    db $1F, $02 ; id 23
+    db $FF, $FF ; id 24
 
-Data_032_4190:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
-    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $03 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames003::
+Data_032_4190:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $03 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $1F, $02 ; id 14
+    db $FF, $FF ; id 15
 
-Data_032_41B0:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
-    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $04 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames004::
+Data_032_41B0:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $03 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $1F, $02 ; id 14
+    db $FF, $FF ; id 15
 
-Data_032_41D0:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0C81D0, $42
+; E-0199 (derived: list for entry $05 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames005::
+Data_032_41D0:: ; address name
+    db $00, $04 ; id 0
+    db $01, $03 ; id 1
+    db $02, $02 ; id 2
+    db $03, $04 ; id 3
+    db $04, $05 ; id 4
+    db $05, $03 ; id 5
+    db $06, $04 ; id 6
+    db $07, $03 ; id 7
+    db $08, $04 ; id 8
+    db $04, $03 ; id 9
+    db $05, $04 ; id 10
+    db $06, $03 ; id 11
+    db $07, $04 ; id 12
+    db $08, $03 ; id 13
+    db $04, $04 ; id 14
+    db $05, $03 ; id 15
+    db $06, $04 ; id 16
+    db $07, $03 ; id 17
+    db $08, $04 ; id 18
+    db $04, $03 ; id 19
+    db $05, $04 ; id 20
+    db $06, $03 ; id 21
+    db $07, $04 ; id 22
+    db $08, $03 ; id 23
+    db $04, $03 ; id 24
+    db $05, $04 ; id 25
+    db $06, $03 ; id 26
+    db $07, $04 ; id 27
+    db $08, $03 ; id 28
+    db $09, $04 ; id 29
+    db $0A, $05 ; id 30
+    db $1F, $02 ; id 31
+    db $FF, $FF ; id 32
 
-Data_032_4212:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $02, $02, $04, $03, $04, $04, $02, $00, $02, $01, $02, $02, $02
-    db $01, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $06 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames006::
+Data_032_4212:: ; address name
+    db $00, $04 ; id 0
+    db $01, $02 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $02 ; id 4
+    db $00, $02 ; id 5
+    db $01, $02 ; id 6
+    db $02, $02 ; id 7
+    db $01, $02 ; id 8
+    db $1F, $02 ; id 9
+    db $FF, $FF ; id 10
 
-; LZSS-compressed asset: 442 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4228:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $01, $02, $02, $02, $1F, $10, $03, $04, $04, $02, $05, $04, $06, $02
-    db $07, $04, $08, $02, $03, $03, $04, $02, $05, $03, $06, $02, $07, $04, $08, $02
-    db $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $07 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames007::
+Data_032_4228:: ; address name
+    db $00, $02 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $1F, $10 ; id 3
+    db $03, $04 ; id 4
+    db $04, $02 ; id 5
+    db $05, $04 ; id 6
+    db $06, $02 ; id 7
+    db $07, $04 ; id 8
+    db $08, $02 ; id 9
+    db $03, $03 ; id 10
+    db $04, $02 ; id 11
+    db $05, $03 ; id 12
+    db $06, $02 ; id 13
+    db $07, $04 ; id 14
+    db $08, $02 ; id 15
+    db $1F, $02 ; id 16
+    db $FF, $FF ; id 17
 
-; LZSS-compressed asset: 436 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_424C:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0C824C, $46
+; E-0199 (derived: list for entry $08 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames008::
+Data_032_424C:: ; address name
+    db $00, $02 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $03, $02 ; id 3
+    db $1F, $10 ; id 4
+    db $04, $05 ; id 5
+    db $05, $05 ; id 6
+    db $06, $05 ; id 7
+    db $07, $02 ; id 8
+    db $08, $02 ; id 9
+    db $0E, $02 ; id 10
+    db $09, $02 ; id 11
+    db $0F, $02 ; id 12
+    db $0E, $02 ; id 13
+    db $10, $02 ; id 14
+    db $0B, $02 ; id 15
+    db $11, $02 ; id 16
+    db $0C, $02 ; id 17
+    db $10, $02 ; id 18
+    db $0B, $02 ; id 19
+    db $11, $02 ; id 20
+    db $0C, $02 ; id 21
+    db $12, $02 ; id 22
+    db $0D, $02 ; id 23
+    db $13, $02 ; id 24
+    db $08, $02 ; id 25
+    db $0E, $02 ; id 26
+    db $09, $02 ; id 27
+    db $0F, $02 ; id 28
+    db $0A, $02 ; id 29
+    db $10, $02 ; id 30
+    db $0B, $02 ; id 31
+    db $06, $02 ; id 32
+    db $1F, $02 ; id 33
+    db $FF, $FF ; id 34
 
-; LZSS-compressed asset: 421 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4292:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
-    db $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $09 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames009::
+Data_032_4292:: ; address name
+    db $00, $02 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $03, $02 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $09, $02 ; id 9
+    db $0A, $02 ; id 10
+    db $0B, $02 ; id 11
+    db $0C, $02 ; id 12
+    db $1F, $02 ; id 13
+    db $FF, $FF ; id 14
 
-; LZSS-compressed asset: 649 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_42B0:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $04, $03, $04, $04, $05, $05, $04, $06, $05, $07, $04
-    db $08, $05, $09, $04, $0A, $05, $0B, $04, $0C, $05, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $0A of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00A::
+Data_032_42B0:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $05 ; id 4
+    db $05, $04 ; id 5
+    db $06, $05 ; id 6
+    db $07, $04 ; id 7
+    db $08, $05 ; id 8
+    db $09, $04 ; id 9
+    db $0A, $05 ; id 10
+    db $0B, $04 ; id 11
+    db $0C, $05 ; id 12
+    db $1F, $02 ; id 13
+    db $FF, $FF ; id 14
 
-Data_032_42CE:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0C82CE, $42
+; E-0199 (derived: list for entry $0B of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00B::
+Data_032_42CE:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $03 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $0E, $03 ; id 14
+    db $0B, $03 ; id 15
+    db $0C, $03 ; id 16
+    db $0D, $03 ; id 17
+    db $0E, $03 ; id 18
+    db $0F, $03 ; id 19
+    db $10, $03 ; id 20
+    db $11, $03 ; id 21
+    db $12, $03 ; id 22
+    db $13, $03 ; id 23
+    db $14, $03 ; id 24
+    db $15, $03 ; id 25
+    db $16, $03 ; id 26
+    db $17, $03 ; id 27
+    db $18, $03 ; id 28
+    db $19, $03 ; id 29
+    db $1A, $03 ; id 30
+    db $1F, $03 ; id 31
+    db $FF, $FF ; id 32
 
-Data_032_4310:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
-    db $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $0E, $03, $0F, $03
-    db $10, $03, $11, $03, $12, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $0C of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00C::
+Data_032_4310:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $03 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $0E, $03 ; id 14
+    db $0F, $03 ; id 15
+    db $10, $03 ; id 16
+    db $11, $03 ; id 17
+    db $12, $03 ; id 18
+    db $1F, $02 ; id 19
+    db $FF, $FF ; id 20
 
-Data_032_433A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $04, $02, $04, $03, $03, $04, $02, $03, $02, $04, $03, $03, $03
-    db $04, $0F, $1F, $03, $04, $03, $1F, $03, $04, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $0D of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00D::
+Data_032_433A:: ; address name
+    db $00, $05 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $02 ; id 4
+    db $03, $02 ; id 5
+    db $04, $03 ; id 6
+    db $03, $03 ; id 7
+    db $04, $0F ; id 8
+    db $1F, $03 ; id 9
+    db $04, $03 ; id 10
+    db $1F, $03 ; id 11
+    db $04, $02 ; id 12
+    db $1F, $02 ; id 13
+    db $FF, $FF ; id 14
 
-; LZSS-compressed asset: 619 bytes expand to 774 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4358:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $03, $07, $03, $08, $02, $09, $02, $0A, $01, $0B, $01, $0C, $01, $1F, $08
-    db $01, $02, $02, $02, $03, $02, $04, $02, $01, $02, $02, $02, $03, $02, $04, $02
-    db $01, $02, $02, $02, $03, $02, $04, $02, $01, $02, $02, $02, $03, $02, $04, $02
-    db $01, $02, $02, $02, $03, $02, $04, $02, $05, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $0E of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00E::
+Data_032_4358:: ; address name
+    db $06, $03 ; id 0
+    db $07, $03 ; id 1
+    db $08, $02 ; id 2
+    db $09, $02 ; id 3
+    db $0A, $01 ; id 4
+    db $0B, $01 ; id 5
+    db $0C, $01 ; id 6
+    db $1F, $08 ; id 7
+    db $01, $02 ; id 8
+    db $02, $02 ; id 9
+    db $03, $02 ; id 10
+    db $04, $02 ; id 11
+    db $01, $02 ; id 12
+    db $02, $02 ; id 13
+    db $03, $02 ; id 14
+    db $04, $02 ; id 15
+    db $01, $02 ; id 16
+    db $02, $02 ; id 17
+    db $03, $02 ; id 18
+    db $04, $02 ; id 19
+    db $01, $02 ; id 20
+    db $02, $02 ; id 21
+    db $03, $02 ; id 22
+    db $04, $02 ; id 23
+    db $01, $02 ; id 24
+    db $02, $02 ; id 25
+    db $03, $02 ; id 26
+    db $04, $02 ; id 27
+    db $05, $01 ; id 28
+    db $1F, $02 ; id 29
+    db $FF, $FF ; id 30
 
-; LZSS-compressed asset: 891 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4396:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $03, $1F, $08, $02, $05, $03, $04, $04, $03, $05, $03, $06, $02
-    db $07, $02, $04, $02, $05, $02, $06, $02, $07, $02, $02, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $0F of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames00F::
+Data_032_4396:: ; address name
+    db $00, $04 ; id 0
+    db $01, $03 ; id 1
+    db $1F, $08 ; id 2
+    db $02, $05 ; id 3
+    db $03, $04 ; id 4
+    db $04, $03 ; id 5
+    db $05, $03 ; id 6
+    db $06, $02 ; id 7
+    db $07, $02 ; id 8
+    db $04, $02 ; id 9
+    db $05, $02 ; id 10
+    db $06, $02 ; id 11
+    db $07, $02 ; id 12
+    db $02, $02 ; id 13
+    db $1F, $02 ; id 14
+    db $FF, $FF ; id 15
 
-; LZSS-compressed asset: 894 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_43B6:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $03, $02, $02, $1F, $08, $03, $05, $04, $04, $05, $03, $06, $03
-    db $07, $02, $08, $02, $09, $02, $05, $02, $06, $02, $07, $02, $08, $02, $09, $02
-    db $06, $02, $07, $02, $08, $02, $09, $02, $04, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $10 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames010::
+Data_032_43B6:: ; address name
+    db $00, $04 ; id 0
+    db $01, $03 ; id 1
+    db $02, $02 ; id 2
+    db $1F, $08 ; id 3
+    db $03, $05 ; id 4
+    db $04, $04 ; id 5
+    db $05, $03 ; id 6
+    db $06, $03 ; id 7
+    db $07, $02 ; id 8
+    db $08, $02 ; id 9
+    db $09, $02 ; id 10
+    db $05, $02 ; id 11
+    db $06, $02 ; id 12
+    db $07, $02 ; id 13
+    db $08, $02 ; id 14
+    db $09, $02 ; id 15
+    db $06, $02 ; id 16
+    db $07, $02 ; id 17
+    db $08, $02 ; id 18
+    db $09, $02 ; id 19
+    db $04, $01 ; id 20
+    db $1F, $02 ; id 21
+    db $FF, $FF ; id 22
 
-Data_032_43E4:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $02, $03, $03, $02, $01, $0F, $02, $04, $03, $05, $03
-    db $06, $03, $07, $02, $08, $02, $09, $02, $0A, $01, $0B, $01, $0C, $01, $0D, $01
-    db $06, $03, $07, $02, $0A, $01, $0B, $01, $0C, $01, $0D, $01, $08, $03, $09, $02
-    db $0A, $01, $0B, $01, $0C, $01, $0D, $01, $0E, $01, $04, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $11 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames011::
+Data_032_43E4:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $02 ; id 2
+    db $03, $03 ; id 3
+    db $02, $01 ; id 4
+    db $0F, $02 ; id 5
+    db $04, $03 ; id 6
+    db $05, $03 ; id 7
+    db $06, $03 ; id 8
+    db $07, $02 ; id 9
+    db $08, $02 ; id 10
+    db $09, $02 ; id 11
+    db $0A, $01 ; id 12
+    db $0B, $01 ; id 13
+    db $0C, $01 ; id 14
+    db $0D, $01 ; id 15
+    db $06, $03 ; id 16
+    db $07, $02 ; id 17
+    db $0A, $01 ; id 18
+    db $0B, $01 ; id 19
+    db $0C, $01 ; id 20
+    db $0D, $01 ; id 21
+    db $08, $03 ; id 22
+    db $09, $02 ; id 23
+    db $0A, $01 ; id 24
+    db $0B, $01 ; id 25
+    db $0C, $01 ; id 26
+    db $0D, $01 ; id 27
+    db $0E, $01 ; id 28
+    db $04, $02 ; id 29
+    db $1F, $02 ; id 30
+    db $FF, $FF ; id 31
 
-; LZSS-compressed asset: 894 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4424:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $04, $05, $04, $06, $04, $07, $04
-    db $08, $04, $09, $04, $0A, $04, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $12 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames012::
+Data_032_4424:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $04 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $07, $04 ; id 7
+    db $08, $04 ; id 8
+    db $09, $04 ; id 9
+    db $0A, $04 ; id 10
+    db $1F, $02 ; id 11
+    db $FF, $FF ; id 12
 
-Data_032_443E:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $03, $02, $04, $03, $03, $04, $02, $05, $01, $06, $01, $07, $01
-    db $1F, $01, $FF, $FF
+; E-0199 (derived: list for entry $13 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames013::
+Data_032_443E:: ; address name
+    db $00, $04 ; id 0
+    db $01, $03 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $02 ; id 4
+    db $05, $01 ; id 5
+    db $06, $01 ; id 6
+    db $07, $01 ; id 7
+    db $1F, $01 ; id 8
+    db $FF, $FF ; id 9
 
-; LZSS-compressed asset: 2305 bytes expand to 2560 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4452:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $0A, $01, $08, $02, $07, $03, $06, $04, $05, $05, $05, $06, $05, $07, $05
-    db $08, $04, $09, $04, $0A, $04, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $14 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames014::
+Data_032_4452:: ; address name
+    db $00, $0A ; id 0
+    db $01, $08 ; id 1
+    db $02, $07 ; id 2
+    db $03, $06 ; id 3
+    db $04, $05 ; id 4
+    db $05, $05 ; id 5
+    db $06, $05 ; id 6
+    db $07, $05 ; id 7
+    db $08, $04 ; id 8
+    db $09, $04 ; id 9
+    db $0A, $04 ; id 10
+    db $1F, $02 ; id 11
+    db $FF, $FF ; id 12
 
-; LZSS-compressed asset: 1807 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_446C:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $08, $01, $06, $02, $08, $03, $06, $04, $08, $05, $08, $06, $08, $07, $08
-    db $08, $04, $09, $04, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $15 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames015::
+Data_032_446C:: ; address name
+    db $00, $08 ; id 0
+    db $01, $06 ; id 1
+    db $02, $08 ; id 2
+    db $03, $06 ; id 3
+    db $04, $08 ; id 4
+    db $05, $08 ; id 5
+    db $06, $08 ; id 6
+    db $07, $08 ; id 7
+    db $08, $04 ; id 8
+    db $09, $04 ; id 9
+    db $1F, $02 ; id 10
+    db $FF, $FF ; id 11
 
-; LZSS-compressed asset: 1351 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4484:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $01, $06, $02, $06, $03, $06, $04, $08, $05, $08, $06, $04, $08, $04
-    db $08, $04, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $16 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames016::
+Data_032_4484:: ; address name
+    db $00, $06 ; id 0
+    db $01, $06 ; id 1
+    db $02, $06 ; id 2
+    db $03, $06 ; id 3
+    db $04, $08 ; id 4
+    db $05, $08 ; id 5
+    db $06, $04 ; id 6
+    db $08, $04 ; id 7
+    db $08, $04 ; id 8
+    db $1F, $02 ; id 9
+    db $FF, $FF ; id 10
 
-; LZSS-compressed asset: 1352 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_449A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $01, $06, $02, $06, $03, $06, $04, $06, $05, $06, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $17 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames017::
+Data_032_449A:: ; address name
+    db $00, $06 ; id 0
+    db $01, $06 ; id 1
+    db $02, $06 ; id 2
+    db $03, $06 ; id 3
+    db $04, $06 ; id 4
+    db $05, $06 ; id 5
+    db $1F, $02 ; id 6
+    db $FF, $FF ; id 7
 
-; LZSS-compressed asset: 2316 bytes expand to 2560 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_44AA:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $0A, $01, $06, $02, $06, $03, $06, $04, $06, $05, $06, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $18 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames018::
+Data_032_44AA:: ; address name
+    db $00, $0A ; id 0
+    db $01, $06 ; id 1
+    db $02, $06 ; id 2
+    db $03, $06 ; id 3
+    db $04, $06 ; id 4
+    db $05, $06 ; id 5
+    db $1F, $02 ; id 6
+    db $FF, $FF ; id 7
 
-Data_032_44BA:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $1F, $04, $00, $04, $1F, $04, $00, $04, $1F, $04, $00, $04, $1F, $04
-    db $00, $04, $1F, $04, $00, $04, $1F, $0F, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $19 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames019::
+Data_032_44BA:: ; address name
+    db $00, $04 ; id 0
+    db $1F, $04 ; id 1
+    db $00, $04 ; id 2
+    db $1F, $04 ; id 3
+    db $00, $04 ; id 4
+    db $1F, $04 ; id 5
+    db $00, $04 ; id 6
+    db $1F, $04 ; id 7
+    db $00, $04 ; id 8
+    db $1F, $04 ; id 9
+    db $00, $04 ; id 10
+    db $1F, $0F ; id 11
+    db $1F, $02 ; id 12
+    db $FF, $FF ; id 13
 
-; LZSS-compressed asset: 669 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_44D6:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $1F, $08, $03, $02, $04, $02, $05, $02, $06, $02
-    db $07, $02, $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
-    db $0F, $02, $10, $02, $11, $02, $12, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1A of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01A::
+Data_032_44D6:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $1F, $08 ; id 3
+    db $03, $02 ; id 4
+    db $04, $02 ; id 5
+    db $05, $02 ; id 6
+    db $06, $02 ; id 7
+    db $07, $02 ; id 8
+    db $08, $02 ; id 9
+    db $09, $02 ; id 10
+    db $0A, $02 ; id 11
+    db $0B, $02 ; id 12
+    db $0C, $02 ; id 13
+    db $0D, $02 ; id 14
+    db $0E, $02 ; id 15
+    db $0F, $02 ; id 16
+    db $10, $02 ; id 17
+    db $11, $02 ; id 18
+    db $12, $02 ; id 19
+    db $1F, $02 ; id 20
+    db $FF, $FF ; id 21
 
-; LZSS-compressed asset: 904 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4502:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $02, $04, $03, $04, $04, $05, $05, $04, $06, $04, $07, $04
-    db $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1B of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01B::
+Data_032_4502:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $05 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $07, $04 ; id 7
+    db $1F, $02 ; id 8
+    db $FF, $FF ; id 9
 
-; LZSS-compressed asset: 456 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4516:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
-    db $08, $02, $09, $02, $0A, $02, $0B, $03, $0C, $05, $0D, $04, $0E, $03, $0F, $03
-    db $0E, $04, $0D, $04, $0E, $03, $0B, $03, $13, $04, $0B, $04, $0C, $05, $0D, $04
-    db $0E, $03, $0F, $04, $0E, $03, $10, $04, $11, $04, $12, $04, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1C of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01C::
+Data_032_4516:: ; address name
+    db $00, $02 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $03, $02 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $09, $02 ; id 9
+    db $0A, $02 ; id 10
+    db $0B, $03 ; id 11
+    db $0C, $05 ; id 12
+    db $0D, $04 ; id 13
+    db $0E, $03 ; id 14
+    db $0F, $03 ; id 15
+    db $0E, $04 ; id 16
+    db $0D, $04 ; id 17
+    db $0E, $03 ; id 18
+    db $0B, $03 ; id 19
+    db $13, $04 ; id 20
+    db $0B, $04 ; id 21
+    db $0C, $05 ; id 22
+    db $0D, $04 ; id 23
+    db $0E, $03 ; id 24
+    db $0F, $04 ; id 25
+    db $0E, $03 ; id 26
+    db $10, $04 ; id 27
+    db $11, $04 ; id 28
+    db $12, $04 ; id 29
+    db $1F, $02 ; id 30
+    db $FF, $FF ; id 31
 
-; LZSS-compressed asset: 666 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4556:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1D of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01D::
+Data_032_4556:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $05 ; id 4
+    db $05, $03 ; id 5
+    db $1F, $02 ; id 6
+    db $FF, $FF ; id 7
 
-; LZSS-compressed asset: 669 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4566:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $00, $03, $01, $04, $02, $04, $03, $03
-    db $04, $05, $05, $03, $06, $03, $1F, $08, $07, $03, $08, $02, $09, $04, $0A, $04
-    db $0B, $04, $0C, $04, $0D, $04, $0E, $03, $0F, $03, $10, $03, $11, $03, $12, $03
-    db $13, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1E of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01E::
+Data_032_4566:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $00, $03 ; id 4
+    db $01, $04 ; id 5
+    db $02, $04 ; id 6
+    db $03, $03 ; id 7
+    db $04, $05 ; id 8
+    db $05, $03 ; id 9
+    db $06, $03 ; id 10
+    db $1F, $08 ; id 11
+    db $07, $03 ; id 12
+    db $08, $02 ; id 13
+    db $09, $04 ; id 14
+    db $0A, $04 ; id 15
+    db $0B, $04 ; id 16
+    db $0C, $04 ; id 17
+    db $0D, $04 ; id 18
+    db $0E, $03 ; id 19
+    db $0F, $03 ; id 20
+    db $10, $03 ; id 21
+    db $11, $03 ; id 22
+    db $12, $03 ; id 23
+    db $13, $03 ; id 24
+    db $1F, $02 ; id 25
+    db $FF, $FF ; id 26
 
-; LZSS-compressed asset: 671 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_459C:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $02, $06, $02, $07, $02
-    db $08, $02, $09, $02, $0A, $03, $0B, $04, $0C, $03, $0D, $03, $0E, $03, $0F, $02
-    db $10, $02, $0C, $02, $0D, $02, $0E, $02, $0F, $02, $10, $02, $0D, $02, $0E, $02
-    db $0F, $02, $10, $02, $0A, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $1F of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames01F::
+Data_032_459C:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $05 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $09, $02 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $04 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $0E, $03 ; id 14
+    db $0F, $02 ; id 15
+    db $10, $02 ; id 16
+    db $0C, $02 ; id 17
+    db $0D, $02 ; id 18
+    db $0E, $02 ; id 19
+    db $0F, $02 ; id 20
+    db $10, $02 ; id 21
+    db $0D, $02 ; id 22
+    db $0E, $02 ; id 23
+    db $0F, $02 ; id 24
+    db $10, $02 ; id 25
+    db $0A, $01 ; id 26
+    db $1F, $02 ; id 27
+    db $FF, $FF ; id 28
 
-; LZSS-compressed asset: 671 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_45D6:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $03, $1F, $08
-    db $07, $02, $08, $02, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
-    db $0F, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $15, $02, $16, $02
-    db $17, $02, $18, $02, $19, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $20 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames020::
+Data_032_45D6:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $05 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $1F, $08 ; id 7
+    db $07, $02 ; id 8
+    db $08, $02 ; id 9
+    db $09, $02 ; id 10
+    db $0A, $02 ; id 11
+    db $0B, $02 ; id 12
+    db $0C, $02 ; id 13
+    db $0D, $02 ; id 14
+    db $0E, $02 ; id 15
+    db $0F, $02 ; id 16
+    db $10, $02 ; id 17
+    db $11, $02 ; id 18
+    db $12, $02 ; id 19
+    db $13, $02 ; id 20
+    db $14, $02 ; id 21
+    db $15, $02 ; id 22
+    db $16, $02 ; id 23
+    db $17, $02 ; id 24
+    db $18, $02 ; id 25
+    db $19, $02 ; id 26
+    db $1F, $02 ; id 27
+    db $FF, $FF ; id 28
 
-; LZSS-compressed asset: 673 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4610:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $03, $1F, $08
-    db $07, $05, $08, $04, $09, $03, $0A, $03, $0B, $03, $0A, $04, $0B, $08, $1F, $03
-    db $0B, $02, $1F, $02, $0B, $01, $1F, $01, $0B, $01, $1F, $01, $0B, $01, $1F, $01
-    db $0B, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $21 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames021::
+Data_032_4610:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $05 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $1F, $08 ; id 7
+    db $07, $05 ; id 8
+    db $08, $04 ; id 9
+    db $09, $03 ; id 10
+    db $0A, $03 ; id 11
+    db $0B, $03 ; id 12
+    db $0A, $04 ; id 13
+    db $0B, $08 ; id 14
+    db $1F, $03 ; id 15
+    db $0B, $02 ; id 16
+    db $1F, $02 ; id 17
+    db $0B, $01 ; id 18
+    db $1F, $01 ; id 19
+    db $0B, $01 ; id 20
+    db $1F, $01 ; id 21
+    db $0B, $01 ; id 22
+    db $1F, $01 ; id 23
+    db $0B, $01 ; id 24
+    db $1F, $02 ; id 25
+    db $FF, $FF ; id 26
 
-; LZSS-compressed asset: 1346 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4646:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $01, $05, $02, $05, $03, $03, $04, $04, $05, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $22 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames022::
+Data_032_4646:: ; address name
+    db $00, $06 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $03 ; id 3
+    db $04, $04 ; id 4
+    db $05, $03 ; id 5
+    db $1F, $02 ; id 6
+    db $FF, $FF ; id 7
 
-; LZSS-compressed asset: 662 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4656:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $05, $05, $03, $06, $02, $1F, $02
-    db $FF, $FF
+; E-0199 (derived: list for entry $23 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames023::
+Data_032_4656:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $05 ; id 4
+    db $05, $03 ; id 5
+    db $06, $02 ; id 6
+    db $1F, $02 ; id 7
+    db $FF, $FF ; id 8
 
-; LZSS-compressed asset: 1350 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4668:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $01, $05, $02, $05, $03, $05, $04, $03, $05, $03, $06, $08, $07, $03
-    db $06, $03, $07, $03, $06, $03, $07, $02, $06, $02, $07, $02, $06, $02, $07, $01
-    db $06, $01, $07, $01, $06, $01, $07, $01, $06, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $24 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames024::
+Data_032_4668:: ; address name
+    db $00, $06 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $05 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $08 ; id 6
+    db $07, $03 ; id 7
+    db $06, $03 ; id 8
+    db $07, $03 ; id 9
+    db $06, $03 ; id 10
+    db $07, $02 ; id 11
+    db $06, $02 ; id 12
+    db $07, $02 ; id 13
+    db $06, $02 ; id 14
+    db $07, $01 ; id 15
+    db $06, $01 ; id 16
+    db $07, $01 ; id 17
+    db $06, $01 ; id 18
+    db $07, $01 ; id 19
+    db $06, $01 ; id 20
+    db $1F, $02 ; id 21
+    db $FF, $FF ; id 22
 
-Data_032_4696:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $04, $02, $04, $03, $04, $04, $03, $05, $03, $06, $03, $05, $02
-    db $07, $02, $08, $02, $07, $02, $1F, $02, $08, $02, $1F, $02, $07, $01, $1F, $01
-    db $08, $01, $1F, $01, $07, $01, $1F, $01, $08, $01, $1F, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $25 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames025::
+Data_032_4696:: ; address name
+    db $00, $05 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $05, $02 ; id 7
+    db $07, $02 ; id 8
+    db $08, $02 ; id 9
+    db $07, $02 ; id 10
+    db $1F, $02 ; id 11
+    db $08, $02 ; id 12
+    db $1F, $02 ; id 13
+    db $07, $01 ; id 14
+    db $1F, $01 ; id 15
+    db $08, $01 ; id 16
+    db $1F, $01 ; id 17
+    db $07, $01 ; id 18
+    db $1F, $01 ; id 19
+    db $08, $01 ; id 20
+    db $1F, $01 ; id 21
+    db $1F, $02 ; id 22
+    db $FF, $FF ; id 23
 
-; LZSS-compressed asset: 905 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_46C6:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $05, $02, $05, $03, $04, $04, $04, $05, $06, $06, $04, $07, $04
-    db $08, $03, $07, $02, $08, $02, $06, $02, $08, $03, $09, $03, $08, $02, $09, $02
-    db $08, $02, $09, $02, $0A, $02, $0B, $02, $0A, $01, $0B, $01, $0A, $01, $1F, $01
-    db $0B, $01, $1F, $01, $0A, $01, $1F, $01, $0B, $01, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $26 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames026::
+Data_032_46C6:: ; address name
+    db $00, $04 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $04 ; id 3
+    db $04, $04 ; id 4
+    db $05, $06 ; id 5
+    db $06, $04 ; id 6
+    db $07, $04 ; id 7
+    db $08, $03 ; id 8
+    db $07, $02 ; id 9
+    db $08, $02 ; id 10
+    db $06, $02 ; id 11
+    db $08, $03 ; id 12
+    db $09, $03 ; id 13
+    db $08, $02 ; id 14
+    db $09, $02 ; id 15
+    db $08, $02 ; id 16
+    db $09, $02 ; id 17
+    db $0A, $02 ; id 18
+    db $0B, $02 ; id 19
+    db $0A, $01 ; id 20
+    db $0B, $01 ; id 21
+    db $0A, $01 ; id 22
+    db $1F, $01 ; id 23
+    db $0B, $01 ; id 24
+    db $1F, $01 ; id 25
+    db $0A, $01 ; id 26
+    db $1F, $01 ; id 27
+    db $0B, $01 ; id 28
+    db $1F, $02 ; id 29
+    db $FF, $FF ; id 30
 
-Data_032_4704:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $01, $02, $01, $03, $02, $04, $03, $05, $03, $06, $03, $07, $03
-    db $08, $03, $09, $03, $0A, $03, $0B, $02, $0C, $02, $0D, $02, $0B, $02, $0C, $02
-    db $0D, $02, $0B, $02, $0C, $02, $0D, $02, $0B, $02, $0C, $02, $0D, $02, $0B, $02
-    db $0C, $02, $0D, $02, $0B, $02, $0C, $02, $0D, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $27 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames027::
+Data_032_4704:: ; address name
+    db $00, $01 ; id 0
+    db $01, $01 ; id 1
+    db $02, $01 ; id 2
+    db $03, $02 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $02 ; id 11
+    db $0C, $02 ; id 12
+    db $0D, $02 ; id 13
+    db $0B, $02 ; id 14
+    db $0C, $02 ; id 15
+    db $0D, $02 ; id 16
+    db $0B, $02 ; id 17
+    db $0C, $02 ; id 18
+    db $0D, $02 ; id 19
+    db $0B, $02 ; id 20
+    db $0C, $02 ; id 21
+    db $0D, $02 ; id 22
+    db $0B, $02 ; id 23
+    db $0C, $02 ; id 24
+    db $0D, $02 ; id 25
+    db $0B, $02 ; id 26
+    db $0C, $02 ; id 27
+    db $0D, $02 ; id 28
+    db $1F, $02 ; id 29
+    db $FF, $FF ; id 30
 
-; LZSS-compressed asset: 162 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4742:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $1F, $01, $01, $03, $1F, $01, $02, $03, $1F, $01, $03, $03, $1F, $01
-    db $04, $03, $05, $03, $04, $03, $05, $03, $04, $03, $05, $03, $04, $03, $05, $03
-    db $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $28 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames028::
+Data_032_4742:: ; address name
+    db $00, $03 ; id 0
+    db $1F, $01 ; id 1
+    db $01, $03 ; id 2
+    db $1F, $01 ; id 3
+    db $02, $03 ; id 4
+    db $1F, $01 ; id 5
+    db $03, $03 ; id 6
+    db $1F, $01 ; id 7
+    db $04, $03 ; id 8
+    db $05, $03 ; id 9
+    db $04, $03 ; id 10
+    db $05, $03 ; id 11
+    db $04, $03 ; id 12
+    db $05, $03 ; id 13
+    db $04, $03 ; id 14
+    db $05, $03 ; id 15
+    db $1F, $02 ; id 16
+    db $FF, $FF ; id 17
 
-Data_032_4766:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $00, $03, $01, $03, $02, $04, $01, $04, $02, $03, $01, $03
-    db $03, $04, $02, $04, $03, $03, $02, $03, $04, $04, $03, $04, $04, $03, $03, $03
-    db $05, $04, $04, $03, $06, $03, $05, $04, $07, $04, $10, $04, $0B, $04, $11, $04
-    db $0C, $04, $12, $04, $0D, $04, $13, $04, $07, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $29 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames029::
+Data_032_4766:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $00, $03 ; id 2
+    db $01, $03 ; id 3
+    db $02, $04 ; id 4
+    db $01, $04 ; id 5
+    db $02, $03 ; id 6
+    db $01, $03 ; id 7
+    db $03, $04 ; id 8
+    db $02, $04 ; id 9
+    db $03, $03 ; id 10
+    db $02, $03 ; id 11
+    db $04, $04 ; id 12
+    db $03, $04 ; id 13
+    db $04, $03 ; id 14
+    db $03, $03 ; id 15
+    db $05, $04 ; id 16
+    db $04, $03 ; id 17
+    db $06, $03 ; id 18
+    db $05, $04 ; id 19
+    db $07, $04 ; id 20
+    db $10, $04 ; id 21
+    db $0B, $04 ; id 22
+    db $11, $04 ; id 23
+    db $0C, $04 ; id 24
+    db $12, $04 ; id 25
+    db $0D, $04 ; id 26
+    db $13, $04 ; id 27
+    db $07, $03 ; id 28
+    db $1F, $02 ; id 29
+    db $FF, $FF ; id 30
 
-; LZSS-compressed asset: 921 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_47A4:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $05, $02, $04, $03, $03, $04, $03, $05, $03, $06, $03, $07, $03
-    db $08, $03, $1F, $08, $09, $02, $0A, $02, $0B, $02, $0C, $02, $0D, $02, $0E, $02
-    db $0F, $02, $10, $02, $11, $02, $12, $02, $13, $02, $14, $02, $0B, $02, $0C, $02
-    db $0D, $02, $0E, $02, $0F, $02, $15, $02, $16, $02, $17, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $2A of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02A::
+Data_032_47A4:: ; address name
+    db $00, $04 ; id 0
+    db $01, $05 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $1F, $08 ; id 9
+    db $09, $02 ; id 10
+    db $0A, $02 ; id 11
+    db $0B, $02 ; id 12
+    db $0C, $02 ; id 13
+    db $0D, $02 ; id 14
+    db $0E, $02 ; id 15
+    db $0F, $02 ; id 16
+    db $10, $02 ; id 17
+    db $11, $02 ; id 18
+    db $12, $02 ; id 19
+    db $13, $02 ; id 20
+    db $14, $02 ; id 21
+    db $0B, $02 ; id 22
+    db $0C, $02 ; id 23
+    db $0D, $02 ; id 24
+    db $0E, $02 ; id 25
+    db $0F, $02 ; id 26
+    db $15, $02 ; id 27
+    db $16, $02 ; id 28
+    db $17, $02 ; id 29
+    db $1F, $02 ; id 30
+    db $FF, $FF ; id 31
 
-; LZSS-compressed asset: 909 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_47E4:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $02, $04, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
-    db $08, $02, $05, $02, $06, $02, $07, $02, $08, $02, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $2B of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02B::
+Data_032_47E4:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $02 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $05, $02 ; id 9
+    db $06, $02 ; id 10
+    db $07, $02 ; id 11
+    db $08, $02 ; id 12
+    db $1F, $02 ; id 13
+    db $FF, $FF ; id 14
 
-; LZSS-compressed asset: 910 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4802:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $03, $02, $06, $03, $06, $04, $06, $05, $06, $06, $06, $07, $06
-    db $08, $06, $09, $06, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $2C of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02C::
+Data_032_4802:: ; address name
+    db $00, $04 ; id 0
+    db $01, $03 ; id 1
+    db $02, $06 ; id 2
+    db $03, $06 ; id 3
+    db $04, $06 ; id 4
+    db $05, $06 ; id 5
+    db $06, $06 ; id 6
+    db $07, $06 ; id 7
+    db $08, $06 ; id 8
+    db $09, $06 ; id 9
+    db $1F, $02 ; id 10
+    db $FF, $FF ; id 11
 
-; LZSS-compressed asset: 677 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_481A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $04, $03, $03, $04, $03, $05, $04, $06, $04, $07, $03
-    db $08, $03, $07, $03, $09, $04, $0A, $03, $0B, $03, $FF, $FF
+; E-0199 (derived: list for entry $2D of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02D::
+Data_032_481A:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $07, $03 ; id 9
+    db $09, $04 ; id 10
+    db $0A, $03 ; id 11
+    db $0B, $03 ; id 12
+    db $FF, $FF ; id 13
 
-; LZSS-compressed asset: 677 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4836:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $05, $03, $05, $04, $05, $05, $04, $06, $03, $12, $03
-    db $07, $02, $13, $02, $08, $02, $14, $02, $09, $02, $15, $02, $0A, $02, $16, $02
-    db $0B, $02, $17, $02, $0C, $02, $18, $02, $0D, $02, $19, $02, $0E, $02, $1A, $02
-    db $0F, $02, $1B, $02, $10, $02, $11, $02, $FF, $FF
+; E-0199 (derived: list for entry $2E of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02E::
+Data_032_4836:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $05 ; id 2
+    db $03, $05 ; id 3
+    db $04, $05 ; id 4
+    db $05, $04 ; id 5
+    db $06, $03 ; id 6
+    db $12, $03 ; id 7
+    db $07, $02 ; id 8
+    db $13, $02 ; id 9
+    db $08, $02 ; id 10
+    db $14, $02 ; id 11
+    db $09, $02 ; id 12
+    db $15, $02 ; id 13
+    db $0A, $02 ; id 14
+    db $16, $02 ; id 15
+    db $0B, $02 ; id 16
+    db $17, $02 ; id 17
+    db $0C, $02 ; id 18
+    db $18, $02 ; id 19
+    db $0D, $02 ; id 20
+    db $19, $02 ; id 21
+    db $0E, $02 ; id 22
+    db $1A, $02 ; id 23
+    db $0F, $02 ; id 24
+    db $1B, $02 ; id 25
+    db $10, $02 ; id 26
+    db $11, $02 ; id 27
+    db $FF, $FF ; id 28
 
-; LZSS-compressed asset: 917 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4870:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $05, $02, $05, $03, $04, $04, $06, $05, $04, $06, $04, $1F, $0A
-    db $07, $03, $08, $02, $09, $05, $0A, $05, $0B, $05, $0C, $06, $0D, $06, $0E, $05
-    db $0F, $04, $0C, $04, $0D, $04, $0E, $04, $0F, $03, $0C, $03, $0D, $03, $0E, $03
-    db $10, $02, $0F, $02, $11, $02, $10, $02, $11, $02, $FF, $FF
+; E-0199 (derived: list for entry $2F of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames02F::
+Data_032_4870:: ; address name
+    db $00, $04 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $04 ; id 3
+    db $04, $06 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $1F, $0A ; id 7
+    db $07, $03 ; id 8
+    db $08, $02 ; id 9
+    db $09, $05 ; id 10
+    db $0A, $05 ; id 11
+    db $0B, $05 ; id 12
+    db $0C, $06 ; id 13
+    db $0D, $06 ; id 14
+    db $0E, $05 ; id 15
+    db $0F, $04 ; id 16
+    db $0C, $04 ; id 17
+    db $0D, $04 ; id 18
+    db $0E, $04 ; id 19
+    db $0F, $03 ; id 20
+    db $0C, $03 ; id 21
+    db $0D, $03 ; id 22
+    db $0E, $03 ; id 23
+    db $10, $02 ; id 24
+    db $0F, $02 ; id 25
+    db $11, $02 ; id 26
+    db $10, $02 ; id 27
+    db $11, $02 ; id 28
+    db $FF, $FF ; id 29
 
-; LZSS-compressed asset: 679 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_48AC:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $02, $02, $02, $03, $05, $04, $05, $05, $06, $06, $06, $07, $05
-    db $08, $05, $09, $05, $07, $04, $08, $04, $09, $04, $07, $04, $08, $04, $09, $04
-    db $0A, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $30 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames030::
+Data_032_48AC:: ; address name
+    db $00, $03 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $03, $05 ; id 3
+    db $04, $05 ; id 4
+    db $05, $06 ; id 5
+    db $06, $06 ; id 6
+    db $07, $05 ; id 7
+    db $08, $05 ; id 8
+    db $09, $05 ; id 9
+    db $07, $04 ; id 10
+    db $08, $04 ; id 11
+    db $09, $04 ; id 12
+    db $07, $04 ; id 13
+    db $08, $04 ; id 14
+    db $09, $04 ; id 15
+    db $0A, $03 ; id 16
+    db $1F, $02 ; id 17
+    db $FF, $FF ; id 18
 
-Data_032_48D2:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $01, $02, $04, $03, $01, $04, $04, $05, $01, $06, $04, $07, $01
-    db $08, $04, $09, $01, $0A, $04, $0B, $01, $0C, $04, $0D, $01, $0E, $04, $0F, $03
-    db $0E, $04, $0F, $03, $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $31 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames031::
+Data_032_48D2:: ; address name
+    db $00, $04 ; id 0
+    db $01, $01 ; id 1
+    db $02, $04 ; id 2
+    db $03, $01 ; id 3
+    db $04, $04 ; id 4
+    db $05, $01 ; id 5
+    db $06, $04 ; id 6
+    db $07, $01 ; id 7
+    db $08, $04 ; id 8
+    db $09, $01 ; id 9
+    db $0A, $04 ; id 10
+    db $0B, $01 ; id 11
+    db $0C, $04 ; id 12
+    db $0D, $01 ; id 13
+    db $0E, $04 ; id 14
+    db $0F, $03 ; id 15
+    db $0E, $04 ; id 16
+    db $0F, $03 ; id 17
+    db $1F, $02 ; id 18
+    db $FF, $FF ; id 19
 
-; LZSS-compressed asset: 1204 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_48FA:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $05, $02, $05, $03, $05, $04, $05, $05, $05, $06, $05, $07, $05
-    db $1F, $02, $FF, $FF
+; E-0199 (derived: list for entry $32 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames032::
+Data_032_48FA:: ; address name
+    db $00, $05 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $05 ; id 3
+    db $04, $05 ; id 4
+    db $05, $05 ; id 5
+    db $06, $05 ; id 6
+    db $07, $05 ; id 7
+    db $1F, $02 ; id 8
+    db $FF, $FF ; id 9
 
-; LZSS-compressed asset: 703 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_490E:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0C890E, $44
+; E-0199 (derived: list for entry $33 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames033::
+Data_032_490E:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $03 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $03 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $03 ; id 10
+    db $0B, $03 ; id 11
+    db $0B, $03 ; id 12
+    db $0C, $03 ; id 13
+    db $0D, $03 ; id 14
+    db $0E, $03 ; id 15
+    db $0F, $03 ; id 16
+    db $13, $03 ; id 17
+    db $10, $03 ; id 18
+    db $14, $03 ; id 19
+    db $11, $03 ; id 20
+    db $15, $03 ; id 21
+    db $12, $03 ; id 22
+    db $0F, $03 ; id 23
+    db $13, $02 ; id 24
+    db $10, $02 ; id 25
+    db $14, $02 ; id 26
+    db $11, $02 ; id 27
+    db $15, $02 ; id 28
+    db $12, $02 ; id 29
+    db $13, $02 ; id 30
+    db $0F, $02 ; id 31
+    db $0E, $03 ; id 32
+    db $FF, $FF ; id 33
 
-; LZSS-compressed asset: 961 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4952:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0C8952, $42
+; E-0199 (derived: list for entry $34 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames034::
+Data_032_4952:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $04 ; id 2
+    db $03, $04 ; id 3
+    db $04, $04 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $07, $04 ; id 7
+    db $08, $04 ; id 8
+    db $09, $04 ; id 9
+    db $0A, $04 ; id 10
+    db $0B, $04 ; id 11
+    db $0C, $03 ; id 12
+    db $0D, $03 ; id 13
+    db $0C, $03 ; id 14
+    db $0E, $04 ; id 15
+    db $0F, $03 ; id 16
+    db $10, $02 ; id 17
+    db $11, $04 ; id 18
+    db $12, $04 ; id 19
+    db $13, $04 ; id 20
+    db $14, $1D ; id 21
+    db $1F, $03 ; id 22
+    db $14, $03 ; id 23
+    db $1F, $03 ; id 24
+    db $14, $03 ; id 25
+    db $1F, $02 ; id 26
+    db $14, $02 ; id 27
+    db $1F, $01 ; id 28
+    db $14, $01 ; id 29
+    db $1F, $01 ; id 30
+    db $14, $01 ; id 31
+    db $FF, $FF ; id 32
 
-; LZSS-compressed asset: 713 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4994:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $04, $02, $05, $03, $04, $04, $03, $05, $04, $06, $05, $07, $04
-    db $08, $03, $09, $03, $0A, $04, $0B, $05, $0C, $06, $0D, $03, $0E, $04, $0F, $04
-    db $10, $04, $11, $04, $12, $04, $13, $04, $14, $04, $15, $04, $16, $04, $17, $03
-    db $FF, $FF
+; E-0199 (derived: list for entry $35 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames035::
+Data_032_4994:: ; address name
+    db $00, $03 ; id 0
+    db $01, $04 ; id 1
+    db $02, $05 ; id 2
+    db $03, $04 ; id 3
+    db $04, $03 ; id 4
+    db $05, $04 ; id 5
+    db $06, $05 ; id 6
+    db $07, $04 ; id 7
+    db $08, $03 ; id 8
+    db $09, $03 ; id 9
+    db $0A, $04 ; id 10
+    db $0B, $05 ; id 11
+    db $0C, $06 ; id 12
+    db $0D, $03 ; id 13
+    db $0E, $04 ; id 14
+    db $0F, $04 ; id 15
+    db $10, $04 ; id 16
+    db $11, $04 ; id 17
+    db $12, $04 ; id 18
+    db $13, $04 ; id 19
+    db $14, $04 ; id 20
+    db $15, $04 ; id 21
+    db $16, $04 ; id 22
+    db $17, $03 ; id 23
+    db $FF, $FF ; id 24
 
-; LZSS-compressed asset: 715 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_49C6:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $03, $03, $04, $02, $05, $03, $06, $04, $1F, $08
-    db $07, $04, $08, $04, $09, $04, $0A, $04, $0B, $04, $0C, $04, $0D, $04, $0E, $04
-    db $0F, $04, $10, $04, $11, $04, $12, $03, $13, $03, $12, $03, $13, $03, $12, $03
-    db $13, $03, $11, $02, $0F, $02, $0E, $02, $0C, $02, $0B, $02, $0A, $02, $FF, $FF
+; E-0199 (derived: list for entry $36 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames036::
+Data_032_49C6:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $04, $02 ; id 4
+    db $05, $03 ; id 5
+    db $06, $04 ; id 6
+    db $1F, $08 ; id 7
+    db $07, $04 ; id 8
+    db $08, $04 ; id 9
+    db $09, $04 ; id 10
+    db $0A, $04 ; id 11
+    db $0B, $04 ; id 12
+    db $0C, $04 ; id 13
+    db $0D, $04 ; id 14
+    db $0E, $04 ; id 15
+    db $0F, $04 ; id 16
+    db $10, $04 ; id 17
+    db $11, $04 ; id 18
+    db $12, $03 ; id 19
+    db $13, $03 ; id 20
+    db $12, $03 ; id 21
+    db $13, $03 ; id 22
+    db $12, $03 ; id 23
+    db $13, $03 ; id 24
+    db $11, $02 ; id 25
+    db $0F, $02 ; id 26
+    db $0E, $02 ; id 27
+    db $0C, $02 ; id 28
+    db $0B, $02 ; id 29
+    db $0A, $02 ; id 30
+    db $FF, $FF ; id 31
 
-; LZSS-compressed asset: 1425 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4A06:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $01, $05, $02, $05, $03, $04, $04, $02, $05, $03, $04, $03, $06, $04
-    db $07, $06, $08, $05, $09, $04, $0A, $04, $0B, $04, $0C, $04, $0D, $04, $0E, $04
-    db $0F, $04, $FF, $FF
+; E-0199 (derived: list for entry $37 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames037::
+Data_032_4A06:: ; address name
+    db $00, $06 ; id 0
+    db $01, $05 ; id 1
+    db $02, $05 ; id 2
+    db $03, $04 ; id 3
+    db $04, $02 ; id 4
+    db $05, $03 ; id 5
+    db $04, $03 ; id 6
+    db $06, $04 ; id 7
+    db $07, $06 ; id 8
+    db $08, $05 ; id 9
+    db $09, $04 ; id 10
+    db $0A, $04 ; id 11
+    db $0B, $04 ; id 12
+    db $0C, $04 ; id 13
+    db $0D, $04 ; id 14
+    db $0E, $04 ; id 15
+    db $0F, $04 ; id 16
+    db $FF, $FF ; id 17
 
-; LZSS-compressed asset: 957 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4A2A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $01, $04, $02, $03, $03, $04, $04, $04, $05, $03, $06, $03, $07, $02
-    db $08, $02, $07, $03, $08, $03, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03
-    db $10, $03, $11, $03, $0E, $03, $0F, $03, $10, $03, $11, $03, $0C, $02, $0D, $02
-    db $12, $01, $1F, $01, $13, $01, $1F, $01, $14, $01, $1F, $01, $15, $01, $FF, $FF
+; E-0199 (derived: list for entry $38 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames038::
+Data_032_4A2A:: ; address name
+    db $00, $04 ; id 0
+    db $01, $04 ; id 1
+    db $02, $03 ; id 2
+    db $03, $04 ; id 3
+    db $04, $04 ; id 4
+    db $05, $03 ; id 5
+    db $06, $03 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $07, $03 ; id 9
+    db $08, $03 ; id 10
+    db $09, $03 ; id 11
+    db $0A, $03 ; id 12
+    db $0B, $03 ; id 13
+    db $0C, $03 ; id 14
+    db $0D, $03 ; id 15
+    db $10, $03 ; id 16
+    db $11, $03 ; id 17
+    db $0E, $03 ; id 18
+    db $0F, $03 ; id 19
+    db $10, $03 ; id 20
+    db $11, $03 ; id 21
+    db $0C, $02 ; id 22
+    db $0D, $02 ; id 23
+    db $12, $01 ; id 24
+    db $1F, $01 ; id 25
+    db $13, $01 ; id 26
+    db $1F, $01 ; id 27
+    db $14, $01 ; id 28
+    db $1F, $01 ; id 29
+    db $15, $01 ; id 30
+    db $FF, $FF ; id 31
 
-; LZSS-compressed asset: 1214 bytes expand to 1280 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4A6A:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $06, $02, $05, $03, $04, $04, $04, $05, $04, $06, $04, $07, $04
-    db $08, $04, $1F, $0A, $09, $03, $0A, $03, $0B, $03, $0C, $03, $0D, $03, $0E, $03
-    db $FF, $FF
+; E-0199 (derived: list for entry $39 of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames039::
+Data_032_4A6A:: ; address name
+    db $00, $05 ; id 0
+    db $01, $06 ; id 1
+    db $02, $05 ; id 2
+    db $03, $04 ; id 3
+    db $04, $04 ; id 4
+    db $05, $04 ; id 5
+    db $06, $04 ; id 6
+    db $07, $04 ; id 7
+    db $08, $04 ; id 8
+    db $1F, $0A ; id 9
+    db $09, $03 ; id 10
+    db $0A, $03 ; id 11
+    db $0B, $03 ; id 12
+    db $0C, $03 ; id 13
+    db $0D, $03 ; id 14
+    db $0E, $03 ; id 15
+    db $FF, $FF ; id 16
 
-; LZSS-compressed asset: 741 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4A8C:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $01, $03, $02, $03, $03, $03, $10, $03, $04, $03, $11, $03, $05, $03
-    db $12, $03, $06, $03, $13, $03, $07, $03, $14, $03, $08, $03, $15, $03, $09, $03
-    db $16, $03, $0A, $03, $17, $03, $0B, $03, $18, $03, $0C, $03, $19, $03, $0D, $03
-    db $1A, $03, $0E, $03, $0F, $03, $FF, $FF
+; E-0199 (derived: list for entry $3A of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames03A::
+Data_032_4A8C:: ; address name
+    db $00, $03 ; id 0
+    db $01, $03 ; id 1
+    db $02, $03 ; id 2
+    db $03, $03 ; id 3
+    db $10, $03 ; id 4
+    db $04, $03 ; id 5
+    db $11, $03 ; id 6
+    db $05, $03 ; id 7
+    db $12, $03 ; id 8
+    db $06, $03 ; id 9
+    db $13, $03 ; id 10
+    db $07, $03 ; id 11
+    db $14, $03 ; id 12
+    db $08, $03 ; id 13
+    db $15, $03 ; id 14
+    db $09, $03 ; id 15
+    db $16, $03 ; id 16
+    db $0A, $03 ; id 17
+    db $17, $03 ; id 18
+    db $0B, $03 ; id 19
+    db $18, $03 ; id 20
+    db $0C, $03 ; id 21
+    db $19, $03 ; id 22
+    db $0D, $03 ; id 23
+    db $1A, $03 ; id 24
+    db $0E, $03 ; id 25
+    db $0F, $03 ; id 26
+    db $FF, $FF ; id 27
 
-; LZSS-compressed asset: 495 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_032_4AC4:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $01, $02, $02, $02, $03, $02, $04, $02, $05, $02, $06, $02, $07, $02
-    db $08, $02, $09, $02, $0A, $02, $FF, $FF
+; E-0199 (derived: list for entry $3B of SequenceFrameTable; it runs to the next list)
+; record: frame, timer
+SequenceFrames03B::
+Data_032_4AC4:: ; address name
+    db $00, $02 ; id 0
+    db $01, $02 ; id 1
+    db $02, $02 ; id 2
+    db $03, $02 ; id 3
+    db $04, $02 ; id 4
+    db $05, $02 ; id 5
+    db $06, $02 ; id 6
+    db $07, $02 ; id 7
+    db $08, $02 ; id 8
+    db $09, $02 ; id 9
+    db $0A, $02 ; id 10
+    db $FF, $FF ; id 11
 
 ; only called from RunBattleActions_Case00 (E-0047)
 ; 1 call site from 1 routine (e.g. RunBattleActions_Case00)

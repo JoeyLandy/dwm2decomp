@@ -256,30 +256,7 @@ Data_04A_4FB1:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 108 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_500F:: ; heuristic: map screen stream; C0
-    db $68, $01, $00, $2A, $2B, $00, $00, $0E, $3A, $3B, $00, $14, $0E, $00, $00, $0F
-    db $1F, $44, $45, $00, $5A, $00, $40, $41, $40, $41, $00, $14, $06, $54, $55, $00
-    db $6E, $00, $50
-    dw Data_04A_5051
-    db $51
-    dw Data_04A_5400
-    db $08
-    dw Data_04A_5E00
-    db $02
-    dw Data_04A_6200
-    db $04
-    dw Data_04A_6E00
-    db $02
-    dw Data_04A_7200
-    db $02
-    dw Data_04A_7600
-    db $02
-    dw Data_04A_7E00
-    db $0A, $00, $62, $02, $00, $92, $0A, $00
-
-Data_04A_5051:: ; heuristic: target of a monotone pointer table; C0
-    db $76, $00, $00, $7E, $04, $00, $82, $08, $00, $92, $04, $00, $96, $08, $00, $CA
-    db $0F, $21, $00, $5E, $04, $00, $DE, $08, $00, $72, $04, $00, $1A, $1A, $44, $45
-    db $00, $12, $00, $00, $2E, $1A, $54, $55, $3A, $3B
+    INCBIN "dwm2-cobi-us.gbc", $12900F, $6C
 
 ; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_507B:: ; heuristic: map screen stream; C0
@@ -309,10 +286,8 @@ Data_04A_5330:: ; heuristic: map screen stream; C0
 Data_04A_53D4:: ; heuristic: map screen stream; C0
     db $68, $01, $00, $44, $45, $00, $00, $00, $2A, $2B, $00, $06, $08, $54, $55, $00
     db $14, $00, $3A, $3B, $00, $1A, $08, $00, $00, $0F, $41, $00, $06, $0A, $00, $12
-    db $02, $00, $1A, $0A, $00, $76, $0F, $17, $00, $7C, $0C, $00
-
-Data_04A_5400:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $00, $00, $90, $0C, $00, $C4, $0F, $4D, $00, $FC, $0F, $09
+    db $02, $00, $1A, $0A, $00, $76, $0F, $17, $00, $7C, $0C, $00, $06, $00, $00, $90
+    db $0C, $00, $C4, $0F, $4D, $00, $FC, $0F, $09
 
 ; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_540D:: ; heuristic: map screen stream; C0
@@ -401,13 +376,7 @@ Data_04A_5D50:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 150 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_5DCD:: ; heuristic: map screen stream; C0
-    db $68, $01, $00, $2A, $2B, $42, $43, $00, $02, $00, $44, $45, $00, $08, $00, $40
-    db $41, $00, $0E, $00, $3A, $3B, $52, $53, $00, $16, $00, $54, $55, $00, $1C, $00
-    db $50, $51, $00, $22, $00, $00, $00, $02, $00, $08, $02, $00, $0A, $04, $00, $14
-    db $02, $00, $1C
-
-Data_04A_5E00:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $129E00, $63
+    INCBIN "dwm2-cobi-us.gbc", $129DCD, $96
 
 ; LZSS-compressed asset: 174 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_5E63:: ; heuristic: map screen stream; C0
@@ -445,11 +414,7 @@ Data_04A_6145:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 107 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_61A9:: ; heuristic: map screen stream; C0
-    INCBIN "dwm2-cobi-us.gbc", $12A1A9, $57
-
-Data_04A_6200:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $00, $64, $06, $00, $C8, $0C, $00, $50, $00, $00, $DC, $0C, $00, $64, $00
-    db $00, $F0, $0F, $3D
+    INCBIN "dwm2-cobi-us.gbc", $12A1A9, $6B
 
 ; LZSS-compressed asset: 117 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_6214:: ; heuristic: map screen stream; C0
@@ -760,13 +725,7 @@ Data_04A_6D98:: ; heuristic: map screen stream; C0
 
 ; LZSS-compressed asset: 69 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_6DC2:: ; heuristic: map screen stream; C0
-    db $68, $01, $00, $03, $03, $02, $00, $02, $01, $01, $00, $08, $07, $00, $00, $0F
-    db $07, $00, $08, $08, $00, $26, $0F, $05, $00, $28, $04, $00, $06, $06, $00, $50
-    db $0F, $05, $00, $52, $0C, $00, $78, $0F, $03, $00, $02, $0A, $00, $02, $00, $00
-    db $A0, $0F, $01, $00, $AC, $02, $00, $2E, $0A, $00, $C8, $0F, $05, $00
-
-Data_04A_6E00:: ; heuristic: target of a monotone pointer table; C0
-    db $F3, $0F, $4D, $00, $08, $1F, $01
+    INCBIN "dwm2-cobi-us.gbc", $12ADC2, $45
 
 ; LZSS-compressed asset: 89 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_6E07:: ; heuristic: map screen stream; C0
@@ -826,10 +785,7 @@ Data_04A_6FC3:: ; heuristic: map screen stream; C0
 ; LZSS-compressed asset: 1248 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map21Tileset:: ; heuristic: map tileset stream; C0
 Data_04A_700B:: ; address name
-    INCBIN "dwm2-cobi-us.gbc", $12B00B, $1F5
-
-Data_04A_7200:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $12B200, $2EB
+    INCBIN "dwm2-cobi-us.gbc", $12B00B, $4E0
 
 ; E-0142 (derived: the $40 bytes LoadBGPaletteBufferFromBank copies for a map record)
 ; record: one CGB palette: 4 BGR555 colours
@@ -860,12 +816,7 @@ Data_04A_7531:: ; address name
 
 ; LZSS-compressed asset: 235 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_7537:: ; heuristic: map screen stream; C0
-    INCBIN "dwm2-cobi-us.gbc", $12B537, $C9
-
-Data_04A_7600:: ; heuristic: target of a monotone pointer table; C0
-    db $44, $45, $44, $41, $00, $10, $04, $00, $00, $00, $00, $8E, $00, $00, $8E, $00
-    db $00, $20, $18, $00, $26, $02, $00, $38, $1C, $00, $68, $01, $00, $20, $15, $00
-    db $3C, $00
+    INCBIN "dwm2-cobi-us.gbc", $12B537, $EB
 
 ; LZSS-compressed asset: 231 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_04A_7622:: ; heuristic: map screen stream; C0
@@ -946,7 +897,4 @@ Data_04A_7C1B:: ; heuristic: map screen stream; C0
     db $05, $2A, $05, $05, $FA, $F6, $05, $2A, $0F, $4D, $05, $24, $04, $05, $10, $0E
     db $05, $A4, $0F, $27, $05, $3E, $06, $05, $3E, $00, $02, $02, $05, $EE, $0F, $2D
     db $05, $A2, $0F, $13
-    ds $1B1, $00
-
-Data_04A_7E00:: ; heuristic: target of a monotone pointer table; C0
-    ds $200, $00
+    ds $3B1, $00
