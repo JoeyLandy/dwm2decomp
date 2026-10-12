@@ -3238,6 +3238,19 @@ class Rom:
                         self.skill_name(i) if tn["by"] == "skill" else ""))
                 nm = re.sub(r"[^A-Za-z0-9]", "", nm)
                 give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"{tn['prefix']}{nm or f'{i:02X}'}")
+        # E-0266: SGB packets by command (first byte >> 3, the SGB command code; HARDWARE) and special map records
+        sgb = ["Pal01", "Pal23", "Pal03", "Pal12", "AttrBlk", "AttrLin", "AttrDiv", "AttrChr", "Sound", "SouTrn",
+               "PalSet", "PalTrn", "AtrcEn", "TestEn", "IconEn", "DataSnd", "DataTrn", "MltReq", "Jump", "ChrTrn",
+               "PctTrn", "AttrTrn", "AttrSet", "MaskEn", "ObjTrn"]
+        for b in range(self.nbanks):
+            for a in [a for a in self.dlabels[b] if self.dreason.get((b, a)) == "SGB packet"]:
+                cmd = self.data[b * BANK - self.base(b) + a] >> 3
+                if cmd < len(sgb):
+                    give(b, a, f"Sgb{sgb[cmd]}_{b:02X}_{a:04X}")
+        smr = next((t for t in self.schemas if t["label"] == "SpecialMapRecords"), None)
+        if smr:
+            for i in range(smr["count"]):
+                give(smr["bank"], smr["addr"] + 26 * i, f"SpecialMapRecord{i:02X}")
         it = next((t for t in self.schemas if t["label"] == "ItemDescriptionTable"), None)
         if it:  # E-0255: item descriptions, by item name (StringTable_ItemNames, 08:$4716)
             for i in list(range(1, it["count"])) + [0]:  # item 0 has no name; a named item wins a shared text

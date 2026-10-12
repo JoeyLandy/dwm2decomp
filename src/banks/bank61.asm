@@ -3810,11 +3810,11 @@ Jump_061_60BB::
 SpecialMapTable::
 Data_061_60D8:: ; address name
     dw SpecialMapRecords ; id 0
-    dw Data_061_61F2 ; id 1
-    dw Data_061_620C ; id 2
-    dw Data_061_6226 ; id 3
-    dw Data_061_6240 ; id 4
-    dw Data_061_625A ; id 5
+    dw SpecialMapRecord01 ; id 1
+    dw SpecialMapRecord02 ; id 2
+    dw SpecialMapRecord03 ; id 3
+    dw SpecialMapRecord04 ; id 4
+    dw SpecialMapRecord05 ; id 5
     dw $0000 ; id 6
     dw $0000 ; id 7
     dw $0000 ; id 8
@@ -3841,16 +3841,16 @@ Data_061_60D8:: ; address name
     dw $0000 ; id 29
     dw $0000 ; id 30
     dw $0000 ; id 31
-    dw Data_061_6274 ; id 32
-    dw Data_061_628E ; id 33
-    dw Data_061_62A8 ; id 34
-    dw Data_061_62C2 ; id 35
-    dw Data_061_62DC ; id 36
-    dw Data_061_62F6 ; id 37
-    dw Data_061_6310 ; id 38
-    dw Data_061_632A ; id 39
-    dw Data_061_6344 ; id 40
-    dw Data_061_635E ; id 41
+    dw SpecialMapRecord06 ; id 32
+    dw SpecialMapRecord07 ; id 33
+    dw SpecialMapRecord08 ; id 34
+    dw SpecialMapRecord09 ; id 35
+    dw SpecialMapRecord0A ; id 36
+    dw SpecialMapRecord0B ; id 37
+    dw SpecialMapRecord0C ; id 38
+    dw SpecialMapRecord0D ; id 39
+    dw SpecialMapRecord0E ; id 40
+    dw SpecialMapRecord0F ; id 41
     dw $0000 ; id 42
     dw $0000 ; id 43
     dw $0000 ; id 44
@@ -3873,27 +3873,27 @@ Data_061_60D8:: ; address name
     dw $0000 ; id 61
     dw $0000 ; id 62
     dw $0000 ; id 63
-    dw Data_061_6378 ; id 64
-    dw Data_061_6392 ; id 65
-    dw Data_061_63AC ; id 66
-    dw Data_061_63C6 ; id 67
-    dw Data_061_63E0 ; id 68
-    dw Data_061_63FA ; id 69
-    dw Data_061_6414 ; id 70
-    dw Data_061_642E ; id 71
-    dw Data_061_6448 ; id 72
-    dw Data_061_6462 ; id 73
+    dw SpecialMapRecord10 ; id 64
+    dw SpecialMapRecord11 ; id 65
+    dw SpecialMapRecord12 ; id 66
+    dw SpecialMapRecord13 ; id 67
+    dw SpecialMapRecord14 ; id 68
+    dw SpecialMapRecord15 ; id 69
+    dw SpecialMapRecord16 ; id 70
+    dw SpecialMapRecord17 ; id 71
+    dw SpecialMapRecord18 ; id 72
+    dw SpecialMapRecord19 ; id 73
     dw $0000 ; id 74
     dw $0000 ; id 75
     dw $0000 ; id 76
     dw $0000 ; id 77
     dw $0000 ; id 78
     dw $0000 ; id 79
-    dw Data_061_647C ; id 80
-    dw Data_061_6496 ; id 81
-    dw Data_061_64B0 ; id 82
-    dw Data_061_64CA ; id 83
-    dw Data_061_64E4 ; id 84
+    dw SpecialMapRecord1A ; id 80
+    dw SpecialMapRecord1B ; id 81
+    dw SpecialMapRecord1C ; id 82
+    dw SpecialMapRecord1D ; id 83
+    dw SpecialMapRecord1E ; id 84
     dw $0000 ; id 85
     dw $0000 ; id 86
     dw $0000 ; id 87
@@ -3906,12 +3906,12 @@ Data_061_60D8:: ; address name
     dw $0000 ; id 94
     dw $0000 ; id 95
     dw $0000 ; id 96
-    dw Data_061_64FE ; id 97
-    dw Data_061_6518 ; id 98
-    dw Data_061_6532 ; id 99
-    dw Data_061_654C ; id 100
-    dw Data_061_654C ; id 101
-    dw Data_061_654C ; id 102
+    dw SpecialMapRecord1F ; id 97
+    dw SpecialMapRecord20 ; id 98
+    dw SpecialMapRecord21 ; id 99
+    dw SpecialMapRecord22 ; id 100
+    dw SpecialMapRecord22 ; id 101
+    dw SpecialMapRecord22 ; id 102
     dw $0000 ; id 103
     dw $0000 ; id 104
     dw $0000 ; id 105
@@ -3941,211 +3941,246 @@ Data_061_60D8:: ; address name
 ; E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens).
 ; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its ROM bank; screen attribute-map array; its ROM bank
 SpecialMapRecords::
+SpecialMapRecord00:: ; heuristic: special map record; C0
 Data_061_61D8:: ; address name
     dfar SpecialMap00Tileset ; id 0
     dfar SpecialMap00Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap00Screens
     dfar SpecialMap00Attrs
-Data_061_61F2:: ; heuristic: special map record; C0
+SpecialMapRecord01:: ; heuristic: special map record; C0
+Data_061_61F2:: ; address name
     dfar SpecialMap01Tileset ; id 1
     dfar SpecialMap01Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap01Screens
     dfar SpecialMap01Attrs
-Data_061_620C:: ; heuristic: special map record; C0
+SpecialMapRecord02:: ; heuristic: special map record; C0
+Data_061_620C:: ; address name
     dfar SpecialMap02Tileset ; id 2
     dfar SpecialMap02Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap02Screens
     dfar SpecialMap02Attrs
-Data_061_6226:: ; heuristic: special map record; C0
+SpecialMapRecord03:: ; heuristic: special map record; C0
+Data_061_6226:: ; address name
     dfar SpecialMap03Tileset ; id 3
     dfar SpecialMap03Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap03Screens
     dfar SpecialMap03Attrs
-Data_061_6240:: ; heuristic: special map record; C0
+SpecialMapRecord04:: ; heuristic: special map record; C0
+Data_061_6240:: ; address name
     dfar SpecialMap04Tileset ; id 4
     dfar SpecialMap04Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap04Screens
     dfar SpecialMap04Attrs
-Data_061_625A:: ; heuristic: special map record; C0
+SpecialMapRecord05:: ; heuristic: special map record; C0
+Data_061_625A:: ; address name
     dfar SpecialMap05Tileset ; id 5
     dfar SpecialMap05Palettes
     db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap05Screens
     dfar SpecialMap05Attrs
-Data_061_6274:: ; heuristic: special map record; C0
+SpecialMapRecord06:: ; heuristic: special map record; C0
+Data_061_6274:: ; address name
     dfar SpecialMap06Tileset ; id 6
     dfar SpecialMap06Palettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap06Screens
     dfar SpecialMap06Attrs
-Data_061_628E:: ; heuristic: special map record; C0
+SpecialMapRecord07:: ; heuristic: special map record; C0
+Data_061_628E:: ; address name
     dfar SpecialMap07Tileset ; id 7
     dfar SpecialMap07Palettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap07Screens
     dfar SpecialMap07Attrs
-Data_061_62A8:: ; heuristic: special map record; C0
+SpecialMapRecord08:: ; heuristic: special map record; C0
+Data_061_62A8:: ; address name
     dfar SpecialMap08Tileset ; id 8
     dfar SpecialMap08Palettes
     db $02, $02, $4F, $00, $01, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap08Screens
     dfar SpecialMap08Attrs
-Data_061_62C2:: ; heuristic: special map record; C0
+SpecialMapRecord09:: ; heuristic: special map record; C0
+Data_061_62C2:: ; address name
     dfar SpecialMap09Tileset ; id 9
     dfar SpecialMap09Palettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap09Screens
     dfar SpecialMap09Attrs
-Data_061_62DC:: ; heuristic: special map record; C0
+SpecialMapRecord0A:: ; heuristic: special map record; C0
+Data_061_62DC:: ; address name
     dfar SpecialMap0ATileset ; id 10
     dfar SpecialMap0APalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0AScreens
     dfar SpecialMap0AAttrs
-Data_061_62F6:: ; heuristic: special map record; C0
+SpecialMapRecord0B:: ; heuristic: special map record; C0
+Data_061_62F6:: ; address name
     dfar SpecialMap0BTileset ; id 11
     dfar SpecialMap0BPalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0BScreens
     dfar SpecialMap0BAttrs
-Data_061_6310:: ; heuristic: special map record; C0
+SpecialMapRecord0C:: ; heuristic: special map record; C0
+Data_061_6310:: ; address name
     dfar SpecialMap0CTileset ; id 12
     dfar SpecialMap0CPalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0CScreens
     dfar SpecialMap0CAttrs
-Data_061_632A:: ; heuristic: special map record; C0
+SpecialMapRecord0D:: ; heuristic: special map record; C0
+Data_061_632A:: ; address name
     dfar SpecialMap0DTileset ; id 13
     dfar SpecialMap0DPalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0DScreens
     dfar SpecialMap0DAttrs
-Data_061_6344:: ; heuristic: special map record; C0
+SpecialMapRecord0E:: ; heuristic: special map record; C0
+Data_061_6344:: ; address name
     dfar SpecialMap0ETileset ; id 14
     dfar SpecialMap0EPalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0EScreens
     dfar SpecialMap0EAttrs
-Data_061_635E:: ; heuristic: special map record; C0
+SpecialMapRecord0F:: ; heuristic: special map record; C0
+Data_061_635E:: ; address name
     dfar SpecialMap0FTileset ; id 15
     dfar SpecialMap0FPalettes
     db $02, $02, $4F, $00, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap0FScreens
     dfar SpecialMap0FAttrs
-Data_061_6378:: ; heuristic: special map record; C0
+SpecialMapRecord10:: ; heuristic: special map record; C0
+Data_061_6378:: ; address name
     dfar SpecialMap10Tileset ; id 16
     dfar SpecialMap10Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap10Screens
     dfar SpecialMap10Attrs
-Data_061_6392:: ; heuristic: special map record; C0
+SpecialMapRecord11:: ; heuristic: special map record; C0
+Data_061_6392:: ; address name
     dfar SpecialMap11Tileset ; id 17
     dfar SpecialMap11Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap11Screens
     dfar SpecialMap11Attrs
-Data_061_63AC:: ; heuristic: special map record; C0
+SpecialMapRecord12:: ; heuristic: special map record; C0
+Data_061_63AC:: ; address name
     dfar SpecialMap12Tileset ; id 18
     dfar SpecialMap12Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap12Screens
     dfar SpecialMap12Attrs
-Data_061_63C6:: ; heuristic: special map record; C0
+SpecialMapRecord13:: ; heuristic: special map record; C0
+Data_061_63C6:: ; address name
     dfar SpecialMap13Tileset ; id 19
     dfar SpecialMap13Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap13Screens
     dfar SpecialMap13Attrs
-Data_061_63E0:: ; heuristic: special map record; C0
+SpecialMapRecord14:: ; heuristic: special map record; C0
+Data_061_63E0:: ; address name
     dfar SpecialMap14Tileset ; id 20
     dfar SpecialMap14Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap14Screens
     dfar SpecialMap14Attrs
-Data_061_63FA:: ; heuristic: special map record; C0
+SpecialMapRecord15:: ; heuristic: special map record; C0
+Data_061_63FA:: ; address name
     dfar SpecialMap15Tileset ; id 21
     dfar SpecialMap15Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap15Screens
     dfar SpecialMap15Attrs
-Data_061_6414:: ; heuristic: special map record; C0
+SpecialMapRecord16:: ; heuristic: special map record; C0
+Data_061_6414:: ; address name
     dfar SpecialMap16Tileset ; id 22
     dfar SpecialMap16Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap16Screens
     dfar SpecialMap16Attrs
-Data_061_642E:: ; heuristic: special map record; C0
+SpecialMapRecord17:: ; heuristic: special map record; C0
+Data_061_642E:: ; address name
     dfar SpecialMap17Tileset ; id 23
     dfar SpecialMap17Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap17Screens
     dfar SpecialMap17Attrs
-Data_061_6448:: ; heuristic: special map record; C0
+SpecialMapRecord18:: ; heuristic: special map record; C0
+Data_061_6448:: ; address name
     dfar SpecialMap18Tileset ; id 24
     dfar SpecialMap18Palettes
     db $02, $01, $3F, $00, $01, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap18Screens
     dfar SpecialMap18Attrs
-Data_061_6462:: ; heuristic: special map record; C0
+SpecialMapRecord19:: ; heuristic: special map record; C0
+Data_061_6462:: ; address name
     dfar SpecialMap19Tileset ; id 25
     dfar SpecialMap19Palettes
     db $02, $01, $3F, $00, $00, $00, $00, $00, $40, $80, $00, $00, $40, $80
     dfar SpecialMap19Screens
     dfar SpecialMap19Attrs
-Data_061_647C:: ; heuristic: special map record; C0
+SpecialMapRecord1A:: ; heuristic: special map record; C0
+Data_061_647C:: ; address name
     dfar SpecialMap1ATileset ; id 26
     dfar SpecialMap1APalettes
     db $01, $01, $3F, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1AScreens
     dfar SpecialMap1AAttrs
-Data_061_6496:: ; heuristic: special map record; C0
+SpecialMapRecord1B:: ; heuristic: special map record; C0
+Data_061_6496:: ; address name
     dfar SpecialMap1ATileset ; id 27
     dfar SpecialMap1APalettes
     db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1BScreens
     dfar SpecialMap1BAttrs
-Data_061_64B0:: ; heuristic: special map record; C0
+SpecialMapRecord1C:: ; heuristic: special map record; C0
+Data_061_64B0:: ; address name
     dfar SpecialMap1ATileset ; id 28
     dfar SpecialMap1APalettes
     db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1CScreens
     dfar SpecialMap1CAttrs
-Data_061_64CA:: ; heuristic: special map record; C0
+SpecialMapRecord1D:: ; heuristic: special map record; C0
+Data_061_64CA:: ; address name
     dfar SpecialMap1ATileset ; id 29
     dfar SpecialMap1APalettes
     db $01, $01, $3F, $3C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1DScreens
     dfar SpecialMap1DAttrs
-Data_061_64E4:: ; heuristic: special map record; C0
+SpecialMapRecord1E:: ; heuristic: special map record; C0
+Data_061_64E4:: ; address name
     dfar SpecialMap1ATileset ; id 30
     dfar SpecialMap1APalettes
     db $01, $01, $3F, $3C, $00, $00, $00, $00, $40, $80, $00, $00, $50, $80
     dfar SpecialMap1EScreens
     dfar SpecialMap1EAttrs
-Data_061_64FE:: ; heuristic: special map record; C0
+SpecialMapRecord1F:: ; heuristic: special map record; C0
+Data_061_64FE:: ; address name
     dfar SpecialMap1FTileset ; id 31
     dfar SpecialMap1FPalettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap1FScreens
     dfar SpecialMap1FAttrs
-Data_061_6518:: ; heuristic: special map record; C0
+SpecialMapRecord20:: ; heuristic: special map record; C0
+Data_061_6518:: ; address name
     dfar SpecialMap20Tileset ; id 32
     dfar SpecialMap20Palettes
     db $01, $01, $23, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap20Screens
     dfar SpecialMap20Attrs
-Data_061_6532:: ; heuristic: special map record; C0
+SpecialMapRecord21:: ; heuristic: special map record; C0
+Data_061_6532:: ; address name
     dfar SpecialMap21Tileset ; id 33
     dfar SpecialMap21Palettes
     db $01, $01, $19, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     dfar SpecialMap21Screens
     dfar SpecialMap21Attrs
-Data_061_654C:: ; heuristic: special map record; C0
+SpecialMapRecord22:: ; heuristic: special map record; C0
+Data_061_654C:: ; address name
     dfar Map29Tileset ; id 34
     dfar Map29Palettes
     db $01, $01, $32, $2C, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00

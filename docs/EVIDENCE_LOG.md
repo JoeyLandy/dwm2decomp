@@ -2430,6 +2430,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0266 — SGB packets named by command; special map records by index
+
+- Kind: HARDWARE (SGB command codes) and TOOL.
+- An SGB packet's first byte is command * 8 + packet count. The packets found earlier (E-0021/E-0022) are now labelled Sgb<Command>_BB_AAAA after that command (Pal01 ... DataSnd, MltReq, ChrTrn, PctTrn, ...). The SGB start-up sequence's DATA_SND packets in bank $1F are an example.
+- The records of SpecialMapRecords are labelled SpecialMapRecordNN.
+- Binary verification: build/run346 PASS, 0 differing bytes; tests OK.
+
 ### E-0265 — Skill prerequisite lists named by skill
 
 - Kind: TOOL (C1 names from E-0159 and E-0026).
