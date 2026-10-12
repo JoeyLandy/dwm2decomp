@@ -516,12 +516,12 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_TargetOnLocalSide_Bank3B
     dw RunBattleActions_Case08_Sub01_ShowHeroIsAHunk
     dw RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep
-    dw RunBattleActions_Case08_Sub01_Case05
+    dw RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
     dw RunBattleActions_Case08_Sub01_ShowBattleText
     dw RunBattleActions_Case08_Sub01_Return
     dw RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B
     dw RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764
-    dw RunBattleActions_Case08_Sub01_Case0A
+    dw RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc
     dw RunBattleActions_Case08_Sub01_LoadItemRecord
     dw RunBattleActions_Case08_Sub01_SetDefeatFlagsBA
     dw RunBattleActions_Case08_Sub01_ShowButNothingHappened
@@ -758,7 +758,7 @@ Jump_03B_4473:: ; address name
 ; reads: wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wBattleActionId, wBattleTarget
 ; writes: wResolveMsgFlags, wSlotsOccupiedFlag, wEffectFlags, wEffectFlags2
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_Case05::
+RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
 Jump_03B_447B:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -967,7 +967,7 @@ Jump_03B_459F:: ; address name
 ; reads: wBattleFlag93, wBattleFlag92, wBattleTarget, wDefeatFlagsBA
 ; writes: wBattleTarget, wBattleResolveStep, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleResolveStep, wBattleMonsterId, wDefeatFlagsBA, wSpeciesGroups
-RunBattleActions_Case08_Sub01_Case0A::
+RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc::
 Jump_03B_45A6:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1044,7 +1044,7 @@ Jump_03B_4627::
     ret
 
 ; runs Func_03B_4650 once (marked by bit 7 of wDABA), then Func_03B_4673 each time; returns wDABA & $7F (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_Case0A)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc)
 ; reads: wDefeatFlagsBA
 ; writes: wDefeatFlagsBA
 RunOnce4650Then4673::
@@ -1213,7 +1213,7 @@ Func_03B_470B:: ; address name
     ret
 
 ; lists the target side's species and groups the targets that share the target's species into wD88B-wD88D (bit 7 marks a group) (E-0131)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_Case0A)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc)
 ; reads: wBattleTarget
 ; writes: wSpeciesGroups, wDefeatFlagsBA
 ; points at: wSpeciesGroups, wTemp0
@@ -1602,7 +1602,7 @@ Data_03B_4949:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
 ; wD89F += HL, capped at $0708 (1800) (E-0122)
-; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, RunBattleActions_Case08_Sub01_Case05)
+; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
 ; reads: wBattleMeter
 ; writes: wBattleMeter
 AddHLToBattleMeterCappedAt1800::
@@ -1625,7 +1625,7 @@ Jump_03B_4967::
     ret
 
 ; wD89F -= HL, floored at 0 (E-0124)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_Case05)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
 ; reads: wBattleMeter
 ; writes: wBattleMeter
 SubtractHLFromBattleMeterFloored::

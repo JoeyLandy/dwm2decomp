@@ -11,7 +11,7 @@ Func_01E_4001:: ; address name
     dw CloseMenuE9_CopyBytesDEToHL_Bank1E
     dw CloseMenuE9_ToCloseBreedMenu
     dw CloseMenuE9_DecompressToVRAM
-    dw CloseMenuE9_ToCloseBreedMenu_CloseBreedMenu
+    dw CloseMenuE9_ToCloseBreedMenu_Case03
 
 ; entry 0 of the `rst $00` table in CloseMenuE9
 ; no direct call (reached through a table, a jump or a vector)
@@ -69,13 +69,13 @@ Jump_01E_4046:: ; address name
 
 ; entry 3 of the `rst $00` table in CloseMenuE9
 ; no direct call (reached through a table, a jump or a vector)
-CloseMenuE9_ToCloseBreedMenu_CloseBreedMenu::
+CloseMenuE9_ToCloseBreedMenu_Case03::
 Jump_01E_4062:: ; address name
     farcall CloseBreedMenu
     ret
 
 ; implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244)
-; 18 call sites from 18 routines (e.g. EggServiceMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu_SwapMonstersMenu, ScriptCommandE8, ...)
+; 18 call sites from 18 routines (e.g. EggServiceMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_SwapMonstersMenu_Case0C, ScriptCommandE8, ...)
 ; reads: wScreenState
 SwapMonstersMenu::
 Func_01E_4069:: ; address name
@@ -83,7 +83,7 @@ Func_01E_4069:: ; address name
     rst $00
     dw SwapMonstersMenu_CopyBytesDEToHL_Bank1E
     dw SwapMonstersMenu_Case01
-    dw SwapMonstersMenu_Case02_WriteGridCursorY_Case02
+    dw SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
     dw SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries_Case03
     dw SwapMonstersMenu_Case04
     dw SwapMonstersMenu_Case05
@@ -210,7 +210,7 @@ Jump_01E_4100:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, wGridCursorX
-SwapMonstersMenu_Case02_WriteGridCursorY_Case02::
+SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 Jump_01E_412A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -313,7 +313,7 @@ Jump_01E_41D0::
     ret
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 3 call sites from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
+; 3 call sites from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
 ; reads: wJoypadRepeatTimer, wGridCursorY, wGridCursorX
 ; writes: wGridCursorY
 SwapMonstersMenu_Case02_WriteGridCursorY::
@@ -332,7 +332,7 @@ Func_01E_41DF:: ; address name
     ld [wGridCursorY], a
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_ReadGridCursorX::
 Func_01E_41F9:: ; address name
@@ -340,7 +340,7 @@ Func_01E_41F9:: ; address name
     jr Jump_01E_4203
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 2 call sites from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
+; 2 call sites from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_ReadGridCursorX_Sub03::
 Func_01E_41FD:: ; address name
@@ -348,7 +348,7 @@ Func_01E_41FD:: ; address name
     jr Jump_01E_4203
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
 ; reads: wGridCursorX
 SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap::
 Func_01E_4201:: ; address name
@@ -389,7 +389,7 @@ SwapMonstersMenu_Case04::
 Jump_01E_4234:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case04_Case00
+    dw SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc
     dw SwapMonstersMenu_Case04_LoadFamilyIconTileForRecordB_Bank1E_Case01
     dw SwapMonstersMenu_Case04_FillTilesBxC_Case02
     dw SwapMonstersMenu_Case04_DrawRecordNameAndSpeciesNameTiles_Case03
@@ -444,7 +444,7 @@ Jump_01E_4234:: ; address name
 ; reads: wScreenSubStep, wScreenStep, wPartyCount
 ; writes: wScreenSubStep, wScreenStep, rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList
-SwapMonstersMenu_Case04_Case00::
+SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc::
 Jump_01E_429A:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -1916,7 +1916,7 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case04_CountRecordsInUse
     dw SwapMonstersMenu_Case04_CopyFromBankWaitVRAM
     dw SwapMonstersMenu_Case04_UpdateTwoChoiceCursor_Bank1D
-    dw SwapMonstersMenu_Case04_Case00
+    dw SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc
     dw SwapMonstersMenu_Case04_LoadFamilyIconTileForRecordB_Bank1E_Case01
     dw SwapMonstersMenu_Case04_FillTilesBxC_Case02
     dw SwapMonstersMenu_Case04_DrawRecordNameAndSpeciesNameTiles_Case03
@@ -1945,7 +1945,7 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E
     dw SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E_Case3C
-    dw SwapMonstersMenu_Case05_Case3D
+    dw SwapMonstersMenu_Case05_WriteScreenSubStepAndScreenStepEtc
     dw SwapMonstersMenu_Case04_LoadFamilyIconTileForRecordB_Bank1E_Case01
     dw SwapMonstersMenu_Case04_FillTilesBxC_Case02
     dw SwapMonstersMenu_Case04_DrawRecordNameAndSpeciesNameTiles_Case03
@@ -2350,7 +2350,7 @@ Jump_01E_4F9D:: ; address name
 ; reads: wScreenSubStep, wScreenStep, wPartyCount
 ; writes: wScreenSubStep, wScreenStep, rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList
-SwapMonstersMenu_Case05_Case3D::
+SwapMonstersMenu_Case05_WriteScreenSubStepAndScreenStepEtc::
 Jump_01E_4FAC:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -7775,7 +7775,7 @@ Jump_01E_740A::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 41 call sites from 29 routines (e.g. SwapMonstersMenu_Case02_WriteGridCursorY_Case02, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable, SwapMonstersMenu_Case04_UpdateListCursorListCursor, ...)
+; 41 call sites from 29 routines (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable, SwapMonstersMenu_Case04_UpdateListCursorListCursor, ...)
 StoreBAtWordTableEntry_Bank1E::
 Func_01E_741A:: ; address name
     push bc
@@ -7896,7 +7896,7 @@ Jump_01E_7486::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 33 call sites from 27 routines (e.g. SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_Case00, SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E_Case3C, ...)
+; 33 call sites from 27 routines (e.g. SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_Case04_CountRecordsInUse_Case22, SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc, SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E_Case3C, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank1E::

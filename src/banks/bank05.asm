@@ -3047,7 +3047,7 @@ Jump_005_4E55::
     jr c, Jump_005_4E70
     push hl
     push bc
-    call FailIfFoeAIDamageEstimatesAtLeastEstimate_Sub01
+    call FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc
     pop bc
     ld d, h
     ld e, l
@@ -3080,7 +3080,7 @@ Jump_005_4E79::
 ; 1 call site from 1 routine (e.g. FailIfFoeAIDamageEstimatesAtLeastEstimate)
 ; reads: wRecordBuffer, wRecordBufferData, wBattleActor, wLinkMode
 ; points at: wBattleLevel
-FailIfFoeAIDamageEstimatesAtLeastEstimate_Sub01::
+FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc::
 Func_005_4E7C:: ; address name
     ld a, [wRecordBuffer]
     cp a, $48
@@ -3347,7 +3347,7 @@ Jump_005_5028::
     ld a, c
 
 ; HL = HL * A / 100 (24-bit intermediate: Multiply8By16 then Divide24ByA), A = the remainder (E-0114)
-; 3 call sites from 1 routine (e.g. FailIfFoeAIDamageEstimatesAtLeastEstimate_Sub01)
+; 3 call sites from 1 routine (e.g. FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc)
 MultiplyHLByAPercent::
 Func_005_5029:: ; address name
     ld b, h
@@ -3358,7 +3358,7 @@ Func_005_5029:: ; address name
     ret
 
 ; C = battle slot: loads the slot's species record (LoadSpeciesRecord); A = its family; carry set when the family is below 9 (Slime to Material), clear for Water (9) and Boss (10) (E-0069)
-; 1 call site from 1 routine (e.g. FailIfFoeAIDamageEstimatesAtLeastEstimate_Sub01)
+; 1 call site from 1 routine (e.g. FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleMonsterId
@@ -3721,7 +3721,7 @@ Jump_005_5225::
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hTemp0, hTemp1
-AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02:: ; heuristic: follows a terminator; C0
 Func_005_5228:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6387,7 +6387,7 @@ Jump_005_5FB3::
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
 ; reads: wBattleActor, wAIFlag
 ; points at: wSlotMarks
-AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
 Func_005_5FC7:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6437,7 +6437,7 @@ Jump_005_600B::
     ret
 
 ; carry when slot C has under 3 MP; otherwise Z when skill $6B is among its eight skills (E-0124)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
 ; points at: wBattleMP, wBattleSkills
 SlotCHasMP3AndSkill6B::
 Func_005_600E:: ; address name
@@ -6471,7 +6471,7 @@ Jump_005_6037::
     ret
 
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
 WDA77EntryHasBits2And3_Bank05::
 Func_005_6039:: ; address name
     ld a, c
@@ -8911,7 +8911,7 @@ Func_005_6CA5:: ; address name
     ret
 
 ; only called from routines of AIScore_TwinHits (E-0098)
-; 2 call sites from 2 routines (e.g. AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05, AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_ReadSlotAIModeIndexed_Bank05)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05, AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02)
 ; reads: wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0

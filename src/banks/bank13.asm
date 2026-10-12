@@ -61,7 +61,7 @@ Func_013_4049:: ; address name
     ret
 
 ; unless wCC44 says otherwise (several special values), starts an event: when wC916 is not $FD it runs script command $09 with a parameter from wCDAE; otherwise (and for the other paths) it jumps through an 11-entry table by wC917 (the handler group: cases far-call bank-$04 dispatchers or, for group 4, dispatch on wC916 through a 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond talk handlers is not read (E-0097)
-; 39 call sites from 26 routines (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B, RunFieldReturnPhase_OpenFieldMenuOnA, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
+; 39 call sites from 26 routines (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B, RunFieldReturnPhase_OpenFieldMenuOnA, FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc, FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03, ...)
 ; reads: wMapType, wTalkEventIndex, wKeyWorldFloor, wTalkEventGroup
 ; writes: wScriptStartRequest, wModeState, wTalkEventIndex, wTalkEventGroup, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
 DispatchTalkEvent::

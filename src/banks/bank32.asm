@@ -3881,7 +3881,7 @@ RunBattleStep4_Case00_Sub01::
 Func_032_5820:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleStep4_Case00_Sub01_Case00
+    dw RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc
     dw RunBattleStep4_Case00_Sub01_CheckSkillMPCost
     dw RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable
     dw RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags
@@ -3895,7 +3895,7 @@ Func_032_5820:: ; address name
 ; reads: wBattleActor, wBattleTarget, wDefeatFlagsBA, wBattleActionId
 ; writes: wFollowUpAction, wDefeatFlagsBA, wBattleActor, wBattleTarget
 ; points at: wBattleResolveStep, wSavedActorTarget, wBattleActionChoice, wSlotMarks, wBattleTargetChoice
-RunBattleStep4_Case00_Sub01_Case00::
+RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc::
 Jump_032_5834:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4942,7 +4942,7 @@ ResolveStep0EEffect::
 Func_032_5EAB:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw ResolveStep0EEffect_Case00
+    dw ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc
     dw ResolveStep0EEffect_ShowBattleText
     dw ResolveStep0EEffect_SetBattleSubStep
     dw ResolveStep0EEffect_Case03
@@ -4958,7 +4958,7 @@ Func_032_5EAB:: ; address name
 ; reads: wBattleActionId, wBattleActor, hTemp0, wBattleScreenFlags, wBattleTarget
 ; writes: wBattleSubStep2, wEffectSubStep, wBattleActor, wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wSavedActorSlot, wSavedActorByte, ...
 ; points at: wBattleSubStep, wBattleStatus
-ResolveStep0EEffect_Case00::
+ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
 Jump_032_5EC3:: ; address name
     xor a, a
     ld [wBattleSubStep2], a
@@ -5143,7 +5143,7 @@ Jump_032_6044::
     jp SetBattleSubStep1
 
 ; only called from ResolveStep0EEffect_Case00 (E-0047)
-; 2 call sites from 1 routine (e.g. ResolveStep0EEffect_Case00)
+; 2 call sites from 1 routine (e.g. ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc)
 ; reads: wBattleActor, wRandomLo
 ; points at: wBattleActionChoice
 ResolveStep0EEffect_Case00_AdvanceRandom::
@@ -6578,7 +6578,7 @@ Jump_032_681C::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 19 call sites from 10 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleStep4_Case00_Sub01_Case00, RunBattleActions_Case00_Sub01_CheckActionD0ToE3OrSpecial, RunBattleSubStep_6662_AddDoubleAToHL_Bank32, ...)
+; 19 call sites from 10 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc, RunBattleActions_Case00_Sub01_CheckActionD0ToE3OrSpecial, RunBattleSubStep_6662_AddDoubleAToHL_Bank32, ...)
 AddDoubleAToHL_Bank32::
 Func_032_6826:: ; address name
     add a, a
@@ -6607,7 +6607,7 @@ Jump_032_6842::
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. RunBattleSubStep2_6764_SetBit2OfLevelUpGainsIndexed_Bank32, ResolveStep0EEffect_Case00, RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32)
+; 3 call sites from 3 routines (e.g. RunBattleSubStep2_6764_SetBit2OfLevelUpGainsIndexed_Bank32, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank32::
 Func_032_6848:: ; address name

@@ -502,7 +502,7 @@ Jump_019_433F::
     ret
 
 ; C = wD868, then falls into Func_019_434D (E-0126)
-; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_BattlerRecordAddress_BankA0)
+; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills
@@ -1260,7 +1260,7 @@ Jump_019_46F3::
 
 Jump_019_46FD::
     push bc
-    call GameMode4_Init_Sub01_Sub07_Sub01
+    call GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc
     pop bc
     inc c
     ld a, e
@@ -1310,7 +1310,7 @@ Func_019_470F:: ; address name
     farcall LoadSpeciesRecord
     pop de
     pop bc
-    call LoadMonsterAndSpeciesForListEntryC_Sub02
+    call LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc
     pop bc
     ret
 
@@ -1319,7 +1319,7 @@ Func_019_470F:: ; address name
 ; reads: wBattleArg2, wBattleArg3, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, hTemp1
 ; writes: wBattleArg2, wBattleArg3, wBattleArg1, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0, wBattleArg0
 ; points at: wWildLevel, wEncounterMonsters
-GameMode4_Init_Sub01_Sub07_Sub01::
+GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc::
 Func_019_4752:: ; address name
     push bc
     ld a, e
@@ -1468,7 +1468,7 @@ Jump_019_4771::
     ret
 
 ; advances the random table (NextTableByte) and stores the new wC5E7 at HL; HL += 1; AF, BC, DE kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wRandomLo
 StoreRandomByteAtHL_Bank19::
 Func_019_488D:: ; address name
@@ -1486,7 +1486,7 @@ Func_019_488D:: ; address name
     ret
 
 ; NextTableByte, then stores (wC5E7 & $7F) + $80 at HL; HL += 1 (E-0118)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wRandomLo
 StoreRandomByte80ToFFAtHL::
 Func_019_489D:: ; address name
@@ -1506,7 +1506,7 @@ Func_019_489D:: ; address name
     ret
 
 ; scales the word hFFC8 by 101 percent and caps it at 999, 600 or 700 depending on wD868 and the battle kind wCFC5, then stores it (E-0128)
-; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 6 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: hTemp2, hTemp3, wBattleKind, wBattleArg0, wBattleIntroFlag, wBattleArg1, wSpeciesRecord
 ; writes: hTemp2, hTemp3
 ScaleStatAndCapByBattleKind::
@@ -1628,7 +1628,7 @@ Jump_019_494B::
     ret
 
 ; stores hFFC8 then hFFC9 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
-; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: hTemp2, hTemp3
 StoreTemp2WordAtHL_Bank19::
 Func_019_495C:: ; address name
@@ -1639,7 +1639,7 @@ Func_019_495C:: ; address name
     ret
 
 ; copies the 27 ($1B) bytes at wD01A to HL; HL ends past the copy; clobbers A, B, DE (E-0065) (the same 12 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 CopyWD01ARecordToHL_Bank19::
 Func_019_4963:: ; address name
     ld de, wSpeciesRecord + $12
@@ -1654,7 +1654,7 @@ Jump_019_4968::
     ret
 
 ; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wD068 set bit 4 is cleared (E-0125)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wBattleArg2, wBattleArg3, wRandomLo, wNewRecordByte0D
 RollRecordField0DState::
 Func_019_496F:: ; address name
@@ -1710,7 +1710,7 @@ Jump_019_49A7::
     ret
 
 ; sums the stat word at record + $18 times each level 1..hFFC7 (with a /20 rounding term outside battle kind 3) into the 24-bit hFFCA-hFFCC (E-0130)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc)
 ; reads: wBattleArg2, wBattleArg3, hTemp1, hTemp7, hTemp8, wBattleKind, hTemp9, hTemp4, ...
 ; writes: hTemp4, hTemp5, hTemp6, hTemp9, hTemp7, hTemp8
 AccumulateGrowthForLevelsTemp1::
@@ -2015,7 +2015,7 @@ Jump_019_4B31::
 ; only called from LoadMonsterAndSpeciesForListEntryC (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMonsterAndSpeciesForListEntryC)
 ; reads: wSpeciesRecord, wRandomLo, wNewRecordByte0D
-LoadMonsterAndSpeciesForListEntryC_Sub02::
+LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
 Func_019_4B37:: ; address name
     ld a, $0C
     add a, e

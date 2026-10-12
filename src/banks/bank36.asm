@@ -74,7 +74,7 @@ ResolveStepTargetAndSubEffects::
 Jump_036_4077:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw ResolveStepTargetAndSubEffects_Case00
+    dw ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc
     dw ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
 
 ; entry 0 of the `rst $00` table in ResolveStepTargetAndSubEffects
@@ -82,7 +82,7 @@ Jump_036_4077:: ; address name
 ; reads: wFollowUpAction, wRecordBufferData, wBattleTarget, wBattleActor, wResolveMsgFlags
 ; writes: wResolveByte81, wResolveFlagB2, wBattleTarget, wBattleSubStep, wDefeatStep, wResolveMsgFlags
 ; points at: wSideFlags0, wBattleTargetChoice, wBattleSubStep, wBattleResolveStep, wBattleStatus2
-ResolveStepTargetAndSubEffects_Case00::
+ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc::
 Jump_036_407F:: ; address name
     xor a, a
     ld [wResolveByte81], a
@@ -216,7 +216,7 @@ Jump_036_414B::
     ret
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
+; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc)
 ; reads: wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor
 ; writes: wDefeatByteD1, wBattleTarget
 ; points at: wBattleStatus6, wSlotFlags854, wBattleStatus4, wBattleTargetChoice, wDefeatByteBF
@@ -276,7 +276,7 @@ Jump_036_41AF::
     jr z, Jump_036_421B
 
 Jump_036_41D1::
-    call ResolveStepTargetAndSubEffects_Case00_Sub01_Sub01
+    call ResolveStepTargetAndSubEffects_Case00_Sub01_ReadBattleTargetAndResolveByte71Etc
     jr c, Jump_036_4211
     push af
     ld a, [wBattleActionId]
@@ -319,7 +319,7 @@ Jump_036_421B::
     ret
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
+; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc)
 ; reads: wBattleTarget, wBattleActor
 ; writes: wDefeatStep, wResolveByte81
 ; points at: wBattleStatus2
@@ -343,7 +343,7 @@ Func_036_421D:: ; address name
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_036_4255
     ld d, $01
-    call ResolveStepTargetAndSubEffects_Shared02
+    call ResolveStepTargetAndSubEffects_WriteBattleActorAndBattleTargetEtc
     scf
     ret
 
@@ -357,7 +357,7 @@ Jump_036_4255::
     ret
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
+; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc)
 ; reads: wBattleTarget, wRecordBufferData, wBattleActor
 ; writes: wDefeatStep, wResolveByte81
 ; points at: wBattleStatus2
@@ -394,7 +394,7 @@ Jump_036_4289::
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_036_42A5
     ld d, $04
-    call ResolveStepTargetAndSubEffects_Shared02
+    call ResolveStepTargetAndSubEffects_WriteBattleActorAndBattleTargetEtc
     scf
     ret
 
@@ -408,7 +408,7 @@ Jump_036_42A5::
     ret
 
 ; only called from ResolveStepTargetAndSubEffects_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00)
+; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc)
 ; reads: wBattleTarget, wRecordBufferData
 ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo::
 Func_036_42AA:: ; address name
@@ -567,7 +567,7 @@ Jump_036_438A:: ; address name
 Jump_036_439B::
     ld hl, wBattleResolveStep
     inc [hl]
-    call ResolveStepEffectChecks_WaitBattleActionId_ReadBattleActionId
+    call ResolveStepEffectChecks_WaitBattleActionId_Sub02
     ret z
     ld a, [wRecordBufferData + $6]
     bit 1, a
@@ -834,7 +834,7 @@ Func_036_454F:: ; address name
 ; only called from ResolveStepEffectChecks (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepEffectChecks)
 ; reads: wBattleActionId
-ResolveStepEffectChecks_WaitBattleActionId_ReadBattleActionId::
+ResolveStepEffectChecks_WaitBattleActionId_Sub02::
 Func_036_4582:: ; address name
     ld a, [wBattleActionId]
     cp a, $6A
@@ -1750,7 +1750,7 @@ Jump_036_4B16::
     dw ResolveStepDamageMessage_Sub04_LoadBattleMonsterPictureForSlotB
     dw ResolveStepDamageMessage_Sub04_ShowHeroWentAway
     dw ResolveStepDamageMessage_Sub04_AddAx9ToHL
-    dw ResolveStepDamageMessage_Sub04_Case05
+    dw ResolveStepDamageMessage_Sub04_WriteBattleResolveStepAndBattleSubStepEtc
 
 ; entry 0 of the `rst $00` table in Func_036_4A38
 ; no direct call (reached through a table, a jump or a vector)
@@ -2116,7 +2116,7 @@ Jump_036_4DD6:: ; address name
 ; reads: wSideFlags0, wSideFlags1, wBattleActionId
 ; writes: wBattleResolveStep, wBattleSubStep, wSideFlags0, wSideFlags1
 ; points at: wBattleSubPhase
-ResolveStepDamageMessage_Sub04_Case05::
+ResolveStepDamageMessage_Sub04_WriteBattleResolveStepAndBattleSubStepEtc::
 Jump_036_4DF3:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
@@ -2240,7 +2240,7 @@ Jump_036_4EB0::
 ; reads: wBattleActor, wBattleTarget, wDefeatFlagsBA, wFollowUpAction
 ; writes: wBattleActor, wBattleTarget, wFollowUpAction
 ; points at: wSavedActorTarget, wBattleActionChoice
-ResolveStepTargetAndSubEffects_Shared02::
+ResolveStepTargetAndSubEffects_WriteBattleActorAndBattleTargetEtc::
 Func_036_4EB1:: ; address name
     push de
     ld hl, wSavedActorTarget
@@ -2320,7 +2320,7 @@ Func_036_4F0E:: ; address name
 ; 1 call site from 1 routine (e.g. ResolveStepTargetAndSubEffects_Case00_SlotHasStatus3Or4Bits_Bank36)
 ; reads: wBattleTarget, wResolveByte71, wRandomLo
 ; points at: wSlotFlags854, wSlotChoices
-ResolveStepTargetAndSubEffects_Case00_Sub01_Sub01::
+ResolveStepTargetAndSubEffects_Case00_Sub01_ReadBattleTargetAndResolveByte71Etc::
 Func_036_4F18:: ; address name
     ld a, [wBattleTarget]
     ld hl, wSlotFlags854
@@ -2715,7 +2715,7 @@ Func_036_511D:: ; address name
 ; reads: wBattleActor, wAllMPSpentLo, wAllMPSpentHi, wBattleDamageLo, wBattleDamageHi, hTemp0
 ; writes: wBattleDamageLo, wBattleDamageHi, wBattleActor
 ; points at: wBattleLevel
-ActionEffect_ActionD9_Sub01::
+ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc::
 Func_036_5152:: ; address name
     ld a, [wBattleActor]
     push af
@@ -4757,7 +4757,7 @@ Jump_036_5D0B::
     ld bc, $0004
     call CopyBytes
     ld hl, wTemp0
-    call ActionEffect_TatsuCall_Sub01_Sub01
+    call ActionEffect_TatsuCall_Sub01_WriteRecordBufferAndBattleArg0Etc
     ret
 
 ; only called from ActionEffect_TatsuCall_Sub01 (E-0047)
@@ -4765,7 +4765,7 @@ Jump_036_5D0B::
 ; reads: wLoadSlot, wRecordBufferData
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkills
-ActionEffect_TatsuCall_Sub01_Sub01::
+ActionEffect_TatsuCall_Sub01_WriteRecordBufferAndBattleArg0Etc::
 Func_036_5D2C:: ; address name
     ld b, $04
     ld a, [wLoadSlot]
@@ -5215,7 +5215,7 @@ Jump_036_5FE1::
     ld de, wTemp0
     ld bc, $0004
     call CopyBytes
-    call ActionEffect_BeDragon_Sub02_Sub01
+    call ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc
     ld a, [wBattleActor]
     ld hl, wSlotDamageFlags
     add_a_to_hl
@@ -5231,7 +5231,7 @@ Jump_036_5FE1::
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wTemp0, wBattleSkills
-ActionEffect_BeDragon_Sub02_Sub01::
+ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc::
 Func_036_6018:: ; address name
     ld hl, wTemp0
     ld b, $04
@@ -5290,7 +5290,7 @@ Jump_036_606A::
     call ActionEffect_BeDragon_Sub02_Sub01_Sub01
 
 ; only called from ActionEffect_BeDragon_Sub02_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. ActionEffect_BeDragon_Sub02_Sub01)
+; 4 call sites from 1 routine (e.g. ActionEffect_BeDragon_Sub02_WriteRecordBufferAndBattleArg0Etc)
 ActionEffect_BeDragon_Sub02_Sub01_Sub01::
 Func_036_6077:: ; address name
     ld a, $FF
@@ -5375,7 +5375,7 @@ Jump_036_60CD::
     ret
 
 ; level = bits 0-1 of the target's wDA72 byte 4 (forced to 4 by bit 2 of the actor's wD854); level 4 returns carry; otherwise rolls the sided chance, E = 0 on carry else 1 (E-0122)
-; 3 call sites from 3 routines (e.g. ActionEffect_PoisonGas, ResolveStep0EEffect_Case00, InflictStatus0Bit0WithBattleWordArray3FReduction)
+; 3 call sites from 3 routines (e.g. ActionEffect_PoisonGas, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, InflictStatus0Bit0WithBattleWordArray3FReduction)
 RollTargetSlotResistancesByte4Bits01ChanceToE::
 Func_036_60D1:: ; address name
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
@@ -5395,7 +5395,7 @@ Jump_036_60E2::
     ret
 
 ; skips allies in modes 2/3; otherwise level = bits 6-7 of the target's wDA72 byte 5: carry at 4, else the sided chance with E = 0 on carry, 1 otherwise (E-0124)
-; 2 call sites from 2 routines (e.g. ActionEffect_PalsyAir, ResolveStep0EEffect_Case00)
+; 2 call sites from 2 routines (e.g. ActionEffect_PalsyAir, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc)
 RollTargetSlotResistancesByte5Bits67ChanceToE::
 Func_036_60EB:: ; address name
     call ZIfAllyActorInBattleKindMode2Or3
@@ -5419,7 +5419,7 @@ Jump_036_6104::
     ret
 
 ; only called from ResolveStep0EEffect_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case00)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc)
 ResolveStep0EEffect_Case00_RollTargetSlotResistancesByte2Bits67Chance::
 Func_036_610D:: ; address name
     call RollTargetSlotResistancesByte2Bits67Chance
@@ -7127,7 +7127,7 @@ Func_036_6963:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_ActionD9:: ; code pointer of the table ActionEffectTable; C0
 Func_036_696F:: ; address name
-    call ActionEffect_ActionD9_Sub01
+    call ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc
     farcall RunA3414FAndMarkWDA5B3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -11086,7 +11086,7 @@ Jump_036_7F37::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, ResolveStepTargetAndSubEffects_Case00, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36, ...)
+; 5 call sites from 5 routines (e.g. ResolveStepFlagBit7Effect, ResolveStepBegin, ResolveStepTargetAndSubEffects_WriteResolveByte81AndResolveFlagB2Etc, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36, ...)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank36::
 Func_036_7F3C:: ; address name

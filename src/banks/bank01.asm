@@ -1283,7 +1283,7 @@ Jump_001_4CE5::
     ld a, [wMenuState]
     ld b, $21
     cp a, $00
-    call z, DebugMessageTest_Update_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
     add a, a
     ld hl, DebugMessageTestTable
@@ -1303,7 +1303,7 @@ Jump_001_4D0C::
     ld b, a
     ld a, [wMenuState]
     cp a, $01
-    call z, DebugMessageTest_Update_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
     add a, a
     ld hl, DebugMessageTestTable
@@ -1332,7 +1332,7 @@ Jump_001_4D3B::
     ld b, a
     ld a, [wMenuState]
     cp a, $02
-    call z, DebugMessageTest_Update_Case21_Sub04
+    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
 
 Jump_001_4D44::
     ld a, [wJoypadPressed]
@@ -1441,7 +1441,7 @@ Jump_001_4DEC::
 ; 3 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
 ; reads: wMenuState, wTemp0, wTemp1, wMenuRowCount
 ; points at: wTemp0
-DebugMessageTest_Update_Case21_Sub04::
+DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc::
 Func_001_4DED:: ; address name
     push af
     ld a, [wMenuState]
@@ -4853,7 +4853,7 @@ Jump_001_64F0::
     jr Jump_001_6505
 
 Jump_001_6502::
-    call DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1
+    call DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
 
 Jump_001_6505::
     ld a, [wMenuState]
@@ -4894,10 +4894,10 @@ Jump_001_6539::
     ld a, [wMenuState]
     ld b, $20
     cp a, $00
-    call z, DebugSoundTest_Update_Sub03
+    call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
     ld b, $54
     cp a, $01
-    call z, DebugSoundTest_Update_Sub03
+    call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
 
 Jump_001_654F::
     ld a, [wJoypadPressed]
@@ -4935,7 +4935,7 @@ Func_001_6578:: ; address name
 Jump_001_6583::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1
+    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
     xor a, a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
@@ -4945,7 +4945,7 @@ Jump_001_6583::
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wTemp1
-DebugSoundTest_Update_WriteHexByteTilesAtDE_ReadTemp1::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02::
 Func_001_6596:: ; address name
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
@@ -4958,7 +4958,7 @@ Jump_001_659F::
 ; 2 call sites from 1 routine (e.g. DebugSoundTest_Update)
 ; reads: wMenuState, wTemp0, wTemp1
 ; points at: wTemp0
-DebugSoundTest_Update_Sub03::
+DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
 Func_001_65A0:: ; address name
     push af
     ld a, [wMenuState]
@@ -5160,7 +5160,7 @@ Jump_001_667A::
     jr Jump_001_6696
 
 Jump_001_6693::
-    call DebugBattleSetup_Update_Shared01
+    call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
 
 Jump_001_6696::
     ld a, $04
@@ -5543,7 +5543,7 @@ Jump_001_68B4::
     ret
 
 Jump_001_68C6::
-    call DebugBattleSetup_Update_Shared01
+    call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
     ret
 
 ; only called from DebugBattleSetup_Update_Sub01 (E-0047)
@@ -5764,7 +5764,7 @@ Data_001_6A78:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $6B, $99, $AB, $99, $EB, $99
 
 ; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble), each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
-; 20 call sites from 11 routines (e.g. DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03, DebugMessageTest_Update_Case21_Sub04, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE, ...)
+; 20 call sites from 11 routines (e.g. DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE, ...)
 WriteHexByteTilesAtDE::
 Func_001_6A7E:: ; address name
     push af
@@ -5818,7 +5818,7 @@ Func_001_6A98:: ; address name
 ; only called from routines of DebugBattleSetup_Update (E-0098)
 ; 2 call sites from 2 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, DebugBattleSetup_Update)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY, wFollowerRecords, wPlayerName, wGoldLo, ...
-DebugBattleSetup_Update_Shared01::
+DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
 Func_001_6ABE:: ; address name
     ld a, $00
     ldh [hMapId], a
@@ -5939,7 +5939,7 @@ Func_001_6ABE:: ; address name
     ret
 
 ; only called from DebugBattleSetup_Update_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc)
 ; writes: wBattleArg0, rRAMG, rRAMB
 ; points at: wBattleArg0, sRecords
 DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82::
@@ -6008,7 +6008,7 @@ Func_001_6C1F:: ; address name
     cp a, $82
     jr z, PickRandomMonsterSkipping7ETo82
     ld d, $00
-    call PickRandomMonsterSkipping7ETo82_Sub01
+    call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
     ret
 
 ; only called from CreateMonsterRecordOfKindTemp1_Sub01 (E-0047)
@@ -6363,7 +6363,7 @@ Jump_001_6E7D::
 ; 1 call site from 1 routine (e.g. PickRandomMonsterSkipping7ETo82)
 ; reads: wBattleArg0
 ; writes: wBattleArg1, wBattleArg2, hTemp3, wBattleArg0
-PickRandomMonsterSkipping7ETo82_Sub01::
+PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
 Func_001_6E82:: ; address name
     ld a, $FF
     ld [wBattleArg1], a
@@ -6382,7 +6382,7 @@ Func_001_6E91:: ; address name
     ret
 
 ; only called from DebugBattleSetup_Update_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Shared01)
+; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc)
 ; points at: wKeyList
 DebugBattleSetup_Update_Shared01_Sub02::
 Func_001_6E98:: ; address name

@@ -2851,7 +2851,7 @@ Jump_037_57D0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case04_SetArg5ToListEntriesCell5
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_FillTilesFromRequest
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc
     dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case0E
@@ -2902,7 +2902,7 @@ Jump_037_580D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08::
+RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc::
 Jump_037_5821:: ; address name
     ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $E7
@@ -3372,7 +3372,7 @@ Func_037_5AD3:: ; address name
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_CopyFromBankWaitVRAM, RunLinkSession5Exchange_Case01_Sub01_Case04_WaitTextFlags_Case17, RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08, RunLinkSession5Exchange_Case01_Sub01_Case04_SetArg5ToListEntriesCell5)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_CopyFromBankWaitVRAM, RunLinkSession5Exchange_Case01_Sub01_Case04_WaitTextFlags_Case17, RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc, RunLinkSession5Exchange_Case01_Sub01_Case04_SetArg5ToListEntriesCell5)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectToScreenBufferAndClearAttributes_37::
@@ -4402,7 +4402,7 @@ Func_037_5FB8:: ; address name
     push bc
     push de
     push hl
-    farcall CallFunc4001InBank81KeepRegs_Sub01
+    farcall CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc
     pop hl
     pop de
     pop bc

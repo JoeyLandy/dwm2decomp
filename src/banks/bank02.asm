@@ -5,7 +5,7 @@ SECTION "Bank 02", ROMX[$4000], BANK[$02]
 ; 1 call site from 1 routine (e.g. StartPaletteFade)
 ; reads: wFadeState, wFadeMode
 ; writes: wFadeLevel, wFadeDelay, wFadeDelayCounter, rBGPI, rBGPD, rOBPI, rOBPD
-StartPaletteFade_Sub01::
+StartPaletteFade_WriteFadeLevelAndFadeDelayEtc::
 Func_002_4001:: ; address name
     ld a, [wFadeState]
     ld b, a
@@ -564,7 +564,7 @@ Data_002_4322:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $7C, $FF, $7F, $E0, $01, $00, $00
 
 ; only called from RunMenuStateMenuState_Case04 (E-0047)
-; 2 call sites from 1 routine (e.g. RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame_Case04)
+; 2 call sites from 1 routine (e.g. RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc)
 ; reads: wIsCGB, wDMGPaletteBGP, wDMGPaletteOBP0
 ; writes: wDMGPaletteBytes
 ; points at: wDMGPaletteBytes
@@ -601,9 +601,9 @@ Jump_002_4351::
     ret z
     rst $00
     dw RunScreenStateStepEveryOtherFrame_WriteScreenState
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_WriteScreenState
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_WriteScreenState_Case02
-    dw RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState_Case03
+    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_Case01
+    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_Case02
+    dw RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc
 
 ; entry 0 of the `rst $00` table in RunScreenStateStepEveryOtherFrame
 ; no direct call (reached through a table, a jump or a vector)
@@ -632,7 +632,7 @@ Jump_002_4360:: ; address name
     inc de
 
 ; only called from RunScreenStateStepEveryOtherFrame_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState_Case03)
+; 1 call site from 1 routine (e.g. RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc)
 ; reads: rSTAT, wScreenState
 ; writes: wScreenState
 RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState::
@@ -720,7 +720,7 @@ Jump_002_43C7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, rSTAT, wScreenState
 ; writes: wScreenState
-RunScreenStateStepEveryOtherFrame_WriteScreenState_WriteScreenState::
+RunScreenStateStepEveryOtherFrame_WriteScreenState_Case01::
 Jump_002_43DA:: ; address name
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
@@ -746,7 +746,7 @@ Jump_002_43DA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, rSTAT, wScreenState
 ; writes: wScreenState
-RunScreenStateStepEveryOtherFrame_WriteScreenState_WriteScreenState_Case02::
+RunScreenStateStepEveryOtherFrame_WriteScreenState_Case02::
 Jump_002_43FD:: ; address name
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
@@ -772,7 +772,7 @@ Jump_002_43FD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter
 ; writes: wScreenCounter, wScreenSubStep, wScreenState
-RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState_Case03::
+RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
 Jump_002_4420:: ; address name
     ld hl, wWorkBuf + $30
     ld a, [wScreenCounter]
@@ -826,7 +826,7 @@ Jump_002_446B::
     push bc
     push hl
     push de
-    call RunMenuStateMenuState_Case01_Sub01_Sub01
+    call RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
     pop de
     pop hl
     pop bc
@@ -857,7 +857,7 @@ Jump_002_447B::
 ; reads: wScreenCounter, wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
 ; writes: wTextCounter2, wTextCounter3, wTextCounter4, wScreenSubStep
 ; points at: wTextCounter2
-RunMenuStateMenuState_Case01_Sub01_Sub01::
+RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc::
 Func_002_449A:: ; address name
     ld c, [hl]
     inc hl
@@ -925,12 +925,12 @@ Jump_002_44DA::
     inc a
     ld [wScreenSubStep], a
     cp a, $08
-    jr c, RunMenuStateMenuState_Case01_Sub01_Sub01
+    jr c, RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
     xor a, a
     ld [wScreenSubStep], a
     ret
 
-; address loaded by RunMenuStateMenuState_Case01_Sub01_Sub01
+; address loaded by RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
 Data_002_4510:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $08, $0C, $10, $14, $18, $1C, $20, $24
 
@@ -1072,7 +1072,7 @@ Jump_002_45DB::
     ld a, [wSaveStateFlag]
     or a, a
     call nz, InitSoundHardware
-    call GameMode1_Init_Sub01
+    call GameMode1_Init_ReadMapTypeAndMapIdEtc
     call LoadSGBBorderForSetA
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -1103,7 +1103,7 @@ Jump_002_461A::
     jp Jump_000_077A
 
 ; enters the field: loads the map header, resets scroll and timers, reorders the party, loads names and sprites, finds triggers, draws the map screen and places objects (E-0129)
-; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites, ExitPauseMenuToField, EnterGameMode1WithDefaultPalettes)
+; 4 call sites from 4 routines (e.g. GameMode1_Init, FieldModeStateDispatch_DrawFieldSprites_Case04, ExitPauseMenuToField, EnterGameMode1WithDefaultPalettes)
 ; reads: wMapType, hMapId, wFieldReturnPhase, wFieldInitFlag, wFieldInitStage, wIsCGB
 ; writes: hFieldDrawFlags, hScrollY, hScrollX, hWindowY, hWindowX, rLYC, wFrameCounterLo, wFrameCounterHi, ...
 InitFieldScreen::
@@ -1206,7 +1206,7 @@ Jump_002_46F7::
     ret
 
 ; copies the player name to wC130 with a terminator, then a two-tile suffix ($58 $87 when story flag 0 is set, else $87 $60) (E-0124)
-; 10 call sites from 10 routines (e.g. InitFieldScreen, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Case23, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0, ...)
+; 10 call sites from 10 routines (e.g. InitFieldScreen, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case23, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0, ...)
 ; writes: wTextBuf0
 ; points at: wPlayerName, wTextBuf0
 WritePlayerNameWithFlag0SuffixToTextBuf0::
@@ -1245,16 +1245,16 @@ Func_002_4745:: ; address name
     ld a, [wFieldReturnPhase]
     and a, $03
     rst $00
-    dw RunFieldReturnPhase_Case00
+    dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
     dw RunFieldReturnPhase_OpenFieldMenuOnA
     dw RunFieldReturnPhase_ResetLeadRecordFields55And5B
-    dw RunFieldReturnPhase_Case00
+    dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
 ; entry 0 of the `rst $00` table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wModeState, wScriptRunning, wSGBActive, wFieldInitStage, wMapType
 ; writes: wFieldReturnPhase, wMenuState, wMenuSubState, wModeState
-RunFieldReturnPhase_Case00::
+RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
 Jump_002_4753:: ; address name
     xor a, a
     ld [wFieldReturnPhase], a
@@ -1308,14 +1308,14 @@ Jump_002_4798:: ; address name
     jp z, Jump_002_48AE
     ld a, [wBattleScene]
     or a, a
-    jr z, RunFieldReturnPhase_Case00
+    jr z, RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
     cp a, $03
     jp z, Jump_002_4846
     cp a, $02
     jr nz, Jump_002_47B6
     ld a, [wBattleKind]
     cp a, $04
-    jr nz, RunFieldReturnPhase_Case00
+    jr nz, RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
 Jump_002_47B6::
     ld a, [wBattleKind]
@@ -1328,7 +1328,7 @@ Jump_002_47B6::
 
 Jump_002_47C6::
     call ResetLeadRecordFields55And5B
-    jr RunFieldReturnPhase_Case00
+    jr RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
 Jump_002_47CB::
     xor a, a
@@ -1433,7 +1433,7 @@ Jump_002_48AE::
     call RunMoveIncapacitatedPartyMembersBackTwice
     call LoadRecordListNameTiles
     farcall LoadPlayerAndFollowerSpriteGraphics
-    jp RunFieldReturnPhase_Case00
+    jp RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
 ; entry 1 of the `rst $00` table in RunFieldReturnPhase
 ; no direct call (reached through a table, a jump or a vector)
@@ -1620,7 +1620,7 @@ Jump_002_4A0E::
     jr nz, Jump_002_4A1C
     xor a, a
     ld [wDataBankSave], a
-    farcall RunFieldReturnPhase_Case01_Sub02
+    farcall RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc
     ret
 
 Jump_002_4A1C::
@@ -1718,7 +1718,7 @@ Jump_002_4AA1::
 ; only called from GameMode1_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode1_Init)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY
-GameMode1_Init_Sub01::
+GameMode1_Init_ReadMapTypeAndMapIdEtc::
 Func_002_4AB5:: ; address name
     ld a, [wMapType]
     bit 7, a
@@ -1777,8 +1777,8 @@ Func_002_4AE0:: ; address name
     dw FieldModeStateDispatch_RunEventScriptFrame
     dw FieldModeStateDispatch_DrawFieldSprites
     dw FieldModeStateDispatch_RunBattleTransitionStep
-    dw FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites
-    dw FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8
+    dw FieldModeStateDispatch_DrawFieldSprites_Case04
+    dw FieldModeStateDispatch_UpdatePlayerMovement_Case05
     dw FieldModeStateDispatch_RunMenuStateMenuState
     dw FieldModeStateDispatch_FieldStateCommonUpdate
     dw FieldModeStateDispatch_RunGameMode2State
@@ -1795,7 +1795,7 @@ Jump_002_4AFB:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_002_4B13
-    farcall FieldModeStateDispatch_Shared04
+    farcall FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc
     ldh a, [hTemp0]
     or a, a
     ret nz
@@ -1810,7 +1810,7 @@ Jump_002_4B13::
     jr z, Jump_002_4B44
     call CheckInteractionInFront
     farcall FieldModeStateDispatch_WaitTextWindowState
-    farcall FieldModeStateDispatch_WaitTextWindowState_WaitTextWindowState
+    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
     call FieldModeStateDispatch_WaitMapSpriteKind
     xor a, a
     ldh [hTemp8], a
@@ -1878,7 +1878,7 @@ Jump_002_4BB1:: ; address name
 ; reads: wFadeState, wFieldTransitionStep, wWarpDestFacing, wKeyWorldWidth, wKeyWorldHeight, wMapType
 ; writes: wTriggerKind, wMapType, wMapWidthScreens, wMapHeightScreens, wGameMode, wFieldInitStage, wModeState, wFieldReturnPhase
 ; points at: wModeChangeRequest, wFieldInitStage
-FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites::
+FieldModeStateDispatch_DrawFieldSprites_Case04::
 Jump_002_4BCD:: ; address name
     farcall DrawFieldSprites
     farcall AdvancePlayerAnimCounterAndRunPlayerSpriteMode
@@ -1892,7 +1892,7 @@ Jump_002_4BCD:: ; address name
     jp nz, Jump_002_4C18
     ld a, $FF
     ld [wTriggerKind], a
-    farcall FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending_Sub02
+    farcall FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc
     ld a, [wWarpDestFacing]
     cp a, $F0
     jr nz, Jump_002_4C14
@@ -1941,7 +1941,7 @@ Jump_002_4C3F::
     ret
 
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_DrawFieldSprites_Case04)
 ; reads: wFieldTransitionKind, wReturnWarpFlag, hPlayerStateFlags, wSavedPositionValid, wWarpDestX, wWarpDestY, hPlayerFacing, hPlayerX, ...
 ; writes: hPlayerFacing, wReturnWarpFlag, wMapType, hPlayerStateFlags, hMapId, hMapScreenX, hMapScreenY, hPlayerX, ...
 ; points at: wFieldTransitionStep
@@ -2055,7 +2055,7 @@ Jump_002_4CDA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wJoypadPressed, hTemp0
 ; writes: hTemp8
-FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8::
+FieldModeStateDispatch_UpdatePlayerMovement_Case05::
 Jump_002_4D28:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2063,7 +2063,7 @@ Jump_002_4D28:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
     jr z, Jump_002_4D3F
-    farcall FieldModeStateDispatch_Shared04
+    farcall FieldModeStateDispatch_WriteTemp0AndGameMode2Byte44Etc
     ldh a, [hTemp0]
     or a, a
     ret nz
@@ -2077,7 +2077,7 @@ Jump_002_4D3F::
     call FieldModeStateDispatch_Case05_WaitFadeState
     farcall FieldModeStateDispatch_WaitTextWindowState
     farcall FieldModeStateDispatch_Case05_WaitTextWindowState
-    farcall FieldModeStateDispatch_WaitTextWindowState_WaitTextWindowState
+    farcall FieldModeStateDispatch_WaitTextWindowState_Shared03
     call FieldModeStateDispatch_WaitMapSpriteKind
     xor a, a
     ldh [hTemp8], a
@@ -2111,7 +2111,7 @@ Jump_002_4D98::
 ; writes: wScriptRunning, wFieldStepFlags
 FieldModeStateDispatch_FieldStateCommonUpdate::
 Jump_002_4D99:: ; address name
-    farcall FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect_Sub01
+    farcall FieldModeStateDispatch_Case07_WriteMenuStateAndRAMGEtc
     farcall FieldStateCommonUpdate
     farcall DrawTriggerMarkerSprite
     ld a, [wModeState]
@@ -2135,7 +2135,7 @@ Jump_002_4DCC:: ; address name
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, far-calls Func_0F0_72B4 (E-0122)
-; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_RunGameMode2State, FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8, FieldModeStateDispatch_DrawFieldSprites, FieldModeStateDispatch_RunEventScriptFrame, ...)
+; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_RunGameMode2State, FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_DrawFieldSprites, FieldModeStateDispatch_RunEventScriptFrame, ...)
 ; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames
 CallF072B4WhenGM2TimerMinutesIs59::
 Func_002_4DD6:: ; address name
@@ -2152,7 +2152,7 @@ Func_002_4DD6:: ; address name
     ret
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8, FieldModeStateDispatch_UpdatePlayerMovement)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_UpdatePlayerMovement)
 ; reads: wMapSpriteKind, wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, hPlayerX, hPlayerY, ...
 ; writes: wFieldStateByte34
 FieldModeStateDispatch_WaitMapSpriteKind::
@@ -2226,7 +2226,7 @@ Jump_002_4E3F::
     or a, a
     jr z, Jump_002_4E59
     ld [wFieldStateByte34], a
-    call FieldModeStateDispatch_Shared01_Sub02
+    call FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc
     or a, a
     ret nz
 
@@ -2243,7 +2243,7 @@ Jump_002_4E59::
     ld [wFieldStateByte34], a
 
 Jump_002_4E6D::
-    call FieldModeStateDispatch_Shared01_Sub03
+    call FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03
     ret
 
 ; A = 1 if story flag $1F is set, else 0 (E-0122)
@@ -2291,7 +2291,7 @@ Jump_002_4E9B::
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitMapSpriteKind)
 ; reads: hPlayerStateFlags, wMapHeaderByte11, wTilesUnderPoint, wPartyWindowFlags
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_Shared01_Sub02::
+FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc::
 Func_002_4E9E:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2329,7 +2329,7 @@ Jump_002_4ED3::
 ; reads: hPlayerStateFlags, wMapTallTileMin, wPartyWindowFlags, wMaxBlockingTile
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 ; points at: wTilesUnderPoint
-FieldModeStateDispatch_Shared01_Sub03::
+FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03::
 Func_002_4ED6:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2403,7 +2403,7 @@ Jump_002_4F29::
     ret
 
 ; only called from FieldModeStateDispatch_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05)
 ; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wMapType
 FieldModeStateDispatch_Case05_WaitFadeState::
 Func_002_4F4C:: ; address name
@@ -2428,7 +2428,7 @@ Func_002_4F4C:: ; address name
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
-    dw FieldModeStateDispatch_Case05_Sub01_Case03
+    dw FieldModeStateDispatch_Case05_Sub01_WriteFieldReturnPhaseAndGameModeEtc
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Return
@@ -2444,7 +2444,7 @@ Jump_002_4F7E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor, hPlayerFacing, hMapScreenY, hPlayerX, hPlayerY
 ; writes: wFieldReturnPhase, wGameMode, wModeState, wGameMode2State, wJoypadHeld, wJoypadPressed
-FieldModeStateDispatch_Case05_Sub01_Case03::
+FieldModeStateDispatch_Case05_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
 Jump_002_4F7F:: ; address name
     ld a, [wKeyWorldFloor]
     add a, a
@@ -2608,7 +2608,7 @@ Jump_002_504E::
     ret
 
 ; unless a fade runs or bit 7 of wC468 is set, runs the field event for wC90D & $0F (jump table of sixteen) (E-0124)
-; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8, FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites, FieldModeStateDispatch_RunBattleTransitionStep, FieldModeStateDispatch_DrawFieldSprites, ...)
+; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_DrawFieldSprites_Case04, FieldModeStateDispatch_RunBattleTransitionStep, FieldModeStateDispatch_DrawFieldSprites, ...)
 ; reads: wFadeState, wFieldActionRequest, wFieldEventKind
 RunFieldEventFieldEventKind::
 Func_002_5074:: ; address name
@@ -2625,17 +2625,17 @@ Func_002_5074:: ; address name
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04
     dw RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_TestFlagBit
     dw RunFieldEventFieldEventKind_ReadFrameCounterLo
     dw RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_Case08_CopyBytes
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo_Case09
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo_Case0A
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A
     dw RunFieldEventFieldEventKind_WaitMapScreenY
     dw RunFieldEventFieldEventKind_Case0C_WriteFieldEventTimerAndScrollX_Case0C
     dw RunFieldEventFieldEventKind_WriteVRAMByteInc
-    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_WaitFrameCounterLo
+    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E
     dw RunFieldEventFieldEventKind_WaitMapScreenX
 
 ; entry 12 of the `rst $00` table in RunFieldEventFieldEventKind
@@ -2719,7 +2719,7 @@ Jump_002_50E0::
 ; entry 14 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_WriteVRAMByteInc_WaitFrameCounterLo::
+RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E::
 Jump_002_50EE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
@@ -2765,7 +2765,7 @@ Jump_002_5119:: ; address name
 ; entry 4 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04::
 Jump_002_5128:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2790,7 +2790,7 @@ Jump_002_5136:: ; address name
 ; entry 9 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo_Case09::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09::
 Jump_002_5147:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -2802,7 +2802,7 @@ Jump_002_5147:: ; address name
 ; entry 10 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo
-RunFieldEventFieldEventKind_WaitFrameCounterLo_ReadFrameCounterLo_Case0A::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A::
 Jump_002_5155:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
@@ -3071,15 +3071,15 @@ Jump_002_5321::
     ldh [hTemp0], a
     ld hl, wBGPaletteCopy + $8
     ld de, wBGPaletteBuffer + $8
-    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
     ld hl, wBGPaletteCopy + $10
     ld de, wBGPaletteBuffer + $10
     ld hl, wBGPaletteCopy + $18
     ld de, wBGPaletteBuffer + $18
-    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
     ld hl, wBGPaletteCopy + $20
     ld de, wBGPaletteBuffer + $20
-    call RunFieldEventFieldEventKind_Case08_Sub01_Sub01
+    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
     ret
@@ -3089,7 +3089,7 @@ Jump_002_5321::
 ; reads: hTemp0, wMenuSubState, wTextCounter2, wTextCounter3, wTextCounter4
 ; writes: wTextCounter2, wTextCounter3, wTextCounter4
 ; points at: wTextCounter2
-RunFieldEventFieldEventKind_Case08_Sub01_Sub01::
+RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc::
 Func_002_534A:: ; address name
     ld a, [hl]
     ld c, a
@@ -3172,7 +3172,7 @@ Jump_002_539B::
     inc de
     ret
 
-; address loaded by RunFieldEventFieldEventKind_Case08_Sub01_Sub01
+; address loaded by RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
 Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
@@ -3226,7 +3226,7 @@ Jump_002_5408::
     ret
 
 ; does nothing during a fade or while the map is loading; reads the D-pad (wJoypadHeld, wJoypadPressed), sets the facing hPlayerFacing and the move timer hFF9A, and starts or continues a step when the tile ahead is free (checks through Func_002_59CD, Func_002_5A51 and Func_002_5AB6)
-; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
+; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
 ; reads: wFadeState, hPlayerTurnDelay, hPlayerStateFlags, wFieldActionRequest, wJoypadPressed, hPlayerFacing, hPlayerX, wScriptRunning, ...
 ; writes: hPlayerTurnDelay, hPlayerFacing, hPlayerStateFlags, hPlayerStepDXLo, hPlayerStepDXHi, hMapScreenX, wFieldActionRequest, wScreenScrollDir, ...
 ; points at: hSndNoteTimer, hMapScreenX, hMapScreenY, hFF80, hFFF8
@@ -3293,7 +3293,7 @@ Jump_002_5460::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_544D
-    call UpdatePlayerMovement_Sub02
+    call UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
     or a, a
     jr nz, Jump_002_544D
 
@@ -3380,7 +3380,7 @@ Jump_002_54F7::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_54E4
-    call UpdatePlayerMovement_Sub02
+    call UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
     or a, a
     jr nz, Jump_002_54E4
 
@@ -3474,7 +3474,7 @@ Jump_002_5590::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_557C
-    call UpdatePlayerMovement_Sub02
+    call UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
     or a, a
     jr nz, Jump_002_557C
 
@@ -3576,7 +3576,7 @@ Jump_002_564B::
     call FindSpriteSlotAtTile
     or a, a
     jr nz, Jump_002_5639
-    call UpdatePlayerMovement_Sub02
+    call UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
     or a, a
     jr nz, Jump_002_5639
 
@@ -4261,7 +4261,7 @@ Jump_002_5AB1::
 ; only called from UpdatePlayerMovement (E-0047)
 ; 4 call sites from 1 routine (e.g. UpdatePlayerMovement)
 ; reads: wTriggerKind, wMapType, wTriggerCell
-UpdatePlayerMovement_Sub02::
+UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc::
 Func_002_5AB6:: ; address name
     push bc
     ld a, [wTriggerKind]
@@ -4319,7 +4319,7 @@ Jump_002_5AEE::
     pop bc
     ret
 
-; address loaded by UpdatePlayerMovement_Sub02
+; address loaded by UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc
 Data_002_5B0A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
@@ -4436,7 +4436,7 @@ Func_002_5B9E:: ; address name
     ret
 
 ; if bit 7 of wC468 is set, runs the routine for wC468 & 3 (jump table) (E-0122)
-; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
+; 12 call sites from 12 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement_Case05, FieldModeStateDispatch_RunEventScriptFrame, FieldModeStateDispatch_UpdatePlayerMovement, SceneMedicineGiven_UpdatePlayerMovement, ...)
 ; reads: wFieldActionRequest
 RunFieldActionRequestActionIfBit7::
 Func_002_5BD7:: ; address name
@@ -4556,7 +4556,7 @@ Jump_002_5C83::
     ld hl, wScreenTileBuffer
     ld a, [wFieldActionStep]
     add_a_to_hl
-    call RunFieldActionRequestActionIfBit7_Case01_Sub01
+    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc
     ldh a, [hScrollX]
     add a, $08
     ldh [hScrollX], a
@@ -4595,7 +4595,7 @@ Jump_002_5CCC::
     ld a, $13
     sub a, c
     add_a_to_hl
-    call RunFieldActionRequestActionIfBit7_Case01_Sub01
+    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc
     ldh a, [hScrollX]
     sub a, $08
     ldh [hScrollX], a
@@ -4643,7 +4643,7 @@ Jump_002_5D15::
     ld a, h
     adc a, $C1
     ld h, a
-    call RunFieldActionRequestActionIfBit7_Case01_Sub02
+    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02
     ldh a, [hScrollY]
     add a, $08
     ldh [hScrollY], a
@@ -4702,7 +4702,7 @@ Jump_002_5D81::
     ld a, h
     adc a, $C1
     ld h, a
-    call RunFieldActionRequestActionIfBit7_Case01_Sub02
+    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02
     ldh a, [hScrollY]
     sub a, $08
     ldh [hScrollY], a
@@ -4731,7 +4731,7 @@ Jump_002_5DC7::
 ; reads: wIsCGB, hTemp0
 ; writes: wBGWriteDestLo, wBGWriteDestHi, wBGWriteVertical, wBGWriteCount, wAttrWriteDestLo, wAttrWriteDestHi, wAttrWriteVertical, wAttrWriteCount, ...
 ; points at: wBGWriteData, wAttrWriteData
-RunFieldActionRequestActionIfBit7_Case01_Sub01::
+RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc::
 Func_002_5DC8:: ; address name
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4794,7 +4794,7 @@ Jump_002_5E10::
 ; reads: wIsCGB, hTemp0
 ; writes: wBGWriteDestLo, wBGWriteDestHi, wBGWriteVertical, wBGWriteCount, wAttrWriteDestLo, wAttrWriteDestHi, wAttrWriteVertical, wAttrWriteCount, ...
 ; points at: wBGWriteData, wAttrWriteData
-RunFieldActionRequestActionIfBit7_Case01_Sub02::
+RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc_Sub02::
 Func_002_5E2C:: ; address name
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4954,7 +4954,7 @@ Jump_002_5F1B::
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
-; 7 call sites from 7 routines (e.g. InitFieldScreen, Talk08Event_Case0A_RestoreScreenBufferFromBGMap1, SceneWatchOut_RunMessageBoxFar_Bank85_RunMessageBoxFar_Bank85, SceneWatchOut_RestoreScreenBufferFromBGMap1, ...)
+; 7 call sites from 7 routines (e.g. InitFieldScreen, Talk08Event_Case0A_RestoreScreenBufferFromBGMap1, SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, SceneWatchOut_RestoreScreenBufferFromBGMap1, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wSavedScreenAttrs, wScreenAttrBuffer
@@ -5157,7 +5157,7 @@ Func_002_604B:: ; address name
     ld [wCurrentMusic], a
 
 ; chooses the music for the current map (by wCC44 and hMapId, with story-flag cases) and queues it unless it is already wC608 (E-0122)
-; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites, RunFieldReturnPhase_ResetLeadRecordFields55And5B, SceneThreeItems_ShowWarubouWaheyThereIs, SceneCheerYuna_StepObjectTowardCoord_StepObjectTowardCoord, ...)
+; 9 call sites from 9 routines (e.g. FieldModeStateDispatch_DrawFieldSprites_Case04, RunFieldReturnPhase_ResetLeadRecordFields55And5B, SceneThreeItems_ShowWarubouWaheyThereIs, SceneCheerYuna_StepObjectTowardCoord_Case0A, ...)
 ; reads: wMapType, wKeyWorldFloor, hPlayerStateFlags, wCurrentMusic, hMapId
 PlayMapMusic::
 Func_002_6050:: ; address name
@@ -5214,8 +5214,8 @@ Jump_002_609D::
     dw PlayMapMusic_TestFlagBit
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_ReadMapScreenXAndCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case04
+    dw PlayMapMusic_TestFlagBit_Case05
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -5223,18 +5223,18 @@ Jump_002_609D::
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case0D
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case0D
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_ReadCurrentMusic
+    dw PlayMapMusic_TestFlagBit_Case04
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -5242,44 +5242,44 @@ Jump_002_609D::
     dw PlayMapMusic_ReadSoundEffectRequest
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw PlayMapMusic_InitSoundHardware
-    dw PlayMapMusic_TestFlagBit_TestFlagBit
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_TestFlagBit_ReadCurrentMusic_TestFlagBit
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_TestFlagBit_Case39
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_TestFlagBit_Case3B
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag23_631A
@@ -5293,27 +5293,27 @@ Jump_002_609D::
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23_631A
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw MapMusicByFlag23_631A
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -5322,121 +5322,121 @@ Jump_002_609D::
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_TestFlagBit_ReadMapScreenYAndCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_TestFlagBit_Case9B
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag25
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_CaseA1
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_CaseA1
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_CaseA1
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1
+    dw PlayMapMusic_ReadCurrentMusic_CaseA1
     dw MapMusicByFlag25
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
+    dw PlayMapMusic_ReadCurrentMusic_Case2B
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case21
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
+    dw PlayMapMusic_ReadCurrentMusic_Case37
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    dw PlayMapMusic_ReadCurrentMusic_Case20
     db $00, $00
 
 ; entry 0 of the `rst $00` table in PlayMapMusic
@@ -5474,7 +5474,7 @@ Jump_002_627C::
 ; entry 5 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, wCurrentMusic
-PlayMapMusic_TestFlagBit_ReadMapScreenXAndCurrentMusic::
+PlayMapMusic_TestFlagBit_Case05::
 Jump_002_6291:: ; address name
     ldh a, [hMapScreenX]
     or a, a
@@ -5499,7 +5499,7 @@ Jump_002_62B6::
 ; entry 13 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_Case0D::
 Jump_002_62BB:: ; address name
     ld c, $0C
     jp Jump_002_6089
@@ -5507,7 +5507,7 @@ Jump_002_62BB:: ; address name
 ; entry 4 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_TestFlagBit_ReadCurrentMusic::
+PlayMapMusic_TestFlagBit_Case04::
 Jump_002_62C0:: ; address name
     ld de, $00CC
     call TestFlagBit
@@ -5535,7 +5535,7 @@ Jump_002_62DA:: ; address name
 ; entry 33 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21::
+PlayMapMusic_ReadCurrentMusic_Case21::
 Jump_002_62DB:: ; address name
     ld c, $19
     jp Jump_002_6089
@@ -5547,7 +5547,7 @@ MapMusicByFlag23::
 Jump_002_62E0:: ; address name
     ld de, $0023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case21
+    jr c, PlayMapMusic_ReadCurrentMusic_Case21
     ld c, $2E
     jp Jump_002_6089
 
@@ -5571,7 +5571,7 @@ Jump_002_62ED:: ; address name
 ; entry 32 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20::
+PlayMapMusic_ReadCurrentMusic_Case20::
 Jump_002_6307:: ; address name
     ld c, $1C
     jp Jump_002_6089
@@ -5595,7 +5595,7 @@ MapMusicByFlag23_631A::
 Jump_002_631A:: ; address name
     ld de, $0023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    jr c, PlayMapMusic_ReadCurrentMusic_Case20
     ld c, $2E
     jp Jump_002_6089
 
@@ -5606,14 +5606,14 @@ MapMusicByFlag25::
 Jump_002_6327:: ; address name
     ld de, $0025
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case20
+    jr c, PlayMapMusic_ReadCurrentMusic_Case20
     ld c, $1F
     jp Jump_002_6089
 
 ; entry 161 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_CaseA1::
+PlayMapMusic_ReadCurrentMusic_CaseA1::
 Jump_002_6334:: ; address name
     ld c, $CC
     jp Jump_002_6089
@@ -5621,7 +5621,7 @@ Jump_002_6334:: ; address name
 ; entry 43 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B::
+PlayMapMusic_ReadCurrentMusic_Case2B::
 Jump_002_6339:: ; address name
     ld c, $25
     jp Jump_002_6089
@@ -5633,45 +5633,45 @@ PlayMapMusic_InitSoundHardware::
 Jump_002_633E:: ; address name
     ldh a, [hMapScreenX]
     or a, a
-    jr nz, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
     ldh a, [hMapScreenY]
     or a, a
-    jr nz, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
     call InitSoundHardware
     ret
 
 ; entry 57 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, hMapScreenY, wCurrentMusic
-PlayMapMusic_TestFlagBit_TestFlagBit::
+PlayMapMusic_TestFlagBit_Case39::
 Jump_002_634C:: ; address name
     ldh a, [hMapScreenX]
     cp a, $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
     ldh a, [hMapScreenY]
     cp a, $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B
     ld de, $007C
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr c, PlayMapMusic_ReadCurrentMusic_Case2B
     ld c, $28
     jp Jump_002_6089
 
 ; entry 59 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_TestFlagBit_ReadCurrentMusic_TestFlagBit::
+PlayMapMusic_TestFlagBit_Case3B::
 Jump_002_6365:: ; address name
     ld de, $0022
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case2B
+    jr c, PlayMapMusic_ReadCurrentMusic_Case2B
     ld c, $28
     jp Jump_002_6089
 
 ; entry 55 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCurrentMusic
-PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37::
+PlayMapMusic_ReadCurrentMusic_Case37::
 Jump_002_6372:: ; address name
     ld c, $22
     jp Jump_002_6089
@@ -5679,17 +5679,17 @@ Jump_002_6372:: ; address name
 ; entry 155 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenY, wCurrentMusic
-PlayMapMusic_TestFlagBit_ReadMapScreenYAndCurrentMusic::
+PlayMapMusic_TestFlagBit_Case9B::
 Jump_002_6377:: ; address name
     ldh a, [hMapScreenY]
     or a, a
-    jr nz, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    jr nz, PlayMapMusic_ReadCurrentMusic_Case37
     ld de, $00C2
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    jr nc, PlayMapMusic_ReadCurrentMusic_Case37
     ld de, $00C3
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_ReadCurrentMusic_Case37
+    jr c, PlayMapMusic_ReadCurrentMusic_Case37
     ld c, $28
     jp Jump_002_6089
 
@@ -5923,7 +5923,7 @@ Jump_002_64D7::
     ret
 
 ; in the field, when A is pressed and nothing blocks it: saves the screen, sets the object flags and draws the field menu windows (Data_002_6606, 6642) (E-0130)
-; 3 call sites from 3 routines (e.g. RunFieldReturnPhase_OpenFieldMenuOnA, FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_WriteTemp8)
+; 3 call sites from 3 routines (e.g. RunFieldReturnPhase_OpenFieldMenuOnA, FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
 ; reads: wFadeState, wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wIsCGB, hScrollY, hScrollX, ...
 ; writes: hSpriteWindowClipMode, wFieldReturnPhase, rSVBK, wPartyWindowTimer, wModeState, wMenuState
 ; points at: wWindowTileBuffer, wScreenTileBuffer, wWindowAttrBuffer, wScreenAttrBuffer
@@ -6633,7 +6633,7 @@ Data_002_695E:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 5
 
 ; while wC8CB & 3 is set: copies the text window rows to or from wC300 (with CGB attributes) and redraws them at the scroll position (E-0130)
-; 10 call sites from 10 routines (e.g. FieldModeStateDispatch_RunEventScriptFrame, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket_Case06, ...)
+; 10 call sites from 10 routines (e.g. FieldModeStateDispatch_RunEventScriptFrame, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, GameMode5_Init_SendSGBPaletteSetPacket_Case06, ...)
 ; reads: wTextWindowState, wIsCGB, hScrollY, hScrollX, wTextWindowStep
 ; writes: rSVBK
 ; points at: wWindowTileBuffer, wScreenTileBuffer, wTextWindowStep
@@ -6996,9 +6996,9 @@ Jump_002_6C46::
     rst $00
     dw RunMenuStateMenuState_QueueMusic
     dw RunMenuStateMenuState_QueueSoundEffect
-    dw RunMenuStateMenuState_Case02
-    dw RunMenuStateMenuState_Case03
-    dw RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame_Case04
+    dw RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc
+    dw RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc
+    dw RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc
     dw RunMenuStateMenuState_InitSoundHardware
     dw RunMenuStateMenuState_Return
     dw RunMenuStateMenuState_Return
@@ -7146,7 +7146,7 @@ Jump_002_6D05::
 ; reads: wMenuSelectedMember
 ; writes: wMenuSubState, wMenuSelectedMember, wMenuCursor, rLYC, wSTATSplitEnable
 ; points at: wMenuState
-RunMenuStateMenuState_Case02::
+RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
 Jump_002_6D28:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $01
@@ -7172,7 +7172,7 @@ Jump_002_6D28:: ; address name
 ; reads: wFrameCounterLo, wMenuCursor, hTemp0, hScrollX, hTemp1
 ; writes: wMenuSubState, wMenuCursor, wSubMenuCursor, hTemp0, hTemp1
 ; points at: wMenuState, wBGPaletteCopy
-RunMenuStateMenuState_Case03::
+RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
 Jump_002_6D4D:: ; address name
     ld a, $01
     ld [wMenuSubState], a
@@ -7265,7 +7265,7 @@ Jump_002_6DD4::
     jr nz, Jump_002_6DB7
     ret
 
-; address loaded by RunMenuStateMenuState_Case03
+; address loaded by RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc
 Data_002_6DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $60, $B6, $EC, $FF, $EC, $B6, $60, $00, $60, $B6, $EC, $FF, $EC, $B6, $60
 
@@ -7274,7 +7274,7 @@ Data_002_6DDE:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wFrameCounterLo, wSubMenuCursor, wMenuCursor, hTemp0, hScrollX, hTemp1
 ; writes: wSubMenuCursor, wSTATSplitEnable, wDMGPaletteBGP, hTemp0, hTemp1
 ; points at: wMenuState, wBGPaletteCopy
-RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame_Case04::
+RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
 Jump_002_6DEE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $0F
@@ -7299,7 +7299,7 @@ Jump_002_6E0B::
     call RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame
     jp Jump_002_6D75
 
-; address loaded by RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame_Case04
+; address loaded by RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc
 Data_002_6E20:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D2, $81, $40, $00, $00
 
@@ -7835,7 +7835,7 @@ Jump_002_717A::
     ret
 
 ; with SRAM enabled, steps by wC8C3: on the first call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines; on the second runs Func_002_71B2; afterwards sets bit 7 of wC8C3 (finished); disables SRAM each time (E-0109)
-; 9 call sites from 9 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, ...)
+; 9 call sites from 9 routines (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, GameMode5_Init_SendSGBPaletteSetPacket_Case04, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveSteps::
@@ -8184,7 +8184,7 @@ Func_002_7333:: ; address name
     jr Jump_002_7359
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wC8C3) (E-0124)
-; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_RunSaveGameSteps_7347, KeyAppraisalMenu_Case03_RunSaveGameSteps_7347, BreedMenu_Case04_BreedMenu_WaitLinkMode)
+; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_RunSaveGameSteps_7347, KeyAppraisalMenu_Case03_RunSaveGameSteps_7347, BreedMenu_Case04_WriteScreenSubStepAndScreenStepEtc)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps_7347::
@@ -8937,6 +8937,6 @@ Jump_002_7741::
     ret
     ds $8B9, $00
 
-; address loaded by StartPaletteFade_Sub01
+; address loaded by StartPaletteFade_WriteFadeLevelAndFadeDelayEtc
 Data_002_7FFF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00

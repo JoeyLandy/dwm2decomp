@@ -287,7 +287,7 @@ Jump_030_4196::
     jr nz, Jump_030_41D2
     ld a, e
     call RunBattleCommandEntry_Case04_AdvanceRandom
-    call RunBattleCommandEntry_Case04_Sub02
+    call RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc
     ld hl, wBattleTemp7A
     deref_hl
     ld a, c
@@ -344,7 +344,7 @@ Func_030_41DF:: ; address name
 ; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBufferData, wRandomLo
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleActionChoice
-RunBattleCommandEntry_Case04_Sub02::
+RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc::
 Func_030_4203:: ; address name
     push de
     ld a, e
@@ -931,7 +931,7 @@ Jump_030_4586::
     ret
 
 ; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
-; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_Sub01)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc)
 ; reads: wBattleActor
 ; writes: wAIFlag
 ; points at: wSideControl, wSlotAIMode, wBattleResolveStep
@@ -1455,7 +1455,7 @@ Jump_030_48C6::
     ld hl, wAIWeights
     add a, a
     add_a_to_hl
-    call AddWeightsForSkillD_Sub01
+    call AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc
     pop hl
 
 Jump_030_48DA::
@@ -1471,7 +1471,7 @@ Jump_030_48DA::
     dec a
     ld hl, wAIWeights + $10
     add_a_to_hl
-    call AddWeightsForSkillD_Sub01
+    call AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc
 
 Jump_030_48F2::
     ret
@@ -1480,7 +1480,7 @@ Jump_030_48F2::
 ; 2 call sites from 1 routine (e.g. AddWeightsForSkillD)
 ; reads: wLinkMode, wBattleActor, wMenuState, wCommandBytesE9
 ; points at: wCommandBytesE9
-AddWeightsForSkillD_Sub01::
+AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
 Func_030_48F3:: ; address name
     push de
     push hl
@@ -2770,7 +2770,7 @@ Func_030_502D:: ; address name
     ld bc, $0008
     ld a, $FF
     call FillBytes
-    call RunCommandEntryResolveStep_Case01_Sub03_Sub01
+    call RunCommandEntryResolveStep_Case01_Sub03_WriteRecordBufferAndBattleArg0Etc
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityHi
     add_a_to_hl
@@ -2850,7 +2850,7 @@ Jump_030_50CD::
 ; reads: wBattleActor, wRecordBufferData
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkills, wTemp0
-RunCommandEntryResolveStep_Case01_Sub03_Sub01::
+RunCommandEntryResolveStep_Case01_Sub03_WriteRecordBufferAndBattleArg0Etc::
 Func_030_50D2:: ; address name
     ld a, [wBattleActor]
     swap a
@@ -3383,7 +3383,7 @@ Data_030_53EC:: ; address name
     db $00, $00, $00, $FF ; id 7
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
-; 14 call sites from 13 routines (e.g. ScoreActionsWithAIScoreTableA, AIRunNextChoice, AIPickRandomSkillOfKind3, AddWeightsForSkillD_Sub01, ...)
+; 14 call sites from 13 routines (e.g. ScoreActionsWithAIScoreTableA, AIRunNextChoice, AIPickRandomSkillOfKind3, AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc, ...)
 ; reads: wBattleActor
 ; points at: wSlotTactic
 GetActorSlotTacticLow2::

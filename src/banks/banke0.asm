@@ -56,7 +56,7 @@ Jump_0E0_4045::
     pop bc
     dec c
     jr nz, Jump_0E0_4043
-    call RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor
+    call RunDebugSubState_E0_WriteVRAMByte_Shared01
     call ShowSkillNumberAndName_BankE0
     call RunDebugSubState_E0_HLToDecimalDigits
     call RunDebugSubState_E0_WriteVRAMByte
@@ -102,7 +102,7 @@ Jump_0E0_4095::
     and a, $01
     xor a, $01
     ld [wDebugCursor], a
-    call RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor
+    call RunDebugSubState_E0_WriteVRAMByte_Shared01
     ret
 
 Jump_0E0_40A6::
@@ -306,7 +306,7 @@ Jump_0E0_41BD:: ; address name
 ; only called from routines of RunDebugSubState_E0 (E-0098)
 ; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugCursor
-RunDebugSubState_E0_WriteVRAMByte_ReadDebugCursor::
+RunDebugSubState_E0_WriteVRAMByte_Shared01::
 Func_0E0_41C7:: ; address name
     ld a, [wDebugCursor]
     and a, $01
@@ -520,7 +520,7 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_WaitJoypadPressed
     dw DrawTileMap4946AndStep
     dw RunDebugState_E0_DrawEightBytesAsHexColumns
-    dw RunDebugState_E0_WaitJoypadPressed_WriteDebugState
+    dw RunDebugState_E0_WaitJoypadPressed_Case09
     dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A
     dw RunDebugState_E0_BlinkWC0A0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
@@ -1378,7 +1378,7 @@ Jump_0E0_4929::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; writes: wDebugState
-RunDebugState_E0_WaitJoypadPressed_WriteDebugState::
+RunDebugState_E0_WaitJoypadPressed_Case09::
 Jump_0E0_493B:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
@@ -1772,7 +1772,7 @@ Jump_0E0_4C9A:: ; address name
     dw RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0
     dw RunDebugState_E0_Case0D_WriteDebugSubState
     dw RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor
-    dw RunDebugState_E0_Case0D_Case04
+    dw RunDebugState_E0_Case0D_WriteBattleActorAndDebugSubStateEtc
     dw RunDebugState_E0_Case0D_WriteDebugSubState_Case05
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
@@ -1829,7 +1829,7 @@ Jump_0E0_4CF6:: ; address name
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
     ld [wPersonalityIndex], a
-    farcall RunDebugState_E0_Case0D_Case01_Sub01
+    farcall RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -1914,7 +1914,7 @@ Jump_0E0_4D71::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wDebugSubState, wDebugState
 ; points at: wBattleActionChoice
-RunDebugState_E0_Case0D_Case04::
+RunDebugState_E0_Case0D_WriteBattleActorAndDebugSubStateEtc::
 Jump_0E0_4D72:: ; address name
     xor a, a
     ld [wBattleActor], a
@@ -2110,7 +2110,7 @@ DrawSkillByte0AndRun502BAnd53B9::
 Func_0E0_4FCE:: ; address name
     call DrawSkillRecordByte0DigitsForDebugValue0
     call DrawSkillByte0AndRun502BAnd53B9_LoadSkillRecord
-    farcall DrawSkillByte0AndRun502BAnd53B9_Sub01_WriteVRAMByte_Sub01
+    farcall DrawSkillByte0AndRun502BAnd53B9_WriteBattleArg0AndBattleArg1Etc
     ret
 
 ; loads skill wC5F9's first record byte (LoadSkillRecordPart) and writes it as three digit tiles at vBGMap0 + $204 (E-0121)
@@ -2534,7 +2534,7 @@ Data_0E0_55FB:: ; address name
 ; reads: wBattleActor, wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 ; points at: wBattleActionChoice
-RunDebugState_E0_Case0D_Case01_Sub01::
+RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc::
 Func_0E0_56C7:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -2576,7 +2576,7 @@ Jump_0E0_570B::
     ret
 
 ; when the actor's wBattleTargetChoice entry is $FF (no target yet), far-calls ChooseActionTarget (E-0112)
-; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_Sub01)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
 ChooseTargetIfUnset::

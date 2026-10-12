@@ -740,7 +740,7 @@ Func_004_449F:: ; address name
     ret
 
 ; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
-; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunNameEntryStateWhenNotFading_Shared01, GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots, ...)
+; 5 call sites from 5 routines (e.g. FieldStateCommonUpdate, RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc, GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots, ...)
 ; reads: wFieldActionRequest, wSpriteSlotCount, hScrollX, hScrollXHi, hScrollY, hScrollYHi, hSpriteAttrXor, hTemp0
 ; writes: hTemp0, hSpriteAttrXor, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSubIndex, ...
 ; points at: wSpriteSlots
@@ -865,9 +865,9 @@ Jump_004_4574::
     dw UpdateSpriteSlots_Case00
     dw UpdateSpriteSlots_Return
     dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
-    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo
+    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03
     dw UpdateSpriteSlots_WriteTemp0AndTemp1
-    dw UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1
+    dw UpdateSpriteSlots_WriteTemp0AndTemp1_Case05
 
 Jump_004_4585::
     pop hl
@@ -1083,7 +1083,7 @@ Jump_004_465C::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1125,7 +1125,7 @@ Jump_004_46B9::
     call IsTileUnderCellBlocking
     cp a, $01
     jr z, Jump_004_46F7
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_46F7
     pop hl
@@ -1158,7 +1158,7 @@ Jump_004_4704:: ; address name
 ; entry 3 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptRunning, wRandomLo
-UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo::
+UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03::
 Jump_004_4705:: ; address name
     pop hl
     push hl
@@ -1294,7 +1294,7 @@ Jump_004_4784::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jp z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jp nz, Jump_004_4845
     pop hl
@@ -1322,7 +1322,7 @@ Jump_004_47CD::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1352,7 +1352,7 @@ Jump_004_47F4::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1382,7 +1382,7 @@ Jump_004_481C::
     call RunPendingFieldEventType0AOrOther
     cp a, $01
     jr z, Jump_004_4845
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01
+    call UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01
     or a, a
     jr nz, Jump_004_4845
     pop hl
@@ -1407,7 +1407,7 @@ Jump_004_4846::
     jp Jump_004_45A7
 
 ; runs Func_004_495A when wC935 & $0F = $0A, else Func_004_4904 (E-0122)
-; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo)
+; 4 call sites from 1 routine (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03)
 ; reads: wPendingFieldEvent
 RunPendingFieldEventType0AOrOther::
 Func_004_4852:: ; address name
@@ -1439,7 +1439,7 @@ Jump_004_4863:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1::
+UpdateSpriteSlots_WriteTemp0AndTemp1_Case05::
 Jump_004_486E:: ; address name
     ld hl, $48FA
     ld a, l
@@ -1666,10 +1666,10 @@ Jump_004_49AC::
     ret
 
 ; only called from routines of UpdateSpriteSlots (E-0098)
-; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_ReadScriptRunningAndRandomLo, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
+; 6 call sites from 2 routines (e.g. UpdateSpriteSlots_ReadScriptRunningAndRandomLo_Case03, UpdateSpriteSlots_ReadScriptRunningAndRandomLo)
 ; reads: hPlayerX, hTemp1, hPlayerY, hTemp0, wPartyCount
 ; writes: hTemp0, hTemp1
-UpdateSpriteSlots_WriteTemp0AndTemp1_WriteTemp0AndTemp1_Shared01::
+UpdateSpriteSlots_WriteTemp0AndTemp1_Shared01::
 Func_004_49B0:: ; address name
     push bc
     ld a, c
@@ -2058,7 +2058,7 @@ Func_004_4B7E:: ; address name
     ret
 
 ; unless bit 1 of hFF8C is set, hFF99 += 1 (+3 more with bit 2); then runs the routine for hFF8B (jump table of three) (E-0124)
-; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_DrawFieldSprites)
+; 2 call sites from 2 routines (e.g. FieldStateCommonUpdate, FieldModeStateDispatch_DrawFieldSprites_Case04)
 ; reads: hPlayerStateFlags, hPlayerAnimCounter, hPlayerSpriteMode
 ; writes: hPlayerAnimCounter
 ; points at: hPlayerAnimCounter

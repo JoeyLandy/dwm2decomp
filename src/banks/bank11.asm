@@ -645,14 +645,14 @@ Jump_011_43DF::
     cp a, b
     jr nz, Jump_011_43F3
     ld de, wKeyWorldGoal
-    call CheckMapExitTable4480_Sub01
+    call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
     ret
 
 Jump_011_43F3::
     ld e, l
     ld d, h
     inc de
-    call CheckMapExitTable4480_Sub01
+    call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
     ret
 
 ; only called from CheckMapExitTable4480 (E-0047)
@@ -660,7 +660,7 @@ Jump_011_43F3::
 ; reads: hPlayerX, hPlayerY, hMapScreenX, hMapScreenY, hPlayerStateFlags
 ; writes: wWarpPending, hMapId, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wLastWarpIndex, wFieldTransitionKind, ...
 ; points at: wFieldInitStage
-CheckMapExitTable4480_Sub01::
+CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc::
 Func_011_43FA:: ; address name
     ldh a, [hPlayerX]
     and a, $F0
@@ -742,7 +742,7 @@ Data_011_4480:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A0, $44, $10, $05, $A8, $44, $00, $06, $B0, $44, $01, $07, $B8, $44, $44, $08
     db $C8, $44, $01, $09, $D1, $44, $00, $0A, $DA, $44, $00, $0B, $FF
 
-; address loaded by CheckMapExitTable4480_Sub01
+; address loaded by CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
 Data_011_44AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9, $E2
 

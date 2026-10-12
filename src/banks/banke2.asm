@@ -887,7 +887,7 @@ Func_0E2_4619:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4636::
-    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_ReadSlotAIModeIndexed_Bank05
+    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
     jr z, Jump_0E2_464A
@@ -5834,7 +5834,7 @@ Func_0E2_67F9:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_680D::
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_ReadBattleActorAndAIFlag
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6821

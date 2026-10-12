@@ -1334,8 +1334,11 @@ class Rom:
         used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
         renamed = 0
 
-        def bare(lab: str) -> bool:  # a root followed only by CaseNN/SubNN/SharedNN parts (not yet descriptive)
-            return re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab) ==                 re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab)
+        if not hasattr(self, "shape_named"):
+            self.shape_named: set[str] = set()  # labels these rules gave (never renamed again)
+
+        def bare(lab: str) -> bool:  # a structural label no rule has renamed
+            return lab not in self.shape_named and re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab) ==                 re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab)
 
         def stem(addr: int) -> str:
             nm = self.sym_name(addr, True) or f"w{addr:04X}"
@@ -1409,6 +1412,7 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 renamed += 1
         log(f"single-purpose structural routines named from their shape: {renamed}")
         # E-0274: a structural step whose body (up to the next label) shows exactly one quoted string -
@@ -1454,6 +1458,7 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 shown += 1
         log(f"structural steps named after the string they show: {shown}")
         # E-0278: a short branch-free step (at most 12 instructions, no conditional or relative jump, ending
@@ -1519,6 +1524,7 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 leaves += 1
         log(f"branch-free steps named after their main call: {leaves}")
         # E-0280: the same for steps up to 24 instructions that branch (conditional jr/jp/ret inside, ending at an
@@ -1568,6 +1574,7 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 branched += 1
         log(f"branching steps named after their main call: {branched}")
         # E-0281: steps that start by testing one variable and returning early (a wait/guard), and steps made
@@ -1622,9 +1629,10 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
         log(f"wait/guard steps: {guards}; constant-store steps: {stores}")
         # E-0282: a structural routine still without a descriptive name, by the RAM it touches (build_xrefs):
-        # Parent_Write<V>[And<W>] when it writes one or two symbols, else Parent_Read<V>[And<W>] for one or two reads
+        # Parent_Write<V>[And<W>][Etc] when it writes RAM, else Parent_Read<V>[And<W>][Etc] (E-0284: Etc = more than two)
         def sym_stem(nm: str) -> str:
             nm = re.sub(r"[^A-Za-z0-9]", "", nm.replace(" + $", "Plus"))
             return nm[1:] if nm[:1] in "whr" and nm[1:2].isupper() else nm
@@ -1634,18 +1642,17 @@ class Rom:
                 m = pat.match(lab) if bare(lab) else None
                 if not m or (b, a) in self.config_name_keys:
                     continue
-                core = re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab)
-                if core != re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab):
+                if not bare(lab):
                     continue  # already descriptive, only numbered for uniqueness
                 v0 = self.insn[b].get(a)
                 v1 = self.insn[b].get(a + v0[0]) if v0 and v0[0] != "dw" else None
                 if v1 and v1[1] == "rst $00":
                     continue  # a dispatcher: its cases carry its name
                 r, w, _p = self.ram_use.get((b, a), ([], [], []))
-                if 1 <= len(w) <= 2:
-                    new = f"{m.group(1)}_Write" + "And".join(sym_stem(x) for x in w)
-                elif not w and 1 <= len(r) <= 2:
-                    new = f"{m.group(1)}_Read" + "And".join(sym_stem(x) for x in r)
+                if w:
+                    new = f"{m.group(1)}_Write" + "And".join(sym_stem(x) for x in w[:2]) + ("Etc" if len(w) > 2 else "")
+                elif r:
+                    new = f"{m.group(1)}_Read" + "And".join(sym_stem(x) for x in r[:2]) + ("Etc" if len(r) > 2 else "")
                 else:
                     continue
                 if len(new) > 80:
@@ -1656,8 +1663,15 @@ class Rom:
                         continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 by_ram += 1
         log(f"structural routines named by the RAM they touch: {by_ram}")
+        left = [lab for bb in range(self.nbanks) for aa, lab in self.labels[bb].items()
+                if pat.match(lab) and bare(lab) and aa in self.insn[bb]]
+        disp = sum(1 for bb in range(self.nbanks) for aa, lab in self.labels[bb].items()
+                   if lab in set(left) and (v := self.insn[bb].get(aa)) and v[0] != "dw"
+                   and (w := self.insn[bb].get(aa + v[0])) and w[1] == "rst $00")
+        log(f"structural labels left unnamed: {len(left)} ({disp} dispatchers)")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0
@@ -1685,6 +1699,7 @@ class Rom:
                     continue
                 used.add(new)
                 self.labels[b][a] = new
+                self.shape_named.add(new)
                 entries += 1
         log(f"register-preset entries named after the code they enter: {entries}")
 

@@ -2,7 +2,7 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1A
 
 ; wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE
-; 17 call sites from 15 routines (e.g. PauseMenu_Skills_SRAMRecordAddressMapped_SRAMRecordAddressMapped, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_ShowStringBank08AtTilesHL_Bank31, LoadSelectedSkillRecord_Bank31, ...)
+; 17 call sites from 15 routines (e.g. PauseMenu_Skills_SRAMRecordAddressMapped_Shared02, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_ShowStringBank08AtTilesHL_Bank31, LoadSelectedSkillRecord_Bank31, ...)
 ; reads: wRecordBuffer
 ; points at: wRecordBufferData
 LoadSkillRecord::
@@ -1582,7 +1582,7 @@ Data_01A_5F9C:: ; heuristic: target of a monotone pointer table; C0
     db $86, $85, $FF, $8B, $FF, $8D, $FF, $97, $FF, $99, $FF
 
 ; copies the record's eight skills to wD09D and, for each skill in Data_01A_4FF8, checks the level and stat requirements; learnable skills go into the list (E-0131)
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
 ; reads: wBattleArg2, wBattleArg3
 ; writes: wNameSlot
 ; points at: wWorkBuf
@@ -2465,7 +2465,7 @@ Jump_01A_63A4::
     ret
 
 ; hFFC8/9 = StatGrowthBase[hFFC6] + the sum of the first hFFC7 gains of StatGrowthTable row hFFC6: the stat value of growth row hFFC6 at level hFFC7 (E-0125, E-0158)
-; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_Sub01, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
+; 12 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc, ApplyLevelScaledStatsToSlots_LoadSpeciesRecord)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3
 StatFromGrowthRow::
@@ -3340,7 +3340,7 @@ Func_01A_72F4:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_787E, then QueueSoundEffect $6C (E-0079)
-; 6 call sites from 6 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case01_Case01_Sub01_Case11, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, ...)
 CopyRectRecord787EAndPlaySound6C::
 Func_01A_72FB:: ; address name
     ld hl, TileRect_1A_787E
@@ -3366,7 +3366,7 @@ Func_01A_730E:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_796F, then QueueSoundEffect $6C (E-0115)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex, BattleEnd_Step5_Case01_Case01_Sub01_Case11)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc)
 CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Func_01A_7315:: ; address name
     ld hl, TileRect_1A_796F

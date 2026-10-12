@@ -216,7 +216,7 @@ PauseMenu_State4_Sub02_Case02::
 Jump_0F1_414E:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State4_Sub02_Case02_Case00
+    dw PauseMenu_State4_Sub02_Case02_WriteArg1AndCounterPtr0LoEtc
     dw PauseMenu_State4_Sub02_Case02_ClearWindowAndBuildBlock32WithCursor_BankF1AndStep
     dw PauseMenu_State4_Sub02_Case02_BeginStringDisplay_BankF0_48A0AndStep
     dw PauseMenu_State4_Sub02_Case02_WaitTextFlags
@@ -226,7 +226,7 @@ Jump_0F1_414E:: ; address name
 ; reads: wItemId, wInventorySlot
 ; writes: wArg1, wCounterPtr0Lo, wDataBankSave, wStringIndex
 ; points at: wInventory, wTemp1
-PauseMenu_State4_Sub02_Case02_Case00::
+PauseMenu_State4_Sub02_Case02_WriteArg1AndCounterPtr0LoEtc::
 Jump_0F1_415A:: ; address name
     ld a, [wItemId]
     cp a, $1F
@@ -391,7 +391,7 @@ Func_0F1_4244:: ; address name
     add_a_to_hl
     deref_hl
     call CopyRecordRectToScreenBuffer_BankF1
-    call BuildItemScreenForWItemId_BankF1_Sub01
+    call BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
     ret
 
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wC46D & 3 (E-0122)
@@ -704,7 +704,7 @@ Jump_0F1_442B::
 ; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1)
 ; reads: wMenuSelectedMember, wItemId, hTemp0, hTemp1
 ; writes: rRAMG, rRAMB, wStringIndex, wStringCategory, hTemp0, hTemp1, wScreenTileBuffer, wTextWindowTileLo, ...
-BuildItemScreenForWItemId_BankF1_Sub01:: ; heuristic: follows a terminator; C0
+BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc:: ; heuristic: follows a terminator; C0
 Func_0F1_442F:: ; address name
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -954,7 +954,7 @@ Jump_0F1_4599::
     ret
 
 ; wC2DF = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
+; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC2_BankF1::
 Func_0F1_459E:: ; address name
@@ -963,7 +963,7 @@ Func_0F1_459E:: ; address name
     ret
 
 ; wC2DF = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
+; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DFTileC1_BankF1::
 Func_0F1_45A4:: ; address name
@@ -972,7 +972,7 @@ Func_0F1_45A4:: ; address name
     ret
 
 ; wC2DE = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_Sub01)
+; 1 call site from 1 routine (e.g. BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; writes: wScreenTileBuffer
 SetWC2DETileC0_BankF1::
 Func_0F1_45AA:: ; address name
@@ -980,7 +980,7 @@ Func_0F1_45AA:: ; address name
     ld [wScreenTileBuffer + $146], a
     ret
 
-; address loaded by BuildItemScreenForWItemId_BankF1_Sub01
+; address loaded by BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
 Data_0F1_45B0:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
@@ -1026,7 +1026,7 @@ Data_0F1_45CB:: ; address name
     db $07, $00 ; id 34
     db $00, $00 ; id 35
 
-; address loaded by BuildItemScreenForWItemId_BankF1, BuildItemScreenForWItemId_BankF1_Sub01
+; address loaded by BuildItemScreenForWItemId_BankF1, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
 Data_0F1_4613:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $04, $05, $06
     db $07, $00, $01, $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03
@@ -1259,7 +1259,7 @@ Jump_0F1_48C9::
 Jump_0F1_48DC::
     ld [hl], b
     ld a, b
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_WaitForVRAMAccess
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
     xor a, a
     ld [wFrameCounterLo], a
     jr Jump_0F1_493A
@@ -1285,7 +1285,7 @@ Jump_0F1_48E7::
     pop de
     pop af
     ld [hl], a
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_WaitForVRAMAccess
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
 
 Jump_0F1_4909::
     set 7, [hl]
@@ -1304,7 +1304,7 @@ Jump_0F1_4916::
     jr z, Jump_0F1_492C
     ld a, [hl]
     and a, $0F
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_WaitForVRAMAccess
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
     jr Jump_0F1_493A
 
 Jump_0F1_492C::
@@ -1345,7 +1345,7 @@ Jump_0F1_4941::
 
 ; only called from UpdateMenuCursor_BankF1 (E-0047)
 ; 3 call sites from 1 routine (e.g. UpdateMenuCursor_BankF1)
-UpdateMenuCursor_BankF1_WaitForVRAMAccess_WaitForVRAMAccess::
+UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02::
 Func_0F1_4951:: ; address name
     add a, a
     add a, e
@@ -1496,7 +1496,7 @@ Func_0F1_4A0D:: ; address name
     ld de, $0501
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
-; 3 call sites from 2 routines (e.g. ShowSelectedItemDescription_BankF1, BuildItemScreenForWItemId_BankF1_Sub01)
+; 3 call sites from 2 routines (e.g. ShowSelectedItemDescription_BankF1, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHL_BankF1::
@@ -1548,7 +1548,7 @@ Data_0F1_4A72:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8C, $99, $8E, $99, $90, $99
 
 ; fills the $2D0 bytes $C198-$C467 (wScreenTileBuffer, $240 bytes, and the $90 bytes after it) with $C3; on CGB continues with the attribute buffer (not fully read) (E-0077)
-; 7 call sites from 7 routines (e.g. GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_SendSGBPaletteSetPacket_Case06, UnreferencedScreenInitFromBank46, ...)
+; 7 call sites from 7 routines (e.g. GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, GameMode5_Init_SendSGBPaletteSetPacket_Case06, UnreferencedScreenInitFromBank46, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -1880,11 +1880,11 @@ Jump_0F1_4C64::
     rst $00
     dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0
     dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_WaitLinkMessage
+    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02
     dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
     dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0
     dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_WaitLinkMessage
+    dw RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02
     dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
 
 ; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
@@ -1925,7 +1925,7 @@ Jump_0F1_4C8E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_WaitLinkMessage::
+RunScreenStateWhenNotFading_F1_Table2_BeginString_Bank0E_Cat0_Case02::
 Jump_0F1_4CA0:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -3627,7 +3627,7 @@ Jump_0F1_56DC:: ; address name
     ret
 
 ; wD7F1/2 = the species wCA36/7, wD7F3-6 = $00, $90, $40, $00, then far-calls DrawMetaSpritePartC0 (E-0122)
-; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
+; 4 call sites from 4 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, GameMode5_Update_Case05_LinkExchangeJoypadPerFrame)
 ; reads: wRecordBufB
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart_BankF1::
@@ -4255,7 +4255,7 @@ Jump_0F1_5AF7::
     cp a, $07
     ret c
     call GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots
-    call GameMode5_Update_Case07_Sub01_Sub02
+    call GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc
     ld a, [wScreenByteEE]
     and a, a
     ret z
@@ -4295,7 +4295,7 @@ Jump_0F1_5B31::
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
 ; reads: wLinkByteE8, wLinkByteEA, wLinkByteE9
 ; writes: wArg1, wArg2, hSpriteWindowClipMode
-GameMode5_Update_Case07_Sub01_Sub02::
+GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc::
 Func_0F1_5B38:: ; address name
     ld a, [wLinkByteE8]
     cp a, $0C

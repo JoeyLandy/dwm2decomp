@@ -175,7 +175,7 @@ Jump_031_4106:: ; address name
     rst $00
     dw BattlePhase0_Step2_SetArg1
     dw BattlePhase0_Step2_WaitLinkMessage
-    dw BattlePhase0_Step2_Case02
+    dw BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc
     dw BattlePhase0_Step2_CopyFiveGlyphsPlusMarks
 
 ; entry 0 of the `rst $00` table in BattlePhase0_Step2
@@ -212,7 +212,7 @@ Jump_031_4126:: ; address name
 ; reads: wArg1
 ; writes: wArg1, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
 ; points at: wPlayerName, wBattleByte58
-BattlePhase0_Step2_Case02::
+BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc::
 Jump_031_4138:: ; address name
     ld a, [wArg1]
     inc a
@@ -437,7 +437,7 @@ Jump_031_42B2::
     jr nz, Jump_031_429D
     ld a, $00
     ld [wStringCategory], a
-    call BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
+    call BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattlePhase
     dec [hl]
@@ -456,7 +456,7 @@ Jump_031_42D4::
 ; 1 call site from 1 routine (e.g. BattlePhase0_Step3)
 ; reads: wBattlePictureIds, wBattleFoeCount, wStringIndex
 ; points at: wTextBuf0
-BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01::
+BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
 Func_031_42D5:: ; address name
     ld a, [wBattlePictureIds]
     ld e, a
@@ -549,7 +549,7 @@ Jump_031_4364::
     ret
 
 ; only called from BattlePhase0_Step3_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01)
+; 1 call site from 1 routine (e.g. BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc)
 ; reads: wStringCategory, wStringIndex
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
@@ -583,11 +583,11 @@ Jump_031_4384::
     ld [wStringIndex], a
     ret
 
-; address loaded by BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
+; address loaded by BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
 Data_031_438E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $30, $32, $31, $36, $37, $28, $35, $36, $F0
 
-; address loaded by BattlePhase0_Step3_Sub01_CopyStringHLToDE_Sub01
+; address loaded by BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
 Data_031_4397:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $16, $32, $31, $36, $37, $28, $35, $36, $F0
 
@@ -704,7 +704,7 @@ BattleEnd_Step1::
 Jump_031_440E:: ; address name
     ld a, $01
     ld [wBattleKindFlags], a
-    call BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02
+    call BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc
     ld a, [wBattleScene]
     and a, $01
     jr z, Jump_031_4421
@@ -1200,7 +1200,7 @@ BattleEnd_Step5::
 Jump_031_46CA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw BattleEnd_Step5_Case00
+    dw BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc
     dw BattleEnd_Step5_Case01
     dw BattleEnd_Step5_SwapMonstersMenu
     dw BattleEnd_Step5_BuildAndDrawBattleScreen
@@ -1211,9 +1211,9 @@ Jump_031_46CA:: ; address name
 ; reads: wDisplaySlot, wSpeciesIdLo, wSpeciesIdHi
 ; writes: wBattleSubPhase, wBattlePictureIds, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleStep, wBattleSubPhase
-BattleEnd_Step5_Case00::
+BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc::
 Jump_031_46D8:: ; address name
-    farcall BattleEnd_Step5_Case00_Sub01
+    farcall BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
     ld a, [wDisplaySlot]
     cp a, $FF
     jr nz, Jump_031_46EE
@@ -1426,7 +1426,7 @@ Jump_031_4840:: ; address name
     rst $00
     dw BattleEnd_Step6_QueueMusic
     dw BattleEnd_Step6_WaitFadeState
-    dw BattleEnd_Step6_QueueMusic_QueueMusic
+    dw BattleEnd_Step6_QueueMusic_Case02
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step6
 ; no direct call (reached through a table, a jump or a vector)
@@ -1474,7 +1474,7 @@ Jump_031_486E:: ; address name
 ; reads: wCurrentMusic, wBattleKind
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wNewRecordByte0D, wScreenState, wFieldInitStage
 ; points at: wTransitionByteCD, wBGFillFlag
-BattleEnd_Step6_QueueMusic_QueueMusic::
+BattleEnd_Step6_QueueMusic_Case02::
 Jump_031_4878:: ; address name
     ld a, [wCurrentMusic]
     ld hl, wTransitionByteCD
@@ -1512,7 +1512,7 @@ Jump_031_4893::
     ret
 
 ; copies hPlayerFacing to the three follower directions and hPlayerX/hPlayerY to the three follower positions (the facing-preserving form of ResetFollowersToPlayer) (E-0118)
-; 1 call site from 1 routine (e.g. BattleEnd_Step6_QueueMusic_QueueMusic)
+; 1 call site from 1 routine (e.g. BattleEnd_Step6_QueueMusic_Case02)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFollowerRecords
 SetFollowersToPlayer::
@@ -1944,9 +1944,9 @@ Func_031_4B10:: ; address name
     dw RunBattleSetup_FillWC278WithC3_Bank31
     dw RunBattleSetup_ShowSelectingHeroSMove
     dw RunBattleSetup_WriteLinkSendByte
-    dw RunBattleSetup_Case06
+    dw RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc
     dw RunBattleSetup_WriteLinkSendByteAndLinkReady
-    dw RunBattleSetup_Case08
+    dw RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc
     dw RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo
     dw RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte
     dw RunBattleSetup_WriteBattleSubPhase
@@ -1964,7 +1964,7 @@ Jump_031_4B2E:: ; address name
     dw RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM
     dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink
     dw RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep
-    dw RunBattleSetup_Case00_Case05
+    dw RunBattleSetup_Case00_WriteBattleSetupDBAndStringIndexEtc
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345FarAndStep
     dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far
@@ -2121,7 +2121,7 @@ Jump_031_4C19:: ; address name
 ; reads: wMenuState, wLinkMode, wBattleKind, wLinkRole
 ; writes: wBattleSetupDB, wStringIndex, wStringCategory, wBattleSubPhase, wBattleResolveStep, wCommandMonster
 ; points at: wBattleResolveStep, wSlotMarks
-RunBattleSetup_Case00_Case05::
+RunBattleSetup_Case00_WriteBattleSetupDBAndStringIndexEtc::
 Jump_031_4C21:: ; address name
     ld a, [wMenuState]
     and a, $03
@@ -2187,7 +2187,7 @@ Jump_031_4C83::
     cp a, $05
     jr z, Jump_031_4CA2
     call RunBattleSetup_Case00_Case05_ReadLinkRole
-    call RunBattleSetup_Case00_Case05_Sub03
+    call RunBattleSetup_Case00_Case05_WriteCommandPageCountAndCommandCursorMaxEtc
     ld a, e
     or a, a
     jr nz, Jump_031_4CB1
@@ -2243,7 +2243,7 @@ Jump_031_4CED::
     ret
 
 ; only called from RunBattleSetup_Case00_Case05 (E-0047)
-; 3 call sites from 1 routine (e.g. RunBattleSetup_Case00_Case05)
+; 3 call sites from 1 routine (e.g. RunBattleSetup_Case00_WriteBattleSetupDBAndStringIndexEtc)
 ; reads: wLinkRole
 ; points at: wBattleActionChoice
 RunBattleSetup_Case00_Case05_ReadLinkRole::
@@ -2264,7 +2264,7 @@ Func_031_4CEE:: ; address name
     ret
 
 ; only called from RunBattleSetup_Case00_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_WriteBattleSetupDBAndStringIndexEtc)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleSetupF2, wSlotTactic
 RunBattleSetup_Case00_Case05_ReadLinkModeAndLinkRole::
@@ -2801,7 +2801,7 @@ Jump_031_4FF4:: ; address name
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case1D
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1E
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11
-    dw RunBattleSetup_Case01_Case20
+    dw RunBattleSetup_Case01_WriteCommandMonsterAndBattleResolveStepEtc
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_Case21
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case23
@@ -3118,7 +3118,7 @@ Jump_031_525C::
     jr Jump_031_52B4
 
 Jump_031_526D::
-    call RunBattleSetup_Case01_Case06_Sub02
+    call RunBattleSetup_Case01_Case06_WriteBattleArg2AndBattleArg3Etc
     ld a, d
     or a, a
     jr nz, Jump_031_5281
@@ -3717,7 +3717,7 @@ Jump_031_560B:: ; address name
     ld a, $03
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call RunBattleSetup_Case01_Case18_Sub01
+    call RunBattleSetup_Case01_Case18_ReadRecordBufferAndLinkRoleEtc
     xor a, a
     ld [wSubMenuCursor2], a
     ld hl, wBattleResolveStep
@@ -3994,7 +3994,7 @@ Jump_031_57D6:: ; address name
 ; reads: wCommandMonster
 ; writes: wCommandMonster, wBattleResolveStep, wBattleSubPhase
 ; points at: wSlotMarks
-RunBattleSetup_Case01_Case20::
+RunBattleSetup_Case01_WriteCommandMonsterAndBattleResolveStepEtc::
 Jump_031_57E0:: ; address name
     ld a, [wCommandMonster]
     and a, $04
@@ -4444,7 +4444,7 @@ Jump_031_5AA6:: ; address name
     ld a, $03
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call RunBattleSetup_Case02_Case08_Sub01
+    call RunBattleSetup_Case02_Case08_ReadItemIdAndLinkRoleEtc
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4840,7 +4840,7 @@ Jump_031_5CE8::
 ; reads: wLinkMode, wLinkMessage, wLinkRole, wRandomLo, wRandomHi, wMenuState
 ; writes: wLinkSendByte, wLinkBufferCountLo, wLinkBufferCountHi, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi
 ; points at: wSlotTactic, wLinkRecvBuffer, wBattleActionChoice, wSlotMarks, wSideControl, wLinkPartnerName, wBattleSubPhase
-RunBattleSetup_Case06::
+RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc::
 Jump_031_5CED:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -4973,7 +4973,7 @@ Jump_031_5DA6::
 ; reads: wLinkMode, wLinkMessage, wLinkRole, wRandomLo, wRandomHi, wMenuState, wRandomSeed2Lo, wRandomSeed2Hi
 ; writes: wLinkSendByte, wLinkReady, wCommandBytesE9, wCommandByteEA, wRandomSeed2Lo, wRandomSeed2Hi, wBattleSetupByteBC, wRandomLo, ...
 ; points at: wSlotTactic, wLinkPartnerName, wBattleActionChoice, wSlotMarks, wSideControl, wBattleSubPhase, wSlotLastTactic
-RunBattleSetup_Case08::
+RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc::
 Jump_031_5DA7:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -5590,7 +5590,7 @@ Data_031_6102:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wCommandMonster
 ; writes: wBattleArg2, wBattleArg3, wCommandPageCount, wCommandCursorMax, wCommandCursor
 ; points at: wBattleSkills
-RunBattleSetup_Case01_Case06_Sub02::
+RunBattleSetup_Case01_Case06_WriteBattleArg2AndBattleArg3Etc::
 Func_031_6105:: ; address name
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
@@ -5752,10 +5752,10 @@ Jump_031_61BE::
     ret
 
 ; only called from RunBattleSetup_Case00_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_WriteBattleSetupDBAndStringIndexEtc)
 ; writes: wCommandPageCount, wCommandCursorMax, wCommandCursor
 ; points at: wInventory
-RunBattleSetup_Case00_Case05_Sub03::
+RunBattleSetup_Case00_Case05_WriteCommandPageCountAndCommandCursorMaxEtc::
 Func_031_6200:: ; address name
     ld hl, wInventory
     ld bc, $1800
@@ -5807,7 +5807,7 @@ Jump_031_623D::
     ret
 
 ; only called from RunBattleSetup_Case00_Case05_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05_Sub03)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case05_WriteCommandPageCountAndCommandCursorMaxEtc)
 ; reads: wCommandPageCount
 ; writes: wCommandPageCount
 RunBattleSetup_Case00_Case05_Sub03_WriteCommandPageCount::
@@ -6164,7 +6164,7 @@ Jump_031_644C::
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep)
 ; reads: wRecordBuffer, wLinkRole, wSlotChoices
 ; points at: wBattleSlotOut, wSlotChoices
-RunBattleSetup_Case01_Case18_Sub01::
+RunBattleSetup_Case01_Case18_ReadRecordBufferAndLinkRoleEtc::
 Func_031_6451:: ; address name
     ld a, [wRecordBuffer]
     cp a, $1E
@@ -6177,7 +6177,7 @@ Func_031_6451:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_ShowStringBank09AtTilesHL_Bank31AndStep)
 ; reads: wItemId, wLinkRole, wSlotChoices
 ; points at: wBattleSlotOut, wSlotChoices
-RunBattleSetup_Case02_Case08_Sub01::
+RunBattleSetup_Case02_Case08_ReadItemIdAndLinkRoleEtc::
 Func_031_645E:: ; address name
     ld a, [wItemId]
     cp a, $0C
@@ -6259,7 +6259,7 @@ Jump_031_64A2::
     ret
 
 ; stores tile $C3 in the five bytes from HL; HL kept (E-0118)
-; 3 call sites from 1 routine (e.g. RunBattleSetup_Case02_Case08_Sub01)
+; 3 call sites from 1 routine (e.g. RunBattleSetup_Case02_Case08_ReadItemIdAndLinkRoleEtc)
 FillFiveC3AtHL::
 Func_031_64CE:: ; address name
     push hl
@@ -6392,7 +6392,7 @@ Func_031_6564:: ; address name
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1)
 ; reads: wDataBankSave, wBattleKind, wBattleScene, wLinkRole
 ; writes: wDataBank, wDataBankSave, wBattleScene
-BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02::
+BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc::
 Func_031_656B:: ; address name
     ld a, [wDataBankSave]
     ld [wDataBank], a
@@ -6481,7 +6481,7 @@ Jump_031_65FB::
     ret
 
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 7 call sites from 1 routine (e.g. BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02)
+; 7 call sites from 1 routine (e.g. BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc)
 ; points at: wBattleSlotOut, wBattleStatus
 BattleEnd_Step1_Sub02_AddAx9ToHL::
 Func_031_65FF:: ; address name
@@ -6507,7 +6507,7 @@ Jump_031_6618::
     ret
 
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub02_AddAx9ToHL_Sub02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step1_WriteDataBankAndDataBankSaveEtc)
 ; points at: wBattleSlotOut
 BattleEnd_Step1_Sub02_Sub02::
 Func_031_6620:: ; address name
@@ -6862,7 +6862,7 @@ BattleEnd_Step4_Sub02::
 Func_031_67AA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw BattleEnd_Step4_Sub02_Case00
+    dw BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc
     dw BattleEnd_Step4_Sub02_AddExpToRecordCCapped
     dw BattleEnd_Step4_Sub02_Case02
     dw BattleEnd_Step4_Sub02_CountDownBattleEndTimerWhenSoundIdle
@@ -6878,7 +6878,7 @@ Func_031_67AA:: ; address name
 ; reads: wBattleKind, wLinkMode, wBattleExpAward
 ; writes: wBattleResolveStep, wBattleSubPhase, hTemp0, wBattleExpAward, hTemp1, hTemp2
 ; points at: wBattleSlotOut, wTextBuf0, wBattleSubPhase
-BattleEnd_Step4_Sub02_Case00::
+BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc::
 Jump_031_67C2:: ; address name
     ld a, [wBattleKind]
     cp a, $04
@@ -7713,7 +7713,7 @@ BattleEnd_Step4_Sub02_Case09::
 Jump_031_6C67:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_Step4_Sub02_Case09_Case00
+    dw BattleEnd_Step4_Sub02_Case09_WriteBattleByte93AndBattleSubPhaseEtc
     dw BattleEnd_Step4_Sub02_Case09_ClearTemp0AndA
     dw BattleEnd_Step4_Sub02_Case09_WaitTextFlags
 
@@ -7722,7 +7722,7 @@ Jump_031_6C67:: ; address name
 ; reads: wArenaRank, wBattlePartyCount, wBattleByte93
 ; writes: wBattleByte93, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleStep
-BattleEnd_Step4_Sub02_Case09_Case00::
+BattleEnd_Step4_Sub02_Case09_WriteBattleByte93AndBattleSubPhaseEtc::
 Jump_031_6C71:: ; address name
     ld a, [wArenaRank]
     cp a, $05
@@ -7965,7 +7965,7 @@ Func_031_6D96:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
-; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0, BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc, BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0, BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink, ...)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank31::
 Func_031_6DDD:: ; address name
@@ -8190,7 +8190,7 @@ Jump_031_6EF7:: ; address name
     ret nz
     call FillWC278WithC3_Bank31
     call DrawWC278RowsToBGMapRow7
-    call RunBattleEndStep4SubSteps_Shared01
+    call RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
     farcall CopyRectRecords77B6And79CBAndPlaySound6C
     ld a, $0A
     ld [rRAMG], a
@@ -8268,7 +8268,7 @@ Jump_031_6F9C::
     ret z
     ld hl, wCommandCursor
     res 7, [hl]
-    call RunBattleEndStep4SubSteps_Shared01
+    call RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
     call DrawWC39EThreeTilesAtBGMap206
     call DrawCommandCursorPageNumber
     ret
@@ -8429,7 +8429,7 @@ Jump_031_708E::
 ; reads: wCommandCursor
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wStringIndex, wStringCategory
 ; points at: wWorkBuf
-RunBattleEndStep4SubSteps_Shared01::
+RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc::
 Func_031_7096:: ; address name
     ld hl, $0901
     ld a, l
@@ -8485,7 +8485,7 @@ Jump_031_70D2::
     ld [wTextWindowTileHi], a
     ret
 
-; address loaded by RunBattleEndStep4SubSteps_Shared01
+; address loaded by RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc
 Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
@@ -8637,7 +8637,7 @@ Func_031_71C4:: ; address name
     ret
 
 ; on CGB writes 0 to the 20 x 18 visible attributes of vBGMap0 in VRAM bank 1 (rows 32 apart, WriteVRAMByteInc); then fills the $240 bytes of wScreenTileBuffer with $C3; what follows is not read (E-0110)
-; 6 call sites from 6 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
+; 6 call sites from 6 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wScreenTileBuffer
@@ -8765,7 +8765,7 @@ Jump_031_7285::
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
 ; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
-; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 CopyRectRecordForBattlePartyCount_Bank31::
 Func_031_72AC:: ; address name
@@ -8788,7 +8788,7 @@ Data_031_72C3:: ; address name
     dw TileRect_31_761E ; id 3
 
 ; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForBattleFoeCount (E-0071)
-; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case02, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07, RunBattleSetup_BankA0_Case01_Case02, ...)
+; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case02, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07, RunBattleSetup_BankA0_Case01_WriteBattleArg1AndBattleResolveStepEtc, ...)
 ; reads: wBattleFoeCount
 ClearAndLayoutTileBlocksForBattleFoeCount::
 Func_031_72C9:: ; address name
@@ -8934,7 +8934,7 @@ Func_031_7379:: ; address name
     ret
 
 ; draws the HP, MP and status of the first one, two or three slots (by wD88F) (E-0122)
-; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 DrawPartySlotStatusPanels::
 Func_031_7389:: ; address name
@@ -9098,7 +9098,7 @@ Jump_031_7465::
     ret
 
 ; FillTilesFromRequest, then far-calls CopyRectRecord7345ToScreenBuffer (E-0119)
-; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, BuildBattleScreenBuffer, BattleEnd_Step5_Case00, ...)
+; 13 call sites from 13 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, BuildBattleScreenBuffer, BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, ...)
 ClearWindowAndCopyRect7345Far::
 Func_031_746F:: ; address name
     call FillTilesFromRequest
@@ -9186,7 +9186,7 @@ Func_031_74C8:: ; address name
     ret
 
 ; far-calls CopyRectRecord76ACToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_Case08_Sub01)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_Case08_ReadItemIdAndLinkRoleEtc)
 CopyRectRecord76ACToScreenBufferFar::
 Func_031_74DA:: ; address name
     farcall CopyRectRecord76ACToScreenBuffer
@@ -9421,17 +9421,17 @@ Jump_031_76D6::
     jr z, Jump_031_7710
     call DrawSlotStatusMarks_ReadWordTableEntryForSlotC
     bit 0, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03
     bit 1, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04
     bit 4, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06
     bit 5, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02
     bit 6, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07
     bit 7, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05
     jr Jump_031_773A
 
 Jump_031_7710::
@@ -9477,7 +9477,7 @@ Func_031_773C:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02::
 Func_031_774C:: ; address name
     push hl
     ld hl, Data_031_779B
@@ -9488,7 +9488,7 @@ Func_031_774C:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03::
 Func_031_7757:: ; address name
     push hl
     ld hl, Data_031_77A7
@@ -9499,7 +9499,7 @@ Func_031_7757:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04::
 Func_031_7762:: ; address name
     push hl
     ld hl, Data_031_77A7
@@ -9510,7 +9510,7 @@ Func_031_7762:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05::
 Func_031_776D:: ; address name
     push hl
     ld hl, Data_031_77AD
@@ -9521,7 +9521,7 @@ Func_031_776D:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06::
 Func_031_7778:: ; address name
     push hl
     ld hl, Data_031_77A1
@@ -9532,7 +9532,7 @@ Func_031_7778:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07::
 Func_031_7783:: ; address name
     push hl
     ld hl, Data_031_77B3
@@ -9542,7 +9542,7 @@ Func_031_7783:: ; address name
     ret
 
 ; HL = table: HL = the word at HL + 2 * (C & 3) (falls into DerefHL_Bank31) (E-0110)
-; 7 call sites from 7 routines (e.g. DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06, ...)
+; 7 call sites from 7 routines (e.g. DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06, ...)
 ReadWordTableEntryForSlotC::
 Func_031_778E:: ; address name
     ld a, c
@@ -9560,23 +9560,23 @@ Func_031_7797:: ; address name
     deref_hl
     ret
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02
 Data_031_779B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $39, $C2, $3F, $C2, $45, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06
 Data_031_77A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3A, $C2, $40, $C2, $46, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04
 Data_031_77A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3B, $C2, $41, $C2, $47, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05
 Data_031_77AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $C2, $42, $C2, $48, $C2
 
-; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07
+; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07
 Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $43, $C2, $49, $C2
 
@@ -10415,13 +10415,13 @@ Jump_031_7C1C::
     pop hl
     ret
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus240Gfx_31_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7C1E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_Case04_ReadLinkSetupMode, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus5F0Gfx_31_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7DFB:: ; address name

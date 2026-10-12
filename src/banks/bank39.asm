@@ -2,7 +2,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
-; 8 call sites from 7 routines (e.g. ChooseTargetForActor, PickRandomActionWhenUncontrolled, RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA_Case02, RunBattleStep4_Case00_Sub01_Case00, ...)
+; 8 call sites from 7 routines (e.g. ChooseTargetForActor, PickRandomActionWhenUncontrolled, RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA_Case02, RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc, ...)
 ; reads: wBattleActor, wLinkMode
 ; writes: wBattleActionId
 ; points at: wBattleActionChoice, wSlotAIMode
@@ -2993,7 +2993,7 @@ Jump_039_5553::
     inc e
     dec d
     jr nz, Jump_039_551C
-    call ChooseTarget_Heal_Sub01
+    call ChooseTarget_Heal_WriteTemp0AndTemp1Etc
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -3840,7 +3840,7 @@ Jump_039_5A7B::
     inc c
     dec b
     jr nz, Jump_039_5A40
-    call ChooseTarget_Cover_Sub01
+    call ChooseTarget_Cover_ReadBattleActorAndTemp0Etc
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
@@ -7591,7 +7591,7 @@ Jump_039_6EAE::
 ; reads: hTemp1, hTemp0, hTemp2, wBattleActor, wBattleTarget
 ; writes: hTemp0, hTemp1, hTemp2, wBattleTarget
 ; points at: wTargetEstimates, wBattleTemp7D, hTemp1, wBattleTargetChoice
-ChooseTarget_Heal_Sub01::
+ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
 Func_039_6EB6:: ; address name
     ld a, $00
     ldh [hTemp0], a
@@ -7840,7 +7840,7 @@ Jump_039_7022::
 ; 1 call site from 1 routine (e.g. ChooseTarget_Cover)
 ; reads: wBattleActor, hTemp0, hTemp5, hTemp4, hTemp3, hTempA
 ; points at: wBattleTargetChoice
-ChooseTarget_Cover_Sub01::
+ChooseTarget_Cover_ReadBattleActorAndTemp0Etc::
 Func_039_7028:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice

@@ -826,7 +826,7 @@ Jump_033_520E::
 ; only called from RunLinkSession6Exchange_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_LinkReceiveStepWithBuffer)
 ; reads: wLinkScreenState, wLinkScreenSubState, wFadeState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01::
+RunLinkSession6Exchange_Case01_ReadLinkScreenStateAndLinkScreenSubStateEtc::
 Func_033_5215:: ; address name
     ld a, [wLinkScreenState]
     or a, a
@@ -837,16 +837,16 @@ Func_033_5215:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep
     dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5
     dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case03
-    dw RunLinkSession6Exchange_Case01_Sub01_Case04
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
     dw RunLinkSession6Exchange_Case01_Sub01_Case06
     dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case07
-    dw RunLinkSession6Exchange_Case01_Sub01_Case08
-    dw RunLinkSession6Exchange_Case01_Sub01_Case09
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte_Case0A
     dw RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B
-    dw RunLinkSession6Exchange_Case01_Sub01_Case0C
-    dw RunLinkSession6Exchange_Case01_Sub01_Case0D
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D
 
 Jump_033_523B::
     ld a, [wFadeState]
@@ -1003,7 +1003,7 @@ Jump_033_531E::
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkScreenState, wScreenState
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_Case04::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc::
 Jump_033_5338:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1185,7 +1185,7 @@ Jump_033_5419::
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkScreenState, wScreenState
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_Case08::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08::
 Jump_033_5433:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1214,7 +1214,7 @@ Jump_033_5446::
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkScreenState, wScreenState
 ; points at: wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_Case09::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09::
 Jump_033_545B:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1325,7 +1325,7 @@ Jump_033_54ED::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkScreenSubState, wLinkSendByte, wLinkScreenState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01_Case0C::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc::
 Jump_033_5502:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -1355,7 +1355,7 @@ Jump_033_5515::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkScreenState, wLinkScreenSubState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01_Case0D::
+RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D::
 Jump_033_552A:: ; address name
     ld a, [wLinkMessage]
     cp a, $10
@@ -1379,7 +1379,7 @@ Jump_033_553C::
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
-; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case0C, RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B, RunLinkSession6Exchange_Case01_Sub01_Case09, RunLinkSession6Exchange_Case01_Sub01_Case08, ...)
+; 34 call sites from 19 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc, RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09, RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank07_Cat5::
 Func_033_5550:: ; address name

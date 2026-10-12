@@ -1826,7 +1826,7 @@ Func_010_49F5:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
-    dw ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Case01
+    dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
 
@@ -1856,7 +1856,7 @@ Func_010_4A1B:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
-    dw ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Case01
+    dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
 
@@ -1900,7 +1900,7 @@ Jump_010_4A62::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wTextWindowState, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Case01::
+ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
 Jump_010_4A67:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -1973,7 +1973,7 @@ Jump_010_4AC6::
     ret
 
 ; only called from ScriptCommand09_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Case01)
+; 1 call site from 1 routine (e.g. ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc)
 ; reads: wMessageMode, wMapType
 ; writes: wStringIndex, wStringCategory
 ScriptCommand09_Case01_WriteStringIndexAndStringCategory::

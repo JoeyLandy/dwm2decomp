@@ -5,7 +5,7 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 ; 1 call site from 1 routine (e.g. CallFunc4001InBank81KeepRegs)
 ; reads: wRecordBufB, wSpeciesRecord, wAIWeights
 ; writes: wAIWeights, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
-CallFunc4001InBank81KeepRegs_Sub01::
+CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
 Func_081_4001:: ; address name
     ld a, [wRecordBufB + $B]
     ld l, a
@@ -123,7 +123,7 @@ Jump_081_40D8::
     ret
 
 ; only called from CallFunc4001InBank81KeepRegs_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_Sub01)
+; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, wAIWeights
 ; points at: hTemp5
 CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::

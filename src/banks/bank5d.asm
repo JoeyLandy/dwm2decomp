@@ -145,7 +145,7 @@ WorldMapView10::
 Data_05D_43AC:: ; address name
     db $38, $39 ; id 0
 
-; address loaded by RunGameMode2State_CopyScrollToHardware_CopyScrollToHardware
+; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
 ; LZSS-compressed asset: 439 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_5D_43AE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_05D_43AE:: ; address name

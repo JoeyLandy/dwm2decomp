@@ -771,13 +771,13 @@ Func_0F0_4CA0:: ; address name
 Jump_0F0_4CB7::
     ld a, [wScreenState]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case01
-    dw RunLinkSession8Exchange_Case01_Sub01_Case02
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case02
     dw RunLinkSession8Exchange_Case01_Sub01_ToRunLinkSession8Case03Steps
     dw RunLinkSession8Exchange_Case01_Sub01_Case04
-    dw RunLinkSession8Exchange_Case01_Sub01_Case05
-    dw RunLinkSession8Exchange_Case01_Sub01_Case06
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05
+    dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06
     dw RunLinkSession8Exchange_Case01_Sub01_Case07
     dw RunLinkSession8Exchange_Case01_Sub01_Case08
     dw RunLinkSession8Exchange_Case01_Sub01_Case09
@@ -789,7 +789,7 @@ Jump_0F0_4CB7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case00::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc::
 Jump_0F0_4CD5:: ; address name
     ld a, [wLinkMessage]
     cp a, $BD
@@ -1059,7 +1059,7 @@ Jump_0F0_4E3D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case01::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01::
 Jump_0F0_4E54:: ; address name
     ld a, [wLinkMessage]
     cp a, $BD
@@ -1081,7 +1081,7 @@ Jump_0F0_4E6D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case02::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case02::
 Jump_0F0_4E71:: ; address name
     ld a, [wLinkMessage]
     cp a, $BD
@@ -1426,7 +1426,7 @@ Jump_0F0_5061::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case05::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05::
 Jump_0F0_507B:: ; address name
     ld a, [wLinkMessage]
     cp a, $BD
@@ -1618,7 +1618,7 @@ Jump_0F0_51A1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case06::
+RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06::
 Jump_0F0_51B8:: ; address name
     ld a, [wLinkMessage]
     cp a, $BD
@@ -2589,7 +2589,7 @@ Jump_0F0_56F8:: ; address name
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1C
+    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndSpriteSlotsEtc
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1E
     dw RunLinkSession8Exchange_Case01_Sub01_Case0A_CopyRectTo20ByteRows_BankF0
@@ -2888,7 +2888,7 @@ Jump_0F0_58FE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2, wSpriteSlots, wScreenSubStep
 ; writes: wObject2, wSpriteSlots, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1C::
+RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndSpriteSlotsEtc::
 Jump_0F0_590A:: ; address name
     ld a, [wObject2 + $D]
     res 1, a
@@ -2974,7 +2974,7 @@ Jump_0F0_5967:: ; address name
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteObject2AndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1C
+    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E
     dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
@@ -3106,7 +3106,7 @@ Jump_0F0_5A6C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject1, wObject2, wScreenSubStep
 ; writes: wSpriteSlots, wObject1, wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1C::
+RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc::
 Jump_0F0_5A73:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -3268,7 +3268,7 @@ Jump_0F0_5B4C::
     ret
 
 ; runs the routine for wD781 (jump table of ten) (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case01)
 ; reads: wScreenStep
 RunLinkSession8Case01Steps::
 Func_0F0_5B50:: ; address name
@@ -3606,16 +3606,16 @@ Func_0F0_5DE8:: ; address name
     dw RunLinkSession8Case03Steps_ClearBGMapAtScrollAndResetScroll_BankF0
     dw RunLinkSession8Case03Steps_WriteScreenStep
     dw RunLinkSession8Case03Steps_OrFromBankWaitVRAM
-    dw RunLinkSession8Case03Steps_FillTilesBxC_FillTilesBxC
+    dw RunLinkSession8Case03Steps_FillTilesBxC_Case03
     dw RunLinkSession8Case03Steps_UploadTilesFromData6D20
     dw RunLinkSession8Case03Steps_Case05_DrawRecordParentNames_Case05
     dw RunLinkSession8Case03Steps_DrawRect6x6From651BAtScroll41_BankF0
     dw RunLinkSession8Case03Steps_HandleListCursorInput_1D
     dw RunLinkSession8Case03Steps_FillTilesBxC
     dw ClearBGMapAtScrollAndResetScroll_BankF0
-    dw RunLinkSession8Case03Steps_WriteScreenStep_WriteScreenStep
+    dw RunLinkSession8Case03Steps_WriteScreenStep_Case0A
     dw RunLinkSession8Case03Steps_ShowString_BankF0
-    dw RunLinkSession8Case03Steps_FillTilesBxC_WriteScreenStep
+    dw RunLinkSession8Case03Steps_FillTilesBxC_Case0C
     dw RunLinkSession8Case03Steps_ClampRecordListPageCursor4
     dw RunLinkSession8Case03Steps_DrawRecordListPageSpeciesNames
     dw RunLinkSession8Case03Steps_DrawRecordListPageMarks
@@ -3728,7 +3728,7 @@ Jump_0F0_5E74:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPageIndex, wListCursor, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
-RunLinkSession8Case03Steps_FillTilesBxC_FillTilesBxC::
+RunLinkSession8Case03Steps_FillTilesBxC_Case03::
 Jump_0F0_5ECA:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $1304
@@ -3991,7 +3991,7 @@ Jump_0F0_607B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession8Case03Steps_WriteScreenStep_WriteScreenStep::
+RunLinkSession8Case03Steps_WriteScreenStep_Case0A::
 Jump_0F0_6096:: ; address name
     ld hl, TileCopyDestList_F0_64C2
     ld de, TileCopySrcList_F0_64D2
@@ -4040,7 +4040,7 @@ Jump_0F0_60A7:: ; address name
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-RunLinkSession8Case03Steps_FillTilesBxC_WriteScreenStep::
+RunLinkSession8Case03Steps_FillTilesBxC_Case0C::
 Jump_0F0_60E7:: ; address name
     ld hl, vTiles1 + $3F0
     ld bc, $0401
@@ -4290,7 +4290,7 @@ Func_0F0_6262:: ; address name
     ret
 
 ; only called from routines of RunLinkSession8Case03Steps (E-0098)
-; 3 call sites from 3 routines (e.g. RunLinkSession8Case03Steps_ShowString_BankF0, RunLinkSession8Case03Steps_WriteScreenStep_WriteScreenStep, RunLinkSession8Case03Steps_WriteScreenStep)
+; 3 call sites from 3 routines (e.g. RunLinkSession8Case03Steps_ShowString_BankF0, RunLinkSession8Case03Steps_WriteScreenStep_Case0A, RunLinkSession8Case03Steps_WriteScreenStep)
 ; writes: wGlyphListPos
 RunLinkSession8Case03Steps_WriteGlyphListPos::
 Func_0F0_627E:: ; address name
@@ -6645,7 +6645,7 @@ Jump_0F0_7281::
     ret
 
 ; wCEC2 += 1 up to $0F; when wCEC1 is set, runs Func_0F0_72C8 if a random value is below 100 - 5 * wCEC2; then wCEC1 = wD7F1 (E-0124)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case02_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case02_WriteArg1AndCounterPtr0LoEtc)
 ; reads: wRollCounter, wRollState, wArg1
 ; writes: wRollCounter, wRollState
 RollCounterChanceAndRunEvent::

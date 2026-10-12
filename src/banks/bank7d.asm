@@ -16,7 +16,7 @@ Data_07D_40FA:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F40FA, $E7
 
 ; compressed sprite graphics number $02 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_WriteSpriteSlots, DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM and 2 more
+; address loaded by RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06, DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM and 2 more
 ; LZSS-compressed asset: 220 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx02:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07D_41E1:: ; address name
@@ -453,7 +453,7 @@ Data_07D_7975:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F7975, $15F
 
 ; compressed sprite graphics number $49 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by RunSceneScriptSubStep_AddStepDeltaToPointedByte_AddStepDeltaToPointedByte, SceneWarubouFood2_RunMessageBox
+; address loaded by RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, SceneWarubouFood2_RunMessageBox
 ; LZSS-compressed asset: 185 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx49:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07D_7AD4:: ; address name
