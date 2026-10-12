@@ -455,1941 +455,2589 @@ Data_035_403B:: ; address name
 SpeciesRecords::
 SpeciesRecord_000:: ; heuristic: species record; C0
 Data_035_433B:: ; address name
-    db $FF, $00, $00, $00, $00, $00, $00, $00 ; id 0
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00
+    db $FF ; id 0: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $00, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $00, $00 ; bytes 40-46
 SpeciesRecord_DrakSlime:: ; heuristic: species record; C0
 Data_035_436A:: ; address name
-    db $00, $02, $00, $00, $04, $00, $2D, $0D ; id 1
-    db $3B, $40, $89, $00, $10, $0A, $0D, $08, $14, $10, $01, $01, $01, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $02, $02, $03, $02, $02, $01, $00, $01, $00, $00
-    db $00, $00, $00, $00, $00, $4F, $00
+    db $00 ; id 1: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3B, $40, $89, $00, $10, $0A, $0D, $08, $14, $10, $01, $01, $01, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $03, $02, $02, $01, $00, $01, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $4F, $00 ; bytes 40-46
 SpeciesRecord_SpotSlime:: ; heuristic: species record; C0
 Data_035_4399:: ; address name
-    db $00, $02, $00, $00, $03, $00, $23, $0A ; id 2
-    db $4E, $8B, $9E, $00, $11, $01, $11, $04, $11, $08, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $01
-    db $01, $01, $01, $01, $00, $41, $00
+    db $00 ; id 2: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $8B, $9E, $00, $11, $01, $11, $04, $11, $08, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $41, $00 ; bytes 40-46
 SpeciesRecord_WingSlime:: ; heuristic: species record; C0
 Data_035_43C8:: ; address name
-    db $00, $02, $01, $00, $04, $01, $23, $0A ; id 3
-    db $48, $62, $99, $00, $0D, $02, $0B, $0B, $18, $08, $00, $00, $00, $01, $01, $00
-    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01
-    db $01, $01, $01, $01, $00, $44, $00
+    db $00 ; id 3: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $48, $62, $99, $00, $0D, $02, $0B, $0B, $18, $08, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $44, $00 ; bytes 40-46
 SpeciesRecord_TreeSlime:: ; heuristic: species record; C0
 Data_035_43F7:: ; address name
-    db $00, $02, $00, $00, $04, $00, $32, $0B ; id 4
-    db $27, $60, $71, $00, $0D, $0B, $08, $0E, $11, $11, $00, $00, $00, $01, $01, $00
-    db $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01
-    db $01, $01, $00, $00, $02, $4B, $00
+    db $00 ; id 4: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $60, $71, $00, $0D, $0B, $08, $0E, $11, $11, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $02, $4B, $00 ; bytes 40-46
 SpeciesRecord_Snaily:: ; heuristic: species record; C0
 Data_035_4426:: ; address name
-    db $00, $02, $00, $00, $03, $00, $23, $08 ; id 5
-    db $10, $23, $4E, $00, $0B, $0A, $11, $14, $14, $08, $00, $00, $00, $00, $00, $00
-    db $02, $03, $02, $02, $03, $02, $02, $02, $02, $02, $00, $00, $01, $01, $01, $00
-    db $00, $00, $01, $01, $02, $4E, $00
+    db $00 ; id 5: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $23, $4E, $00, $0B, $0A, $11, $14, $14, $08, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $03, $02, $02, $03, $02, $02, $02, $02, $02, $00, $00, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $02, $4E, $00 ; bytes 40-46
 SpeciesRecord_SlimeNite:: ; heuristic: species record; C0
 Data_035_4455:: ; address name
-    db $00, $02, $00, $00, $04, $00, $28, $0F ; id 6
-    db $16, $25, $56, $00, $0E, $01, $0F, $0E, $14, $0E, $01, $01, $01, $01, $01, $01
-    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $01, $00, $00, $01, $00, $00
-    db $00, $00, $00, $00, $00, $4E, $00
+    db $00 ; id 6: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $25, $56, $00, $0E, $01, $0F, $0E, $14, $0E, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $01, $00, $00, $01, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $4E, $00 ; bytes 40-46
 SpeciesRecord_Babble:: ; heuristic: species record; C0
 Data_035_4484:: ; address name
-    db $00, $02, $00, $00, $04, $00, $2D, $0C ; id 7
-    db $2E, $5F, $80, $00, $11, $07, $11, $08, $0E, $0D, $00, $00, $00, $00, $00, $00
-    db $03, $03, $03, $02, $02, $03, $02, $02, $02, $02, $00, $00, $03, $01, $01, $00
-    db $00, $00, $00, $00, $01, $4A, $00
+    db $00 ; id 7: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2E, $5F, $80, $00, $11, $07, $11, $08, $0E, $0D, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $03, $03, $03, $02, $02, $03, $02, $02, $02, $02, $00, $00, $03, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $4A, $00 ; bytes 40-46
 SpeciesRecord_BoxSlime:: ; heuristic: species record; C0
 Data_035_44B3:: ; address name
-    db $00, $02, $00, $00, $03, $00, $32, $0B ; id 8
-    db $01, $25, $6F, $00, $0B, $0A, $0E, $13, $0E, $0D, $00, $00, $01, $00, $00, $01
-    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $01, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $48, $00
+    db $00 ; id 8: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $25, $6F, $00, $0B, $0A, $0E, $13, $0E, $0D, $00, $00, $01, $00, $00, $01 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $48, $00 ; bytes 40-46
 SpeciesRecord_PearlGel:: ; heuristic: species record; C0
 Data_035_44E2:: ; address name
-    db $00, $02, $00, $00, $04, $00, $28, $0A ; id 9
-    db $25, $68, $7F, $01, $0A, $10, $08, $16, $0E, $09, $00, $00, $00, $00, $00, $01
-    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $01, $00, $00, $00, $00
-    db $00, $00, $00, $00, $02, $46, $00
+    db $00 ; id 9: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $68, $7F, $01, $0A, $10, $08, $16, $0E, $09, $00, $00, $00, $00, $00, $01 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $46, $00 ; bytes 40-46
 SpeciesRecord_Slime:: ; heuristic: species record; C0
 Data_035_4511:: ; address name
-    db $00, $02, $00, $00, $01, $00, $28, $10 ; id 10
-    db $04, $3D, $7F, $00, $16, $0B, $0E, $11, $0B, $0D, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $46, $00
+    db $00 ; id 10: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $01, $00, $28 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $3D, $7F, $00, $16, $0B, $0E, $11, $0B, $0D, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $46, $00 ; bytes 40-46
 SpeciesRecord_Healer:: ; heuristic: species record; C0
 Data_035_4540:: ; address name
-    db $00, $02, $00, $00, $03, $00, $32, $0B ; id 11
-    db $16, $19, $25, $00, $0B, $0F, $0B, $0B, $14, $12, $00, $00, $00, $01, $01, $00
-    db $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01
-    db $02, $02, $00, $00, $00, $4E, $00
+    db $00 ; id 11: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $19, $25, $00, $0B, $0F, $0B, $0B, $14, $12, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $02, $02, $00, $00, $00, $4E, $00 ; bytes 40-46
 SpeciesRecord_FangSlime:: ; heuristic: species record; C0
 Data_035_456F:: ; address name
-    db $00, $02, $00, $00, $05, $00, $23, $0A ; id 12
-    db $4E, $68, $90, $00, $19, $01, $12, $0D, $14, $0D, $00, $00, $00, $00, $00, $00
-    db $02, $02, $03, $02, $02, $02, $03, $03, $03, $02, $00, $00, $00, $01, $00, $01
-    db $01, $01, $01, $01, $00, $54, $00
+    db $00 ; id 12: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $68, $90, $00, $19, $01, $12, $0D, $14, $0D, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $03, $03, $03, $02, $00, $00, $00, $01, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $54, $00 ; bytes 40-46
 SpeciesRecord_RockSlime:: ; heuristic: species record; C0
 Data_035_459E:: ; address name
-    db $00, $02, $00, $00, $05, $00, $2D, $0B ; id 13
-    db $6A, $6F, $94, $03, $0D, $0A, $0E, $17, $10, $0E, $00, $00, $01, $00, $00, $02
-    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $02, $00, $00, $01, $00
-    db $00, $00, $00, $00, $00, $51, $00
+    db $00 ; id 13: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6A, $6F, $94, $03, $0D, $0A, $0E, $17, $10, $0E, $00, $00, $01, $00, $00, $02 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $02, $00, $00, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $51, $00 ; bytes 40-46
 SpeciesRecord_SlimeBorg:: ; heuristic: species record; C0
 Data_035_45CD:: ; address name
-    db $00, $02, $00, $00, $05, $00, $32, $0B ; id 14
-    db $4A, $65, $96, $00, $12, $0B, $14, $0F, $0E, $0D, $01, $01, $00, $01, $02, $01
-    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $02, $01, $01, $00, $01, $00, $00
-    db $00, $00, $00, $00, $00, $57, $00
+    db $00 ; id 14: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4A, $65, $96, $00, $12, $0B, $14, $0F, $0E, $0D, $01, $01, $00, $01, $02, $01 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $02, $01, $01, $00, $01, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $57, $00 ; bytes 40-46
 SpeciesRecord_Slabbit:: ; heuristic: species record; C0
 Data_035_45FC:: ; address name
-    db $00, $03, $00, $00, $04, $00, $23, $0A ; id 15
-    db $7D, $8D, $A2, $00, $0F, $07, $0E, $08, $15, $0F, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $02
-    db $01, $01, $02, $01, $01, $4C, $00
+    db $00 ; id 15: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $7D, $8D, $A2, $00, $0F, $07, $0E, $08, $15, $0F, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $01, $01, $02, $01, $01, $4C, $00 ; bytes 40-46
 SpeciesRecord_KingSlime:: ; heuristic: species record; C0
 Data_035_462B:: ; address name
-    db $00, $02, $00, $00, $06, $00, $2D, $0C ; id 16
-    db $1B, $38, $1E, $00, $12, $0E, $0F, $0E, $14, $0F, $01, $01, $01, $01, $01, $01
-    db $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $01, $01, $01, $01
-    db $01, $01, $01, $01, $01, $67, $00
+    db $00 ; id 16: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $38, $1E, $00, $12, $0E, $0F, $0E, $14, $0F, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $67, $00 ; bytes 40-46
 SpeciesRecord_Metaly:: ; heuristic: species record; C0
 Data_035_465A:: ; address name
-    db $00, $01, $00, $01, $06, $00, $14, $19 ; id 17
-    db $01, $10, $13, $00, $00, $1E, $0B, $1E, $1F, $0D, $03, $03, $03, $03, $03, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $03, $03, $03, $03, $03, $00
-    db $00, $00, $03, $00, $03, $C8, $00
+    db $00 ; id 17: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $01, $06, $00, $14 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $10, $13, $00, $00, $1E, $0B, $1E, $1F, $0D, $03, $03, $03, $03, $03, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $03, $03, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $03, $00, $03, $C8, $00 ; bytes 40-46
 SpeciesRecord_Metabble:: ; heuristic: species record; C0
 Data_035_4689:: ; address name
-    db $00, $01, $00, $01, $06, $00, $23, $1B ; id 18
-    db $04, $07, $15, $00, $00, $1E, $0E, $1F, $1F, $0F, $03, $03, $03, $03, $03, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00
-    db $00, $00, $03, $00, $03, $BC, $02
+    db $00 ; id 18: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $01, $06, $00, $23 ; bytes 1-6
+    db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $07, $15, $00, $00, $1E, $0E, $1F, $1F, $0F, $03, $03, $03, $03, $03, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $03, $00, $03, $BC, $02 ; bytes 40-46
 SpeciesRecord_SpotKing:: ; heuristic: species record; C0
 Data_035_46B8:: ; address name
-    db $00, $03, $00, $00, $06, $00, $2D, $09 ; id 19
-    db $5C, $61, $93, $00, $12, $0B, $12, $0B, $14, $0F, $01, $01, $01, $00, $00, $01
-    db $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $00, $01, $00, $02
-    db $02, $02, $02, $02, $01, $67, $00
+    db $00 ; id 19: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $06, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5C, $61, $93, $00, $12, $0B, $12, $0B, $14, $0F, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $00, $01, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $67, $00 ; bytes 40-46
 SpeciesRecord_TropicGel:: ; heuristic: species record; C0
 Data_035_46E7:: ; address name
-    db $00, $02, $00, $00, $05, $00, $28, $0E ; id 20
-    db $1B, $71, $8B, $00, $0F, $14, $13, $09, $0E, $0F, $01, $01, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $4E, $00
+    db $00 ; id 20: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $71, $8B, $00, $0F, $14, $13, $09, $0E, $0F, $01, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $4E, $00 ; bytes 40-46
 SpeciesRecord_MimeSlime:: ; heuristic: species record; C0
 Data_035_4716:: ; address name
-    db $00, $02, $00, $00, $04, $00, $28, $11 ; id 21
-    db $34, $8F, $A1, $00, $0A, $0C, $08, $13, $14, $11, $01, $01, $01, $01, $00, $01
-    db $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $01, $01, $01, $00
-    db $00, $00, $00, $00, $01, $55, $00
+    db $00 ; id 21: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $34, $8F, $A1, $00, $0A, $0C, $08, $13, $14, $11, $01, $01, $01, $01, $00, $01 ; bytes 8-23
+    db $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $55, $00 ; bytes 40-46
 SpeciesRecord_HaloSlime:: ; heuristic: species record; C0
 Data_035_4745:: ; address name
-    db $00, $02, $01, $00, $05, $01, $23, $10 ; id 22
-    db $2F, $9C, $A0, $02, $09, $14, $0B, $0D, $0C, $16, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $02, $02
-    db $02, $02, $01, $00, $00, $52, $00
+    db $00 ; id 22: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $9C, $A0, $02, $09, $14, $0B, $0D, $0C, $16, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $02, $02 ; bytes 24-39
+    db $02, $02, $01, $00, $00, $52, $00 ; bytes 40-46
 SpeciesRecord_MetalKing:: ; heuristic: species record; C0
 Data_035_4774:: ; address name
-    db $00, $01, $00, $01, $06, $00, $37, $1D ; id 23
-    db $0D, $35, $3F, $00, $00, $1F, $0F, $1F, $1F, $12, $03, $03, $03, $03, $03, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00
-    db $00, $00, $03, $01, $03, $84, $03
+    db $00 ; id 23: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $01, $06, $00, $37 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $35, $3F, $00, $00, $1F, $0F, $1F, $1F, $12, $03, $03, $03, $03, $03, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $03, $01, $03, $84, $03 ; bytes 40-46
 SpeciesRecord_GoldSlime:: ; heuristic: species record; C0
 Data_035_47A3:: ; address name
-    db $00, $01, $00, $00, $06, $00, $46, $1F ; id 24
-    db $3C, $3E, $81, $03, $00, $1F, $13, $1F, $1F, $12, $03, $03, $03, $03, $03, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01
-    db $01, $01, $03, $02, $03, $9C, $00
+    db $00 ; id 24: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3C, $3E, $81, $03, $00, $1F, $13, $1F, $1F, $12, $03, $03, $03, $03, $03, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $01, $03, $02, $03, $9C, $00 ; bytes 40-46
 SpeciesRecord_GranSlime:: ; heuristic: species record; C0
 Data_035_47D2:: ; address name
-    db $00, $02, $00, $00, $06, $00, $50, $1E ; id 25
-    db $20, $8A, $A6, $02, $19, $1D, $1B, $1F, $06, $1F, $03, $03, $03, $03, $03, $03
-    db $01, $01, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $02, $03, $02
-    db $02, $02, $02, $03, $02, $A7, $00
+    db $00 ; id 25: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $20, $8A, $A6, $02, $19, $1D, $1B, $1F, $06, $1F, $03, $03, $03, $03, $03, $03 ; bytes 8-23
+    db $01, $01, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $02, $03, $02 ; bytes 24-39
+    db $02, $02, $02, $03, $02, $A7, $00 ; bytes 40-46
 SpeciesRecord_WonderEgg:: ; heuristic: species record; C0
 Data_035_4801:: ; address name
-    db $00, $02, $00, $00, $01, $00, $28, $04 ; id 26
-    db $15, $35, $3C, $00, $08, $0D, $0B, $13, $0B, $14, $01, $01, $01, $02, $01, $02
-    db $01, $02, $03, $01, $00, $03, $00, $00, $00, $00, $02, $01, $02, $02, $02, $02
-    db $02, $02, $01, $01, $03, $4D, $00
+    db $00 ; id 26: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $01, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $15, $35, $3C, $00, $08, $0D, $0B, $13, $0B, $14, $01, $01, $01, $02, $01, $02 ; bytes 8-23
+    db $01, $02, $03, $01, $00, $03, $00, $00, $00, $00, $02, $01, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $01, $01, $03, $4D, $00 ; bytes 40-46
 SpeciesRecord_Butch:: ; heuristic: species record; C0
 Data_035_4830:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 27
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01
-    db $01, $01, $01, $01, $02, $00, $00
+    db $00 ; id 27: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $00, $00 ; bytes 40-46
 SpeciesRecord_DragonKid:: ; heuristic: species record; C0
 Data_035_485F:: ; address name
-    db $01, $02, $00, $00, $04, $00, $1E, $07 ; id 28
-    db $40, $71, $95, $00, $0A, $03, $11, $02, $05, $05, $01, $02, $02, $00, $00, $02
-    db $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $30, $00
+    db $01 ; id 28: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $71, $95, $00, $0A, $03, $11, $02, $05, $05, $01, $02, $02, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $30, $00 ; bytes 40-46
 SpeciesRecord_Tortragon:: ; heuristic: species record; C0
 Data_035_488E:: ; address name
-    db $01, $02, $00, $00, $04, $00, $23, $11 ; id 29
-    db $35, $36, $4A, $03, $0F, $0B, $12, $06, $07, $0D, $02, $02, $02, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $01, $01, $02, $00, $02, $01, $00, $00, $00, $01
-    db $01, $01, $01, $01, $01, $3F, $00
+    db $01 ; id 29: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $35, $36, $4A, $03, $0F, $0B, $12, $06, $07, $0D, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $01, $01, $02, $00, $02, $01, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $3F, $00 ; bytes 40-46
 SpeciesRecord_Pteranod:: ; heuristic: species record; C0
 Data_035_48BD:: ; address name
-    db $01, $02, $01, $00, $03, $01, $23, $10 ; id 30
-    db $04, $48, $99, $02, $0E, $0B, $12, $02, $14, $04, $02, $02, $02, $01, $01, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01
-    db $01, $01, $01, $01, $00, $3A, $00
+    db $01 ; id 30: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $48, $99, $02, $0E, $0B, $12, $02, $14, $04, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $3A, $00 ; bytes 40-46
 SpeciesRecord_Gasgon:: ; heuristic: species record; C0
 Data_035_48EC:: ; address name
-    db $01, $02, $01, $00, $04, $01, $32, $12 ; id 31
-    db $15, $20, $6E, $02, $11, $0F, $0D, $0B, $07, $12, $02, $02, $02, $01, $01, $00
-    db $00, $00, $00, $01, $01, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01
-    db $01, $01, $00, $00, $00, $43, $00
+    db $01 ; id 31: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $32 ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $15, $20, $6E, $02, $11, $0F, $0D, $0B, $07, $12, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $01, $01, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_FairyDrak:: ; heuristic: species record; C0
 Data_035_491B:: ; address name
-    db $01, $03, $01, $00, $03, $01, $1E, $0F ; id 32
-    db $2E, $71, $8B, $00, $09, $0D, $11, $10, $0E, $04, $02, $02, $02, $00, $00, $00
-    db $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $01, $01, $01, $00
-    db $00, $00, $01, $01, $00, $3C, $00
+    db $01 ; id 32: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $01, $00, $03, $01, $1E ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2E, $71, $8B, $00, $09, $0D, $11, $10, $0E, $04, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $00, $3C, $00 ; bytes 40-46
 SpeciesRecord_LizardMan:: ; heuristic: species record; C0
 Data_035_494A:: ; address name
-    db $01, $02, $00, $00, $04, $00, $2D, $14 ; id 33
-    db $5D, $67, $6B, $05, $11, $0A, $13, $0D, $05, $10, $00, $02, $02, $01, $01, $01
-    db $01, $00, $02, $00, $00, $01, $00, $00, $03, $00, $02, $00, $00, $01, $02, $00
-    db $00, $00, $00, $00, $00, $43, $00
+    db $01 ; id 33: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5D, $67, $6B, $05, $11, $0A, $13, $0D, $05, $10, $00, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $01, $00, $02, $00, $00, $01, $00, $00, $03, $00, $02, $00, $00, $01, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_Poisongon:: ; heuristic: species record; C0
 Data_035_4979:: ; address name
-    db $01, $02, $00, $00, $03, $00, $2D, $13 ; id 34
-    db $5F, $73, $8B, $00, $15, $10, $0F, $0D, $07, $01, $00, $00, $00, $00, $00, $00
-    db $01, $01, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $02, $01, $01, $00
-    db $00, $00, $00, $00, $01, $3E, $00
+    db $01 ; id 34: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $2D ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5F, $73, $8B, $00, $15, $10, $0F, $0D, $07, $01, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $02, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $3E, $00 ; bytes 40-46
 SpeciesRecord_Swordgon:: ; heuristic: species record; C0
 Data_035_49A8:: ; address name
-    db $01, $02, $00, $00, $04, $00, $32, $14 ; id 35
-    db $5C, $65, $96, $05, $09, $03, $17, $06, $01, $05, $01, $01, $01, $00, $00, $01
-    db $01, $01, $01, $00, $00, $00, $00, $00, $03, $00, $02, $01, $01, $00, $01, $01
-    db $00, $00, $00, $00, $01, $31, $00
+    db $01 ; id 35: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5C, $65, $96, $05, $09, $03, $17, $06, $01, $05, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $00, $00, $00, $03, $00, $02, $01, $01, $00, $01, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $31, $00 ; bytes 40-46
 SpeciesRecord_Drygon:: ; heuristic: species record; C0
 Data_035_49D7:: ; address name
-    db $01, $02, $00, $00, $04, $00, $23, $10 ; id 36
-    db $27, $6F, $90, $00, $0B, $02, $13, $0D, $07, $05, $02, $02, $02, $00, $00, $00
-    db $00, $00, $01, $00, $00, $00, $00, $00, $03, $00, $02, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $33, $00
+    db $01 ; id 36: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $6F, $90, $00, $0B, $02, $13, $0D, $07, $05, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $00, $00, $03, $00, $02, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $33, $00 ; bytes 40-46
 SpeciesRecord_Dragon:: ; heuristic: species record; C0
 Data_035_4A06:: ; address name
-    db $01, $02, $00, $00, $03, $00, $28, $14 ; id 37
-    db $40, $50, $9D, $00, $11, $01, $14, $10, $07, $04, $02, $02, $02, $00, $00, $00
-    db $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $38, $00
+    db $01 ; id 37: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $50, $9D, $00, $11, $01, $14, $10, $07, $04, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $38, $00 ; bytes 40-46
 SpeciesRecord_MiniDrak:: ; heuristic: species record; C0
 Data_035_4A35:: ; address name
-    db $01, $02, $00, $00, $03, $00, $23, $10 ; id 38
-    db $4E, $6F, $7E, $00, $0E, $08, $11, $0E, $12, $0A, $00, $00, $00, $01, $01, $00
-    db $00, $00, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $01, $02, $02
-    db $01, $02, $01, $01, $01, $43, $00
+    db $01 ; id 38: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $6F, $7E, $00, $0E, $08, $11, $0E, $12, $0A, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $01, $02, $02 ; bytes 24-39
+    db $01, $02, $01, $01, $01, $43, $00 ; bytes 40-46
 SpeciesRecord_MadDragon:: ; heuristic: species record; C0
 Data_035_4A64:: ; address name
-    db $01, $02, $00, $00, $05, $00, $23, $13 ; id 39
-    db $6B, $6C, $7A, $00, $13, $00, $15, $05, $08, $00, $01, $01, $00, $00, $00, $00
-    db $00, $01, $00, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $01, $02
-    db $02, $01, $02, $02, $01, $3E, $00
+    db $01 ; id 39: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6B, $6C, $7A, $00, $13, $00, $15, $05, $08, $00, $01, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $01, $02 ; bytes 24-39
+    db $02, $01, $02, $02, $01, $3E, $00 ; bytes 40-46
 SpeciesRecord_Rayburn:: ; heuristic: species record; C0
 Data_035_4A93:: ; address name
-    db $01, $02, $01, $00, $04, $01, $23, $11 ; id 40
-    db $51, $5A, $5F, $02, $0E, $02, $11, $10, $0F, $05, $02, $02, $02, $02, $02, $00
-    db $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $01, $00, $00, $00, $00
-    db $02, $01, $02, $01, $01, $45, $00
+    db $01 ; id 40: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $51, $5A, $5F, $02, $0E, $02, $11, $10, $0F, $05, $02, $02, $02, $02, $02, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $02, $01, $02, $01, $01, $45, $00 ; bytes 40-46
 SpeciesRecord_Chamelgon:: ; heuristic: species record; C0
 Data_035_4AC2:: ; address name
-    db $01, $02, $00, $00, $04, $00, $28, $13 ; id 41
-    db $34, $60, $72, $00, $11, $12, $0B, $06, $08, $0D, $01, $02, $02, $00, $00, $00
-    db $00, $00, $02, $01, $00, $03, $00, $00, $03, $00, $03, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $3D, $00
+    db $01 ; id 41: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $34, $60, $72, $00, $11, $12, $0B, $06, $08, $0D, $01, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $02, $01, $00, $03, $00, $00, $03, $00, $03, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $3D, $00 ; bytes 40-46
 SpeciesRecord_LizardFly:: ; heuristic: species record; C0
 Data_035_4AF1:: ; address name
-    db $01, $02, $01, $00, $03, $01, $1E, $10 ; id 42
-    db $04, $27, $40, $00, $0B, $0B, $11, $11, $0D, $05, $01, $02, $02, $00, $00, $00
-    db $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $03, $00, $01, $01, $01, $00
-    db $00, $00, $01, $01, $00, $3C, $00
+    db $01 ; id 42: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $1E ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $27, $40, $00, $0B, $0B, $11, $11, $0D, $05, $01, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $03, $00, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $00, $3C, $00 ; bytes 40-46
 SpeciesRecord_Andreal:: ; heuristic: species record; C0
 Data_035_4B20:: ; address name
-    db $01, $02, $00, $00, $05, $00, $32, $16 ; id 43
-    db $0A, $2E, $73, $05, $15, $0F, $13, $11, $13, $0C, $02, $02, $02, $00, $00, $00
-    db $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01
-    db $01, $01, $00, $00, $01, $55, $00
+    db $01 ; id 43: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $2E, $73, $05, $15, $0F, $13, $11, $13, $0C, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $01, $55, $00 ; bytes 40-46
 SpeciesRecord_KingCobra:: ; heuristic: species record; C0
 Data_035_4B4F:: ; address name
-    db $01, $02, $00, $00, $03, $00, $28, $14 ; id 44
-    db $5F, $75, $79, $00, $12, $08, $10, $0D, $13, $0B, $01, $02, $02, $00, $00, $00
-    db $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $02, $00, $02, $00
-    db $00, $00, $00, $00, $01, $49, $00
+    db $01 ; id 44: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5F, $75, $79, $00, $12, $08, $10, $0D, $13, $0B, $01, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $02, $00, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $49, $00 ; bytes 40-46
 SpeciesRecord_Vampirus:: ; heuristic: species record; C0
 Data_035_4B7E:: ; address name
-    db $01, $02, $01, $00, $03, $01, $23, $08 ; id 45
-    db $0A, $4E, $63, $02, $0E, $07, $0A, $08, $13, $08, $01, $02, $02, $01, $00, $00
-    db $01, $01, $01, $00, $00, $00, $00, $01, $02, $00, $02, $00, $01, $00, $01, $01
-    db $00, $00, $00, $00, $00, $37, $00
+    db $01 ; id 45: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $23 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $4E, $63, $02, $0E, $07, $0A, $08, $13, $08, $01, $02, $02, $01, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $00, $00, $01, $02, $00, $02, $00, $01, $00, $01, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $37, $00 ; bytes 40-46
 SpeciesRecord_SnakeBat:: ; heuristic: species record; C0
 Data_035_4BAD:: ; address name
-    db $01, $02, $01, $00, $03, $01, $23, $07 ; id 46
-    db $4B, $8B, $A7, $02, $0A, $09, $15, $0F, $09, $08, $02, $02, $02, $01, $01, $00
-    db $00, $02, $00, $00, $01, $00, $00, $00, $02, $00, $01, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $38, $00
+    db $01 ; id 46: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $23 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4B, $8B, $A7, $02, $0A, $09, $15, $0F, $09, $08, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $01, $00, $00, $00, $02, $00, $01, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $38, $00 ; bytes 40-46
 SpeciesRecord_Spikerous:: ; heuristic: species record; C0
 Data_035_4BDC:: ; address name
-    db $01, $02, $00, $00, $04, $00, $23, $13 ; id 47
-    db $4B, $6E, $70, $03, $14, $08, $13, $18, $01, $02, $02, $02, $02, $00, $00, $00
-    db $00, $01, $01, $00, $00, $01, $00, $00, $03, $00, $02, $00, $01, $01, $01, $00
-    db $00, $00, $01, $01, $01, $45, $00
+    db $01 ; id 47: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4B, $6E, $70, $03, $14, $08, $13, $18, $01, $02, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $01, $00, $00, $01, $00, $00, $03, $00, $02, $00, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $01, $45, $00 ; bytes 40-46
 SpeciesRecord_GreatDrak:: ; heuristic: species record; C0
 Data_035_4C0B:: ; address name
-    db $01, $02, $00, $00, $06, $00, $3C, $17 ; id 48
-    db $44, $53, $9D, $02, $15, $05, $17, $0E, $10, $0B, $02, $03, $02, $01, $01, $01
-    db $01, $02, $03, $01, $01, $02, $01, $01, $03, $00, $03, $01, $01, $03, $01, $01
-    db $01, $01, $01, $01, $01, $64, $00
+    db $01 ; id 48: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $44, $53, $9D, $02, $15, $05, $17, $0E, $10, $0B, $02, $03, $02, $01, $01, $01 ; bytes 8-23
+    db $01, $02, $03, $01, $01, $02, $01, $01, $03, $00, $03, $01, $01, $03, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $64, $00 ; bytes 40-46
 SpeciesRecord_Crestpent:: ; heuristic: species record; C0
 Data_035_4C3A:: ; address name
-    db $01, $02, $00, $00, $01, $00, $23, $12 ; id 49
-    db $33, $3B, $5F, $00, $0E, $04, $0F, $05, $13, $08, $02, $02, $02, $01, $01, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $02
-    db $02, $01, $01, $01, $01, $3B, $00
+    db $01 ; id 49: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $01, $00, $23 ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $33, $3B, $5F, $00, $0E, $04, $0F, $05, $13, $08, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $01, $01, $01, $01, $3B, $00 ; bytes 40-46
 SpeciesRecord_WingSnake:: ; heuristic: species record; C0
 Data_035_4C69:: ; address name
-    db $01, $02, $00, $00, $03, $00, $2D, $14 ; id 50
-    db $62, $6A, $73, $00, $0F, $08, $14, $11, $0E, $0B, $03, $03, $02, $01, $01, $00
-    db $00, $00, $02, $00, $01, $00, $00, $00, $03, $00, $03, $00, $00, $00, $00, $02
-    db $02, $01, $01, $01, $00, $4E, $00
+    db $01 ; id 50: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $2D ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $62, $6A, $73, $00, $0F, $08, $14, $11, $0E, $0B, $03, $03, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $02, $00, $01, $00, $00, $00, $03, $00, $03, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $01, $01, $01, $00, $4E, $00 ; bytes 40-46
 SpeciesRecord_Coatol:: ; heuristic: species record; C0
 Data_035_4C98:: ; address name
-    db $01, $02, $00, $00, $05, $00, $3C, $17 ; id 51
-    db $07, $52, $6B, $00, $19, $0E, $14, $16, $12, $0E, $02, $02, $02, $01, $01, $01
-    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $01, $03, $01, $01, $01, $01, $02
-    db $02, $01, $01, $01, $02, $6C, $00
+    db $01 ; id 51: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $3C ; bytes 1-6
+    db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $52, $6B, $00, $19, $0E, $14, $16, $12, $0E, $02, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $01, $03, $01, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $01, $01, $01, $02, $6C, $00 ; bytes 40-46
 SpeciesRecord_Orochi:: ; heuristic: species record; C0
 Data_035_4CC7:: ; address name
-    db $01, $01, $00, $00, $06, $00, $3C, $16 ; id 52
-    db $40, $50, $63, $00, $18, $0D, $18, $15, $0B, $08, $02, $02, $02, $01, $01, $01
-    db $02, $02, $02, $01, $01, $03, $01, $01, $03, $00, $03, $01, $02, $02, $02, $01
-    db $01, $01, $01, $01, $02, $6C, $00
+    db $01 ; id 52: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $50, $63, $00, $18, $0D, $18, $15, $0B, $08, $02, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $03, $01, $01, $03, $00, $03, $01, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $6C, $00 ; bytes 40-46
 SpeciesRecord_BattleRex:: ; heuristic: species record; C0
 Data_035_4CF6:: ; address name
-    db $01, $02, $00, $00, $05, $00, $3C, $16 ; id 53
-    db $40, $5E, $6B, $05, $17, $10, $1A, $14, $11, $10, $02, $02, $02, $02, $02, $01
-    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $01
-    db $01, $01, $01, $01, $01, $6D, $00
+    db $01 ; id 53: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $3C ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $5E, $6B, $05, $17, $10, $1A, $14, $11, $10, $02, $02, $02, $02, $02, $01 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $6D, $00 ; bytes 40-46
 SpeciesRecord_SkyDragon:: ; heuristic: species record; C0
 Data_035_4D25:: ; address name
-    db $01, $03, $01, $00, $06, $01, $28, $12 ; id 54
-    db $40, $66, $89, $02, $0F, $0B, $14, $0E, $12, $08, $00, $00, $00, $02, $02, $01
-    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $02
-    db $02, $02, $02, $02, $01, $61, $00
+    db $01 ; id 54: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $01, $00, $06, $01, $28 ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $66, $89, $02, $0F, $0B, $14, $0E, $12, $08, $00, $00, $00, $02, $02, $01 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $61, $00 ; bytes 40-46
 SpeciesRecord_Serpentia:: ; heuristic: species record; C0
 Data_035_4D54:: ; address name
-    db $01, $02, $00, $00, $05, $00, $37, $18 ; id 55
-    db $54, $5A, $65, $00, $17, $07, $18, $15, $12, $08, $02, $02, $02, $01, $01, $00
-    db $02, $02, $02, $01, $01, $02, $01, $01, $03, $00, $02, $00, $01, $01, $01, $01
-    db $01, $01, $02, $02, $02, $67, $00
+    db $01 ; id 55: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $37 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $54, $5A, $65, $00, $17, $07, $18, $15, $12, $08, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $02, $01, $01, $03, $00, $02, $00, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $02, $67, $00 ; bytes 40-46
 SpeciesRecord_Divinegon:: ; heuristic: species record; C0
 Data_035_4D83:: ; address name
-    db $01, $02, $01, $00, $06, $01, $46, $1C ; id 56
-    db $3E, $44, $9F, $02, $1A, $19, $1C, $18, $14, $17, $02, $03, $03, $02, $02, $02
-    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $01, $03, $02, $02, $03, $02, $02
-    db $02, $02, $02, $02, $01, $96, $00
+    db $01 ; id 56: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $06, $01, $46 ; bytes 1-6
+    db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $44, $9F, $02, $1A, $19, $1C, $18, $14, $17, $02, $03, $03, $02, $02, $02 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $01, $03, $02, $02, $03, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $96, $00 ; bytes 40-46
 SpeciesRecord_Orligon:: ; heuristic: species record; C0
 Data_035_4DB2:: ; address name
-    db $01, $02, $00, $00, $06, $00, $4B, $1D ; id 57
-    db $2D, $6E, $94, $03, $19, $18, $1C, $19, $15, $18, $03, $03, $03, $02, $02, $01
-    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $00, $03, $02, $02, $02, $02, $02
-    db $02, $02, $02, $02, $02, $99, $00
+    db $01 ; id 57: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $4B ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $6E, $94, $03, $19, $18, $1C, $19, $15, $18, $03, $03, $03, $02, $02, $01 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $03, $02, $02, $03, $00, $03, $02, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $02, $99, $00 ; bytes 40-46
 SpeciesRecord_GigaDraco:: ; heuristic: species record; C0
 Data_035_4DE1:: ; address name
-    db $01, $01, $00, $00, $06, $01, $46, $18 ; id 58
-    db $40, $4B, $6C, $03, $1E, $18, $1D, $0C, $06, $0B, $00, $00, $00, $00, $00, $00
-    db $02, $02, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $03, $02, $02, $01
-    db $01, $02, $02, $02, $01, $7A, $00
+    db $01 ; id 58: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $01, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $4B, $6C, $03, $1E, $18, $1D, $0C, $06, $0B, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $03, $02, $02, $01 ; bytes 24-39
+    db $01, $02, $02, $02, $01, $7A, $00 ; bytes 40-46
 SpeciesRecord_Tonguella:: ; heuristic: species record; C0
 Data_035_4E10:: ; address name
-    db $02, $02, $00, $00, $04, $00, $28, $0C ; id 59
-    db $61, $71, $8B, $00, $0E, $05, $0F, $0C, $0B, $10, $00, $00, $00, $00, $00, $00
-    db $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $44, $00
+    db $02 ; id 59: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $61, $71, $8B, $00, $0E, $05, $0F, $0C, $0B, $10, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_Almiraj:: ; heuristic: species record; C0
 Data_035_4E3F:: ; address name
-    db $02, $03, $00, $00, $03, $00, $2D, $0D ; id 60
-    db $2F, $68, $6E, $00, $12, $05, $0E, $09, $0F, $04, $01, $01, $01, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $01, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $3B, $00
+    db $02 ; id 60: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $03, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $68, $6E, $00, $12, $05, $0E, $09, $0F, $04, $01, $01, $01, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $01, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $3B, $00 ; bytes 40-46
 SpeciesRecord_CatFly:: ; heuristic: species record; C0
 Data_035_4E6E:: ; address name
-    db $02, $02, $01, $00, $04, $01, $23, $0A ; id 61
-    db $2B, $33, $76, $00, $0B, $0A, $0D, $08, $12, $0E, $00, $00, $00, $01, $01, $00
-    db $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $01, $01, $03
-    db $03, $03, $03, $03, $00, $40, $00
+    db $02 ; id 61: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2B, $33, $76, $00, $0B, $0A, $0D, $08, $12, $0E, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $01, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $00, $40, $00 ; bytes 40-46
 SpeciesRecord_PillowRat:: ; heuristic: species record; C0
 Data_035_4E9D:: ; address name
-    db $02, $02, $00, $00, $04, $00, $23, $0B ; id 62
-    db $2B, $6F, $7D, $00, $0E, $11, $08, $08, $13, $0D, $00, $00, $00, $01, $01, $00
-    db $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $01, $44, $00
+    db $02 ; id 62: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2B, $6F, $7D, $00, $0E, $11, $08, $08, $13, $0D, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_Saccer:: ; heuristic: species record; C0
 Data_035_4ECC:: ; address name
-    db $02, $02, $00, $00, $03, $00, $28, $09 ; id 63
-    db $25, $69, $72, $00, $10, $05, $09, $11, $00, $0D, $00, $00, $00, $00, $00, $00
-    db $00, $01, $00, $00, $00, $01, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $03, $03, $01, $3A, $00
+    db $02 ; id 63: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $69, $72, $00, $10, $05, $09, $11, $00, $0D, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $01, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $03, $03, $01, $3A, $00 ; bytes 40-46
 SpeciesRecord_GulpBeast:: ; heuristic: species record; C0
 Data_035_4EFB:: ; address name
-    db $02, $02, $00, $00, $04, $00, $2D, $0D ; id 64
-    db $6C, $6F, $90, $00, $18, $01, $1A, $0D, $07, $01, $01, $01, $01, $01, $01, $01
-    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $47, $00
+    db $02 ; id 64: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6C, $6F, $90, $00, $18, $01, $1A, $0D, $07, $01, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $47, $00 ; bytes 40-46
 SpeciesRecord_Skullroo:: ; heuristic: species record; C0
 Data_035_4F2A:: ; address name
-    db $02, $02, $00, $00, $04, $00, $2D, $0C ; id 65
-    db $68, $78, $A8, $00, $0E, $0A, $0B, $08, $10, $02, $00, $00, $00, $00, $00, $00
-    db $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $02, $02, $01, $3C, $00
+    db $02 ; id 65: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $68, $78, $A8, $00, $0E, $0A, $0B, $08, $10, $02, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $3C, $00 ; bytes 40-46
 SpeciesRecord_WindBeast:: ; heuristic: species record; C0
 Data_035_4F59:: ; address name
-    db $02, $02, $00, $00, $04, $00, $32, $0C ; id 66
-    db $0A, $10, $51, $02, $0D, $14, $0D, $0F, $0F, $0D, $00, $00, $00, $02, $00, $01
-    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $48, $00
+    db $02 ; id 66: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $10, $51, $02, $0D, $14, $0D, $0F, $0F, $0D, $00, $00, $00, $02, $00, $01 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_Beavern:: ; heuristic: species record; C0
 Data_035_4F88:: ; address name
-    db $02, $02, $00, $00, $03, $00, $28, $0E ; id 67
-    db $10, $68, $91, $00, $16, $08, $08, $15, $0A, $07, $00, $00, $00, $01, $00, $02
-    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $02, $44, $00
+    db $02 ; id 67: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $68, $91, $00, $16, $08, $08, $15, $0A, $07, $00, $00, $00, $01, $00, $02 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_Antbear:: ; heuristic: species record; C0
 Data_035_4FB7:: ; address name
-    db $02, $02, $00, $00, $02, $00, $28, $08 ; id 68
-    db $5E, $62, $8B, $00, $0E, $07, $11, $0B, $09, $0B, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $38, $00
+    db $02 ; id 68: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $02, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5E, $62, $8B, $00, $0E, $07, $11, $0B, $09, $0B, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $38, $00 ; bytes 40-46
 SpeciesRecord_SuperTen:: ; heuristic: species record; C0
 Data_035_4FE6:: ; address name
-    db $02, $02, $00, $00, $04, $00, $2D, $09 ; id 69
-    db $79, $7C, $9E, $00, $12, $07, $0D, $0C, $0B, $07, $00, $00, $00, $00, $00, $00
-    db $01, $02, $01, $00, $00, $02, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $02, $02, $01, $43, $00
+    db $02 ; id 69: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $79, $7C, $9E, $00, $12, $07, $0D, $0C, $0B, $07, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $02, $01, $00, $00, $02, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $43, $00 ; bytes 40-46
 SpeciesRecord_IronTurt:: ; heuristic: species record; C0
 Data_035_5015:: ; address name
-    db $02, $02, $00, $00, $04, $00, $2D, $0A ; id 70
-    db $39, $94, $97, $03, $12, $05, $11, $17, $02, $0B, $01, $01, $01, $00, $00, $01
-    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $02, $02, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $47, $00
+    db $02 ; id 70: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $39, $94, $97, $03, $12, $05, $11, $17, $02, $0B, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $02, $02, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $47, $00 ; bytes 40-46
 SpeciesRecord_Mommonja:: ; heuristic: species record; C0
 Data_035_5044:: ; address name
-    db $02, $02, $00, $00, $03, $00, $23, $09 ; id 71
-    db $7A, $93, $A8, $00, $0E, $0B, $10, $0E, $14, $08, $00, $00, $00, $01, $01, $00
-    db $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $03, $03, $01, $48, $00
+    db $02 ; id 71: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $7A, $93, $A8, $00, $0E, $0B, $10, $0E, $14, $08, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_HammerMan:: ; heuristic: species record; C0
 Data_035_5073:: ; address name
-    db $02, $02, $00, $00, $03, $00, $32, $0B ; id 72
-    db $68, $6B, $70, $03, $11, $13, $11, $0B, $11, $0A, $00, $00, $00, $01, $01, $00
-    db $00, $00, $00, $02, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $01, $4F, $00
+    db $02 ; id 72: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $68, $6B, $70, $03, $11, $13, $11, $0B, $11, $0A, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $01, $4F, $00 ; bytes 40-46
 SpeciesRecord_Grizzly:: ; heuristic: species record; C0
 Data_035_50A2:: ; address name
-    db $02, $01, $00, $00, $05, $00, $2D, $0E ; id 73
-    db $62, $63, $8D, $00, $14, $00, $1B, $07, $09, $01, $01, $01, $01, $01, $01, $01
-    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03
-    db $02, $02, $03, $02, $01, $42, $00
+    db $02 ; id 73: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $62, $63, $8D, $00, $14, $00, $1B, $07, $09, $01, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $02, $02, $03, $02, $01, $42, $00 ; bytes 40-46
 SpeciesRecord_Yeti:: ; heuristic: species record; C0
 Data_035_50D1:: ; address name
-    db $02, $02, $00, $00, $05, $00, $28, $0D ; id 74
-    db $10, $53, $90, $00, $12, $0B, $0F, $09, $0A, $08, $01, $01, $01, $01, $01, $02
-    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $03, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $48, $00
+    db $02 ; id 74: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $53, $90, $00, $12, $0B, $0F, $09, $0A, $08, $01, $01, $01, $01, $01, $02 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $03, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_ArrowDog:: ; heuristic: species record; C0
 Data_035_5100:: ; address name
-    db $02, $02, $01, $00, $04, $01, $28, $05 ; id 75
-    db $01, $4E, $93, $00, $09, $07, $15, $13, $0D, $0E, $00, $00, $00, $00, $00, $00
-    db $00, $01, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02
-    db $02, $02, $02, $02, $00, $40, $00
+    db $02 ; id 75: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $4E, $93, $00, $09, $07, $15, $13, $0D, $0E, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $40, $00 ; bytes 40-46
 SpeciesRecord_NoctoKing:: ; heuristic: species record; C0
 Data_035_512F:: ; address name
-    db $02, $02, $01, $00, $04, $01, $28, $0D ; id 76
-    db $2E, $71, $84, $02, $16, $0D, $12, $0F, $14, $08, $00, $00, $00, $00, $00, $00
-    db $00, $00, $01, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02
-    db $02, $02, $02, $02, $00, $4B, $00
+    db $02 ; id 76: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2E, $71, $84, $02, $16, $0D, $12, $0F, $14, $08, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $01, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $4B, $00 ; bytes 40-46
 SpeciesRecord_BeastNite:: ; heuristic: species record; C0
 Data_035_515E:: ; address name
-    db $02, $02, $00, $00, $05, $00, $28, $08 ; id 77
-    db $2F, $65, $67, $05, $15, $04, $16, $0E, $08, $06, $00, $00, $00, $01, $00, $00
-    db $00, $02, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $43, $00
+    db $02 ; id 77: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $65, $67, $05, $15, $04, $16, $0E, $08, $06, $00, $00, $00, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_MadGopher:: ; heuristic: species record; C0
 Data_035_518D:: ; address name
-    db $02, $02, $00, $00, $03, $00, $28, $0C ; id 78
-    db $57, $5B, $A6, $00, $0E, $0D, $11, $09, $08, $0B, $01, $01, $00, $00, $00, $01
-    db $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $01, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $42, $00
+    db $02 ; id 78: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $57, $5B, $A6, $00, $0E, $0D, $11, $09, $08, $0B, $01, $01, $00, $00, $00, $01 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $01, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $42, $00 ; bytes 40-46
 SpeciesRecord_FairyRat:: ; heuristic: species record; C0
 Data_035_51BC:: ; address name
-    db $02, $03, $01, $00, $04, $01, $2D, $0B ; id 79
-    db $2B, $2E, $54, $00, $0C, $05, $0D, $0E, $11, $07, $01, $01, $01, $00, $00, $01
-    db $00, $01, $00, $00, $00, $01, $02, $02, $01, $00, $01, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $40, $00
+    db $02 ; id 79: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $01, $00, $04, $01, $2D ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2B, $2E, $54, $00, $0C, $05, $0D, $0E, $11, $07, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $01, $02, $02, $01, $00, $01, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $40, $00 ; bytes 40-46
 SpeciesRecord_Unicorn:: ; heuristic: species record; C0
 Data_035_51EB:: ; address name
-    db $02, $02, $00, $00, $05, $00, $32, $0E ; id 80
-    db $16, $1E, $A7, $02, $13, $15, $0E, $0D, $0C, $19, $00, $00, $00, $00, $00, $00
-    db $01, $02, $02, $01, $01, $02, $03, $03, $01, $01, $00, $02, $00, $01, $01, $03
-    db $02, $02, $03, $02, $02, $63, $00
+    db $02 ; id 80: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $1E, $A7, $02, $13, $15, $0E, $0D, $0C, $19, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $02, $03, $03, $01, $01, $00, $02, $00, $01, $01, $03 ; bytes 24-39
+    db $02, $02, $03, $02, $02, $63, $00 ; bytes 40-46
 SpeciesRecord_Goategon:: ; heuristic: species record; C0
 Data_035_521A:: ; address name
-    db $02, $02, $00, $00, $04, $00, $28, $0B ; id 81
-    db $04, $2B, $71, $00, $13, $09, $11, $0D, $11, $03, $00, $01, $01, $00, $00, $02
-    db $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $01, $02, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $50, $00
+    db $02 ; id 81: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $2B, $71, $00, $13, $09, $11, $0D, $11, $03, $00, $01, $01, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $01, $02, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $50, $00 ; bytes 40-46
 SpeciesRecord_WildApe:: ; heuristic: species record; C0
 Data_035_5249:: ; address name
-    db $02, $02, $00, $00, $05, $00, $23, $0D ; id 82
-    db $6D, $7D, $A7, $00, $0D, $01, $14, $0A, $08, $04, $00, $00, $00, $01, $01, $00
-    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $03, $03, $01, $40, $00
+    db $02 ; id 82: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6D, $7D, $A7, $00, $0D, $01, $14, $0A, $08, $04, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $40, $00 ; bytes 40-46
 SpeciesRecord_Trumpeter:: ; heuristic: species record; C0
 Data_035_5278:: ; address name
-    db $02, $02, $00, $00, $05, $00, $32, $0E ; id 83
-    db $6E, $7E, $90, $03, $11, $08, $15, $11, $0E, $0D, $00, $01, $01, $01, $01, $01
-    db $00, $00, $02, $00, $00, $01, $02, $03, $01, $00, $00, $01, $00, $00, $00, $03
-    db $03, $03, $03, $03, $01, $58, $00
+    db $02 ; id 83: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6E, $7E, $90, $03, $11, $08, $15, $11, $0E, $0D, $00, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $01, $02, $03, $01, $00, $00, $01, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $58, $00 ; bytes 40-46
 SpeciesRecord_KingLeo:: ; heuristic: species record; C0
 Data_035_52A7:: ; address name
-    db $02, $01, $00, $00, $06, $00, $3C, $0F ; id 84
-    db $04, $44, $63, $00, $14, $0E, $18, $17, $11, $0E, $01, $01, $01, $02, $02, $01
-    db $01, $01, $03, $01, $01, $02, $03, $03, $03, $01, $01, $02, $01, $02, $01, $03
-    db $03, $03, $03, $03, $01, $7C, $00
+    db $02 ; id 84: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $44, $63, $00, $14, $0E, $18, $17, $11, $0E, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $02, $03, $03, $03, $01, $01, $02, $01, $02, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $7C, $00 ; bytes 40-46
 SpeciesRecord_DarkHorn:: ; heuristic: species record; C0
 Data_035_52D6:: ; address name
-    db $02, $02, $00, $00, $05, $00, $32, $0D ; id 85
-    db $2F, $33, $69, $00, $11, $04, $13, $12, $0A, $0C, $01, $01, $00, $00, $00, $01
-    db $01, $02, $03, $01, $03, $01, $03, $03, $03, $01, $01, $01, $00, $02, $01, $03
-    db $03, $03, $03, $03, $01, $64, $00
+    db $02 ; id 85: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $33, $69, $00, $11, $04, $13, $12, $0A, $0C, $01, $01, $00, $00, $00, $01 ; bytes 8-23
+    db $01, $02, $03, $01, $03, $01, $03, $03, $03, $01, $01, $01, $00, $02, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $64, $00 ; bytes 40-46
 SpeciesRecord_MadCat:: ; heuristic: species record; C0
 Data_035_5305:: ; address name
-    db $02, $02, $00, $00, $05, $00, $28, $0C ; id 86
-    db $51, $62, $8D, $00, $0F, $07, $12, $0E, $11, $0B, $01, $01, $01, $00, $00, $01
-    db $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $01, $01, $00, $01, $00, $03
-    db $02, $02, $02, $02, $01, $53, $00
+    db $02 ; id 86: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $51, $62, $8D, $00, $0F, $07, $12, $0E, $11, $0B, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $01, $01, $00, $01, $00, $03 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $53, $00 ; bytes 40-46
 SpeciesRecord_BigEye:: ; heuristic: species record; C0
 Data_035_5334:: ; address name
-    db $02, $02, $00, $00, $04, $00, $28, $0B ; id 87
-    db $10, $44, $A1, $00, $0E, $08, $0E, $0B, $07, $09, $01, $01, $01, $01, $01, $01
-    db $00, $01, $03, $00, $02, $00, $02, $02, $03, $00, $00, $00, $00, $01, $00, $02
-    db $02, $02, $02, $02, $01, $48, $00
+    db $02 ; id 87: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $44, $A1, $00, $0E, $08, $0E, $0B, $07, $09, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $01, $03, $00, $02, $00, $02, $02, $03, $00, $00, $00, $00, $01, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_Gorago:: ; heuristic: species record; C0
 Data_035_5363:: ; address name
-    db $02, $02, $00, $00, $06, $00, $41, $1D ; id 88
-    db $07, $6C, $80, $00, $1D, $1C, $1E, $18, $18, $06, $02, $02, $02, $01, $01, $02
-    db $02, $02, $02, $02, $02, $01, $03, $03, $03, $01, $01, $02, $02, $01, $01, $03
-    db $03, $02, $02, $02, $02, $90, $00
+    db $02 ; id 88: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $41 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $6C, $80, $00, $1D, $1C, $1E, $18, $18, $06, $02, $02, $02, $01, $01, $02 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $01, $03, $03, $03, $01, $01, $02, $02, $01, $01, $03 ; bytes 24-39
+    db $03, $02, $02, $02, $02, $90, $00 ; bytes 40-46
 SpeciesRecord_CatMage:: ; heuristic: species record; C0
 Data_035_5392:: ; address name
-    db $02, $02, $00, $00, $03, $00, $28, $04 ; id 89
-    db $01, $2E, $3A, $00, $07, $06, $0A, $04, $06, $0F, $00, $00, $00, $00, $00, $00
-    db $01, $00, $02, $01, $02, $02, $01, $01, $00, $00, $00, $00, $00, $02, $03, $00
-    db $03, $00, $00, $00, $00, $3D, $00
+    db $02 ; id 89: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $2E, $3A, $00, $07, $06, $0A, $04, $06, $0F, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $00, $02, $01, $02, $02, $01, $01, $00, $00, $00, $00, $00, $02, $03, $00 ; bytes 24-39
+    db $03, $00, $00, $00, $00, $3D, $00 ; bytes 40-46
 SpeciesRecord_Dumbira:: ; heuristic: species record; C0
 Data_035_53C1:: ; address name
-    db $02, $02, $00, $00, $04, $00, $2D, $07 ; id 90
-    db $5E, $65, $6D, $05, $0F, $0A, $09, $08, $0E, $07, $00, $00, $01, $00, $00, $02
-    db $02, $01, $03, $00, $00, $01, $02, $02, $01, $00, $01, $02, $01, $01, $01, $03
-    db $01, $02, $02, $02, $01, $49, $00
+    db $02 ; id 90: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5E, $65, $6D, $05, $0F, $0A, $09, $08, $0E, $07, $00, $00, $01, $00, $00, $02 ; bytes 8-23
+    db $02, $01, $03, $00, $00, $01, $02, $02, $01, $00, $01, $02, $01, $01, $01, $03 ; bytes 24-39
+    db $01, $02, $02, $02, $01, $49, $00 ; bytes 40-46
 SpeciesRecord_Picky:: ; heuristic: species record; C0
 Data_035_53F0:: ; address name
-    db $03, $02, $00, $00, $04, $00, $28, $04 ; id 91
-    db $27, $2E, $58, $00, $0B, $0C, $0E, $08, $12, $0D, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $44, $00
+    db $03 ; id 91: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $2E, $58, $00, $0B, $0C, $0E, $08, $12, $0D, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $44, $00 ; bytes 40-46
 SpeciesRecord_Wyvern:: ; heuristic: species record; C0
 Data_035_541F:: ; address name
-    db $03, $02, $01, $00, $04, $01, $2D, $06 ; id 92
-    db $16, $2F, $44, $02, $11, $0D, $13, $0B, $10, $14, $01, $01, $01, $02, $02, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $4C, $00
+    db $03 ; id 92: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $2D ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $2F, $44, $02, $11, $0D, $13, $0B, $10, $14, $01, $01, $01, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $4C, $00 ; bytes 40-46
 SpeciesRecord_BullBird:: ; heuristic: species record; C0
 Data_035_544E:: ; address name
-    db $03, $02, $00, $00, $04, $00, $23, $05 ; id 93
-    db $59, $68, $6F, $00, $0E, $08, $11, $09, $06, $04, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $03, $03, $00, $3B, $00
+    db $03 ; id 93: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $59, $68, $6F, $00, $0E, $08, $11, $09, $06, $04, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $00, $3B, $00 ; bytes 40-46
 SpeciesRecord_Florajay:: ; heuristic: species record; C0
 Data_035_547D:: ; address name
-    db $03, $02, $01, $00, $03, $01, $32, $05 ; id 94
-    db $29, $56, $A0, $00, $06, $12, $0C, $03, $15, $13, $00, $00, $00, $03, $03, $00
-    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $00, $43, $00
+    db $03 ; id 94: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $32 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $29, $56, $A0, $00, $06, $12, $0C, $03, $15, $13, $00, $00, $00, $03, $03, $00 ; bytes 8-23
+    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_DuckKite:: ; heuristic: species record; C0
 Data_035_54AC:: ; address name
-    db $03, $02, $01, $00, $05, $01, $1E, $03 ; id 95
-    db $2F, $34, $75, $00, $0B, $0B, $09, $0C, $12, $07, $00, $00, $00, $02, $02, $00
-    db $00, $01, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $03, $03, $00, $43, $00
+    db $03 ; id 95: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $1E ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $34, $75, $00, $0B, $0B, $09, $0C, $12, $07, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $01, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $03, $03, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_MadPecker:: ; heuristic: species record; C0
 Data_035_54DB:: ; address name
-    db $03, $02, $00, $00, $04, $00, $28, $04 ; id 96
-    db $0A, $27, $51, $00, $09, $07, $14, $0E, $17, $0D, $01, $01, $01, $03, $03, $01
-    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $4B, $00
+    db $03 ; id 96: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $27, $51, $00, $09, $07, $14, $0E, $17, $0D, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $4B, $00 ; bytes 40-46
 SpeciesRecord_MadRaven:: ; heuristic: species record; C0
 Data_035_550A:: ; address name
-    db $03, $02, $01, $00, $04, $01, $28, $05 ; id 97
-    db $6A, $99, $A8, $00, $06, $0E, $11, $0C, $12, $05, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $02, $02, $00, $3F, $00
+    db $03 ; id 97: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6A, $99, $A8, $00, $06, $0E, $11, $0C, $12, $05, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $3F, $00 ; bytes 40-46
 SpeciesRecord_MistyWing:: ; heuristic: species record; C0
 Data_035_5539:: ; address name
-    db $03, $02, $01, $00, $04, $01, $32, $05 ; id 98
-    db $38, $80, $A6, $02, $0C, $11, $08, $0F, $16, $0D, $00, $00, $00, $02, $02, $01
-    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02
-    db $02, $02, $02, $02, $01, $48, $00
+    db $03 ; id 98: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $32 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $38, $80, $A6, $02, $0C, $11, $08, $0F, $16, $0D, $00, $00, $00, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_AquaHawk:: ; heuristic: species record; C0
 Data_035_5568:: ; address name
-    db $03, $02, $01, $00, $05, $01, $28, $0C ; id 99
-    db $24, $62, $9B, $00, $07, $08, $06, $0D, $0E, $13, $00, $00, $00, $02, $02, $02
-    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02
-    db $02, $02, $02, $02, $02, $41, $00
+    db $03 ; id 99: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $24, $62, $9B, $00, $07, $08, $06, $0D, $0E, $13, $00, $00, $00, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $02, $41, $00 ; bytes 40-46
 SpeciesRecord_Dracky:: ; heuristic: species record; C0
 Data_035_5597:: ; address name
-    db $03, $02, $01, $00, $02, $01, $32, $02 ; id 100
-    db $21, $2F, $32, $00, $0B, $04, $08, $0D, $11, $0B, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $34, $00
+    db $03 ; id 100: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $02, $01, $32 ; bytes 1-6
+    db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $21, $2F, $32, $00, $0B, $04, $08, $0D, $11, $0B, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $34, $00 ; bytes 40-46
 SpeciesRecord_KiteHawk:: ; heuristic: species record; C0
 Data_035_55C6:: ; address name
-    db $03, $02, $01, $00, $04, $01, $28, $05 ; id 101
-    db $39, $75, $99, $02, $0D, $08, $08, $07, $09, $01, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02
-    db $02, $02, $02, $02, $00, $31, $00
+    db $03 ; id 101: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $39, $75, $99, $02, $0D, $08, $08, $07, $09, $01, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $31, $00 ; bytes 40-46
 SpeciesRecord_BigRoost:: ; heuristic: species record; C0
 Data_035_55F5:: ; address name
-    db $03, $02, $01, $00, $03, $01, $28, $03 ; id 102
-    db $51, $7E, $95, $00, $08, $05, $0E, $0C, $11, $08, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $34, $00
+    db $03 ; id 102: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $28 ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $51, $7E, $95, $00, $08, $05, $0E, $0C, $11, $08, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $34, $00 ; bytes 40-46
 SpeciesRecord_StubBird:: ; heuristic: species record; C0
 Data_035_5624:: ; address name
-    db $03, $02, $00, $00, $04, $00, $28, $06 ; id 103
-    db $2D, $58, $65, $00, $10, $0C, $14, $14, $0E, $0B, $00, $00, $00, $02, $02, $02
-    db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $54, $00
+    db $03 ; id 103: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $58, $65, $00, $10, $0C, $14, $14, $0E, $0B, $00, $00, $00, $02, $02, $02 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $54, $00 ; bytes 40-46
 SpeciesRecord_LandOwl:: ; heuristic: species record; C0
 Data_035_5653:: ; address name
-    db $03, $02, $00, $00, $04, $00, $23, $05 ; id 104
-    db $0A, $52, $7D, $00, $0F, $0A, $15, $0D, $0B, $12, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $00, $01, $01, $03
-    db $03, $03, $03, $03, $01, $51, $00
+    db $03 ; id 104: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $52, $7D, $00, $0F, $0A, $15, $0D, $0B, $12, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $00, $01, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $51, $00 ; bytes 40-46
 SpeciesRecord_MadGoose:: ; heuristic: species record; C0
 Data_035_5682:: ; address name
-    db $03, $02, $01, $00, $03, $01, $1E, $03 ; id 105
-    db $16, $48, $7A, $00, $11, $06, $11, $0F, $14, $08, $00, $00, $00, $02, $02, $00
-    db $00, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $01, $01, $02
-    db $02, $02, $03, $03, $01, $4D, $00
+    db $03 ; id 105: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $1E ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $48, $7A, $00, $11, $06, $11, $0F, $14, $08, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $03, $03, $01, $4D, $00 ; bytes 40-46
 SpeciesRecord_MadCondor:: ; heuristic: species record; C0
 Data_035_56B1:: ; address name
-    db $03, $02, $01, $00, $04, $01, $2D, $06 ; id 106
-    db $04, $19, $66, $02, $0E, $0B, $12, $0C, $11, $0D, $01, $01, $00, $02, $02, $01
-    db $00, $00, $02, $00, $01, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $4E, $00
+    db $03 ; id 106: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $2D ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $19, $66, $02, $0E, $0B, $12, $0C, $11, $0D, $01, $01, $00, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $02, $00, $01, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $4E, $00 ; bytes 40-46
 SpeciesRecord_Emyu:: ; heuristic: species record; C0
 Data_035_56E0:: ; address name
-    db $03, $02, $00, $00, $04, $00, $28, $04 ; id 107
-    db $48, $7C, $A7, $00, $09, $0D, $14, $13, $17, $1E, $00, $00, $00, $03, $02, $00
-    db $01, $00, $01, $02, $02, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $59, $00
+    db $03 ; id 107: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $48, $7C, $A7, $00, $09, $0D, $14, $13, $17, $1E, $00, $00, $00, $03, $02, $00 ; bytes 8-23
+    db $01, $00, $01, $02, $02, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $59, $00 ; bytes 40-46
 SpeciesRecord_Blizzardy:: ; heuristic: species record; C0
 Data_035_570F:: ; address name
-    db $03, $01, $01, $00, $05, $01, $32, $07 ; id 108
-    db $13, $44, $53, $02, $14, $07, $0B, $11, $13, $0B, $01, $01, $00, $02, $02, $03
-    db $00, $00, $02, $00, $00, $01, $00, $00, $01, $00, $01, $03, $00, $01, $00, $02
-    db $02, $02, $02, $02, $01, $54, $00
+    db $03 ; id 108: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $01, $00, $05, $01, $32 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $44, $53, $02, $14, $07, $0B, $11, $13, $0B, $01, $01, $00, $02, $02, $03 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $01, $00, $00, $01, $00, $01, $03, $00, $01, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $54, $00 ; bytes 40-46
 SpeciesRecord_Phoenix:: ; heuristic: species record; C0
 Data_035_573E:: ; address name
-    db $03, $03, $01, $00, $06, $01, $32, $07 ; id 109
-    db $40, $62, $99, $00, $10, $0D, $13, $08, $13, $0C, $02, $02, $02, $01, $01, $00
-    db $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $03, $00, $00, $01, $00, $03
-    db $03, $03, $02, $02, $00, $54, $00
+    db $03 ; id 109: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $01, $00, $06, $01, $32 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $62, $99, $00, $10, $0D, $13, $08, $13, $0C, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $03, $00, $00, $01, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $00, $54, $00 ; bytes 40-46
 SpeciesRecord_ZapBird:: ; heuristic: species record; C0
 Data_035_576D:: ; address name
-    db $03, $02, $01, $00, $05, $01, $32, $07 ; id 110
-    db $3F, $4A, $52, $02, $14, $07, $13, $11, $16, $0C, $01, $01, $01, $03, $03, $01
-    db $00, $00, $01, $02, $00, $02, $00, $00, $01, $00, $01, $01, $00, $01, $00, $02
-    db $02, $02, $02, $02, $00, $5A, $00
+    db $03 ; id 110: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $32 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3F, $4A, $52, $02, $14, $07, $13, $11, $16, $0C, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $00, $00, $01, $02, $00, $02, $00, $00, $01, $00, $01, $01, $00, $01, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $5A, $00 ; bytes 40-46
 SpeciesRecord_Garudian:: ; heuristic: species record; C0
 Data_035_579C:: ; address name
-    db $03, $02, $01, $00, $05, $01, $32, $08 ; id 111
-    db $0A, $48, $5D, $02, $0A, $07, $08, $0E, $16, $09, $01, $01, $01, $02, $02, $01
-    db $03, $00, $03, $00, $02, $00, $00, $00, $01, $01, $01, $01, $02, $03, $03, $03
-    db $02, $02, $02, $02, $00, $46, $00
+    db $03 ; id 111: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $32 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $48, $5D, $02, $0A, $07, $08, $0E, $16, $09, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $03, $00, $03, $00, $02, $00, $00, $00, $01, $01, $01, $01, $02, $03, $03, $03 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $46, $00 ; bytes 40-46
 SpeciesRecord_WhipBird:: ; heuristic: species record; C0
 Data_035_57CB:: ; address name
-    db $03, $02, $01, $00, $06, $01, $3C, $0F ; id 112
-    db $35, $84, $85, $03, $1B, $13, $0C, $14, $17, $17, $01, $01, $01, $02, $02, $01
-    db $01, $01, $02, $00, $00, $01, $00, $00, $02, $00, $01, $01, $00, $02, $00, $02
-    db $02, $02, $02, $02, $00, $67, $00
+    db $03 ; id 112: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $06, $01, $3C ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $35, $84, $85, $03, $1B, $13, $0C, $14, $17, $17, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $01, $01, $02, $00, $00, $01, $00, $00, $02, $00, $01, $01, $00, $02, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $67, $00 ; bytes 40-46
 SpeciesRecord_FunkyBird:: ; heuristic: species record; C0
 Data_035_57FA:: ; address name
-    db $03, $02, $00, $00, $05, $00, $32, $05 ; id 113
-    db $78, $7B, $7C, $00, $0E, $14, $08, $09, $10, $14, $00, $00, $00, $03, $03, $00
-    db $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03
-    db $03, $03, $02, $02, $01, $54, $00
+    db $03 ; id 113: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $78, $7B, $7C, $00, $0E, $14, $08, $09, $10, $14, $00, $00, $00, $03, $03, $00 ; bytes 8-23
+    db $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $01, $54, $00 ; bytes 40-46
 SpeciesRecord_RainHawk:: ; heuristic: species record; C0
 Data_035_5829:: ; address name
-    db $03, $01, $00, $00, $06, $00, $46, $18 ; id 114
-    db $3D, $81, $94, $02, $19, $1B, $0F, $18, $12, $18, $02, $02, $02, $03, $02, $02
-    db $01, $01, $02, $01, $01, $03, $03, $01, $03, $01, $02, $03, $01, $02, $01, $03
-    db $03, $03, $03, $03, $01, $8A, $00
+    db $03 ; id 114: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3D, $81, $94, $02, $19, $1B, $0F, $18, $12, $18, $02, $02, $02, $03, $02, $02 ; bytes 8-23
+    db $01, $01, $02, $01, $01, $03, $03, $01, $03, $01, $02, $03, $01, $02, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $01, $8A, $00 ; bytes 40-46
 SpeciesRecord_Azurile:: ; heuristic: species record; C0
 Data_035_5858:: ; address name
-    db $03, $02, $01, $00, $06, $01, $4B, $1C ; id 115
-    db $3F, $9F, $A0, $02, $1B, $18, $18, $0C, $18, $0C, $02, $02, $02, $03, $03, $02
-    db $01, $01, $02, $02, $02, $03, $02, $02, $02, $02, $03, $03, $03, $01, $01, $03
-    db $03, $03, $03, $03, $02, $90, $00
+    db $03 ; id 115: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $06, $01, $4B ; bytes 1-6
+    db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3F, $9F, $A0, $02, $1B, $18, $18, $0C, $18, $0C, $02, $02, $02, $03, $03, $02 ; bytes 8-23
+    db $01, $01, $02, $02, $02, $03, $02, $02, $02, $02, $03, $03, $03, $01, $01, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $02, $90, $00 ; bytes 40-46
 SpeciesRecord_Shantak:: ; heuristic: species record; C0
 Data_035_5887:: ; address name
-    db $03, $02, $01, $00, $06, $01, $3C, $16 ; id 116
-    db $19, $40, $9D, $02, $18, $16, $12, $14, $18, $16, $01, $01, $01, $02, $02, $02
-    db $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $02, $02, $02, $03
-    db $03, $03, $03, $03, $02, $84, $00
+    db $03 ; id 116: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $06, $01, $3C ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $19, $40, $9D, $02, $18, $16, $12, $14, $18, $16, $01, $01, $01, $02, $02, $02 ; bytes 8-23
+    db $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $02, $02, $02, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $02, $84, $00 ; bytes 40-46
 SpeciesRecord_CragDevil:: ; heuristic: species record; C0
 Data_035_58B6:: ; address name
-    db $03, $02, $00, $00, $01, $00, $23, $04 ; id 117
-    db $0A, $34, $A8, $00, $07, $08, $0D, $05, $0E, $0B, $00, $00, $00, $00, $00, $03
-    db $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $03, $00, $01, $00, $02
-    db $01, $01, $00, $00, $02, $8A, $00
+    db $03 ; id 117: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $01, $00, $23 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $34, $A8, $00, $07, $08, $0D, $05, $0E, $0B, $00, $00, $00, $00, $00, $03 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $03, $00, $01, $00, $02 ; bytes 24-39
+    db $01, $01, $00, $00, $02, $8A, $00 ; bytes 40-46
 SpeciesRecord_MadPlant:: ; heuristic: species record; C0
 Data_035_58E5:: ; address name
-    db $04, $02, $00, $00, $04, $00, $28, $0A ; id 118
-    db $23, $27, $2B, $00, $0F, $18, $0B, $0D, $06, $12, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $03, $03, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $02, $4C, $00
+    db $04 ; id 118: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $23, $27, $2B, $00, $0F, $18, $0B, $0D, $06, $12, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $03, $03, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $4C, $00 ; bytes 40-46
 SpeciesRecord_FireWeed:: ; heuristic: species record; C0
 Data_035_5914:: ; address name
-    db $04, $02, $00, $00, $03, $00, $2D, $0F ; id 119
-    db $01, $22, $72, $00, $0E, $1A, $0A, $0C, $05, $11, $01, $01, $01, $02, $02, $00
-    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $02, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $01, $48, $00
+    db $04 ; id 119: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $2D ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $22, $72, $00, $0E, $1A, $0A, $0C, $05, $11, $01, $01, $01, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $02, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $01, $48, $00 ; bytes 40-46
 SpeciesRecord_FloraMan:: ; heuristic: species record; C0
 Data_035_5943:: ; address name
-    db $04, $02, $00, $00, $04, $00, $28, $07 ; id 120
-    db $04, $21, $24, $00, $11, $14, $06, $09, $02, $13, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $02, $02, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $02, $44, $00
+    db $04 ; id 120: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $21, $24, $00, $11, $14, $06, $09, $02, $13, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_WingTree:: ; heuristic: species record; C0
 Data_035_5972:: ; address name
-    db $04, $02, $01, $00, $04, $01, $23, $07 ; id 121
-    db $20, $5B, $A4, $02, $0C, $14, $06, $0B, $0E, $07, $00, $00, $00, $03, $03, $00
-    db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $01, $41, $00
+    db $04 ; id 121: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $20, $5B, $A4, $02, $0C, $14, $06, $0B, $0E, $07, $00, $00, $00, $03, $03, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $01, $41, $00 ; bytes 40-46
 SpeciesRecord_CactiBall:: ; heuristic: species record; C0
 Data_035_59A1:: ; address name
-    db $04, $02, $00, $00, $01, $00, $1E, $06 ; id 122
-    db $60, $6A, $76, $00, $12, $12, $0C, $0F, $09, $05, $00, $00, $00, $02, $02, $00
-    db $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $01, $01, $02, $44, $00
+    db $04 ; id 122: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $01, $00, $1E ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $60, $6A, $76, $00, $12, $12, $0C, $0F, $09, $05, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $01, $01, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_Gulpple:: ; heuristic: species record; C0
 Data_035_59D0:: ; address name
-    db $04, $02, $00, $00, $03, $00, $28, $0B ; id 123
-    db $61, $6A, $71, $00, $10, $11, $09, $06, $02, $0E, $01, $01, $01, $02, $02, $01
-    db $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $02, $3C, $00
+    db $04 ; id 123: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $61, $6A, $71, $00, $10, $11, $09, $06, $02, $0E, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $3C, $00 ; bytes 40-46
 SpeciesRecord_Toadstool:: ; heuristic: species record; C0
 Data_035_59FF:: ; address name
-    db $04, $02, $00, $00, $03, $00, $2D, $09 ; id 124
-    db $61, $71, $93, $00, $0E, $12, $08, $09, $0D, $0D, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $00, $00, $02, $44, $00
+    db $04 ; id 124: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $61, $71, $93, $00, $0E, $12, $08, $09, $0D, $0D, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_AmberWeed:: ; heuristic: species record; C0
 Data_035_5A2E:: ; address name
-    db $04, $02, $00, $00, $04, $00, $32, $0C ; id 125
-    db $2D, $38, $39, $00, $0C, $18, $08, $11, $0C, $0A, $00, $00, $00, $02, $02, $01
-    db $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02
-    db $02, $02, $00, $00, $02, $47, $00
+    db $04 ; id 125: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $38, $39, $00, $0C, $18, $08, $11, $0C, $0A, $00, $00, $00, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $47, $00 ; bytes 40-46
 SpeciesRecord_Slurperon:: ; heuristic: species record; C0
 Data_035_5A5D:: ; address name
-    db $04, $02, $00, $00, $04, $00, $28, $03 ; id 126
-    db $2F, $76, $8B, $00, $08, $05, $07, $02, $07, $02, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $00, $00, $02, $2A, $00
+    db $04 ; id 126: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $76, $8B, $00, $08, $05, $07, $02, $07, $02, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $2A, $00 ; bytes 40-46
 SpeciesRecord_Stubsuck:: ; heuristic: species record; C0
 Data_035_5A8C:: ; address name
-    db $04, $02, $00, $00, $05, $00, $28, $08 ; id 127
-    db $2F, $5B, $A4, $00, $11, $0B, $04, $02, $09, $0E, $00, $00, $00, $02, $02, $00
-    db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $02, $03, $02
-    db $02, $02, $00, $00, $02, $33, $00
+    db $04 ; id 127: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $5B, $A4, $00, $11, $0B, $04, $02, $09, $0E, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $02, $03, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $33, $00 ; bytes 40-46
 SpeciesRecord_Oniono:: ; heuristic: species record; C0
 Data_035_5ABB:: ; address name
-    db $04, $02, $00, $00, $04, $00, $23, $09 ; id 128
-    db $32, $68, $71, $00, $0D, $14, $0E, $0B, $03, $10, $00, $00, $00, $02, $02, $00
-    db $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $01, $01, $02, $44, $00
+    db $04 ; id 128: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $68, $71, $00, $0D, $14, $0E, $0B, $03, $10, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $01, $01, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_DanceVegi:: ; heuristic: species record; C0
 Data_035_5AEA:: ; address name
-    db $04, $02, $00, $00, $03, $00, $28, $0C ; id 129
-    db $79, $7A, $7D, $00, $0B, $15, $07, $06, $14, $0B, $01, $01, $00, $02, $02, $01
-    db $00, $00, $02, $03, $02, $01, $00, $00, $01, $00, $01, $01, $00, $01, $01, $02
-    db $03, $03, $00, $00, $02, $47, $00
+    db $04 ; id 129: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $79, $7A, $7D, $00, $0B, $15, $07, $06, $14, $0B, $01, $01, $00, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $02, $03, $02, $01, $00, $00, $01, $00, $01, $01, $00, $01, $01, $02 ; bytes 24-39
+    db $03, $03, $00, $00, $02, $47, $00 ; bytes 40-46
 SpeciesRecord_TreeBoy:: ; heuristic: species record; C0
 Data_035_5B19:: ; address name
-    db $04, $02, $00, $00, $03, $00, $28, $0B ; id 130
-    db $1B, $24, $7C, $00, $0F, $12, $08, $03, $0C, $0F, $01, $01, $01, $03, $03, $01
-    db $00, $01, $02, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $02, $49, $00
+    db $04 ; id 130: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $24, $7C, $00, $0F, $12, $08, $03, $0C, $0F, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $00, $01, $02, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $49, $00 ; bytes 40-46
 SpeciesRecord_Devipine:: ; heuristic: species record; C0
 Data_035_5B48:: ; address name
-    db $04, $02, $00, $00, $04, $00, $28, $0A ; id 131
-    db $13, $71, $73, $00, $0E, $07, $08, $04, $05, $03, $01, $01, $01, $02, $02, $00
-    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $01, $00, $01, $00, $00, $02
-    db $02, $02, $00, $00, $02, $34, $00
+    db $04 ; id 131: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $71, $73, $00, $0E, $07, $08, $04, $05, $03, $01, $01, $01, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $01, $00, $01, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $34, $00 ; bytes 40-46
 SpeciesRecord_FaceTree:: ; heuristic: species record; C0
 Data_035_5B77:: ; address name
-    db $04, $02, $00, $00, $05, $00, $2D, $09 ; id 132
-    db $33, $75, $76, $00, $0C, $14, $0B, $08, $0A, $11, $00, $00, $00, $02, $02, $00
-    db $01, $02, $02, $02, $02, $01, $00, $00, $03, $00, $00, $00, $01, $02, $02, $02
-    db $02, $02, $00, $00, $02, $51, $00
+    db $04 ; id 132: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $33, $75, $76, $00, $0C, $14, $0B, $08, $0A, $11, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $02, $02, $02, $02, $01, $00, $00, $03, $00, $00, $00, $01, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $51, $00 ; bytes 40-46
 SpeciesRecord_HerbMan:: ; heuristic: species record; C0
 Data_035_5BA6:: ; address name
-    db $04, $02, $00, $00, $05, $00, $28, $0D ; id 133
-    db $75, $8A, $92, $00, $13, $11, $07, $0A, $0F, $17, $00, $00, $00, $03, $03, $00
-    db $00, $00, $02, $02, $02, $00, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03
-    db $03, $03, $01, $01, $02, $58, $00
+    db $04 ; id 133: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $75, $8A, $92, $00, $13, $11, $07, $0A, $0F, $17, $00, $00, $00, $03, $03, $00 ; bytes 8-23
+    db $00, $00, $02, $02, $02, $00, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $02, $58, $00 ; bytes 40-46
 SpeciesRecord_BeanMan:: ; heuristic: species record; C0
 Data_035_5BD5:: ; address name
-    db $04, $02, $00, $00, $04, $00, $23, $0A ; id 134
-    db $2D, $32, $A9, $00, $0E, $0F, $0C, $0E, $0F, $09, $00, $00, $00, $02, $02, $00
-    db $00, $00, $01, $02, $02, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $02, $02, $01, $4B, $00
+    db $04 ; id 134: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $32, $A9, $00, $0E, $0F, $0C, $0E, $0F, $09, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $00, $00, $01, $02, $02, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $01, $4B, $00 ; bytes 40-46
 SpeciesRecord_EvilSeed:: ; heuristic: species record; C0
 Data_035_5C04:: ; address name
-    db $04, $02, $00, $00, $04, $00, $1E, $06 ; id 135
-    db $5C, $60, $7F, $02, $08, $0B, $08, $05, $01, $03, $01, $01, $01, $03, $03, $01
-    db $00, $00, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $02, $32, $00
+    db $04 ; id 135: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5C, $60, $7F, $02, $08, $0B, $08, $05, $01, $03, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $00, $00, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $02, $32, $00 ; bytes 40-46
 SpeciesRecord_ManEater:: ; heuristic: species record; C0
 Data_035_5C33:: ; address name
-    db $04, $02, $00, $00, $04, $00, $2D, $09 ; id 136
-    db $55, $69, $71, $00, $0E, $0C, $13, $07, $0A, $06, $01, $01, $01, $02, $02, $01
-    db $00, $00, $01, $03, $03, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $00, $00, $01, $47, $00
+    db $04 ; id 136: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $55, $69, $71, $00, $0E, $0C, $13, $07, $0A, $06, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $01, $03, $03, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $00, $00, $01, $47, $00 ; bytes 40-46
 SpeciesRecord_Snapper:: ; heuristic: species record; C0
 Data_035_5C62:: ; address name
-    db $04, $02, $00, $00, $05, $00, $32, $0B ; id 137
-    db $33, $4E, $65, $00, $11, $0E, $14, $0D, $0A, $10, $01, $01, $01, $02, $02, $01
-    db $00, $00, $02, $03, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03
-    db $03, $03, $00, $00, $01, $57, $00
+    db $04 ; id 137: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $33, $4E, $65, $00, $11, $0E, $14, $0D, $0A, $10, $01, $01, $01, $02, $02, $01 ; bytes 8-23
+    db $00, $00, $02, $03, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03 ; bytes 24-39
+    db $03, $03, $00, $00, $01, $57, $00 ; bytes 40-46
 SpeciesRecord_GhosTree:: ; heuristic: species record; C0
 Data_035_5C91:: ; address name
-    db $04, $02, $00, $00, $04, $00, $32, $09 ; id 138
-    db $32, $7A, $80, $00, $08, $0D, $09, $06, $07, $0F, $00, $00, $00, $02, $02, $00
-    db $01, $01, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $02
-    db $02, $02, $00, $00, $01, $3E, $00
+    db $04 ; id 138: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $7A, $80, $00, $08, $0D, $09, $06, $07, $0F, $00, $00, $00, $02, $02, $00 ; bytes 8-23
+    db $01, $01, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $01, $3E, $00 ; bytes 40-46
 SpeciesRecord_Rosevine:: ; heuristic: species record; C0
 Data_035_5CC0:: ; address name
-    db $04, $03, $00, $00, $06, $00, $46, $18 ; id 139
-    db $63, $82, $96, $00, $18, $1E, $17, $15, $12, $12, $01, $01, $01, $03, $03, $01
-    db $01, $01, $02, $03, $03, $01, $01, $01, $03, $01, $01, $01, $01, $02, $01, $03
-    db $03, $03, $01, $01, $03, $81, $00
+    db $04 ; id 139: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $63, $82, $96, $00, $18, $1E, $17, $15, $12, $12, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $01, $01, $02, $03, $03, $01, $01, $01, $03, $01, $01, $01, $01, $02, $01, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $03, $81, $00 ; bytes 40-46
 SpeciesRecord_Egdracil:: ; heuristic: species record; C0
 Data_035_5CEF:: ; address name
-    db $04, $02, $00, $00, $06, $00, $46, $18 ; id 140
-    db $1E, $71, $9D, $00, $19, $12, $15, $18, $0F, $17, $01, $01, $01, $03, $03, $01
-    db $02, $02, $03, $03, $03, $01, $01, $01, $03, $01, $01, $01, $02, $01, $01, $03
-    db $03, $03, $01, $01, $03, $80, $00
+    db $04 ; id 140: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1E, $71, $9D, $00, $19, $12, $15, $18, $0F, $17, $01, $01, $01, $03, $03, $01 ; bytes 8-23
+    db $02, $02, $03, $03, $03, $01, $01, $01, $03, $01, $01, $01, $02, $01, $01, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $03, $80, $00 ; bytes 40-46
 SpeciesRecord_Warubou:: ; heuristic: species record; C0
 Data_035_5D1E:: ; address name
-    db $04, $02, $00, $00, $06, $00, $50, $0F ; id 141
-    db $1B, $83, $A3, $00, $16, $07, $0C, $0D, $18, $04, $02, $02, $02, $03, $03, $03
-    db $01, $01, $03, $03, $03, $01, $01, $01, $03, $02, $02, $02, $02, $02, $02, $02
-    db $02, $02, $02, $01, $02, $72, $00
+    db $04 ; id 141: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $83, $A3, $00, $16, $07, $0C, $0D, $18, $04, $02, $02, $02, $03, $03, $03 ; bytes 8-23
+    db $01, $01, $03, $03, $03, $01, $01, $01, $03, $02, $02, $02, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $01, $02, $72, $00 ; bytes 40-46
 SpeciesRecord_Watabou:: ; heuristic: species record; C0
 Data_035_5D4D:: ; address name
-    db $04, $02, $00, $00, $06, $00, $50, $00 ; id 142
-    db $3C, $9E, $A2, $00, $0A, $1B, $0B, $0E, $18, $1E, $02, $02, $02, $03, $03, $03
-    db $01, $03, $03, $03, $03, $03, $01, $01, $03, $01, $02, $03, $03, $03, $03, $03
-    db $03, $03, $01, $01, $02, $8F, $00
+    db $04 ; id 142: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3C, $9E, $A2, $00, $0A, $1B, $0B, $0E, $18, $1E, $02, $02, $02, $03, $03, $03 ; bytes 8-23
+    db $01, $03, $03, $03, $03, $03, $01, $01, $03, $01, $02, $03, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $02, $8F, $00 ; bytes 40-46
 SpeciesRecord_Eggplaton:: ; heuristic: species record; C0
 Data_035_5D7C:: ; address name
-    db $04, $02, $00, $00, $02, $00, $1E, $03 ; id 143
-    db $1B, $76, $7A, $00, $08, $0E, $0D, $13, $07, $0E, $00, $00, $00, $00, $00, $00
-    db $01, $01, $01, $03, $03, $01, $01, $01, $01, $00, $00, $00, $01, $01, $02, $00
-    db $00, $00, $00, $01, $02, $32, $00
+    db $04 ; id 143: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $02, $00, $1E ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $76, $7A, $00, $08, $0E, $0D, $13, $07, $0E, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $01, $01, $03, $03, $01, $01, $01, $01, $00, $00, $00, $01, $01, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $01, $02, $32, $00 ; bytes 40-46
 SpeciesRecord_FooHero:: ; heuristic: species record; C0
 Data_035_5DAB:: ; address name
-    db $04, $00, $00, $00, $01, $00, $2D, $10 ; id 144
-    db $0D, $16, $67, $00, $08, $04, $07, $04, $09, $07, $00, $00, $00, $00, $00, $00
-    db $00, $01, $02, $03, $03, $02, $02, $01, $02, $00, $01, $01, $01, $02, $00, $01
-    db $03, $00, $01, $01, $02, $4D, $00
+    db $04 ; id 144: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $01, $00, $2D ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $16, $67, $00, $08, $04, $07, $04, $09, $07, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $01, $02, $03, $03, $02, $02, $01, $02, $00, $01, $01, $01, $02, $00, $01 ; bytes 24-39
+    db $03, $00, $01, $01, $02, $4D, $00 ; bytes 40-46
 SpeciesRecord_GiantSlug:: ; heuristic: species record; C0
 Data_035_5DDA:: ; address name
-    db $05, $02, $00, $00, $03, $00, $23, $02 ; id 145
-    db $8B, $95, $A2, $00, $0B, $08, $0E, $09, $0B, $07, $00, $00, $00, $00, $00, $00
-    db $01, $03, $01, $01, $01, $03, $01, $01, $01, $01, $00, $00, $02, $02, $02, $00
-    db $00, $00, $02, $02, $00, $3C, $00
+    db $05 ; id 145: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $8B, $95, $A2, $00, $0B, $08, $0E, $09, $0B, $07, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $03, $01, $01, $01, $03, $01, $01, $01, $01, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $00, $3C, $00 ; bytes 40-46
 SpeciesRecord_Catapila:: ; heuristic: species record; C0
 Data_035_5E09:: ; address name
-    db $05, $02, $00, $00, $04, $00, $28, $04 ; id 146
-    db $25, $5F, $84, $00, $0D, $05, $0B, $0E, $0B, $09, $01, $01, $01, $00, $00, $01
-    db $00, $02, $00, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00
-    db $00, $00, $02, $02, $01, $3F, $00
+    db $05 ; id 146: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $5F, $84, $00, $0D, $05, $0B, $0E, $0B, $09, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $01, $3F, $00 ; bytes 40-46
 SpeciesRecord_Gophecada:: ; heuristic: species record; C0
 Data_035_5E38:: ; address name
-    db $05, $02, $00, $00, $04, $00, $1E, $01 ; id 147
-    db $13, $36, $4E, $00, $06, $0B, $0E, $12, $08, $07, $00, $00, $00, $00, $00, $00
-    db $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $00, $00, $02, $02, $02, $02
-    db $02, $02, $03, $03, $00, $3E, $00
+    db $05 ; id 147: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $01 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $36, $4E, $00, $06, $0B, $0E, $12, $08, $07, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $00, $00, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $03, $03, $00, $3E, $00 ; bytes 40-46
 SpeciesRecord_Butterfly:: ; heuristic: species record; C0
 Data_035_5E67:: ; address name
-    db $05, $02, $01, $00, $03, $01, $1E, $00 ; id 148
-    db $2E, $4E, $75, $00, $0B, $02, $0D, $07, $0C, $08, $00, $00, $00, $01, $01, $00
-    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $03, $03, $00, $36, $00
+    db $05 ; id 148: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $1E ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2E, $4E, $75, $00, $0B, $02, $0D, $07, $0C, $08, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $03, $03, $00, $36, $00 ; bytes 40-46
 SpeciesRecord_WeedBug:: ; heuristic: species record; C0
 Data_035_5E96:: ; address name
-    db $05, $02, $00, $00, $04, $00, $28, $04 ; id 149
-    db $32, $38, $39, $00, $11, $0D, $0A, $0C, $05, $13, $00, $00, $00, $01, $01, $00
-    db $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $02, $02, $01, $45, $00
+    db $05 ; id 149: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $38, $39, $00, $11, $0D, $0A, $0C, $05, $13, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $45, $00 ; bytes 40-46
 SpeciesRecord_GiantWorm:: ; heuristic: species record; C0
 Data_035_5EC5:: ; address name
-    db $05, $02, $00, $00, $04, $00, $23, $06 ; id 150
-    db $56, $76, $A4, $00, $0D, $08, $10, $08, $0D, $0E, $01, $01, $01, $01, $01, $01
-    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $02, $02, $01, $41, $00
+    db $05 ; id 150: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $56, $76, $A4, $00, $0D, $08, $10, $08, $0D, $0E, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $01, $41, $00 ; bytes 40-46
 SpeciesRecord_Lipsy:: ; heuristic: species record; C0
 Data_035_5EF4:: ; address name
-    db $05, $02, $00, $00, $04, $00, $28, $04 ; id 151
-    db $8B, $8F, $A3, $00, $0C, $08, $09, $09, $04, $01, $00, $00, $00, $00, $00, $00
-    db $01, $03, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $00
-    db $00, $00, $02, $02, $01, $33, $00
+    db $05 ; id 151: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $8B, $8F, $A3, $00, $0C, $08, $09, $09, $04, $01, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $03, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $01, $33, $00 ; bytes 40-46
 SpeciesRecord_StagBug:: ; heuristic: species record; C0
 Data_035_5F23:: ; address name
-    db $05, $02, $00, $00, $04, $00, $2D, $03 ; id 152
-    db $2F, $40, $8D, $00, $0D, $07, $10, $14, $09, $07, $01, $01, $00, $00, $00, $01
-    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00
-    db $00, $00, $02, $02, $01, $40, $00
+    db $05 ; id 152: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $40, $8D, $00, $0D, $07, $10, $14, $09, $07, $01, $01, $00, $00, $00, $01 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $01, $40, $00 ; bytes 40-46
 SpeciesRecord_Pyuro:: ; heuristic: species record; C0
 Data_035_5F52:: ; address name
-    db $05, $02, $01, $00, $03, $01, $28, $07 ; id 153
-    db $29, $48, $93, $02, $08, $08, $07, $0D, $0B, $0E, $00, $00, $00, $00, $00, $00
-    db $01, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $02, $02, $02, $3A, $00
+    db $05 ; id 153: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $28 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $29, $48, $93, $02, $08, $08, $07, $0D, $0B, $0E, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $02, $3A, $00 ; bytes 40-46
 SpeciesRecord_ArmyAnt:: ; heuristic: species record; C0
 Data_035_5F81:: ; address name
-    db $05, $02, $00, $00, $02, $00, $23, $02 ; id 154
-    db $4E, $61, $70, $00, $08, $04, $0B, $11, $0D, $01, $00, $00, $00, $00, $00, $00
-    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $02, $02, $00, $2F, $00
+    db $05 ; id 154: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $02, $00, $23 ; bytes 1-6
+    db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $61, $70, $00, $08, $04, $0B, $11, $0D, $01, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $00, $2F, $00 ; bytes 40-46
 SpeciesRecord_GoHopper:: ; heuristic: species record; C0
 Data_035_5FB0:: ; address name
-    db $05, $02, $00, $00, $04, $00, $23, $00 ; id 155
-    db $32, $4E, $68, $00, $0B, $04, $08, $0E, $0E, $04, $00, $00, $00, $00, $00, $00
-    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $02, $02, $00, $30, $00
+    db $05 ; id 155: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $4E, $68, $00, $0B, $04, $08, $0E, $0E, $04, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $00, $30, $00 ; bytes 40-46
 SpeciesRecord_TailEater:: ; heuristic: species record; C0
 Data_035_5FDF:: ; address name
-    db $05, $02, $00, $00, $02, $00, $2D, $05 ; id 156
-    db $53, $73, $7F, $00, $0C, $0A, $10, $0B, $0E, $05, $00, $00, $00, $01, $01, $00
-    db $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01
-    db $02, $02, $02, $02, $01, $40, $00
+    db $05 ; id 156: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $02, $00, $2D ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $53, $73, $7F, $00, $0C, $0A, $10, $0B, $0E, $05, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $40, $00 ; bytes 40-46
 SpeciesRecord_ArmorPede:: ; heuristic: species record; C0
 Data_035_600E:: ; address name
-    db $05, $02, $00, $00, $05, $00, $23, $06 ; id 157
-    db $25, $2D, $6D, $03, $0F, $0A, $11, $14, $0B, $02, $01, $01, $01, $01, $01, $01
-    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01
-    db $01, $01, $03, $03, $00, $4A, $00
+    db $05 ; id 157: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $2D, $6D, $03, $0F, $0A, $11, $14, $0B, $02, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $03, $03, $00, $4A, $00 ; bytes 40-46
 SpeciesRecord_Eyeder:: ; heuristic: species record; C0
 Data_035_603D:: ; address name
-    db $05, $02, $01, $00, $04, $01, $2D, $04 ; id 158
-    db $04, $16, $A9, $02, $09, $0B, $06, $03, $0A, $09, $00, $00, $00, $01, $01, $00
-    db $00, $02, $01, $01, $01, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $02, $02, $01, $36, $00
+    db $05 ; id 158: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $2D ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $16, $A9, $02, $09, $0B, $06, $03, $0A, $09, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $01, $01, $01, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $36, $00 ; bytes 40-46
 SpeciesRecord_GiantMoth:: ; heuristic: species record; C0
 Data_035_606C:: ; address name
-    db $05, $03, $01, $00, $04, $01, $1E, $02 ; id 159
-    db $48, $60, $7F, $02, $0E, $09, $10, $0C, $14, $0C, $00, $00, $00, $00, $00, $00
-    db $00, $03, $01, $00, $00, $02, $01, $01, $01, $00, $00, $00, $03, $02, $02, $01
-    db $01, $01, $03, $03, $00, $4C, $00
+    db $05 ; id 159: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $01, $00, $04, $01, $1E ; bytes 1-6
+    db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $48, $60, $7F, $02, $0E, $09, $10, $0C, $14, $0C, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $03, $01, $00, $00, $02, $01, $01, $01, $00, $00, $00, $03, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $03, $03, $00, $4C, $00 ; bytes 40-46
 SpeciesRecord_Droll:: ; heuristic: species record; C0
 Data_035_609B:: ; address name
-    db $05, $02, $00, $00, $04, $00, $28, $05 ; id 160
-    db $2B, $59, $A4, $00, $11, $0A, $0F, $10, $07, $0E, $00, $00, $00, $00, $00, $00
-    db $01, $03, $01, $01, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $01
-    db $01, $01, $02, $02, $01, $4C, $00
+    db $05 ; id 160: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2B, $59, $A4, $00, $11, $0A, $0F, $10, $07, $0E, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $03, $01, $01, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $4C, $00 ; bytes 40-46
 SpeciesRecord_ArmyCrab:: ; heuristic: species record; C0
 Data_035_60CA:: ; address name
-    db $05, $02, $00, $00, $05, $00, $28, $06 ; id 161
-    db $25, $4E, $5E, $01, $10, $08, $0E, $13, $05, $01, $00, $00, $00, $00, $00, $00
-    db $01, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03, $03, $03, $00
-    db $00, $00, $03, $03, $01, $41, $00
+    db $05 ; id 161: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $4E, $5E, $01, $10, $08, $0E, $13, $05, $01, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $03, $03, $01, $41, $00 ; bytes 40-46
 SpeciesRecord_MadHornet:: ; heuristic: species record; C0
 Data_035_60F9:: ; address name
-    db $05, $02, $01, $00, $04, $01, $28, $07 ; id 162
-    db $5F, $60, $99, $00, $14, $05, $13, $0D, $14, $04, $01, $01, $01, $00, $00, $01
-    db $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $01, $01, $02, $02, $02, $01
-    db $01, $01, $03, $03, $00, $4D, $00
+    db $05 ; id 162: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5F, $60, $99, $00, $14, $05, $13, $0D, $14, $04, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $01, $01, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $03, $03, $00, $4D, $00 ; bytes 40-46
 SpeciesRecord_Belzebub:: ; heuristic: species record; C0
 Data_035_6128:: ; address name
-    db $05, $02, $01, $00, $03, $01, $23, $0C ; id 163
-    db $04, $20, $6F, $00, $17, $13, $08, $07, $0E, $03, $00, $00, $00, $00, $00, $00
-    db $00, $02, $03, $00, $00, $03, $00, $00, $01, $01, $00, $00, $02, $02, $02, $01
-    db $01, $01, $02, $02, $00, $45, $00
+    db $05 ; id 163: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $23 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $20, $6F, $00, $17, $13, $08, $07, $0E, $03, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $03, $00, $00, $03, $00, $00, $01, $01, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $00, $45, $00 ; bytes 40-46
 SpeciesRecord_WarMantis:: ; heuristic: species record; C0
 Data_035_6157:: ; address name
-    db $05, $02, $00, $00, $05, $00, $32, $12 ; id 164
-    db $51, $59, $67, $05, $17, $10, $0C, $09, $0B, $08, $01, $00, $00, $01, $00, $01
-    db $01, $02, $03, $01, $01, $02, $01, $01, $01, $01, $01, $01, $02, $02, $02, $01
-    db $01, $01, $02, $02, $01, $5A, $00
+    db $05 ; id 164: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $51, $59, $67, $05, $17, $10, $0C, $09, $0B, $08, $01, $00, $00, $01, $00, $01 ; bytes 8-23
+    db $01, $02, $03, $01, $01, $02, $01, $01, $01, $01, $01, $01, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $5A, $00 ; bytes 40-46
 SpeciesRecord_HornBeet:: ; heuristic: species record; C0
 Data_035_6186:: ; address name
-    db $05, $02, $00, $00, $05, $00, $32, $07 ; id 165
-    db $4B, $52, $5A, $00, $15, $13, $17, $14, $0C, $0E, $02, $02, $02, $00, $00, $02
-    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $02, $02, $02, $03, $02, $00
-    db $00, $00, $02, $02, $02, $65, $00
+    db $05 ; id 165: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4B, $52, $5A, $00, $15, $13, $17, $14, $0C, $0E, $02, $02, $02, $00, $00, $02 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $02, $02, $02, $03, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $02, $65, $00 ; bytes 40-46
 SpeciesRecord_Sickler:: ; heuristic: species record; C0
 Data_035_61B5:: ; address name
-    db $05, $02, $00, $00, $04, $00, $2D, $07 ; id 166
-    db $0A, $5A, $62, $00, $13, $0D, $09, $07, $0E, $05, $00, $00, $01, $01, $00, $01
-    db $01, $02, $02, $01, $01, $02, $01, $01, $01, $01, $00, $00, $02, $02, $02, $01
-    db $01, $01, $02, $02, $01, $49, $00
+    db $05 ; id 166: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $5A, $62, $00, $13, $0D, $09, $07, $0E, $05, $00, $00, $01, $01, $00, $01 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $02, $01, $01, $01, $01, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $49, $00 ; bytes 40-46
 SpeciesRecord_Armorpion:: ; heuristic: species record; C0
 Data_035_61E4:: ; address name
-    db $05, $02, $00, $00, $06, $00, $37, $18 ; id 167
-    db $5B, $65, $6B, $03, $16, $14, $18, $17, $0F, $12, $01, $02, $02, $01, $00, $02
-    db $01, $03, $02, $01, $01, $03, $01, $01, $03, $01, $02, $02, $03, $03, $03, $01
-    db $01, $01, $03, $03, $01, $81, $00
+    db $05 ; id 167: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $37 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5B, $65, $6B, $03, $16, $14, $18, $17, $0F, $12, $01, $02, $02, $01, $00, $02 ; bytes 8-23
+    db $01, $03, $02, $01, $01, $03, $01, $01, $03, $01, $02, $02, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $01, $03, $03, $01, $81, $00 ; bytes 40-46
 SpeciesRecord_Digster:: ; heuristic: species record; C0
 Data_035_6213:: ; address name
-    db $05, $02, $00, $00, $06, $00, $32, $0B ; id 168
-    db $20, $94, $9D, $01, $18, $0A, $13, $1A, $01, $0F, $01, $01, $01, $00, $00, $01
-    db $01, $02, $02, $00, $00, $02, $00, $00, $03, $00, $01, $01, $02, $02, $02, $00
-    db $00, $00, $02, $02, $03, $59, $00
+    db $05 ; id 168: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $32 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $20, $94, $9D, $01, $18, $0A, $13, $1A, $01, $0F, $01, $01, $01, $00, $00, $01 ; bytes 8-23
+    db $01, $02, $02, $00, $00, $02, $00, $00, $03, $00, $01, $01, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $02, $02, $03, $59, $00 ; bytes 40-46
 SpeciesRecord_Skularach:: ; heuristic: species record; C0
 Data_035_6242:: ; address name
-    db $05, $02, $00, $00, $05, $00, $41, $19 ; id 169
-    db $4A, $63, $73, $00, $12, $17, $19, $18, $1E, $15, $03, $03, $03, $02, $01, $03
-    db $01, $03, $02, $01, $01, $01, $01, $01, $02, $01, $03, $03, $02, $02, $02, $02
-    db $02, $02, $03, $03, $01, $92, $00
+    db $05 ; id 169: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $41 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4A, $63, $73, $00, $12, $17, $19, $18, $1E, $15, $03, $03, $03, $02, $01, $03 ; bytes 8-23
+    db $01, $03, $02, $01, $01, $01, $01, $01, $02, $01, $03, $03, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $03, $03, $01, $92, $00 ; bytes 40-46
 SpeciesRecord_MultiEyes:: ; heuristic: species record; C0
 Data_035_6271:: ; address name
-    db $05, $02, $00, $00, $04, $00, $23, $04 ; id 170
-    db $27, $2D, $72, $00, $0E, $0F, $13, $0D, $02, $03, $00, $01, $00, $00, $00, $00
-    db $03, $03, $01, $02, $02, $02, $01, $01, $00, $00, $00, $00, $01, $02, $02, $00
-    db $00, $00, $00, $00, $00, $3F, $00
+    db $05 ; id 170: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $2D, $72, $00, $0E, $0F, $13, $0D, $02, $03, $00, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $03, $03, $01, $02, $02, $02, $01, $01, $00, $00, $00, $00, $01, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $3F, $00 ; bytes 40-46
 SpeciesRecord_Pixy:: ; heuristic: species record; C0
 Data_035_62A0:: ; address name
-    db $06, $03, $00, $00, $02, $00, $28, $13 ; id 171
-    db $21, $2D, $9C, $00, $0B, $07, $0F, $08, $0F, $04, $02, $02, $01, $01, $01, $02
-    db $01, $01, $03, $02, $02, $02, $01, $01, $03, $01, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $3E, $00
+    db $06 ; id 171: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $02, $00, $28 ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $21, $2D, $9C, $00, $0B, $07, $0F, $08, $0F, $04, $02, $02, $01, $01, $01, $02 ; bytes 8-23
+    db $01, $01, $03, $02, $02, $02, $01, $01, $03, $01, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $3E, $00 ; bytes 40-46
 SpeciesRecord_MedusaEye:: ; heuristic: species record; C0
 Data_035_62CF:: ; address name
-    db $06, $02, $01, $00, $04, $01, $1E, $13 ; id 172
-    db $27, $2E, $59, $00, $0B, $0D, $0E, $0F, $08, $0B, $02, $02, $02, $01, $01, $01
-    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01
-    db $01, $00, $01, $01, $01, $44, $00
+    db $06 ; id 172: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $1E ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $2E, $59, $00, $0B, $0D, $0E, $0F, $08, $0B, $02, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $00, $01, $01, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_AgDevil:: ; heuristic: species record; C0
 Data_035_62FE:: ; address name
-    db $06, $02, $00, $00, $05, $00, $23, $10 ; id 173
-    db $04, $15, $71, $00, $10, $0B, $12, $0C, $10, $13, $01, $01, $02, $02, $02, $02
-    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02
-    db $01, $01, $02, $01, $01, $52, $00
+    db $06 ; id 173: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $15, $71, $00, $10, $0B, $12, $0C, $10, $13, $01, $01, $02, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $01, $01, $02, $01, $01, $52, $00 ; bytes 40-46
 SpeciesRecord_Demonite:: ; heuristic: species record; C0
 Data_035_632D:: ; address name
-    db $06, $02, $00, $00, $04, $00, $1E, $0D ; id 174
-    db $01, $40, $44, $00, $0D, $01, $05, $04, $09, $14, $01, $01, $01, $03, $03, $02
-    db $00, $00, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $01, $01, $01
-    db $02, $02, $02, $01, $00, $37, $00
+    db $06 ; id 174: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $40, $44, $00, $0D, $01, $05, $04, $09, $14, $01, $01, $01, $03, $03, $02 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $01, $01, $01 ; bytes 24-39
+    db $02, $02, $02, $01, $00, $37, $00 ; bytes 40-46
 SpeciesRecord_DarkEye:: ; heuristic: species record; C0
 Data_035_635C:: ; address name
-    db $06, $02, $01, $00, $04, $01, $28, $12 ; id 175
-    db $5C, $72, $7F, $00, $0B, $12, $0A, $10, $09, $0C, $02, $02, $01, $03, $03, $01
-    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $01, $00, $00, $01, $44, $00
+    db $06 ; id 175: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5C, $72, $7F, $00, $0B, $12, $0A, $10, $09, $0C, $02, $02, $01, $03, $03, $01 ; bytes 8-23
+    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $01, $00, $00, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_EyeBall:: ; heuristic: species record; C0
 Data_035_638B:: ; address name
-    db $06, $02, $00, $00, $04, $00, $23, $10 ; id 176
-    db $36, $90, $A5, $00, $10, $11, $0E, $0E, $0D, $08, $02, $02, $02, $02, $02, $02
-    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $00
-    db $00, $00, $01, $01, $01, $4A, $00
+    db $06 ; id 176: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $36, $90, $A5, $00, $10, $11, $0E, $0E, $0D, $08, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $01, $4A, $00 ; bytes 40-46
 SpeciesRecord_SkulRider:: ; heuristic: species record; C0
 Data_035_63BA:: ; address name
-    db $06, $02, $00, $00, $04, $00, $2D, $12 ; id 177
-    db $50, $65, $8D, $00, $11, $0B, $11, $0D, $0F, $0C, $02, $02, $02, $01, $01, $02
-    db $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $02, $02, $01, $00
-    db $00, $00, $00, $00, $00, $4C, $00
+    db $06 ; id 177: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $50, $65, $8D, $00, $11, $0B, $11, $0D, $0F, $0C, $02, $02, $02, $01, $01, $02 ; bytes 8-23
+    db $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $02, $02, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $4C, $00 ; bytes 40-46
 SpeciesRecord_EvilBeast:: ; heuristic: species record; C0
 Data_035_63E9:: ; address name
-    db $06, $02, $00, $00, $05, $00, $32, $14 ; id 178
-    db $04, $35, $44, $03, $10, $0A, $14, $16, $04, $0C, $02, $02, $01, $02, $02, $03
-    db $00, $00, $03, $01, $01, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $4A, $00
+    db $06 ; id 178: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $35, $44, $03, $10, $0A, $14, $16, $04, $0C, $02, $02, $01, $02, $02, $03 ; bytes 8-23
+    db $00, $00, $03, $01, $01, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $4A, $00 ; bytes 40-46
 SpeciesRecord_Bubblemon:: ; heuristic: species record; C0
 Data_035_6418:: ; address name
-    db $06, $02, $00, $00, $04, $00, $2D, $0C ; id 179
-    db $4C, $53, $96, $01, $0E, $0D, $0F, $07, $07, $04, $01, $01, $01, $01, $01, $03
-    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $01, $00
-    db $00, $02, $00, $00, $02, $3D, $00
+    db $06 ; id 179: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4C, $53, $96, $01, $0E, $0D, $0F, $07, $07, $04, $01, $01, $01, $01, $01, $03 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $01, $00 ; bytes 24-39
+    db $00, $02, $00, $00, $02, $3D, $00 ; bytes 40-46
 SpeciesRecord_1EyeClown:: ; heuristic: species record; C0
 Data_035_6447:: ; address name
-    db $06, $02, $01, $00, $03, $01, $19, $0D ; id 180
-    db $01, $04, $10, $00, $0A, $01, $05, $09, $09, $11, $01, $01, $01, $02, $02, $02
-    db $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $30, $00
+    db $06 ; id 180: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $19 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $04, $10, $00, $0A, $01, $05, $09, $09, $11, $01, $01, $01, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $30, $00 ; bytes 40-46
 SpeciesRecord_Gremlin:: ; heuristic: species record; C0
 Data_035_6476:: ; address name
-    db $06, $01, $01, $00, $03, $01, $19, $0D ; id 181
-    db $04, $16, $33, $00, $0D, $07, $08, $04, $02, $12, $02, $02, $02, $01, $01, $01
-    db $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $31, $00
+    db $06 ; id 181: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $01, $00, $03, $01, $19 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $16, $33, $00, $0D, $07, $08, $04, $02, $12, $02, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $31, $00 ; bytes 40-46
 SpeciesRecord_ArcDemon:: ; heuristic: species record; C0
 Data_035_64A5:: ; address name
-    db $06, $02, $00, $00, $05, $00, $2D, $14 ; id 182
-    db $07, $51, $52, $03, $0E, $0D, $11, $0C, $07, $15, $02, $03, $02, $02, $02, $02
-    db $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $01, $00, $00, $02, $01, $00
-    db $00, $00, $00, $01, $01, $53, $00
+    db $06 ; id 182: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $51, $52, $03, $0E, $0D, $11, $0C, $07, $15, $02, $03, $02, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $01, $00, $00, $02, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $01, $01, $53, $00 ; bytes 40-46
 SpeciesRecord_Lionex:: ; heuristic: species record; C0
 Data_035_64D4:: ; address name
-    db $06, $02, $00, $00, $05, $00, $2D, $15 ; id 183
-    db $0A, $19, $51, $03, $0F, $0B, $0E, $0F, $0C, $13, $01, $03, $02, $02, $02, $02
-    db $02, $02, $03, $01, $01, $01, $00, $00, $03, $00, $02, $02, $01, $00, $02, $02
-    db $00, $00, $00, $00, $00, $54, $00
+    db $06 ; id 183: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $19, $51, $03, $0F, $0B, $0E, $0F, $0C, $13, $01, $03, $02, $02, $02, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $01, $00, $00, $03, $00, $02, $02, $01, $00, $02, $02 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $54, $00 ; bytes 40-46
 SpeciesRecord_GoatHorn:: ; heuristic: species record; C0
 Data_035_6503:: ; address name
-    db $06, $02, $00, $00, $05, $00, $28, $16 ; id 184
-    db $07, $0A, $10, $03, $14, $0B, $11, $0D, $0B, $14, $02, $02, $02, $02, $02, $02
-    db $00, $00, $03, $00, $01, $01, $02, $02, $03, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $02, $00, $5F, $00
+    db $06 ; id 184: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $0A, $10, $03, $14, $0B, $11, $0D, $0B, $14, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $03, $00, $01, $01, $02, $02, $03, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $00, $5F, $00 ; bytes 40-46
 SpeciesRecord_Orc:: ; heuristic: species record; C0
 Data_035_6532:: ; address name
-    db $06, $01, $00, $00, $05, $00, $32, $11 ; id 185
-    db $1E, $27, $57, $00, $13, $07, $13, $0D, $0D, $12, $01, $01, $01, $03, $03, $02
-    db $00, $00, $02, $01, $01, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $00, $00, $00, $4F, $00
+    db $06 ; id 185: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1E, $27, $57, $00, $13, $07, $13, $0D, $0D, $12, $01, $01, $01, $03, $03, $02 ; bytes 8-23
+    db $00, $00, $02, $01, $01, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $00, $4F, $00 ; bytes 40-46
 SpeciesRecord_Ogre:: ; heuristic: species record; C0
 Data_035_6561:: ; address name
-    db $06, $01, $00, $00, $05, $00, $28, $13 ; id 186
-    db $5E, $69, $6C, $03, $0F, $08, $14, $0C, $0A, $0C, $01, $01, $02, $02, $02, $02
-    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02
-    db $02, $02, $02, $01, $00, $4C, $00
+    db $06 ; id 186: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5E, $69, $6C, $03, $0F, $08, $14, $0C, $0A, $0C, $01, $01, $02, $02, $02, $02 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $02, $01, $00, $4C, $00 ; bytes 40-46
 SpeciesRecord_GateGuard:: ; heuristic: species record; C0
 Data_035_6590:: ; address name
-    db $06, $02, $00, $00, $06, $00, $32, $17 ; id 187
-    db $01, $5C, $84, $00, $12, $0C, $12, $0E, $0A, $0E, $02, $02, $02, $03, $03, $02
-    db $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $01
-    db $02, $02, $02, $01, $01, $56, $00
+    db $06 ; id 187: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $32 ; bytes 1-6
+    db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $5C, $84, $00, $12, $0C, $12, $0E, $0A, $0E, $02, $02, $02, $03, $03, $02 ; bytes 8-23
+    db $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $02, $02, $02, $01, $01, $56, $00 ; bytes 40-46
 SpeciesRecord_ChopClown:: ; heuristic: species record; C0
 Data_035_65BF:: ; address name
-    db $06, $02, $00, $00, $04, $00, $32, $16 ; id 188
-    db $2D, $51, $62, $00, $11, $0C, $14, $0B, $14, $0F, $02, $02, $02, $02, $02, $03
-    db $01, $00, $03, $01, $01, $00, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $55, $00
+    db $06 ; id 188: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $51, $62, $00, $11, $0C, $14, $0B, $14, $0F, $02, $02, $02, $02, $02, $03 ; bytes 8-23
+    db $01, $00, $03, $01, $01, $00, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $55, $00 ; bytes 40-46
 SpeciesRecord_BossTroll:: ; heuristic: species record; C0
 Data_035_65EE:: ; address name
-    db $06, $01, $00, $00, $05, $00, $32, $18 ; id 189
-    db $6C, $6F, $97, $03, $18, $03, $19, $16, $04, $01, $01, $01, $01, $01, $01, $01
-    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $01, $01, $00, $02, $00, $01
-    db $00, $00, $00, $01, $00, $49, $00
+    db $06 ; id 189: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $6C, $6F, $97, $03, $18, $03, $19, $16, $04, $01, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $01, $01, $00, $02, $00, $01 ; bytes 24-39
+    db $00, $00, $00, $01, $00, $49, $00 ; bytes 40-46
 SpeciesRecord_Grendal:: ; heuristic: species record; C0
 Data_035_661D:: ; address name
-    db $06, $02, $00, $00, $05, $00, $3C, $14 ; id 190
-    db $50, $55, $97, $05, $17, $01, $12, $18, $0C, $0C, $02, $02, $02, $02, $02, $01
-    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $55, $00
+    db $06 ; id 190: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $3C ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $50, $55, $97, $05, $17, $01, $12, $18, $0C, $0C, $02, $02, $02, $02, $02, $01 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $55, $00 ; bytes 40-46
 SpeciesRecord_Akubar:: ; heuristic: species record; C0
 Data_035_664C:: ; address name
-    db $06, $02, $00, $00, $05, $00, $46, $1E ; id 191
-    db $07, $44, $8A, $00, $18, $1E, $17, $15, $12, $15, $02, $02, $03, $02, $02, $02
-    db $01, $02, $03, $01, $03, $02, $01, $01, $03, $00, $02, $01, $00, $02, $00, $01
-    db $00, $00, $00, $00, $01, $7C, $00
+    db $06 ; id 191: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $46 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $44, $8A, $00, $18, $1E, $17, $15, $12, $15, $02, $02, $03, $02, $02, $02 ; bytes 8-23
+    db $01, $02, $03, $01, $03, $02, $01, $01, $03, $00, $02, $01, $00, $02, $00, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $7C, $00 ; bytes 40-46
 SpeciesRecord_MadKnight:: ; heuristic: species record; C0
 Data_035_667B:: ; address name
-    db $06, $02, $00, $00, $05, $00, $37, $17 ; id 192
-    db $56, $67, $6C, $05, $11, $09, $12, $14, $0A, $0C, $01, $01, $01, $01, $01, $02
-    db $02, $02, $03, $00, $01, $01, $01, $01, $03, $00, $01, $01, $02, $02, $02, $01
-    db $00, $00, $00, $00, $01, $52, $00
+    db $06 ; id 192: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $37 ; bytes 1-6
+    db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $56, $67, $6C, $05, $11, $09, $12, $14, $0A, $0C, $01, $01, $01, $01, $01, $02 ; bytes 8-23
+    db $02, $02, $03, $00, $01, $01, $01, $01, $03, $00, $01, $01, $02, $02, $02, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $52, $00 ; bytes 40-46
 SpeciesRecord_EvilWell:: ; heuristic: species record; C0
 Data_035_66AA:: ; address name
-    db $06, $02, $00, $00, $04, $00, $32, $0F ; id 193
-    db $01, $68, $90, $00, $17, $0E, $0A, $0F, $06, $08, $01, $01, $01, $01, $01, $01
-    db $01, $01, $03, $00, $00, $01, $01, $01, $03, $01, $01, $01, $01, $01, $01, $00
-    db $01, $01, $00, $00, $03, $4E, $00
+    db $06 ; id 193: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $68, $90, $00, $17, $0E, $0A, $0F, $06, $08, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $01, $01, $03, $00, $00, $01, $01, $01, $03, $01, $01, $01, $01, $01, $01, $00 ; bytes 24-39
+    db $01, $01, $00, $00, $03, $4E, $00 ; bytes 40-46
 SpeciesRecord_Gigantes:: ; heuristic: species record; C0
 Data_035_66D9:: ; address name
-    db $06, $01, $00, $00, $04, $00, $2D, $16 ; id 194
-    db $54, $68, $6B, $03, $1B, $00, $1B, $07, $00, $00, $01, $01, $01, $01, $01, $01
-    db $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $00, $00, $00, $02, $00, $02
-    db $01, $01, $01, $01, $00, $41, $00
+    db $06 ; id 194: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $54, $68, $6B, $03, $1B, $00, $1B, $07, $00, $00, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $00, $00, $00, $02, $00, $02 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $41, $00 ; bytes 40-46
 SpeciesRecord_Centasaur:: ; heuristic: species record; C0
 Data_035_6708:: ; address name
-    db $06, $02, $00, $00, $05, $00, $2D, $17 ; id 195
-    db $33, $50, $65, $02, $14, $01, $18, $15, $12, $13, $00, $00, $00, $00, $00, $02
-    db $01, $00, $02, $00, $01, $01, $01, $01, $03, $00, $00, $01, $01, $02, $01, $02
-    db $00, $00, $00, $00, $01, $5B, $00
+    db $06 ; id 195: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $33, $50, $65, $02, $14, $01, $18, $15, $12, $13, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $00, $02, $00, $01, $01, $01, $01, $03, $00, $00, $01, $01, $02, $01, $02 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $5B, $00 ; bytes 40-46
 SpeciesRecord_EvilArmor:: ; heuristic: species record; C0
 Data_035_6737:: ; address name
-    db $06, $02, $00, $00, $05, $00, $28, $16 ; id 196
-    db $50, $52, $5D, $05, $10, $01, $11, $1D, $05, $0D, $00, $02, $00, $02, $00, $00
-    db $00, $01, $03, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $02, $01, $00
-    db $00, $00, $01, $01, $01, $4C, $00
+    db $06 ; id 196: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $50, $52, $5D, $05, $10, $01, $11, $1D, $05, $0D, $00, $02, $00, $02, $00, $00 ; bytes 8-23
+    db $00, $01, $03, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $02, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $01, $4C, $00 ; bytes 40-46
 SpeciesRecord_Jamirus:: ; heuristic: species record; C0
 Data_035_6766:: ; address name
-    db $06, $02, $00, $00, $05, $00, $3C, $15 ; id 197
-    db $01, $63, $99, $02, $18, $09, $15, $18, $17, $12, $02, $02, $02, $03, $03, $01
-    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $02, $00, $01
-    db $01, $01, $01, $01, $01, $6D, $00
+    db $06 ; id 197: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $3C ; bytes 1-6
+    db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $63, $99, $02, $18, $09, $15, $18, $17, $12, $02, $02, $02, $03, $03, $01 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $02, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $6D, $00 ; bytes 40-46
 SpeciesRecord_Durran:: ; heuristic: species record; C0
 Data_035_6795:: ; address name
-    db $06, $02, $00, $00, $06, $00, $46, $1C ; id 198
-    db $48, $55, $57, $05, $19, $18, $17, $0F, $11, $14, $02, $02, $03, $02, $01, $03
-    db $02, $02, $03, $01, $02, $02, $01, $01, $03, $01, $01, $01, $03, $03, $02, $02
-    db $00, $00, $00, $00, $02, $7D, $00
+    db $06 ; id 198: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $48, $55, $57, $05, $19, $18, $17, $0F, $11, $14, $02, $02, $03, $02, $01, $03 ; bytes 8-23
+    db $02, $02, $03, $01, $02, $02, $01, $01, $03, $01, $01, $01, $03, $03, $02, $02 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $7D, $00 ; bytes 40-46
 SpeciesRecord_Titanis:: ; heuristic: species record; C0
 Data_035_67C4:: ; address name
-    db $06, $02, $00, $00, $06, $00, $4B, $1B ; id 199
-    db $07, $6E, $82, $03, $19, $18, $19, $16, $17, $0D, $02, $02, $02, $02, $02, $02
-    db $01, $01, $03, $01, $01, $02, $01, $01, $03, $01, $02, $02, $02, $02, $02, $00
-    db $00, $00, $00, $01, $02, $7F, $00
+    db $06 ; id 199: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $4B ; bytes 1-6
+    db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $6E, $82, $03, $19, $18, $19, $16, $17, $0D, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $02, $01, $01, $03, $01, $02, $02, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $01, $02, $7F, $00 ; bytes 40-46
 SpeciesRecord_LampGenie:: ; heuristic: species record; C0
 Data_035_67F3:: ; address name
-    db $06, $02, $01, $00, $05, $01, $3C, $15 ; id 200
-    db $16, $2F, $99, $02, $0A, $0C, $0B, $16, $0F, $0A, $01, $01, $01, $01, $00, $00
-    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $01, $01, $01, $02, $01, $00
-    db $00, $00, $01, $00, $02, $51, $00
+    db $06 ; id 200: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $3C ; bytes 1-6
+    db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $2F, $99, $02, $0A, $0C, $0B, $16, $0F, $0A, $01, $01, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $01, $01, $01, $02, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $00, $02, $51, $00 ; bytes 40-46
 SpeciesRecord_Spooky:: ; heuristic: species record; C0
 Data_035_6822:: ; address name
-    db $07, $02, $01, $00, $03, $01, $28, $0B ; id 201
-    db $7F, $93, $A5, $00, $0B, $0C, $0D, $08, $12, $0F, $00, $00, $00, $00, $00, $00
-    db $03, $03, $03, $01, $01, $03, $01, $01, $03, $01, $00, $00, $02, $02, $02, $00
-    db $00, $00, $00, $00, $00, $47, $00
+    db $07 ; id 201: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $7F, $93, $A5, $00, $0B, $0C, $0D, $08, $12, $0F, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $03, $03, $03, $01, $01, $03, $01, $01, $03, $01, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $47, $00 ; bytes 40-46
 SpeciesRecord_Skullgon:: ; heuristic: species record; C0
 Data_035_6851:: ; address name
-    db $07, $02, $00, $00, $05, $00, $2D, $0D ; id 202
-    db $44, $53, $6D, $03, $06, $01, $17, $0F, $04, $06, $01, $01, $01, $00, $00, $02
-    db $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $44, $00
+    db $07 ; id 202: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $44, $53, $6D, $03, $06, $01, $17, $0F, $04, $06, $01, $01, $01, $00, $00, $02 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_PutrePup:: ; heuristic: species record; C0
 Data_035_6880:: ; address name
-    db $07, $02, $00, $00, $03, $00, $23, $06 ; id 203
-    db $27, $2B, $36, $00, $11, $0D, $11, $08, $0B, $04, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $01, $01, $00, $43, $00
+    db $07 ; id 203: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $2B, $36, $00, $11, $0D, $11, $08, $0B, $04, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $43, $00 ; bytes 40-46
 SpeciesRecord_RotRaven:: ; heuristic: species record; C0
 Data_035_68AF:: ; address name
-    db $07, $02, $00, $00, $04, $00, $23, $05 ; id 204
-    db $4A, $52, $70, $00, $0E, $08, $0C, $0B, $12, $09, $00, $00, $00, $01, $01, $00
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $01, $01, $00, $41, $00
+    db $07 ; id 204: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $23 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4A, $52, $70, $00, $0E, $08, $0C, $0B, $12, $09, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $41, $00 ; bytes 40-46
 SpeciesRecord_Mummy:: ; heuristic: species record; C0
 Data_035_68DE:: ; address name
-    db $07, $02, $00, $00, $04, $00, $32, $0A ; id 205
-    db $4E, $60, $6B, $00, $0F, $11, $0C, $09, $04, $08, $00, $00, $00, $01, $01, $00
-    db $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $03, $01
-    db $01, $01, $00, $00, $00, $41, $00
+    db $07 ; id 205: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $60, $6B, $00, $0F, $11, $0C, $09, $04, $08, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $03, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $00, $41, $00 ; bytes 40-46
 SpeciesRecord_DarkCrab:: ; heuristic: species record; C0
 Data_035_690D:: ; address name
-    db $07, $02, $00, $00, $05, $00, $1E, $08 ; id 206
-    db $35, $39, $A4, $01, $0C, $08, $0F, $14, $01, $0B, $00, $00, $00, $00, $00, $00
-    db $02, $03, $02, $00, $00, $03, $00, $00, $02, $00, $00, $00, $03, $03, $03, $00
-    db $00, $00, $01, $01, $00, $42, $00
+    db $07 ; id 206: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $1E ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $35, $39, $A4, $01, $0C, $08, $0F, $14, $01, $0B, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $03, $02, $00, $00, $03, $00, $00, $02, $00, $00, $00, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $00, $42, $00 ; bytes 40-46
 SpeciesRecord_DeadNite:: ; heuristic: species record; C0
 Data_035_693C:: ; address name
-    db $07, $02, $00, $00, $05, $00, $2D, $0D ; id 207
-    db $16, $22, $24, $00, $11, $07, $13, $09, $0C, $08, $01, $01, $01, $01, $01, $01
-    db $02, $02, $03, $00, $00, $02, $00, $00, $03, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $43, $00
+    db $07 ; id 207: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $22, $24, $00, $11, $07, $13, $09, $0C, $08, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $02, $02, $03, $00, $00, $02, $00, $00, $03, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $43, $00 ; bytes 40-46
 SpeciesRecord_Shadow:: ; heuristic: species record; C0
 Data_035_696B:: ; address name
-    db $07, $02, $01, $00, $04, $01, $32, $0C ; id 208
-    db $44, $79, $84, $02, $09, $06, $06, $14, $08, $0C, $00, $00, $00, $00, $00, $01
-    db $02, $02, $03, $00, $00, $03, $00, $00, $03, $00, $00, $01, $02, $03, $02, $00
-    db $00, $00, $00, $00, $01, $3B, $00
+    db $07 ; id 208: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $32 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $44, $79, $84, $02, $09, $06, $06, $14, $08, $0C, $00, $00, $00, $00, $00, $01 ; bytes 8-23
+    db $02, $02, $03, $00, $00, $03, $00, $00, $03, $00, $00, $01, $02, $03, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $3B, $00 ; bytes 40-46
 SpeciesRecord_Skulpent:: ; heuristic: species record; C0
 Data_035_699A:: ; address name
-    db $07, $02, $00, $00, $05, $00, $2D, $09 ; id 209
-    db $13, $5F, $95, $00, $11, $13, $17, $09, $0C, $0A, $01, $01, $01, $01, $00, $01
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01, $01, $01
-    db $01, $00, $00, $00, $01, $4D, $00
+    db $07 ; id 209: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $5F, $95, $00, $11, $13, $17, $09, $0C, $0A, $01, $01, $01, $01, $00, $01 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $00, $00, $00, $01, $4D, $00 ; bytes 40-46
 SpeciesRecord_Hork:: ; heuristic: species record; C0
 Data_035_69C9:: ; address name
-    db $07, $02, $00, $00, $04, $00, $28, $08 ; id 210
-    db $73, $80, $8B, $00, $11, $0D, $10, $08, $0B, $0A, $00, $00, $00, $00, $00, $00
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $00, $00, $00, $3F, $00
+    db $07 ; id 210: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $73, $80, $8B, $00, $11, $0D, $10, $08, $0B, $0A, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $3F, $00 ; bytes 40-46
 SpeciesRecord_Mudron:: ; heuristic: species record; C0
 Data_035_69F8:: ; address name
-    db $07, $02, $00, $00, $04, $00, $1E, $0A ; id 211
-    db $13, $1B, $1E, $01, $06, $0A, $0B, $11, $07, $0E, $00, $00, $00, $00, $00, $00
-    db $02, $03, $02, $00, $00, $03, $01, $01, $02, $00, $00, $00, $03, $03, $03, $00
-    db $00, $00, $01, $01, $02, $42, $00
+    db $07 ; id 211: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $1B, $1E, $01, $06, $0A, $0B, $11, $07, $0E, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $03, $02, $00, $00, $03, $01, $01, $02, $00, $00, $00, $03, $03, $03, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $02, $42, $00 ; bytes 40-46
 SpeciesRecord_NiteWhip:: ; heuristic: species record; C0
 Data_035_6A27:: ; address name
-    db $07, $02, $01, $00, $03, $01, $23, $0C ; id 212
-    db $48, $4A, $A6, $00, $11, $04, $0A, $03, $0F, $09, $00, $00, $00, $02, $01, $01
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $01, $01, $01, $3D, $00
+    db $07 ; id 212: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $03, $01, $23 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $48, $4A, $A6, $00, $11, $04, $0A, $03, $0F, $09, $00, $00, $00, $02, $01, $01 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $3D, $00 ; bytes 40-46
 SpeciesRecord_WindMerge:: ; heuristic: species record; C0
 Data_035_6A56:: ; address name
-    db $07, $02, $01, $00, $04, $01, $23, $09 ; id 213
-    db $0A, $24, $57, $02, $10, $13, $13, $0C, $0D, $06, $00, $00, $00, $03, $01, $00
-    db $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $01, $01, $00, $4F, $00
+    db $07 ; id 213: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $24, $57, $02, $10, $13, $13, $0C, $0D, $06, $00, $00, $00, $03, $01, $00 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $4F, $00 ; bytes 40-46
 SpeciesRecord_Reaper:: ; heuristic: species record; C0
 Data_035_6A85:: ; address name
-    db $07, $02, $01, $00, $04, $01, $28, $0A ; id 214
-    db $5A, $75, $80, $00, $13, $03, $15, $11, $13, $06, $00, $00, $00, $01, $01, $00
-    db $02, $03, $02, $01, $01, $03, $00, $00, $02, $00, $00, $01, $03, $03, $03, $01
-    db $01, $00, $01, $01, $01, $53, $00
+    db $07 ; id 214: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $5A, $75, $80, $00, $13, $03, $15, $11, $13, $06, $00, $00, $00, $01, $01, $00 ; bytes 8-23
+    db $02, $03, $02, $01, $01, $03, $00, $00, $02, $00, $00, $01, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $00, $01, $01, $01, $53, $00 ; bytes 40-46
 SpeciesRecord_Inverzon:: ; heuristic: species record; C0
 Data_035_6AB4:: ; address name
-    db $07, $02, $00, $00, $03, $00, $23, $04 ; id 215
-    db $2E, $73, $7D, $00, $07, $02, $0E, $07, $04, $01, $00, $00, $00, $01, $00, $01
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $2C, $00
+    db $07 ; id 215: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2E, $73, $7D, $00, $07, $02, $0E, $07, $04, $01, $00, $00, $00, $01, $00, $01 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $2C, $00 ; bytes 40-46
 SpeciesRecord_FoxFire:: ; heuristic: species record; C0
 Data_035_6AE3:: ; address name
-    db $07, $02, $01, $00, $04, $01, $28, $07 ; id 216
-    db $01, $04, $A5, $00, $09, $0F, $06, $08, $0D, $04, $02, $02, $00, $01, $00, $00
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $02, $00, $02, $02, $02, $01
-    db $01, $00, $00, $00, $00, $3E, $00
+    db $07 ; id 216: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $04, $A5, $00, $09, $0F, $06, $08, $0D, $04, $02, $02, $00, $01, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $02, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $00, $00, $00, $00, $3E, $00 ; bytes 40-46
 SpeciesRecord_CaptDead:: ; heuristic: species record; C0
 Data_035_6B12:: ; address name
-    db $07, $02, $00, $00, $05, $00, $28, $0D ; id 217
-    db $4E, $5D, $62, $01, $09, $14, $11, $10, $08, $05, $01, $01, $01, $02, $01, $02
-    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $00, $00, $03, $4A, $00
+    db $07 ; id 217: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $5D, $62, $01, $09, $14, $11, $10, $08, $05, $01, $01, $01, $02, $01, $02 ; bytes 8-23
+    db $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $03, $4A, $00 ; bytes 40-46
 SpeciesRecord_DeadNoble:: ; heuristic: species record; C0
 Data_035_6B41:: ; address name
-    db $07, $02, $00, $00, $05, $00, $32, $10 ; id 218
-    db $19, $5D, $85, $00, $15, $02, $1A, $13, $0F, $0D, $00, $01, $01, $01, $00, $02
-    db $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $02, $02, $03, $02, $03
-    db $00, $00, $00, $00, $00, $5F, $00
+    db $07 ; id 218: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $19, $5D, $85, $00, $15, $02, $1A, $13, $0F, $0D, $00, $01, $01, $01, $00, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $02, $02, $03, $02, $03 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $5F, $00 ; bytes 40-46
 SpeciesRecord_WhiteKing:: ; heuristic: species record; C0
 Data_035_6B70:: ; address name
-    db $07, $02, $00, $00, $06, $00, $3C, $19 ; id 219
-    db $0A, $0D, $3C, $00, $14, $18, $0E, $14, $0F, $1B, $01, $01, $02, $03, $01, $03
-    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01
-    db $01, $01, $01, $01, $01, $7A, $00
+    db $07 ; id 219: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $0D, $3C, $00, $14, $18, $0E, $14, $0F, $1B, $01, $01, $02, $03, $01, $03 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $7A, $00 ; bytes 40-46
 SpeciesRecord_BoneSlave:: ; heuristic: species record; C0
 Data_035_6B9F:: ; address name
-    db $07, $02, $00, $00, $06, $00, $28, $0A ; id 220
-    db $07, $52, $63, $00, $0E, $0D, $11, $0C, $07, $01, $00, $00, $00, $01, $00, $01
-    db $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $3B, $00
+    db $07 ; id 220: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $52, $63, $00, $0E, $0D, $11, $0C, $07, $01, $00, $00, $00, $01, $00, $01 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $3B, $00 ; bytes 40-46
 SpeciesRecord_Skeletor:: ; heuristic: species record; C0
 Data_035_6BCE:: ; address name
-    db $07, $02, $00, $00, $05, $00, $37, $0C ; id 221
-    db $27, $57, $63, $05, $10, $0B, $12, $0C, $10, $13, $00, $00, $01, $02, $00, $02
-    db $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $55, $00
+    db $07 ; id 221: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $37 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $57, $63, $05, $10, $0B, $12, $0C, $10, $13, $00, $00, $01, $02, $00, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $55, $00 ; bytes 40-46
 SpeciesRecord_Servant:: ; heuristic: species record; C0
 Data_035_6BFD:: ; address name
-    db $07, $02, $00, $00, $05, $00, $46, $14 ; id 222
-    db $01, $10, $8A, $05, $17, $15, $19, $12, $0F, $14, $01, $01, $03, $02, $01, $02
-    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01
-    db $01, $01, $01, $01, $01, $7A, $00
+    db $07 ; id 222: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $46 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $10, $8A, $05, $17, $15, $19, $12, $0F, $14, $01, $01, $03, $02, $01, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $7A, $00 ; bytes 40-46
 SpeciesRecord_Lazamanus:: ; heuristic: species record; C0
 Data_035_6C2C:: ; address name
-    db $07, $02, $00, $00, $06, $00, $4B, $1A ; id 223
-    db $31, $79, $7B, $00, $18, $14, $1E, $14, $0C, $0E, $02, $02, $02, $02, $01, $02
-    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $00, $02, $02, $01, $01, $01, $01
-    db $01, $01, $01, $02, $01, $78, $00
+    db $07 ; id 223: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $4B ; bytes 1-6
+    db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $31, $79, $7B, $00, $18, $14, $1E, $14, $0C, $0E, $02, $02, $02, $02, $01, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $03, $01, $01, $03, $00, $02, $02, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $02, $01, $78, $00 ; bytes 40-46
 SpeciesRecord_Copycat:: ; heuristic: species record; C0
 Data_035_6C5B:: ; address name
-    db $07, $02, $01, $00, $05, $01, $28, $01 ; id 224
-    db $3A, $76, $9E, $00, $0B, $14, $01, $02, $15, $05, $00, $00, $00, $00, $00, $00
-    db $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01
-    db $00, $00, $00, $00, $01, $38, $00
+    db $07 ; id 224: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $28 ; bytes 1-6
+    db $01 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3A, $76, $9E, $00, $0B, $14, $01, $02, $15, $05, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $38, $00 ; bytes 40-46
 SpeciesRecord_MadSpirit:: ; heuristic: species record; C0
 Data_035_6C8A:: ; address name
-    db $07, $02, $01, $00, $04, $01, $32, $0D ; id 225
-    db $71, $7F, $84, $02, $0E, $0C, $0F, $0C, $10, $0A, $00, $00, $00, $01, $01, $01
-    db $02, $02, $03, $01, $01, $03, $00, $00, $03, $00, $00, $00, $02, $02, $02, $01
-    db $01, $01, $00, $00, $01, $4D, $00
+    db $07 ; id 225: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $32 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $71, $7F, $84, $02, $0E, $0C, $0F, $0C, $10, $0A, $00, $00, $00, $01, $01, $01 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $03, $00, $00, $03, $00, $00, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $01, $4D, $00 ; bytes 40-46
 SpeciesRecord_PomPomBom:: ; heuristic: species record; C0
 Data_035_6CB9:: ; address name
-    db $07, $02, $01, $00, $04, $00, $28, $08 ; id 226
-    db $13, $84, $7B, $00, $05, $15, $0D, $0B, $0E, $15, $00, $00, $02, $01, $01, $00
-    db $03, $03, $03, $00, $01, $02, $00, $00, $02, $00, $00, $01, $01, $01, $03, $01
-    db $00, $00, $00, $00, $00, $48, $00
+    db $07 ; id 226: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $84, $7B, $00, $05, $15, $0D, $0B, $0E, $15, $00, $00, $02, $01, $01, $00 ; bytes 8-23
+    db $03, $03, $03, $00, $01, $02, $00, $00, $02, $00, $00, $01, $01, $01, $03, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $48, $00 ; bytes 40-46
 SpeciesRecord_Niterich:: ; heuristic: species record; C0
 Data_035_6CE8:: ; address name
-    db $07, $01, $00, $00, $06, $00, $41, $14 ; id 227
-    db $13, $84, $96, $05, $1B, $0D, $18, $17, $13, $15, $00, $00, $00, $02, $02, $03
-    db $03, $03, $03, $01, $01, $02, $01, $01, $03, $01, $00, $03, $01, $03, $03, $01
-    db $00, $01, $01, $02, $02, $3B, $00
+    db $07 ; id 227: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $41 ; bytes 1-6
+    db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $84, $96, $05, $1B, $0D, $18, $17, $13, $15, $00, $00, $00, $02, $02, $03 ; bytes 8-23
+    db $03, $03, $03, $01, $01, $02, $01, $01, $03, $01, $00, $03, $01, $03, $03, $01 ; bytes 24-39
+    db $00, $01, $01, $02, $02, $3B, $00 ; bytes 40-46
 SpeciesRecord_JewelBag:: ; heuristic: species record; C0
 Data_035_6D17:: ; address name
-    db $08, $03, $00, $00, $04, $00, $28, $0C ; id 228
-    db $04, $33, $34, $00, $0D, $0B, $09, $12, $11, $0F, $00, $00, $00, $00, $00, $02
-    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $43, $00
+    db $08 ; id 228: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $33, $34, $00, $0D, $0B, $09, $12, $11, $0F, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $43, $00 ; bytes 40-46
 SpeciesRecord_EvilWand:: ; heuristic: species record; C0
 Data_035_6D46:: ; address name
-    db $08, $02, $00, $00, $04, $00, $32, $0E ; id 229
-    db $22, $44, $A9, $00, $0E, $0F, $11, $0C, $09, $0D, $01, $01, $01, $00, $00, $02
-    db $00, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $02, $00, $00, $03, $01
-    db $01, $01, $00, $00, $01, $3D, $00
+    db $08 ; id 229: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $22, $44, $A9, $00, $0E, $0F, $11, $0C, $09, $0D, $01, $01, $01, $00, $00, $02 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $02, $00, $00, $03, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $01, $3D, $00 ; bytes 40-46
 SpeciesRecord_MadCandle:: ; heuristic: species record; C0
 Data_035_6D75:: ; address name
-    db $08, $02, $00, $00, $03, $00, $23, $0A ; id 230
-    db $01, $69, $A2, $00, $0C, $0A, $0E, $06, $11, $0C, $00, $00, $00, $00, $00, $00
-    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $00, $01
-    db $01, $01, $01, $01, $00, $37, $00
+    db $08 ; id 230: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $69, $A2, $00, $0C, $0A, $0E, $06, $11, $0C, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $37, $00 ; bytes 40-46
 SpeciesRecord_CoilBird:: ; heuristic: species record; C0
 Data_035_6DA4:: ; address name
-    db $08, $02, $01, $00, $04, $01, $23, $0A ; id 231
-    db $22, $23, $9D, $00, $10, $0D, $05, $0E, $0E, $07, $00, $00, $00, $01, $01, $02
-    db $02, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01
-    db $01, $01, $01, $01, $01, $39, $00
+    db $08 ; id 231: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $22, $23, $9D, $00, $10, $0D, $05, $0E, $0E, $07, $00, $00, $00, $01, $01, $02 ; bytes 8-23
+    db $02, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $39, $00 ; bytes 40-46
 SpeciesRecord_Facer:: ; heuristic: species record; C0
 Data_035_6DD3:: ; address name
-    db $08, $02, $00, $00, $05, $00, $2D, $0C ; id 232
-    db $0A, $15, $A0, $00, $08, $17, $0B, $0C, $03, $13, $00, $00, $00, $01, $01, $02
-    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01
-    db $01, $01, $00, $00, $01, $3C, $00
+    db $08 ; id 232: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $15, $A0, $00, $08, $17, $0B, $0C, $03, $13, $00, $00, $00, $01, $01, $02 ; bytes 8-23
+    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $00, $00, $01, $3C, $00 ; bytes 40-46
 SpeciesRecord_SpikyBoy:: ; heuristic: species record; C0
 Data_035_6E02:: ; address name
-    db $08, $02, $00, $00, $04, $00, $1E, $08 ; id 233
-    db $15, $54, $6A, $00, $09, $0D, $0E, $11, $07, $0B, $00, $00, $00, $00, $00, $02
-    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00
-    db $00, $00, $01, $01, $01, $3A, $00
+    db $08 ; id 233: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $15, $54, $6A, $00, $09, $0D, $0E, $11, $07, $0B, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $01, $3A, $00 ; bytes 40-46
 SpeciesRecord_MadMirror:: ; heuristic: species record; C0
 Data_035_6E31:: ; address name
-    db $08, $02, $00, $00, $05, $00, $2D, $0E ; id 234
-    db $36, $3A, $A5, $00, $0F, $0B, $08, $06, $0B, $13, $01, $01, $01, $01, $01, $02
-    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $02, $3D, $00
+    db $08 ; id 234: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $36, $3A, $A5, $00, $0F, $0B, $08, $06, $0B, $13, $01, $01, $01, $01, $01, $02 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $3D, $00 ; bytes 40-46
 SpeciesRecord_RogueNite:: ; heuristic: species record; C0
 Data_035_6E60:: ; address name
-    db $08, $02, $00, $00, $04, $00, $2D, $0C ; id 235
-    db $16, $5E, $6B, $00, $0E, $04, $14, $15, $0A, $0D, $00, $00, $00, $00, $00, $02
-    db $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $02, $01, $01, $01, $00
-    db $00, $00, $00, $00, $02, $47, $00
+    db $08 ; id 235: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $5E, $6B, $00, $0E, $04, $14, $15, $0A, $0D, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $02, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $47, $00 ; bytes 40-46
 SpeciesRecord_Puppetor:: ; heuristic: species record; C0
 Data_035_6E8F:: ; address name
-    db $08, $02, $01, $00, $04, $01, $23, $06 ; id 236
-    db $76, $7A, $A3, $00, $0D, $09, $07, $04, $07, $0B, $00, $00, $00, $00, $00, $02
-    db $01, $01, $02, $01, $01, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $01
-    db $00, $00, $00, $00, $00, $34, $00
+    db $08 ; id 236: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $23 ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $76, $7A, $A3, $00, $0D, $09, $07, $04, $07, $0B, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $02, $01, $01, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $34, $00 ; bytes 40-46
 SpeciesRecord_Goopi:: ; heuristic: species record; C0
 Data_035_6EBE:: ; address name
-    db $08, $02, $00, $00, $03, $00, $28, $08 ; id 237
-    db $4E, $8D, $95, $00, $08, $0D, $0B, $0E, $07, $04, $00, $00, $00, $00, $00, $02
-    db $00, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $2C, $00
+    db $08 ; id 237: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $8D, $95, $00, $08, $0D, $0B, $0E, $07, $04, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $2C, $00 ; bytes 40-46
 SpeciesRecord_Voodoll:: ; heuristic: species record; C0
 Data_035_6EED:: ; address name
-    db $08, $02, $00, $00, $05, $00, $23, $0B ; id 238
-    db $27, $2E, $34, $00, $0E, $11, $0C, $0C, $08, $0E, $00, $00, $00, $00, $00, $02
-    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $02, $02, $01, $00
-    db $00, $00, $01, $01, $01, $42, $00
+    db $08 ; id 238: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $2E, $34, $00, $0E, $11, $0C, $0C, $08, $0E, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $02, $02, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $01, $42, $00 ; bytes 40-46
 SpeciesRecord_MetalDrak:: ; heuristic: species record; C0
 Data_035_6F1C:: ; address name
-    db $08, $02, $00, $00, $06, $00, $2D, $0F ; id 239
-    db $40, $6C, $7E, $03, $12, $0D, $14, $17, $09, $0A, $01, $01, $01, $00, $00, $02
-    db $01, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $03, $02, $03, $02, $00
-    db $00, $00, $00, $00, $01, $51, $00
+    db $08 ; id 239: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $2D ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $6C, $7E, $03, $12, $0D, $14, $17, $09, $0A, $01, $01, $01, $00, $00, $02 ; bytes 8-23
+    db $01, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $03, $02, $03, $02, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $51, $00 ; bytes 40-46
 SpeciesRecord_Balzak:: ; heuristic: species record; C0
 Data_035_6F4B:: ; address name
-    db $08, $02, $00, $00, $05, $00, $23, $0D ; id 240
-    db $07, $0D, $66, $03, $15, $0B, $17, $15, $12, $13, $00, $00, $00, $00, $00, $02
-    db $01, $01, $02, $01, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01
-    db $01, $01, $01, $01, $00, $5D, $00
+    db $08 ; id 240: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $23 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $0D, $66, $03, $15, $0B, $17, $15, $12, $13, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $02, $01, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $5D, $00 ; bytes 40-46
 SpeciesRecord_SabreMan:: ; heuristic: species record; C0
 Data_035_6F7A:: ; address name
-    db $08, $02, $01, $00, $04, $01, $1E, $0B ; id 241
-    db $32, $5A, $60, $00, $08, $03, $09, $0B, $0C, $06, $00, $00, $01, $01, $00, $02
-    db $00, $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00
-    db $00, $00, $01, $01, $00, $35, $00
+    db $08 ; id 241: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $1E ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $5A, $60, $00, $08, $03, $09, $0B, $0C, $06, $00, $00, $01, $01, $00, $02 ; bytes 8-23
+    db $00, $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $00, $35, $00 ; bytes 40-46
 SpeciesRecord_CurseLamp:: ; heuristic: species record; C0
 Data_035_6FA9:: ; address name
-    db $08, $02, $01, $00, $04, $01, $2D, $09 ; id 242
-    db $25, $29, $2D, $02, $0C, $12, $09, $13, $0D, $0F, $00, $00, $00, $02, $01, $02
-    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02
-    db $02, $02, $00, $00, $00, $44, $00
+    db $08 ; id 242: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $2D ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $29, $2D, $02, $0C, $12, $09, $13, $0D, $0F, $00, $00, $00, $02, $01, $02 ; bytes 8-23
+    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $00, $00, $00, $44, $00 ; bytes 40-46
 SpeciesRecord_Brushead:: ; heuristic: species record; C0
 Data_035_6FD8:: ; address name
-    db $08, $02, $00, $00, $04, $00, $1E, $08 ; id 243
-    db $76, $7E, $A1, $00, $07, $06, $0E, $04, $04, $03, $00, $00, $00, $00, $00, $02
-    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $02, $28, $00
+    db $08 ; id 243: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $1E ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $76, $7E, $A1, $00, $07, $06, $0E, $04, $04, $03, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $28, $00 ; bytes 40-46
 SpeciesRecord_Roboster:: ; heuristic: species record; C0
 Data_035_7007:: ; address name
-    db $08, $01, $00, $00, $05, $00, $28, $0D ; id 244
-    db $62, $63, $65, $05, $0C, $05, $15, $16, $18, $11, $01, $01, $01, $01, $01, $02
-    db $01, $02, $03, $00, $00, $00, $00, $00, $03, $00, $01, $02, $02, $02, $01, $02
-    db $00, $00, $00, $00, $00, $53, $00
+    db $08 ; id 244: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $05, $00, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $62, $63, $65, $05, $0C, $05, $15, $16, $18, $11, $01, $01, $01, $01, $01, $02 ; bytes 8-23
+    db $01, $02, $03, $00, $00, $00, $00, $00, $03, $00, $01, $02, $02, $02, $01, $02 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $53, $00 ; bytes 40-46
 SpeciesRecord_Roboster2:: ; heuristic: species record; C0
 Data_035_7036:: ; address name
-    db $08, $02, $00, $00, $05, $00, $2D, $16 ; id 245
-    db $52, $5E, $67, $03, $17, $0D, $18, $1A, $16, $0C, $02, $02, $02, $02, $02, $03
-    db $02, $03, $03, $00, $00, $00, $00, $00, $03, $00, $02, $03, $03, $03, $00, $00
-    db $00, $00, $00, $00, $01, $6F, $00
+    db $08 ; id 245: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $2D ; bytes 1-6
+    db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $52, $5E, $67, $03, $17, $0D, $18, $1A, $16, $0C, $02, $02, $02, $02, $02, $03 ; bytes 8-23
+    db $02, $03, $03, $00, $00, $00, $00, $00, $03, $00, $02, $03, $03, $03, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $6F, $00 ; bytes 40-46
 SpeciesRecord_EvilPot:: ; heuristic: species record; C0
 Data_035_7065:: ; address name
-    db $08, $02, $01, $00, $04, $01, $28, $0B ; id 246
-    db $13, $6C, $A5, $00, $12, $13, $0F, $12, $09, $13, $00, $00, $00, $00, $00, $02
-    db $02, $02, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $4F, $00
+    db $08 ; id 246: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $6C, $A5, $00, $12, $13, $0F, $12, $09, $13, $00, $00, $00, $00, $00, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $4F, $00 ; bytes 40-46
 SpeciesRecord_Gismo:: ; heuristic: species record; C0
 Data_035_7094:: ; address name
-    db $08, $02, $01, $00, $04, $01, $28, $09 ; id 247
-    db $40, $44, $89, $02, $0D, $0F, $0B, $0E, $14, $12, $00, $00, $00, $02, $01, $02
-    db $00, $00, $02, $00, $00, $00, $00, $01, $02, $00, $00, $02, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $44, $00
+    db $08 ; id 247: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $04, $01, $28 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $44, $89, $02, $0D, $0F, $0B, $0E, $14, $12, $00, $00, $00, $02, $01, $02 ; bytes 8-23
+    db $00, $00, $02, $00, $00, $00, $00, $01, $02, $00, $00, $02, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $44, $00 ; bytes 40-46
 SpeciesRecord_LavaMan:: ; heuristic: species record; C0
 Data_035_70C3:: ; address name
-    db $08, $03, $00, $00, $06, $00, $2D, $0D ; id 248
-    db $01, $40, $97, $00, $12, $0C, $11, $18, $04, $07, $03, $03, $01, $02, $00, $01
-    db $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $03, $01, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $4A, $00
+    db $08 ; id 248: family (StringTable_MonsterFamilies index; $FF unused)
+    db $03, $00, $00, $06, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $40, $97, $00, $12, $0C, $11, $18, $04, $07, $03, $03, $01, $02, $00, $01 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $03, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $4A, $00 ; bytes 40-46
 SpeciesRecord_IceMan:: ; heuristic: species record; C0
 Data_035_70F2:: ; address name
-    db $08, $01, $00, $00, $06, $00, $2D, $0D ; id 249
-    db $10, $44, $94, $00, $10, $06, $12, $18, $04, $07, $01, $01, $01, $02, $00, $03
-    db $00, $00, $03, $00, $00, $00, $01, $00, $03, $00, $01, $03, $00, $00, $00, $00
-    db $00, $00, $00, $00, $02, $47, $00
+    db $08 ; id 249: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $2D ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $44, $94, $00, $10, $06, $12, $18, $04, $07, $01, $01, $01, $02, $00, $03 ; bytes 8-23
+    db $00, $00, $03, $00, $00, $00, $01, $00, $03, $00, $01, $03, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $02, $47, $00 ; bytes 40-46
 SpeciesRecord_Mimic:: ; heuristic: species record; C0
 Data_035_7121:: ; address name
-    db $08, $02, $01, $00, $05, $01, $28, $0B ; id 250
-    db $01, $13, $A8, $00, $19, $0A, $14, $0C, $01, $14, $00, $00, $01, $02, $01, $02
-    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $01, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $4E, $00
+    db $08 ; id 250: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $28 ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $13, $A8, $00, $19, $0A, $14, $0C, $01, $14, $00, $00, $01, $02, $01, $02 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $01, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $4E, $00 ; bytes 40-46
 SpeciesRecord_Exaucers:: ; heuristic: species record; C0
 Data_035_7150:: ; address name
-    db $08, $02, $01, $00, $05, $01, $2D, $0B ; id 251
-    db $31, $48, $78, $00, $14, $0D, $0F, $06, $07, $04, $01, $01, $00, $00, $00, $02
-    db $01, $01, $03, $01, $01, $01, $01, $01, $02, $00, $01, $02, $01, $01, $00, $00
-    db $00, $00, $00, $00, $01, $40, $00
+    db $08 ; id 251: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $05, $01, $2D ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $31, $48, $78, $00, $14, $0D, $0F, $06, $07, $04, $01, $01, $00, $00, $00, $02 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $01, $02, $00, $01, $02, $01, $01, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $40, $00 ; bytes 40-46
 SpeciesRecord_MudDoll:: ; heuristic: species record; C0
 Data_035_717F:: ; address name
-    db $08, $02, $00, $00, $04, $00, $28, $08 ; id 252
-    db $76, $7C, $7D, $00, $0C, $03, $0D, $0E, $01, $0F, $00, $00, $01, $01, $00, $03
-    db $01, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $00
-    db $00, $00, $00, $00, $01, $33, $00
+    db $08 ; id 252: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $76, $7C, $7D, $00, $0C, $03, $0D, $0E, $01, $0F, $00, $00, $01, $01, $00, $03 ; bytes 8-23
+    db $01, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $01, $33, $00 ; bytes 40-46
 SpeciesRecord_Golem:: ; heuristic: species record; C0
 Data_035_71AE:: ; address name
-    db $08, $02, $00, $00, $04, $00, $2D, $12 ; id 253
-    db $68, $69, $9F, $03, $11, $04, $0C, $15, $04, $06, $00, $00, $01, $01, $00, $03
-    db $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $01
-    db $01, $01, $01, $01, $02, $43, $00
+    db $08 ; id 253: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $2D ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $68, $69, $9F, $03, $11, $04, $0C, $15, $04, $06, $00, $00, $01, $01, $00, $03 ; bytes 8-23
+    db $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $43, $00 ; bytes 40-46
 SpeciesRecord_StoneMan:: ; heuristic: species record; C0
 Data_035_71DD:: ; address name
-    db $08, $02, $00, $00, $05, $00, $32, $0F ; id 254
-    db $94, $97, $9D, $03, $18, $0A, $17, $18, $01, $0E, $00, $01, $01, $01, $00, $03
-    db $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01
-    db $01, $01, $01, $01, $02, $5D, $00
+    db $08 ; id 254: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $00, $32 ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $94, $97, $9D, $03, $18, $0A, $17, $18, $01, $0E, $00, $01, $01, $01, $00, $03 ; bytes 8-23
+    db $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $5D, $00 ; bytes 40-46
 SpeciesRecord_BombCrag:: ; heuristic: species record; C0
 Data_035_720C:: ; address name
-    db $08, $02, $00, $00, $04, $00, $32, $0E ; id 255
-    db $15, $20, $4B, $03, $0F, $0B, $11, $14, $00, $0D, $01, $01, $00, $00, $00, $02
-    db $00, $01, $03, $01, $01, $01, $01, $01, $03, $00, $02, $02, $01, $01, $01, $00
-    db $00, $00, $01, $01, $02, $4D, $00
+    db $08 ; id 255: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $00, $32 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $15, $20, $4B, $03, $0F, $0B, $11, $14, $00, $0D, $01, $01, $00, $00, $00, $02 ; bytes 8-23
+    db $00, $01, $03, $01, $01, $01, $01, $01, $03, $00, $02, $02, $01, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $01, $01, $02, $4D, $00 ; bytes 40-46
 SpeciesRecord_GoldGolem:: ; heuristic: species record; C0
 Data_035_723B:: ; address name
-    db $08, $01, $00, $00, $06, $00, $4B, $12 ; id 256
-    db $3E, $81, $85, $05, $18, $15, $18, $1B, $11, $17, $02, $02, $02, $02, $01, $02
-    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $02, $03, $03, $03, $02
-    db $02, $02, $01, $01, $02, $92, $00
+    db $08 ; id 256: family (StringTable_MonsterFamilies index; $FF unused)
+    db $01, $00, $00, $06, $00, $4B ; bytes 1-6
+    db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $81, $85, $05, $18, $15, $18, $1B, $11, $17, $02, $02, $02, $02, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $02, $03, $03, $03, $02 ; bytes 24-39
+    db $02, $02, $01, $01, $02, $92, $00 ; bytes 40-46
 SpeciesRecord_DarkMate:: ; heuristic: species record; C0
 Data_035_726A:: ; address name
-    db $08, $02, $00, $00, $06, $00, $46, $18 ; id 257
-    db $13, $3F, $80, $00, $18, $15, $0C, $19, $15, $0A, $02, $02, $02, $02, $02, $02
-    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $02, $02, $02, $03, $03, $03, $01
-    db $01, $03, $01, $01, $02, $88, $00
+    db $08 ; id 257: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $13, $3F, $80, $00, $18, $15, $0C, $19, $15, $0A, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $02, $02, $02, $03, $03, $03, $01 ; bytes 24-39
+    db $01, $03, $01, $01, $02, $88, $00 ; bytes 40-46
 SpeciesRecord_ProtoMech:: ; heuristic: species record; C0
 Data_035_7299:: ; address name
-    db $08, $00, $00, $00, $02, $00, $28, $05 ; id 258
-    db $54, $68, $6F, $00, $03, $02, $06, $03, $04, $06, $00, $00, $00, $01, $00, $00
-    db $01, $01, $03, $01, $01, $01, $01, $00, $02, $00, $00, $00, $03, $02, $00, $00
-    db $00, $00, $00, $00, $00, $4F, $00
+    db $08 ; id 258: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $02, $00, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $54, $68, $6F, $00, $03, $02, $06, $03, $04, $06, $00, $00, $00, $01, $00, $00 ; bytes 8-23
+    db $01, $01, $03, $01, $01, $01, $01, $00, $02, $00, $00, $00, $03, $02, $00, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $00, $4F, $00 ; bytes 40-46
 SpeciesRecord_CloudKing:: ; heuristic: species record; C0
 Data_035_72C8:: ; address name
-    db $08, $00, $01, $00, $05, $01, $2D, $08 ; id 259
-    db $0A, $38, $81, $02, $08, $18, $0E, $10, $0B, $1A, $01, $00, $00, $01, $03, $01
-    db $00, $02, $03, $02, $02, $01, $00, $00, $01, $00, $02, $02, $03, $02, $01, $01
-    db $01, $00, $00, $02, $02, $75, $00
+    db $08 ; id 259: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $05, $01, $2D ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0A, $38, $81, $02, $08, $18, $0E, $10, $0B, $1A, $01, $00, $00, $01, $03, $01 ; bytes 8-23
+    db $00, $02, $03, $02, $02, $01, $00, $00, $01, $00, $02, $02, $03, $02, $01, $01 ; bytes 24-39
+    db $01, $00, $00, $02, $02, $75, $00 ; bytes 40-46
 SpeciesRecord_Petiteel:: ; heuristic: species record; C0
 Data_035_72F7:: ; address name
-    db $09, $02, $00, $00, $03, $02, $23, $03 ; id 260
-    db $29, $2D, $6F, $00, $0F, $11, $0C, $09, $0E, $0A, $02, $02, $00, $00, $00, $00
-    db $00, $02, $01, $00, $01, $00, $00, $02, $00, $00, $02, $00, $03, $02, $00, $00
-    db $00, $02, $00, $00, $02, $42, $00
+    db $09 ; id 260: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $02, $23 ; bytes 1-6
+    db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $29, $2D, $6F, $00, $0F, $11, $0C, $09, $0E, $0A, $02, $02, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $01, $00, $00, $02, $00, $00, $02, $00, $03, $02, $00, $00 ; bytes 24-39
+    db $00, $02, $00, $00, $02, $42, $00 ; bytes 40-46
 SpeciesRecord_Moray:: ; heuristic: species record; C0
 Data_035_7326:: ; address name
-    db $09, $02, $00, $00, $04, $02, $28, $05 ; id 261
-    db $2F, $69, $73, $01, $0C, $11, $12, $13, $16, $09, $00, $00, $00, $01, $00, $00
-    db $00, $02, $01, $00, $01, $01, $00, $02, $00, $00, $02, $00, $03, $00, $00, $00
-    db $00, $02, $00, $00, $02, $4C, $00
+    db $09 ; id 261: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $28 ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2F, $69, $73, $01, $0C, $11, $12, $13, $16, $09, $00, $00, $00, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $01, $01, $00, $02, $00, $00, $02, $00, $03, $00, $00, $00 ; bytes 24-39
+    db $00, $02, $00, $00, $02, $4C, $00 ; bytes 40-46
 SpeciesRecord_WalrusMan:: ; heuristic: species record; C0
 Data_035_7355:: ; address name
-    db $09, $02, $00, $00, $04, $02, $28, $0D ; id 262
-    db $58, $6B, $6C, $03, $17, $08, $17, $10, $07, $08, $01, $01, $00, $01, $00, $00
-    db $00, $02, $00, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $02, $02, $01
-    db $01, $02, $00, $00, $02, $4A, $00
+    db $09 ; id 262: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $28 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $58, $6B, $6C, $03, $17, $08, $17, $10, $07, $08, $01, $01, $00, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $02, $02, $01 ; bytes 24-39
+    db $01, $02, $00, $00, $02, $4A, $00 ; bytes 40-46
 SpeciesRecord_RayGigas:: ; heuristic: species record; C0
 Data_035_7384:: ; address name
-    db $09, $02, $00, $00, $05, $02, $28, $0A ; id 263
-    db $04, $93, $9B, $02, $16, $09, $18, $13, $09, $07, $02, $02, $01, $01, $00, $00
-    db $01, $02, $00, $00, $00, $01, $00, $02, $00, $00, $02, $00, $00, $00, $00, $02
-    db $02, $02, $01, $00, $02, $4D, $00
+    db $09 ; id 263: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $28 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $93, $9B, $02, $16, $09, $18, $13, $09, $07, $02, $02, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $02, $00, $00, $00, $01, $00, $02, $00, $00, $02, $00, $00, $00, $00, $02 ; bytes 24-39
+    db $02, $02, $01, $00, $02, $4D, $00 ; bytes 40-46
 SpeciesRecord_Anemon:: ; heuristic: species record; C0
 Data_035_73B3:: ; address name
-    db $09, $02, $00, $00, $04, $02, $28, $04 ; id 264
-    db $04, $60, $73, $00, $09, $0E, $0A, $0D, $05, $07, $01, $01, $01, $01, $00, $00
-    db $01, $02, $01, $01, $00, $00, $00, $02, $01, $00, $02, $00, $01, $02, $00, $00
-    db $01, $02, $00, $00, $01, $3A, $00
+    db $09 ; id 264: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $28 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $60, $73, $00, $09, $0E, $0A, $0D, $05, $07, $01, $01, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $02, $01, $01, $00, $00, $00, $02, $01, $00, $02, $00, $01, $02, $00, $00 ; bytes 24-39
+    db $01, $02, $00, $00, $01, $3A, $00 ; bytes 40-46
 SpeciesRecord_Aquarella:: ; heuristic: species record; C0
 Data_035_73E2:: ; address name
-    db $09, $02, $00, $00, $05, $02, $2D, $06 ; id 265
-    db $38, $62, $91, $00, $0B, $08, $11, $0E, $06, $04, $02, $02, $01, $01, $00, $00
-    db $00, $02, $01, $00, $00, $00, $00, $02, $01, $00, $02, $00, $02, $02, $01, $00
-    db $00, $02, $00, $00, $01, $3A, $00
+    db $09 ; id 265: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $2D ; bytes 1-6
+    db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $38, $62, $91, $00, $0B, $08, $11, $0E, $06, $04, $02, $02, $01, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $00, $00, $02, $01, $00, $02, $00, $02, $02, $01, $00 ; bytes 24-39
+    db $00, $02, $00, $00, $01, $3A, $00 ; bytes 40-46
 SpeciesRecord_Merman:: ; heuristic: species record; C0
 Data_035_7411:: ; address name
-    db $09, $02, $00, $00, $04, $02, $23, $09 ; id 266
-    db $1E, $27, $71, $01, $10, $11, $0E, $12, $14, $13, $02, $02, $02, $01, $00, $00
-    db $00, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $02, $01, $01, $01
-    db $01, $02, $01, $00, $02, $59, $00
+    db $09 ; id 266: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $23 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1E, $27, $71, $01, $10, $11, $0E, $12, $14, $13, $02, $02, $02, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $02, $01, $01, $01 ; bytes 24-39
+    db $01, $02, $01, $00, $02, $59, $00 ; bytes 40-46
 SpeciesRecord_Octokid:: ; heuristic: species record; C0
 Data_035_7440:: ; address name
-    db $09, $02, $00, $00, $04, $02, $23, $0A ; id 267
-    db $16, $1B, $7A, $01, $07, $0F, $07, $0D, $11, $15, $01, $01, $01, $01, $00, $00
-    db $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01
-    db $00, $02, $00, $00, $02, $44, $00
+    db $09 ; id 267: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $16, $1B, $7A, $01, $07, $0F, $07, $0D, $11, $15, $01, $01, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01 ; bytes 24-39
+    db $00, $02, $00, $00, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_PutreFish:: ; heuristic: species record; C0
 Data_035_746F:: ; address name
-    db $09, $02, $00, $00, $03, $02, $23, $04 ; id 268
-    db $34, $4C, $6F, $01, $05, $04, $08, $03, $0E, $07, $00, $00, $00, $00, $00, $01
-    db $01, $02, $01, $01, $01, $00, $00, $00, $00, $00, $01, $01, $02, $01, $01, $00
-    db $00, $00, $00, $00, $03, $3F, $00
+    db $09 ; id 268: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $02, $23 ; bytes 1-6
+    db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $34, $4C, $6F, $01, $05, $04, $08, $03, $0E, $07, $00, $00, $00, $00, $00, $01 ; bytes 8-23
+    db $01, $02, $01, $01, $01, $00, $00, $00, $00, $00, $01, $01, $02, $01, $01, $00 ; bytes 24-39
+    db $00, $00, $00, $00, $03, $3F, $00 ; bytes 40-46
 SpeciesRecord_Octoreach:: ; heuristic: species record; C0
 Data_035_749E:: ; address name
-    db $09, $02, $00, $00, $05, $02, $28, $0E ; id 269
-    db $76, $78, $91, $01, $17, $15, $18, $14, $08, $0E, $02, $02, $01, $01, $00, $00
-    db $00, $02, $01, $00, $01, $01, $01, $02, $01, $00, $02, $00, $01, $01, $01, $01
-    db $02, $02, $01, $00, $02, $59, $00
+    db $09 ; id 269: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $28 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $76, $78, $91, $01, $17, $15, $18, $14, $08, $0E, $02, $02, $01, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $01, $01, $01, $02, $01, $00, $02, $00, $01, $01, $01, $01 ; bytes 24-39
+    db $02, $02, $01, $00, $02, $59, $00 ; bytes 40-46
 SpeciesRecord_Angleron:: ; heuristic: species record; C0
 Data_035_74CD:: ; address name
-    db $09, $02, $00, $00, $04, $02, $2D, $0C ; id 270
-    db $0D, $2E, $71, $01, $11, $10, $17, $14, $09, $13, $02, $02, $00, $02, $00, $00
-    db $00, $02, $00, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $00, $00, $00
-    db $00, $02, $00, $00, $02, $4F, $00
+    db $09 ; id 270: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $2D ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $2E, $71, $01, $11, $10, $17, $14, $09, $13, $02, $02, $00, $02, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $00, $00, $00 ; bytes 24-39
+    db $00, $02, $00, $00, $02, $4F, $00 ; bytes 40-46
 SpeciesRecord_FishRider:: ; heuristic: species record; C0
 Data_035_74FC:: ; address name
-    db $09, $02, $00, $00, $05, $02, $32, $0D ; id 271
-    db $52, $65, $95, $01, $12, $13, $10, $16, $0D, $07, $02, $02, $02, $01, $01, $00
-    db $01, $02, $01, $01, $01, $00, $02, $02, $01, $00, $02, $00, $00, $00, $02, $00
-    db $00, $02, $01, $01, $02, $55, $00
+    db $09 ; id 271: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $32 ; bytes 1-6
+    db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $52, $65, $95, $01, $12, $13, $10, $16, $0D, $07, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $01, $02, $01, $01, $01, $00, $02, $02, $01, $00, $02, $00, $00, $00, $02, $00 ; bytes 24-39
+    db $00, $02, $01, $01, $02, $55, $00 ; bytes 40-46
 SpeciesRecord_RushFish:: ; heuristic: species record; C0
 Data_035_752B:: ; address name
-    db $09, $02, $00, $00, $05, $02, $28, $08 ; id 272
-    db $25, $70, $7E, $03, $09, $06, $0C, $07, $12, $06, $02, $02, $01, $01, $00, $00
-    db $00, $02, $00, $00, $00, $01, $02, $02, $00, $00, $02, $00, $00, $01, $01, $01
-    db $00, $02, $01, $00, $02, $3D, $00
+    db $09 ; id 272: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $28 ; bytes 1-6
+    db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $70, $7E, $03, $09, $06, $0C, $07, $12, $06, $02, $02, $01, $01, $00, $00 ; bytes 8-23
+    db $00, $02, $00, $00, $00, $01, $02, $02, $00, $00, $02, $00, $00, $01, $01, $01 ; bytes 24-39
+    db $00, $02, $01, $00, $02, $3D, $00 ; bytes 40-46
 SpeciesRecord_Gamanian:: ; heuristic: species record; C0
 Data_035_755A:: ; address name
-    db $09, $02, $00, $00, $03, $02, $28, $0E ; id 273
-    db $04, $61, $8B, $00, $0B, $0A, $15, $11, $16, $0F, $01, $01, $00, $00, $00, $00
-    db $01, $02, $03, $00, $00, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $01
-    db $01, $02, $01, $00, $02, $4D, $00
+    db $09 ; id 273: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $02, $28 ; bytes 1-6
+    db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $61, $8B, $00, $0B, $0A, $15, $11, $16, $0F, $01, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $01, $02, $03, $00, $00, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $01 ; bytes 24-39
+    db $01, $02, $01, $00, $02, $4D, $00 ; bytes 40-46
 SpeciesRecord_Clawster:: ; heuristic: species record; C0
 Data_035_7589:: ; address name
-    db $09, $02, $00, $00, $04, $02, $2D, $0B ; id 274
-    db $55, $5E, $63, $01, $0C, $14, $18, $12, $14, $0E, $02, $02, $02, $01, $00, $01
-    db $00, $03, $02, $01, $01, $00, $00, $02, $01, $01, $02, $01, $00, $00, $00, $01
-    db $01, $02, $00, $00, $02, $5B, $00
+    db $09 ; id 274: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $2D ; bytes 1-6
+    db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $55, $5E, $63, $01, $0C, $14, $18, $12, $14, $0E, $02, $02, $02, $01, $00, $01 ; bytes 8-23
+    db $00, $03, $02, $01, $01, $00, $00, $02, $01, $01, $02, $01, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $02, $00, $00, $02, $5B, $00 ; bytes 40-46
 SpeciesRecord_CancerMan:: ; heuristic: species record; C0
 Data_035_75B8:: ; address name
-    db $09, $02, $00, $00, $05, $02, $2D, $0F ; id 275
-    db $52, $56, $65, $05, $17, $0D, $18, $15, $0E, $09, $02, $02, $02, $00, $01, $01
-    db $01, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $01, $01, $00, $00
-    db $00, $02, $01, $01, $02, $5B, $00
+    db $09 ; id 275: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $2D ; bytes 1-6
+    db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $52, $56, $65, $05, $17, $0D, $18, $15, $0E, $09, $02, $02, $02, $00, $01, $01 ; bytes 8-23
+    db $01, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $01, $01, $00, $00 ; bytes 24-39
+    db $00, $02, $01, $01, $02, $5B, $00 ; bytes 40-46
 SpeciesRecord_RogueWave:: ; heuristic: species record; C0
 Data_035_75E7:: ; address name
-    db $09, $02, $00, $00, $03, $02, $28, $09 ; id 276
-    db $4C, $73, $9B, $01, $0B, $07, $12, $09, $18, $13, $02, $02, $01, $01, $00, $00
-    db $01, $02, $02, $00, $00, $01, $01, $02, $01, $00, $02, $01, $00, $01, $01, $01
-    db $02, $02, $00, $01, $02, $4F, $00
+    db $09 ; id 276: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $03, $02, $28 ; bytes 1-6
+    db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4C, $73, $9B, $01, $0B, $07, $12, $09, $18, $13, $02, $02, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $02, $02, $00, $00, $01, $01, $02, $01, $00, $02, $01, $00, $01, $01, $01 ; bytes 24-39
+    db $02, $02, $00, $01, $02, $4F, $00 ; bytes 40-46
 SpeciesRecord_Scallopa:: ; heuristic: species record; C0
 Data_035_7616:: ; address name
-    db $09, $02, $00, $00, $04, $02, $23, $0A ; id 277
-    db $25, $39, $7F, $01, $11, $13, $09, $17, $07, $13, $02, $02, $02, $02, $01, $01
-    db $01, $02, $01, $00, $00, $01, $00, $02, $00, $00, $02, $01, $02, $02, $00, $00
-    db $02, $02, $00, $01, $02, $54, $00
+    db $09 ; id 277: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $23 ; bytes 1-6
+    db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $39, $7F, $01, $11, $13, $09, $17, $07, $13, $02, $02, $02, $02, $01, $01 ; bytes 8-23
+    db $01, $02, $01, $00, $00, $01, $00, $02, $00, $00, $02, $01, $02, $02, $00, $00 ; bytes 24-39
+    db $02, $02, $00, $01, $02, $54, $00 ; bytes 40-46
 SpeciesRecord_SeaHorse:: ; heuristic: species record; C0
 Data_035_7645:: ; address name
-    db $09, $02, $00, $00, $05, $02, $28, $0C ; id 278
-    db $44, $91, $96, $01, $15, $09, $11, $0E, $0F, $08, $02, $02, $01, $00, $00, $00
-    db $00, $03, $01, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $01, $01, $01
-    db $00, $03, $00, $00, $01, $47, $00
+    db $09 ; id 278: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $28 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $44, $91, $96, $01, $15, $09, $11, $0E, $0F, $08, $02, $02, $01, $00, $00, $00 ; bytes 8-23
+    db $00, $03, $01, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $01, $01, $01 ; bytes 24-39
+    db $00, $03, $00, $00, $01, $47, $00 ; bytes 40-46
 SpeciesRecord_HoodSquid:: ; heuristic: species record; C0
 Data_035_7674:: ; address name
-    db $09, $02, $00, $00, $05, $02, $2D, $11 ; id 279
-    db $4E, $63, $7A, $01, $0B, $15, $10, $0A, $0E, $13, $02, $02, $01, $01, $00, $01
-    db $01, $02, $00, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01, $02
-    db $02, $02, $01, $02, $02, $59, $00
+    db $09 ; id 279: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $2D ; bytes 1-6
+    db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $63, $7A, $01, $0B, $15, $10, $0A, $0E, $13, $02, $02, $01, $01, $00, $01 ; bytes 8-23
+    db $01, $02, $00, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01, $02 ; bytes 24-39
+    db $02, $02, $01, $02, $02, $59, $00 ; bytes 40-46
 SpeciesRecord_MerTiger:: ; heuristic: species record; C0
 Data_035_76A3:: ; address name
-    db $09, $02, $00, $00, $05, $02, $32, $10 ; id 280
-    db $10, $2F, $90, $05, $17, $05, $1A, $18, $0A, $0D, $02, $02, $02, $02, $00, $01
-    db $01, $02, $02, $01, $01, $01, $00, $02, $02, $00, $02, $01, $01, $02, $02, $01
-    db $00, $02, $01, $02, $01, $63, $00
+    db $09 ; id 280: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $32 ; bytes 1-6
+    db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $10, $2F, $90, $05, $17, $05, $1A, $18, $0A, $0D, $02, $02, $02, $02, $00, $01 ; bytes 8-23
+    db $01, $02, $02, $01, $01, $01, $00, $02, $02, $00, $02, $01, $01, $02, $02, $01 ; bytes 24-39
+    db $00, $02, $01, $02, $01, $63, $00 ; bytes 40-46
 SpeciesRecord_AxeShark:: ; heuristic: species record; C0
 Data_035_76D2:: ; address name
-    db $09, $02, $00, $00, $05, $02, $32, $19 ; id 281
-    db $27, $65, $97, $05, $19, $14, $1C, $15, $0E, $0D, $01, $01, $01, $01, $00, $00
-    db $02, $02, $03, $02, $02, $02, $02, $02, $02, $01, $02, $00, $02, $02, $02, $01
-    db $02, $02, $01, $01, $03, $76, $00
+    db $09 ; id 281: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $32 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $27, $65, $97, $05, $19, $14, $1C, $15, $0E, $0D, $01, $01, $01, $01, $00, $00 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $02, $02, $02, $01, $02, $00, $02, $02, $02, $01 ; bytes 24-39
+    db $02, $02, $01, $01, $03, $76, $00 ; bytes 40-46
 SpeciesRecord_Octogon:: ; heuristic: species record; C0
 Data_035_7701:: ; address name
-    db $09, $02, $00, $00, $05, $02, $2D, $13 ; id 282
-    db $1B, $63, $7C, $01, $18, $09, $19, $12, $09, $14, $02, $02, $02, $01, $01, $00
-    db $00, $02, $01, $00, $02, $01, $01, $02, $02, $00, $02, $00, $02, $01, $01, $01
-    db $02, $02, $01, $01, $03, $64, $00
+    db $09 ; id 282: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $2D ; bytes 1-6
+    db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1B, $63, $7C, $01, $18, $09, $19, $12, $09, $14, $02, $02, $02, $01, $01, $00 ; bytes 8-23
+    db $00, $02, $01, $00, $02, $01, $01, $02, $02, $00, $02, $00, $02, $01, $01, $01 ; bytes 24-39
+    db $02, $02, $01, $01, $03, $64, $00 ; bytes 40-46
 SpeciesRecord_KingSquid:: ; heuristic: species record; C0
 Data_035_7730:: ; address name
-    db $09, $02, $00, $00, $06, $02, $37, $18 ; id 283
-    db $1E, $65, $69, $01, $19, $0E, $1A, $17, $0C, $15, $02, $02, $02, $02, $01, $01
-    db $01, $02, $00, $02, $02, $01, $01, $03, $01, $01, $02, $01, $02, $01, $01, $01
-    db $01, $02, $01, $02, $03, $75, $00
+    db $09 ; id 283: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $02, $37 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $1E, $65, $69, $01, $19, $0E, $1A, $17, $0C, $15, $02, $02, $02, $02, $01, $01 ; bytes 8-23
+    db $01, $02, $00, $02, $02, $01, $01, $03, $01, $01, $02, $01, $02, $01, $01, $01 ; bytes 24-39
+    db $01, $02, $01, $02, $03, $75, $00 ; bytes 40-46
 SpeciesRecord_Digong:: ; heuristic: species record; C0
 Data_035_775F:: ; address name
-    db $09, $02, $00, $00, $04, $02, $37, $15 ; id 284
-    db $40, $6F, $73, $03, $12, $17, $19, $0B, $0A, $0A, $02, $02, $02, $01, $01, $01
-    db $02, $02, $02, $01, $01, $01, $02, $03, $01, $01, $03, $01, $01, $02, $02, $01
-    db $01, $02, $01, $00, $03, $6A, $00
+    db $09 ; id 284: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $37 ; bytes 1-6
+    db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $6F, $73, $03, $12, $17, $19, $0B, $0A, $0A, $02, $02, $02, $01, $01, $01 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $01, $02, $03, $01, $01, $03, $01, $01, $02, $02, $01 ; bytes 24-39
+    db $01, $02, $01, $00, $03, $6A, $00 ; bytes 40-46
 SpeciesRecord_WhaleMage:: ; heuristic: species record; C0
 Data_035_778E:: ; address name
-    db $09, $02, $00, $00, $05, $02, $2D, $1E ; id 285
-    db $21, $4C, $91, $01, $1D, $15, $17, $12, $03, $0A, $02, $02, $01, $01, $02, $01
-    db $02, $02, $03, $01, $01, $01, $00, $02, $02, $02, $02, $01, $01, $02, $02, $01
-    db $00, $02, $00, $01, $03, $68, $00
+    db $09 ; id 285: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $2D ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $21, $4C, $91, $01, $1D, $15, $17, $12, $03, $0A, $02, $02, $01, $01, $02, $01 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $01, $00, $02, $02, $02, $02, $01, $01, $02, $02, $01 ; bytes 24-39
+    db $00, $02, $00, $01, $03, $68, $00 ; bytes 40-46
 SpeciesRecord_Aquadon:: ; heuristic: species record; C0
 Data_035_77BD:: ; address name
-    db $09, $02, $00, $00, $06, $02, $32, $18 ; id 286
-    db $32, $48, $6E, $05, $18, $14, $1A, $0A, $11, $09, $03, $03, $02, $02, $01, $02
-    db $02, $02, $02, $01, $01, $02, $02, $03, $02, $01, $03, $01, $02, $02, $02, $02
-    db $02, $02, $02, $02, $03, $7D, $00
+    db $09 ; id 286: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $02, $32 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $32, $48, $6E, $05, $18, $14, $1A, $0A, $11, $09, $03, $03, $02, $02, $01, $02 ; bytes 8-23
+    db $02, $02, $02, $01, $01, $02, $02, $03, $02, $01, $03, $01, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $03, $7D, $00 ; bytes 40-46
 SpeciesRecord_Octoraid:: ; heuristic: species record; C0
 Data_035_77EC:: ; address name
-    db $09, $02, $00, $00, $06, $02, $32, $1A ; id 287
-    db $55, $62, $67, $03, $12, $09, $1B, $15, $15, $0D, $02, $02, $02, $02, $01, $01
-    db $02, $02, $02, $03, $02, $02, $01, $02, $02, $02, $02, $01, $01, $01, $01, $01
-    db $01, $02, $01, $02, $02, $73, $00
+    db $09 ; id 287: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $02, $32 ; bytes 1-6
+    db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $55, $62, $67, $03, $12, $09, $1B, $15, $15, $0D, $02, $02, $02, $02, $01, $01 ; bytes 8-23
+    db $02, $02, $02, $03, $02, $02, $01, $02, $02, $02, $02, $01, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $02, $01, $02, $02, $73, $00 ; bytes 40-46
 SpeciesRecord_Grakos:: ; heuristic: species record; C0
 Data_035_781B:: ; address name
-    db $09, $02, $00, $00, $05, $02, $37, $15 ; id 288
-    db $2D, $6A, $7E, $01, $17, $12, $19, $12, $10, $0A, $00, $02, $00, $00, $00, $01
-    db $02, $02, $03, $01, $01, $02, $02, $03, $01, $00, $00, $02, $02, $02, $02, $02
-    db $02, $02, $02, $01, $03, $77, $00
+    db $09 ; id 288: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $05, $02, $37 ; bytes 1-6
+    db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $2D, $6A, $7E, $01, $17, $12, $19, $12, $10, $0A, $00, $02, $00, $00, $00, $01 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $02, $02, $03, $01, $00, $00, $02, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $01, $03, $77, $00 ; bytes 40-46
 SpeciesRecord_Poseidon:: ; heuristic: species record; C0
 Data_035_784A:: ; address name
-    db $09, $02, $00, $00, $06, $02, $41, $1E ; id 289
-    db $0D, $8A, $95, $03, $1C, $16, $17, $18, $0D, $09, $03, $03, $03, $03, $01, $01
-    db $02, $02, $03, $02, $02, $02, $03, $02, $02, $02, $02, $01, $03, $03, $03, $03
-    db $03, $02, $02, $03, $03, $8E, $00
+    db $09 ; id 289: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $02, $41 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $8A, $95, $03, $1C, $16, $17, $18, $0D, $09, $03, $03, $03, $03, $01, $01 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $03, $02, $02, $02, $02, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $02, $02, $03, $03, $8E, $00 ; bytes 40-46
 SpeciesRecord_Pumpoise:: ; heuristic: species record; C0
 Data_035_7879:: ; address name
-    db $09, $02, $00, $00, $04, $02, $23, $0C ; id 290
-    db $4E, $89, $95, $01, $11, $08, $0D, $16, $07, $08, $02, $02, $01, $01, $00, $01
-    db $00, $02, $01, $00, $00, $00, $01, $02, $01, $00, $02, $00, $00, $00, $00, $00
-    db $00, $02, $01, $00, $02, $44, $00
+    db $09 ; id 290: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $04, $02, $23 ; bytes 1-6
+    db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $4E, $89, $95, $01, $11, $08, $0D, $16, $07, $08, $02, $02, $01, $01, $00, $01 ; bytes 8-23
+    db $00, $02, $01, $00, $00, $00, $01, $02, $01, $00, $02, $00, $00, $00, $00, $00 ; bytes 24-39
+    db $00, $02, $01, $00, $02, $44, $00 ; bytes 40-46
 SpeciesRecord_Starfish:: ; heuristic: species record; C0
 Data_035_78A8:: ; address name
-    db $09, $02, $00, $00, $06, $03, $1E, $05 ; id 291
-    db $25, $5F, $76, $01, $07, $13, $05, $09, $09, $0F, $01, $01, $01, $01, $00, $00
-    db $01, $02, $00, $02, $00, $00, $01, $00, $01, $00, $01, $01, $03, $01, $00, $01
-    db $00, $00, $00, $00, $03, $8E, $00
+    db $09 ; id 291: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $00, $00, $06, $03, $1E ; bytes 1-6
+    db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $25, $5F, $76, $01, $07, $13, $05, $09, $09, $0F, $01, $01, $01, $01, $00, $00 ; bytes 8-23
+    db $01, $02, $00, $02, $00, $00, $01, $00, $01, $00, $01, $01, $03, $01, $00, $01 ; bytes 24-39
+    db $00, $00, $00, $00, $03, $8E, $00 ; bytes 40-46
 SpeciesRecord_DracoLord:: ; heuristic: species record; C0
 Data_035_78D7:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $32, $18 ; id 292
-    db $04, $3B, $9F, $02, $14, $1E, $15, $14, $17, $17, $01, $01, $00, $00, $00, $01
-    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $01, $01, $03, $02, $03, $03
-    db $03, $03, $00, $00, $00, $10, $02
+    db $0A ; id 292: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $32 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $3B, $9F, $02, $14, $1E, $15, $14, $17, $17, $01, $01, $00, $00, $00, $01 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $01, $01, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $00, $00, $00, $10, $02 ; bytes 40-46
 Data_035_7906:: ; heuristic: species record; C0
-    db $0A, $00, $00, $00, $06, $00, $46, $19 ; id 293
-    db $40, $6C, $81, $02, $15, $1E, $18, $15, $17, $15, $02, $02, $01, $01, $01, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03
-    db $03, $03, $01, $01, $01, $58, $02
+    db $0A ; id 293: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $6C, $81, $02, $15, $1E, $18, $15, $17, $15, $02, $02, $01, $01, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $01, $58, $02 ; bytes 40-46
 SpeciesRecord_LordDraco:: ; heuristic: species record; C0
 Data_035_7935:: ; address name
-    db $0A, $00, $01, $00, $06, $01, $50, $1B ; id 294
-    db $0D, $3F, $8A, $03, $16, $1F, $18, $16, $18, $16, $02, $02, $02, $02, $01, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03
-    db $03, $03, $02, $02, $02, $84, $02
+    db $0A ; id 294: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $06, $01, $50 ; bytes 1-6
+    db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $3F, $8A, $03, $16, $1F, $18, $16, $18, $16, $02, $02, $02, $02, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $02, $84, $02 ; bytes 40-46
 SpeciesRecord_Hargon:: ; heuristic: species record; C0
 Data_035_7964:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $3C, $18 ; id 295
-    db $04, $07, $85, $00, $13, $1E, $14, $15, $17, $17, $01, $01, $01, $01, $00, $01
-    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $00, $00, $03, $02, $03, $03
-    db $03, $03, $02, $00, $01, $1C, $02
+    db $0A ; id 295: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $07, $85, $00, $13, $1E, $14, $15, $17, $17, $01, $01, $01, $01, $00, $01 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $00, $00, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $00, $01, $1C, $02 ; bytes 40-46
 SpeciesRecord_Sidoh:: ; heuristic: species record; C0
 Data_035_7993:: ; address name
-    db $0A, $00, $01, $00, $06, $01, $46, $19 ; id 296
-    db $3F, $40, $44, $01, $18, $1E, $18, $15, $17, $17, $01, $01, $01, $01, $01, $01
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03
-    db $03, $03, $02, $01, $01, $44, $02
+    db $0A ; id 296: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $06, $01, $46 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3F, $40, $44, $01, $18, $1E, $18, $15, $17, $17, $01, $01, $01, $01, $01, $01 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $01, $01, $44, $02 ; bytes 40-46
 SpeciesRecord_Genosidoh:: ; heuristic: species record; C0
 Data_035_79C2:: ; address name
-    db $0A, $00, $01, $00, $06, $01, $50, $1E ; id 297
-    db $38, $48, $66, $01, $19, $1F, $19, $11, $12, $16, $02, $02, $02, $01, $01, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $01, $01, $03, $03, $03, $03
-    db $03, $03, $02, $02, $02, $68, $02
+    db $0A ; id 297: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $06, $01, $50 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $38, $48, $66, $01, $19, $1F, $19, $11, $12, $16, $02, $02, $02, $01, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $01, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $02, $68, $02 ; bytes 40-46
 SpeciesRecord_Baramos:: ; heuristic: species record; C0
 Data_035_79F1:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $3C, $18 ; id 298
-    db $07, $3F, $4B, $00, $14, $1E, $14, $14, $16, $15, $01, $01, $01, $02, $00, $02
-    db $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $01, $01, $03, $03, $03, $03
-    db $03, $03, $00, $00, $01, $1C, $02
+    db $0A ; id 298: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $3F, $4B, $00, $14, $1E, $14, $14, $16, $15, $01, $01, $01, $02, $00, $02 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $01, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $00, $00, $01, $1C, $02 ; bytes 40-46
 SpeciesRecord_Zoma:: ; heuristic: species record; C0
 Data_035_7A20:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $46, $19 ; id 299
-    db $3E, $44, $83, $02, $18, $1E, $1A, $15, $17, $17, $01, $02, $03, $03, $01, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03
-    db $03, $03, $02, $01, $02, $84, $02
+    db $0A ; id 299: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $44, $83, $02, $18, $1E, $1A, $15, $17, $17, $01, $02, $03, $03, $01, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $01, $02, $84, $02 ; bytes 40-46
 SpeciesRecord_AsuraZoma:: ; heuristic: species record; C0
 Data_035_7A4F:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $50, $1D ; id 300
-    db $40, $67, $8A, $05, $1A, $1E, $1D, $16, $17, $0C, $02, $02, $03, $03, $01, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03
-    db $03, $03, $02, $02, $02, $90, $02
+    db $0A ; id 300: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $67, $8A, $05, $1A, $1E, $1D, $16, $17, $0C, $02, $02, $03, $03, $01, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $02, $90, $02 ; bytes 40-46
 SpeciesRecord_Pizzaro:: ; heuristic: species record; C0
 Data_035_7A7E:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $46, $18 ; id 301
-    db $3F, $40, $63, $03, $15, $1E, $1A, $15, $17, $17, $01, $01, $01, $01, $00, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03
-    db $03, $03, $02, $01, $01, $48, $02
+    db $0A ; id 301: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3F, $40, $63, $03, $15, $1E, $1A, $15, $17, $17, $01, $01, $01, $01, $00, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $01, $01, $48, $02 ; bytes 40-46
 SpeciesRecord_PsychoPiz:: ; heuristic: species record; C0
 Data_035_7AAD:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $50, $1D ; id 302
-    db $3E, $44, $83, $05, $1E, $1E, $1B, $12, $18, $15, $01, $01, $01, $01, $01, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $01, $01, $03, $03, $03, $03
-    db $03, $03, $02, $01, $02, $74, $02
+    db $0A ; id 302: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $44, $83, $05, $1E, $1E, $1B, $12, $18, $15, $01, $01, $01, $01, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $01, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $01, $02, $74, $02 ; bytes 40-46
 SpeciesRecord_Esterk:: ; heuristic: species record; C0
 Data_035_7ADC:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $50, $1F ; id 303
-    db $63, $65, $67, $05, $1D, $1E, $1A, $18, $17, $17, $01, $02, $02, $02, $00, $01
-    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $01, $03, $02, $03, $03
-    db $03, $03, $01, $01, $01, $58, $02
+    db $0A ; id 303: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $63, $65, $67, $05, $1D, $1E, $1A, $18, $17, $17, $01, $02, $02, $02, $00, $01 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $01, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $01, $58, $02 ; bytes 40-46
 SpeciesRecord_Mirudraas:: ; heuristic: species record; C0
 Data_035_7B0B:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $46, $1E ; id 304
-    db $01, $07, $0D, $02, $15, $1E, $1A, $15, $17, $17, $02, $02, $02, $01, $02, $02
-    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03
-    db $03, $03, $01, $01, $01, $50, $02
+    db $0A ; id 304: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $01, $07, $0D, $02, $15, $1E, $1A, $15, $17, $17, $02, $02, $02, $01, $02, $02 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $01, $50, $02 ; bytes 40-46
 Data_035_7B3A:: ; heuristic: species record; C0
-    db $0A, $00, $00, $00, $06, $00, $50, $1F ; id 305
-    db $40, $83, $89, $02, $1D, $1E, $1A, $15, $17, $17, $02, $02, $02, $00, $00, $00
-    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $03, $01, $03, $03, $03, $03
-    db $03, $03, $01, $01, $02, $60, $02
+    db $0A ; id 305: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $83, $89, $02, $1D, $1E, $1A, $15, $17, $17, $02, $02, $02, $00, $00, $00 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $03, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $01, $02, $60, $02 ; bytes 40-46
 SpeciesRecord_Mudou:: ; heuristic: species record; C0
 Data_035_7B69:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $3C, $1C ; id 306
-    db $40, $44, $73, $02, $15, $1E, $1A, $18, $17, $17, $00, $00, $00, $03, $00, $01
-    db $03, $03, $03, $02, $03, $03, $02, $03, $03, $00, $03, $03, $03, $02, $03, $03
-    db $03, $03, $00, $00, $01, $38, $02
+    db $0A ; id 306: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $44, $73, $02, $15, $1E, $1A, $18, $17, $17, $00, $00, $00, $03, $00, $01 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $02, $03, $03, $00, $03, $03, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $00, $00, $01, $38, $02 ; bytes 40-46
 SpeciesRecord_DeathMore:: ; heuristic: species record; C0
 Data_035_7B98:: ; address name
-    db $0A, $00, $01, $00, $06, $01, $3C, $1B ; id 307
-    db $3E, $3F, $85, $02, $15, $1E, $1A, $15, $17, $17, $01, $02, $02, $01, $01, $02
-    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03
-    db $03, $03, $01, $00, $02, $48, $02
+    db $0A ; id 307: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $06, $01, $3C ; bytes 1-6
+    db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $3F, $85, $02, $15, $1E, $1A, $15, $17, $17, $01, $02, $02, $01, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $00, $02, $48, $02 ; bytes 40-46
 Data_035_7BC7:: ; heuristic: species record; C0
-    db $0A, $00, $00, $00, $06, $00, $46, $1D ; id 308
-    db $40, $6F, $82, $03, $18, $1E, $1A, $15, $17, $17, $02, $02, $02, $02, $01, $02
-    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $01, $02, $03, $02, $03, $03
-    db $03, $03, $02, $01, $03, $6C, $02
+    db $0A ; id 308: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $6F, $82, $03, $18, $1E, $1A, $15, $17, $17, $02, $02, $02, $02, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $01, $02, $03, $02, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $01, $03, $6C, $02 ; bytes 40-46
 Data_035_7BF6:: ; heuristic: species record; C0
-    db $0A, $00, $01, $00, $06, $01, $50, $1F ; id 309
-    db $3E, $83, $8A, $01, $1D, $1E, $1E, $18, $17, $17, $03, $03, $03, $03, $02, $03
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03
-    db $03, $03, $03, $02, $03, $C0, $02
+    db $0A ; id 309: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $06, $01, $50 ; bytes 1-6
+    db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3E, $83, $8A, $01, $1D, $1E, $1E, $18, $17, $17, $03, $03, $03, $03, $02, $03 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $03, $02, $03, $C0, $02 ; bytes 40-46
 SpeciesRecord_Darkdrium:: ; heuristic: species record; C0
 Data_035_7C25:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $50, $1E ; id 310
-    db $0D, $40, $44, $02, $1F, $1E, $1F, $18, $17, $17, $02, $02, $02, $02, $02, $03
-    db $03, $03, $02, $02, $03, $03, $02, $03, $03, $02, $02, $02, $03, $03, $03, $03
-    db $03, $03, $03, $03, $02, $AC, $02
+    db $0A ; id 310: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $50 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $0D, $40, $44, $02, $1F, $1E, $1F, $18, $17, $17, $02, $02, $02, $02, $02, $03 ; bytes 8-23
+    db $03, $03, $02, $02, $03, $03, $02, $03, $03, $02, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $03, $03, $02, $AC, $02 ; bytes 40-46
 SpeciesRecord_Orgodemir:: ; heuristic: species record; C0
 Data_035_7C54:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $41, $1E ; id 311
-    db $07, $6B, $8A, $02, $18, $19, $1A, $17, $16, $1F, $02, $02, $02, $02, $02, $02
-    db $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $02, $02, $02, $03, $02, $01
-    db $02, $02, $02, $02, $02, $6C, $02
+    db $0A ; id 311: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $41 ; bytes 1-6
+    db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $07, $6B, $8A, $02, $18, $19, $1A, $17, $16, $1F, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $02, $02, $02, $03, $02, $01 ; bytes 24-39
+    db $02, $02, $02, $02, $02, $6C, $02 ; bytes 40-46
 Data_035_7C83:: ; heuristic: species record; C0
-    db $0A, $00, $00, $00, $06, $00, $46, $1F ; id 312
-    db $3D, $83, $A0, $05, $1B, $1F, $1E, $17, $18, $1F, $03, $03, $03, $03, $02, $03
-    db $03, $03, $03, $02, $03, $03, $02, $03, $03, $02, $02, $03, $03, $03, $03, $02
-    db $01, $01, $01, $01, $02, $20, $03
+    db $0A ; id 312: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $46 ; bytes 1-6
+    db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3D, $83, $A0, $05, $1B, $1F, $1E, $17, $18, $1F, $03, $03, $03, $03, $02, $03 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $02, $03, $03, $02, $02, $03, $03, $03, $03, $02 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $20, $03 ; bytes 40-46
 SpeciesRecord_Darck:: ; heuristic: species record; C0
 Data_035_7CB2:: ; address name
-    db $0A, $00, $00, $00, $06, $00, $3C, $1A ; id 313
-    db $04, $07, $68, $02, $17, $19, $12, $17, $0E, $11, $00, $02, $00, $00, $00, $01
-    db $03, $03, $03, $02, $03, $03, $03, $02, $03, $02, $00, $01, $03, $03, $03, $03
-    db $03, $03, $01, $00, $01, $24, $02
+    db $0A ; id 313: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $06, $00, $3C ; bytes 1-6
+    db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $04, $07, $68, $02, $17, $19, $12, $17, $0E, $11, $00, $02, $00, $00, $00, $01 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $03, $02, $03, $02, $00, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $01, $00, $01, $24, $02 ; bytes 40-46
 SpeciesRecord_Tatsu:: ; heuristic: species record; C0
 Data_035_7CE1:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 314
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $02, $03, $01
-    db $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01
-    db $01, $01, $01, $01, $00, $00, $00
+    db $00 ; id 314: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $02, $03, $01 ; bytes 8-23
+    db $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $00, $00 ; bytes 40-46
 SpeciesRecord_Diago:: ; heuristic: species record; C0
 Data_035_7D10:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 315
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $03, $02, $02, $00, $00, $01
-    db $01, $01, $02, $01, $00, $01, $01, $01, $00, $00, $03, $00, $01, $01, $01, $01
-    db $01, $01, $01, $01, $00, $00, $00
+    db $00 ; id 315: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $03, $02, $02, $00, $00, $01 ; bytes 8-23
+    db $01, $01, $02, $01, $00, $01, $01, $01, $00, $00, $03, $00, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $00, $00, $00 ; bytes 40-46
 SpeciesRecord_Samsi:: ; heuristic: species record; C0
 Data_035_7D3F:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 316
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $03, $00, $01
-    db $02, $02, $03, $01, $01, $01, $00, $01, $00, $00, $01, $02, $01, $01, $01, $01
-    db $01, $01, $01, $01, $01, $00, $00
+    db $00 ; id 316: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $03, $00, $01 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $01, $00, $01, $00, $00, $01, $02, $01, $01, $01, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $01, $00, $00 ; bytes 40-46
 SpeciesRecord_Bazoo:: ; heuristic: species record; C0
 Data_035_7D6E:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 317
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $02, $02, $01, $02, $03
-    db $03, $03, $03, $02, $02, $02, $02, $02, $01, $00, $01, $03, $02, $02, $02, $02
-    db $02, $02, $02, $02, $01, $00, $00
+    db $00 ; id 317: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $02, $02, $01, $02, $03 ; bytes 8-23
+    db $03, $03, $03, $02, $02, $02, $02, $02, $01, $00, $01, $03, $02, $02, $02, $02 ; bytes 24-39
+    db $02, $02, $02, $02, $01, $00, $00 ; bytes 40-46
 SpeciesRecord_179:: ; heuristic: species record; C0
 Data_035_7D9D:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 318
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02
-    db $02, $02, $03, $01, $01, $02, $02, $01, $01, $00, $03, $03, $02, $03, $02, $02
-    db $01, $01, $02, $02, $01, $00, $00
+    db $00 ; id 318: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $02, $02, $03, $01, $01, $02, $02, $01, $01, $00, $03, $03, $02, $03, $02, $02 ; bytes 24-39
+    db $01, $01, $02, $02, $01, $00, $00 ; bytes 40-46
 SpeciesRecord_17A:: ; heuristic: species record; C0
 Data_035_7DCC:: ; address name
-    db $00, $00, $00, $00, $07, $00, $00, $00 ; id 319
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
-    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01
-    db $01, $01, $01, $01, $02, $00, $00
+    db $00 ; id 319: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $00, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00 ; bytes 8-23
+    db $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01 ; bytes 24-39
+    db $01, $01, $01, $01, $02, $00, $00 ; bytes 40-46
 SpeciesRecord_17B:: ; heuristic: species record; C0
 Data_035_7DFB:: ; address name
-    db $0A, $00, $00, $00, $07, $01, $00, $00 ; id 320
-    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $01, $02
-    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03
-    db $03, $03, $02, $02, $02, $00, $00
+    db $0A ; id 320: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $00, $00, $07, $01, $00 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $01, $02 ; bytes 8-23
+    db $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $02, $02, $00, $00 ; bytes 40-46
 SpeciesRecord_Lamia:: ; heuristic: species record; C0
 Data_035_7E2A:: ; address name
-    db $0A, $02, $01, $00, $07, $01, $63, $1C ; id 321
-    db $19, $1B, $1E, $00, $14, $18, $13, $15, $12, $18, $01, $01, $01, $02, $02, $02
-    db $03, $03, $03, $02, $03, $03, $01, $01, $02, $01, $01, $01, $02, $03, $03, $02
-    db $01, $02, $02, $01, $02, $00, $00
+    db $0A ; id 321: family (StringTable_MonsterFamilies index; $FF unused)
+    db $02, $01, $00, $07, $01, $63 ; bytes 1-6
+    db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $19, $1B, $1E, $00, $14, $18, $13, $15, $12, $18, $01, $01, $01, $02, $02, $02 ; bytes 8-23
+    db $03, $03, $03, $02, $03, $03, $01, $01, $02, $01, $01, $01, $02, $03, $03, $02 ; bytes 24-39
+    db $01, $02, $02, $01, $02, $00, $00 ; bytes 40-46
 SpeciesRecord_Dimensaur:: ; heuristic: species record; C0
 Data_035_7E59:: ; address name
-    db $0A, $00, $01, $00, $07, $01, $09, $1D ; id 322
-    db $40, $3D, $3F, $00, $1F, $1F, $1F, $1F, $1F, $1F, $02, $02, $02, $02, $02, $02
-    db $02, $02, $03, $02, $02, $02, $02, $03, $02, $01, $02, $01, $03, $03, $03, $03
-    db $03, $01, $02, $01, $01, $00, $00
+    db $0A ; id 322: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $07, $01, $09 ; bytes 1-6
+    db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $40, $3D, $3F, $00, $1F, $1F, $1F, $1F, $1F, $1F, $02, $02, $02, $02, $02, $02 ; bytes 8-23
+    db $02, $02, $03, $02, $02, $02, $02, $03, $02, $01, $02, $01, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $01, $02, $01, $01, $00, $00 ; bytes 40-46
 SpeciesRecord_Kagebou:: ; heuristic: species record; C0
 Data_035_7E88:: ; address name
-    db $0A, $00, $01, $00, $07, $01, $63, $00 ; id 323
-    db $3C, $3E, $85, $00, $17, $0F, $18, $10, $18, $09, $00, $00, $00, $00, $00, $00
-    db $00, $03, $03, $01, $01, $03, $03, $01, $02, $01, $00, $00, $03, $03, $03, $03
-    db $03, $03, $02, $00, $00, $00, $00
+    db $0A ; id 323: family (StringTable_MonsterFamilies index; $FF unused)
+    db $00, $01, $00, $07, $01, $63 ; bytes 1-6
+    db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
+    db $3C, $3E, $85, $00, $17, $0F, $18, $10, $18, $09, $00, $00, $00, $00, $00, $00 ; bytes 8-23
+    db $00, $03, $03, $01, $01, $03, $03, $01, $02, $01, $00, $00, $03, $03, $03, $03 ; bytes 24-39
+    db $03, $03, $02, $00, $00, $00, $00 ; bytes 40-46
     ds $149, $00

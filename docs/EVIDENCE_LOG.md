@@ -2430,6 +2430,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0262 — Monster record fields; per-field comments
+
+- Kind: OBSERVATION (collected from earlier readings; C1) and TOOL.
+- **The $A5-byte monster record.** PresetMonsterRecords and DefaultMonsterRecord are now laid out field by field from existing evidence:
+  - state (byte 0, E-0104); name (1-10) and second name (15-24, E-0034);
+  - word $0B (E-0236); $0D, whose low nibble is the family (E-0122);
+  - skills $34-$3B (E-0122); the list at $3C-$54 that AppendMappedSkillsToWCA67 appends to (E-0237);
+  - status bits $55 (E-0085); level $56 (E-0122); 24-bit EXP $58 (E-0125);
+  - HP, max HP, MP and max MP at $5B-$62 (E-0122); personality axes $6F-$72 (E-0034); equipped item $A4 (E-0125).
+  - The other bytes keep their offsets as names.
+- **Tool.** A table marked `"field_comments": true` prints each field on its own line, ending with the field's name (after the id tag on the first). This is turned on for the monster records, SpeciesRecords, CartridgeHeader, KeyListMapDestinationTable and MapExitWarpTable.
+- Binary verification: build/run339 PASS, 0 differing bytes; tests OK.
+
 ### E-0261 — Bank $1C item name copy; a target-naming table option
 
 - Kind: OBSERVATION (reading; C1) and TOOL.

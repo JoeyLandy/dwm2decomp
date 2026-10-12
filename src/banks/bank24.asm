@@ -3005,23 +3005,31 @@ Jump_024_52E6::
     jr nz, Jump_024_52E6
     ret
 
-; E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names "???").
+; E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names "???"; fields from E-0034, E-0104, E-0122, E-0125 and E-0237, laid out in E-0262).
 ; record: one $A5-byte monster record in the SRAM record format
 DefaultMonsterRecord::
 Data_024_52ED:: ; address name
-    db $01 ; id 0
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
-    db $D4, $00, $07, $00
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $16, $1B, $40, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $12, $2D, $00
-    db $00, $00, $83, $00, $83, $00, $28, $00, $28, $00, $8A, $00, $5D, $00, $45, $00
-    db $7F, $01, $00, $00, $00, $00, $C8, $C8, $96, $50, $01, $01, $01, $00, $00, $02
-    db $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00
-    db $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+    db $01 ; id 0: state: 0 empty, 1 or 2 in use (E-0104)
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
+    dw $00D4 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
+    db $07 ; $0D: low nibble = family (E-0122)
+    db $00 ; $0E
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db $16, $1B, $40, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db $00 ; $55: status bits (bit 2 read as poison, E-0085)
+    db $12 ; $56: level (E-0122)
+    db $2D ; $57
+    db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
+    dw $0083, $0083, $0028, $0028 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
+    db $8A, $00, $5D, $00, $45, $00, $7F, $01, $00, $00, $00, $00 ; $63-$6E
+    db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
+    db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00 ; $73-$82
+    db $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
+    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00 ; $A4: equipped item (E-0125)
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
 ; 3 call sites from 3 routines (e.g. GameMode6_Update_Case05_Case02, GameMode6_Update_Case0E_Case01, GameMode6_Update_Case0F_Case01)

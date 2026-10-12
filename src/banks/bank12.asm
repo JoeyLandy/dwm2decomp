@@ -2924,22 +2924,38 @@ Jump_012_512C::
 ; record: map, new map, key; destination position and screen
 MapExitWarpTable::
 Data_012_5130:: ; address name
-    db $20, $20, $00, $44, $00 ; id 0
-    db $2F, $20, $00, $44, $00 ; id 1
-    db $30, $30, $01, $44, $76 ; id 2
-    db $43, $30, $01, $44, $76 ; id 3
-    db $48, $48, $02, $44, $B4 ; id 4
-    db $49, $48, $02, $44, $B4 ; id 5
-    db $70, $70, $03, $44, $B4 ; id 6
-    db $7A, $70, $03, $44, $B4 ; id 7
-    db $A0, $A0, $04, $44, $10 ; id 8
-    db $A8, $A8, $05, $44, $00 ; id 9
-    db $AA, $A8, $05, $44, $00 ; id 10
-    db $B0, $B0, $06, $44, $01 ; id 11
-    db $B8, $B8, $07, $44, $44 ; id 12
-    db $C8, $C8, $08, $44, $01 ; id 13
-    db $D1, $D1, $09, $44, $00 ; id 14
-    db $DA, $DA, $0A, $44, $00 ; id 15
+    db $20, $20, $00 ; id 0: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $2F, $20, $00 ; id 1: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $30, $30, $01 ; id 2: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $76 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $43, $30, $01 ; id 3: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $76 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $48, $48, $02 ; id 4: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $B4 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $49, $48, $02 ; id 5: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $B4 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $70, $70, $03 ; id 6: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $B4 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $7A, $70, $03 ; id 7: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $B4 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $A0, $A0, $04 ; id 8: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $10 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $A8, $A8, $05 ; id 9: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $AA, $A8, $05 ; id 10: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $B0, $B0, $06 ; id 11: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $01 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $B8, $B8, $07 ; id 12: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $44 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $C8, $C8, $08 ; id 13: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $01 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $D1, $D1, $09 ; id 14: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
+    db $DA, $DA, $0A ; id 15: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
+    db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
     db $FF ; end
 
 Jump_012_5181::

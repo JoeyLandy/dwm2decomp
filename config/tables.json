@@ -18016,7 +18016,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "record byte 0 (0 = empty, 1 or 2 = in use, E-0104)"
+          "name": "state: 0 empty, 1 or 2 in use (E-0104)"
         },
         {
           "type": "text",
@@ -18024,10 +18024,19 @@
           "name": "name, bytes 1-10 (E-0034)"
         },
         {
+          "type": "words",
+          "size": 2,
+          "name": "word $0B (compared with monster ids by talk events $29/$47, E-0236)"
+        },
+        {
           "type": "db",
-          "size": 4,
-          "line": true,
-          "name": "bytes 11-14"
+          "size": 1,
+          "name": "$0D: low nibble = family (E-0122)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$0E"
         },
         {
           "type": "text",
@@ -18038,59 +18047,89 @@
           "type": "db",
           "size": 16,
           "line": true,
-          "name": "bytes 25-40"
+          "name": "$19-$28"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 11,
           "line": true,
-          "name": "bytes 41-56"
+          "name": "$29-$33"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 8,
           "line": true,
-          "name": "bytes 57-72"
+          "name": "skills, $34-$3B (E-0122)"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 25,
           "line": true,
-          "name": "bytes 73-88"
+          "name": "$3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 89-104"
+          "size": 1,
+          "name": "$55: status bits (bit 2 read as poison, E-0085)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 105-120"
+          "size": 1,
+          "name": "$56: level (E-0122)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 121-136"
+          "size": 1,
+          "name": "$57"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 137-152"
+          "size": 3,
+          "name": "$58: EXP, 24 bits (E-0125)"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "$5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)"
         },
         {
           "type": "db",
           "size": 12,
           "line": true,
-          "name": "bytes 153-164"
+          "name": "$63-$6E"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "name": "$6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "$73-$82"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "$83-$92"
+        },
+        {
+          "type": "db",
+          "size": 17,
+          "line": true,
+          "name": "$93-$A3"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$A4: equipped item (E-0125)"
         }
       ],
       "record": "one $A5-byte monster record in the SRAM record format",
-      "note": "E-0235 (C1: the ten records PresetMonsterRecordTable points at, $A5 bytes apart; only bytes 0, 1-10 and 15-24 have read meanings, the rest are kept as bytes)."
+      "note": "E-0235 (C1: the ten records PresetMonsterRecordTable points at, $A5 bytes apart; only bytes 0, 1-10 and 15-24 have read meanings, the rest are kept as bytes; fields from E-0034, E-0104, E-0122, E-0125 and E-0237, laid out in E-0262).",
+      "field_comments": true
     },
     {
       "bank": "A0",
@@ -18371,7 +18410,8 @@
         }
       ],
       "record": "map number, screen X, screen Y, player X, player Y; three bytes not read",
-      "note": "E-0237 (C1: the code after Jump_002_6EC7 takes the key list byte & $3F as the index, sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from the 8-byte record at $7006 + 8 * index; 13 records)."
+      "note": "E-0237 (C1: the code after Jump_002_6EC7 takes the key list byte & $3F as the index, sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from the 8-byte record at $7006 + 8 * index; 13 records).",
+      "field_comments": true
     },
     {
       "bank": "12",
@@ -18681,7 +18721,8 @@
         }
       ],
       "record": "map, new map, key; destination position and screen",
-      "note": "E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to Talk00Event08_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF)."
+      "note": "E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to Talk00Event08_Case01_Sub01 (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF).",
+      "field_comments": true
     },
     {
       "bank": "3B",
@@ -18709,7 +18750,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "record byte 0 (0 = empty, 1 or 2 = in use, E-0104)"
+          "name": "state: 0 empty, 1 or 2 in use (E-0104)"
         },
         {
           "type": "text",
@@ -18717,10 +18758,19 @@
           "name": "name, bytes 1-10 (E-0034)"
         },
         {
+          "type": "words",
+          "size": 2,
+          "name": "word $0B (compared with monster ids by talk events $29/$47, E-0236)"
+        },
+        {
           "type": "db",
-          "size": 4,
-          "line": true,
-          "name": "bytes 11-14"
+          "size": 1,
+          "name": "$0D: low nibble = family (E-0122)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$0E"
         },
         {
           "type": "text",
@@ -18731,59 +18781,89 @@
           "type": "db",
           "size": 16,
           "line": true,
-          "name": "bytes 25-40"
+          "name": "$19-$28"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 11,
           "line": true,
-          "name": "bytes 41-56"
+          "name": "$29-$33"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 8,
           "line": true,
-          "name": "bytes 57-72"
+          "name": "skills, $34-$3B (E-0122)"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 25,
           "line": true,
-          "name": "bytes 73-88"
+          "name": "$3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 89-104"
+          "size": 1,
+          "name": "$55: status bits (bit 2 read as poison, E-0085)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 105-120"
+          "size": 1,
+          "name": "$56: level (E-0122)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 121-136"
+          "size": 1,
+          "name": "$57"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "bytes 137-152"
+          "size": 3,
+          "name": "$58: EXP, 24 bits (E-0125)"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "name": "$5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)"
         },
         {
           "type": "db",
           "size": 12,
           "line": true,
-          "name": "bytes 153-164"
+          "name": "$63-$6E"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "name": "$6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "$73-$82"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "$83-$92"
+        },
+        {
+          "type": "db",
+          "size": 17,
+          "line": true,
+          "name": "$93-$A3"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$A4: equipped item (E-0125)"
         }
       ],
       "record": "one $A5-byte monster record in the SRAM record format",
-      "note": "E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names \"???\")."
+      "note": "E-0239 (C1: CopyDefaultRecordToRecordBufB copies these $A5 bytes to wRecordBufB; laid out like PresetMonsterRecords (E-0235): byte 0 = 1, both names \"???\"; fields from E-0034, E-0104, E-0122, E-0125 and E-0237, laid out in E-0262).",
+      "field_comments": true
     },
     {
       "bank": "00",
@@ -18890,7 +18970,8 @@
         }
       ],
       "record": "cartridge header $0104-$014F, one field per line: Nintendo logo (3 lines); title \"DWM2-C\" padded with $00; manufacturer \"BQLE\"; CGB flag $80; new licensee \"B4\"; SGB flag $03; cartridge type $1B (MBC5 + RAM + battery); ROM size $07 (4 MiB); RAM size $03 (32 KiB); destination $01 (overseas); old licensee $33 (use the new code); version $00; header checksum; global checksum (big-endian)",
-      "note": "E-0239 (HARDWARE: the standard Game Boy cartridge header layout; the byte values are those of the reference ROM and are kept exactly, checksums included; ASCII fields are written as numbers because charmap.inc maps letters to the game's encoding)."
+      "note": "E-0239 (HARDWARE: the standard Game Boy cartridge header layout; the byte values are those of the reference ROM and are kept exactly, checksums included; ASCII fields are written as numbers because charmap.inc maps letters to the game's encoding).",
+      "field_comments": true
     },
     {
       "bank": "00",
@@ -19474,7 +19555,8 @@
         }
       ],
       "record": "family; bytes 1-6; EXP curve; bytes 8-46",
-      "note": "E-0253 (C1: the 324 records SpeciesRecordPointers points at, 47 bytes each and contiguous up to $7EB7; each is labelled SpeciesRecord_<monster> after the first id that uses it; byte 0 is the family (E-0069) and byte 7 the EXP curve (E-0148); the other bytes are not read here)."
+      "note": "E-0253 (C1: the 324 records SpeciesRecordPointers points at, 47 bytes each and contiguous up to $7EB7; each is labelled SpeciesRecord_<monster> after the first id that uses it; byte 0 is the family (E-0069) and byte 7 the EXP curve (E-0148); the other bytes are not read here).",
+      "field_comments": true
     },
     {
       "bank": "14",

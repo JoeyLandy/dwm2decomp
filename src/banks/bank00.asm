@@ -128,22 +128,22 @@ Func_000_0100:: ; address name
 ; record: cartridge header $0104-$014F, one field per line: Nintendo logo (3 lines); title "DWM2-C" padded with $00; manufacturer "BQLE"; CGB flag $80; new licensee "B4"; SGB flag $03; cartridge type $1B (MBC5 + RAM + battery); ROM size $07 (4 MiB); RAM size $03 (32 KiB); destination $01 (overseas); old licensee $33 (use the new code); version $00; header checksum; global checksum (big-endian)
 CartridgeHeader::
 Data_000_0104:: ; address name
-    db $CE, $ED, $66, $66, $CC, $0D, $00, $0B, $03, $73, $00, $83, $00, $0C, $00, $0D ; id 0
-    db $00, $08, $11, $1F, $88, $89, $00, $0E, $DC, $CC, $6E, $E6, $DD, $DD, $D9, $99
-    db $BB, $BB, $67, $63, $6E, $0E, $EC, $CC, $DD, $DC, $99, $9F, $BB, $B9, $33, $3E
-    db $44, $57, $4D, $32, $2D, $43, $00, $00, $00, $00, $00
-    db $42, $51, $4C, $45
-    db $80
-    db $42, $34
-    db $03
-    db $1B
-    db $07
-    db $03
-    db $01
-    db $33
-    db $00
-    db $E7
-    db $85, $9E
+    db $CE, $ED, $66, $66, $CC, $0D, $00, $0B, $03, $73, $00, $83, $00, $0C, $00, $0D ; id 0: Nintendo logo bytes 0-15
+    db $00, $08, $11, $1F, $88, $89, $00, $0E, $DC, $CC, $6E, $E6, $DD, $DD, $D9, $99 ; Nintendo logo bytes 16-31
+    db $BB, $BB, $67, $63, $6E, $0E, $EC, $CC, $DD, $DC, $99, $9F, $BB, $B9, $33, $3E ; Nintendo logo bytes 32-47
+    db $44, $57, $4D, $32, $2D, $43, $00, $00, $00, $00, $00 ; title, ASCII "DWM2-C" padded with $00
+    db $42, $51, $4C, $45 ; manufacturer code, ASCII "BQLE"
+    db $80 ; CGB flag ($80 = CGB features, also runs on DMG)
+    db $42, $34 ; new licensee code, ASCII "B4"
+    db $03 ; SGB flag ($03 = SGB functions)
+    db $1B ; cartridge type ($1B = MBC5 + RAM + battery)
+    db $07 ; ROM size ($07 = 4 MiB, 256 banks)
+    db $03 ; RAM size ($03 = 32 KiB)
+    db $01 ; destination ($01 = overseas)
+    db $33 ; old licensee ($33 = use the new licensee code)
+    db $00 ; version ($00)
+    db $E7 ; header checksum (as stored)
+    db $85, $9E ; global checksum, big-endian (as stored)
 
 ; entry after the header jump: wIsCGB = 1 when A was $11 at power-on; disables interrupts, sets the stack, clears RAM, installs the OAM DMA routine, clears VRAM, sets game mode 5 and the MBC banks, then runs the main loop (E-0131)
 ; no direct call (reached through a table, a jump or a vector)

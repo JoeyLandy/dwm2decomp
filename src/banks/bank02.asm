@@ -7542,19 +7542,32 @@ Jump_002_6FDE::
 ; record: map number, screen X, screen Y, player X, player Y; three bytes not read
 KeyListMapDestinationTable::
 Data_002_7006:: ; address name
-    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
-    db $05, $01, $00, $50, $30, $00, $00, $00 ; id 1
-    db $29, $00, $00, $40, $40, $00, $00, $00 ; id 2
-    db $45, $00, $00, $40, $40, $00, $00, $00 ; id 3
-    db $68, $00, $00, $40, $40, $00, $00, $00 ; id 4
-    db $9D, $00, $00, $40, $40, $00, $00, $00 ; id 5
-    db $A4, $00, $00, $40, $40, $00, $00, $00 ; id 6
-    db $AF, $00, $00, $40, $40, $00, $00, $00 ; id 7
-    db $B2, $00, $00, $40, $40, $00, $00, $00 ; id 8
-    db $C5, $00, $00, $40, $40, $00, $00, $00 ; id 9
-    db $D0, $00, $00, $40, $40, $00, $00, $00 ; id 10
-    db $D9, $00, $00, $40, $40, $00, $00, $00 ; id 11
-    db $E2, $00, $00, $40, $40, $00, $00, $00 ; id 12
+    db $00, $00, $00, $00, $00 ; id 0: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $05, $01, $00, $50, $30 ; id 1: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $29, $00, $00, $40, $40 ; id 2: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $45, $00, $00, $40, $40 ; id 3: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $68, $00, $00, $40, $40 ; id 4: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $9D, $00, $00, $40, $40 ; id 5: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $A4, $00, $00, $40, $40 ; id 6: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $AF, $00, $00, $40, $40 ; id 7: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $B2, $00, $00, $40, $40 ; id 8: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $C5, $00, $00, $40, $40 ; id 9: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $D0, $00, $00, $40, $40 ; id 10: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $D9, $00, $00, $40, $40 ; id 11: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
+    db $E2, $00, $00, $40, $40 ; id 12: hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
+    db $00, $00, $00 ; not read
 
 ; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
 ; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, ShowSaveFileInfoWindow, LoadSaveFileSummary)

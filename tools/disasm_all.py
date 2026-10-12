@@ -3690,11 +3690,17 @@ class Rom:
                 tag += f" '{gb_text.BYTE_TO_TEXT[t['id_base'] + i]}'"  # glyph number = text byte (E-0169)
             run: list[int] = []
             tagged = False
+            fc = t.get("field_comments")  # E-0262: each field on its own line, ending with its name
 
-            def flush() -> None:
+            def suffix(f: dict | None) -> str:
+                if not fc or f is None:
+                    return "" if tagged else tag
+                return (tag + ": " if not tagged else " ; ") + f["name"]
+
+            def flush(f: dict | None = None) -> None:
                 nonlocal tagged
                 if run:
-                    out.append("    db " + ", ".join(f"${v:02X}" for v in run) + ("" if tagged else tag))
+                    out.append("    db " + ", ".join(f"${v:02X}" for v in run) + suffix(f))
                     tagged = True
                     run.clear()
 
@@ -3726,7 +3732,7 @@ class Rom:
                     for j in range(0, len(words) if not f.get("names") else 0, per):
                         out.append("    dw " + ", ".join((f.get("ram") and self.sym_name(v, True))
                                                          or (str(v) if f.get("decimal") else f"${v:04X}")
-                                                         for v in words[j:j + per]) + ("" if tagged else tag))
+                                                         for v in words[j:j + per]) + suffix(f if j == 0 else None))
                         tagged = True
                     tagged = True
                 elif f["type"] == "text":  # a string up to $F0 through charmap.inc, then raw padding (E-0191)
@@ -3734,7 +3740,7 @@ class Rom:
                     r = raws[fi]
                     k = r.index(0xF0) + 1 if 0xF0 in r else len(r)
                     parts = gb_text.render(bytes(r[:k])) + [f"${v:02X}" for v in r[k:]]
-                    out.append("    db " + ", ".join(parts) + ("" if tagged else tag))
+                    out.append("    db " + ", ".join(parts) + suffix(f))
                     tagged = True
                 elif skip_bank == fi:
                     pass  # emitted by the `dfar` of the pointer before it
@@ -3755,11 +3761,11 @@ class Rom:
                         out.append(f"    dw {nm or f'${tgt:04X}'}" + ("" if tagged else tag))
                     tagged = True
                 else:
-                    if f.get("line"):
+                    if f.get("line") or fc:
                         flush()  # a field marked "line" gets a db line of its own
                     run.extend(raws[fi])
-                    if f.get("line"):
-                        flush()
+                    if f.get("line") or fc:
+                        flush(f)
                 q += sz
             flush()
         if t.get("tail"):
