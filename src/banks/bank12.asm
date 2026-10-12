@@ -6942,7 +6942,7 @@ Func_012_6990:: ; address name
     ret
 
 ; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0, wCurrentKeyIndex
 ; writes: rRAMB, rRAMG
 ; points at: wKeySeeds, wCurrentKeyIndex

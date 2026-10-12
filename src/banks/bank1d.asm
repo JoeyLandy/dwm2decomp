@@ -3910,7 +3910,7 @@ Func_01D_5ADF:: ; address name
     ret
 
 ; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
-; 4 call sites from 4 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
+; 4 call sites from 4 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
 ; reads: wArg1, hTemp0, wDigits, hTemp1
 ; writes: rRAMG2, rRAMB, wWindowTileBuffer
 DrawRecordStatsBoxForArg1::
@@ -4182,7 +4182,7 @@ Jump_01D_5CAF:: ; address name
     ret
 
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
-; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
+; 11 call sites from 11 routines (e.g. NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
 ; reads: wArg1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
 ; points at: wNameGlyphBuf
@@ -4317,7 +4317,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 28 call sites from 28 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_Case12_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
+; 28 call sites from 28 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
 ; points at: wListEntries
@@ -4591,7 +4591,7 @@ Func_01D_5ECE:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_AskToJoin_ClampRecordListPageCursor5, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear, BattleEnd_AskToJoin_ClampRecordListPageCursor5, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPartyList
@@ -4782,7 +4782,7 @@ Func_01D_5F9C:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, sRecords
@@ -4860,7 +4860,7 @@ Func_01D_6026:: ; address name
     ret
 
 ; for the visible entries of page wD7AF draws the species name (field $0B, category 2 of the bank-08 database) of each listed record (E-0129)
-; 8 call sites from 8 routines (e.g. EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames, BreedMenu_Case05_DrawRecordListPageSpeciesNames, BreedMenu_Case0F_DrawRecordListPageSpeciesNames, SwapMonstersMenu_ChooseToView_DrawRecordListPageSpeciesNames, ...)
+; 8 call sites from 8 routines (e.g. EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames, BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames, BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames, SwapMonstersMenu_ChooseToView_DrawRecordListPageSpeciesNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, hTemp1, wDataBank, wListPages
 ; writes: rRAMG2, rRAMB, wDataBank, wNameGlyphBuf
 ; points at: wListEntries, wNameGlyphBuf
@@ -5278,7 +5278,7 @@ Func_01D_62FF:: ; address name
     ret
 
 ; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks, BreedMenu_Case05_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks, BreedMenu_ChooseEgg_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, wArg2, wArg1, wListPages
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
@@ -6644,7 +6644,7 @@ Jump_01D_6A59:: ; address name
     ret
 
 ; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
-; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames, SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E, ...)
+; 14 call sites from 10 routines (e.g. HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames, SwapMonstersMenu_ChooseToView_LoadFamilyIconTileForRecordB_Bank1E, ...)
 ; reads: wListPageIndex, wListLastRow, wPartyCount, wArg1
 ; writes: rRAMG2, rRAMB
 ; points at: wPartyList, wListEntries
@@ -6867,7 +6867,7 @@ Func_01D_6B32:: ; address name
     ret
 
 ; copies tiles listed at the address in wD7F3/4 to wD7F1/2 + 16 * n, six per call; wD7F5 = $FF when the $FF end is reached, else 0 (E-0128)
-; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall_Case32, BreedMenu_Case05_DrawGoldBoxAndStep_Bank15, ...)
+; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall_Case32, BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wArg3, wArg4, wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart, wArg5
 LoadTileListSixPerCall::

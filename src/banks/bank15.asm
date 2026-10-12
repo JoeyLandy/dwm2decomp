@@ -151,7 +151,7 @@ Jump_015_40AE:: ; address name
     ret
 
 ; implements script command type ED (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank $1B strings); reached through ScriptCommandED in bank $10 (E-0038, E-0244)
-; 27 call sites from 27 routines (e.g. EggServiceMenu_ChooseAndPay_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_BreedMenu, NpcBreedMenu_Case11_ToBreedMenu, ...)
+; 27 call sites from 27 routines (e.g. EggServiceMenu_ChooseAndPay_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_ToBreedMenu, NpcBreedMenu_ChooseAndBreed_BreedMenu, NpcBreedMenu_RedrawListScreen_ToBreedMenu, ...)
 ; reads: wScreenState
 BreedMenu::
 Func_015_40FA:: ; address name
@@ -162,20 +162,20 @@ Func_015_40FA:: ; address name
     dw BreedMenu_ToHandleThreeOptionMenuInput_15
     dw BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc
     dw BreedMenu_ChooseParents
-    dw BreedMenu_Case05
+    dw BreedMenu_ChooseEgg
     dw BreedMenu_NameEntry
     dw BreedMenu_ReturnToMap
     dw BreedMenu_TalkEvent17ThenNameEntry
     dw BreedMenu_CopyToChildThenTalkEvent16
     dw BreedMenu_TalkEvent15
-    dw BreedMenu_Case0B
+    dw BreedMenu_RestoreScreen
     dw BreedMenu_SwapMonstersMenu
     dw BreedMenu_SwapMonstersMenu_Case0D
     dw BreedMenu_SwapMonstersMenu_Case0D
-    dw BreedMenu_Case0F
-    dw BreedMenu_Case10
-    dw BreedMenu_Case11
-    dw BreedMenu_Case12
+    dw BreedMenu_RedrawListScreen
+    dw BreedMenu_ClearListMarks
+    dw BreedMenu_ListMonsters
+    dw BreedMenu_ShowSelectedRecord
 
 ; state 0 of BreedMenu: clears $6F bytes from wScreenState (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
@@ -232,7 +232,7 @@ Jump_015_4167:: ; address name
     dw BreedMenu_Setup_CopyRectTo20ByteRows_Bank15
 
 ; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
-; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15)
+; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawPair72A9And72C5AndStep::
@@ -246,7 +246,7 @@ Func_015_4171:: ; address name
     ret
 
 ; copies box Data_015_7291 to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0125)
-; 6 call sites from 6 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15, BreedMenu_Case05_DrawGoldBoxAndStep_Bank15, ...)
+; 6 call sites from 6 routines (e.g. BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep, BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15, BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wGoldLo, wDigits, wArg3
@@ -1126,7 +1126,7 @@ Jump_015_479C:: ; address name
     ret
 
 ; draws the name and species name of the record at WD789 cell 5, clears wCFA8 and wCFA9 and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0, BreedMenu_Case12_ClearThreeTileRows)
+; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_PrepareWCF8BCountersAndRequestScript, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0, BreedMenu_ShowSelectedRecord_ClearThreeTileRows)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wNameEntryState, wNameEntrySubState, wScreenStep
 DrawListEntriesCell5RecordNamesAndStep::
@@ -2502,43 +2502,43 @@ Jump_015_5030:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in BreedMenu
+; BreedMenu screen state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseWithByte6ESet), species names, marks, the gold box and a two-choice confirmation
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case05::
+BreedMenu_ChooseEgg::
 Jump_015_50D1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case05_ToBreedMenu_Case05_Case00_WriteArg1AndArg2Etc
-    dw BreedMenu_Case05_ListRecordsInUseWithByte6ESet
+    dw BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc
+    dw BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet
     dw ClearTileRowsAndResetWindowAndStep
-    dw BreedMenu_Case05_ClampRecordListPageCursor4_Case03
-    dw BreedMenu_Case05_DrawRecordListPageSpeciesNames
-    dw BreedMenu_Case05_DrawRecordListPageMarks
-    dw BreedMenu_Case05_UpdatePagedListCursor
-    dw BreedMenu_Case05_CopyRectTo20ByteRows_Bank15
-    dw BreedMenu_Case05_DrawGoldBoxAndStep_Bank15
+    dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03
+    dw BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames
+    dw BreedMenu_ChooseEgg_DrawRecordListPageMarks
+    dw BreedMenu_ChooseEgg_UpdatePagedListCursor
+    dw BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15
+    dw BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15
     dw BreedMenu_ChooseParents_BlankWordTableTargets
-    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
-    dw BreedMenu_Case05_QueueSoundEffect
+    dw BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep
+    dw BreedMenu_ChooseEgg_QueueSoundEffect
     dw BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15
-    dw BreedMenu_Case05_ClampRecordListPageCursor4
-    dw BreedMenu_Case05_LoadTile4990AndRun6320
-    dw BreedMenu_Case05_SetArg5ToListEntriesCell4
-    dw BreedMenu_Case05_SetArg5ToListEntriesCell4_Case10
+    dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4
+    dw BreedMenu_ChooseEgg_LoadTile4990AndRun6320
+    dw BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4
+    dw BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10
 
-; entry 0 of the `rst $00` table in BreedMenu_Case05
+; entry 0 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case05_ToBreedMenu_Case05_Case00_WriteArg1AndArg2Etc::
+BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc::
 Jump_015_50F7:: ; address name
-    call BreedMenu_Case05_Case00_WriteArg1AndArg2Etc
+    call BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc
     ret
 
-; entry 1 of the `rst $00` table in BreedMenu_Case05
+; entry 1 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case05_ListRecordsInUseWithByte6ESet::
+BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet::
 Jump_015_50FB:: ; address name
     ld de, TileRect_15_6FDB
     ld hl, wWindowTileBuffer + $BB
@@ -2559,7 +2559,7 @@ Jump_015_50FB:: ; address name
     ret
 
 ; clears four tile rows, sets the default window ($8800, $1202) and wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep)
+; 1 call site from 1 routine (e.g. BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
@@ -2590,11 +2590,11 @@ Func_015_512C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_Case05
+; entry 3 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case05_ClampRecordListPageCursor4_Case03::
+BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03::
 Jump_015_5165:: ; address name
     ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $BB
@@ -2624,7 +2624,7 @@ Jump_015_5165:: ; address name
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -2632,18 +2632,18 @@ Jump_015_5165:: ; address name
     call DrawScreenBufferRect_Bank15
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in BreedMenu_Case05
+; entry 4 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-BreedMenu_Case05_DrawRecordListPageSpeciesNames::
+BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames::
 Jump_015_51D6:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -2653,11 +2653,11 @@ Jump_015_51D6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in BreedMenu_Case05
+; entry 5 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case05_DrawRecordListPageMarks::
+BreedMenu_ChooseEgg_DrawRecordListPageMarks::
 Jump_015_51E9:: ; address name
     ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
@@ -2674,11 +2674,11 @@ Jump_015_51E9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_Case05
+; entry 6 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor, wArg5, wArg6
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenStep, rRAMG2, rRAMB, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
-BreedMenu_Case05_UpdatePagedListCursor::
+BreedMenu_ChooseEgg_UpdatePagedListCursor::
 Jump_015_520D:: ; address name
     ld a, $02
     ld [wMenuInputResult], a
@@ -2733,7 +2733,7 @@ Jump_015_520D:: ; address name
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -2767,11 +2767,11 @@ Jump_015_520D:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in BreedMenu_Case05
+; entry 7 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wThreeOptionResult, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case05_CopyRectTo20ByteRows_Bank15::
+BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
 Jump_015_52BD:: ; address name
     ld c, $09
     ld hl, $0223
@@ -2803,11 +2803,11 @@ Jump_015_52BD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu_Case05
+; entry 8 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wScreenStep, wArg5
 ; writes: wScreenStep, wScreenSubStep, wArg1, wArg2, wArg3, wArg4, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case05_DrawGoldBoxAndStep_Bank15::
+BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15::
 Jump_015_52FF:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -2869,11 +2869,11 @@ Jump_015_5358:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 10 of the `rst $00` table in BreedMenu_Case05
+; entry 10 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
+BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
 Jump_015_5376:: ; address name
     ld hl, TileCopyDestList_15_72E1
     ld de, TileCopySrcList_15_72F1
@@ -2883,11 +2883,11 @@ Jump_015_5376:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in BreedMenu_Case05
+; entry 11 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wChoiceCursorF0, wChoiceCursor, wScreenStep
-BreedMenu_Case05_QueueSoundEffect::
+BreedMenu_ChooseEgg_QueueSoundEffect::
 Jump_015_5387:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -3106,10 +3106,10 @@ BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_Data:: ; heurist
 Data_015_54E2:: ; address name
     db $2D, $01, $6D, $01
 
-; entry 14 of the `rst $00` table in BreedMenu_Case05
+; entry 14 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case05_LoadTile4990AndRun6320::
+BreedMenu_ChooseEgg_LoadTile4990AndRun6320::
 Jump_015_54E6:: ; address name
     call LoadTile4990AndRun6320
     call BGMapAddressAtScroll_Bank15
@@ -3124,11 +3124,11 @@ Jump_015_54E6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 15 of the `rst $00` table in BreedMenu_Case05
+; entry 15 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wArg1, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg3, wArg2, wArg1, wTwoChoiceCursor, wScreenStep, wScriptCommandType, ...
-BreedMenu_Case05_SetArg5ToListEntriesCell4::
+BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4::
 Jump_015_5504:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -3177,12 +3177,12 @@ Jump_015_5504:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 16 of the `rst $00` table in BreedMenu_Case05
+; entry 16 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, wArg3, wArg2, wArg1, wScreenStep, wScreenState, wScriptCommandType, ...
 ; points at: sRecords, wListEntries2
-BreedMenu_Case05_SetArg5ToListEntriesCell4_Case10::
+BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10::
 Jump_015_556A:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -3389,8 +3389,8 @@ Jump_015_56B0:: ; address name
     dw BreedMenu_ReturnToMap_UpdatePagedListCursor
     dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case14
     dw BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C
-    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
-    dw BreedMenu_Case05_QueueSoundEffect
+    dw BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep
+    dw BreedMenu_ChooseEgg_QueueSoundEffect
     dw BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15
     dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19
     dw BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_Case1A
@@ -4547,26 +4547,26 @@ Jump_015_5ECC:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in BreedMenu
+; BreedMenu screen state $0B: redraws the window, the map's graphics and palettes (SendSGBPaletteSetForSGBPaletteSet, StartPaletteFade), the gold box and the monster name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case0B::
+BreedMenu_RestoreScreen::
 Jump_015_5EF6:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case0B_FillTileRectWithArg1Tile
+    dw BreedMenu_RestoreScreen_FillTileRectWithArg1Tile
     dw BreedMenu_ReturnToMap_DecompressToVRAM
     dw DrawPair72A9And72C5AndStep_570C
     dw BreedMenu_ReturnToMap_LoadMapHeader
     dw BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15
-    dw BreedMenu_Case0B_DrawGoldBoxAndStep_Bank15
-    dw BreedMenu_Case0B_CopyMonsterNameToBuffer_B15
-    dw BreedMenu_Case0B_WriteScreenStepAndScreenSubStepEtc
+    dw BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15
+    dw BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15
+    dw BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc
 
-; entry 5 of the `rst $00` table in BreedMenu_Case0B
+; entry 5 of the `rst $00` table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
-BreedMenu_Case0B_DrawGoldBoxAndStep_Bank15::
+BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15::
 Jump_015_5F0A:: ; address name
     call DrawGoldBoxAndStep_Bank15
     ld a, [wIsCGB]
@@ -4579,11 +4579,11 @@ Jump_015_5F0A:: ; address name
 .return:
     ret
 
-; entry 0 of the `rst $00` table in BreedMenu_Case0B
+; entry 0 of the `rst $00` table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenStep
-BreedMenu_Case0B_FillTileRectWithArg1Tile::
+BreedMenu_RestoreScreen_FillTileRectWithArg1Tile::
 Jump_015_5F1F:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld a, h
@@ -4607,12 +4607,12 @@ Jump_015_5F1F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_Case0B
+; entry 6 of the `rst $00` table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScreenStep
 ; writes: wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
 ; points at: wNameGlyphBuf, wTextBuf0
-BreedMenu_Case0B_CopyMonsterNameToBuffer_B15::
+BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
 Jump_015_5F51:: ; address name
     ld a, [wFadeState]
     and a, a
@@ -4666,10 +4666,10 @@ Jump_015_5F51:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in BreedMenu_Case0B
+; entry 7 of the `rst $00` table in BreedMenu_RestoreScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, ...
-BreedMenu_Case0B_WriteScreenStepAndScreenSubStepEtc::
+BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc::
 Jump_015_5FAD:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -4741,29 +4741,29 @@ Jump_015_600C:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 15 of the `rst $00` table in BreedMenu
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and draws the record list page
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case0F::
+BreedMenu_RedrawListScreen::
 Jump_015_6028:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case0F_DecompressToVRAM
-    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
-    dw BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep
-    dw BreedMenu_Case05_ClampRecordListPageCursor4
-    dw BreedMenu_Case0F_DrawRecordListPageSpeciesNames
+    dw BreedMenu_RedrawListScreen_DecompressToVRAM
+    dw BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15
+    dw BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep
+    dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4
+    dw BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames
     dw LoadTile4990AndRun6320
-    dw BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15
-    dw BreedMenu_Case0F_SetArg5ToListEntriesCell4
-    dw BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
+    dw BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15
+    dw BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4
+    dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 0 of the `rst $00` table in BreedMenu_Case0F
+; entry 0 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
 ; points at: wBGPaletteBuffer
-BreedMenu_Case0F_DecompressToVRAM::
+BreedMenu_RedrawListScreen_DecompressToVRAM::
 Jump_015_603E:: ; address name
     ld hl, vTiles2
     ld de, Map0DTileset
@@ -4781,9 +4781,9 @@ Jump_015_603E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in BreedMenu_Case0F
+; entry 1 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15::
+BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15::
 Jump_015_6063:: ; address name
     ld hl, TileCopyDestList_15_72E1
     ld de, TileCopySrcList_15_72F1
@@ -4791,18 +4791,18 @@ Jump_015_6063:: ; address name
     call DrawPair72A9And72C5AndStep
     ret
 
-; entry 2 of the `rst $00` table in BreedMenu_Case0F
+; entry 2 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep::
+BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
 Jump_015_6070:: ; address name
     call ClearTileRowsAndResetWindowAndStep
     ret
 
-; entry 13 of the `rst $00` table in BreedMenu_Case05
+; entry 13 of the `rst $00` table in BreedMenu_ChooseEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case05_ClampRecordListPageCursor4::
+BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
 Jump_015_6074:: ; address name
     ld de, TileRect_15_7050
     ld hl, wWindowTileBuffer + $BB
@@ -4827,11 +4827,11 @@ Jump_015_6074:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in BreedMenu_Case0F
+; entry 4 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-BreedMenu_Case0F_DrawRecordListPageSpeciesNames::
+BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames::
 Jump_015_60AC:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -4842,7 +4842,7 @@ Jump_015_60AC:: ; address name
     ret
 
 ; copies a tile from bank $1F to vTiles1 + $4E0, runs Func_01D_6320 with wD7F1 = wD7F2 = 1, then wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. BreedMenu_Case05_LoadTile4990AndRun6320)
+; 1 call site from 1 routine (e.g. BreedMenu_ChooseEgg_LoadTile4990AndRun6320)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 LoadTile4990AndRun6320::
@@ -4861,15 +4861,15 @@ Func_015_60BF:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_Case0F
+; entry 6 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15::
+BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15::
 Jump_015_60E2:: ; address name
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
     call StoreBAtWordTableEntry_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
@@ -4880,11 +4880,11 @@ Jump_015_60E2:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in BreedMenu_Case0F
+; entry 7 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: rRAMG2, rRAMB, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, ...
-BreedMenu_Case0F_SetArg5ToListEntriesCell4::
+BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4::
 Jump_015_6101:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -4922,11 +4922,11 @@ Jump_015_6101:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu_Case0F
+; entry 8 of the `rst $00` table in BreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
-BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics::
+BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics::
 Jump_015_6155:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -4966,30 +4966,30 @@ Jump_015_6155:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 16 of the `rst $00` table in BreedMenu
+; BreedMenu screen state $10: blanks the list marks (BlankWordTableTargets), fills tiles and resets the cursor
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case10::
+BreedMenu_ClearListMarks::
 Jump_015_61B6:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case0F_DecompressToVRAM
-    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
-    dw BreedMenu_Case10_FillTilesBxC
+    dw BreedMenu_RedrawListScreen_DecompressToVRAM
+    dw BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15
+    dw BreedMenu_ClearListMarks_FillTilesBxC
     dw BreedMenu_ReturnToMap_ToDrawRecordListPageNames
     dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5
     dw BreedMenu_ReturnToMap_FillTilesBxC
     dw BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11
     dw BreedMenu_ChooseParents_CopyFromBankWaitVRAM
-    dw BreedMenu_Case10_BlankWordTableTargets
-    dw BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
+    dw BreedMenu_ClearListMarks_BlankWordTableTargets
+    dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 2 of the `rst $00` table in BreedMenu_Case10
+; entry 2 of the `rst $00` table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-BreedMenu_Case10_FillTilesBxC::
+BreedMenu_ClearListMarks_FillTilesBxC::
 Jump_015_61CE:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0F01
@@ -5051,11 +5051,11 @@ Jump_015_6203:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu_Case10
+; entry 8 of the `rst $00` table in BreedMenu_ClearListMarks
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case10_BlankWordTableTargets::
+BreedMenu_ClearListMarks_BlankWordTableTargets::
 Jump_015_6235:: ; address name
     ld c, $04
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
@@ -5073,30 +5073,30 @@ Jump_015_6235:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in BreedMenu
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case12::
+BreedMenu_ShowSelectedRecord::
 Jump_015_625C:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case0F_DecompressToVRAM
-    dw BreedMenu_Case12_LoadRecordSelectedRecordByte0EBit0
+    dw BreedMenu_RedrawListScreen_DecompressToVRAM
+    dw BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0
     dw DrawPair72A9And72C5AndStep
-    dw BreedMenu_Case12_FillTilesBxC
-    dw BreedMenu_Case12_ClearThreeTileRows
-    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
-    dw BreedMenu_Case12_ToDrawRecordListPageNames
-    dw BreedMenu_Case12_DrawRecordNameAndSpeciesNameTiles
+    dw BreedMenu_ShowSelectedRecord_FillTilesBxC
+    dw BreedMenu_ShowSelectedRecord_ClearThreeTileRows
+    dw BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep
+    dw BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames
+    dw BreedMenu_ShowSelectedRecord_DrawRecordNameAndSpeciesNameTiles
     dw BreedMenu_ChooseParents_ComputeBreedingChild
-    dw BreedMenu_Case12_LoadFamilyIconTileForRecordB_Bank15
-    dw BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
+    dw BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15
+    dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 7 of the `rst $00` table in BreedMenu_Case12
+; entry 7 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wScreenStep
 ; writes: wArg1, wScreenStep
-BreedMenu_Case12_DrawRecordNameAndSpeciesNameTiles::
+BreedMenu_ShowSelectedRecord_DrawRecordNameAndSpeciesNameTiles::
 Jump_015_6276:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -5113,11 +5113,11 @@ Jump_015_6276:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in BreedMenu_Case12
+; entry 9 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wArg5, wArg6
 ; writes: wArg1
-BreedMenu_Case12_LoadFamilyIconTileForRecordB_Bank15::
+BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15::
 Jump_015_629F:: ; address name
     ld a, $C7
     ld [wArg1], a
@@ -5139,51 +5139,51 @@ Jump_015_629F:: ; address name
     call CopyRect7351ToWC410AndIncScreenStep
     ret
 
-; entry 1 of the `rst $00` table in BreedMenu_Case12
+; entry 1 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case12_LoadRecordSelectedRecordByte0EBit0::
+BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0::
 Jump_015_62C9:: ; address name
     call LoadRecordSelectedRecordByte0EBit0
     call BreedMenu_WriteListCountAndRAMG2Etc
-    jp BreedMenu_Case11_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5
+    jp BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5
 
-; entry 4 of the `rst $00` table in BreedMenu_Case12
+; entry 4 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case12_ClearThreeTileRows::
+BreedMenu_ShowSelectedRecord_ClearThreeTileRows::
 Jump_015_62D2:: ; address name
     call ClearThreeTileRows
     call DrawListEntriesCell5RecordNamesAndStep
     ret
 
-; entry 17 of the `rst $00` table in BreedMenu
+; BreedMenu screen state $11: the list of records that are not eggs (ListRecordsInUseWithByte6EClear) with page-of-pages
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case11::
+BreedMenu_ListMonsters::
 Jump_015_62D9:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case0F_DecompressToVRAM
-    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
-    dw BreedMenu_Case11_ListRecordsInUseWithByte6EClear
-    dw BreedMenu_Case12_FillTilesBxC
-    dw BreedMenu_Case12_ToDrawRecordListPageNames
+    dw BreedMenu_RedrawListScreen_DecompressToVRAM
+    dw BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15
+    dw BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear
+    dw BreedMenu_ShowSelectedRecord_FillTilesBxC
+    dw BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5
     dw BreedMenu_ChooseParents_FillTilesBxC
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06
     dw CopyRect7351ToWC410AndIncScreenStep
-    dw BreedMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
+    dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 2 of the `rst $00` table in BreedMenu_Case11
+; entry 2 of the `rst $00` table in BreedMenu_ListMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case11_ListRecordsInUseWithByte6EClear::
+BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear::
 Jump_015_62F1:: ; address name
     farcall ListRecordsInUseWithByte6EClear
 
-BreedMenu_Case11_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5::
+BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5::
 Jump_015_62F7:: ; address name
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -5211,11 +5211,11 @@ Jump_015_62F7:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_Case12
+; entry 3 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case12_FillTilesBxC::
+BreedMenu_ShowSelectedRecord_FillTilesBxC::
 Jump_015_6336:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
@@ -5231,15 +5231,15 @@ Jump_015_6336:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_Case12
+; entry 6 of the `rst $00` table in BreedMenu_ShowSelectedRecord
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case12_ToDrawRecordListPageNames::
+BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
 Jump_015_6359:: ; address name
     farcall DrawRecordListPageNames
     ret
 
 ; copies the 8 x 5 rectangle Data_015_7351 into wC410 (CopyRectTo20ByteRows_Bank15), then wD781 += 1 (E-0119)
-; 1 call site from 1 routine (e.g. BreedMenu_Case12_LoadFamilyIconTileForRecordB_Bank15)
+; 1 call site from 1 routine (e.g. BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15)
 ; reads: wScreenStep
 ; writes: wScreenStep
 CopyRect7351ToWC410AndIncScreenStep::
@@ -5254,7 +5254,7 @@ Func_015_6360:: ; address name
     ret
 
 ; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
-; 6 call sites from 6 routines (e.g. CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15, DrawPair72A9And72C5AndStep_570C, BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15, ...)
+; 6 call sites from 6 routines (e.g. CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15, DrawPair72A9And72C5AndStep_570C, BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15, ...)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
 CopyGlyphTileListFromBank1F_Bank15::
@@ -5896,19 +5896,19 @@ BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc::
 Func_015_66D8:: ; address name
     ld hl, BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data
     ld a, $9D
-    jr BreedMenu_Case05_Case00_WriteArg1AndArg2Etc_SetArg1
+    jr BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc_SetArg1
 
-; only called from BreedMenu_Case05_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Case05_ToBreedMenu_Case05_Case00_WriteArg1AndArg2Etc)
+; only called from BreedMenu_ChooseEgg_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
-BreedMenu_Case05_Case00_WriteArg1AndArg2Etc::
+BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc::
 Func_015_66DF:: ; address name
     ld hl, BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data
     ld a, $9C
 
-BreedMenu_Case05_Case00_WriteArg1AndArg2Etc_SetArg1::
+BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc_SetArg1::
 Jump_015_66E4:: ; address name
     ld [wArg1], a
     xor a, a
@@ -5968,7 +5968,7 @@ Jump_015_66E4:: ; address name
     ret
 
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (E-0121)
-; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case05_ClampRecordListPageCursor4_Case03)
+; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03)
 DrawC5BEC6AtScrollOffsetDE_Bank15::
 Func_015_6742:: ; address name
     push de
@@ -6004,7 +6004,7 @@ Func_015_6742:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case05_ClampRecordListPageCursor4_Case03, BreedMenu_Case05_ClampRecordListPageCursor4, BreedMenu_Case11_ListRecordsInUseWithByte6EClear)
+; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03, BreedMenu_ChooseEgg_ClampRecordListPageCursor4, BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear)
 StoreC5BEC6AtHLStride2_Bank15::
 Func_015_6772:: ; address name
     ld a, $C5
@@ -6020,7 +6020,7 @@ Func_015_6772:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. ShowSaveFileInfoWindow, BreedMenu_Case05_Case00_WriteArg1AndArg2Etc)
+; 2 call sites from 2 routines (e.g. ShowSaveFileInfoWindow, BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank15::
 Func_015_6780:: ; address name
@@ -6128,7 +6128,7 @@ Func_015_67E5:: ; address name
     ret
 
 ; TenTimesTemp0PlusTen, then converts it to packed BCD (Number24ToPackedBCD) and unpacks the digits to wD7F1 onward (E-0117)
-; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits, BreedMenu_Case05_UpdatePagedListCursor, BreedMenu_Case0F_SetArg5ToListEntriesCell4)
+; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits, BreedMenu_ChooseEgg_UpdatePagedListCursor, BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4)
 ; writes: wDigits
 TenTimesTemp0PlusTenToDigits::
 Func_015_67F9:: ; address name
@@ -6144,7 +6144,7 @@ Func_015_67F9:: ; address name
     ret
 
 ; HL = 10 * hFFC6 + 10 (E-0117)
-; 5 call sites from 5 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_Case3F, TenTimesTemp0PlusTenToDigits, BreedMenu_Case05_SetArg5ToListEntriesCell4_Case10, ...)
+; 5 call sites from 5 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_Case3F, TenTimesTemp0PlusTenToDigits, BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10, ...)
 ; reads: hTemp0
 TenTimesTemp0PlusTen::
 Func_015_680F:: ; address name
@@ -6161,7 +6161,7 @@ Func_015_680F:: ; address name
     ret
 
 ; only called from routines of BreedMenu (E-0098)
-; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits, BreedMenu_Case05_UpdatePagedListCursor, BreedMenu_Case0F_SetArg5ToListEntriesCell4)
+; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits, BreedMenu_ChooseEgg_UpdatePagedListCursor, BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4)
 ; points at: wArg4, wTextBuf0
 BreedMenu_Shared02::
 Func_015_6822:: ; address name
@@ -6187,7 +6187,7 @@ Func_015_6822:: ; address name
     ret
 
 ; wGold -= the 24-bit amount wD7F3:wD7F2:wD7F1 (no floor; callers check first, for example with IsAmountInArg1AboveGold) (E-0106)
-; 9 call sites from 9 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_Case05_SetArg5ToListEntriesCell4_Case10, ArenaMenu_SubtractArg1AmountFromGold, ArenaMenu_SubtractArg1AmountFromGold_Case19, ...)
+; 9 call sites from 9 routines (e.g. BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_Case10, ArenaMenu_SubtractArg1AmountFromGold, ArenaMenu_SubtractArg1AmountFromGold_Case19, ...)
 ; reads: wArg3, wArg2, wArg1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldHi, wGoldMid, wGoldLo
 SubtractArg1AmountFromGold::
@@ -6218,7 +6218,7 @@ Func_015_683C:: ; address name
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
-; 5 call sites from 4 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5, BreedMenu_Case12_LoadFamilyIconTileForRecordB_Bank15)
+; 5 call sites from 4 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5, BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
 LoadFamilyIconTileForRecordB_Bank15::
@@ -6371,7 +6371,7 @@ Data_015_6937:: ; address name
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; only called from routines of BreedMenu (E-0098)
-; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0, BreedMenu_Case12_LoadRecordSelectedRecordByte0EBit0)
+; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0, BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0)
 ; reads: wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wArg1
@@ -6478,7 +6478,7 @@ Func_015_693F:: ; address name
     ret
 
 ; with SRAM bank 0 enabled: wD7F1 = bit 0 of byte $0E of record wD7B4 (LoadSRAMRecordByte) (E-0119)
-; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0, BreedMenu_Case12_LoadRecordSelectedRecordByte0EBit0)
+; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0, BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0)
 ; reads: wSelectedRecord, hTemp0
 ; writes: rRAMG2, rRAMB, wArg1
 LoadRecordSelectedRecordByte0EBit0::
@@ -6498,7 +6498,7 @@ Func_015_69C6:: ; address name
     ret
 
 ; clears 4 tiles at vTiles2 + $7C0, 3 at vTiles1 + $400 and 2 at vTiles1 + $4A0 (FillTilesBxC); falls through (E-0122)
-; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_ToClearThreeTileRowsAndStep, BreedMenu_ChooseParents_ClearThreeTileRows, BreedMenu_Case12_ClearThreeTileRows)
+; 3 call sites from 3 routines (e.g. BreedMenu_ChooseParents_ToClearThreeTileRowsAndStep, BreedMenu_ChooseParents_ClearThreeTileRows, BreedMenu_ShowSelectedRecord_ClearThreeTileRows)
 ClearThreeTileRows::
 Func_015_69E3:: ; address name
     ld hl, vTiles2 + $7C0
@@ -6586,7 +6586,7 @@ Func_015_6A36:: ; address name
     ret
 
 ; only called from routines of BreedMenu (E-0098)
-; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_WriteNameEntryStateAndNameEntrySubStateEtc, BreedMenu_Case12_DrawRecordNameAndSpeciesNameTiles)
+; 2 call sites from 2 routines (e.g. BreedMenu_ChooseParents_WriteNameEntryStateAndNameEntrySubStateEtc, BreedMenu_ShowSelectedRecord_DrawRecordNameAndSpeciesNameTiles)
 ; reads: wSelectedRecord, wArg5, wArg6
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wRecordBufA, wRecordBufB
@@ -6634,7 +6634,7 @@ Func_015_6A82:: ; address name
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored
-; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordNameAndSpeciesName, BreedMenu_Case0B_CopyMonsterNameToBuffer_B15, BreedMenu_ChooseParents_ComputeBreedingChild)
+; 4 call sites from 4 routines (e.g. BreedMenu_ChooseParents_TestBitInFieldAtArg3, DrawRecordNameAndSpeciesName, BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15, BreedMenu_ChooseParents_ComputeBreedingChild)
 ; reads: wDataBank
 ; writes: wDataBank
 ; points at: wNameGlyphBuf
@@ -7476,19 +7476,19 @@ Data_015_72FF:: ; address name
     dw $4130, $4180, $4100, $4190, $41E0, $40F0, $41D0, $4150 ; entry 0
     dw $4160, $41A0, $40B0, $4910, $4910, $FFFF
 
-; address loaded by BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc, BreedMenu_Case05_Case00_WriteArg1AndArg2Etc
+; address loaded by BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc, BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc
 BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_015_731B:: ; address name
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $FF, $FF
 
-; address loaded by BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, BreedMenu_ChooseParents_BlankWordTableTargets and 4 more
+; address loaded by BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A, BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15, BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet, BreedMenu_ChooseParents_BlankWordTableTargets and 4 more
 BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_015_732D:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3
 
-; address loaded by BreedMenu_Case05_ClampRecordListPageCursor4_Case03, BreedMenu_Case05_UpdatePagedListCursor, BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15
-BreedMenu_Case05_ClampRecordListPageCursor4_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03, BreedMenu_ChooseEgg_UpdatePagedListCursor, BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15
+BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_015_7333:: ; address name
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
 

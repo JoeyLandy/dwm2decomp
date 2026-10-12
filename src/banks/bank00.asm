@@ -6634,7 +6634,7 @@ Jump_000_2447:: ; address name
     ret
 
 ; A = key slot, or $FE: writes 'Magic Key' to DE; otherwise writes the name of key A in wKeyList (4-byte entries from $C708): the word numbered byte 0 + 1, then the word numbered byte 1 + $11 (CopyKeyNameWordToDE), then $F0 (E-0090)
-; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_WaitPauseListCount, ...)
+; 7 call sites from 7 routines (e.g. DebugAutomap_Update_CopyGlyphTilesToVRAM, PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03, PauseMenu_State3_ChooseListEntry_WaitPauseListCount, ...)
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE

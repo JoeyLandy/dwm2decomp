@@ -4961,7 +4961,7 @@ Func_032_5EAB:: ; address name
     dw ResolveStep0EEffect_Return
     dw ResolveStep0EEffect_Return
     dw ResolveStep0EEffect_Return
-    dw ResolveStep0EEffect_Case09
+    dw ResolveStep0EEffect_DamageAndSelectEffect
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
@@ -5436,7 +5436,7 @@ Jump_032_61B1:: ; address name
     ret
 
 ; wBattleSubStep2 = 0, wBattleSubStep = 1 (E-0071)
-; 3 call sites from 3 routines (e.g. SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1, ResolveStep0EEffect_Case09_ToSetBattleSubStep1)
+; 3 call sites from 3 routines (e.g. SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1, ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1)
 ; writes: wBattleSubStep2, wBattleSubStep
 SetBattleSubStep1::
 Func_032_61D9:: ; address name
@@ -5875,23 +5875,23 @@ ResolveStep0EEffect_Return::
 Jump_032_643C:: ; address name
     ret
 
-; entry 9 of the `rst $00` table in ResolveStep0EEffect
+; skips an absent actor, computes damage on the target and selects the effect by the effect flags (SelectEffectByEffectFlags, SelectEffectByEffectFlags2Flags)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep2
-ResolveStep0EEffect_Case09::
+ResolveStep0EEffect_DamageAndSelectEffect::
 Jump_032_643D:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
-    dw ResolveStep0EEffect_Case09_SkipTurnIfActorAbsent
-    dw ResolveStep0EEffect_Case09_AddDoubleAToHL_Bank32
-    dw ResolveStep0EEffect_Case09_RunEffectSubStep_652E
-    dw ResolveStep0EEffect_Case09_ToSetBattleSubStep1
+    dw ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent
+    dw ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32
+    dw ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_652E
+    dw ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1
 
-; entry 0 of the `rst $00` table in ResolveStep0EEffect_Case09
+; entry 0 of the `rst $00` table in ResolveStep0EEffect_DamageAndSelectEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectFlags, wEffectFlags2
 ; points at: wBattleSubStep2
-ResolveStep0EEffect_Case09_SkipTurnIfActorAbsent::
+ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent::
 Jump_032_6449:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5905,12 +5905,12 @@ Jump_032_6449:: ; address name
     farcall SelectEffectByEffectFlags2Flags
     ret
 
-; entry 1 of the `rst $00` table in ResolveStep0EEffect_Case09
+; entry 1 of the `rst $00` table in ResolveStep0EEffect_DamageAndSelectEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleDamageLo, wBattleDamageHi, wBattleTarget, wEffectTemp0, wEffectTemp1, wTemp0, wLoadSlot
 ; writes: wEffectTemp0, wEffectTemp1, wEffectSubStep, wTemp0, wLoadSlot, wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleSubStep2, wBattleHP, wTemp0
-ResolveStep0EEffect_Case09_AddDoubleAToHL_Bank32::
+ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32::
 Jump_032_6468:: ; address name
     ld hl, wBattleSubStep2
     inc [hl]
@@ -6011,11 +6011,11 @@ Jump_032_6468:: ; address name
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
-; entry 2 of the `rst $00` table in ResolveStep0EEffect_Case09
+; entry 2 of the `rst $00` table in ResolveStep0EEffect_DamageAndSelectEffect
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget, wBattleActor, wLoadSlot
 ; writes: wLoadSlot, wBattleTarget
-ResolveStep0EEffect_Case09_RunEffectSubStep_652E::
+ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_652E::
 Jump_032_6518:: ; address name
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -6027,7 +6027,7 @@ Jump_032_6518:: ; address name
     ret
 
 ; runs the routine for wCFCE (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. ResolveStep0EEffect_Case09_RunEffectSubStep_652E)
+; 1 call site from 1 routine (e.g. ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_652E)
 ; reads: wEffectSubStep
 RunEffectSubStep_652E::
 Func_032_652E:: ; address name
@@ -6088,9 +6088,9 @@ Jump_032_6555:: ; address name
     ld [wEffectSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in ResolveStep0EEffect_Case09
+; entry 3 of the `rst $00` table in ResolveStep0EEffect_DamageAndSelectEffect
 ; no direct call (reached through a table, a jump or a vector)
-ResolveStep0EEffect_Case09_ToSetBattleSubStep1::
+ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1::
 Jump_032_657D:: ; address name
     call SetBattleSubStep1
     ret
@@ -6408,7 +6408,7 @@ Jump_032_6718:: ; address name
     ret
 
 ; when the actor's slot is absent (CarryUnlessBattleSlotOutSlotEmpty) runs SetBattleSubStep1 and returns carry set; otherwise returns carry clear (E-0115)
-; 3 call sites from 3 routines (e.g. ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent, ResolveStep0EEffect_Case09_SkipTurnIfActorAbsent)
+; 3 call sites from 3 routines (e.g. ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent, ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent, ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent)
 ; reads: wBattleActor
 SkipTurnIfActorAbsent::
 Func_032_6749:: ; address name

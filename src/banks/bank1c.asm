@@ -421,7 +421,7 @@ Jump_01C_4295:: ; address name
     ret
 
 ; when the Super Game Boy is active, sets the four palette numbers 4 * wC51F + 0-3, sends a PAL_SET ($B1) packet with attribute file wC520, waits, and loads the object palettes (E-0121)
-; 3 call sites from 3 routines (e.g. InnMenu_Morning, BreedMenu_Case0B_DrawGoldBoxAndStep_Bank15, GameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
+; 3 call sites from 3 routines (e.g. InnMenu_Morning, BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15, GameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
 ; reads: wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, wSGBPaletteNum3Hi, ...
 SendSGBPaletteSetForSGBPaletteSet::

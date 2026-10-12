@@ -572,7 +572,7 @@ Jump_00D_4710:: ; address name
     dw EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold
     dw DrawBox5022WithPageIndicator
     dw EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks
-    dw EggServiceMenu_ChooseAndPay_Case12
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_ChooseAndPay
 ; no direct call (reached through a table, a jump or a vector)
@@ -912,36 +912,36 @@ Jump_00D_4952:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 18 of the `rst $00` table in EggServiceMenu_ChooseAndPay
+; by wScreenSubStep: reads bytes of the chosen record (LoadSRAMRecordByte/Word, MON_SEX), divides, and subtracts 20 gold (SubtractArg1AmountFromGold)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-EggServiceMenu_ChooseAndPay_Case12::
+EggServiceMenu_ChooseAndPay_CheckAndPay::
 Jump_00D_4988:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw EggServiceMenu_ChooseAndPay_Case12_EndScriptCommandAndIncScreenSubStep
-    dw EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM
-    dw EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case02
-    dw EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case03
-    dw EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case04
-    dw EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case05
-    dw EggServiceMenu_ChooseAndPay_Case12_SubtractArg1AmountFromGold
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case02
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case03
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case04
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case05
+    dw EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold
 
-; entry 0 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 0 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor
-EggServiceMenu_ChooseAndPay_Case12_EndScriptCommandAndIncScreenSubStep::
+EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep::
 Jump_00D_499A:: ; address name
     xor a, a
     ld [wTwoChoiceCursor], a
     call EndScriptCommandAndIncScreenSubStep
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 1 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: wTwoChoiceCursor, rRAMG2
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
 Jump_00D_49A2:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld c, $00
@@ -952,7 +952,7 @@ Jump_00D_49A2:: ; address name
     push bc
     push de
     ld a, c
-    ld de, EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Data
+    ld de, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Data
     add a, e
     ld e, a
     jr nc, .skip
@@ -986,7 +986,7 @@ Jump_00D_49A2:: ; address name
 
 .loop2:
     ld a, $03
-    jr EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jr EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip2:
     ld a, l
@@ -997,16 +997,16 @@ Jump_00D_49A2:: ; address name
     cp a, $33
     jr nc, .skip4
     xor a, a
-    jr EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jr EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jr EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jr EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip4:
     ld a, $01
 
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor::
 Jump_00D_49F2:: ; address name
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -1014,15 +1014,15 @@ Jump_00D_49F2:: ; address name
     call EndScriptCommandAndIncScreenSubStep
     ret
 
-; address loaded by EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_49FD:: ; address name
     db $5D, $61, $63, $65, $67, $69
 
-; entry 2 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 2 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, rRAMG2
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case02::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case02::
 Jump_00D_4A03:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1052,25 +1052,25 @@ Jump_00D_4A03:: ; address name
     cp a, $10
     jr c, .skip3
     ld a, $03
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip:
     xor a, a
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip2:
     ld a, $01
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
-; entry 3 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 3 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: wTwoChoiceCursor, rRAMG2
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case03::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case03::
 Jump_00D_4A3F:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1084,25 +1084,25 @@ Jump_00D_4A3F:: ; address name
     cp a, $51
     jr c, .skip3
     ld a, $03
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip:
     xor a, a
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip2:
     ld a, $01
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
 .skip3:
     ld a, $02
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
-; entry 4 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 4 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, hTemp1
 ; writes: wTwoChoiceCursor, rRAMG2
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case04::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case04::
 Jump_00D_4A69:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld b, $00
@@ -1170,13 +1170,13 @@ Jump_00D_4A69:: ; address name
 
 .skip:
     ld a, b
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
-; entry 5 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 5 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: wTwoChoiceCursor, rRAMG2
-EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case05::
+EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case05::
 Jump_00D_4ABF:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1184,13 +1184,13 @@ Jump_00D_4ABF:: ; address name
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
-    jp EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
+    jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
-; entry 6 of the `rst $00` table in EggServiceMenu_ChooseAndPay_Case12
+; entry 6 of the `rst $00` table in EggServiceMenu_ChooseAndPay_CheckAndPay
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6
 ; writes: wArg1, wArg2, wArg3, rRAMG2, rRAMB, wScreenSubStep, wScreenStep, wScriptCommandType, ...
-EggServiceMenu_ChooseAndPay_Case12_SubtractArg1AmountFromGold::
+EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold::
 Jump_00D_4ACF:: ; address name
     ld a, $14
     ld [wArg1], a
@@ -1225,7 +1225,7 @@ Jump_00D_4ACF:: ; address name
     ret
 
 ; enables SRAM (bank 0), far-calls SetArg5ToListEntriesCell4 and returns HL = wD7F5 (high) / wD7F6 (low) (E-0119)
-; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case05, EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case04, EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case03, EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case02, ...)
+; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case05, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case04, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case03, EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Case02, ...)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB
 GetListEntriesCell4AddressWithSRAM::
@@ -1242,7 +1242,7 @@ Func_00D_4B18:: ; address name
     ret
 
 ; wD782 += 1, wScriptCommandType = 0, wScriptStartRequest = $80 (E-0119)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM, EggServiceMenu_ChooseAndPay_Case12_EndScriptCommandAndIncScreenSubStep)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM, EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep, wScriptCommandType, wScriptStartRequest
 EndScriptCommandAndIncScreenSubStep::
@@ -1561,7 +1561,7 @@ Func_00D_4CF4:: ; address name
     ret
 
 ; up/down moves wD7AD between two entries; A sets wD7F5 = $FF (with sound $69 and the arrow tile), B sets $FE; otherwise blinks the cursor and wD7F5 = 0 (E-0127)
-; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A, GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D, GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, ...)
+; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0A, GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D, GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wChoiceCursor
 ; writes: wArg5, wChoiceCursor
 HandleTwoChoiceCursorInput_0D::
@@ -2013,7 +2013,7 @@ Func_00D_4F29:: ; address name
     ret
 
 ; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
-; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F, NpcBreedMenu_Case11_CopyGlyphTileListFromBank1F)
+; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F, NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
 CopyGlyphTileListFromBank1F::
@@ -6859,7 +6859,7 @@ Func_00D_711C:: ; address name
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_Return
-    dw NpcBreedMenu_Case11
+    dw NpcBreedMenu_RedrawListScreen
 
 ; entry 0 of the `rst $00` table in NpcBreedMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -7477,44 +7477,44 @@ Jump_00D_755C:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 17 of the `rst $00` table in NpcBreedMenu
+; NpcBreedMenu screen state $11: graphics, palette and glyph tiles, then BreedMenu list steps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-NpcBreedMenu_Case11::
+NpcBreedMenu_RedrawListScreen::
 Jump_00D_7578:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw NpcBreedMenu_Case11_DecompressToVRAM
-    dw NpcBreedMenu_Case11_CopyGlyphTileListFromBank1F
-    dw NpcBreedMenu_Case11_ToBreedMenu
-    dw NpcBreedMenu_Case11_ToBreedMenu
-    dw NpcBreedMenu_Case11_ToBreedMenu
+    dw NpcBreedMenu_RedrawListScreen_DecompressToVRAM
+    dw NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F
+    dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
+    dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
+    dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5
-    dw NpcBreedMenu_Case11_FillTilesFromRequest
-    dw NpcBreedMenu_Case11_SetArg5ToListEntriesCell5
-    dw NpcBreedMenu_Case11_ToBreedMenu
-    dw NpcBreedMenu_Case11_ToBreedMenu
+    dw NpcBreedMenu_RedrawListScreen_FillTilesFromRequest
+    dw NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5
+    dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
+    dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
 
-; entry 2 of the `rst $00` table in NpcBreedMenu_Case11
+; entry 2 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
-NpcBreedMenu_Case11_ToBreedMenu::
+NpcBreedMenu_RedrawListScreen_ToBreedMenu::
 Jump_00D_7590:: ; address name
     farcall BreedMenu
     ret
 
-; entry 0 of the `rst $00` table in NpcBreedMenu_Case11
+; entry 0 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenTableIndex, wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
 ; points at: wBGPaletteBuffer
-NpcBreedMenu_Case11_DecompressToVRAM::
+NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
 Jump_00D_7597:: ; address name
     ld a, [wScreenTableIndex]
     ld b, a
     sla a
     add a, b
     push af
-    ld hl, NpcBreedMenu_Case11_DecompressToVRAM_Data_75D7
+    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_75D7
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7525,7 +7525,7 @@ Jump_00D_7597:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     pop af
-    ld hl, NpcBreedMenu_Case11_DecompressToVRAM_Data_7607
+    ld hl, NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_7607
     add_a_to_hl
     ld a, [hl+]
     ld e, a
@@ -7543,25 +7543,25 @@ Jump_00D_7597:: ; address name
     ld [wScreenStep], a
     ret
 
-; address loaded by NpcBreedMenu_Case11_DecompressToVRAM
-NpcBreedMenu_Case11_DecompressToVRAM_Data_75D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by NpcBreedMenu_RedrawListScreen_DecompressToVRAM
+NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_75D7:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_75D7:: ; address name
     db $82, $6B, $48, $A9, $49, $48, $82, $6B, $48, $A9, $49, $48, $82, $6B, $48, $A9
     db $49, $48, $A9, $49, $48, $A9, $49, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B
     db $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48, $82, $6B, $48
 
-; address loaded by NpcBreedMenu_Case11_DecompressToVRAM
-NpcBreedMenu_Case11_DecompressToVRAM_Data_7607:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by NpcBreedMenu_RedrawListScreen_DecompressToVRAM
+NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data_7607:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_7607:: ; address name
     db $34, $6F, $48, $87, $4C, $48, $34, $6F, $48, $87, $4C, $48, $34, $6F, $48, $87
     db $4C, $48, $87, $4C, $48, $87, $4C, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F
     db $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48, $34, $6F, $48
 
-; entry 1 of the `rst $00` table in NpcBreedMenu_Case11
+; entry 1 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-NpcBreedMenu_Case11_CopyGlyphTileListFromBank1F::
+NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F::
 Jump_00D_7637:: ; address name
     ld hl, TileCopyDestList_0D_789A
     ld de, TileCopySrcList_0D_78AA
@@ -7581,11 +7581,11 @@ Jump_00D_7637:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in NpcBreedMenu_Case11
+; entry 6 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wScreenStep
-NpcBreedMenu_Case11_FillTilesFromRequest::
+NpcBreedMenu_RedrawListScreen_FillTilesFromRequest::
 Jump_00D_7662:: ; address name
     ld hl, vTiles1 + $270
     ld a, l
@@ -7623,11 +7623,11 @@ Jump_00D_7662:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in NpcBreedMenu_Case11
+; entry 7 of the `rst $00` table in NpcBreedMenu_RedrawListScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-NpcBreedMenu_Case11_SetArg5ToListEntriesCell5::
+NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5::
 Jump_00D_76AF:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]

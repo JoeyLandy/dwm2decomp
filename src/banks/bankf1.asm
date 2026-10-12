@@ -1622,10 +1622,10 @@ Func_0F1_4AD0:: ; address name
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_SwapMonstersMenu
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats
-    dw RunScreenStateWhenNotFading_F1_Case0E
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Case11
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord
 
 ; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1
 ; no direct call (reached through a table, a jump or a vector)
@@ -2842,36 +2842,36 @@ Jump_0F1_5242:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 17 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; by wScreenStep: a string, BreedMenu list steps and the chosen record's name and species
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunScreenStateWhenNotFading_F1_Case11::
+RunScreenStateWhenNotFading_F1_ShowChosenRecord::
 Jump_0F1_525E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case11_AdvanceScreenStep
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_AdvanceScreenStep
     dw ShowString0EAndStep_BankF1
-    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
-    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
-    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunScreenStateWhenNotFading_F1_Case11_FillTilesBxC
-    dw RunScreenStateWhenNotFading_F1_Case11_SetArg5ToListEntriesCell5
-    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
-    dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
-RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu::
+RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu::
 Jump_0F1_5276:: ; address name
     farcall BreedMenu
     ret
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case11_AdvanceScreenStep::
+RunScreenStateWhenNotFading_F1_ShowChosenRecord_AdvanceScreenStep::
 Jump_0F1_527D:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2890,10 +2890,10 @@ Func_0F1_5285:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
+; entry 6 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
-RunScreenStateWhenNotFading_F1_Case11_FillTilesBxC::
+RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC::
 Jump_0F1_5293:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -2913,11 +2913,11 @@ Jump_0F1_5293:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case11
+; entry 7 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-RunScreenStateWhenNotFading_F1_Case11_SetArg5ToListEntriesCell5::
+RunScreenStateWhenNotFading_F1_ShowChosenRecord_SetArg5ToListEntriesCell5::
 Jump_0F1_52B7:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3542,29 +3542,29 @@ Jump_0F1_5656:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; by wScreenStep: resets the list and grid cursors, shows a string (ShowString_Bank0E) and runs BreedMenu steps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0E::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString::
 Jump_0F1_568B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case0E_SetListCursor
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor
     dw ShowString0EAndStep_BankF1
-    dw RunScreenStateWhenNotFading_F1_Case0E_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_Case0E_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_Case0E_BreedMenu
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu
     dw RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunScreenStateWhenNotFading_F1_Case11_FillTilesBxC
-    dw RunScreenStateWhenNotFading_F1_Case11_SetArg5ToListEntriesCell5
-    dw RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E
-    dw RunScreenStateWhenNotFading_F1_Case0E_BreedMenu_Case09
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC
+    dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E
+    dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_Case09
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemGridX, wItemGridY, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
-RunScreenStateWhenNotFading_F1_Case0E_SetListCursor::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor::
 Jump_0F1_56A3:: ; address name
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -3575,11 +3575,11 @@ Jump_0F1_56A3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
+; entry 9 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunScreenStateWhenNotFading_F1_Case0E_BreedMenu_Case09::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_Case09::
 Jump_0F1_56B7:: ; address name
     ld a, [wScreenState]
     push af
@@ -3589,11 +3589,11 @@ Jump_0F1_56B7:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunScreenStateWhenNotFading_F1_Case0E_BreedMenu::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
 Jump_0F1_56C8:: ; address name
     ld a, [wScreenState]
     push af
@@ -3604,12 +3604,12 @@ Jump_0F1_56C8:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0E
+; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringIndex, wStringCategory, wScreenStep
 ; points at: wTextWindowTileLo
-RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E::
+RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E::
 Jump_0F1_56DC:: ; address name
     ld de, TileRect_F1_5A90
     ld hl, wWindowTileBuffer + $E7
@@ -4066,7 +4066,7 @@ Func_0F1_5969:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect, RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E, RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5)
+; 4 call sites from 4 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_PrepareWCF8BCountersAndRequestScript, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect, RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E, RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_BankF1::

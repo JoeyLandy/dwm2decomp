@@ -184,7 +184,7 @@ Func_024_4117:: ; address name
     dw GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24
     dw GameMode6_Update_SavePrompt
     dw GameMode6_Update_Save
-    dw GameMode6_Update_Case04
+    dw GameMode6_Update_ChooseRecordList
     dw GameMode6_Update_ChooseRecordAndSave
     dw GameMode6_Update_Return
     dw GameMode6_Update_Return
@@ -843,62 +843,62 @@ Jump_024_4557:: ; address name
     call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update
+; by wScreenStep: a paged record list with strings (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-GameMode6_Update_Case04::
+GameMode6_Update_ChooseRecordList::
 Jump_024_4567:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case04_ToBreedMenu
-    dw GameMode6_Update_Case04_ToBreedMenu
-    dw GameMode6_Update_Case04_ToBreedMenu
-    dw GameMode6_Update_Case04_ToBreedMenu
-    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case04_AdvanceScreenStep
-    dw GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE
+    dw GameMode6_Update_ChooseRecordList_ToBreedMenu
+    dw GameMode6_Update_ChooseRecordList_ToBreedMenu
+    dw GameMode6_Update_ChooseRecordList_ToBreedMenu
+    dw GameMode6_Update_ChooseRecordList_ToBreedMenu
+    dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_ChooseRecordList_AdvanceScreenStep
+    dw GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE
     dw GameMode6_Update_Case04_PageList
-    dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D
-    dw GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg
-    dw GameMode6_Update_Case04_SetArg5ToListEntriesCell5
-    dw GameMode6_Update_Case04_RunSaveGameSteps
+    dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D
+    dw GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg
+    dw GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5
+    dw GameMode6_Update_ChooseRecordList_RunSaveGameSteps
 
-; entry 0 of the `rst $00` table in GameMode6_Update_Case04
+; entry 0 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case04_ToBreedMenu::
+GameMode6_Update_ChooseRecordList_ToBreedMenu::
 Jump_024_4587:: ; address name
     farcall BreedMenu
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update_Case04
+; entry 4 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case04_ToEggServiceMenu_Bank1B::
+GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B::
 Jump_024_458E:: ; address name
     farcall EggServiceMenu_Bank1B
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update_Case04
+; entry 6 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case04_AdvanceScreenStep::
+GameMode6_Update_ChooseRecordList_AdvanceScreenStep::
 Jump_024_4595:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update_Case04
+; entry 7 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE::
+GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_459D:: ; address name
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -906,7 +906,7 @@ Jump_024_459D:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -979,7 +979,7 @@ Jump_024_45D1:: ; address name
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -1053,11 +1053,11 @@ Jump_024_46B5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in GameMode6_Update_Case04
+; entry 10 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wChoiceCursor, wScreenState, wScreenStep, wPartyCount, wListPageIndex, wListCursor
 ; writes: wArg5, wScreenByteB2, wScreenByteB3, wScreenStep, wScreenSubStep, wScreenState
-GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D::
+GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
 Jump_024_46BA:: ; address name
     xor a, a
     ld [wArg5], a
@@ -1095,19 +1095,19 @@ Jump_024_46BA:: ; address name
 .check_party_count:
     ld a, [wPartyCount]
     cp a, $02
-    jr nc, .call_game_mode6_update_case04_case0_a_set
+    jr nc, .call_game_mode6_update_choose_record_list
     ld a, [wListPageIndex]
     and a, a
-    jr nz, .call_game_mode6_update_case04_case0_a_set
+    jr nz, .call_game_mode6_update_choose_record_list
     ld a, [wListCursor]
     and a, a
-    jr nz, .call_game_mode6_update_case04_case0_a_set
+    jr nz, .call_game_mode6_update_choose_record_list
     ld a, $12
     call ShowStringAInDefaultWindow_Bank24
     jr .check_screen_step
 
-.call_game_mode6_update_case04_case0_a_set:
-    call GameMode6_Update_Case04_Case0A_SetArg5ToListEntriesCell5
+.call_game_mode6_update_choose_record_list:
+    call GameMode6_Update_ChooseRecordList_Case0A_SetArg5ToListEntriesCell5
     ld a, $0A
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenStep]
@@ -1115,11 +1115,11 @@ Jump_024_46BA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode6_Update_Case04
+; entry 11 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg::
+GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
 Jump_024_4724:: ; address name
     ld de, TileRect_24_5A28
     ld hl, wWindowTileBuffer + $110
@@ -1136,19 +1136,19 @@ Jump_024_4724:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     sub a, $03
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in GameMode6_Update_Case04
+; entry 12 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wRecordBufB, wScreenStep
 ; writes: wArg1, wArg2, rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, ...
 ; points at: sRecords, wRecordBufB
-GameMode6_Update_Case04_SetArg5ToListEntriesCell5::
+GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5::
 Jump_024_475C:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1193,10 +1193,10 @@ Jump_024_475C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in GameMode6_Update_Case04
+; entry 13 of the `rst $00` table in GameMode6_Update_ChooseRecordList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSaveStep
-GameMode6_Update_Case04_RunSaveGameSteps::
+GameMode6_Update_ChooseRecordList_RunSaveGameSteps::
 Jump_024_47BF:: ; address name
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1358,7 +1358,7 @@ Jump_024_4878:: ; address name
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -1510,7 +1510,7 @@ Jump_024_49AF:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     sub a, $04
@@ -1681,7 +1681,7 @@ Jump_024_4AA4:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -1787,7 +1787,7 @@ GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_4BB0:: ; address name
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call BGMapAddressAtScroll_Bank24
     ld bc, $140D
@@ -1896,7 +1896,7 @@ Jump_024_4C2C:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
@@ -2071,7 +2071,7 @@ Func_024_4D65:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextFlags, wTextControl
 GameMode6_Update_ShowMonsterEg::
 Func_024_4DA8:: ; address name
@@ -2466,12 +2466,12 @@ Func_024_4F68:: ; address name
     call CopyFromBankWaitVRAM
     ret
 
-; only called from GameMode6_Update_Case04_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D)
+; only called from GameMode6_Update_ChooseRecordList_Case0A (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D)
 ; reads: wArg5, wArg6
 ; writes: rRAMG, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf0
-GameMode6_Update_Case04_Case0A_SetArg5ToListEntriesCell5::
+GameMode6_Update_ChooseRecordList_Case0A_SetArg5ToListEntriesCell5::
 Func_024_4FA3:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -2979,7 +2979,7 @@ Func_024_52BA:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 17 call sites from 12 routines (e.g. GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE, ...)
+; 17 call sites from 12 routines (e.g. GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE, ...)
 StoreBAtWordTableEntry_Bank24_52CE::
 Func_024_52CE:: ; address name
     push bc
@@ -3830,13 +3830,13 @@ Data_024_5A82:: ; address name
     db $7D, $7F, $7F, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg and 2 more
+; address loaded by GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg and 2 more
 GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5AAA:: ; address name
     db $23, $C4, $4B, $C4
 
-; address loaded by GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor and 4 more
-GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor and 4 more
+GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5AAE:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 

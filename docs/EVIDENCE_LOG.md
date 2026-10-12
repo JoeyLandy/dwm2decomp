@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0304 — The last 27 dispatchers named
+
+- Kind: STATIC (C1, from the RAM and calls each dispatcher's steps use).
+- **Link and battle:**
+  - RunLinkSession4ScreenState_EditRules: wLinkRules (19 uses) and wLinkRuleTurnLimit.
+  - RunLinkSession4ScreenState_SetBattleKindAndSync.
+  - RunBattleSetup_ItemCommand: wItemId, wItemRecord, wSlotChoices.
+  - RunBattleSetup_BankA0_EntrySelect: sets and clears bit 6 on entry tiles.
+  - ResolveStep0EEffect_DamageAndSelectEffect, RunBattleTransitionStep_StagedSteps.
+- **Breeding and services:**
+  - BreedMenu_ChooseEgg: the list of records with the egg flag set (E-0296).
+  - BreedMenu_RestoreScreen, _RedrawListScreen, _ClearListMarks, _ListMonsters, _ShowSelectedRecord.
+  - NpcBreedMenu_RedrawListScreen, EggServiceMenu_ChooseAndPay_CheckAndPay (subtracts 20 gold), EggServiceMenu_Bank1B_ListAvailableRecords2.
+- **Lists and screens:**
+  - RunScreenStateWhenNotFading_F1_ShowChosenRecord and _ResetListAndShowString, plus their RunLinkSession5Exchange counterparts.
+  - GameMode6_Update_ChooseRecordList.
+  - HibernateMenu_ChooseWithStats (MarkPartyMembersInRecordListPage, DrawRecordStatsBoxForArg1), HibernateMenu_IndexListEntry.
+  - PauseMenu_State3_ChooseListEntry.
+  - GameMode5_Update_LoadScreens_Screen0/1/2/WithMusic.
+- **Counts.** Bare dispatchers: 27 → 0. Structural labels the generator leaves unnamed: 133 → 112, none of them dispatchers. Routines with only an address name: 0.
+- Binary verification: build/run419 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0303 — 34 small dispatchers named from their steps
 
 - Kind: STATIC (C1, or C2 where the name only lists what the steps build).

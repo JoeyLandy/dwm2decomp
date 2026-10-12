@@ -1250,7 +1250,7 @@ Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. HibernateMenu_ChooseRecords_ToDrawRecordListPageNames, BreedMenu_ChooseParents_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
+; 8 call sites from 8 routines (e.g. HibernateMenu_ChooseRecords_ToDrawRecordListPageNames, BreedMenu_ChooseParents_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries
@@ -1636,7 +1636,7 @@ Func_01F_5D9A:: ; address name
     ret
 
 ; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
-; address loaded by LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, BreedMenu_Case0B_FillTileRectWithArg1Tile and 6 more
+; address loaded by LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, BreedMenu_RestoreScreen_FillTileRectWithArg1Tile and 6 more
 BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithArg1Tile; C0
 Data_01F_5E12:: ; address name
     db $C3

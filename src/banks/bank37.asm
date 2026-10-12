@@ -754,10 +754,10 @@ Func_037_4AFD:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
     dw RunLinkSession5Exchange_Case01_Sub01_SwapMonstersMenu
     dw RunLinkSession5Exchange_ShowRecordStats
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E
+    dw RunLinkSession5Exchange_ResetListAndShowString
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
     dw RunLinkSession5Exchange_Case01_Sub01_WaitTextFlags
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11
+    dw RunLinkSession5Exchange_ShowChosenRecord
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD
 ; no direct call (reached through a table, a jump or a vector)
@@ -2073,36 +2073,36 @@ Jump_037_5301:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 17 of the `rst $00` table in Func_037_4AFD
+; as RunScreenStateWhenNotFading_F1_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case11::
+RunLinkSession5Exchange_ShowChosenRecord::
 Jump_037_531D:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_AdvanceScreenStep
+    dw RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
+    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
+    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
+    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
     dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_FillTilesFromRequest
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
+    dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
+    dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
+    dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
 
-; entry 2 of the `rst $00` table in Func_037_4AFD_Case11
+; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu::
+RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu::
 Jump_037_5335:: ; address name
     farcall BreedMenu
     ret
 
-; entry 0 of the `rst $00` table in Func_037_4AFD_Case11
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case11_AdvanceScreenStep::
+RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep::
 Jump_037_533C:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2121,11 +2121,11 @@ Func_037_5344:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in Func_037_4AFD_Case11
+; entry 6 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case11_FillTilesFromRequest::
+RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
 Jump_037_5352:: ; address name
     ld hl, vTiles1 + $270
     ld a, l
@@ -2163,11 +2163,11 @@ Jump_037_5352:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_037_4AFD_Case11
+; entry 7 of the `rst $00` table in RunLinkSession5Exchange_ShowChosenRecord
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case11_SetArg5ToListEntriesCell5::
+RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5::
 Jump_037_539F:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2836,29 +2836,29 @@ Jump_037_579B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in Func_037_4AFD
+; as RunScreenStateWhenNotFading_F1_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0E::
+RunLinkSession5Exchange_ResetListAndShowString::
 Jump_037_57D0:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_SetListCursor
+    dw RunLinkSession5Exchange_ResetListAndShowString_SetListCursor
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
+    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
+    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
+    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu
     dw RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_FillTilesFromRequest
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_SetArg5ToListEntriesCell5
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09
+    dw RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest
+    dw RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5
+    dw RunLinkSession5Exchange_ResetListAndShowString_Case08
+    dw RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_Case09
 
-; entry 0 of the `rst $00` table in Func_037_4AFD_Case0E
+; entry 0 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemGridX, wItemGridY, wScreenStep
 ; writes: wListCursor, wListPageIndex, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0E_SetListCursor::
+RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
 Jump_037_57E8:: ; address name
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2869,11 +2869,11 @@ Jump_037_57E8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in Func_037_4AFD_Case0E
+; entry 9 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09::
+RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_Case09::
 Jump_037_57FC:: ; address name
     ld a, [wScreenState]
     push af
@@ -2883,11 +2883,11 @@ Jump_037_57FC:: ; address name
     pop af
     ret
 
-; entry 2 of the `rst $00` table in Func_037_4AFD_Case0E
+; entry 2 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu::
+RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 Jump_037_580D:: ; address name
     ld a, [wScreenState]
     push af
@@ -2898,11 +2898,11 @@ Jump_037_580D:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 8 of the `rst $00` table in Func_037_4AFD_Case0E
+; entry 8 of the `rst $00` table in RunLinkSession5Exchange_ResetListAndShowString
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc::
+RunLinkSession5Exchange_ResetListAndShowString_Case08::
 Jump_037_5821:: ; address name
     ld de, TileRect_37_64D7
     ld hl, wWindowTileBuffer + $E7
@@ -3374,7 +3374,7 @@ Func_037_5AD3:: ; address name
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows in WRAM bank 2 (E-0127)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc, RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37, RunLinkSession5Exchange_ResetListAndShowString_Case08, RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectToScreenBufferAndClearAttributes_37::

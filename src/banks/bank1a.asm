@@ -3301,7 +3301,7 @@ Func_01A_7276:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73AD (E-0114)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_FleeCommand_CopyRectRecord73ADToScreenBuffer, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_FleeCommand_CopyRectRecord73ADToScreenBuffer, RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount_Case07)
 CopyRectRecord73ADToScreenBuffer::
 Func_01A_727D:: ; address name
     ld hl, TileRect_1A_73AD

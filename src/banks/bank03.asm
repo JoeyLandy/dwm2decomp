@@ -453,7 +453,7 @@ Func_003_42DA:: ; address name
     ld bc, $1412
 
 ; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)
-; 24 call sites from 21 routines (e.g. PauseMenu_State4, PauseMenu_State3_Block21Menu_CopyRectToBGMap, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_BuildScreenBlocks21To25WithCursor, ...)
+; 24 call sites from 21 routines (e.g. PauseMenu_State4, PauseMenu_State3_Block21Menu_CopyRectToBGMap, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To25WithCursor, ...)
 CopyRectToBGMap::
 Func_003_42E3:: ; address name
     push bc
@@ -533,7 +533,7 @@ Func_003_432F:: ; address name
     ret
 
 ; clears the object flag bits, saves the player position to wC8C8/9, whitens the CGB palettes, blanks the screen and returns to game mode 1 through Func_002_4628 (E-0125)
-; 12 call sites from 12 routines (e.g. PauseMenu_Main_ToExitPauseMenuToField, PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_Case01_ExitPauseMenuToField, PauseMenu_State3_Case01_UpdateMenuCursor, ...)
+; 12 call sites from 12 routines (e.g. PauseMenu_Main_ToExitPauseMenuToField, PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_ExitPauseMenuToField, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, ...)
 ; reads: hPlayerX, hPlayerY, wIsCGB
 ; writes: wWarpDestX, wWarpDestY, wWarpDestFacing, rRAMG, wBGPaletteUploadRequest, wFieldInitStage, wGameMode
 ; points at: wBGPaletteBuffer, wScreenTileBuffer, wFieldInitStage
@@ -696,7 +696,7 @@ Func_003_4414:: ; address name
     ret
 
 ; HL = cursor byte (low nibble = row, bit 7 = page-changed flag). Up/Down (wJoypadPressedRepeat bits 6/7) move the row with wrap over wMenuRowCount, erase the old cursor (Func_003_44F0), play sound $69, store the row (clearing bit 7) and draw it (Func_003_4506). When wMenuPageCount >= 2, Left/Right (bits 5/4) step wMenuPage with wrap, clamp the row to wMenuLastPageRows - 1 on the last page, set bit 7 and play sound $69. With no input the cursor blinks every 16 frames. wFrameCounterLo is reset on each move (E-0060)
-; 19 call sites from 19 routines (e.g. PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_Case01_UpdateMenuCursor, ...)
+; 19 call sites from 19 routines (e.g. PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, ...)
 ; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
 ; writes: wFrameCounterLo, wMenuPage
 UpdateMenuCursor::
@@ -902,7 +902,7 @@ Func_003_451C:: ; address name
     ret
 
 ; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC there (E-0072) (the same 20 bytes appear in 2 banks)
-; 15 call sites from 14 routines (e.g. LoadScreenBlock21WithCursor, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_BuildScreenBlocks21To24, PauseMenu_State3_PagedMenu_LoadScreenBlock21AndStep, ...)
+; 15 call sites from 14 routines (e.g. LoadScreenBlock21WithCursor, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01, PauseMenu_State3_PagedMenu_LoadScreenBlock21AndStep, ...)
 WriteBCTileToScreenBufferAtTableEntry_Bank03::
 Func_003_4538:: ; address name
     add a, a
@@ -918,7 +918,7 @@ Func_003_4538:: ; address name
     ret
 
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
-; 4 call sites from 4 routines (e.g. PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_UpdateMenuCursor, PauseMenu_State3_RecordJourney_UpdateMenuCursor)
+; 4 call sites from 4 routines (e.g. PauseMenu_State3_Block21Menu_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, PauseMenu_State3_RecordJourney_UpdateMenuCursor)
 WriteBCTileAtWordTableEntry_Bank03::
 Func_003_454C:: ; address name
     add a, a
@@ -1075,18 +1075,18 @@ PauseMenu_Items_SubMenu_UpdateMenuCursor_Data:: ; heuristic: pointer load in the
 Data_003_4623:: ; address name
     db $21, $99, $61, $99
 
-; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor_Case0E
-PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_4627:: ; address name
     db $01, $99, $41, $99
 
-; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor
-PauseMenu_State3_Case01_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_UpdateMenuCursor
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_462B:: ; address name
     db $47, $99, $87, $99, $C7, $99, $07, $9A
 
-; address loaded by PauseMenu_State3_Case01_UpdateMenuCursor_Case03, PauseMenu_State3_BuildScreenBlocks21To24, BuildScreenBlocks21To25WithCursor
-PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01, BuildScreenBlocks21To25WithCursor
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_4633:: ; address name
     db $61, $98, $A1, $98
 
@@ -6582,7 +6582,7 @@ Jump_003_6A9D:: ; address name
     ld a, [wTemp0]
     rst $00
     dw PauseMenu_State3_Block21Menu
-    dw PauseMenu_State3_Case01
+    dw PauseMenu_State3_ChooseListEntry
     dw PauseMenu_State3_TileBufferMenu
     dw PauseMenu_State3_Blocks21And2C
     dw PauseMenu_State3_PagedMenu
@@ -6711,35 +6711,35 @@ Func_003_6B5E:: ; address name
     or a, a
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State3
+; by wTemp1: menu rows and pages, a list-entry bit-7 test, strings, and an exit to the field
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-PauseMenu_State3_Case01::
+PauseMenu_State3_ChooseListEntry::
 Jump_003_6B67:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State3_Case01_BuildScreenBlocks21To23
-    dw PauseMenu_State3_Case01_UpdateMenuCursor
-    dw PauseMenu_State3_Case01_BuildScreenBlocks21To24
-    dw PauseMenu_State3_Case01_UpdateMenuCursor_Case03
-    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep
-    dw PauseMenu_State3_Case01_TestListEntryBit7
-    dw PauseMenu_State3_Case01_ExitPauseMenuToField
-    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep_Case07
-    dw PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep
-    dw PauseMenu_State3_Case01_WaitTextFlags
-    dw PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount
-    dw PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep_Case0B
-    dw PauseMenu_State3_Case01_WaitTextFlags_Case0C
-    dw PauseMenu_State3_Case01_BuildScreenBlocks21To25WithCursor
-    dw PauseMenu_State3_Case01_UpdateMenuCursor_Case0E
-    dw PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep_Case0F
-    dw PauseMenu_State3_Case01_TestListEntryBit7_Case10
+    dw PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To23
+    dw PauseMenu_State3_ChooseListEntry_UpdateMenuCursor
+    dw PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24
+    dw PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03
+    dw PauseMenu_State3_ChooseListEntry_Case04
+    dw PauseMenu_State3_ChooseListEntry_TestListEntryBit7
+    dw PauseMenu_State3_ChooseListEntry_ExitPauseMenuToField
+    dw PauseMenu_State3_ChooseListEntry_Case07
+    dw PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep
+    dw PauseMenu_State3_ChooseListEntry_WaitTextFlags
+    dw PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount
+    dw PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0B
+    dw PauseMenu_State3_ChooseListEntry_WaitTextFlags_Case0C
+    dw PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To25WithCursor
+    dw PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E
+    dw PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0F
+    dw PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10
 
-; entry 0 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 0 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wTemp1
-PauseMenu_State3_Case01_BuildScreenBlocks21To23::
+PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To23::
 Jump_003_6B8D:: ; address name
     ld hl, vTiles2 + $710
     ld de, Tiles2Plus710Tiles_1F_4910
@@ -6768,24 +6768,24 @@ Jump_003_6B8D:: ; address name
     ld [hl+], a
     call FillTilesFromRequest
     call CopyTileBufferToBGMap
-    call PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc
-    call PauseMenu_State3_WaitPauseListCount
+    call PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_State3_ChooseListEntry_WaitPauseListCount
     ld hl, wTemp1
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 1 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPauseListCount, wJoypadPressed, wGameFlags836, wJoypadPressedRepeat, wMenuPageCount, wWindowTileBuffer, wMenuCursor, wModeState
 ; writes: wGameFlags836, wTemp1, wTemp0, wDataBankSave
 ; points at: wMenuCursor, wTemp1
-PauseMenu_State3_Case01_UpdateMenuCursor::
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor::
 Jump_003_6BD7:: ; address name
     ld a, [wPauseListCount]
     or a, a
     jr z, .check_joypad_pressed2
     ld hl, wMenuCursor
-    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Data
+    ld de, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     and a, $04
@@ -6808,7 +6808,7 @@ Jump_003_6BD7:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $C0
     jr z, .check_joypad_pressed_repeat2
-    call PauseMenu_State3_WaitPauseListCount
+    call PauseMenu_State3_ChooseListEntry_WaitPauseListCount
     ret
 
 .check_joypad_pressed_repeat2:
@@ -6818,8 +6818,8 @@ Jump_003_6BD7:: ; address name
     ld a, [wMenuPageCount]
     cp a, $02
     ret c
-    call PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc
-    call PauseMenu_State3_WaitPauseListCount
+    call PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_State3_ChooseListEntry_WaitPauseListCount
     ld a, [wMenuPageCount]
     cp a, $02
     ret c
@@ -6837,7 +6837,7 @@ Jump_003_6BD7:: ; address name
     call QueueSoundEffect
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Data
     call WriteBCTileAtWordTableEntry_Bank03
     ld hl, wTemp1
     inc [hl]
@@ -6858,11 +6858,11 @@ Jump_003_6BD7:: ; address name
     call ExitPauseMenuToField
     ret
 
-; entry 2 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 2 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount, wSubMenuCursor
 ; points at: wScreenTileBuffer, wTemp1
-PauseMenu_State3_Case01_BuildScreenBlocks21To24::
+PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24::
 Jump_003_6C6E:: ; address name
     call BuildScreenBlocks21To24
     ld hl, vBGMap0
@@ -6879,15 +6879,15 @@ Jump_003_6C6E:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 3 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor, wCurrentKeyIndex, wMapType
 ; writes: wTemp1, wStringIndex, wStringCategory, wStringDestLo, wStringDestHi
 ; points at: wSubMenuCursor, wTemp1, wTextBuf2
-PauseMenu_State3_Case01_UpdateMenuCursor_Case03::
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03::
 Jump_003_6C90:: ; address name
     ld hl, wSubMenuCursor
-    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
+    ld de, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -6986,22 +6986,22 @@ Jump_003_6C90:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 4 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 4 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep::
+PauseMenu_State3_ChooseListEntry_Case04::
 Jump_003_6D31:: ; address name
-    call PauseMenu_State3_BuildScreenBlocks21To24
+    call PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01
     ld hl, wTemp1
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 5 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wModeState
 ; writes: wDataBankSave, wStringIndex, wStringCategory
 ; points at: wTemp1
-PauseMenu_State3_Case01_TestListEntryBit7::
+PauseMenu_State3_ChooseListEntry_TestListEntryBit7::
 Jump_003_6D39:: ; address name
     call TestListEntryBit7
     jr nz, .check_mode_state
@@ -7055,11 +7055,11 @@ Jump_003_6D39:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 6 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wModeState
 ; writes: wTemp1
-PauseMenu_State3_Case01_ExitPauseMenuToField::
+PauseMenu_State3_ChooseListEntry_ExitPauseMenuToField::
 Jump_003_6D90:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7072,21 +7072,21 @@ Jump_003_6D90:: ; address name
     call ExitPauseMenuToField
     ret
 
-; entry 7 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 7 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep_Case07::
+PauseMenu_State3_ChooseListEntry_Case07::
 Jump_003_6DA3:: ; address name
-    call PauseMenu_State3_BuildScreenBlocks21To24
+    call PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01
     ld hl, wTemp1
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 8 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep::
+PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep::
 Jump_003_6DAB:: ; address name
     ld a, $08
     ld [wStringCategory], a
@@ -7097,11 +7097,11 @@ Jump_003_6DAB:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 9 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wTemp1
-PauseMenu_State3_Case01_WaitTextFlags::
+PauseMenu_State3_ChooseListEntry_WaitTextFlags::
 Jump_003_6DC0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7110,13 +7110,13 @@ Jump_003_6DC0:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 10 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 10 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount
 ; points at: wTemp1
-PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount::
+PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount::
 Jump_003_6DCA:: ; address name
-    call PauseMenu_State3_BuildScreenBlocks21To24
+    call PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -7125,11 +7125,11 @@ Jump_003_6DCA:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 11 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep_Case0B::
+PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0B::
 Jump_003_6DDC:: ; address name
     ld a, $08
     ld [wStringCategory], a
@@ -7140,11 +7140,11 @@ Jump_003_6DDC:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 12 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wTemp1
-PauseMenu_State3_Case01_WaitTextFlags_Case0C::
+PauseMenu_State3_ChooseListEntry_WaitTextFlags_Case0C::
 Jump_003_6DF1:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7153,11 +7153,11 @@ Jump_003_6DF1:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 13 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount, wSubMenuCursor2
 ; points at: wTemp1
-PauseMenu_State3_Case01_BuildScreenBlocks21To25WithCursor::
+PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To25WithCursor::
 Jump_003_6DFB:: ; address name
     call BuildScreenBlocks21To25WithCursor
     ld hl, vBGMap0 + $E0
@@ -7178,15 +7178,15 @@ Jump_003_6DFB:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 14 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor2
 ; writes: wMenuRowCount, wMenuPageCount, wSubMenuCursor, wTemp1
 ; points at: wSubMenuCursor2, wTemp1
-PauseMenu_State3_Case01_UpdateMenuCursor_Case0E::
+PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E::
 Jump_003_6E27:: ; address name
     ld hl, wSubMenuCursor2
-    ld de, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data
+    ld de, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E_Data
     call UpdateMenuCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -7195,7 +7195,7 @@ Jump_003_6E27:: ; address name
     call QueueSoundEffect
     ld a, [wSubMenuCursor2]
     and a, $01
-    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E_Data
     call WriteBCTileAtWordTableEntry_Bank03
     ld a, [wSubMenuCursor2]
     and a, $01
@@ -7218,7 +7218,7 @@ Jump_003_6E27:: ; address name
     ld de, wWindowTileBuffer + $38
     ld bc, $1405
     call CopyRectToBGMap
-    call PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -7229,11 +7229,11 @@ Jump_003_6E27:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 15 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 15 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTemp1
-PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep_Case0F::
+PauseMenu_State3_ChooseListEntry_BeginStringDisplay_Bank08AndStep_Case0F::
 Jump_003_6E88:: ; address name
     ld a, $04
     ld [wStringIndex], a
@@ -7244,11 +7244,11 @@ Jump_003_6E88:: ; address name
     inc [hl]
     ret
 
-; entry 16 of the `rst $00` table in PauseMenu_State3_Case01
+; entry 16 of the `rst $00` table in PauseMenu_State3_ChooseListEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wTemp1, hTemp0, wMenuPage, wMenuCursor
-PauseMenu_State3_Case01_TestListEntryBit7_Case10::
+PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10::
 Jump_003_6E9D:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7269,7 +7269,7 @@ Jump_003_6E9D:: ; address name
     ret
 
 ; index = wMenuPage * 4 + (wC46E & 7): A = wD0A7[index], Z clear when its bit 7 is set (E-0117)
-; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, PauseMenu_State3_Case01_TestListEntryBit7, PauseMenu_State3_Case01_UpdateMenuCursor_Case03)
+; 4 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_TestListEntryBit7_Case10, PauseMenu_State3_ChooseListEntry_TestListEntryBit7, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03)
 ; reads: wMenuPage, wMenuCursor
 TestListEntryBit7::
 Func_003_6EBF:: ; address name
@@ -8555,7 +8555,7 @@ Func_003_769E:: ; address name
     ret
 
 ; loads block $21 with its cursor and block $23, adds block $22 when Func_003_7978 returns NZ, then runs Func_003_7A58 (E-0122)
-; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To24, PauseMenu_State3_Case01_BuildScreenBlocks21To23)
+; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To24, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To23)
 BuildScreenBlocks21To23::
 Func_003_76AD:: ; address name
     call LoadScreenBlock21WithCursor
@@ -8571,7 +8571,7 @@ Func_003_76AD:: ; address name
     ret
 
 ; builds blocks $21-$23 and copies block $24 (E-0122)
-; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_BuildScreenBlocks21To24, PauseMenu_State3_Case01_BuildScreenBlocks21To24)
+; 4 call sites from 4 routines (e.g. PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E, BuildScreenBlocks21To25WithCursor, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24)
 BuildScreenBlocks21To24::
 Func_003_76C9:: ; address name
     call BuildScreenBlocks21To23
@@ -8579,10 +8579,10 @@ Func_003_76C9:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; only called from routines of PauseMenu_State3 (E-0098)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep_Case07, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared01AndStep)
+; only called from routines of PauseMenu_State3_ChooseListEntry (E-0098)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_ChooseListEntry_Case07, PauseMenu_State3_ChooseListEntry_Case04)
 ; reads: wSubMenuCursor
-PauseMenu_State3_BuildScreenBlocks21To24::
+PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To24_Shared01::
 Func_003_76D5:: ; address name
     call BuildScreenBlocks21To24
     call FillTilesFromRequest
@@ -8590,7 +8590,7 @@ Func_003_76D5:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $07
-    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld hl, vBGMap0 + $80
     ld de, wScreenTileBuffer + $80
@@ -8603,14 +8603,14 @@ Func_003_76D5:: ; address name
     ret
 
 ; builds blocks $21-$24, draws the cursor for wC46F & 7 and copies blocks $25 and $10 (E-0122)
-; 1 call site from 1 routine (e.g. PauseMenu_State3_Case01_BuildScreenBlocks21To25WithCursor)
+; 1 call site from 1 routine (e.g. PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To25WithCursor)
 ; reads: wSubMenuCursor
 BuildScreenBlocks21To25WithCursor::
 Func_003_7707:: ; address name
     call BuildScreenBlocks21To24
     ld a, [wSubMenuCursor]
     and a, $07
-    ld hl, PauseMenu_State3_Case01_UpdateMenuCursor_Case03_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case03_Data
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ld e, $25
     farcall CopyBlockToTileBuffer
@@ -8690,12 +8690,12 @@ Func_003_7791:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; only called from routines of PauseMenu_State3 (E-0098)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_UpdateMenuCursor, PauseMenu_State3_Case01_BuildScreenBlocks21To23)
+; only called from routines of PauseMenu_State3_ChooseListEntry (E-0098)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_ChooseListEntry_UpdateMenuCursor_Case0E, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To23)
 ; reads: wMenuPage, wPauseListCount
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wTextBuf0
-PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc::
+PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc::
 Func_003_779A:: ; address name
     ld hl, $0C01
     ld a, l
@@ -8735,7 +8735,7 @@ Func_003_779A:: ; address name
     push bc
     push de
     ld a, c
-    ld hl, PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8744,7 +8744,7 @@ Func_003_779A:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ld a, [de]
-    call PauseMenu_State3_Shared02_Sub01
+    call PauseMenu_State3_ChooseListEntry_Shared02_Sub01
     cp a, $FF
     jr z, .set_string_category_to_06
     and a, $3F
@@ -8822,9 +8822,9 @@ Func_003_779A:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from PauseMenu_State3_Shared02 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc)
-PauseMenu_State3_Shared02_Sub01::
+; only called from PauseMenu_State3_ChooseListEntry_Shared02 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc)
+PauseMenu_State3_ChooseListEntry_Shared02_Sub01::
 Func_003_7880:: ; address name
     push af
     cp a, $FF
@@ -8847,7 +8847,7 @@ Func_003_7880:: ; address name
 .skip:
     push af
     ld a, c
-    ld hl, PauseMenu_State3_Shared02_Sub01_Data
+    ld hl, PauseMenu_State3_ChooseListEntry_Shared02_Sub01_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8866,22 +8866,22 @@ Func_003_7880:: ; address name
     pop af
     ret
 
-; address loaded by PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc
-PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc
+PauseMenu_State3_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_78B9:: ; address name
     db $40, $94, $00, $95, $C0, $95, $80, $96, $40, $97
 
-; address loaded by PauseMenu_State3_Shared02_Sub01
-PauseMenu_State3_Shared02_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_ChooseListEntry_Shared02_Sub01
+PauseMenu_State3_ChooseListEntry_Shared02_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_78C3:: ; address name
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 
-; only called from routines of PauseMenu_State3 (E-0098)
-; 3 call sites from 2 routines (e.g. PauseMenu_State3_Case01_UpdateMenuCursor, PauseMenu_State3_Case01_BuildScreenBlocks21To23)
+; only called from routines of PauseMenu_State3_ChooseListEntry (E-0098)
+; 3 call sites from 2 routines (e.g. PauseMenu_State3_ChooseListEntry_UpdateMenuCursor, PauseMenu_State3_ChooseListEntry_BuildScreenBlocks21To23)
 ; reads: wPauseListCount, wMenuPage, wMenuCursor
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ; points at: wTextBuf0
-PauseMenu_State3_WaitPauseListCount::
+PauseMenu_State3_ChooseListEntry_WaitPauseListCount::
 Func_003_78CB:: ; address name
     ld a, [wPauseListCount]
     or a, a
@@ -9152,7 +9152,7 @@ Func_003_7978:: ; address name
     ret
 
 ; from wD0C7 items computes wMenuPageCount (4 rows per page, up to 8 pages), wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
-; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_Case01_UpdateMenuCursor)
+; 2 call sites from 2 routines (e.g. BuildScreenBlocks21To23, PauseMenu_State3_ChooseListEntry_UpdateMenuCursor)
 ; reads: wPauseListCount, wMenuPage, wMenuLastPageRows, wMenuPageCount
 ; writes: wMenuLastPageRows, wMenuPageCount, wMenuRowCount, wWindowTileBuffer
 ComputeMenuPagesForPauseListCountItems::

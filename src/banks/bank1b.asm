@@ -1589,7 +1589,7 @@ Func_01B_4C86:: ; address name
     db $11, $9B, $4C, $CD, $FE, $25, $C9
 
 ; Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, BreedMenu_Case0F_SetArg5ToListEntriesCell4, ShowSaveFileInfoWindow)
+; 3 call sites from 3 routines (e.g. DebugResultsDisplay_Init, BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4, ShowSaveFileInfoWindow)
 ShowString_Bank1B_4C94::
 Func_01B_4C94:: ; address name
     call BeginStringDisplay_Bank1B_4C86
@@ -5131,7 +5131,7 @@ Func_01B_660D:: ; address name
     ret
 
 ; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ShowSwitchWithWhich)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ShowSwitchWithWhich)
 ; reads: wScreenState
 EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
@@ -5152,7 +5152,7 @@ Func_01B_665E:: ; address name
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
     dw EggServiceMenu_Bank1B_RunScreenStateWhenNotFading_F1
     dw EggServiceMenu_Bank1B_ListAvailableRecords
-    dw EggServiceMenu_Bank1B_Case0F
+    dw EggServiceMenu_Bank1B_ListAvailableRecords2
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B
 ; no direct call (reached through a table, a jump or a vector)
@@ -6692,10 +6692,10 @@ Jump_01B_6FD8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B
+; the EggServiceMenu_Bank1B_ListAvailableRecords steps again
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Bank1B_Case0F::
+EggServiceMenu_Bank1B_ListAvailableRecords2::
 Jump_01B_7019:: ; address name
     ld a, [wScreenStep]
     rst $00
@@ -6705,7 +6705,7 @@ Jump_01B_7019:: ; address name
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
     dw EggServiceMenu_Bank1B_ListAvailableRecords_Case04
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7
-    dw EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN
+    dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
@@ -6786,11 +6786,11 @@ Jump_01B_7097:: ; address name
     call DrawRuleBoxByWD04CBit7
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case0F
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPickCount, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN::
+EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
 Jump_01B_709B:: ; address name
     ld hl, vTiles2 + $700
     ld a, l
@@ -7852,7 +7852,7 @@ Func_01B_7600:: ; address name
     ret
 
 ; copies the name of the record at WD789 cell 5 (11 bytes) to wC130 (E-0124)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo, EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN, GameMode6_Update_Case04_PageList_UpdatePagedListCursor, GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wNameGlyphBuf, wTextBuf0

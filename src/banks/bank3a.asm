@@ -9778,11 +9778,11 @@ Func_03A_7B82:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar, RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar, RunBattleSetup_ItemCommand_CopyRectRecord7750ToScreenBufferFar)
 ; reads: wLinkMode, wBattleArg1, wSlotChoices, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wLinkRole
 ; writes: wNameSlot, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wSlotChoices, wTextBuf0
-RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared03::
+RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02::
 Func_03A_7BA0:: ; address name
     ld a, $FF
     ld hl, wSlotChoices
@@ -9827,19 +9827,19 @@ Func_03A_7BA0:: ; address name
     jr nz, .loop
     ld a, [wSlotChoices]
     ld hl, vTiles1 + $6D0
-    call RunBattleSetup_Shared03_CopySlotNameToHL
+    call RunBattleSetup_Shared02_CopySlotNameToHL
     ld hl, vTiles1 + $770
     ld a, [wSlotChoices + $1]
-    call RunBattleSetup_Shared03_CopySlotNameToHL
+    call RunBattleSetup_Shared02_CopySlotNameToHL
     ld hl, vTiles2 + $10
     ld a, [wSlotChoices + $2]
 
-; only called from RunBattleSetup_Shared03 (E-0047)
-; 2 call sites from 1 routine (e.g. RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared03)
+; only called from RunBattleSetup_Shared02 (E-0047)
+; 2 call sites from 1 routine (e.g. RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared02)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wNameSlot, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wTextBuf0
-RunBattleSetup_Shared03_CopySlotNameToHL::
+RunBattleSetup_Shared02_CopySlotNameToHL::
 Func_03A_7BF9:: ; address name
     cp a, $FF
     jr z, .set_string_category_to_02

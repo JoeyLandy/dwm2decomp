@@ -2780,7 +2780,7 @@ Func_00A_51FD:: ; address name
     ld a, [wBattleTransitionStep]
     rst $00
     dw RunBattleTransitionStep_QueueMusic
-    dw RunBattleTransitionStep_Case01
+    dw RunBattleTransitionStep_StagedSteps
     dw RunBattleTransitionStep_WriteGameModeAndModeStateEtc
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep
@@ -2885,15 +2885,15 @@ Jump_00A_525C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattleTransitionStep
+; by its sub-step: CheckStage, the transition counter, SetCounts
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTransitionSubStep
-RunBattleTransitionStep_Case01::
+RunBattleTransitionStep_StagedSteps::
 Jump_00A_52A4:: ; address name
     ld a, [wBattleTransitionSubStep]
     rst $00
     dw RunBattleTransitionStep_Case01_CheckStage
-    dw RunBattleTransitionStep_Case01_ReadTransitionCounter
+    dw RunBattleTransitionStep_StagedSteps_ReadTransitionCounter
     dw RunBattleTransitionStep_Case01_SetCounts
 
 ; reads the transition stage, then advances the step
@@ -3054,14 +3054,14 @@ Func_00A_534E:: ; address name
     ld h, a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01
+; entry 1 of the `rst $00` table in RunBattleTransitionStep_StagedSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTransitionCounter
-RunBattleTransitionStep_Case01_ReadTransitionCounter::
+RunBattleTransitionStep_StagedSteps_ReadTransitionCounter::
 Jump_00A_5362:: ; address name
     ld b, $06
 
-RunBattleTransitionStep_Case01_ReadTransitionCounter_ReadTransitionCounter::
+RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter::
 Jump_00A_5364:: ; address name
     ld a, [wTransitionCounter]
     rst $00
@@ -3263,7 +3263,7 @@ Jump_00A_5489:: ; address name
 .restore:
     pop bc
     dec b
-    jp nz, RunBattleTransitionStep_Case01_ReadTransitionCounter_ReadTransitionCounter
+    jp nz, RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
     ret
 
 ; entry 2 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
