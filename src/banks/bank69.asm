@@ -12,36 +12,36 @@ Func_069_4001:: ; address name
     ld [wSpriteSlotCount], a
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_069_401E
+    jr z, .check_map_id
     farcall SetupKeyWorldObjectsForMapType
     farcall RestoreSpriteSnapshot
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
     ret
 
-Jump_069_401E::
+.check_map_id:
     ldh a, [hMapId]
     cp a, $2F
-    jr nz, Jump_069_404C
+    jr nz, .read_map_id
     ldh a, [hMapScreenX]
     or a, a
-    jr nz, Jump_069_404C
+    jr nz, .read_map_id
     ldh a, [hMapScreenY]
     cp a, $01
-    jr nz, Jump_069_404C
+    jr nz, .read_map_id
     ld de, $0056
     call TestFlagBit
-    jr nc, Jump_069_404C
+    jr nc, .read_map_id
     ld de, $0058
     call TestFlagBit
-    jr c, Jump_069_404C
+    jr c, .read_map_id
     ld a, [wStoryFlags + $61]
     bit 3, a
-    jr z, Jump_069_404C
+    jr z, .read_map_id
     ld hl, MapObjects_7E1E
-    jp Jump_069_40F4
+    jp .set_sprite_slot_count
 
-Jump_069_404C::
+.read_map_id:
     ldh a, [hMapId]
     ld l, a
     ld h, $00
@@ -69,103 +69,103 @@ Jump_069_404C::
     ld e, a
     ld a, [hl]
     or a, e
-    jr nz, Jump_069_407C
-    jp Jump_069_4168
+    jr nz, .skip
+    jp .call_restore_sprite_snapshot
 
-Jump_069_407C::
+.skip:
     ld a, [hl]
     ld d, a
     ld l, e
     ld h, d
 
-Jump_069_4080::
+.skip2:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
     ld d, a
     cp a, $FF
-    jr nz, Jump_069_40E5
+    jr nz, .call_test_flag_bit
     ld a, e
     cp a, $FF
-    jr nz, Jump_069_4094
+    jr nz, .cp_FE
 
-Jump_069_408D::
+.clear_sprite_slot_count:
     xor a, a
     ld [wSpriteSlotCount], a
-    jp Jump_069_4168
+    jp .call_restore_sprite_snapshot
 
-Jump_069_4094::
+.cp_FE:
     cp a, $FE
-    jr z, Jump_069_40EE
+    jr z, .skip8
     cp a, $FD
-    jr z, Jump_069_40D2
+    jr z, .skip6
     cp a, $FC
-    jr z, Jump_069_40BC
+    jr z, .skip4
     cp a, $FB
-    jr z, Jump_069_40A6
-    jr Jump_069_408D
+    jr z, .skip3
+    jr .clear_sprite_slot_count
 
-Jump_069_40A6::
+.skip3:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
     ld d, a
     call TestFlagBit
-    jr nc, Jump_069_40B8
+    jr nc, .next
     ld a, [hl+]
     inc hl
     add_a_to_hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40B8::
+.next:
     inc hl
     inc hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40BC::
+.skip4:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
     ld d, a
     call TestFlagBit
-    jr nc, Jump_069_40C9
+    jr nc, .skip5
     inc hl
     inc hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40C9::
+.skip5:
     ld a, [hl+]
     inc hl
     add_a_to_hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40D2::
+.skip6:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
     ld d, a
     call TestFlagBit
-    jr nc, Jump_069_40E1
+    jr nc, .skip7
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40E1::
+.skip7:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
     ld d, a
 
-Jump_069_40E5::
+.call_test_flag_bit:
     call TestFlagBit
-    jr nc, Jump_069_40EE
+    jr nc, .skip8
     inc hl
     inc hl
-    jr Jump_069_4080
+    jr .skip2
 
-Jump_069_40EE::
+.skip8:
     ld a, [hl+]
     ld e, a
     ld a, [hl]
@@ -173,13 +173,13 @@ Jump_069_40EE::
     ld l, e
     ld h, d
 
-Jump_069_40F4::
+.set_sprite_slot_count:
     ld a, [hl+]
     ld [wSpriteSlotCount], a
     ld b, a
     ld de, wSpriteSlots
 
-Jump_069_40FC::
+.loop:
     push bc
     ld a, b
     ldh [hTempA], a
@@ -216,10 +216,10 @@ Jump_069_40FC::
     ld a, $07
     add a, e
     ld e, a
-    jr nc, Jump_069_412C
+    jr nc, .skip9
     inc d
 
-Jump_069_412C::
+.skip9:
     ld a, [hl+]
     ld [de], a
     pop de
@@ -230,10 +230,10 @@ Jump_069_412C::
     ld a, $07
     add a, e
     ld e, a
-    jr nc, Jump_069_413A
+    jr nc, .skip10
     inc d
 
-Jump_069_413A::
+.skip10:
     ld a, [hl+]
     ld [de], a
     pop de
@@ -270,9 +270,9 @@ Jump_069_413A::
     pop hl
     pop bc
     dec b
-    jr nz, Jump_069_40FC
+    jr nz, .loop
 
-Jump_069_4168::
+.call_restore_sprite_snapshot:
     farcall RestoreSpriteSnapshot
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a

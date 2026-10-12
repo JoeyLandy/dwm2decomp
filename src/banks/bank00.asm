@@ -66,20 +66,20 @@ Func_000_0040:: ; address name
     jp VBlankHandler
     db $00, $00, $00, $00
 
-; the LCD STAT interrupt vector ($0048): jumps to the handler at Jump_000_256A (E-0114)
+; the LCD STAT interrupt vector ($0048): jumps to the handler at ComputeSpriteScrollOffsets_Skip2 (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: rSVBK, wSTATSplitEnable
 ; writes: rSVBK
 StatInterruptVector::
 Func_000_0048:: ; address name
-    jp Jump_000_256A
+    jp ComputeSpriteScrollOffsets_Skip2
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; the serial-transfer interrupt vector ($0058): jumps to the handler at Jump_000_255B (E-0114)
+; the serial-transfer interrupt vector ($0058): jumps to the handler at ComputeSpriteScrollOffsets_Skip (E-0114)
 ; no direct call (reached through a table, a jump or a vector)
 SerialInterruptVector::
 Func_000_0058:: ; address name
-    jp Jump_000_255B
+    jp ComputeSpriteScrollOffsets_Skip
     db $D9
     ds $24, $00
 
@@ -91,12 +91,12 @@ Func_000_0080:: ; address name
     ld b, $0A
     ld hl, $008E
 
-Jump_000_0087::
+.loop:
     ld a, [hl+]
     ldh [c], a
     inc c
     dec b
-    jr nz, Jump_000_0087
+    jr nz, .loop
     ret
 
 ; the OAM DMA routine copied to HRAM: starts DMA from $C000 (ld a, $C0; ldh [rDMA], a) and waits $28 loop iterations; never called in place (E-0122)
@@ -108,9 +108,9 @@ Func_000_008E:: ; address name
     ldh [rDMA], a
     ld a, $28
 
-Jump_000_0094::
+.loop:
     dec a
-    jr nz, Jump_000_0094
+    jr nz, .loop
     ret
     ds $68, $00
 
@@ -154,13 +154,14 @@ BootAndMainLoop::
 Func_000_0150:: ; address name
     cp a, $11
     ld a, $00
-    jr nz, Jump_000_0157
+    jr nz, .set_is_cgb
     inc a
 
-Jump_000_0157::
+.set_is_cgb:
     ld [wIsCGB], a
 
-Jump_000_015A::
+BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts::
+Jump_000_015A:: ; address name
     di
     ld sp, wStackTop
     call DisableVBlankTimerSerialJoypadInterrupts
@@ -172,7 +173,7 @@ Jump_000_015A::
     call FillBytes
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_0189
+    jr z, .skip
     ld a, $01
     ldh [rVBK], a
     ld hl, vBGMap0
@@ -182,7 +183,7 @@ Jump_000_015A::
     ld a, $00
     ldh [rVBK], a
 
-Jump_000_0189::
+.skip:
     ld hl, wGameMode
     xor a, a
     ld [hl+], a
@@ -209,24 +210,24 @@ Jump_000_0189::
     ld [wLinkReady], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_01D3
+    jr z, .call_detect_sgb
     xor a, a
     ldh [rVBK], a
     ldh [rSVBK], a
     ldh [rRP], a
     farcall LoadPalette0FromData4322
-    jr Jump_000_01D8
+    jr .clear_sgb_active
 
-Jump_000_01D3::
+.call_detect_sgb:
     call DetectSGB
-    jr c, Jump_000_01DF
+    jr c, .call_delay_bc_when_sgb
 
-Jump_000_01D8::
+.clear_sgb_active:
     xor a, a
     ld [wSGBActive], a
-    jp Jump_000_02D1
+    jp .call_clear_bg_map_or_fill_with_c3
 
-Jump_000_01DF::
+.call_delay_bc_when_sgb:
     ld bc, $000C
     call DelayBCWhenSGB
     ld a, $14
@@ -303,10 +304,10 @@ Jump_000_01DF::
     ld [wSGBAttrFile], a
     farcall SendSGBPaletteSetPacket
 
-Jump_000_02D1::
+.call_clear_bg_map_or_fill_with_c3:
     ei
 
-Jump_000_02D2::
+.call_clear_bg_map_or_fill_with_c32:
     call ClearBGMapOrFillWithC3
     call ClearShadowOAM
     call SetDefaultDMGPaletteBytes
@@ -341,7 +342,7 @@ Jump_000_02D2::
     ld [hl+], a
     ld [hl], a
 
-Jump_000_0324::
+.loop:
     ld a, [wLinkMode]
     or a, a
     call z, NextTableByte
@@ -349,14 +350,14 @@ Jump_000_0324::
     nop
     ld a, [wModeChangeRequest]
     or a, a
-    jr z, Jump_000_0324
+    jr z, .loop
     ld a, [wFadeState]
     or a, a
-    jr z, Jump_000_033D
+    jr z, .call_disable_v_blank_timer_serial_joypad
     bit 7, a
-    jr z, Jump_000_0324
+    jr z, .loop
 
-Jump_000_033D::
+.call_disable_v_blank_timer_serial_joypad:
     di
     call DisableVBlankTimerSerialJoypadInterrupts
     call SpinDelay
@@ -364,7 +365,7 @@ Jump_000_033D::
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
     call SpinDelay
-    jp Jump_000_02D2
+    jp .call_clear_bg_map_or_fill_with_c32
 
 ; jumps through a 9-entry table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07, $24, $A0, $F2); called from the main loop each time the mode changes
 ; 1 call site from 1 routine (e.g. BootAndMainLoop)
@@ -465,20 +466,20 @@ Jump_000_03A4:: ; address name
     push af
     ld hl, wVBlankFlags
     bit 0, [hl]
-    jp nz, Jump_000_046B
+    jp nz, .call_write_lcdc_shadow
     set 0, [hl]
     call $FF80
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_03EA
+    jr z, .call_flush_queued_bg_map_write
     ld a, [wFadeState]
     or a, a
-    jr nz, Jump_000_03EA
+    jr nz, .call_flush_queued_bg_map_write
     ld hl, wBGPaletteUploadRequest
     ld a, [hl]
     inc hl
     or a, [hl]
-    jr z, Jump_000_03EA
+    jr z, .call_flush_queued_bg_map_write
     ld a, [wBGPaletteUploadRequest]
     or a, a
     call nz, UploadBGPalettes
@@ -490,7 +491,7 @@ Jump_000_03A4:: ; address name
     xor a, a
     ld [wOBJPaletteUploadRequest], a
 
-Jump_000_03EA::
+.call_flush_queued_bg_map_write:
     call FlushQueuedBGMapWrite
     call CopyDMGPalettesToHardware
     call CopyScrollToHardware
@@ -498,7 +499,7 @@ Jump_000_03EA::
     call WriteLCDCShadow
     ld a, [wLinkMode]
     and a, a
-    jr nz, Jump_000_042E
+    jr nz, .call_sound_tick
     ei
     call PollJoypad
     call UpdateJoypadPresses
@@ -516,37 +517,37 @@ Jump_000_03EA::
     ld a, [wFrameCounterHi]
     adc a, $00
     ld [wFrameCounterHi], a
-    jr Jump_000_043A
+    jr .check_fade_state
 
-Jump_000_042E::
+.call_sound_tick:
     call SoundTick
     ei
     call ProcessSoundQueue
     call GameFrameUpdate
-    jr Jump_000_043A
+    jr .check_fade_state
 
-Jump_000_043A::
+.check_fade_state:
     ld a, [wFadeState]
     or a, a
-    jr nz, Jump_000_0456
+    jr nz, .skip
     ld a, [wJoypadHeld]
     and a, $0F
     cp a, $0F
-    jr nz, Jump_000_0450
+    jr nz, .check_link_mode
     ld a, [wLinkMode]
     or a, a
-    jp z, Jump_000_015A
+    jp z, BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts
 
-Jump_000_0450::
+.check_link_mode:
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_000_0456
+    jr nz, .skip
 
-Jump_000_0456::
+.skip:
     ld hl, wVBlankFlags
     res 0, [hl]
 
-Jump_000_045B::
+.restore:
     pop af
     ldh [rVBK], a
     ldh a, [rLY]
@@ -559,11 +560,11 @@ Jump_000_045B::
     pop af
     reti
 
-Jump_000_046B::
+.call_write_lcdc_shadow:
     call WriteLCDCShadow
     call SoundTick
     ei
-    jr Jump_000_045B
+    jr .restore
 
 ; hOamNextEntry = 0, ComputeSpriteScrollOffsets, RunGameModeUpdate, and ClearUnusedOAMEntries unless a fade is running
 ; 2 call sites from 1 routine (e.g. VBlankHandler)
@@ -577,11 +578,11 @@ Func_000_0474:: ; address name
     call RunGameModeUpdate
     ld a, [wFadeState]
     or a, a
-    jr z, Jump_000_0486
+    jr z, .call_clear_unused_oam_entries
     bit 7, a
     ret z
 
-Jump_000_0486::
+.call_clear_unused_oam_entries:
     call ClearUnusedOAMEntries
     ret
 
@@ -595,14 +596,14 @@ Func_000_048A:: ; address name
     ret nz
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_000_049E
+    jr nz, .read_game_mode
     ld a, [wFadeState]
     or a, a
-    jr z, Jump_000_049E
+    jr z, .read_game_mode
     bit 7, a
     ret z
 
-Jump_000_049E::
+.read_game_mode:
     ld a, [wGameMode]
     rst $00
     dw RunGameModeUpdate_ToGameMode0_Update
@@ -691,7 +692,7 @@ Func_000_04ED:: ; address name
     ret z
     ld a, [wScreenShakeTimer]
     or a, a
-    jr z, Jump_000_0511
+    jr z, .check_screen_shake_offset2
     dec a
     ld [wScreenShakeTimer], a
     ldh a, [rSCY]
@@ -701,17 +702,17 @@ Func_000_04ED:: ; address name
     ld c, a
     and a, $07
     bit 3, c
-    jr nz, Jump_000_050E
+    jr nz, .check_screen_shake_offset
     xor a, $07
 
-Jump_000_050E::
+.check_screen_shake_offset:
     add a, b
     ldh [rSCY], a
 
-Jump_000_0511::
+.check_screen_shake_offset2:
     ld a, [wScreenShakeOffset]
     or a, a
-    jr z, Jump_000_0530
+    jr z, .return
     dec a
     ld [wScreenShakeOffset], a
     ldh a, [rSCX]
@@ -721,15 +722,15 @@ Jump_000_0511::
     ld c, a
     and a, $07
     bit 3, c
-    jr nz, Jump_000_052B
+    jr nz, .skip
     xor a, $07
 
-Jump_000_052B::
+.skip:
     sub a, $04
     add a, b
     ldh [rSCX], a
 
-Jump_000_0530::
+.return:
     ret
     db $CD, $CC, $0B, $C9
 
@@ -750,35 +751,35 @@ Func_000_0535:: ; address name
     adc a, $00
     ld [wLinkFrameCounterHi], a
     or a, a
-    jp nz, Jump_000_015A
+    jp nz, BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts
     ld a, [wLinkRole]
     bit 1, a
     ret nz
     ld a, [wLinkSession]
     cp a, $05
-    jr nz, Jump_000_0563
+    jr nz, .check_v_blank_flags
     ld a, [wVBlankFlags]
     bit 1, a
     ret nz
-    jr Jump_000_057C
+    jr .read_joypad_held
 
-Jump_000_0563::
+.check_v_blank_flags:
     ld a, [wVBlankFlags]
     bit 1, a
-    jr nz, Jump_000_0574
+    jr nz, .clear_link_saved_joypad_held
     bit 2, a
-    jr nz, Jump_000_0574
+    jr nz, .clear_link_saved_joypad_held
     bit 7, a
-    jr nz, Jump_000_0574
-    jr Jump_000_057C
+    jr nz, .clear_link_saved_joypad_held
+    jr .read_joypad_held
 
-Jump_000_0574::
+.clear_link_saved_joypad_held:
     xor a, a
     ld [wLinkSavedJoypadHeld], a
     ld [wLinkSavedJoypadHeldPrev], a
     ret
 
-Jump_000_057C::
+.read_joypad_held:
     ld a, [wJoypadHeld]
     ld [wLinkSavedJoypadHeld], a
     ld a, [wJoypadHeldPrev]
@@ -786,17 +787,17 @@ Jump_000_057C::
     call PollJoypad
     ld a, [wLinkSendByte]
     cp a, $FF
-    jr z, Jump_000_059D
+    jr z, .skip
     ld a, $00
     ld [wLinkExchangeState], a
     ld a, [wLinkSendByte]
     jp StartSerialTransferInternalClock
 
-Jump_000_059D::
+.skip:
     ld hl, wLinkBufferCountLo
     ld a, [hl+]
     or a, [hl]
-    jr z, Jump_000_05C7
+    jr z, .set_link_exchange_state_to_00
     ld a, [wLinkTimeoutLo]
     ld l, a
     ld a, [wLinkTimeoutHi]
@@ -814,7 +815,7 @@ Jump_000_059D::
     ld a, [hl]
     jp StartSerialTransferInternalClock
 
-Jump_000_05C7::
+.set_link_exchange_state_to_00:
     ld a, $00
     ld [wLinkExchangeState], a
     ld a, $F0
@@ -830,14 +831,14 @@ Func_000_05D1:: ; address name
     ret z
     ld de, $1B58
 
-Jump_000_05D9::
+.loop:
     nop
     nop
     nop
     dec de
     ld a, d
     or a, e
-    jr nz, Jump_000_05D9
+    jr nz, .loop
     ret
 
 ; sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes
@@ -853,7 +854,7 @@ Func_000_05E2:: ; address name
     ldh a, [rP1]
     and a, $03
     cp a, $03
-    jr nz, Jump_000_0636
+    jr nz, .set_sgb_packet_index_to_0A
     ld a, $20
     ldh [rP1], a
     ldh a, [rP1]
@@ -876,7 +877,7 @@ Func_000_05E2:: ; address name
     ldh a, [rP1]
     and a, $03
     cp a, $03
-    jr nz, Jump_000_0636
+    jr nz, .set_sgb_packet_index_to_0A
     ld a, $0A
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
@@ -884,7 +885,7 @@ Func_000_05E2:: ; address name
     sub a, a
     ret
 
-Jump_000_0636::
+.set_sgb_packet_index_to_0A:
     ld a, $0A
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
@@ -902,14 +903,14 @@ Func_000_0646:: ; address name
     ldh a, [rP1]
     ld b, $04
     ld c, a
-    jr Jump_000_0651
+    jr .skip
 
-Jump_000_064D::
+.loop:
     ldh a, [rP1]
     cp a, c
     ret z
 
-Jump_000_0651::
+.skip:
     cpl
     and a, $03
     sla a
@@ -948,7 +949,7 @@ Jump_000_0651::
     ld a, $30
     ldh [rP1], a
     dec b
-    jr nz, Jump_000_064D
+    jr nz, .loop
     ret
 
 ; returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes
@@ -960,21 +961,21 @@ Func_000_0692:: ; address name
     or a, a
     ret z
 
-Jump_000_0697::
+.loop:
     ld de, $06D6
 
-Jump_000_069A::
+.loop2:
     nop
     nop
     nop
     dec de
     ld a, d
     or a, e
-    jr nz, Jump_000_069A
+    jr nz, .loop2
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_0697
+    jr nz, .loop
     ret
 
 ; A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read
@@ -1009,17 +1010,17 @@ Func_000_06A8:: ; address name
     ld a, $80
     ld c, $0D
 
-Jump_000_06DD::
+.loop:
     ld b, $14
 
-Jump_000_06DF::
+.loop2:
     ld [hl+], a
     inc a
     dec b
-    jr nz, Jump_000_06DF
+    jr nz, .loop2
     add hl, de
     dec c
-    jr nz, Jump_000_06DD
+    jr nz, .loop
     ld a, $81
     ldh [rLCDC], a
     ld [wLCDCShadow], a
@@ -1060,30 +1061,30 @@ Func_000_0705:: ; address name
     pop bc
     ld hl, vTiles1
 
-Jump_000_072D::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_072D
+    jr nz, .loop
     ld hl, vBGMap0
     ld de, $000C
     ld a, $80
     ld c, $0D
 
-Jump_000_073F::
+.loop2:
     ld b, $14
 
-Jump_000_0741::
+.loop3:
     ld [hl+], a
     inc a
     dec b
-    jr nz, Jump_000_0741
+    jr nz, .loop3
     add hl, de
     dec c
-    jr nz, Jump_000_073F
+    jr nz, .loop2
     ld a, $81
     ldh [rLCDC], a
     ld [wLCDCShadow], a
@@ -1108,22 +1109,23 @@ Func_000_076B:: ; address name
     ld hl, wSGBPacketBuffer
     ld c, $10
 
-Jump_000_0773::
+.loop:
     ld [hl+], a
     dec c
-    jr nz, Jump_000_0773
+    jr nz, .loop
     pop bc
     pop hl
     ret
 
-Jump_000_077A::
+ClearSGBPacketBuffer_CheckLinkMode::
+Jump_000_077A:: ; address name
     push af
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_000_0784
+    jr z, .call_clear_sgb_packet_buffer_send_sgb_packet
     call ClearSGBPacketBuffer_WaitSerialTransferDone
 
-Jump_000_0784::
+.call_clear_sgb_packet_buffer_send_sgb_packet:
     call ClearSGBPacketBuffer_SendSGBPacketSet
     pop af
     call ClearSGBPacketBuffer_WriteIFAndIE
@@ -1153,10 +1155,10 @@ Func_000_0796:: ; address name
     bit 7, [hl]
     ret z
 
-Jump_000_079C::
+.loop:
     ldh a, [rLY]
     cp a, $91
-    jr nz, Jump_000_079C
+    jr nz, .loop
     res 7, [hl]
     ld hl, wLCDCShadow
     res 7, [hl]
@@ -1264,12 +1266,12 @@ Func_000_080A:: ; address name
     ld [rROMB0], a
     ld b, $40
 
-Jump_000_0819::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_000_0819
+    jr nz, .loop
     ld b, $00
     add hl, bc
     ld [hl], $7F
@@ -1286,7 +1288,7 @@ UploadBGPalettes::
 Func_000_0829:: ; address name
     ld a, [wBGPaletteUploadRequest]
     bit 7, a
-    jr z, Jump_000_0841
+    jr z, .call_wait_for_vram_access
     ldh [rBGPI], a
     call HLFromABits3To5
     ld a, l
@@ -1296,9 +1298,9 @@ Func_000_0829:: ; address name
     adc a, $C4
     ld h, a
     ld b, $08
-    jr Jump_000_084F
+    jr .call_wait_for_vram_access2
 
-Jump_000_0841::
+.call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, $80
@@ -1307,17 +1309,17 @@ Jump_000_0841::
     ld b, $40
     ld hl, wBGPaletteBuffer
 
-Jump_000_084F::
+.call_wait_for_vram_access2:
     ld c, $69
 
-Jump_000_0851::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
     ldh [c], a
     ei
     dec b
-    jr nz, Jump_000_0851
+    jr nz, .loop
     ret
 
 ; only called from VBlankHandler (E-0047)
@@ -1329,7 +1331,7 @@ VBlankHandler_HLFromABits3To5::
 Func_000_085C:: ; address name
     ld a, [wOBJPaletteUploadRequest]
     bit 7, a
-    jr z, Jump_000_0876
+    jr z, .call_wait_for_vram_access
     ldh [rOBPI], a
     call HLFromABits3To5
     ld a, l
@@ -1341,9 +1343,9 @@ Func_000_085C:: ; address name
     ld e, l
     ld d, h
     ld b, $08
-    jr Jump_000_0884
+    jr .skip
 
-Jump_000_0876::
+.call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, $80
@@ -1352,23 +1354,23 @@ Jump_000_0876::
     ld b, $40
     ld de, wOBJPaletteBuffer
 
-Jump_000_0884::
+.skip:
     ld hl, rOBPD
 
-Jump_000_0887::
+.loop:
     ld a, [de]
     inc de
     ld c, a
     di
 
-Jump_000_088B::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_088B
+    jr nz, .loop2
     ld [hl], c
     ei
     dec b
-    jr nz, Jump_000_0887
+    jr nz, .loop
     ret
 
 ; HL = A & $38 (bits 3-5), H = 0 (E-0119)
@@ -1448,7 +1450,7 @@ ClearWRAMHRAMAndSRAMBanks0And2::
 Func_000_08D0:: ; address name
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_08EC
+    jr z, .skip
     xor a, a
     ldh [rVBK], a
     ldh [rSVBK], a
@@ -1461,7 +1463,7 @@ Func_000_08D0:: ; address name
     ldh [rOBPI], a
     ld a, [wIsCGB]
 
-Jump_000_08EC::
+.skip:
     push af
     ld hl, wShadowOAM
     ld bc, $1E00
@@ -1501,13 +1503,13 @@ Func_000_0930:: ; address name
     ld bc, $0800
     ld a, [wBGFillFlag]
     or a, a
-    jr z, Jump_000_0945
+    jr z, .call_fill_bytes
     xor a, a
     ld [wBGFillFlag], a
     ld bc, $0400
     ld a, $C3
 
-Jump_000_0945::
+.call_fill_bytes:
     call FillBytes
     ret
 
@@ -1517,13 +1519,13 @@ FillBytes::
 Func_000_0949:: ; address name
     ld d, a
 
-Jump_000_094A::
+.loop:
     ld [hl], d
     inc hl
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_094A
+    jr nz, .loop
     ret
 
 ; HL = source, DE = destination, BC = count (memcpy)
@@ -1607,7 +1609,7 @@ PollJoypad::
 Func_000_0A17:: ; address name
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_000_0A39
+    jr z, .clear_joypad_read_flag
     call PollJoypad_WriteP1
     ld a, [wJoypadHeld]
     ld [wJoypadHeldPrev], a
@@ -1619,7 +1621,7 @@ Func_000_0A17:: ; address name
     ld [wLinkJoypadHeld], a
     ret
 
-Jump_000_0A39::
+.clear_joypad_read_flag:
     xor a, a
     ld [wJoypadReadFlag], a
     call ReadJoypadDirect
@@ -1687,15 +1689,15 @@ UpdateJoypadPresses::
 Func_000_0A8D:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_000_0AA0
+    jr nz, .clear_joypad_pressed_repeat
     ld a, [wJoypadReadFlag]
     or a, a
-    jr nz, Jump_000_0AA0
+    jr nz, .clear_joypad_pressed_repeat
     xor a, a
     ld [wLinkJoypadHeld], a
     ld [wLinkJoypadHeldPrev], a
 
-Jump_000_0AA0::
+.clear_joypad_pressed_repeat:
     xor a, a
     ld [wJoypadPressedRepeat], a
     ld hl, wJoypadHeld
@@ -1708,30 +1710,30 @@ Jump_000_0AA0::
     ld hl, wJoypadHeld
     ld a, [hl+]
     or a, a
-    jr z, Jump_000_0AB9
+    jr z, .read_joypad_pressed
     cp a, [hl]
-    jr z, Jump_000_0AC6
+    jr z, .skip
 
-Jump_000_0AB9::
+.read_joypad_pressed:
     ld a, [wJoypadPressed]
     ld [wJoypadPressedRepeat], a
     ld a, $14
     ld [wJoypadRepeatTimer], a
-    jr Jump_000_0AD6
+    jr .clear_link_joypad_pressed_repeat2
 
-Jump_000_0AC6::
+.skip:
     ld hl, wJoypadRepeatTimer
     ld a, [hl]
     or a, a
-    jr nz, Jump_000_0AD5
+    jr nz, .clear_link_joypad_pressed_repeat
     ld [hl], $06
     ld a, [wJoypadHeld]
     ld [wJoypadPressedRepeat], a
 
-Jump_000_0AD5::
+.clear_link_joypad_pressed_repeat:
     dec [hl]
 
-Jump_000_0AD6::
+.clear_link_joypad_pressed_repeat2:
     xor a, a
     ld [wLinkJoypadPressedRepeat], a
     ld hl, wLinkJoypadHeld
@@ -1744,30 +1746,30 @@ Jump_000_0AD6::
     ld hl, wLinkJoypadHeld
     ld a, [hl+]
     or a, a
-    jr z, Jump_000_0AEF
+    jr z, .read_link_joypad_pressed
     cp a, [hl]
-    jr z, Jump_000_0AFC
+    jr z, .skip2
 
-Jump_000_0AEF::
+.read_link_joypad_pressed:
     ld a, [wLinkJoypadPressed]
     ld [wLinkJoypadPressedRepeat], a
     ld a, $14
     ld [wLinkJoypadRepeatTimer], a
-    jr Jump_000_0B0C
+    jr .return
 
-Jump_000_0AFC::
+.skip2:
     ld hl, wLinkJoypadRepeatTimer
     ld a, [hl]
     or a, a
-    jr nz, Jump_000_0B0B
+    jr nz, .done
     ld [hl], $06
     ld a, [wLinkJoypadHeld]
     ld [wLinkJoypadPressedRepeat], a
 
-Jump_000_0B0B::
+.done:
     dec [hl]
 
-Jump_000_0B0C::
+.return:
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
@@ -1793,12 +1795,12 @@ Func_000_0B18:: ; address name
     ld a, b
     ld [rROMB0], a
 
-Jump_000_0B20::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec c
-    jr nz, Jump_000_0B20
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -1814,19 +1816,19 @@ Func_000_0B2B:: ; address name
     ld a, b
     ld [rROMB0], a
 
-Jump_000_0B33::
+.loop:
     di
 
-Jump_000_0B34::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0B34
+    jr nz, .loop2
     ld a, [de]
     ld [hl+], a
     inc de
     ei
     dec c
-    jr nz, Jump_000_0B33
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -1842,29 +1844,29 @@ Func_000_0B46:: ; address name
     ld a, b
     ld [rROMB0], a
 
-Jump_000_0B4E::
+.loop:
     di
 
-Jump_000_0B4F::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0B4F
+    jr nz, .loop2
     ld a, [de]
     ld b, a
     inc de
     ei
     di
 
-Jump_000_0B5A::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0B5A
+    jr nz, .loop3
     ld a, [hl]
     or a, b
     ld [hl+], a
     ei
     dec c
-    jr nz, Jump_000_0B4E
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -1939,10 +1941,10 @@ Func_000_0BA7:: ; address name
     ld hl, wShadowOAM
     ld b, $A0
 
-Jump_000_0BAF::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_000_0BAF
+    jr nz, .loop
     ret
 
 ; zeroes the first byte (Y) of every OAM shadow entry from hOamNextEntry up to 40
@@ -1961,13 +1963,13 @@ Func_000_0BB4:: ; address name
     ld b, a
     xor a, a
 
-Jump_000_0BC4::
+.loop:
     ld [hl+], a
     inc l
     inc l
     inc l
     inc b
-    jr nz, Jump_000_0BC4
+    jr nz, .loop
     ret
 
 ; if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise
@@ -1983,21 +1985,21 @@ Func_000_0BCC:: ; address name
     ld d, a
     ld a, d
     or a, e
-    jr nz, Jump_000_0BD9
+    jr nz, .read_bg_write_count
     ret
 
-Jump_000_0BD9::
+.read_bg_write_count:
     ld a, [wBGWriteCount]
     ld b, a
     ld hl, wBGWriteData
     ld a, [wBGWriteVertical]
     or a, a
-    jr nz, Jump_000_0BF7
+    jr nz, .loop2
     ld a, e
     and a, $E0
     ld c, a
 
-Jump_000_0BEA::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc e
@@ -2006,24 +2008,24 @@ Jump_000_0BEA::
     or a, c
     ld e, a
     dec b
-    jr nz, Jump_000_0BEA
-    jr Jump_000_0C05
+    jr nz, .loop
+    jr .clear_bg_write_dest_lo
 
-Jump_000_0BF7::
+.loop2:
     ld a, [hl+]
     ld [de], a
     ld a, $20
     add a, e
     ld e, a
-    jr nc, Jump_000_0C00
+    jr nc, .skip
     inc d
 
-Jump_000_0C00::
+.skip:
     res 2, d
     dec b
-    jr nz, Jump_000_0BF7
+    jr nz, .loop2
 
-Jump_000_0C05::
+.clear_bg_write_dest_lo:
     xor a, a
     ld [wBGWriteDestLo], a
     ld [wBGWriteDestHi], a
@@ -2038,21 +2040,21 @@ Jump_000_0C05::
     ld d, a
     ld a, d
     or a, e
-    jr nz, Jump_000_0C22
+    jr nz, .read_attr_write_count
     ret
 
-Jump_000_0C22::
+.read_attr_write_count:
     ld a, [wAttrWriteCount]
     ld b, a
     ld hl, wAttrWriteData
     ld a, [wAttrWriteVertical]
     or a, a
-    jr nz, Jump_000_0C40
+    jr nz, .loop4
     ld a, e
     and a, $E0
     ld c, a
 
-Jump_000_0C33::
+.loop3:
     ld a, [hl+]
     ld [de], a
     inc e
@@ -2061,24 +2063,24 @@ Jump_000_0C33::
     or a, c
     ld e, a
     dec b
-    jr nz, Jump_000_0C33
-    jr Jump_000_0C4E
+    jr nz, .loop3
+    jr .skip3
 
-Jump_000_0C40::
+.loop4:
     ld a, [hl+]
     ld [de], a
     ld a, $20
     add a, e
     ld e, a
-    jr nc, Jump_000_0C49
+    jr nc, .skip2
     inc d
 
-Jump_000_0C49::
+.skip2:
     res 2, d
     dec b
-    jr nz, Jump_000_0C40
+    jr nz, .loop4
 
-Jump_000_0C4E::
+.skip3:
     ld a, $00
     ldh [rVBK], a
     xor a, a
@@ -2113,23 +2115,23 @@ Func_000_0C69:: ; address name
     push af
     call DecompressReadHeader
 
-Jump_000_0C70::
+.loop:
     ld a, [de]
     inc de
     push hl
     ld hl, hDecompressMarker
     cp a, [hl]
-    jr z, Jump_000_0C83
+    jr z, .set_decompress_run_byte
     pop hl
     ld [hl], a
     inc hl
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_0C70
-    jr Jump_000_0CF0
+    jr nz, .loop
+    jr .done
 
-Jump_000_0C83::
+.set_decompress_run_byte:
     pop hl
     ld a, [de]
     ldh [hDecompressRunByte], a
@@ -2142,12 +2144,12 @@ Jump_000_0C83::
     and a, $0F
     add a, $04
     cp a, $13
-    jr nz, Jump_000_0C9B
+    jr nz, .set_decompress_run_count
     ld a, [de]
     inc de
     add a, $13
 
-Jump_000_0C9B::
+.set_decompress_run_count:
     ldh [hDecompressRunCount], a
     pop af
     push de
@@ -2166,63 +2168,63 @@ Jump_000_0C9B::
     ld d, h
     pop hl
 
-Jump_000_0CB2::
+.loop2:
     ldh a, [hDecompressHeader2]
     cp a, d
-    jr z, Jump_000_0CBB
-    jr c, Jump_000_0CC2
-    jr Jump_000_0CDD
+    jr z, .check_decompress_header1
+    jr c, .skip
+    jr .skip3
 
-Jump_000_0CBB::
+.check_decompress_header1:
     ldh a, [hDecompressHeader1]
     cp a, e
-    jr z, Jump_000_0CC2
-    jr nc, Jump_000_0CDD
+    jr z, .skip
+    jr nc, .skip3
 
-Jump_000_0CC2::
+.skip:
     ld a, $F0
     add a, d
     ld d, a
     ldh a, [hDecompressHeader4]
     cp a, d
-    jr z, Jump_000_0CCF
-    jr nc, Jump_000_0CD6
-    jr Jump_000_0CDD
+    jr z, .check_decompress_header3
+    jr nc, .skip2
+    jr .skip3
 
-Jump_000_0CCF::
+.check_decompress_header3:
     ldh a, [hDecompressHeader3]
     cp a, e
-    jr z, Jump_000_0CDD
-    jr c, Jump_000_0CDD
+    jr z, .skip3
+    jr c, .skip3
 
-Jump_000_0CD6::
+.skip2:
     ld a, $10
     add a, d
     ld d, a
     xor a, a
-    jr Jump_000_0CDE
+    jr .skip4
 
-Jump_000_0CDD::
+.skip3:
     ld a, [de]
 
-Jump_000_0CDE::
+.skip4:
     ld [hl+], a
     inc de
     dec bc
     ld a, b
     or a, c
-    jr z, Jump_000_0CEF
+    jr z, .restore
     ldh a, [hDecompressRunCount]
     dec a
     ldh [hDecompressRunCount], a
-    jr nz, Jump_000_0CB2
+    jr nz, .loop2
     pop de
-    jr Jump_000_0C70
+    jr .loop
 
-Jump_000_0CEF::
+.restore:
     pop de
 
-Jump_000_0CF0::
+.done:
     pop af
     ld [rROMB0], a
     ret
@@ -2243,31 +2245,31 @@ Func_000_0CF5:: ; address name
     push af
     call DecompressReadHeader
 
-Jump_000_0D04::
+.loop:
     ld a, [de]
     inc de
     push hl
     ld hl, hDecompressMarker
     cp a, [hl]
-    jr z, Jump_000_0D22
+    jr z, .set_decompress_run_byte
     pop hl
     ldh [hVRAMByteTemp], a
     di
 
-Jump_000_0D11::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0D11
+    jr nz, .loop2
     ldh a, [hVRAMByteTemp]
     ld [hl+], a
     ei
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_0D04
-    jr Jump_000_0DA0
+    jr nz, .loop
+    jr .restore2
 
-Jump_000_0D22::
+.set_decompress_run_byte:
     pop hl
     ld a, [de]
     ldh [hDecompressRunByte], a
@@ -2280,12 +2282,12 @@ Jump_000_0D22::
     and a, $0F
     add a, $04
     cp a, $13
-    jr nz, Jump_000_0D3B
+    jr nz, .set_decompress_run_count
     ld a, [de]
     inc de
     add a, $13
 
-Jump_000_0D3B::
+.set_decompress_run_count:
     ldh [hDecompressRunCount], a
     ldh a, [hVRAMByteTemp]
     push de
@@ -2301,78 +2303,78 @@ Jump_000_0D3B::
     adc a, d
     ld d, a
 
-Jump_000_0D50::
+.loop3:
     ldh a, [hDecompressHeader2]
     cp a, d
-    jr z, Jump_000_0D59
-    jr c, Jump_000_0D60
-    jr Jump_000_0D84
+    jr z, .check_decompress_header1
+    jr c, .skip
+    jr .skip3
 
-Jump_000_0D59::
+.check_decompress_header1:
     ldh a, [hDecompressHeader1]
     cp a, e
-    jr z, Jump_000_0D60
-    jr nc, Jump_000_0D84
+    jr z, .skip
+    jr nc, .skip3
 
-Jump_000_0D60::
+.skip:
     ld a, $F0
     add a, d
     ld d, a
     ldh a, [hDecompressHeader4]
     cp a, d
-    jr z, Jump_000_0D6D
-    jr nc, Jump_000_0D74
-    jr Jump_000_0D84
+    jr z, .check_decompress_header3
+    jr nc, .skip2
+    jr .skip3
 
-Jump_000_0D6D::
+.check_decompress_header3:
     ldh a, [hDecompressHeader3]
     cp a, e
-    jr z, Jump_000_0D84
-    jr c, Jump_000_0D84
+    jr z, .skip3
+    jr c, .skip3
 
-Jump_000_0D74::
+.skip2:
     ld a, $10
     add a, d
     ld d, a
     di
 
-Jump_000_0D79::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0D79
+    jr nz, .loop4
     xor a, a
     ld [hl+], a
     ei
-    jr Jump_000_0D8E
+    jr .next
 
-Jump_000_0D84::
+.skip3:
     di
 
-Jump_000_0D85::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_0D85
+    jr nz, .loop5
     ld a, [de]
     ld [hl+], a
     ei
 
-Jump_000_0D8E::
+.next:
     inc de
     dec bc
     ld a, b
     or a, c
-    jr z, Jump_000_0D9F
+    jr z, .restore
     ldh a, [hDecompressRunCount]
     dec a
     ldh [hDecompressRunCount], a
-    jr nz, Jump_000_0D50
+    jr nz, .loop3
     pop de
-    jp Jump_000_0D04
+    jp .loop
 
-Jump_000_0D9F::
+.restore:
     pop de
 
-Jump_000_0DA0::
+.restore2:
     pop af
     ld [rROMB0], a
     xor a, a
@@ -2424,9 +2426,9 @@ Func_000_0DCA:: ; address name
     ld [hl+], a
     ld a, [wDMGPaletteOBP1]
     ld [hl], a
-    jr Jump_000_0DDB
+    jr .skip
 
-Jump_000_0DDB::
+.skip:
     xor a, a
     ld hl, wFadeLevel
     ld [hl+], a
@@ -2451,24 +2453,24 @@ Func_000_0DF2:: ; address name
     ld b, a
     ld a, [wIsCGB]
     or a, a
-    jp nz, Jump_000_0E9B
+    jp nz, .set_fade_state2
     ld a, [wSGBActive]
     or a, a
-    jp z, Jump_000_0EA8
+    jp z, .check_fade_mode
     bit 7, b
-    jr nz, Jump_000_0E2C
+    jr nz, .set_fade_state
     ld a, b
     ld [wFadeState], a
     ld hl, wOBJPaletteBuffer + $20
     ld de, wOBJPaletteBuffer
     ld c, $20
 
-Jump_000_0E11::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec c
-    jr nz, Jump_000_0E11
+    jr nz, .loop
     ld a, $00
     ld [wFadeLevel], a
     ld a, [wFadeState]
@@ -2476,9 +2478,9 @@ Jump_000_0E11::
     srl a
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
-    jp Jump_000_0F3D
+    jp .return
 
-Jump_000_0E2C::
+.set_fade_state:
     ld a, b
     ld [wFadeState], a
     ld a, $20
@@ -2493,29 +2495,29 @@ Jump_000_0E2C::
     ld de, wOBJPaletteBuffer
     ld c, $20
 
-Jump_000_0E4B::
+.loop2:
     ld a, [de]
     ld [hl+], a
     inc de
     dec c
-    jr nz, Jump_000_0E4B
+    jr nz, .loop2
     ld de, $7FFF
     ld a, [wFadeMode]
     bit 7, a
-    jr z, Jump_000_0E5E
+    jr z, .skip
     ld de, $0000
 
-Jump_000_0E5E::
+.skip:
     ld hl, wOBJPaletteBuffer
     ld c, $10
 
-Jump_000_0E63::
+.loop3:
     ld [hl], e
     inc hl
     ld [hl], d
     inc hl
     dec c
-    jr nz, Jump_000_0E63
+    jr nz, .loop3
     call ClearSGBPacketBuffer
     ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
@@ -2526,7 +2528,7 @@ Jump_000_0E63::
     call SpinDelay
     ld a, [wFadeMask]
     bit 4, a
-    jp z, Jump_000_0F3D
+    jp z, .return
     call ClearSGBPacketBuffer
     ld hl, wOBJPaletteBuffer + $10
     ld de, wSGBPacketBuffer
@@ -2535,20 +2537,20 @@ Jump_000_0E63::
     inc de
     call CopySGBPacketFieldsAndSend
     call SpinDelay
-    jp Jump_000_0F3D
+    jp .return
 
-Jump_000_0E9B::
+.set_fade_state2:
     ld a, b
     ld [wFadeState], a
     farcall StartPaletteFade_WriteFadeLevelAndFadeDelayEtc
-    jp Jump_000_0F3D
+    jp .return
 
-Jump_000_0EA8::
+.check_fade_mode:
     ld a, [wFadeMode]
     bit 7, a
-    jr nz, Jump_000_0EF7
+    jr nz, .skip2
     bit 7, b
-    jr nz, Jump_000_0ED8
+    jr nz, .set_fade_state3
     ld a, b
     ld [wFadeState], a
     ld hl, wFadeDMGPalettes
@@ -2564,9 +2566,9 @@ Jump_000_0EA8::
     add a, $02
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
-    jr Jump_000_0F3D
+    jr .return
 
-Jump_000_0ED8::
+.set_fade_state3:
     ld a, b
     ld [wFadeState], a
     ld a, $04
@@ -2581,11 +2583,11 @@ Jump_000_0ED8::
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
-    jr Jump_000_0F3D
+    jr .return
 
-Jump_000_0EF7::
+.skip2:
     bit 7, b
-    jr nz, Jump_000_0F20
+    jr nz, .set_fade_state4
     ld a, b
     ld [wFadeState], a
     ld hl, wFadeDMGPalettes
@@ -2601,9 +2603,9 @@ Jump_000_0EF7::
     add a, $02
     ld [wFadeDelay], a
     ld [wFadeDelayCounter], a
-    jr Jump_000_0F3D
+    jr .return
 
-Jump_000_0F20::
+.set_fade_state4:
     ld a, b
     ld [wFadeState], a
     ld a, $04
@@ -2619,7 +2621,7 @@ Jump_000_0F20::
     ld [hl+], a
     ld [hl], a
 
-Jump_000_0F3D::
+.return:
     ret
 
 ; copies the 8 bytes at vTiles1 + 8 * HL to DE (E-0122)
@@ -2633,12 +2635,12 @@ Func_000_0F3E:: ; address name
     add hl, bc
     ld c, $08
 
-Jump_000_0F47::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Jump_000_0F47
+    jr nz, .loop
     ret
 
 ; does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)
@@ -2654,60 +2656,60 @@ Func_000_0F4E:: ; address name
     call z, StepFade_WriteSoundFadeTargetAndNR50Etc
     ld a, [wIsCGB]
     or a, a
-    jp nz, Jump_000_10C7
+    jp nz, AdjustColorChannelForFade_CallStepCGBFade
     ld a, [wSGBActive]
     or a, a
-    jp z, Jump_000_10CE
+    jp z, AdjustColorChannelForFade_CheckFadeMode
     ld a, [wFadeState]
     bit 7, a
-    jr nz, Jump_000_0F98
+    jr nz, .check_fade_delay_counter
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_0F78
+    jr z, .read_fade_level
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_0F78::
+.read_fade_level:
     ld a, [wFadeLevel]
     add a, $05
     cp a, $1F
-    jr c, Jump_000_0F83
+    jr c, .set_fade_level
     ld a, $1F
 
-Jump_000_0F83::
+.set_fade_level:
     ld [wFadeLevel], a
     call StepFade_ClearSGBPacketBuffer
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     cp a, $1F
-    jp z, Jump_000_1205
+    jp z, DarkenDMGShade_ClearFadeState
     ret
 
-Jump_000_0F98::
+.check_fade_delay_counter:
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_0FA3
+    jr z, .read_fade_level2
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_0FA3::
+.read_fade_level2:
     ld a, [wFadeLevel]
     sub a, $05
     bit 7, a
-    jr z, Jump_000_0FAD
+    jr z, .set_fade_level2
     xor a, a
 
-Jump_000_0FAD::
+.set_fade_level2:
     ld [wFadeLevel], a
     call StepFade_ClearSGBPacketBuffer
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
     ld a, [wFadeLevel]
     or a, a
-    jp z, Jump_000_1205
+    jp z, DarkenDMGShade_ClearFadeState
     ret
 
 ; only called from StepFade (E-0047)
@@ -2729,7 +2731,7 @@ Func_000_0FC1:: ; address name
     call nz, StepFade_Sub01_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 4, a
-    jr z, Jump_000_0FFC
+    jr z, .call_clear_sgb_packet_buffer
     ld a, [wFadeMask]
     bit 2, a
     ld a, $10
@@ -2741,7 +2743,7 @@ Func_000_0FC1:: ; address name
     ld [wFadeStepSize], a
     call nz, StepFade_Sub01_WriteFadeStepSize
 
-Jump_000_0FFC::
+.call_clear_sgb_packet_buffer:
     call ClearSGBPacketBuffer
     ld hl, wOBJPaletteBuffer
     ld de, wSGBPacketBuffer
@@ -2767,22 +2769,22 @@ CopySGBPacketFieldsAndSend::
 Func_000_1022:: ; address name
     ld c, $08
 
-Jump_000_1024::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Jump_000_1024
+    jr nz, .loop
     inc hl
     inc hl
     ld c, $06
 
-Jump_000_102E::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Jump_000_102E
+    jr nz, .loop2
     ld a, $FF
     ld [wSGBPacketIndex], a
     farcall_b SendSGBPacketSet
@@ -2877,42 +2879,44 @@ Func_000_10AB:: ; address name
     ld c, a
     pop af
     bit 7, c
-    jr nz, Jump_000_10C0
+    jr nz, .skip
     and a, $1F
     add a, b
     cp a, $1F
-    jr c, Jump_000_10C6
+    jr c, .return
     ld a, $1F
-    jr Jump_000_10C6
+    jr .return
 
-Jump_000_10C0::
+.skip:
     and a, $1F
     sub a, b
-    jr nc, Jump_000_10C6
+    jr nc, .return
     xor a, a
 
-Jump_000_10C6::
+.return:
     ret
 
-Jump_000_10C7::
+AdjustColorChannelForFade_CallStepCGBFade::
+Jump_000_10C7:: ; address name
     farcall StepCGBFade
     ret
 
-Jump_000_10CE::
+AdjustColorChannelForFade_CheckFadeMode::
+Jump_000_10CE:: ; address name
     ld a, [wFadeMode]
     bit 7, a
-    jp nz, Jump_000_116D
+    jp nz, LightenDMGShade_CheckFadeState
     ld a, [wFadeState]
     bit 7, a
-    jr nz, Jump_000_10FE
+    jr nz, .check_fade_delay_counter
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_10E8
+    jr z, .call_lighten_selected_dmg_palettes
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_10E8::
+.call_lighten_selected_dmg_palettes:
     call LightenSelectedDMGPalettes
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
@@ -2920,18 +2924,18 @@ Jump_000_10E8::
     inc a
     ld [wFadeLevel], a
     cp a, $04
-    jp z, Jump_000_1205
+    jp z, DarkenDMGShade_ClearFadeState
     ret
 
-Jump_000_10FE::
+.check_fade_delay_counter:
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_1109
+    jr z, .call_lighten_selected_dmg_palettes2
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_1109::
+.call_lighten_selected_dmg_palettes2:
     call LightenSelectedDMGPalettes
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
@@ -2939,7 +2943,7 @@ Jump_000_1109::
     dec a
     ld [wFadeLevel], a
     cp a, $FF
-    jp z, Jump_000_1205
+    jp z, DarkenDMGShade_ClearFadeState
     ret
 
 ; for each of bits 0, 1, 2 of wC56D that is set, lightens wC56F, wC570 or wC571 by wFadeLevel into wC5E9, wC5EA or wC5EB (LightenDMGPaletteByFadeLevel) (E-0117)
@@ -2996,28 +3000,29 @@ LightenDMGShade::
 Func_000_1160:: ; address name
     and a, $03
     sub a, b
-    jr nc, Jump_000_1166
+    jr nc, .skip
     xor a, a
 
-Jump_000_1166::
+.skip:
     or a, c
     ld c, a
     rrc c
     rrc c
     ret
 
-Jump_000_116D::
+LightenDMGShade_CheckFadeState::
+Jump_000_116D:: ; address name
     ld a, [wFadeState]
     bit 7, a
-    jr nz, Jump_000_1194
+    jr nz, .check_fade_delay_counter
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_117F
+    jr z, .call_lighten_dmg_shade_darken_dmg_palette_by
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_117F::
+.call_lighten_dmg_shade_darken_dmg_palette_by:
     call LightenDMGShade_DarkenDMGPaletteByFadeLevel
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
@@ -3025,18 +3030,18 @@ Jump_000_117F::
     inc a
     ld [wFadeLevel], a
     cp a, $04
-    jr z, Jump_000_1205
+    jr z, DarkenDMGShade_ClearFadeState
     ret
 
-Jump_000_1194::
+.check_fade_delay_counter:
     ld a, [wFadeDelayCounter]
     or a, a
-    jr z, Jump_000_119F
+    jr z, .call_lighten_dmg_shade_darken_dmg_palette_by2
     dec a
     ld [wFadeDelayCounter], a
     ret
 
-Jump_000_119F::
+.call_lighten_dmg_shade_darken_dmg_palette_by2:
     call LightenDMGShade_DarkenDMGPaletteByFadeLevel
     ld a, [wFadeDelay]
     ld [wFadeDelayCounter], a
@@ -3044,7 +3049,7 @@ Jump_000_119F::
     dec a
     ld [wFadeLevel], a
     cp a, $FF
-    jr z, Jump_000_1205
+    jr z, DarkenDMGShade_ClearFadeState
     ret
 
 ; only called from LightenDMGShade (E-0047)
@@ -3102,17 +3107,18 @@ Func_000_11F5:: ; address name
     and a, $03
     add a, b
     cp a, $03
-    jr c, Jump_000_11FE
+    jr c, .skip
     ld a, $03
 
-Jump_000_11FE::
+.skip:
     or a, c
     ld c, a
     rrc c
     rrc c
     ret
 
-Jump_000_1205::
+DarkenDMGShade_ClearFadeState::
+Jump_000_1205:: ; address name
     xor a, a
     ld [wFadeState], a
     ret
@@ -3136,10 +3142,10 @@ Func_000_1211:: ; address name
     ldh [hVRAMWriteByte], a
     di
 
-Jump_000_1214::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_1214
+    jr nz, .loop
     ldh a, [hVRAMWriteByte]
     ld [hl], a
     ei
@@ -3154,10 +3160,10 @@ Func_000_121F:: ; address name
     ldh [hVRAMWriteByte], a
     di
 
-Jump_000_1222::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_1222
+    jr nz, .loop
     ldh a, [hVRAMWriteByte]
     ld [hl+], a
     ei
@@ -3182,41 +3188,41 @@ Func_000_1231:: ; address name
     call InitSoundHardware
     ld a, [wCurrentMusic]
     or a, a
-    jr z, Jump_000_1276
+    jr z, .done
     ld [wSoundId], a
     cp a, $02
-    jr z, Jump_000_126E
+    jr z, .call_start_music_start_sound
     cp a, $0F
-    jr z, Jump_000_126E
+    jr z, .call_start_music_start_sound
     cp a, $40
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $42
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $44
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $46
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $48
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $50
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $52
-    jr z, Jump_000_1273
+    jr z, .call_start_two_sound_tracks
     cp a, $58
-    jr z, Jump_000_126E
+    jr z, .call_start_music_start_sound
     call StartThreeSoundTracks
     ei
     ret
 
-Jump_000_126E::
+.call_start_music_start_sound:
     call StartMusic_StartSound
     ei
     ret
 
-Jump_000_1273::
+.call_start_two_sound_tracks:
     call StartTwoSoundTracks
 
-Jump_000_1276::
+.done:
     ei
     ret
 
@@ -3239,65 +3245,65 @@ Func_000_127C:: ; address name
     push hl
     ld [wSoundId], a
     cp a, $63
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $67
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $6D
-    jp z, Jump_000_1310
+    jp z, .call_start_three_sound_tracks
     cp a, $70
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $72
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $74
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $7E
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $89
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $8B
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $8D
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $91
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $9F
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $A5
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $AC
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $AE
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $B2
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $B6
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $B8
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $BA
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $BD
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $BF
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $C1
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $C3
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $C5
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $C7
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $C9
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $D2
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $D4
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $DA
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     cp a, $DD
-    jr z, Jump_000_1306
+    jr z, .call_start_two_sound_tracks
     di
     call StartSound
     ei
@@ -3307,7 +3313,7 @@ Func_000_127C:: ; address name
     pop af
     ret
 
-Jump_000_1306::
+.call_start_two_sound_tracks:
     di
     call StartTwoSoundTracks
     ei
@@ -3317,7 +3323,7 @@ Jump_000_1306::
     pop af
     ret
 
-Jump_000_1310::
+.call_start_three_sound_tracks:
     di
     call StartThreeSoundTracks
     ei
@@ -3335,20 +3341,20 @@ ProcessSoundQueue::
 Func_000_131A:: ; address name
     ld a, [wMusicRequest]
     cp a, $FF
-    jr z, Jump_000_1329
+    jr z, .check_sound_effect_request
     call StartMusic
     ld a, $FF
     ld [wMusicRequest], a
 
-Jump_000_1329::
+.check_sound_effect_request:
     ld a, [wSoundEffectRequest]
     cp a, $FF
-    jr z, Jump_000_1338
+    jr z, .return
     call StartSoundEffect
     ld a, $FF
     ld [wSoundEffectRequest], a
 
-Jump_000_1338::
+.return:
     ret
 
 ; a lone ret after the sound-effect request step's ret; nothing reaches it (E-0239)
@@ -3366,28 +3372,28 @@ Func_000_133A:: ; address name
     ld b, a
     ld a, [wFieldInitStage]
     or a, a
-    jr nz, Jump_000_1378
+    jr nz, .clear_sound_fade_level
     ld a, b
     bit 7, a
-    jr nz, Jump_000_1378
+    jr nz, .clear_sound_fade_level
     or a, a
-    jr z, Jump_000_1378
+    jr z, .clear_sound_fade_level
     ld [wSoundFadeLevel], a
     ld a, [wSGBActive]
     or a, a
-    jr nz, Jump_000_135A
+    jr nz, .skip
     ld a, [wSoundFadeLevel]
     sra a
     ld [wSoundFadeLevel], a
 
-Jump_000_135A::
+.skip:
     ldh a, [rNR50]
     bit 7, a
-    jr nz, Jump_000_1378
+    jr nz, .clear_sound_fade_level
     bit 3, a
-    jr nz, Jump_000_1378
+    jr nz, .clear_sound_fade_level
     or a, a
-    jr z, Jump_000_1378
+    jr z, .clear_sound_fade_level
     ld a, [wSoundFadeLevel]
     ld [wSoundFadeTarget], a
     ld a, $08
@@ -3396,7 +3402,7 @@ Jump_000_135A::
     ld [wSoundFadeNR50], a
     ret
 
-Jump_000_1378::
+.clear_sound_fade_level:
     xor a, a
     ld [wSoundFadeLevel], a
     ret
@@ -3409,27 +3415,27 @@ StepFade_WriteSoundFadeTargetAndNR50Etc::
 Func_000_137D:: ; address name
     ld a, [wFieldInitStage]
     or a, a
-    jr nz, Jump_000_13E0
+    jr nz, .clear_sound_fade_level
     ld a, [wSoundFadeLevel]
     bit 7, a
-    jr nz, Jump_000_13E0
+    jr nz, .clear_sound_fade_level
     or a, a
     ret z
     ld a, [wSoundFadeTarget]
     or a, a
-    jr z, Jump_000_1397
+    jr z, .skip
     dec a
     ld [wSoundFadeTarget], a
     ret
 
-Jump_000_1397::
+.skip:
     ldh a, [rNR50]
     and a, $88
     cp a, $88
-    jr z, Jump_000_13E0
+    jr z, .clear_sound_fade_level
     ld a, [wSoundFadeNR50]
     or a, a
-    jr z, Jump_000_13E0
+    jr z, .clear_sound_fade_level
     ld b, a
     and a, $0F
     ld d, a
@@ -3438,42 +3444,42 @@ Jump_000_1397::
     and a, $0F
     ld c, a
     bit 3, c
-    jr nz, Jump_000_13B8
+    jr nz, .skip2
     ld a, c
     or a, a
-    jr z, Jump_000_13B8
+    jr z, .skip2
     dec c
 
-Jump_000_13B8::
+.skip2:
     bit 3, d
-    jr nz, Jump_000_13C1
+    jr nz, .skip3
     ld a, d
     or a, a
-    jr z, Jump_000_13C1
+    jr z, .skip3
     dec d
 
-Jump_000_13C1::
+.skip3:
     ld a, c
     swap a
     or a, d
     ldh [rNR50], a
     ld [wSoundFadeNR50], a
     or a, a
-    jr z, Jump_000_13DE
+    jr z, .skip4
     ld a, [wSoundFadeTimer]
     or a, a
-    jr z, Jump_000_13E0
+    jr z, .clear_sound_fade_level
     dec a
     ld [wSoundFadeTimer], a
     ld a, [wSoundFadeLevel]
     ld [wSoundFadeTarget], a
     ret
 
-Jump_000_13DE::
+.skip4:
     di
     ei
 
-Jump_000_13E0::
+.clear_sound_fade_level:
     xor a, a
     ld [wSoundFadeLevel], a
     ret
@@ -3488,7 +3494,7 @@ Func_000_13E5:: ; address name
     ret z
     ld [hl], a
     cp a, $00
-    jr nz, Jump_000_1419
+    jr nz, .cp_01
     ld a, $10
     ld e, LOW(SGBBorder0TilesA)
     ld d, HIGH(SGBBorder0TilesA)
@@ -3506,11 +3512,11 @@ Func_000_13E5:: ; address name
     ld d, HIGH(SGBBorder0MapAndPalettes)
     ld b, BANK(SGBBorder0MapAndPalettes)
     call SGBTransferCompressed
-    jp Jump_000_14CF
+    jp .return
 
-Jump_000_1419::
+.cp_01:
     cp a, $01
-    jr nz, Jump_000_1447
+    jr nz, .cp_02
     ld a, $10
     ld e, LOW(SGBBorder1TilesA)
     ld d, HIGH(SGBBorder1TilesA)
@@ -3528,11 +3534,11 @@ Jump_000_1419::
     ld d, HIGH(SGBBorder1MapAndPalettes)
     ld b, BANK(SGBBorder1MapAndPalettes)
     call SGBTransferCompressed
-    jp Jump_000_14CF
+    jp .return
 
-Jump_000_1447::
+.cp_02:
     cp a, $02
-    jr nz, Jump_000_1474
+    jr nz, .cp_03
     ld a, $10
     ld e, LOW(SGBBorder2TilesA)
     ld d, HIGH(SGBBorder2TilesA)
@@ -3550,11 +3556,11 @@ Jump_000_1447::
     ld d, HIGH(SGBBorder2MapAndPalettes)
     ld b, BANK(SGBBorder2MapAndPalettes)
     call SGBTransferCompressed
-    jr Jump_000_14CF
+    jr .return
 
-Jump_000_1474::
+.cp_03:
     cp a, $03
-    jr nz, Jump_000_14A1
+    jr nz, .cp_04
     ld a, $10
     ld e, LOW(SGBBorder3TilesA)
     ld d, HIGH(SGBBorder3TilesA)
@@ -3572,11 +3578,11 @@ Jump_000_1474::
     ld d, HIGH(SGBBorder3MapAndPalettes)
     ld b, BANK(SGBBorder3MapAndPalettes)
     call SGBTransferCompressed
-    jr Jump_000_14CF
+    jr .return
 
-Jump_000_14A1::
+.cp_04:
     cp a, $04
-    jr nz, Jump_000_14CF
+    jr nz, .return
     ld a, $10
     ld e, LOW(SGBBorder4TilesA)
     ld d, HIGH(SGBBorder4TilesA)
@@ -3596,7 +3602,7 @@ Jump_000_14A1::
     call SGBTransferCompressed
     call SpinDelay
 
-Jump_000_14CF::
+.return:
     ret
     db $C9
 
@@ -3609,7 +3615,7 @@ ClearSGBPacketBuffer_WaitSerialTransferDone::
 Func_000_14D1:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jp z, Jump_000_1575
+    jp z, .clear_link_exchange_state
     ld a, $08
     call ClearSGBPacketBuffer_WriteIFAndIE
     ld a, [wLinkStatus]
@@ -3618,73 +3624,73 @@ Func_000_14D1:: ; address name
     ld [wLinkStatus], a
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_000_14F6
+    jr nz, .check_link_session
     ld hl, $6000
 
-Jump_000_14F1::
+.loop:
     dec hl
     ld a, h
     or a, l
-    jr nz, Jump_000_14F1
+    jr nz, .loop
 
-Jump_000_14F6::
+.check_link_session:
     ei
     ld a, [wLinkSession]
     cp a, $05
-    jr nz, Jump_000_150D
+    jr nz, .call_clear_sgb_packet_buffer_sub02_start
     call ClearSGBPacketBuffer_Sub02_SerialSendByte
     call WaitSerialTransferDone
     ldh a, [rSB]
     cp a, $F5
     call nz, ClearSGBPacketBuffer_Sub02_SerialSendByte
-    jr Jump_000_1558
+    jr .read_link_status
 
-Jump_000_150D::
+.call_clear_sgb_packet_buffer_sub02_start:
     call ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock
     cp a, $02
-    jr z, Jump_000_1517
+    jr z, .skip
     call WaitSerialTransferDone
 
-Jump_000_1517::
+.skip:
     ldh a, [rSB]
     cp a, $70
-    jr z, Jump_000_1524
+    jr z, .check_link_session2
     cp a, $71
-    jr z, Jump_000_1524
+    jr z, .check_link_session2
     call ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock
 
-Jump_000_1524::
+.check_link_session2:
     ld b, a
     ld a, [wLinkSession]
     cp a, $05
-    jr z, Jump_000_1558
+    jr z, .read_link_status
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_000_1545
+    jr nz, .check_is_cgb
     ld a, [wIsCGB]
     and a, a
-    jr nz, Jump_000_1558
+    jr nz, .read_link_status
     ld a, b
     bit 0, a
-    jr z, Jump_000_1558
+    jr z, .read_link_status
     ld a, [wLinkRole]
     set 1, a
-    jr Jump_000_1555
+    jr .set_link_role
 
-Jump_000_1545::
+.check_is_cgb:
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_000_1558
+    jr z, .read_link_status
     ld a, b
     bit 0, a
-    jr nz, Jump_000_1558
+    jr nz, .read_link_status
     ld a, [wLinkRole]
     res 1, a
 
-Jump_000_1555::
+.set_link_role:
     ld [wLinkRole], a
 
-Jump_000_1558::
+.read_link_status:
     di
     ld a, [wLinkStatus]
     res 7, a
@@ -3698,16 +3704,16 @@ Jump_000_1558::
     ld a, $F8
     call nz, SerialSendByte
 
-Jump_000_1575::
+.clear_link_exchange_state:
     xor a, a
     ld [wLinkExchangeState], a
     ld hl, wJoypadHeld
     ld b, $0E
 
-Jump_000_157E::
+.loop2:
     ld [hl+], a
     dec b
-    jr nz, Jump_000_157E
+    jr nz, .loop2
     ret
 
 ; only called from ClearSGBPacketBuffer_Sub02 (E-0047)
@@ -3718,18 +3724,18 @@ ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock::
 Func_000_1583:: ; address name
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_000_1594
+    jr nz, .check_is_cgb
     ld a, [wIsCGB]
     or a, $70
     call StartSerialTransferInternalClock
-    jr Jump_000_159C
+    jr .loop
 
-Jump_000_1594::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, $70
     call SerialSendByte
 
-Jump_000_159C::
+.loop:
     ld a, [wLinkTimerLo]
     add a, $01
     ld [wLinkTimerLo], a
@@ -3738,14 +3744,14 @@ Jump_000_159C::
     ld [wLinkTimerHi], a
     ld a, [wLinkTimerHi]
     cp a, $FF
-    jr nc, Jump_000_15BC
+    jr nc, .set_link_frame_counter_hi_to_02
     ld a, [wLinkStatus]
     bit 6, a
-    jr z, Jump_000_159C
+    jr z, .loop
     xor a, a
     ret
 
-Jump_000_15BC::
+.set_link_frame_counter_hi_to_02:
     ld a, $02
     ld [wLinkFrameCounterHi], a
     ret
@@ -3764,10 +3770,10 @@ Func_000_15C2:: ; address name
     ld a, $F5
     call z, StartSerialTransferInternalClock
 
-Jump_000_15D6::
+.loop:
     ld a, [wLinkStatus]
     bit 6, a
-    jr z, Jump_000_15D6
+    jr z, .loop
     ret
 
 ; A = ROM bank, DE = source in that bank, B = width, C = rows, HL = VRAM with rows 32 bytes apart: switches to the bank, copies the rectangle with WriteVRAMByteInc (interrupts off per byte; source rows packed), then restores the bank; B kept (E-0071)
@@ -3785,31 +3791,31 @@ Func_000_15DE:: ; address name
     pop bc
     push af
 
-Jump_000_15EB::
+.skip:
     push hl
     push bc
 
-Jump_000_15ED::
+.loop:
     di
     ld a, [de]
     call WriteVRAMByteInc
     ei
     inc de
     dec b
-    jr nz, Jump_000_15ED
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1606
+    jr z, .done
     ld a, l
     add a, $20
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    jr Jump_000_15EB
+    jr .skip
 
-Jump_000_1606::
+.done:
     pop af
     ld [rROMB0], a
     ret
@@ -3829,18 +3835,18 @@ Func_000_160B:: ; address name
     pop bc
     push af
 
-Jump_000_1618::
+.skip:
     push hl
     push bc
 
-Jump_000_161A::
+.loop:
     di
     ld a, [de]
     call WriteVRAMByteInc
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_162D
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -3848,14 +3854,14 @@ Jump_000_161A::
     sbc a, $00
     ld h, a
 
-Jump_000_162D::
+.next:
     inc de
     dec b
-    jr nz, Jump_000_161A
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1644
+    jr z, .done
     ld a, l
     add a, $20
     ld l, a
@@ -3865,9 +3871,9 @@ Jump_000_162D::
     ld a, h
     and a, $9B
     ld h, a
-    jr Jump_000_1618
+    jr .skip
 
-Jump_000_1644::
+.done:
     pop af
     ld [rROMB0], a
     ret
@@ -3881,11 +3887,11 @@ Func_000_1649:: ; address name
     ld de, wScreenTileBuffer
     ld c, $20
 
-Jump_000_1651::
+.loop:
     ld b, $20
     push hl
 
-Jump_000_1654::
+.loop2:
     ld a, [de]
     call WriteVRAMByte
     ld a, l
@@ -3900,7 +3906,7 @@ Jump_000_1654::
     ld l, a
     inc de
     dec b
-    jr nz, Jump_000_1654
+    jr nz, .loop2
     pop hl
     push bc
     ld bc, $0020
@@ -3911,7 +3917,7 @@ Jump_000_1654::
     ld h, a
     pop bc
     dec c
-    jr nz, Jump_000_1651
+    jr nz, .loop
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
@@ -3941,31 +3947,31 @@ Func_000_1682:: ; address name
 Multiply8_Sub01::
 Func_000_1689:: ; address name
     rrca
-    jr nc, Jump_000_168D
+    jr nc, .skip
     add hl, bc
 
-Jump_000_168D::
+.skip:
     sla c
     rl b
     rrca
-    jr nc, Jump_000_1695
+    jr nc, .skip2
     add hl, bc
 
-Jump_000_1695::
+.skip2:
     sla c
     rl b
     rrca
-    jr nc, Jump_000_169D
+    jr nc, .skip3
     add hl, bc
 
-Jump_000_169D::
+.skip3:
     sla c
     rl b
     rrca
-    jr nc, Jump_000_16A5
+    jr nc, .done
     add hl, bc
 
-Jump_000_16A5::
+.done:
     sla c
     rl b
     ret
@@ -3999,20 +4005,20 @@ Func_000_16BF:: ; address name
     ld e, a
     xor a, a
 
-Jump_000_16C3::
+.loop:
     sla b
     rla
-    jr c, Jump_000_16CB
+    jr c, .skip
     cp a, e
-    jr c, Jump_000_16CD
+    jr c, .next
 
-Jump_000_16CB::
+.skip:
     sub a, e
     inc b
 
-Jump_000_16CD::
+.next:
     dec d
-    jr nz, Jump_000_16C3
+    jr nz, .loop
     ret
 
 ; HL = HL / A (quotient in HL), A = remainder; clobbers D, E
@@ -4023,20 +4029,20 @@ Func_000_16D1:: ; address name
     ld e, a
     xor a, a
 
-Jump_000_16D5::
+.loop:
     add hl, hl
     rla
-    jr c, Jump_000_16DC
+    jr c, .skip
     cp a, e
-    jr c, Jump_000_16DE
+    jr c, .next
 
-Jump_000_16DC::
+.skip:
     sub a, e
     inc l
 
-Jump_000_16DE::
+.next:
     dec d
-    jr nz, Jump_000_16D5
+    jr nz, .loop
     ret
 
 ; E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D
@@ -4047,21 +4053,21 @@ Func_000_16E2:: ; address name
     ld b, a
     xor a, a
 
-Jump_000_16E6::
+.loop:
     add hl, hl
     rl e
     rla
-    jr c, Jump_000_16EF
+    jr c, .skip
     cp a, b
-    jr c, Jump_000_16F1
+    jr c, .next
 
-Jump_000_16EF::
+.skip:
     sub a, b
     inc l
 
-Jump_000_16F1::
+.next:
     dec d
-    jr nz, Jump_000_16E6
+    jr nz, .loop
     ret
 
 ; HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones
@@ -4075,7 +4081,7 @@ Func_000_16F5:: ; address name
     ld [wDigits + $1], a
     ld [wDigits + $2], a
 
-Jump_000_16FF::
+.loop:
     ld a, [wDigits]
     inc a
     ld [wDigits], a
@@ -4083,14 +4089,14 @@ Jump_000_16FF::
     add hl, bc
     ld a, h
     rlc a
-    jr nc, Jump_000_16FF
+    jr nc, .loop
     ld bc, $0064
     add hl, bc
     ld a, [wDigits]
     dec a
     ld [wDigits], a
 
-Jump_000_171A::
+.loop2:
     ld a, [wDigits + $1]
     inc a
     ld [wDigits + $1], a
@@ -4098,7 +4104,7 @@ Jump_000_171A::
     add hl, bc
     ld a, h
     rlc a
-    jr nc, Jump_000_171A
+    jr nc, .loop2
     ld bc, $000A
     add hl, bc
     ld a, [wDigits + $1]
@@ -4129,7 +4135,7 @@ Func_000_173A:: ; address name
     ld d, a
     ld e, $00
 
-Jump_000_174E::
+.skip:
     ld a, c
     sub a, $40
     ld c, a
@@ -4139,7 +4145,7 @@ Jump_000_174E::
     ld a, d
     sbc a, $0F
     ld d, a
-    jr c, Jump_000_1768
+    jr c, .set_temp3
     ld hl, wDigits
     ld a, c
     ld [hl+], a
@@ -4148,9 +4154,9 @@ Jump_000_174E::
     ld a, d
     ld [hl+], a
     inc e
-    jr Jump_000_174E
+    jr .skip
 
-Jump_000_1768::
+.set_temp3:
     ld a, e
     ldh [hTemp3], a
     ld hl, wDigits
@@ -4162,7 +4168,7 @@ Jump_000_1768::
     ld d, a
     ld e, $00
 
-Jump_000_1776::
+.skip2:
     ld a, c
     sub a, $A0
     ld c, a
@@ -4172,7 +4178,7 @@ Jump_000_1776::
     ld a, d
     sbc a, $01
     ld d, a
-    jr c, Jump_000_1790
+    jr c, .set_temp2
     ld hl, wDigits
     ld a, c
     ld [hl+], a
@@ -4181,9 +4187,9 @@ Jump_000_1776::
     ld a, d
     ld [hl+], a
     inc e
-    jr Jump_000_1776
+    jr .skip2
 
-Jump_000_1790::
+.set_temp2:
     ld a, e
     swap a
     ldh [hTemp2], a
@@ -4196,7 +4202,7 @@ Jump_000_1790::
     ld d, a
     ld e, $00
 
-Jump_000_17A0::
+.skip3:
     ld a, c
     sub a, $10
     ld c, a
@@ -4206,7 +4212,7 @@ Jump_000_17A0::
     ld a, d
     sbc a, $00
     ld d, a
-    jr c, Jump_000_17BA
+    jr c, .read_temp2
     ld hl, wDigits
     ld a, c
     ld [hl+], a
@@ -4215,9 +4221,9 @@ Jump_000_17A0::
     ld a, d
     ld [hl+], a
     inc e
-    jr Jump_000_17A0
+    jr .skip3
 
-Jump_000_17BA::
+.read_temp2:
     ldh a, [hTemp2]
     add a, e
     ldh [hTemp2], a
@@ -4228,23 +4234,23 @@ Jump_000_17BA::
     ld b, a
     ld e, $00
 
-Jump_000_17C8::
+.skip4:
     ld a, c
     sub a, $E8
     ld c, a
     ld a, b
     sbc a, $03
     ld b, a
-    jr c, Jump_000_17DC
+    jr c, .set_temp1
     ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
     ld [hl+], a
     inc e
-    jr Jump_000_17C8
+    jr .skip4
 
-Jump_000_17DC::
+.set_temp1:
     ld a, e
     swap a
     ldh [hTemp1], a
@@ -4255,37 +4261,37 @@ Jump_000_17DC::
     ld b, a
     ld e, $00
 
-Jump_000_17EA::
+.skip5:
     ld a, c
     sub a, $64
     ld c, a
     ld a, b
     sbc a, $00
     ld b, a
-    jr c, Jump_000_17FE
+    jr c, .read_temp1
     ld hl, wDigits
     ld a, c
     ld [hl+], a
     ld a, b
     ld [hl+], a
     inc e
-    jr Jump_000_17EA
+    jr .skip5
 
-Jump_000_17FE::
+.read_temp1:
     ldh a, [hTemp1]
     add a, e
     ldh [hTemp1], a
     ld a, [wDigits]
     ld e, $00
 
-Jump_000_1808::
+.skip6:
     sub a, $0A
-    jr c, Jump_000_1812
+    jr c, .read_digits
     ld [wDigits], a
     inc e
-    jr Jump_000_1808
+    jr .skip6
 
-Jump_000_1812::
+.read_digits:
     swap e
     ld a, [wDigits]
     add a, e
@@ -4312,22 +4318,22 @@ Func_000_181B:: ; address name
     ld c, $01
     ld a, b
     and a, $07
-    jr z, Jump_000_183D
+    jr z, .skip
     ld b, a
 
-Jump_000_1838::
+.loop:
     sla c
     dec b
-    jr nz, Jump_000_1838
+    jr nz, .loop
 
-Jump_000_183D::
+.skip:
     ld a, [de]
     and a, c
-    jr nz, Jump_000_1843
+    jr nz, .return_carry
     sub a, a
     ret
 
-Jump_000_1843::
+.return_carry:
     scf
     ret
 
@@ -4337,7 +4343,7 @@ SetFlagBit::
 Func_000_1845:: ; address name
     ld a, d
     cp a, $03
-    jr nc, Jump_000_1870
+    jr nc, .skip2
     ld b, e
     sra d
     rr e
@@ -4354,22 +4360,22 @@ Func_000_1845:: ; address name
     ld c, $01
     ld a, b
     and a, $07
-    jr z, Jump_000_186C
+    jr z, .skip
     ld b, a
 
-Jump_000_1867::
+.loop:
     sla c
     dec b
-    jr nz, Jump_000_1867
+    jr nz, .loop
 
-Jump_000_186C::
+.skip:
     ld a, [de]
     or a, c
     ld [de], a
     ret
 
-Jump_000_1870::
-    jr Jump_000_1870
+.skip2:
+    jr .skip2
 
 ; B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored
 ; 73 call sites from 24 routines (e.g. DebugMonsterPictureViewer_Update, ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB, DecompressGraphicsArg1ToArg4, LoadSpeciesSpriteGraphicsAndPalette, ...)
@@ -4395,31 +4401,31 @@ Func_000_1881:: ; address name
     ld a, b
     ld [wTextWindowTileLo], a
 
-Jump_000_1885::
+.loop:
     push bc
     ld de, $2940
     ld c, $10
 
-Jump_000_188B::
+.loop2:
     di
 
-Jump_000_188C::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_188C
+    jr nz, .loop3
     ld a, [de]
     ld [hl+], a
     ei
     inc de
     dec c
-    jr nz, Jump_000_188B
+    jr nz, .loop2
     pop bc
     dec b
-    jr nz, Jump_000_1885
+    jr nz, .loop
     ld a, [wTextWindowTileLo]
     ld b, a
     dec c
-    jr nz, Jump_000_1885
+    jr nz, .loop
     ret
 
 ; B = width, C = rows, DE = source, HL = BG map address: copies a B x C rectangle, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF (H &= $9B). Each byte is written with interrupts off after rSTAT bit 1 clears. DE ends past the source, HL at the last row start, C = 0; B kept (E-0059)
@@ -4430,19 +4436,19 @@ Func_000_18A5:: ; address name
     push hl
     push bc
 
-Jump_000_18A7::
+.loop:
     di
 
-Jump_000_18A8::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_18A8
+    jr nz, .loop2
     ld a, [de]
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_18BE
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -4450,14 +4456,14 @@ Jump_000_18A8::
     sbc a, $00
     ld h, a
 
-Jump_000_18BE::
+.next:
     inc de
     dec b
-    jr nz, Jump_000_18A7
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_18D5
+    jr z, .return
     ld a, l
     add a, $20
     ld l, a
@@ -4469,7 +4475,7 @@ Jump_000_18BE::
     ld h, a
     jr CopyRectToBGMapWrapped
 
-Jump_000_18D5::
+.return:
     ret
 
 ; with ROM bank B mapped, reads three bytes at DE: HL = the word, B = the third byte (a far pointer: address then bank); DE += 3; restores the bank (E-0090)
@@ -4566,7 +4572,7 @@ Func_000_1906:: ; address name
     ld [rROMB0], a
     ld a, [wIsCGB]
     or a, a
-    jr nz, Jump_000_1978
+    jr nz, .read_temp0
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4574,9 +4580,9 @@ Func_000_1906:: ; address name
     inc hl
     inc hl
     inc hl
-    jr Jump_000_19A4
+    jr .done
 
-Jump_000_1978::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4608,7 +4614,7 @@ Jump_000_1978::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_000_19A4::
+.done:
     pop af
     ld [rROMB0], a
     ret
@@ -4622,11 +4628,11 @@ LoadMapScreen::
 Func_000_19A9:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_000_19B7
+    jr z, .skip
     farcall LoadMapScreen_ReadMapType
     ret
 
-Jump_000_19B7::
+.skip:
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $11
@@ -4647,9 +4653,9 @@ Jump_000_19B7::
     ld a, [de]
     ld b, $08
 
-Jump_000_19D9::
+.loop:
     sla a
-    jr c, Jump_000_19E6
+    jr c, .set_temp0
     dec hl
     dec hl
     dec hl
@@ -4657,9 +4663,9 @@ Jump_000_19D9::
     dec hl
     dec hl
     dec b
-    jr nz, Jump_000_19D9
+    jr nz, .loop
 
-Jump_000_19E6::
+.set_temp0:
     ld a, l
     ldh [hTemp0], a
     ld a, h
@@ -4701,7 +4707,7 @@ Jump_000_19E6::
     ld [rROMB0], a
     ld a, [wIsCGB]
     or a, a
-    jr nz, Jump_000_1A36
+    jr nz, .read_temp0
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4709,9 +4715,9 @@ Jump_000_19E6::
     inc hl
     inc hl
     inc hl
-    jr Jump_000_1A62
+    jr .call_apply_map_screen_flag_events
 
-Jump_000_1A36::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4743,7 +4749,7 @@ Jump_000_1A36::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_000_1A62::
+.call_apply_map_screen_flag_events:
     pop af
     ld [rROMB0], a
     farcall ApplyMapScreenFlagEvents
@@ -4760,42 +4766,42 @@ LoadMapScreen_WriteTemp0::
 Func_000_1A73:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_000_1AB3
+    jp nz, .return
     ldh a, [hMapId]
     ld c, a
     ld b, $00
     ld hl, $1AB4
 
-Jump_000_1A83::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_000_1A89
+    jr nz, .skip2
     ret
 
-Jump_000_1A89::
+.skip2:
     cp a, c
-    jr z, Jump_000_1A92
+    jr z, .check_key_world_active
     inc hl
     inc hl
     inc hl
     inc b
-    jr Jump_000_1A83
+    jr .skip
 
-Jump_000_1A92::
+.check_key_world_active:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_000_1AA9
+    jr z, .skip3
     ld a, [wKeyWorldKey]
     dec a
     cp a, b
-    jr nz, Jump_000_1AA9
+    jr nz, .skip3
     ld de, wKeyWorldGoal
     ld a, b
     ldh [hTemp0], a
     call LoadMapScreen_Sub01_WriteSVBK
     ret
 
-Jump_000_1AA9::
+.skip3:
     ld e, l
     ld d, h
     inc de
@@ -4804,7 +4810,7 @@ Jump_000_1AA9::
     call LoadMapScreen_Sub01_WriteSVBK
     ret
 
-Jump_000_1AB3::
+.return:
     ret
     db $20, $44, $00, $30, $44, $76, $48, $44, $B4, $70, $44, $B4, $A0, $44, $10, $A8
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
@@ -4870,7 +4876,7 @@ Func_000_1AD6:: ; address name
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_1B6D
+    jr z, .done
     ld a, l
     add a, $00
     ld l, a
@@ -4882,19 +4888,19 @@ Func_000_1AD6:: ; address name
     ld c, $03
     ldh a, [hTemp0]
     cp a, $04
-    jr z, Jump_000_1B5C
+    jr z, .skip
     cp a, $0A
-    jr z, Jump_000_1B5C
+    jr z, .skip
     ld c, $05
     cp a, $05
-    jr z, Jump_000_1B5C
+    jr z, .skip
     cp a, $06
-    jr z, Jump_000_1B5C
+    jr z, .skip
     cp a, $07
-    jr z, Jump_000_1B5C
+    jr z, .skip
     ld c, $01
 
-Jump_000_1B5C::
+.skip:
     ld a, c
     ld [hl+], a
     ld [hl], a
@@ -4906,7 +4912,7 @@ Jump_000_1B5C::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_000_1B6D::
+.done:
     pop hl
     ret
 
@@ -4923,7 +4929,7 @@ Func_000_1B6F:: ; address name
     ret nz
     ldh a, [hMapId]
     cp a, $0D
-    jr nz, Jump_000_1B95
+    jr nz, .cp_05
     ld hl, wScreenTileBuffer + $14A
     ld [hl], $44
     inc hl
@@ -4935,7 +4941,7 @@ Func_000_1B6F:: ; address name
     ld [hl], $47
     ret
 
-Jump_000_1B95::
+.cp_05:
     cp a, $05
     ret nz
     ld hl, wScreenTileBuffer + $32
@@ -5022,11 +5028,11 @@ LoadMapHeader::
 Func_000_1C0C:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_000_1C1A
+    jr z, .skip
     farcall LoadMapHeaderByMapType
     ret
 
-Jump_000_1C1A::
+.skip:
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $11
@@ -5042,7 +5048,7 @@ Jump_000_1C1A::
     ld hl, vTiles2
     ldh a, [hMapId]
     cp a, $14
-    jr nz, Jump_000_1C51
+    jr nz, .call_decompress_to_vram
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, Tiles2Gfx_48_7861
@@ -5053,13 +5059,13 @@ Jump_000_1C1A::
     xor a, a
     ld [wMenuState], a
     ld [wMenuSubState], a
-    jr Jump_000_1C55
+    jr .skip2
 
-Jump_000_1C51::
+.call_decompress_to_vram:
     call DecompressToVRAM
     pop hl
 
-Jump_000_1C55::
+.skip2:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -5087,18 +5093,18 @@ Jump_000_1C55::
     ld a, [hl+]
     ld [wMapSpriteKind], a
     or a, a
-    jr z, Jump_000_1C93
+    jr z, .call_set_map_sprite_kind_and_map_header
     and a, $0F
-    jr z, Jump_000_1C8F
+    jr z, .set_map_header_byte11
     ld a, [hl+]
     ld [wMapTallTileMin], a
-    jr Jump_000_1C93
+    jr .call_set_map_sprite_kind_and_map_header
 
-Jump_000_1C8F::
+.set_map_header_byte11:
     ld a, [hl+]
     ld [wMapHeaderByte11], a
 
-Jump_000_1C93::
+.call_set_map_sprite_kind_and_map_header:
     call SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps
     call ShiftAnimatedTilesOnMap1Or2
     call SetFieldEventKindOnMap19IfFlagD1
@@ -5136,12 +5142,12 @@ Func_000_1CB7:: ; address name
     ret z
     ldh a, [hMapId]
     cp a, $01
-    jr z, Jump_000_1CCB
+    jr z, .skip
     cp a, $02
-    jr z, Jump_000_1CE2
+    jr z, .skip2
     ret
 
-Jump_000_1CCB::
+.skip:
     ld de, vTiles2 + $500
     ld hl, vTiles2 + $510
     ld b, $10
@@ -5152,7 +5158,7 @@ Jump_000_1CCB::
     call CopyBBytesToVRAMFromDE
     ret
 
-Jump_000_1CE2::
+.skip2:
     ld de, vTiles2 + $400
     ld hl, vTiles2 + $410
     ld b, $10
@@ -5194,38 +5200,38 @@ SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps::
 Func_000_1D47:: ; address name
     ldh a, [hMapId]
     cp a, $30
-    jr z, Jump_000_1D51
+    jr z, .set_map_sprite_kind_to_11
     cp a, $B8
-    jr nz, Jump_000_1D5C
+    jr nz, .cp_63
 
-Jump_000_1D51::
+.set_map_sprite_kind_to_11:
     ld a, $11
     ld [wMapSpriteKind], a
     ld a, $2C
     ld [wMapHeaderByte11], a
     ret
 
-Jump_000_1D5C::
+.cp_63:
     cp a, $63
-    jr c, Jump_000_1D6F
+    jr c, .cp_70
     cp a, $67
-    jr nc, Jump_000_1D6F
+    jr nc, .cp_70
     ld a, $22
     ld [wMapSpriteKind], a
     ld a, $30
     ld [wMapHeaderByte11], a
     ret
 
-Jump_000_1D6F::
+.cp_70:
     cp a, $70
-    jr nz, Jump_000_1D7E
+    jr nz, .return
     ld a, $12
     ld [wMapSpriteKind], a
     ld a, $2C
     ld [wMapHeaderByte11], a
     ret
 
-Jump_000_1D7E::
+.return:
     ret
 
 ; HL = the word at MapTable + 2 * hMapId (bank $11)
@@ -5280,22 +5286,22 @@ Func_000_1D90:: ; address name
     ld a, [hl+]
     ldh [hTemp0], a
     cp a, c
-    jr z, Jump_000_1DC0
-    jr nc, Jump_000_1DC7
+    jr z, .loop
+    jr nc, .read_debug_value3
 
-Jump_000_1DC0::
+.loop:
     pop af
     ld [rROMB0], a
     ld a, $01
     ret
 
-Jump_000_1DC7::
+.read_debug_value3:
     ld a, [wDebugValue3]
     ld c, a
     ld a, [hl+]
     cp a, c
-    jr z, Jump_000_1DC0
-    jr c, Jump_000_1DC0
+    jr z, .loop
+    jr c, .loop
     ld a, $08
     add_a_to_hl
     ld a, [hl+]
@@ -5311,9 +5317,9 @@ Jump_000_1DC7::
     ld a, [de]
     ld b, $08
 
-Jump_000_1DE7::
+.loop2:
     sla a
-    jr c, Jump_000_1DF4
+    jr c, .skip
     dec hl
     dec hl
     dec hl
@@ -5321,9 +5327,9 @@ Jump_000_1DE7::
     dec hl
     dec hl
     dec b
-    jr nz, Jump_000_1DE7
+    jr nz, .loop2
 
-Jump_000_1DF4::
+.skip:
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -5347,13 +5353,13 @@ Jump_000_1DF4::
     ld c, a
     ld a, [hl]
     or a, c
-    jr nz, Jump_000_1E23
+    jr nz, .restore
     pop af
     ld [rROMB0], a
     ld a, $01
     ret
 
-Jump_000_1E23::
+.restore:
     pop af
     ld [rROMB0], a
     xor a, a
@@ -5370,18 +5376,18 @@ Func_000_1E29:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
 
-Jump_000_1E30::
+.skip:
     push hl
     push bc
 
-Jump_000_1E32::
+.loop:
     di
     ld a, [de]
     call WriteVRAMByteInc
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_1E45
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -5389,22 +5395,22 @@ Jump_000_1E32::
     sbc a, $00
     ld h, a
 
-Jump_000_1E45::
+.next:
     inc de
     dec b
-    jr nz, Jump_000_1E32
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1E5B
+    jr z, .check_is_cgb
     ld a, $20
     add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
-    jr Jump_000_1E30
+    jr .skip
 
-Jump_000_1E5B::
+.check_is_cgb:
     pop hl
     ld a, [wIsCGB]
     or a, a
@@ -5416,11 +5422,11 @@ Jump_000_1E5B::
     ld de, wScreenAttrBuffer
     ld bc, $1412
 
-Jump_000_1E6F::
+.skip2:
     push hl
     push bc
 
-Jump_000_1E71::
+.loop2:
     di
     ld a, [de]
     and a, $07
@@ -5428,7 +5434,7 @@ Jump_000_1E71::
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_1E86
+    jr nz, .next2
     ld a, l
     sub a, $20
     ld l, a
@@ -5436,22 +5442,22 @@ Jump_000_1E71::
     sbc a, $00
     ld h, a
 
-Jump_000_1E86::
+.next2:
     inc de
     dec b
-    jr nz, Jump_000_1E71
+    jr nz, .loop2
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1E9C
+    jr z, .skip3
     ld a, $20
     add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
-    jr Jump_000_1E6F
+    jr .skip2
 
-Jump_000_1E9C::
+.skip3:
     ld a, $00
     ldh [rSVBK], a
     ld a, $00
@@ -5468,42 +5474,42 @@ Func_000_1EA5:: ; address name
     ld de, wScreenTileBuffer
     ld a, [wTextWindowState]
     bit 7, a
-    jr z, Jump_000_1EC1
+    jr z, .skip2
     ld a, $64
     add a, e
     ld e, a
-    jr nc, Jump_000_1EB6
+    jr nc, .skip
     inc d
 
-Jump_000_1EB6::
+.skip:
     ld a, $A0
     add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
 
-Jump_000_1EC1::
+.skip2:
     push de
     push hl
     ld bc, $140D
 
-Jump_000_1EC6::
+.skip3:
     push hl
     push bc
 
-Jump_000_1EC8::
+.loop:
     di
 
-Jump_000_1EC9::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_1EC9
+    jr nz, .loop2
     ld a, [de]
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_1EDF
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -5511,22 +5517,22 @@ Jump_000_1EC9::
     sbc a, $00
     ld h, a
 
-Jump_000_1EDF::
+.next:
     inc de
     dec b
-    jr nz, Jump_000_1EC8
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1EF5
+    jr z, .check_is_cgb
     ld a, $20
     add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
-    jr Jump_000_1EC6
+    jr .skip3
 
-Jump_000_1EF5::
+.check_is_cgb:
     pop hl
     pop de
     ld a, [wIsCGB]
@@ -5544,24 +5550,24 @@ Jump_000_1EF5::
     ld d, a
     ld bc, $140D
 
-Jump_000_1F0F::
+.skip4:
     push hl
     push bc
 
-Jump_000_1F11::
+.loop3:
     di
 
-Jump_000_1F12::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_1F12
+    jr nz, .loop4
     ld a, [de]
     and a, $07
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_000_1F2A
+    jr nz, .next2
     ld a, l
     sub a, $20
     ld l, a
@@ -5569,22 +5575,22 @@ Jump_000_1F12::
     sbc a, $00
     ld h, a
 
-Jump_000_1F2A::
+.next2:
     inc de
     dec b
-    jr nz, Jump_000_1F11
+    jr nz, .loop3
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_1F40
+    jr z, .skip5
     ld a, $20
     add_a_to_hl
     ld a, h
     and a, $9B
     ld h, a
-    jr Jump_000_1F0F
+    jr .skip4
 
-Jump_000_1F40::
+.skip5:
     ld a, $00
     ldh [rSVBK], a
     ld a, $00
@@ -5617,12 +5623,12 @@ Func_000_1F5E:: ; address name
     call SRAMRecordAddressMapped
     ld de, hTemp0
 
-Jump_000_1F66::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_000_1F66
+    jr nz, .loop
     pop de
     pop hl
     ret
@@ -5637,12 +5643,12 @@ Func_000_1F6F:: ; address name
     call SRAMRecordAddressMapped
     ld de, hTemp0
 
-Jump_000_1F77::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_1F77
+    jr nz, .loop
     pop de
     pop hl
     ret
@@ -5701,20 +5707,20 @@ Func_000_1FA4:: ; address name
     ld b, $0A
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_000_1FBD
+    jr z, .skip
 
-Jump_000_1FB3::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_1FB3
+    jr nz, .loop
     pop de
     pop hl
     sub a, a
     ret
 
-Jump_000_1FBD::
+.skip:
     ld l, e
     ld h, d
     ld [hl], $98
@@ -5824,29 +5830,29 @@ Func_000_2038:: ; address name
     ld e, a
     ld a, [hl]
     or a, e
-    jr z, Jump_000_2056
+    jr z, .skip
     ld a, [hl+]
     ld d, a
     ld l, [hl]
     ld a, l
-    jr Jump_000_205B
+    jr .skip2
 
-Jump_000_2056::
+.skip:
     ld de, $20E9
     ld a, $00
 
-Jump_000_205B::
+.skip2:
     ld [rROMB0], a
     pop hl
     ld a, $02
     ldh [rSVBK], a
     ld bc, $0606
 
-Jump_000_2066::
+.skip3:
     push hl
     push bc
 
-Jump_000_2068::
+.loop:
     di
     ld a, [de]
     push bc
@@ -5858,20 +5864,20 @@ Jump_000_2068::
     ei
     inc de
     dec b
-    jr nz, Jump_000_2068
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_2087
+    jr z, .skip4
     ld a, l
     add a, $14
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    jr Jump_000_2066
+    jr .skip3
 
-Jump_000_2087::
+.skip4:
     ld a, $00
     ldh [rSVBK], a
     pop af
@@ -5899,29 +5905,29 @@ Func_000_2090:: ; address name
     ld e, a
     ld a, [hl]
     or a, e
-    jr z, Jump_000_20AE
+    jr z, .skip
     ld a, [hl+]
     ld d, a
     ld l, [hl]
     ld a, l
-    jr Jump_000_20B3
+    jr .skip2
 
-Jump_000_20AE::
+.skip:
     ld de, $20E9
     ld a, $00
 
-Jump_000_20B3::
+.skip2:
     ld [rROMB0], a
     ld a, $01
     ldh [rVBK], a
     pop hl
     ld bc, $0606
 
-Jump_000_20BE::
+.skip3:
     push hl
     push bc
 
-Jump_000_20C0::
+.loop:
     di
     ld a, [de]
     push bc
@@ -5933,20 +5939,20 @@ Jump_000_20C0::
     ei
     inc de
     dec b
-    jr nz, Jump_000_20C0
+    jr nz, .loop
     pop bc
     pop hl
     dec c
-    jr z, Jump_000_20DF
+    jr z, .skip4
     ld a, l
     add a, $20
     ld l, a
     ld a, h
     adc a, $00
     ld h, a
-    jr Jump_000_20BE
+    jr .skip3
 
-Jump_000_20DF::
+.skip4:
     ld c, $4F
     ld a, $00
     ldh [c], a
@@ -5963,14 +5969,14 @@ Func_000_210D:: ; address name
     ld hl, wDigits + $1
     ld a, [hl+]
     or a, a
-    jr z, Jump_000_2119
+    jr z, .skip
     add a, $E0
-    jr Jump_000_211B
+    jr .skip2
 
-Jump_000_2119::
+.skip:
     ld a, $C3
 
-Jump_000_211B::
+.skip2:
     ld [de], a
     inc de
     ld a, [hl]
@@ -5989,32 +5995,32 @@ Func_000_2123:: ; address name
     ld hl, wDigits
     ld a, [hl+]
     or a, a
-    jr z, Jump_000_2133
+    jr z, .skip
     add a, $E0
     ld c, $01
-    jr Jump_000_2135
+    jr .skip2
 
-Jump_000_2133::
+.skip:
     ld a, $C3
 
-Jump_000_2135::
+.skip2:
     ld [de], a
     inc de
     ld a, [hl+]
     bit 0, c
-    jr nz, Jump_000_213F
+    jr nz, .skip3
     or a, a
-    jr z, Jump_000_2145
+    jr z, .skip4
 
-Jump_000_213F::
+.skip3:
     add a, $E0
     ld c, $01
-    jr Jump_000_2147
+    jr .skip5
 
-Jump_000_2145::
+.skip4:
     ld a, $C3
 
-Jump_000_2147::
+.skip5:
     ld [de], a
     inc de
     ld a, [hl]
@@ -6033,67 +6039,67 @@ Func_000_214F:: ; address name
     ld hl, hTemp3
     ld a, [hl-]
     and a, $0F
-    jr z, Jump_000_2160
+    jr z, .skip
     ld c, $01
     add a, $E0
-    jr Jump_000_2162
+    jr .skip2
 
-Jump_000_2160::
+.skip:
     ld a, $C3
 
-Jump_000_2162::
+.skip2:
     ld [de], a
     inc de
     ld b, $03
 
-Jump_000_2166::
+.loop:
     ld a, [hl]
     srl a
     srl a
     srl a
     srl a
     bit 0, c
-    jr nz, Jump_000_2177
+    jr nz, .skip3
     and a, $0F
-    jr z, Jump_000_217D
+    jr z, .skip4
 
-Jump_000_2177::
+.skip3:
     ld c, $01
     add a, $E0
-    jr Jump_000_217F
+    jr .skip5
 
-Jump_000_217D::
+.skip4:
     ld a, $C3
 
-Jump_000_217F::
+.skip5:
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_2186
+    jr nz, .next
     ld c, $01
 
-Jump_000_2186::
+.next:
     inc b
     ld a, [hl-]
     and a, $0F
     bit 0, c
-    jr nz, Jump_000_2192
+    jr nz, .skip6
     and a, $0F
-    jr z, Jump_000_2198
+    jr z, .skip7
 
-Jump_000_2192::
+.skip6:
     ld c, $01
     add a, $E0
-    jr Jump_000_219A
+    jr .skip8
 
-Jump_000_2198::
+.skip7:
     ld a, $C3
 
-Jump_000_219A::
+.skip8:
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_2166
+    jr nz, .loop
     pop hl
     ret
 
@@ -6111,17 +6117,17 @@ Func_000_21A1:: ; address name
     ld hl, wNameGlyphBuf
     ld c, $0B
 
-Jump_000_21AF::
+.loop:
     push bc
     ld a, [hl+]
     cp a, $F0
-    jr nz, Jump_000_21BB
+    jr nz, .skip
     pop bc
     pop af
     ld [rROMB0], a
     ret
 
-Jump_000_21BB::
+.skip:
     push hl
     swap a
     ld h, a
@@ -6134,39 +6140,39 @@ Jump_000_21BB::
     add hl, bc
     ld b, $10
 
-Jump_000_21CC::
+.loop2:
     di
 
-Jump_000_21CD::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_21CD
+    jr nz, .loop3
     ld a, [hl+]
     ld [de], a
     ei
     inc de
     dec b
-    jr nz, Jump_000_21CC
+    jr nz, .loop2
     pop hl
     ld a, [hl]
     cp a, $8D
-    jr z, Jump_000_21E6
+    jr z, .next
     cp a, $8E
-    jr z, Jump_000_21ED
-    jr Jump_000_2221
+    jr z, .next2
+    jr .restore
 
-Jump_000_21E6::
+.next:
     inc hl
     push hl
     ld hl, $48E0
-    jr Jump_000_21F2
+    jr .skip2
 
-Jump_000_21ED::
+.next2:
     inc hl
     push hl
     ld hl, $48F0
 
-Jump_000_21F2::
+.skip2:
     ld b, $10
     ld a, e
     sub a, $10
@@ -6175,45 +6181,45 @@ Jump_000_21F2::
     sbc a, $00
     ld d, a
 
-Jump_000_21FC::
+.loop4:
     ld a, [hl+]
     ld c, a
     di
 
-Jump_000_21FF::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_21FF
+    jr nz, .loop5
     ld a, [de]
     ei
     or a, c
     push af
     ld a, b
     cp a, $0D
-    jr nz, Jump_000_2212
+    jr nz, .skip3
     pop af
     and a, $FD
     push af
 
-Jump_000_2212::
+.skip3:
     di
 
-Jump_000_2213::
+.loop6:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_2213
+    jr nz, .loop6
     pop af
     ld [de], a
     ei
     inc de
     dec b
-    jr nz, Jump_000_21FC
+    jr nz, .loop4
     pop hl
 
-Jump_000_2221::
+.restore:
     pop bc
     dec c
-    jp nz, Jump_000_21AF
+    jp nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -6248,7 +6254,7 @@ Func_000_222B:: ; address name
     ld hl, wPartyList
     ld de, vTiles1 + $500
 
-Jump_000_2264::
+.loop:
     push hl
     push bc
     push de
@@ -6264,15 +6270,15 @@ Jump_000_2264::
     ld a, $50
     add a, e
     ld e, a
-    jr nc, Jump_000_227F
+    jr nc, .restore
     inc d
 
-Jump_000_227F::
+.restore:
     pop bc
     pop hl
     inc hl
     dec b
-    jr nz, Jump_000_2264
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret
@@ -6300,7 +6306,7 @@ Func_000_228A:: ; address name
     ldh [hTemp3], a
     ld de, wPartyList
 
-Jump_000_22A5::
+.loop:
     push bc
     push de
     ld a, $0A
@@ -6312,7 +6318,7 @@ Jump_000_22A5::
     pop de
     ldh a, [hTemp0]
     bit 7, a
-    jr z, Jump_000_2304
+    jr z, .call_load_sram_record_word
     xor a, a
     ld [rRAMG], a
     ldh a, [hTemp4]
@@ -6332,7 +6338,7 @@ Jump_000_22A5::
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jp z, Jump_000_2378
+    jp z, .check_temp3
     pop de
     pop bc
     push bc
@@ -6349,16 +6355,16 @@ Jump_000_22A5::
     ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
-    jr nc, Jump_000_22FB
+    jr nc, .call_copy_from_bank
     inc d
 
-Jump_000_22FB::
+.call_copy_from_bank:
     ld b, $7E
     ld c, $08
     call CopyFromBank
-    jr Jump_000_2378
+    jr .check_temp3
 
-Jump_000_2304::
+.call_load_sram_record_word:
     ld a, [de]
     ld c, $0B
     call LoadSRAMRecordWord
@@ -6402,7 +6408,7 @@ Jump_000_2304::
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_000_2378
+    jr z, .check_temp3
     pop de
     pop bc
     push bc
@@ -6436,7 +6442,7 @@ Jump_000_2304::
     ld c, $08
     call CopyFromBank
 
-Jump_000_2378::
+.check_temp3:
     ldh a, [hTemp3]
     inc a
     ldh [hTemp3], a
@@ -6450,7 +6456,7 @@ Jump_000_2378::
     inc de
     pop bc
     dec b
-    jp nz, Jump_000_22A5
+    jp nz, .loop
     ret
 
 ; A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeTemp0 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)
@@ -6506,71 +6512,71 @@ WritePackedBCDNoLeadingZeros::
 Func_000_23CA:: ; address name
     ldh a, [hTemp0]
     or a, a
-    jr nz, Jump_000_23E4
+    jr nz, .check_temp3
     ldh a, [hTemp1]
     or a, a
-    jr nz, Jump_000_23E4
+    jr nz, .check_temp3
     ldh a, [hTemp2]
     or a, a
-    jr nz, Jump_000_23E4
+    jr nz, .check_temp3
     ldh a, [hTemp3]
     or a, a
-    jr nz, Jump_000_23E4
+    jr nz, .check_temp3
     ld [de], a
     inc de
     ld a, $F0
     ld [de], a
     ret
 
-Jump_000_23E4::
+.check_temp3:
     ld c, $00
     ldh a, [hTemp3]
     or a, a
-    jr z, Jump_000_23EF
+    jr z, .skip
     ld [de], a
     inc de
     ld c, $01
 
-Jump_000_23EF::
+.skip:
     ld b, $03
     ld hl, hTemp2
 
-Jump_000_23F4::
+.loop:
     ld a, [hl]
     swap a
     and a, $0F
     bit 0, c
-    jr nz, Jump_000_2400
+    jr nz, .skip2
     or a, a
-    jr z, Jump_000_2404
+    jr z, .skip3
 
-Jump_000_2400::
+.skip2:
     ld [de], a
     inc de
     ld c, $01
 
-Jump_000_2404::
+.skip3:
     ld a, [hl]
     and a, $0F
     bit 0, c
-    jr nz, Jump_000_240E
+    jr nz, .skip4
     or a, a
-    jr z, Jump_000_2412
+    jr z, .next
 
-Jump_000_240E::
+.skip4:
     ld [de], a
     inc de
     ld c, $01
 
-Jump_000_2412::
+.next:
     dec hl
     dec b
-    jr nz, Jump_000_23F4
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     ret
 
-; HL = $4558 + 2 * A, switches to ROM bank 8 and continues with the shared read at Jump_000_2447 (E-0126)
+; HL = $4558 + 2 * A, switches to ROM bank 8 and continues with the shared read at CopyItemNameToDE_Skip (E-0126)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13)
 ; writes: rROMB0
 ReadBank08Table4558WordForA::
@@ -6588,7 +6594,7 @@ Func_000_241A:: ; address name
     push af
     ld a, $08
     ld [rROMB0], a
-    jr Jump_000_2447
+    jr CopyItemNameToDE_Skip
 
 ; A = item number: with ROM bank $08 mapped, copies that string of StringTable_ItemNames, including its $F0 terminator, to DE; restores the bank (E-0071)
 ; 17 call sites from 13 routines (e.g. KeyWorldDoorItem_StartMessageA, RandomGoldOrItem_Number24ToPackedBCD, AreaItemEvent_StartMessageA, StepTriggerReward_CopyItemNameToDE, ...)
@@ -6609,19 +6615,20 @@ Func_000_2431:: ; address name
     ld a, $08
     ld [rROMB0], a
 
-Jump_000_2447::
+CopyItemNameToDE_Skip::
+Jump_000_2447:: ; address name
     ld a, [hl+]
     ld c, a
     ld a, [hl]
     ld h, a
     ld l, c
 
-Jump_000_244C::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     cp a, $F0
-    jr nz, Jump_000_244C
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -6631,7 +6638,7 @@ Jump_000_244C::
 WriteKeyNameToDE::
 Func_000_2458:: ; address name
     cp a, $FE
-    jr nz, Jump_000_2482
+    jr nz, .skip
     ld a, $16
     ld [de], a
     inc de
@@ -6659,9 +6666,9 @@ Func_000_2458:: ; address name
     ld a, $3C
     ld [de], a
     inc de
-    jr Jump_000_249E
+    jr .done
 
-Jump_000_2482::
+.skip:
     ld l, a
     ld h, $00
     add hl, hl
@@ -6683,7 +6690,7 @@ Jump_000_2482::
     call CopyKeyNameWordToDE
     dec de
 
-Jump_000_249E::
+.done:
     ld a, $F0
     ld [de], a
     ret
@@ -6706,12 +6713,12 @@ Func_000_24A2:: ; address name
     ld h, a
     ld l, c
 
-Jump_000_24B9::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     cp a, $F0
-    jr nz, Jump_000_24B9
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
@@ -6726,15 +6733,15 @@ Func_000_24C5:: ; address name
     ld b, a
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_000_24D7
+    jr z, .skip
     ld a, [wGameMode]
     cp a, $04
-    jr nz, Jump_000_24D7
+    jr nz, .skip
     ld a, b
     pop bc
     ret
 
-Jump_000_24D7::
+.skip:
     ld a, b
     pop bc
     ld hl, wPartyList
@@ -6780,14 +6787,14 @@ Func_000_24F8:: ; address name
     ld a, $14
     sub a, b
     bit 7, a
-    jr nz, Jump_000_2528
+    jr nz, .restore
     pop hl
     push hl
     ld d, a
     ld a, l
     and a, $1F
     cp a, d
-    jr nc, Jump_000_2528
+    jr nc, .restore
     pop hl
     pop de
     pop bc
@@ -6800,7 +6807,7 @@ Func_000_24F8:: ; address name
     ld a, $FF
     ret
 
-Jump_000_2528::
+.restore:
     pop hl
     pop de
     pop bc
@@ -6816,13 +6823,13 @@ ComputeSpriteScrollOffsets::
 Func_000_252D:: ; address name
     ld a, [wGameMode]
     cp a, $01
-    jr nz, Jump_000_253C
+    jr nz, .skip
     ld a, [wModeState]
     and a, $0F
     cp a, $06
     ret z
 
-Jump_000_253C::
+.skip:
     ld hl, hScrollX
     ld a, [hl+]
     sub a, $09
@@ -6843,7 +6850,8 @@ Jump_000_253C::
     ldh [hSpriteScrollYHi], a
     ret
 
-Jump_000_255B::
+ComputeSpriteScrollOffsets_Skip::
+Jump_000_255B:: ; address name
     push af
     push bc
     push de
@@ -6855,7 +6863,8 @@ Jump_000_255B::
     pop af
     reti
 
-Jump_000_256A::
+ComputeSpriteScrollOffsets_Skip2::
+Jump_000_256A:: ; address name
     push af
     push hl
     push de
@@ -6906,12 +6915,12 @@ Jump_000_258B:: ; address name
     ldh a, [rLYC]
     add a, $02
     cp a, $90
-    jr c, Jump_000_25A6
+    jr c, .skip
     ldh a, [hScrollX]
     ldh [rSCX], a
     ld a, $00
 
-Jump_000_25A6::
+.skip:
     ldh [rLYC], a
     jr ComputeSpriteScrollOffsets_WriteSVBK
 
@@ -6930,12 +6939,12 @@ Jump_000_25AA:: ; address name
     ldh a, [rLYC]
     add a, $02
     cp a, $81
-    jr c, Jump_000_25C5
+    jr c, .skip
     ldh a, [hScrollY]
     ldh [rSCY], a
     ld a, $00
 
-Jump_000_25C5::
+.skip:
     ldh [rLYC], a
     jr ComputeSpriteScrollOffsets_WriteSVBK
 
@@ -6979,12 +6988,12 @@ Func_000_25FE:: ; address name
     ld a, [wStringDestHi]
     ld h, a
 
-Jump_000_2609::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     cp a, $F0
-    jr nz, Jump_000_2609
+    jr nz, .loop
     ret
 
 ; sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero
@@ -6996,11 +7005,11 @@ Func_000_2611:: ; address name
     ld hl, wTextFlags
     set 1, [hl]
 
-Jump_000_2616::
+.loop:
     call StepStringDisplayUntilDone
     ld a, [wTextFlags]
     or a, a
-    jr nz, Jump_000_2616
+    jr nz, .loop
     ret
 
 ; runs the string display step (Func_000_2637) repeatedly while bit 7 of wC52C stays set, setting bit 1 of wC52B each time (E-0122)
@@ -7014,13 +7023,13 @@ Func_000_2620:: ; address name
     bit 7, a
     jr z, StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo
 
-Jump_000_2627::
+.loop:
     ld hl, wTextFlags
     set 1, [hl]
     call StepStringDisplayUntilDone_AddHLToTextCursorTextCursorLo
     ld a, [wTextControl]
     bit 7, a
-    jr nz, Jump_000_2627
+    jr nz, .loop
     ret
 
 ; only called from StepStringDisplayUntilDone (E-0047)
@@ -7036,19 +7045,19 @@ Func_000_2637:: ; address name
     ld [rROMB0], a
     ld a, [wTextControl]
     bit 2, a
-    jp nz, Jump_000_2847
+    jp nz, .read_sound_channel_slots
     ld a, [wTextFlags]
     or a, a
-    jp z, Jump_000_2875
+    jp z, .skip2
     bit 5, a
-    jr z, Jump_000_266E
+    jr z, .check_text_flags
     ld c, $BD
     ld a, [wFrameCounterLo]
     bit 4, a
-    jr z, Jump_000_265F
+    jr z, .call_add_hl_to_text_cursor_text_cursor_lo
     ld c, $B4
 
-Jump_000_265F::
+.call_add_hl_to_text_cursor_text_cursor_lo:
     ld hl, $0060
     call AddHLToTextCursorTextCursorLo
     ld b, $09
@@ -7056,35 +7065,35 @@ Jump_000_265F::
     ld a, c
     call WriteVRAMByte
 
-Jump_000_266E::
+.check_text_flags:
     ld a, [wTextFlags]
     bit 2, a
-    jp z, Jump_000_2764
+    jp z, .check_bit6
     ld a, [wTextLastChar]
     cp a, $E6
-    jr z, Jump_000_2685
+    jr z, .read_joypad_pressed_repeat
     ld a, [wTextLastChar]
     cp a, $FF
-    jp nz, Jump_000_274A
+    jp nz, .read_joypad_pressed
 
-Jump_000_2685::
+.read_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     ld b, a
     ld a, [wLinkJoypadPressedRepeat]
     or a, b
     bit 6, a
-    jr z, Jump_000_26A2
+    jr z, .check_bit7
     ld a, [wTextYesNoResult]
     and a, $01
     xor a, $01
     ld [wTextYesNoResult], a
     ld a, $69
     call QueueSoundEffect
-    jr Jump_000_26B5
+    jr .check_text_yes_no_result
 
-Jump_000_26A2::
+.check_bit7:
     bit 7, a
-    jr z, Jump_000_26B5
+    jr z, .check_text_yes_no_result
     ld a, [wTextYesNoResult]
     and a, $01
     xor a, $01
@@ -7092,23 +7101,23 @@ Jump_000_26A2::
     ld a, $69
     call QueueSoundEffect
 
-Jump_000_26B5::
+.check_text_yes_no_result:
     ld c, $BB
     ld b, $C3
     ld a, [wTextYesNoResult]
     or a, a
-    jr z, Jump_000_26C3
+    jr z, .check_frame_counter_lo
     ld c, $C3
     ld b, $BB
 
-Jump_000_26C3::
+.check_frame_counter_lo:
     ld a, [wFrameCounterLo]
     bit 4, a
-    jr z, Jump_000_26CE
+    jr z, .call_bg_map_address_at_scroll_plus_hl
     ld c, $C3
     ld b, $C3
 
-Jump_000_26CE::
+.call_bg_map_address_at_scroll_plus_hl:
     push bc
     ld hl, $0120
     call BGMapAddressAtScrollPlusHL
@@ -7130,26 +7139,26 @@ Jump_000_26CE::
     ld a, [wLinkJoypadPressed]
     or a, b
     bit 0, a
-    jr z, Jump_000_2711
+    jr z, .check_bit1
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_000_2716
+    jr nz, .set_text_yes_no_result_to_01
     ld a, [wTextLastChar]
     cp a, $E6
-    jp z, Jump_000_271B
+    jp z, .skip
     ld a, $69
     call QueueSoundEffect
-    jr Jump_000_271B
+    jr .skip
 
-Jump_000_2711::
+.check_bit1:
     bit 1, a
-    jp z, Jump_000_2875
+    jp z, .skip2
 
-Jump_000_2716::
+.set_text_yes_no_result_to_01:
     ld a, $01
     ld [wTextYesNoResult], a
 
-Jump_000_271B::
+.skip:
     ld hl, wTextFlags
     res 2, [hl]
     res 1, [hl]
@@ -7171,93 +7180,93 @@ Jump_000_271B::
     add_a_to_hl
     pop de
     call DrawScreenBufferToBGMapWithAttrs
-    jp Jump_000_2875
+    jp .skip2
 
-Jump_000_274A::
+.read_joypad_pressed:
     ld a, [wJoypadPressed]
     ld b, a
     ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
-    jp z, Jump_000_2875
+    jp z, .skip2
     ld hl, wTextFlags
     res 2, [hl]
     res 1, [hl]
     call ShowTextContinueMark
-    jp Jump_000_2875
+    jp .skip2
 
-Jump_000_2764::
+.check_bit6:
     bit 6, a
-    jr z, Jump_000_278B
+    jr z, .check_bit72
     ld a, [wTextRepeatCount]
     dec a
     ld [wTextRepeatCount], a
     or a, a
-    jp z, Jump_000_2780
+    jp z, .call_show_text_continue_mark
     ld a, [wJoypadPressed]
     ld b, a
     ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
-    jp z, Jump_000_2875
+    jp z, .skip2
 
-Jump_000_2780::
+.call_show_text_continue_mark:
     ld hl, wTextFlags
     res 6, [hl]
     call ShowTextContinueMark
-    jp Jump_000_2875
+    jp .skip2
 
-Jump_000_278B::
+.check_bit72:
     bit 7, a
-    jr z, Jump_000_27A2
+    jr z, .read_text_pos_lo
     ld a, [wTextDelayCounter]
     dec a
     ld [wTextDelayCounter], a
     or a, a
-    jp nz, Jump_000_2875
+    jp nz, .skip2
     ld hl, wTextFlags
     res 7, [hl]
-    jp Jump_000_2875
+    jp .skip2
 
-Jump_000_27A2::
+.read_text_pos_lo:
     ld a, [wTextPosLo]
     ld l, a
     ld a, [wTextPosHi]
     ld h, a
     ld a, [hl]
     cp a, $8D
-    jr z, Jump_000_2816
+    jr z, .read_text_pos_lo2
     cp a, $8E
-    jr z, Jump_000_2816
+    jr z, .read_text_pos_lo2
     cp a, $E0
-    jr nc, Jump_000_282C
+    jr nc, .read_text_pos_lo3
     ld a, [wTextFlags]
     bit 1, a
-    jr nz, Jump_000_27E5
+    jr nz, .clear_text_line_count
     ld a, [wJoypadPressed]
     ld b, a
     ld a, [wLinkJoypadPressed]
     or a, b
     and a, $F7
-    jr z, Jump_000_27CF
+    jr z, .read_battle_kind_flags
     ld hl, wTextControl
     set 7, [hl]
 
-Jump_000_27CF::
+.read_battle_kind_flags:
     ld a, [wBattleKindFlags]
     ld b, a
     ld a, [wTextFlags]
     bit 3, a
-    jr z, Jump_000_27DE
+    jr z, .check_text_line_count
     ld a, [wTextControlArg]
     ld b, a
 
-Jump_000_27DE::
+.check_text_line_count:
     ld a, [wTextLineCount]
     cp a, b
-    jp c, Jump_000_2875
+    jp c, .skip2
 
-Jump_000_27E5::
+.clear_text_line_count:
     xor a, a
     ld [wTextLineCount], a
     ld hl, wTextControl
@@ -7265,23 +7274,23 @@ Jump_000_27E5::
     call IncrementTextPosLoWord
     ld a, [hl]
     cp a, $E0
-    jr nc, Jump_000_282C
+    jr nc, .read_text_pos_lo3
     call StepStringDisplayUntilDone_Sub01_GlyphTileSourceForL
     ld a, [wTextControl]
     bit 0, a
-    jr z, Jump_000_2875
+    jr z, .skip2
     ld a, b
     cp a, $90
-    jr z, Jump_000_2875
+    jr z, .skip2
     cp a, $9A
-    jr z, Jump_000_2875
+    jr z, .skip2
     ld a, [wTextBeepSound]
     call QueueSoundEffect
     ld hl, wTextControl
     set 1, [hl]
-    jr Jump_000_2875
+    jr .skip2
 
-Jump_000_2816::
+.read_text_pos_lo2:
     ld a, [wTextPosLo]
     add a, $01
     ld [wTextPosLo], a
@@ -7290,9 +7299,9 @@ Jump_000_2816::
     ld [wTextPosHi], a
     ld a, [hl]
     call CallFunc28BDInBank1F
-    jr Jump_000_2875
+    jr .skip2
 
-Jump_000_282C::
+.read_text_pos_lo3:
     ld a, [wTextPosLo]
     add a, $01
     ld [wTextPosLo], a
@@ -7303,9 +7312,9 @@ Jump_000_282C::
     call StepStringDisplayUntilDone_Sub01_WriteTextLastChar
     ld hl, wTextControl
     res 1, [hl]
-    jr Jump_000_2875
+    jr .skip2
 
-Jump_000_2847::
+.read_sound_channel_slots:
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
     and a, [hl]
@@ -7330,11 +7339,11 @@ Jump_000_2847::
     inc hl
     and a, [hl]
     cp a, $FF
-    jr nz, Jump_000_2875
+    jr nz, .skip2
     ld hl, wTextControl
     res 2, [hl]
 
-Jump_000_2875::
+.skip2:
     ld hl, wTextLineCount
     inc [hl]
     pop af
@@ -7355,13 +7364,13 @@ Func_000_287E:: ; address name
     call GlyphTileSourceForL
     ld c, $08
 
-Jump_000_288D::
+.loop:
     di
 
-Jump_000_288E::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_288E
+    jr nz, .loop2
     ld a, [de]
     ld [hl+], a
     inc e
@@ -7370,7 +7379,7 @@ Jump_000_288E::
     ei
     inc de
     dec c
-    jr nz, Jump_000_288D
+    jr nz, .loop
     ld a, l
     ld [wTextGlyphDestLo], a
     ld a, h
@@ -7409,35 +7418,35 @@ Func_000_28BD:: ; address name
     ld h, a
     ld b, $10
 
-Jump_000_28CA::
+.loop:
     di
     ld a, b
     cp a, $0D
-    jr z, Jump_000_28DB
+    jr z, .loop3
 
-Jump_000_28D0::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_28D0
+    jr nz, .loop2
     ld a, [de]
     or a, [hl]
     ld [hl+], a
-    jr Jump_000_28E6
+    jr .skip
 
-Jump_000_28DB::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_28DB
+    jr nz, .loop3
     ld a, [de]
     or a, [hl]
     and a, $FD
     ld [hl+], a
 
-Jump_000_28E6::
+.skip:
     ei
     inc de
     dec b
-    jr nz, Jump_000_28CA
+    jr nz, .loop
     ld a, l
     ld [wTextGlyphDestLo], a
     ld a, h
@@ -7484,33 +7493,33 @@ Func_000_290E:: ; address name
     ld a, [wTextWindowWidth]
     ld c, a
 
-Jump_000_2920::
+.loop:
     ld a, [wTextWindowRows]
     ld b, a
 
-Jump_000_2924::
+.loop2:
     push bc
     ld b, $10
     ld de, $2940
 
-Jump_000_292A::
+.loop3:
     di
 
-Jump_000_292B::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_000_292B
+    jr nz, .loop4
     ld a, [de]
     ld [hl+], a
     ei
     inc de
     dec b
-    jr nz, Jump_000_292A
+    jr nz, .loop3
     pop bc
     dec b
-    jr nz, Jump_000_2924
+    jr nz, .loop2
     dec c
-    jr nz, Jump_000_2920
+    jr nz, .loop
     ret
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
 
@@ -7643,23 +7652,23 @@ Jump_000_29FA:: ; address name
     call IncrementTextPosLoWord
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_000_2A1A
+    jr z, .call_restart_map_music
     cp a, $60
-    jr c, Jump_000_2A16
+    jr c, .call_queue_music
     cp a, $CC
-    jr z, Jump_000_2A16
+    jr z, .call_queue_music
     cp a, $CF
-    jr z, Jump_000_2A16
+    jr z, .call_queue_music
     cp a, $D6
-    jr z, Jump_000_2A16
+    jr z, .call_queue_music
     call QueueSoundEffect
     ret
 
-Jump_000_2A16::
+.call_queue_music:
     call QueueMusic
     ret
 
-Jump_000_2A1A::
+.call_restart_map_music:
     farcall RestartMapMusic
     ret
     db $CD, $78, $12, $C9
@@ -7699,7 +7708,7 @@ Jump_000_2A3B:: ; address name
     res 7, [hl]
     ld a, [wBattleKindFlags]
     cp a, $07
-    jr z, Jump_000_2A59
+    jr z, .skip
     ld hl, $2A66
     add_a_to_hl
     ld a, [hl]
@@ -7708,7 +7717,7 @@ Jump_000_2A3B:: ; address name
     set 7, [hl]
     ret
 
-Jump_000_2A59::
+.skip:
     ld hl, wTextControl
     res 7, [hl]
     ld hl, wTextFlags
@@ -7755,13 +7764,13 @@ Jump_000_2A73:: ; address name
     ld h, a
     push bc
 
-Jump_000_2A9C::
+.loop:
     ld a, e
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
     inc e
     dec b
-    jr nz, Jump_000_2A9C
+    jr nz, .loop
     ld hl, $0020
     call AddHLToTextCursorTextCursorLo
     ld a, [wTextWindowRows]
@@ -7787,7 +7796,7 @@ Jump_000_2A9C::
     add hl, de
     pop de
 
-Jump_000_2AD2::
+.loop2:
     ld a, $FF
     call WriteVRAMByteInc
     xor a, a
@@ -7796,18 +7805,18 @@ Jump_000_2AD2::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_2AD2
+    jr nz, .loop2
     pop bc
     ld hl, $0040
     call AddHLToTextCursorTextCursorLo
 
-Jump_000_2AE8::
+.loop3:
     ld a, e
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
     inc e
     dec b
-    jr nz, Jump_000_2AE8
+    jr nz, .loop3
     ld a, [wTextLineStartLo]
     ld l, a
     ld a, [wTextLineStartHi]
@@ -7852,7 +7861,7 @@ Jump_000_2B09:: ; address name
     ld d, a
     ld a, d
     or a, e
-    jr z, Jump_000_2B45
+    jr z, .read_text_cursor_lo
     ld a, l
     ld [wTextGlyphDestLo], a
     ld a, h
@@ -7864,7 +7873,7 @@ Jump_000_2B09:: ; address name
     call IncrementTextPosLoWord
     ret
 
-Jump_000_2B45::
+.read_text_cursor_lo:
     ld a, [wTextCursorLo]
     ld l, a
     ld a, [wTextCursorHi]
@@ -7896,13 +7905,13 @@ Jump_000_2B45::
     add a, b
     ld e, a
 
-Jump_000_2B81::
+.loop:
     ld a, e
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
     inc e
     dec b
-    jr nz, Jump_000_2B81
+    jr nz, .loop
     ld hl, $0040
     call AddHLToTextCursorTextCursorLo
     ld a, [wTextWindowRows]
@@ -7926,7 +7935,7 @@ Jump_000_2B81::
     ld b, h
     add hl, de
 
-Jump_000_2BB5::
+.loop2:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -7936,7 +7945,7 @@ Jump_000_2BB5::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_000_2BB5
+    jr nz, .loop2
     ld hl, wTextFlags
     set 7, [hl]
     ld a, $04
@@ -7951,7 +7960,7 @@ StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark::
 Jump_000_2BCD:: ; address name
     ld a, [wTextFlags]
     bit 4, a
-    jp z, Jump_000_2BF1
+    jp z, .clear_text_flags
     ld a, [wTextFlags]
     res 4, a
     ld [wTextFlags], a
@@ -7966,7 +7975,7 @@ Jump_000_2BCD:: ; address name
     ld [wTextPosHi], a
     ret
 
-Jump_000_2BF1::
+.clear_text_flags:
     xor a, a
     ld [wTextFlags], a
     xor a, a
@@ -8087,12 +8096,12 @@ Jump_000_2C7B:: ; address name
     ld de, wPlayerNameText
     ld b, $0A
 
-Jump_000_2C83::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_2C83
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     ld hl, wTextFlags
@@ -8270,16 +8279,16 @@ Func_000_2D4A:: ; address name
     push hl
     ld de, TextPromptWindowTiles
 
-Jump_000_2D76::
+.skip:
     push hl
 
-Jump_000_2D77::
+.skip2:
     ld a, [de]
     inc de
     cp a, $FE
-    jr z, Jump_000_2D9A
+    jr z, .check_is_cgb
     cp a, $FD
-    jr nz, Jump_000_2D92
+    jr nz, .call_write_vram_byte
     pop hl
     ld a, l
     add a, $20
@@ -8291,14 +8300,14 @@ Jump_000_2D77::
     and a, $03
     or a, $98
     ld h, a
-    jr Jump_000_2D76
+    jr .skip
 
-Jump_000_2D92::
+.call_write_vram_byte:
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
-    jr Jump_000_2D77
+    jr .skip2
 
-Jump_000_2D9A::
+.check_is_cgb:
     pop hl
     pop hl
     ld a, [wIsCGB]
@@ -8310,16 +8319,16 @@ Jump_000_2D9A::
     ldh [rVBK], a
     pop bc
 
-Jump_000_2DAA::
+.skip3:
     push hl
 
-Jump_000_2DAB::
+.skip4:
     ld a, [de]
     inc de
     cp a, $FE
-    jr z, Jump_000_2DCE
+    jr z, .skip5
     cp a, $FD
-    jr nz, Jump_000_2DC6
+    jr nz, .call_write_vram_byte2
     pop hl
     ld a, l
     add a, $20
@@ -8331,14 +8340,14 @@ Jump_000_2DAB::
     and a, $03
     or a, $98
     ld h, a
-    jr Jump_000_2DAA
+    jr .skip3
 
-Jump_000_2DC6::
+.call_write_vram_byte2:
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
-    jr Jump_000_2DAB
+    jr .skip4
 
-Jump_000_2DCE::
+.skip5:
     push bc
     ld a, $00
     ldh [rVBK], a
@@ -8489,20 +8498,20 @@ Func_000_2E98:: ; address name
 WriteDecimalByteString::
 Func_000_2EAC:: ; address name
     cp a, $64
-    jr nc, Jump_000_2EB6
+    jr nc, .call_write_decimal_digit_for_e
     cp a, $0A
-    jr nc, Jump_000_2EBB
-    jr Jump_000_2EC0
+    jr nc, .call_write_decimal_digit_for_e2
+    jr .skip
 
-Jump_000_2EB6::
+.call_write_decimal_digit_for_e:
     ld e, $64
     call WriteDecimalDigitForE
 
-Jump_000_2EBB::
+.call_write_decimal_digit_for_e2:
     ld e, $0A
     call WriteDecimalDigitForE
 
-Jump_000_2EC0::
+.skip:
     ld [hl+], a
     ld a, $F0
     ld [hl], a
@@ -8514,10 +8523,10 @@ WriteDecimalDigitForE::
 Func_000_2EC5:: ; address name
     ld d, $FF
 
-Jump_000_2EC7::
+.loop:
     inc d
     sub a, e
-    jr nc, Jump_000_2EC7
+    jr nc, .loop
     add a, e
     ld [hl], d
     inc hl
@@ -8535,28 +8544,28 @@ Func_000_2ECF:: ; address name
     ld d, $42
     call Quotient24ByHFFCCDE
     or a, a
-    jp nz, Jump_000_2F03
+    jp nz, .set_temp6_to_0F
     ld a, $01
     ldh [hTemp6], a
     ld e, $A0
     ld d, $86
     call Quotient24ByHFFCCDE
     or a, a
-    jr nz, Jump_000_2F11
+    jr nz, .set_temp6_to_01
     ld a, $00
     ldh [hTemp6], a
     ld e, $10
     ld d, $27
     call Quotient24ByHFFCCDE
     or a, a
-    jr nz, Jump_000_2F1F
+    jr nz, .set_temp6_to_00
     ldh a, [hTemp0]
     ld c, a
     ldh a, [hTemp1]
     ld b, a
     jp WriteBCAsDecimalString
 
-Jump_000_2F03::
+.set_temp6_to_0F:
     ld a, $0F
     ldh [hTemp6], a
     ld e, $40
@@ -8564,7 +8573,7 @@ Jump_000_2F03::
     call Divide24ByHFFCCDE
     call StoreAThenTerminator
 
-Jump_000_2F11::
+.set_temp6_to_01:
     ld a, $01
     ldh [hTemp6], a
     ld e, $A0
@@ -8572,7 +8581,7 @@ Jump_000_2F11::
     call Divide24ByHFFCCDE
     call StoreAThenTerminator
 
-Jump_000_2F1F::
+.set_temp6_to_00:
     ld a, $00
     ldh [hTemp6], a
     ld e, $10
@@ -8583,7 +8592,7 @@ Jump_000_2F1F::
     ld c, a
     ldh a, [hTemp1]
     ld b, a
-    jp Jump_000_2FA7
+    jp WriteBCAsDecimalString_CallDivideBCByDE
 
 ; Divide24ByHFFCCDE with hFFC6-hFFC8 restored afterwards (A = the quotient); uses wC0A0, wC0A1 and wMenuRowCount as scratch, so wMenuRowCount is overwritten (E-0090)
 ; 3 call sites from 1 routine (e.g. WriteNumber24AsDecimalString)
@@ -8619,7 +8628,7 @@ Func_000_2F5A:: ; address name
     ld l, a
     ld h, $FF
 
-Jump_000_2F60::
+.loop:
     inc h
     ldh a, [hTemp0]
     sub a, e
@@ -8630,7 +8639,7 @@ Jump_000_2F60::
     ldh a, [hTemp2]
     sbc a, l
     ldh [hTemp2], a
-    jr nc, Jump_000_2F60
+    jr nc, .loop
     ldh a, [hTemp0]
     add a, e
     ldh [hTemp0], a
@@ -8653,37 +8662,41 @@ Func_000_2F84:: ; address name
     call DivideBCByDE
     pop bc
     or a, a
-    jr nz, Jump_000_2FA7
+    jr nz, WriteBCAsDecimalString_CallDivideBCByDE
     ld de, $0064
     push bc
     call DivideBCByDE
     pop bc
     or a, a
-    jr nz, Jump_000_2FB0
+    jr nz, WriteBCAsDecimalString_CallDivideBCByDE2
     ld de, $000A
     push bc
     call DivideBCByDE
     pop bc
     or a, a
-    jr nz, Jump_000_2FB9
-    jr Jump_000_2FC2
+    jr nz, WriteBCAsDecimalString_CallDivideBCByDE3
+    jr WriteBCAsDecimalString_CallStoreAThenTerminator
 
-Jump_000_2FA7::
+WriteBCAsDecimalString_CallDivideBCByDE::
+Jump_000_2FA7:: ; address name
     ld de, $03E8
     call DivideBCByDE
     call StoreAThenTerminator
 
-Jump_000_2FB0::
+WriteBCAsDecimalString_CallDivideBCByDE2::
+Jump_000_2FB0:: ; address name
     ld de, $0064
     call DivideBCByDE
     call StoreAThenTerminator
 
-Jump_000_2FB9::
+WriteBCAsDecimalString_CallDivideBCByDE3::
+Jump_000_2FB9:: ; address name
     ld de, $000A
     call DivideBCByDE
     call StoreAThenTerminator
 
-Jump_000_2FC2::
+WriteBCAsDecimalString_CallStoreAThenTerminator::
+Jump_000_2FC2:: ; address name
     ld a, c
     call StoreAThenTerminator
     ret
@@ -8695,7 +8708,7 @@ Func_000_2FC7:: ; address name
     push hl
     ld h, $FF
 
-Jump_000_2FCA::
+.loop:
     inc h
     ld a, c
     sub a, e
@@ -8703,7 +8716,7 @@ Jump_000_2FCA::
     ld a, b
     sbc a, d
     ld b, a
-    jr nc, Jump_000_2FCA
+    jr nc, .loop
     ld a, c
     add a, e
     ld c, a
@@ -8729,25 +8742,25 @@ CopyFiveGlyphsPlusMarks::
 Func_000_2FE1:: ; address name
     ld b, $05
 
-Jump_000_2FE3::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     cp a, $8D
-    jr z, Jump_000_2FE3
+    jr z, .loop
     cp a, $8E
-    jr z, Jump_000_2FE3
+    jr z, .loop
     dec b
-    jr nz, Jump_000_2FE3
+    jr nz, .loop
     ld a, [de]
     cp a, $8D
-    jr z, Jump_000_2FFD
+    jr z, .done
     cp a, $8E
-    jr z, Jump_000_2FFD
+    jr z, .done
     ld [hl], $F0
     ret
 
-Jump_000_2FFD::
+.done:
     ld [hl+], a
     ld [hl], $F0
     ret
@@ -8783,21 +8796,21 @@ Func_000_3001:: ; address name
     ld a, [wTextCursorHi]
     ld h, a
 
-Jump_000_3031::
+.loop:
     push bc
 
-Jump_000_3032::
+.loop2:
     ld a, e
     call WriteVRAMByte
     call NextBGMapColumn_Bank00
     inc e
     dec b
-    jr nz, Jump_000_3032
+    jr nz, .loop2
     pop bc
     ld hl, $0040
     call AddHLToTextCursorTextCursorLo
     dec c
-    jr nz, Jump_000_3031
+    jr nz, .loop
     ret
 
 ; moves HL B entries to the right inside its 32-entry BG map row, wrapping at the row end (NextBGMapColumn B times); B = 0 (E-0078)
@@ -8913,7 +8926,7 @@ Func_000_30A1:: ; address name
     ld [rROMB0], a
     ld b, $08
 
-Jump_000_30BE::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc e
@@ -8921,18 +8934,18 @@ Jump_000_30BE::
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_000_30BE
+    jr nz, .loop
     pop af
     ld [rROMB0], a
     ret
 
-; E-0189 (C1: Jump_000_35A8 indexes it by (hSndA8Param >> 4) * 2; only entry 0 exists, and the wave set follows it directly).
+; E-0189 (C1: StartChannelFromTrackHeader.set_sound_event_byte17 indexes it by (hSndA8Param >> 4) * 2; only entry 0 exists, and the wave set follows it directly).
 ; record: wave set
 SoundWaveSetTable::
 Data_000_30CC:: ; address name
     dw SoundWaveSet0 ; id 0
 
-; E-0189 (C1: Jump_000_35A8 clears rNR30, then copies the 16 bytes at the set + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high nibble) to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth).
+; E-0189 (C1: StartChannelFromTrackHeader.set_sound_event_byte17 clears rNR30, then copies the 16 bytes at the set + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high nibble) to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth).
 ; record: one wave RAM image: 32 4-bit samples, two per byte
 SoundWaveSet0::
 Data_000_30CE:: ; address name
@@ -8953,13 +8966,13 @@ Data_000_30CE:: ; address name
     db $EE, $EE, $CD, $AC, $35, $23, $11, $11, $11, $11, $32, $53, $CA, $DC, $EE, $EE ; id 14
     db $DD, $DD, $DD, $DD, $DD, $DD, $DD, $DD, $22, $22, $22, $22, $22, $22, $22, $22 ; id 15
 
-; E-0189 (C1: Jump_000_3A94 indexes it by (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly).
+; E-0189 (C1: SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay indexes it by (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly).
 ; record: modulation rows
 SoundModulationTable::
 Data_000_31CE:: ; address name
     dw SoundModulationRows0 ; id 0
 
-; E-0189 (C1: Jump_000_3A94 reads the byte at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at $3290; what each step does to the pitch or volume is not read).
+; E-0189 (C1: SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay reads the byte at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at $3290; what each step does to the pitch or volume is not read).
 ; record: 16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a branch
 SoundModulationRows0::
 Data_000_31D0:: ; address name
@@ -8996,20 +9009,20 @@ Func_000_3290:: ; address name
     ld b, $06
     ld a, $FF
 
-Jump_000_32AE::
+.loop:
     ld [hl+], a
     ld [hl-], a
     add hl, de
     dec b
-    jr nz, Jump_000_32AE
+    jr nz, .loop
     ld hl, wSoundLabelSlots
     ld b, $48
     xor a, a
 
-Jump_000_32BA::
+.loop2:
     ld [hl+], a
     dec b
-    jr nz, Jump_000_32BA
+    jr nz, .loop2
     xor a, a
     ld [wSoundEngineState], a
     ld [wSoundInitByte19], a
@@ -9062,13 +9075,13 @@ Func_000_32E8:: ; address name
     ld b, a
     ld a, $01
 
-Jump_000_32EF::
+.next:
     dec b
-    jr z, Jump_000_32F5
+    jr z, .check_sound_timer14
     add a, a
-    jr Jump_000_32EF
+    jr .next
 
-Jump_000_32F5::
+.check_sound_timer14:
     ld b, a
     ld a, [wSoundTimer14]
     or a, b
@@ -9086,23 +9099,23 @@ Func_000_32FE:: ; address name
     ld hl, wSoundTimer12
     and a, [hl]
     cp a, [hl]
-    jr nz, Jump_000_3332
+    jr nz, .clear_sound_timer14
     ld hl, wSoundChannelSlots + $6
     ld a, [wSoundTimer13]
     and a, $0F
     ld b, a
     ld a, [wSoundTimer12]
 
-Jump_000_3314::
+.loop:
     srl a
     ld [wSoundTimer14], a
-    jr nc, Jump_000_3320
+    jr nc, .skip
     ld a, [hl]
     and a, $F0
     or a, b
     ld [hl], a
 
-Jump_000_3320::
+.skip:
     ld a, l
     add a, $20
     ld l, a
@@ -9111,11 +9124,11 @@ Jump_000_3320::
     ld h, a
     ld a, [wSoundTimer14]
     and a, a
-    jr nz, Jump_000_3314
+    jr nz, .loop
     xor a, a
     ld [wSoundTimer12], a
 
-Jump_000_3332::
+.clear_sound_timer14:
     xor a, a
     ld [wSoundTimer14], a
     ret
@@ -9143,7 +9156,7 @@ Func_000_3340:: ; address name
     push hl
     ld [wSoundId], a
     ld hl, $3E24
-    jr Jump_000_335D
+    jr StartSound_Skip
 
 ; only called from StartMusic (E-0047)
 ; 1 call site from 1 routine (e.g. StartMusic)
@@ -9185,16 +9198,17 @@ Func_000_3354:: ; address name
     ld [wSoundId], a
     ld hl, SoundBankTable
 
-Jump_000_335D::
+StartSound_Skip::
+Jump_000_335D:: ; address name
     cp a, [hl]
-    jr c, Jump_000_3366
+    jr c, .skip
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_000_335D
+    jr StartSound_Skip
 
-Jump_000_3366::
+.skip:
     ld a, [BANK_NUMBER_BYTE]
     push af
     dec hl
@@ -9221,26 +9235,26 @@ Jump_000_3366::
     add hl, bc
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_000_33AA
+    jr z, .skip2
     inc hl
     ld a, [hl-]
     ld b, $EE
     and a, $03
-    jr z, Jump_000_33A3
+    jr z, .check_sound_engine_mode
     ld b, $DD
     cp a, $01
-    jr z, Jump_000_33A3
+    jr z, .check_sound_engine_mode
     ld b, $BB
     cp a, $02
-    jr z, Jump_000_33A3
+    jr z, .check_sound_engine_mode
     ld b, $77
 
-Jump_000_33A3::
+.check_sound_engine_mode:
     ld a, [wSoundEngineMode]
     and a, b
     ld [wSoundEngineMode], a
 
-Jump_000_33AA::
+.skip2:
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -9313,18 +9327,19 @@ Func_000_33E8:: ; address name
     inc [hl]
     ld hl, wSoundChannelSlots
 
-Jump_000_33FD::
+SoundTick_Loop::
+Jump_000_33FD:: ; address name
     ld a, [hl+]
     ld b, a
     ld a, [hl-]
     and a, b
     cp a, $FF
-    jp z, Jump_000_352F
+    jp z, SoundTick_CheckSoundChannelIndex
     push hl
     ld c, $D8
     ld b, $04
 
-Jump_000_340B::
+.loop:
     ld a, [hl+]
     ldh [c], a
     inc c
@@ -9350,7 +9365,7 @@ Jump_000_340B::
     ldh [c], a
     inc c
     dec b
-    jr nz, Jump_000_340B
+    jr nz, .loop
     ldh a, [hSoundBank]
     ld [rROMB0], a
     ldh a, [hSndChanFlags]
@@ -9364,10 +9379,10 @@ Jump_000_340B::
     inc b
     ld a, $88
 
-Jump_000_343C::
+.loop2:
     rlca
     dec b
-    jr nz, Jump_000_343C
+    jr nz, .loop2
     ld [wSoundSkipMaskB], a
     ld [wSoundTickByte0C], a
     ldh a, [hTrackPosLo]
@@ -9375,7 +9390,7 @@ Jump_000_343C::
     ldh a, [hTrackPosHi]
     or a, b
     and a, a
-    jp z, Jump_000_3554
+    jp z, StartChannelFromTrackHeader
     call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05
     ldh a, [hSndVibratoDelay]
@@ -9383,40 +9398,40 @@ Jump_000_343C::
     ldh a, [hSndVibratoCounter]
     inc a
     cp a, b
-    jr c, Jump_000_3460
+    jr c, .set_snd_vibrato_counter
     ld a, b
 
-Jump_000_3460::
+.set_snd_vibrato_counter:
     ldh [hSndVibratoCounter], a
     ld hl, hSndTickAccum
     ldh a, [hSndDutyAndTempo]
     and a, $0F
     add a, [hl]
     cp a, $10
-    jr c, Jump_000_3473
+    jr c, .call_sound_tick_wait_sound_hw_channel
     sub a, $10
     ld [hl], a
-    jr Jump_000_34C7
+    jr SoundTick_CheckSoundInitByte19
 
-Jump_000_3473::
+.call_sound_tick_wait_sound_hw_channel:
     ld [hl], a
     call SoundTick_WaitSoundHwChannel
     ldh a, [hSndNoteTimer]
     and a, a
-    jr z, Jump_000_347F
+    jr z, .check_snd_wait_ticks
     dec a
     ldh [hSndNoteTimer], a
 
-Jump_000_347F::
+.check_snd_wait_ticks:
     ldh a, [hSndWaitTicks]
     and a, a
-    jr nz, Jump_000_34BA
+    jr nz, SoundTick_SetSndWaitTicks
     ldh a, [hSndEnvFlags]
     and a, $F0
-    jr z, Jump_000_349C
+    jr z, SoundTick_CallSoundTick_WriteSoundTimer14
     ld hl, hSndEnvTimer
     dec [hl]
-    jr nz, Jump_000_34A8
+    jr nz, SoundTick_CheckSndEnvFlags
     ldh a, [hSndEnvelopeReload]
     and a, $F0
     ld c, a
@@ -9425,55 +9440,60 @@ Jump_000_347F::
     or a, c
     ldh [hSndEnvelope], a
 
-Jump_000_349C::
+SoundTick_CallSoundTick_WriteSoundTimer14::
+Jump_000_349C:: ; address name
     call SoundTick_WriteSoundTimer14
 
-Jump_000_349F::
+SoundTick_ReadSndNoteLength::
+Jump_000_349F:: ; address name
     ldh a, [hSndNoteLength]
     ldh [hSndNoteTimer], a
     call SoundNextEvent
-    jr Jump_000_34C7
+    jr SoundTick_CheckSoundInitByte19
 
-Jump_000_34A8::
+SoundTick_CheckSndEnvFlags::
+Jump_000_34A8:: ; address name
     ldh a, [hSndEnvFlags]
     and a, $0F
     dec a
     cp a, [hl]
-    jr nz, Jump_000_34C7
+    jr nz, SoundTick_CheckSoundInitByte19
     call SoundTick_WriteSndEnvelopeReloadAndSndEnvelope
     ldh a, [hSndEnvelope]
     call WriteChannelEnvelopeIfChanged
-    jr Jump_000_34C7
+    jr SoundTick_CheckSoundInitByte19
 
-Jump_000_34BA::
+SoundTick_SetSndWaitTicks::
+Jump_000_34BA:: ; address name
     dec a
     ldh [hSndWaitTicks], a
-    jr nz, Jump_000_34C7
+    jr nz, SoundTick_CheckSoundInitByte19
     ldh a, [hSndEnvFlags]
     and a, $F0
-    jr nz, Jump_000_34C7
-    jr Jump_000_349C
+    jr nz, SoundTick_CheckSoundInitByte19
+    jr SoundTick_CallSoundTick_WriteSoundTimer14
 
-Jump_000_34C7::
+SoundTick_CheckSoundInitByte19::
+Jump_000_34C7:: ; address name
     ld a, [wSoundInitByte19]
     and a, a
-    jr z, Jump_000_3502
+    jr z, .read_sound_skip_mask_b
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr nz, Jump_000_3502
+    jr nz, .read_sound_skip_mask_b
     ld a, [wSoundChannelIndex]
     cp a, $02
-    jr c, Jump_000_3502
+    jr c, .read_sound_skip_mask_b
     ld a, [wSoundSkipMaskB]
     ld b, a
     ld a, [wSoundSkipMaskA]
     and a, b
-    jr nz, Jump_000_3502
+    jr nz, .read_sound_skip_mask_b
     ld a, [wSoundEventByte17]
     ld b, a
     ldh a, [hSndSweepOrWave]
     cp a, b
-    jr z, Jump_000_3502
+    jr z, .read_sound_skip_mask_b
     ld e, a
     ld [wSoundEventByte17], a
     swap e
@@ -9485,7 +9505,7 @@ Jump_000_34C7::
     ld a, $80
     ldh [rNR30], a
 
-Jump_000_3502::
+.read_sound_skip_mask_b:
     ld a, [wSoundSkipMaskB]
     ld b, a
     ld a, [wSoundSkipMaskA]
@@ -9496,7 +9516,7 @@ Jump_000_3502::
     ld c, $D8
     ld b, $04
 
-Jump_000_3513::
+.loop:
     ldh a, [c]
     ld [hl+], a
     inc c
@@ -9522,17 +9542,18 @@ Jump_000_3513::
     ld [hl+], a
     inc c
     dec b
-    jr nz, Jump_000_3513
+    jr nz, .loop
     pop hl
 
-Jump_000_352F::
+SoundTick_CheckSoundChannelIndex::
+Jump_000_352F:: ; address name
     ld de, $0020
     add hl, de
     ld a, [wSoundChannelIndex]
     inc a
     ld [wSoundChannelIndex], a
     cp a, $06
-    jp c, Jump_000_33FD
+    jp c, SoundTick_Loop
     ld a, [wSoundSkipMaskA]
     ld b, a
     ld a, [wSoundEngineMode]
@@ -9545,7 +9566,13 @@ Jump_000_352F::
     ret
 
 ; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble -> $FFDF, byte 1 -> duty bits of $FFDE (wave: $FFE6), byte 2 swapped -> $FFE0, byte 3 -> $FFE2) and begins playback at event 2 ($FFD8 = 2).
-Jump_000_3554::
+; the channel start: reads the 4-byte track header and begins playback at event 2 (see the annotation above)
+; no direct call (reached through a table, a jump or a vector)
+; reads: hTrackBaseLo, hTrackBaseHi, wSoundHwChannel, hSndNoteLength, wSoundInitByte19, wSoundChannelIndex, wSoundSkipMaskB, wSoundSkipMaskA, ...
+; writes: hSndTickAccum, hSndDutyAndTempo, hSndEnvelope, hSndSweepOrWave, hSndChanByteE3, hSndBranchIndex, hSndVibratoDepth, hSndPitchSlide, ...
+; points at: hSndTickAccum, hSndEnvTimer
+StartChannelFromTrackHeader::
+Jump_000_3554:: ; address name
     ldh a, [hTrackBaseLo]
     ld l, a
     ldh a, [hTrackBaseHi]
@@ -9556,25 +9583,25 @@ Jump_000_3554::
     ldh [hSndTickAccum], a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3593
+    jr z, .set_snd_vibrato_delay
     ld a, [hl+]
     rrca
     rrca
     and a, $C0
     or a, d
 
-Jump_000_356D::
+.set_snd_duty_and_tempo:
     ldh [hSndDutyAndTempo], a
     ld a, [hl+]
     swap a
     ldh [hSndEnvelope], a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3599
+    jr z, .skip
     ld a, [hl+]
     ldh [hSndSweepOrWave], a
 
-Jump_000_357E::
+.clear_snd_chan_byte_e3:
     xor a, a
     ldh [hSndChanByteE3], a
     ldh [hSndBranchIndex], a
@@ -9585,27 +9612,27 @@ Jump_000_357E::
     ldh [hSndPanning], a
     ld a, $02
     ldh [hTrackPosLo], a
-    jp Jump_000_349F
+    jp SoundTick_ReadSndNoteLength
 
-Jump_000_3593::
+.set_snd_vibrato_delay:
     ld a, [hl+]
     ldh [hSndVibratoDelay], a
     ld a, d
-    jr Jump_000_356D
+    jr .set_snd_duty_and_tempo
 
-Jump_000_3599::
+.skip:
     xor a, a
     ldh [rNR30], a
     ld d, a
     ldh a, [hSndSweepOrWave]
     ld e, a
     cp a, $FF
-    jr nz, Jump_000_35A8
+    jr nz, .set_sound_event_byte17
     ld e, [hl]
     ld a, e
     ldh [hSndSweepOrWave], a
 
-Jump_000_35A8::
+.set_sound_event_byte17:
     ld [wSoundEventByte17], a
     swap e
     ld hl, SoundWaveSetTable
@@ -9623,13 +9650,13 @@ Jump_000_35A8::
     ld c, $30
     ld b, $10
 
-Jump_000_35C5::
+.loop:
     ld a, [hl+]
     ldh [c], a
     inc c
     dec b
-    jr nz, Jump_000_35C5
-    jr Jump_000_357E
+    jr nz, .loop
+    jr .clear_snd_chan_byte_e3
 
 ; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start ($FFDB/$FFDC), the event address is base + 2*position, and the first byte selects the command (see tools/sound_tracks.py).
 ; 1 call site from 1 routine (e.g. SoundTick)
@@ -9648,7 +9675,7 @@ Func_000_35CD:: ; address name
     ld d, a
     add hl, de
 
-Jump_000_35DB::
+.loop:
     ldh a, [hTrackPosLo]
     add a, $01
     ldh [hTrackPosLo], a
@@ -9657,21 +9684,21 @@ Jump_000_35DB::
     ldh [hTrackPosHi], a
     ld a, [hl+]
     cp a, $D0
-    jr nc, Jump_000_362E
+    jr nc, .cp_F0
     cp a, $B0
-    jr nc, Jump_000_366D
+    jr nc, .cp_C0
     cp a, $A0
-    jp nc, Jump_000_36A9
-    jp Jump_000_38C9
+    jp nc, .cp_A0
+    jp .check_snd_env_flags
 
-Jump_000_35F8::
+.loop2:
     cp a, $FD
-    jr z, Jump_000_3602
+    jr z, .call_sound_label_slot
     cp a, $FF
-    jr z, Jump_000_3613
-    jr Jump_000_3610
+    jr z, .set_track_pos_lo
+    jr .next
 
-Jump_000_3602::
+.call_sound_label_slot:
     push hl
     ld b, [hl]
     call SoundLabelSlot
@@ -9683,78 +9710,78 @@ Jump_000_3602::
     ld [hl], a
     pop hl
 
-Jump_000_3610::
+.next:
     inc hl
-    jr Jump_000_35DB
+    jr .loop
 
-Jump_000_3613::
+.set_track_pos_lo:
     ldh [hTrackPosLo], a
     ldh [hTrackPosHi], a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr nz, Jump_000_362A
+    jr nz, .call_sound_next_event_return_twice_if_sound
     ld a, [wSoundChannelIndex]
     cp a, $02
-    jr nc, Jump_000_362A
+    jr nc, .call_sound_next_event_return_twice_if_sound
     ld a, $FF
     ld [wSoundInitByte19], a
 
-Jump_000_362A::
+.call_sound_next_event_return_twice_if_sound:
     call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ret
 
-Jump_000_362E::
+.cp_F0:
     cp a, $F0
-    jr nc, Jump_000_35F8
+    jr nc, .loop2
     cp a, $E0
-    jr nc, Jump_000_363A
+    jr nc, .skip
     and a, $0F
-    jr Jump_000_363E
+    jr .check_sound_hw_channel
 
-Jump_000_363A::
+.skip:
     and a, $0F
     cpl
     inc a
 
-Jump_000_363E::
+.check_sound_hw_channel:
     ld b, a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_364E
+    jr z, .next2
     ld a, b
     ldh [hSndPitchSlide], a
     ld a, [hl]
     ldh [hSndPitchSlideTime], a
     ldh [hSndPitchSlideCounter], a
 
-Jump_000_364E::
+.next2:
     inc hl
-    jr Jump_000_35DB
+    jr .loop
 
-Jump_000_3651::
+.loop3:
     and a, $0F
     ld b, a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3669
+    jr z, .next3
     ldh a, [hSndEnvelope]
     and a, $0F
-    jr nz, Jump_000_3669
+    jr nz, .next3
     ld a, [hl]
     ldh [hSndVibratoDelay], a
     ld a, b
     swap a
     ldh [hSndVibratoDepth], a
 
-Jump_000_3669::
+.next3:
     inc hl
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_366D::
+.cp_C0:
     cp a, $C0
-    jr nc, Jump_000_3651
+    jr nc, .loop3
     and a, $0F
-    jp z, Jump_000_368C
+    jp z, .skip2
     ld e, a
     ld b, [hl]
     push hl
@@ -9763,22 +9790,22 @@ Jump_000_366D::
     ld a, [hl+]
     inc e
     cp a, e
-    jr nc, Jump_000_3688
+    jr nc, .restore
     ld a, [hl+]
     ldh [hTrackPosLo], a
     ld a, [hl]
     ldh [hTrackPosHi], a
 
-Jump_000_3688::
+.restore:
     pop hl
     jp SoundNextEvent
 
-Jump_000_368C::
+.skip2:
     ld a, [hl]
     ld b, a
     and a, $F0
     cp a, $F0
-    jp nz, Jump_000_36A5
+    jp nz, .next4
     ld b, [hl]
     push hl
     call SoundLabelSlot
@@ -9790,13 +9817,13 @@ Jump_000_368C::
     pop hl
     jp SoundNextEvent
 
-Jump_000_36A5::
+.next4:
     inc hl
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_36A9::
+.cp_A0:
     cp a, $A0
-    jr nz, Jump_000_36C3
+    jr nz, .cp_A1
     ld a, [hl+]
     swap a
     ldh [hSndEnvelope], a
@@ -9804,21 +9831,21 @@ Jump_000_36A9::
     ld b, a
     ld a, [wSoundSkipMaskA]
     and a, b
-    jp nz, Jump_000_35DB
+    jp nz, .loop
     call WriteChannelEnvelopeIfChanged
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_36C3::
+.cp_A1:
     cp a, $A1
-    jr nz, Jump_000_3712
+    jr nz, .cp_A2
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_36D4
+    jr z, .set_snd_sweep_or_wave
     ld a, [hl+]
     ldh [hSndSweepOrWave], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_36D4::
+.set_snd_sweep_or_wave:
     ld a, [hl+]
     ld e, a
     ldh [hSndSweepOrWave], a
@@ -9826,10 +9853,10 @@ Jump_000_36D4::
     ld b, a
     ld a, [wSoundSkipMaskA]
     and a, b
-    jr z, Jump_000_36E5
-    jp Jump_000_35DB
+    jr z, .skip3
+    jp .loop
 
-Jump_000_36E5::
+.skip3:
     xor a, a
     ldh [rNR30], a
     ld d, a
@@ -9852,21 +9879,21 @@ Jump_000_36E5::
     ld c, $30
     ld b, $10
 
-Jump_000_3708::
+.loop4:
     ld a, [hl+]
     ldh [c], a
     inc c
     dec b
-    jr nz, Jump_000_3708
+    jr nz, .loop4
     pop hl
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3712::
+.cp_A2:
     cp a, $A2
-    jr nz, Jump_000_3733
+    jr nz, .cp_A3
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_372D
+    jr z, .set_snd_vibrato_delay
     ld a, [hl+]
     rrca
     rrca
@@ -9876,20 +9903,20 @@ Jump_000_3712::
     and a, $3F
     or a, d
     ldh [hSndDutyAndTempo], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_372D::
+.set_snd_vibrato_delay:
     ld a, [hl+]
     ldh [hSndVibratoDelay], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3733::
+.cp_A3:
     cp a, $A3
     cp a, $A3
-    jr nz, Jump_000_375C
+    jr nz, .cp_A5
     ld a, [hl+]
     cp a, $FE
-    jr z, Jump_000_3756
+    jr z, .check_snd_chan_flags
     ld b, a
     and a, $0F
     add a, a
@@ -9903,45 +9930,45 @@ Jump_000_3733::
     and a, $0F
     or a, e
 
-Jump_000_3751::
+.set_snd_chan_flags:
     ldh [hSndChanFlags], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3756::
+.check_snd_chan_flags:
     ldh a, [hSndChanFlags]
     and a, $0F
-    jr Jump_000_3751
+    jr .set_snd_chan_flags
 
-Jump_000_375C::
+.cp_A5:
     cp a, $A5
-    jr nz, Jump_000_376E
+    jr nz, .cp_A6
     ld a, [hl+]
     cp a, $01
-    jr nz, Jump_000_3769
+    jr nz, .set_snd_panning
     ldh a, [hSndPanning]
     swap a
 
-Jump_000_3769::
+.set_snd_panning:
     ldh [hSndPanning], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_376E::
+.cp_A6:
     cp a, $A6
-    jr nz, Jump_000_3778
+    jr nz, .cp_A7
     ld a, [hl+]
     ldh [rNR50], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3778::
+.cp_A7:
     cp a, $A7
-    jr nz, Jump_000_3782
+    jr nz, .cp_A8
     ld a, [hl]
     ldh [hSndWaitTicks], a
-    jp Jump_000_3998
+    jp ComputeNotePitch_ReadSoundTickByte0C
 
-Jump_000_3782::
+.cp_A8:
     cp a, $A8
-    jr nz, Jump_000_3794
+    jr nz, .cp_A9
     ld a, [hl+]
     ld c, a
     and a, $0F
@@ -9950,31 +9977,31 @@ Jump_000_3782::
     and a, $F0
     or a, b
     ldh [hSndA8Param], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3794::
+.cp_A9:
     cp a, $A9
-    jp nz, Jump_000_37FF
+    jp nz, .cp_AA
     ld a, [hl+]
     cp a, $F0
-    jr z, Jump_000_37DB
+    jr z, .check_snd_branch_index
     cp a, $F1
-    jr z, Jump_000_37E3
+    jr z, .check_snd_branch_index2
     cp a, $F2
-    jr z, Jump_000_37EB
+    jr z, .check_sound_event_byte18
     cp a, $F3
-    jr z, Jump_000_37F5
+    jr z, .check_sound_event_byte182
     cp a, $FE
-    jr z, Jump_000_37B6
+    jr z, .read_sound_event_byte18
     cp a, $FF
-    jr nz, Jump_000_37CA
+    jr nz, .cp_80
     ldh a, [hSndBranchIndex]
-    jr Jump_000_37B9
+    jr .skip4
 
-Jump_000_37B6::
+.read_sound_event_byte18:
     ld a, [wSoundEventByte18]
 
-Jump_000_37B9::
+.skip4:
     sla a
     add a, l
     ld l, a
@@ -9987,48 +10014,48 @@ Jump_000_37B9::
     ldh [hTrackPosHi], a
     jp SoundNextEvent
 
-Jump_000_37CA::
+.cp_80:
     cp a, $80
-    jr nc, Jump_000_37D3
+    jr nc, .set_sound_event_byte18
     ldh [hSndBranchIndex], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37D3::
+.set_sound_event_byte18:
     sub a, $80
     ld [wSoundEventByte18], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37DB::
+.check_snd_branch_index:
     ldh a, [hSndBranchIndex]
     inc a
     ldh [hSndBranchIndex], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37E3::
+.check_snd_branch_index2:
     ldh a, [hSndBranchIndex]
     dec a
     ldh [hSndBranchIndex], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37EB::
+.check_sound_event_byte18:
     ld a, [wSoundEventByte18]
     inc a
     ld [wSoundEventByte18], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37F5::
+.check_sound_event_byte182:
     ld a, [wSoundEventByte18]
     dec a
     ld [wSoundEventByte18], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_37FF::
+.cp_AA:
     cp a, $AA
-    jr nz, Jump_000_3829
+    jr nz, .cp_AC
     ld a, [hl+]
     ld c, a
     and a, $F0
-    jr z, Jump_000_381F
+    jr z, .clear_snd_env_timer
     swap a
     ldh [hSndEnvTimer], a
     or a, $F0
@@ -10040,25 +10067,25 @@ Jump_000_37FF::
     and a, $F0
     or a, c
     ldh [hSndEnvelopeReload], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_381F::
+.clear_snd_env_timer:
     xor a, a
     ldh [hSndEnvTimer], a
     ldh [hSndEnvelopeReload], a
     ldh [hSndEnvFlags], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3829::
+.cp_AC:
     cp a, $AC
-    jr nz, Jump_000_3867
+    jr nz, .cp_AD
     ldh a, [hSndLoopCount]
     sub a, $01
-    jr z, Jump_000_3855
-    jr nc, Jump_000_3836
+    jr z, .clear_snd_loop_count
+    jr nc, .set_snd_loop_count
     ld a, [hl]
 
-Jump_000_3836::
+.set_snd_loop_count:
     ldh [hSndLoopCount], a
     ldh a, [hTrackPosLo]
     sub a, $01
@@ -10076,7 +10103,7 @@ Jump_000_3836::
     ldh [hTrackPosHi], a
     jp SoundNextEvent
 
-Jump_000_3855::
+.clear_snd_loop_count:
     xor a, a
     ldh [hSndLoopCount], a
     ldh a, [hTrackPosLo]
@@ -10087,18 +10114,18 @@ Jump_000_3855::
     ldh [hTrackPosHi], a
     jp SoundNextEvent
 
-Jump_000_3867::
+.cp_AD:
     cp a, $AD
-    jr nz, Jump_000_3876
+    jr nz, .cp_AE
     ldh a, [hSndReturnPosLo]
     ldh [hTrackPosLo], a
     ldh a, [hSndReturnPosHi]
     ldh [hTrackPosHi], a
     jp SoundNextEvent
 
-Jump_000_3876::
+.cp_AE:
     cp a, $AE
-    jr nz, Jump_000_3888
+    jr nz, .cp_AF
     ld a, [hl+]
     and a, $10
     ld b, a
@@ -10106,11 +10133,11 @@ Jump_000_3876::
     and a, $EF
     or a, b
     ldh [hSndDutyAndTempo], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_3888::
+.cp_AF:
     cp a, $AF
-    jr nz, Jump_000_389C
+    jr nz, .next5
     ld a, [hl+]
     and a, $0F
     ldh [hSndTickAccum], a
@@ -10119,35 +10146,35 @@ Jump_000_3888::
     and a, $F0
     or a, b
     ldh [hSndDutyAndTempo], a
-    jp Jump_000_35DB
+    jp .loop
 
-Jump_000_389C::
+.next5:
     inc hl
-    jp Jump_000_35DB
+    jp .loop
     db $00, $01, $11, $12, $14, $23, $07, $15, $17, $32, $33, $60, $61, $45, $53, $62
 
-Jump_000_38B0::
+.loop5:
     xor a, a
     ldh [hSndFreqLo], a
     ld a, $80
     ldh [hSndFreqHi], a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_38C2
-    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02
+    jr z, .call_return_twice_if_sound_skip_mask_a_and
+    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01
     ret
 
-Jump_000_38C2::
+.call_return_twice_if_sound_skip_mask_a_and:
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     xor a, a
     ldh [rNR30], a
     ret
 
-Jump_000_38C9::
+.check_snd_env_flags:
     ld b, a
     ldh a, [hSndEnvFlags]
     and a, $F0
-    jr z, Jump_000_38DF
+    jr z, .set_snd_wait_ticks
     push de
     ldh a, [hSndEnvFlags]
     and a, $0F
@@ -10157,21 +10184,21 @@ Jump_000_38C9::
     sub a, c
     ldh [hSndWaitTicks], a
     pop de
-    jr Jump_000_38E2
+    jr .check_sound_hw_channel2
 
-Jump_000_38DF::
+.set_snd_wait_ticks:
     ld a, [hl]
     ldh [hSndWaitTicks], a
 
-Jump_000_38E2::
+.check_sound_hw_channel2:
     ld a, [wSoundHwChannel]
     cp a, $03
-    jr nz, Jump_000_3905
+    jr nz, .skip6
     ld a, b
     cp a, $1F
-    jr z, Jump_000_38B0
+    jr z, .loop5
     cp a, $10
-    jr nc, Jump_000_3900
+    jr nc, .skip5
     ld hl, $38A0
     add a, l
     ld l, a
@@ -10180,28 +10207,28 @@ Jump_000_38E2::
     ld h, a
     ld l, [hl]
     ld h, $00
-    jr Jump_000_3938
+    jr ComputeNotePitch
 
-Jump_000_3900::
+.skip5:
     ld l, a
     ld h, $00
-    jr Jump_000_3938
+    jr ComputeNotePitch
 
-Jump_000_3905::
+.skip6:
     ld a, b
     and a, $0F
     cp a, $0C
-    jr nc, Jump_000_38B0
+    jr nc, .loop5
     add a, a
     ld e, a
     ldh a, [hSndDutyAndTempo]
     and a, $10
-    jr z, Jump_000_3918
+    jr z, .skip7
     ld a, e
     add a, $18
     ld e, a
 
-Jump_000_3918::
+.skip7:
     ld d, $00
     ld hl, SoundNotePeriodTable
     add hl, de
@@ -10209,16 +10236,16 @@ Jump_000_3918::
     ld a, b
     swap a
     and a, $0F
-    jr z, Jump_000_3930
+    jr z, .skip8
     ld b, a
 
-Jump_000_3929::
+.loop6:
     srl h
     rr l
     dec b
-    jr nz, Jump_000_3929
+    jr nz, .loop6
 
-Jump_000_3930::
+.skip8:
     ld a, $00
     sub a, l
     ld l, a
@@ -10227,20 +10254,25 @@ Jump_000_3930::
     ld h, a
 
 ; C2 (E-0019: formula matched 1,928 of 1,928 emulated notes): pitch for a note event. The semitone (low nibble of the first byte, 0-11) indexes the period table at $3B5C ($3B74 when $FFDE bit 4 is set), the value is shifted right by the octave (high nibble) and subtracted from $0800 to give the frequency register value in HL. Noise-channel notes use $38A0.
-Jump_000_3938::
+; pitch for a note event: semitone and octave to the frequency register value in HL (see the annotation above)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wSoundHwChannel, hSndSweepOrWave, hSndDutyAndTempo, wSoundTickByte0C, hSndPanning, wSoundEngineMode, rNR52
+; writes: hSndVibratoCounter, rNR30, hSndFreqLo, hSndFreqHi, wSoundEngineMode, rNR31
+ComputeNotePitch::
+Jump_000_3938:: ; address name
     xor a, a
     ldh [hSndVibratoCounter], a
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr nz, Jump_000_394C
-    call SoundNextEvent_WriteSoundEventByte17AndNR30
+    jr nz, .call_compute_note_pitch_write_nr32
+    call ComputeNotePitch_WriteSoundEventByte17AndNR30
     ld a, $80
     ldh [rNR30], a
 
-Jump_000_394C::
+.call_compute_note_pitch_write_nr32:
     push hl
-    call SoundNextEvent_WriteNR32
+    call ComputeNotePitch_WriteNR32
     pop hl
     ld a, [wSoundHwChannel]
     and a, a
@@ -10252,40 +10284,43 @@ Jump_000_394C::
     call WriteChannelRegisterC
     ld a, l
     cp a, $02
-    jr c, Jump_000_396F
+    jr c, .set_snd_freq_lo_to_02
     cp a, $FE
-    jr c, Jump_000_3971
+    jr c, .set_snd_freq_lo
     ld a, $FD
-    jr Jump_000_3971
+    jr .set_snd_freq_lo
 
-Jump_000_396F::
+.set_snd_freq_lo_to_02:
     ld a, $02
 
-Jump_000_3971::
+.set_snd_freq_lo:
     ldh [hSndFreqLo], a
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_39AB
+    jr z, ComputeNotePitch_Skip
     cp a, $02
-    jr nc, Jump_000_3989
+    jr nc, ComputeNotePitch_Loop
     ldh a, [hSndDutyAndTempo]
     and a, $C0
     or a, $3F
     ld c, $11
     call WriteChannelRegisterC
 
-Jump_000_3989::
+ComputeNotePitch_Loop::
+Jump_000_3989:: ; address name
     ld a, h
     and a, $07
     or a, $80
 
-Jump_000_398E::
+ComputeNotePitch_SetSndFreqHi::
+Jump_000_398E:: ; address name
     ldh [hSndFreqHi], a
     ld c, $14
     call WriteChannelRegisterC
     call ClearChannelLengthBits
 
-Jump_000_3998::
+ComputeNotePitch_ReadSoundTickByte0C::
+Jump_000_3998:: ; address name
     ld a, [wSoundTickByte0C]
     ld b, a
     cpl
@@ -10299,15 +10334,16 @@ Jump_000_3998::
     ld [wSoundEngineMode], a
     ret
 
-Jump_000_39AB::
+ComputeNotePitch_Skip::
+Jump_000_39AB:: ; address name
     xor a, a
     ldh [rNR31], a
     ldh a, [rNR52]
     and a, $04
-    jr z, Jump_000_3989
+    jr z, ComputeNotePitch_Loop
     ld a, h
     and a, $07
-    jr Jump_000_398E
+    jr ComputeNotePitch_SetSndFreqHi
 
 ; only called from SoundTick (E-0047)
 ; 1 call site from 1 routine (e.g. SoundTick)
@@ -10336,7 +10372,7 @@ Func_000_39B9:: ; address name
     ld hl, hSndPitchSlide
     ld a, [hl]
     bit 7, a
-    jr nz, Jump_000_39EC
+    jr nz, .skip
     dec [hl]
     ld a, b
     cp a, $0F
@@ -10346,7 +10382,7 @@ Func_000_39B9:: ; address name
     ldh [hSndEnvelope], a
     jp WriteChannelEnvelopeIfChanged
 
-Jump_000_39EC::
+.skip:
     inc [hl]
     ld a, b
     and a, a
@@ -10385,19 +10421,19 @@ Func_000_39F8:: ; address name
     ld c, $13
     jr WriteChannelRegisterC
 
-; only called from SoundNextEvent (E-0047)
-; 1 call site from 1 routine (e.g. SoundNextEvent)
+; only called from ComputeNotePitch (E-0047)
+; 1 call site from 1 routine (e.g. ComputeNotePitch)
 ; reads: wSoundHwChannel, hSndVibratoDepth, hSndEnvelope, wSoundRegBase, hSndFreqHi, hSndVibratoDelay, hSndVibratoCounter, hSndA8Param
 ; writes: rNR32
 ; points at: hSndEnvelope
-SoundNextEvent_WriteNR32::
+ComputeNotePitch_WriteNR32::
 Func_000_3A21:: ; address name
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3A57
+    jr z, WriteChannelRegisterC_ReadSndEnvelope
     ldh a, [hSndVibratoDepth]
     and a, a
-    jr nz, Jump_000_3A94
+    jr nz, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay
     ldh a, [hSndEnvelope]
 
 ; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register (wDD0D + $12) only if it differs, then restarts the channel (E-0124)
@@ -10407,12 +10443,12 @@ WriteChannelEnvelopeIfChanged::
 Func_000_3A2F:: ; address name
     ld b, a
     and a, $07
-    jr nz, Jump_000_3A38
+    jr nz, .read_sound_reg_base
     ld a, b
     or a, $08
     ld b, a
 
-Jump_000_3A38::
+.read_sound_reg_base:
     ld a, [wSoundRegBase]
     add a, $12
     ld c, a
@@ -10428,7 +10464,7 @@ Jump_000_3A38::
     ret
 
 ; A = value, C = register offset: writes A to $FF00 + wDD0D + C (wDD0D holds the current sound channel's register base); B = A (E-0077)
-; 5 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
+; 5 call sites from 2 routines (e.g. ComputeNotePitch, WriteChannelEnvelopeIfChanged)
 ; reads: wSoundRegBase
 WriteChannelRegisterC::
 Func_000_3A4E:: ; address name
@@ -10440,13 +10476,14 @@ Func_000_3A4E:: ; address name
     ldh [c], a
     ret
 
-Jump_000_3A57::
+WriteChannelRegisterC_ReadSndEnvelope::
+Jump_000_3A57:: ; address name
     ldh a, [hSndEnvelope]
     ld c, $12
     jr WriteChannelRegisterC
 
 ; [$FF00 + wDD0D + $11] &= $C0: keeps the duty bits of the current channel's length/duty register and clears its length (E-0114)
-; 2 call sites from 2 routines (e.g. SoundNextEvent, WriteChannelEnvelopeIfChanged)
+; 2 call sites from 2 routines (e.g. ComputeNotePitch, WriteChannelEnvelopeIfChanged)
 ; reads: wSoundRegBase
 ClearChannelLengthBits::
 Func_000_3A5D:: ; address name
@@ -10459,7 +10496,8 @@ Func_000_3A5D:: ; address name
     ldh [c], a
     ret
 
-Jump_000_3A69::
+ClearChannelLengthBits_Skip::
+Jump_000_3A69:: ; address name
     ld a, e
     srl a
     add a, $02
@@ -10481,20 +10519,21 @@ Func_000_3A7A:: ; address name
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ldh a, [hSndFreqLo]
     and a, a
-    jr nz, Jump_000_3A89
+    jr nz, .check_sound_hw_channel
     ldh a, [hSndFreqHi]
     and a, $7F
-    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02
+    jp z, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01
 
-Jump_000_3A89::
+.check_sound_hw_channel:
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3A94
+    jr z, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay
     ldh a, [hSndVibratoDepth]
     and a, a
     ret z
 
-Jump_000_3A94::
+SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay::
+Jump_000_3A94:: ; address name
     ldh a, [hSndVibratoDelay]
     and a, a
     ret z
@@ -10503,20 +10542,20 @@ Jump_000_3A94::
     ldh a, [hSndVibratoCounter]
     ld b, $04
 
-Jump_000_3A9F::
+.loop:
     add a, a
     cp a, c
-    jr c, Jump_000_3AA4
+    jr c, .skip
     sub a, c
 
-Jump_000_3AA4::
+.skip:
     ccf
     rl e
     dec b
-    jr nz, Jump_000_3A9F
+    jr nz, .loop
     ld a, [wSoundHwChannel]
     cp a, $02
-    jr z, Jump_000_3A69
+    jr z, ClearChannelLengthBits_Skip
     ldh a, [hSndVibratoDepth]
     or a, e
     ld e, a
@@ -10553,51 +10592,51 @@ Jump_000_3AA4::
     or a, e
     ld e, a
     bit 2, h
-    jr nz, Jump_000_3B05
+    jr nz, .skip4
     inc b
     ld a, c
     swap a
     and a, $0F
-    jr z, Jump_000_3B05
+    jr z, .skip4
     ld b, a
     bit 3, e
-    jr nz, Jump_000_3AFE
+    jr nz, .skip2
     sla b
     bit 2, e
-    jr nz, Jump_000_3AFE
+    jr nz, .skip2
     sla b
     bit 1, e
-    jr z, Jump_000_3B03
+    jr z, .skip3
 
-Jump_000_3AFE::
+.skip2:
     ld a, b
     cp a, $08
-    jr c, Jump_000_3B05
+    jr c, .skip4
 
-Jump_000_3B03::
+.skip3:
     ld b, $00
 
-Jump_000_3B05::
+.skip4:
     bit 1, h
-    jr z, Jump_000_3B0E
+    jr z, .skip5
     ld a, b
-    jr z, Jump_000_3B0E
+    jr z, .skip5
     srl b
 
-Jump_000_3B0E::
+.skip5:
     ld a, h
     and a, $08
     or a, b
     ld b, a
     bit 0, h
-    jr z, Jump_000_3B20
+    jr z, .read_sound_reg_base
     ld hl, SoundEnvelopeScaleTable
     add hl, de
     ld a, [hl]
     or a, b
     jp WriteChannelEnvelopeIfChanged
 
-Jump_000_3B20::
+.read_sound_reg_base:
     ld c, $12
     ld a, [wSoundRegBase]
     add a, c
@@ -10618,7 +10657,7 @@ Jump_000_3B20::
 ; only called from SoundNextEvent (E-0047)
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wSoundRegBase, hSndFreqHi
-SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02::
+SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01::
 Func_000_3B39:: ; address name
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
@@ -10640,7 +10679,7 @@ Func_000_3B41:: ; address name
     ret
 
 ; when wDD08 & wDD0B is non-zero, drops the caller's return address (pop af) so it returns to the caller's caller; otherwise returns normally with Z set (E-0119)
-; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub02, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05, ...)
+; 6 call sites from 6 routines (e.g. ComputeNotePitch, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub01, SoundNextEvent, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB, ...)
 ; reads: wSoundSkipMaskB, wSoundSkipMaskA
 ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
 Func_000_3B51:: ; address name
@@ -10659,7 +10698,7 @@ Data_000_3B5C:: ; address name
     dw $07D4, $0764, $06F9, $0695, $0637, $05DD, $0589, $053A, $04F0, $04A8, $0465, $0426 ; id 0
     dw $079C, $072E, $06C7, $0666, $060A, $05B3, $0561, $0515, $04CC, $0486, $0445, $0408 ; id 1
 
-; E-0209 (C1: Jump_000_3B0E reads the byte at $3B8C + DE (DE = level row * 16 + input) and ORs it into the envelope written by WriteChannelEnvelopeIfChanged; the rows rise from all $10 to $00-$F0).
+; E-0209 (C1: Jump_000_3A94.skip5 reads the byte at $3B8C + DE (DE = level row * 16 + input) and ORs it into the envelope written by WriteChannelEnvelopeIfChanged; the rows rise from all $10 to $00-$F0).
 ; record: 16 scaled volumes (high nibble) for one level
 SoundEnvelopeScaleTable::
 Data_000_3B8C:: ; address name
@@ -10700,11 +10739,11 @@ Data_000_3C8C:: ; address name
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
 
-; only called from SoundNextEvent (E-0047)
-; 1 call site from 1 routine (e.g. SoundNextEvent)
+; only called from ComputeNotePitch (E-0047)
+; 1 call site from 1 routine (e.g. ComputeNotePitch)
 ; reads: wSoundEventByte17, hSndSweepOrWave, hSndA8Param
 ; writes: wSoundEventByte17, rNR30
-SoundNextEvent_WriteSoundEventByte17AndNR30::
+ComputeNotePitch_WriteSoundEventByte17AndNR30::
 Func_000_3D7C:: ; address name
     ld a, [wSoundEventByte17]
     ld b, a
@@ -10738,12 +10777,12 @@ Func_000_3D8D:: ; address name
     ld de, rWAVE
     ld b, $10
 
-Jump_000_3DA7::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_000_3DA7
+    jr nz, .loop
     ret
 
 ; C2 static reading (E-0019): address of a label slot: HL = $DCC0 + channel*12 + (B & $0F)*3. A slot holds a repeat counter and a saved position (2 bytes); used by the FD, B0 and B1-BF commands.
@@ -10792,7 +10831,7 @@ Func_000_3DC8:: ; address name
     inc a
     ld e, a
 
-Jump_000_3DDB::
+.loop:
     ld a, e
     add a, c
     ld c, a
@@ -10800,7 +10839,7 @@ Jump_000_3DDB::
     adc a, b
     ld b, a
     dec d
-    jr nz, Jump_000_3DDB
+    jr nz, .loop
     srl b
     rr c
     srl b
@@ -10811,10 +10850,10 @@ Jump_000_3DDB::
     rr c
     ld a, c
     and a, a
-    jr nz, Jump_000_3DFB
+    jr nz, .read_snd_envelope
     ld c, $01
 
-Jump_000_3DFB::
+.read_snd_envelope:
     swap c
     ldh a, [hSndEnvelope]
     ld d, a
@@ -10855,33 +10894,33 @@ Func_000_3E25:: ; address name
     push bc
     ld c, a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_000_3E50
+    jr c, .skip
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $D0
-    jr nz, Jump_000_3E4F
+    jr nz, .set_carry
     inc hl
     inc hl
     ld a, [hl+]
     and a, $3F
-    jr nz, Jump_000_3E4F
+    jr nz, .set_carry
     inc hl
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_000_3E4F
+    jr nz, .set_carry
     inc hl
     inc hl
     bit 3, [hl]
-    jr nz, Jump_000_3E4F
+    jr nz, .set_carry
     xor a, a
-    jr Jump_000_3E50
+    jr .skip
 
-Jump_000_3E4F::
+.set_carry:
     scf
 
-Jump_000_3E50::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -10896,27 +10935,27 @@ Func_000_3E54:: ; address name
     push bc
     ld c, a
     cp a, $08
-    jr nc, Jump_000_3E6E
+    jr nc, .skip
     ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     and a, a
-    jr z, Jump_000_3E72
+    jr z, .skip2
     cp a, $FF
-    jr z, Jump_000_3E6E
+    jr z, .skip
     scf
-    jr Jump_000_3E76
+    jr .skip3
 
-Jump_000_3E6E::
+.skip:
     xor a, a
     scf
-    jr Jump_000_3E76
+    jr .skip3
 
-Jump_000_3E72::
+.skip2:
     ld a, $0A
     cp a, $01
 
-Jump_000_3E76::
+.skip3:
     ld a, c
     pop bc
     pop hl
@@ -10939,21 +10978,21 @@ CompareHLToBCFastZero::
 Func_000_3E80:: ; address name
     ld a, b
     or a, c
-    jr nz, Jump_000_3E8F
+    jr nz, .skip
     ld a, h
     or a, l
-    jr nz, Jump_000_3E8C
+    jr nz, .done
     xor a, a
     scf
     ccf
     ret
 
-Jump_000_3E8C::
+.done:
     scf
     ccf
     ret
 
-Jump_000_3E8F::
+.skip:
     ld a, h
     or a, l
     jr nz, CompareHLToBC
@@ -10968,10 +11007,10 @@ Jump_000_3E8F::
 RandomInRange::
 Func_000_3E98:: ; address name
     call CompareHLToBC
-    jr z, Jump_000_3ED1
+    jr z, .done
     ld a, h
     or a, l
-    jr z, Jump_000_3EB1
+    jr z, .skip
     ld a, l
     cpl
     add a, $01
@@ -10987,7 +11026,7 @@ Func_000_3E98:: ; address name
     adc a, h
     ld b, a
 
-Jump_000_3EB1::
+.skip:
     ld a, c
     add a, $01
     ld c, a
@@ -11008,13 +11047,13 @@ Jump_000_3EB1::
     ld a, b
     sbc a, h
     ld d, a
-    jr Jump_000_3ED3
+    jr .return
 
-Jump_000_3ED1::
+.done:
     ld e, a
     ld d, h
 
-Jump_000_3ED3::
+.return:
     ret
 
 ; when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB
@@ -11063,34 +11102,34 @@ Func_000_3F04:: ; address name
     ld de, $0000
     ld a, b
     or a, a
-    jr z, Jump_000_3F16
+    jr z, .call_divide_hl_by_a
 
-Jump_000_3F0B::
+.skip:
     ld a, l
     sub a, c
     ld l, a
     ld a, h
     sbc a, b
     ld h, a
-    jr c, Jump_000_3F1F
+    jr c, .skip2
     inc de
-    jr Jump_000_3F0B
+    jr .skip
 
-Jump_000_3F16::
+.call_divide_hl_by_a:
     ld a, c
     call DivideHLByA
     ld c, a
     ld b, $00
-    jr Jump_000_3F24
+    jr .return
 
-Jump_000_3F1F::
+.skip2:
     add hl, bc
     ld b, h
     ld c, l
     ld h, d
     ld l, e
 
-Jump_000_3F24::
+.return:
     ret
 
 ; HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved
@@ -11113,10 +11152,10 @@ Func_000_3F25:: ; address name
 BattlerRecordFieldAddress::
 Func_000_3F32:: ; address name
     cp a, $03
-    jr c, Jump_000_3F37
+    jr c, .call_multiply8
     dec a
 
-Jump_000_3F37::
+.call_multiply8:
     ld c, $4E
     call Multiply8
     ld bc, wBattlerRecords
@@ -11136,79 +11175,79 @@ Func_000_3F47:: ; address name
     ld c, a
     pop af
     cp a, c
-    jr nz, Jump_000_3F53
+    jr nz, .cp_34
 
-Jump_000_3F51::
+.loop:
     pop bc
     ret
 
-Jump_000_3F53::
+.cp_34:
     cp a, $34
-    jr nz, Jump_000_3F5C
+    jr nz, .cp_AD
     ld a, $AD
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F5C::
+.cp_AD:
     cp a, $AD
-    jr nz, Jump_000_3F65
+    jr nz, .cp_35
     ld a, $34
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F65::
+.cp_35:
     cp a, $35
-    jr nz, Jump_000_3F6E
+    jr nz, .cp_AE
     ld a, $AE
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F6E::
+.cp_AE:
     cp a, $AE
-    jr nz, Jump_000_3F77
+    jr nz, .cp_6A
     ld a, $35
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F77::
+.cp_6A:
     cp a, $6A
-    jr nz, Jump_000_3F80
+    jr nz, .cp_CC
     ld a, $CC
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F80::
+.cp_CC:
     cp a, $CC
-    jr nz, Jump_000_3F89
+    jr nz, .cp_A1
     ld a, $6A
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F89::
+.cp_A1:
     cp a, $A1
-    jr nz, Jump_000_3F92
+    jr nz, .cp_CF
     ld a, $CF
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F92::
+.cp_CF:
     cp a, $CF
-    jr nz, Jump_000_3F9B
+    jr nz, .cp_8F
     ld a, $A1
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3F9B::
+.cp_8F:
     cp a, $8F
-    jr nz, Jump_000_3FA4
+    jr nz, .cp_AA
     ld a, $AA
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
 
-Jump_000_3FA4::
+.cp_AA:
     cp a, $AA
-    jr nz, Jump_000_3F51
+    jr nz, .loop
     ld a, $8F
     cp a, c
-    jr Jump_000_3F51
+    jr .loop
     ds $53, $00

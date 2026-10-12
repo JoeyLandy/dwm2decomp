@@ -17,21 +17,21 @@ Func_00A_4001:: ; address name
     ld [rRAMG], a
     ld a, [wMenuSubState]
     or a, a
-    jr nz, Jump_00A_4021
+    jr nz, .call_field_mode_state_dispatch_case07_sub01
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
-    jr Jump_00A_4027
+    jr .check_status_field_step
 
-Jump_00A_4021::
+.call_field_mode_state_dispatch_case07_sub01:
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub02
     call FieldModeStateDispatch_Case07_Sub01_LoadSRAMRecordByte_Sub01
 
-Jump_00A_4027::
+.check_status_field_step:
     xor a, a
     ld [rRAMG], a
     ld a, [wStatusFieldStep]
     and a, $07
-    jr z, Jump_00A_4042
+    jr z, .check_map_type
     ld a, $04
     ld [wTalkEventGroup], a
     xor a, a
@@ -39,15 +39,15 @@ Jump_00A_4027::
     farcall DispatchTalkEvent
     ret
 
-Jump_00A_4042::
+.check_map_type:
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_00A_404F
+    jr nz, .set_mode_state_to_05
     ld a, $00
     ld [wModeState], a
     ret
 
-Jump_00A_404F::
+.set_mode_state_to_05:
     ld a, $05
     ld [wModeState], a
     ret
@@ -65,15 +65,15 @@ Func_00A_4055:: ; address name
     ld b, a
     ld hl, wPartyList
 
-Jump_00A_4062::
+.loop:
     push bc
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
     bit 7, a
-    jr nz, Jump_00A_4095
+    jr nz, .next
     bit 0, a
-    jr z, Jump_00A_4095
+    jr z, .next
     ld a, [hl]
     ld c, $5F
     call LoadSRAMRecordWord
@@ -83,7 +83,7 @@ Jump_00A_4062::
     ld d, a
     ld a, e
     or a, d
-    jr z, Jump_00A_4095
+    jr z, .next
     ld a, e
     sub a, $01
     ld e, a
@@ -100,11 +100,11 @@ Jump_00A_4062::
     ld [hl], a
     pop hl
 
-Jump_00A_4095::
+.next:
     inc hl
     pop bc
     dec b
-    jr nz, Jump_00A_4062
+    jr nz, .loop
     ret
 
 ; sets bit 7 of wC8BF (E-0114)
@@ -129,15 +129,15 @@ Func_00A_40A4:: ; address name
     ld b, a
     ld hl, wPartyList
 
-Jump_00A_40AB::
+.loop:
     push bc
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
     bit 7, a
-    jr nz, Jump_00A_410A
+    jr nz, .next
     bit 2, a
-    jr z, Jump_00A_410A
+    jr z, .next
     ld a, [hl]
     ld c, $5B
     call LoadSRAMRecordWord
@@ -152,24 +152,24 @@ Jump_00A_40AB::
     sbc a, $00
     ld d, a
     bit 7, a
-    jr nz, Jump_00A_40D5
+    jr nz, .call_set_field_step_flags_bit7
     or a, e
-    jr nz, Jump_00A_40FE
+    jr nz, .skip
 
-Jump_00A_40D5::
+.call_set_field_step_flags_bit7:
     ld c, $01
     call SetFieldStepFlagsBit7
     ld a, [wPartyCount]
     sub a, b
-    jr z, Jump_00A_40E6
+    jr z, .check_status_field_step
     ld b, a
 
-Jump_00A_40E1::
+.loop2:
     sla c
     dec b
-    jr nz, Jump_00A_40E1
+    jr nz, .loop2
 
-Jump_00A_40E6::
+.check_status_field_step:
     ld a, [wStatusFieldStep]
     or a, c
     ld [wStatusFieldStep], a
@@ -184,7 +184,7 @@ Jump_00A_40E6::
     pop hl
     ld de, $0000
 
-Jump_00A_40FE::
+.skip:
     push hl
     ld a, [hl]
     ld c, $5B
@@ -195,11 +195,11 @@ Jump_00A_40FE::
     ld [hl], a
     pop hl
 
-Jump_00A_410A::
+.next:
     inc hl
     pop bc
     dec b
-    jr nz, Jump_00A_40AB
+    jr nz, .loop
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
@@ -213,13 +213,13 @@ Func_00A_4110:: ; address name
     ld b, a
     ld hl, wPartyList
 
-Jump_00A_4117::
+.loop:
     push bc
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
     bit 7, a
-    jr nz, Jump_00A_4190
+    jr nz, .next
     ld a, [hl]
     ld c, $5B
     call LoadSRAMRecordWord
@@ -229,23 +229,23 @@ Jump_00A_4117::
     ld d, a
     ld a, [wStatusFieldStep]
     bit 7, a
-    jr nz, Jump_00A_413E
+    jr nz, .check_map_type
     ld c, $0A
     ld a, $40
     ld [wFieldStepFlags], a
-    jr Jump_00A_414F
+    jr .skip
 
-Jump_00A_413E::
+.check_map_type:
     ld c, $02
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_00A_414F
+    jr nz, .skip
     ldh a, [hMapId]
     cp a, $3A
-    jr nz, Jump_00A_414F
+    jr nz, .skip
     ld c, $05
 
-Jump_00A_414F::
+.skip:
     ld a, e
     sub a, c
     ld e, a
@@ -253,24 +253,24 @@ Jump_00A_414F::
     sbc a, $00
     ld d, a
     bit 7, a
-    jr nz, Jump_00A_415D
+    jr nz, .call_set_field_step_flags_bit7
     or a, e
-    jr nz, Jump_00A_4184
+    jr nz, .skip2
 
-Jump_00A_415D::
+.call_set_field_step_flags_bit7:
     ld c, $01
     call SetFieldStepFlagsBit7
     ld a, [wPartyCount]
     sub a, b
-    jr z, Jump_00A_416E
+    jr z, .check_status_field_step
     ld b, a
 
-Jump_00A_4169::
+.loop2:
     sla c
     dec b
-    jr nz, Jump_00A_4169
+    jr nz, .loop2
 
-Jump_00A_416E::
+.check_status_field_step:
     ld a, [wStatusFieldStep]
     or a, c
     ld [wStatusFieldStep], a
@@ -284,7 +284,7 @@ Jump_00A_416E::
     pop hl
     ld de, $0000
 
-Jump_00A_4184::
+.skip2:
     push hl
     ld a, [hl]
     ld c, $5B
@@ -295,11 +295,11 @@ Jump_00A_4184::
     ld [hl], a
     pop hl
 
-Jump_00A_4190::
+.next:
     inc hl
     pop bc
     dec b
-    jr nz, Jump_00A_4117
+    jr nz, .loop
     ret
 
 ; only called from FieldModeStateDispatch_Case07_Sub01 (E-0047)
@@ -311,7 +311,7 @@ FieldModeStateDispatch_Case07_Sub01_QueueSoundEffect::
 Func_00A_4196:: ; address name
     ld a, [wMenuState]
     or a, a
-    jr nz, Jump_00A_41C1
+    jr nz, .read_menu_state
     ld a, $66
     call QueueSoundEffect
     ld hl, wDMGPaletteBGP
@@ -323,19 +323,19 @@ Func_00A_4196:: ; address name
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00A_4213
+    jr z, .return
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
-    jr Jump_00A_420E
+    jr .set_bg_palette_upload_request_to_7F
 
-Jump_00A_41C1::
+.read_menu_state:
     ld a, [wMenuState]
     srl a
     srl a
     and a, $01
-    jr z, Jump_00A_41EC
+    jr z, .skip
     ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
@@ -345,14 +345,14 @@ Jump_00A_41C1::
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00A_4213
+    jr z, .return
     ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
     ld bc, $0040
     call CopyBytes
-    jr Jump_00A_420E
+    jr .set_bg_palette_upload_request_to_7F
 
-Jump_00A_41EC::
+.skip:
     ld hl, wDMGPaletteBGP
     ld a, $2D
     ld [hl+], a
@@ -362,24 +362,24 @@ Jump_00A_41EC::
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00A_4213
+    jr z, .return
     ld b, $40
     ld hl, wBGPaletteCopy
     ld de, wBGPaletteBuffer
 
-Jump_00A_4206::
+.loop:
     ld a, [hl+]
     xor a, $FF
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_00A_4206
+    jr nz, .loop
 
-Jump_00A_420E::
+.set_bg_palette_upload_request_to_7F:
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_00A_4213::
+.return:
     ret
 
 ; runs the movement routine for wC194 (jump table of eight) (E-0122)
@@ -416,7 +416,7 @@ Jump_00A_4229:: ; address name
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 7 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -428,7 +428,7 @@ Jump_00A_4239:: ; address name
     ldh [hTemp1], a
     xor a, a
     ld [wStatusFieldStep], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 1 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -440,7 +440,7 @@ Jump_00A_4243:: ; address name
     ldh [hTemp1], a
     xor a, a
     ld [wStatusFieldStep], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 2 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -452,7 +452,7 @@ Jump_00A_424D:: ; address name
     ldh [hTemp1], a
     xor a, a
     ld [wStatusFieldStep], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 3 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -464,7 +464,7 @@ Jump_00A_4257:: ; address name
     ldh [hTemp1], a
     xor a, a
     ld [wStatusFieldStep], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 4 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -478,7 +478,7 @@ Jump_00A_4261:: ; address name
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
 ; entry 5 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
@@ -490,9 +490,10 @@ Jump_00A_4271:: ; address name
     ldh [hTemp1], a
     xor a, a
     ld [wStatusFieldStep], a
-    jr Jump_00A_427B
+    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-Jump_00A_427B::
+RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState::
+Jump_00A_427B:: ; address name
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -511,19 +512,19 @@ Jump_00A_427B::
     ld c, a
     ld a, [wTilesUnderPoint]
     cp a, c
-    jr z, Jump_00A_42AF
+    jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $1]
     cp a, c
-    jr z, Jump_00A_42AF
+    jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $2]
     cp a, c
-    jr z, Jump_00A_42AF
+    jr z, .set_mode_state_to_07
     ld a, [wTilesUnderPoint + $3]
     cp a, c
-    jr z, Jump_00A_42AF
+    jr z, .set_mode_state_to_07
     ret
 
-Jump_00A_42AF::
+.set_mode_state_to_07:
     ld a, $07
     ld [wModeState], a
     xor a, a
@@ -555,22 +556,22 @@ Func_00A_42BC:: ; address name
     ret z
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_00A_42F1
+    jr nz, .cp_82
     ldh a, [hMapId]
     cp a, $20
     ret c
     ld c, a
     ld hl, EnterStatusEffectFieldState_Data
 
-Jump_00A_42E8::
+.skip:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_00A_42FD
+    jr z, .read_party_count
     cp a, c
     ret z
-    jr Jump_00A_42E8
+    jr .skip
 
-Jump_00A_42F1::
+.cp_82:
     cp a, $82
     ret z
     cp a, $83
@@ -580,38 +581,38 @@ Jump_00A_42F1::
     cp a, $87
     ret z
 
-Jump_00A_42FD::
+.read_party_count:
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
 
-Jump_00A_4309::
+.loop:
     push bc
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
     bit 7, a
-    jr nz, Jump_00A_4350
+    jr nz, .restore
     bit 2, a
-    jr nz, Jump_00A_431E
+    jr nz, .call_toggle_status_step_flags_low_bit_once
     bit 0, a
-    jr nz, Jump_00A_4349
-    jr Jump_00A_4350
+    jr nz, .call_toggle_status_step_flags_low_bit_once2
+    jr .restore
 
-Jump_00A_431E::
+.call_toggle_status_step_flags_low_bit_once:
     call ToggleStatusStepFlagsLowBitOnce
 
-Jump_00A_4321::
+.loop2:
     pop bc
     ld a, [wModeState]
     cp a, $03
-    jr nz, Jump_00A_432D
+    jr nz, .set_mode_state_to_07
     xor a, a
     ld [wEncounterCountdown], a
 
-Jump_00A_432D::
+.set_mode_state_to_07:
     ld a, $07
     ld [wModeState], a
     xor a, a
@@ -623,20 +624,20 @@ Jump_00A_432D::
     ld a, [wStatusStepFlags]
     and a, $7F
     ld [wStatusStepFlags], a
-    jr Jump_00A_4355
+    jr .check_status_step_flags
 
-Jump_00A_4349::
+.call_toggle_status_step_flags_low_bit_once2:
     call ToggleStatusStepFlagsLowBitOnce
     and a, $01
-    jr nz, Jump_00A_4321
+    jr nz, .loop2
 
-Jump_00A_4350::
+.restore:
     pop bc
     inc hl
     dec b
-    jr nz, Jump_00A_4309
+    jr nz, .loop
 
-Jump_00A_4355::
+.check_status_step_flags:
     ld a, [wStatusStepFlags]
     and a, $7F
     ld [wStatusStepFlags], a
@@ -703,12 +704,12 @@ Func_00A_43B5:: ; address name
     ret nz
     ld a, [wScriptRunning]
     or a, a
-    jr z, Jump_00A_43DC
+    jr z, .set_talk_event_group_to_1E
     ld a, $01
     ld [wTalkCountdown], a
     ret
 
-Jump_00A_43DC::
+.set_talk_event_group_to_1E:
     ld a, $1E
     ld [wTalkEventGroup], a
     xor a, a
@@ -740,30 +741,30 @@ Func_00A_43EC:: ; address name
     ret z
     ld a, [wEncounterRate]
     bit 7, a
-    jr z, Jump_00A_4414
+    jr z, .check_encounter_rate
     and a, $7F
     ld [wEncounterRate], a
     ret
 
-Jump_00A_4414::
+.check_encounter_rate:
     ld a, [wEncounterRate]
     or a, a
     ret z
     ld a, [wEncounterDelay]
     or a, a
-    jr z, Jump_00A_4442
+    jr z, .read_encounter_rate
     dec a
     ld [wEncounterDelay], a
     or a, a
     ret nz
     ld a, [wModeState]
     cp a, $01
-    jr nz, Jump_00A_4432
+    jr nz, .set_talk_event_group_to_1D
     ld a, $01
     ld [wEncounterDelay], a
     ret
 
-Jump_00A_4432::
+.set_talk_event_group_to_1D:
     ld a, $1D
     ld [wTalkEventGroup], a
     xor a, a
@@ -771,17 +772,17 @@ Jump_00A_4432::
     farcall DispatchTalkEvent
     ret
 
-Jump_00A_4442::
+.read_encounter_rate:
     ld a, [wEncounterRate]
     push af
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr z, Jump_00A_4451
+    jr z, .restore
     pop af
     ld b, $02
-    jr Jump_00A_44A0
+    jr .skip
 
-Jump_00A_4451::
+.restore:
     pop af
     ld l, a
     ld h, $00
@@ -799,7 +800,7 @@ Jump_00A_4451::
     ld h, a
     ld a, [hl+]
     or a, a
-    jr nz, Jump_00A_44AD
+    jr nz, .read_encounter_countdown
     push hl
     ldh a, [hPlayerX]
     ld b, a
@@ -809,66 +810,66 @@ Jump_00A_4451::
     pop hl
     ld b, $02
 
-Jump_00A_447A::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_00A_4498
+    jr z, .next
     ld c, a
     ld a, [wTilesUnderPoint]
     cp a, c
-    jr z, Jump_00A_44A0
+    jr z, .skip
     ld a, [wTilesUnderPoint + $1]
     cp a, c
-    jr z, Jump_00A_44A0
+    jr z, .skip
     ld a, [wTilesUnderPoint + $2]
     cp a, c
-    jr z, Jump_00A_44A0
+    jr z, .skip
     ld a, [wTilesUnderPoint + $3]
     cp a, c
-    jr z, Jump_00A_44A0
+    jr z, .skip
 
-Jump_00A_4498::
+.next:
     inc b
     ld a, b
     cp a, $09
-    jr nz, Jump_00A_447A
+    jr nz, .loop
     ld b, $02
 
-Jump_00A_44A0::
+.skip:
     ld a, b
     srl a
     ld b, a
     ld a, [wEncounterCountdown]
     sub a, b
     ld [wEncounterCountdown], a
-    jr Jump_00A_44B6
+    jr .skip2
 
-Jump_00A_44AD::
+.read_encounter_countdown:
     ld a, [hl]
     ld c, a
     ld a, [wEncounterCountdown]
     sub a, c
     ld [wEncounterCountdown], a
 
-Jump_00A_44B6::
-    jr c, Jump_00A_44C3
+.skip2:
+    jr c, .clear_battle_intro_kind
     ld a, [wEncounterCountdown]
     or a, a
-    jr z, Jump_00A_44C3
+    jr z, .clear_battle_intro_kind
     cp a, $E0
-    jr nc, Jump_00A_44C3
+    jr nc, .clear_battle_intro_kind
     ret
 
-Jump_00A_44C3::
+.clear_battle_intro_kind:
     xor a, a
     ld [wBattleIntroKind], a
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_00A_44D3
+    jr z, .call_redraw_screen_buffer_if_party_window
     ld a, $01
     ld [wBattleIntroKind], a
 
-Jump_00A_44D3::
+.call_redraw_screen_buffer_if_party_window:
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ld a, $03
     ld [wModeState], a
@@ -885,7 +886,7 @@ Jump_00A_44D3::
     call PickRandomEncounterCountdownFromTable478F
     ret
 
-; E-0202 (C1: Jump_00A_4451 reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0 it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot) / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of hPlayerStateFlags is set the decrement is 1; 36 records end at the code at $461E).
+; E-0202 (C1: TickRandomEncounterCounter.restore reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0 it compares bytes 1-7 (until $FF) with the four tiles of wTilesUnderPoint and subtracts (2 + slot) / 2 from wEncounterCountdown, else 1; with a non-zero byte 0 it subtracts byte 1; when bit 3 of hPlayerStateFlags is set the decrement is 1; 36 records end at the code at $461E).
 ; record: mode (0 = by tile); then tile numbers, slot k taking (k + 2) / 2 off wEncounterCountdown when a tile under the player matches (otherwise 1), or with a non-zero mode the decrement itself
 EncounterRateTable::
 Data_00A_44FE:: ; address name
@@ -995,7 +996,7 @@ Jump_00A_4677:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
     cp a, $0C
-    jr nc, Jump_00A_46D0
+    jr nc, .skip2
     farcall ComputePartyStrengthForKey
     ld a, [wPartyStrength]
     ld b, a
@@ -1006,10 +1007,10 @@ Jump_00A_4677:: ; address name
     ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE
     add a, e
     ld e, a
-    jr nc, Jump_00A_4699
+    jr nc, .set_temp0
     inc d
 
-Jump_00A_4699::
+.set_temp0:
     ld a, [de]
     ldh [hTemp0], a
     inc de
@@ -1018,12 +1019,12 @@ Jump_00A_4699::
     ld hl, wEncounterMonsters
     ld b, $03
 
-Jump_00A_46A5::
+.loop:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
-    jr nc, Jump_00A_46A5
+    jr nc, .loop
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -1032,25 +1033,25 @@ Jump_00A_46A5::
     pop af
     add a, e
     ld e, a
-    jr nc, Jump_00A_46BE
+    jr nc, .skip
     inc d
 
-Jump_00A_46BE::
+.skip:
     ld a, e
     ld [hl+], a
     ld a, d
     ld [hl+], a
     dec b
-    jr nz, Jump_00A_46A5
+    jr nz, .loop
 
-Jump_00A_46C5::
+.set_encounter_kind_to_02:
     ld a, $02
     ld [wEncounterKind], a
     ld a, $06
     ld [wBattleKind], a
     ret
 
-Jump_00A_46D0::
+.skip2:
     sub a, $0C
     ld c, a
     add a, a
@@ -1059,14 +1060,14 @@ Jump_00A_46D0::
     ld de, RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_4716
     add a, e
     ld e, a
-    jr nc, Jump_00A_46DE
+    jr nc, .skip3
     inc d
 
-Jump_00A_46DE::
+.skip3:
     ld hl, wEncounterMonsters
     ld b, $03
 
-Jump_00A_46E3::
+.loop2:
     ld a, [de]
     inc de
     ld [hl+], a
@@ -1074,8 +1075,8 @@ Jump_00A_46E3::
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_00A_46E3
-    jr Jump_00A_46C5
+    jr nz, .loop2
+    jr .set_encounter_kind_to_02
 
 ; address loaded by RunBattleIntroKindCase_ComputePartyStrengthForKey
 RunBattleIntroKindCase_ComputePartyStrengthForKey_Data_46EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1100,28 +1101,28 @@ Jump_00A_472E:: ; address name
     ld c, $76
     ld a, [wPartyStrength]
     cp a, $05
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $0A
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $0F
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $14
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $19
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $1E
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
     cp a, $23
-    jr c, Jump_00A_475C
+    jr c, .set_encounter_monsters
     inc c
 
-Jump_00A_475C::
+.set_encounter_monsters:
     ld a, c
     ld [wEncounterMonsters], a
     xor a, a
@@ -1201,21 +1202,21 @@ Func_00A_47A4:: ; address name
     ld [wBattleIntroKind], a
     ldh a, [hTemp0]
     cp a, $14
-    jr z, Jump_00A_47F6
+    jr z, .set_battle_intro_kind_to_07
     cp a, $15
-    jr z, Jump_00A_47F6
+    jr z, .set_battle_intro_kind_to_07
     cp a, $2F
-    jr z, Jump_00A_47F6
+    jr z, .set_battle_intro_kind_to_07
     cp a, $30
-    jr z, Jump_00A_47F6
+    jr z, .set_battle_intro_kind_to_07
     cp a, $31
-    jr nz, Jump_00A_47FB
+    jr nz, .set_mode_state_to_03
 
-Jump_00A_47F6::
+.set_battle_intro_kind_to_07:
     ld a, $07
     ld [wBattleIntroKind], a
 
-Jump_00A_47FB::
+.set_mode_state_to_03:
     ld a, $03
     ld [wModeState], a
     xor a, a
@@ -1445,439 +1446,439 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
 Jump_00A_49B4:: ; address name
     ldh a, [hMapId]
     cp a, $20
-    jp z, Jump_00A_4ACF
+    jp z, .call_read_map_cell_word_for_screen_xy
     cp a, $2B
-    jp z, Jump_00A_4AD8
+    jp z, .check_player_state_flags
     cp a, $30
-    jp z, Jump_00A_4AEE
+    jp z, .check_player_state_flags2
     cp a, $35
-    jp z, Jump_00A_4B04
+    jp z, .call_read_map_cell_word_for_screen_xy2
     cp a, $38
-    jp z, Jump_00A_4B0D
+    jp z, .call_read_map_cell_word_for_screen_xy3
     cp a, $39
-    jp z, Jump_00A_4B16
+    jp z, .call_read_map_cell_word_for_screen_xy4
     cp a, $3A
-    jp z, Jump_00A_4B1F
+    jp z, .call_read_map_cell_word_for_screen_xy5
     cp a, $3E
-    jp z, Jump_00A_4B28
+    jp z, .call_read_map_cell_word_for_screen_xy6
     cp a, $3F
-    jp z, Jump_00A_4B31
+    jp z, .call_read_map_cell_word_for_screen_xy7
     cp a, $37
-    jp z, Jump_00A_4B3A
+    jp z, .call_read_map_cell_word_for_screen_xy8
     cp a, $42
-    jp z, Jump_00A_4B43
+    jp z, .call_read_map_cell_word_for_screen_xy9
     cp a, $43
-    jp z, Jump_00A_4B4C
+    jp z, .call_read_map_cell_word_for_screen_xy10
     cp a, $48
-    jp z, Jump_00A_4B55
+    jp z, .check_player_state_flags3
     cp a, $53
-    jp z, Jump_00A_4B6B
+    jp z, .call_read_map_cell_word_for_screen_xy11
     cp a, $54
-    jp z, Jump_00A_4B74
+    jp z, .call_run_battle_intro_kind_case_case00_write4
     cp a, $55
-    jp z, Jump_00A_4B74
+    jp z, .call_run_battle_intro_kind_case_case00_write4
     cp a, $56
-    jp z, Jump_00A_4B74
+    jp z, .call_run_battle_intro_kind_case_case00_write4
     cp a, $5D
-    jp z, Jump_00A_4B7B
+    jp z, .call_read_map_cell_word_for_screen_xy12
     cp a, $62
-    jp z, Jump_00A_4B84
+    jp z, .call_read_map_cell_word_for_screen_xy13
     cp a, $63
-    jp z, Jump_00A_4B8D
+    jp z, .call_read_map_cell_word_for_screen_xy14
     cp a, $64
-    jp z, Jump_00A_4B96
+    jp z, .call_read_map_cell_word_for_screen_xy15
     cp a, $65
-    jp z, Jump_00A_4B9F
+    jp z, .call_read_map_cell_word_for_screen_xy16
     cp a, $66
-    jp z, Jump_00A_4BA8
+    jp z, .call_read_map_cell_word_for_screen_xy17
     cp a, $67
-    jp z, Jump_00A_4BB1
+    jp z, .call_read_map_cell_word_for_screen_xy18
     cp a, $70
-    jp z, Jump_00A_4BBA
+    jp z, .call_read_map_cell_word_for_screen_xy19
     cp a, $73
-    jp z, Jump_00A_4BC3
+    jp z, .call_read_map_cell_word_for_screen_xy20
     cp a, $74
-    jp z, Jump_00A_4BCC
+    jp z, .call_read_map_cell_word_for_screen_xy21
     cp a, $75
-    jp z, Jump_00A_4BD5
+    jp z, .call_read_map_cell_word_for_screen_xy22
     cp a, $76
-    jp z, Jump_00A_4BDE
+    jp z, .call_read_map_cell_word_for_screen_xy23
     cp a, $81
-    jp z, Jump_00A_4BE7
+    jp z, .call_read_map_cell_word_for_screen_xy24
     cp a, $82
-    jp z, Jump_00A_4BF0
+    jp z, .call_read_map_cell_word_for_screen_xy25
     cp a, $83
-    jp z, Jump_00A_4BF9
+    jp z, .call_read_map_cell_word_for_screen_xy26
     cp a, $85
-    jp z, Jump_00A_4C02
+    jp z, .call_read_map_cell_word_for_screen_xy27
     cp a, $86
-    jp z, Jump_00A_4C0B
+    jp z, .call_read_map_cell_word_for_screen_xy28
     cp a, $87
-    jp z, Jump_00A_4C14
+    jp z, .call_read_map_cell_word_for_screen_xy29
     cp a, $88
-    jp z, Jump_00A_4C1D
+    jp z, .call_read_map_cell_word_for_screen_xy30
     cp a, $8B
-    jp z, Jump_00A_4C26
+    jp z, .call_read_map_cell_word_for_screen_xy31
     cp a, $8C
-    jp z, Jump_00A_4C2F
+    jp z, .call_read_map_cell_word_for_screen_xy32
     cp a, $8E
-    jp z, Jump_00A_4C38
+    jp z, .call_read_map_cell_word_for_screen_xy33
     cp a, $90
-    jp z, Jump_00A_4C41
+    jp z, .call_read_map_cell_word_for_screen_xy34
     cp a, $A0
-    jp z, Jump_00A_4C4A
+    jp z, .call_read_map_cell_word_for_screen_xy35
     cp a, $A2
-    jp z, Jump_00A_4C53
+    jp z, .call_read_map_cell_word_for_screen_xy36
     cp a, $A8
-    jp z, Jump_00A_4C5C
+    jp z, .call_read_map_cell_word_for_screen_xy37
     cp a, $AD
-    jp z, Jump_00A_4C65
+    jp z, .call_read_map_cell_word_for_screen_xy38
     cp a, $AE
-    jp z, Jump_00A_4C65
+    jp z, .call_read_map_cell_word_for_screen_xy38
     cp a, $B0
-    jp z, Jump_00A_4C6E
+    jp z, .call_read_map_cell_word_for_screen_xy39
     cp a, $B3
-    jp z, Jump_00A_4C77
+    jp z, .call_read_map_cell_word_for_screen_xy40
     cp a, $B4
-    jp z, Jump_00A_4C77
+    jp z, .call_read_map_cell_word_for_screen_xy40
     cp a, $B5
-    jp z, Jump_00A_4C77
+    jp z, .call_read_map_cell_word_for_screen_xy40
     cp a, $B8
-    jp z, Jump_00A_4C80
+    jp z, .check_player_state_flags4
     cp a, $BE
-    jp z, Jump_00A_4C96
+    jp z, .call_read_map_cell_word_for_screen_xy41
     cp a, $BF
-    jp z, Jump_00A_4C9F
+    jp z, .call_read_map_cell_word_for_screen_xy42
     cp a, $C0
-    jp z, Jump_00A_4CA8
+    jp z, .call_read_map_cell_word_for_screen_xy43
     cp a, $C1
-    jp z, Jump_00A_4CA8
+    jp z, .call_read_map_cell_word_for_screen_xy43
     cp a, $C2
-    jp z, Jump_00A_4CB1
+    jp z, .call_read_map_cell_word_for_screen_xy44
     cp a, $C3
-    jp z, Jump_00A_4CB1
+    jp z, .call_read_map_cell_word_for_screen_xy44
     ret
 
-Jump_00A_4ACF::
+.call_read_map_cell_word_for_screen_xy:
     ld de, EncounterGrid_5773
     ld a, $08
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4AD8::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4AE7
+    jr nz, .call_run_battle_intro_kind_case_case00_write
     ld de, EncounterGrid_5856
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4AE7::
+.call_run_battle_intro_kind_case_case00_write:
     ld de, EncounterGroup_588E
     call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
     ret
 
-Jump_00A_4AEE::
+.check_player_state_flags2:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4AFD
+    jr nz, .call_run_battle_intro_kind_case_case00_write2
     ld de, EncounterGrid_589B
     ld a, $08
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4AFD::
+.call_run_battle_intro_kind_case_case00_write2:
     ld de, EncounterGroup_5A3B
     call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
     ret
 
-Jump_00A_4B04::
+.call_read_map_cell_word_for_screen_xy2:
     ld de, EncounterGrid_5A4C
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B0D::
+.call_read_map_cell_word_for_screen_xy3:
     ld de, EncounterGrid_5A8A
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B16::
+.call_read_map_cell_word_for_screen_xy4:
     ld de, EncounterGrid_5AB7
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B1F::
+.call_read_map_cell_word_for_screen_xy5:
     ld de, EncounterGrid_5ADE
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B28::
+.call_read_map_cell_word_for_screen_xy6:
     ld de, EncounterGrid_5AFF
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B31::
+.call_read_map_cell_word_for_screen_xy7:
     ld de, EncounterGrid_5B14
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B3A::
+.call_read_map_cell_word_for_screen_xy8:
     ld de, EncounterGrid_5B29
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B43::
+.call_read_map_cell_word_for_screen_xy9:
     ld de, EncounterGrid_5B45
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B4C::
+.call_read_map_cell_word_for_screen_xy10:
     ld de, EncounterGrid_5B58
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B55::
+.check_player_state_flags3:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4B64
+    jr nz, .call_run_battle_intro_kind_case_case00_write3
     ld de, EncounterGrid_5B6B
     ld a, $0C
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B64::
+.call_run_battle_intro_kind_case_case00_write3:
     ld de, EncounterGroup_5D4E
     call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
     ret
 
-Jump_00A_4B6B::
+.call_read_map_cell_word_for_screen_xy11:
     ld de, EncounterGrid_5D5D
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B74::
+.call_run_battle_intro_kind_case_case00_write4:
     ld de, EncounterGroup_5D8C
     call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
     ret
 
-Jump_00A_4B7B::
+.call_read_map_cell_word_for_screen_xy12:
     ld de, EncounterGrid_5D9B
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B84::
+.call_read_map_cell_word_for_screen_xy13:
     ld de, EncounterGrid_5DCA
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B8D::
+.call_read_map_cell_word_for_screen_xy14:
     ld de, EncounterGrid_5DE7
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B96::
+.call_read_map_cell_word_for_screen_xy15:
     ld de, EncounterGrid_5DEF
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4B9F::
+.call_read_map_cell_word_for_screen_xy16:
     ld de, EncounterGrid_5DF7
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BA8::
+.call_read_map_cell_word_for_screen_xy17:
     ld de, EncounterGrid_5E0C
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BB1::
+.call_read_map_cell_word_for_screen_xy18:
     ld de, EncounterGrid_5E14
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BBA::
+.call_read_map_cell_word_for_screen_xy19:
     ld de, EncounterGrid_5E2B
     ld a, $0C
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BC3::
+.call_read_map_cell_word_for_screen_xy20:
     ld de, EncounterGrid_6028
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BCC::
+.call_read_map_cell_word_for_screen_xy21:
     ld de, EncounterGrid_603D
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BD5::
+.call_read_map_cell_word_for_screen_xy22:
     ld de, EncounterGrid_6052
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BDE::
+.call_read_map_cell_word_for_screen_xy23:
     ld de, EncounterGrid_606B
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BE7::
+.call_read_map_cell_word_for_screen_xy24:
     ld de, EncounterGrid_6084
     ld a, $01
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BF0::
+.call_read_map_cell_word_for_screen_xy25:
     ld de, EncounterGrid_6097
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4BF9::
+.call_read_map_cell_word_for_screen_xy26:
     ld de, EncounterGrid_60BA
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C02::
+.call_read_map_cell_word_for_screen_xy27:
     ld de, EncounterGrid_60DD
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C0B::
+.call_read_map_cell_word_for_screen_xy28:
     ld de, EncounterGrid_60F2
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C14::
+.call_read_map_cell_word_for_screen_xy29:
     ld de, EncounterGrid_6107
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C1D::
+.call_read_map_cell_word_for_screen_xy30:
     ld de, EncounterGrid_6120
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C26::
+.call_read_map_cell_word_for_screen_xy31:
     ld de, EncounterGrid_6139
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C2F::
+.call_read_map_cell_word_for_screen_xy32:
     ld de, EncounterGrid_6160
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C38::
+.call_read_map_cell_word_for_screen_xy33:
     ld de, EncounterGrid_6181
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C41::
+.call_read_map_cell_word_for_screen_xy34:
     ld de, EncounterGrid_61A2
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C4A::
+.call_read_map_cell_word_for_screen_xy35:
     ld de, EncounterGrid_61BD
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C53::
+.call_read_map_cell_word_for_screen_xy36:
     ld de, EncounterGrid_61FB
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C5C::
+.call_read_map_cell_word_for_screen_xy37:
     ld de, EncounterGrid_6220
     ld a, $06
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C65::
+.call_read_map_cell_word_for_screen_xy38:
     ld de, EncounterGrid_62AB
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C6E::
+.call_read_map_cell_word_for_screen_xy39:
     ld de, EncounterGrid_62D2
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C77::
+.call_read_map_cell_word_for_screen_xy40:
     ld de, EncounterGrid_62EB
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C80::
+.check_player_state_flags4:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4C8F
+    jr nz, .call_run_battle_intro_kind_case_case00_write5
     ld de, EncounterGrid_6300
     ld a, $05
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C8F::
+.call_run_battle_intro_kind_case_case00_write5:
     ld de, EncounterGroup_6375
     call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
     ret
 
-Jump_00A_4C96::
+.call_read_map_cell_word_for_screen_xy41:
     ld de, EncounterGrid_6382
     ld a, $01
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4C9F::
+.call_read_map_cell_word_for_screen_xy42:
     ld de, EncounterGrid_6393
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4CA8::
+.call_read_map_cell_word_for_screen_xy43:
     ld de, EncounterGrid_63AA
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
-Jump_00A_4CB1::
+.call_read_map_cell_word_for_screen_xy44:
     ld de, EncounterGrid_63BF
     ld a, $02
     call ReadMapCellWordForScreenXY
@@ -1937,72 +1938,72 @@ Func_00A_4CD4:: ; address name
     ld hl, wEncounterMonsters
     ld b, $03
 
-Jump_00A_4CF7::
+.loop:
     call NextTableByte
     ld a, [wRandomLo]
     and a, $7F
     ld c, a
     ldh a, [hTemp0]
     cp a, c
-    jr c, Jump_00A_4CF7
+    jr c, .loop
     push hl
     push de
     ldh a, [hTemp1]
     cp a, c
-    jr nc, Jump_00A_4D31
+    jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp2]
     cp a, c
-    jr nc, Jump_00A_4D31
+    jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp3]
     cp a, c
-    jr nc, Jump_00A_4D31
+    jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp4]
     cp a, c
-    jr nc, Jump_00A_4D31
+    jr nc, .skip
     inc de
     inc de
     ldh a, [hTemp5]
     cp a, c
-    jr nc, Jump_00A_4D31
+    jr nc, .skip
 
-Jump_00A_4D28::
+.restore:
     pop de
     pop hl
     inc hl
     inc hl
     dec b
-    jr nz, Jump_00A_4CF7
-    jr Jump_00A_4D38
+    jr nz, .loop
+    jr .clear_battle_kind
 
-Jump_00A_4D31::
+.skip:
     ld a, [de]
     inc de
     ld [hl+], a
     ld a, [de]
     ld [hl], a
-    jr Jump_00A_4D28
+    jr .restore
 
-Jump_00A_4D38::
+.clear_battle_kind:
     xor a, a
     ld [wBattleKind], a
     ld a, [wEncounterKind]
     or a, a
     ret z
     dec a
-    jr nz, Jump_00A_4D49
+    jr nz, .call_next_table_byte
     ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_5150
-    jr Jump_00A_4D4C
+    jr .call_next_table_byte2
 
-Jump_00A_4D49::
+.call_next_table_byte:
     ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data_514C
 
-Jump_00A_4D4C::
+.call_next_table_byte2:
     call NextTableByte
     ld a, [wRandomLo]
     and a, $03
@@ -2018,431 +2019,431 @@ CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags::
 Func_00A_4D5E:: ; address name
     ldh a, [hMapId]
     cp a, $20
-    jp z, Jump_00A_4E79
+    jp z, .call_read_map_cell_word_for_screen_xy_5057
     cp a, $2B
-    jp z, Jump_00A_4E82
+    jp z, .check_player_state_flags
     cp a, $30
-    jp z, Jump_00A_4E98
+    jp z, .check_player_state_flags2
     cp a, $35
-    jp z, Jump_00A_4EAE
+    jp z, .call_read_map_cell_word_for_screen_xy_50572
     cp a, $38
-    jp z, Jump_00A_4EB7
+    jp z, .call_read_map_cell_word_for_screen_xy_50573
     cp a, $39
-    jp z, Jump_00A_4EC0
+    jp z, .call_read_map_cell_word_for_screen_xy_50574
     cp a, $3A
-    jp z, Jump_00A_4EC9
+    jp z, .call_read_map_cell_word_for_screen_xy_50575
     cp a, $3E
-    jp z, Jump_00A_4ED2
+    jp z, .call_read_map_cell_word_for_screen_xy_50576
     cp a, $3F
-    jp z, Jump_00A_4EDB
+    jp z, .call_read_map_cell_word_for_screen_xy_50577
     cp a, $37
-    jp z, Jump_00A_4EE4
+    jp z, .call_read_map_cell_word_for_screen_xy_50578
     cp a, $42
-    jp z, Jump_00A_4EED
+    jp z, .call_read_map_cell_word_for_screen_xy_50579
     cp a, $43
-    jp z, Jump_00A_4EF6
+    jp z, .call_read_map_cell_word_for_screen_xy_505710
     cp a, $48
-    jp z, Jump_00A_4EFF
+    jp z, .check_player_state_flags3
     cp a, $53
-    jp z, Jump_00A_4F15
+    jp z, .call_read_map_cell_word_for_screen_xy_505711
     cp a, $54
-    jp z, Jump_00A_4F1E
+    jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp a, $55
-    jp z, Jump_00A_4F1E
+    jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp a, $56
-    jp z, Jump_00A_4F1E
+    jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp a, $5D
-    jp z, Jump_00A_4F25
+    jp z, .call_read_map_cell_word_for_screen_xy_505712
     cp a, $62
-    jp z, Jump_00A_4F2E
+    jp z, .call_read_map_cell_word_for_screen_xy_505713
     cp a, $63
-    jp z, Jump_00A_4F37
+    jp z, .call_read_map_cell_word_for_screen_xy_505714
     cp a, $64
-    jp z, Jump_00A_4F40
+    jp z, .call_read_map_cell_word_for_screen_xy_505715
     cp a, $65
-    jp z, Jump_00A_4F49
+    jp z, .call_read_map_cell_word_for_screen_xy_505716
     cp a, $66
-    jp z, Jump_00A_4F52
+    jp z, .call_read_map_cell_word_for_screen_xy_505717
     cp a, $67
-    jp z, Jump_00A_4F5B
+    jp z, .call_read_map_cell_word_for_screen_xy_505718
     cp a, $70
-    jp z, Jump_00A_4F64
+    jp z, .call_read_map_cell_word_for_screen_xy_505719
     cp a, $73
-    jp z, Jump_00A_4F6D
+    jp z, .call_read_map_cell_word_for_screen_xy_505720
     cp a, $74
-    jp z, Jump_00A_4F76
+    jp z, .call_read_map_cell_word_for_screen_xy_505721
     cp a, $75
-    jp z, Jump_00A_4F7F
+    jp z, .call_read_map_cell_word_for_screen_xy_505722
     cp a, $76
-    jp z, Jump_00A_4F88
+    jp z, .call_read_map_cell_word_for_screen_xy_505723
     cp a, $81
-    jp z, Jump_00A_4F91
+    jp z, .call_read_map_cell_word_for_screen_xy_505724
     cp a, $82
-    jp z, Jump_00A_4F9A
+    jp z, .call_read_map_cell_word_for_screen_xy_505725
     cp a, $83
-    jp z, Jump_00A_4FA3
+    jp z, .call_read_map_cell_word_for_screen_xy_505726
     cp a, $85
-    jp z, Jump_00A_4FAC
+    jp z, .call_read_map_cell_word_for_screen_xy_505727
     cp a, $86
-    jp z, Jump_00A_4FB5
+    jp z, .call_read_map_cell_word_for_screen_xy_505728
     cp a, $87
-    jp z, Jump_00A_4FBE
+    jp z, .call_read_map_cell_word_for_screen_xy_505729
     cp a, $88
-    jp z, Jump_00A_4FC7
+    jp z, .call_read_map_cell_word_for_screen_xy_505730
     cp a, $8B
-    jp z, Jump_00A_4FD0
+    jp z, .call_read_map_cell_word_for_screen_xy_505731
     cp a, $8C
-    jp z, Jump_00A_4FD9
+    jp z, .call_read_map_cell_word_for_screen_xy_505732
     cp a, $8E
-    jp z, Jump_00A_4FE2
+    jp z, .call_read_map_cell_word_for_screen_xy_505733
     cp a, $90
-    jp z, Jump_00A_4FEB
+    jp z, .call_read_map_cell_word_for_screen_xy_505734
     cp a, $A0
-    jp z, Jump_00A_4FF4
+    jp z, .call_read_map_cell_word_for_screen_xy_505735
     cp a, $A2
-    jp z, Jump_00A_4FFD
+    jp z, .call_read_map_cell_word_for_screen_xy_505736
     cp a, $A8
-    jp z, Jump_00A_5006
+    jp z, .call_read_map_cell_word_for_screen_xy_505737
     cp a, $AD
-    jp z, Jump_00A_500F
+    jp z, .call_read_map_cell_word_for_screen_xy_505738
     cp a, $AE
-    jp z, Jump_00A_500F
+    jp z, .call_read_map_cell_word_for_screen_xy_505738
     cp a, $B0
-    jp z, Jump_00A_5018
+    jp z, .call_read_map_cell_word_for_screen_xy_505739
     cp a, $B3
-    jp z, Jump_00A_5021
+    jp z, .call_read_map_cell_word_for_screen_xy_505740
     cp a, $B4
-    jp z, Jump_00A_5021
+    jp z, .call_read_map_cell_word_for_screen_xy_505740
     cp a, $B5
-    jp z, Jump_00A_5021
+    jp z, .call_read_map_cell_word_for_screen_xy_505740
     cp a, $B8
-    jp z, Jump_00A_502A
+    jp z, .call_read_map_cell_word_for_screen_xy_505741
     cp a, $BE
-    jp z, Jump_00A_5033
+    jp z, .call_read_map_cell_word_for_screen_xy_505742
     cp a, $BF
-    jp z, Jump_00A_503C
+    jp z, .call_read_map_cell_word_for_screen_xy_505743
     cp a, $C0
-    jp z, Jump_00A_5045
+    jp z, .call_read_map_cell_word_for_screen_xy_505744
     cp a, $C1
-    jp z, Jump_00A_5045
+    jp z, .call_read_map_cell_word_for_screen_xy_505744
     cp a, $C2
-    jp z, Jump_00A_504E
+    jp z, .call_read_map_cell_word_for_screen_xy_505745
     cp a, $C3
-    jp z, Jump_00A_504E
+    jp z, .call_read_map_cell_word_for_screen_xy_505745
     ret
 
-Jump_00A_4E79::
+.call_read_map_cell_word_for_screen_xy_5057:
     ld de, EncounterGrid_5773
     ld a, $08
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4E82::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4E91
+    jr nz, .call_load_encounter_monster_ids_to_work_buf
     ld de, EncounterGrid_5856
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4E91::
+.call_load_encounter_monster_ids_to_work_buf:
     ld de, EncounterGroup_588E
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-Jump_00A_4E98::
+.check_player_state_flags2:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4EA7
+    jr nz, .call_load_encounter_monster_ids_to_work_buf2
     ld de, EncounterGrid_589B
     ld a, $08
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EA7::
+.call_load_encounter_monster_ids_to_work_buf2:
     ld de, EncounterGroup_5A3B
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-Jump_00A_4EAE::
+.call_read_map_cell_word_for_screen_xy_50572:
     ld de, EncounterGrid_5A4C
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EB7::
+.call_read_map_cell_word_for_screen_xy_50573:
     ld de, EncounterGrid_5A8A
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EC0::
+.call_read_map_cell_word_for_screen_xy_50574:
     ld de, EncounterGrid_5AB7
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EC9::
+.call_read_map_cell_word_for_screen_xy_50575:
     ld de, EncounterGrid_5ADE
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4ED2::
+.call_read_map_cell_word_for_screen_xy_50576:
     ld de, EncounterGrid_5AFF
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EDB::
+.call_read_map_cell_word_for_screen_xy_50577:
     ld de, EncounterGrid_5B14
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EE4::
+.call_read_map_cell_word_for_screen_xy_50578:
     ld de, EncounterGrid_5B29
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EED::
+.call_read_map_cell_word_for_screen_xy_50579:
     ld de, EncounterGrid_5B45
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EF6::
+.call_read_map_cell_word_for_screen_xy_505710:
     ld de, EncounterGrid_5B58
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4EFF::
+.check_player_state_flags3:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_4F0E
+    jr nz, .call_load_encounter_monster_ids_to_work_buf3
     ld de, EncounterGrid_5B6B
     ld a, $0C
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F0E::
+.call_load_encounter_monster_ids_to_work_buf3:
     ld de, EncounterGroup_5D4E
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-Jump_00A_4F15::
+.call_read_map_cell_word_for_screen_xy_505711:
     ld de, EncounterGrid_5D5D
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F1E::
+.call_load_encounter_monster_ids_to_work_buf4:
     ld de, EncounterGroup_5D8C
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-Jump_00A_4F25::
+.call_read_map_cell_word_for_screen_xy_505712:
     ld de, EncounterGrid_5D9B
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F2E::
+.call_read_map_cell_word_for_screen_xy_505713:
     ld de, EncounterGrid_5DCA
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F37::
+.call_read_map_cell_word_for_screen_xy_505714:
     ld de, EncounterGrid_5DE7
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F40::
+.call_read_map_cell_word_for_screen_xy_505715:
     ld de, EncounterGrid_5DEF
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F49::
+.call_read_map_cell_word_for_screen_xy_505716:
     ld de, EncounterGrid_5DF7
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F52::
+.call_read_map_cell_word_for_screen_xy_505717:
     ld de, EncounterGrid_5E0C
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F5B::
+.call_read_map_cell_word_for_screen_xy_505718:
     ld de, EncounterGrid_5E14
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F64::
+.call_read_map_cell_word_for_screen_xy_505719:
     ld de, EncounterGrid_5E2B
     ld a, $0C
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F6D::
+.call_read_map_cell_word_for_screen_xy_505720:
     ld de, EncounterGrid_6028
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F76::
+.call_read_map_cell_word_for_screen_xy_505721:
     ld de, EncounterGrid_603D
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F7F::
+.call_read_map_cell_word_for_screen_xy_505722:
     ld de, EncounterGrid_6052
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F88::
+.call_read_map_cell_word_for_screen_xy_505723:
     ld de, EncounterGrid_606B
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F91::
+.call_read_map_cell_word_for_screen_xy_505724:
     ld de, EncounterGrid_6084
     ld a, $01
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4F9A::
+.call_read_map_cell_word_for_screen_xy_505725:
     ld de, EncounterGrid_6097
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FA3::
+.call_read_map_cell_word_for_screen_xy_505726:
     ld de, EncounterGrid_60BA
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FAC::
+.call_read_map_cell_word_for_screen_xy_505727:
     ld de, EncounterGrid_60DD
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FB5::
+.call_read_map_cell_word_for_screen_xy_505728:
     ld de, EncounterGrid_60F2
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FBE::
+.call_read_map_cell_word_for_screen_xy_505729:
     ld de, EncounterGrid_6107
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FC7::
+.call_read_map_cell_word_for_screen_xy_505730:
     ld de, EncounterGrid_6120
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FD0::
+.call_read_map_cell_word_for_screen_xy_505731:
     ld de, EncounterGrid_6139
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FD9::
+.call_read_map_cell_word_for_screen_xy_505732:
     ld de, EncounterGrid_6160
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FE2::
+.call_read_map_cell_word_for_screen_xy_505733:
     ld de, EncounterGrid_6181
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FEB::
+.call_read_map_cell_word_for_screen_xy_505734:
     ld de, EncounterGrid_61A2
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FF4::
+.call_read_map_cell_word_for_screen_xy_505735:
     ld de, EncounterGrid_61BD
     ld a, $04
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_4FFD::
+.call_read_map_cell_word_for_screen_xy_505736:
     ld de, EncounterGrid_61FB
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_5006::
+.call_read_map_cell_word_for_screen_xy_505737:
     ld de, EncounterGrid_6220
     ld a, $06
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_500F::
+.call_read_map_cell_word_for_screen_xy_505738:
     ld de, EncounterGrid_62AB
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_5018::
+.call_read_map_cell_word_for_screen_xy_505739:
     ld de, EncounterGrid_62D2
     ld a, $03
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_5021::
+.call_read_map_cell_word_for_screen_xy_505740:
     ld de, EncounterGrid_62EB
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_502A::
+.call_read_map_cell_word_for_screen_xy_505741:
     ld de, EncounterGrid_6300
     ld a, $05
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_5033::
+.call_read_map_cell_word_for_screen_xy_505742:
     ld de, EncounterGrid_6382
     ld a, $01
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_503C::
+.call_read_map_cell_word_for_screen_xy_505743:
     ld de, EncounterGrid_6393
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_5045::
+.call_read_map_cell_word_for_screen_xy_505744:
     ld de, EncounterGrid_63AA
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
     ret
 
-Jump_00A_504E::
+.call_read_map_cell_word_for_screen_xy_505745:
     ld de, EncounterGrid_63BF
     ld a, $02
     call ReadMapCellWordForScreenXY_5057
@@ -2482,33 +2483,33 @@ Func_00A_5071:: ; address name
     push de
     ld b, $00
 
-Jump_00A_5076::
+.skip:
     ld a, [de]
     inc de
     or a, a
-    jr z, Jump_00A_5083
+    jr z, .restore
     inc b
     ld a, b
     cp a, $05
-    jr z, Jump_00A_5083
-    jr Jump_00A_5076
+    jr z, .restore
+    jr .skip
 
-Jump_00A_5083::
+.restore:
     pop de
     ld a, $05
     add a, e
     ld e, a
-    jr nc, Jump_00A_508B
+    jr nc, .set_work_buf
     inc d
 
-Jump_00A_508B::
+.set_work_buf:
     ld a, b
     ld [wWorkBuf], a
     xor a, a
     ld [wWorkBuf + $1], a
     ld hl, wWorkBuf + $2
 
-Jump_00A_5096::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
@@ -2516,12 +2517,12 @@ Jump_00A_5096::
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_00A_5096
+    jr nz, .loop
     ld a, [wWorkBuf]
     ld b, a
     ld hl, wWorkBuf + $2
 
-Jump_00A_50A6::
+.loop2:
     push bc
     ld a, [hl+]
     ld [wMonsterId], a
@@ -2540,7 +2541,7 @@ Jump_00A_50A6::
     ld [hl+], a
     pop bc
     dec b
-    jr nz, Jump_00A_50A6
+    jr nz, .loop2
     ret
 
 ; entry 2 of the `rst $00` table in RunBattleIntroKindCase
@@ -2569,11 +2570,11 @@ Jump_00A_50D1:: ; address name
     ld a, [wMapType]
     and a, $07
     cp a, $01
-    jr z, Jump_00A_50F1
+    jr z, .read_map_screen_y
     or a, a
-    jr nz, Jump_00A_5116
+    jr nz, .read_key_world_floor
 
-Jump_00A_50F1::
+.read_map_screen_y:
     ldh a, [hMapScreenY]
     srl a
     and a, $FE
@@ -2595,7 +2596,7 @@ Jump_00A_50F1::
     ld [wBattleKind], a
     ret
 
-Jump_00A_5116::
+.read_key_world_floor:
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
@@ -2643,21 +2644,21 @@ RunBattleIntroKindCase_Case01_NextRandomSeed::
 Func_00A_5154:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_00A_519F
+    jr nz, .skip2
     ld b, $03
     ld de, wEncounterMonsters
 
-Jump_00A_515F::
+.loop:
     push bc
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $07
     add a, c
     cp a, $20
-    jr c, Jump_00A_516F
+    jr c, .skip
     ld a, $1F
 
-Jump_00A_516F::
+.skip:
     add a, a
     ld hl, wKeyWorldMonsters
     add_a_to_hl
@@ -2689,14 +2690,14 @@ Jump_00A_516F::
     pop de
     pop bc
     dec b
-    jr nz, Jump_00A_515F
+    jr nz, .loop
     ret
 
-Jump_00A_519F::
+.skip2:
     ld b, $03
     ld de, wEncounterMonsters
 
-Jump_00A_51A4::
+.loop2:
     push bc
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -2733,7 +2734,7 @@ Jump_00A_51A4::
     pop de
     pop bc
     dec b
-    jr nz, Jump_00A_51A4
+    jr nz, .loop2
     ret
 
 ; entry 3 of the `rst $00` table in RunBattleIntroKindCase
@@ -2744,11 +2745,11 @@ RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind::
 Jump_00A_51DF:: ; address name
     ld a, [wMapType]
     cp a, $82
-    jr nz, Jump_00A_51EB
+    jr nz, .set_battle_kind_to_03
     ld a, $01
     ld [wBattleIntroFlag], a
 
-Jump_00A_51EB::
+.set_battle_kind_to_03:
     ld a, $03
     ld [wBattleKind], a
     ret
@@ -2821,10 +2822,10 @@ Jump_00A_5207:: ; address name
     srl a
     add a, e
     ld e, a
-    jr nc, Jump_00A_5245
+    jr nc, .set_transition_bg_ptr_lo
     inc d
 
-Jump_00A_5245::
+.set_transition_bg_ptr_lo:
     ld a, e
     ld [wTransitionBGPtrLo], a
     ld a, d
@@ -2913,18 +2914,18 @@ RunBattleTransitionStep_Case01_Case00_ReadTransitionStage::
 Jump_00A_52B6:: ; address name
     ld a, [wTransitionStage]
     cp a, $14
-    jr nz, Jump_00A_52C2
+    jr nz, .read_transition_stage
     ld hl, wTransitionCounter
     inc [hl]
     ret
 
-Jump_00A_52C2::
+.read_transition_stage:
     ld a, [wTransitionStage]
     ld hl, $0000
     add_a_to_hl
     ld b, $09
 
-Jump_00A_52CF::
+.loop:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -2937,7 +2938,7 @@ Jump_00A_52CF::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_00A_52CF
+    jr nz, .loop
     ld a, [wTransitionStage]
     ld b, a
     ld a, $13
@@ -2946,7 +2947,7 @@ Jump_00A_52CF::
     add_a_to_hl
     ld b, $09
 
-Jump_00A_52F2::
+.loop2:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -2959,7 +2960,7 @@ Jump_00A_52F2::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_00A_52F2
+    jr nz, .loop2
     ld hl, wTransitionStage
     inc [hl]
     ret
@@ -3005,15 +3006,15 @@ Func_00A_5328:: ; address name
     call AddHLToTransitionBGPtrLoInBGMap
     ld a, b
     and a, $1F
-    jr z, Jump_00A_533D
+    jr z, .done
     ld b, a
 
-Jump_00A_5337::
+.loop:
     call NextBGMapColumn_Bank0A
     dec b
-    jr nz, Jump_00A_5337
+    jr nz, .loop
 
-Jump_00A_533D::
+.done:
     pop bc
     ret
 
@@ -3060,7 +3061,8 @@ RunBattleTransitionStep_Case01_ReadTransitionCounter::
 Jump_00A_5362:: ; address name
     ld b, $06
 
-Jump_00A_5364::
+RunBattleTransitionStep_Case01_ReadTransitionCounter_ReadTransitionCounter::
+Jump_00A_5364:: ; address name
     ld a, [wTransitionCounter]
     rst $00
     dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc
@@ -3077,40 +3079,40 @@ Jump_00A_536E:: ; address name
     push bc
     ld a, [wTransitionStage]
     cp a, $11
-    jp c, Jump_00A_5413
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $23
-    jp c, Jump_00A_5438
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $33
-    jp c, Jump_00A_545D
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $43
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $51
-    jp c, Jump_00A_5413
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $5F
-    jp c, Jump_00A_5438
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $6B
-    jp c, Jump_00A_545D
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $77
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $81
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $8B
-    jp c, Jump_00A_5438
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $93
-    jp c, Jump_00A_545D
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $9B
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $A1
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $A7
-    jp c, Jump_00A_5438
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $AB
-    jp c, Jump_00A_545D
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $AF
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $B1
-    jr c, Jump_00A_5413
-    jr Jump_00A_5438
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
 
 ; entry 1 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
 ; no direct call (reached through a table, a jump or a vector)
@@ -3122,51 +3124,52 @@ Jump_00A_53C6:: ; address name
     push bc
     ld a, [wTransitionStage]
     cp a, $02
-    jr c, Jump_00A_5438
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $04
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $08
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $0C
-    jp c, Jump_00A_545D
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $12
-    jr c, Jump_00A_5438
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $18
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $20
-    jp c, Jump_00A_5474
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $28
-    jr c, Jump_00A_545D
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $32
-    jr c, Jump_00A_5438
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $3C
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $48
-    jr c, Jump_00A_5474
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $54
-    jr c, Jump_00A_545D
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $62
-    jr c, Jump_00A_5438
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
     cp a, $70
-    jr c, Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
     cp a, $80
-    jr c, Jump_00A_5474
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
     cp a, $90
-    jr c, Jump_00A_545D
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
     cp a, $A2
-    jr c, Jump_00A_5438
-    jr Jump_00A_5413
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
 
-Jump_00A_5413::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip::
+Jump_00A_5413:: ; address name
     or a, a
-    jr nz, Jump_00A_5421
+    jr nz, .read_transition_count_a
     ld hl, $0233
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
     ld [wTransitionCountB], a
 
-Jump_00A_5421::
+.read_transition_count_a:
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3180,18 +3183,19 @@ Jump_00A_5421::
     ld a, h
     sbc a, $00
     ld h, a
-    jr Jump_00A_5489
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
-Jump_00A_5438::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2::
+Jump_00A_5438:: ; address name
     or a, a
-    jr nz, Jump_00A_5446
+    jr nz, .read_transition_count_a
     ld hl, $012A
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
     ld [wTransitionCountB], a
 
-Jump_00A_5446::
+.read_transition_count_a:
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3205,9 +3209,10 @@ Jump_00A_5446::
     ld a, h
     sbc a, $00
     ld h, a
-    jr Jump_00A_5489
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
-Jump_00A_545D::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA::
+Jump_00A_545D:: ; address name
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3221,9 +3226,10 @@ Jump_00A_545D::
     ld a, h
     adc a, $00
     ld h, a
-    jr Jump_00A_5489
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
 
-Jump_00A_5474::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2::
+Jump_00A_5474:: ; address name
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3238,7 +3244,8 @@ Jump_00A_5474::
     adc a, $00
     ld h, a
 
-Jump_00A_5489::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA::
+Jump_00A_5489:: ; address name
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3247,16 +3254,16 @@ Jump_00A_5489::
     inc [hl]
     ld a, [wTransitionStage]
     cp a, $B4
-    jr nz, Jump_00A_54A4
+    jr nz, .restore
     ld hl, wTransitionCounter
     inc [hl]
     xor a, a
     ld [wTransitionStage], a
 
-Jump_00A_54A4::
+.restore:
     pop bc
     dec b
-    jp nz, Jump_00A_5364
+    jp nz, RunBattleTransitionStep_Case01_ReadTransitionCounter_ReadTransitionCounter
     ret
 
 ; entry 2 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
@@ -3288,14 +3295,14 @@ RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB::
 Jump_00A_54B9:: ; address name
     ld a, [wTransitionStage]
     or a, a
-    jr nz, Jump_00A_54CA
+    jr nz, .read_transition_stage
     ld hl, $0000
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
     ld [wTransitionCountB], a
 
-Jump_00A_54CA::
+.read_transition_stage:
     ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
@@ -3310,7 +3317,7 @@ Jump_00A_54CA::
     ld d, a
     call JumpToWordAtHL_Bank0A
 
-Jump_00A_54ED::
+.loop:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -3318,7 +3325,7 @@ Jump_00A_54ED::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_00A_54ED
+    jr nz, .loop
     ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_55FA
     ld a, [wTransitionStage]
     add_a_to_hl
@@ -3328,7 +3335,7 @@ Jump_00A_54ED::
     ld a, [wTransitionCountB]
     ld h, a
 
-Jump_00A_550C::
+.loop2:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -3336,7 +3343,7 @@ Jump_00A_550C::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_00A_550C
+    jr nz, .loop2
     push hl
     ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_5603
     ld a, [wTransitionStage]
@@ -3345,7 +3352,7 @@ Jump_00A_550C::
     pop hl
     dec hl
 
-Jump_00A_5526::
+.loop3:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -3358,7 +3365,7 @@ Jump_00A_5526::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_00A_5526
+    jr nz, .loop3
     ld hl, RunBattleTransitionStep_Case01_Case02_WriteTransitionCountAAndTransitionCountB_Data_5603
     ld a, [wTransitionStage]
     add_a_to_hl
@@ -3368,7 +3375,7 @@ Jump_00A_5526::
     ld a, [wTransitionCountB]
     ld h, a
 
-Jump_00A_554C::
+.loop4:
     push hl
     push bc
     call WriteTileC4AtTransitionBGPtrLoAndClearAttr
@@ -3381,7 +3388,7 @@ Jump_00A_554C::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_00A_554C
+    jr nz, .loop4
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3606,24 +3613,24 @@ Func_00A_561E:: ; address name
     ld a, $64
     call DivideHLByA
     or a, a
-    jr nz, Jump_00A_5642
+    jr nz, .restore
     ld a, $01
     ldh [hTemp0], a
 
-Jump_00A_5642::
+.restore:
     pop hl
     ld a, l
     cp a, $E8
-    jr nz, Jump_00A_5656
+    jr nz, .set_step_counter_lo
     ld a, h
     cp a, $03
-    jr nz, Jump_00A_5656
+    jr nz, .set_step_counter_lo
     ldh a, [hTemp0]
     or a, $02
     ldh [hTemp0], a
     ld hl, $0000
 
-Jump_00A_5656::
+.set_step_counter_lo:
     ld a, l
     ld [wStepCounterLo], a
     ld a, h
@@ -3639,15 +3646,15 @@ Jump_00A_5656::
     ld de, sRecords
     ld b, $1E
 
-Jump_00A_5676::
+.loop:
     ld a, [de]
     or a, a
-    jr z, Jump_00A_56B8
+    jr z, .skip2
     dec a
-    jr nz, Jump_00A_56A7
+    jr nz, .skip
     ldh a, [hTemp0]
     bit 1, a
-    jr z, Jump_00A_56B8
+    jr z, .skip2
     push de
     ld a, e
     add a, $6E
@@ -3658,51 +3665,51 @@ Jump_00A_5676::
     ld a, [de]
     pop de
     or a, a
-    jr nz, Jump_00A_56B8
+    jr nz, .skip2
     push de
     ld a, [hl+]
     ld e, a
     ld a, [hl-]
     ld d, a
     cp a, $03
-    jr nz, Jump_00A_569F
+    jr nz, .next
     ld a, e
     cp a, $E7
-    jr z, Jump_00A_56A4
+    jr z, .restore2
 
-Jump_00A_569F::
+.next:
     inc de
     ld a, e
     ld [hl+], a
     ld a, d
     ld [hl-], a
 
-Jump_00A_56A4::
+.restore2:
     pop de
-    jr Jump_00A_56B8
+    jr .skip2
 
-Jump_00A_56A7::
+.skip:
     push de
     ld a, [hl+]
     ld e, a
     ld a, [hl-]
     ld d, a
     cp a, e
-    jr nz, Jump_00A_56B2
+    jr nz, .next2
     or a, a
-    jr z, Jump_00A_56B7
+    jr z, .restore3
 
-Jump_00A_56B2::
+.next2:
     dec de
     ld a, e
     ld [hl+], a
     ld a, d
     ld [hl-], a
 
-Jump_00A_56B7::
+.restore3:
     pop de
 
-Jump_00A_56B8::
+.skip2:
     ld a, e
     add a, $A5
     ld e, a
@@ -3716,7 +3723,7 @@ Jump_00A_56B8::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_00A_5676
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret
@@ -3745,27 +3752,27 @@ Func_00A_56D0:: ; address name
     ld a, $0A
     ld [rRAMG], a
 
-Jump_00A_56F0::
+.loop:
     push bc
     ld a, [hl]
     ld c, $55
     call LoadSRAMRecordByte
     bit 7, a
-    jr nz, Jump_00A_573E
+    jr nz, .restore
     ld a, [hl]
     ld c, $A4
     call LoadSRAMRecordByte
     cp a, $1B
-    jr nz, Jump_00A_5709
+    jr nz, .cp_1C
     ld c, $5D
-    jr Jump_00A_570F
+    jr .call_load_sram_record_word
 
-Jump_00A_5709::
+.cp_1C:
     cp a, $1C
-    jr nz, Jump_00A_573E
+    jr nz, .restore
     ld c, $61
 
-Jump_00A_570F::
+.call_load_sram_record_word:
     push bc
     ld a, [hl]
     call LoadSRAMRecordWord
@@ -3782,12 +3789,12 @@ Jump_00A_570F::
     pop bc
     ldh a, [hTemp0]
     cp a, e
-    jr nz, Jump_00A_572D
+    jr nz, .read_temp0
     ldh a, [hTemp1]
     cp a, d
-    jr z, Jump_00A_573E
+    jr z, .restore
 
-Jump_00A_572D::
+.read_temp0:
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -3802,11 +3809,11 @@ Jump_00A_572D::
     ld [hl], a
     pop hl
 
-Jump_00A_573E::
+.restore:
     pop bc
     inc hl
     dec b
-    jr nz, Jump_00A_56F0
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret

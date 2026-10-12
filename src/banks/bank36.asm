@@ -38,29 +38,29 @@ Jump_036_4025:: ; address name
     ld [wBattleSubStep], a
     ld a, [wFollowUpAction]
     or a, a
-    jr nz, Jump_036_4069
+    jr nz, .read_battle_target
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jr z, Jump_036_4069
+    jr z, .read_battle_target
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank36
-    jr c, Jump_036_4069
+    jr c, .read_battle_target
     ld a, [wBattleTarget]
     ld hl, wSlotFlags854
     add a, a
     add_a_to_hl
     bit 5, [hl]
-    jr z, Jump_036_4069
+    jr z, .read_battle_target
     farcall ResolveStepBegin_AdvanceRandom
     ld a, c
     cp a, $FF
-    jr z, Jump_036_4069
+    jr z, .read_battle_target
     ld [wResolveByte71], a
     ld d, $33
     farcall ShowBattleTextCategory0
     ret
 
-Jump_036_4069::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wSlotFlags854
     add a, a
@@ -88,7 +88,7 @@ Jump_036_407F:: ; address name
     ld [wResolveByte81], a
     ld a, [wFollowUpAction]
     or a, a
-    jp nz, Jump_036_411F
+    jp nz, .skip2
     ld a, [wRecordBufferData + $4]
     cp a, $40
     jp z, ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
@@ -97,7 +97,7 @@ Jump_036_407F:: ; address name
     jp z, ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
     ld a, [wRecordBufferData + $5]
     bit 4, a
-    jr z, Jump_036_40ED
+    jr z, .check_record_buffer_data
     ld a, [wBattleTarget]
     and a, $04
     ld c, a
@@ -107,7 +107,7 @@ Jump_036_407F:: ; address name
     ld hl, wSideFlags0
     add_a_to_hl
     bit 6, [hl]
-    jr z, Jump_036_40ED
+    jr z, .check_record_buffer_data
     ld a, l
     add a, $5A
     ld l, a
@@ -121,7 +121,7 @@ Jump_036_407F:: ; address name
     or a, c
     ld c, a
     call CheckSlotStatusBlockWide_Bank36
-    jr c, Jump_036_40ED
+    jr c, .check_record_buffer_data
     ld a, $01
     ld [wResolveFlagB2], a
     ld a, [wBattleActor]
@@ -137,44 +137,44 @@ Jump_036_407F:: ; address name
     inc [hl]
     ret
 
-Jump_036_40ED::
+.check_record_buffer_data:
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jr nz, Jump_036_4102
+    jr nz, .call_resolve_step_target_and_sub_effects
     bit 4, a
-    jr nz, Jump_036_4109
+    jr nz, .call_resolve_step_target_and_sub_effects2
     bit 6, a
-    jr nz, Jump_036_4110
-    jr Jump_036_4117
+    jr nz, .call_resolve_step_target_and_sub_effects3
+    jr .call_resolve_step_target_and_sub_effects4
 
-Jump_036_4102::
+.call_resolve_step_target_and_sub_effects:
     call ResolveStepTargetAndSubEffects_Case00_SlotHasStatus3Or4Bits_Bank36
-    jr c, Jump_036_411E
-    jr Jump_036_411C
+    jr c, .return
+    jr .skip
 
-Jump_036_4109::
+.call_resolve_step_target_and_sub_effects2:
     call ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero
-    jr c, Jump_036_411E
-    jr Jump_036_411C
+    jr c, .return
+    jr .skip
 
-Jump_036_4110::
+.call_resolve_step_target_and_sub_effects3:
     call ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81
-    jr c, Jump_036_411E
-    jr Jump_036_411C
+    jr c, .return
+    jr .skip
 
-Jump_036_4117::
+.call_resolve_step_target_and_sub_effects4:
     call ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo
-    jr c, Jump_036_411E
+    jr c, .return
 
-Jump_036_411C::
+.skip:
     jr ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36
 
-Jump_036_411E::
+.return:
     ret
 
-Jump_036_411F::
+.skip2:
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -202,10 +202,10 @@ Jump_036_4127:: ; address name
     res 3, [hl]
     ld d, $E9
     call TargetOnLocalSide_Bank36
-    jr c, Jump_036_414B
+    jr c, .call_show_battle_text
     inc d
 
-Jump_036_414B::
+.call_show_battle_text:
     farcall ShowBattleText
     ld a, $03
     ld [wDefeatStep], a
@@ -224,64 +224,64 @@ ResolveStepTargetAndSubEffects_Case00_SlotHasStatus3Or4Bits_Bank36::
 Func_036_4162:: ; address name
     ld a, [wBattleTarget]
     call SlotHasStatus3Or4Bits_Bank36
-    jr z, Jump_036_4191
+    jr z, .call_resolve_step_target_and_sub_effects
     ld a, [wRecordBufferData + $7]
     bit 5, a
-    jr z, Jump_036_4191
+    jr z, .call_resolve_step_target_and_sub_effects
     ld a, [wBattleActionId]
     cp a, $4E
-    jr z, Jump_036_4189
+    jr z, .call_set_sub_phase2_and_restart_resolve
     cp a, $4F
-    jr z, Jump_036_4189
+    jr z, .call_set_sub_phase2_and_restart_resolve
     ld a, $84
     call QueueSoundEffect
     call SetSubPhase2AndRestartResolve
     ld d, $68
-    jp Jump_036_4317
+    jp ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
 
-Jump_036_4189::
+.call_set_sub_phase2_and_restart_resolve:
     call SetSubPhase2AndRestartResolve
     ld d, $69
-    jp Jump_036_4317
+    jp ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
 
-Jump_036_4191::
+.call_resolve_step_target_and_sub_effects:
     call ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36
-    jp nc, Jump_036_4317
+    jp nc, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
     ld a, [wBattleActionId]
     cp a, $4E
-    jr z, Jump_036_41A2
+    jr z, .read_battle_actor
     cp a, $4F
-    jr nz, Jump_036_41AF
+    jr nz, .read_battle_target
 
-Jump_036_41A2::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 0, [hl]
-    jr z, Jump_036_421B
+    jr z, .return_0
 
-Jump_036_41AF::
+.read_battle_target:
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank36
-    jr c, Jump_036_421B
+    jr c, .return_0
     ld a, [wBattleTarget]
     ld hl, wSlotFlags854
     call AddDoubleAToHL_Bank36
     bit 5, [hl]
-    jr nz, Jump_036_41D1
+    jr nz, .call_resolve_step_target_and_sub_effects2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 5, [hl]
-    jr z, Jump_036_421B
+    jr z, .return_0
 
-Jump_036_41D1::
+.call_resolve_step_target_and_sub_effects2:
     call ResolveStepTargetAndSubEffects_Case00_Sub01_ReadBattleTargetAndResolveByte71Etc
-    jr c, Jump_036_4211
+    jr c, .call_show_battle_text
     push af
     ld a, [wBattleActionId]
     cp a, $CC
-    jr nz, Jump_036_41EB
+    jr nz, .restore
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
@@ -289,7 +289,7 @@ Jump_036_41D1::
     and a, $F3
     ld [hl], a
 
-Jump_036_41EB::
+.restore:
     pop af
     push af
     ld d, $C8 ; battle text '0 shunted the attack!'
@@ -308,13 +308,13 @@ Jump_036_41EB::
     scf
     ret
 
-Jump_036_4211::
+.call_show_battle_text:
     ld d, $C9 ; battle text '0 failed to avert attack!'
     farcall ShowBattleText
     scf
     ret
 
-Jump_036_421B::
+.return_0:
     xor a, a
     ret
 
@@ -326,12 +326,12 @@ Jump_036_421B::
 ResolveStepTargetAndSubEffects_Case00_ShowTheWindAroundHero::
 Func_036_421D:: ; address name
     call ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36
-    jp nc, Jump_036_4317
+    jp nc, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 6, [hl]
-    jr z, Jump_036_4253
+    jr z, .return_0
     res 6, [hl]
     ld a, $02
     ld [wDefeatStep], a
@@ -341,17 +341,17 @@ Func_036_421D:: ; address name
     ld [wResolveByte81], a
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_4255
+    jr c, .call_set_sub_phase2_and_restart_resolve
     ld d, $01
     call ResolveStepTargetAndSubEffects_WriteBattleActorAndBattleTargetEtc
     scf
     ret
 
-Jump_036_4253::
+.return_0:
     xor a, a
     ret
 
-Jump_036_4255::
+.call_set_sub_phase2_and_restart_resolve:
     call SetSubPhase2AndRestartResolve
     scf
     ret
@@ -364,45 +364,45 @@ Jump_036_4255::
 ResolveStepTargetAndSubEffects_Case00_WriteDefeatStepAndResolveByte81::
 Func_036_425A:: ; address name
     call ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36
-    jp nc, Jump_036_4317
+    jp nc, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
-    jr z, Jump_036_42A3
+    jr z, .return_0
     ld a, [wRecordBufferData + $7]
     bit 7, a
-    jr z, Jump_036_42A3
+    jr z, .return_0
     bit 1, [hl]
-    jr nz, Jump_036_4280
+    jr nz, .call_target_on_local_side_bank36
     res 5, [hl]
     ld a, $01
     ld [wDefeatStep], a
 
-Jump_036_4280::
+.call_target_on_local_side_bank36:
     call TargetOnLocalSide_Bank36
     ld d, $C5
-    jr c, Jump_036_4289
+    jr c, .call_show_battle_text
     ld d, $C6 ; battle text 'The wall of light bounced the'
 
-Jump_036_4289::
+.call_show_battle_text:
     farcall ShowBattleText
     ld a, $01
     ld [wResolveByte81], a
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_42A5
+    jr c, .call_set_sub_phase2_and_restart_resolve
     ld d, $04
     call ResolveStepTargetAndSubEffects_WriteBattleActorAndBattleTargetEtc
     scf
     ret
 
-Jump_036_42A3::
+.return_0:
     xor a, a
     ret
 
-Jump_036_42A5::
+.call_set_sub_phase2_and_restart_resolve:
     call SetSubPhase2AndRestartResolve
     scf
     ret
@@ -414,10 +414,10 @@ ResolveStepTargetAndSubEffects_Case00_ShowButItFailedTo::
 Func_036_42AA:: ; address name
     ld a, [wBattleTarget]
     call SlotHasStatus3Or4Bits_Bank36
-    jr z, Jump_036_42CB
+    jr z, .call_resolve_step_target_and_sub_effects
     ld a, [wRecordBufferData + $7]
     bit 5, a
-    jr z, Jump_036_42CB
+    jr z, .call_resolve_step_target_and_sub_effects
     ld a, $84
     call QueueSoundEffect
     ld d, $68 ; battle text 'But it failed to reach 0!'
@@ -426,9 +426,9 @@ Func_036_42AA:: ; address name
     scf
     ret
 
-Jump_036_42CB::
+.call_resolve_step_target_and_sub_effects:
     call ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36
-    jp nc, Jump_036_4317
+    jp nc, ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText
     xor a, a
     ret
 
@@ -443,17 +443,17 @@ Func_036_42D3:: ; address name
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 4, [hl]
-    jr z, Jump_036_4315
+    jr z, .return_carry
     ld a, [wRecordBufferData + $6]
     bit 0, a
-    jr z, Jump_036_4315
+    jr z, .return_carry
     inc hl
     ld a, [hl]
     swap a
     and a, $0F
     ld c, a
     call CheckSlotStatusBlockWide_Bank36
-    jr c, Jump_036_4315
+    jr c, .return_carry
     ld a, [wBattleTarget]
     ld [wDefeatByteD1], a
     ld a, [wBattleActor]
@@ -470,11 +470,12 @@ Func_036_42D3:: ; address name
     xor a, a
     ret
 
-Jump_036_4315::
+.return_carry:
     scf
     ret
 
-Jump_036_4317::
+ResolveStepTargetAndSubEffects_CheckSlotStatusBlockWide_Bank36_CallShowBattleText::
+Jump_036_4317:: ; address name
     farcall ShowBattleText
     scf
     ret
@@ -509,10 +510,10 @@ ActionIs91AndStatusBit6Set::
 Func_036_433F:: ; address name
     ld a, [wBattleActionId]
     cp a, $91
-    jr z, Jump_036_4347
+    jr z, .read_battle_actor
     ret
 
-Jump_036_4347::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
     call AddAx9ToHL
@@ -557,159 +558,159 @@ Jump_036_4356:: ; address name
 ResolveStepEffectChecks::
 Jump_036_438A:: ; address name
     call ResolveStepEffectChecks_WaitBattleActionId
-    jr z, Jump_036_439B
+    jr z, .call_resolve_step_effect_checks_wait_battle
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_036_439B
+    jr nc, .call_resolve_step_effect_checks_wait_battle
     call SetSubPhase3AndRestartResolve
     ret
 
-Jump_036_439B::
+.call_resolve_step_effect_checks_wait_battle:
     ld hl, wBattleResolveStep
     inc [hl]
     call ResolveStepEffectChecks_WaitBattleActionId_Sub02
     ret z
     ld a, [wRecordBufferData + $6]
     bit 1, a
-    jr z, Jump_036_43D8
+    jr z, .check_record_buffer_data
     ld a, [wBattleActionId]
     cp a, $CC
-    jr nz, Jump_036_43BF
+    jr nz, .read_battle_target
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr z, Jump_036_43D8
+    jr z, .check_record_buffer_data
 
-Jump_036_43BF::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $C0
-    jr z, Jump_036_43D8
+    jr z, .check_record_buffer_data
     ld d, $66 ; battle text '0 is a hunk of iron!'
     farcall ShowBattleText
-    jp Jump_036_4543
+    jp .read_resolve_msg_flags
 
-Jump_036_43D8::
+.check_record_buffer_data:
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jr z, Jump_036_4431
+    jr z, .check_record_buffer_data2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr z, Jump_036_4416
+    jr z, .read_battle_target2
     cp a, $0C
-    jr nz, Jump_036_4406
+    jr nz, .loop
     ld a, [wBattleActionId]
     cp a, $CC
-    jr nz, Jump_036_4406
+    jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr z, Jump_036_4416
+    jr z, .read_battle_target2
 
-Jump_036_4406::
+.loop:
     ld a, $84
     call QueueSoundEffect
     ld d, $68 ; battle text 'But it failed to reach 0!'
     farcall ShowBattleText
-    jp Jump_036_4543
+    jp .read_resolve_msg_flags
 
-Jump_036_4416::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl]
     and a, $C0
-    jr z, Jump_036_4431
+    jr z, .check_record_buffer_data2
     cp a, $C0
-    jr nz, Jump_036_4406
+    jr nz, .loop
     ld a, [wBattleActionId]
     cp a, $CC
-    jr z, Jump_036_4431
-    jr Jump_036_4406
+    jr z, .check_record_buffer_data2
+    jr .loop
 
-Jump_036_4431::
+.check_record_buffer_data2:
     ld a, [wRecordBufferData + $5]
     bit 0, a
-    jr z, Jump_036_447F
+    jr z, .check_record_buffer_data3
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr z, Jump_036_4451
+    jr z, .read_battle_actor
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $A0
-    jr nc, Jump_036_4451
-    jr Jump_036_4469
+    jr nc, .read_battle_actor
+    jr .read_battle_actor2
 
-Jump_036_4451::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr z, Jump_036_447F
+    jr z, .check_record_buffer_data3
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $60
-    jr nc, Jump_036_447F
+    jr nc, .check_record_buffer_data3
 
-Jump_036_4469::
+.read_battle_actor2:
     ld a, [wBattleActor]
     ld hl, wSlotFlags854
     add a, a
     add_a_to_hl
     bit 2, [hl]
-    jr nz, Jump_036_447F
+    jr nz, .check_record_buffer_data3
     call ResolveStepEffectChecks_ShowMissHeroAvoidedDamage
-    jp Jump_036_4543
+    jp .read_resolve_msg_flags
 
-Jump_036_447F::
+.check_record_buffer_data3:
     ld a, [wRecordBufferData + $6]
     bit 6, a
-    jp z, Jump_036_4542
+    jp z, .return
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $D0
-    jp nz, Jump_036_4542
+    jp nz, .return
     ld bc, $0004
     add hl, bc
     ld a, [hl]
     and a, $03
-    jp nz, Jump_036_4542
+    jp nz, .return
     inc hl
     ld a, [hl]
     and a, $30
-    jp nz, Jump_036_4542
+    jp nz, .return
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     and a, $03
-    jp nz, Jump_036_4542
+    jp nz, .return
     call AdvanceRandom
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr z, Jump_036_44C8
+    jr z, .read_battle_actor3
     ld a, [wRandomLo]
     and a, $01
-    jr z, Jump_036_4533
+    jr z, .call_show_battle_text
 
-Jump_036_44C8::
+.read_battle_actor3:
     ld a, [wBattleActor]
     ld hl, wBattleAGL
     add a, a
@@ -726,66 +727,66 @@ Jump_036_44C8::
     ld a, h
     sbc a, b
     ld h, a
-    jr c, Jump_036_452B
+    jr c, .check_random_lo
     or a, l
-    jr z, Jump_036_452B
+    jr z, .check_random_lo
     ld bc, $0320
     call CompareHLToBC
-    jr nc, Jump_036_4517
+    jr nc, .skip
     ld bc, $0258
     call CompareHLToBC
-    jr nc, Jump_036_451B
+    jr nc, .skip2
     ld bc, $0190
     call CompareHLToBC
-    jr nc, Jump_036_451F
+    jr nc, .skip3
     ld bc, $00C8
     call CompareHLToBC
-    jr nc, Jump_036_4523
+    jr nc, .skip4
     ld bc, $0064
     call CompareHLToBC
-    jr nc, Jump_036_4527
+    jr nc, .skip5
     ld b, $02
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_4517::
+.skip:
     ld b, $80
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_451B::
+.skip2:
     ld b, $20
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_451F::
+.skip3:
     ld b, $10
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_4523::
+.skip4:
     ld b, $08
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_4527::
+.skip5:
     ld b, $04
-    jr Jump_036_452D
+    jr .check_random_lo2
 
-Jump_036_452B::
+.check_random_lo:
     ld b, $01
 
-Jump_036_452D::
+.check_random_lo2:
     ld a, [wRandomLo]
     cp a, b
-    jr nc, Jump_036_4542
+    jr nc, .return
 
-Jump_036_4533::
+.call_show_battle_text:
     ld d, $D2 ; battle text '0 leapt out of the way!'
     farcall ShowBattleText
     ld a, $84
     call QueueSoundEffect
-    jr Jump_036_4543
+    jr .read_resolve_msg_flags
 
-Jump_036_4542::
+.return:
     ret
 
-Jump_036_4543::
+.read_resolve_msg_flags:
     ld a, [wResolveMsgFlags]
     res 4, a
     ld [wResolveMsgFlags], a
@@ -856,42 +857,42 @@ Jump_036_458E:: ; address name
     and a, $18
     jr z, ResolveStepActionEffect
     bit 4, a
-    jr z, Jump_036_45AA
+    jr z, .check_record_buffer_data
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
     jr nz, ResolveStepActionEffect
 
-Jump_036_45AA::
+.check_record_buffer_data:
     ld a, [wRecordBufferData + $6]
     bit 3, a
-    jr z, Jump_036_45F7
+    jr z, .read_battle_actor2
     ld a, [wBattleActor]
     ld hl, wSlotFlags854
     call AddDoubleAToHL_Bank36
     bit 0, [hl]
-    jr nz, Jump_036_45D3
+    jr nz, .read_battle_actor
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 3, [hl]
-    jr nz, Jump_036_45D3
+    jr nz, .read_battle_actor
     call AdvanceRandom
     call RollRandomLoBelowChance
-    jr nc, Jump_036_45F7
+    jr nc, .read_battle_actor2
 
-Jump_036_45D3::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set 7, [hl]
     call ActorOnLocalSide_Bank36
     ld d, $9C
-    jr c, Jump_036_45E7
+    jr c, .call_show_battle_text
     ld d, $9D ; battle text 'A brutal hit!'
 
-Jump_036_45E7::
+.call_show_battle_text:
     farcall ShowBattleText
     ld a, $83
     call QueueSoundEffect
@@ -899,7 +900,7 @@ Jump_036_45E7::
     inc [hl]
     ret
 
-Jump_036_45F7::
+.read_battle_actor2:
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -927,24 +928,24 @@ Jump_036_460B:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 7, [hl]
-    jr z, Jump_036_4622
+    jr z, .check_record_buffer_data
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
     and a, [hl]
     cp a, $FF
     ret nz
 
-Jump_036_4622::
+.check_record_buffer_data:
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wRecordBufferData + $6]
     bit 4, a
-    jr z, Jump_036_464D
+    jr z, .check_record_buffer_data2
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
-    jr z, Jump_036_464D
+    jr z, .check_record_buffer_data2
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -954,17 +955,17 @@ Jump_036_4622::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_036_46C7
+    jr .read_battle_actor
 
-Jump_036_464D::
+.check_record_buffer_data2:
     ld a, [wRecordBufferData + $6]
     bit 3, a
-    jr z, Jump_036_4679
+    jr z, .check_record_buffer_data3
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 7, [hl]
-    jr z, Jump_036_4679
+    jr z, .check_record_buffer_data3
     res 7, [hl]
     call UnreferencedStoreResolveMessage35D0_Bank36
     ld a, [wBattleActor]
@@ -974,17 +975,17 @@ Jump_036_464D::
     ld [wBattleDamageLo], a
     ld a, d
     ld [wBattleDamageHi], a
-    jr Jump_036_46EB
+    jr .read_battle_target
 
-Jump_036_4679::
+.check_record_buffer_data3:
     ld a, [wRecordBufferData + $6]
     bit 5, a
-    jr z, Jump_036_46A0
+    jr z, .check_record_buffer_data4
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     bit 0, [hl]
-    jr z, Jump_036_46A0
+    jr z, .check_record_buffer_data4
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -994,17 +995,17 @@ Jump_036_4679::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_036_46C7
+    jr .read_battle_actor
 
-Jump_036_46A0::
+.check_record_buffer_data4:
     ld a, [wRecordBufferData + $5]
     bit 1, a
-    jr z, Jump_036_46C7
+    jr z, .read_battle_actor
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     bit 4, [hl]
-    jr z, Jump_036_46C7
+    jr z, .read_battle_actor
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -1015,12 +1016,12 @@ Jump_036_46A0::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_036_46C7::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wSlotFlags854
     call AddDoubleAToHL_Bank36
     bit 6, [hl]
-    jr z, Jump_036_46EB
+    jr z, .read_battle_target
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -1035,75 +1036,75 @@ Jump_036_46C7::
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_46EB::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus7
     call AddAx9ToHL
     ld a, [hl]
     and a, $07
-    jr z, Jump_036_4742
+    jr z, .read_battle_target3
     and a, $03
     ld c, a
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
-    jr nz, Jump_036_4713
+    jr nz, .check_record_buffer_data5
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jr z, Jump_036_4742
+    jr z, .read_battle_target3
 
-Jump_036_470D::
+.loop:
     srl h
     rr l
-    jr Jump_036_4723
+    jr .read_battle_target2
 
-Jump_036_4713::
+.check_record_buffer_data5:
     ld a, [wRecordBufferData + $6]
     bit 7, a
-    jr z, Jump_036_4742
+    jr z, .read_battle_target3
     bit 0, c
-    jr nz, Jump_036_470D
+    jr nz, .loop
     ld a, $0A
     call DivideHLByA
 
-Jump_036_4723::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld de, wSlotFlags854
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_036_472F
+    jr nc, .skip
     inc d
 
-Jump_036_472F::
+.skip:
     ld a, [de]
     bit 1, a
-    jr z, Jump_036_4738
+    jr z, .set_battle_damage_lo
     srl h
     rr l
 
-Jump_036_4738::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_036_4742
+    jr .read_battle_target3
 
-Jump_036_4742::
+.read_battle_target3:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 2, [hl]
-    jr z, Jump_036_4775
+    jr z, .return
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jr z, Jump_036_4775
+    jr z, .return
     ld a, [wBattleActionId]
     cp a, $6F
-    jr z, Jump_036_4775
+    jr z, .return
     cp a, $70
-    jr z, Jump_036_4775
+    jr z, .return
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -1115,7 +1116,7 @@ Jump_036_4742::
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_4775::
+.return:
     ret
 
 ; resolve step $08: for action $CD it returns while the sound channels in wDC20 are busy (wSoundChannelSlots and wDC20 not both $FF). Otherwise it advances the step twice, updates bit 4 or 6 of wDAC0 from wBattleDamageLo/Hi and wD873 when wDAC0 bit 5 is set, and for action $CF rewinds the step while wDAC0 bit 4 is set and wDABA is zero. It then stores $40 or $41 in wDAD2, farcalls 3A:4001 and 3A:5762 (E-0053)
@@ -1127,14 +1128,14 @@ ResolveStepSoundWaitAndMessage::
 Jump_036_4776:: ; address name
     ld a, [wBattleActionId]
     cp a, $CD
-    jr nz, Jump_036_4787
+    jr nz, .skip
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
     and a, [hl]
     cp a, $FF
     ret nz
 
-Jump_036_4787::
+.skip:
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -1142,30 +1143,30 @@ Jump_036_4787::
     ld a, [wResolveMsgFlags]
     ld b, a
     bit 5, a
-    jr z, Jump_036_47B1
+    jr z, .check_battle_action_id
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
     ld a, h
     or a, l
-    jr z, Jump_036_47A9
+    jr z, .skip2
     set 4, b
     res 6, b
-    jr Jump_036_47AD
+    jr .set_resolve_msg_flags
 
-Jump_036_47A9::
+.skip2:
     res 4, b
     set 6, b
 
-Jump_036_47AD::
+.set_resolve_msg_flags:
     ld a, b
     ld [wResolveMsgFlags], a
 
-Jump_036_47B1::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $CF
-    jr nz, Jump_036_47C7
+    jr nz, .check_resolve_msg_flags
     ld a, [wResolveMsgFlags]
     bit 4, a
     ret z
@@ -1175,16 +1176,16 @@ Jump_036_47B1::
     or a, a
     ret nz
 
-Jump_036_47C7::
+.check_resolve_msg_flags:
     ld b, $40
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_036_47D6
+    jr z, .set_effect_flags
     bit 6, a
-    jr nz, Jump_036_47D6
+    jr nz, .set_effect_flags
     set 0, b
 
-Jump_036_47D6::
+.set_effect_flags:
     ld a, b
     ld [wEffectFlags], a
     farcall SelectEffectByEffectFlags
@@ -1221,78 +1222,78 @@ Jump_036_4806:: ; address name
     inc [hl]
     ld a, [wResolveMsgFlags]
     bit 7, a
-    jr z, Jump_036_484E
+    jr z, .call_resolve_step_damage_message_set_sub
     bit 4, a
-    jr z, Jump_036_4825
+    jr z, .read_resolve_msg_target
     ld a, [wResolveMsgActor]
     ld [wTemp0], a
     ld a, [wResolveMsgFlags]
     bit 3, a
     call nz, ResolveStepDamageMessage_TargetOnLocalSide_Bank36
-    jr Jump_036_4833
+    jr .check_battle_action_id
 
-Jump_036_4825::
+.read_resolve_msg_target:
     ld a, [wResolveMsgTarget]
     ld [wTemp0], a
     ld a, [wResolveMsgArg]
     bit 3, a
     call nz, ResolveStepDamageMessage_ActorOnLocalSide_Bank36
 
-Jump_036_4833::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $DC
-    jr z, Jump_036_484E
+    jr z, .call_resolve_step_damage_message_set_sub
     cp a, $D7
-    jr nz, Jump_036_4844
+    jr nz, .read_temp0
     farcall ResolveStepDamageMessage_AddAx9ToHL
 
-Jump_036_4844::
+.read_temp0:
     ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
 
-Jump_036_484E::
+.call_resolve_step_damage_message_set_sub:
     call ResolveStepDamageMessage_SetSubPhase3AndRestartResolve
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr nz, Jump_036_4859
+    jr nz, .check_battle_action_id2
     ret
 
-Jump_036_4859::
+.check_battle_action_id2:
     ld a, [wBattleActionId]
     cp a, $3A
-    jr z, Jump_036_4879
+    jr z, .read_battle_target
     cp a, $3B
-    jr z, Jump_036_4890
+    jr z, .skip
     cp a, $B8
-    jr z, Jump_036_4890
+    jr z, .skip
     cp a, $32
-    jr z, Jump_036_48AE
+    jr z, .read_battle_actor2
     cp a, $77
-    jr z, Jump_036_48AE
+    jr z, .read_battle_actor2
     cp a, $DC
-    jr z, Jump_036_48B5
+    jr z, .read_battle_actor3
     cp a, $DF
-    jr z, Jump_036_48A3
+    jr z, .call_actor_formation_slot_to_temp0
     ret
 
-Jump_036_4879::
+.read_battle_target:
     ld a, [wBattleTarget]
     add a, a
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_036_4885
+    jr nc, .read_battle_actor
     inc d
 
-Jump_036_4885::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld b, a
     call LoadBattleMonsterPictureForSlotB
     call ResolveStepDamageMessage_WaitLinkMode
     ret
 
-Jump_036_4890::
+.skip:
     ld de, wTemp0
     ld a, $60
     ld [de], a
@@ -1305,17 +1306,17 @@ Jump_036_4890::
     call LoadBattleMonsterPictureForSlotB
     ret
 
-Jump_036_48A3::
+.call_actor_formation_slot_to_temp0:
     farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     call SetBit1OfLevelUpGainsIndexed_Bank36
 
-Jump_036_48AE::
+.read_battle_actor2:
     ld a, [wBattleActor]
     call SetBit1OfLevelUpGainsIndexed_Bank36
     ret
 
-Jump_036_48B5::
+.read_battle_actor3:
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToTemp0
@@ -1352,13 +1353,13 @@ ResolveStepBranchOnAction::
 Jump_036_48DE:: ; address name
     ld a, [wBattleActionId]
     cp a, $82
-    jp z, Jump_036_4A9D
+    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots
     cp a, $83
-    jp z, Jump_036_4B16
+    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
     cp a, $84
-    jp z, Jump_036_4B16
+    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
     cp a, $B3
-    jp z, Jump_036_4B16
+    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -1409,10 +1410,10 @@ Func_036_4918:: ; address name
     ldh a, [hTemp0]
     ld b, a
     cp a, $03
-    jr nz, Jump_036_492B
+    jr nz, .check_random_lo
     ld b, $04
 
-Jump_036_492B::
+.check_random_lo:
     ld a, [wRandomLo]
     cp a, b
     ret
@@ -1502,107 +1503,107 @@ ResolveStepDamageMessage_TargetOnLocalSide_Bank36::
 Func_036_4991:: ; address name
     ld a, [wBattleActionId]
     cp a, $6C
-    jr nz, Jump_036_49A1
+    jr nz, .check_defeat_byte_bf
 
-Jump_036_4998::
+.loop:
     call TargetOnLocalSide_Bank36
     ret nc
     ld hl, wTemp0
     inc [hl]
     ret
 
-Jump_036_49A1::
+.check_defeat_byte_bf:
     ld a, [wDefeatByteBF]
     bit 0, a
-    jr nz, Jump_036_4998
+    jr nz, .loop
     call ActorOnLocalSide_Bank36
     ret c
     ld a, [wBattleActionId]
     cp a, $34
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $AD
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $78
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $13
-    jr z, Jump_036_4A01
+    jr z, .loop3
     cp a, $14
-    jr z, Jump_036_4A01
+    jr z, .loop3
     cp a, $15
-    jr z, Jump_036_4A13
+    jr z, .skip
     cp a, $2B
-    jr z, Jump_036_4A23
+    jr z, .set_temp0_to_CD
     cp a, $2C
-    jr z, Jump_036_4A23
+    jr z, .set_temp0_to_CD
     cp a, $79
-    jr z, Jump_036_4A01
+    jr z, .loop3
     cp a, $80
-    jr z, Jump_036_4A07
+    jr z, .set_temp0_to_56
     cp a, $92
-    jr z, Jump_036_4A0D
+    jr z, .set_temp0_to_63
     cp a, $B5
-    jr z, Jump_036_4A29
+    jr z, .check_resolve_msg_actor
     cp a, $BA
-    jr z, Jump_036_4A32
+    jr z, .set_temp0_to_78
     cp a, $BF
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $C0
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $C9
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $CA
-    jr z, Jump_036_49FC
+    jr z, .done
     cp a, $CB
-    jr z, Jump_036_49FC
+    jr z, .done
 
-Jump_036_49F7::
+.loop2:
     ld hl, wTemp0
     inc [hl]
     ret
 
-Jump_036_49FC::
+.done:
     ld hl, wTemp0
     dec [hl]
     ret
 
-Jump_036_4A01::
+.loop3:
     ld a, $8A
     ld [wTemp0], a
     ret
 
-Jump_036_4A07::
+.set_temp0_to_56:
     ld a, $56
     ld [wTemp0], a
     ret
 
-Jump_036_4A0D::
+.set_temp0_to_63:
     ld a, $63
     ld [wTemp0], a
     ret
 
-Jump_036_4A13::
+.skip:
     ld hl, wBattleDamageLo
     ld a, [hl+]
     sub a, $E8
     ld a, [hl]
     sbc a, $03
-    jr z, Jump_036_4A01
+    jr z, .loop3
     ld hl, wTemp0
     inc [hl]
     ret
 
-Jump_036_4A23::
+.set_temp0_to_CD:
     ld a, $CD
     ld [wTemp0], a
     ret
 
-Jump_036_4A29::
+.check_resolve_msg_actor:
     ld a, [wResolveMsgActor]
     cp a, $73
-    jr z, Jump_036_49F7
-    jr Jump_036_49FC
+    jr z, .loop2
+    jr .done
 
-Jump_036_4A32::
+.set_temp0_to_78:
     ld a, $78
     ld [wTemp0], a
     ret
@@ -1618,69 +1619,70 @@ Func_036_4A38:: ; address name
     ret c
     ld a, [wBattleActionId]
     cp a, $72
-    jr z, Jump_036_4A74
+    jr z, .set_temp0_to_6A
     cp a, $73
-    jr z, Jump_036_4A74
+    jr z, .set_temp0_to_6A
     cp a, $74
-    jr z, Jump_036_4A74
+    jr z, .set_temp0_to_6A
     cp a, $75
-    jr z, Jump_036_4A7A
+    jr z, .set_temp0_to_6B
     cp a, $7E
-    jr z, Jump_036_4A80
+    jr z, .set_temp0_to_6C
     cp a, $7F
-    jr z, Jump_036_4A86
+    jr z, .set_temp0_to_6D
     cp a, $80
-    jr z, Jump_036_4A8C
+    jr z, .set_temp0_to_6E
     cp a, $8B
-    jr z, Jump_036_4A8C
+    jr z, .set_temp0_to_6E
     cp a, $8C
-    jr z, Jump_036_4A8C
+    jr z, .set_temp0_to_6E
     cp a, $8F
-    jr z, Jump_036_4A92
+    jr z, .set_temp0_to_71
     cp a, $AA
-    jr z, Jump_036_4A92
+    jr z, .set_temp0_to_71
     cp a, $C0
-    jr z, Jump_036_4A98
+    jr z, .done
     ld hl, wTemp0
     inc [hl]
     ret
 
-Jump_036_4A74::
+.set_temp0_to_6A:
     ld a, $6A
     ld [wTemp0], a
     ret
 
-Jump_036_4A7A::
+.set_temp0_to_6B:
     ld a, $6B
     ld [wTemp0], a
     ret
 
-Jump_036_4A80::
+.set_temp0_to_6C:
     ld a, $6C
     ld [wTemp0], a
     ret
 
-Jump_036_4A86::
+.set_temp0_to_6D:
     ld a, $6D
     ld [wTemp0], a
     ret
 
-Jump_036_4A8C::
+.set_temp0_to_6E:
     ld a, $6E
     ld [wTemp0], a
     ret
 
-Jump_036_4A92::
+.set_temp0_to_71:
     ld a, $71
     ld [wTemp0], a
     ret
 
-Jump_036_4A98::
+.done:
     ld hl, wTemp0
     dec [hl]
     ret
 
-Jump_036_4A9D::
+ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
+Jump_036_4A9D:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
     and a, [hl]
@@ -1688,7 +1690,7 @@ Jump_036_4A9D::
     ret nz
     ld a, [wBattleSubStep]
     or a, a
-    jr z, Jump_036_4AE5
+    jr z, .call_resolve_step_damage_message_sub04_sub01
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -1707,16 +1709,16 @@ Jump_036_4A9D::
     ld d, a
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_036_4AE1
+    jr z, .call_resolve_step_damage_message_set_sub
     ld a, [wResolveMsgActor]
     ld d, a
     farcall ShowBattleText
 
-Jump_036_4AE1::
+.call_resolve_step_damage_message_set_sub:
     call ResolveStepDamageMessage_SetSubPhase3AndRestartResolve
     ret
 
-Jump_036_4AE5::
+.call_resolve_step_damage_message_sub04_sub01:
     call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01
     ld a, [wResolveMsgFlags]
     bit 4, a
@@ -1724,25 +1726,26 @@ Jump_036_4AE5::
     call nz, QueueSoundEffect
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_036_4B06
+    jr z, .read_resolve_msg_target
     ld a, [wResolveMsgActor]
     ld d, a
     call ActorOnLocalSide_Bank36
-    jr c, Jump_036_4B0A
+    jr c, .call_show_battle_text
     ld d, $CD
-    jr Jump_036_4B0A
+    jr .call_show_battle_text
 
-Jump_036_4B06::
+.read_resolve_msg_target:
     ld a, [wResolveMsgTarget]
     ld d, a
 
-Jump_036_4B0A::
+.call_show_battle_text:
     farcall ShowBattleText
     ld a, $01
     ld [wBattleSubStep], a
     ret
 
-Jump_036_4B16::
+ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep::
+Jump_036_4B16:: ; address name
     ld a, [wBattleSubStep]
     rst $00
     dw ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero
@@ -1786,7 +1789,7 @@ Jump_036_4B41:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $30
-    jp z, Jump_036_4CCF
+    jp z, .read_battle_target3
     ld a, [hl]
     and a, $CF
     ld [hl], a
@@ -1825,7 +1828,7 @@ Jump_036_4B41:: ; address name
     ld a, [wBattleTarget]
     call GetBattleHP
     call CompareHLToBC
-    jr c, Jump_036_4BCC
+    jr c, .read_battle_target
     ld a, [wBattleTarget]
     call SetBit0OfLevelUpGainsIndexed_Bank36
     ld a, [wBattleTarget]
@@ -1835,7 +1838,7 @@ Jump_036_4B41:: ; address name
     inc hl
     ld [hl], b
 
-Jump_036_4BCC::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld c, a
     farcall GetBaseMP
@@ -1852,7 +1855,7 @@ Jump_036_4BCC::
     ld a, [wBattleTarget]
     call GetBattleMP
     call CompareHLToBC
-    jr c, Jump_036_4C07
+    jr c, .read_battle_target2
     ld a, [wBattleTarget]
     call SetBit1OfLevelUpGainsIndexed_Bank36
     ld a, [wBattleTarget]
@@ -1862,7 +1865,7 @@ Jump_036_4BCC::
     inc hl
     ld [hl], b
 
-Jump_036_4C07::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld c, a
     farcall GetBaseATK
@@ -1938,7 +1941,7 @@ Jump_036_4C07::
     add_a_to_hl
     ld [hl], c
 
-Jump_036_4CCF::
+.read_battle_target3:
     ld a, [wBattleTarget]
     ld c, a
     farcall GetBaseAGL
@@ -1995,10 +1998,10 @@ Func_036_4D0C:: ; address name
     add a, b
     add a, e
     ld e, a
-    jr nc, Jump_036_4D33
+    jr nc, .set_battle_arg2
     inc d
 
-Jump_036_4D33::
+.set_battle_arg2:
     ld a, e
     ld [wBattleArg2], a
     ld a, d
@@ -2020,10 +2023,10 @@ Jump_036_4D42:: ; address name
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_036_4D53
+    jr nc, .call_load_battle_monster_picture_for_slot_b
     inc d
 
-Jump_036_4D53::
+.call_load_battle_monster_picture_for_slot_b:
     call LoadBattleMonsterPictureForSlotB
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
@@ -2150,23 +2153,23 @@ Func_036_4E26:: ; address name
     ld a, [wLinkMode]
     cp a, $01
     ld a, b
-    jr nz, Jump_036_4E3C
+    jr nz, .cp_04
     ld a, [wLinkRole]
     bit 1, a
     ld a, b
-    jr z, Jump_036_4E3C
+    jr z, .cp_04
     cp a, $03
-    jr nc, Jump_036_4EB0
-    jr Jump_036_4E46
+    jr nc, .return
+    jr .skip
 
-Jump_036_4E3C::
+.cp_04:
     cp a, $04
-    jr c, Jump_036_4EB0
+    jr c, .return
     cp a, $07
-    jr z, Jump_036_4EB0
+    jr z, .return
     sub a, $04
 
-Jump_036_4E46::
+.skip:
     push de
     push af
     ld bc, $0240
@@ -2199,29 +2202,29 @@ Jump_036_4E46::
     ld a, [wLinkMode]
     cp a, $01
     ld a, [wBattleFoeCount]
-    jr nz, Jump_036_4E8A
+    jr nz, .cp_01
     ld a, [wLinkRole]
     bit 1, a
     ld a, [wSide1Flag]
-    jr z, Jump_036_4E8A
+    jr z, .cp_01
     ld a, [wSide0Flag]
 
-Jump_036_4E8A::
+.cp_01:
     cp a, $01
-    jr z, Jump_036_4E97
+    jr z, .skip2
     cp a, $03
-    jr z, Jump_036_4E9C
+    jr z, .skip3
     ld hl, vBGMap0 + $E4
-    jr Jump_036_4E9F
+    jr .skip4
 
-Jump_036_4E97::
+.skip2:
     ld hl, vBGMap0 + $E7
-    jr Jump_036_4E9F
+    jr .skip4
 
-Jump_036_4E9C::
+.skip3:
     ld hl, vBGMap0 + $E1
 
-Jump_036_4E9F::
+.skip4:
     ld a, c
     sub a, $01
     srl a
@@ -2232,7 +2235,7 @@ Jump_036_4E9F::
     add_a_to_hl
     call LoadMonsterPictureAttributes
 
-Jump_036_4EB0::
+.return:
     ret
 
 ; only called from routines of ResolveStepTargetAndSubEffects (E-0098)
@@ -2255,10 +2258,10 @@ Func_036_4EB1:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_036_4ECD
+    jr nc, .skip
     inc d
 
-Jump_036_4ECD::
+.skip:
     ld a, [de]
     ld [hl+], a
     inc de
@@ -2269,10 +2272,10 @@ Jump_036_4ECD::
     add a, a
     add a, c
     ld c, a
-    jr nc, Jump_036_4EDE
+    jr nc, .skip2
     inc b
 
-Jump_036_4EDE::
+.skip2:
     ld a, [bc]
     ld [hl+], a
     inc bc
@@ -2294,12 +2297,12 @@ Jump_036_4EDE::
     ld [wBattleTarget], a
     pop de
     bit 0, d
-    jr nz, Jump_036_4F06
+    jr nz, .check_follow_up_action
     bit 2, d
-    jr nz, Jump_036_4F06
-    jr Jump_036_4F06
+    jr nz, .check_follow_up_action
+    jr .check_follow_up_action
 
-Jump_036_4F06::
+.check_follow_up_action:
     ld a, [wFollowUpAction]
     or a, d
     ld [wFollowUpAction], a
@@ -2327,19 +2330,19 @@ Func_036_4F18:: ; address name
     add a, a
     add_a_to_hl
     bit 5, [hl]
-    jr z, Jump_036_4F2E
+    jr z, .call_advance_random
     ld a, [wResolveByte71]
     scf
     ccf
     ret
 
-Jump_036_4F2E::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $33
-    jp c, Jump_036_4FBA
+    jp c, PickRandomEntryOfSlotChoices_ReturnCarry
     cp a, $66
-    jr c, Jump_036_4F80
+    jr c, PickRandomEntryOfSlotChoices_Skip
     ld a, $FF
     ld hl, wSlotChoices
     ld bc, $0003
@@ -2351,20 +2354,20 @@ Jump_036_4F2E::
     ld b, $03
     ld e, $00
 
-Jump_036_4F54::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_4F65
+    jr c, .next
     ld a, e
     ld hl, wSlotChoices
     add_a_to_hl
     ld [hl], c
     inc e
 
-Jump_036_4F65::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_4F54
+    jr nz, .loop
 
 ; A = a random one of the first E bytes at wD86D (no carry); the next entry lists the target's other occupied ally slots there and carries when none (E-0127)
 ; 1 call site from 1 routine (e.g. PickRandomEntryOfSlotChoices)
@@ -2384,7 +2387,8 @@ Func_036_4F69:: ; address name
     ccf
     ret
 
-Jump_036_4F80::
+PickRandomEntryOfSlotChoices_Skip::
+Jump_036_4F80:: ; address name
     ld a, $FF
     ld hl, wSlotChoices
     ld bc, $0003
@@ -2397,30 +2401,31 @@ Jump_036_4F80::
     ld b, $03
     ld e, $00
 
-Jump_036_4F99::
+.loop:
     ld a, c
     cp a, d
-    jr z, Jump_036_4FAE
+    jr z, .next
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_4FAE
+    jr c, .next
     ld a, e
     ld hl, wSlotChoices
     add_a_to_hl
     ld [hl], c
     inc e
 
-Jump_036_4FAE::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_4F99
+    jr nz, .loop
     ld a, e
     or a, a
-    jr z, Jump_036_4FBA
+    jr z, PickRandomEntryOfSlotChoices_ReturnCarry
     call PickRandomEntryOfSlotChoices
     ret
 
-Jump_036_4FBA::
+PickRandomEntryOfSlotChoices_ReturnCarry::
+Jump_036_4FBA:: ; address name
     scf
     ret
 
@@ -2432,10 +2437,10 @@ Func_036_4FBC:: ; address name
     call QueueSoundEffect
     call ActorOnLocalSide_Bank36
     ld d, $D0
-    jr c, Jump_036_4FCA
+    jr c, .call_show_battle_text
     ld d, $D1 ; battle text 'Miss! 0 avoided damage!'
 
-Jump_036_4FCA::
+.call_show_battle_text:
     farcall ShowBattleText
     ret
 
@@ -2448,33 +2453,33 @@ SetSubPhase2AndRestartResolve::
 Func_036_4FD1:: ; address name
     ld a, [wBattleActionId]
     cp a, $CC
-    jr z, Jump_036_4FF3
+    jr z, .read_battle_actor
     ld a, [wBattleActionId]
     cp a, $D0
-    jr c, Jump_036_4FE9
+    jr c, .loop
     cp a, $E4
-    jr nc, Jump_036_4FE9
+    jr nc, .loop
     farcall RunA3414FAndMarkWDA5B3
 
-Jump_036_4FE9::
+.loop:
     ld a, $02
     ld [wBattleSubPhase], a
     xor a, a
     ld [wBattleResolveStep], a
     ret
 
-Jump_036_4FF3::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     cp a, $04
-    jr nz, Jump_036_4FE9
+    jr nz, .loop
     ld a, [hl]
     and a, $F3
     ld [hl], a
-    jr Jump_036_4FE9
+    jr .loop
 
 ; sets wBattleSubPhase to 3 and clears wBattleResolveStep (E-0055)
 ; 2 call sites from 2 routines (e.g. ResolveStepDamageMessage_SetSubPhase3AndRestartResolve, ResolveStepEffectChecks)
@@ -2512,8 +2517,8 @@ Func_036_5025:: ; address name
     ld a, [wBattleActor]
     call GetBattleATK
     call CompareHLToBC
-    jr z, Jump_036_504E
-    jr c, Jump_036_504E
+    jr z, .call_random_in_range
+    jr c, .call_random_in_range
     ld a, l
     sub a, c
     ld e, a
@@ -2530,25 +2535,25 @@ Func_036_5025:: ; address name
     call CompareHLToBC
     pop bc
     pop hl
-    jr z, Jump_036_5059
-    jr nc, Jump_036_5059
-    jr Jump_036_5066
+    jr z, .call_shift_hl_right4
+    jr nc, .call_shift_hl_right4
+    jr .skip
 
-Jump_036_504E::
+.call_random_in_range:
     ld hl, $0000
     ld bc, $0001
     call RandomInRange
-    jr Jump_036_508B
+    jr .set_battle_damage_lo
 
-Jump_036_5059::
+.call_shift_hl_right4:
     call ShiftHLRight4
     ld c, l
     ld b, h
     ld hl, $0000
     call RandomInRange
-    jr Jump_036_508B
+    jr .set_battle_damage_lo
 
-Jump_036_5066::
+.skip:
     ld l, e
     ld h, d
     push hl
@@ -2575,7 +2580,7 @@ Jump_036_5066::
     ld e, l
     ld d, h
 
-Jump_036_508B::
+.set_battle_damage_lo:
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -2598,13 +2603,13 @@ Func_036_509D:: ; address name
     call SkillDamageScaledBySlotResistancesByte6Bits32
     call GetTargetSpeciesFamily
     cp a, $00
-    jr z, Jump_036_50AE
+    jr z, .call_scale_damage_by3_over2
     cp a, $08
-    jr z, Jump_036_50AE
+    jr z, .call_scale_damage_by3_over2
     cp a, $09
     ret nz
 
-Jump_036_50AE::
+.call_scale_damage_by3_over2:
     call ScaleDamageBy3Over2
     ret
 
@@ -2615,13 +2620,13 @@ Func_036_50B2:: ; address name
     call SkillDamageScaledBySlotResistancesByte6Bits32
     call GetTargetSpeciesFamily
     cp a, $01
-    jr z, Jump_036_50C3
+    jr z, .call_scale_damage_by3_over2
     cp a, $03
-    jr z, Jump_036_50C3
+    jr z, .call_scale_damage_by3_over2
     cp a, $06
     ret nz
 
-Jump_036_50C3::
+.call_scale_damage_by3_over2:
     call ScaleDamageBy3Over2
     ret
 
@@ -2632,13 +2637,13 @@ Func_036_50C7:: ; address name
     call SkillDamageScaledBySlotResistancesByte6Bits32
     call GetTargetSpeciesFamily
     cp a, $02
-    jr z, Jump_036_50D8
+    jr z, .call_scale_damage_by3_over2
     cp a, $05
-    jr z, Jump_036_50D8
+    jr z, .call_scale_damage_by3_over2
     cp a, $04
     ret nz
 
-Jump_036_50D8::
+.call_scale_damage_by3_over2:
     call ScaleDamageBy3Over2
     ret
 
@@ -2778,7 +2783,7 @@ Func_036_5152:: ; address name
     ld [wBattleDamageHi], a
     pop af
     ld [wBattleActor], a
-    jp Jump_036_588D
+    jp ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent
     db $C9
 
 ; only called from ActionEffect_Blaze (E-0047)
@@ -2868,29 +2873,29 @@ HealTargetHP::
 Func_036_5223:: ; address name
     ld a, [wBattleActionId]
     cp a, $18
-    jp z, Jump_036_52CC
+    jp z, .check_link_mode
     cp a, $1A
-    jp z, Jump_036_52CC
+    jp z, .check_link_mode
     cp a, $20
-    jr z, Jump_036_5251
+    jr z, .loop
     cp a, $B1
-    jr z, Jump_036_5251
+    jr z, .loop
     cp a, $7B
-    jr z, Jump_036_5251
+    jr z, .loop
     cp a, $CF
-    jr z, Jump_036_528B
+    jr z, .read_battle_target
     cp a, $DA
-    jr z, Jump_036_5251
+    jr z, .loop
 
-Jump_036_5244::
+.call_roll_skill_damage_from_record:
     call RollSkillDamageFromRecord
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wBattleDamageHi]
     ld d, a
-    jr Jump_036_5265
+    jr .loop2
 
-Jump_036_5251::
+.loop:
     ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -2902,7 +2907,7 @@ Jump_036_5251::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_036_5265::
+.loop2:
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -2917,11 +2922,11 @@ Jump_036_5265::
     ld a, [wBattleTarget]
     call GetBattleMaxHP
     call CompareHLToBC
-    jr nc, Jump_036_5285
+    jr nc, .restore
     ld b, h
     ld c, l
 
-Jump_036_5285::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -2929,7 +2934,7 @@ Jump_036_5285::
     scf
     ret
 
-Jump_036_528B::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -2945,7 +2950,7 @@ Jump_036_528B::
     add_a_to_hl
     ld a, [hl]
     or a, a
-    jr z, Jump_036_5265
+    jr z, .loop2
     push af
     call ScaleDamageTo40Percent
     ld a, [wBattleDamageLo]
@@ -2954,23 +2959,23 @@ Jump_036_528B::
     ld d, a
     pop af
     dec a
-    jr z, Jump_036_5265
+    jr z, .loop2
     sra d
     rr e
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
     ld [wBattleDamageHi], a
-    jr Jump_036_5265
+    jr .loop2
 
-Jump_036_52CC::
+.check_link_mode:
     ld a, [wLinkMode]
     cp a, $01
-    jp z, Jump_036_5251
+    jp z, .loop
     ld a, [wBattleActor]
     bit 2, a
-    jp z, Jump_036_5251
-    jp Jump_036_5244
+    jp z, .loop
+    jp .call_roll_skill_damage_from_record
 
 ; only called from ActionEffect_MPass (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_MPass)
@@ -2981,20 +2986,20 @@ ActionEffect_MPass_AddDoubleAToHL_Bank36::
 Func_036_52DF:: ; address name
     ld a, [wBattleActionId]
     cp a, $1B
-    jr z, Jump_036_52EF
+    jr z, .skip
     cp a, $1C
-    jr z, Jump_036_52F4
+    jr z, .set_battle_damage_lo
     ld de, $0050
-    jr Jump_036_52F7
+    jr .set_battle_damage_lo2
 
-Jump_036_52EF::
+.skip:
     ld de, $000F
-    jr Jump_036_52F7
+    jr .set_battle_damage_lo2
 
-Jump_036_52F4::
+.set_battle_damage_lo:
     ld de, $001E
 
-Jump_036_52F7::
+.set_battle_damage_lo2:
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -3013,11 +3018,11 @@ Jump_036_52F7::
     ld a, [wBattleTarget]
     call GetBattleMaxMP
     call CompareHLToBC
-    jr nc, Jump_036_531F
+    jr nc, .restore
     ld b, h
     ld c, l
 
-Jump_036_531F::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -3080,24 +3085,24 @@ RaiseTargetDEF::
 Func_036_5360:: ; address name
     ld a, [wBattleTarget]
     call SlotDEFBelowBuffCap
-    jr nc, Jump_036_53C4
-    jr z, Jump_036_53C4
+    jr nc, .return_0
+    jr z, .return_0
     ld a, [wBattleTarget]
     call GetBaseDEFOfSlotA
     ld a, [wBattleActionId]
     cp a, $25
-    jr z, Jump_036_5380
+    jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
     call DivideHLBy3
     ld c, l
     ld b, h
-    jr Jump_036_5383
+    jr .set_battle_damage_lo
 
-Jump_036_5380::
+.call_shift_bc_right1:
     call ShiftBCRight1
 
-Jump_036_5383::
+.set_battle_damage_lo:
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
@@ -3115,7 +3120,7 @@ Jump_036_5383::
     push hl
     call SlotDEFBelowBuffCap
     pop hl
-    jr c, Jump_036_53C2
+    jr c, .return_carry
     ld a, [hl-]
     ld e, [hl]
     ld d, a
@@ -3139,11 +3144,11 @@ Jump_036_5383::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_036_53C2::
+.return_carry:
     scf
     ret
 
-Jump_036_53C4::
+.return_0:
     xor a, a
     ret
 
@@ -3160,21 +3165,21 @@ Func_036_53C6:: ; address name
     ld [wBattleArg2], a
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_53DC
+    jr nz, .check_battle_action_id
     scf
     ret
 
-Jump_036_53DC::
+.check_battle_action_id:
     and a, $03
     ld b, a
     ld a, [wBattleActionId]
     cp a, $8C
     ld a, b
-    jr z, Jump_036_53EB
+    jr z, .call_roll_chance_by_flags_at_hl_sided
     call RollChanceByFlagsAtHL
     ret
 
-Jump_036_53EB::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
     ret
 
@@ -3191,27 +3196,27 @@ Func_036_53EF:: ; address name
     ld c, l
     ld hl, $0001
     call CompareHLToBC
-    jr c, Jump_036_5401
+    jr c, .read_battle_target
     xor a, a
     ret
 
-Jump_036_5401::
+.read_battle_target:
     ld a, [wBattleTarget]
     call GetBaseDEFOfSlotA
     ld a, [wBattleActionId]
     cp a, $27
-    jr z, Jump_036_5417
+    jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
     call DivideHLBy3
     ld c, l
     ld b, h
-    jr Jump_036_541A
+    jr .read_battle_target2
 
-Jump_036_5417::
+.call_shift_bc_right1:
     call ShiftBCRight1
 
-Jump_036_541A::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
@@ -3220,7 +3225,7 @@ Jump_036_541A::
     ld h, [hl]
     or a, h
     pop hl
-    jr z, Jump_036_543F
+    jr z, .return_0
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
@@ -3231,16 +3236,16 @@ Jump_036_541A::
     ld a, [hl]
     sbc a, b
     ld [hl], a
-    jr nc, Jump_036_543D
+    jr nc, .return_carry
     xor a, a
     ld [hl-], a
     ld [hl], a
 
-Jump_036_543D::
+.return_carry:
     scf
     ret
 
-Jump_036_543F::
+.return_0:
     xor a, a
     ret
 
@@ -3253,23 +3258,23 @@ RaiseTargetAGL::
 Func_036_5441:: ; address name
     ld a, [wBattleTarget]
     call SlotAGLBelowBuffCap
-    jr nc, Jump_036_54A5
+    jr nc, .return_0
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
     cp a, $29
-    jr z, Jump_036_545F
+    jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
     call DivideHLBy3
     ld c, l
     ld b, h
-    jr Jump_036_5462
+    jr .set_battle_damage_lo
 
-Jump_036_545F::
+.call_shift_bc_right1:
     call ShiftBCRight1
 
-Jump_036_5462::
+.set_battle_damage_lo:
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
@@ -3287,7 +3292,7 @@ Jump_036_5462::
     push hl
     call SlotAGLBelowBuffCap
     pop hl
-    jr c, Jump_036_54A3
+    jr c, .return_carry
     dec hl
     ld a, [hl+]
     sub a, c
@@ -3313,11 +3318,11 @@ Jump_036_5462::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_036_54A3::
+.return_carry:
     scf
     ret
 
-Jump_036_54A5::
+.return_0:
     xor a, a
     ret
 
@@ -3332,11 +3337,11 @@ Func_036_54A7:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_54BA
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_54BA::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
@@ -3351,18 +3356,18 @@ Func_036_54BE:: ; address name
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
     cp a, $2B
-    jr z, Jump_036_54D4
+    jr z, .call_shift_bc_right1
     ld l, c
     ld h, b
     call DivideHLBy3
     ld c, l
     ld b, h
-    jr Jump_036_54D7
+    jr .read_battle_target
 
-Jump_036_54D4::
+.call_shift_bc_right1:
     call ShiftBCRight1
 
-Jump_036_54D7::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleAGL
     call AddDoubleAToHL_Bank36
@@ -3370,16 +3375,16 @@ Jump_036_54D7::
     ld d, $00
     deref_hl
     call CompareHLToBC
-    jr nz, Jump_036_54ED
+    jr nz, .call_compare_hl_to_bc
     ld d, $01
 
-Jump_036_54ED::
+.call_compare_hl_to_bc:
     push bc
     ld bc, $0002
     call CompareHLToBC
     pop bc
     pop hl
-    jr c, Jump_036_5520
+    jr c, .return_0
     ld a, c
     sub a, d
     ld c, a
@@ -3398,7 +3403,7 @@ Jump_036_54ED::
     ld d, a
     sbc a, b
     ld [hl], a
-    jr nc, Jump_036_551E
+    jr nc, .return_carry
     xor a, a
     ld [hl-], a
     ld [hl], $01
@@ -3408,11 +3413,11 @@ Jump_036_54ED::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_036_551E::
+.return_carry:
     scf
     ret
 
-Jump_036_5520::
+.return_0:
     xor a, a
     ret
 
@@ -3598,7 +3603,7 @@ Func_036_55D4:: ; address name
     ld hl, wSlotDamageFlags
     add_a_to_hl
     bit 0, [hl]
-    jr z, Jump_036_55FA
+    jr z, .return
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -3610,7 +3615,7 @@ Func_036_55D4:: ; address name
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_55FA::
+.return:
     ret
 
 ; carry for action $82 or level 4; otherwise rolls by bits 0-1 of the target's wDA72 byte 1 (RollChanceByHLBits6And7 for action $7E) (E-0124)
@@ -3620,29 +3625,29 @@ RollTargetSlotResistancesByte1Bits01Chance::
 Func_036_55FB:: ; address name
     ld a, [wBattleActionId]
     cp a, $82
-    jr z, Jump_036_5611
+    jr z, .return_carry
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5613
+    jr nz, .check_battle_action_id
 
-Jump_036_5611::
+.return_carry:
     scf
     ret
 
-Jump_036_5613::
+.check_battle_action_id:
     and a, $03
     ld b, a
     ld a, [wBattleActionId]
     cp a, $7E
     ld a, b
-    jr z, Jump_036_5622
+    jr z, .call_roll_chance_by_hl_bits6_and7
     call RollChanceByFlagsAtHL
     ret
 
-Jump_036_5622::
+.call_roll_chance_by_hl_bits6_and7:
     call RollChanceByHLBits6And7
     ret
 
@@ -3659,11 +3664,11 @@ Func_036_5626:: ; address name
     ld [wBattleArg2], a
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_563C
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_563C::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
@@ -3688,23 +3693,23 @@ Func_036_5640:: ; address name
     ld [hl], b
     ld a, [wBattleActor]
     call ActionEffect_RobMagic_Sub01_GetBattleMP
-    jr nc, Jump_036_5670
+    jr nc, .return
     ld a, [wBattleActor]
     ld bc, wBattleMaxMP + $1
     add a, a
     add a, c
     ld c, a
-    jr nc, Jump_036_566B
+    jr nc, .skip
     inc b
 
-Jump_036_566B::
+.skip:
     ld a, [bc]
     ld [hl-], a
     dec bc
     ld a, [bc]
     ld [hl], a
 
-Jump_036_5670::
+.return:
     ret
 
 ; takes MP from the target: up to wD8B7[actor] / 4 + 5 (or wC982 for action $DF), limited by its MP; the amount is stored as damage (E-0127)
@@ -3720,25 +3725,25 @@ Func_036_5671:: ; address name
     push hl
     ld a, [wBattleActionId]
     cp a, $DF
-    jr nz, Jump_036_568C
+    jr nz, .skip
     ld a, [wSavedActorSlot]
     ld c, a
     ld a, [wSavedActorByte]
     ld b, a
-    jr Jump_036_56AE
+    jr .set_battle_damage_lo
 
-Jump_036_568C::
+.skip:
     deref_hl
     or a, h
-    jr z, Jump_036_56B8
+    jr z, .set_battle_damage_lo2
     ld a, [wBattleActor]
     ld de, wBattleLevel
     add a, e
     ld e, a
-    jr nc, Jump_036_569D
+    jr nc, .skip2
     inc d
 
-Jump_036_569D::
+.skip2:
     ld a, [de]
     srl a
     srl a
@@ -3746,25 +3751,25 @@ Jump_036_569D::
     ld c, a
     ld b, $00
     call CompareHLToBC
-    jr nc, Jump_036_56AE
+    jr nc, .set_battle_damage_lo
     ld b, h
     ld c, l
 
-Jump_036_56AE::
+.set_battle_damage_lo:
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
     ld [wBattleDamageHi], a
-    jr Jump_036_56C3
+    jr .restore
 
-Jump_036_56B8::
+.set_battle_damage_lo2:
     ld bc, $0000
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
     ld [wBattleDamageHi], a
 
-Jump_036_56C3::
+.restore:
     pop hl
     ld a, [hl]
     sub a, c
@@ -3783,11 +3788,11 @@ Func_036_56CB:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_56DC
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_56DC::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
@@ -3804,20 +3809,20 @@ Func_036_56E0:: ; address name
     push af
     ld a, [wBattleActionId]
     cp a, $E1
-    jr nz, Jump_036_56F5
+    jr nz, .call_force_level4_if_actor_slot_flags854_bit2
     pop af
     xor a, a
     push af
 
-Jump_036_56F5::
+.call_force_level4_if_actor_slot_flags854_bit2:
     pop af
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_56FF
+    jr nz, .call_roll_chance_by_flags_at_hl_sided
     scf
     ret
 
-Jump_036_56FF::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
     ret
 
@@ -3843,14 +3848,14 @@ Func_036_5703:: ; address name
     deref_hl
     call CompareHLToBC
     pop hl
-    jr c, Jump_036_5737
+    jr c, .read_battle_actor
     ld a, c
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
     call SetBit0OfLevelUpGainsIndexed_Bank36
 
-Jump_036_5737::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -3866,14 +3871,14 @@ Jump_036_5737::
     deref_hl
     call CompareHLToBC
     pop hl
-    jr c, Jump_036_5765
+    jr c, .read_battle_actor2
     ld a, c
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
     call SetBit1OfLevelUpGainsIndexed_Bank36
 
-Jump_036_5765::
+.read_battle_actor2:
     ld a, [wBattleActor]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank36
@@ -3915,10 +3920,10 @@ Jump_036_5765::
     add a, b
     add a, e
     ld e, a
-    jr nc, Jump_036_57BD
+    jr nc, .set_battle_arg0
     inc d
 
-Jump_036_57BD::
+.set_battle_arg0:
     ld a, l
     ld [wBattleArg0], a
     ld a, h
@@ -3935,54 +3940,54 @@ Jump_036_57BD::
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_036_57E6
+    jr nc, .skip
     inc d
 
-Jump_036_57E6::
+.skip:
     ld c, $00
 
-Jump_036_57E8::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_036_584D
+    jr z, .loop2
     cp a, $C8
-    jr z, Jump_036_584D
+    jr z, .loop2
     push af
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_5822
+    jr z, .restore2
     ld a, [wBattleTarget]
     cp a, $04
-    jr nc, Jump_036_5811
+    jr nc, .restore
     pop af
     cp a, $34
-    jr nz, Jump_036_5809
+    jr nz, .cp_35
     ld a, $AD
-    jr Jump_036_5823
+    jr .skip2
 
-Jump_036_5809::
+.cp_35:
     cp a, $35
-    jr nz, Jump_036_5823
+    jr nz, .skip2
     ld a, $AE
-    jr Jump_036_5823
+    jr .skip2
 
-Jump_036_5811::
+.restore:
     pop af
     cp a, $AD
-    jr nz, Jump_036_581A
+    jr nz, .cp_AE
     ld a, $34
-    jr Jump_036_5823
+    jr .skip2
 
-Jump_036_581A::
+.cp_AE:
     cp a, $AE
-    jr nz, Jump_036_5823
+    jr nz, .skip2
     ld a, $35
-    jr Jump_036_5823
+    jr .skip2
 
-Jump_036_5822::
+.restore2:
     pop af
 
-Jump_036_5823::
+.skip2:
     push af
     push hl
     push de
@@ -4005,12 +4010,12 @@ Jump_036_5823::
     inc de
     inc c
     dec b
-    jr nz, Jump_036_57E8
+    jr nz, .loop
     ld a, c
     cp a, $08
-    jr z, Jump_036_585B
+    jr z, .return
 
-Jump_036_584D::
+.loop2:
     ld a, $00
     ld [de], a
     inc de
@@ -4020,9 +4025,9 @@ Jump_036_584D::
     inc c
     ld a, c
     cp a, $08
-    jr nz, Jump_036_584D
+    jr nz, .loop2
 
-Jump_036_585B::
+.return:
     ret
 
 ; only called from ActionEffect_MegaMagic (E-0047)
@@ -4057,12 +4062,13 @@ Func_036_585C:: ; address name
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_588D::
+ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent::
+Jump_036_588D:: ; address name
     call ScaleHLTo40Percent
     call ShiftHLRight2
     ld a, l
     or a, h
-    jr z, Jump_036_58B7
+    jr z, .call_hl_to_battle_status8_entry_of_battle
     ld b, h
     ld c, l
     ld a, l
@@ -4084,7 +4090,7 @@ Jump_036_588D::
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_58B7::
+.call_hl_to_battle_status8_entry_of_battle:
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte4
     rlca
@@ -4109,26 +4115,26 @@ Func_036_58C5:: ; address name
     ld c, l
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_58E8
+    jr z, .skip
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_036_58E8
+    jr c, .skip
     call ShiftBCRight1
-    jr Jump_036_58ED
+    jr .call_compare_hl_to_bc
 
-Jump_036_58E8::
+.skip:
     add hl, bc
     add hl, bc
     ld bc, $000A
 
-Jump_036_58ED::
+.call_compare_hl_to_bc:
     add hl, bc
     ld bc, $00B4
     call CompareHLToBC
-    jr c, Jump_036_58F9
+    jr c, .set_battle_damage_lo
     ld hl, $00B4
 
-Jump_036_58F9::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4173,26 +4179,26 @@ Func_036_592E:: ; address name
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_594E
+    jr z, .skip
     cp a, $04
-    jr c, Jump_036_594E
+    jr c, .skip
     ld b, h
     ld c, l
     call ShiftBCRight1
-    jr Jump_036_5952
+    jr .call_compare_hl_to_bc
 
-Jump_036_594E::
+.skip:
     add hl, hl
     ld bc, $001E
 
-Jump_036_5952::
+.call_compare_hl_to_bc:
     add hl, bc
     ld bc, $0096
     call CompareHLToBC
-    jr c, Jump_036_595E
+    jr c, .set_battle_damage_lo
     ld hl, $0096
 
-Jump_036_595E::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4237,39 +4243,39 @@ Func_036_5993:: ; address name
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_59B6
+    jr z, .skip
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_036_59B6
+    jr c, .skip
     ld b, h
     ld c, l
     call ShiftBCRight1
-    jr Jump_036_59BA
+    jr .call_get_target_species_family
 
-Jump_036_59B6::
+.skip:
     add hl, hl
     ld bc, $0014
 
-Jump_036_59BA::
+.call_get_target_species_family:
     add hl, bc
     push hl
     call GetTargetSpeciesFamily
     cp a, $09
-    jr z, Jump_036_59C8
+    jr z, .call_compare_hl_to_bc
     ld bc, $00B4
-    jr Jump_036_59CB
+    jr .call_compare_hl_to_bc2
 
-Jump_036_59C8::
+.call_compare_hl_to_bc:
     ld bc, $00DC
 
-Jump_036_59CB::
+.call_compare_hl_to_bc2:
     pop hl
     call CompareHLToBC
-    jr c, Jump_036_59D3
+    jr c, .set_battle_damage_lo
     ld l, c
     ld h, b
 
-Jump_036_59D3::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4313,30 +4319,30 @@ Func_036_5A08:: ; address name
     farcall LoadSkillRecord
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_5A33
+    jr z, .read_record_buffer_data
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_036_5A33
+    jr c, .read_record_buffer_data
     ld a, [wRecordBufferData + $D]
     ld l, a
     ld a, [wRecordBufferData + $E]
     ld h, a
     ld a, [wRecordBufferData + $F]
-    jr Jump_036_5A3E
+    jr .set_battle_arg2
 
-Jump_036_5A33::
+.read_record_buffer_data:
     ld a, [wRecordBufferData + $9]
     ld l, a
     ld a, [wRecordBufferData + $A]
     ld h, a
     ld a, [wRecordBufferData + $B]
 
-Jump_036_5A3E::
+.set_battle_arg2:
     ld [wBattleArg2], a
     call RollDamageBaseToBasePlusBattleArg2
     call GetTargetSpeciesFamily
     cp a, $07
-    jr nz, Jump_036_5A5E
+    jr nz, .call_hl_to_battle_status8_entry_of_battle
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -4347,7 +4353,7 @@ Jump_036_5A3E::
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_036_5A5E::
+.call_hl_to_battle_status8_entry_of_battle:
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte1
     rlca
@@ -4398,7 +4404,7 @@ Func_036_5A98:: ; address name
     call GetTargetSlotResistancesByte3
     and a, $03
     call RollChanceByFlagsAtHL
-    jr nc, Jump_036_5AF5
+    jr nc, .set_battle_damage_lo2
     ld a, [wBattleActor]
     call GetBattleHP
     ld a, l
@@ -4408,28 +4414,28 @@ Func_036_5A98:: ; address name
     deref_hl
     ld a, h
     or a, a
-    jr nz, Jump_036_5ABF
+    jr nz, .check_link_mode
     ld a, l
     cp a, $01
-    jr z, Jump_036_5AEB
+    jr z, .set_battle_damage_lo
 
-Jump_036_5ABF::
+.check_link_mode:
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_036_5AD8
+    jr nz, .read_battle_damage_lo
     ld a, [wBattleKind]
     or a, a
-    jr z, Jump_036_5ACF
+    jr z, .read_battle_target
     cp a, $01
-    jr nz, Jump_036_5AD8
+    jr nz, .read_battle_damage_lo
 
-Jump_036_5ACF::
+.read_battle_target:
     ld a, [wBattleTarget]
     call GetBattleHP
     dec hl
-    jr Jump_036_5AE4
+    jr .skip
 
-Jump_036_5AD8::
+.read_battle_damage_lo:
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -4437,13 +4443,13 @@ Jump_036_5AD8::
     dec hl
     call ShiftHLRight1
 
-Jump_036_5AE4::
+.skip:
     ld a, h
     or a, l
-    jr nz, Jump_036_5AEB
+    jr nz, .set_battle_damage_lo
     ld hl, $0001
 
-Jump_036_5AEB::
+.set_battle_damage_lo:
     scf
     ld a, l
     ld [wBattleDamageLo], a
@@ -4451,7 +4457,7 @@ Jump_036_5AEB::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_5AF5::
+.set_battle_damage_lo2:
     ld hl, $0000
     ld a, l
     ld [wBattleDamageLo], a
@@ -4470,11 +4476,11 @@ Func_036_5B02:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5B15
+    jr nz, .call_roll_chance_by_flags_at_hl_sided
     scf
     ret
 
-Jump_036_5B15::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
     ret
 
@@ -4485,7 +4491,7 @@ Jump_036_5B15::
 RollTargetSlotResistancesByte2Bits45Chance::
 Func_036_5B19:: ; address name
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, Jump_036_613D
+    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte2
     swap a
@@ -4493,30 +4499,30 @@ Func_036_5B19:: ; address name
     ld [wBattleArg2], a
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5B35
+    jr nz, .check_battle_action_id
     scf
     ret
 
-Jump_036_5B35::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $13
-    jr c, Jump_036_5B4F
+    jr c, .read_battle_arg2
     cp a, $14
-    jr z, Jump_036_5B4F
+    jr z, .read_battle_arg2
     cp a, $79
-    jr z, Jump_036_5B4F
+    jr z, .read_battle_arg2
     cp a, $82
-    jr z, Jump_036_5B56
+    jr z, .read_battle_arg22
     ld a, [wBattleArg2]
     call RollChanceByFlagsAtHL
     ret
 
-Jump_036_5B4F::
+.read_battle_arg2:
     ld a, [wBattleArg2]
     call RollChanceByFlagsAtHLSided
     ret
 
-Jump_036_5B56::
+.read_battle_arg22:
     ld a, [wBattleArg2]
     call RollChanceByHLBits6And7
     ret
@@ -4534,27 +4540,27 @@ Func_036_5B5D:: ; address name
     ld b, a
     ld a, [wBattleActionId]
     cp a, $7A
-    jr z, Jump_036_5B7D
+    jr z, .call_force_level4_if_actor_slot_flags854_bit2
     cp a, $8E
-    jr z, Jump_036_5B7D
+    jr z, .call_force_level4_if_actor_slot_flags854_bit2
     cp a, $90
-    jr z, Jump_036_5B7D
+    jr z, .call_force_level4_if_actor_slot_flags854_bit2
     ld a, b
     call RollChanceByFlagsAtHL
-    jr Jump_036_5B8A
+    jr .return
 
-Jump_036_5B7D::
+.call_force_level4_if_actor_slot_flags854_bit2:
     ld a, b
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5B87
+    jr nz, .call_roll_chance_by_flags_at_hl_sided
     scf
     ret
 
-Jump_036_5B87::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
 
-Jump_036_5B8A::
+.return:
     ret
 
 ; only called from ActionEffect_UltraDown (E-0047)
@@ -4573,7 +4579,7 @@ Func_036_5B8B:: ; address name
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_036_5BC2
+    jr nz, .return_carry
     ld a, [wBattleTarget]
     ld hl, wBattleAGL
     add a, a
@@ -4584,16 +4590,16 @@ Func_036_5B8B:: ; address name
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_036_5BC2
+    jr nz, .return_carry
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr z, Jump_036_5BC2
+    jr z, .return_carry
     xor a, a
     ret
 
-Jump_036_5BC2::
+.return_carry:
     scf
     ret
 
@@ -4743,10 +4749,10 @@ Func_036_5BC4:: ; address name
     ld de, wSlotResistances
     add a, e
     ld e, a
-    jr nc, Jump_036_5D0B
+    jr nc, .set_battle_arg2
     inc d
 
-Jump_036_5D0B::
+.set_battle_arg2:
     ld a, e
     ld [wBattleArg2], a
     ld a, d
@@ -4773,10 +4779,10 @@ Func_036_5D2C:: ; address name
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_036_5D3B
+    jr nc, .loop
     inc d
 
-Jump_036_5D3B::
+.loop:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -4811,7 +4817,7 @@ Jump_036_5D3B::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_036_5D3B
+    jr nz, .loop
     ret
 
 ; only called from ActionEffect_TatsuCall_Sub01 (E-0047)
@@ -4860,11 +4866,11 @@ Func_036_5DA3:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5DB4
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_5DB4::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
@@ -4879,11 +4885,11 @@ Func_036_5DB8:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5DCB
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_5DCB::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
@@ -4901,21 +4907,21 @@ Func_036_5DCF:: ; address name
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_5DF4
+    jr z, .set_battle_damage_lo
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_036_5DF4
+    jr c, .set_battle_damage_lo
     push hl
     srl h
     rr l
     pop bc
     add hl, bc
-    jr Jump_036_5DF5
+    jr .set_battle_damage_lo2
 
-Jump_036_5DF4::
+.set_battle_damage_lo:
     add hl, hl
 
-Jump_036_5DF5::
+.set_battle_damage_lo2:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4949,18 +4955,18 @@ Func_036_5E0B:: ; address name
     call Multiply8By16
     ld a, [wBattleActionId]
     cp a, $63
-    jr z, Jump_036_5E39
+    jr z, .call_scale_hl_to75_percent
     call ShiftHLRight1
     ld b, h
     ld c, l
     call ShiftBCRight2
     add hl, bc
-    jr Jump_036_5E3C
+    jr .read_battle_temp7_f
 
-Jump_036_5E39::
+.call_scale_hl_to75_percent:
     call ScaleHLTo75Percent
 
-Jump_036_5E3C::
+.read_battle_temp7_f:
     ld a, [wBattleTemp7F]
     ld c, a
     ld a, [wBattleTemp80]
@@ -5030,7 +5036,7 @@ Func_036_5E86:: ; address name
     ld [wEffectTemp3], a
     deref_hl
     call CompareHLToBC
-    jr z, Jump_036_5ED5
+    jr z, .done
     ld bc, $01F4
     add hl, bc
     ld a, [wEffectTemp0]
@@ -5038,11 +5044,11 @@ Func_036_5E86:: ; address name
     ld a, [wEffectTemp1]
     ld b, a
     call CompareHLToBC
-    jr c, Jump_036_5EC6
+    jr c, .read_effect_temp2
     ld h, b
     ld l, c
 
-Jump_036_5EC6::
+.read_effect_temp2:
     ld a, [wEffectTemp2]
     ld c, a
     ld a, [wEffectTemp3]
@@ -5055,7 +5061,7 @@ Jump_036_5EC6::
     scf
     ret
 
-Jump_036_5ED5::
+.done:
     scf
     ccf
     ret
@@ -5066,26 +5072,26 @@ Jump_036_5ED5::
 ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3::
 Func_036_5ED8:: ; address name
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, Jump_036_613D
+    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte3
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5EEF
+    jr nz, .check_battle_action_id
     scf
     ret
 
-Jump_036_5EEF::
+.check_battle_action_id:
     push af
     ld a, [wBattleActionId]
     cp a, $D6
-    jr z, Jump_036_5EFC
+    jr z, .call_roll_chance_for_level_a_6346
     pop af
     call ActionEffect_Sacrifice_Sub01_RollChanceByLevel_100_84_50_0
     ret
 
-Jump_036_5EFC::
+.call_roll_chance_for_level_a_6346:
     pop af
     call RollChanceForLevelA_6346
     ret
@@ -5104,11 +5110,11 @@ Func_036_5F01:: ; address name
     ld [wBattleArg2], a
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_5F17
+    jr nz, .check_battle_action_id
     scf
     ret
 
-Jump_036_5F17::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $2F
     ld a, [wBattleArg2]
@@ -5125,10 +5131,10 @@ Func_036_5F25:: ; address name
     ld hl, $0082
     ld a, [wBattleActionId]
     cp a, $DC
-    jr nz, Jump_036_5F32
+    jr nz, .set_monster_id
     ld hl, $0262
 
-Jump_036_5F32::
+.set_monster_id:
     ld a, l
     ld [wMonsterId], a
     ld a, h
@@ -5202,10 +5208,10 @@ Jump_036_5F32::
     ld de, wSlotResistances
     add a, e
     ld e, a
-    jr nc, Jump_036_5FE1
+    jr nc, .set_battle_arg2
     inc d
 
-Jump_036_5FE1::
+.set_battle_arg2:
     ld a, e
     ld [wBattleArg2], a
     ld a, d
@@ -5240,17 +5246,17 @@ Func_036_6018:: ; address name
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_036_602A
+    jr nc, .loop
     inc d
 
-Jump_036_602A::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_036_6034
+    jr nz, .skip
     call ActionEffect_BeDragon_Sub02_Sub01_Sub01
-    jr Jump_036_606A
+    jr .next
 
-Jump_036_6034::
+.skip:
     push hl
     push bc
     ld a, [hl]
@@ -5281,10 +5287,10 @@ Jump_036_6034::
     inc de
     inc de
 
-Jump_036_606A::
+.next:
     inc hl
     dec b
-    jr nz, Jump_036_602A
+    jr nz, .loop
     call ActionEffect_BeDragon_Sub02_Sub01_Sub01
     call ActionEffect_BeDragon_Sub02_Sub01_Sub01
     call ActionEffect_BeDragon_Sub02_Sub01_Sub01
@@ -5366,11 +5372,11 @@ Func_036_60B4:: ; address name
     ld a, [wBattleActionId]
     cp a, $4C
     ld a, b
-    jr z, Jump_036_60CD
+    jr z, .call_scale_damage_by_flags_at_hl
     call ScaleDamageByFlagsAtHLAlt
     ret
 
-Jump_036_60CD::
+.call_scale_damage_by_flags_at_hl:
     call ScaleDamageByFlagsAtHL
     ret
 
@@ -5383,11 +5389,11 @@ Func_036_60D1:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_60E2
+    jr nz, .call_roll_chance_by_flags_at_hl_sided
     scf
     ret
 
-Jump_036_60E2::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
     ld e, $00
     ret c
@@ -5399,7 +5405,7 @@ Jump_036_60E2::
 RollTargetSlotResistancesByte5Bits67ChanceToE::
 Func_036_60EB:: ; address name
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, Jump_036_613D
+    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte5
     rlca
@@ -5407,11 +5413,11 @@ Func_036_60EB:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_6104
+    jr nz, .call_roll_chance_by_flags_at_hl_sided
     scf
     ret
 
-Jump_036_6104::
+.call_roll_chance_by_flags_at_hl_sided:
     call RollChanceByFlagsAtHLSided
     ld e, $00
     ret c
@@ -5451,15 +5457,16 @@ Func_036_6126:: ; address name
     and a, $03
     call ForceLevel4IfActorSlotFlags854Bit2
     cp a, $04
-    jr nz, Jump_036_6139
+    jr nz, .call_roll_chance_by_flags_at_hl
     scf
     ret
 
-Jump_036_6139::
+.call_roll_chance_by_flags_at_hl:
     call RollChanceByFlagsAtHL
     ret
 
-Jump_036_613D::
+ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done::
+Jump_036_613D:: ; address name
     xor a, a
     ld e, $01
     ret
@@ -5471,18 +5478,18 @@ ZIfAllyActorInBattleKindMode2Or3::
 Func_036_6141:: ; address name
     ld a, [wBattleKind]
     cp a, $02
-    jr z, Jump_036_614C
+    jr z, .check_battle_actor
     cp a, $03
-    jr nz, Jump_036_6155
+    jr nz, .done
 
-Jump_036_614C::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_036_6155
+    jr nc, .done
     xor a, a
     ret
 
-Jump_036_6155::
+.done:
     ld a, $01
     or a, a
     ret
@@ -5496,25 +5503,25 @@ RollSkillDamageFromRecord::
 Func_036_6159:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_6174
+    jr z, .read_record_buffer_data
     ld a, [wBattleActor]
     bit 2, a
-    jr z, Jump_036_6174
+    jr z, .read_record_buffer_data
     ld a, [wRecordBufferData + $D]
     ld l, a
     ld a, [wRecordBufferData + $E]
     ld h, a
     ld a, [wRecordBufferData + $F]
-    jr Jump_036_617F
+    jr .set_battle_arg2
 
-Jump_036_6174::
+.read_record_buffer_data:
     ld a, [wRecordBufferData + $9]
     ld l, a
     ld a, [wRecordBufferData + $A]
     ld h, a
     ld a, [wRecordBufferData + $B]
 
-Jump_036_617F::
+.set_battle_arg2:
     ld [wBattleArg2], a
     call RollDamageBaseToBasePlusBattleArg2
 
@@ -5557,7 +5564,7 @@ Func_036_618F:: ; address name
 GetTargetSlotResistancesByte0::
 Func_036_61A6:: ; address name
     ld de, wSlotResistances
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 1 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA73 + 7 * target); DE points at it (E-0095)
 ; 8 call sites from 8 routines (e.g. AttackDamageScaledBySlotResistancesByte1Bits32, AttackDamageScaledBySlotResistancesByte1Bits54, AttackDamageScaledBySlotResistancesByte1Bits76, ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1, ...)
@@ -5565,7 +5572,7 @@ Func_036_61A6:: ; address name
 GetTargetSlotResistancesByte1::
 Func_036_61AB:: ; address name
     ld de, wSlotResistances + $1
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 2 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA74 + 7 * target); DE points at it (E-0095)
 ; 5 call sites from 5 routines (e.g. RollTargetSlotResistancesByte2Bits45Chance, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36, RollTargetSlotResistancesByte2Bits23Chance, ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36, ...)
@@ -5573,7 +5580,7 @@ Func_036_61AB:: ; address name
 GetTargetSlotResistancesByte2::
 Func_036_61B0:: ; address name
     ld de, wSlotResistances + $2
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 3 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA75 + 7 * target); DE points at it (E-0095)
 ; 6 call sites from 6 routines (e.g. RollTargetSlotResistancesByte3Bits45Chance, ActionEffect_Kamikaze_HLToBattleStatus8EntryOfBattleTarget_Bank36, DamageEightyPercentOfTargetHPScaled, ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36, ...)
@@ -5581,7 +5588,7 @@ Func_036_61B0:: ; address name
 GetTargetSlotResistancesByte3::
 Func_036_61B5:: ; address name
     ld de, wSlotResistances + $3
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 4 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA76 + 7 * target); DE points at it (E-0095)
 ; 4 call sites from 4 routines (e.g. ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi, RollTargetSlotResistancesByte4Bits01ChanceToE, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ActionEffect_FireAir_RollSkillDamageFromRecord)
@@ -5589,7 +5596,7 @@ Func_036_61B5:: ; address name
 GetTargetSlotResistancesByte4::
 Func_036_61BA:: ; address name
     ld de, wSlotResistances + $4
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 5 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA77 + 7 * target); DE points at it (E-0095)
 ; 4 call sites from 4 routines (e.g. ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36, RollChanceVsTargetSlotResistancesByte5Bits23, ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36, RollTargetSlotResistancesByte5Bits67ChanceToE)
@@ -5597,7 +5604,7 @@ Func_036_61BA:: ; address name
 GetTargetSlotResistancesByte5::
 Func_036_61BF:: ; address name
     ld de, wSlotResistances + $5
-    jr Jump_036_61C7
+    jr GetTargetSlotResistancesByte6_ReadBattleTarget
 
 ; A = byte 6 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA78 + 7 * target); DE points at it (E-0095)
 ; 4 call sites from 4 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi, ActionEffect_RockThrow_RollSkillDamageFromRecord, ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36)
@@ -5606,7 +5613,8 @@ GetTargetSlotResistancesByte6::
 Func_036_61C4:: ; address name
     ld de, wSlotResistances + $6
 
-Jump_036_61C7::
+GetTargetSlotResistancesByte6_ReadBattleTarget::
+Jump_036_61C7:: ; address name
     ld a, [wBattleTarget]
     ld b, a
     add a, a
@@ -5615,10 +5623,10 @@ Jump_036_61C7::
     add a, b
     add a, e
     ld e, a
-    jr nc, Jump_036_61D4
+    jr nc, .done
     inc d
 
-Jump_036_61D4::
+.done:
     ld a, [de]
     ret
 
@@ -5627,20 +5635,20 @@ Jump_036_61D4::
 RollChanceByFlagsAtHL::
 Func_036_61D6:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_61DF
+    jr z, .skip
     call RollChanceByLevel_100_75_40_0
-    jr Jump_036_61EB
+    jr .return
 
-Jump_036_61DF::
+.skip:
     bit 7, [hl]
-    jr z, Jump_036_61E8
+    jr z, .call_roll_chance_by_level_100_84_50_0
     call RollChanceByLevel_100_100_75_0
-    jr Jump_036_61EB
+    jr .return
 
-Jump_036_61E8::
+.call_roll_chance_by_level_100_84_50_0:
     call RollChanceByLevel_100_84_50_0
 
-Jump_036_61EB::
+.return:
     ret
 
 ; only called from ActionEffect_Sacrifice_Sub01 (E-0047)
@@ -5648,14 +5656,14 @@ Jump_036_61EB::
 ActionEffect_Sacrifice_Sub01_RollChanceByLevel_100_84_50_0::
 Func_036_61EC:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_61F5
+    jr z, .call_roll_chance_by_level_100_100_75_0
     call RollChanceByLevel_100_84_50_0
-    jr Jump_036_61F8
+    jr .return
 
-Jump_036_61F5::
+.call_roll_chance_by_level_100_100_75_0:
     call RollChanceByLevel_100_100_75_0
 
-Jump_036_61F8::
+.return:
     ret
 
 ; bit 6 of [HL]: RollChanceByLevelAndSide; else bit 7: RollChanceByLevel_100_100_75_0; else RollChanceByLevel_100_75_40_0 (E-0122)
@@ -5663,20 +5671,20 @@ Jump_036_61F8::
 RollChanceByHLBits6And7::
 Func_036_61F9:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_6202
+    jr z, .skip
     call RollChanceByLevelAndSide
-    jr Jump_036_620E
+    jr .return
 
-Jump_036_6202::
+.skip:
     bit 7, [hl]
-    jr z, Jump_036_620B
+    jr z, .call_roll_chance_by_level_100_75_40_0
     call RollChanceByLevel_100_100_75_0
-    jr Jump_036_620E
+    jr .return
 
-Jump_036_620B::
+.call_roll_chance_by_level_100_75_40_0:
     call RollChanceByLevel_100_75_40_0
 
-Jump_036_620E::
+.return:
     ret
 
 ; bit 7 of [HL] set uses RollChanceByLevel_100_84_50_0, otherwise RollChanceByLevelAndSide (A = level) (E-0095)
@@ -5684,14 +5692,14 @@ Jump_036_620E::
 RollChanceByFlagsAtHLSided::
 Func_036_620F:: ; address name
     bit 7, [hl]
-    jr z, Jump_036_6218
+    jr z, .call_roll_chance_by_level_and_side
     call RollChanceByLevel_100_84_50_0
-    jr Jump_036_621B
+    jr .return
 
-Jump_036_6218::
+.call_roll_chance_by_level_and_side:
     call RollChanceByLevelAndSide
 
-Jump_036_621B::
+.return:
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_075_04_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_085_05_0 (A = level) (E-0095)
@@ -5699,20 +5707,20 @@ Jump_036_621B::
 ScaleDamageByFlagsAtHL::
 Func_036_621C:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_6225
+    jr z, .skip
     call ScaleDamageByLevel_1_075_04_0
-    jr Jump_036_6231
+    jr .return
 
-Jump_036_6225::
+.skip:
     bit 7, [hl]
-    jr z, Jump_036_622E
+    jr z, .call_scale_damage_by_level_1_085_05_0
     call ScaleDamageByLevel_131_116_075_03
-    jr Jump_036_6231
+    jr .return
 
-Jump_036_622E::
+.call_scale_damage_by_level_1_085_05_0:
     call ScaleDamageByLevel_1_085_05_0
 
-Jump_036_6231::
+.return:
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_075_05_025_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_075_04_0 (A = level) (E-0096)
@@ -5720,20 +5728,20 @@ Jump_036_6231::
 ScaleDamageByFlagsAtHLAlt::
 Func_036_6232:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_623B
+    jr z, .skip
     call ScaleDamageByLevel_075_05_025_0
-    jr Jump_036_6247
+    jr .return
 
-Jump_036_623B::
+.skip:
     bit 7, [hl]
-    jr z, Jump_036_6244
+    jr z, .call_scale_damage_by_level_1_075_04_0
     call ScaleDamageByLevel_131_116_075_03
-    jr Jump_036_6247
+    jr .return
 
-Jump_036_6244::
+.call_scale_damage_by_level_1_075_04_0:
     call ScaleDamageByLevel_1_075_04_0
 
-Jump_036_6247::
+.return:
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_085_05_0, otherwise ScaleDamageByLevel_131_116_075_03 (A = level) (E-0096)
@@ -5741,14 +5749,14 @@ Jump_036_6247::
 ScaleDamageByFlagsAtHLBit6::
 Func_036_6248:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_6251
+    jr z, .call_scale_damage_by_level_131_116_075_03
     call ScaleDamageByLevel_1_085_05_0
-    jr Jump_036_6254
+    jr .return
 
-Jump_036_6251::
+.call_scale_damage_by_level_131_116_075_03:
     call ScaleDamageByLevel_131_116_075_03
 
-Jump_036_6254::
+.return:
     ret
 
 ; bit 7 of [HL]: ScaleDamageByLevel_1_085_05_0, else ScaleDamageByLevel_075_05_025_0 (E-0122)
@@ -5756,14 +5764,14 @@ Jump_036_6254::
 ScaleDamageByLevelByHLBit7:: ; heuristic: follows a terminator; C0
 Func_036_6255:: ; address name
     bit 7, [hl]
-    jr z, Jump_036_625E
+    jr z, .call_scale_damage_by_level_075_05_025_0
     call ScaleDamageByLevel_1_085_05_0
-    jr Jump_036_6261
+    jr .return
 
-Jump_036_625E::
+.call_scale_damage_by_level_075_05_025_0:
     call ScaleDamageByLevel_075_05_025_0
 
-Jump_036_6261::
+.return:
     ret
 
 ; bit 6 of [HL]: RollChanceByLevel_100_75_40_0; else bit 7: Func_036_6346; else Func_036_6330 (E-0122)
@@ -5771,20 +5779,20 @@ Jump_036_6261::
 RollChanceByHLBits6And7_6262:: ; heuristic: follows a terminator; C0
 Func_036_6262:: ; address name
     bit 6, [hl]
-    jr z, Jump_036_626B
+    jr z, .skip
     call RollChanceByLevel_100_75_40_0
-    jr Jump_036_6277
+    jr .return
 
-Jump_036_626B::
+.skip:
     bit 7, [hl]
-    jr z, Jump_036_6274
+    jr z, .call_roll_chance_for_level_a_6330
     call RollChanceForLevelA_6346
-    jr Jump_036_6277
+    jr .return
 
-Jump_036_6274::
+.call_roll_chance_for_level_a_6330:
     call RollChanceForLevelA_6330
 
-Jump_036_6277::
+.return:
     ret
 
 ; A = level 0-3: success always for 0, when wC5E7 < $D8 (216/256) for 1, < $7F (127/256) for 2, never for 3; carry set = success; each roll is AdvanceRandom then wC5E7 compared with a threshold (E-0095)
@@ -5793,21 +5801,21 @@ Jump_036_6277::
 RollChanceByLevel_100_84_50_0::
 Func_036_6278:: ; address name
     and a, a
-    jr nz, Jump_036_627D
+    jr nz, .cp_01
     scf
     ret
 
-Jump_036_627D::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_6284
-    jp Jump_036_636A
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_CallAdvanceRandom
 
-Jump_036_6284::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_628B
-    jp Jump_036_637C
+    jr nz, .done
+    jp RollChanceForLevelA_6346_CallAdvanceRandom3
 
-Jump_036_628B::
+.done:
     scf
     ccf
     ret
@@ -5818,14 +5826,14 @@ Jump_036_628B::
 RollChanceByLevel_100_100_75_0::
 Func_036_628E:: ; address name
     cp a, $02
-    jr nc, Jump_036_6293
+    jr nc, .skip
     ret
 
-Jump_036_6293::
-    jr nz, Jump_036_6298
-    jp Jump_036_6373
+.skip:
+    jr nz, .done
+    jp RollChanceForLevelA_6346_CallAdvanceRandom2
 
-Jump_036_6298::
+.done:
     scf
     ccf
     ret
@@ -5836,21 +5844,21 @@ Jump_036_6298::
 RollChanceByLevel_100_75_40_0::
 Func_036_629B:: ; address name
     and a, a
-    jr nz, Jump_036_62A0
+    jr nz, .cp_01
     scf
     ret
 
-Jump_036_62A0::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_62A7
-    jp Jump_036_6373
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_CallAdvanceRandom2
 
-Jump_036_62A7::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_62AE
-    jp Jump_036_6385
+    jr nz, .done
+    jp RollChanceForLevelA_6346_CallAdvanceRandom4
 
-Jump_036_62AE::
+.done:
     scf
     ccf
     ret
@@ -5863,30 +5871,30 @@ Func_036_62B1:: ; address name
     push af
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_62C4
+    jr z, .restore
     ld a, [wBattleTarget]
     cp a, $04
-    jr nc, Jump_036_62C4
+    jr nc, .restore
     pop af
-    jp Jump_036_6353
+    jp RollChanceForLevelA_6346_Skip
 
-Jump_036_62C4::
+.restore:
     pop af
     and a, a
-    jr nz, Jump_036_62CB
-    jp Jump_036_6373
+    jr nz, .cp_01
+    jp RollChanceForLevelA_6346_CallAdvanceRandom2
 
-Jump_036_62CB::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_62D2
-    jp Jump_036_637C
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_CallAdvanceRandom3
 
-Jump_036_62D2::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_62D9
-    jp Jump_036_6397
+    jr nz, .done
+    jp RollChanceForLevelA_6346_CallAdvanceRandom6
 
-Jump_036_62D9::
+.done:
     scf
     ccf
     ret
@@ -5900,16 +5908,16 @@ Func_036_62DC:: ; address name
     and a, a
     ret z
     cp a, $01
-    jr nz, Jump_036_62E5
-    jp Jump_036_63D1
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo3
 
-Jump_036_62E5::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_62EC
-    jp Jump_036_63F9
+    jr nz, .skip
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo5
 
-Jump_036_62EC::
-    jp Jump_036_6449
+.skip:
+    jp ScaleDamageTo40Percent_ClearBattleDamageLo
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wD873 by 1 (unchanged), 3/4, 0.4 or 0 (E-0095)
 ; 2 call sites from 2 routines (e.g. ScaleDamageByFlagsAtHL, ScaleDamageByFlagsAtHLAlt)
@@ -5920,16 +5928,16 @@ Func_036_62EF:: ; address name
     and a, a
     ret z
     cp a, $01
-    jr nz, Jump_036_62F8
-    jp Jump_036_63E5
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
 
-Jump_036_62F8::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_62FF
+    jr nz, .skip
     jp ScaleDamageTo40Percent
 
-Jump_036_62FF::
-    jp Jump_036_6449
+.skip:
+    jp ScaleDamageTo40Percent_ClearBattleDamageLo
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wD873 by 21/16, 37/32, 3/4 or 0.3 (E-0095)
 ; 3 call sites from 3 routines (e.g. ScaleDamageByFlagsAtHL, ScaleDamageByFlagsAtHLBit6, ScaleDamageByFlagsAtHLAlt)
@@ -5938,21 +5946,21 @@ Jump_036_62FF::
 ScaleDamageByLevel_131_116_075_03::
 Func_036_6302:: ; address name
     and a, a
-    jr nz, Jump_036_6308
-    jp Jump_036_63A9
+    jr nz, .cp_01
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo
 
-Jump_036_6308::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_630F
-    jp Jump_036_63BD
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo2
 
-Jump_036_630F::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_6316
-    jp Jump_036_63E5
+    jr nz, .skip
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
 
-Jump_036_6316::
-    jp Jump_036_6421
+.skip:
+    jp ScaleDamageTo40Percent_ReadBattleDamageLo
 
 ; A = level 0-3: scales the damage word wBattleDamageLo/wD873 by 3/4, 1/2, 1/4 or 0 (E-0095)
 ; 2 call sites from 2 routines (e.g. ScaleDamageByFlagsAtHLAlt, ScaleDamageByLevelByHLBit7)
@@ -5961,21 +5969,21 @@ Jump_036_6316::
 ScaleDamageByLevel_075_05_025_0::
 Func_036_6319:: ; address name
     and a, a
-    jr nz, Jump_036_631F
-    jp Jump_036_63E5
+    jr nz, .cp_01
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
 
-Jump_036_631F::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_6326
-    jp Jump_036_63F9
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_ReadBattleDamageLo5
 
-Jump_036_6326::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_632D
-    jp Jump_036_6435
+    jr nz, .skip
+    jp ScaleDamageTo40Percent_ReadBattleDamageLo2
 
-Jump_036_632D::
-    jp Jump_036_6449
+.skip:
+    jp ScaleDamageTo40Percent_ClearBattleDamageLo
 
 ; level A: 0 returns carry; 1, 2 and 3 take three different chance rolls (E-0122)
 ; 1 call site from 1 routine (e.g. RollChanceByHLBits6And7_6262)
@@ -5983,22 +5991,22 @@ Jump_036_632D::
 RollChanceForLevelA_6330:: ; heuristic: follows a terminator; C0
 Func_036_6330:: ; address name
     and a, a
-    jr nz, Jump_036_6335
+    jr nz, .cp_01
     scf
     ret
 
-Jump_036_6335::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_633C
-    jp Jump_036_6373
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_CallAdvanceRandom2
 
-Jump_036_633C::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_6343
-    jp Jump_036_637C
+    jr nz, .skip
+    jp RollChanceForLevelA_6346_CallAdvanceRandom3
 
-Jump_036_6343::
-    jp Jump_036_6397
+.skip:
+    jp RollChanceForLevelA_6346_CallAdvanceRandom6
 
 ; level A: 0 and 1 return, 2 and 3 take chance rolls; the following entries roll random values against $D8, $BF, $7F, $66, $4C, $3F and $26 (E-0130)
 ; 2 call sites from 2 routines (e.g. ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3, RollChanceByHLBits6And7_6262)
@@ -6006,79 +6014,88 @@ Jump_036_6343::
 RollChanceForLevelA_6346::
 Func_036_6346:: ; address name
     cp a, $02
-    jr nc, Jump_036_634B
+    jr nc, .skip
     ret
 
-Jump_036_634B::
-    jr nz, Jump_036_6350
-    jp Jump_036_6373
+.skip:
+    jr nz, .skip2
+    jp RollChanceForLevelA_6346_CallAdvanceRandom2
 
-Jump_036_6350::
-    jp Jump_036_6385
+.skip2:
+    jp RollChanceForLevelA_6346_CallAdvanceRandom4
 
-Jump_036_6353::
+RollChanceForLevelA_6346_Skip::
+Jump_036_6353:: ; address name
     and a, a
-    jr nz, Jump_036_6359
-    jp Jump_036_637C
+    jr nz, .cp_01
+    jp RollChanceForLevelA_6346_CallAdvanceRandom3
 
-Jump_036_6359::
+.cp_01:
     cp a, $01
-    jr nz, Jump_036_6360
-    jp Jump_036_638E
+    jr nz, .cp_02
+    jp RollChanceForLevelA_6346_CallAdvanceRandom5
 
-Jump_036_6360::
+.cp_02:
     cp a, $02
-    jr nz, Jump_036_6367
-    jp Jump_036_63A0
+    jr nz, .done
+    jp RollChanceForLevelA_6346_CallAdvanceRandom7
 
-Jump_036_6367::
+.done:
     scf
     ccf
     ret
 
-Jump_036_636A::
+RollChanceForLevelA_6346_CallAdvanceRandom::
+Jump_036_636A:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $D8
     ret
 
-Jump_036_6373::
+RollChanceForLevelA_6346_CallAdvanceRandom2::
+Jump_036_6373:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $BF
     ret
 
-Jump_036_637C::
+RollChanceForLevelA_6346_CallAdvanceRandom3::
+Jump_036_637C:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $7F
     ret
 
-Jump_036_6385::
+RollChanceForLevelA_6346_CallAdvanceRandom4::
+Jump_036_6385:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $66
     ret
 
-Jump_036_638E::
+RollChanceForLevelA_6346_CallAdvanceRandom5::
+Jump_036_638E:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $4C
     ret
 
-Jump_036_6397::
+RollChanceForLevelA_6346_CallAdvanceRandom6::
+Jump_036_6397:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $3F
     ret
 
-Jump_036_63A0::
+RollChanceForLevelA_6346_CallAdvanceRandom7::
+Jump_036_63A0:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $26
     ret
 
-Jump_036_63A9::
+RollChanceForLevelA_6346_ReadBattleDamageLo::
+Jump_036_63A9:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6090,7 +6107,8 @@ Jump_036_63A9::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_63BD::
+RollChanceForLevelA_6346_ReadBattleDamageLo2::
+Jump_036_63BD:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6102,7 +6120,8 @@ Jump_036_63BD::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_63D1::
+RollChanceForLevelA_6346_ReadBattleDamageLo3::
+Jump_036_63D1:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6114,7 +6133,8 @@ Jump_036_63D1::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_63E5::
+RollChanceForLevelA_6346_ReadBattleDamageLo4::
+Jump_036_63E5:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6126,7 +6146,8 @@ Jump_036_63E5::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_63F9::
+RollChanceForLevelA_6346_ReadBattleDamageLo5::
+Jump_036_63F9:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6155,7 +6176,8 @@ Func_036_640D:: ; address name
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_6421::
+ScaleDamageTo40Percent_ReadBattleDamageLo::
+Jump_036_6421:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6167,7 +6189,8 @@ Jump_036_6421::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_6435::
+ScaleDamageTo40Percent_ReadBattleDamageLo2::
+Jump_036_6435:: ; address name
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6179,7 +6202,8 @@ Jump_036_6435::
     ld [wBattleDamageHi], a
     ret
 
-Jump_036_6449::
+ScaleDamageTo40Percent_ClearBattleDamageLo::
+Jump_036_6449:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
@@ -6414,34 +6438,38 @@ Func_036_6521:: ; address name
     call GetBattleDEF
     ld bc, $03E7
     call CompareHLToBC
-    jr nc, Jump_036_6554
+    jr nc, SlotDEFBelowBuffCap_Skip3
     push hl
     ld a, [wBattleArg0]
     call GetBaseDEFOfSlotA
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_6544
+    jr z, SlotDEFBelowBuffCap_Skip
     ld a, [wBattleArg0]
     cp a, $04
-    jr nc, Jump_036_6548
+    jr nc, SlotDEFBelowBuffCap_Skip2
 
-Jump_036_6544::
+SlotDEFBelowBuffCap_Skip::
+Jump_036_6544:: ; address name
     sla c
     rl b
 
-Jump_036_6548::
+SlotDEFBelowBuffCap_Skip2::
+Jump_036_6548:: ; address name
     sla c
     rl b
     pop hl
     call CompareHLToBC
-    jr nc, Jump_036_6554
+    jr nc, SlotDEFBelowBuffCap_Skip3
 
-Jump_036_6552::
+SlotDEFBelowBuffCap_Loop::
+Jump_036_6552:: ; address name
     scf
     ret
 
-Jump_036_6554::
-    jr z, Jump_036_6552
+SlotDEFBelowBuffCap_Skip3::
+Jump_036_6554:: ; address name
+    jr z, SlotDEFBelowBuffCap_Loop
     xor a, a
     ret
 
@@ -6457,33 +6485,33 @@ Func_036_6558:: ; address name
     call ReadWordTableEntry_Bank36
     ld bc, $03E7
     call CompareHLToBC
-    jr z, Jump_036_6590
-    jr nc, Jump_036_6590
+    jr z, .skip2
+    jr nc, .skip2
     push hl
     ld a, [wBattleArg0]
     call GetBaseAGLOfSlotA
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_6544
+    jr z, SlotDEFBelowBuffCap_Skip
     ld a, [wBattleArg0]
     cp a, $04
-    jr nc, Jump_036_6584
+    jr nc, .skip
     sla c
     rl b
 
-Jump_036_6584::
+.skip:
     sla c
     rl b
     pop hl
     call CompareHLToBC
-    jr nc, Jump_036_6590
+    jr nc, .skip2
 
-Jump_036_658E::
+.loop:
     scf
     ret
 
-Jump_036_6590::
-    jr z, Jump_036_658E
+.skip2:
+    jr z, .loop
     xor a, a
     ret
 
@@ -6531,13 +6559,13 @@ Func_036_65B6:: ; address name
     add_a_to_hl
     ld a, [hl]
     and a, $04
-    jr nz, Jump_036_65D1
+    jr nz, .skip
     ld a, b
     pop hl
     pop bc
     ret
 
-Jump_036_65D1::
+.skip:
     ld a, $04
     pop hl
     pop bc
@@ -6574,10 +6602,10 @@ Func_036_65E8:: ; address name
     ld b, a
     ld hl, $03E7
     call CompareHLToBC
-    jr nc, Jump_036_6603
+    jr nc, .done
     ld bc, $03E7
 
-Jump_036_6603::
+.done:
     pop hl
     ret
 
@@ -6595,10 +6623,10 @@ Func_036_6605:: ; address name
     ld b, a
     ld hl, $03E7
     call CompareHLToBC
-    jr nc, Jump_036_6620
+    jr nc, .done
     ld bc, $03E7
 
-Jump_036_6620::
+.done:
     pop hl
     ret
 
@@ -6657,13 +6685,13 @@ Func_036_6658:: ; address name
     ld b, a
     and a, $03
     cp a, $03
-    jr z, Jump_036_6667
+    jr z, .skip
     ld a, b
     ld e, $31
     call BattlerRecordFieldAddress
-    jr Jump_036_669D
+    jr .return
 
-Jump_036_6667::
+.skip:
     ld a, b
     srl a
     srl a
@@ -6684,7 +6712,7 @@ Jump_036_6667::
     farcall LoadSpeciesRecord
     ld hl, wSpeciesRecord + $12
 
-Jump_036_669D::
+.return:
     ret
 
 ; only called from ActionEffect_Transform_Sub01 (E-0047)
@@ -6696,14 +6724,14 @@ Func_036_669E:: ; address name
     ld b, a
     and a, $03
     cp a, $03
-    jr z, Jump_036_66AF
+    jr z, .skip
     ld a, b
     ld e, $0E
     call BattlerRecordFieldAddress
     ld b, $08
-    jr Jump_036_66D5
+    jr .return
 
-Jump_036_66AF::
+.skip:
     ld a, b
     srl a
     srl a
@@ -6720,7 +6748,7 @@ Jump_036_66AF::
     ld hl, wRecordBufferData
     ld b, $04
 
-Jump_036_66D5::
+.return:
     ret
 
 ; only called from ActionEffect_Transform_Sub01 (E-0047)
@@ -6770,11 +6798,11 @@ Func_036_6701:: ; address name
     push hl
     deref_hl
     call CompareHLToBC
-    jr nc, Jump_036_6712
+    jr nc, .restore
     ld b, h
     ld c, l
 
-Jump_036_6712::
+.restore:
     pop hl
     ld [hl], c
     inc hl
@@ -7047,7 +7075,7 @@ ActionEffect_ActionD0:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6906:: ; address name
     call RollSkillDamageThenScaleBySlotResistancesByte1
     farcall RunA3414FAndMarkWDA5B3
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D1; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7056,7 +7084,7 @@ ActionEffect_ActionD1:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6912:: ; address name
     call ActionEffect_ActionD1_RollSkillDamageFromRecord
     farcall RunA3414FAndMarkWDA5B3
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D2; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7143,12 +7171,12 @@ Func_036_697B:: ; address name
     ldh [hTemp0], a
     call ClearDamageAndReadTargetStatus0_Bank36
     or a, a
-    jr z, Jump_036_6990
+    jr z, .read_battle_target
     ld [hl], $00
     ld a, $01
     ldh [hTemp0], a
 
-Jump_036_6990::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7160,12 +7188,12 @@ Jump_036_6990::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, Jump_036_69B4
+    jr z, .read_battle_target2
     call HealTargetHP
     ld a, $01
     ldh [hTemp0], a
 
-Jump_036_69B4::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -7180,7 +7208,7 @@ Jump_036_69B4::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, Jump_036_69DD
+    jr z, .check_temp0
     ld a, l
     ld [de], a
     inc de
@@ -7189,16 +7217,16 @@ Jump_036_69B4::
     ld a, $01
     ldh [hTemp0], a
 
-Jump_036_69DD::
+.check_temp0:
     ldh a, [hTemp0]
     or a, a
-    jr z, Jump_036_69EA
+    jr z, .skip
     ld l, $37
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_69EA::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7218,10 +7246,10 @@ Func_036_69ED:: ; address name
     ld de, $6A59
     add a, e
     ld e, a
-    jr nc, Jump_036_6A0E
+    jr nc, .skip
     inc d
 
-Jump_036_6A0E::
+.skip:
     ld a, [de]
     inc de
     ld c, a
@@ -7233,7 +7261,7 @@ Jump_036_6A0E::
     push de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_036_6A4B
+    jr z, .restore
     ld [wBattleActionId], a
     ld a, [wEffectFlags2]
     ldh [hTemp0], a
@@ -7250,7 +7278,7 @@ Jump_036_6A0E::
     ldh a, [hTemp1]
     ld [wEffectFlags], a
 
-Jump_036_6A4B::
+.restore:
     pop de
     inc de
     pop af
@@ -7258,7 +7286,7 @@ Jump_036_6A4B::
     ld a, [de]
     ld l, a
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
     db $02, $2F, $77, $00, $20, $34, $D9, $00, $40, $2F, $76, $00, $10, $34, $42, $00
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $DC; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -7304,17 +7332,17 @@ Func_036_6A82:: ; address name
     or a, b
     ld [hl], a
     call RaiseTargetDEF
-    jr nc, Jump_036_6AB7
+    jr nc, .call_raise_target_agl
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
 
-Jump_036_6AB7::
+.call_raise_target_agl:
     call RaiseTargetAGL
-    jr nc, Jump_036_6AC2
+    jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
 
-Jump_036_6AC2::
+.skip:
     ld l, $93
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7388,22 +7416,22 @@ Func_036_6B18:: ; address name
     ldh [hTemp0], a
     ld b, $04
 
-Jump_036_6B27::
+.loop:
     ldh a, [hTemp0]
     ld c, a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_6B38
+    jr c, .skip
     ld a, c
     ld hl, wBattleStatus7
     call AddAx9ToHL
     set 1, [hl]
 
-Jump_036_6B38::
+.skip:
     ld hl, hTemp0
     inc [hl]
     dec b
-    jr nz, Jump_036_6B27
-    jp Jump_036_7CD3
+    jr nz, .loop
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7418,11 +7446,11 @@ Func_036_6B42:: ; address name
     ldh [hTemp0], a
     ld b, $03
 
-Jump_036_6B51::
+.loop:
     ldh a, [hTemp0]
     ld c, a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_6B6A
+    jr c, .skip
     ldh a, [hTemp0]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -7433,12 +7461,12 @@ Jump_036_6B51::
     res 6, [hl]
     set 7, [hl]
 
-Jump_036_6B6A::
+.skip:
     ld hl, hTemp0
     inc [hl]
     dec b
-    jr nz, Jump_036_6B51
-    jp Jump_036_7CD3
+    jr nz, .loop
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 175, 190, 228, 229, 230, 231 ...; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7460,7 +7488,7 @@ Func_036_6B75:: ; address name
 ActionEffect_Blaze:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B7B:: ; address name
     call ActionEffect_Blaze_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 4 Firebal, 5 Firebane, 6 Firebolt; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7468,7 +7496,7 @@ Func_036_6B7B:: ; address name
 ActionEffect_Firebal:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B81:: ; address name
     call ActionEffect_Firebal_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 7 Bang, 8 Boom, 9 Explodet; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7476,7 +7504,7 @@ Func_036_6B81:: ; address name
 ActionEffect_Bang:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B87:: ; address name
     call ActionEffect_Bang_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 10 Infernos, 11 Infermore, 12 Infermost; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7484,7 +7512,7 @@ Func_036_6B87:: ; address name
 ActionEffect_Infernos:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B8D:: ; address name
     call ActionEffect_Infernos_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 13 Bolt, 14 Zap, 15 Thordain, 63 Hellblast; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7492,7 +7520,7 @@ Func_036_6B8D:: ; address name
 ActionEffect_Bolt:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B93:: ; address name
     call RollSkillDamageThenScaleBySlotResistancesByte1
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 16 IceBolt, 17 SnowStorm, 18 Blizzard; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7500,7 +7528,7 @@ Func_036_6B93:: ; address name
 ActionEffect_IceBolt:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B99:: ; address name
     call ActionEffect_IceBolt_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 19 Beat, 20 Defeat, 121 K.O.Dance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7510,7 +7538,7 @@ Func_036_6B99:: ; address name
 ActionEffect_Beat:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B9F:: ; address name
     call RollTargetSlotResistancesByte2Bits45Chance
-    jr nc, Jump_036_6BC4
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7524,10 +7552,10 @@ Func_036_6B9F:: ; address name
     ld [wBattleDamageHi], a
     ld hl, $B58E
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
-Jump_036_6BC4::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 21 Sacrifice; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7537,11 +7565,11 @@ Jump_036_6BC4::
 ActionEffect_Sacrifice:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6BC7:: ; address name
     call ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3
-    jr nc, Jump_036_6C21
+    jr nc, .skip
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr z, Jump_036_6C01
+    jr z, .read_battle_target
     ld a, [wBattleTarget]
     call GetBattleHP
     push hl
@@ -7549,10 +7577,10 @@ Func_036_6BC7:: ; address name
     call DivideHLByA
     ld a, h
     or a, l
-    jr nz, Jump_036_6BE9
+    jr nz, .restore
     ld hl, $0001
 
-Jump_036_6BE9::
+.restore:
     pop bc
     ld a, c
     sub a, l
@@ -7561,17 +7589,17 @@ Jump_036_6BE9::
     sbc a, h
     ld b, a
     or a, c
-    jr nz, Jump_036_6BF6
+    jr nz, .set_battle_damage_lo
     ld bc, $0001
 
-Jump_036_6BF6::
+.set_battle_damage_lo:
     ld a, c
     ld [wBattleDamageLo], a
     ld a, b
     ld [wBattleDamageHi], a
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
-Jump_036_6C01::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7585,10 +7613,10 @@ Jump_036_6C01::
     ld [wBattleDamageHi], a
     ld hl, $B58F
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
-Jump_036_6C21::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 22 Heal, 23 HealMore, 24 HealAll, 25 HealUs, 26 HealUsAll, 124 Hustle, $B1; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; 2 call sites from 2 routines (e.g. ActionEffect_LoveRain, ActionEffect_Farewell)
@@ -7599,11 +7627,11 @@ ActionEffect_Heal:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6C24:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_036_6C30
-    jr z, Jump_036_6C5B
-    jr Jump_036_6C58
+    jr nc, .read_battle_target
+    jr z, .skip2
+    jr .skip
 
-Jump_036_6C30::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7615,17 +7643,17 @@ Jump_036_6C30::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, Jump_036_6C58
+    jr z, .skip
     call HealTargetHP
     ld l, $37
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6C58::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
-Jump_036_6C5B::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7636,11 +7664,11 @@ ActionEffect_MPass:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6C5E:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_036_6C6A
-    jr z, Jump_036_6C97
-    jr Jump_036_6C94
+    jr nc, .read_battle_target
+    jr z, .skip2
+    jr .skip
 
-Jump_036_6C6A::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -7652,18 +7680,18 @@ Jump_036_6C6A::
     call AddDoubleAToHL_Bank36
     deref_hl
     call CompareHLToBC
-    jr z, Jump_036_6C94
+    jr z, .skip
     call ActionEffect_MPass_AddDoubleAToHL_Bank36
-    jr nc, Jump_036_6C94
+    jr nc, .skip
     ld l, $C3
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6C94::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
-Jump_036_6C97::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 30 Vivify; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7674,12 +7702,12 @@ ActionEffect_Vivify:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6C9A:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp nc, Jump_036_6D1A
-    jp z, Jump_036_6D1D
+    jp nc, ApplyTargetMaxHPAmount_Skip
+    jp z, ApplyTargetMaxHPAmount_Skip2
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr z, Jump_036_6CED
+    jr z, ActionEffect_Vivify_Skip
     ld a, [wBattleTarget]
     ld b, a
     ld hl, wBattleMaxHP
@@ -7690,7 +7718,8 @@ Func_036_6C9A:: ; address name
     srl d
     rr e
 
-Jump_036_6CC1::
+ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
+Jump_036_6CC1:: ; address name
     ld a, b
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -7698,30 +7727,31 @@ Jump_036_6CC1::
     ld [hl+], a
     ld [hl], d
     call TargetOnLocalSide_Bank36
-    jr c, Jump_036_6CE2
+    jr c, .call_action_effect_vivify_add_ax9_to_hl
     ld a, [wBattleTarget]
     ld b, a
     add a, a
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_036_6CDD
+    jr nc, .call_load_battle_monster_picture_for_slot_b
     inc d
 
-Jump_036_6CDD::
+.call_load_battle_monster_picture_for_slot_b:
     call LoadBattleMonsterPictureForSlotB
-    jr Jump_036_6CE2
+    jr .call_action_effect_vivify_add_ax9_to_hl
 
-Jump_036_6CE2::
+.call_action_effect_vivify_add_ax9_to_hl:
     call ActionEffect_Vivify_AddAx9ToHL
     ld l, $50
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6CED::
+ActionEffect_Vivify_Skip::
+Jump_036_6CED:: ; address name
     ld h, $67
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 31 Revive, $BB; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7733,13 +7763,13 @@ Func_036_6CF5:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jr z, Jump_036_6D1D
+    jr z, ApplyTargetMaxHPAmount_Skip2
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp nc, Jump_036_6D1A
-    jp z, Jump_036_6D1D
+    jp nc, ApplyTargetMaxHPAmount_Skip
+    jp z, ApplyTargetMaxHPAmount_Skip2
 
-; DE = the target's max HP and continues with the shared HP amount path (Jump_036_6CC1) (E-0122)
+; DE = the target's max HP and continues with the shared HP amount path (ActionEffect_Vivify_CallAddDoubleAToHL_Bank36) (E-0122)
 ; 3 call sites from 3 routines (e.g. ActionEffect_LifeSong, ActionEffect_Farewell, ApplyTargetMaxHPIfPresent)
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi, wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg
@@ -7753,13 +7783,15 @@ Func_036_6D0A:: ; address name
     ld a, [hl+]
     ld d, [hl]
     ld e, a
-    jp Jump_036_6CC1
+    jp ActionEffect_Vivify_CallAddDoubleAToHL_Bank36
 
-Jump_036_6D1A::
-    jp Jump_036_7CB0
+ApplyTargetMaxHPAmount_Skip::
+Jump_036_6D1A:: ; address name
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
-Jump_036_6D1D::
-    jp Jump_036_7CD3
+ApplyTargetMaxHPAmount_Skip2::
+Jump_036_6D1D:: ; address name
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 32 Farewell; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; 1 call site from 1 routine (e.g. ActionEffect_LifeDance)
@@ -7771,21 +7803,21 @@ Func_036_6D20:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleActor
     cp a, [hl]
-    jr z, Jump_036_6D1D
+    jr z, ApplyTargetMaxHPAmount_Skip2
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jr z, Jump_036_6D1D
+    jr z, ApplyTargetMaxHPAmount_Skip2
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_036_6D45
-    jr z, Jump_036_6D1D
+    jr nc, .call_action_effect_heal
+    jr z, ApplyTargetMaxHPAmount_Skip2
     call ApplyTargetMaxHPAmount
     ld hl, wResolveMsgFlags
     set 6, [hl]
     ret
 
-Jump_036_6D45::
+.call_action_effect_heal:
     call ActionEffect_Heal
     ld hl, wResolveMsgFlags
     res 6, [hl]
@@ -7798,7 +7830,7 @@ ActionEffect_Antidote:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6D4E:: ; address name
     call ClearDamageAndReadTargetStatus0_Bank36
     and a, $03
-    jr z, Jump_036_6D61
+    jr z, .skip
     ld a, [hl]
     and a, $FC
     ld [hl], a
@@ -7806,8 +7838,8 @@ Func_036_6D4E:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6D61::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 34 DeChaos; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7818,7 +7850,7 @@ ActionEffect_DeChaos:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6D64:: ; address name
     call ClearDamageAndReadTargetStatus0_Bank36
     and a, $10
-    jr z, Jump_036_6D84
+    jr z, .skip
     ld a, [hl]
     and a, $EF
     ld [hl], a
@@ -7830,8 +7862,8 @@ Func_036_6D64:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6D84::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 35 NumbOff; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7842,17 +7874,17 @@ ActionEffect_NumbOff:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6D87:: ; address name
     call ClearDamageAndReadTargetStatus0_Bank36
     and a, $CC
-    jr z, Jump_036_6DB2
+    jr z, .skip
     push hl
     bit 6, [hl]
-    jr z, Jump_036_6D97
+    jr z, .call_clear_damage_and_store_resolve_msg_flags
     ld l, $4F
-    jr Jump_036_6D99
+    jr .call_clear_damage_and_store_resolve_msg_flags2
 
-Jump_036_6D97::
+.call_clear_damage_and_store_resolve_msg_flags:
     ld l, $82
 
-Jump_036_6D99::
+.call_clear_damage_and_store_resolve_msg_flags2:
     ld bc, $4090
     call ClearDamageAndStoreResolveMsgFlags_Bank36
     pop hl
@@ -7865,8 +7897,8 @@ Jump_036_6D99::
     ld [hl], $03
     ret
 
-Jump_036_6DB2::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 36 CurseOff; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7875,7 +7907,7 @@ ActionEffect_CurseOff:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6DB5:: ; address name
     call ClearDamageAndReadTargetStatus0_Bank36
     and a, $20
-    jr z, Jump_036_6DC8
+    jr z, .skip
     ld a, [hl]
     and a, $DF
     ld [hl], a
@@ -7883,8 +7915,8 @@ Func_036_6DB5:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6DC8::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 37 Upper, 38 Increase; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7893,7 +7925,7 @@ Jump_036_6DC8::
 ActionEffect_Upper:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6DCB:: ; address name
     call RaiseTargetDEF
-    jr nc, Jump_036_6DEA
+    jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
     ld a, [wBattleDamageLo]
@@ -7902,15 +7934,15 @@ Func_036_6DCB:: ; address name
     ld h, a
     ld a, l
     or a, h
-    jr z, Jump_036_6DEA
+    jr z, .skip
     ld l, $45
     ld bc, $0090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6DEA::
+.skip:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 39 Sap, 40 Defense; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7919,7 +7951,7 @@ Jump_036_6DEA::
 ActionEffect_Sap:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6DF2:: ; address name
     call RollTargetSlotResistancesByte3Bits45Chance
-    jp nc, Jump_036_7CB7
+    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; only called from ActionEffect_UltraDown (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_UltraDown)
@@ -7928,17 +7960,17 @@ Func_036_6DF2:: ; address name
 ActionEffect_UltraDown_SetSlotStatus6Bit7::
 Func_036_6DF8:: ; address name
     call ActionEffect_UltraDown_Sub02_GetBattleDEF
-    jr nc, Jump_036_6E0B
+    jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $39
     ld bc, $0098
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6E0B::
+.skip:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 41 Speed, 42 SpeedUp; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7947,7 +7979,7 @@ Jump_036_6E0B::
 ActionEffect_Speed:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6E13:: ; address name
     call RaiseTargetAGL
-    jr nc, Jump_036_6E32
+    jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit6
     ld a, [wBattleDamageLo]
@@ -7956,15 +7988,15 @@ Func_036_6E13:: ; address name
     ld h, a
     ld a, l
     or a, h
-    jr z, Jump_036_6E32
+    jr z, .skip
     ld l, $49
     ld bc, $0090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6E32::
+.skip:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 43 Slow, 44 SlowAll; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7973,7 +8005,7 @@ Jump_036_6E32::
 ActionEffect_Slow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6E3A:: ; address name
     call RollTargetSlotResistancesByte3Bits23Chance
-    jp nc, Jump_036_7CB7
+    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; only called from ResolveStepDamageMessage_Sub04 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_ActorOnLocalSide_Bank36)
@@ -7982,17 +8014,17 @@ Func_036_6E3A:: ; address name
 ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA_Sub01::
 Func_036_6E40:: ; address name
     call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA
-    jr nc, Jump_036_6E53
+    jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $48
     ld bc, $0098
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6E53::
+.skip:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 45 TwinHits; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8005,14 +8037,14 @@ Func_036_6E5B:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, Jump_036_6E72
+    jr nz, .skip
     set 2, [hl]
     ld l, $43
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6E72::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; only called from ResolveStepDamageMessage_Sub04 (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage_ActorOnLocalSide_Bank36)
@@ -8025,9 +8057,9 @@ Func_036_6E75:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_036_6E9A
+    jr nz, .check_resolve_msg_flags
     call RollTargetSlotResistancesByte1Bits01Chance
-    jr nc, Jump_036_6EA5
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -8036,14 +8068,14 @@ Func_036_6E75:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6E9A::
+.check_resolve_msg_flags:
     ld a, [wResolveMsgFlags]
     and a, $EF
     ld [wResolveMsgFlags], a
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
-Jump_036_6EA5::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 47 Sleep, 48 SleepAll, 113 SleepAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8057,11 +8089,11 @@ Func_036_6EA8:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $8C
-    jr nz, Jump_036_6EDA
+    jr nz, .skip2
     push hl
     call RollTargetSlotResistancesByte2Bits67Chance
     pop hl
-    jr nc, Jump_036_6EC9
+    jr nc, .check_battle_action_id
     ld a, [hl]
     or a, $8C
     ld [hl], a
@@ -8069,21 +8101,21 @@ Func_036_6EA8:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6EC9::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $71
     ld h, $B5
-    jr z, Jump_036_6ED4
+    jr z, .skip
     ld h, $CE
 
-Jump_036_6ED4::
+.skip:
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_6EDA::
+.skip2:
     ld h, $D4
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 49 TakeMagic; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8096,14 +8128,14 @@ Func_036_6EE2:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_036_6EF9
+    jr nz, .skip
     set 0, [hl]
     ld l, $3F
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6EF9::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 50 RobMagic, 119 RobDance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8117,10 +8149,10 @@ Func_036_6EFC:: ; address name
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
-    jp z, Jump_036_6F93
+    jp z, .skip3
     ld a, [wBattleActionId]
     cp a, $DF
-    jr z, Jump_036_6F2D
+    jr z, .call_roll_target_slot_resistances_byte2
     ld a, [wBattleActor]
     call GetBattleMP
     ld a, [wBattleActor]
@@ -8128,21 +8160,21 @@ Func_036_6EFC:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_036_6F23
+    jr nc, .skip
     inc d
 
-Jump_036_6F23::
+.skip:
     ld a, [de]
     ld c, a
     inc de
     ld a, [de]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_036_6F93
+    jr nc, .skip3
 
-Jump_036_6F2D::
+.call_roll_target_slot_resistances_byte2:
     call RollTargetSlotResistancesByte2Bits23Chance
-    jr nc, Jump_036_6F93
+    jr nc, .skip3
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -8159,7 +8191,7 @@ Jump_036_6F2D::
     call ActionEffect_RobMagic_DrainTargetMPAmount
     ld a, [wBattleActionId]
     cp a, $DF
-    jr nz, Jump_036_6F8B
+    jr nz, .skip2
     farcall ActorFormationSlotToTemp0
     ld a, [wBattleActor]
     push af
@@ -8185,13 +8217,13 @@ Jump_036_6F2D::
     ld a, b
     ld [wBattleDamageHi], a
 
-Jump_036_6F8B::
+.skip2:
     ld l, $3D
     ld bc, $4098
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_6F93::
-    jp Jump_036_7CD3
+.skip3:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 51 StopSpell; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8204,9 +8236,9 @@ Func_036_6F96:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_036_6FBB
+    jr nz, .skip
     call ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_6FBE
+    jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -8215,11 +8247,11 @@ Func_036_6F96:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6FBB::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
-Jump_036_6FBE::
-    jp Jump_036_7CB7
+.skip2:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 52 PanicAll, 120 PaniDance, 173 PanicAll; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8232,9 +8264,9 @@ Func_036_6FC1:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 4, [hl]
-    jr nz, Jump_036_6FE6
+    jr nz, .skip
     call ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_6FEE
+    jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -8243,13 +8275,13 @@ Func_036_6FC1:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_6FE6::
+.skip:
     ld h, $CF
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_6FEE::
-    jp Jump_036_7CB7
+.skip2:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 53 Ironize, 174 Ironize; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8260,18 +8292,18 @@ ActionEffect_Ironize:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6FF1:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_036_700D
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Jump_036_700D
+    jr c, .check_battle_target
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld b, $01
     ld a, [wBattleTarget]
     ld c, a
-    jr Jump_036_701B
+    jr .loop
 
-Jump_036_700D::
+.check_battle_target:
     ld b, $04
     ld a, [wBattleTarget]
     and a, $04
@@ -8279,20 +8311,20 @@ Jump_036_700D::
     ld hl, wBattleStatus5
     call AddAx9ToHL
 
-Jump_036_701B::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_7025
+    jr c, .skip
     ld a, [hl]
     or a, $C0
     ld [hl], a
 
-Jump_036_7025::
+.skip:
     ld a, $09
     add_a_to_hl
     inc c
     dec b
-    jr nz, Jump_036_701B
+    jr nz, .loop
     farcall ActionEffect_Ironize_ReadLinkModeAndBattleTarget
     ld l, d
     ld bc, $0090
@@ -8310,9 +8342,9 @@ Func_036_703D:: ; address name
     call AddAx9ToHL
     ld a, [wBattleActionId]
     cp a, $37
-    jr z, Jump_036_705F
+    jr z, .skip
     bit 5, [hl]
-    jr nz, Jump_036_7071
+    jr nz, .skip2
     ld a, [hl]
     and a, $DD
     or a, $20
@@ -8321,9 +8353,9 @@ Func_036_703D:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_705F::
+.skip:
     bit 1, [hl]
-    jr nz, Jump_036_7071
+    jr nz, .skip2
     ld a, [hl]
     and a, $DD
     or a, $02
@@ -8332,10 +8364,10 @@ Jump_036_705F::
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7071::
+.skip2:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 56 Barrier; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8350,35 +8382,35 @@ Func_036_7079:: ; address name
     ld b, $04
     ld d, $00
 
-Jump_036_7083::
+.loop:
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_7099
+    jr c, .skip
     bit 2, [hl]
-    jr nz, Jump_036_709B
+    jr nz, .next
     inc d
     set 2, [hl]
-    jr Jump_036_709B
+    jr .next
 
-Jump_036_7099::
+.skip:
     res 2, [hl]
 
-Jump_036_709B::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_7083
+    jr nz, .loop
     ld a, d
     or a, a
-    jr z, Jump_036_70AB
+    jr z, .skip2
     ld l, $4D
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_70AB::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 57 MagicWall; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8392,20 +8424,20 @@ Func_036_70AE:: ; address name
     ld c, a
     ld b, $03
 
-Jump_036_70B6::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_70C5
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus8
     call AddAx9ToHL
     set 6, [hl]
 
-Jump_036_70C5::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_70B6
-    jp Jump_036_7CD3
+    jr nz, .loop
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 58 Transform; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8473,12 +8505,12 @@ Func_036_710F:: ; address name
     farcall ActionEffect_BeDragon_ReadLinkMode
     ld a, [wBattleActionId]
     cp a, $DC
-    jr z, Jump_036_7147
+    jr z, .skip
     ld l, $44
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7147::
+.skip:
     ld l, $F7
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8528,9 +8560,9 @@ Func_036_7196:: ; address name
     ld h, a
     ld a, l
     or a, h
-    jp z, Jump_036_7CB7
+    jp z, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
     call ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 62 BigBang; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8538,7 +8570,7 @@ Func_036_7196:: ; address name
 ActionEffect_BigBang:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71A9:: ; address name
     call ActionEffect_BigBang_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8547,7 +8579,7 @@ ActionEffect_FireAir:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71AF:: ; address name
     call ActionEffect_FireAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8556,7 +8588,7 @@ ActionEffect_FrigidAir:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71B8:: ; address name
     call ActionEffect_FrigidAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 72 WindBeast; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8564,7 +8596,7 @@ Func_036_71B8:: ; address name
 ActionEffect_WindBeast:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71C1:: ; address name
     call ActionEffect_WindBeast_ShiftBCRight1
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 73 Vacuum; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8572,7 +8604,7 @@ Func_036_71C1:: ; address name
 ActionEffect_Vacuum:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71C7:: ; address name
     call ActionEffect_Vacuum_ShiftBCRight1
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 74 Lightning; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8580,7 +8612,7 @@ Func_036_71C7:: ; address name
 ActionEffect_Lightning:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71CD:: ; address name
     call ActionEffect_Lightning_ShiftBCRight1
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 75 RockThrow; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8588,7 +8620,7 @@ Func_036_71CD:: ; address name
 ActionEffect_RockThrow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71D3:: ; address name
     call ActionEffect_RockThrow_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 76 Watershot, 77 Tidalwave; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8596,7 +8628,7 @@ Func_036_71D3:: ; address name
 ActionEffect_Watershot:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71D9:: ; address name
     call ActionEffect_Watershot_RollSkillDamageFromRecord
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 78 CallHelp, 79 YellHelp; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8609,13 +8641,13 @@ Func_036_71DF:: ; address name
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_036_7214
+    jr nz, .call_action_effect_call_help_write_battle
     push hl
     call AdvanceRandom
     pop hl
     ld a, [wRandomLo]
     cp a, $80
-    jr c, Jump_036_720C
+    jr c, .skip
     set 0, [hl]
     ld d, $53 ; battle text 'Help arrived from seemingly nowhere!'
     farcall ShowBattleText
@@ -8625,12 +8657,12 @@ Func_036_71DF:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-Jump_036_720C::
+.skip:
     ld h, $69
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7214::
+.call_action_effect_call_help_write_battle:
     call ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -8800,20 +8832,20 @@ Func_036_7297:: ; address name
     ld h, a
     ld a, [wBattleTarget]
     and a, $03
-    jr nz, Jump_036_72AE
+    jr nz, .skip
     call ScaleHLTo80Percent_Bank36
-    jr Jump_036_72B9
+    jr .set_battle_damage_lo
 
-Jump_036_72AE::
+.skip:
     dec a
-    jr nz, Jump_036_72B6
+    jr nz, .call_scale_hl_to40_percent
     call ScaleHLTo60Percent
-    jr Jump_036_72B9
+    jr .set_battle_damage_lo
 
-Jump_036_72B6::
+.call_scale_hl_to40_percent:
     call ScaleHLTo40Percent
 
-Jump_036_72B9::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -8849,7 +8881,7 @@ Func_036_72D0:: ; address name
     ld a, [hl]
     or a, $03
     ld [hl], a
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 105 PsycheUp; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; 1 call site from 1 routine (e.g. ActionEffect_TwinSlash)
@@ -8881,13 +8913,14 @@ Func_036_72F9:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_036_730E
+    jr nz, ActionEffect_HighJump_Skip
     ld a, [hl]
     or a, $0C
     ld [hl], a
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
-Jump_036_730E::
+ActionEffect_HighJump_Skip::
+Jump_036_730E:: ; address name
     ld a, [hl]
     and a, $F3
     ld [hl], a
@@ -8902,13 +8935,13 @@ ActionEffect_EvilSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7314:: ; address name
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
-    jr c, Jump_036_7326
+    jr c, .read_battle_actor
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $A0
-    jr c, Jump_036_734B
+    jr c, .skip
 
-Jump_036_7326::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -8922,12 +8955,12 @@ Jump_036_7326::
     ld [wBattleDamageHi], a
     ld hl, $D235
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
-Jump_036_734B::
+.skip:
     ld h, $D2
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 108 Massacre; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8949,7 +8982,7 @@ Func_036_7353:: ; address name
     ld [wBattleDamageHi], a
     ld hl, $B535
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 109 TwinSlash; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9006,7 +9039,7 @@ Func_036_73B7:: ; address name
 ActionEffect_Kamikaze:: ; code pointer of the table ActionEffectTable; C0
 Func_036_73BD:: ; address name
     call ActionEffect_Kamikaze_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 114 PalsyAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9019,23 +9052,23 @@ Func_036_73C3:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_036_73E9
+    jr nz, .skip2
     push hl
     call RollTargetSlotResistancesByte5Bits67ChanceToE
     pop hl
-    jr c, Jump_036_73DF
+    jr c, .skip
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_73DF::
+.skip:
     set 6, [hl]
     ld l, $76
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_73E9::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 115 PoisonGas, 116 PoisonAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9049,45 +9082,45 @@ Func_036_73EC:: ; address name
     call AddAx9ToHL
     ld a, [wBattleActionId]
     cp a, $74
-    jr z, Jump_036_7403
+    jr z, .skip
     ld a, [hl]
     and a, $03
-    jr nz, Jump_036_7431
-    jr Jump_036_7407
+    jr nz, .skip4
+    jr .call_roll_target_slot_resistances_byte4
 
-Jump_036_7403::
+.skip:
     bit 1, [hl]
-    jr nz, Jump_036_7431
+    jr nz, .skip4
 
-Jump_036_7407::
+.call_roll_target_slot_resistances_byte4:
     push hl
     call RollTargetSlotResistancesByte4Bits01ChanceToE
     pop hl
-    jr c, Jump_036_7416
+    jr c, .check_battle_action_id
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7416::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $74
-    jr z, Jump_036_7425
+    jr z, .skip2
     set 0, [hl]
     res 1, [hl]
     ld l, $75
-    jr Jump_036_742B
+    jr .skip3
 
-Jump_036_7425::
+.skip2:
     set 1, [hl]
     res 0, [hl]
     ld l, $77
 
-Jump_036_742B::
+.skip3:
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7431::
-    jp Jump_036_7CD3
+.skip4:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 117 Curse; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9100,23 +9133,23 @@ Func_036_7434:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 5, [hl]
-    jr nz, Jump_036_745A
+    jr nz, .skip2
     push hl
     call ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36
     pop hl
-    jr c, Jump_036_7450
+    jr c, .skip
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7450::
+.skip:
     set 5, [hl]
     ld l, $D9
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_745A::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 118 OddDance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9130,16 +9163,16 @@ Func_036_745D:: ; address name
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
-    jr z, Jump_036_747B
+    jr z, .skip
     call RollTargetSlotResistancesByte2Bits23Chance
-    jp nc, Jump_036_7CB7
+    jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
     call DrainTargetMPAmount
     ld l, $57
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_747B::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 122 LureDance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9150,9 +9183,9 @@ ActionEffect_LureDance:: ; code pointer of the table ActionEffectTable; C0
 Func_036_747E:: ; address name
     call TargetStatus3Address
     bit 1, [hl]
-    jr nz, Jump_036_749D
+    jr nz, .skip2
     call RollChanceVsTargetSlotResistancesByte5Bits23
-    jr nc, Jump_036_749A
+    jr nc, .skip
     call TargetStatus3Address
     set 1, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -9160,11 +9193,11 @@ Func_036_747E:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_749A::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
-Jump_036_749D::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 123 LifeDance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9175,11 +9208,11 @@ ActionEffect_LifeDance:: ; code pointer of the table ActionEffectTable; C0
 Func_036_74A0:: ; address name
     ld a, [wDefeatFlagsBA]
     or a, a
-    jr nz, Jump_036_74CD
+    jr nz, .call_action_effect_farewell
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr nz, Jump_036_74CD
+    jr nz, .call_action_effect_farewell
     ld d, $CC ; battle text 'But nothing happened!'
     farcall ShowBattleText
     ld a, $01
@@ -9192,7 +9225,7 @@ Func_036_74A0:: ; address name
     set 0, [hl]
     ret
 
-Jump_036_74CD::
+.call_action_effect_farewell:
     call ActionEffect_Farewell
     ret
 
@@ -9209,7 +9242,7 @@ Func_036_74D1:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_036_74EF
+    jr nz, .skip
     ld a, [wRandomLo]
     and a, $04
     add a, $04
@@ -9219,8 +9252,8 @@ Func_036_74D1:: ; address name
     or a, b
     ld [hl], a
 
-Jump_036_74EF::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 126 SandStorm; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9230,7 +9263,7 @@ Jump_036_74EF::
 ActionEffect_SandStorm:: ; code pointer of the table ActionEffectTable; C0
 Func_036_74F2:: ; address name
     ld d, $02
-    jr Jump_036_74F8
+    jr ActionEffect_Radiant_ReadBattleTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 127 Radiant; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9241,22 +9274,23 @@ ActionEffect_Radiant:: ; code pointer of the table ActionEffectTable; C0
 Func_036_74F6:: ; address name
     ld d, $01
 
-Jump_036_74F8::
+ActionEffect_Radiant_ReadBattleTarget::
+Jump_036_74F8:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, d
-    jr nz, Jump_036_7539
+    jr nz, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_036_7539
+    jr nz, .skip2
     push de
     call RollTargetSlotResistancesByte1Bits01Chance
     pop de
-    jr nc, Jump_036_7531
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus5
     call AddAx9ToHL
@@ -9269,13 +9303,13 @@ Jump_036_74F8::
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7531::
+.skip:
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7539::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 128 EerieLite; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9288,9 +9322,9 @@ Func_036_753C:: ; address name
     ld hl, wBattleStatus8
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_036_7569
+    jr nz, .skip2
     call ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_7561
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
     call AddAx9ToHL
@@ -9299,15 +9333,15 @@ Func_036_753C:: ; address name
     ld bc, $0098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7561::
+.skip:
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7569::
+.skip2:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 129 Surge; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9325,18 +9359,18 @@ Func_036_7571:: ; address name
 ActionEffect_UltraDown:: ; code pointer of the table ActionEffectTable; C0
 Func_036_757F:: ; address name
     call RollTargetSlotResistancesByte2Bits45Chance
-    jr nc, Jump_036_7591
+    jr nc, .skip
     call ActionEffect_UltraDown_ReadBattleTarget
-    jr nc, Jump_036_7591
+    jr nc, .skip
     call ActionEffect_UltraDown_SetSlotStatus6Bit7
     xor a, a
     ld [wBattleSubStep], a
     ret
 
-Jump_036_7591::
+.skip:
     ld h, $B5
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 131 DeMagic, 132 ThickFog, $B3; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9364,7 +9398,7 @@ Func_036_75AB:: ; address name
     ld hl, wSideFlags0
     add_a_to_hl
     bit 2, [hl]
-    jr nz, Jump_036_761F
+    jr nz, .skip2
     push hl
     ld a, [wBattleActor]
     ld hl, wSlotFlags854
@@ -9373,15 +9407,15 @@ Func_036_75AB:: ; address name
     ld a, [hl]
     pop hl
     and a, $04
-    jr nz, Jump_036_75DD
+    jr nz, .check_battle_actor
     call AdvanceRandom
     ld a, $C0
     ld b, a
     ld a, [wRandomLo]
     cp a, b
-    jr nc, Jump_036_7617
+    jr nc, .skip
 
-Jump_036_75DD::
+.check_battle_actor:
     set 2, [hl]
     ld a, [wBattleActor]
     and a, $04
@@ -9408,15 +9442,15 @@ Jump_036_75DD::
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7617::
+.skip:
     ld h, $72
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_761F::
+.skip2:
     ld h, $CC
     ld bc, $0084
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 137 SuckAir; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9431,7 +9465,7 @@ Func_036_7627:: ; address name
     ld a, [hl]
     or a, $30
     ld [hl], a
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 138 Focus; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9444,7 +9478,7 @@ Func_036_7637:: ; address name
     ld hl, wBattleStatus4
     call AddAx9ToHL
     set 7, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 139 LushLicks, 140 SickLick; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9455,24 +9489,24 @@ ActionEffect_LushLicks:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7645:: ; address name
     call TargetStatus3Address
     bit 3, [hl]
-    jr nz, Jump_036_7694
+    jr nz, .skip3
     ld a, [wBattleActionId]
     cp a, $8C
-    jr z, Jump_036_7658
+    jr z, .call_roll_target_slot_resistances_byte3
     call RollChanceVsTargetSlotResistancesByte5Bits23
-    jr Jump_036_765B
+    jr .skip
 
-Jump_036_7658::
+.call_roll_target_slot_resistances_byte3:
     call RollTargetSlotResistancesByte3Bits45Chance
 
-Jump_036_765B::
-    jr nc, Jump_036_768C
+.skip:
+    jr nc, .skip2
     call TargetStatus3Address
     set 3, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld a, [wBattleActionId]
     cp a, $8B
-    jr z, Jump_036_7680
+    jr z, .read_battle_action_id
     ld a, [wBattleTarget]
     ld hl, wBattleDEF
     call AddDoubleAToHL_Bank36
@@ -9482,20 +9516,20 @@ Jump_036_765B::
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
 
-Jump_036_7680::
+.read_battle_action_id:
     ld a, [wBattleActionId]
     sub a, $31
     ld l, a
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_768C::
+.skip2:
     ld h, $71
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7694::
-    jp Jump_036_7CD3
+.skip3:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 141 LegSweep, 142 BigTrip; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9506,9 +9540,9 @@ ActionEffect_LegSweep:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7697:: ; address name
     call TargetStatus3Address
     bit 2, [hl]
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     call ActionEffect_LegSweep_RollChanceVsTargetSlotResistancesByte5Bits23
-    jr nc, Jump_036_76B4
+    jr nc, .read_battle_target
     call TargetStatus3Address
     set 2, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -9516,18 +9550,18 @@ Func_036_7697:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_76B4::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wSlotDamageFlags
     add_a_to_hl
     bit 4, [hl]
     ld h, $70
-    jr z, Jump_036_76C7
+    jr z, .skip
     ld h, $68
 
-Jump_036_76C7::
+.skip:
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 143 Ahhh; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9538,9 +9572,9 @@ ActionEffect_Ahhh:: ; code pointer of the table ActionEffectTable; C0
 Func_036_76CD:: ; address name
     call TargetStatus3Address
     bit 5, [hl]
-    jr nz, Jump_036_76F1
+    jr nz, .skip2
     call RollChanceVsTargetSlotResistancesByte5Bits23
-    jr nc, Jump_036_76E9
+    jr nc, .skip
     call TargetStatus3Address
     set 5, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -9548,13 +9582,13 @@ Func_036_76CD:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_76E9::
+.skip:
     ld h, $B5
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_76F1::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 144 WarCry; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9565,9 +9599,9 @@ ActionEffect_WarCry:: ; code pointer of the table ActionEffectTable; C0
 Func_036_76F4:: ; address name
     call TargetStatus3Address
     bit 4, [hl]
-    jr nz, Jump_036_7718
+    jr nz, .skip2
     call RollChanceVsTargetSlotResistancesByte5Bits23
-    jr nc, Jump_036_7710
+    jr nc, .skip
     call TargetStatus3Address
     set 4, [hl]
     call ClearTargetStatus5Bits23And7Bits012
@@ -9575,13 +9609,13 @@ Func_036_76F4:: ; address name
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7710::
+.skip:
     ld h, $6B
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7718::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 145 Geyser; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9596,9 +9630,9 @@ Func_036_771B:: ; address name
     ld a, [hl]
     and a, $C0
     cp a, $40
-    jr z, Jump_036_775E
+    jr z, ActionEffect_Geyser_Skip
     call ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_7756
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus3
     call AddAx9ToHL
@@ -9614,12 +9648,13 @@ Func_036_771B:: ; address name
     farcall ShowBattleText
     jp SetSubPhase2AndResetResolveStep
 
-Jump_036_7756::
+.skip:
     ld h, $6E
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_775E::
+ActionEffect_Geyser_Skip::
+Jump_036_775E:: ; address name
     ld a, [hl]
     and a, $3F
     ld [hl], a
@@ -9628,15 +9663,15 @@ Jump_036_775E::
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_036_7780
+    jr nz, .read_battle_actor
     bit 7, [hl]
-    jr nz, Jump_036_7780
+    jr nz, .read_battle_actor
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr z, Jump_036_77AD
+    jr z, .skip
 
-Jump_036_7780::
+.read_battle_actor:
     ld a, [wBattleActor]
     call GetBattleMaxHP
     push hl
@@ -9650,22 +9685,22 @@ Jump_036_7780::
     call RandomInRange
     ld a, d
     or a, e
-    jr nz, Jump_036_779C
+    jr nz, .set_battle_damage_lo
     ld de, $0001
 
-Jump_036_779C::
+.set_battle_damage_lo:
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
     ld [wBattleDamageHi], a
     ld hl, $D0AD
     ld bc, $88A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
-Jump_036_77AD::
+.skip:
     ld h, $AF
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 146 DanceShut; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9678,9 +9713,9 @@ Func_036_77B5:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     call ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_77DB
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -9689,8 +9724,8 @@ Func_036_77B5:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_77DB::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 147 MouthShut; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9703,9 +9738,9 @@ Func_036_77DE:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_036_7806
+    jr nz, .skip2
     call ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36
-    jr nc, Jump_036_7803
+    jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -9714,11 +9749,11 @@ Func_036_77DE:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7803::
-    jp Jump_036_7CB7
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
-Jump_036_7806::
-    jp Jump_036_7CD3
+.skip2:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 148 StrongD, 150 BladeD; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; 1 call site from 1 routine (e.g. ActionEffect_ActionE0)
@@ -9732,30 +9767,30 @@ Func_036_7809:: ; address name
     call AddAx9ToHL
     ld a, [wBattleActionId]
     cp a, $96
-    jr z, Jump_036_782D
+    jr z, .skip2
     cp a, $E0
-    jr nz, Jump_036_7825
+    jr nz, .skip
     ld a, [hl]
     and a, $F0
     or a, $0C
     ld [hl], a
-    jr Jump_036_7833
+    jr .skip3
 
-Jump_036_7825::
+.skip:
     ld a, [hl]
     and a, $F0
     or a, $02
     ld [hl], a
-    jr Jump_036_7833
+    jr .skip3
 
-Jump_036_782D::
+.skip2:
     ld a, [hl]
     and a, $F0
     or a, $04
     ld [hl], a
 
-Jump_036_7833::
-    jp Jump_036_7CD3
+.skip3:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 149 Dodge; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9768,7 +9803,7 @@ Func_036_7836:: ; address name
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set 5, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 151 Cover, 152 Guardian; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9784,34 +9819,34 @@ Func_036_7844:: ; address name
     ld hl, wSideFlags0
     add_a_to_hl
     bit 4, [hl]
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     ld a, [wBattleActionId]
     cp a, $98
-    jr z, Jump_036_7867
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     ld c, a
     ld b, $01
-    jr Jump_036_7871
+    jr .loop
 
-Jump_036_7867::
+.check_battle_target:
     set 4, [hl]
     ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_036_7871::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_7894
+    jr c, .next
     ld a, c
     ld hl, wBattleActor
     cp a, [hl]
-    jr z, Jump_036_7894
+    jr z, .next
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 4, [hl]
-    jr nz, Jump_036_7894
+    jr nz, .next
     set 4, [hl]
     inc hl
     ld a, [wBattleActor]
@@ -9820,11 +9855,11 @@ Jump_036_7871::
     or a, [hl]
     ld [hl], a
 
-Jump_036_7894::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_7871
-    jp Jump_036_7CD3
+    jr nz, .loop
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 153 TailWind, 154 StormWind; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9835,32 +9870,32 @@ ActionEffect_TailWind:: ; code pointer of the table ActionEffectTable; C0
 Func_036_789B:: ; address name
     ld a, [wBattleActionId]
     cp a, $9A
-    jr z, Jump_036_78AF
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set 6, [hl]
-    jr Jump_036_78DB
+    jr .skip
 
-Jump_036_78AF::
+.check_battle_target:
     ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_036_78B7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_78C6
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set 6, [hl]
 
-Jump_036_78C6::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_78B7
+    jr nz, .loop
     ld a, [wBattleTarget]
     rra
     rra
@@ -9869,8 +9904,8 @@ Jump_036_78C6::
     add_a_to_hl
     set 5, [hl]
 
-Jump_036_78DB::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 155 AquaWall; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9883,7 +9918,7 @@ Func_036_78DE:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     set 3, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 156 SealPray; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9896,7 +9931,7 @@ Func_036_78EC:: ; address name
     ld hl, wBattleStatus8
     call AddAx9ToHL
     set 4, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 157 SuckAll; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9913,7 +9948,7 @@ Func_036_78FA:: ; address name
     ld hl, wSideFlags0
     add_a_to_hl
     bit 6, [hl]
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     set 6, [hl]
     ld a, b
     ld hl, wSlotPairBytes
@@ -9928,7 +9963,7 @@ Func_036_78FA:: ; address name
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set 1, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 158 Imitate; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9941,7 +9976,7 @@ Func_036_7931:: ; address name
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set 3, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 159 Meditate; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9949,13 +9984,13 @@ Func_036_7931:: ; address name
 ActionEffect_Meditate:: ; code pointer of the table ActionEffectTable; C0
 Func_036_793F:: ; address name
     call ActionEffect_Meditate_AddDoubleAToHL_Bank36
-    jr nc, Jump_036_794C
+    jr nc, .skip
     ld l, $37
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
-Jump_036_794C::
-    jp Jump_036_7CB0
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 160 LifeSong; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9969,39 +10004,40 @@ Func_036_794F:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $10
-    jr nz, Jump_036_7966
+    jr nz, ActionEffect_LifeSong_CheckDefeatFlagsBA
     ld a, [hl]
     and a, $CF
     or a, $20
     ld [hl], a
     jp SetSubPhase7AndResetResolveStep
 
-Jump_036_7966::
+ActionEffect_LifeSong_CheckDefeatFlagsBA::
+Jump_036_7966:: ; address name
     ld a, [wDefeatFlagsBA]
     or a, a
-    jr nz, Jump_036_7981
+    jr nz, .read_battle_target
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $80
-    jr c, Jump_036_7981
+    jr c, .read_battle_target
     ld d, $72 ; battle text 'But the prayer went unanswered!'
     farcall ShowBattleText
     jp SetSubPhase7AndResetResolveStep
 
-Jump_036_7981::
+.read_battle_target:
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_036_7998
-    jr z, Jump_036_7998
+    jr nc, .skip
+    jr z, .skip
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jr z, Jump_036_7998
+    jr z, .skip
     call ApplyTargetMaxHPAmount
     ret
 
-Jump_036_7998::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 161 LoveRain; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10015,7 +10051,7 @@ Func_036_799B:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $01
-    jr nz, Jump_036_79CF
+    jr nz, ActionEffect_LoveRain_CheckEffectByte6F
     push hl
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -10033,14 +10069,15 @@ Func_036_799B:: ; address name
     set 1, [hl]
     jp SetSubPhase7AndResetResolveStep
 
-Jump_036_79CF::
+ActionEffect_LoveRain_CheckEffectByte6F::
+Jump_036_79CF:: ; address name
     ld a, [wEffectByte6F]
     or a, a
-    jr z, Jump_036_79D9
+    jr z, .to_set_sub_phase7_and_reset_resolve_step
     call ActionEffect_Heal
     ret
 
-Jump_036_79D9::
+.to_set_sub_phase7_and_reset_resolve_step:
     jp SetSubPhase7AndResetResolveStep
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
 
@@ -10066,7 +10103,7 @@ Func_036_79ED:: ; address name
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp Jump_036_7C7D
+    jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 172 Guard; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10082,7 +10119,7 @@ Func_036_7A06:: ; address name
     and a, $F0
     or a, $01
     ld [hl], a
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $B0, $B2; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10093,13 +10130,13 @@ ActionEffect_ActionB0:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7A18:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     ld a, [wBattleActor]
     cp a, $04
-    jp nc, Jump_036_7CD3
+    jp nc, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Jump_036_7A7A
+    jr c, .check_battle_action_id
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -10125,23 +10162,23 @@ Func_036_7A18:: ; address name
     ld a, [wBattleActionId]
     cp a, $B2
     ld d, $8F
-    jr z, Jump_036_7A85
+    jr z, .call_show_battle_text
     ld d, $D8 ; battle text '0 fled!'
     farcall ShowBattleText
     ld a, $82
     call QueueSoundEffect
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
-Jump_036_7A7A::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $B2
     ld d, $8F
-    jr z, Jump_036_7A85
+    jr z, .call_show_battle_text
     ld d, $5C ; battle text '0 was shocked!'
 
-Jump_036_7A85::
+.call_show_battle_text:
     farcall ShowBattleText
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $B4; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10155,20 +10192,20 @@ Func_036_7A8E:: ; address name
     ld c, a
     ld b, $03
 
-Jump_036_7A96::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_036_7AA5
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     set 3, [hl]
 
-Jump_036_7AA5::
+.next:
     inc c
     dec b
-    jr nz, Jump_036_7A96
-    jp Jump_036_7CD3
+    jr nz, .loop
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $B5; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10182,23 +10219,23 @@ Func_036_7AAC:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $8C
-    jr nz, Jump_036_7ACD
+    jr nz, .skip2
     ld a, [hl]
     or a, $8C
     ld [hl], a
     call TargetOnLocalSide_Bank36
     ld l, $73
-    jr nc, Jump_036_7AC7
+    jr nc, .skip
     ld l, $74
 
-Jump_036_7AC7::
+.skip:
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
-Jump_036_7ACD::
+.skip2:
     ld h, $D4
     ld bc, $0080
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $B6; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10212,13 +10249,13 @@ Func_036_7AD5:: ; address name
     call AddDoubleAToHL_Bank36
     ld a, [hl+]
     or a, [hl]
-    jp z, Jump_036_7CD3
+    jp z, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     xor a, a
     ld [hl-], a
     ld [hl], a
     ld l, $DF
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 185; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10237,12 +10274,12 @@ ActionEffect_ActionBA:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7AF4:: ; address name
     call TargetStatus3Address
     bit 0, [hl]
-    jp nz, Jump_036_7CD3
+    jp nz, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     set 0, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $78
     ld bc, $0098
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $BC; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10264,7 +10301,7 @@ Func_036_7B09:: ; address name
     deref_hl
     call CompareHLToBC
     pop bc
-    jp z, Jump_036_7CD3
+    jp z, SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
     ld a, l
     ld [bc], a
     inc bc
@@ -10272,7 +10309,7 @@ Func_036_7B09:: ; address name
     ld [bc], a
     ld l, $C3
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $BD; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10288,10 +10325,10 @@ Func_036_7B36:: ; address name
     ld b, h
     ld a, [hl+]
     cp a, $01
-    jr nz, Jump_036_7B5C
+    jr nz, .skip
     ld a, [hl]
     or a, a
-    jr nz, Jump_036_7B5C
+    jr nz, .skip
     ld hl, $0001
     ld a, l
     ld [wBattleDamageLo], a
@@ -10299,9 +10336,9 @@ Func_036_7B36:: ; address name
     ld [wBattleDamageHi], a
     ld l, $35
     ld bc, $88A8
-    jr Jump_036_7B68
+    jr .skip2
 
-Jump_036_7B5C::
+.skip:
     ld a, $01
     ld [bc], a
     inc bc
@@ -10310,8 +10347,8 @@ Jump_036_7B5C::
     ld l, $38
     ld bc, $4090
 
-Jump_036_7B68::
-    jp Jump_036_7CA3
+.skip2:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C0; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10322,16 +10359,16 @@ Func_036_7B6B:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $40
-    jr c, Jump_036_7B81
+    jr c, .skip
     call ComputeAttackDamage
     ld hl, $D136
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
-Jump_036_7B81::
+.skip:
     ld h, $D1
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C1; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10342,14 +10379,14 @@ Func_036_7B89:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $C0
-    jr c, Jump_036_7B99
+    jr c, .skip
     call ComputeAttackDamage
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
-Jump_036_7B99::
+.skip:
     ld h, $D0
     ld bc, $0888
-    jp Jump_036_7CBC
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C2; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10365,7 +10402,7 @@ Func_036_7BA1:: ; address name
 ; points at: wBattleTargetChoice
 ActionEffect_ZoneOut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7BA5:: ; address name
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C5; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10378,7 +10415,7 @@ Func_036_7BA8:: ; address name
     ld hl, wBattleStatus3
     call AddAx9ToHL
     set 2, [hl]
-    jp Jump_036_7CD3
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C6, $C7; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10393,7 +10430,7 @@ Func_036_7BB6:: ; address name
     set 6, [hl]
     ld l, $76
     ld bc, $4090
-    jp Jump_036_7CA3
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C8; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10407,7 +10444,7 @@ Func_036_7BC9:: ; address name
     add_a_to_hl
     ld [hl], $FF
     call TargetOnLocalSide_Bank36
-    jr c, Jump_036_7BF5
+    jr c, .skip
     ld a, [wBattleTarget]
     and a, $03
     ld hl, wBattleBytes4F
@@ -10421,8 +10458,8 @@ Func_036_7BC9:: ; address name
     ld [hl], a
     farcall BlankTargetMonsterPicture
 
-Jump_036_7BF5::
-    jp Jump_036_7CD3
+.skip:
+    jp SetSubPhase2AndResetResolveStep_CheckDefeatByteD1
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $C9, $CA; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10446,17 +10483,17 @@ Func_036_7BF8:: ; address name
     call DivideHLByA
     ld a, h
     or a, l
-    jr nz, Jump_036_7C1B
+    jr nz, .set_battle_damage_lo
     ld hl, $0001
 
-Jump_036_7C1B::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
     ld hl, $AF36
     ld bc, $80A8
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $BF, $CB; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10487,7 +10524,7 @@ Func_036_7C2C:: ; address name
     ld [wBattleDamageHi], a
     ld hl, $AFAF
     ld bc, $0080
-    jp Jump_036_7C8B
+    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $CC; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10499,7 +10536,7 @@ Func_036_7C5F:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
-    jp Jump_036_730E
+    jp ActionEffect_HighJump_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $CD; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10511,7 +10548,7 @@ Func_036_7C6B:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
     call AddAx9ToHL
-    jp Jump_036_775E
+    jp ActionEffect_Geyser_Skip
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $CE; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10520,7 +10557,7 @@ Func_036_7C6B:: ; address name
 ; points at: wBattleTargetChoice
 ActionEffect_ActionCE:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7C77:: ; address name
-    jp Jump_036_7966
+    jp ActionEffect_LifeSong_CheckDefeatFlagsBA
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10528,12 +10565,13 @@ Func_036_7C77:: ; address name
 ; writes: wBattleSubPhase, wBattleResolveStep
 ActionEffect_ActionCF:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7C7A:: ; address name
-    jp Jump_036_79CF
+    jp ActionEffect_LoveRain_CheckEffectByte6F
 
-Jump_036_7C7D::
+ActionEffect_ActionCF_Skip::
+Jump_036_7C7D:: ; address name
     ld hl, $B535
     ld bc, $80A8
-    jr Jump_036_7C8B
+    jr UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; the same 23 bytes as UnreferencedStoreResolveMessage35D0 (3B:4EB8)
 ; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
@@ -10543,7 +10581,8 @@ Func_036_7C85:: ; address name
     ld hl, $D035
     ld bc, $88A8
 
-Jump_036_7C8B::
+UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor::
+Jump_036_7C8B:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h
@@ -10563,7 +10602,8 @@ Func_036_7C9C:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_036_7CA3::
+ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor::
+Jump_036_7CA3:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, c
@@ -10572,20 +10612,24 @@ Jump_036_7CA3::
     ld [wResolveMsgArg], a
     ret
 
-Jump_036_7CB0::
+ClearDamageAndStoreResolveMsgFlags_Bank36_Skip::
+Jump_036_7CB0:: ; address name
     ld h, $CC
     ld bc, $0080
-    jr Jump_036_7CBC
+    jr ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-Jump_036_7CB7::
+ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2::
+Jump_036_7CB7:: ; address name
     ld h, $B5
     ld bc, $0080
 
-Jump_036_7CBC::
+ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget::
+Jump_036_7CBC:: ; address name
     ld a, h
     ld [wResolveMsgTarget], a
 
-Jump_036_7CC0::
+ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags::
+Jump_036_7CC0:: ; address name
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b
@@ -10603,10 +10647,11 @@ Jump_036_7CC9:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-Jump_036_7CD3::
+SetSubPhase2AndResetResolveStep_CheckDefeatByteD1::
+Jump_036_7CD3:: ; address name
     ld a, [wDefeatByteD1]
     cp a, $FF
-    jr z, Jump_036_7CF3
+    jr z, .check_follow_up_action
     push hl
     ld [wBattleTarget], a
     push af
@@ -10620,10 +10665,10 @@ Jump_036_7CD3::
     ld [wDefeatByteD1], a
     pop hl
 
-Jump_036_7CF3::
+.check_follow_up_action:
     ld a, [wFollowUpAction]
     or a, a
-    jr nz, Jump_036_7D0D
+    jr nz, SetSubPhase7AndResetResolveStep_Skip
     ld a, $03
     ld [wBattleSubPhase], a
     xor a, a
@@ -10641,9 +10686,10 @@ Jump_036_7D03:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-Jump_036_7D0D::
+SetSubPhase7AndResetResolveStep_Skip::
+Jump_036_7D0D:: ; address name
     ld bc, $0000
-    jp Jump_036_7CC0
+    jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags
 
 ; when the target's status byte 2 (wD80E) bit 2 is set, the damage word is halved (E-0118)
 ; 2 call sites from 2 routines (e.g. ActionEffect_FrigidAir, ActionEffect_FireAir)
@@ -10777,15 +10823,15 @@ Func_036_7DA6:: ; address name
     ld b, $08
     ld d, $00
 
-Jump_036_7DAD::
+.loop:
     bit 0, d
-    jr nz, Jump_036_7DB7
+    jr nz, .next
     ld a, [hl]
     cp a, c
-    jr nz, Jump_036_7DC4
+    jr nz, .next2
     ld d, $01
 
-Jump_036_7DB7::
+.next:
     inc hl
     ld a, [hl]
     ld [hl], $FF
@@ -10793,14 +10839,14 @@ Jump_036_7DB7::
     ld [hl], a
     inc hl
     dec b
-    jr nz, Jump_036_7DAD
+    jr nz, .loop
     ld [hl], $FF
     ret
 
-Jump_036_7DC4::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_036_7DAD
+    jr nz, .loop
     ret
 
 ; jumps to the handler for wBattleActionId (0, or id - $47) from the word table $7DDE (E-0124)
@@ -10810,10 +10856,10 @@ RunEffectHandlerForActionId::
 Func_036_7DC9:: ; address name
     ld a, [wBattleActionId]
     or a, a
-    jr z, Jump_036_7DD1
+    jr z, .skip
     sub a, $47
 
-Jump_036_7DD1::
+.skip:
     ld hl, EffectHandlerTable
     add a, a
     add_a_to_hl
@@ -10938,16 +10984,16 @@ ActorOnLocalSide_Bank36::
 Func_036_7E6C:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_036_7E81
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_036_7E81
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_036_7E81::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -10959,16 +11005,16 @@ TargetOnLocalSide_Bank36::
 Func_036_7E87:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_036_7E9C
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_036_7E9C
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_036_7E9C::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -11040,13 +11086,13 @@ Func_036_7EE5:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_036_7F01
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_036_7F01
+    jr nc, .skip
     ld l, $12
 
-Jump_036_7F01::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -11056,13 +11102,13 @@ Jump_036_7F01::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_036_7F1C
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_036_7F1C
+    jr nc, .skip2
     ld l, $06
 
-Jump_036_7F1C::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -11072,13 +11118,13 @@ Jump_036_7F1C::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_036_7F37
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_036_7F37
+    jr nc, .skip3
     ld l, $02
 
-Jump_036_7F37::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -11099,17 +11145,17 @@ Func_036_7F3C:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_036_7F56
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_036_7F56
+    jr nz, .set_carry
     xor a, a
-    jr Jump_036_7F57
+    jr .skip
 
-Jump_036_7F56::
+.set_carry:
     scf
 
-Jump_036_7F57::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -11125,11 +11171,11 @@ Func_036_7F5B:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_036_7F6A
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_036_7F6A::
+.done:
     pop hl
     ret
     ds $94, $00

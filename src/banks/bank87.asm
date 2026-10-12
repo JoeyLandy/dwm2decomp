@@ -40,64 +40,64 @@ Func_087_4001:: ; address name
     ld h, a
     ld l, e
 
-Jump_087_4031::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
     push hl
     or a, a
-    jr nz, Jump_087_4096
+    jr nz, .restore
     inc hl
     ld a, [hl+]
     ld c, a
     ldh a, [hMapId]
     cp a, c
-    jr nz, Jump_087_4096
+    jr nz, .restore
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_087_4096
+    jr nz, .restore
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_087_4096
+    jr nz, .restore
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_087_4057
+    jr nz, .check_player_x
     inc hl
-    jr Jump_087_4064
+    jr .skip2
 
-Jump_087_4057::
+.check_player_x:
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_087_4096
+    jr nz, .restore
     ld a, [hl+]
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_087_4096
+    jr nz, .restore
 
-Jump_087_4064::
+.skip2:
     ld a, [hl+]
     ld e, a
     ld a, [hl]
     cp a, e
-    jr nz, Jump_087_4071
+    jr nz, .call_test_flag_bit
     cp a, $FF
-    jr nz, Jump_087_4071
+    jr nz, .call_test_flag_bit
     inc hl
-    jr Jump_087_4078
+    jr .set_talk_event_group
 
-Jump_087_4071::
+.call_test_flag_bit:
     ld a, [hl+]
     ld d, a
     call TestFlagBit
-    jr c, Jump_087_4096
+    jr c, .restore
 
-Jump_087_4078::
+.set_talk_event_group:
     ld a, [hl+]
     ld [wTalkEventGroup], a
     ld a, [hl]
@@ -105,20 +105,20 @@ Jump_087_4078::
     farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
-    jr nz, Jump_087_4094
+    jr nz, .done
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
 
-Jump_087_4094::
+.done:
     pop hl
     ret
 
-Jump_087_4096::
+.restore:
     pop hl
     ld a, $0A
     add_a_to_hl
-    jr Jump_087_4031
+    jr .skip
 
 ; E-0198 (C1: FieldModeStateDispatch_Case00_Sub02, once per step (wStepTriggerFlag), reads the word at $40A0 + 2 * hMapId and walks 10-byte entries until $FF: an entry with byte 0 = 0 whose map, screen and position (unless player X is $FF) match and whose flag is $FFFF or clear sets wTalkEventGroup/Index and far-calls DispatchTalkEvent; 256 words end at the code at $42A0).
 ; record: list of step triggers for this map ($0000 = none)
@@ -401,40 +401,40 @@ Func_087_42A0:: ; address name
     ret z
     ld a, [wSpriteSlotCount]
     or a, a
-    jp z, Jump_087_43FC
+    jp z, .check_map_type
     ldh a, [hPlayerX]
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
     ldh a, [hPlayerFacing]
     or a, a
-    jr z, Jump_087_42D2
+    jr z, .skip
     dec a
-    jr z, Jump_087_42D8
+    jr z, .skip2
     dec a
-    jr z, Jump_087_42DE
+    jr z, .call_field_mode_state_dispatch_shared03_wait
     dec b
-    jr Jump_087_42DF
+    jr .call_field_mode_state_dispatch_shared03_wait2
 
-Jump_087_42D2::
+.skip:
     ld a, c
     add a, $11
     ld c, a
-    jr Jump_087_42DF
+    jr .call_field_mode_state_dispatch_shared03_wait2
 
-Jump_087_42D8::
+.skip2:
     ld a, b
     add a, $11
     ld b, a
-    jr Jump_087_42DF
+    jr .call_field_mode_state_dispatch_shared03_wait2
 
-Jump_087_42DE::
+.call_field_mode_state_dispatch_shared03_wait:
     dec c
 
-Jump_087_42DF::
+.call_field_mode_state_dispatch_shared03_wait2:
     call FieldModeStateDispatch_Shared03_WaitSpriteSlotCount
     or a, a
-    jp z, Jump_087_43FC
+    jp z, .check_map_type
     dec a
     ld c, $10
     call Multiply8
@@ -446,42 +446,42 @@ Jump_087_42DF::
     ld h, a
     ld a, [hl]
     or a, a
-    jr z, Jump_087_432B
+    jr z, .skip3
     push hl
     ld a, [hl]
     cp a, $02
-    jr nz, Jump_087_430E
+    jr nz, .restore
     ld a, $0A
     add_a_to_hl
     ld a, [hl]
     bit 7, a
-    jr z, Jump_087_430E
+    jr z, .restore
     pop hl
-    jp Jump_087_43FC
+    jp .check_map_type
 
-Jump_087_430E::
+.restore:
     pop hl
     push hl
     ld a, $0B
     add_a_to_hl
     ld a, [hl]
     and a, $0F
-    jr z, Jump_087_4320
+    jr z, .next
     pop hl
-    jp Jump_087_43FC
+    jp .check_map_type
 
-Jump_087_4320::
+.next:
     inc hl
     ld a, [hl]
     and a, $0F
-    jr z, Jump_087_432A
+    jr z, .restore2
     pop hl
-    jp Jump_087_43FC
+    jp .check_map_type
 
-Jump_087_432A::
+.restore2:
     pop hl
 
-Jump_087_432B::
+.skip3:
     ld a, $09
     add_a_to_hl
     xor a, a
@@ -496,96 +496,96 @@ Jump_087_432B::
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_087_4351
+    jr nz, .cp_FE
     ld a, $08
     ld [wTalkEventIndex], a
-    jp Jump_087_43DC
+    jp .call_dispatch_talk_event
 
-Jump_087_4351::
+.cp_FE:
     cp a, $FE
-    jr nz, Jump_087_4360
+    jr nz, .cp_FC
     ld a, $09
     ld [wTalkEventIndex], a
     xor a, a
     ld [wTalkEventGroup], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_4360::
+.cp_FC:
     cp a, $FC
-    jr nz, Jump_087_4370
+    jr nz, .cp_FB
     ld a, $09
     ld [wTalkEventIndex], a
     ld a, $02
     ld [wTalkEventGroup], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_4370::
+.cp_FB:
     cp a, $FB
-    jr nz, Jump_087_4380
+    jr nz, .cp_FA
     ld a, $09
     ld [wTalkEventIndex], a
     ld a, $03
     ld [wTalkEventGroup], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_4380::
+.cp_FA:
     cp a, $FA
-    jr nz, Jump_087_4390
+    jr nz, .set_talk_event_group
     ld a, $09
     ld [wTalkEventIndex], a
     ld a, $08
     ld [wTalkEventGroup], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_4390::
+.set_talk_event_group:
     ld [wTalkEventGroup], a
     ldh a, [hMapId]
     cp a, $20
-    jr nc, Jump_087_43A0
+    jr nc, .cp_30
     ld a, $01
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43A0::
+.cp_30:
     cp a, $30
-    jr nc, Jump_087_43AB
+    jr nc, .cp_48
     ld a, $02
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43AB::
+.cp_48:
     cp a, $48
-    jr nc, Jump_087_43B6
+    jr nc, .cp_70
     ld a, $03
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43B6::
+.cp_70:
     cp a, $70
-    jr nc, Jump_087_43C1
+    jr nc, .cp_A0
     ld a, $04
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43C1::
+.cp_A0:
     cp a, $A0
-    jr nc, Jump_087_43CC
+    jr nc, .cp_A8
     ld a, $05
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43CC::
+.cp_A8:
     cp a, $A8
-    jr nc, Jump_087_43D7
+    jr nc, .set_talk_event_index_to_07
     ld a, $06
     ld [wTalkEventIndex], a
-    jr Jump_087_43DC
+    jr .call_dispatch_talk_event
 
-Jump_087_43D7::
+.set_talk_event_index_to_07:
     ld a, $07
     ld [wTalkEventIndex], a
 
-Jump_087_43DC::
+.call_dispatch_talk_event:
     farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
@@ -599,16 +599,16 @@ Jump_087_43DC::
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
-Jump_087_43FC::
+.check_map_type:
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_087_440A
+    jr z, .read_map_id
     call FieldModeStateDispatch_Shared03_ReadKeyWorldFloor
     or a, a
-    jr nz, Jump_087_4420
+    jr nz, .skip4
     ret
 
-Jump_087_440A::
+.read_map_id:
     ldh a, [hMapId]
     ld l, a
     ld h, $00
@@ -628,140 +628,140 @@ Jump_087_440A::
     ld h, a
     ld l, e
 
-Jump_087_4420::
+.skip4:
     ld a, [hl]
     cp a, $FF
     ret z
     push hl
     or a, a
-    jp z, Jump_087_44FC
+    jp z, .restore3
     cp a, $05
-    jr nz, Jump_087_4489
+    jr nz, .check_player_facing
     inc hl
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_087_443D
+    jr nz, .next2
     ld a, [hl]
     ld c, a
     ldh a, [hMapId]
     cp a, c
-    jp nz, Jump_087_44FC
+    jp nz, .restore3
 
-Jump_087_443D::
+.next2:
     inc hl
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jp nz, Jump_087_44FC
+    jp nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jp nz, Jump_087_44FC
+    jp nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hPlayerFacing]
     dec a
-    jp nz, Jump_087_445D
+    jp nz, .skip5
     ld a, c
     sub a, $10
     ld c, a
-    jp Jump_087_4466
+    jp .check_player_x
 
-Jump_087_445D::
+.skip5:
     dec a
     dec a
-    jp nz, Jump_087_4466
+    jp nz, .check_player_x
     ld a, c
     add a, $10
     ld c, a
 
-Jump_087_4466::
+.check_player_x:
     ldh a, [hPlayerX]
     cp a, c
-    jp nz, Jump_087_44FC
+    jp nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hPlayerFacing]
     or a, a
-    jr nz, Jump_087_4479
+    jr nz, .skip6
     ld a, c
     sub a, $10
     ld c, a
-    jr Jump_087_4481
+    jr .check_player_y
 
-Jump_087_4479::
+.skip6:
     dec a
     dec a
-    jr nz, Jump_087_4481
+    jr nz, .check_player_y
     ld a, c
     add a, $10
     ld c, a
 
-Jump_087_4481::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, c
-    jp nz, Jump_087_44FC
-    jr Jump_087_44BD
+    jp nz, .restore3
+    jr .skip7
 
-Jump_087_4489::
+.check_player_facing:
     dec a
     ld c, a
     ldh a, [hPlayerFacing]
     cp a, c
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
     inc hl
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_087_449F
+    jr nz, .next3
     ld a, [hl]
     ld c, a
     ldh a, [hMapId]
     cp a, c
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
 
-Jump_087_449F::
+.next3:
     inc hl
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jp nz, Jump_087_44FC
+    jp nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
     ld a, [hl+]
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
 
-Jump_087_44BD::
+.skip7:
     ld a, [hl+]
     ld e, a
     ld a, [hl]
     cp a, e
-    jr nz, Jump_087_44CA
+    jr nz, .call_test_flag_bit
     cp a, $FF
-    jr nz, Jump_087_44CA
+    jr nz, .call_test_flag_bit
     inc hl
-    jr Jump_087_44D1
+    jr .set_talk_event_group2
 
-Jump_087_44CA::
+.call_test_flag_bit:
     ld a, [hl+]
     ld d, a
     call TestFlagBit
-    jr c, Jump_087_44FC
+    jr c, .restore3
 
-Jump_087_44D1::
+.set_talk_event_group2:
     ld a, [hl+]
     ld [wTalkEventGroup], a
     ld a, [hl]
@@ -769,24 +769,24 @@ Jump_087_44D1::
     farcall DispatchTalkEvent
     ld a, [wModeState]
     cp a, $01
-    jr nz, Jump_087_44FC
+    jr nz, .restore3
     xor a, a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     ld a, [wPartyWindowFlags]
     bit 7, a
-    jr z, Jump_087_44FA
+    jr z, .done
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
 
-Jump_087_44FA::
+.done:
     pop hl
     ret
 
-Jump_087_44FC::
+.restore3:
     pop hl
     ld a, $0A
     add_a_to_hl
-    jp Jump_087_4420
+    jp .skip4
 
 ; only called from FieldModeStateDispatch_Shared03 (E-0047)
 ; 1 call site from 1 routine (e.g. FieldModeStateDispatch_WaitTextWindowState_Shared03)
@@ -794,14 +794,14 @@ Jump_087_44FC::
 FieldModeStateDispatch_Shared03_ReadKeyWorldFloor::
 Func_087_4507:: ; address name
     cp a, $84
-    jr nz, Jump_087_4511
+    jr nz, .cp_83
     ld hl, SpecialMapInteractions_5D28
     ld a, $01
     ret
 
-Jump_087_4511::
+.cp_83:
     cp a, $83
-    jr nz, Jump_087_4537
+    jr nz, .return_0
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
@@ -809,19 +809,19 @@ Jump_087_4511::
     add_a_to_hl
     ld a, [hl]
     cp a, $02
-    jr nz, Jump_087_452D
+    jr nz, .cp_03
     ld hl, SpecialMapInteractions_5CA4
     ld a, $01
     ret
 
-Jump_087_452D::
+.cp_03:
     cp a, $03
-    jr nz, Jump_087_4537
+    jr nz, .return_0
     ld hl, SpecialMapInteractions_5CFF
     ld a, $01
     ret
 
-Jump_087_4537::
+.return_0:
     xor a, a
     ret
 
@@ -1084,7 +1084,7 @@ Func_087_4709:: ; address name
     ld c, $01
     ld hl, wSpriteSlots + $B
 
-Jump_087_4725::
+.loop:
     push hl
     push bc
     ld a, [hl]
@@ -1093,7 +1093,7 @@ Jump_087_4725::
     ld c, a
     ldh a, [hTemp1]
     cp a, c
-    jr nz, Jump_087_473E
+    jr nz, .restore
     inc hl
     ld a, [hl]
     swap a
@@ -1101,20 +1101,20 @@ Jump_087_4725::
     ld c, a
     ldh a, [hTemp0]
     cp a, c
-    jr z, Jump_087_474D
+    jr z, .restore2
 
-Jump_087_473E::
+.restore:
     pop bc
     inc c
     pop hl
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, Jump_087_4725
+    jr nz, .loop
     xor a, a
     ret
 
-Jump_087_474D::
+.restore2:
     pop bc
     pop hl
     ld a, c

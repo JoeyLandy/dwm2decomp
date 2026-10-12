@@ -12,11 +12,11 @@ Func_017_4001:: ; address name
     ret z
     ld a, [wSGBPacketIndex]
     cp a, $FF
-    jr nz, Jump_017_4012
+    jr nz, .skip
     ld hl, wSGBPacketBuffer
-    jr Jump_017_401F
+    jr .skip2
 
-Jump_017_4012::
+.skip:
     ld l, a
     ld h, $00
     add hl, hl
@@ -28,14 +28,14 @@ Jump_017_4012::
     push de
     pop hl
 
-Jump_017_401F::
+.skip2:
     ld a, [hl]
     and a, $07
     ret z
     ld b, a
     ld c, $00
 
-Jump_017_4026::
+.skip3:
     push bc
     ld a, $00
     ldh [c], a
@@ -43,26 +43,26 @@ Jump_017_4026::
     ldh [c], a
     ld b, $10
 
-Jump_017_402F::
+.loop:
     ld e, $08
     ld a, [hl+]
     ld d, a
 
-Jump_017_4033::
+.loop2:
     bit 0, d
     ld a, $10
-    jr nz, Jump_017_403B
+    jr nz, .skip4
     ld a, $20
 
-Jump_017_403B::
+.skip4:
     ldh [c], a
     ld a, $30
     ldh [c], a
     rr d
     dec e
-    jr nz, Jump_017_4033
+    jr nz, .loop2
     dec b
-    jr nz, Jump_017_402F
+    jr nz, .loop
     ld a, $20
     ldh [c], a
     ld a, $30
@@ -71,7 +71,7 @@ Jump_017_403B::
     dec b
     ret z
     call SpinDelay
-    jr Jump_017_4026
+    jr .skip3
 
 ; address loaded by SendSGBPaletteSetPacket_WaitSGBActive
 SendSGBPaletteSetPacket_WaitSGBActive_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -202,7 +202,7 @@ Func_017_41CF:: ; address name
     ld a, $08
     ld [wTemp0], a
 
-Jump_017_41F4::
+.loop:
     ld a, [hl+]
     ld [de], a
     ld [bc], a
@@ -211,7 +211,7 @@ Jump_017_41F4::
     ld a, [wTemp0]
     dec a
     ld [wTemp0], a
-    jr nz, Jump_017_41F4
+    jr nz, .loop
     ld a, [wSGBAttrFile]
     or a, $80
     ld [de], a
@@ -272,12 +272,12 @@ Func_017_4258:: ; address name
     ld h, a
     ld c, $08
 
-Jump_017_4265::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Jump_017_4265
+    jr nz, .loop
     ret
 
 ; E-0178 (C1: SendSGBPaletteSetPacket copies the 8 bytes at $426C + 8 * wSGBPaletteSet into a PAL_SET ($51) packet after the command byte and into wSGBPaletteNum0Lo onward, then adds the attribute file wSGBAttrFile | $80; entries 0-63 hold four words below 512 (the SGB's system palette count), the words after them do not).

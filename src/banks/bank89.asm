@@ -8,11 +8,11 @@ BeginStringDisplay_Bank89::
 Func_089_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $DE
-    jr c, Jump_089_400F
+    jr c, .call_begin_string_display
     farcall BeginStringDisplay_Bank89_Overflow
     ret
 
-Jump_089_400F::
+.call_begin_string_display:
     ld de, MessageStrings_Bank89
     call BeginStringDisplay
     ret
@@ -24,11 +24,11 @@ CopyStringToBuffer_Bank89:: ; heuristic: follows a terminator; C0
 Func_089_4016:: ; address name
     ld a, [wStringIndex]
     cp a, $DE
-    jr c, Jump_089_4024
+    jr c, .call_copy_string_to_buffer
     farcall CopyStringToBuffer_Bank89_Overflow
     ret
 
-Jump_089_4024::
+.call_copy_string_to_buffer:
     ld de, MessageStrings_Bank89
     call CopyStringToBuffer
     ret

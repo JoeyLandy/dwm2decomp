@@ -85,7 +85,7 @@ Func_081_4001:: ; address name
     pop hl
     ld a, c
     or a, a
-    jr z, Jump_081_40D8
+    jr z, .set_species_id_lo
     ld a, [wAIWeights + $4]
     ld e, a
     ld a, [wAIWeights + $5]
@@ -109,12 +109,12 @@ Func_081_4001:: ; address name
     call CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
     ld a, c
     or a, a
-    jr nz, Jump_081_40D8
+    jr nz, .set_species_id_lo
     ld a, [wRecordBufB + $D]
     set 4, a
     ld [wRecordBufB + $D], a
 
-Jump_081_40D8::
+.set_species_id_lo:
     pop hl
     ld a, l
     ld [wSpeciesIdLo], a
@@ -132,14 +132,14 @@ Func_081_40E2:: ; address name
     ld d, [hl]
     inc hl
     cp a, $FF
-    jr z, Jump_081_40F4
+    jr z, .read_temp0
     cp a, $00
-    jr z, Jump_081_4116
+    jr z, .skip
     cp a, $01
-    jp z, Jump_081_414C
+    jp z, .skip2
     jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
-Jump_081_40F4::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -149,48 +149,48 @@ Jump_081_40F4::
     ld a, [wAIWeights + $1]
     ld b, a
     call CompareHLToBC
-    jr nz, Jump_081_4113
+    jr nz, .done
     ld a, [wAIWeights + $6]
     ld hl, hTemp5
     cp a, [hl]
-    jr nz, Jump_081_4113
+    jr nz, .done
 
-Jump_081_4110::
+.loop:
     ld c, $00
     ret
 
-Jump_081_4113::
+.done:
     ld c, $FF
     ret
 
-Jump_081_4116::
+.skip:
     ld c, [hl]
     inc hl
     inc hl
     ld a, [wAIWeights + $6]
     cp a, c
-    jr z, Jump_081_4126
+    jr z, .loop3
 
-Jump_081_411F::
+.loop2:
     inc hl
     inc hl
     dec d
-    jr nz, Jump_081_411F
+    jr nz, .loop2
     jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
-Jump_081_4126::
+.loop3:
     ld c, [hl]
     inc hl
     ld b, [hl]
     inc hl
     bit 7, b
-    jr nz, Jump_081_4136
+    jr nz, .read_temp2
     ldh a, [hTemp5]
     cp a, c
-    jp z, Jump_081_4110
-    jr Jump_081_4146
+    jp z, .loop
+    jr .next
 
-Jump_081_4136::
+.read_temp2:
     res 7, b
     push hl
     ldh a, [hTemp2]
@@ -199,14 +199,14 @@ Jump_081_4136::
     ld h, a
     call CompareHLToBC
     pop hl
-    jp z, Jump_081_4110
+    jp z, .loop
 
-Jump_081_4146::
+.next:
     dec d
-    jr nz, Jump_081_4126
+    jr nz, .loop3
     jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
-Jump_081_414C::
+.skip2:
     ld c, [hl]
     inc hl
     ld b, [hl]
@@ -218,17 +218,17 @@ Jump_081_414C::
     ld h, a
     call CompareHLToBC
     pop hl
-    jr z, Jump_081_4165
+    jr z, .skip3
 
-Jump_081_415D::
+.loop4:
     inc hl
     inc hl
     dec d
-    jr nz, Jump_081_415D
+    jr nz, .loop4
     jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
-Jump_081_4165::
-    jr Jump_081_4126
+.skip3:
+    jr .loop3
 
 ; E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CallFunc4001InBank81KeepRegs_Sub01_Sub01 over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453).
 ; record: pair-check list for this species

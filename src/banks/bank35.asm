@@ -53,12 +53,12 @@ Func_035_401C:: ; address name
     pop de
     pop bc
 
-Jump_035_4034::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_035_4034
+    jr nz, .loop
     ret
 
 ; E-0253 (C1: CopySpeciesRecordPrefix reads the word at $403B + 2 * monster id (wSpeciesIdLo/Hi) and copies the first B bytes of the record it points at (E-0062, E-0069); 384 words, 324 distinct records).

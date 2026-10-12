@@ -22,12 +22,12 @@ Func_01A_4001:: ; address name
     ld de, wRecordBufferData
     ld b, $11
 
-Jump_01A_401B::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_01A_401B
+    jr nz, .loop
     ret
 
 ; like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead
@@ -41,7 +41,7 @@ Func_01A_4022:: ; address name
     ld b, a
     ld a, c
     cp a, $FF
-    jr z, Jump_01A_4057
+    jr z, .read_battle_arg1
     ld a, $11
     call Multiply8By16
     ld a, l
@@ -59,15 +59,15 @@ Func_01A_4022:: ; address name
     ld a, [wBattleArg3]
     ld d, a
 
-Jump_01A_4050::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_01A_4050
+    jr nz, .loop
     ret
 
-Jump_01A_4057::
+.read_battle_arg1:
     ld a, [wBattleArg1]
     ld b, a
     ld a, [wBattleArg2]
@@ -75,11 +75,11 @@ Jump_01A_4057::
     ld a, [wBattleArg3]
     ld h, a
 
-Jump_01A_4063::
+.loop2:
     ld a, $00
     ld [hl+], a
     dec b
-    jr nz, Jump_01A_4063
+    jr nz, .loop2
     ret
     db $C5, $FA, $EC, $CF, $4F, $FA, $ED, $CF, $47, $79, $FE, $FF, $28, $13, $3E, $11
     db $CD, $AA, $16, $7D, $C6, $D4, $6F, $7C, $CE, $40, $67, $C1, $06, $00, $09, $4E
@@ -106,13 +106,13 @@ Func_01A_408F:: ; address name
     ld bc, $0009
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_01A_40B6
+    jr z, .read_battle_actor
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_01A_40B6
+    jr c, .read_battle_actor
     ld bc, $000D
 
-Jump_01A_40B6::
+.read_battle_actor:
     add hl, bc
     ld a, [wBattleActor]
     push hl
@@ -121,11 +121,11 @@ Jump_01A_40B6::
     ld a, [hl]
     pop hl
     cp a, $04
-    jr nz, Jump_01A_40CB
+    jr nz, .set_battle_damage_lo
     inc hl
     inc hl
 
-Jump_01A_40CB::
+.set_battle_damage_lo:
     ld a, [hl+]
     ld [wBattleDamageLo], a
     ld a, [hl]
@@ -1675,14 +1675,14 @@ Func_01A_5FA7:: ; address name
     ld hl, wWorkBuf
     ld b, $08
 
-Jump_01A_5FC3::
+.loop:
     ld a, [de]
     ld [hl+], a
     ld a, $FF
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_01A_5FC3
+    jr nz, .loop
     ld a, [wBattleArg2]
     add a, $17
     ld e, a
@@ -1694,13 +1694,13 @@ Jump_01A_5FC3::
     ld a, $04
     ld [wNameSlot], a
 
-Jump_01A_5FE2::
+.loop2:
     push de
     push hl
     push bc
     ld a, [de]
     cp a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $06
     ld e, a
@@ -1714,7 +1714,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $03
     ld e, a
@@ -1728,7 +1728,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -1742,7 +1742,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -1756,7 +1756,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -1770,7 +1770,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -1784,7 +1784,7 @@ Jump_01A_5FE2::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_6080
+    jp c, .restore
     ld a, e
     add a, $E4
     ld e, a
@@ -1797,30 +1797,30 @@ Jump_01A_5FE2::
     ld de, wWorkBuf
     ld b, $08
 
-Jump_01A_6066::
+.loop3:
     ld a, [de]
     cp a, c
-    jr z, Jump_01A_6094
+    jr z, .restore2
     inc de
     dec b
-    jr nz, Jump_01A_6066
+    jr nz, .loop3
     pop de
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_6080
+    jr z, .restore
     call FindByteAtHLInEightAtDEAndStepHL
-    jr nz, Jump_01A_6080
+    jr nz, .restore
     ld a, [hl]
     cp a, $FF
-    jp z, Jump_01A_60B9
+    jp z, .restore4
 
-Jump_01A_6080::
+.restore:
     pop bc
     pop hl
     pop de
 
-Jump_01A_6083::
+.skip:
     ld a, l
     add a, $12
     ld l, a
@@ -1830,10 +1830,10 @@ Jump_01A_6083::
     inc c
     ld a, c
     cp a, $AA
-    jp nz, Jump_01A_5FE2
-    jr Jump_01A_60DE
+    jp nz, .loop2
+    jr .return
 
-Jump_01A_6094::
+.restore2:
     pop de
     pop bc
     push bc
@@ -1845,26 +1845,26 @@ Jump_01A_6094::
     ld h, a
     ld b, $08
 
-Jump_01A_60A5::
+.loop4:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_60B3
+    jr z, .restore3
     inc hl
     dec b
-    jr nz, Jump_01A_60A5
+    jr nz, .loop4
     pop bc
     pop hl
     pop de
-    jr Jump_01A_6083
+    jr .skip
 
-Jump_01A_60B3::
+.restore3:
     pop bc
     ld [hl], c
     pop hl
     pop de
-    jr Jump_01A_6083
+    jr .skip
 
-Jump_01A_60B9::
+.restore4:
     pop bc
     push bc
     dec hl
@@ -1877,26 +1877,26 @@ Jump_01A_60B9::
     ld h, a
     ld b, $08
 
-Jump_01A_60CB::
+.loop5:
     ld a, [hl]
     cp a, e
-    jr z, Jump_01A_60D8
+    jr z, .restore5
     inc hl
     dec b
-    jr nz, Jump_01A_60CB
+    jr nz, .loop5
     pop bc
     pop hl
     pop de
-    jr Jump_01A_6083
+    jr .skip
 
-Jump_01A_60D8::
+.restore5:
     pop bc
     ld [hl], c
     pop hl
     pop de
-    jr Jump_01A_6083
+    jr .skip
 
-Jump_01A_60DE::
+.return:
     ret
 
 ; FindByteAtHLInEightAtDE_Bank1A with DE kept, then HL += 1 (E-0119)
@@ -1915,13 +1915,13 @@ FindByteAtHLInEightAtDE_Bank1A::
 Func_01A_60E6:: ; address name
     ld b, $08
 
-Jump_01A_60E8::
+.loop:
     ld a, [de]
     cp a, [hl]
     ret z
     inc de
     dec b
-    jr nz, Jump_01A_60E8
+    jr nz, .loop
     inc b
     ret
 
@@ -1939,18 +1939,18 @@ Func_01A_60F1:: ; address name
     ld hl, SkillRequirementTable
     ld c, $00
 
-Jump_01A_6100::
+.loop:
     push de
     push hl
     push bc
     push de
     call FindCInWD09D38
     pop de
-    jp z, Jump_01A_61E4
+    jp z, .restore
     ld a, [de]
     inc a
     cp a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $07
     ld e, a
@@ -1964,7 +1964,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $03
     ld e, a
@@ -1978,7 +1978,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -1992,7 +1992,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -2006,7 +2006,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -2020,7 +2020,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jp c, Jump_01A_61E4
+    jp c, .restore
     ld a, e
     add a, $01
     ld e, a
@@ -2034,7 +2034,7 @@ Jump_01A_6100::
     inc hl
     ld a, [de]
     sbc a, [hl]
-    jr c, Jump_01A_61E4
+    jr c, .restore
     ld a, e
     add a, $D2
     ld e, a
@@ -2046,13 +2046,13 @@ Jump_01A_6100::
     push de
     ld b, $19
 
-Jump_01A_6189::
+.loop2:
     ld a, [de]
     cp a, c
-    jr z, Jump_01A_61FF
+    jr z, FindNewlyLearnableSkills_Skip
     inc de
     dec b
-    jr nz, Jump_01A_6189
+    jr nz, .loop2
     pop de
     ld a, e
     add a, $F8
@@ -2063,49 +2063,49 @@ Jump_01A_6189::
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_61B6
+    jr z, .next
     ldh [hTemp6], a
     ld a, c
     cp a, $3D
-    jr nz, Jump_01A_61AF
+    jr nz, .call_find_byte_then_continue61_fe
     ld a, [hl]
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
-    jr Jump_01A_61B6
+    jr nz, .restore
+    jr .next
 
-Jump_01A_61AF::
+.call_find_byte_then_continue61_fe:
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
-    jr Jump_01A_620F
+    jr nz, .restore
+    jr FindNewlyLearnableSkills_ReadTemp6
 
-Jump_01A_61B6::
+.next:
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_61E4
+    jr z, .restore
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
+    jr nz, .restore
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_621F
+    jr z, FindNewlyLearnableSkills_Restore
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
+    jr nz, .restore
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_621F
+    jr z, FindNewlyLearnableSkills_Restore
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
+    jr nz, .restore
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_01A_621F
+    jr z, FindNewlyLearnableSkills_Restore
     call FindByteThenContinue61FE
-    jr nz, Jump_01A_61E4
-    jr Jump_01A_621F
+    jr nz, .restore
+    jr FindNewlyLearnableSkills_Restore
 
-Jump_01A_61E4::
+.restore:
     pop bc
     pop hl
     pop de
@@ -2118,16 +2118,18 @@ Jump_01A_61E4::
     inc c
     ld a, c
     cp a, $AA
-    jp nz, Jump_01A_6100
+    jp nz, .loop
     ld a, $FF
     ldh [hTemp3], a
     ld a, $FF
     ldh [hTemp4], a
 
-Jump_01A_61FE::
+FindNewlyLearnableSkills_Return::
+Jump_01A_61FE:: ; address name
     ret
 
-Jump_01A_61FF::
+FindNewlyLearnableSkills_Skip::
+Jump_01A_61FF:: ; address name
     ld a, $FF
     ld [de], a
     pop de
@@ -2138,9 +2140,10 @@ Jump_01A_61FF::
     ldh [hTemp3], a
     ld a, $00
     ldh [hTemp4], a
-    jr Jump_01A_61FE
+    jr FindNewlyLearnableSkills_Return
 
-Jump_01A_620F::
+FindNewlyLearnableSkills_ReadTemp6::
+Jump_01A_620F:: ; address name
     ldh a, [hTemp6]
     ldh [hTemp5], a
     pop bc
@@ -2150,9 +2153,10 @@ Jump_01A_620F::
     ldh [hTemp3], a
     ld a, $01
     ldh [hTemp4], a
-    jr Jump_01A_61FE
+    jr FindNewlyLearnableSkills_Return
 
-Jump_01A_621F::
+FindNewlyLearnableSkills_Restore::
+Jump_01A_621F:: ; address name
     pop bc
     pop hl
     pop de
@@ -2160,16 +2164,16 @@ Jump_01A_621F::
     ldh [hTemp3], a
     ld a, $02
     ldh [hTemp4], a
-    jr Jump_01A_61FE
+    jr FindNewlyLearnableSkills_Return
 
-; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at Jump_01A_61FE (E-0126)
+; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at FindNewlyLearnableSkills_Return (E-0126)
 ; 6 call sites from 1 routine (e.g. FindNewlyLearnableSkills)
 FindByteThenContinue61FE::
 Func_01A_622B:: ; address name
     push de
     call FindByteAtHLInEightAtDE_Bank1A_6232
     pop de
-    jr Jump_01A_61FE
+    jr FindNewlyLearnableSkills_Return
 
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
 ; 1 call site from 1 routine (e.g. FindByteThenContinue61FE)
@@ -2177,13 +2181,13 @@ FindByteAtHLInEightAtDE_Bank1A_6232::
 Func_01A_6232:: ; address name
     ld b, $08
 
-Jump_01A_6234::
+.loop:
     ld a, [de]
     cp a, [hl]
     ret z
     inc de
     dec b
-    jr nz, Jump_01A_6234
+    jr nz, .loop
     inc b
     ret
 
@@ -2195,13 +2199,13 @@ Func_01A_623D:: ; address name
     ld de, wWorkBuf
     ld b, $38
 
-Jump_01A_6242::
+.loop:
     ld a, [de]
     cp a, c
     ret z
     inc de
     dec b
-    jr nz, Jump_01A_6242
+    jr nz, .loop
     inc b
     ret
 
@@ -2229,39 +2233,39 @@ Func_01A_624B:: ; address name
     ld de, wSpeciesRecord + $8
     ld b, $03
 
-Jump_01A_6274::
+.loop:
     ld a, [de]
     inc de
     call BattleEnd_Step3_Sub02_Sub01
-    jr z, Jump_01A_627E
+    jr z, .skip
     call BattleEnd_Step3_Sub02_Sub02
 
-Jump_01A_627E::
+.skip:
     ld [hl+], a
     dec b
-    jr nz, Jump_01A_6274
+    jr nz, .loop
     ld hl, wRecordBufA + $3C
     ld b, $19
     ld a, $FF
 
-Jump_01A_6289::
+.loop2:
     ld [hl+], a
     dec b
-    jr nz, Jump_01A_6289
+    jr nz, .loop2
     ld de, wWorkBuf
     ld hl, wRecordBufA + $3C
     ld b, $19
 
-Jump_01A_6295::
+.loop3:
     ld a, [de]
     inc de
     cp a, $FF
-    jr z, Jump_01A_629C
+    jr z, .next
     ld [hl+], a
 
-Jump_01A_629C::
+.next:
     dec b
-    jr nz, Jump_01A_6295
+    jr nz, .loop3
     ret
 
 ; only called from BattleEnd_Step3_Sub02 (E-0047)
@@ -2271,10 +2275,10 @@ Func_01A_62A0:: ; address name
     push hl
     push bc
     cp a, $C8
-    jr z, Jump_01A_62CA
+    jr z, .skip3
     ld c, a
     call BattleEnd_Step3_Shared01
-    jr nz, Jump_01A_62CD
+    jr nz, .done
     push bc
     ld b, $00
     ld hl, SkillPrerequisitePointers
@@ -2283,26 +2287,26 @@ Func_01A_62A0:: ; address name
     pop bc
     deref_hl
 
-Jump_01A_62B8::
+.skip:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_01A_62C6
+    jr z, .skip2
     push hl
     call BattleEnd_Step3_Shared01
     pop hl
-    jr nz, Jump_01A_62CD
-    jr Jump_01A_62B8
+    jr nz, .done
+    jr .skip
 
-Jump_01A_62C6::
+.skip2:
     xor a, a
     ld a, c
-    jr Jump_01A_62CD
+    jr .done
 
-Jump_01A_62CA::
+.skip3:
     ld a, $FF
     inc b
 
-Jump_01A_62CD::
+.done:
     pop bc
     pop hl
     ret
@@ -2318,45 +2322,45 @@ Func_01A_62D0:: ; address name
     ld b, $AA
     ld c, $00
 
-Jump_01A_62DA::
+.loop:
     push hl
     cp a, [hl]
-    jr z, Jump_01A_62FB
+    jr z, .call_battle_end_step3_shared01
     inc hl
     cp a, [hl]
-    jr z, Jump_01A_62FB
+    jr z, .call_battle_end_step3_shared01
     inc hl
     cp a, [hl]
-    jr z, Jump_01A_62FB
+    jr z, .call_battle_end_step3_shared01
     inc hl
     cp a, [hl]
-    jr z, Jump_01A_62FB
+    jr z, .call_battle_end_step3_shared01
     inc hl
     cp a, [hl]
-    jr z, Jump_01A_62FB
+    jr z, .call_battle_end_step3_shared01
 
-Jump_01A_62EE::
+.loop2:
     pop hl
     ld de, $0012
     add hl, de
     inc c
     dec b
-    jr nz, Jump_01A_62DA
+    jr nz, .loop
 
-Jump_01A_62F7::
+.restore:
     pop bc
     pop de
     pop hl
     ret
 
-Jump_01A_62FB::
+.call_battle_end_step3_shared01:
     ld e, a
     ld a, c
     call BattleEnd_Step3_Shared01
     ld a, e
-    jr z, Jump_01A_62EE
+    jr z, .loop2
     pop hl
-    jr Jump_01A_62F7
+    jr .restore
 
 ; only called from routines of BattleEnd_Step3 (E-0098)
 ; 3 call sites from 2 routines (e.g. BattleEnd_Step3_Sub02_Sub02, BattleEnd_Step3_Sub02_Sub01)
@@ -2366,19 +2370,19 @@ Func_01A_6306:: ; address name
     ld hl, wRecordBufA + $34
     ld b, $08
 
-Jump_01A_630C::
+.loop:
     cp a, [hl]
-    jr z, Jump_01A_6315
+    jr z, .skip
     inc hl
     dec b
-    jr nz, Jump_01A_630C
-    jr Jump_01A_6318
+    jr nz, .loop
+    jr .done
 
-Jump_01A_6315::
+.skip:
     ld a, $FF
     inc b
 
-Jump_01A_6318::
+.done:
     pop bc
     ret
 
@@ -2406,29 +2410,29 @@ Func_01A_631F:: ; address name
     add hl, bc
     deref_hl
 
-Jump_01A_632C::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_01A_633A
+    jr z, .call_find_c_in_wd09_d8
     push hl
     call AIsCOrInWD09D8
     pop hl
-    jr c, Jump_01A_632C
-    jr Jump_01A_633F
+    jr c, .loop
+    jr .clear_temp0
 
-Jump_01A_633A::
+.call_find_c_in_wd09_d8:
     call FindCInWD09D8
-    jr c, Jump_01A_6344
+    jr c, .call_add_skill_c_to_free_slot_unless_excluded
 
-Jump_01A_633F::
+.clear_temp0:
     xor a, a
     ldh [hTemp0], a
-    jr Jump_01A_6347
+    jr .return
 
-Jump_01A_6344::
+.call_add_skill_c_to_free_slot_unless_excluded:
     call AddSkillCToFreeSlotUnlessExcluded
 
-Jump_01A_6347::
+.return:
     ret
 
 ; A = 0 and NC if A equals C or one of the 8 bytes at wD09D; otherwise carry (E-0122)
@@ -2437,20 +2441,20 @@ Jump_01A_6347::
 AIsCOrInWD09D8::
 Func_01A_6348:: ; address name
     cp a, c
-    jr z, Jump_01A_6359
+    jr z, .return_0
     ld b, $08
     ld hl, wWorkBuf
 
-Jump_01A_6350::
+.loop:
     cp a, [hl]
-    jr z, Jump_01A_6359
+    jr z, .return_0
     inc hl
     dec b
-    jr nz, Jump_01A_6350
+    jr nz, .loop
     scf
     ret
 
-Jump_01A_6359::
+.return_0:
     xor a, a
     ret
 
@@ -2463,16 +2467,16 @@ Func_01A_635B:: ; address name
     ld b, $08
     ld hl, wWorkBuf
 
-Jump_01A_6361::
+.loop:
     cp a, [hl]
-    jr z, Jump_01A_636A
+    jr z, .return_0
     inc hl
     dec b
-    jr nz, Jump_01A_6361
+    jr nz, .loop
     scf
     ret
 
-Jump_01A_636A::
+.return_0:
     xor a, a
     ret
 
@@ -2494,22 +2498,22 @@ Func_01A_636C:: ; address name
     xor a, a
     ldh [hTemp1], a
 
-Jump_01A_637E::
+.loop:
     ld a, [hl]
     or a, a
-    jr z, Jump_01A_6393
+    jr z, .done
     cp a, $FF
-    jr z, Jump_01A_6393
+    jr z, .done
     call IsHLByteInFFListAtDE
-    jr nc, Jump_01A_6393
+    jr nc, .done
     inc hl
     dec b
-    jr nz, Jump_01A_637E
+    jr nz, .loop
     xor a, a
     ldh [hTemp0], a
     ret
 
-Jump_01A_6393::
+.done:
     ld [hl], c
     ret
 
@@ -2519,21 +2523,21 @@ IsHLByteInFFListAtDE::
 Func_01A_6395:: ; address name
     push de
 
-Jump_01A_6396::
+.skip:
     ld a, [de]
     cp a, $FF
-    jr z, Jump_01A_63A1
+    jr z, .done
     cp a, [hl]
-    jr z, Jump_01A_63A4
+    jr z, .done2
     inc de
-    jr Jump_01A_6396
+    jr .skip
 
-Jump_01A_63A1::
+.done:
     pop de
     scf
     ret
 
-Jump_01A_63A4::
+.done2:
     pop de
     xor a, a
     ret
@@ -2559,15 +2563,15 @@ Func_01A_63A7:: ; address name
     ld de, StatGrowthBase
     add a, e
     ld e, a
-    jr nc, Jump_01A_63C3
+    jr nc, .skip
     inc d
 
-Jump_01A_63C3::
+.skip:
     ld a, [de]
     ld e, a
     ld d, $00
 
-Jump_01A_63C7::
+.loop:
     ld a, [hl+]
     add a, e
     ld e, a
@@ -2575,7 +2579,7 @@ Jump_01A_63C7::
     adc a, $00
     ld d, a
     dec b
-    jr nz, Jump_01A_63C7
+    jr nz, .loop
     ld a, e
     ldh [hTemp2], a
     ld a, d
@@ -2673,7 +2677,7 @@ Func_01A_6418:: ; address name
     ld h, a
     ld a, [hl+]
     cp a, [hl]
-    jr nc, Jump_01A_64A1
+    jr nc, .return
     ld d, a
     call ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress
     ld a, [wSpeciesRecord + $C]
@@ -2708,7 +2712,7 @@ Func_01A_6418:: ; address name
     ld [wLevelUpGains + $5], a
     call ClampLevelUpGainsTo999
 
-Jump_01A_64A1::
+.return:
     ret
 
 ; only called from ComputeLevelUpStatGainsForBattleArg1 (E-0047)
@@ -2725,17 +2729,17 @@ Func_01A_64A2:: ; address name
     ld bc, $0000
     ld a, [hl]
     cp a, $1D
-    jr c, Jump_01A_64B7
+    jr c, .set_growth_temp0_to_FF
     cp a, $23
-    jr c, Jump_01A_64C0
+    jr c, .set_growth_temp0
 
-Jump_01A_64B7::
+.set_growth_temp0_to_FF:
     ld a, $FF
     ld [wGrowthTemp0], a
     xor a, a
-    jp Jump_01A_654C
+    jp .set_growth_temp1
 
-Jump_01A_64C0::
+.set_growth_temp0:
     sub a, $1D
     ld [wGrowthTemp0], a
     ld a, l
@@ -2789,41 +2793,41 @@ Jump_01A_64C0::
     ld b, $0A
     ld d, $00
 
-Jump_01A_6511::
+.loop:
     ld a, [hl+]
     cp a, $F0
-    jr z, Jump_01A_6522
+    jr z, .restore
     cp a, $8D
-    jr z, Jump_01A_651F
+    jr z, .next
     cp a, $8E
-    jr z, Jump_01A_651F
+    jr z, .next
     inc d
 
-Jump_01A_651F::
+.next:
     dec b
-    jr nz, Jump_01A_6511
+    jr nz, .loop
 
-Jump_01A_6522::
+.restore:
     pop bc
     bit 0, e
-    jr z, Jump_01A_652E
+    jr z, .skip
     bit 0, d
-    jr z, Jump_01A_6533
+    jr z, .skip2
     inc c
-    jr Jump_01A_6533
+    jr .skip2
 
-Jump_01A_652E::
+.skip:
     bit 0, d
-    jr nz, Jump_01A_6533
+    jr nz, .skip2
     inc b
 
-Jump_01A_6533::
+.skip2:
     ld a, b
     bit 0, e
-    jr z, Jump_01A_6539
+    jr z, .skip3
     ld a, c
 
-Jump_01A_6539::
+.skip3:
     ld b, a
     srl a
     ld b, a
@@ -2835,7 +2839,7 @@ Jump_01A_6539::
     pop hl
     add a, b
 
-Jump_01A_654C::
+.set_growth_temp1:
     ld [wGrowthTemp1], a
     pop de
     ret
@@ -2845,18 +2849,18 @@ Jump_01A_654C::
 CountBit0MatchOfEAndHL::
 Func_01A_6551:: ; address name
     bit 0, e
-    jr z, Jump_01A_655C
+    jr z, .skip
     bit 0, [hl]
-    jr z, Jump_01A_6561
+    jr z, .return
     inc c
-    jr Jump_01A_6561
+    jr .return
 
-Jump_01A_655C::
+.skip:
     bit 0, [hl]
-    jr nz, Jump_01A_6561
+    jr nz, .return
     inc b
 
-Jump_01A_6561::
+.return:
     ret
 
 ; C = StatGrowthTable[A][D] (row A of 99 per-level gains, entry D); DE kept (E-0119, E-0158)
@@ -2885,14 +2889,14 @@ AddGrowthTemp1IfGrowthTemp0MatchesB::
 Func_01A_6579:: ; address name
     ld a, [wGrowthTemp0]
     cp a, b
-    jr z, Jump_01A_6582
+    jr z, .read_growth_temp1
     xor a, a
-    jr Jump_01A_6585
+    jr .done
 
-Jump_01A_6582::
+.read_growth_temp1:
     ld a, [wGrowthTemp1]
 
-Jump_01A_6585::
+.done:
     add a, c
     ret
 
@@ -2974,23 +2978,23 @@ Func_01A_65F4:: ; address name
     add hl, de
     ld a, h
     or a, l
-    jr z, Jump_01A_6611
+    jr z, .skip
     ld e, l
     add hl, bc
     ld a, h
     or a, l
-    jr z, Jump_01A_6613
+    jr z, .done
     bit 7, h
-    jr nz, Jump_01A_6613
+    jr nz, .done
     xor a, a
     sub a, e
     ld c, a
-    jr Jump_01A_6613
+    jr .done
 
-Jump_01A_6611::
+.skip:
     ld c, $00
 
-Jump_01A_6613::
+.done:
     ld a, c
     pop hl
     ret
@@ -3466,16 +3470,16 @@ Func_01A_7321:: ; address name
     ld c, [hl]
     inc hl
 
-Jump_01A_732F::
+.loop:
     push bc
     push de
 
-Jump_01A_7331::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_01A_7331
+    jr nz, .loop2
     pop de
     ld a, e
     add a, $20
@@ -3485,7 +3489,7 @@ Jump_01A_7331::
     ld d, a
     pop bc
     dec c
-    jr nz, Jump_01A_732F
+    jr nz, .loop
     ret
 
 ; E-0161 (derived: a tile-rectangle record for CopyRecordRectToScreenBuffer)

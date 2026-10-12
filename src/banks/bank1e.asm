@@ -26,13 +26,13 @@ Jump_01E_400D:: ; address name
     call CopyBytesDEToHL_Bank1E
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_402B
+    jr z, .call_bg_map_address_at_scroll_bank1_e
     ld hl, wWindowAttrBuffer + $64
     ld de, wScreenAttrBuffer
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank1E
 
-Jump_01E_402B::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -107,26 +107,26 @@ Jump_01E_408B:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_01E_4091::
+.loop:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_01E_4091
+    jr nz, .loop
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
     ld bc, $0104
     call CopyBytesDEToHL_Bank1E
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_40B6
+    jr z, .set_message_mode_to_03
     ld hl, wWindowAttrBuffer + $64
     ld de, wScreenAttrBuffer
     ld bc, $0104
     call CopyLow3BitsToWRAMBank2_Bank1E
 
-Jump_01E_40B6::
+.set_message_mode_to_03:
     ld a, $03
     ld [wMessageMode], a
     ld a, $70
@@ -214,22 +214,22 @@ SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 Jump_01E_412A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, Jump_01E_4146
+    jr nz, .call_swap_monsters_menu_case02_read_grid
     bit 7, a
-    jr nz, Jump_01E_4174
+    jr nz, .call_swap_monsters_menu_case02_read_grid2
     ld a, [wJoypadPressed]
     bit 0, a
-    jp nz, Jump_01E_418E
+    jp nz, .call_queue_sound_effect
     bit 1, a
-    jp nz, Jump_01E_41D0
+    jp nz, .set_two_choice_cursor_to_04
     call SwapMonstersMenu_Case02_WriteGridCursorY
     ret
 
-Jump_01E_4146::
+.call_swap_monsters_menu_case02_read_grid:
     call SwapMonstersMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     and a, a
-    jr nz, Jump_01E_415D
+    jr nz, .set_grid_cursor_x
     ld a, $04
     ld [wGridCursorX], a
     call SwapMonstersMenu_Case02_WriteGridCursorY
@@ -237,10 +237,10 @@ Jump_01E_4146::
     call QueueSoundEffect
     ret
 
-Jump_01E_415D::
+.set_grid_cursor_x:
     dec a
 
-Jump_01E_415E::
+.set_grid_cursor_x2:
     ld [wGridCursorX], a
     xor a, a
     ld [wListCursor], a
@@ -251,11 +251,11 @@ Jump_01E_415E::
     call QueueSoundEffect
     ret
 
-Jump_01E_4174::
+.call_swap_monsters_menu_case02_read_grid2:
     call SwapMonstersMenu_Case02_ReadGridCursorX_Sub03
     ld a, [wGridCursorX]
     cp a, $04
-    jr c, Jump_01E_418B
+    jr c, .skip
     xor a, a
     ld [wGridCursorX], a
     call SwapMonstersMenu_Case02_WriteGridCursorY
@@ -263,17 +263,17 @@ Jump_01E_4174::
     call QueueSoundEffect
     ret
 
-Jump_01E_418B::
+.skip:
     inc a
-    jr Jump_01E_415E
+    jr .set_grid_cursor_x2
 
-Jump_01E_418E::
+.call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
     call SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap
     ld c, $00
 
-Jump_01E_4198::
+.loop:
     ld a, c
     ld b, $C3
     ld hl, CursorCellTable7880
@@ -285,10 +285,10 @@ Jump_01E_4198::
     inc c
     ld a, c
     cp a, $05
-    jr c, Jump_01E_4198
+    jr c, .loop
     ld a, [wGridCursorX]
     cp a, $04
-    jr z, Jump_01E_41D0
+    jr z, .set_two_choice_cursor_to_04
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
     inc a
@@ -303,7 +303,7 @@ Jump_01E_4198::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_41D0::
+.set_two_choice_cursor_to_04:
     ld a, $04
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -337,7 +337,7 @@ Func_01E_41DF:: ; address name
 SwapMonstersMenu_Case02_ReadGridCursorX::
 Func_01E_41F9:: ; address name
     ld b, $BB
-    jr Jump_01E_4203
+    jr SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
 ; 2 call sites from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
@@ -345,7 +345,7 @@ Func_01E_41F9:: ; address name
 SwapMonstersMenu_Case02_ReadGridCursorX_Sub03::
 Func_01E_41FD:: ; address name
     ld b, $C3
-    jr Jump_01E_4203
+    jr SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
 
 ; only called from SwapMonstersMenu_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc)
@@ -354,7 +354,8 @@ SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap::
 Func_01E_4201:: ; address name
     ld b, $BC
 
-Jump_01E_4203::
+SwapMonstersMenu_Case02_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX::
+Jump_01E_4203:: ; address name
     ld a, [wGridCursorX]
     add a, a
     ld hl, $4223
@@ -448,12 +449,13 @@ SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc::
 Jump_01E_429A:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jp z, Jump_01E_42A9
+    jp z, SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc_Skip
     cp a, $01
     jp z, SwapMonstersMenu_Case0E_Case07_CopyRecordNameToNameGlyphBuf
-    jp Jump_01E_430D
+    jp SwapMonstersMenu_Case0E_Case07_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
 
-Jump_01E_42A9::
+SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc_Skip::
+Jump_01E_42A9:: ; address name
     ld de, $4333
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
@@ -479,7 +481,7 @@ Func_01E_42C6:: ; address name
     ld [rRAMB], a
     ld b, $00
 
-Jump_01E_42D1::
+.loop:
     push bc
     ld hl, wPartyList
     ld a, b
@@ -504,7 +506,7 @@ Jump_01E_42D1::
     inc b
     ld a, [wPartyCount]
     cp a, b
-    jr nz, Jump_01E_42D1
+    jr nz, .loop
     xor a, a
     ld [rRAMG2], a
     ld a, [wScreenSubStep]
@@ -512,7 +514,8 @@ Jump_01E_42D1::
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_430D::
+SwapMonstersMenu_Case0E_Case07_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries::
+Jump_01E_430D:: ; address name
     farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wWindowTileBuffer + $78
     ld c, $28
@@ -646,19 +649,19 @@ Jump_01E_440A:: ; address name
     and a, a
     ret z
     cp a, $FD
-    jr z, Jump_01E_4426
+    jr z, .set_screen_step_to_01
     cp a, $FE
-    jr z, Jump_01E_442C
+    jr z, .set_two_choice_cursor_to_01
     cp a, $FF
-    jr z, Jump_01E_4442
+    jr z, .read_list_cursor
     ret
 
-Jump_01E_4426::
+.set_screen_step_to_01:
     ld a, $01
     ld [wScreenStep], a
     ret
 
-Jump_01E_442C::
+.set_two_choice_cursor_to_01:
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -670,7 +673,7 @@ Jump_01E_442C::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4442::
+.read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
     ld hl, CursorCellTable7880
@@ -801,110 +804,110 @@ SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E::
 Jump_01E_4517:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, Jump_01E_4533
+    jr nz, .call_draw_blank_tile_c3_46_bb_bank1_e
     bit 7, a
-    jr nz, Jump_01E_454D
+    jr nz, .call_draw_blank_tile_c3_46_bb_bank1_e2
     ld a, [wJoypadPressed]
     bit 0, a
-    jp nz, Jump_01E_455D
+    jp nz, .call_queue_sound_effect
     bit 1, a
-    jp nz, Jump_01E_4687
+    jp nz, .set_two_choice_cursor_to_02
     call BlinkCursorBlinkAE_Bank1E
     ret
 
-Jump_01E_4533::
+.call_draw_blank_tile_c3_46_bb_bank1_e:
     call DrawBlankTileC3_46BB_Bank1E
     ld a, [wChoiceCursor]
     and a, a
-    jr nz, Jump_01E_4540
+    jr nz, .set_choice_cursor
     ld a, $01
-    jr Jump_01E_4541
+    jr .set_choice_cursor2
 
-Jump_01E_4540::
+.set_choice_cursor:
     dec a
 
-Jump_01E_4541::
+.set_choice_cursor2:
     ld [wChoiceCursor], a
     call DrawCursorTileBB_46B7_Bank1E
     ld a, $69
     call QueueSoundEffect
     ret
 
-Jump_01E_454D::
+.call_draw_blank_tile_c3_46_bb_bank1_e2:
     call DrawBlankTileC3_46BB_Bank1E
     ld a, [wChoiceCursor]
     cp a, $01
-    jr c, Jump_01E_455A
+    jr c, .skip
     xor a, a
-    jr Jump_01E_4541
+    jr .set_choice_cursor2
 
-Jump_01E_455A::
+.skip:
     inc a
-    jr Jump_01E_4541
+    jr .set_choice_cursor2
 
-Jump_01E_455D::
+.call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
     call SwapMonstersMenu_Case04_Case0C_StepBGMapAddressBackOnScrollWrap
     ld a, [wChoiceCursor]
     and a, a
-    jp nz, Jump_01E_460F
+    jp nz, .check_screen_state
     ld a, [wScreenState]
     cp a, $07
-    jp z, Jump_01E_45EC
+    jp z, .check_screen_step3
     cp a, $04
-    jr z, Jump_01E_45B1
+    jr z, .check_screen_step2
     cp a, $05
-    jr z, Jump_01E_457C
+    jr z, .check_screen_step
 
-Jump_01E_457C::
+.check_screen_step:
     ld a, [wScreenStep]
     cp a, $13
-    jr c, Jump_01E_45A3
+    jr c, .set_screen_byte_b2_to_052
     cp a, $42
-    jr c, Jump_01E_4595
+    jr c, .set_screen_byte_b2_to_05
     ld a, $05
     ld [wScreenByteB2], a
     ld a, $44
     ld [wScreenByteB3], a
     ld a, $09
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_4595::
+.set_screen_byte_b2_to_05:
     ld a, $05
     ld [wScreenByteB2], a
     ld a, $2C
     ld [wScreenByteB3], a
     ld a, $08
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_45A3::
+.set_screen_byte_b2_to_052:
     ld a, $05
     ld [wScreenByteB2], a
     ld a, $12
     ld [wScreenByteB3], a
     ld a, $09
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_45B1::
+.check_screen_step2:
     ld a, [wScreenStep]
     cp a, $10
-    jr nc, Jump_01E_45C6
+    jr nc, .set_screen_byte_b2_to_04
     ld a, $04
     ld [wScreenByteB2], a
     ld a, $0C
     ld [wScreenByteB3], a
     ld a, $08
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_45C6::
+.set_screen_byte_b2_to_04:
     ld a, $04
     ld [wScreenByteB2], a
     ld a, $25
     ld [wScreenByteB3], a
     ld a, $09
 
-Jump_01E_45D2::
+.set_screen_state:
     ld [wScreenState], a
     xor a, a
     ld [wScreenStep], a
@@ -917,38 +920,38 @@ Jump_01E_45D2::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_45EC::
+.check_screen_step3:
     ld a, [wScreenStep]
     cp a, $16
-    jr nz, Jump_01E_4601
+    jr nz, .set_screen_byte_b2_to_07
     ld a, $07
     ld [wScreenByteB2], a
     ld a, $16
     ld [wScreenByteB3], a
     ld a, $0A
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_4601::
+.set_screen_byte_b2_to_07:
     ld a, $07
     ld [wScreenByteB2], a
     ld a, $2E
     ld [wScreenByteB3], a
     ld a, $0B
-    jr Jump_01E_45D2
+    jr .set_screen_state
 
-Jump_01E_460F::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $07
-    jr nz, Jump_01E_465C
+    jr nz, .check_screen_state2
     ld a, [wChoiceCursorF0]
     and a, a
-    jr nz, Jump_01E_4655
+    jr nz, .check_screen_step4
     ld a, [wListCursor]
     and a, a
-    jr nz, Jump_01E_465C
+    jr nz, .check_screen_state2
     ld a, [wPartyCount]
     cp a, $02
-    jr nc, Jump_01E_465C
+    jr nc, .check_screen_state2
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -958,7 +961,7 @@ Jump_01E_460F::
     ld b, a
     ld a, [wPartyList]
     cp a, b
-    jr nz, Jump_01E_465C
+    jr nz, .check_screen_state2
     ld a, $03
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -970,21 +973,21 @@ Jump_01E_460F::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4655::
+.check_screen_step4:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
-Jump_01E_465C::
+.check_screen_state2:
     ld a, [wScreenState]
     cp a, $04
-    jr nz, Jump_01E_4670
+    jr nz, .set_two_choice_cursor_to_01
     ld a, [wScreenStep]
     cp a, $0C
-    jr nz, Jump_01E_4670
+    jr nz, .set_two_choice_cursor_to_01
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
 
-Jump_01E_4670::
+.set_two_choice_cursor_to_01:
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -996,7 +999,7 @@ Jump_01E_4670::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4687::
+.set_two_choice_cursor_to_02:
     ld a, $02
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -1033,7 +1036,7 @@ Func_01E_469D:: ; address name
 DrawCursorTileBB_46B7_Bank1E::
 Func_01E_46B7:: ; address name
     ld b, $BB
-    jr Jump_01E_46C1
+    jr SwapMonstersMenu_Case04_Case0C_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 ; 2 call sites from 1 routine (e.g. SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E)
@@ -1041,7 +1044,7 @@ Func_01E_46B7:: ; address name
 DrawBlankTileC3_46BB_Bank1E::
 Func_01E_46BB:: ; address name
     ld b, $C3
-    jr Jump_01E_46C1
+    jr SwapMonstersMenu_Case04_Case0C_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
 ; only called from SwapMonstersMenu_Case04_Case0C (E-0047)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case04_BlinkCursorBlinkAE_Bank1E)
@@ -1050,7 +1053,8 @@ SwapMonstersMenu_Case04_Case0C_StepBGMapAddressBackOnScrollWrap::
 Func_01E_46BF:: ; address name
     ld b, $BC
 
-Jump_01E_46C1::
+SwapMonstersMenu_Case04_Case0C_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
+Jump_01E_46C1:: ; address name
     ld a, [wChoiceCursor]
     add a, a
     ld hl, $46E1
@@ -1151,22 +1155,22 @@ Jump_01E_473B:: ; address name
     ld [rRAMG2], a
     ld a, [wPartyCount]
     and a, a
-    jr z, Jump_01E_4774
+    jr z, .call_list_party_records_with_state2_to_list
     dec a
     ld [wPartyCount], a
 
-Jump_01E_4774::
+.call_list_party_records_with_state2_to_list:
     farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wListEntries
     ld de, wPartyList
     ld b, $03
 
-Jump_01E_4782::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_01E_4782
+    jr nz, .loop
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
@@ -1200,35 +1204,35 @@ Jump_01E_47B2:: ; address name
     ld hl, sRecords
     ld c, $00
 
-Jump_01E_47C7::
+.loop:
     ld a, [hl]
     cp a, $01
-    jr z, Jump_01E_47DA
+    jr z, .skip2
 
-Jump_01E_47CC::
+.skip:
     ld a, $A5
     add_a_to_hl
     inc c
     ld a, c
     cp a, d
-    jr c, Jump_01E_47C7
-    jr Jump_01E_47EC
+    jr c, .loop
+    jr .clear_two_choice_cursor
 
-Jump_01E_47DA::
+.skip2:
     push hl
     ld a, $6E
     add_a_to_hl
     ld a, [hl]
     and a, a
-    jr z, Jump_01E_47E9
+    jr z, .restore
     pop hl
-    jr Jump_01E_47CC
+    jr .skip
 
-Jump_01E_47E9::
+.restore:
     pop hl
-    jr Jump_01E_4817
+    jr .set_two_choice_cursor_to_01
 
-Jump_01E_47EC::
+.clear_two_choice_cursor:
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, $01
@@ -1249,7 +1253,7 @@ Jump_01E_47EC::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4817::
+.set_two_choice_cursor_to_01:
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -1316,12 +1320,12 @@ Jump_01E_4890:: ; address name
     and a, a
     ret z
     cp a, $FE
-    jr z, Jump_01E_48A4
+    jr z, .loop
     cp a, $FF
-    jr z, Jump_01E_48C4
+    jr z, .check_two_choice_cursor
     ret
 
-Jump_01E_48A4::
+.loop:
     call SwapMonstersMenu_Case04_Case12_BGMapAddressAtScroll_Bank1E
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -1337,10 +1341,10 @@ Jump_01E_48A4::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_48C4::
+.check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
     cp a, $01
-    jr z, Jump_01E_48A4
+    jr z, .loop
     call SwapMonstersMenu_Case04_Case12_BGMapAddressAtScroll_Bank1E
     ld a, [wScreenStep]
     inc a
@@ -1365,7 +1369,7 @@ Func_01E_48E3:: ; address name
     call SwapMonstersMenu_Case04_Case12_Sub01_CopyBytesDEToHL_Bank1E
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_490B
+    jr z, .call_bg_map_address_at_scroll_bank1_e
     ldh a, [rSVBK]
     set 1, a
     ldh [rSVBK], a
@@ -1377,7 +1381,7 @@ Func_01E_48E3:: ; address name
     res 1, a
     ldh [rSVBK], a
 
-Jump_01E_490B::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -1401,10 +1405,10 @@ Func_01E_4918:: ; address name
     ld a, $14
     add a, e
     ld e, a
-    jr nc, Jump_01E_492F
+    jr nc, .next
     inc d
 
-Jump_01E_492F::
+.next:
     dec c
     jr nz, SwapMonstersMenu_Case04_Case12_Sub01_CopyBytesDEToHL_Bank1E
     ret
@@ -1500,7 +1504,7 @@ Func_01E_49F8:: ; address name
     call ClampRecordListPageCursor5
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_01E_4A2A
+    jr c, .check_screen_step
     ld de, $0142
     call DrawC5BEC6AtScrollOffsetDE_Bank1E
     ld hl, wWindowTileBuffer + $12E
@@ -1518,7 +1522,7 @@ Func_01E_49F8:: ; address name
     ld [wArg2], a
     call DrawPageOfPagesAtArg1_Bank1E
 
-Jump_01E_4A2A::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1585,30 +1589,30 @@ Jump_01E_4A74:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_4A98
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_01E_4A98
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_01E_4AD7
+    jr z, .read_screen_step3
     cp a, $FE
-    jr z, Jump_01E_4AA1
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_4AA9
+    jr z, .read_screen_step2
     ret
 
-Jump_01E_4A98::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $07
     ld [wScreenStep], a
     ret
 
-Jump_01E_4AA1::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_4AA9::
+.read_screen_step2:
     ld a, [wScreenStep]
     add a, $08
     ld [wScreenStep], a
@@ -1632,7 +1636,7 @@ Jump_01E_4AA9::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4AD7::
+.read_screen_step3:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
@@ -1731,19 +1735,20 @@ Jump_01E_4B5D:: ; address name
     ld de, wTextBuf0
     ld c, $00
 
-Jump_01E_4B7B::
+SwapMonstersMenu_Case04_CopyRecordNameToNameGlyphBuf_Loop::
+Jump_01E_4B7B:: ; address name
     ld a, [hl]
     cp a, $F0
-    jr z, Jump_01E_4B89
+    jr z, .skip
     ld [de], a
     inc de
     inc hl
     inc c
     ld a, c
     cp a, $0A
-    jr c, Jump_01E_4B7B
+    jr c, SwapMonstersMenu_Case04_CopyRecordNameToNameGlyphBuf_Loop
 
-Jump_01E_4B89::
+.skip:
     ld a, $90
     ld [de], a
     inc de
@@ -1772,16 +1777,16 @@ Jump_01E_4B89::
     ld [wNameGlyphBuf + $A], a
     ld hl, wNameGlyphBuf
 
-Jump_01E_4BB4::
+.skip2:
     ld a, [hl]
     cp a, $F0
-    jr z, Jump_01E_4BBE
+    jr z, .skip3
     ld [de], a
     inc de
     inc hl
-    jr Jump_01E_4BB4
+    jr .skip2
 
-Jump_01E_4BBE::
+.skip3:
     ld [de], a
     xor a, a
     ld [rRAMG2], a
@@ -2064,19 +2069,19 @@ Jump_01E_4DB5:: ; address name
     and a, a
     ret z
     cp a, $FD
-    jr z, Jump_01E_4DD1
+    jr z, .set_screen_step_to_21
     cp a, $FE
-    jr z, Jump_01E_4DD7
+    jr z, .set_two_choice_cursor_to_01
     cp a, $FF
-    jr z, Jump_01E_4DED
+    jr z, .read_list_cursor
     ret
 
-Jump_01E_4DD1::
+.set_screen_step_to_21:
     ld a, $21
     ld [wScreenStep], a
     ret
 
-Jump_01E_4DD7::
+.set_two_choice_cursor_to_01:
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -2088,7 +2093,7 @@ Jump_01E_4DD7::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4DED::
+.read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
     ld hl, CursorCellTable7880
@@ -2280,30 +2285,30 @@ Jump_01E_4F31:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_4F55
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_01E_4F55
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_01E_4F94
+    jr z, .read_screen_step3
     cp a, $FE
-    jr z, Jump_01E_4F5E
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_4F66
+    jr z, .read_screen_step2
     ret
 
-Jump_01E_4F55::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $07
     ld [wScreenStep], a
     ret
 
-Jump_01E_4F5E::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_4F66::
+.read_screen_step2:
     ld a, [wScreenStep]
     add a, $09
     ld [wScreenStep], a
@@ -2327,7 +2332,7 @@ Jump_01E_4F66::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_4F94::
+.read_screen_step3:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
@@ -2354,10 +2359,10 @@ SwapMonstersMenu_Case05_WriteScreenSubStepAndScreenStepEtc::
 Jump_01E_4FAC:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jp z, Jump_01E_42A9
+    jp z, SwapMonstersMenu_Case04_WriteScreenSubStepAndScreenStepEtc_Skip
     cp a, $01
     jp z, SwapMonstersMenu_Case0E_Case07_CopyRecordNameToNameGlyphBuf
-    jp Jump_01E_430D
+    jp SwapMonstersMenu_Case0E_Case07_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
 
 ; entry 70 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
@@ -2395,7 +2400,7 @@ Jump_01E_4FD6:: ; address name
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
-    jp Jump_01E_4B7B
+    jp SwapMonstersMenu_Case04_CopyRecordNameToNameGlyphBuf_Loop
 
 ; entry 72 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
@@ -2571,12 +2576,13 @@ Jump_01E_512E:: ; address name
     cp a, $FD
     ret z
     cp a, $FE
-    jr z, Jump_01E_5145
+    jr z, SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_SetTwoChoiceCursorTo03
     cp a, $FF
-    jr z, Jump_01E_5162
+    jr z, SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_CheckChoiceCursorF0
     ret
 
-Jump_01E_5145::
+SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_SetTwoChoiceCursorTo03::
+Jump_01E_5145:: ; address name
     ld a, $03
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -2591,10 +2597,11 @@ Jump_01E_5145::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5162::
+SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_CheckChoiceCursorF0::
+Jump_01E_5162:: ; address name
     ld a, [wChoiceCursorF0]
     and a, a
-    jr nz, Jump_01E_5199
+    jr nz, SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_CheckRecordsFlagged
     call BlankTwoTableEntries788A
     ld a, [wChoiceCursorF0]
     ld b, $BC
@@ -2619,10 +2626,11 @@ Jump_01E_5162::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5199::
+SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_CheckRecordsFlagged::
+Jump_01E_5199:: ; address name
     ld a, [wRecordsFlagged]
     and a, a
-    jr nz, Jump_01E_51AE
+    jr nz, .call_blank_two_table_entries788_a
     ld a, $02
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -2631,7 +2639,7 @@ Jump_01E_5199::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_51AE::
+.call_blank_two_table_entries788_a:
     call BlankTwoTableEntries788A
     ld a, [wChoiceCursorF0]
     ld b, $BC
@@ -2641,7 +2649,7 @@ Jump_01E_51AE::
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
     cp a, $07
-    jr z, Jump_01E_51D7
+    jr z, .set_screen_step_to_22
     ld a, $15
     ld [wScreenStep], a
     xor a, a
@@ -2650,7 +2658,7 @@ Jump_01E_51AE::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_51D7::
+.set_screen_step_to_22:
     ld a, $22
     ld [wScreenStep], a
     xor a, a
@@ -2752,24 +2760,24 @@ Jump_01E_5290:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_52B4
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_01E_52B4
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_01E_52F7
+    jr z, .read_screen_step3
     cp a, $FE
-    jr z, Jump_01E_52BD
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_52C9
+    jr z, .read_screen_step2
     ret
 
-Jump_01E_52B4::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $07
     ld [wScreenStep], a
     ret
 
-Jump_01E_52BD::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2777,7 +2785,7 @@ Jump_01E_52BD::
     ld [wListCursor], a
     ret
 
-Jump_01E_52C9::
+.read_screen_step2:
     ld a, [wScreenStep]
     add a, $08
     ld [wScreenStep], a
@@ -2801,7 +2809,7 @@ Jump_01E_52C9::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_52F7::
+.read_screen_step3:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
@@ -3030,7 +3038,7 @@ Jump_01E_5518:: ; address name
     call ClampRecordListPageCursor4
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_01E_5556
+    jr c, .call_bg_map_address_at_scroll_bank1_e
     ld de, $010E
     call DrawC5BEC6AtScrollOffsetDE_Bank1E
     ld hl, wWindowTileBuffer + $112
@@ -3048,7 +3056,7 @@ Jump_01E_5518:: ; address name
     ld [wArg2], a
     call DrawPageOfPagesAtArg1_Bank1E
 
-Jump_01E_5556::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld bc, $1409
     ld de, $01CC
@@ -3105,27 +3113,27 @@ Jump_01E_559E:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_55C3
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_01E_55C3
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_01E_55CC
+    jr z, .return
     cp a, $FE
-    jr z, Jump_01E_55CD
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_55D9
+    jr z, .set_screen_byte_b2_to_06
     ret
 
-Jump_01E_55C3::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
     ret
 
-Jump_01E_55CC::
+.return:
     ret
 
-Jump_01E_55CD::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3133,7 +3141,7 @@ Jump_01E_55CD::
     ld [wListCursor], a
     ret
 
-Jump_01E_55D9::
+.set_screen_byte_b2_to_06:
     ld a, $06
     ld [wScreenByteB2], a
     ld a, $1B
@@ -3302,19 +3310,19 @@ Jump_01E_5708:: ; address name
     cp a, $FD
     ret z
     cp a, $FE
-    jp z, Jump_01E_5145
+    jp z, SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_SetTwoChoiceCursorTo03
     cp a, $FF
-    jr z, Jump_01E_5720
+    jr z, .check_choice_cursor_f0
     ret
 
-Jump_01E_5720::
+.check_choice_cursor_f0:
     ld a, [wChoiceCursorF0]
     and a, a
-    jp nz, Jump_01E_5199
+    jp nz, SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E_CheckRecordsFlagged
     farcall ListRecordsInUseWithByte6EClear
     ld a, [wListCount]
     cp a, $02
-    jr nc, Jump_01E_5743
+    jr nc, .read_screen_step
     ld a, $04
     ld [wTwoChoiceCursor], a
     xor a, a
@@ -3323,7 +3331,7 @@ Jump_01E_5720::
     ld [wScriptStartRequest], a
     ret
 
-Jump_01E_5743::
+.read_screen_step:
     ld a, [wScreenStep]
     add a, $02
     ld [wScreenStep], a
@@ -3456,19 +3464,19 @@ Jump_01E_581C:: ; address name
     ld de, wTextBuf0
     ld c, $00
 
-Jump_01E_583B::
+.loop:
     ld a, [hl]
     cp a, $F0
-    jr z, Jump_01E_5849
+    jr z, .skip
     ld [de], a
     inc de
     inc hl
     inc c
     ld a, c
     cp a, $0A
-    jr c, Jump_01E_583B
+    jr c, .loop
 
-Jump_01E_5849::
+.skip:
     ld a, $F0
     ld [de], a
     xor a, a
@@ -3533,27 +3541,27 @@ Jump_01E_58B0:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_58D5
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_01E_58D5
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_01E_58DE
+    jr z, .return
     cp a, $FE
-    jr z, Jump_01E_58DF
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_58FD
+    jr z, .clear_two_choice_cursor
     ret
 
-Jump_01E_58D5::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
     ret
 
-Jump_01E_58DE::
+.return:
     ret
 
-Jump_01E_58DF::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3571,7 +3579,7 @@ Jump_01E_58DF::
     ld [hl], $12
     ret
 
-Jump_01E_58FD::
+.clear_two_choice_cursor:
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3655,7 +3663,7 @@ Jump_01E_5994:: ; address name
     call ClampRecordListPageCursor4
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_01E_59CC
+    jr c, .check_screen_step
     ld de, $010E
     call DrawC5BEC6AtScrollOffsetDE_Bank1E
     ld hl, wWindowTileBuffer + $112
@@ -3673,7 +3681,7 @@ Jump_01E_5994:: ; address name
     ld [wArg2], a
     call DrawPageOfPagesAtArg1_Bank1E
 
-Jump_01E_59CC::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3943,7 +3951,7 @@ Jump_01E_5B96:: ; address name
     call DrawTileRectAtHLFromDE_Bank1E
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_01E_5BC8
+    jr c, .check_screen_step
     ld de, $0142
     call DrawC5BEC6AtScrollOffsetDE_Bank1E
     ld de, $0143
@@ -3953,7 +3961,7 @@ Jump_01E_5B96:: ; address name
     ld [wArg2], a
     call DrawPageOfPagesAtScrollOffset
 
-Jump_01E_5BC8::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3984,35 +3992,35 @@ Jump_01E_5BDC:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_5C00
+    jr z, .check_screen_sub_step
     cp a, $FC
-    jr z, Jump_01E_5C00
+    jr z, .check_screen_sub_step
     cp a, $FD
-    jr z, Jump_01E_5C08
+    jr z, .set_screen_step_to_04
     cp a, $FE
-    jr z, Jump_01E_5C0E
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_5C16
+    jr z, .call_bg_map_address_at_scroll_bank1_e
     ret
 
-Jump_01E_5C00::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_5C08::
+.set_screen_step_to_04:
     ld a, $04
     ld [wScreenStep], a
     ret
 
-Jump_01E_5C0E::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_5C16::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
@@ -4094,36 +4102,36 @@ Jump_01E_5C85:: ; address name
     call EraseCEntriesOfWordTable_Bank1E
     ld a, [wDataBank]
     cp a, $1F
-    jr z, Jump_01E_5CB3
+    jr z, .check_screen_state
     ld a, [wScreenByteB2]
     cp a, $04
-    jr z, Jump_01E_5CCA
+    jr z, .read_list_cursor
     cp a, $05
-    jr nz, Jump_01E_5CD5
+    jr nz, .call_bg_map_address_at_scroll_bank1_e
     ld a, [wScreenByteB3]
     cp a, $2F
-    jr c, Jump_01E_5CD5
-    jr Jump_01E_5CCA
+    jr c, .call_bg_map_address_at_scroll_bank1_e
+    jr .read_list_cursor
 
-Jump_01E_5CB3::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0A
-    jr nz, Jump_01E_5CCA
+    jr nz, .read_list_cursor
     ld a, [wScreenByteB2]
     cp a, $06
-    jr z, Jump_01E_5CD5
+    jr z, .call_bg_map_address_at_scroll_bank1_e
     ld a, [wScriptCommandType]
     cp a, $E8
-    jr z, Jump_01E_5CCA
-    jr Jump_01E_5CD5
+    jr z, .read_list_cursor
+    jr .call_bg_map_address_at_scroll_bank1_e
 
-Jump_01E_5CCA::
+.read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
-Jump_01E_5CD5::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
     ld de, $01CC
@@ -4177,10 +4185,10 @@ SwapMonstersMenu_Case09_Case15_DrawListEntriesCell5SpeciesSprite::
 Jump_01E_5D2B:: ; address name
     ld a, [wGameMode]
     cp a, $05
-    jr z, Jump_01E_5D38
+    jr z, .clear_menu_input_result
     farcall DrawListEntriesCell5SpeciesSprite
 
-Jump_01E_5D38::
+.clear_menu_input_result:
     xor a, a
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -4188,18 +4196,18 @@ Jump_01E_5D38::
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_5D5C
+    jr z, .clear_sprite_hide_tile
     cp a, $FC
-    jr z, Jump_01E_5D5C
+    jr z, .clear_sprite_hide_tile
     cp a, $FD
-    jr z, Jump_01E_5D67
+    jr z, .clear_sprite_hide_tile2
     cp a, $FE
-    jr z, Jump_01E_5D7E
+    jr z, .clear_sprite_hide_tile4
     cp a, $FF
-    jr z, Jump_01E_5D72
+    jr z, .clear_sprite_hide_tile3
     ret
 
-Jump_01E_5D5C::
+.clear_sprite_hide_tile:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenSubStep]
@@ -4207,7 +4215,7 @@ Jump_01E_5D5C::
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_5D67::
+.clear_sprite_hide_tile2:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -4215,7 +4223,7 @@ Jump_01E_5D67::
     ld [wScreenStep], a
     ret
 
-Jump_01E_5D72::
+.clear_sprite_hide_tile3:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -4224,7 +4232,7 @@ Jump_01E_5D72::
     ld [wScreenStep], a
     ret
 
-Jump_01E_5D7E::
+.clear_sprite_hide_tile4:
     xor a, a
     ldh [hSpriteHideTile], a
     call BGMapAddressAtScroll_Bank1E
@@ -4289,30 +4297,30 @@ Jump_01E_5DD1:: ; address name
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_01E_5DF5
+    jr z, .check_screen_sub_step
     cp a, $FC
-    jr z, Jump_01E_5DF5
+    jr z, .check_screen_sub_step
     cp a, $FD
-    jr z, Jump_01E_5DFD
+    jr z, .read_screen_step
     cp a, $FE
-    jr z, Jump_01E_5E06
+    jr z, .call_fill_tiles_bx_c
     cp a, $FF
-    jr z, Jump_01E_5E17
+    jr z, .skip
     ret
 
-Jump_01E_5DF5::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_5DFD::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $02
     ld [wScreenStep], a
     ret
 
-Jump_01E_5E06::
+.call_fill_tiles_bx_c:
     ld hl, vTiles2 + $200
     ld bc, $1504
     call FillTilesBxC
@@ -4321,7 +4329,7 @@ Jump_01E_5E06::
     ld [wScreenStep], a
     ret
 
-Jump_01E_5E17::
+.skip:
     ld hl, vTiles2 + $730
     ld de, Tiles1Plus2E0Tiles_1F_42D0
     ld b, $1F
@@ -4476,26 +4484,26 @@ Jump_01E_5F29:: ; address name
     farcall UpdatePagedListCursor
     ld a, [wMenuInputResult]
     and a, a
-    jr z, Jump_01E_5F4D
+    jr z, .check_game_mode
     cp a, $FB
-    jr z, Jump_01E_5F5A
+    jr z, .clear_sprite_hide_tile
     cp a, $FC
-    jr z, Jump_01E_5F5A
+    jr z, .clear_sprite_hide_tile
     cp a, $FD
-    jr z, Jump_01E_5F65
+    jr z, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile
     cp a, $FE
-    jr z, Jump_01E_5F87
+    jr z, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile2
     cp a, $FF
-    jr z, Jump_01E_5F90
+    jr z, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile3
 
-Jump_01E_5F4D::
+.check_game_mode:
     ld a, [wGameMode]
     cp a, $05
     ret z
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-Jump_01E_5F5A::
+.clear_sprite_hide_tile:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenSubStep]
@@ -4503,7 +4511,8 @@ Jump_01E_5F5A::
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_5F65::
+SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile::
+Jump_01E_5F65:: ; address name
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -4523,14 +4532,16 @@ Jump_01E_5F65::
     ld [hl], $12
     ret
 
-Jump_01E_5F87::
+SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile2::
+Jump_01E_5F87:: ; address name
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $17
     ld [wScreenStep], a
     ret
 
-Jump_01E_5F90::
+SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile3::
+Jump_01E_5F90:: ; address name
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $07
@@ -4550,7 +4561,7 @@ Jump_01E_5F99:: ; address name
     ld [wScreenStep], a
     xor a, a
     ld [wScreenSubStep], a
-    jp Jump_01E_5F65
+    jp SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile
 
 ; entry 14 of the `rst $00` table in SwapMonstersMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -4679,16 +4690,16 @@ Func_01E_6074:: ; address name
     ld c, $00
     ld b, $10
 
-Jump_01E_6078::
+.loop:
     push bc
     ld a, c
     ld de, $60B1
     add a, e
     ld e, a
-    jr nc, Jump_01E_6082
+    jr nc, .skip
     inc d
 
-Jump_01E_6082::
+.skip:
     ld a, [de]
     swap a
     ld d, a
@@ -4707,10 +4718,10 @@ Jump_01E_6082::
     ld de, $60C1
     add a, e
     ld e, a
-    jr nc, Jump_01E_609E
+    jr nc, .skip2
     inc d
 
-Jump_01E_609E::
+.skip2:
     ld a, [de]
     ld l, a
     inc de
@@ -4723,7 +4734,7 @@ Jump_01E_609E::
     pop bc
     inc c
     dec b
-    jr nz, Jump_01E_6078
+    jr nz, .loop
     ret
     db $A3, $54, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $A3
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
@@ -4981,7 +4992,7 @@ Jump_01E_6231:: ; address name
     ld [wScreenStep], a
     xor a, a
     ld [wScreenSubStep], a
-    jp Jump_01E_5F65
+    jp SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor_ClearSpriteHideTile
 
 ; entry 13 of the `rst $00` table in SwapMonstersMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -5136,7 +5147,7 @@ Jump_01E_6325:: ; address name
     ei
     ld a, [wListCount]
     cp a, $02
-    jr c, Jump_01E_6391
+    jr c, .check_screen_step
     ld de, Tiles2Plus20Tiles_1F_4AA0
     ld hl, vTiles2 + $20
     ld b, $1F
@@ -5164,7 +5175,7 @@ Jump_01E_6325:: ; address name
     ld [hl], a
     ei
 
-Jump_01E_6391::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5178,7 +5189,7 @@ SwapMonstersMenu_Case0D_DrawRect6x6From651BAtScroll41::
 Jump_01E_6399:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jp nz, Jump_01E_63D3
+    jp nz, .call_get_list_entries_cell4_address
     call DrawRect6x6From651BAtScroll41
     call GetListEntriesCell4Address
     ld a, $0A
@@ -5206,7 +5217,7 @@ Jump_01E_6399:: ; address name
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_63D3::
+.call_get_list_entries_cell4_address:
     call GetListEntriesCell4Address
     ld a, $0A
     ld [rRAMG2], a
@@ -5215,7 +5226,7 @@ Jump_01E_63D3::
     push hl
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_640A
+    jr z, .restore
     ld a, [hl]
     ld c, $0B
     call LoadSRAMRecordWord
@@ -5235,7 +5246,7 @@ Jump_01E_63D3::
     pop de
     call LoadMonsterPictureAttributes
 
-Jump_01E_640A::
+.restore:
     pop hl
     xor a, a
     ld [rRAMG2], a
@@ -5266,24 +5277,24 @@ Jump_01E_6437:: ; address name
     farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
     and a, a
-    jr z, Jump_01E_644F
+    jr z, .loop
     cp a, $FD
-    jr z, Jump_01E_6471
+    jr z, .check_records_flagged
     cp a, $FE
-    jr z, Jump_01E_6483
+    jr z, .call_split_list_cursor_by4_bank1_e
     cp a, $FF
-    jr z, Jump_01E_6483
+    jr z, .call_split_list_cursor_by4_bank1_e
 
-Jump_01E_644F::
+.loop:
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_01E_645D
+    jr z, .call_get_list_entries_cell4_address
     ld a, [wLinkSession]
     cp a, $08
-    jr nz, Jump_01E_645D
+    jr nz, .call_get_list_entries_cell4_address
     ret
 
-Jump_01E_645D::
+.call_get_list_entries_cell4_address:
     call GetListEntriesCell4Address
     ld c, $00
     ld a, l
@@ -5293,10 +5304,10 @@ Jump_01E_645D::
     farcall DrawPartySpeciesSprites
     ret
 
-Jump_01E_6471::
+.check_records_flagged:
     ld a, [wRecordsFlagged]
     cp a, $02
-    jr c, Jump_01E_644F
+    jr c, .loop
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -5304,7 +5315,7 @@ Jump_01E_6471::
     ld [wScreenStep], a
     ret
 
-Jump_01E_6483::
+.call_split_list_cursor_by4_bank1_e:
     call SplitListCursorBy4_Bank1E
     xor a, a
     ldh [hSpriteHideTile], a
@@ -5403,10 +5414,10 @@ Jump_01E_6519:: ; address name
     call ClampRecordListPageCursor4
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_01E_6552
+    jr c, .check_screen_byte_b2
     ld a, [wScreenByteB2]
     cp a, $07
-    jr z, Jump_01E_6559
+    jr z, .skip
     ld hl, wWindowTileBuffer + $112
     call StoreC5BEC6AtHLStride2_Bank1E
     ld hl, wWindowTileBuffer + $113
@@ -5416,23 +5427,23 @@ Jump_01E_6519:: ; address name
     ld [wArg2], a
     call DrawPageOfPagesAtArg1_Bank1E
 
-Jump_01E_654A::
+.loop:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_6552::
+.check_screen_byte_b2:
     ld a, [wScreenByteB2]
     cp a, $07
-    jr nz, Jump_01E_654A
+    jr nz, .loop
 
-Jump_01E_6559::
+.skip:
     ld de, $6567
     ld hl, wWindowTileBuffer + $110
     ld bc, $0801
     call CopyRectTo20ByteRows_Bank1E
-    jr Jump_01E_654A
+    jr .loop
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 8 x 1 tiles, one row per line
@@ -5462,13 +5473,13 @@ Jump_01E_656F:: ; address name
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenByteB2]
     cp a, $07
-    jr z, Jump_01E_65A5
+    jr z, .read_list_cursor
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_65A5::
+.read_list_cursor:
     ld a, [wListCursor]
     ld b, $BC
     ld hl, $788E
@@ -5630,7 +5641,7 @@ SwapMonstersMenu_Case09_DrawTileRectAtHLFromDE_Bank1E::
 Jump_01E_669D:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jp nz, Jump_01E_66EF
+    jp nz, .call_get_list_entries_cell5_address
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
@@ -5668,7 +5679,7 @@ Jump_01E_669D:: ; address name
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_66EF::
+.call_get_list_entries_cell5_address:
     call GetListEntriesCell5Address
     ld a, $0A
     ld [rRAMG2], a
@@ -5677,7 +5688,7 @@ Jump_01E_66EF::
     push hl
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_6726
+    jr z, .restore
     ld a, [hl]
     ld c, $0B
     call LoadSRAMRecordWord
@@ -5697,7 +5708,7 @@ Jump_01E_66EF::
     pop de
     call LoadMonsterPictureAttributes
 
-Jump_01E_6726::
+.restore:
     pop hl
     xor a, a
     ld [rRAMG2], a
@@ -5732,25 +5743,25 @@ Jump_01E_6753:: ; address name
     and a, a
     ret z
     cp a, $FD
-    jr z, Jump_01E_676F
+    jr z, .set_screen_step_to_04
     cp a, $FE
-    jr z, Jump_01E_6775
+    jr z, .check_screen_step
     cp a, $FF
-    jr z, Jump_01E_677D
+    jr z, .call_bg_map_address_at_scroll_bank1_e
     ret
 
-Jump_01E_676F::
+.set_screen_step_to_04:
     ld a, $04
     ld [wScreenStep], a
     ret
 
-Jump_01E_6775::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-Jump_01E_677D::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
@@ -5803,7 +5814,7 @@ Jump_01E_67B1:: ; address name
     call StoreBAtWordTableEntry_Bank1E
     ld a, [wScreenState]
     cp a, $08
-    jr z, Jump_01E_67F2
+    jr z, .check_screen_state
     ld a, $03
     ld b, $C3
     ld hl, CursorCellTable7880
@@ -5813,18 +5824,18 @@ Jump_01E_67B1:: ; address name
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
-Jump_01E_67F2::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0A
-    jr z, Jump_01E_6808
+    jr z, .check_screen_step
     cp a, $0B
-    jr z, Jump_01E_6808
+    jr z, .check_screen_step
     ld a, [wListCursor]
     ld b, $BC
     ld hl, CursorCellTable7880
     call StoreBAtWordTableEntry_Bank1E
 
-Jump_01E_6808::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5838,14 +5849,14 @@ ListRecordsAndDrawListEntriesCell5Panel::
 Func_01E_6810:: ; address name
     ld a, [wScreenState]
     cp a, $08
-    jr nz, Jump_01E_681F
+    jr nz, .call_list_records_state1_with_byte6_e_clear
     farcall ListPartyRecordsWithState2ToListEntries
-    jr Jump_01E_6825
+    jr .call_get_list_entries_cell5_address
 
-Jump_01E_681F::
+.call_list_records_state1_with_byte6_e_clear:
     farcall ListRecordsState1WithByte6EClear
 
-Jump_01E_6825::
+.call_get_list_entries_cell5_address:
     call GetListEntriesCell5Address
     ld a, [hl]
     ld b, a
@@ -6105,14 +6116,14 @@ Jump_01E_69AD:: ; address name
     and a, a
     ret z
     cp a, $FD
-    jr z, Jump_01E_6A01
+    jr z, .clear_sprite_hide_tile
     cp a, $FE
-    jr z, Jump_01E_6A18
+    jr z, .clear_sprite_hide_tile3
     cp a, $FF
-    jr z, Jump_01E_6A0C
+    jr z, .clear_sprite_hide_tile2
     ret
 
-Jump_01E_6A01::
+.clear_sprite_hide_tile:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -6120,7 +6131,7 @@ Jump_01E_6A01::
     ld [wScreenStep], a
     ret
 
-Jump_01E_6A0C::
+.clear_sprite_hide_tile2:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -6129,7 +6140,7 @@ Jump_01E_6A0C::
     ld [wScreenStep], a
     ret
 
-Jump_01E_6A18::
+.clear_sprite_hide_tile3:
     xor a, a
     ldh [hSpriteHideTile], a
     call BGMapAddressAtScroll_Bank1E
@@ -6193,12 +6204,12 @@ Jump_01E_6A70:: ; address name
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $FF
-    jr z, Jump_01E_6A8F
+    jr z, .call_fill_tiles_bx_c
     and a, a
-    jr z, Jump_01E_6A8F
-    jr Jump_01E_6AB7
+    jr z, .call_fill_tiles_bx_c
+    jr .skip
 
-Jump_01E_6A8F::
+.call_fill_tiles_bx_c:
     ld hl, vTiles2 + $200
     ld bc, $1504
     call FillTilesBxC
@@ -6215,9 +6226,9 @@ Jump_01E_6A8F::
     ld a, $0E
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    jr Jump_01E_6AFF
+    jr .skip2
 
-Jump_01E_6AB7::
+.skip:
     ld hl, vTiles2 + $200
     ld c, $34
     ld b, $08
@@ -6228,7 +6239,7 @@ Jump_01E_6AB7::
     ld a, $04
     ld [wStringCategory], a
 
-Jump_01E_6ACD::
+.loop:
     push bc
     push hl
     ld a, l
@@ -6239,29 +6250,29 @@ Jump_01E_6ACD::
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, a
-    jr z, Jump_01E_6AE7
+    jr z, .call_fill_tiles_from_request
     cp a, $FF
-    jr z, Jump_01E_6AE7
-    jr Jump_01E_6AEC
+    jr z, .call_fill_tiles_from_request
+    jr .set_string_index
 
-Jump_01E_6AE7::
+.call_fill_tiles_from_request:
     call FillTilesFromRequest
-    jr Jump_01E_6AF5
+    jr .restore
 
-Jump_01E_6AEC::
+.set_string_index:
     ld [wStringIndex], a
     farcall ShowString_Bank08
 
-Jump_01E_6AF5::
+.restore:
     pop hl
     ld bc, $0090
     add hl, bc
     pop bc
     inc c
     dec b
-    jr nz, Jump_01E_6ACD
+    jr nz, .loop
 
-Jump_01E_6AFF::
+.skip2:
     xor a, a
     ld [rRAMG2], a
     ld hl, wTextWindowTileLo
@@ -6299,20 +6310,20 @@ Jump_01E_6B1F:: ; address name
     and a, a
     ret z
     cp a, $FD
-    jr z, Jump_01E_6B3B
+    jr z, .read_screen_step
     cp a, $FE
-    jr z, Jump_01E_6B44
+    jr z, .call_fill_tiles_bx_c
     cp a, $FF
-    jr z, Jump_01E_6B55
+    jr z, .skip
     ret
 
-Jump_01E_6B3B::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $02
     ld [wScreenStep], a
     ret
 
-Jump_01E_6B44::
+.call_fill_tiles_bx_c:
     ld hl, vTiles2 + $200
     ld bc, $1504
     call FillTilesBxC
@@ -6321,7 +6332,7 @@ Jump_01E_6B44::
     ld [wScreenStep], a
     ret
 
-Jump_01E_6B55::
+.skip:
     ld hl, vTiles2 + $730
     ld de, Tiles1Plus2E0Tiles_1F_42D0
     ld b, $1F
@@ -6377,7 +6388,7 @@ SwapMonstersMenu_Case09_DrawTileRectAtHLFromDE_Bank1E_Case1C::
 Jump_01E_6BC6:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jr nz, Jump_01E_6C0A
+    jr nz, .call_swap_monsters_menu_write_glyph_list_pos
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
@@ -6405,7 +6416,7 @@ Jump_01E_6BC6:: ; address name
     ld [wScreenSubStep], a
     ret
 
-Jump_01E_6C0A::
+.call_swap_monsters_menu_write_glyph_list_pos:
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
     call SwapMonstersMenu_WriteGlyphListPos
@@ -6511,15 +6522,15 @@ Jump_01E_6CAB:: ; address name
     farcall UpdateListCursorListCursor
     ld a, [wMenuInputResult]
     and a, a
-    jr z, Jump_01E_6CC7
+    jr z, .call_get_list_entries_cell5_address
     cp a, $FD
-    jr z, Jump_01E_6CDB
+    jr z, .clear_sprite_hide_tile
     cp a, $FE
-    jr z, Jump_01E_6CFD
+    jr z, .clear_sprite_hide_tile2
     cp a, $FF
-    jr z, Jump_01E_6D06
+    jr z, .clear_sprite_hide_tile3
 
-Jump_01E_6CC7::
+.call_get_list_entries_cell5_address:
     call GetListEntriesCell5Address
     ld c, $00
     ld a, l
@@ -6529,7 +6540,7 @@ Jump_01E_6CC7::
     farcall DrawPartySpeciesSprites
     ret
 
-Jump_01E_6CDB::
+.clear_sprite_hide_tile:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -6549,14 +6560,14 @@ Jump_01E_6CDB::
     ld [hl], $12
     ret
 
-Jump_01E_6CFD::
+.clear_sprite_hide_tile2:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $17
     ld [wScreenStep], a
     ret
 
-Jump_01E_6D06::
+.clear_sprite_hide_tile3:
     xor a, a
     ldh [hSpriteHideTile], a
     ld a, $07
@@ -6645,14 +6656,14 @@ Func_01E_6D70:: ; address name
     ldh a, [hTemp0]
     and a, $10
     and a, a
-    jr nz, Jump_01E_6D8C
+    jr nz, .skip
     ld de, $6ED2
-    jr Jump_01E_6D8F
+    jr .restore
 
-Jump_01E_6D8C::
+.skip:
     ld de, $6EDA
 
-Jump_01E_6D8F::
+.restore:
     pop bc
     push bc
     ld a, [de]
@@ -6663,7 +6674,7 @@ Jump_01E_6D8F::
     pop de
     ldh a, [hTemp1]
     cp a, $FF
-    jr nz, Jump_01E_6DC5
+    jr nz, .next
     ld a, $98
     ld [wNameGlyphBuf], a
     ld a, $98
@@ -6680,13 +6691,13 @@ Jump_01E_6D8F::
     ld a, $03
     add a, e
     ld e, a
-    jr nc, Jump_01E_6DC3
+    jr nc, .skip2
     inc d
 
-Jump_01E_6DC3::
-    jr Jump_01E_6DF3
+.skip2:
+    jr .skip3
 
-Jump_01E_6DC5::
+.next:
     inc de
     pop bc
     push bc
@@ -6715,7 +6726,7 @@ Jump_01E_6DC5::
     pop de
     pop bc
 
-Jump_01E_6DF3::
+.skip3:
     push bc
     ld a, [de]
     ld c, a
@@ -6738,7 +6749,7 @@ Jump_01E_6DF3::
     pop de
     ldh a, [hTemp1]
     cp a, $FF
-    jr nz, Jump_01E_6E3E
+    jr nz, .next2
     ld a, $98
     ld [wNameGlyphBuf], a
     ld a, $98
@@ -6755,13 +6766,13 @@ Jump_01E_6DF3::
     ld a, $03
     add a, e
     ld e, a
-    jr nc, Jump_01E_6E3C
+    jr nc, .skip4
     inc d
 
-Jump_01E_6E3C::
-    jr Jump_01E_6E6C
+.skip4:
+    jr .skip5
 
-Jump_01E_6E3E::
+.next2:
     inc de
     pop bc
     push bc
@@ -6790,7 +6801,7 @@ Jump_01E_6E3E::
     pop de
     pop bc
 
-Jump_01E_6E6C::
+.skip5:
     push bc
     ld a, [de]
     ld c, a
@@ -6918,7 +6929,7 @@ Func_01E_6F17:: ; address name
     ld b, a
     ldh a, [hTemp0]
     cp a, b
-    jp nc, Jump_01E_6FC9
+    jp nc, .set_arg1_to_E3
     ldh a, [hTemp0]
     ld b, a
     pop hl
@@ -6980,7 +6991,7 @@ Func_01E_6F17:: ; address name
     call Number24ToPackedBCD
     call UnpackBCDToDigitsArg1_Bank1E
 
-Jump_01E_6FBA::
+.call_bg_map_address_at_scroll_bank1_e:
     call BGMapAddressAtScroll_Bank1E
     ld de, $020C
     add hl, de
@@ -6989,7 +7000,7 @@ Jump_01E_6FBA::
     pop hl
     ret
 
-Jump_01E_6FC9::
+.set_arg1_to_E3:
     ld a, $E3
     ld [wArg1], a
     ld [wArg2], a
@@ -6999,7 +7010,7 @@ Jump_01E_6FC9::
     ld [wArg6], a
     xor a, a
     ld [wArg7], a
-    jr Jump_01E_6FBA
+    jr .call_bg_map_address_at_scroll_bank1_e
 
 ; only called from RunLinkSession8Case03Steps_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession8Case03Steps_Case05_DrawRecordParentNames_Case05)
@@ -7027,14 +7038,14 @@ Func_01E_6FEB:: ; address name
     ldh a, [hTemp0]
     and a, $10
     and a, a
-    jr nz, Jump_01E_7007
+    jr nz, .skip
     ld de, $70D7
-    jr Jump_01E_700A
+    jr .restore
 
-Jump_01E_7007::
+.skip:
     ld de, $70DD
 
-Jump_01E_700A::
+.restore:
     pop bc
     push bc
     ld a, [de]
@@ -7045,7 +7056,7 @@ Jump_01E_700A::
     pop de
     ldh a, [hTemp1]
     cp a, $FF
-    jr nz, Jump_01E_702A
+    jr nz, .next
     push de
     ld hl, vTiles1 + $430
     ld de, vTiles2 + $6C0
@@ -7054,9 +7065,9 @@ Jump_01E_700A::
     inc de
     inc de
     inc de
-    jr Jump_01E_7067
+    jr .restore2
 
-Jump_01E_702A::
+.next:
     inc de
     pop bc
     push bc
@@ -7087,16 +7098,16 @@ Jump_01E_702A::
     call StepBGMapAddressBackOnScrollWrap
     di
 
-Jump_01E_705D::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_705D
+    jr nz, .loop
     ld a, b
     ld [hl], a
     ei
     pop de
 
-Jump_01E_7067::
+.restore2:
     pop bc
     push bc
     ld a, [de]
@@ -7107,7 +7118,7 @@ Jump_01E_7067::
     pop de
     ldh a, [hTemp1]
     cp a, $FF
-    jr nz, Jump_01E_7087
+    jr nz, .next2
     push de
     ld hl, vTiles1 + $430
     ld de, vTiles2 + $6D0
@@ -7116,9 +7127,9 @@ Jump_01E_7067::
     inc de
     inc de
     inc de
-    jr Jump_01E_70C3
+    jr .restore3
 
-Jump_01E_7087::
+.next2:
     inc de
     pop bc
     push bc
@@ -7147,16 +7158,16 @@ Jump_01E_7087::
     call StepBGMapAddressBackOnScrollWrap
     di
 
-Jump_01E_70B9::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_70B9
+    jr nz, .loop2
     ld a, b
     ld [hl], a
     ei
     pop de
 
-Jump_01E_70C3::
+.restore3:
     pop bc
     xor a, a
     ld [rRAMG2], a
@@ -7169,18 +7180,18 @@ PickNameBufferForFirstByte::
 Func_01E_70C9:: ; address name
     ld a, [de]
     cp a, $98
-    jr z, Jump_01E_70D3
+    jr z, .done
     ld bc, wNameBufAlt
-    jr Jump_01E_70D6
+    jr .return
 
-Jump_01E_70D3::
+.done:
     ld bc, wNameBufUnknown
 
-Jump_01E_70D6::
+.return:
     ret
     db $1A, $98, $1A, $1C, $A3, $1C, $1C, $A3, $1C, $1A, $98, $1A
 
-; far-calls LoadRecordWordFieldArg5AndShowIcon for record B and continues at Jump_01E_710A (E-0126)
+; far-calls LoadRecordWordFieldArg5AndShowIcon for record B and continues at SwapMonstersMenu_Case09_Case13_LoadFamilyIconTileForWorkBuf_ReadArg1 (E-0126)
 ; 2 call sites from 1 routine (e.g. DrawRecordFamilyEntries_6FEB)
 ; reads: wArg1, hTemp0, wArg2, wArg3, rSTAT, wDigits
 LoadRecordWordFieldAndContinue710A::
@@ -7189,7 +7200,7 @@ Func_01E_70E3:: ; address name
     ld c, b
     farcall LoadRecordWordFieldArg5AndShowIcon
     pop bc
-    jp Jump_01E_710A
+    jp SwapMonstersMenu_Case09_Case13_LoadFamilyIconTileForWorkBuf_ReadArg1
 
 ; only called from SwapMonstersMenu_Case09_Case13 (E-0047)
 ; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_GetListEntriesCell5Address)
@@ -7209,17 +7220,18 @@ Func_01E_70EF:: ; address name
     farcall LoadFamilyIconTileForWorkBuf
     pop bc
 
-Jump_01E_710A::
+SwapMonstersMenu_Case09_Case13_LoadFamilyIconTileForWorkBuf_ReadArg1::
+Jump_01E_710A:: ; address name
     ld a, [wArg1]
     ld c, a
     ld a, b
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, a
-    jr nz, Jump_01E_7118
+    jr nz, .call_bg_map_address_at_scroll_bank1_e
     ret
 
-Jump_01E_7118::
+.call_bg_map_address_at_scroll_bank1_e:
     push af
     call BGMapAddressAtScroll_Bank1E
     ld a, [wArg2]
@@ -7230,10 +7242,10 @@ Jump_01E_7118::
     call StepBGMapAddressBackOnScrollWrap
     di
 
-Jump_01E_7129::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_7129
+    jr nz, .loop
     ld a, $1E
     ld [hl+], a
     ei
@@ -7246,25 +7258,25 @@ Jump_01E_7129::
     pop hl
     ld a, [wDigits + $1]
     cp a, $E3
-    jr z, Jump_01E_7154
+    jr z, .skip
     di
 
-Jump_01E_7147::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_7147
+    jr nz, .loop2
     ld a, [wDigits + $1]
     add a, $E0
     ld [hl+], a
     ei
 
-Jump_01E_7154::
+.skip:
     di
 
-Jump_01E_7155::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_7155
+    jr nz, .loop3
     ld a, [wDigits + $2]
     add a, $E0
     ld [hl+], a
@@ -7284,38 +7296,38 @@ Func_01E_7163:: ; address name
     call DivideHLByA
     push af
     and a, a
-    jr z, Jump_01E_7173
+    jr z, .set_list_pages
     inc l
 
-Jump_01E_7173::
+.set_list_pages:
     ld a, l
     ld [wListPages], a
     ld a, [wListPageIndex]
     inc a
     cp a, l
-    jr c, Jump_01E_71AE
+    jr c, .set_list_last_row_to_04
     pop af
     push af
     and a, a
-    jr nz, Jump_01E_7193
+    jr nz, .set_list_last_row
     ld a, [wListPageIndex]
     inc a
     cp a, l
-    jr z, Jump_01E_71AE
+    jr z, .set_list_last_row_to_04
     ld a, [wListPageIndex]
     dec a
     ld [wListPageIndex], a
-    jr Jump_01E_71AE
+    jr .set_list_last_row_to_04
 
-Jump_01E_7193::
+.set_list_last_row:
     pop af
     dec a
     ld [wListLastRow], a
     ld b, a
     ld a, [wListCursor]
     cp a, b
-    jr c, Jump_01E_71B4
-    jr z, Jump_01E_71B4
+    jr c, .return
+    jr z, .return
     push bc
     push hl
     call EraseCursorAt71D7ForListCursor
@@ -7323,14 +7335,14 @@ Jump_01E_7193::
     pop bc
     ld a, b
     ld [wListCursor], a
-    jr Jump_01E_71B4
+    jr .return
 
-Jump_01E_71AE::
+.set_list_last_row_to_04:
     pop af
     ld a, $04
     ld [wListLastRow], a
 
-Jump_01E_71B4::
+.return:
     ret
 
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $71D7 + 2 * wD7AB (E-0120)
@@ -7372,38 +7384,38 @@ Func_01E_71E1:: ; address name
     call DivideHLByA
     push af
     and a, a
-    jr z, Jump_01E_71F1
+    jr z, .set_list_pages
     inc l
 
-Jump_01E_71F1::
+.set_list_pages:
     ld a, l
     ld [wListPages], a
     ld a, [wListPageIndex]
     inc a
     cp a, l
-    jr c, Jump_01E_722C
+    jr c, .set_list_last_row_to_03
     pop af
     push af
     and a, a
-    jr nz, Jump_01E_7211
+    jr nz, .set_list_last_row
     ld a, [wListPageIndex]
     inc a
     cp a, l
-    jr z, Jump_01E_722C
+    jr z, .set_list_last_row_to_03
     ld a, [wListPageIndex]
     dec a
     ld [wListPageIndex], a
-    jr Jump_01E_722C
+    jr .set_list_last_row_to_03
 
-Jump_01E_7211::
+.set_list_last_row:
     pop af
     dec a
     ld [wListLastRow], a
     ld b, a
     ld a, [wListCursor]
     cp a, b
-    jr c, Jump_01E_7232
-    jr z, Jump_01E_7232
+    jr c, .return
+    jr z, .return
     push bc
     push hl
     call EraseCursorAt7255ForListCursor
@@ -7411,14 +7423,14 @@ Jump_01E_7211::
     pop bc
     ld a, b
     ld [wListCursor], a
-    jr Jump_01E_7232
+    jr .return
 
-Jump_01E_722C::
+.set_list_last_row_to_03:
     pop af
     ld a, $03
     ld [wListLastRow], a
 
-Jump_01E_7232::
+.return:
     ret
 
 ; writes tile $C3 at BGMapAddressAtScroll + the offset from the word table $7255 + 2 * wD7AB (E-0120)
@@ -7465,22 +7477,22 @@ Func_01E_725D:: ; address name
     ld b, a
     ldh a, [hTemp0]
     cp a, b
-    jr c, Jump_01E_7282
+    jr c, .call_wait_for_vram_access
     di
     call WaitForVRAMAccess
     ld a, $6F
     ld [hl], a
     ei
-    jr Jump_01E_728A
+    jr .call_wait_for_vram_access2
 
-Jump_01E_7282::
+.call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, $C3
     ld [hl], a
     ei
 
-Jump_01E_728A::
+.call_wait_for_vram_access2:
     inc hl
     di
     call WaitForVRAMAccess
@@ -7570,14 +7582,14 @@ Func_01E_7306:: ; address name
     ld e, $C3
     ld c, $03
 
-Jump_01E_730B::
+.loop:
     di
     call WaitForVRAMAccess
     ld [hl], e
     ei
     inc hl
     dec c
-    jr nz, Jump_01E_730B
+    jr nz, .loop
     pop hl
     ret
 
@@ -7629,7 +7641,7 @@ Func_01E_7332:: ; address name
     pop hl
     ld c, $00
 
-Jump_01E_7342::
+.loop:
     push bc
     push hl
     push de
@@ -7637,10 +7649,10 @@ Jump_01E_7342::
     ld de, $7394
     add a, e
     ld e, a
-    jr nc, Jump_01E_734E
+    jr nc, .skip
     inc d
 
-Jump_01E_734E::
+.skip:
     ld a, [de]
     ld c, a
     ld a, [hl]
@@ -7675,16 +7687,16 @@ Jump_01E_734E::
     ld a, $40
     add a, e
     ld e, a
-    jr nc, Jump_01E_738B
+    jr nc, .restore
     inc d
 
-Jump_01E_738B::
+.restore:
     pop hl
     pop bc
     inc c
     ld a, c
     cp a, $05
-    jr c, Jump_01E_7342
+    jr c, .loop
     ret
     db $63, $65, $67, $69, $6B
 
@@ -7695,7 +7707,7 @@ DrawListEntriesCell5RecordDetails_HLToDecimalDigits::
 Func_01E_7399:: ; address name
     ld c, $00
 
-Jump_01E_739B::
+.loop:
     push hl
     ld a, [hl]
     ld b, a
@@ -7748,7 +7760,7 @@ Jump_01E_739B::
     inc c
     ld a, c
     cp a, $04
-    jr c, Jump_01E_739B
+    jr c, .loop
     ret
     db $5B, $5D, $5F, $61, $CC, $01, $D0, $01, $0C, $02, $10, $02
 
@@ -7760,7 +7772,7 @@ Func_01E_7406:: ; address name
     ld b, a
     ld c, $00
 
-Jump_01E_740A::
+.loop:
     ld a, c
     push bc
     ld b, $C3
@@ -7771,7 +7783,7 @@ Jump_01E_740A::
     inc c
     ld a, c
     cp a, b
-    jr c, Jump_01E_740A
+    jr c, .loop
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
@@ -7810,7 +7822,7 @@ Func_01E_7431:: ; address name
     ld a, $02
     ldh [rSVBK], a
 
-Jump_01E_7435::
+.loop:
     ld a, [de]
     and a, $07
     inc de
@@ -7818,7 +7830,7 @@ Jump_01E_7435::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_01E_7435
+    jr nz, .loop
     xor a, a
     ldh [rSVBK], a
     ret
@@ -7830,19 +7842,19 @@ CopyTileBytesToVRAM_Bank1E::
 Func_01E_7443:: ; address name
     ld c, $10
 
-Jump_01E_7445::
+.loop:
     di
 
-Jump_01E_7446::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_7446
+    jr nz, .loop2
     ld a, [hl+]
     ld [de], a
     inc de
     ei
     dec c
-    jr nz, Jump_01E_7445
+    jr nz, .loop
     ret
 
 ; only called from routines of SwapMonstersMenu (E-0098)
@@ -7852,7 +7864,7 @@ SwapMonstersMenu_WriteGlyphListPos::
 Func_01E_7454:: ; address name
     ld b, $00
 
-Jump_01E_7456::
+.skip:
     push bc
     push hl
     push de
@@ -7861,7 +7873,7 @@ Jump_01E_7456::
     add_a_to_hl
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_01E_7486
+    jr z, .restore
     ld e, a
     ld a, [hl]
     ld h, a
@@ -7885,9 +7897,9 @@ Jump_01E_7456::
     pop hl
     pop bc
     inc b
-    jr Jump_01E_7456
+    jr .skip
 
-Jump_01E_7486::
+.restore:
     pop de
     pop hl
     pop bc
@@ -7904,22 +7916,22 @@ Func_01E_748E:: ; address name
     push hl
     push bc
 
-Jump_01E_7490::
+.loop:
     push bc
     push hl
 
-Jump_01E_7492::
+.loop2:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_01E_7492
+    jr nz, .loop2
     pop hl
     ld bc, $0014
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_01E_7490
+    jr nz, .loop
     pop bc
     pop hl
     ld a, [wIsCGB]
@@ -7934,21 +7946,21 @@ Jump_01E_7492::
     ld a, $02
     ldh [rSVBK], a
 
-Jump_01E_74B4::
+.loop3:
     push bc
     push hl
 
-Jump_01E_74B6::
+.loop4:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_01E_74B6
+    jr nz, .loop4
     pop hl
     ld bc, $0014
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_01E_74B4
+    jr nz, .loop3
     xor a, a
     ldh [rSVBK], a
     ret
@@ -7974,10 +7986,10 @@ Func_01E_74C8:: ; address name
     push hl
     ld a, l
     cp a, $00
-    jr nz, Jump_01E_74EE
+    jr nz, .restore
     ld a, h
     cp a, $98
-    jr nz, Jump_01E_74EE
+    jr nz, .restore
     ld a, l
     add a, $C1
     ld [wTextCursorLo], a
@@ -7985,7 +7997,7 @@ Func_01E_74C8:: ; address name
     adc a, $01
     ld [wTextCursorHi], a
 
-Jump_01E_74EE::
+.restore:
     pop hl
     pop bc
     pop de
@@ -8145,16 +8157,16 @@ Func_01E_75B3:: ; address name
     ld hl, wDigits
     ld a, [hl]
     and a, a
-    jr nz, Jump_01E_75C4
+    jr nz, .return
     add a, $E3
     ld [hl+], a
     ld a, [hl]
     and a, a
-    jr nz, Jump_01E_75C4
+    jr nz, .return
     add a, $E3
     ld [hl], a
 
-Jump_01E_75C4::
+.return:
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
@@ -8215,7 +8227,7 @@ Func_01E_75F2:: ; address name
     pop hl
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01E_7633
+    jr z, .restore
     push hl
     push de
     ld de, wScreenAttrBuffer
@@ -8236,17 +8248,17 @@ Func_01E_75F2:: ; address name
     pop de
     pop hl
 
-Jump_01E_7633::
+.restore:
     pop bc
     ld a, $14
     add_a_to_hl
     ld a, $14
     add a, e
     ld e, a
-    jr nc, Jump_01E_7642
+    jr nc, .next
     inc d
 
-Jump_01E_7642::
+.next:
     dec c
     jr nz, CopyScreenBufferRectWithAttrs_1E
     ret
@@ -8260,7 +8272,7 @@ SwapMonstersMenu_LoadSRAMRecordByte::
 Func_01E_7646:: ; address name
     ld b, $00
 
-Jump_01E_7648::
+.loop:
     push bc
     push hl
     ld a, $0A
@@ -8278,16 +8290,16 @@ Jump_01E_7648::
     ld [rRAMG2], a
     ldh a, [hTemp0]
     cp a, $02
-    jr nz, Jump_01E_7684
+    jr nz, .restore
     pop hl
     pop bc
     push bc
     di
 
-Jump_01E_7672::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01E_7672
+    jr nz, .loop2
     ld a, b
     add a, $E1
     ld [hl], a
@@ -8296,13 +8308,13 @@ Jump_01E_7672::
     add_a_to_hl
     push hl
 
-Jump_01E_7684::
+.restore:
     pop hl
     pop bc
     inc b
     ld a, [wPartyCount]
     cp a, b
-    jr nz, Jump_01E_7648
+    jr nz, .loop
     ret
 
 ; the same 57 bytes as UnpackBCDToDigitsArg1 (15:6676)
@@ -8341,16 +8353,16 @@ Func_01E_768E:: ; address name
     ld c, $06
     ld hl, wArg1
 
-Jump_01E_76BC::
+.loop:
     ld a, [hl]
     and a, a
-    jr nz, Jump_01E_76C6
+    jr nz, .return
     add a, $E3
     ld [hl+], a
     dec c
-    jr nz, Jump_01E_76BC
+    jr nz, .loop
 
-Jump_01E_76C6::
+.return:
     ret
 
 ; HL = VRAM address: writes the 7 bytes at wD7F1 as tiles $E0 + digit to HL onward (WaitForVRAMAccess, interrupts off per byte) (E-0067) (the same 19 bytes appear in 2 banks)
@@ -8361,7 +8373,7 @@ Func_01E_76C7:: ; address name
     ld de, wArg1
     ld c, $07
 
-Jump_01E_76CC::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, [de]
@@ -8370,7 +8382,7 @@ Jump_01E_76CC::
     inc de
     ei
     dec c
-    jr nz, Jump_01E_76CC
+    jr nz, .loop
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress), B = count: copies B bytes from hFFC6 onward into the SRAM record (SRAM must be enabled); DE and HL kept (E-0074)
@@ -8383,12 +8395,12 @@ Func_01E_76DA:: ; address name
     call SRAMRecordAddress
     ld de, hTemp0
 
-Jump_01E_76E2::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_01E_76E2
+    jr nz, .loop
     pop de
     pop hl
     ret
@@ -8399,7 +8411,7 @@ Jump_01E_76E2::
 GetListEntriesCell5Address::
 Func_01E_76EB:: ; address name
     farcall SetArg5ToListEntriesCell5
-    jr Jump_01E_76F9
+    jr GetListEntriesCell4Address_ReadArg5
 
 ; far-calls SetArg5ToListEntriesCell4, then HL = wD7F5 (high) / wD7F6 (low) (E-0075)
 ; 8 call sites from 7 routines (e.g. SwapMonstersMenu_Case07_DeleteSRAMRecordAndCompact_Case33, SwapMonstersMenu_Case08_ListPartyRecordsWithState2ToListEntries, SwapMonstersMenu_Case0D_HandleListCursorInput_1D, SwapMonstersMenu_Case0D_DrawRect6x6From651BAtScroll41, ...)
@@ -8408,7 +8420,8 @@ GetListEntriesCell4Address::
 Func_01E_76F3:: ; address name
     farcall SetArg5ToListEntriesCell4
 
-Jump_01E_76F9::
+GetListEntriesCell4Address_ReadArg5::
+Jump_01E_76F9:: ; address name
     ld a, [wArg5]
     ld h, a
     ld a, [wArg6]
@@ -8426,7 +8439,7 @@ Func_01E_7702:: ; address name
     call StepBGMapAddressBackOnScrollWrap
     ld c, $05
 
-Jump_01E_770E::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, $B6
@@ -8435,7 +8448,7 @@ Jump_01E_770E::
     ld a, $40
     add_a_to_hl
     dec c
-    jr nz, Jump_01E_770E
+    jr nz, .loop
     ld a, $B6
     ld [wWindowTileBuffer + $78], a
     ld [wWindowTileBuffer + $A0], a

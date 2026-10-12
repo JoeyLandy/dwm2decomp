@@ -21,12 +21,12 @@ Func_016_4007:: ; address name
     pop de
     ld b, $0D
 
-Jump_016_401E::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_401E
+    jr nz, .loop
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
@@ -182,12 +182,12 @@ ItemUsable_WorldDew::
 Func_016_4118:: ; address name
     ld a, [wPartyCount]
     or a, a
-    jr z, Jump_016_4195
+    jr z, .set_item_id_to_FF
     ld a, $00
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
-    jr nz, Jump_016_4141
+    jr nz, .check_party_count
     ld a, $00
     ld c, $5B
     call SRAMRecordAddressMapped
@@ -204,17 +204,17 @@ Func_016_4118:: ; address name
     ld h, a
     ld a, h
     or a, l
-    jr nz, Jump_016_419B
+    jr nz, .call_item_usable_world_dew_sram_record
 
-Jump_016_4141::
+.check_party_count:
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_4195
+    jr z, .set_item_id_to_FF
     ld a, $01
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
-    jr nz, Jump_016_416B
+    jr nz, .check_party_count2
     ld a, $01
     ld c, $5B
     call SRAMRecordAddressMapped
@@ -231,17 +231,17 @@ Jump_016_4141::
     ld h, a
     ld a, h
     or a, l
-    jr nz, Jump_016_419B
+    jr nz, .call_item_usable_world_dew_sram_record
 
-Jump_016_416B::
+.check_party_count2:
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_4195
+    jr z, .set_item_id_to_FF
     ld a, $02
     ld c, $55
     call SRAMRecordAddressMapped
     bit 7, [hl]
-    jr nz, Jump_016_4195
+    jr nz, .set_item_id_to_FF
     ld a, $02
     ld c, $5B
     call SRAMRecordAddressMapped
@@ -258,14 +258,14 @@ Jump_016_416B::
     ld h, a
     ld a, h
     or a, l
-    jr nz, Jump_016_419B
+    jr nz, .call_item_usable_world_dew_sram_record
 
-Jump_016_4195::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_419B::
+.call_item_usable_world_dew_sram_record:
     ld d, $00
     ld a, $00
     call ItemUsable_WorldDew_SRAMRecordAddressMapped
@@ -419,48 +419,48 @@ ListPartyMembersWithField55Bit0::
 Func_016_425E:: ; address name
     ld a, [wPartyCount]
     and a, a
-    jr z, Jump_016_42A6
+    jr z, .set_item_id_to_FF
     xor a, a
     call CheckRecordFlag55Bit7
-    jr nz, Jump_016_4274
+    jr nz, .check_party_count
     xor a, a
     ld c, $55
     call SRAMRecordAddressMapped
     bit 0, [hl]
-    jr nz, Jump_016_42AC
+    jr nz, .call_copy_eligible_record_name_to_text_buf3
 
-Jump_016_4274::
+.check_party_count:
     ld a, [wPartyCount]
     cp a, $02
-    jr c, Jump_016_42A6
+    jr c, .set_item_id_to_FF
     ld a, $01
     call CheckRecordFlag55Bit7
-    jr nz, Jump_016_428D
+    jr nz, .check_party_count2
     ld a, $01
     ld c, $55
     call SRAMRecordAddressMapped
     bit 0, [hl]
-    jr nz, Jump_016_42AC
+    jr nz, .call_copy_eligible_record_name_to_text_buf3
 
-Jump_016_428D::
+.check_party_count2:
     ld a, [wPartyCount]
     cp a, $03
-    jr c, Jump_016_42A6
+    jr c, .set_item_id_to_FF
     ld a, $02
     call CheckRecordFlag55Bit7
-    jr nz, Jump_016_42A6
+    jr nz, .set_item_id_to_FF
     ld a, $02
     ld c, $55
     call SRAMRecordAddressMapped
     bit 0, [hl]
-    jr nz, Jump_016_42AC
+    jr nz, .call_copy_eligible_record_name_to_text_buf3
 
-Jump_016_42A6::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_42AC::
+.call_copy_eligible_record_name_to_text_buf3:
     ld d, $00
     ld a, $00
     call CopyEligibleRecordNameToTextBuf3Row
@@ -821,42 +821,42 @@ ItemUsable_LogTwig::
 Jump_016_4458:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_016_4469
+    jr z, .check_map_id
     cp a, $80
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_4469::
+.check_map_id:
     ldh a, [hMapId]
     cp a, $20
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $30
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $48
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $70
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $A0
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $A8
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $B0
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $B8
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $C8
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $D1
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     cp a, $DA
-    jr z, Jump_016_449D
+    jr z, .call_item_usable_log_twig_write_temp_a_and
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_449D::
+.call_item_usable_log_twig_write_temp_a_and:
     farcall ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
     ldh a, [hTempA]
     or a, a
@@ -873,14 +873,14 @@ ItemUsable_WarpWing::
 Func_016_44AD:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_016_44BD
+    jr z, .read_map_id
     cp a, $80
     ret z
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_44BD::
+.read_map_id:
     ldh a, [hMapId]
     ld hl, MapItemUseFlags
     add_a_to_hl
@@ -898,7 +898,7 @@ ItemUsable_ExitBell::
 Func_016_44D0:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_016_44E6
+    jr z, .read_map_id
     cp a, $81
     ret z
     cp a, $85
@@ -909,7 +909,7 @@ Func_016_44D0:: ; address name
     ld [wItemId], a
     ret
 
-Jump_016_44E6::
+.read_map_id:
     ldh a, [hMapId]
     ld hl, MapItemUseFlags
     add_a_to_hl
@@ -939,48 +939,48 @@ ItemUsable_WaterCall::
 Jump_016_44FB:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapId]
     cp a, $2F
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapScreenX]
     cp a, $00
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapScreenY]
     cp a, $01
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_016_4528
+    jr nz, .cp_50
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerFacing]
     cp a, $01
-    jr nz, Jump_016_4542
-    jr Jump_016_4538
+    jr nz, .set_item_id_to_FF
+    jr .call_test_flag_bit
 
-Jump_016_4528::
+.cp_50:
     cp a, $50
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerFacing]
     cp a, $02
-    jr nz, Jump_016_4542
+    jr nz, .set_item_id_to_FF
 
-Jump_016_4538::
+.call_test_flag_bit:
     ld de, $0058
     call TestFlagBit
-    jr c, Jump_016_4542
-    jr Jump_016_4547
+    jr c, .set_item_id_to_FF
+    jr .return
 
-Jump_016_4542::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
 
-Jump_016_4547::
+.return:
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -991,36 +991,36 @@ ItemUsable_MoonRock::
 Jump_016_4548:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_457D
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapId]
     cp a, $40
-    jr nz, Jump_016_457D
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapScreenX]
     ld b, a
     ldh a, [hMapScreenY]
     or a, b
-    jr nz, Jump_016_457D
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_016_457D
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerFacing]
     cp a, $02
-    jr nz, Jump_016_457D
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerX]
     cp a, $40
-    jr c, Jump_016_457D
+    jr c, .set_item_id_to_FF
     cp a, $51
-    jr nc, Jump_016_457D
+    jr nc, .set_item_id_to_FF
     ld de, $007A
     call TestFlagBit
-    jr c, Jump_016_457D
-    jr Jump_016_4582
+    jr c, .set_item_id_to_FF
+    jr .return
 
-Jump_016_457D::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
 
-Jump_016_4582::
+.return:
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -1031,37 +1031,37 @@ ItemUsable_Crest::
 Jump_016_4583:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapId]
     cp a, $49
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapScreenX]
     ld b, a
     ldh a, [hMapScreenY]
     or a, b
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerFacing]
     cp a, $02
-    jr nz, Jump_016_45BC
+    jr nz, .set_item_id_to_FF
     ld de, $01E4
     call TestFlagBit
-    jr nc, Jump_016_45BC
+    jr nc, .set_item_id_to_FF
     ld de, $01E5
     call TestFlagBit
-    jr c, Jump_016_45BC
-    jr Jump_016_45C1
+    jr c, .set_item_id_to_FF
+    jr .return
 
-Jump_016_45BC::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
 
-Jump_016_45C1::
+.return:
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -1078,34 +1078,34 @@ ItemUsable_SleepHerb::
 Jump_016_45C3:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapId]
     cp a, $61
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapScreenX]
     ld b, a
     ldh a, [hMapScreenY]
     or a, b
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ldh a, [hPlayerFacing]
     cp a, $02
-    jr nz, Jump_016_45F4
+    jr nz, .set_item_id_to_FF
     ld de, $01E1
     call TestFlagBit
-    jr c, Jump_016_45F4
-    jr Jump_016_45F9
+    jr c, .set_item_id_to_FF
+    jr .return
 
-Jump_016_45F4::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
 
-Jump_016_45F9::
+.return:
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
@@ -1116,30 +1116,30 @@ ItemUsable_Change::
 Jump_016_45FA:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_4626
+    jr nz, .set_item_id_to_FF
     ldh a, [hMapId]
     cp a, $70
-    jr c, Jump_016_4626
+    jr c, .set_item_id_to_FF
     cp a, $A0
-    jr nc, Jump_016_4626
+    jr nc, .set_item_id_to_FF
     cp a, $76
-    jr z, Jump_016_4626
+    jr z, .set_item_id_to_FF
     cp a, $9B
-    jr z, Jump_016_4626
+    jr z, .set_item_id_to_FF
     cp a, $9A
-    jr z, Jump_016_4626
+    jr z, .set_item_id_to_FF
     cp a, $7A
-    jr nz, Jump_016_4621
+    jr nz, .check_screen_saved_flag
     ldh a, [hMapScreenY]
     cp a, $01
-    jr z, Jump_016_4626
+    jr z, .set_item_id_to_FF
 
-Jump_016_4621::
+.check_screen_saved_flag:
     ld a, [wScreenSavedFlag]
     or a, a
     ret nz
 
-Jump_016_4626::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
     ret
@@ -1198,27 +1198,27 @@ Bank16Func4645ResultTest_ReadMapTypeAndEncounterRateEtc::
 Func_016_4645:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_016_4655
+    jr z, .read_map_id
     ld a, [wEncounterRate]
     and a, $7F
-    jr nz, Jump_016_4667
-    jr Jump_016_4663
+    jr nz, .done
+    jr .skip
 
-Jump_016_4655::
+.read_map_id:
     ldh a, [hMapId]
     ld hl, MapItemUseFlags
     add_a_to_hl
     bit 4, [hl]
-    jr z, Jump_016_4667
+    jr z, .done
 
-Jump_016_4663::
+.skip:
     ld c, $00
-    jr Jump_016_4669
+    jr .return
 
-Jump_016_4667::
+.done:
     ld c, $01
 
-Jump_016_4669::
+.return:
     ret
 
 ; HL = cap, BC = current value: when they are equal sets wItemId = $FF (refuse); otherwise writes min(HL - BC, wD08F) (wD08F when the difference is 256 or more) as a decimal string at wC160 (WriteDecimalByteString) (E-0103)
@@ -1236,22 +1236,22 @@ Func_016_466A:: ; address name
     ld h, a
     ld a, h
     or a, l
-    jr z, Jump_016_4688
+    jr z, .set_item_id_to_FF
     ld a, h
     or a, a
     ld a, [wItemEffectAmount]
-    jr nz, Jump_016_4681
+    jr nz, .call_write_decimal_byte_string
     cp a, l
-    jr z, Jump_016_4681
-    jr c, Jump_016_4681
+    jr z, .call_write_decimal_byte_string
+    jr c, .call_write_decimal_byte_string
     ld a, l
 
-Jump_016_4681::
+.call_write_decimal_byte_string:
     ld hl, wTextBuf3
     call WriteDecimalByteString
     ret
 
-Jump_016_4688::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
     ret
@@ -1892,15 +1892,15 @@ ItemApply_TidalBell::
 Jump_016_499A:: ; address name
     ld a, [wTownEventTimer]
     add a, $32
-    jr nc, Jump_016_49A3
+    jr nc, .cp_F0
     ld a, $FF
 
-Jump_016_49A3::
+.cp_F0:
     cp a, $F0
-    jr c, Jump_016_49A9
+    jr c, .set_town_event_timer
     ld a, $F0
 
-Jump_016_49A9::
+.set_town_event_timer:
     ld [wTownEventTimer], a
     ret
 
@@ -2084,7 +2084,7 @@ Func_016_4A48:: ; address name
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
-    jr nz, Jump_016_4A61
+    jr nz, .read_item_id
     ld a, [wItemId]
     sub a, $3F
     ld [hl], a
@@ -2093,7 +2093,7 @@ Func_016_4A48:: ; address name
     ldh [hTemp0], a
     ret
 
-Jump_016_4A61::
+.read_item_id:
     push af
     ld a, [wItemId]
     sub a, $3F
@@ -2326,10 +2326,10 @@ Func_016_4B4D:: ; address name
     ldh a, [hTemp0]
     add a, e
     ld e, a
-    jr nc, Jump_016_4B60
+    jr nc, .call_cap_de_to999
     inc d
 
-Jump_016_4B60::
+.call_cap_de_to999:
     call CapDETo999
     ld a, d
     ld [hl-], a
@@ -2353,10 +2353,10 @@ Func_016_4B68:: ; address name
     ldh a, [hTemp0]
     add a, e
     ld e, a
-    jr nc, Jump_016_4B7B
+    jr nc, .call_cap_de_to999
     inc d
 
-Jump_016_4B7B::
+.call_cap_de_to999:
     call CapDETo999
     ld a, d
     ld [hl-], a
@@ -2371,10 +2371,10 @@ Jump_016_4B7B::
     ldh a, [hTemp0]
     add a, e
     ld e, a
-    jr nc, Jump_016_4B8F
+    jr nc, .call_cap_de_to9992
     inc d
 
-Jump_016_4B8F::
+.call_cap_de_to9992:
     call CapDETo999
     ld a, d
     ld [hl-], a
@@ -2397,12 +2397,12 @@ Func_016_4B97:: ; address name
     ld d, a
     ld a, e
     cp a, $E7
-    jr nz, Jump_016_4BAC
+    jr nz, .read_temp0
     ld a, d
     cp a, $03
     ret z
 
-Jump_016_4BAC::
+.read_temp0:
     ld a, e
     push af
     ldh a, [hTemp0]
@@ -2414,10 +2414,10 @@ Jump_016_4BAC::
     sbc a, $00
     ld d, a
     bit 7, a
-    jr z, Jump_016_4BBF
+    jr z, .skip
     ld de, $0001
 
-Jump_016_4BBF::
+.skip:
     ld a, d
     ld [hl-], a
     ld a, e
@@ -2439,12 +2439,12 @@ Func_016_4BC4:: ; address name
     ld d, a
     ld a, e
     cp a, $E7
-    jr nz, Jump_016_4BD9
+    jr nz, .read_temp0
     ld a, d
     cp a, $03
     ret z
 
-Jump_016_4BD9::
+.read_temp0:
     ld a, e
     push af
     ldh a, [hTemp0]
@@ -2456,10 +2456,10 @@ Jump_016_4BD9::
     sbc a, $00
     ld d, a
     bit 7, a
-    jr z, Jump_016_4BEC
+    jr z, .skip
     ld de, $0001
 
-Jump_016_4BEC::
+.skip:
     ld a, d
     ld [hl-], a
     ld a, e
@@ -2481,10 +2481,10 @@ Jump_016_4BEC::
     sbc a, $00
     ld d, a
     bit 7, a
-    jr z, Jump_016_4C09
+    jr z, .skip2
     ld de, $0001
 
-Jump_016_4C09::
+.skip2:
     ld a, d
     ld [hl-], a
     ld a, e
@@ -2498,12 +2498,12 @@ Func_016_4C0E:: ; address name
     ld a, d
     cp a, $03
     ret c
-    jr nz, Jump_016_4C18
+    jr nz, .done
     ld a, e
     cp a, $E8
     ret c
 
-Jump_016_4C18::
+.done:
     ld e, $E7
     ld d, $03
     ret
@@ -2543,12 +2543,12 @@ Func_016_4C48:: ; address name
     ld de, wInventory
     ld b, $18
 
-Jump_016_4C50::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_016_4C50
+    jr nz, .loop
     ld hl, wInventory
     ld bc, $0018
     ld a, $FF
@@ -2557,18 +2557,18 @@ Jump_016_4C50::
     ld de, wInventory
     ld b, $18
 
-Jump_016_4C69::
+.loop2:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_016_4C74
+    jr z, .next
     cp a, $00
-    jr z, Jump_016_4C74
+    jr z, .next
     ld [de], a
     inc de
 
-Jump_016_4C74::
+.next:
     dec b
-    jr nz, Jump_016_4C69
+    jr nz, .loop2
     ret
 
 ; puts wItemId in the first empty inventory slot; sets wItemId = $FF when all 24 are full (E-0124)
@@ -2586,20 +2586,20 @@ Func_016_4C78:: ; address name
     ld hl, wInventory
     ld b, $18
 
-Jump_016_4C86::
+.loop:
     ld a, [hl]
     cp a, $00
-    jr z, Jump_016_4C99
+    jr z, .read_item_id
     cp a, $FF
-    jr z, Jump_016_4C99
+    jr z, .read_item_id
     inc hl
     dec b
-    jr nz, Jump_016_4C86
+    jr nz, .loop
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_4C99::
+.read_item_id:
     ld a, [wItemId]
     ld [hl], a
     ret
@@ -2619,18 +2619,18 @@ Func_016_4C9E:: ; address name
     ld hl, wInventory
     ld b, $18
 
-Jump_016_4CAC::
+.loop:
     ld a, [wItemId]
     cp a, [hl]
-    jr z, Jump_016_4CBC
+    jr z, .call_compact_inventory
     inc hl
     dec b
-    jr nz, Jump_016_4CAC
+    jr nz, .loop
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_4CBC::
+.call_compact_inventory:
     ld [hl], $FF
     call CompactInventory
     ret
@@ -3008,12 +3008,12 @@ PauseMenu_Skills_Case03_Case02_WriteItemId::
 Func_016_52C9:: ; address name
     ld a, [wInventorySlot]
     cp a, $14
-    jr c, Jump_016_52D6
+    jr c, .skip
     ld a, $FF
     ld [wItemId], a
     ret
 
-Jump_016_52D6::
+.skip:
     rst $00
     dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
     dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
@@ -3062,15 +3062,15 @@ Jump_016_530D:: ; address name
     ld c, a
     ld a, [wTargetRecord]
     cp a, c
-    jr nz, Jump_016_531E
+    jr nz, .call_item_usable_potion
     ld a, $FF
     ld [wItemId], a
-    jr Jump_016_5321
+    jr .call_set_wd08_d12_if_item_refused
 
-Jump_016_531E::
+.call_item_usable_potion:
     call ItemUsable_Potion
 
-Jump_016_5321::
+.call_set_wd08_d12_if_item_refused:
     call SetWD08D12IfItemRefused
     ret
 
@@ -3107,19 +3107,19 @@ Jump_016_533A:: ; address name
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
     cp a, $10
-    jr z, Jump_016_5348
+    jr z, .check_item_id
     call SetWD08D14IfItemRefused
     ret
 
-Jump_016_5348::
+.check_item_id:
     ld a, [wItemId]
     cp a, $FF
-    jr nz, Jump_016_5355
+    jr nz, .call_collect_unique_encounter_ids_to_wd09_f
     ld a, $15
     ld [wItemMessage], a
     ret
 
-Jump_016_5355::
+.call_collect_unique_encounter_ids_to_wd09_f:
     call CollectUniqueEncounterIdsToWD09F
     ret
 
@@ -3142,20 +3142,20 @@ Jump_016_5360:: ; address name
     ret z
     ld a, [wGoldHi]
     or a, a
-    jr nz, Jump_016_5385
+    jr nz, .check_inventory
     ld a, [wGoldMid]
     or a, a
-    jr nz, Jump_016_5385
+    jr nz, .check_inventory
     ld a, [wGoldLo]
     cp a, $64
-    jr nc, Jump_016_5385
+    jr nc, .check_inventory
     ld a, $FF
     ld [wItemId], a
     ld a, $17
     ld [wItemMessage], a
     ret
 
-Jump_016_5385::
+.check_inventory:
     ld a, [wInventory + $17]
     or a, a
     ret z
@@ -3179,14 +3179,14 @@ Jump_016_5398:: ; address name
     ret z
     ld a, [wMapObjectCount]
     or a, a
-    jr z, Jump_016_53BB
+    jr z, .set_item_id_to_FF
     ld hl, wMapObjects
     ld a, [wMapObjectCount]
     ld b, a
 
-Jump_016_53AC::
+.loop:
     bit 7, [hl]
-    jr z, Jump_016_53C6
+    jr z, .return
     ld a, l
     add a, $08
     ld l, a
@@ -3194,16 +3194,16 @@ Jump_016_53AC::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_016_53AC
+    jr nz, .loop
 
-Jump_016_53BB::
+.set_item_id_to_FF:
     ld a, $FF
     ld [wItemId], a
     ld a, $18
     ld [wItemMessage], a
     ret
 
-Jump_016_53C6::
+.return:
     ret
 
 ; entry 19 of the `rst $00` table in Func_016_52C9
@@ -3616,16 +3616,16 @@ PauseMenu_Skills_Case03_Case07_Sub01_NextTableByte::
 Jump_016_55CB:: ; address name
     ld a, [wMapType]
     cp a, $80
-    jr nz, Jump_016_55E3
+    jr nz, .skip
     ld a, [wPendingFieldEvent]
     bit 7, a
-    jr z, Jump_016_55E3
+    jr z, .skip
     xor a, a
     ld [wSpriteSlotCount], a
     ld [wScreenSavedFlag], a
     ld [wPendingFieldEvent], a
 
-Jump_016_55E3::
+.skip:
     ld hl, wGoldLo
     ld a, [hl]
     sub a, $64
@@ -3645,63 +3645,63 @@ Jump_016_55E3::
     call Divide24ByA
     ld c, $01
     sub a, $19
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $02
     sub a, $0A
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $04
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $06
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $07
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $08
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $09
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $0A
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $19
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $1A
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $1B
     sub a, $02
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $1C
     sub a, $01
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $1D
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $20
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $28
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $29
     sub a, $01
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $2A
     sub a, $05
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld c, $2B
     sub a, $01
-    jr c, Jump_016_5675
+    jr c, .set_inventory
     ld a, $FF
     ld [wItemId], a
-    jr Jump_016_5688
+    jr .set_item_message_to_0E
 
-Jump_016_5675::
+.set_inventory:
     ld a, c
     ld [wInventory + $17], a
     ld l, c
@@ -3710,7 +3710,7 @@ Jump_016_5675::
     call CopyStringHLToDE
     farcall CompactInventory
 
-Jump_016_5688::
+.set_item_message_to_0E:
     ld a, $0E
     ld [wItemMessage], a
     ret
@@ -3791,16 +3791,16 @@ CollectUniqueEncounterIdsToWD09F::
 Func_016_56E4:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_016_56F2
+    jr nz, .call_address_of_key_world_monsters_entry_for
     farcall CollectUniqueEncounterIdsToWD09F_ReadMapIdAndPlayerStateFlags
     ret
 
-Jump_016_56F2::
+.call_address_of_key_world_monsters_entry_for:
     call AddressOfKeyWorldMonstersEntryForCurrentScreen
     ld de, wWorkBuf + $2
     ld b, $08
 
-Jump_016_56FA::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -3809,7 +3809,7 @@ Jump_016_56FA::
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_56FA
+    jr nz, .loop
     ld hl, wWorkBuf + $4
     ld a, [wWorkBuf + $2]
     ld e, a
@@ -3817,17 +3817,17 @@ Jump_016_56FA::
     ld d, a
     ld bc, $0707
 
-Jump_016_5713::
+.loop2:
     push bc
     push hl
 
-Jump_016_5715::
+.loop3:
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_016_5728
+    jr nz, .next
     ld a, [hl]
     cp a, d
-    jr nz, Jump_016_5728
+    jr nz, .next
     ld a, [wWorkBuf + $1]
     inc a
     ld [wWorkBuf + $1], a
@@ -3835,14 +3835,14 @@ Jump_016_5715::
     ld [hl-], a
     ld [hl+], a
 
-Jump_016_5728::
+.next:
     inc hl
     dec c
-    jr nz, Jump_016_5715
+    jr nz, .loop3
     pop hl
     pop bc
 
-Jump_016_572E::
+.loop4:
     dec c
     ld e, [hl]
     inc hl
@@ -3851,39 +3851,39 @@ Jump_016_572E::
     ld a, e
     and a, d
     cp a, $FF
-    jr nz, Jump_016_573E
+    jr nz, .next2
     dec b
-    jr nz, Jump_016_572E
-    jr Jump_016_5741
+    jr nz, .loop4
+    jr .skip
 
-Jump_016_573E::
+.next2:
     dec b
-    jr nz, Jump_016_5713
+    jr nz, .loop2
 
-Jump_016_5741::
+.skip:
     ld de, wWorkBuf + $2
     ld hl, wWorkBuf + $2
     ld bc, $0800
 
-Jump_016_574A::
+.loop5:
     ld a, [hl+]
     ld [de], a
     cp a, $FF
     ld a, [hl]
-    jr nz, Jump_016_5755
+    jr nz, .next3
     cp a, $FF
-    jr z, Jump_016_5759
+    jr z, .next4
 
-Jump_016_5755::
+.next3:
     inc de
     ld [de], a
     inc de
     inc c
 
-Jump_016_5759::
+.next4:
     inc hl
     dec b
-    jr nz, Jump_016_574A
+    jr nz, .loop5
     ld a, c
     ld [wWorkBuf], a
     xor a, a
@@ -3898,15 +3898,15 @@ AddressOfKeyWorldMonstersEntryForCurrentScreen::
 Func_016_5766:: ; address name
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_016_57C4
+    jr nz, .skip
     ld a, [wMapType]
     and a, $07
     cp a, $01
-    jr z, Jump_016_5778
+    jr z, .read_map_screen_y
     or a, a
-    jr nz, Jump_016_5795
+    jr nz, .read_key_world_floor
 
-Jump_016_5778::
+.read_map_screen_y:
     ldh a, [hMapScreenY]
     srl a
     and a, $FE
@@ -3922,9 +3922,9 @@ Jump_016_5778::
     add a, a
     add a, c
     ld c, a
-    jr Jump_016_57C6
+    jr .skip2
 
-Jump_016_5795::
+.read_key_world_floor:
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
@@ -3949,12 +3949,12 @@ Jump_016_5795::
     add a, a
     add a, a
     ld c, a
-    jr Jump_016_57C6
+    jr .skip2
 
-Jump_016_57C4::
+.skip:
     ld c, $20
 
-Jump_016_57C6::
+.skip2:
     ld a, c
     add a, a
     ld hl, wKeyWorldMonsters
@@ -4175,14 +4175,14 @@ AddEToByteAtHLCappedAtC::
 Func_016_58B8:: ; address name
     ld a, [hl]
     add a, e
-    jr c, Jump_016_58BF
+    jr c, .done
     cp a, c
-    jr c, Jump_016_58C0
+    jr c, .done2
 
-Jump_016_58BF::
+.done:
     ld a, c
 
-Jump_016_58C0::
+.done2:
     ld [hl], a
     ret
 
@@ -4192,14 +4192,14 @@ SubtractEFromByteAtHLFlooredAtC::
 Func_016_58C2:: ; address name
     ld a, [hl]
     sub a, e
-    jr c, Jump_016_58C9
+    jr c, .done
     cp a, c
-    jr nc, Jump_016_58CA
+    jr nc, .done2
 
-Jump_016_58C9::
+.done:
     ld a, c
 
-Jump_016_58CA::
+.done2:
     ld [hl], a
     ret
 
@@ -4210,18 +4210,18 @@ Func_016_58CC:: ; address name
     push hl
     deref_hl
     add hl, de
-    jr c, Jump_016_58D9
+    jr c, .skip
     ld a, l
     sub a, c
     ld a, h
     sbc a, b
-    jr nc, Jump_016_58DB
+    jr nc, .restore
 
-Jump_016_58D9::
+.skip:
     ld c, l
     ld b, h
 
-Jump_016_58DB::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -4240,10 +4240,10 @@ Func_016_58E0:: ; address name
     ld a, h
     sbc a, d
     ld h, a
-    jr nc, Jump_016_58EF
+    jr nc, .skip
     ld hl, $0000
 
-Jump_016_58EF::
+.skip:
     ld e, l
     ld d, h
     pop hl
@@ -4300,30 +4300,30 @@ Func_016_590C:: ; address name
     call FillBytes
     ld a, [wGameFlags836]
     bit 7, a
-    jr nz, Jump_016_5928
+    jr nz, .set_game_flags836
     xor a, $01
 
-Jump_016_5928::
+.set_game_flags836:
     res 7, a
     ld [wGameFlags836], a
     ld de, InventorySortKeysA
     bit 0, a
-    jr z, Jump_016_5937
+    jr z, .skip
     ld de, InventorySortKeysB
 
-Jump_016_5937::
+.skip:
     ld hl, wInventory
     ld b, $18
 
-Jump_016_593C::
+.loop:
     push bc
     push hl
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_016_5944
+    jr nz, .skip2
     xor a, a
 
-Jump_016_5944::
+.skip2:
     ld l, a
     ld h, $00
     add hl, de
@@ -4342,20 +4342,20 @@ Jump_016_5944::
     pop bc
     inc hl
     dec b
-    jr nz, Jump_016_593C
+    jr nz, .loop
     ld a, $18
     ld [wWorkBuf], a
 
-Jump_016_5966::
+.loop2:
     ld hl, wWorkBuf + $2
     ld de, wWorkBuf + $3
     ld b, $17
     ld c, $00
 
-Jump_016_5970::
+.loop3:
     ld a, [de]
     cp a, [hl]
-    jr nc, Jump_016_597C
+    jr nc, .next
     push af
     ld a, [hl]
     ld [de], a
@@ -4363,16 +4363,16 @@ Jump_016_5970::
     ld [hl], a
     call SwapInventorySlotCWithNext
 
-Jump_016_597C::
+.next:
     inc de
     inc hl
     inc c
     dec b
-    jr nz, Jump_016_5970
+    jr nz, .loop3
     ld a, [wWorkBuf]
     dec a
     ld [wWorkBuf], a
-    jr nz, Jump_016_5966
+    jr nz, .loop2
     ret
 
 ; swaps wInventory[C] and wInventory[C + 1]; HL kept (E-0118)
@@ -4693,20 +4693,20 @@ Func_016_5AC0:: ; address name
     ld [wSpeciesIdLo], a
     ld [wSpeciesIdHi], a
 
-Jump_016_5AD1::
+.loop:
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
     cp a, $FF
-    jr z, Jump_016_5B16
+    jr z, .read_species_id_lo
     ld de, wWorkBuf
     add a, e
     ld e, a
-    jr nc, Jump_016_5AE6
+    jr nc, .call_test_species_flag
     inc d
 
-Jump_016_5AE6::
+.call_test_species_flag:
     call TestSpeciesFlag
-    jr nz, Jump_016_5B13
+    jr nz, .skip
     push de
     ld a, [wSpeciesIdLo]
     ld [wArg1], a
@@ -4721,15 +4721,15 @@ Jump_016_5AE6::
     pop de
     ld a, [wArg5]
     cp a, $FF
-    jr z, Jump_016_5B13
-    jr Jump_016_5B16
+    jr z, .skip
+    jr .read_species_id_lo
 
-Jump_016_5B13::
+.skip:
     ld a, [de]
     inc a
     ld [de], a
 
-Jump_016_5B16::
+.read_species_id_lo:
     ld a, [wSpeciesIdLo]
     ld l, a
     ld a, [wSpeciesIdHi]
@@ -4746,7 +4746,7 @@ Jump_016_5B16::
     ld a, h
     sbc a, b
     ld h, a
-    jr c, Jump_016_5AD1
+    jr c, .loop
     ret
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)
@@ -4764,25 +4764,25 @@ Func_016_5B33:: ; address name
     ld [wSpeciesIdLo], a
     ld [wSpeciesIdHi], a
 
-Jump_016_5B44::
+.loop:
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
     cp a, $FF
-    jr z, Jump_016_5B61
+    jr z, .read_species_id_lo
     ld de, wWorkBuf
     add a, e
     ld e, a
-    jr nc, Jump_016_5B59
+    jr nc, .call_test_species_flag
     inc d
 
-Jump_016_5B59::
+.call_test_species_flag:
     call TestSpeciesFlag
-    jr z, Jump_016_5B61
+    jr z, .read_species_id_lo
     ld a, [de]
     inc a
     ld [de], a
 
-Jump_016_5B61::
+.read_species_id_lo:
     ld a, [wSpeciesIdLo]
     ld l, a
     ld a, [wSpeciesIdHi]
@@ -4799,7 +4799,7 @@ Jump_016_5B61::
     ld a, h
     sbc a, b
     ld h, a
-    jr c, Jump_016_5B44
+    jr c, .loop
     ret
 
 ; only called from BattleEnd_Step5_Case00 (E-0047)
@@ -4813,29 +4813,29 @@ Func_016_5B7E:: ; address name
     ld [wBattleFoeCount], a
     ld a, [wLinkMode]
     or a, a
-    jp nz, Jump_016_5CF5
+    jp nz, .set_display_slot_to_FF
     ld a, [wBattleKind]
     cp a, $03
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     cp a, $04
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     cp a, $05
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     cp a, $08
-    jp nc, Jump_016_5CF5
+    jp nc, .set_display_slot_to_FF
     ld a, [wDisplaySlot]
     cp a, $FF
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     cp a, $04
-    jp c, Jump_016_5CF5
+    jp c, .set_display_slot_to_FF
     cp a, $07
-    jp nc, Jump_016_5CF5
+    jp nc, .set_display_slot_to_FF
     and a, $03
     ld hl, wBattleInitA1
     add_a_to_hl
     ld a, [hl]
     cp a, $07
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     ld a, [wDisplaySlot]
     ld hl, wBattleMonsterId
     add a, a
@@ -4846,7 +4846,7 @@ Func_016_5B7E:: ; address name
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
     ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B
-    jr nz, Jump_016_5C15
+    jr nz, .read_battle_meter
     farcall LoadSpeciesRecord
     call NextTableByte
     ld a, [wRandomLo]
@@ -4858,18 +4858,18 @@ Func_016_5B7E:: ; address name
     ld b, a
     ld a, [wSpeciesRecord + $4]
     cp a, $07
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     ld hl, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5CFB
     add_a_to_hl
     ld a, [hl]
     cp a, b
-    jp nc, Jump_016_5CFA
+    jp nc, .return
     ld a, [wBattleEndFlag]
     or a, a
-    jp nz, Jump_016_5CFA
+    jp nz, .return
     ld de, BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D03
 
-Jump_016_5C15::
+.read_battle_meter:
     ld a, [wBattleMeter]
     ld c, a
     ld a, [wBattleMeter + $1]
@@ -4881,71 +4881,71 @@ Jump_016_5C15::
     ld a, [hl]
     add a, e
     ld e, a
-    jr nc, Jump_016_5C30
+    jr nc, .skip
     inc d
 
-Jump_016_5C30::
+.skip:
     ld a, [de]
     ld h, b
     ld l, c
     or a, a
-    jp z, Jump_016_5CFA
+    jp z, .return
     cp a, $07
-    jp z, Jump_016_5CF5
+    jp z, .set_display_slot_to_FF
     ld a, [wBattleEndFlag]
     or a, a
-    jp nz, Jump_016_5CFA
+    jp nz, .return
     ld a, [de]
     cp a, $01
-    jr z, Jump_016_5C77
+    jr z, .skip2
     cp a, $02
-    jr z, Jump_016_5C7C
+    jr z, .skip3
     cp a, $03
-    jr z, Jump_016_5C7F
+    jr z, .skip4
     cp a, $04
-    jr z, Jump_016_5C81
+    jr z, .skip5
     cp a, $05
-    jr z, Jump_016_5C87
+    jr z, .call_divide_hl_by_a
     cp a, $06
-    jr z, Jump_016_5C8E
+    jr z, .skip6
     cp a, $11
-    jr z, Jump_016_5CA0
+    jr z, .skip7
     cp a, $12
-    jr z, Jump_016_5CA2
+    jr z, .skip8
     cp a, $13
-    jr z, Jump_016_5CAC
+    jr z, .skip9
     cp a, $14
-    jr z, Jump_016_5CAC
+    jr z, .skip9
     cp a, $15
-    jr z, Jump_016_5CAC
+    jr z, .skip9
     cp a, $16
-    jr z, Jump_016_5CBA
-    jp Jump_016_5CF5
+    jr z, .call_divide_hl_by_a2
+    jp .set_display_slot_to_FF
 
-Jump_016_5C77::
+.skip2:
     add hl, hl
     add hl, hl
     add hl, bc
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5C7C::
+.skip3:
     add hl, hl
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5C7F::
-    jr Jump_016_5CBF
+.skip4:
+    jr .call_next_table_byte
 
-Jump_016_5C81::
+.skip5:
     srl h
     rr l
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5C87::
+.call_divide_hl_by_a:
     ld a, $05
     call DivideHLByA
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5C8E::
+.skip6:
     srl h
     rr l
     srl h
@@ -4954,32 +4954,32 @@ Jump_016_5C8E::
     rr l
     srl h
     rr l
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5CA0::
-    jr Jump_016_5CBF
+.skip7:
+    jr .call_next_table_byte
 
-Jump_016_5CA2::
+.skip8:
     srl h
     rr l
     srl h
     rr l
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5CAC::
+.skip9:
     srl h
     rr l
     srl h
     rr l
     srl h
     rr l
-    jr Jump_016_5CBF
+    jr .call_next_table_byte
 
-Jump_016_5CBA::
+.call_divide_hl_by_a2:
     ld a, $14
     call DivideHLByA
 
-Jump_016_5CBF::
+.call_next_table_byte:
     push hl
     call NextTableByte
     ld a, [wRandomLo]
@@ -4999,7 +4999,7 @@ Jump_016_5CBF::
     sbc a, b
     ld h, a
     bit 7, h
-    jr nz, Jump_016_5CF5
+    jr nz, .set_display_slot_to_FF
     call NextTableByte
     ld a, [wRandomLo]
     ld l, a
@@ -5009,13 +5009,13 @@ Jump_016_5CBF::
     call DivideHLByA
     inc a
     cp a, $5B
-    jr c, Jump_016_5CFA
+    jr c, .return
 
-Jump_016_5CF5::
+.set_display_slot_to_FF:
     ld a, $FF
     ld [wDisplaySlot], a
 
-Jump_016_5CFA::
+.return:
     ret
 
 ; address loaded by BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc
@@ -5083,21 +5083,21 @@ Jump_016_5D51:: ; address name
     call CopyBattleMonsterNameWithLetterSuffix
     ld a, [wBattleKind]
     cp a, $08
-    jr nc, Jump_016_5D71
+    jr nc, .set_string_index_to_1E
     and a, $01
-    jr z, Jump_016_5D7A
+    jr z, .call_count_records_by_field6_e
     farcall KeyWorldAreaEncounterIndex
     ldh a, [hTemp0]
     or a, a
-    jr nz, Jump_016_5D7A
+    jr nz, .call_count_records_by_field6_e
 
-Jump_016_5D71::
+.set_string_index_to_1E:
     ld a, $1E
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
     ret
 
-Jump_016_5D7A::
+.call_count_records_by_field6_e:
     call CountRecordsByField6E
     xor a, a
     ld [wSubMenuCursor2], a
@@ -5213,12 +5213,12 @@ Jump_016_5E0B:: ; address name
     ld a, [wTemp1]
     add a, b
     cp a, [hl]
-    jr c, Jump_016_5E2E
+    jr c, .skip
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-Jump_016_5E2E::
+.skip:
     ld hl, wBattleSubPhase
     inc [hl]
     ld hl, wBattleSubPhase
@@ -5302,7 +5302,7 @@ Jump_016_5E96:: ; address name
     ret z
     ld a, [wJoypadPressed]
     and a, $02
-    jr nz, Jump_016_5ED7
+    jr nz, .call_build_battle_menu_screen_733_f
     ld a, [de]
     ld e, a
     xor a, a
@@ -5317,7 +5317,7 @@ Jump_016_5E96:: ; address name
     call CountRecordsByField6E
     ld a, [wTemp1]
     or a, a
-    jr nz, Jump_016_5ED1
+    jr nz, .set_battle_sub_step_to_16
     ld a, $0F
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -5325,12 +5325,12 @@ Jump_016_5E96:: ; address name
     ld [wBattleSubStep], a
     ret
 
-Jump_016_5ED1::
+.set_battle_sub_step_to_16:
     ld a, $16
     ld [wBattleSubStep], a
     ret
 
-Jump_016_5ED7::
+.call_build_battle_menu_screen_733_f:
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -5379,14 +5379,14 @@ Jump_016_5F24:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
-    jr z, Jump_016_5F38
+    jr z, .check_joypad_pressed
     call DrawRecordListPageWithNumbers
     ret
 
-Jump_016_5F38::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_016_5F4D
+    jr z, .check_bit1
     ld a, [wListPage]
     ld [wSubMenuCursor2], a
     call ShowRecordNameString12
@@ -5394,7 +5394,7 @@ Jump_016_5F38::
     inc [hl]
     ret
 
-Jump_016_5F4D::
+.check_bit1:
     bit 1, a
     ret z
     ld a, [wListPage]
@@ -5450,7 +5450,7 @@ Jump_016_5FA4:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_016_5FC7
+    jr z, .check_bit1
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wMenuSubState]
@@ -5462,7 +5462,7 @@ Jump_016_5FA4:: ; address name
     inc [hl]
     ret
 
-Jump_016_5FC7::
+.check_bit1:
     bit 1, a
     ret z
     ld a, $1F
@@ -5587,12 +5587,12 @@ Jump_016_60B5:: ; address name
     ld b, [hl]
     ld a, [wPartyCount]
     cp a, $01
-    jr nz, Jump_016_60ED
+    jr nz, .check_party_count
     ld a, [wPartyList]
     cp a, b
-    jr nz, Jump_016_6143
+    jr nz, .skip
 
-Jump_016_60DF::
+.loop:
     ld a, $15
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -5600,32 +5600,32 @@ Jump_016_60DF::
     ld [wBattleSubStep], a
     ret
 
-Jump_016_60ED::
+.check_party_count:
     ld a, [wPartyCount]
     cp a, $02
-    jr nz, Jump_016_6118
+    jr nz, .read_battle_slot_out
     ld a, [wBattleSlotOut]
     ld c, a
     ld a, [wBattleSlotOut + $1]
     or a, c
-    jr z, Jump_016_6143
+    jr z, .skip
     ld hl, wBattleSlotOut
     ld a, [wPartyList]
     cp a, b
-    jr z, Jump_016_6112
+    jr z, .loop2
     ld hl, wBattleSlotOut + $1
     ld a, [wPartyList + $1]
     cp a, b
-    jr z, Jump_016_6112
-    jr Jump_016_6143
+    jr z, .loop2
+    jr .skip
 
-Jump_016_6112::
+.loop2:
     ld a, [hl]
     or a, a
-    jr z, Jump_016_60DF
-    jr Jump_016_6143
+    jr z, .loop
+    jr .skip
 
-Jump_016_6118::
+.read_battle_slot_out:
     ld a, [wBattleSlotOut]
     ld c, a
     ld a, [wBattleSlotOut + $1]
@@ -5633,21 +5633,21 @@ Jump_016_6118::
     ld a, [wBattleSlotOut + $2]
     add a, c
     cp a, $02
-    jr c, Jump_016_6143
+    jr c, .skip
     ld hl, wBattleSlotOut
     ld a, [wPartyList]
     cp a, b
-    jr z, Jump_016_6112
+    jr z, .loop2
     ld hl, wBattleSlotOut + $1
     ld a, [wPartyList + $1]
     cp a, b
-    jr z, Jump_016_6112
+    jr z, .loop2
     ld hl, wBattleSlotOut + $2
     ld a, [wPartyList + $2]
     cp a, b
-    jr z, Jump_016_6112
+    jr z, .loop2
 
-Jump_016_6143::
+.skip:
     xor a, a
     ld [rRAMG], a
     ld hl, wBattleSubStep
@@ -5710,17 +5710,17 @@ Jump_016_615E:: ; address name
     ld a, [wPartyCount]
     ld [wBattlePartyCount], a
     cp a, $03
-    jr z, Jump_016_61A8
+    jr z, .read_party_list
     cp a, $02
-    jr z, Jump_016_61A3
+    jr z, .set_party_list_to_FF
     ld a, $FF
     ld [wPartyList + $1], a
 
-Jump_016_61A3::
+.set_party_list_to_FF:
     ld a, $FF
     ld [wPartyList + $2], a
 
-Jump_016_61A8::
+.read_party_list:
     ld a, [wPartyList]
     ld [wTemp0], a
     ld a, [wPartyList + $1]
@@ -5774,7 +5774,7 @@ Jump_016_61D2:: ; address name
     inc a
     ld [wListPageCount], a
     cp a, $02
-    jr c, Jump_016_622B
+    jr c, .set_list_page_size_to_04
     add a, $E0
     ld [wWindowTileBuffer + $22], a
     ld a, $C5
@@ -5784,7 +5784,7 @@ Jump_016_61D2:: ; address name
     ld a, $C6
     ld [wWindowTileBuffer + $23], a
 
-Jump_016_622B::
+.set_list_page_size_to_04:
     ld a, $04
     ld [wListPageSize], a
     ld a, [wMenuOption]
@@ -5812,7 +5812,7 @@ Jump_016_6250:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
-    jr z, Jump_016_6279
+    jr z, .check_joypad_pressed
     call DrawFourListEntriesForPageListPage
     ld hl, vBGMap0 + $AB
     ld de, wScreenTileBuffer + $AB
@@ -5823,10 +5823,10 @@ Jump_016_6250:: ; address name
     call WriteVRAMByte
     ret
 
-Jump_016_6279::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_016_6291
+    jr z, .check_bit1
     ld a, [wMenuState]
     ld [wCommandCursorMax], a
     ld a, [wListPage]
@@ -5835,7 +5835,7 @@ Jump_016_6279::
     inc [hl]
     ret
 
-Jump_016_6291::
+.check_bit1:
     bit 1, a
     ret z
     call BuildBattleMenuScreen_733F
@@ -5859,7 +5859,7 @@ Jump_016_62A9:: ; address name
     farcall CopyRectRecord787EAndPlaySound6C
     ld a, [wListPageCount]
     cp a, $02
-    jr c, Jump_016_62D3
+    jr c, .call_draw_four_list_entries_for_page_list
     add a, $E0
     ld [wWindowTileBuffer + $22], a
     ld a, $C5
@@ -5869,7 +5869,7 @@ Jump_016_62A9:: ; address name
     ld a, $C6
     ld [wWindowTileBuffer + $23], a
 
-Jump_016_62D3::
+.call_draw_four_list_entries_for_page_list:
     call DrawFourListEntriesForPageListPage
     ld a, [wCommandCursorMax]
     ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
@@ -5914,7 +5914,7 @@ Jump_016_631B:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_016_6375
+    jr z, .check_bit1
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [de]
@@ -5952,7 +5952,7 @@ Jump_016_631B:: ; address name
     ld [rRAMG], a
     ret
 
-Jump_016_6375::
+.check_bit1:
     bit 1, a
     ret z
     ld a, $16
@@ -6018,7 +6018,7 @@ Jump_016_63B9:: ; address name
     ld a, [wCommandPageCount]
     inc a
     cp a, $02
-    jr c, Jump_016_640E
+    jr c, .call_list_records_with_field6_e_to_list
     add a, $E0
     ld [wWindowTileBuffer + $22], a
     ld a, $C5
@@ -6028,7 +6028,7 @@ Jump_016_63B9:: ; address name
     ld a, $C6
     ld [wWindowTileBuffer + $23], a
 
-Jump_016_640E::
+.call_list_records_with_field6_e_to_list:
     call ListRecordsWithField6EToListEntries
     call DrawFourListEntriesForPageListPage
     ld de, wScreenTileBuffer
@@ -6121,10 +6121,10 @@ Func_016_6493:: ; address name
     ld hl, sRecords
     ld de, $0000
 
-Jump_016_64AE::
+.loop:
     ld a, [hl]
     or a, a
-    jr z, Jump_016_64C4
+    jr z, .skip
     push hl
     ld a, l
     add a, $6E
@@ -6135,14 +6135,14 @@ Jump_016_64AE::
     ld a, [hl]
     pop hl
     or a, a
-    jr z, Jump_016_64C3
+    jr z, .next
     inc d
-    jr Jump_016_64C4
+    jr .skip
 
-Jump_016_64C3::
+.next:
     inc e
 
-Jump_016_64C4::
+.skip:
     ld a, l
     add a, $A5
     ld l, a
@@ -6150,7 +6150,7 @@ Jump_016_64C4::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_016_64AE
+    jr nz, .loop
     ld a, e
     ld [wTemp0], a
     ld a, d
@@ -6177,7 +6177,7 @@ Func_016_64DC:: ; address name
     ld b, a
     ld hl, wPartyList
 
-Jump_016_64F3::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -6185,7 +6185,7 @@ Jump_016_64F3::
     inc a
     ld [wTemp0], a
     dec b
-    jr nz, Jump_016_64F3
+    jr nz, .loop
     ld a, [wFarmLevel]
     ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
     add_a_to_hl
@@ -6193,10 +6193,10 @@ Jump_016_64F3::
     ld hl, sRecords
     ld c, $00
 
-Jump_016_6511::
+.loop2:
     ld a, [hl]
     cp a, $01
-    jr nz, Jump_016_652E
+    jr nz, .next
     push hl
     ld a, l
     add a, $6E
@@ -6207,7 +6207,7 @@ Jump_016_6511::
     ld a, [hl]
     pop hl
     or a, a
-    jr nz, Jump_016_652E
+    jr nz, .next
     ld a, c
     ld [de], a
     inc de
@@ -6215,7 +6215,7 @@ Jump_016_6511::
     inc a
     ld [wTemp0], a
 
-Jump_016_652E::
+.next:
     inc c
     ld a, l
     add a, $A5
@@ -6224,7 +6224,7 @@ Jump_016_652E::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_016_6511
+    jr nz, .loop2
     xor a, a
     ld [rRAMG], a
     ld a, [wTemp0]
@@ -6241,37 +6241,37 @@ Jump_016_652E::
     ld [wListPageSize], a
     ld a, [wSubMenuCursor2]
     or a, a
-    jr nz, Jump_016_657B
+    jr nz, .set_screen_tile_buffer_to_B6
     ld a, $E1
     ld [wScreenTileBuffer + $20], a
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_6580
+    jr z, .set_screen_tile_buffer_to_B62
     ld a, $E2
     ld [wScreenTileBuffer + $60], a
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_6585
+    jr z, .set_screen_tile_buffer_to_B63
     ld a, $E3
     ld [wScreenTileBuffer + $A0], a
-    jr Jump_016_658A
+    jr .check_list_page_count
 
-Jump_016_657B::
+.set_screen_tile_buffer_to_B6:
     ld a, $B6
     ld [wScreenTileBuffer + $20], a
 
-Jump_016_6580::
+.set_screen_tile_buffer_to_B62:
     ld a, $B6
     ld [wScreenTileBuffer + $60], a
 
-Jump_016_6585::
+.set_screen_tile_buffer_to_B63:
     ld a, $B6
     ld [wScreenTileBuffer + $A0], a
 
-Jump_016_658A::
+.check_list_page_count:
     ld a, [wListPageCount]
     cp a, $02
-    jr c, Jump_016_65B0
+    jr c, .return
     ld a, $C5
     ld [wScreenTileBuffer + $142], a
     ld a, $BE
@@ -6285,7 +6285,7 @@ Jump_016_658A::
     add a, $E0
     ld [wScreenTileBuffer + $145], a
 
-Jump_016_65B0::
+.return:
     ret
 
 ; fills wD789 ($1E bytes) with $FF, then lists the indexes of the first Data_016_75EB[wC7C7] SRAM records that have field $6E set (E-0127)
@@ -6311,10 +6311,10 @@ Func_016_65B1:: ; address name
     ld de, wListEntries
     ld c, $00
 
-Jump_016_65D9::
+.loop:
     ld a, [hl]
     or a, a
-    jr z, Jump_016_65EE
+    jr z, .next
     push hl
     ld a, l
     add a, $6E
@@ -6325,12 +6325,12 @@ Jump_016_65D9::
     ld a, [hl]
     pop hl
     or a, a
-    jr z, Jump_016_65EE
+    jr z, .next
     ld a, c
     ld [de], a
     inc de
 
-Jump_016_65EE::
+.next:
     inc c
     ld a, l
     add a, $A5
@@ -6339,7 +6339,7 @@ Jump_016_65EE::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_016_65D9
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret
@@ -6352,85 +6352,85 @@ MovePagedListCursor::
 Func_016_65FF:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_016_662B
+    jr z, .check_bit7
     call BlankTileAtTableEntryDE
     ld a, [de]
     sub a, $01
-    jp nc, Jump_016_6691
+    jp nc, .call_draw_cursor_tile_at_table_entry_de
     ld a, [wListPageCount]
     cp a, $02
-    jr c, Jump_016_661E
+    jr c, .check_list_last_page_size
     ld b, a
     ld a, [wListPage]
     inc a
     cp a, b
-    jr nz, Jump_016_6625
+    jr nz, .check_list_page_size
 
-Jump_016_661E::
+.check_list_last_page_size:
     ld a, [wListLastPageSize]
     dec a
-    jp Jump_016_6691
+    jp .call_draw_cursor_tile_at_table_entry_de
 
-Jump_016_6625::
+.check_list_page_size:
     ld a, [wListPageSize]
     dec a
-    jr Jump_016_6691
+    jr .call_draw_cursor_tile_at_table_entry_de
 
-Jump_016_662B::
+.check_bit7:
     bit 7, a
-    jr z, Jump_016_664E
+    jr z, .check_list_page_count
     call BlankTileAtTableEntryDE
     ld a, [wListPage]
     inc a
     ld b, a
     ld a, [wListPageCount]
     cp a, b
-    jr nz, Jump_016_6642
+    jr nz, .read_list_page_size
     ld a, [wListLastPageSize]
-    jr Jump_016_6645
+    jr .skip
 
-Jump_016_6642::
+.read_list_page_size:
     ld a, [wListPageSize]
 
-Jump_016_6645::
+.skip:
     ld b, a
     ld a, [de]
     inc a
     cp a, b
-    jr c, Jump_016_6691
+    jr c, .call_draw_cursor_tile_at_table_entry_de
     xor a, a
-    jr Jump_016_6691
+    jr .call_draw_cursor_tile_at_table_entry_de
 
-Jump_016_664E::
+.check_list_page_count:
     ld a, [wListPageCount]
     cp a, $02
-    jr c, Jump_016_6682
+    jr c, .check_frame_counter_lo
     ld a, [wJoypadPressedRepeat]
     bit 5, a
-    jr z, Jump_016_666D
+    jr z, .check_bit4
     call BlankTileAtTableEntryDE
     ld a, [wListPage]
     dec a
     cp a, $FF
-    jr nz, Jump_016_669B
+    jr nz, .set_list_page
     ld a, [wListPageCount]
     dec a
-    jr Jump_016_669B
+    jr .set_list_page
 
-Jump_016_666D::
+.check_bit4:
     bit 4, a
-    jr z, Jump_016_6682
+    jr z, .check_frame_counter_lo
     call BlankTileAtTableEntryDE
     ld a, [wListPageCount]
     ld b, a
     ld a, [wListPage]
     inc a
     cp a, b
-    jr c, Jump_016_669B
+    jr c, .set_list_page
     xor a, a
-    jr Jump_016_669B
+    jr .set_list_page
 
-Jump_016_6682::
+.check_frame_counter_lo:
     ld a, [wFrameCounterLo]
     and a, $0F
     ret z
@@ -6439,30 +6439,30 @@ Jump_016_6682::
     jr z, BlankTileAtTableEntryDE
     jr DrawCursorTileAtTableEntryDE
 
-Jump_016_6691::
+.call_draw_cursor_tile_at_table_entry_de:
     ld [de], a
     call DrawCursorTileAtTableEntryDE
     ld a, $02
     ld [wFrameCounterLo], a
     ret
 
-Jump_016_669B::
+.set_list_page:
     ld [wListPage], a
     ld b, a
     ld a, [wListPageCount]
     dec a
     cp a, b
-    jr nz, Jump_016_66B1
+    jr nz, .call_draw_cursor_tile_at_table_entry_de2
     ld a, [wListLastPageSize]
     ld b, a
     ld a, [de]
     cp a, b
-    jr c, Jump_016_66B1
+    jr c, .call_draw_cursor_tile_at_table_entry_de2
     ld a, b
     dec a
     ld [de], a
 
-Jump_016_66B1::
+.call_draw_cursor_tile_at_table_entry_de2:
     call DrawCursorTileAtTableEntryDE
     xor a, a
     ld [wFrameCounterLo], a
@@ -6571,49 +6571,49 @@ Func_016_6705:: ; address name
     ld [wTextWindowTileHi], a
     ld a, [wListPage]
     or a, a
-    jr nz, Jump_016_677A
+    jr nz, .call_write_vram_byte
     ld a, $E1
     ld hl, vBGMap0 + $20
     call WriteVRAMByte
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_6782
+    jr z, .call_write_vram_byte2
     ld a, $E2
     ld hl, vBGMap0 + $60
     call WriteVRAMByte
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_678A
+    jr z, .call_write_vram_byte3
     ld a, $E3
     ld hl, vBGMap0 + $A0
     call WriteVRAMByte
-    jr Jump_016_6792
+    jr .check_list_page_count
 
-Jump_016_677A::
+.call_write_vram_byte:
     ld a, $B6
     ld hl, vBGMap0 + $20
     call WriteVRAMByte
 
-Jump_016_6782::
+.call_write_vram_byte2:
     ld a, $B6
     ld hl, vBGMap0 + $60
     call WriteVRAMByte
 
-Jump_016_678A::
+.call_write_vram_byte3:
     ld a, $B6
     ld hl, vBGMap0 + $A0
     call WriteVRAMByte
 
-Jump_016_6792::
+.check_list_page_count:
     ld a, [wListPageCount]
     cp a, $02
-    jr c, Jump_016_67A4
+    jr c, .return
     ld a, [wListPage]
     add a, $E1
     ld hl, vBGMap0 + $143
     call WriteVRAMByte
 
-Jump_016_67A4::
+.return:
     ret
 
 ; draws four values from wD868 at vTiles2 + $3B0 with size $0105 (Func_016_67E0), preserving the window settings (E-0121)
@@ -6669,30 +6669,30 @@ Func_016_67E0:: ; address name
     ld a, $05
     ld [wStringIndex], a
 
-Jump_016_67F3::
+.loop:
     ld a, [hl+]
     push bc
     ld c, $01
     push hl
     push de
     cp a, $FF
-    jr nz, Jump_016_6802
+    jr nz, .call_sram_record_address
     ld de, wTextBuf0
-    jr Jump_016_6810
+    jr .skip
 
-Jump_016_6802::
+.call_sram_record_address:
     call SRAMRecordAddress
     ld b, $0A
     ld de, wTextBuf0
 
-Jump_016_680A::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_680A
+    jr nz, .loop2
 
-Jump_016_6810::
+.skip:
     ld a, $F0
     ld [de], a
     pop de
@@ -6707,7 +6707,7 @@ Jump_016_6810::
     pop hl
     pop bc
     dec b
-    jr nz, Jump_016_67F3
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret
@@ -6770,7 +6770,7 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
 Func_016_6891:: ; address name
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_016_68CB
+    jr z, .call_show_string_bc_at_tile_row_battle_arg0
     push hl
     call DrawFourListEntriesForPageListPage_Sub01_SRAMRecordAddress
     pop hl
@@ -6780,7 +6780,7 @@ Func_016_6891:: ; address name
     call SRAMRecordAddress
     ld a, [hl]
     cp a, $02
-    jr nz, Jump_016_68B6
+    jr nz, .read_battle_arg0
     ld a, l
     add a, $A0
     ld l, a
@@ -6790,12 +6790,12 @@ Func_016_6891:: ; address name
     ld a, [hl]
     and a, $01
     add a, $CC
-    jr Jump_016_68B8
+    jr .read_battle_arg02
 
-Jump_016_68B6::
+.read_battle_arg0:
     ld a, $C9
 
-Jump_016_68B8::
+.read_battle_arg02:
     ld c, a
     ld a, [wBattleArg0]
     ld hl, DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data
@@ -6806,7 +6806,7 @@ Jump_016_68B8::
     pop hl
     ret
 
-Jump_016_68CB::
+.call_show_string_bc_at_tile_row_battle_arg0:
     push hl
     ld bc, $0200
     call ShowStringBCAtTileRowBattleArg0
@@ -6885,16 +6885,16 @@ Func_016_6926:: ; address name
     ld hl, wPartyList
     ld de, wTemp0
 
-Jump_016_6930::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_016_6937
+    jr z, .next
     ld [de], a
     inc de
 
-Jump_016_6937::
+.next:
     dec b
-    jr nz, Jump_016_6930
+    jr nz, .loop
     ld a, [wPartyCount]
     dec a
     ld [wPartyCount], a
@@ -6903,12 +6903,12 @@ Jump_016_6937::
     ld hl, wTemp0
     ld de, wPartyList
 
-Jump_016_694B::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_694B
+    jr nz, .loop2
     ld a, $FF
     ld [de], a
     ret
@@ -6960,12 +6960,12 @@ Func_016_696D:: ; address name
     ld b, $0A
     ld de, wTextBuf1
 
-Jump_016_6995::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_6995
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     xor a, a
@@ -7028,12 +7028,12 @@ Func_016_69E2:: ; address name
     ld de, wTextBuf0
     ld b, $0A
 
-Jump_016_6A01::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_6A01
+    jr nz, .loop
     ld a, $1D
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -7057,14 +7057,14 @@ Func_016_6A10:: ; address name
     ld a, [wDisplaySlot]
     pop hl
 
-Jump_016_6A29::
+.skip:
     ld a, [hl]
     cp a, $F0
-    jr z, Jump_016_6A31
+    jr z, .skip2
     inc hl
-    jr Jump_016_6A29
+    jr .skip
 
-Jump_016_6A31::
+.skip2:
     ld [hl], d
     inc hl
     ld [hl], $F0
@@ -7232,12 +7232,12 @@ Jump_016_6AE3:: ; address name
     ld de, wNameGlyphBuf
     ld b, $0A
 
-Jump_016_6B47::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_016_6B47
+    jr nz, .loop
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7269,10 +7269,10 @@ Jump_016_6B57:: ; address name
     ld hl, sRecords
     ld c, $00
 
-Jump_016_6B71::
+.loop:
     ld a, [hl]
     or a, a
-    jr z, Jump_016_6B83
+    jr z, .set_work_buf
     inc c
     ld a, l
     add a, $A5
@@ -7281,10 +7281,10 @@ Jump_016_6B71::
     adc a, $00
     ld h, a
     dec b
-    jr nz, Jump_016_6B71
-    jr Jump_016_6BCC
+    jr nz, .loop
+    jr .skip
 
-Jump_016_6B83::
+.set_work_buf:
     ld a, c
     ld [wWorkBuf], a
     ld [hl], $01
@@ -7302,7 +7302,7 @@ Jump_016_6B83::
     call InitSlotFromRecordFlags
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_6BCC
+    jr z, .skip
     ld a, $01
     ld c, $55
     call SRAMRecordAddressMapped
@@ -7310,14 +7310,14 @@ Jump_016_6B83::
     call InitSlotFromRecordFlags
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_6BCC
+    jr z, .skip
     ld a, $02
     ld c, $55
     call SRAMRecordAddressMapped
     ld c, $02
     call InitSlotFromRecordFlags
 
-Jump_016_6BCC::
+.skip:
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
@@ -7343,7 +7343,7 @@ Func_016_6BD9:: ; address name
 InitSlotFromRecordFlags::
 Func_016_6BE0:: ; address name
     bit 7, [hl]
-    jr nz, Jump_016_6C0A
+    jr nz, SetBit0AtHL_Skip
     ld d, [hl]
     ld a, c
     ld hl, wBattleSlotOut
@@ -7373,7 +7373,8 @@ Func_016_6C07:: ; address name
     set 0, [hl]
     ret
 
-Jump_016_6C0A::
+SetBit0AtHL_Skip::
+Jump_016_6C0A:: ; address name
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -7427,12 +7428,12 @@ Jump_016_6C42:: ; address name
     ld hl, wBattleArg0
     ld de, wPartyList
 
-Jump_016_6C5F::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_016_6C5F
+    jr nz, .loop
     pop af
     ld [hl], a
     ld c, $01
@@ -7444,12 +7445,12 @@ Jump_016_6C5F::
     ld b, $0A
     ld de, wTextBuf0
 
-Jump_016_6C7A::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_6C7A
+    jr nz, .loop2
     ld a, $F0
     ld [de], a
     xor a, a
@@ -7502,22 +7503,22 @@ Jump_016_6CC8:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_016_6CEA
+    jr z, .check_joypad_pressed
     ld a, $6C
     call QueueSoundEffect
     ld a, [wMenuState]
     and a, $01
-    jr nz, Jump_016_6CF0
+    jr nz, .done
     ld a, $05
     ld [wBattleSubStep], a
     ret
 
-Jump_016_6CEA::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
 
-Jump_016_6CF0::
+.done:
     ld hl, wBattleSubStep
     inc [hl]
     ret
@@ -7532,13 +7533,13 @@ Jump_016_6CF5:: ; address name
     inc [hl]
     call BattleMonsterTable71ACAtLeast6
     or a, a
-    jr z, Jump_016_6D08
+    jr z, .set_string_index_to_1A
     ld a, $20
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
     ret
 
-Jump_016_6D08::
+.set_string_index_to_1A:
     ld a, $1A
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -7567,23 +7568,23 @@ BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex::
 Jump_016_6D1E:: ; address name
     ld a, [wPartyCount]
     cp a, $03
-    jr c, Jump_016_6D2B
+    jr c, .call_battle_monster_table71_ac_at_least6
     ld a, $08
     ld [wBattleSubStep], a
     ret
 
-Jump_016_6D2B::
+.call_battle_monster_table71_ac_at_least6:
     ld hl, wBattleSubStep
     inc [hl]
     call BattleMonsterTable71ACAtLeast6
     or a, a
-    jr z, Jump_016_6D3E
+    jr z, .set_string_index_to_1B
     ld a, $21
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
     ret
 
-Jump_016_6D3E::
+.set_string_index_to_1B:
     ld a, $1B
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -7696,7 +7697,7 @@ Jump_016_6DE4:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_016_6E22
+    jr z, .check_joypad_pressed
     ld a, [wBattlePartyCount]
     ld hl, wBattleArg0
     add_a_to_hl
@@ -7710,19 +7711,19 @@ Jump_016_6DE4:: ; address name
     ld b, $0A
     ld de, wTextBuf0
 
-Jump_016_6E13::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_6E13
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     ld a, $13
     ld [wBattleSubStep], a
     ret
 
-Jump_016_6E22::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -7781,17 +7782,17 @@ Jump_016_6E80:: ; address name
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_016_6ED4
+    jr z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuSelectedMember]
     and a, $01
-    jr nz, Jump_016_6EA1
+    jr nz, .skip
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-Jump_016_6EA1::
+.skip:
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -7805,12 +7806,12 @@ Jump_016_6EA1::
     ld de, wTextBuf0
     ld b, $0A
 
-Jump_016_6EC0::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_6EC0
+    jr nz, .loop
     ld a, $1A
     ld [wStringIndex], a
     call ShowStringCategory5_Bank16
@@ -7818,7 +7819,7 @@ Jump_016_6EC0::
     ld [wBattleSubStep], a
     ret
 
-Jump_016_6ED4::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
@@ -7846,12 +7847,12 @@ Jump_016_6EE9:: ; address name
     ld de, wBattleArg0
     ld hl, wListEntries
 
-Jump_016_6F01::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_016_6F01
+    jr nz, .loop
     ld a, [wMenuSubState]
     ld [wListCursor], a
     ld a, $00
@@ -7995,10 +7996,10 @@ Jump_016_7008:: ; address name
     ld a, [wBattlePartyCount]
     ld b, a
 
-Jump_016_7023::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_016_7023
+    jr z, .loop
     ld [de], a
     push hl
     push de
@@ -8009,7 +8010,7 @@ Jump_016_7023::
     pop hl
     inc de
     dec b
-    jr nz, Jump_016_7023
+    jr nz, .loop
     call LoadRecordListNameTiles
     call RunFunc710FForPartyMembers
     call BuildBattleMenuScreen_733F
@@ -8143,18 +8144,18 @@ Func_016_70DB:: ; address name
     call RunFunc710FForPartyMembers_SRAMRecordAddress
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_710A
+    jr z, .done
     ld c, $01
     ld a, [wPartyList + $1]
     call RunFunc710FForPartyMembers_SRAMRecordAddress
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_710A
+    jr z, .done
     ld c, $02
     ld a, [wPartyList + $2]
     call RunFunc710FForPartyMembers_SRAMRecordAddress
 
-Jump_016_710A::
+.done:
     xor a, a
     ld [rRAMG], a
     ret
@@ -8172,10 +8173,10 @@ Func_016_710F:: ; address name
     ld de, wBattleLevel
     add a, e
     ld e, a
-    jr nc, Jump_016_711F
+    jr nc, .skip
     inc d
 
-Jump_016_711F::
+.skip:
     ld a, [hl]
     ld [de], a
     ld a, l
@@ -8189,10 +8190,10 @@ Jump_016_711F::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_016_7133
+    jr nc, .skip2
     inc d
 
-Jump_016_7133::
+.skip2:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -8205,10 +8206,10 @@ Jump_016_7133::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_016_7144
+    jr nc, .skip3
     inc d
 
-Jump_016_7144::
+.skip3:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -8218,10 +8219,10 @@ Jump_016_7144::
     ld de, wBattleSlotOut
     add a, e
     ld e, a
-    jr nc, Jump_016_7152
+    jr nc, .skip4
     inc d
 
-Jump_016_7152::
+.skip4:
     xor a, a
     ld [de], a
     ld a, l
@@ -8231,7 +8232,7 @@ Jump_016_7152::
     adc a, $FF
     ld h, a
     bit 7, [hl]
-    jr nz, Jump_016_717A
+    jr nz, .done
     ld a, c
     add a, a
     add a, a
@@ -8240,10 +8241,10 @@ Jump_016_7152::
     ld de, wBattleStatus
     add a, e
     ld e, a
-    jr nc, Jump_016_716D
+    jr nc, .skip5
     inc d
 
-Jump_016_716D::
+.skip5:
     xor a, a
     ld [de], a
     bit 0, [hl]
@@ -8252,7 +8253,7 @@ Jump_016_716D::
     call nz, SetBit0AtDE
     ret
 
-Jump_016_717A::
+.done:
     ld a, $01
     ld [de], a
     ret
@@ -8299,11 +8300,11 @@ Func_016_7188:: ; address name
     ld h, a
     ld a, [hl]
     cp a, $06
-    jr c, Jump_016_71AA
+    jr c, .return_0
     ld a, $01
     ret
 
-Jump_016_71AA::
+.return_0:
     xor a, a
     ret
 
@@ -8693,12 +8694,12 @@ Func_016_7321:: ; address name
     push de
     push hl
 
-Jump_016_7324::
+.loop:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_016_7324
+    jr nz, .loop
     pop hl
     ld de, $0020
     add hl, de
@@ -8735,11 +8736,11 @@ BattleEnd_Step3_NextTableByte::
 Func_016_7364:: ; address name
     ld a, [wBattleKind]
     cp a, $02
-    jr nz, Jump_016_736F
+    jr nz, .call_next_table_byte
     ld c, $00
-    jr Jump_016_7382
+    jr .read_record_buf_a
 
-Jump_016_736F::
+.call_next_table_byte:
     call NextTableByte
     ld a, [wRandomLo]
     ld l, a
@@ -8750,22 +8751,22 @@ Jump_016_736F::
     sub a, $02
     ld c, a
 
-Jump_016_7382::
+.read_record_buf_a:
     ld a, [wRecordBufA + $56]
     add a, c
     bit 7, a
-    jr nz, Jump_016_7395
+    jr nz, .set_record_buf_a_to_01
     or a, a
-    jr z, Jump_016_7395
+    jr z, .set_record_buf_a_to_01
     cp a, $64
-    jr c, Jump_016_7397
+    jr c, .set_record_buf_a
     ld a, $63
-    jr Jump_016_7397
+    jr .set_record_buf_a
 
-Jump_016_7395::
+.set_record_buf_a_to_01:
     ld a, $01
 
-Jump_016_7397::
+.set_record_buf_a:
     ld [wRecordBufA + $56], a
     ld a, [wRecordBufA + $B]
     ld l, a
@@ -8780,15 +8781,15 @@ Jump_016_7397::
     ld c, a
     ld a, [wRecordBufA + $56]
     cp a, c
-    jr c, Jump_016_73BB
+    jr c, .set_record_buf_a2
     ld c, a
 
-Jump_016_73BB::
+.set_record_buf_a2:
     ld a, c
     ld [wRecordBufA + $57], a
     ld a, [wBattleKind]
     cp a, $02
-    jp z, Jump_016_7456
+    jp z, .call_battle_end_step3_sub01_load_species
     ld a, [wRecordBufA + $5D]
     ld c, a
     ld a, [wRecordBufA + $5E]
@@ -8858,13 +8859,13 @@ Jump_016_73BB::
     ld a, l
     ld [wRecordBufAByte71], a
 
-Jump_016_7456::
+.call_battle_end_step3_sub01_load_species:
     call BattleEnd_Step3_Sub01_LoadSpeciesFamily
     ld hl, wWorkBuf
     ld b, $0B
     ld de, $0000
 
-Jump_016_7461::
+.loop:
     ld a, e
     add a, [hl]
     ld e, a
@@ -8873,37 +8874,37 @@ Jump_016_7461::
     ld d, a
     inc hl
     dec b
-    jr nz, Jump_016_7461
+    jr nz, .loop
     ld a, d
     or a, a
-    jr nz, Jump_016_74A2
+    jr nz, .read_record_buf_a2
     ld hl, $0000
     ld a, e
     cp a, $15
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $0032
     cp a, $29
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $0064
     cp a, $3D
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $0096
     cp a, $51
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $00C8
     cp a, $65
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $00FA
     cp a, $79
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
     ld hl, $012C
     cp a, $8D
-    jr c, Jump_016_74A5
+    jr c, .read_record_buf_a3
 
-Jump_016_74A2::
+.read_record_buf_a2:
     ld hl, $0190
 
-Jump_016_74A5::
+.read_record_buf_a3:
     push hl
     ld a, [wRecordBufA + $56]
     ld c, $19
@@ -8916,19 +8917,19 @@ Jump_016_74A5::
     sbc a, d
     ld h, a
     bit 7, h
-    jr z, Jump_016_74BE
+    jr z, .skip
     ld hl, $0000
-    jr Jump_016_74C9
+    jr .set_record_buf_a3
 
-Jump_016_74BE::
+.skip:
     ld a, l
     sub a, $E7
     ld a, h
     sbc a, $03
-    jr c, Jump_016_74C9
+    jr c, .set_record_buf_a3
     ld hl, $03E7
 
-Jump_016_74C9::
+.set_record_buf_a3:
     ld a, l
     ld [wRecordBufA + $6B], a
     ld a, h
@@ -8949,10 +8950,10 @@ Func_016_74D2:: ; address name
     sbc a, b
     ld h, a
     bit 7, h
-    jr z, Jump_016_74E2
+    jr z, .set_battle_temp7_d
     ld bc, $03E7
 
-Jump_016_74E2::
+.set_battle_temp7_d:
     ld a, c
     ld [wBattleTemp7D], a
     ld a, b
@@ -8996,10 +8997,10 @@ Func_016_751B:: ; address name
     sbc a, b
     ld h, a
     bit 7, h
-    jr z, Jump_016_752B
+    jr z, .set_battle_temp7_d
     ld bc, $03E7
 
-Jump_016_752B::
+.set_battle_temp7_d:
     ld a, c
     ld [wBattleTemp7D], a
     ld a, b
@@ -9043,13 +9044,13 @@ Func_016_756F:: ; address name
     ld hl, vTiles1 + $6D0
     ld b, $10
 
-Jump_016_7577::
+.loop:
     call WaitForVRAMAccess
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_016_7577
+    jr nz, .loop
     ld hl, $0301
     ld a, l
     ld [wTextWindowRows], a
@@ -9112,12 +9113,12 @@ Func_016_75EE:: ; address name
     farcall CheckSaveData
     ldh a, [hTemp0]
     or a, a
-    jr z, Jump_016_760B
+    jr z, .set_battler_records_to_01
     ld a, $00
     ld [wBattlerRecords], a
-    jp Jump_016_76B5
+    jp .return
 
-Jump_016_760B::
+.set_battler_records_to_01:
     ld a, $01
     ld [wBattlerRecords], a
     ld a, $0A
@@ -9145,7 +9146,7 @@ Jump_016_760B::
     call BuildRecordSummaryForWorkBuf
     pop af
     cp a, $01
-    jr z, Jump_016_767E
+    jr z, .read_saved_arena_byte37
     push af
     ld a, [sSaveData + $101]
     ld [wWorkBuf], a
@@ -9157,7 +9158,7 @@ Jump_016_760B::
     call BuildRecordSummaryForWorkBuf
     pop af
     cp a, $02
-    jr z, Jump_016_767E
+    jr z, .read_saved_arena_byte37
     ld a, [sSaveData + $102]
     ld [wWorkBuf], a
     ld de, wBattlerRecords + $29
@@ -9167,7 +9168,7 @@ Jump_016_760B::
     ld [wWorkBuf + $2], a
     call BuildRecordSummaryForWorkBuf
 
-Jump_016_767E::
+.read_saved_arena_byte37:
     ld a, [sSavedArenaByte37]
     ld [wTitleByte0A], a
     ld a, [sSavedMapType]
@@ -9192,7 +9193,7 @@ Jump_016_767E::
     xor a, a
     ld [rRAMG], a
 
-Jump_016_76B5::
+.return:
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
@@ -9301,66 +9302,66 @@ Func_016_7720:: ; address name
     ld [de], a
     ld a, b
     and a, $C0
-    jr z, Jump_016_7744
+    jr z, .next
     inc de
     rlca
     rlca
     add a, $8C
     ld [de], a
 
-Jump_016_7744::
+.next:
     inc de
     ld a, [hl+]
     ld [de], a
     ld a, b
     and a, $30
-    jr z, Jump_016_7752
+    jr z, .next2
     inc de
     swap a
     add a, $8C
     ld [de], a
 
-Jump_016_7752::
+.next2:
     inc de
     ld a, [hl+]
     ld [de], a
     ld a, b
     and a, $0C
-    jr z, Jump_016_7760
+    jr z, .next3
     inc de
     rrca
     rrca
     add a, $8C
     ld [de], a
 
-Jump_016_7760::
+.next3:
     inc de
     ld a, [hl+]
     ld [de], a
     ld a, b
     and a, $03
-    jr z, Jump_016_776C
+    jr z, .next4
     inc de
     add a, $8C
     ld [de], a
 
-Jump_016_776C::
+.next4:
     inc de
     ld a, [hl+]
     ld [de], a
     ld a, c
     and a, $C0
-    jr z, Jump_016_777A
+    jr z, .return
     inc de
     rlca
     rlca
     add a, $8C
     ld [de], a
 
-Jump_016_777A::
+.return:
     ret
 
-; far-calls DecompressGraphicsA4ToTiles0 and continues at Jump_016_77A6 (E-0127)
+; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary (E-0127)
 ; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_CopyBlockToTileBuffer, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
 ; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
@@ -9368,7 +9369,7 @@ Jump_016_777A::
 DecompressA4GraphicsAndContinue::
 Func_016_777B:: ; address name
     farcall DecompressGraphicsA4ToTiles0
-    jr Jump_016_77A6
+    jr DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary
 
 ; loads the summary graphics and palette, the save file summary, and draws the player name, party icons, names, levels and key name on the title screen (E-0131)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9383,7 +9384,7 @@ Func_016_7783:: ; address name
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_016_77A6
+    jr z, DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary
     ld de, OBJPaletteBufferData_7E_5BB8
     ld b, $7E
     ld hl, wOBJPaletteBuffer
@@ -9392,59 +9393,60 @@ Func_016_7783:: ; address name
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
 
-Jump_016_77A6::
+DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
+Jump_016_77A6:: ; address name
     call LoadSaveFileSummary
     ld a, [wBattlerRecords]
     or a, a
-    jp nz, Jump_016_7832
+    jp nz, .set_text_window_rows
     ld hl, wScreenTileBuffer + $41
     ld bc, $1104
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_77C0
+    jr nz, .skip
     ld hl, wScreenTileBuffer + $81
 
-Jump_016_77C0::
+.skip:
     ld a, $C3
 
-Jump_016_77C2::
+.loop:
     push bc
     push hl
 
-Jump_016_77C4::
+.loop2:
     ld [hl+], a
     dec b
-    jr nz, Jump_016_77C4
+    jr nz, .loop2
     pop hl
     ld bc, $0040
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_016_77C2
+    jr nz, .loop
     ld hl, wScreenTileBuffer + $C4
     ld b, $0E
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_77E4
+    jr nz, .skip2
     ld hl, wScreenTileBuffer + $104
     ld a, $40
-    jr Jump_016_77E6
+    jr .loop3
 
-Jump_016_77E4::
+.skip2:
     ld a, $20
 
-Jump_016_77E6::
+.loop3:
     ld [hl+], a
     inc a
     dec b
-    jr nz, Jump_016_77E6
+    jr nz, .loop3
     ld hl, vTiles2 + $200
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_77F8
+    jr nz, .set_text_window_tile_lo
     ld hl, vTiles2 + $400
 
-Jump_016_77F8::
+.set_text_window_tile_lo:
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -9471,7 +9473,7 @@ Jump_016_77F8::
     ld [wTextWindowWidth], a
     ret
 
-Jump_016_7832::
+.set_text_window_rows:
     ld hl, $0501
     ld a, l
     ld [wTextWindowRows], a
@@ -9485,10 +9487,10 @@ Jump_016_7832::
     ld de, vTiles2 + $200
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_7857
+    jr nz, .call_show_ten_byte_name_at_de
     ld de, vTiles2 + $400
 
-Jump_016_7857::
+.call_show_ten_byte_name_at_de:
     call ShowTenByteNameAtDE
     ld a, [wTitlePlayHoursLo]
     ld l, a
@@ -9498,10 +9500,10 @@ Jump_016_7857::
     ld de, wScreenTileBuffer + $4D
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_7872
+    jr nz, .call_write_three_digit_tiles_digits_bank16
     ld de, wScreenTileBuffer + $8D
 
-Jump_016_7872::
+.call_write_three_digit_tiles_digits_bank16:
     call WriteThreeDigitTilesDigits_Bank16
     ld a, [wTitlePlayMinutes]
     ld l, a
@@ -9510,10 +9512,10 @@ Jump_016_7872::
     ld de, wScreenTileBuffer + $51
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_788B
+    jr nz, .call_write_two_digit_tiles_wc8_c1_no_blank
     ld de, wScreenTileBuffer + $91
 
-Jump_016_788B::
+.call_write_two_digit_tiles_wc8_c1_no_blank:
     call WriteTwoDigitTilesWC8C1NoBlank_Bank16
     ld a, [wTitlePartyCount]
     ld b, a
@@ -9578,12 +9580,12 @@ Func_016_78DC:: ; address name
     ld de, wTextBuf0
     ld b, $0A
 
-Jump_016_78E9::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_016_78E9
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     farcall ShowString_Bank08
@@ -9597,7 +9599,7 @@ DrawSaveSummaryPartyEntryC::
 Func_016_78F9:: ; address name
     ld a, c
     cp a, b
-    jr nc, Jump_016_7969
+    jr nc, .check_game_mode
     push bc
     ld a, [hl+]
     ld [wWorkBuf], a
@@ -9607,10 +9609,10 @@ Func_016_78F9:: ; address name
     push af
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_7912
+    jr nz, .restore
     ld hl, DrawSaveSummaryPartyEntryC_Data_7A39
 
-Jump_016_7912::
+.restore:
     pop af
     add_a_to_hl
     ld a, [hl]
@@ -9652,10 +9654,10 @@ Jump_016_7912::
     push af
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_795B
+    jr nz, .restore2
     ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
 
-Jump_016_795B::
+.restore2:
     pop af
     add a, a
     add_a_to_hl
@@ -9665,15 +9667,15 @@ Jump_016_795B::
     call WriteTwoDigitTilesWC8C1NoBlank_Bank16
     ret
 
-Jump_016_7969::
+.check_game_mode:
     ld hl, DrawSaveSummaryPartyEntryC_Data_7A3C
     push af
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_7977
+    jr nz, .restore3
     ld hl, DrawSaveSummaryPartyEntryC_Data_7A42
 
-Jump_016_7977::
+.restore3:
     pop af
     add a, a
     add_a_to_hl
@@ -9684,10 +9686,10 @@ Jump_016_7977::
     ld b, $0B
     ld a, $C3
 
-Jump_016_798A::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_016_798A
+    jr nz, .loop
     pop bc
     ret
 
@@ -9699,7 +9701,7 @@ BlankTwoTileCellByGameMode::
 Func_016_7990:: ; address name
     ld a, [wGameMode]
     cp a, $05
-    jr z, Jump_016_79A6
+    jr z, .set_screen_tile_buffer_to_C3
     ld a, $C3
     ld [wScreenTileBuffer + $8F], a
     ld [wScreenTileBuffer + $90], a
@@ -9707,7 +9709,7 @@ Func_016_7990:: ; address name
     ld [wScreenTileBuffer + $B0], a
     ret
 
-Jump_016_79A6::
+.set_screen_tile_buffer_to_C3:
     ld a, $C3
     ld [wScreenTileBuffer + $CF], a
     ld [wScreenTileBuffer + $D0], a
@@ -9725,10 +9727,10 @@ Func_016_79B5:: ; address name
     ld hl, vTiles2 + $3B0
     ld a, [wGameMode]
     cp a, $05
-    jr nz, Jump_016_79C2
+    jr nz, .set_text_window_tile_lo
     ld hl, vTiles2 + $5B0
 
-Jump_016_79C2::
+.set_text_window_tile_lo:
     ld a, l
     ld [wTextWindowTileLo], a
     ld a, h
@@ -9740,7 +9742,7 @@ Jump_016_79C2::
     ld [wTextWindowWidth], a
     ld a, [wTitleKeyFlag]
     bit 7, a
-    jr nz, Jump_016_79EF
+    jr nz, .check_title_key_byte3
     ld a, [wTitleStringIndex]
     add a, $0A
     ld [wStringIndex], a
@@ -9749,10 +9751,10 @@ Jump_016_79C2::
     farcall ShowString_Bank08
     ret
 
-Jump_016_79EF::
+.check_title_key_byte3:
     ld a, [wTitleKeyByte3]
     bit 7, a
-    jr nz, Jump_016_7A22
+    jr nz, CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry
     ld de, wTextBuf0
     ld a, [wTitleKeyWord1]
     inc a
@@ -9778,7 +9780,8 @@ Func_016_7A1E:: ; address name
     call CopyKeyNameWordToDE
     ret
 
-Jump_016_7A22::
+CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
+Jump_016_7A22:: ; address name
     ld a, [wTitleKeyEntry]
     and a, $3F
     ld [wStringIndex], a
@@ -9817,10 +9820,10 @@ Func_016_7A48:: ; address name
     ld de, FamilyIconTiles
     add a, e
     ld e, a
-    jr nc, Jump_016_7A55
+    jr nc, .call_write_bytes_to_vram_tile_wd09_e
     inc d
 
-Jump_016_7A55::
+.call_write_bytes_to_vram_tile_wd09_e:
     ld b, $10
     call WriteBytesToVRAMTileWD09E
     ret
@@ -9849,23 +9852,23 @@ Func_016_7A64:: ; address name
     call LoadTileForRecordByte0D
     ld a, [wPartyCount]
     cp a, $01
-    jr z, Jump_016_7A91
+    jr z, .done
     ld a, $01
     ld h, $C8
     call LoadTileForRecordByte0D
     ld a, [wPartyCount]
     cp a, $02
-    jr z, Jump_016_7A91
+    jr z, .done
     ld a, $02
     ld h, $C9
     call LoadTileForRecordByte0D
 
-Jump_016_7A91::
+.done:
     ld a, $00
     ld [rRAMG], a
     ret
 
-; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from Data_016_7ACD by the low nibble of record byte $0D and copies them on through the shared copy loop at Jump_016_7AB2 (not read to its end) (E-0103)
+; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from Data_016_7ACD by the low nibble of record byte $0D and copies them on through the shared copy loop at WriteBytesToVRAMTileWD09E_Skip (not read to its end) (E-0103)
 ; 3 call sites from 1 routine (e.g. LoadTilesForPartyRecords)
 LoadTileForRecordByte0D::
 Func_016_7A97:: ; address name
@@ -9878,13 +9881,13 @@ Func_016_7A97:: ; address name
     ld de, FamilyIconTiles
     add a, e
     ld e, a
-    jr nc, Jump_016_7AAA
+    jr nc, .skip
     inc d
 
-Jump_016_7AAA::
+.skip:
     ld b, $10
     pop af
-    jr Jump_016_7AB2
+    jr WriteBytesToVRAMTileWD09E_Skip
 
 ; writes B bytes from DE to VRAM tile wD09E ($8000 + 16 * index; indices below $80 use the $9000 area) (E-0124)
 ; 2 call sites from 2 routines (e.g. LoadFamilyIconTileForWorkBuf, LoadAllFamilyIconTiles)
@@ -9893,7 +9896,8 @@ WriteBytesToVRAMTileWD09E::
 Func_016_7AAF:: ; address name
     ld a, [wWorkBuf + $1]
 
-Jump_016_7AB2::
+WriteBytesToVRAMTileWD09E_Skip::
+Jump_016_7AB2:: ; address name
     swap a
     ld h, a
     and a, $F0
@@ -9903,15 +9907,15 @@ Jump_016_7AB2::
     or a, $80
     ld h, a
     cp a, $88
-    jr nc, Jump_016_7AC4
+    jr nc, .loop
     set 4, h
 
-Jump_016_7AC4::
+.loop:
     ld a, [de]
     call WriteVRAMByteInc
     inc de
     dec b
-    jr nz, Jump_016_7AC4
+    jr nz, .loop
     ret
 
 ; E-0229 (C1: LoadFamilyIconTileForWorkBuf copies the 16 bytes at $7ACD + 16 * family (wWorkBuf) to VRAM; 11 families).

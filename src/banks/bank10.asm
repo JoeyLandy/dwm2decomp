@@ -26,42 +26,43 @@ Func_010_4008:: ; address name
     ld a, $01
     ld [wScriptRunning], a
 
-Jump_010_401D::
+FetchScriptCommand_ReadScriptPointerLo::
+Jump_010_401D:: ; address name
     ld a, [wScriptPointerLo]
     ld l, a
     ld a, [wScriptPointerHi]
     ld h, a
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_4032
+    jr z, .skip
     call ReadWordFromDataBank
     ld a, b
     inc hl
-    jr Jump_010_4033
+    jr .cp_FF
 
-Jump_010_4032::
+.skip:
     ld a, [hl+]
 
-Jump_010_4033::
+.cp_FF:
     cp a, $FF
-    jr nz, Jump_010_4054
+    jr nz, .skip2
     xor a, a
     ld [wScriptRunning], a
     ld [wScriptCommandType], a
     ld [wScriptInDataBank], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_010_404E
+    jr nz, .set_mode_state_to_05
     ld a, $00
     ld [wModeState], a
     ret
 
-Jump_010_404E::
+.set_mode_state_to_05:
     ld a, $05
     ld [wModeState], a
     ret
 
-Jump_010_4054::
+.skip2:
     push hl
     rst $00
 
@@ -363,20 +364,20 @@ Func_010_426E:: ; address name
     ld a, [wMapSpriteKind]
     and a, $03
     dec a
-    jr nz, Jump_010_4291
+    jr nz, .set_script_param1_to_02
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, Jump_010_428B
+    jr nz, .set_script_param1_to_03
     ld a, $01
     ld [wScriptParam1], a
     ret
 
-Jump_010_428B::
+.set_script_param1_to_03:
     ld a, $03
     ld [wScriptParam1], a
     ret
 
-Jump_010_4291::
+.set_script_param1_to_02:
     ld a, $02
     ld [wScriptParam1], a
     ret
@@ -409,7 +410,7 @@ Func_010_42B3:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_42CE
+    jr z, .set_script_command_type_to_01
     ld a, $01
     ld [wScriptCommandType], a
     call ReadWordFromDataBank
@@ -419,9 +420,9 @@ Func_010_42B3:: ; address name
     ld [wScriptParam1], a
     inc hl
     inc hl
-    jr Jump_010_42DB
+    jr .clear_script_step
 
-Jump_010_42CE::
+.set_script_command_type_to_01:
     ld a, $01
     ld [wScriptCommandType], a
     ld a, [hl+]
@@ -429,7 +430,7 @@ Jump_010_42CE::
     ld a, [hl+]
     ld [wScriptParam1], a
 
-Jump_010_42DB::
+.clear_script_step:
     xor a, a
     ld [wScriptStep], a
     ld a, l
@@ -445,7 +446,7 @@ ScriptFetch01:: ; code pointer of the table ScriptOpcodeHandlers; C0
 Func_010_42E8:: ; address name
     ld a, $02
     ld [wScriptCommandType], a
-    jr Jump_010_42F4
+    jr ScriptFetch02_Restore
 
 ; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -455,7 +456,8 @@ Func_010_42EF:: ; address name
     ld a, $03
     ld [wScriptCommandType], a
 
-Jump_010_42F4::
+ScriptFetch02_Restore::
+Jump_010_42F4:: ; address name
     pop hl
     ld a, [hl+]
     ld c, a
@@ -567,48 +569,48 @@ Func_010_4367:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_43A6
+    jr z, .check_text_yes_no_result
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_010_43A3
+    jr nz, .next
     call ReadWordFromDataBank
     inc hl
     ld a, b
     add a, l
     ld l, a
-    jr nc, Jump_010_4398
+    jr nc, .set_script_pointer_lo
     inc h
 
-Jump_010_4398::
+.set_script_pointer_lo:
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_43A3::
+.next:
     inc hl
-    jr Jump_010_4398
+    jr .set_script_pointer_lo
 
-Jump_010_43A6::
+.check_text_yes_no_result:
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_010_43BD
+    jr nz, .set_script_pointer_lo2
     ld a, [hl+]
     add_a_to_hl
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_43BD::
+.set_script_pointer_lo2:
     inc hl
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -619,21 +621,21 @@ Func_010_43C9:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_43DF
+    jr z, .set_script_pointer_lo
     call ReadWordFromDataBank
     ld a, b
     ld [wScriptPointerLo], a
     ld a, c
     ld [wScriptPointerHi], a
     inc hl
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_43DF::
+.set_script_pointer_lo:
     ld a, [hl+]
     ld [wScriptPointerLo], a
     ld a, [hl]
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -651,7 +653,7 @@ Func_010_43EA:: ; address name
     ld a, h
     ld [wScriptPointerHi], a
     call SetFlagBit
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -683,17 +685,17 @@ Func_010_4414:: ; address name
     ld de, wSpriteSlots + $C
     add a, e
     ld e, a
-    jr nc, Jump_010_4420
+    jr nc, .skip
     inc d
 
-Jump_010_4420::
+.skip:
     ld a, $E0
     ld [de], a
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -729,7 +731,7 @@ Func_010_4445:: ; address name
     ld a, h
     ld [wScriptPointerHi], a
     farcall AddGoldCapped
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -746,19 +748,19 @@ Func_010_445D:: ; address name
     ld [wScriptPointerHi], a
     pop af
     cp a, $FF
-    jr z, Jump_010_447D
+    jr z, .call_restart_map_music
     cp a, $60
-    jr c, Jump_010_4477
+    jr c, .call_queue_music
     call QueueSoundEffect
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_4477::
+.call_queue_music:
     call QueueMusic
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_447D::
+.call_restart_map_music:
     farcall RestartMapMusic
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript with the pointer just after it; the command reads its own arguments from the script
 ; no direct call (reached through a table, a jump or a vector)
@@ -789,7 +791,7 @@ Func_010_4490:: ; address name
     call StartEventScript
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_010_44BA
+    jr c, .set_message_index
     ld hl, $0088
     ld a, l
     ld [wMessageIndex], a
@@ -799,7 +801,7 @@ Func_010_4490:: ; address name
     ld [wMessageState], a
     ret
 
-Jump_010_44BA::
+.set_message_index:
     ld hl, $0087
     ld a, l
     ld [wMessageIndex], a
@@ -820,7 +822,7 @@ Func_010_44CA:: ; address name
     call StartEventScript
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_010_44EB
+    jr c, .set_message_index
     ld hl, $4097
     ld a, l
     ld [wMessageIndex], a
@@ -830,7 +832,7 @@ Func_010_44CA:: ; address name
     ld [wMessageState], a
     ret
 
-Jump_010_44EB::
+.set_message_index:
     ld hl, $408D
     ld a, l
     ld [wMessageIndex], a
@@ -1079,7 +1081,7 @@ Func_010_45D3:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_45EE
+    jr z, .set_script_command_type_to_01
     ld a, $01
     ld [wScriptCommandType], a
     call ReadWordFromDataBank
@@ -1089,9 +1091,9 @@ Func_010_45D3:: ; address name
     ld [wScriptParam1], a
     inc hl
     inc hl
-    jr Jump_010_45FB
+    jr .read_screen_table_index
 
-Jump_010_45EE::
+.set_script_command_type_to_01:
     ld a, $01
     ld [wScriptCommandType], a
     ld a, [hl+]
@@ -1099,7 +1101,7 @@ Jump_010_45EE::
     ld a, [hl+]
     ld [wScriptParam1], a
 
-Jump_010_45FB::
+.read_screen_table_index:
     push hl
     ld a, [wScreenTableIndex]
     add a, a
@@ -1161,7 +1163,7 @@ Func_010_4637:: ; address name
     pop hl
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_4652
+    jr z, .set_script_command_type_to_01
     ld a, $01
     ld [wScriptCommandType], a
     call ReadWordFromDataBank
@@ -1171,9 +1173,9 @@ Func_010_4637:: ; address name
     ld [wScriptParam1], a
     inc hl
     inc hl
-    jr Jump_010_465F
+    jr .call_test_flag_bit
 
-Jump_010_4652::
+.set_script_command_type_to_01:
     ld a, $01
     ld [wScriptCommandType], a
     ld a, [hl+]
@@ -1181,16 +1183,16 @@ Jump_010_4652::
     ld a, [hl+]
     ld [wScriptParam1], a
 
-Jump_010_465F::
+.call_test_flag_bit:
     push hl
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_010_4670
+    jr c, .clear_script_step
     ld a, [wScriptParam0]
     add a, $20
     ld [wScriptParam0], a
 
-Jump_010_4670::
+.clear_script_step:
     pop hl
     xor a, a
     ld [wScriptStep], a
@@ -1218,7 +1220,7 @@ Func_010_467E:: ; address name
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers)
 ; no direct call (reached through a table, a jump or a vector)
@@ -1230,18 +1232,18 @@ Func_010_4694:: ; address name
     ld a, [wTwoChoiceCursor]
     ld c, a
 
-Jump_010_4699::
+.skip:
     ld a, c
     and a, a
-    jr z, Jump_010_46A1
+    jr z, .check_script_in_data_bank
     inc hl
     dec c
-    jr Jump_010_4699
+    jr .skip
 
-Jump_010_46A1::
+.check_script_in_data_bank:
     ld a, [wScriptInDataBank]
     and a, a
-    jr z, Jump_010_46BC
+    jr z, .skip2
     call ReadWordFromDataBank
     inc hl
     ld a, b
@@ -1250,16 +1252,16 @@ Jump_010_46A1::
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
-Jump_010_46BC::
+.skip2:
     ld a, [hl+]
     add_a_to_hl
     ld a, l
     ld [wScriptPointerLo], a
     ld a, h
     ld [wScriptPointerHi], a
-    jp Jump_010_401D
+    jp FetchScriptCommand_ReadScriptPointerLo
 
 ; HL = script address: clears wC921-wC926 (parameters and step) and stores HL in wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)
 ; 28 call sites from 28 routines (e.g. ScriptFetchF8, ScriptFetchF7, ScriptFetchF6, ScriptFetchF4, ...)
@@ -1869,7 +1871,7 @@ ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
 Jump_010_4A27:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
-    jr nz, Jump_010_4A62
+    jr nz, .done
     farcall SetBit1OfPlayerAndObjectFlags
     ld hl, vTiles1
     ld de, $1202
@@ -1885,13 +1887,13 @@ Jump_010_4A27:: ; address name
     ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
-    jr c, Jump_010_4A62
+    jr c, .done
     ld a, $81
     ld [wTextWindowState], a
     ld a, $01
     ldh [hSpriteWindowClipMode], a
 
-Jump_010_4A62::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1904,12 +1906,12 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
 Jump_010_4A67:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
-    jr nz, Jump_010_4A74
+    jr nz, .read_script_param0
     ld a, [wTextWindowState]
     and a, $03
     ret nz
 
-Jump_010_4A74::
+.read_script_param0:
     ld a, [wScriptParam0]
     ld l, a
     ld a, [wScriptParam1]
@@ -1931,7 +1933,7 @@ Jump_010_4A84:: ; address name
     ret nz
     ld a, [wScriptParam1]
     bit 6, a
-    jr nz, Jump_010_4AAE
+    jr nz, .done
     ld a, $69
     call QueueSoundEffect
     xor a, a
@@ -1942,11 +1944,11 @@ Jump_010_4A84:: ; address name
     ld [wTextWindowStep], a
     ldh a, [hPlayerY]
     cp a, $48
-    jr c, Jump_010_4AAE
+    jr c, .done
     ld a, $82
     ld [wTextWindowState], a
 
-Jump_010_4AAE::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1959,13 +1961,13 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
 Jump_010_4AB3:: ; address name
     ld a, [wScriptParam1]
     bit 6, a
-    jr nz, Jump_010_4AC6
+    jr nz, .clear_script_command_type
     ld a, [wTextWindowState]
     and a, $03
     ret nz
     farcall ClearBit1OfPlayerAndObjectFlags
 
-Jump_010_4AC6::
+.clear_script_command_type:
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -1984,7 +1986,7 @@ Func_010_4AD0:: ; address name
     push hl
     ld a, [wMessageMode]
     and a, a
-    jr z, Jump_010_4B20
+    jr z, ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Data_CheckMapType
     dec a
     ld c, a
     sla a
@@ -1992,10 +1994,10 @@ Func_010_4AD0:: ; address name
     ld de, ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Data
     add a, e
     ld e, a
-    jr nc, Jump_010_4AE8
+    jr nc, .skip
     inc d
 
-Jump_010_4AE8::
+.skip:
     ld a, [de]
     ld c, a
     inc de
@@ -2022,15 +2024,16 @@ Data_010_4AFF:: ; address name
     db $43, $F2, $01, $40, $0D, $01, $40, $0E, $01, $40, $0B, $90, $64, $33, $10, $5D
     db $24
 
-Jump_010_4B20::
+ScriptCommand09_Case01_WriteStringIndexAndStringCategory_Data_CheckMapType::
+Jump_010_4B20:: ; address name
     pop hl
     ld a, [wMapType]
     cp a, $80
-    jr z, Jump_010_4B2D
+    jr z, .set_string_index
     bit 7, a
-    jp nz, Jump_010_4BA7
+    jp nz, ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank89_Skip
 
-Jump_010_4B2D::
+.set_string_index:
     ld a, l
     ld [wStringIndex], a
     xor a, a
@@ -2136,20 +2139,21 @@ Jump_010_4BA0:: ; address name
     farcall BeginStringDisplay_Bank89
     ret
 
-Jump_010_4BA7::
+ScriptCommand09_Case01_Sub01_ToBeginStringDisplay_Bank89_Skip::
+Jump_010_4BA7:: ; address name
     ld a, h
     or a, a
-    jr nz, Jump_010_4BBE
+    jr nz, .set_string_index
     ld a, l
     cp a, $20
-    jr c, Jump_010_4BBE
+    jr c, .set_string_index
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank83
     ret
 
-Jump_010_4BBE::
+.set_string_index:
     ld a, l
     ld [wStringIndex], a
     xor a, a

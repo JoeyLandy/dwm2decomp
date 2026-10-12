@@ -308,14 +308,14 @@ Jump_00F_418E:: ; address name
     ld b, $08
     ld a, $80
 
-Jump_00F_41D4::
+.loop:
     ld [hl+], a
     inc a
     dec b
-    jr nz, Jump_00F_41D4
+    jr nz, .loop
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00F_41F1
+    jr z, .check_sgb_active
     ld a, $02
     ldh [rSVBK], a
     ld hl, wScreenAttrBuffer
@@ -325,10 +325,10 @@ Jump_00F_41D4::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_00F_41F1::
+.check_sgb_active:
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_00F_423E
+    jr z, .call_draw_full_screen_buffer_at_scroll
     xor a, a
     ldh [rBGP], a
     ldh [rOBP0], a
@@ -364,7 +364,7 @@ Jump_00F_41F1::
     ld bc, $0008
     call CopyBytes
 
-Jump_00F_423E::
+.call_draw_full_screen_buffer_at_scroll:
     farcall DrawFullScreenBufferAtScroll
     ld a, $FE
     call StartPaletteFade
@@ -495,7 +495,7 @@ Jump_00F_42D5:: ; address name
     xor a, $FF
     inc a
     ld c, a
-    jr Jump_00F_42F9
+    jr SceneHomecoming_WriteObject2AndPlayerXEtc_ReadObject2
 
 ; entry 28 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)
@@ -512,7 +512,8 @@ Jump_00F_42E7:: ; address name
     ld a, [hl]
     ld c, a
 
-Jump_00F_42F9::
+SceneHomecoming_WriteObject2AndPlayerXEtc_ReadObject2::
+Jump_00F_42F9:: ; address name
     ld a, [wObject2 + $B]
     add a, c
     ld [wObject2 + $B], a
@@ -546,7 +547,7 @@ SceneHomecoming_WritePlayerFacingAndPlayerYEtc::
 Jump_00F_435F:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_4376
+    jr nz, .set_player_facing_to_03
     ld a, $02
     ldh [hPlayerFacing], a
     ldh a, [hPlayerY]
@@ -558,7 +559,7 @@ Jump_00F_435F:: ; address name
     inc [hl]
     ret
 
-Jump_00F_4376::
+.set_player_facing_to_03:
     ld a, $03
     ldh [hPlayerFacing], a
     ldh a, [hPlayerX]
@@ -597,7 +598,7 @@ Jump_00F_439D:: ; address name
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_43C2
+    jr nz, .set_step_target_to_83
     ld a, $80
     ld [wStepTarget], a
     ld a, $40
@@ -610,7 +611,7 @@ Jump_00F_439D:: ; address name
     inc [hl]
     ret
 
-Jump_00F_43C2::
+.set_step_target_to_83:
     ld a, $83
     ld [wStepTarget], a
     ld a, $58
@@ -1091,14 +1092,14 @@ SceneDarckDefeated_QueueSoundEffect::
 Jump_00F_46D8:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_46E8
+    jr nz, .set_script_param0
     inc a
     ld [wScriptParam0], a
     ld a, $6D
     call QueueSoundEffect
     ret
 
-Jump_00F_46E8::
+.set_script_param0:
     inc a
     ld [wScriptParam0], a
     cp a, $78
@@ -1250,33 +1251,33 @@ ScriptStepFlickerObjectCB9B::
 Jump_00F_47BC:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_47C9
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_47D9
-    jr Jump_00F_47E0
+    jr z, .set_object1_to_E0
+    jr .set_object1_to_40
 
-Jump_00F_47C9::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_47D3
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_47D9
-    jr Jump_00F_47E0
+    jr z, .set_object1_to_E0
+    jr .set_object1_to_40
 
-Jump_00F_47D3::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_47D9
-    jr Jump_00F_47E0
+    jr z, .set_object1_to_E0
+    jr .set_object1_to_40
 
-Jump_00F_47D9::
+.set_object1_to_E0:
     ld a, $E0
     ld [wObject1 + $C], a
-    jr Jump_00F_47E5
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_47E0::
+.set_object1_to_40:
     ld a, $40
     ld [wObject1 + $C], a
 
-Jump_00F_47E5::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -1437,7 +1438,7 @@ Jump_00F_48DE:: ; address name
     ld [wStepPtrLo], a
     ld a, $03
     ld [wStepTarget], a
-    jr Jump_00F_48F4
+    jr SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrHiTo04
 
 ; entry 115 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
@@ -1451,7 +1452,8 @@ Jump_00F_48EA:: ; address name
     ld a, $01
     ld [wStepTarget], a
 
-Jump_00F_48F4::
+SceneDarckDefeated_StepObjectTowardCoord_Case73_SetStepPtrHiTo04::
+Jump_00F_48F4:: ; address name
     ld a, $04
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -1561,33 +1563,33 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case68::
 Jump_00F_499C:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_49A9
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_49B9
-    jr Jump_00F_49C0
+    jr z, .set_sprite_slots_to_E0
+    jr .set_sprite_slots_to_30
 
-Jump_00F_49A9::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_49B3
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_49B9
-    jr Jump_00F_49C0
+    jr z, .set_sprite_slots_to_E0
+    jr .set_sprite_slots_to_30
 
-Jump_00F_49B3::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_49B9
-    jr Jump_00F_49C0
+    jr z, .set_sprite_slots_to_E0
+    jr .set_sprite_slots_to_30
 
-Jump_00F_49B9::
+.set_sprite_slots_to_E0:
     ld a, $E0
     ld [wSpriteSlots + $C], a
-    jr Jump_00F_49C5
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_49C0::
+.set_sprite_slots_to_30:
     ld a, $30
     ld [wSpriteSlots + $C], a
 
-Jump_00F_49C5::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -1634,7 +1636,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case65::
 Jump_00F_4A09:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_4A42
+    jr nz, .set_step_ptr_hi_to_02
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $40
@@ -1657,7 +1659,7 @@ Jump_00F_4A09:: ; address name
     inc [hl]
     ret
 
-Jump_00F_4A42::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $C0
@@ -1689,18 +1691,18 @@ SceneDarckDefeated_AddStepDeltaToPointedByte::
 Jump_00F_4A74:: ; address name
     ld a, [wScriptParam0]
     and a, $03
-    jr nz, Jump_00F_4A7F
+    jr nz, .check_script_param0
     ld hl, wObject1 + $C
     dec [hl]
 
-Jump_00F_4A7F::
+.check_script_param0:
     ld a, [wScriptParam0]
     and a, $01
-    jr nz, Jump_00F_4A8A
+    jr nz, .set_step_ptr_lo
     ld hl, wObject1 + $B
     inc [hl]
 
-Jump_00F_4A8A::
+.set_step_ptr_lo:
     ld de, wObject1 + $C
     ld a, e
     ld [wStepPtrLo], a
@@ -1826,7 +1828,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case56::
 Jump_00F_4B45:: ; address name
     ld a, [wScriptParam0]
     and a, $03
-    jr nz, Jump_00F_4B64
+    jr nz, .call_script_apply_step_delta_at_de
     ld a, [wSpriteSlots + $7]
     inc a
     and a, $03
@@ -1838,7 +1840,7 @@ Jump_00F_4B45:: ; address name
     ld [wObject2 + $7], a
     ld [wObject3 + $7], a
 
-Jump_00F_4B64::
+.call_script_apply_step_delta_at_de:
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE
     push af
@@ -1895,7 +1897,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case54::
 Jump_00F_4BB6:: ; address name
     ld a, [wScriptParam0]
     and a, $03
-    jr nz, Jump_00F_4BCC
+    jr nz, .call_script_apply_step_delta_at_de
     ld a, [wObject1 + $7]
     inc a
     and a, $03
@@ -1903,7 +1905,7 @@ Jump_00F_4BB6:: ; address name
     ld [wObject2 + $7], a
     ld [wObject3 + $7], a
 
-Jump_00F_4BCC::
+.call_script_apply_step_delta_at_de:
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE
     push af
@@ -2004,7 +2006,7 @@ SceneDarckDefeated_StepObjectTowardCoord_Case4A::
 Jump_00F_4C56:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_4C90
+    jr nz, .skip
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $02
@@ -2026,25 +2028,25 @@ Jump_00F_4C56:: ; address name
     inc [hl]
     ret
 
-Jump_00F_4C90::
+.skip:
     dec a
-    jr nz, Jump_00F_4CDA
+    jr nz, .set_step_ptr_lo_to_202
     ld a, [wObject2 + $C]
     cp a, $60
-    jr z, Jump_00F_4CA6
+    jr z, .set_step_ptr_lo_to_20
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $02
     ld [wStepTarget], a
-    jr Jump_00F_4CB0
+    jr .set_step_ptr_hi_to_02
 
-Jump_00F_4CA6::
+.set_step_ptr_lo_to_20:
     ld a, $20
     ld [wStepPtrLo], a
     ld a, $03
     ld [wStepTarget], a
 
-Jump_00F_4CB0::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -2062,7 +2064,7 @@ Jump_00F_4CB0::
     inc [hl]
     ret
 
-Jump_00F_4CDA::
+.set_step_ptr_lo_to_202:
     ld a, $20
     ld [wStepPtrLo], a
     ld a, $02
@@ -2101,7 +2103,7 @@ Jump_00F_4D1B:: ; address name
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_4D40
+    jr nz, .skip
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $80
@@ -2114,9 +2116,9 @@ Jump_00F_4D1B:: ; address name
     inc [hl]
     ret
 
-Jump_00F_4D40::
+.skip:
     dec a
-    jr nz, Jump_00F_4D5D
+    jr nz, .set_step_ptr_lo_to_B0
     ld a, $40
     ld [wStepPtrLo], a
     ld a, $81
@@ -2129,7 +2131,7 @@ Jump_00F_4D40::
     inc [hl]
     ret
 
-Jump_00F_4D5D::
+.set_step_ptr_lo_to_B0:
     ld a, $B0
     ld [wStepPtrLo], a
     ld a, $80
@@ -2167,7 +2169,7 @@ Jump_00F_4D87:: ; address name
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_4DAC
+    jr nz, .skip
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $02
@@ -2180,9 +2182,9 @@ Jump_00F_4D87:: ; address name
     inc [hl]
     ret
 
-Jump_00F_4DAC::
+.skip:
     dec a
-    jr nz, Jump_00F_4DC9
+    jr nz, .set_step_ptr_lo_to_50
     ld a, $20
     ld [wStepPtrLo], a
     ld a, $03
@@ -2195,7 +2197,7 @@ Jump_00F_4DAC::
     inc [hl]
     ret
 
-Jump_00F_4DC9::
+.set_step_ptr_lo_to_50:
     ld a, $50
     ld [wStepPtrLo], a
     ld a, $02
@@ -2276,7 +2278,7 @@ Jump_00F_4E31:: ; address name
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr Jump_00F_4EB0
+    jr SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80
 
 ; entry 58 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
@@ -2324,7 +2326,7 @@ Jump_00F_4E70:: ; address name
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr Jump_00F_4EB0
+    jr SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80
 
 ; entry 56 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
@@ -2355,7 +2357,8 @@ Jump_00F_4EA6:: ; address name
     ld a, $60
     ld [wStepPtrLo], a
 
-Jump_00F_4EB0::
+SceneDarckDefeated_StepObjectTowardCoord_Case37_SetStepTargetTo80::
+Jump_00F_4EB0:: ; address name
     ld a, $80
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
@@ -2429,11 +2432,11 @@ Jump_00F_4F06:: ; address name
     inc a
     ld [wScriptParam0], a
     and a, $01
-    jr z, Jump_00F_4F1A
+    jr z, .check_script_param0
     ld hl, wObject5 + $5
     dec [hl]
 
-Jump_00F_4F1A::
+.check_script_param0:
     ld a, [wScriptParam0]
     cp a, $40
     ret nz
@@ -2454,14 +2457,14 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_Case2F::
 Jump_00F_4F2D:: ; address name
     ld a, [wScriptParam0]
     and a, $07
-    jr nz, Jump_00F_4F40
+    jr nz, .call_script_apply_step_delta_at_de
     ld a, [wObject3 + $7]
     inc a
     and a, $03
     ld [wObject3 + $7], a
     ld [wObject4 + $7], a
 
-Jump_00F_4F40::
+.call_script_apply_step_delta_at_de:
     ld de, wObject2 + $C
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -2481,14 +2484,14 @@ SceneDarckDefeated_StepScriptParam0Counter_Bank0F_Case2E::
 Jump_00F_4F54:: ; address name
     ld a, [wScriptParam0]
     and a, $03
-    jr nz, Jump_00F_4F67
+    jr nz, .call_step_script_param0_counter_bank0_f
     ld a, [wObject3 + $7]
     inc a
     and a, $03
     ld [wObject3 + $7], a
     ld [wObject4 + $7], a
 
-Jump_00F_4F67::
+.call_step_script_param0_counter_bank0_f:
     ld b, $96
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -2596,13 +2599,13 @@ Jump_00F_4FF1:: ; address name
     ld [wFieldEventArg], a
     ldh a, [hPlayerY]
     cp a, $40
-    jr z, Jump_00F_5007
+    jr z, .set_step_ptr_lo_to_80
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
     ret
 
-Jump_00F_5007::
+.set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerRightTowardWC928
@@ -2848,13 +2851,13 @@ SceneDarckDefeated_StepPlayerLeftTowardWC928::
 Jump_00F_512E:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_00F_5140
+    jr z, .set_step_ptr_lo_to_20
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
     ret
 
-Jump_00F_5140::
+.set_step_ptr_lo_to_20:
     ld a, $20
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
@@ -2935,12 +2938,12 @@ SceneDarckDefeated_Case8A_WriteScriptSubStepAndObject5::
 Jump_00F_51B2:: ; address name
     ld a, [wScriptSubStep]
     bit 0, a
-    jr z, Jump_00F_51BE
+    jr z, .skip
     inc a
     ld [wScriptSubStep], a
     ret
 
-Jump_00F_51BE::
+.skip:
     srl a
     ld c, a
     ld a, $17
@@ -2949,10 +2952,10 @@ Jump_00F_51BE::
     ld de, ObjectPathTable_5284
     add a, e
     ld e, a
-    jr nc, Jump_00F_51CD
+    jr nc, .check_script_param1
     inc d
 
-Jump_00F_51CD::
+.check_script_param1:
     push de
     ld a, [wScriptParam1]
     and a, $70
@@ -2991,14 +2994,14 @@ Jump_00F_51FB:: ; address name
     add a, $10
     and a, $F0
     cp a, $80
-    jr nz, Jump_00F_5213
+    jr nz, .set_script_param1
     xor a, a
     ld [wScriptSubStep], a
     ld hl, wScriptStep
     inc [hl]
     xor a, a
 
-Jump_00F_5213::
+.set_script_param1:
     ld [wScriptParam1], a
     ret
 
@@ -3027,20 +3030,20 @@ SceneDarckDefeated_Case28_WriteScriptSubStepAndObject5::
 Jump_00F_522A:: ; address name
     ld a, [wScriptSubStep]
     bit 0, a
-    jr z, Jump_00F_5236
+    jr z, .skip
     inc a
     ld [wScriptSubStep], a
     ret
 
-Jump_00F_5236::
+.skip:
     and a, $FE
     ld de, ObjectPathTable_5284
     add a, e
     ld e, a
-    jr nc, Jump_00F_5240
+    jr nc, .check_script_param1
     inc d
 
-Jump_00F_5240::
+.check_script_param1:
     push de
     ld a, [wScriptParam1]
     and a, $70
@@ -3076,14 +3079,14 @@ Jump_00F_526C:: ; address name
     add a, $10
     and a, $F0
     cp a, $80
-    jr nz, Jump_00F_5280
+    jr nz, .set_script_param1
     xor a, a
     ld [wScriptSubStep], a
     ld hl, wScriptStep
     inc [hl]
     xor a, a
 
-Jump_00F_5280::
+.set_script_param1:
     ld [wScriptParam1], a
     ret
 
@@ -3393,13 +3396,13 @@ SceneThreeItems_CopyBytes::
 Jump_00F_55B8:: ; address name
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00F_55CA
+    jr z, .done
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_00F_55CA::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3435,16 +3438,16 @@ SceneThreeItems_StartMessageHL_B0F::
 Jump_00F_55E5:: ; address name
     ld a, [wFrameCounterLo]
     bit 2, a
-    jr z, Jump_00F_55F2
+    jr z, .set_object5_to_80
     xor a, a
     ld [wObject5], a
-    jr Jump_00F_55F7
+    jr .read_player_y
 
-Jump_00F_55F2::
+.set_object5_to_80:
     ld a, $80
     ld [wObject5], a
 
-Jump_00F_55F7::
+.read_player_y:
     ldh a, [hPlayerY]
     ld c, a
     ld a, [wObject5 + $5]
@@ -3469,14 +3472,14 @@ SceneThreeItems_ShowDarckIImagineThat::
 Jump_00F_5612:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr z, Jump_00F_5623
+    jr z, .call_start_message_hl_b0_f
     ld hl, wSGBPacketBuffer + $B
     call StartMessageHL_B0F
     ld hl, wScriptStep
     dec [hl]
     ret
 
-Jump_00F_5623::
+.call_start_message_hl_b0_f:
     ld hl, vTiles0 + $48B
     call StartMessageHL_B0F
     ld a, $04
@@ -3530,42 +3533,42 @@ SceneThreeItems_QueueMusic::
 Jump_00F_5662:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_566D
+    jr nz, .set_object3_to_18
     ld a, $1F
     call QueueMusic
 
-Jump_00F_566D::
+.set_object3_to_18:
     ld a, $18
     ld [wObject3 + $C], a
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_567F
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_568F
-    jr Jump_00F_5696
+    jr z, .set_object1_to_10
+    jr .set_object1_to_C0
 
-Jump_00F_567F::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_5689
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_568F
-    jr Jump_00F_5696
+    jr z, .set_object1_to_10
+    jr .set_object1_to_C0
 
-Jump_00F_5689::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_568F
-    jr Jump_00F_5696
+    jr z, .set_object1_to_10
+    jr .set_object1_to_C0
 
-Jump_00F_568F::
+.set_object1_to_10:
     ld a, $10
     ld [wObject1 + $C], a
-    jr Jump_00F_569B
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_5696::
+.set_object1_to_C0:
     ld a, $C0
     ld [wObject1 + $C], a
 
-Jump_00F_569B::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -3647,14 +3650,14 @@ Jump_00F_56F3:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_570A
+    jr nz, .call_start_message_hl_b0_f
     ld hl, vTiles0 + $416
     call StartMessageHL_B0F
     ld de, $00A6
     call SetFlagBit
     ret
 
-Jump_00F_570A::
+.call_start_message_hl_b0_f:
     ld hl, vTiles0 + $417
     call StartMessageHL_B0F
     ld de, $00A5
@@ -3672,33 +3675,33 @@ Jump_00F_5717:: ; address name
     ld [wObject1 + $C], a
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_5729
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_5739
-    jr Jump_00F_5740
+    jr z, .set_sprite_slot_count_to_02
+    jr .set_sprite_slot_count_to_01
 
-Jump_00F_5729::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_5733
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_5739
-    jr Jump_00F_5740
+    jr z, .set_sprite_slot_count_to_02
+    jr .set_sprite_slot_count_to_01
 
-Jump_00F_5733::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_5739
-    jr Jump_00F_5740
+    jr z, .set_sprite_slot_count_to_02
+    jr .set_sprite_slot_count_to_01
 
-Jump_00F_5739::
+.set_sprite_slot_count_to_02:
     ld a, $02
     ld [wSpriteSlotCount], a
-    jr Jump_00F_5745
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_5740::
+.set_sprite_slot_count_to_01:
     ld a, $01
     ld [wSpriteSlotCount], a
 
-Jump_00F_5745::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -3708,74 +3711,74 @@ Jump_00F_5745::
     ld [wScriptParam0], a
     ld de, $00C2
     call TestFlagBit
-    jp c, Jump_00F_57DE
+    jp c, .call_start_message_hl_b0_f6
     ld de, $00A7
     call TestFlagBit
-    jr c, Jump_00F_57D2
+    jr c, .call_start_message_hl_b0_f5
     ld de, $00A6
     call TestFlagBit
-    jr c, Jump_00F_57C6
+    jr c, .call_start_message_hl_b0_f4
     ld de, $00A5
     call TestFlagBit
-    jr c, Jump_00F_57BB
+    jr c, .call_start_message_hl_b0_f3
     ld de, $00A4
     call TestFlagBit
-    jr c, Jump_00F_579D
+    jr c, .call_test_flag_bit
     ld de, $00A0
     call TestFlagBit
-    jr c, Jump_00F_5791
+    jr c, .call_start_message_hl_b0_f
     ld hl, $040C ; 'Who disturbs my sleep? A visitor'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
-Jump_00F_5791::
+.call_start_message_hl_b0_f:
     ld hl, $040D ; 'What? You again? You seem to'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
-Jump_00F_579D::
+.call_test_flag_bit:
     ld de, $00A0
     call TestFlagBit
-    jr c, Jump_00F_57B0
+    jr c, .call_start_message_hl_b0_f2
     ld hl, $4415 ; 'Who disturbs my sleep? A visitor'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_57B0::
+.call_start_message_hl_b0_f2:
     ld hl, $4418 ; 'Who disturbs my sleep? Oh, it's'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_57BB::
+.call_start_message_hl_b0_f3:
     ld hl, $4419 ; 'Well? Will you go look for'
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_57C6::
+.call_start_message_hl_b0_f4:
     ld hl, $0416 ; 'Ah, you'll do it? Excellent! But'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
-Jump_00F_57D2::
+.call_start_message_hl_b0_f5:
     ld hl, $0452 ; 'The Change Staff will open paths.'
     call StartMessageHL_B0F
     ld a, $03
     ld [wScriptStep], a
     ret
 
-Jump_00F_57DE::
+.call_start_message_hl_b0_f6:
     ld hl, $0493 ; 'Who disturbs my sleep? The visitor'
     call StartMessageHL_B0F
     ld a, $03
@@ -3979,33 +3982,33 @@ Jump_00F_5906:: ; address name
     ld [wObject2 + $C], a
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_5918
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_5928
-    jr Jump_00F_592F
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5918::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_5922
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_5928
-    jr Jump_00F_592F
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5922::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_5928
-    jr Jump_00F_592F
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5928::
+.set_sprite_slot_count_to_03:
     ld a, $03
     ld [wSpriteSlotCount], a
-    jr Jump_00F_5934
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_592F::
+.set_sprite_slot_count_to_02:
     ld a, $02
     ld [wSpriteSlotCount], a
 
-Jump_00F_5934::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4225,14 +4228,14 @@ SceneShield_ShowImpetuousFoolIllShow::
 Jump_00F_5A56:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_5A67
+    jr nz, .call_start_message_hl_b0_f
     ld hl, vTiles1 + $5D0
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_5A67::
+.call_start_message_hl_b0_f:
     ld hl, vTiles1 + $5D1
     call StartMessageHL_B0F
     ld a, $0B
@@ -4248,33 +4251,33 @@ SceneShield_StepScriptParam0Counter_Bank0F::
 Jump_00F_5A73:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_5A80
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_5A90
-    jr Jump_00F_5A97
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_00F_5A80::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_5A8A
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_5A90
-    jr Jump_00F_5A97
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_00F_5A8A::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_5A90
-    jr Jump_00F_5A97
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_00F_5A90::
+.set_object1_to_20:
     ld a, $20
     ld [wObject1 + $C], a
-    jr Jump_00F_5A9C
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_5A97::
+.set_object1_to_E0:
     ld a, $E0
     ld [wObject1 + $C], a
 
-Jump_00F_5A9C::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4302,7 +4305,7 @@ SceneShield_ShowTchObstinateAndFoolish::
 Jump_00F_5AB9:: ; address name
     ld de, $01E3
     call TestFlagBit
-    jr nc, Jump_00F_5AD2
+    jr nc, .check_is_cgb
     ld hl, $0A03 ; 'Tch, obstinate and foolish. You need'
     call StartMessageHL_B0F
     ld a, $01
@@ -4311,16 +4314,16 @@ Jump_00F_5AB9:: ; address name
     ld [wScriptStep], a
     ret
 
-Jump_00F_5AD2::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00F_5AE4
+    jr z, .call_set_flag_bit
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_00F_5AE4::
+.call_set_flag_bit:
     ld de, $01E3
     call SetFlagBit
     xor a, a
@@ -4464,14 +4467,14 @@ SceneShieldGuardian_ShowISeeButI::
 Jump_00F_5BA5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_5BB6
+    jr nz, .call_start_message_hl_b0_f
     ld hl, vTiles1 + $5CE
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_5BB6::
+.call_start_message_hl_b0_f:
     ld hl, vTiles1 + $5CF
     call StartMessageHL_B0F
     ld a, $0F
@@ -4489,33 +4492,33 @@ Jump_00F_5BC2:: ; address name
     ld [wObject2 + $C], a
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_5BD4
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_5BE4
-    jr Jump_00F_5BEB
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5BD4::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_5BDE
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_5BE4
-    jr Jump_00F_5BEB
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5BDE::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_5BE4
-    jr Jump_00F_5BEB
+    jr z, .set_sprite_slot_count_to_03
+    jr .set_sprite_slot_count_to_02
 
-Jump_00F_5BE4::
+.set_sprite_slot_count_to_03:
     ld a, $03
     ld [wSpriteSlotCount], a
-    jr Jump_00F_5BF0
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_5BEB::
+.set_sprite_slot_count_to_02:
     ld a, $02
     ld [wSpriteSlotCount], a
 
-Jump_00F_5BF0::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -4535,7 +4538,7 @@ SceneShieldGuardian_ShowIWishYouWouldnt::
 Jump_00F_5C06:: ; address name
     ld de, $01E1
     call TestFlagBit
-    jr c, Jump_00F_5C2F
+    jr c, .call_start_message_hl_b0_f
     ld hl, $0AED ; 'I wish you wouldn't do that'
     call StartMessageHL_B0F
     ld a, $34
@@ -4548,7 +4551,7 @@ Jump_00F_5C06:: ; address name
     inc [hl]
     ret
 
-Jump_00F_5C2F::
+.call_start_message_hl_b0_f:
     ld hl, $0AEF ; 'Heh, such a show of false'
     call StartMessageHL_B0F
     ld a, $05
@@ -4575,7 +4578,7 @@ SceneMedicineGiven_StepObjectTowardCoord_Case03::
 Jump_00F_5C47:: ; address name
     ld a, [wObject1 + $C]
     cp a, $40
-    jr z, Jump_00F_5C65
+    jr z, .set_step_ptr_hi_to_01
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $02
@@ -4583,9 +4586,9 @@ Jump_00F_5C47:: ; address name
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    jr Jump_00F_5C7A
+    jr .check_player_y
 
-Jump_00F_5C65::
+.set_step_ptr_hi_to_01:
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $01
@@ -4594,16 +4597,16 @@ Jump_00F_5C65::
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-Jump_00F_5C7A::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $40
-    jr z, Jump_00F_5C8C
+    jr z, .set_step_ptr_lo_to_40
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
     ret
 
-Jump_00F_5C8C::
+.set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerRightTowardWC928
@@ -4626,7 +4629,7 @@ SceneMedicineGiven_StepObjectTowardCoord_Case02::
 Jump_00F_5CA9:: ; address name
     ld a, [wObject1 + $B]
     cp a, $30
-    jr z, Jump_00F_5CC7
+    jr z, .set_step_ptr_hi_to_01
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $03
@@ -4634,9 +4637,9 @@ Jump_00F_5CA9:: ; address name
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    jr Jump_00F_5CDC
+    jr .check_player_y
 
-Jump_00F_5CC7::
+.set_step_ptr_hi_to_01:
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $02
@@ -4645,16 +4648,16 @@ Jump_00F_5CC7::
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-Jump_00F_5CDC::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $70
-    jr z, Jump_00F_5CEE
+    jr z, .set_step_ptr_lo_to_30
     ld a, $70
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
     ret
 
-Jump_00F_5CEE::
+.set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
@@ -4689,7 +4692,7 @@ SceneMedicineGiven_StepObjectTowardCoord::
 Jump_00F_5D1A:: ; address name
     ld a, [wSpriteSlots + $B]
     cp a, $50
-    jr z, Jump_00F_5D38
+    jr z, .set_step_ptr_hi_to_00
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $03
@@ -4697,9 +4700,9 @@ Jump_00F_5D1A:: ; address name
     ld a, $50
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    jr Jump_00F_5D4D
+    jr .check_player_x
 
-Jump_00F_5D38::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $02
@@ -4708,16 +4711,16 @@ Jump_00F_5D38::
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-Jump_00F_5D4D::
+.check_player_x:
     ldh a, [hPlayerX]
     cp a, $50
-    jr z, Jump_00F_5D5F
+    jr z, .set_step_ptr_lo_to_00
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
     ret
 
-Jump_00F_5D5F::
+.set_step_ptr_lo_to_00:
     ld a, $00
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
@@ -4837,20 +4840,20 @@ Jump_00F_5E07:: ; address name
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
-    jr nz, Jump_00F_5E1D
+    jr nz, .check_text_yes_no_result
     farcall RemoveInventorySlotShiftDown
 
-Jump_00F_5E1D::
+.check_text_yes_no_result:
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_5E2E
+    jr nz, .call_start_message_hl_b0_f
     ld hl, vTiles1 + $5CC
     call StartMessageHL_B0F
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_5E2E::
+.call_start_message_hl_b0_f:
     ld hl, vTiles1 + $5CD
     call StartMessageHL_B0F
     ld a, $0C
@@ -4866,16 +4869,16 @@ ScenePrincessMedicine_ScriptApplyStepDeltaAtDE::
 Jump_00F_5E3A:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_00F_5E46
+    jr nz, .skip
     ld hl, wSpriteSlots + $C
     dec [hl]
-    jr Jump_00F_5E4A
+    jr .call_script_apply_step_delta_at_de
 
-Jump_00F_5E46::
+.skip:
     ld hl, wSpriteSlots + $C
     inc [hl]
 
-Jump_00F_5E4A::
+.call_script_apply_step_delta_at_de:
     ld de, wSpriteSlots + $C
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -4883,14 +4886,14 @@ Jump_00F_5E4A::
     inc [hl]
     ld de, $009C
     call TestFlagBit
-    jr c, Jump_00F_5E6A
+    jr c, .set_script_step_to_06
     ld hl, $4AD2 ; 'NEVER DID I EXPECT YUNA S'
     call StartMessageHL_B0F
     ld de, $009C
     call SetFlagBit
     ret
 
-Jump_00F_5E6A::
+.set_script_step_to_06:
     ld a, $06
     ld [wScriptStep], a
     ret
@@ -4916,13 +4919,13 @@ Jump_00F_5E70:: ; address name
     inc a
     ld [wScriptParam0], a
     and a, $03
-    jr nz, Jump_00F_5E9D
+    jr nz, .check_script_param0
     ld a, [wObject1 + $7]
     inc a
     and a, $03
     ld [wObject1 + $7], a
 
-Jump_00F_5E9D::
+.check_script_param0:
     ld a, [wScriptParam0]
     cp a, $20
     ret nz
@@ -4945,7 +4948,7 @@ Jump_00F_5E9D::
     ld [wScriptParam1], a
     ldh a, [hPlayerY]
     cp a, $20
-    jr z, Jump_00F_5EE2
+    jr z, .set_script_param1_to_01
     cp a, $40
     ret z
     ld a, [wPartyCount]
@@ -4955,7 +4958,7 @@ Jump_00F_5E9D::
     cp a, $20
     ret nz
 
-Jump_00F_5EE2::
+.set_script_param1_to_01:
     ld a, $01
     ld [wScriptParam1], a
     ret
@@ -4969,17 +4972,17 @@ ScenePrincessMedicine_QueueSoundEffect::
 Jump_00F_5EE8:: ; address name
     ld a, [wObject1 + $B]
     cp a, $80
-    jr nz, Jump_00F_5F00
+    jr nz, .set_script_step_to_06
     ld a, [wObject1 + $C]
     cp a, $10
-    jr nz, Jump_00F_5F00
+    jr nz, .set_script_step_to_06
     ld a, $65
     call QueueSoundEffect
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_5F00::
+.set_script_step_to_06:
     ld a, $06
     ld [wScriptStep], a
     ret
@@ -5069,13 +5072,13 @@ SceneCheerYuna_WritePlayerFacing::
 Jump_00F_5F65:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_00F_5F70
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_5F70::
-    jr nc, Jump_00F_5F80
+.skip:
+    jr nc, .read_player_x
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
     ld a, $01
@@ -5084,7 +5087,7 @@ Jump_00F_5F70::
     inc [hl]
     ret
 
-Jump_00F_5F80::
+.read_player_x:
     ldh a, [hPlayerX]
     call UpdateFollowersOnStep_Bank0F
     ld a, $03
@@ -5214,11 +5217,11 @@ Jump_00F_6019:: ; address name
     farcall AddStepDeltaToPointedByte
     ld a, [wScriptParam0]
     and a, $01
-    jr nz, Jump_00F_6049
+    jr nz, .check_script_param0
     ld hl, wObject2 + $B
     inc [hl]
 
-Jump_00F_6049::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -5243,7 +5246,7 @@ SceneCheerYuna_StepObjectTowardCoord::
 Jump_00F_6066:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_608E
+    jr nz, .skip
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $01
@@ -5259,9 +5262,9 @@ Jump_00F_6066:: ; address name
     inc [hl]
     ret
 
-Jump_00F_608E::
+.skip:
     dec a
-    jr nz, Jump_00F_60B3
+    jr nz, .set_step_ptr_hi_to_02
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $03
@@ -5277,7 +5280,7 @@ Jump_00F_608E::
     inc [hl]
     ret
 
-Jump_00F_60B3::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $01
@@ -5406,13 +5409,13 @@ Jump_00F_614C:: ; address name
     farcall RunFieldCommandTemp0
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_00F_6189
+    jr z, .call_queue_sound_effect
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_00F_6189::
+.call_queue_sound_effect:
     ld a, $7A
     call QueueSoundEffect
     ld hl, hPlayerStateFlags
@@ -5535,7 +5538,7 @@ SceneExplosion_TestFlagBit::
 Jump_00F_6252:: ; address name
     ld de, $0085
     call TestFlagBit
-    jr c, Jump_00F_626B
+    jr c, .call_start_message_hl_b0_f
     farcall RedrawColumnsBesideScreen
     ld de, $0085
     call SetFlagBit
@@ -5543,7 +5546,7 @@ Jump_00F_6252:: ; address name
     inc [hl]
     ret
 
-Jump_00F_626B::
+.call_start_message_hl_b0_f:
     ld hl, $0347 ; 'You again? I'll have to get'
     call StartMessageHL_B0F
     ld a, $03
@@ -5618,49 +5621,49 @@ ScenePlanRuined_TestFlagBit::
 Jump_00F_62C0:: ; address name
     ld de, $0093
     call TestFlagBit
-    jr nc, Jump_00F_62D1
+    jr nc, .read_object2
     ld hl, wScriptStep
     inc [hl]
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_00F_62D1::
+.read_object2:
     ld a, [wObject2 + $7]
     ld [wSpriteSlots + $7], a
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_00F_62E4
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_00F_62F4
-    jr Jump_00F_6300
+    jr z, .set_sprite_slots_to_40
+    jr .set_sprite_slots_to_E0
 
-Jump_00F_62E4::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_00F_62EE
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_00F_62F4
-    jr Jump_00F_6300
+    jr z, .set_sprite_slots_to_40
+    jr .set_sprite_slots_to_E0
 
-Jump_00F_62EE::
+.check_bit3:
     bit 3, a
-    jr z, Jump_00F_62F4
-    jr Jump_00F_6300
+    jr z, .set_sprite_slots_to_40
+    jr .set_sprite_slots_to_E0
 
-Jump_00F_62F4::
+.set_sprite_slots_to_40:
     ld a, $40
     ld [wSpriteSlots + $C], a
     ld a, $E0
     ld [wObject2 + $C], a
-    jr Jump_00F_630A
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_6300::
+.set_sprite_slots_to_E0:
     ld a, $E0
     ld [wSpriteSlots + $C], a
     ld a, $40
     ld [wObject2 + $C], a
 
-Jump_00F_630A::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -5701,7 +5704,7 @@ SceneWallExit_StepObjectTowardCoord_Case0C::
 Jump_00F_633D:: ; address name
     ld a, [wObject1 + $C]
     cp a, $50
-    jr z, Jump_00F_635A
+    jr z, .check_object1
     ld a, $50
     ld [wStepPtrLo], a
     ld a, $01
@@ -5711,10 +5714,10 @@ Jump_00F_633D:: ; address name
     farcall StepObjectTowardCoord
     ret
 
-Jump_00F_635A::
+.check_object1:
     ld a, [wObject1 + $B]
     cp a, $30
-    jr z, Jump_00F_6372
+    jr z, .set_object1_to_01
     dec a
     dec a
     ld [wObject1 + $B], a
@@ -5724,7 +5727,7 @@ Jump_00F_635A::
     ld [wObject1 + $7], a
     ret
 
-Jump_00F_6372::
+.set_object1_to_01:
     ld a, $01
     ld [wObject1 + $7], a
     ld hl, wObject1 + $D
@@ -5757,7 +5760,7 @@ Jump_00F_6383:: ; address name
     ret nz
     ld a, [wScriptParam1]
     cp a, $30
-    jr z, Jump_00F_63BD
+    jr z, .read_story_flags
     ld hl, $0362 ; 'Kameha 0 That wasn't it'
     call StartMessageHL_B0F
     xor a, a
@@ -5766,7 +5769,7 @@ Jump_00F_6383:: ; address name
     inc [hl]
     ret
 
-Jump_00F_63BD::
+.read_story_flags:
     ld a, [wStoryFlags + $63]
     set 0, a
     ld [wStoryFlags + $63], a
@@ -5804,12 +5807,12 @@ Jump_00F_63E5:: ; address name
     inc [hl]
     ld a, [wScriptParam1]
     cp a, $30
-    jr z, Jump_00F_6410
+    jr z, .call_queue_sound_effect
     ld a, $63
     call QueueSoundEffect
     ret
 
-Jump_00F_6410::
+.call_queue_sound_effect:
     ld a, $66
     call QueueSoundEffect
     ret
@@ -5850,7 +5853,7 @@ Jump_00F_6433:: ; address name
     ld c, a
     ld a, [wObject1 + $B]
     cp a, c
-    jr z, Jump_00F_644E
+    jr z, .set_step_ptr_lo_to_20
     inc a
     inc a
     ld [wObject1 + $B], a
@@ -5858,7 +5861,7 @@ Jump_00F_6433:: ; address name
     ld [wObject1 + $7], a
     ret
 
-Jump_00F_644E::
+.set_step_ptr_lo_to_20:
     ld a, $20
     ld [wStepPtrLo], a
     ld a, $01
@@ -5888,22 +5891,22 @@ Jump_00F_6473:: ; address name
     call UpdateFollowersOnStep_Bank0F
     ld a, [wScriptParam1]
     cp a, $40
-    jr nc, Jump_00F_6490
+    jr nc, .check_player_x
     ldh a, [hPlayerX]
     inc a
     ldh [hPlayerX], a
     ld a, $01
     ldh [hPlayerFacing], a
-    jr Jump_00F_6499
+    jr .check_script_param0
 
-Jump_00F_6490::
+.check_player_x:
     ldh a, [hPlayerX]
     dec a
     ldh [hPlayerX], a
     ld a, $03
     ldh [hPlayerFacing], a
 
-Jump_00F_6499::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -5995,17 +5998,17 @@ SceneReportToKing_AddStepDeltaToPointedByte::
 Jump_00F_651B:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_00F_652D
+    jr nz, .skip
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_00F_654D
+    jr nz, .check_player_y
     ld hl, wScriptParam1
     inc [hl]
-    jr Jump_00F_654D
+    jr .check_player_y
 
-Jump_00F_652D::
+.skip:
     dec a
-    jr nz, Jump_00F_654D
+    jr nz, .check_player_y
     ld de, wSpriteSlots + $C
     ld a, e
     ld [wStepPtrLo], a
@@ -6014,35 +6017,35 @@ Jump_00F_652D::
     farcall AddStepDeltaToPointedByte
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE
-    jr nc, Jump_00F_654D
+    jr nc, .check_player_y
     ld hl, wScriptParam1
     inc [hl]
 
-Jump_00F_654D::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $40
-    jr z, Jump_00F_6557
+    jr z, .check_follower_records
     inc a
     inc a
     ldh [hPlayerY], a
 
-Jump_00F_6557::
+.check_follower_records:
     ld a, [wFollowerRecords + $2]
     cp a, $40
-    jr z, Jump_00F_6563
+    jr z, .check_follower_records2
     inc a
     inc a
     ld [wFollowerRecords + $2], a
 
-Jump_00F_6563::
+.check_follower_records2:
     ld a, [wFollowerRecords + $7]
     cp a, $40
-    jr z, Jump_00F_656F
+    jr z, .check_follower_records3
     inc a
     inc a
     ld [wFollowerRecords + $7], a
 
-Jump_00F_656F::
+.check_follower_records3:
     ld a, [wFollowerRecords + $C]
     inc a
     inc a
@@ -6180,7 +6183,7 @@ SceneReportToKing_StepObjectTowardCoord_Case06::
 Jump_00F_6628:: ; address name
     ld a, [wObject1 + $B]
     cp a, $40
-    jr z, Jump_00F_6645
+    jr z, .set_step_ptr_lo_to_A0
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $01
@@ -6190,7 +6193,7 @@ Jump_00F_6628:: ; address name
     farcall StepObjectTowardCoord
     ret
 
-Jump_00F_6645::
+.set_step_ptr_lo_to_A0:
     ld a, $A0
     ld [wStepPtrLo], a
     ld a, $01
@@ -6316,7 +6319,7 @@ SceneReportToKing_StepObjectTowardCoord_Case02::
 Jump_00F_66F4:: ; address name
     ld a, [wObject1 + $C]
     cp a, $60
-    jr z, Jump_00F_6712
+    jr z, .check_object1
     ld a, $60
     ld [wStepPtrLo], a
     ld a, $01
@@ -6324,12 +6327,12 @@ Jump_00F_66F4:: ; address name
     ld a, $02
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
-    jr Jump_00F_6735
+    jr .set_step_ptr_lo_to_40
 
-Jump_00F_6712::
+.check_object1:
     ld a, [wObject1 + $B]
     cp a, $30
-    jr z, Jump_00F_6730
+    jr z, .set_object1_to_01
     ld a, $30
     ld [wStepPtrLo], a
     ld a, $01
@@ -6337,13 +6340,13 @@ Jump_00F_6712::
     ld a, $03
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
-    jr Jump_00F_6735
+    jr .set_step_ptr_lo_to_40
 
-Jump_00F_6730::
+.set_object1_to_01:
     ld a, $01
     ld [wObject1 + $7], a
 
-Jump_00F_6735::
+.set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
@@ -6671,38 +6674,38 @@ SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc::
 Jump_00F_693F:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_6951
+    jr nz, .skip
     ld a, $83
     ld [wStepTarget], a
     ld a, $70
     ld [wStepPtrLo], a
-    jr Jump_00F_6979
+    jr .set_step_ptr_hi_to_00
 
-Jump_00F_6951::
+.skip:
     dec a
-    jr nz, Jump_00F_6960
+    jr nz, .skip2
     ld a, $82
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
-    jr Jump_00F_6979
+    jr .set_step_ptr_hi_to_00
 
-Jump_00F_6960::
+.skip2:
     dec a
-    jr nz, Jump_00F_696F
+    jr nz, .set_step_target_to_82
     ld a, $83
     ld [wStepTarget], a
     ld a, $50
     ld [wStepPtrLo], a
-    jr Jump_00F_6979
+    jr .set_step_ptr_hi_to_00
 
-Jump_00F_696F::
+.set_step_target_to_82:
     ld a, $82
     ld [wStepTarget], a
     ld a, $00
     ld [wStepPtrLo], a
 
-Jump_00F_6979::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -6760,7 +6763,7 @@ SceneMermaidKingdom_StepPlayerDownTowardWC928::
 Jump_00F_69D5:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_69F0
+    jr nz, .skip
     ld a, $10
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
@@ -6771,9 +6774,9 @@ Jump_00F_69D5:: ; address name
     inc [hl]
     ret
 
-Jump_00F_69F0::
+.skip:
     dec a
-    jr nz, Jump_00F_6A08
+    jr nz, .set_step_ptr_lo_to_30
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerRightTowardWC928
@@ -6784,7 +6787,7 @@ Jump_00F_69F0::
     inc [hl]
     ret
 
-Jump_00F_6A08::
+.set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
@@ -6831,14 +6834,14 @@ Jump_00F_6A3F:: ; address name
     ld [wScriptParam0], a
     push af
     bit 4, a
-    jr z, Jump_00F_6A4F
+    jr z, .set_object1_to_03
     ld a, $01
-    jr Jump_00F_6A51
+    jr .set_object1
 
-Jump_00F_6A4F::
+.set_object1_to_03:
     ld a, $03
 
-Jump_00F_6A51::
+.set_object1:
     ld [wObject1 + $7], a
     inc a
     inc a
@@ -7060,12 +7063,12 @@ SceneMermaidKingdom_StepScriptParam0Counter_Bank0F::
 Jump_00F_6BA3:: ; address name
     ld a, [wObject2 + $B]
     cp a, $80
-    jr z, Jump_00F_6BAF
+    jr z, .call_step_script_param0_counter_bank0_f
     inc a
     inc a
     ld [wObject2 + $B], a
 
-Jump_00F_6BAF::
+.call_step_script_param0_counter_bank0_f:
     ld b, $3C
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -7082,7 +7085,7 @@ SceneMermaidKingdom_WriteScriptParam0AndObject1Etc::
 Jump_00F_6BBA:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_00F_6BDA
+    jr nz, .check_object1
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -7097,7 +7100,7 @@ Jump_00F_6BBA:: ; address name
     ld [wScriptParam1], a
     ret
 
-Jump_00F_6BDA::
+.check_object1:
     ld a, [wObject1 + $B]
     inc a
     inc a
@@ -7124,7 +7127,7 @@ Jump_00F_6BF6:: ; address name
     call SetBit2AtHL_B0F
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_6C17
+    jr nz, .skip
     ld a, $03
     ld [wObject1 + $7], a
     ld a, [wObject1 + $B]
@@ -7137,9 +7140,9 @@ Jump_00F_6BF6:: ; address name
     inc [hl]
     ret
 
-Jump_00F_6C17::
+.skip:
     dec a
-    jr nz, Jump_00F_6C2F
+    jr nz, .skip2
     ld a, $00
     ld [wObject1 + $7], a
     ld a, [wObject1 + $C]
@@ -7152,9 +7155,9 @@ Jump_00F_6C17::
     inc [hl]
     ret
 
-Jump_00F_6C2F::
+.skip2:
     dec a
-    jr nz, Jump_00F_6C47
+    jr nz, .skip3
     ld a, $01
     ld [wObject1 + $7], a
     ld a, [wObject1 + $B]
@@ -7167,9 +7170,9 @@ Jump_00F_6C2F::
     inc [hl]
     ret
 
-Jump_00F_6C47::
+.skip3:
     dec a
-    jr nz, Jump_00F_6C5F
+    jr nz, .skip4
     ld a, $02
     ld [wObject1 + $7], a
     ld a, [wObject1 + $C]
@@ -7182,9 +7185,9 @@ Jump_00F_6C47::
     inc [hl]
     ret
 
-Jump_00F_6C5F::
+.skip4:
     dec a
-    jr nz, Jump_00F_6C77
+    jr nz, .set_object1_to_00
     ld a, $03
     ld [wObject1 + $7], a
     ld a, [wObject1 + $B]
@@ -7197,7 +7200,7 @@ Jump_00F_6C5F::
     inc [hl]
     ret
 
-Jump_00F_6C77::
+.set_object1_to_00:
     ld a, $00
     ld [wObject1 + $7], a
     ld a, [wObject1 + $C]
@@ -7276,12 +7279,12 @@ SceneMermaidKingdom_WriteScriptStepAndStepPtrLoEtc::
 Jump_00F_6D07:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_00F_6D13
+    jr nz, .set_step_ptr_lo_to_40
     ld a, $04
     ld [wScriptStep], a
     ret
 
-Jump_00F_6D13::
+.set_step_ptr_lo_to_40:
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
@@ -7414,7 +7417,7 @@ Jump_00F_6DD1:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
-    jr nz, Jump_00F_6E16
+    jr nz, .call_step_script_param0_counter_bank0_f
     dec a
     sla a
     ld c, a
@@ -7422,7 +7425,7 @@ Jump_00F_6DD1:: ; address name
     add a, c
     ldh [hScrollX], a
 
-Jump_00F_6E16::
+.call_step_script_param0_counter_bank0_f:
     ld b, $20
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -7472,17 +7475,17 @@ Jump_00F_6E54:: ; address name
     ld b, $03
     ld hl, wSpriteSlots + $C
 
-Jump_00F_6E59::
+.loop:
     push hl
     ld a, [hl]
     cp a, $40
-    jr z, Jump_00F_6E64
+    jr z, .next
     dec a
     dec a
     ld [hl], a
-    jr Jump_00F_6E6F
+    jr .restore
 
-Jump_00F_6E64::
+.next:
     dec hl
     ld a, [hl]
     dec a
@@ -7494,12 +7497,12 @@ Jump_00F_6E64::
     dec hl
     ld [hl], $03
 
-Jump_00F_6E6F::
+.restore:
     pop hl
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, Jump_00F_6E59
+    jr nz, .loop
     ld a, [wSpriteSlots + $B]
     cp a, $40
     ret nz
@@ -7660,14 +7663,14 @@ Jump_00F_6F71:: ; address name
     ld [wScriptParam0], a
     push af
     bit 4, a
-    jr z, Jump_00F_6F81
+    jr z, .set_sprite_slots_to_03
     ld a, $01
-    jr Jump_00F_6F83
+    jr .set_sprite_slots
 
-Jump_00F_6F81::
+.set_sprite_slots_to_03:
     ld a, $03
 
-Jump_00F_6F83::
+.set_sprite_slots:
     ld [wSpriteSlots + $7], a
     ld [wObject2 + $7], a
     inc a
@@ -7708,7 +7711,7 @@ Jump_00F_6FB5:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
-    jr nz, Jump_00F_6FC7
+    jr nz, .call_step_script_param0_counter_bank0_f
     dec a
     sla a
     ld c, a
@@ -7716,7 +7719,7 @@ Jump_00F_6FB5:: ; address name
     add a, c
     ldh [hScrollX], a
 
-Jump_00F_6FC7::
+.call_step_script_param0_counter_bank0_f:
     ld b, $78
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -7757,7 +7760,7 @@ Jump_00F_7002:: ; address name
     ld b, $03
     ld hl, wSpriteSlots + $B
 
-Jump_00F_7019::
+.loop:
     ld a, [hl]
     inc a
     inc a
@@ -7765,7 +7768,7 @@ Jump_00F_7019::
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, Jump_00F_7019
+    jr nz, .loop
     ld a, [wSpriteSlots + $B]
     cp a, $60
     ret nz
@@ -7818,19 +7821,19 @@ Jump_00F_706C:: ; address name
     ld b, $03
     ld hl, wSpriteSlots + $C
 
-Jump_00F_7071::
+.loop:
     ld a, [hl]
     cp a, $E0
-    jr z, Jump_00F_7079
+    jr z, .skip
     dec a
     dec a
     ld [hl], a
 
-Jump_00F_7079::
+.skip:
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, Jump_00F_7071
+    jr nz, .loop
     ld a, [wObject2 + $C]
     cp a, $E0
     ret nz
@@ -7857,7 +7860,7 @@ GiveItemBlink_TestFlagBit::
 Jump_00F_7099:: ; address name
     ld de, $0075
     call TestFlagBit
-    jr c, Jump_00F_70BD
+    jr c, .set_temp0_to_00
     ld a, $00
     ldh [hTemp0], a
     ld a, $20
@@ -7872,7 +7875,7 @@ Jump_00F_7099:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-Jump_00F_70BD::
+.set_temp0_to_00:
     ld a, $00
     ldh [hTemp0], a
     ld a, $40
@@ -7883,12 +7886,12 @@ Jump_00F_70BD::
     ret z
     ld de, $009B
     call TestFlagBit
-    jr nc, Jump_00F_70E2
+    jr nc, .clear_sprite_slot_count
     ld a, $33
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
 
-Jump_00F_70E2::
+.clear_sprite_slot_count:
     xor a, a
     ld [wSpriteSlotCount], a
     ld a, $80
@@ -7971,7 +7974,7 @@ SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc::
 Jump_00F_714A:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_00F_716A
+    jr nz, .set_step_ptr_hi_to_00
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -7986,7 +7989,7 @@ Jump_00F_714A:: ; address name
     ld [wScriptParam1], a
     ret
 
-Jump_00F_716A::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $81
@@ -8017,7 +8020,7 @@ SceneWhoAreYou_StepObjectTowardCoord::
 Jump_00F_7198:: ; address name
     ld a, [wSpriteSlots + $B]
     cp a, $30
-    jr z, Jump_00F_71B5
+    jr z, .set_step_ptr_hi_to_00
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $03
@@ -8027,7 +8030,7 @@ Jump_00F_7198:: ; address name
     farcall StepObjectTowardCoord
     ret
 
-Jump_00F_71B5::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $00
@@ -8113,14 +8116,14 @@ Jump_00F_7225:: ; address name
     ld hl, wSpriteSlots + $C
     ld b, $03
 
-Jump_00F_723C::
+.loop:
     ld a, [hl]
     inc a
     ld [hl], a
     ld a, $10
     add_a_to_hl
     dec b
-    jr nz, Jump_00F_723C
+    jr nz, .loop
     ld a, [wSpriteSlots + $C]
     cp a, $40
     ret nz
@@ -8200,12 +8203,12 @@ Func_00F_72A0:: ; address name
     ld a, [wFrameCounterLo]
     and a, $03
     bit 0, a
-    jr nz, Jump_00F_72CB
+    jr nz, .call_step_script_param0_counter_bank0_f
     dec a
     add a, a
     ld c, a
     bit 7, a
-    jr z, Jump_00F_72C0
+    jr z, .read_scroll_x
     cpl
     inc a
     ld c, a
@@ -8215,9 +8218,9 @@ Func_00F_72A0:: ; address name
     ldh a, [hScrollXHi]
     sbc a, $00
     ldh [hScrollXHi], a
-    jr Jump_00F_72CB
+    jr .call_step_script_param0_counter_bank0_f
 
-Jump_00F_72C0::
+.read_scroll_x:
     ldh a, [hScrollX]
     add a, c
     ldh [hScrollX], a
@@ -8225,7 +8228,7 @@ Jump_00F_72C0::
     adc a, $00
     ldh [hScrollXHi], a
 
-Jump_00F_72CB::
+.call_step_script_param0_counter_bank0_f:
     call StepScriptParam0Counter_Bank0F
     ret nc
     xor a, a
@@ -8491,11 +8494,11 @@ Jump_00F_7450:: ; address name
     ld a, [wPartyCount]
     ld [wScriptTemp4], a
     cp a, $03
-    jr nz, Jump_00F_746E
+    jr nz, .done
     ld a, $02
     ld [wPartyCount], a
 
-Jump_00F_746E::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -8626,18 +8629,18 @@ SceneRivalDefeated_QueueSoundEffect::
 Jump_00F_7546:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_7553
+    jr nz, .cp_3C
     ld a, $7C
     call QueueSoundEffect
-    jr Jump_00F_755C
+    jr .check_script_param0
 
-Jump_00F_7553::
+.cp_3C:
     cp a, $3C
-    jr nz, Jump_00F_755C
+    jr nz, .check_script_param0
     ld a, $81
     call QueueSoundEffect
 
-Jump_00F_755C::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -8811,28 +8814,28 @@ SceneWaterShortage_StepPlayerDownTowardWC928::
 Jump_00F_766D:: ; address name
     ld a, [wScriptParam0]
     and a, $0F
-    jr nz, Jump_00F_768B
+    jr nz, .set_step_ptr_lo_to_30
     ld a, $60
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_00F_7696
+    jr z, .set_step_ptr_hi_to_00
     ld hl, wScriptParam0
     inc [hl]
-    jr Jump_00F_7696
+    jr .set_step_ptr_hi_to_00
 
-Jump_00F_768B::
+.set_step_ptr_lo_to_30:
     ld a, $30
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
 
-Jump_00F_7696::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     ld a, [wScriptParam0]
     and a, $F0
-    jr nz, Jump_00F_76C0
+    jr nz, .set_step_target_to_03
     ld a, $00
     ld [wStepTarget], a
     ld a, $60
@@ -8846,7 +8849,7 @@ Jump_00F_7696::
     ld [wScriptParam0], a
     ret
 
-Jump_00F_76C0::
+.set_step_target_to_03:
     ld a, $03
     ld [wStepTarget], a
     ld a, $20
@@ -8893,13 +8896,13 @@ SceneWaterShortage_StepPlayerLeftTowardWC928::
 Jump_00F_7707:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_00F_7719
+    jr z, .set_step_ptr_lo_to_80
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
     ret
 
-Jump_00F_7719::
+.set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
@@ -9065,13 +9068,13 @@ SceneMonsterInspection_StepPlayerDownTowardWC928::
 Jump_00F_780D:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_781C
+    jr nz, .set_step_ptr_lo_to_80
     inc a
     ld [wScriptParam0], a
     ld a, $6D
     call QueueSoundEffect
 
-Jump_00F_781C::
+.set_step_ptr_lo_to_80:
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
@@ -9218,12 +9221,12 @@ Jump_00F_78E7:: ; address name
     inc [hl]
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_00F_7903
+    jr c, .call_start_message_hl_b0_f
     ld hl, $009A ; 'Tara Then it's your job, 0!'
     call StartMessageHL_B0F
     ret
 
-Jump_00F_7903::
+.call_start_message_hl_b0_f:
     ld hl, $0092 ; 'Cobi Fine, 0. It's up to'
     call StartMessageHL_B0F
     ret
@@ -9293,7 +9296,7 @@ SceneLongFaces_StepObjectTowardCoord::
 Jump_00F_7968:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_00F_798D
+    jr nz, .check_sprite_slots
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $03
@@ -9308,10 +9311,10 @@ Jump_00F_7968:: ; address name
     inc [hl]
     ret
 
-Jump_00F_798D::
+.check_sprite_slots:
     ld a, [wSpriteSlots + $C]
     cp a, $40
-    jr z, Jump_00F_79AA
+    jr z, .set_step_ptr_hi_to_00
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $02
@@ -9321,7 +9324,7 @@ Jump_00F_798D::
     farcall StepObjectTowardCoord
     ret
 
-Jump_00F_79AA::
+.set_step_ptr_hi_to_00:
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $01
@@ -9372,7 +9375,7 @@ SceneLongFaces_StartMessageHL_B0F::
 Jump_00F_79EC:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_7A12
+    jr nz, .read_message_index
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -9391,7 +9394,7 @@ Jump_00F_79EC:: ; address name
     inc [hl]
     ret
 
-Jump_00F_7A12::
+.read_message_index:
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -9430,7 +9433,7 @@ Jump_00F_7A3B:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_00F_7A5A
+    jr nz, .read_message_index
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -9445,7 +9448,7 @@ Jump_00F_7A3B:: ; address name
     call StartMessageHL_B0F
     ret
 
-Jump_00F_7A5A::
+.read_message_index:
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -9483,12 +9486,12 @@ Jump_00F_7A70:: ; address name
     inc [hl]
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_00F_7A9B
+    jr c, .call_start_message_hl_b0_f
     ld hl, $4094 ; 'Tara If we don't go find'
     call StartMessageHL_B0F
     ret
 
-Jump_00F_7A9B::
+.call_start_message_hl_b0_f:
     ld hl, $4089 ; 'Cobi If we don't find a'
     call StartMessageHL_B0F
     ret
@@ -9622,10 +9625,10 @@ Jump_00F_7B3B:: ; address name
     srl a
     add a, e
     ld e, a
-    jr nc, Jump_00F_7B69
+    jr nc, .skip
     inc d
 
-Jump_00F_7B69::
+.skip:
     ld a, e
     sub a, $20
     ld e, a
@@ -9634,7 +9637,7 @@ Jump_00F_7B69::
     ld d, a
     ld a, d
     cp a, $97
-    jr nz, Jump_00F_7B7E
+    jr nz, .read_field_action_step
     ld a, e
     add a, $00
     ld e, a
@@ -9642,7 +9645,7 @@ Jump_00F_7B69::
     adc a, $04
     ld d, a
 
-Jump_00F_7B7E::
+.read_field_action_step:
     ld a, [wFieldActionStep]
     srl a
     srl a
@@ -9671,10 +9674,10 @@ Jump_00F_7B7E::
     inc [hl]
     ld a, [wFieldActionStep]
     cp a, $90
-    jr nc, Jump_00F_7BB4
+    jr nc, .check_scroll_y
     ret
 
-Jump_00F_7BB4::
+.check_scroll_y:
     ldh a, [hScrollY]
     and a, $F8
     ldh [hScrollY], a
@@ -9704,12 +9707,12 @@ Func_00F_7BC3:: ; address name
     ld b, $14
     ld de, wBGWriteData
 
-Jump_00F_7BDB::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_00F_7BDB
+    jr nz, .loop
     pop de
     pop hl
     ld a, [wIsCGB]
@@ -9728,7 +9731,7 @@ Jump_00F_7BDB::
     ld b, $14
     ld de, wAttrWriteData
 
-Jump_00F_7C03::
+.loop2:
     ld a, $02
     ldh [rSVBK], a
     ld a, [hl+]
@@ -9741,7 +9744,7 @@ Jump_00F_7C03::
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_00F_7C03
+    jr nz, .loop2
     ret
 
 ; entry 9 of the `rst $00` table in SceneLandHo
@@ -9772,13 +9775,13 @@ Jump_00F_7C22:: ; address name
     srl a
     srl a
     cp a, $10
-    jr z, Jump_00F_7C3F
+    jr z, .clear_script_param0
     ld hl, hScrollY
     dec [hl]
     call ComputeSpriteScrollOffsets
     ret
 
-Jump_00F_7C3F::
+.clear_script_param0:
     xor a, a
     ld [wScriptParam0], a
     ldh [hScrollY], a
@@ -9896,12 +9899,12 @@ Jump_00F_7CD6:: ; address name
     inc [hl]
     ld de, $0001
     call TestFlagBit
-    jr nc, Jump_00F_7CF4
+    jr nc, .call_start_message_hl_b0_f
     ld hl, $0076 ; 'The island is sinking? Hahah, no'
     call StartMessageHL_B0F
     ret
 
-Jump_00F_7CF4::
+.call_start_message_hl_b0_f:
     ld hl, $0078 ; 'It's pointless if you're dead. I'm'
     call StartMessageHL_B0F
     ret
@@ -10007,12 +10010,12 @@ Jump_00F_7D6C:: ; address name
     inc [hl]
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_00F_7D7F
+    jr c, .call_start_message_hl_b0_f
     ld hl, $0021 ; 'Tara We'll be OK! I'm going'
     call StartMessageHL_B0F
     ret
 
-Jump_00F_7D7F::
+.call_start_message_hl_b0_f:
     ld hl, $001F ; 'Cobi Sure, Mama! We'll be fine.'
     call StartMessageHL_B0F
     ret
@@ -10142,66 +10145,66 @@ SceneHorsingAround_StepPlayerLeftTowardWC928::
 Func_00F_7E1E:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_00F_7E37
+    jr nz, .skip
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
     farcall StepPlayerLeftTowardWC928
-    jr Jump_00F_7EA0
+    jr .check_step_arrived
 
-Jump_00F_7E37::
+.skip:
     dec a
-    jr nz, Jump_00F_7E4D
+    jr nz, .skip2
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
     farcall StepPlayerDownTowardWC928
-    jr Jump_00F_7EA0
+    jr .check_step_arrived
 
-Jump_00F_7E4D::
+.skip2:
     dec a
-    jr nz, Jump_00F_7E63
+    jr nz, .skip3
     ld a, $80
     ld [wStepPtrLo], a
     farcall StepPlayerRightTowardWC928
     farcall StepPlayerRightTowardWC928
-    jr Jump_00F_7EA0
+    jr .check_step_arrived
 
-Jump_00F_7E63::
+.skip3:
     dec a
-    jr nz, Jump_00F_7E79
+    jr nz, .skip4
     ld a, $60
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
     farcall StepPlayerUpTowardWC928
-    jr Jump_00F_7EA0
+    jr .check_step_arrived
 
-Jump_00F_7E79::
+.skip4:
     dec a
-    jr nz, Jump_00F_7E8F
+    jr nz, .set_step_ptr_lo_to_50
     ld a, $70
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardWC928
     farcall StepPlayerLeftTowardWC928
-    jr Jump_00F_7EA0
+    jr .check_step_arrived
 
-Jump_00F_7E8F::
+.set_step_ptr_lo_to_50:
     ld a, $50
     ld [wStepPtrLo], a
     farcall StepPlayerUpTowardWC928
     farcall StepPlayerUpTowardWC928
 
-Jump_00F_7EA0::
+.check_step_arrived:
     ld a, [wStepArrived]
     or a, a
     ret z
     ld a, [wScriptParam1]
     inc a
     cp a, $06
-    jr nz, Jump_00F_7EAE
+    jr nz, .set_script_param1
     xor a, a
 
-Jump_00F_7EAE::
+.set_script_param1:
     ld [wScriptParam1], a
     ret
 
@@ -10215,11 +10218,11 @@ Func_00F_7EB2:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, b
-    jr z, Jump_00F_7EBE
+    jr z, .clear_script_param0
     sub a, a
     ret
 
-Jump_00F_7EBE::
+.clear_script_param0:
     xor a, a
     ld [wScriptParam0], a
     scf
@@ -10266,10 +10269,10 @@ Func_00F_7ED3:: ; address name
 UpdateFollowersOnStep_Bank0F::
 Func_00F_7ED8:: ; address name
     and a, $0F
-    jr nz, Jump_00F_7EE2
+    jr nz, .call_step_followers_toward_targets
     farcall SetFollowerTargetsFromLeader
 
-Jump_00F_7EE2::
+.call_step_followers_toward_targets:
     farcall StepFollowersTowardTargets
     ret
 
@@ -10289,11 +10292,11 @@ Func_00F_7EE9:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, $20
-    jr z, Jump_00F_7F05
+    jr z, .clear_script_param0
     sub a, a
     ret
 
-Jump_00F_7F05::
+.clear_script_param0:
     xor a, a
     ld [wScriptParam0], a
     scf
@@ -10392,11 +10395,11 @@ Func_00F_7F75:: ; address name
     farcall RunMessageBox
     ld a, [wMessageState]
     cp a, $FF
-    jr z, Jump_00F_7F87
+    jr z, .return_carry
     sub a, a
     ret
 
-Jump_00F_7F87::
+.return_carry:
     scf
     ret
 

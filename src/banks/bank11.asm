@@ -10,11 +10,11 @@ CheckWarpAtPlayer::
 Func_011_4002:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_011_4010
+    jr z, .read_map_id
     farcall CheckWarpAtPlayer_ReadMapType
     ret
 
-Jump_011_4010::
+.read_map_id:
     ldh a, [hMapId]
     ld l, a
     ld h, $00
@@ -26,27 +26,27 @@ Jump_011_4010::
     ld a, [hl]
     ld d, a
 
-Jump_011_401E::
+.skip:
     push de
     ld a, [de]
     inc de
     cp a, $80
-    jr nz, Jump_011_4029
+    jr nz, .cp_FD
     pop de
     ld c, $00
     ret
 
-Jump_011_4029::
+.cp_FD:
     cp a, $FD
-    jr z, Jump_011_407D
+    jr z, .restore2
     cp a, $FE
-    jr z, Jump_011_4066
+    jr z, .set_warp_dest_facing
     cp a, $FF
-    jr z, Jump_011_4066
+    jr z, .set_warp_dest_facing
     ld c, a
     ldh a, [hPlayerFacing]
     cp a, c
-    jr nz, Jump_011_407D
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld [wWarpDestFacing], a
@@ -56,28 +56,28 @@ Jump_011_4029::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_011_407C
+    jr nz, .restore
     pop af
     and a, $0F
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_011_407D
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_011_407D
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_011_407D
-    jr Jump_011_4088
+    jr nz, .restore2
+    jr .set_warp_pending_to_01
 
-Jump_011_4066::
+.set_warp_dest_facing:
     ld [wWarpDestFacing], a
     inc de
     ld a, [de]
@@ -85,19 +85,19 @@ Jump_011_4066::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_011_407D
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_011_407D
-    jr Jump_011_4088
+    jr nz, .restore2
+    jr .set_warp_pending_to_01
 
-Jump_011_407C::
+.restore:
     pop af
 
-Jump_011_407D::
+.restore2:
     pop de
     ld a, e
     add a, $09
@@ -105,9 +105,9 @@ Jump_011_407D::
     ld a, d
     adc a, $00
     ld d, a
-    jr Jump_011_401E
+    jr .skip
 
-Jump_011_4088::
+.set_warp_pending_to_01:
     ld a, $01
     ld [wWarpPending], a
     ld a, $60
@@ -125,7 +125,7 @@ Jump_011_4088::
     ldh [hMapScreenY], a
     ld a, [wWarpDestFacing]
     cp a, $FF
-    jr z, Jump_011_40D2
+    jr z, .skip2
     ld a, [de]
     inc de
     swap a
@@ -140,16 +140,16 @@ Jump_011_4088::
     dec de
     ld a, [de]
     bit 7, a
-    jr z, Jump_011_40F9
+    jr z, .skip3
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
     ld a, [wWarpDestY]
     add a, $08
     ld [wWarpDestY], a
-    jr Jump_011_40F9
+    jr .skip3
 
-Jump_011_40D2::
+.skip2:
     ld a, [de]
     inc de
     ld c, a
@@ -166,7 +166,7 @@ Jump_011_40D2::
     dec de
     ld a, [de]
     bit 7, a
-    jr z, Jump_011_40F9
+    jr z, .skip3
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
@@ -174,15 +174,15 @@ Jump_011_40D2::
     add a, $08
     ld [wWarpDestY], a
 
-Jump_011_40F9::
+.skip3:
     ld a, [de]
     swap a
     and a, $03
     cp a, $03
-    jr z, Jump_011_4105
+    jr z, .next
     ld [wLastWarpIndex], a
 
-Jump_011_4105::
+.next:
     inc de
     ld a, [de]
     swap a
@@ -213,11 +213,11 @@ CheckWarpsAtPlayerPosition::
 Func_011_4130:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_011_413E
+    jr z, .call_check_map_exit_table4480
     farcall CheckWarpsByMapType
     ret
 
-Jump_011_413E::
+.call_check_map_exit_table4480:
     call CheckMapExitTable4480
     bit 0, c
     ret nz
@@ -232,54 +232,54 @@ Jump_011_413E::
     ld a, [hl]
     ld d, a
 
-Jump_011_4152::
+.skip:
     push de
     ld a, [de]
     inc de
     cp a, $80
-    jr nz, Jump_011_4199
+    jr nz, .cp_FD
     pop de
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jr z, Jump_011_4196
+    jr z, .done
     ldh a, [hMapId]
     cp a, $30
-    jr nz, Jump_011_4190
+    jr nz, .check_player_state_flags
     ldh a, [hMapScreenX]
     cp a, $05
-    jr nz, Jump_011_4190
+    jr nz, .check_player_state_flags
     ldh a, [hMapScreenY]
     cp a, $05
-    jr nz, Jump_011_4190
+    jr nz, .check_player_state_flags
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_011_4190
+    jr nz, .check_player_state_flags
     ldh a, [hPlayerY]
     cp a, $50
-    jr nz, Jump_011_4190
+    jr nz, .check_player_state_flags
     ld de, $0076
     call TestFlagBit
-    jr c, Jump_011_4190
+    jr c, .check_player_state_flags
     ld de, $0070
     call TestFlagBit
-    jr nc, Jump_011_4190
-    jr Jump_011_4196
+    jr nc, .check_player_state_flags
+    jr .done
 
-Jump_011_4190::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     and a, $7F
     ldh [hPlayerStateFlags], a
 
-Jump_011_4196::
+.done:
     ld c, $00
     ret
 
-Jump_011_4199::
+.cp_FD:
     cp a, $FD
-    jr z, Jump_011_419F
-    jr Jump_011_41DA
+    jr z, .set_warp_dest_facing
+    jr .restore2
 
-Jump_011_419F::
+.set_warp_dest_facing:
     ld a, [de]
     inc de
     ld [wWarpDestFacing], a
@@ -289,44 +289,44 @@ Jump_011_419F::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_011_41D9
+    jr nz, .restore
     pop af
     and a, $0F
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_011_41DA
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_011_41DA
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr z, Jump_011_41CD
+    jr z, .check_player_state_flags2
     add a, $F8
     cp a, c
-    jr nz, Jump_011_41DA
+    jr nz, .restore2
 
-Jump_011_41CD::
+.check_player_state_flags2:
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jr z, Jump_011_41D7
+    jr z, .skip2
     pop de
     ld c, $00
     ret
 
-Jump_011_41D7::
-    jr Jump_011_41E6
+.skip2:
+    jr .set_warp_pending_to_01
 
-Jump_011_41D9::
+.restore:
     pop af
 
-Jump_011_41DA::
+.restore2:
     pop de
     ld a, e
     add a, $09
@@ -334,9 +334,9 @@ Jump_011_41DA::
     ld a, d
     adc a, $00
     ld d, a
-    jp Jump_011_4152
+    jp .skip
 
-Jump_011_41E6::
+.set_warp_pending_to_01:
     ld a, $01
     ld [wWarpPending], a
     ld a, $60
@@ -366,24 +366,24 @@ Jump_011_41E6::
     dec de
     ld a, [de]
     bit 7, a
-    jr z, Jump_011_4229
+    jr z, .skip3
     ldh a, [hPlayerStateFlags]
     or a, $40
     ldh [hPlayerStateFlags], a
     ld a, [wWarpDestY]
     add a, $08
     ld [wWarpDestY], a
-    jr Jump_011_4229
+    jr .skip3
 
-Jump_011_4229::
+.skip3:
     ld a, [de]
     swap a
     and a, $03
     cp a, $03
-    jr z, Jump_011_4235
+    jr z, .next
     ld [wLastWarpIndex], a
 
-Jump_011_4235::
+.next:
     inc de
     ld a, [de]
     swap a
@@ -418,49 +418,49 @@ WarpToLinkedMapForCurrentMap::
 Func_011_4268:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_011_42D9
+    jp nz, WarpToLinkedMapForCurrentMap_Data_42B8_Cp87
     ldh a, [hMapId]
     ld c, a
     ld b, $00
     ld hl, WarpToLinkedMapForCurrentMap_Data_42AC
 
-Jump_011_4278::
+.skip:
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_011_4280
+    jr nz, .skip2
     ld c, $00
     ret
 
-Jump_011_4280::
+.skip2:
     cp a, c
-    jr z, Jump_011_4286
+    jr z, .skip3
     inc b
-    jr Jump_011_4278
+    jr .skip
 
-Jump_011_4286::
+.skip3:
     ld a, b
     sla a
     add a, b
     ld de, WarpToLinkedMapForCurrentMap_Data_42B8
     add a, e
     ld e, a
-    jr nc, Jump_011_4292
+    jr nc, .set_map_id
     inc d
 
-Jump_011_4292::
+.set_map_id:
     ld a, [de]
     inc de
     ldh [hMapId], a
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_011_42A6
+    jr z, .call_script_warp_to_map_from_bytes_at_de
     ld a, [wKeyWorldKey]
     dec a
     cp a, b
-    jr nz, Jump_011_42A6
+    jr nz, .call_script_warp_to_map_from_bytes_at_de
     ld de, wKeyWorldGoal
 
-Jump_011_42A6::
+.call_script_warp_to_map_from_bytes_at_de:
     call ScriptWarpToMapFromBytesAtDE
     ld c, $01
     ret
@@ -477,24 +477,25 @@ Data_011_42B8:: ; address name
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00
 
-Jump_011_42D9::
+WarpToLinkedMapForCurrentMap_Data_42B8_Cp87::
+Jump_011_42D9:: ; address name
     cp a, $87
-    jr z, Jump_011_42E0
+    jr z, .check_key_world_active
     ld c, $00
     ret
 
-Jump_011_42E0::
+.check_key_world_active:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_011_431E
+    jr z, .read_key_world_goal_pos
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_011_431E
+    jr z, .read_key_world_goal_pos
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_011_431E
+    jr nz, .read_key_world_goal_pos
     ld a, [wKeyWorldGoal]
     and a, $F0
     ld [wWarpDestX], a
@@ -513,7 +514,7 @@ Jump_011_42E0::
     ld c, $01
     ret
 
-Jump_011_431E::
+.read_key_world_goal_pos:
     ld a, [wKeyWorldGoalPos]
     ld [wWarpDestX], a
     ld a, [wKeyWorldGoalPos2]
@@ -611,46 +612,46 @@ CheckMapExitTable4480::
 Func_011_43BB:: ; address name
     ldh a, [hMapId]
     cp a, $20
-    jr c, Jump_011_43CC
+    jr c, .check_player_state_flags
     ld c, a
     ld b, $00
     ld hl, CheckMapExitTable4480_Data
 
-Jump_011_43C7::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_011_43D5
+    jr nz, .skip2
 
-Jump_011_43CC::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     and a, $DF
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
-Jump_011_43D5::
+.skip2:
     cp a, c
-    jr z, Jump_011_43DF
+    jr z, .check_key_world_active
     inc b
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_011_43C7
+    jr .skip
 
-Jump_011_43DF::
+.check_key_world_active:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_011_43F3
+    jr z, .skip3
     ld a, [wKeyWorldKey]
     dec a
     cp a, b
-    jr nz, Jump_011_43F3
+    jr nz, .skip3
     ld de, wKeyWorldGoal
     call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
     ret
 
-Jump_011_43F3::
+.skip3:
     ld e, l
     ld d, h
     inc de
@@ -674,7 +675,7 @@ Func_011_43FA:: ; address name
     ld c, a
     ld a, [de]
     cp a, c
-    jr nz, Jump_011_4422
+    jr nz, .check_player_state_flags
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -684,21 +685,21 @@ Func_011_43FA:: ; address name
     inc de
     ld a, [de]
     cp a, c
-    jr nz, Jump_011_4422
+    jr nz, .check_player_state_flags
     ldh a, [hPlayerStateFlags]
     bit 5, a
-    jr z, Jump_011_442B
+    jr z, .set_warp_pending_to_01
     ld c, $00
     ret
 
-Jump_011_4422::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     and a, $DF
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
-Jump_011_442B::
+.set_warp_pending_to_01:
     ld a, $01
     ld [wWarpPending], a
     ld a, $60

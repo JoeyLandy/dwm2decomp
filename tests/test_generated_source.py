@@ -92,15 +92,17 @@ class SymbolicOperands(unittest.TestCase):
             """Labels of the routines that store L as the battle message (E-0137), plus one jump."""
             found, last = set(), []
             for i, line in enumerate(lines):
-                if line.endswith("::"):
-                    last.append(line[:-2])
+                if line.endswith(":: ; address name"):
+                    continue
+                if re.fullmatch(r"[.\w]+::?", line):
+                    last.append(line.rstrip(":"))  # a global or a local label (E-0287)
                     continue
                 code = line.split(";")[0].strip()
                 if code == "ld a, l" and i + 1 < len(lines) and lines[i + 1].strip() == "ld [wResolveMsgActor], a":
                     found.update(last)
                 if code and code not in ("xor a, a", "ld [wBattleDamageLo], a", "ld [wBattleDamageHi], a"):
                     last = []
-            jumps = re.compile(r"^(\w+)::\n(?:\w+:: ; address name\n)?    j[pr] (\w+)$", re.M)
+            jumps = re.compile(r"^([.\w]+)::?\n(?:\w+:: ; address name\n)?    j[pr] ([.\w]+)$", re.M)
             text = "\n".join(lines)
             return found | {a for a, t in jumps.findall(text) if t in found}
 
@@ -114,7 +116,7 @@ class SymbolicOperands(unittest.TestCase):
                     while k < len(lines) and not lines[k].strip():
                         k += 1  # a label the pair falls into follows a blank line
                     after = lines[k] if k < len(lines) else ""
-                    m = re.match(r"\s+(?:jp|jr|call) (\w+)$", after) or re.match(r"(\w+)::$", after)
+                    m = re.match(r"\s+(?:jp|jr|call) ([.\w]+)$", after) or re.match(r"([.\w]+)::?$", after)
                     if m and m.group(1) in entries:
                         return True
             return False
@@ -372,7 +374,7 @@ class NumericArguments(unittest.TestCase):
 
     def test_message_argument_pairs_are_numeric(self):
         text = (BANKS / "bank36.asm").read_text(encoding="utf-8")
-        self.assertIn("    ld hl, $B58E\n    ld bc, $80A8\n    jp Jump_036_7C8B", text)
+        self.assertIn("    ld hl, $B58E\n    ld bc, $80A8\n    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor", text)
         self.assertNotIn("sB58E", text)
         self.assertNotRegex(text, r"ld bc, vTiles[01] \+ \$A8")
 

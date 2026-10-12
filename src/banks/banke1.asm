@@ -234,86 +234,86 @@ Func_0E1_5AC0:: ; address name
     ld d, $C0
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jp nz, Jump_0E1_5C0A
+    jp nz, .check_sprite_attr_xor
     ldh a, [hSpriteTileOffset]
     ld c, a
     ldh a, [hSpriteAttrXor]
     and a, $20
-    jr nz, Jump_0E1_5B92
+    jr nz, .loop2
 
-Jump_0E1_5B1C::
+.loop:
     ld a, [hl+]
     cp a, $80
     ret z
     ld b, a
-    jr nc, Jump_0E1_5B34
+    jr nc, .read_meta_sprite_y_lo
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $00
-    jr nz, Jump_0E1_5B43
+    jr nz, .next
     ld a, b
     cp a, $A8
-    jr c, Jump_0E1_5B48
-    jr Jump_0E1_5B43
+    jr c, .skip
+    jr .next
 
-Jump_0E1_5B34::
+.read_meta_sprite_y_lo:
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $FF
-    jr nz, Jump_0E1_5B43
+    jr nz, .next
     ld a, b
     cp a, $A8
-    jr c, Jump_0E1_5B48
+    jr c, .skip
 
-Jump_0E1_5B43::
+.next:
     inc hl
     inc hl
     inc hl
-    jr Jump_0E1_5B1C
+    jr .loop
 
-Jump_0E1_5B48::
+.skip:
     ld a, b
     ld [de], a
     inc e
     ld a, [hl+]
     ld b, a
     rlca
-    jr c, Jump_0E1_5B61
+    jr c, .read_meta_sprite_x_lo
     ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteXHi]
     adc a, $00
-    jr nz, Jump_0E1_5B70
+    jr nz, .next2
     ld a, b
     cp a, $B8
-    jr c, Jump_0E1_5B77
-    jr Jump_0E1_5B70
+    jr c, .skip2
+    jr .next2
 
-Jump_0E1_5B61::
+.read_meta_sprite_x_lo:
     ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteXHi]
     adc a, $FF
-    jr nz, Jump_0E1_5B70
+    jr nz, .next2
     ld a, b
     cp a, $B8
-    jr c, Jump_0E1_5B77
+    jr c, .skip2
 
-Jump_0E1_5B70::
+.next2:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_0E1_5B1C
+    jr .loop
 
-Jump_0E1_5B77::
+.skip2:
     ld a, b
     ld [de], a
     inc e
@@ -333,83 +333,83 @@ Jump_0E1_5B77::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_0E1_5B1C
+    jr nz, .loop
     ret
 
-Jump_0E1_5B92::
+.loop2:
     ld a, [hl+]
     cp a, $80
     ret z
     ld b, a
-    jr nc, Jump_0E1_5BAA
+    jr nc, .read_meta_sprite_y_lo2
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $00
-    jr nz, Jump_0E1_5BB9
+    jr nz, .next3
     ld a, b
     cp a, $A8
-    jr c, Jump_0E1_5BBE
-    jr Jump_0E1_5BB9
+    jr c, .skip3
+    jr .next3
 
-Jump_0E1_5BAA::
+.read_meta_sprite_y_lo2:
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $FF
-    jr nz, Jump_0E1_5BB9
+    jr nz, .next3
     ld a, b
     cp a, $A8
-    jr c, Jump_0E1_5BBE
+    jr c, .skip3
 
-Jump_0E1_5BB9::
+.next3:
     inc hl
     inc hl
     inc hl
-    jr Jump_0E1_5B92
+    jr .loop2
 
-Jump_0E1_5BBE::
+.skip3:
     ld a, b
     ld [de], a
     inc e
     ld a, [hl+]
     ld b, a
     rlca
-    jr c, Jump_0E1_5BD9
+    jr c, .read_meta_sprite_x_flip_lo
     ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, $00
-    jr z, Jump_0E1_5BEF
-    jr nz, Jump_0E1_5BE8
+    jr z, .skip4
+    jr nz, .next4
     ld a, b
     cp a, $B8
-    jr c, Jump_0E1_5BEF
-    jr Jump_0E1_5BE8
+    jr c, .skip4
+    jr .next4
 
-Jump_0E1_5BD9::
+.read_meta_sprite_x_flip_lo:
     ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, $FF
-    jr nz, Jump_0E1_5BE8
+    jr nz, .next4
     ld a, b
     cp a, $B8
-    jr c, Jump_0E1_5BEF
+    jr c, .skip4
 
-Jump_0E1_5BE8::
+.next4:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_0E1_5B92
+    jr .loop2
 
-Jump_0E1_5BEF::
+.skip4:
     ld a, b
     ld [de], a
     inc e
@@ -429,62 +429,62 @@ Jump_0E1_5BEF::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_0E1_5B92
+    jr nz, .loop2
     ret
 
-Jump_0E1_5C0A::
+.check_sprite_attr_xor:
     ldh a, [hSpriteAttrXor]
     and a, $20
-    jr nz, Jump_0E1_5C8B
+    jr nz, .loop5
 
-Jump_0E1_5C10::
+.loop3:
     ld a, [hl+]
     cp a, $80
     ret z
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_0E1_5C1B
+    jr nc, .read_meta_sprite_y_lo3
     dec b
 
-Jump_0E1_5C1B::
+.read_meta_sprite_y_lo3:
     ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteYHi]
     adc a, b
-    jr nz, Jump_0E1_5C46
+    jr nz, .next5
     ld a, c
     cp a, $B8
-    jr nc, Jump_0E1_5C46
+    jr nc, .next5
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jr z, Jump_0E1_5C4B
+    jr z, .skip6
     cp a, $01
-    jr nz, Jump_0E1_5C39
+    jr nz, .cp_02
     ld a, c
     cp a, $34
-    jr c, Jump_0E1_5C46
-    jr Jump_0E1_5C4B
+    jr c, .next5
+    jr .skip6
 
-Jump_0E1_5C39::
+.cp_02:
     cp a, $02
-    jr nz, Jump_0E1_5C44
+    jr nz, .skip5
     ld a, c
     cp a, $71
-    jr c, Jump_0E1_5C4B
-    jr Jump_0E1_5C46
+    jr c, .skip6
+    jr .next5
 
-Jump_0E1_5C44::
-    jr Jump_0E1_5C4B
+.skip5:
+    jr .skip6
 
-Jump_0E1_5C46::
+.next5:
     inc hl
     inc hl
     inc hl
-    jr Jump_0E1_5C10
+    jr .loop3
 
-Jump_0E1_5C4B::
+.skip6:
     ld a, c
     ld [de], a
     inc e
@@ -492,33 +492,33 @@ Jump_0E1_5C4B::
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_0E1_5C56
+    jr nc, .read_meta_sprite_x_lo2
     dec b
 
-Jump_0E1_5C56::
+.read_meta_sprite_x_lo2:
     ldh a, [hMetaSpriteXLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteXHi]
     adc a, b
-    jr nz, Jump_0E1_5C64
+    jr nz, .loop4
     ld a, c
     cp a, $B8
-    jr c, Jump_0E1_5C6B
+    jr c, .call_bg_tile_under_point_is_sprite_hide_tile
 
-Jump_0E1_5C64::
+.loop4:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_0E1_5C10
+    jr .loop3
 
-Jump_0E1_5C6B::
+.call_bg_tile_under_point_is_sprite_hide_tile:
     ld a, c
     ld [de], a
     call BGTileUnderPointIsSpriteHideTile_BankE1
-    jr nc, Jump_0E1_5C64
+    jr nc, .loop4
     inc e
     ldh a, [hSpriteTileOffset]
     ld b, a
@@ -536,57 +536,57 @@ Jump_0E1_5C6B::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_0E1_5C10
+    jr nz, .loop3
     ret
 
-Jump_0E1_5C8B::
+.loop5:
     ld a, [hl+]
     cp a, $80
     ret z
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_0E1_5C96
+    jr nc, .read_meta_sprite_y_lo4
     dec b
 
-Jump_0E1_5C96::
+.read_meta_sprite_y_lo4:
     ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteYHi]
     adc a, b
-    jr nz, Jump_0E1_5CC1
+    jr nz, .next6
     ld a, c
     cp a, $B8
-    jr nc, Jump_0E1_5CC1
+    jr nc, .next6
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jr z, Jump_0E1_5CC6
+    jr z, .skip8
     cp a, $01
-    jr nz, Jump_0E1_5CB4
+    jr nz, .cp_022
     ld a, c
     cp a, $34
-    jr c, Jump_0E1_5CC1
-    jr Jump_0E1_5CC6
+    jr c, .next6
+    jr .skip8
 
-Jump_0E1_5CB4::
+.cp_022:
     cp a, $02
-    jr nz, Jump_0E1_5CBF
+    jr nz, .skip7
     ld a, c
     cp a, $71
-    jr c, Jump_0E1_5CC6
-    jr Jump_0E1_5CC1
+    jr c, .skip8
+    jr .next6
 
-Jump_0E1_5CBF::
-    jr Jump_0E1_5CC6
+.skip7:
+    jr .skip8
 
-Jump_0E1_5CC1::
+.next6:
     inc hl
     inc hl
     inc hl
-    jr Jump_0E1_5C8B
+    jr .loop5
 
-Jump_0E1_5CC6::
+.skip8:
     ld a, c
     ld [de], a
     inc e
@@ -594,33 +594,33 @@ Jump_0E1_5CC6::
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_0E1_5CD1
+    jr nc, .read_meta_sprite_x_flip_lo2
     dec b
 
-Jump_0E1_5CD1::
+.read_meta_sprite_x_flip_lo2:
     ldh a, [hMetaSpriteXFlipLo]
     sub a, c
     ld c, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, b
-    jr nz, Jump_0E1_5CDF
+    jr nz, .loop6
     ld a, c
     cp a, $B8
-    jr c, Jump_0E1_5CE6
+    jr c, .call_bg_tile_under_point_is_sprite_hide_tile2
 
-Jump_0E1_5CDF::
+.loop6:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_0E1_5C8B
+    jr .loop5
 
-Jump_0E1_5CE6::
+.call_bg_tile_under_point_is_sprite_hide_tile2:
     ld a, c
     ld [de], a
     call BGTileUnderPointIsSpriteHideTile_BankE1
-    jr nc, Jump_0E1_5CDF
+    jr nc, .loop6
     inc e
     ldh a, [hSpriteTileOffset]
     ld b, a
@@ -638,7 +638,7 @@ Jump_0E1_5CE6::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_0E1_5C8B
+    jr nz, .loop5
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
@@ -679,10 +679,10 @@ Func_0E1_5D06:: ; address name
     ld b, a
     di
 
-Jump_0E1_5D30::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_0E1_5D30
+    jr nz, .loop
     ld a, [hl]
     ei
     cp a, b

@@ -70,7 +70,7 @@ GoldItemOrLoss_Case0C_ShowGreatLogsMajorFacilitiesAre::
 Jump_073_4053:: ; address name
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_407B
+    jr nz, .check_pending_field_event
     ld hl, $003E ; 'GreatLog's major facilities are situated above'
     call StartMessageHL_B73
     ld a, [wPendingFieldEvent]
@@ -88,7 +88,7 @@ Jump_073_4053:: ; address name
     inc [hl]
     ret
 
-Jump_073_407B::
+.check_pending_field_event:
     ld a, [wPendingFieldEvent]
     and a, $0F
     sub a, $0C
@@ -144,14 +144,14 @@ GoldItemOrLoss_Case0B_ShowKamehaWahahahNoGoing::
 Jump_073_40C5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_40D6
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $49
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_40D6::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $48
     call StartMessageHL_B73
     ld a, $0D
@@ -167,23 +167,23 @@ GoldItemOrLoss_Case0B_ShowHeroPeeredIntoThe::
 Jump_073_40E2:: ; address name
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4105
+    jr nz, .call_start_message_hl_b73
     ld hl, $0038 ; '0 peered into the vase. A'
     call StartMessageHL_B73
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_073_4100
+    jr z, .done
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_073_4100::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_4105::
+.call_start_message_hl_b73:
     ld hl, $0039 ; 'Hey! You brats! Scram! Hands off'
     call StartMessageHL_B73
     ld a, $0B
@@ -250,10 +250,10 @@ Jump_073_4139:: ; address name
     ld de, SymbolRowTable_453A
     add a, e
     ld e, a
-    jr nc, Jump_073_4174
+    jr nc, .check_menu_sub_state
     inc d
 
-Jump_073_4174::
+.check_menu_sub_state:
     ld a, [de]
     ld c, a
     ld a, [wMenuSubState]
@@ -262,39 +262,39 @@ Jump_073_4174::
     ld de, SymbolRowTable_4544
     add a, e
     ld e, a
-    jr nc, Jump_073_4185
+    jr nc, .skip
     inc d
 
-Jump_073_4185::
+.skip:
     ld a, [de]
     cp a, c
-    jp nz, Jump_073_4220
+    jp nz, .loop
     ld a, [wMenuSelectedMember]
     and a, $F0
     swap a
     ld de, SymbolRowTable_454E
     add a, e
     ld e, a
-    jr nc, Jump_073_4199
+    jr nc, .skip2
     inc d
 
-Jump_073_4199::
+.skip2:
     ld a, [de]
     cp a, c
-    jp nz, Jump_073_4227
+    jp nz, .check_menu_state
     ld a, [wMenuState]
     and a, $F0
     swap a
     ld de, SymbolRowTable_453A
     add a, e
     ld e, a
-    jr nc, Jump_073_41AD
+    jr nc, .skip3
     inc d
 
-Jump_073_41AD::
+.skip3:
     ld a, [de]
     or a, a
-    jr nz, Jump_073_41C3
+    jr nz, .skip4
     ld hl, $0032 ; 'Hello, there! You must be the'
     call StartMessageHL_B73
     ld a, $1E
@@ -302,9 +302,9 @@ Jump_073_41AD::
     farcall AppendItemWC928ToInventory
     ret
 
-Jump_073_41C3::
+.skip4:
     dec a
-    jr nz, Jump_073_41D8
+    jr nz, .skip5
     ld hl, $0030 ; 'Heh, so these are the newcomers?'
     call StartMessageHL_B73
     ld a, $2C
@@ -312,9 +312,9 @@ Jump_073_41C3::
     farcall AppendItemWC928ToInventory
     ret
 
-Jump_073_41D8::
+.skip5:
     dec a
-    jr nz, Jump_073_41F1
+    jr nz, .skip6
     ld hl, $0031 ; 'C'mon, Warubou!'
     call StartMessageHL_B73
     ld hl, $03E8
@@ -325,9 +325,9 @@ Jump_073_41D8::
     farcall AddGoldCapped
     ret
 
-Jump_073_41F1::
+.skip6:
     dec a
-    jr nz, Jump_073_420A
+    jr nz, .call_start_message_hl_b73
     ld hl, $0044 ; '0 checked the peculiar door. It'
     call StartMessageHL_B73
     ld hl, $01F4
@@ -338,7 +338,7 @@ Jump_073_41F1::
     farcall AddGoldCapped
     ret
 
-Jump_073_420A::
+.call_start_message_hl_b73:
     ld hl, $0045 ; 'You must be the farm kids.'
     call StartMessageHL_B73
     ld hl, $00C8
@@ -349,25 +349,25 @@ Jump_073_420A::
     farcall AddGoldCapped
     ret
 
-Jump_073_4220::
+.loop:
     ld hl, $0035 ; 'The King is too lenient on'
     call StartMessageHL_B73
     ret
 
-Jump_073_4227::
+.check_menu_state:
     ld a, [wMenuState]
     and a, $F0
     swap a
     ld de, SymbolRowTable_453A
     add a, e
     ld e, a
-    jr nc, Jump_073_4236
+    jr nc, .skip7
     inc d
 
-Jump_073_4236::
+.skip7:
     ld a, [de]
     or a, a
-    jr nz, Jump_073_4250
+    jr nz, .skip8
     ld hl, $0046 ; 'Thanks for coming by. I'll always'
     call StartMessageHL_B73
     ld hl, $0064
@@ -378,9 +378,9 @@ Jump_073_4236::
     farcall AddGoldCapped
     ret
 
-Jump_073_4250::
+.skip8:
     dec a
-    jr nz, Jump_073_4220
+    jr nz, .loop
     ld hl, $0047 ; '0 read the notice. We guarantee'
     call StartMessageHL_B73
     ld hl, $0032
@@ -400,38 +400,38 @@ Jump_073_4269:: ; address name
     call GoldItemOrLoss_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
     and a, $01
-    jr z, Jump_073_42A7
+    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
     ld a, [wMenuCursor]
     dec a
-    jr nz, Jump_073_4288
+    jr nz, .skip
     ld hl, wMenuState
     call GoldItemOrLoss_Case0A_Case07_Sub01
     or a, a
-    jr z, Jump_073_42A7
+    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
     ld hl, wScriptStep
     dec [hl]
-    jr Jump_073_42A7
+    jr .call_gold_item_or_loss_write_temp0_and_temp1
 
-Jump_073_4288::
+.skip:
     dec a
-    jr nz, Jump_073_429A
+    jr nz, .call_gold_item_or_loss_case0_a_case07_sub01
     ld hl, wMenuSubState
     call GoldItemOrLoss_Case0A_Case07_Sub01
     or a, a
-    jr z, Jump_073_42A7
+    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
     ld hl, wScriptStep
     dec [hl]
-    jr Jump_073_42A7
+    jr .call_gold_item_or_loss_write_temp0_and_temp1
 
-Jump_073_429A::
+.call_gold_item_or_loss_case0_a_case07_sub01:
     ld hl, wMenuSelectedMember
     call GoldItemOrLoss_Case0A_Case07_Sub01
     or a, a
-    jr z, Jump_073_42A7
+    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
     ld hl, wScriptStep
     inc [hl]
 
-Jump_073_42A7::
+.call_gold_item_or_loss_write_temp0_and_temp1:
     call GoldItemOrLoss_WriteTemp0AndTemp1
     ret
 
@@ -441,22 +441,22 @@ GoldItemOrLoss_Case0A_Case07_Sub01::
 Func_073_42AB:: ; address name
     ld a, [hl]
     and a, $0F
-    jr z, Jump_073_42BF
+    jr z, .return_01
     ld a, [hl]
     inc a
     ld [hl], a
     and a, $F0
     swap a
     cp a, $0A
-    jr nz, Jump_073_42BD
+    jr nz, .return_0
     xor a, a
     ld [hl], a
 
-Jump_073_42BD::
+.return_0:
     xor a, a
     ret
 
-Jump_073_42BF::
+.return_01:
     ld a, $01
     ret
 
@@ -468,13 +468,13 @@ GoldItemOrLoss_Case0A_ReadJoypadPressed::
 Jump_073_42C2:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_073_42D1
+    jr z, .call_gold_item_or_loss_wait_frame_counter_lo
     ld hl, wMenuCursor
     inc [hl]
     ld hl, wScriptStep
     inc [hl]
 
-Jump_073_42D1::
+.call_gold_item_or_loss_wait_frame_counter_lo:
     call GoldItemOrLoss_WaitFrameCounterLo
     call GoldItemOrLoss_WriteTemp0AndTemp1
     ret
@@ -529,7 +529,7 @@ Jump_073_42F1:: ; address name
     ld hl, wScreenTileBuffer
     ld b, $03
 
-Jump_073_432D::
+.loop:
     push hl
     ld a, [de]
     inc de
@@ -549,7 +549,7 @@ Jump_073_432D::
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_073_4363
+    jr z, .skip
     push hl
     ld a, l
     sub a, $98
@@ -575,11 +575,11 @@ Jump_073_432D::
     ldh [rSVBK], a
     pop hl
 
-Jump_073_4363::
+.skip:
     ld a, $14
     add_a_to_hl
     dec b
-    jr nz, Jump_073_432D
+    jr nz, .loop
     farcall DrawFullScreenBufferAtScroll
     ld hl, wScriptStep
     inc [hl]
@@ -595,7 +595,7 @@ GoldItemOrLoss_Case0A_ShowIfSomeMonsterMasters::
 Jump_073_4387:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_43A7
+    jr nz, .call_start_message_hl_b73
     ld hl, $002F ; 'If some monster masters keep their'
     call StartMessageHL_B73
     ld hl, $0064
@@ -608,7 +608,7 @@ Jump_073_4387:: ; address name
     inc [hl]
     ret
 
-Jump_073_43A7::
+.call_start_message_hl_b73:
     ld hl, $0036 ; 'There were many wild monsters in'
     call StartMessageHL_B73
     ld a, $09
@@ -639,46 +639,46 @@ Func_073_43BE:: ; address name
     cp a, $03
     ret z
     or a, a
-    jr nz, Jump_073_43E5
+    jr nz, .check_menu_cursor
     ld a, [wMenuState]
     add a, $02
     ld [wMenuState], a
     and a, $F0
     swap a
     cp a, $0A
-    jr nz, Jump_073_43E5
+    jr nz, .check_menu_cursor
     ld a, [wMenuState]
     and a, $0F
     ld [wMenuState], a
 
-Jump_073_43E5::
+.check_menu_cursor:
     ld a, [wMenuCursor]
     cp a, $02
-    jr z, Jump_073_4404
+    jr z, .read_menu_selected_member
     ld a, [wMenuSubState]
     add a, $01
     ld [wMenuSubState], a
     and a, $F0
     swap a
     cp a, $0A
-    jr nz, Jump_073_4404
+    jr nz, .read_menu_selected_member
     ld a, [wMenuSubState]
     and a, $0F
     ld [wMenuSubState], a
 
-Jump_073_4404::
+.read_menu_selected_member:
     ld a, [wMenuSelectedMember]
     add a, $04
     ld [wMenuSelectedMember], a
     and a, $F0
     swap a
     cp a, $0A
-    jr nz, Jump_073_441C
+    jr nz, .return
     ld a, [wMenuSelectedMember]
     and a, $0F
     ld [wMenuSelectedMember], a
 
-Jump_073_441C::
+.return:
     ret
 
 ; only called from routines of GoldItemOrLoss (E-0098)
@@ -695,26 +695,26 @@ Func_073_441D:: ; address name
     ld de, SymbolRowTable_453A
     add a, e
     ld e, a
-    jr nc, Jump_073_4430
+    jr nc, .set_temp0
     inc d
 
-Jump_073_4430::
+.set_temp0:
     ld a, [de]
     ldh [hTemp0], a
     pop af
     inc a
     cp a, $0A
-    jr nz, Jump_073_443B
+    jr nz, .skip
     ld a, $00
 
-Jump_073_443B::
+.skip:
     ld de, SymbolRowTable_453A
     add a, e
     ld e, a
-    jr nc, Jump_073_4443
+    jr nc, .set_temp1
     inc d
 
-Jump_073_4443::
+.set_temp1:
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuState]
@@ -726,26 +726,26 @@ Jump_073_4443::
     ld de, SymbolRowTable_4544
     add a, e
     ld e, a
-    jr nc, Jump_073_445C
+    jr nc, .set_temp02
     inc d
 
-Jump_073_445C::
+.set_temp02:
     ld a, [de]
     ldh [hTemp0], a
     pop af
     inc a
     cp a, $0A
-    jr nz, Jump_073_4467
+    jr nz, .skip2
     ld a, $00
 
-Jump_073_4467::
+.skip2:
     ld de, SymbolRowTable_4544
     add a, e
     ld e, a
-    jr nc, Jump_073_446F
+    jr nc, .set_temp12
     inc d
 
-Jump_073_446F::
+.set_temp12:
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSubState]
@@ -757,26 +757,26 @@ Jump_073_446F::
     ld de, SymbolRowTable_454E
     add a, e
     ld e, a
-    jr nc, Jump_073_4488
+    jr nc, .set_temp03
     inc d
 
-Jump_073_4488::
+.set_temp03:
     ld a, [de]
     ldh [hTemp0], a
     pop af
     inc a
     cp a, $0A
-    jr nz, Jump_073_4493
+    jr nz, .skip3
     ld a, $00
 
-Jump_073_4493::
+.skip3:
     ld de, SymbolRowTable_454E
     add a, e
     ld e, a
-    jr nc, Jump_073_449B
+    jr nc, .set_temp13
     inc d
 
-Jump_073_449B::
+.set_temp13:
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSelectedMember]
@@ -792,37 +792,37 @@ Func_073_44A5:: ; address name
     and a, $0E
     ldh [hTemp2], a
     or a, a
-    jr z, Jump_073_44CE
+    jr z, .read_temp23
     ldh a, [hTemp1]
     swap a
     ld de, SymbolTiles_73_44EA
     add a, e
     ld e, a
-    jr nc, Jump_073_44B8
+    jr nc, .read_temp2
     inc d
 
-Jump_073_44B8::
+.read_temp2:
     ldh a, [hTemp2]
     ld c, a
     ld a, $10
     sub a, c
     add a, e
     ld e, a
-    jr nc, Jump_073_44C3
+    jr nc, .read_temp22
     inc d
 
-Jump_073_44C3::
+.read_temp22:
     ldh a, [hTemp2]
     ld b, a
 
-Jump_073_44C6::
+.loop:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_073_44C6
+    jr nz, .loop
 
-Jump_073_44CE::
+.read_temp23:
     ldh a, [hTemp2]
     ld c, a
     ld a, $10
@@ -833,18 +833,18 @@ Jump_073_44CE::
     ld de, SymbolTiles_73_44EA
     add a, e
     ld e, a
-    jr nc, Jump_073_44E1
+    jr nc, .loop2
     inc d
 
-Jump_073_44E1::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_073_44E1
+    jr nz, .loop2
     ret
 
-; E-0214 (C1: the routine at Jump_073_44C6 / Jump_073_44E1 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables).
+; E-0214 (C1: the routine at GoldItemOrLoss_Shared02_WriteVRAMByteInc.loop / GoldItemOrLoss_Shared02_WriteVRAMByteInc.loop2 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables).
 ; record: one 2bpp tile (16 bytes)
 SymbolTiles_73_44EA::
 Data_073_44EA:: ; address name
@@ -914,10 +914,10 @@ Func_073_4558:: ; address name
     ld de, RewardAmounts_73_45CA
     add a, e
     ld e, a
-    jr nc, Jump_073_4570
+    jr nc, .skip
     inc d
 
-Jump_073_4570::
+.skip:
     ld a, [de]
     ld c, a
     ld a, [hl]
@@ -934,17 +934,17 @@ Jump_073_4570::
     pop bc
     ldh a, [hTemp3]
     cp a, $03
-    jr nz, Jump_073_459C
+    jr nz, .call_sram_record_address
     ldh a, [hTemp2]
     cp a, $E8
-    jr c, Jump_073_459C
+    jr c, .call_sram_record_address
     ld de, $03E7
     ld a, e
     ldh [hTemp2], a
     ld a, d
     ldh [hTemp3], a
 
-Jump_073_459C::
+.call_sram_record_address:
     ld a, [hl]
     call SRAMRecordAddress
     ldh a, [hTemp2]
@@ -1017,7 +1017,7 @@ GoldItemOrLoss_Case08_ShowHeroCheckedTheBookshelf::
 Jump_073_45EF:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4629
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $23
     call StartMessageHL_B73
     ld a, $FF
@@ -1039,7 +1039,7 @@ Jump_073_45EF:: ; address name
     inc [hl]
     ret
 
-Jump_073_4629::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $22
     call StartMessageHL_B73
     ld a, $06
@@ -1117,7 +1117,7 @@ GoldItemOrLoss_Case06_ShowThereArentManyFriends::
 Jump_073_468F:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_46A7
+    jr nz, .call_start_message_hl_b73
     ld a, [wMenuSubState]
     ld [wMenuState], a
     ld hl, wShadowOAM + $19
@@ -1126,7 +1126,7 @@ Jump_073_468F:: ; address name
     ld [wScriptStep], a
     ret
 
-Jump_073_46A7::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $1A
     call StartMessageHL_B73
     ld a, $0C
@@ -1159,31 +1159,31 @@ Jump_073_46B3:: ; address name
     ld c, a
     ld a, [wMenuSubState]
     cp a, c
-    jr nz, Jump_073_46EA
+    jr nz, .check_text_yes_no_result
     ld hl, vTiles0 + $18
     call StartMessageHL_B73
-    jp Jump_073_4797
+    jp .read_script_param1
 
-Jump_073_46EA::
+.check_text_yes_no_result:
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_46FD
+    jr nz, .read_menu_state
     ld a, [wMenuState]
     ld c, a
     ld a, [wMenuSubState]
     cp a, c
-    jp c, Jump_073_4791
-    jr Jump_073_470A
+    jp c, .call_start_message_hl_b73
+    jr .check_script_param1
 
-Jump_073_46FD::
+.read_menu_state:
     ld a, [wMenuState]
     ld c, a
     ld a, [wMenuSubState]
     cp a, c
-    jp nc, Jump_073_4791
-    jr Jump_073_470A
+    jp nc, .call_start_message_hl_b73
+    jr .check_script_param1
 
-Jump_073_470A::
+.check_script_param1:
     ld a, [wScriptParam1]
     inc a
     ld [wScriptParam1], a
@@ -1191,7 +1191,7 @@ Jump_073_470A::
     ld [wMenuSelectedMember], a
     ld a, [wScriptParam1]
     cp a, $05
-    jr nz, Jump_073_473F
+    jr nz, .call_next_random_seed
     ld hl, vTiles0 + $1C
     call StartMessageHL_B73
     ld a, [wMenuSelectedMember]
@@ -1204,7 +1204,7 @@ Jump_073_470A::
     ld [wScriptStep], a
     ret
 
-Jump_073_473F::
+.call_next_random_seed:
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $03
@@ -1237,11 +1237,11 @@ Jump_073_473F::
     ld [wScriptStep], a
     ret
 
-Jump_073_4791::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $17
     call StartMessageHL_B73
 
-Jump_073_4797::
+.read_script_param1:
     ld a, [wScriptParam1]
     add a, a
     ld hl, $4836
@@ -1283,14 +1283,14 @@ Jump_073_47DB:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_47F1
+    jr nz, .call_start_message_hl_b73
     ld a, $06
     ld [wMenuState], a
     ld hl, wShadowOAM + $14
     call StartMessageHL_B73
     ret
 
-Jump_073_47F1::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $15
     call StartMessageHL_B73
     ld a, $10
@@ -1363,14 +1363,14 @@ GoldItemOrLoss_Case09_ShowWarubouWhatIsThis::
 Jump_073_486B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_487C
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $51
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_487C::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $50
     call StartMessageHL_B73
     ld a, $0C
@@ -1387,12 +1387,12 @@ Jump_073_4888:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4899
+    jr nz, .call_start_message_hl_b73
     ld hl, $0025 ; '0 checked the dresser. It smelled'
     call StartMessageHL_B73
     ret
 
-Jump_073_4899::
+.call_start_message_hl_b73:
     ld hl, $0053 ; 'Warubou Wa-hey! I'm starving!'
     call StartMessageHL_B73
     ret
@@ -1408,7 +1408,7 @@ Jump_073_48A0:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_48E9
+    jr nz, .call_start_message_hl_b73
     ld a, $00
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $00
@@ -1417,16 +1417,16 @@ Jump_073_48A0:: ; address name
     call GoldItemOrLoss_LoadSRAMRecordWord
     ld a, [wPartyCount]
     dec a
-    jr nz, Jump_073_48CB
+    jr nz, .read_party_list
 
-Jump_073_48BF::
+.loop:
     ld hl, $0026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
     ret
 
-Jump_073_48CB::
+.read_party_list:
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyList + $1]
@@ -1436,12 +1436,12 @@ Jump_073_48CB::
     ld [rRAMG], a
     ldh a, [hTemp0]
     bit 7, a
-    jr nz, Jump_073_48BF
+    jr nz, .loop
     ld hl, $4026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ret
 
-Jump_073_48E9::
+.call_start_message_hl_b73:
     ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
@@ -1467,16 +1467,16 @@ Jump_073_48F8:: ; address name
     ld a, [wPartyCount]
     dec a
     dec a
-    jr nz, Jump_073_491E
+    jr nz, .read_party_list
 
-Jump_073_4912::
+.loop:
     ld hl, vTiles0 + $26
     call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
     ret
 
-Jump_073_491E::
+.read_party_list:
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyList + $2]
@@ -1486,7 +1486,7 @@ Jump_073_491E::
     ld [rRAMG], a
     ldh a, [hTemp0]
     bit 7, a
-    jr nz, Jump_073_4912
+    jr nz, .loop
     ld hl, wShadowOAM + $26
     call StartMessageHL_B73
     ret
@@ -1566,13 +1566,13 @@ ProcessRecordFields5DTo69ThenItemString_WriteTemp2::
 Func_073_49B1:: ; address name
     ldh a, [hTemp1]
     cp a, d
-    jr c, Jump_073_49BB
+    jr c, .set_temp2
     ret nz
     ldh a, [hTemp0]
     cp a, e
     ret nc
 
-Jump_073_49BB::
+.set_temp2:
     ld a, b
     ldh [hTemp2], a
     ldh a, [hTemp0]
@@ -1620,12 +1620,12 @@ Func_073_49E6:: ; address name
     ld de, wTextBuf1 + $7
     ld b, $0A
 
-Jump_073_4A05::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_073_4A05
+    jr nz, .loop
     ld a, $F0
     ld [de], a
     ret
@@ -1645,10 +1645,10 @@ Func_073_4A0F:: ; address name
     ld de, $4A7C
     add a, e
     ld e, a
-    jr nc, Jump_073_4A27
+    jr nc, .skip
     inc d
 
-Jump_073_4A27::
+.skip:
     ld a, [de]
     ld c, a
     ld a, [hl]
@@ -1661,17 +1661,17 @@ Jump_073_4A27::
     ldh [hTemp3], a
     ldh a, [hTemp3]
     cp a, $03
-    jr nz, Jump_073_4A4E
+    jr nz, .call_sram_record_address
     ldh a, [hTemp2]
     cp a, $E8
-    jr c, Jump_073_4A4E
+    jr c, .call_sram_record_address
     ld de, $03E7
     ld a, e
     ldh [hTemp2], a
     ld a, d
     ldh [hTemp3], a
 
-Jump_073_4A4E::
+.call_sram_record_address:
     ld a, [hl]
     call SRAMRecordAddress
     ldh a, [hTemp2]
@@ -1738,14 +1738,14 @@ GoldItemOrLoss_Case07_ShowWarubouItsADead::
 Jump_073_4AA9:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4ABA
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $4B
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_4ABA::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $4A
     call StartMessageHL_B73
     ld a, $08
@@ -1762,12 +1762,12 @@ Jump_073_4AC6:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4AD7
+    jr nz, .call_start_message_hl_b73
     ld hl, $001E ; 'You e come at the right'
     call StartMessageHL_B73
     ret
 
-Jump_073_4AD7::
+.call_start_message_hl_b73:
     ld hl, $001F ; 'Cobi Sure, Mama! We'll be fine.'
     call StartMessageHL_B73
     ret
@@ -1783,7 +1783,7 @@ Jump_073_4ADE:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4B21
+    jr nz, .call_start_message_hl_b732
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $03
@@ -1795,21 +1795,21 @@ Jump_073_4ADE:: ; address name
     call CopyItemNameToDE
     ld a, [wInventory + $17]
     or a, a
-    jr z, Jump_073_4B15
+    jr z, .call_start_message_hl_b73
     cp a, $FF
-    jr z, Jump_073_4B15
+    jr z, .call_start_message_hl_b73
     ld hl, $001B ; 'This hay is pretty good. Maybe'
     call StartMessageHL_B73
     ret
 
-Jump_073_4B15::
+.call_start_message_hl_b73:
     ld hl, $401B ; 'This hay is pretty good. Maybe'
     call StartMessageHL_B73
     ld a, $0A
     ld [wScriptStep], a
     ret
 
-Jump_073_4B21::
+.call_start_message_hl_b732:
     ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
@@ -1833,16 +1833,16 @@ Jump_073_4B2B:: ; address name
     call CopyItemNameToDE
     ld a, [wInventory + $17]
     or a, a
-    jr z, Jump_073_4B5D
+    jr z, .call_start_message_hl_b73
     cp a, $FF
-    jr z, Jump_073_4B5D
+    jr z, .call_start_message_hl_b73
     ld hl, vTiles0 + $1B
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
-Jump_073_4B5D::
+.call_start_message_hl_b73:
     ld hl, wShadowOAM + $1B
     call StartMessageHL_B73
     ld hl, wScriptStep
@@ -1887,14 +1887,14 @@ GoldItemOrLoss_Case05_ShowWarubouWaheyGiveMe::
 Jump_073_4B8B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4B9C
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $4F
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_4B9C::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $4E
     call StartMessageHL_B73
     ld a, $08
@@ -1911,12 +1911,12 @@ Jump_073_4BA8:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4BB9
+    jr nz, .call_start_message_hl_b73
     ld hl, $0011 ; 'Cobi 0! They said GreatLog will'
     call StartMessageHL_B73
     ret
 
-Jump_073_4BB9::
+.call_start_message_hl_b73:
     ld hl, $0012 ; 'Land ho! There's GreatLog!'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
@@ -1960,14 +1960,14 @@ GoldItemOrLoss_Case04_ShowWowYouKidsSure::
 Jump_073_4BE6:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4BF7
+    jr nz, .call_start_message_hl_b73
     ld hl, vTiles0 + $4D
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_4BF7::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $4C
     call StartMessageHL_B73
     ld a, $08
@@ -1984,12 +1984,12 @@ Jump_073_4C03:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4C14
+    jr nz, .call_start_message_hl_b73
     ld hl, $000C ; 'GreatLog's King asked us to settle'
     call StartMessageHL_B73
     ret
 
-Jump_073_4C14::
+.call_start_message_hl_b73:
     ld hl, $000E ; 'Worried about your monsters? Don't be!'
     call StartMessageHL_B73
     ret
@@ -2005,13 +2005,13 @@ Jump_073_4C1B:: ; address name
     inc [hl]
     ld a, [wBattleScene]
     or a, a
-    jr nz, Jump_073_4C53
+    jr nz, .call_start_message_hl_b73
     call NextTableByte
     ld a, [wRandomLo]
     cp a, $10
-    jr c, Jump_073_4C41
+    jr c, .call_generate_new_key_entry
 
-Jump_073_4C2F::
+.loop:
     ld hl, $000D ; 'When our farm gets established in'
     call StartMessageHL_B73
     ld a, $29
@@ -2019,16 +2019,16 @@ Jump_073_4C2F::
     farcall AppendItemWC928ToInventory
     ret
 
-Jump_073_4C41::
+.call_generate_new_key_entry:
     farcall GenerateNewKeyEntry
     ldh a, [hTemp0]
     or a, a
-    jr z, Jump_073_4C2F
+    jr z, .loop
     ld hl, $0043 ; '0 checked the odd object. It'
     call StartMessageHL_B73
     ret
 
-Jump_073_4C53::
+.call_start_message_hl_b73:
     ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
@@ -2125,7 +2125,7 @@ Jump_073_4CE5:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4D19
+    jr nz, .call_start_message_hl_b73
     ld a, [wScriptParam0]
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
@@ -2145,7 +2145,7 @@ Jump_073_4CE5:: ; address name
     call StartMessageHL_B73
     ret
 
-Jump_073_4D19::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $A
     call StartMessageHL_B73
     ret
@@ -2188,12 +2188,12 @@ Jump_073_4D41:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4D52
+    jr nz, .skip
     ld hl, vTiles0 + $27
     call StartMessageHL_B73
     ret
 
-Jump_073_4D52::
+.skip:
     ld hl, wScriptStep
     inc [hl]
     ld hl, wScriptStep
@@ -2211,7 +2211,7 @@ Jump_073_4D5B:: ; address name
     inc [hl]
     ld a, [wMessageIndex]
     cp a, $27
-    jr nz, Jump_073_4D82
+    jr nz, .call_start_message_hl_b73
     ld hl, $03E8
     ld a, l
     ldh [hTemp0], a
@@ -2223,7 +2223,7 @@ Jump_073_4D5B:: ; address name
     call StartMessageHL_B73
     ret
 
-Jump_073_4D82::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $7
     call StartMessageHL_B73
     ld hl, wScriptStep
@@ -2282,7 +2282,7 @@ Jump_073_4DCD:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr nz, Jump_073_4DFC
+    jr nz, .call_start_message_hl_b73
     ld a, [wScriptParam0]
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
@@ -2297,7 +2297,7 @@ Jump_073_4DCD:: ; address name
     call StartMessageHL_B73
     ret
 
-Jump_073_4DFC::
+.call_start_message_hl_b73:
     ld hl, vTiles0 + $4
     call StartMessageHL_B73
     ret
@@ -2339,13 +2339,13 @@ Jump_073_4E20:: ; address name
     ret nc
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_073_4E37
+    jr z, .call_queue_sound_effect
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_073_4E37::
+.call_queue_sound_effect:
     ld a, $7A
     call QueueSoundEffect
     ld hl, wScriptStep
@@ -2395,14 +2395,14 @@ GoldItemOrLoss_Case0B_WriteScriptParam0AndFieldDrawFlagsEtc::
 Jump_073_4E67:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_073_4E76
+    jr nz, .call_move_incapacitated_party_members_back
     inc a
     ld [wScriptParam0], a
     ld a, $0E
     ldh [hFieldDrawFlags], a
     ret
 
-Jump_073_4E76::
+.call_move_incapacitated_party_members_back:
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
     call LoadRecordListNameTiles
@@ -2425,33 +2425,33 @@ ScriptStepBlinkSpritesThenEnd::
 Func_073_4E9C:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_073_4EA9
+    jr nc, .cp_3C
     bit 3, a
-    jr z, Jump_073_4EB9
-    jr Jump_073_4EC0
+    jr z, .set_sprite_slot_count_to_01
+    jr .clear_sprite_slot_count
 
-Jump_073_4EA9::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_073_4EB3
+    jr nc, .check_bit1
     bit 2, a
-    jr z, Jump_073_4EB9
-    jr Jump_073_4EC0
+    jr z, .set_sprite_slot_count_to_01
+    jr .clear_sprite_slot_count
 
-Jump_073_4EB3::
+.check_bit1:
     bit 1, a
-    jr z, Jump_073_4EB9
-    jr Jump_073_4EC0
+    jr z, .set_sprite_slot_count_to_01
+    jr .clear_sprite_slot_count
 
-Jump_073_4EB9::
+.set_sprite_slot_count_to_01:
     ld a, $01
     ld [wSpriteSlotCount], a
-    jr Jump_073_4EC4
+    jr .check_script_param0
 
-Jump_073_4EC0::
+.clear_sprite_slot_count:
     xor a, a
     ld [wSpriteSlotCount], a
 
-Jump_073_4EC4::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -2484,11 +2484,11 @@ Func_073_4EE5:: ; address name
     push af
     ld a, [wMessageState]
     cp a, $FF
-    jr nz, Jump_073_4EEF
+    jr nz, .skip
     pop af
     ret
 
-Jump_073_4EEF::
+.skip:
     rst $00
     dw RunMessageBox_Bank73_SetBit1OfPlayerAndObjectFlags
     dw RunMessageBox_Bank73_BeginStringDisplay_Bank09
@@ -2504,13 +2504,13 @@ RunMessageBox_Bank73_SetBit1OfPlayerAndObjectFlags::
 Jump_073_4EF8:: ; address name
     pop af
     or a, a
-    jr nz, Jump_073_4F02
+    jr nz, .check_message_group
     farcall SetBit1OfPlayerAndObjectFlags
 
-Jump_073_4F02::
+.check_message_group:
     ld a, [wMessageGroup]
     bit 7, a
-    jr nz, Jump_073_4F37
+    jr nz, .done
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -2525,13 +2525,13 @@ Jump_073_4F02::
     ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
-    jr c, Jump_073_4F37
+    jr c, .done
     ld a, $81
     ld [wTextWindowState], a
     ld a, $01
     ldh [hSpriteWindowClipMode], a
 
-Jump_073_4F37::
+.done:
     ld hl, wMessageState
     inc [hl]
     ret
@@ -2569,12 +2569,12 @@ Jump_073_4F59:: ; address name
     ret nz
     ld a, [wMessageGroup]
     bit 6, a
-    jr z, Jump_073_4F6D
+    jr z, .call_queue_sound_effect
     ld a, $FF
     ld [wMessageState], a
     ret
 
-Jump_073_4F6D::
+.call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
     ld a, $02
@@ -2585,11 +2585,11 @@ Jump_073_4F6D::
     ldh [hSpriteWindowClipMode], a
     ldh a, [hPlayerY]
     cp a, $48
-    jr c, Jump_073_4F8B
+    jr c, .done
     ld a, $82
     ld [wTextWindowState], a
 
-Jump_073_4F8B::
+.done:
     ld hl, wMessageState
     inc [hl]
     ret
@@ -2602,17 +2602,17 @@ RunMessageBox_Bank73_WriteMessageState::
 Jump_073_4F90:: ; address name
     ld a, [wTextWindowState]
     and a, $03
-    jr z, Jump_073_4F99
+    jr z, .restore
     pop af
     ret
 
-Jump_073_4F99::
+.restore:
     pop af
     or a, a
-    jr nz, Jump_073_4FA3
+    jr nz, .set_message_state_to_FF
     farcall ClearBit1OfPlayerAndObjectFlags
 
-Jump_073_4FA3::
+.set_message_state_to_FF:
     ld a, $FF
     ld [wMessageState], a
     ret
@@ -2625,11 +2625,11 @@ Func_073_4FA9:: ; address name
     call RunMessageBox_Bank73
     ld a, [wMessageState]
     cp a, $FF
-    jr z, Jump_073_4FB5
+    jr z, .return_carry
     sub a, a
     ret
 
-Jump_073_4FB5::
+.return_carry:
     scf
     ret
 
@@ -2664,136 +2664,136 @@ Func_073_4FD2:: ; address name
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_073_4FE8
+    jr z, .call_gold_item_or_loss_shared05_load_sram
     ld a, $0C
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_4FE8::
+.call_gold_item_or_loss_shared05_load_sram:
     farcall GoldItemOrLoss_Shared05_LoadSRAMRecordByte
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_073_4FFE
+    jr z, .call_gold_item_or_loss_shared05_load_sram2
     ld a, $08
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_4FFE::
+.call_gold_item_or_loss_shared05_load_sram2:
     farcall GoldItemOrLoss_Shared05_LoadSRAMRecordByte_Sub01
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_073_5014
+    jr z, .check_party_count
     ld a, $06
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_5014::
+.check_party_count:
     ld a, [wPartyCount]
     cp a, $03
-    jr z, Jump_073_505C
+    jr z, .call_gold_item_or_loss_shared05_load_sram3
     farcall CountRecordsInUse
     ld a, [wRecordsInUse]
     cp a, $03
-    jr nc, Jump_073_5032
+    jr nc, .check_records_in_use
     ld a, $19
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_5032::
+.check_records_in_use:
     ld a, [wRecordsInUse]
     cp a, $03
-    jr c, Jump_073_5047
+    jr c, .check_records_in_use2
     cp a, $06
-    jr nc, Jump_073_5047
+    jr nc, .check_records_in_use2
     ld a, $1A
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_5047::
+.check_records_in_use2:
     ld a, [wRecordsInUse]
     cp a, $06
-    jr c, Jump_073_505C
+    jr c, .call_gold_item_or_loss_shared05_load_sram3
     cp a, $0B
-    jr nc, Jump_073_505C
+    jr nc, .call_gold_item_or_loss_shared05_load_sram3
     ld a, $1B
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_505C::
+.call_gold_item_or_loss_shared05_load_sram3:
     call GoldItemOrLoss_Shared05_LoadSRAMRecordWord
     ldh a, [hTemp3]
     or a, a
-    jr nz, Jump_073_506A
+    jr nz, .set_script_param0_to_05
     ldh a, [hTemp2]
     cp a, $65
-    jr c, Jump_073_5074
+    jr c, .check_temp3
 
-Jump_073_506A::
+.set_script_param0_to_05:
     ld a, $05
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_5074::
+.check_temp3:
     ldh a, [hTemp3]
     or a, a
-    jr nz, Jump_073_508C
+    jr nz, .call_gold_item_or_loss_shared05_load_sram4
     ldh a, [hTemp2]
     cp a, $65
-    jr nc, Jump_073_508C
+    jr nc, .call_gold_item_or_loss_shared05_load_sram4
     or a, a
-    jr z, Jump_073_508C
+    jr z, .call_gold_item_or_loss_shared05_load_sram4
     ld a, $04
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_508C::
+.call_gold_item_or_loss_shared05_load_sram4:
     call GoldItemOrLoss_Shared05_LoadSRAMRecordWord_Sub03
     ldh a, [hTemp3]
     or a, a
-    jr nz, Jump_073_509A
+    jr nz, .set_script_param0_to_03
     ldh a, [hTemp2]
     cp a, $65
-    jr c, Jump_073_50A4
+    jr c, .check_temp32
 
-Jump_073_509A::
+.set_script_param0_to_03:
     ld a, $03
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_50A4::
+.check_temp32:
     ldh a, [hTemp3]
     or a, a
-    jr nz, Jump_073_50BD
+    jr nz, .set_script_param0_to_01
     ldh a, [hTemp2]
     cp a, $33
-    jr c, Jump_073_50BD
+    jr c, .set_script_param0_to_01
     cp a, $64
-    jr nc, Jump_073_50BD
+    jr nc, .set_script_param0_to_01
     ld a, $02
     ld [wScriptParam0], a
     call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-Jump_073_50BD::
+.set_script_param0_to_01:
     ld a, $01
     ld [wScriptParam0], a
     ret
@@ -2814,11 +2814,11 @@ Func_073_50C3:: ; address name
     ld [rRAMG], a
     ld a, [wPartyCount]
     or a, a
-    jr z, Jump_073_5112
+    jr z, .done
     ld b, a
     ld hl, wPartyList
 
-Jump_073_50DB::
+.loop:
     ld a, [hl]
     ld c, $5D
     call LoadSRAMRecordWord
@@ -2854,9 +2854,9 @@ Jump_073_50DB::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_073_50DB
+    jr nz, .loop
 
-Jump_073_5112::
+.done:
     xor a, a
     ld [rRAMG], a
     ret
@@ -2877,11 +2877,11 @@ Func_073_5117:: ; address name
     ld [rRAMG], a
     ld a, [wPartyCount]
     or a, a
-    jr z, Jump_073_5166
+    jr z, .done
     ld b, a
     ld hl, wPartyList
 
-Jump_073_512F::
+.loop:
     ld a, [hl]
     ld c, $61
     call LoadSRAMRecordWord
@@ -2917,9 +2917,9 @@ Jump_073_512F::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_073_512F
+    jr nz, .loop
 
-Jump_073_5166::
+.done:
     xor a, a
     ld [rRAMG], a
     ret
@@ -2933,32 +2933,32 @@ Func_073_516B:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
     dec a
-    jr z, Jump_073_517B
+    jr z, .check_gold_hi
     ld e, l
     ld d, h
     add hl, hl
     add hl, hl
     add hl, de
 
-Jump_073_517B::
+.check_gold_hi:
     ld a, [wGoldHi]
     or a, a
-    jr z, Jump_073_5184
+    jr z, .check_gold_mid
 
-Jump_073_5181::
+.loop:
     ld a, $01
     ret
 
-Jump_073_5184::
+.check_gold_mid:
     ld a, [wGoldMid]
     cp a, h
-    jr c, Jump_073_5192
-    jr nz, Jump_073_5181
+    jr c, .return_0
+    jr nz, .loop
     ld a, [wGoldLo]
     cp a, l
-    jr nc, Jump_073_5181
+    jr nc, .loop
 
-Jump_073_5192::
+.return_0:
     xor a, a
     ret
 
@@ -3082,39 +3082,39 @@ SceneChestBattle_WriteTemp0AndScriptStep::
 Jump_073_5265:: ; address name
     ldh a, [hMapId]
     cp a, $CE
-    jr z, Jump_073_5278
+    jr z, .set_temp0_to_0A
     cp a, $D7
-    jr z, Jump_073_528A
+    jr z, .set_temp0_to_0B
     cp a, $E0
-    jr z, Jump_073_529C
+    jr z, .set_temp0_to_0C
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_5278::
+.set_temp0_to_0A:
     ld a, $0A
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0206
     call SetFlagBit
-    jr Jump_073_52AC
+    jr .set_script_step_to_08
 
-Jump_073_528A::
+.set_temp0_to_0B:
     ld a, $0B
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0207
     call SetFlagBit
-    jr Jump_073_52AC
+    jr .set_script_step_to_08
 
-Jump_073_529C::
+.set_temp0_to_0C:
     ld a, $0C
     ldh [hTemp0], a
     farcall MarkKeyEntryKindTemp0Bit6
     ld de, $0208
     call SetFlagBit
 
-Jump_073_52AC::
+.set_script_step_to_08:
     ld a, $08
     ld [wScriptStep], a
     ret
@@ -3139,10 +3139,10 @@ Jump_073_52B9:: ; address name
     ld de, $52D3
     add a, e
     ld e, a
-    jr nc, Jump_073_52C5
+    jr nc, .set_temp0
     inc d
 
-Jump_073_52C5::
+.set_temp0:
     ld a, [de]
     ldh [hTemp0], a
     farcall StartScriptedEncounterTemp0
@@ -3171,10 +3171,10 @@ Func_073_52F5:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_073_52FF
+    jr nc, .skip
     inc d
 
-Jump_073_52FF::
+.skip:
     ld a, [de]
     ld l, a
     inc de
@@ -3319,41 +3319,41 @@ Jump_073_53D8:: ; address name
     inc [hl]
     ldh a, [hPlayerX]
     cp a, $30
-    jr nz, Jump_073_53EE
+    jr nz, .read_party_count
     ldh a, [hPlayerY]
     cp a, $20
-    jr z, Jump_073_5412
+    jr z, .set_script_param1_to_012
 
-Jump_073_53EE::
+.read_party_count:
     ld a, [wPartyCount]
     ld b, a
     ld hl, wFollowerRecords + $1
 
-Jump_073_53F5::
+.loop:
     push hl
     ld a, [hl+]
     cp a, $30
-    jr nz, Jump_073_5400
+    jr nz, .restore
     ld a, [hl]
     cp a, $20
-    jr z, Jump_073_5411
+    jr z, .set_script_param1_to_01
 
-Jump_073_5400::
+.restore:
     pop hl
     inc hl
     inc hl
     dec b
-    jr nz, Jump_073_53F5
+    jr nz, .loop
     ld a, $FF
     ld [wScriptParam1], a
     ld a, $03
     ld [wSpriteSlots + $7], a
     ret
 
-Jump_073_5411::
+.set_script_param1_to_01:
     pop hl
 
-Jump_073_5412::
+.set_script_param1_to_012:
     ld a, $01
     ld [wScriptParam1], a
     ld a, $01
@@ -3424,7 +3424,7 @@ SceneWizstone_StepObjectTowardCoord_Case07::
 Jump_073_546C:: ; address name
     ld a, [wSpriteSlots + $C]
     cp a, $40
-    jr z, Jump_073_5488
+    jr z, .clear_step_ptr_hi
     xor a, a
     ld [wStepPtrHi], a
     ld a, $00
@@ -3434,7 +3434,7 @@ Jump_073_546C:: ; address name
     farcall StepObjectTowardCoord
     ret
 
-Jump_073_5488::
+.clear_step_ptr_hi:
     xor a, a
     ld [wStepPtrHi], a
     ld a, $03
@@ -3494,7 +3494,7 @@ SceneWizstone_StepObjectTowardCoord::
 Jump_073_54CA:: ; address name
     ld a, [wSpriteSlots + $B]
     cp a, $50
-    jr z, Jump_073_54E6
+    jr z, .clear_step_ptr_hi
     xor a, a
     ld [wStepPtrHi], a
     ld a, $01
@@ -3504,7 +3504,7 @@ Jump_073_54CA:: ; address name
     farcall StepObjectTowardCoord
     ret
 
-Jump_073_54E6::
+.clear_step_ptr_hi:
     xor a, a
     ld [wStepPtrHi], a
     ld a, $02
@@ -3530,45 +3530,45 @@ SceneWizstone_WriteSpriteSlotsAndScriptStep::
 Jump_073_5509:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_073_5515
+    jr nz, .check_party_count
     ldh a, [hPlayerY]
     cp a, $40
-    jr z, Jump_073_5541
+    jr z, .done
 
-Jump_073_5515::
+.check_party_count:
     ld a, [wPartyCount]
     or a, a
-    jr z, Jump_073_5535
+    jr z, .set_sprite_slots_to_02
     ld b, a
     ld hl, wFollowerRecords + $1
 
-Jump_073_551F::
+.loop:
     push hl
     ld a, [hl+]
     cp a, $40
-    jr nz, Jump_073_552A
+    jr nz, .restore
     ld a, [hl]
     cp a, $40
-    jr z, Jump_073_5540
+    jr z, .restore2
 
-Jump_073_552A::
+.restore:
     pop hl
     ld a, $05
     add_a_to_hl
     dec b
-    jr nz, Jump_073_551F
+    jr nz, .loop
 
-Jump_073_5535::
+.set_sprite_slots_to_02:
     ld a, $02
     ld [wSpriteSlots + $7], a
     ld a, $02
     ld [wScriptStep], a
     ret
 
-Jump_073_5540::
+.restore2:
     pop hl
 
-Jump_073_5541::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3622,7 +3622,7 @@ SceneCyalRolt::
 Func_073_5577:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_559E
+    jr nz, .set_script_start_request_to_80
     ld a, $A9
     ldh [hMapId], a
     ld a, $01
@@ -3638,7 +3638,7 @@ Func_073_5577:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-Jump_073_559E::
+.set_script_start_request_to_80:
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3736,12 +3736,12 @@ Jump_073_562C:: ; address name
     ld [wObject1 + $7], a
     ld a, [wObject1 + $B]
     cp a, $60
-    jr z, Jump_073_5643
+    jr z, .call_clear_bit2_at_hl_bank73
     inc a
     ld [wObject1 + $B], a
     ret
 
-Jump_073_5643::
+.call_clear_bit2_at_hl_bank73:
     ld hl, wObject1 + $D
     call ClearBit2AtHL_Bank73
     ld hl, $0300
@@ -3767,10 +3767,10 @@ Jump_073_5659:: ; address name
     farcall ScriptStepBlinkObjectTemp0
     ld a, [wObject2 + $C]
     cp a, $40
-    jr z, Jump_073_5670
+    jr z, .set_object3
     ld a, $30
 
-Jump_073_5670::
+.set_object3:
     ld [wObject3 + $C], a
     ldh a, [hTemp0]
     or a, a
@@ -3918,7 +3918,7 @@ SceneRivalFade::
 Func_073_572F:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_575B
+    jr nz, .set_script_start_request_to_80
     ld a, $28
     ldh [hMapId], a
     xor a, a
@@ -3936,7 +3936,7 @@ Func_073_572F:: ; address name
     call StartPaletteFade
     ret
 
-Jump_073_575B::
+.set_script_start_request_to_80:
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3972,7 +3972,7 @@ Jump_073_5773:: ; address name
     ld [hl], $2E
     ld a, [wPartyCount]
     dec a
-    jr z, Jump_073_57B0
+    jr z, .call_draw_full_screen_buffer_at_scroll
     ld hl, wScreenTileBuffer + $CE
     ld [hl], $2B
     inc hl
@@ -3984,7 +3984,7 @@ Jump_073_5773:: ; address name
     ld a, [wPartyCount]
     dec a
     dec a
-    jr z, Jump_073_57B0
+    jr z, .call_draw_full_screen_buffer_at_scroll
     ld hl, wScreenTileBuffer + $F8
     ld [hl], $2B
     inc hl
@@ -3994,7 +3994,7 @@ Jump_073_5773:: ; address name
     inc hl
     ld [hl], $2E
 
-Jump_073_57B0::
+.call_draw_full_screen_buffer_at_scroll:
     farcall DrawFullScreenBufferAtScroll
     ld a, $01
     ld [wFollowerDelay], a
@@ -4013,12 +4013,12 @@ SceneKamehaStole_WriteFollowerRecords::
 Jump_073_57C5:: ; address name
     ld a, [wFollowerRecords + $C]
     cp a, $60
-    jr z, Jump_073_57D1
+    jr z, .set_follower_records_to_01
     ld hl, wFollowerRecords + $C
     inc [hl]
     ret
 
-Jump_073_57D1::
+.set_follower_records_to_01:
     ld a, $01
     ld [wFollowerRecords + $A], a
     ld a, [wFollowerRecords + $B]
@@ -4041,14 +4041,14 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep_Case04::
 Jump_073_57EA:: ; address name
     ld a, [wFollowerRecords + $6]
     cp a, $30
-    jr z, Jump_073_57FC
+    jr z, .clear_follower_records
     ld a, [wFollowerRecords + $6]
     dec a
     ld [wFollowerRecords + $6], a
     ld [wFollowerRecords + $B], a
     ret
 
-Jump_073_57FC::
+.clear_follower_records:
     xor a, a
     ld [wFollowerRecords + $5], a
     ld [wFollowerRecords + $A], a
@@ -4079,7 +4079,7 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep::
 Jump_073_5825:: ; address name
     ld a, [wFollowerRecords + $2]
     cp a, $40
-    jr z, Jump_073_5845
+    jr z, .set_follower_records_to_03
     ld a, $02
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
@@ -4091,7 +4091,7 @@ Jump_073_5825:: ; address name
     ld [wFollowerRecords + $C], a
     ret
 
-Jump_073_5845::
+.set_follower_records_to_03:
     ld a, $03
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
@@ -4239,33 +4239,33 @@ TakeItem::
 Func_073_5919:: ; address name
     ld a, [wScriptParam0]
     cp a, $1E
-    jr nc, Jump_073_5926
+    jr nc, .cp_3C
     bit 1, a
-    jr z, Jump_073_5936
-    jr Jump_073_593D
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_073_5926::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_073_5930
+    jr nc, .check_bit3
     bit 2, a
-    jr z, Jump_073_5936
-    jr Jump_073_593D
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_073_5930::
+.check_bit3:
     bit 3, a
-    jr z, Jump_073_5936
-    jr Jump_073_593D
+    jr z, .set_object1_to_20
+    jr .set_object1_to_E0
 
-Jump_073_5936::
+.set_object1_to_20:
     ld a, $20
     ld [wObject1 + $C], a
-    jr Jump_073_5942
+    jr .check_script_param0
 
-Jump_073_593D::
+.set_object1_to_E0:
     ld a, $E0
     ld [wObject1 + $C], a
 
-Jump_073_5942::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -4440,57 +4440,57 @@ SceneFoundMe::
 Func_073_5A57:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_073_5A9C
+    jr z, .set_step_target_to_01
     cp a, $60
-    jr z, Jump_073_5A90
+    jr z, .set_step_target_to_03
     ld a, [wPartyCount]
     ld b, a
     ld hl, wFollowerRecords + $1
 
-Jump_073_5A68::
+.loop:
     push hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_5A77
+    jr nz, .skip
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_5A85
+    jr nz, .restore
     pop hl
-    jr Jump_073_5A9C
+    jr .set_step_target_to_01
 
-Jump_073_5A77::
+.skip:
     ld a, [hl]
     cp a, $60
-    jr nz, Jump_073_5A85
+    jr nz, .restore
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_5A85
+    jr nz, .restore
     pop hl
-    jr Jump_073_5A90
+    jr .set_step_target_to_03
 
-Jump_073_5A85::
+.restore:
     pop hl
     ld a, $05
     add_a_to_hl
     dec b
-    jr nz, Jump_073_5A68
+    jr nz, .loop
 
-Jump_073_5A90::
+.set_step_target_to_03:
     ld a, $03
     ld [wStepTarget], a
     ld a, $40
     ld [wStepPtrLo], a
-    jr Jump_073_5AA6
+    jr .clear_step_ptr_hi
 
-Jump_073_5A9C::
+.set_step_target_to_01:
     ld a, $01
     ld [wStepTarget], a
     ld a, $60
     ld [wStepPtrLo], a
 
-Jump_073_5AA6::
+.clear_step_ptr_hi:
     xor a, a
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -4623,30 +4623,30 @@ ScriptStepMoveObjectCB8AByDirection::
 Func_073_5B66:: ; address name
     ld a, [wScriptParam1]
     or a, a
-    jr nz, Jump_073_5B72
+    jr nz, .skip
     ld hl, wSpriteSlots + $C
     inc [hl]
-    jr Jump_073_5B88
+    jr .check_script_param02
 
-Jump_073_5B72::
+.skip:
     dec a
-    jr nz, Jump_073_5B7B
+    jr nz, .skip2
     ld hl, wSpriteSlots + $B
     inc [hl]
-    jr Jump_073_5B88
+    jr .check_script_param02
 
-Jump_073_5B7B::
+.skip2:
     dec a
-    jr nz, Jump_073_5B84
+    jr nz, .check_script_param0
     ld hl, wSpriteSlots + $C
     dec [hl]
-    jr Jump_073_5B88
+    jr .check_script_param02
 
-Jump_073_5B84::
+.check_script_param0:
     ld hl, wSpriteSlots + $B
     dec [hl]
 
-Jump_073_5B88::
+.check_script_param02:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -4656,15 +4656,15 @@ Jump_073_5B88::
     ld [wScriptParam0], a
     ld a, [wSpriteSlots + $C]
     cp a, $30
-    jr nz, Jump_073_5BA9
+    jr nz, .done
     ld a, [wSpriteSlots + $B]
     cp a, $80
-    jr nz, Jump_073_5BA9
+    jr nz, .done
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_5BA9::
+.done:
     ld hl, wScriptStep
     dec [hl]
     ret
@@ -4723,24 +4723,24 @@ Jump_073_5BAE:: ; address name
     dec de
     ld b, $04
 
-Jump_073_5BFD::
+.loop:
     ld a, [de]
     inc de
     ld c, a
     ld a, [wMaxBlockingTile]
     cp a, c
-    jr c, Jump_073_5C08
-    jr Jump_073_5C13
+    jr c, .next
+    jr .call_clear_bit2_at_hl_bank73
 
-Jump_073_5C08::
+.next:
     dec b
-    jr nz, Jump_073_5BFD
+    jr nz, .loop
     call ScriptStepMoveObjectCB8AByDirection
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_5C13::
+.call_clear_bit2_at_hl_bank73:
     ld hl, wSpriteSlots + $D
     call ClearBit2AtHL_Bank73
     ld a, $80
@@ -4785,54 +4785,54 @@ SceneJustice::
 Func_073_5C5F:: ; address name
     ldh a, [hPlayerX]
     cp a, $30
-    jr nz, Jump_073_5C8D
+    jr nz, .check_player_y
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, Jump_073_5C7F
+    jr nz, .call_scene_justice_write_svbk
     ld hl, wScreenTileBuffer + $52
     call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $F2
     call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
     call SceneJustice_WriteSVBK
-    jr Jump_073_5CAD
+    jr .check_screen_tile_buffer
 
-Jump_073_5C7F::
+.call_scene_justice_write_svbk:
     ld hl, wScreenTileBuffer + $F2
     call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
     call SceneJustice_WriteSVBK
-    jr Jump_073_5CAD
+    jr .check_screen_tile_buffer
 
-Jump_073_5C8D::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, Jump_073_5CA1
+    jr nz, .call_scene_justice_write_svbk2
     ld hl, wScreenTileBuffer + $60
     call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $F2
     call SceneJustice_WriteSVBK
-    jr Jump_073_5CAD
+    jr .check_screen_tile_buffer
 
-Jump_073_5CA1::
+.call_scene_justice_write_svbk2:
     ld hl, wScreenTileBuffer + $60
     call SceneJustice_WriteSVBK
     ld hl, wScreenTileBuffer + $100
     call SceneJustice_WriteSVBK
 
-Jump_073_5CAD::
+.check_screen_tile_buffer:
     ld a, [wScreenTileBuffer + $52]
     cp a, $10
-    jr nz, Jump_073_5CFD
+    jr nz, .call_draw_full_screen_buffer_at_scroll
     ld a, [wScreenTileBuffer + $60]
     cp a, $10
-    jr nz, Jump_073_5CFD
+    jr nz, .call_draw_full_screen_buffer_at_scroll
     ld a, [wScreenTileBuffer + $F2]
     cp a, $10
-    jr nz, Jump_073_5CFD
+    jr nz, .call_draw_full_screen_buffer_at_scroll
     ld a, [wScreenTileBuffer + $100]
     cp a, $10
-    jr nz, Jump_073_5CFD
+    jr nz, .call_draw_full_screen_buffer_at_scroll
     ld a, $66
     call QueueSoundEffect
     ld hl, wScreenTileBuffer + $30
@@ -4859,7 +4859,7 @@ Jump_073_5CAD::
     ld de, $00B0
     call SetFlagBit
 
-Jump_073_5CFD::
+.call_draw_full_screen_buffer_at_scroll:
     farcall DrawFullScreenBufferAtScroll
     ld a, $80
     ld [wScriptStartRequest], a
@@ -4913,18 +4913,18 @@ Func_073_5D48:: ; address name
     ld a, [hl]
     add a, $08
     cp a, $28
-    jr c, Jump_073_5D51
+    jr c, .skip
     sub a, $18
 
-Jump_073_5D51::
+.skip:
     ld [hl+], a
     ld a, [hl]
     add a, $08
     cp a, $28
-    jr c, Jump_073_5D5B
+    jr c, .skip2
     sub a, $18
 
-Jump_073_5D5B::
+.skip2:
     ld [hl-], a
     ld a, $14
     add_a_to_hl
@@ -4955,14 +4955,14 @@ Func_073_5D71:: ; address name
     ldh [hTemp1], a
     ldh a, [hMapId]
     cp a, $8C
-    jr z, Jump_073_5D88
+    jr z, .call_script_step_blink_object_temp0
     ldh a, [hMapScreenX]
     cp a, $01
-    jr nz, Jump_073_5D88
+    jr nz, .call_script_step_blink_object_temp0
     ld a, $50
     ldh [hTemp1], a
 
-Jump_073_5D88::
+.call_script_step_blink_object_temp0:
     farcall ScriptStepBlinkObjectTemp0
     ldh a, [hTemp0]
     or a, a
@@ -4974,14 +4974,14 @@ Jump_073_5D88::
     ld de, $00C5
     ldh a, [hMapId]
     cp a, $8C
-    jr z, Jump_073_5DAB
+    jr z, .call_set_flag_bit
     inc de
     ldh a, [hMapScreenX]
     or a, a
-    jr z, Jump_073_5DAB
+    jr z, .call_set_flag_bit
     inc de
 
-Jump_073_5DAB::
+.call_set_flag_bit:
     call SetFlagBit
     ret
 
@@ -4993,7 +4993,7 @@ SceneSmallHole::
 Func_073_5DAF:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_5DD7
+    jr nz, .set_script_start_request_to_80
     ld a, $82
     ldh [hMapId], a
     ld a, $01
@@ -5009,7 +5009,7 @@ Func_073_5DAF:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-Jump_073_5DD7::
+.set_script_start_request_to_80:
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -5066,11 +5066,11 @@ Jump_073_5E11:: ; address name
     inc [hl]
     ld a, [wScriptParam0]
     and a, $01
-    jr nz, Jump_073_5E20
+    jr nz, .call_scene_madcondor_cry_write_message_index
     ld hl, wSpriteSlots + $B
     inc [hl]
 
-Jump_073_5E20::
+.call_scene_madcondor_cry_write_message_index:
     ld hl, wScriptParam0
     inc [hl]
     call SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc
@@ -5104,11 +5104,11 @@ Jump_073_5E51:: ; address name
     inc [hl]
     ld a, [wScriptParam0]
     and a, $01
-    jr nz, Jump_073_5E60
+    jr nz, .call_scene_madcondor_cry_write_message_index
     ld hl, wSpriteSlots + $B
     inc [hl]
 
-Jump_073_5E60::
+.call_scene_madcondor_cry_write_message_index:
     ld hl, wScriptParam0
     inc [hl]
     call SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc
@@ -5355,11 +5355,11 @@ Jump_073_5FC4:: ; address name
     ld [wObject5], a
     ld a, [wScriptParam0]
     and a, $03
-    jr nz, Jump_073_5FD4
+    jr nz, .call_step_script_param0_counter_bank73
     ld hl, wObject5 + $5
     dec [hl]
 
-Jump_073_5FD4::
+.call_step_script_param0_counter_bank73:
     ld b, $5A
     call StepScriptParam0Counter_Bank73
     ret nc
@@ -5382,18 +5382,18 @@ Jump_073_5FE4:: ; address name
     ld hl, $6020
     ld de, $00D1
     call TestFlagBit
-    jr nc, Jump_073_5FFC
+    jr nc, .read_map_id
     ld hl, $602C
 
-Jump_073_5FFC::
+.read_map_id:
     ldh a, [hMapId]
     ld c, a
 
-Jump_073_5FFF::
+.skip:
     push hl
     ld a, [hl]
     cp a, c
-    jr nz, Jump_073_601B
+    jr nz, .restore
     inc hl
     ld a, [hl]
     and a, $F0
@@ -5408,11 +5408,11 @@ Jump_073_5FFF::
     inc [hl]
     ret
 
-Jump_073_601B::
+.restore:
     pop hl
     inc hl
     inc hl
-    jr Jump_073_5FFF
+    jr .skip
     db $06, $31, $12, $44, $00, $63, $02, $24, $16, $53, $1A, $43, $06, $31, $12, $44
     db $00, $53, $02, $24, $16, $42, $1A, $43
 
@@ -5433,11 +5433,11 @@ SceneSpiritEnvoy2_ScriptStepBlinkSpritesThenEnd::
 Jump_073_6040:: ; address name
     ld a, [wScriptParam0]
     and a, $01
-    jr z, Jump_073_604B
+    jr z, .call_script_step_blink_sprites_then_end
     ld hl, wSpriteSlots + $C
     inc [hl]
 
-Jump_073_604B::
+.call_script_step_blink_sprites_then_end:
     call ScriptStepBlinkSpritesThenEnd
     ret
 
@@ -5458,12 +5458,12 @@ Jump_073_604F:: ; address name
     inc [hl]
     ld de, $0098
     call TestFlagBit
-    jr c, Jump_073_6072
+    jr c, .call_set_flag_bit
     ld de, $0098
     call SetFlagBit
     ret
 
-Jump_073_6072::
+.call_set_flag_bit:
     ld de, $0099
     call SetFlagBit
     ret
@@ -5566,16 +5566,16 @@ BlinkSprites::
 Func_073_60FE:: ; address name
     ld a, [wFrameCounterLo]
     bit 2, a
-    jr z, Jump_073_610C
+    jr z, .set_sprite_slot_count_to_02
     ld a, $01
     ld [wSpriteSlotCount], a
-    jr Jump_073_6111
+    jr .check_object1
 
-Jump_073_610C::
+.set_sprite_slot_count_to_02:
     ld a, $02
     ld [wSpriteSlotCount], a
 
-Jump_073_6111::
+.check_object1:
     ld a, [wObject1 + $C]
     inc a
     ld [wObject1 + $C], a
@@ -5715,21 +5715,21 @@ Jump_073_61BF:: ; address name
     ld [wObject1 + $7], a
     ld de, $0191
     call TestFlagBit
-    jr c, Jump_073_61EC
+    jr c, .call_count_keys_or_full
     ld a, [wInventory + $17]
     cp a, $FF
-    jr z, Jump_073_61E0
+    jr z, .set_step_ptr_lo_to_2C
     or a, a
-    jr z, Jump_073_61E0
+    jr z, .set_step_ptr_lo_to_2C
     ret
 
-Jump_073_61E0::
+.set_step_ptr_lo_to_2C:
     ld a, $2C
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
     ret
 
-Jump_073_61EC::
+.call_count_keys_or_full:
     farcall CountKeysOrFull
     ld a, $04
     ldh [hTemp1], a
@@ -5749,14 +5749,14 @@ RewardItemOrKey2_TestFlagBit::
 Jump_073_620B:: ; address name
     ld de, $0191
     call TestFlagBit
-    jr c, Jump_073_6218
+    jr c, .call_start_message_hl_b73b
     ld hl, $0D3F
-    jr Jump_073_621B
+    jr .call_start_message_hl_b73b2
 
-Jump_073_6218::
+.call_start_message_hl_b73b:
     ld hl, $0D4B ; 'What's that? Hey, a Magic Key!'
 
-Jump_073_621B::
+.call_start_message_hl_b73b2:
     call StartMessageHL_B73b
     ld a, $00
     ld [wObject1 + $7], a
@@ -5850,7 +5850,7 @@ Jump_073_628C:: ; address name
     inc hl
     ld a, [hl]
     cp a, $50
-    jr z, Jump_073_62A2
+    jr z, .next
     inc a
     ld [hl], a
     dec hl
@@ -5858,7 +5858,7 @@ Jump_073_628C:: ; address name
     ld [hl], $00
     ret
 
-Jump_073_62A2::
+.next:
     dec hl
     dec hl
     ld [hl], $01
@@ -5882,7 +5882,7 @@ Jump_073_62B0:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr z, Jump_073_62C6
+    jr z, .next
     inc a
     ld [hl], a
     dec hl
@@ -5890,18 +5890,18 @@ Jump_073_62B0:: ; address name
     ld [hl], $00
     ret
 
-Jump_073_62C6::
+.next:
     dec hl
     ld a, [hl]
     cp a, $20
-    jr z, Jump_073_62D2
+    jr z, .done
     dec a
     ld [hl], a
     dec hl
     ld [hl], $03
     ret
 
-Jump_073_62D2::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5983,21 +5983,21 @@ Jump_073_633B:: ; address name
     ld [wSpriteSlots + $7], a
     ld de, $0134
     call TestFlagBit
-    jr c, Jump_073_6368
+    jr c, .call_count_keys_or_full
     ld a, [wInventory + $17]
     cp a, $FF
-    jr z, Jump_073_635C
+    jr z, .set_step_ptr_lo_to_2C
     or a, a
-    jr z, Jump_073_635C
+    jr z, .set_step_ptr_lo_to_2C
     ret
 
-Jump_073_635C::
+.set_step_ptr_lo_to_2C:
     ld a, $2C
     ld [wStepPtrLo], a
     farcall AppendItemWC928ToInventory
     ret
 
-Jump_073_6368::
+.call_count_keys_or_full:
     farcall CountKeysOrFull
     ld a, $04
     ldh [hTemp1], a
@@ -6018,46 +6018,46 @@ RewardItemOrKey_TestFlagBit::
 Jump_073_6387:: ; address name
     ld de, $0134
     call TestFlagBit
-    jr c, Jump_073_6394
+    jr c, .call_start_message_hl_b73b
     ld hl, $0D46
-    jr Jump_073_6397
+    jr .call_start_message_hl_b73b2
 
-Jump_073_6394::
+.call_start_message_hl_b73b:
     ld hl, $0D16 ; 'What's wrong, MadGopher? Did you find'
 
-Jump_073_6397::
+.call_start_message_hl_b73b2:
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ld a, [wObject1 + $B]
     cp a, $50
-    jr nz, Jump_073_63B0
+    jr nz, .cp_70
     ld a, $03
     ld [wSpriteSlots + $7], a
     ld a, $01
     ld [wObject1 + $7], a
     ret
 
-Jump_073_63B0::
+.cp_70:
     cp a, $70
-    jr nz, Jump_073_63BF
+    jr nz, .check_object1
     ld a, $01
     ld [wSpriteSlots + $7], a
     ld a, $03
     ld [wObject1 + $7], a
     ret
 
-Jump_073_63BF::
+.check_object1:
     ld a, [wObject1 + $C]
     cp a, $20
-    jr nz, Jump_073_63D0
+    jr nz, .clear_sprite_slots
     ld a, $02
     ld [wSpriteSlots + $7], a
     xor a, a
     ld [wObject1 + $7], a
     ret
 
-Jump_073_63D0::
+.clear_sprite_slots:
     xor a, a
     ld [wSpriteSlots + $7], a
     ld a, $02
@@ -6151,14 +6151,14 @@ Jump_073_6441:: ; address name
     inc hl
     ld a, [hl]
     cp a, $50
-    jr nz, Jump_073_6459
+    jr nz, .call_reward_item_or_key_shared03
     ld a, $50
     ld [wObject1 + $B], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6459::
+.call_reward_item_or_key_shared03:
     call RewardItemOrKey_Shared03
     ret
 
@@ -6177,14 +6177,14 @@ Jump_073_645D:: ; address name
     inc hl
     ld a, [hl]
     cp a, $20
-    jr nz, Jump_073_6476
+    jr nz, .call_reward_item_or_key_shared02
     ld a, $20
     ld [wObject1 + $C], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6476::
+.call_reward_item_or_key_shared02:
     call RewardItemOrKey_Shared02
     ret
 
@@ -6202,19 +6202,19 @@ Jump_073_647A:: ; address name
     inc hl
     ld a, [hl]
     cp a, $30
-    jr nz, Jump_073_6494
+    jr nz, .skip
     ld a, $30
     ld [wObject1 + $C], a
     ld a, $0D
     ld [wScriptStep], a
     ret
 
-Jump_073_6494::
-    jr nc, Jump_073_649A
+.skip:
+    jr nc, .call_reward_item_or_key_shared02
     call RewardItemOrKey_Shared01
     ret
 
-Jump_073_649A::
+.call_reward_item_or_key_shared02:
     call RewardItemOrKey_Shared02
     ret
 
@@ -6232,14 +6232,14 @@ Jump_073_649E:: ; address name
     inc hl
     ld a, [hl]
     cp a, $70
-    jr nz, Jump_073_64B6
+    jr nz, .call_reward_item_or_key_shared04
     ld a, $70
     ld [wObject1 + $B], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_64B6::
+.call_reward_item_or_key_shared04:
     call RewardItemOrKey_Shared04
     ret
 
@@ -6257,21 +6257,21 @@ Jump_073_64BA:: ; address name
     inc hl
     ld a, [hl]
     cp a, $20
-    jr nz, Jump_073_64CE
+    jr nz, .cp_40
 
-Jump_073_64C9::
+.loop:
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_64CE::
+.cp_40:
     cp a, $40
-    jr z, Jump_073_64C9
-    jr nc, Jump_073_64D8
+    jr z, .loop
+    jr nc, .call_reward_item_or_key_shared02
     call RewardItemOrKey_Shared01
     ret
 
-Jump_073_64D8::
+.call_reward_item_or_key_shared02:
     call RewardItemOrKey_Shared02
     ret
 
@@ -6288,19 +6288,19 @@ Jump_073_64DC:: ; address name
     inc hl
     ld a, [hl]
     cp a, $60
-    jr nz, Jump_073_64F5
+    jr nz, .skip
     ld a, $60
     ld [wObject1 + $B], a
     ld a, $0D
     ld [wScriptStep], a
     ret
 
-Jump_073_64F5::
-    jr nc, Jump_073_64FB
+.skip:
+    jr nc, .call_reward_item_or_key_shared03
     call RewardItemOrKey_Shared04
     ret
 
-Jump_073_64FB::
+.call_reward_item_or_key_shared03:
     call RewardItemOrKey_Shared03
     ret
 
@@ -6319,14 +6319,14 @@ Jump_073_64FF:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_6518
+    jr nz, .call_reward_item_or_key_shared01
     ld a, $40
     ld [wObject1 + $C], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6518::
+.call_reward_item_or_key_shared01:
     call RewardItemOrKey_Shared01
     ret
 
@@ -6343,21 +6343,21 @@ Jump_073_651C:: ; address name
     inc hl
     ld a, [hl]
     cp a, $70
-    jr nz, Jump_073_652F
+    jr nz, .cp_50
 
-Jump_073_652A::
+.loop:
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_652F::
+.cp_50:
     cp a, $50
-    jr z, Jump_073_652A
-    jr nc, Jump_073_6539
+    jr z, .loop
+    jr nc, .call_reward_item_or_key_shared03
     call RewardItemOrKey_Shared04
     ret
 
-Jump_073_6539::
+.call_reward_item_or_key_shared03:
     call RewardItemOrKey_Shared03
     ret
 
@@ -6395,26 +6395,26 @@ Jump_073_653D:: ; address name
     dec [hl]
     ldh a, [hPlayerFacing]
     or a, a
-    jr nz, Jump_073_657E
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_657E::
+.skip:
     dec a
-    jr nz, Jump_073_6587
+    jr nz, .skip2
     ld a, $04
     ld [wScriptStep], a
     ret
 
-Jump_073_6587::
+.skip2:
     dec a
-    jr nz, Jump_073_6590
+    jr nz, .set_script_step_to_0A
     ld a, $07
     ld [wScriptStep], a
     ret
 
-Jump_073_6590::
+.set_script_step_to_0A:
     ld a, $0A
     ld [wScriptStep], a
     ret
@@ -6545,7 +6545,7 @@ Jump_073_6618:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_6641
+    jr nz, .skip
     dec hl
     ld [hl], $02
     ld a, $02
@@ -6560,15 +6560,15 @@ Jump_073_6618:: ; address name
     inc [hl]
     ret
 
-Jump_073_6641::
-    jr nc, Jump_073_6649
+.skip:
+    jr nc, .skip2
     inc a
     ld [hl], a
     dec hl
     ld [hl], $01
     ret
 
-Jump_073_6649::
+.skip2:
     dec a
     ld [hl], a
     dec hl
@@ -6589,12 +6589,12 @@ Jump_073_664F:: ; address name
     inc hl
     ld a, [hl]
     cp a, $50
-    jr nz, Jump_073_6663
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6663::
+.skip:
     inc a
     ld [hl], a
     dec hl
@@ -6615,16 +6615,16 @@ Jump_073_666A:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr z, Jump_073_667C
+    jr z, .set_script_step_to_07
     cp a, $50
-    jr nz, Jump_073_6682
+    jr nz, .set_script_step_to_08
 
-Jump_073_667C::
+.set_script_step_to_07:
     ld a, $07
     ld [wScriptStep], a
     ret
 
-Jump_073_6682::
+.set_script_step_to_08:
     ld a, $08
     ld [wScriptStep], a
     ret
@@ -6642,7 +6642,7 @@ Jump_073_6688:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_66A8
+    jr nz, .skip
     dec hl
     ld [hl], $00
     ld a, $40
@@ -6653,15 +6653,15 @@ Jump_073_6688:: ; address name
     ld [wScriptStep], a
     ret
 
-Jump_073_66A8::
-    jr nc, Jump_073_66B0
+.skip:
+    jr nc, .skip2
     inc a
     ld [hl], a
     dec hl
     ld [hl], $01
     ret
 
-Jump_073_66B0::
+.skip2:
     dec a
     ld [hl], a
     dec hl
@@ -6682,12 +6682,12 @@ Jump_073_66B6:: ; address name
     inc hl
     ld a, [hl]
     cp a, $30
-    jr nz, Jump_073_66CA
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_66CA::
+.skip:
     dec a
     ld [hl], a
     dec hl
@@ -6708,12 +6708,12 @@ Jump_073_66D1:: ; address name
     inc hl
     ld a, [hl]
     cp a, $60
-    jr nz, Jump_073_66E4
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_66E4::
+.skip:
     inc a
     ld [hl], a
     dec hl
@@ -6734,12 +6734,12 @@ Jump_073_66EA:: ; address name
     inc hl
     ld a, [hl]
     cp a, $50
-    jr nz, Jump_073_66FE
+    jr nz, .skip
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_66FE::
+.skip:
     dec a
     ld [hl], a
     dec hl
@@ -6760,19 +6760,19 @@ Jump_073_6705:: ; address name
     inc hl
     ld a, [hl]
     cp a, $40
-    jr nz, Jump_073_6719
+    jr nz, .cp_50
     ld a, $02
     ld [wScriptStep], a
     ret
 
-Jump_073_6719::
+.cp_50:
     cp a, $50
-    jr nz, Jump_073_6723
+    jr nz, .set_script_step_to_04
     ld a, $03
     ld [wScriptStep], a
     ret
 
-Jump_073_6723::
+.set_script_step_to_04:
     ld a, $04
     ld [wScriptStep], a
     ret
@@ -6809,54 +6809,54 @@ Jump_073_6729:: ; address name
     ld [wSavedPlayerState + $2], a
     ldh a, [hPlayerY]
     cp a, $50
-    jr nz, Jump_073_6767
+    jr nz, .check_player_y
 
-Jump_073_6762::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6767::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, Jump_073_6773
+    jr nz, .skip
 
-Jump_073_676D::
+.loop:
     ld a, $06
     ld [wScriptStep], a
     ret
 
-Jump_073_6773::
+.skip:
     ld hl, wMessageIndex
     inc hl
     inc hl
     ld a, [wMessageIndex]
     cp a, $40
-    jr z, Jump_073_6783
-    jr c, Jump_073_676D
-    jr Jump_073_6762
+    jr z, .read_party_count
+    jr c, .loop
+    jr .done
 
-Jump_073_6783::
+.read_party_count:
     ld a, [wPartyCount]
     ld b, a
     ld hl, wFollowerRecords + $1
 
-Jump_073_678A::
+.loop2:
     push hl
     ld a, [hl+]
     cp a, $40
-    jr nz, Jump_073_6798
+    jr nz, .restore
     ld a, [hl]
     cp a, $30
-    jr nz, Jump_073_6798
+    jr nz, .restore
     pop hl
-    jr Jump_073_676D
+    jr .loop
 
-Jump_073_6798::
+.restore:
     pop hl
     dec b
-    jr nz, Jump_073_678A
-    jr Jump_073_6762
+    jr nz, .loop2
+    jr .done
     db $C9
 
 ; implements script command type 35 (SCRIPT_SCENE_KAMEHA_ESCAPE): a cutscene step named after the scene its only script shows: '0 checked the crate.' ... 'Kameha Wahahahah! Thanks for guiding me'; reached through ScriptCommand35 in bank $10 (E-0038, E-0245)
@@ -6932,16 +6932,16 @@ Jump_073_67FC:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, $14
-    jr nz, Jump_073_680F
+    jr nz, .check_script_param0
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
 
-Jump_073_680F::
+.check_script_param0:
     ld a, [wScriptParam0]
     bit 0, a
-    jr z, Jump_073_6826
+    jr z, .call_scene_kameha_escape_decompress_to_vram
     ld de, $77D0
     ld b, $56
     call SceneKamehaEscape_DecompressToVRAM
@@ -6949,7 +6949,7 @@ Jump_073_680F::
     ld b, $56
     jp SceneKamehaEscape_Case03_DecompressToVRAM
 
-Jump_073_6826::
+.call_scene_kameha_escape_decompress_to_vram:
     ld de, $7827
     ld b, $56
     call SceneKamehaEscape_DecompressToVRAM
@@ -6967,7 +6967,7 @@ Jump_073_6835:: ; address name
     ldh [hMapScreenX], a
     ld a, $04
     ldh [hMapScreenY], a
-    jr Jump_073_689E
+    jr SceneKamehaEscape_ScriptStartFadeAndAdvanceStep_SetMapIdTo30
 
 ; entry 10 of the `rst $00` table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
@@ -6980,16 +6980,16 @@ Jump_073_683F:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, $14
-    jr nz, Jump_073_6852
+    jr nz, .check_script_param0
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
 
-Jump_073_6852::
+.check_script_param0:
     ld a, [wScriptParam0]
     bit 0, a
-    jr z, Jump_073_6868
+    jr z, .call_scene_kameha_escape_decompress_to_vram
     ld de, $7ABA
     ld b, $56
     call SceneKamehaEscape_DecompressToVRAM
@@ -6997,7 +6997,7 @@ Jump_073_6852::
     ld b, $56
     jr SceneKamehaEscape_Case03_DecompressToVRAM
 
-Jump_073_6868::
+.call_scene_kameha_escape_decompress_to_vram:
     ld de, $6D99
     ld b, $56
     call SceneKamehaEscape_DecompressToVRAM
@@ -7043,7 +7043,8 @@ Jump_073_6896:: ; address name
     ld a, $05
     ldh [hMapScreenY], a
 
-Jump_073_689E::
+SceneKamehaEscape_ScriptStartFadeAndAdvanceStep_SetMapIdTo30::
+Jump_073_689E:: ; address name
     ld a, $30
     ldh [hMapId], a
     ldh a, [hPlayerX]
@@ -7418,10 +7419,10 @@ SceneTentacles::
 Func_073_6ABE:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_6AE9
+    jr nz, .set_script_start_request_to_80
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_6AE9
+    jr nz, .set_script_start_request_to_80
     ld a, $3C
     ldh [hMapId], a
     xor a, a
@@ -7436,7 +7437,7 @@ Func_073_6ABE:: ; address name
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-Jump_073_6AE9::
+.set_script_start_request_to_80:
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -7449,11 +7450,11 @@ WarpMap41::
 Func_073_6AEF:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_6AF9
+    jr nz, .set_script_start_request_to_80
     call WarpToMap41
     ret
 
-Jump_073_6AF9::
+.set_script_start_request_to_80:
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -7705,22 +7706,22 @@ Jump_073_6C3E:: ; address name
     inc [hl]
     ld de, $006E
     call TestFlagBit
-    jr nc, Jump_073_6C5B
+    jr nc, .check_inventory
     ld hl, $0815 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ret
 
-Jump_073_6C5B::
+.check_inventory:
     ld a, [wInventory + $17]
     cp a, $FF
-    jr z, Jump_073_6C6C
+    jr z, .call_start_message_hl_b73b
     or a, a
-    jr z, Jump_073_6C6C
+    jr z, .call_start_message_hl_b73b
     ld hl, $0814 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ret
 
-Jump_073_6C6C::
+.call_start_message_hl_b73b:
     ld hl, $0812 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ld hl, wScriptStep
@@ -7837,16 +7838,16 @@ SceneMermaidSong2_StepPlayerDownTowardWC928::
 Jump_073_6D22:: ; address name
     ldh a, [hPlayerY]
     cp a, $40
-    jr z, Jump_073_6D34
+    jr z, .check_player_x
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepPlayerDownTowardWC928
     ret
 
-Jump_073_6D34::
+.check_player_x:
     ldh a, [hPlayerX]
     cp a, $70
-    jr z, Jump_073_6D4D
+    jr z, .done
     ld a, $70
     ld [wStepPtrLo], a
     farcall StepPlayerRightTowardWC928
@@ -7856,7 +7857,7 @@ Jump_073_6D34::
     xor a, a
     ldh [hPlayerFacing], a
 
-Jump_073_6D4D::
+.done:
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -7936,26 +7937,26 @@ Jump_073_6DD5:: ; address name
     inc [hl]
     ld a, [wTextYesNoResult]
     or a, a
-    jr z, Jump_073_6DE6
+    jr z, .call_clear_arg5_if_at_or_above_limit_for_farm
     ld hl, vTiles1 + $512
     call StartMessageHL_B73b
     ret
 
-Jump_073_6DE6::
+.call_clear_arg5_if_at_or_above_limit_for_farm:
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
     cp a, $FF
-    jr z, Jump_073_6E05
+    jr z, .call_start_message_hl_b73b
     ld a, [wPartyCount]
     cp a, $03
-    jr z, Jump_073_6E05
+    jr z, .call_start_message_hl_b73b
     ld hl, vTiles1 + $510
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6E05::
+.call_start_message_hl_b73b:
     ld hl, vTiles1 + $511
     call StartMessageHL_B73b
     ret
@@ -8019,13 +8020,13 @@ Jump_073_6E40:: ; address name
     ldh [hSpriteWindowClipMode], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_073_6E55
+    jr z, .call_queue_sound_effect
     ld hl, wBGPaletteBuffer
     ld de, wBGPaletteCopy
     ld bc, $0040
     call CopyBytes
 
-Jump_073_6E55::
+.call_queue_sound_effect:
     ld a, $7A
     call QueueSoundEffect
     ld hl, wScriptStep
@@ -8044,28 +8045,28 @@ Func_073_6E5F:: ; address name
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
-    jr z, Jump_073_6EA0
+    jr z, .read_temp0
     ld a, $1A
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
-    jr z, Jump_073_6EA0
+    jr z, .read_temp0
     ld a, $1B
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
-    jr z, Jump_073_6EA0
+    jr z, .read_temp0
     ld a, $1C
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
     ldh a, [hTemp0]
     bit 7, a
-    jr z, Jump_073_6EA0
+    jr z, .read_temp0
     ret
 
-Jump_073_6EA0::
+.read_temp0:
     ld hl, wInventory
     ldh a, [hTemp0]
     add_a_to_hl
@@ -8163,32 +8164,32 @@ SceneOasisKey::
 Func_073_6F14:: ; address name
     ldh a, [hPlayerX]
     cp a, $50
-    jr nz, Jump_073_6F24
+    jr nz, .cp_30
     ld hl, wObject5 + $4
     inc [hl]
     ld hl, wObject5 + $5
     inc [hl]
-    jr Jump_073_6F40
+    jr .call_script_apply_step_delta_at_de_bank73
 
-Jump_073_6F24::
+.cp_30:
     cp a, $30
-    jr nz, Jump_073_6F32
+    jr nz, .check_player_y
     ld hl, wObject5 + $4
     dec [hl]
     ld hl, wObject5 + $5
     inc [hl]
-    jr Jump_073_6F40
+    jr .call_script_apply_step_delta_at_de_bank73
 
-Jump_073_6F32::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $20
-    jr z, Jump_073_6F40
+    jr z, .call_script_apply_step_delta_at_de_bank73
     ld a, [wObject5 + $5]
     inc a
     inc a
     ld [wObject5 + $5], a
 
-Jump_073_6F40::
+.call_script_apply_step_delta_at_de_bank73:
     ld de, wObject5 + $5
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
@@ -8211,14 +8212,14 @@ SceneWarubouMagicKey::
 Func_073_6F5B:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_6F6B
+    jr nz, .skip
     ld a, $80
     ld [wObject5], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6F6B::
+.skip:
     ld hl, wObject5 + $5
     dec [hl]
     ld de, wObject5 + $5
@@ -8293,40 +8294,40 @@ ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords::
 Jump_073_6FC5:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_073_6FE2
+    jr nz, .check_follower_records
     ld a, [wFollowerRecords + $6]
     cp a, $50
-    jr nz, Jump_073_6FD8
+    jr nz, .set_follower_records_to_01
     ld a, $01
     ld [wScriptParam0], a
     ret
 
-Jump_073_6FD8::
+.set_follower_records_to_01:
     ld a, $01
     ld [wFollowerRecords + $5], a
     ld hl, wFollowerRecords + $6
     inc [hl]
     ret
 
-Jump_073_6FE2::
+.check_follower_records:
     ld a, [wFollowerRecords + $7]
     cp a, $40
-    jr nz, Jump_073_6FF2
+    jr nz, .skip
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-Jump_073_6FF2::
-    jr nc, Jump_073_6FFD
+.skip:
+    jr nc, .set_follower_records_to_02
     xor a, a
     ld [wFollowerRecords + $5], a
     ld hl, wFollowerRecords + $7
     inc [hl]
     ret
 
-Jump_073_6FFD::
+.set_follower_records_to_02:
     ld a, $02
     ld [wFollowerRecords + $5], a
     ld hl, wFollowerRecords + $7
@@ -8344,15 +8345,15 @@ Jump_073_7007:: ; address name
     inc [hl]
     ld a, [wFollowerRecords + $6]
     cp a, $40
-    jr nz, Jump_073_701E
+    jr nz, .set_script_param0_to_01
     ld a, [wFollowerRecords + $7]
     cp a, $20
-    jr nz, Jump_073_701E
+    jr nz, .set_script_param0_to_01
     xor a, a
     ld [wScriptParam0], a
     ret
 
-Jump_073_701E::
+.set_script_param0_to_01:
     ld a, $01
     ld [wScriptParam0], a
     ret
@@ -8403,11 +8404,11 @@ Jump_073_7062:: ; address name
     ld a, [wScriptParam0]
     inc a
     cp a, $1E
-    jr z, Jump_073_706E
+    jr z, .set_script_param0
     ld [wScriptParam0], a
     ret
 
-Jump_073_706E::
+.set_script_param0:
     dec a
     ld [wScriptParam0], a
     ld a, $40
@@ -8484,20 +8485,20 @@ SceneWarubouFood2_RunMessageBox::
 Jump_073_70D3:: ; address name
     ld a, [wMessageState]
     cp a, $FF
-    jr z, Jump_073_70E5
+    jr z, .check_script_param0
     xor a, a
     ld [wStepPtrLo], a
     farcall RunMessageBox
     ret
 
-Jump_073_70E5::
+.check_script_param0:
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_073_70F0
+    jr nz, .set_step_ptr_lo
     ld a, $65
     call QueueSoundEffect
 
-Jump_073_70F0::
+.set_step_ptr_lo:
     ld de, wSpriteSlots + $C
     ld a, e
     ld [wStepPtrLo], a
@@ -8506,33 +8507,33 @@ Jump_073_70F0::
     farcall AddStepDeltaToPointedByte
     ld a, [wScriptParam0]
     and a, $01
-    jr nz, Jump_073_7111
+    jr nz, .check_sprite_slots
     ld a, [wSpriteSlots + $7]
     inc a
     and a, $03
     ld [wSpriteSlots + $7], a
 
-Jump_073_7111::
+.check_sprite_slots:
     ld a, [wSpriteSlots + $B]
     cp a, $40
-    jr z, Jump_073_711D
+    jr z, .check_script_param02
     dec a
     dec a
     ld [wSpriteSlots + $B], a
 
-Jump_073_711D::
+.check_script_param02:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
     cp a, $20
-    jr z, Jump_073_7138
+    jr z, .call_queue_sound_effect
     farcall CycleSpriteFloatYDown
     xor a, a
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
     ret
 
-Jump_073_7138::
+.call_queue_sound_effect:
     ld a, $72
     call QueueSoundEffect
     ld de, FieldSpriteGfx49
@@ -8713,9 +8714,9 @@ Jump_073_724F:: ; address name
     farcall AddStepDeltaToPointedByte
     ld a, [wScriptParam0]
     and a, $01
-    jr z, Jump_073_728D
+    jr z, .check_script_param0
 
-Jump_073_728D::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -8742,11 +8743,11 @@ Jump_073_72A9:: ; address name
     dec a
     ld [wFollowerRecords + $2], a
     cp a, $38
-    jr z, Jump_073_72B9
+    jr z, .set_object1_to_80
     call ShiftObjectsYByTable7526
     ret
 
-Jump_073_72B9::
+.set_object1_to_80:
     ld a, $80
     ld [wObject1 + $B], a
     ld a, $60
@@ -8780,12 +8781,12 @@ Jump_073_72D6:: ; address name
     inc [hl]
     ld de, $0001
     call TestFlagBit
-    jr c, Jump_073_72F9
+    jr c, .call_start_message_hl_b73b
     ld hl, $0058 ; 'Cobi That's ours! Give it back!'
     call StartMessageHL_B73b
     ret
 
-Jump_073_72F9::
+.call_start_message_hl_b73b:
     ld hl, $005E ; 'Tara That's ours! Give it back!'
     call StartMessageHL_B73b
     ret
@@ -8887,13 +8888,13 @@ Func_073_736B:: ; address name
     ld c, a
     ld a, [wScriptParam0]
     and a, $40
-    jr z, Jump_073_7386
+    jr z, .read_object1
     ld a, c
     xor a, $FF
     inc a
     ld c, a
 
-Jump_073_7386::
+.read_object1:
     ld a, [wObject1 + $B]
     add a, c
     ld [wObject1 + $B], a
@@ -8935,7 +8936,7 @@ SceneWarubouFood_StepObjectTowardCoord::
 Jump_073_73BA:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_073_73F9
+    jr nz, .set_step_ptr_hi_to_01
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $82
@@ -8959,7 +8960,7 @@ Jump_073_73BA:: ; address name
     inc [hl]
     ret
 
-Jump_073_73F9::
+.set_step_ptr_hi_to_01:
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $81
@@ -8985,11 +8986,11 @@ SceneWarubouFood_QueueSoundEffect::
 Jump_073_741E:: ; address name
     ld a, [wScriptParam0]
     or a, a
-    jr nz, Jump_073_7429
+    jr nz, .read_script_param0
     ld a, $65
     call QueueSoundEffect
 
-Jump_073_7429::
+.read_script_param0:
     ld a, [wScriptParam0]
     ld hl, $749A
     add_a_to_hl
@@ -9009,14 +9010,14 @@ Jump_073_7429::
     ld [wScriptParam0], a
     ldh a, [hPlayerX]
     cp a, $00
-    jr nz, Jump_073_746A
+    jr nz, .set_player_x
     ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank73
     ld hl, wObject2 + $D
     call ClearBit2AtHL_Bank73
-    jr Jump_073_7476
+    jr .check_script_param0
 
-Jump_073_746A::
+.set_player_x:
     dec a
     dec a
     ldh [hPlayerX], a
@@ -9025,7 +9026,7 @@ Jump_073_746A::
     inc a
     ld [wObject2 + $B], a
 
-Jump_073_7476::
+.check_script_param0:
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -9062,7 +9063,7 @@ Jump_073_74DA:: ; address name
     xor a, $FF
     inc a
     ld c, a
-    jr Jump_073_74F9
+    jr SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2
 
 ; entry 1 of the `rst $00` table in SceneWarubouFood
 ; no direct call (reached through a table, a jump or a vector)
@@ -9077,7 +9078,8 @@ Jump_073_74EC:: ; address name
     ld a, [hl]
     ld c, a
 
-Jump_073_74F9::
+SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2::
+Jump_073_74F9:: ; address name
     ld a, [wObject2 + $B]
     add a, c
     ld [wObject2 + $B], a
@@ -9137,7 +9139,7 @@ ScenePackage::
 Func_073_758C:: ; address name
     ld a, [wScriptStep]
     or a, a
-    jr nz, Jump_073_75A6
+    jr nz, .check_player_x
     ldh a, [hPlayerX]
     ld [wObject5 + $4], a
     ldh a, [hPlayerY]
@@ -9148,34 +9150,34 @@ Func_073_758C:: ; address name
     inc [hl]
     ret
 
-Jump_073_75A6::
+.check_player_x:
     ldh a, [hPlayerX]
     cp a, $30
-    jr nz, Jump_073_75B2
+    jr nz, .cp_50
     ld hl, wObject5 + $4
     inc [hl]
-    jr Jump_073_75CC
+    jr .call_script_apply_step_delta_at_de_bank73
 
-Jump_073_75B2::
+.cp_50:
     cp a, $50
-    jr nz, Jump_073_75BC
+    jr nz, .check_player_y
     ld hl, wObject5 + $4
     dec [hl]
-    jr Jump_073_75CC
+    jr .call_script_apply_step_delta_at_de_bank73
 
-Jump_073_75BC::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $20
-    jr nz, Jump_073_75C8
+    jr nz, .skip
     ld hl, wObject5 + $5
     inc [hl]
-    jr Jump_073_75CC
+    jr .call_script_apply_step_delta_at_de_bank73
 
-Jump_073_75C8::
+.skip:
     ld hl, wObject5 + $5
     dec [hl]
 
-Jump_073_75CC::
+.call_script_apply_step_delta_at_de_bank73:
     ld de, wObject5 + $5
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
@@ -9218,18 +9220,18 @@ SceneWarubouSmells_AddStepDeltaToPointedByte::
 Jump_073_75F5:: ; address name
     ldh a, [hPlayerX]
     cp a, $00
-    jr z, Jump_073_760B
+    jr z, .set_object5_to_80
     dec a
     dec a
     ldh [hPlayerX], a
     ld a, [wFollowerRecords + $1]
     cp a, $00
-    jr z, Jump_073_760B
+    jr z, .set_object5_to_80
     dec a
     dec a
     ld [wFollowerRecords + $1], a
 
-Jump_073_760B::
+.set_object5_to_80:
     ld a, $80
     ld [wObject5], a
     ld de, wObject5 + $5
@@ -9347,20 +9349,20 @@ SceneSpinning_StepObjectTowardCoord_Case0F::
 Jump_073_76B8:: ; address name
     ld a, [wObject2 + $B]
     cp a, $40
-    jr z, Jump_073_76CB
+    jr z, .set_step_target_to_82
     ld a, $83
     ld [wStepTarget], a
     ld a, $40
     ld [wStepPtrLo], a
-    jr Jump_073_76D5
+    jr .set_step_ptr_hi_to_02
 
-Jump_073_76CB::
+.set_step_target_to_82:
     ld a, $82
     ld [wStepTarget], a
     ld a, $E0
     ld [wStepPtrLo], a
 
-Jump_073_76D5::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -9400,7 +9402,7 @@ SceneSpinning_WriteStepPtrLoAndStepPtrHiEtc::
 Jump_073_7713:: ; address name
     ld hl, wObject5 + $4
     inc [hl]
-    jr Jump_073_771D
+    jr SceneSpinning_AddStepDeltaToPointedByte_SetStepPtrLo
 
 ; entry 5 of the `rst $00` table in SceneSpinning
 ; no direct call (reached through a table, a jump or a vector)
@@ -9412,7 +9414,8 @@ Jump_073_7719:: ; address name
     ld hl, wObject5 + $4
     dec [hl]
 
-Jump_073_771D::
+SceneSpinning_AddStepDeltaToPointedByte_SetStepPtrLo::
+Jump_073_771D:: ; address name
     ld de, wObject5 + $5
     ld a, e
     ld [wStepPtrLo], a
@@ -9470,7 +9473,7 @@ SceneSpinning_StepObjectTowardCoord::
 Jump_073_7765:: ; address name
     ld a, [wObject1 + $B]
     cp a, $30
-    jr z, Jump_073_7781
+    jr z, .set_step_ptr_hi_to_02
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $01
@@ -9479,7 +9482,7 @@ Jump_073_7765:: ; address name
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-Jump_073_7781::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $00
@@ -9507,19 +9510,19 @@ Jump_073_77A5:: ; address name
     inc [hl]
     ld a, [wScriptParam0]
     cp a, $3C
-    jr nz, Jump_073_77B6
+    jr nz, .cp_78
     ld a, $50
     ld [wObject2 + $B], a
     ret
 
-Jump_073_77B6::
+.cp_78:
     cp a, $78
-    jr nz, Jump_073_77C0
+    jr nz, .cp_B4
     ld a, $20
     ld [wObject1 + $B], a
     ret
 
-Jump_073_77C0::
+.cp_B4:
     cp a, $B4
     ret nz
     xor a, a
@@ -9566,26 +9569,26 @@ Jump_073_77EA:: ; address name
     call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
     ld a, [wObject1 + $C]
     cp a, $30
-    jr z, Jump_073_7800
+    jr z, .set_step_target_to_83
     ld a, $82
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
-    jr Jump_073_780A
+    jr .set_step_ptr_hi_to_01
 
-Jump_073_7800::
+.set_step_target_to_83:
     ld a, $83
     ld [wStepTarget], a
     ld a, $E0
     ld [wStepPtrLo], a
 
-Jump_073_780A::
+.set_step_ptr_hi_to_01:
     ld a, $01
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
     ld a, [wMessageIndex]
     or a, a
-    jr nz, Jump_073_783B
+    jr nz, .check_object2
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $83
@@ -9600,10 +9603,10 @@ Jump_073_780A::
     ld [wMessageIndex], a
     ret
 
-Jump_073_783B::
+.check_object2:
     ld a, [wObject2 + $C]
     cp a, $30
-    jr z, Jump_073_7858
+    jr z, .set_step_ptr_hi_to_02
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $82
@@ -9613,7 +9616,7 @@ Jump_073_783B::
     farcall StepObjectTowardCoord
     ret
 
-Jump_073_7858::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $83
@@ -9720,115 +9723,115 @@ Func_073_78F5:: ; address name
     ld b, $00
     ld a, [wMessageIndex]
     bit 7, a
-    jr z, Jump_073_7900
+    jr z, .skip
     ld b, $80
 
-Jump_073_7900::
+.skip:
     and a, $03
-    jr nz, Jump_073_7911
+    jr nz, .skip2
     ld a, b
     or a, $01
     ld [wStepTarget], a
     ld a, $50
     ld [wStepPtrLo], a
-    jr Jump_073_793C
+    jr .set_step_ptr_hi_to_01
 
-Jump_073_7911::
+.skip2:
     dec a
-    jr nz, Jump_073_7921
+    jr nz, .skip3
     ld a, b
     or a, $00
     ld [wStepTarget], a
     ld a, $50
     ld [wStepPtrLo], a
-    jr Jump_073_793C
+    jr .set_step_ptr_hi_to_01
 
-Jump_073_7921::
+.skip3:
     dec a
-    jr nz, Jump_073_7931
+    jr nz, .set_step_target
     ld a, b
     or a, $03
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
-    jr Jump_073_793C
+    jr .set_step_ptr_hi_to_01
 
-Jump_073_7931::
+.set_step_target:
     ld a, b
     or a, $02
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
 
-Jump_073_793C::
+.set_step_ptr_hi_to_01:
     ld a, $01
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_073_7956
+    jr z, .check_message_group
     ld a, [wMessageIndex]
     inc a
     and a, $83
     ld [wMessageIndex], a
 
-Jump_073_7956::
+.check_message_group:
     ld b, $00
     ld a, [wMessageGroup]
     bit 7, a
-    jr z, Jump_073_7961
+    jr z, .skip4
     ld b, $80
 
-Jump_073_7961::
+.skip4:
     and a, $03
-    jr nz, Jump_073_7972
+    jr nz, .skip5
     ld a, b
     or a, $01
     ld [wStepTarget], a
     ld a, $50
     ld [wStepPtrLo], a
-    jr Jump_073_799D
+    jr .set_step_ptr_hi_to_02
 
-Jump_073_7972::
+.skip5:
     dec a
-    jr nz, Jump_073_7982
+    jr nz, .skip6
     ld a, b
     or a, $00
     ld [wStepTarget], a
     ld a, $50
     ld [wStepPtrLo], a
-    jr Jump_073_799D
+    jr .set_step_ptr_hi_to_02
 
-Jump_073_7982::
+.skip6:
     dec a
-    jr nz, Jump_073_7992
+    jr nz, .set_step_target2
     ld a, b
     or a, $03
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
-    jr Jump_073_799D
+    jr .set_step_ptr_hi_to_02
 
-Jump_073_7992::
+.set_step_target2:
     ld a, b
     or a, $02
     ld [wStepTarget], a
     ld a, $30
     ld [wStepPtrLo], a
 
-Jump_073_799D::
+.set_step_ptr_hi_to_02:
     ld a, $02
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
     ld a, [wStepArrived]
     or a, a
-    jr z, Jump_073_79B7
+    jr z, .return
     ld a, [wMessageGroup]
     inc a
     and a, $83
     ld [wMessageGroup], a
 
-Jump_073_79B7::
+.return:
     ret
 
 ; only called from routines of SceneLearnQuick (E-0098)
@@ -9855,11 +9858,11 @@ SceneLearnQuick_WriteScriptParam0AndSpriteSlots::
 Func_073_79CE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $08
-    jr nz, Jump_073_79D9
+    jr nz, .read_script_param1
     ld hl, wScriptParam1
     dec [hl]
 
-Jump_073_79D9::
+.read_script_param1:
     ld a, [wScriptParam1]
     swap a
     and a, $0F
@@ -9930,11 +9933,11 @@ Func_073_7A2B:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, b
-    jr z, Jump_073_7A37
+    jr z, .clear_script_param0
     sub a, a
     ret
 
-Jump_073_7A37::
+.clear_script_param0:
     xor a, a
     ld [wScriptParam0], a
     scf
@@ -10006,11 +10009,11 @@ Func_073_7A5D:: ; address name
     inc a
     ld [wScriptParam0], a
     cp a, $20
-    jr z, Jump_073_7A79
+    jr z, .clear_script_param0
     sub a, a
     ret
 
-Jump_073_7A79::
+.clear_script_param0:
     xor a, a
     ld [wScriptParam0], a
     scf
@@ -10065,11 +10068,11 @@ Func_073_7AB2:: ; address name
     farcall RunMessageBox
     ld a, [wMessageState]
     cp a, $FF
-    jr z, Jump_073_7AC4
+    jr z, .return_carry
     sub a, a
     ret
 
-Jump_073_7AC4::
+.return_carry:
     scf
     ret
 

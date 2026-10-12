@@ -17,11 +17,11 @@ Func_03D_4001:: ; address name
     and a, $04
     ld [wBattleArg0], a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03D_4024
+    jr c, .skip
     farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtEffectSpriteX_Bank3D
 
-Jump_03D_4024::
+.skip:
     ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
@@ -31,11 +31,11 @@ Jump_03D_4024::
     inc [hl]
     ld a, [hl]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03D_403E
+    jr c, .skip2
     farcall SetEffectSpriteXForTargets
     call DrawEffectSpriteAtEffectSpriteX_Bank3D
 
-Jump_03D_403E::
+.skip2:
     ld hl, wLoadSlot
     dec [hl]
     ld a, [hl]
@@ -132,7 +132,7 @@ BuildOamFromSpriteTable_Bank3D::
 Func_03D_40D1:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $28
-    jr nc, Jump_03D_4121
+    jr nc, .return
     ldh a, [hSpriteSetIndex]
     ld l, a
     ld h, $00
@@ -155,11 +155,11 @@ Func_03D_40D1:: ; address name
     ld l, a
     ld h, $C0
 
-Jump_03D_40F4::
+.loop:
     ld a, [de]
     inc de
     cp a, $80
-    jr z, Jump_03D_4121
+    jr z, .return
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, b
@@ -188,9 +188,9 @@ Jump_03D_40F4::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr c, Jump_03D_40F4
+    jr c, .loop
 
-Jump_03D_4121::
+.return:
     ret
 
 ; E-0147 (derived: meta-sprite set 0 of MetaSprites3D_4077Table: 32 frame pointer(s), chosen by hSpriteSubIndex)

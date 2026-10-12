@@ -10,12 +10,12 @@ ComputePartyStrengthLevelPartyStrength::
 Func_061_4001:: ; address name
     ld a, [wPartyCount]
     or a, a
-    jr nz, Jump_061_400C
+    jr nz, .skip
     xor a, a
     ld [wPartyStrength], a
     ret
 
-Jump_061_400C::
+.skip:
     ld b, a
     ld hl, $0000
     ld a, l
@@ -26,7 +26,7 @@ Jump_061_400C::
     ld a, $0A
     ld [rRAMG], a
 
-Jump_061_401E::
+.loop:
     push bc
     push hl
     ld a, [hl]
@@ -100,7 +100,7 @@ Jump_061_401E::
     inc hl
     pop bc
     dec b
-    jp nz, Jump_061_401E
+    jp nz, .loop
     xor a, a
     ld [rRAMG], a
     ldh a, [hTemp4]
@@ -111,17 +111,17 @@ Jump_061_401E::
     call DivideHLByA
     ld a, h
     or a, a
-    jr nz, Jump_061_40AA
+    jr nz, .set_party_strength_to_63
     ld a, l
     cp a, $63
-    jr c, Jump_061_40B0
+    jr c, .set_party_strength
 
-Jump_061_40AA::
+.set_party_strength_to_63:
     ld a, $63
     ld [wPartyStrength], a
     ret
 
-Jump_061_40B0::
+.set_party_strength:
     ld [wPartyStrength], a
     ret
 
@@ -134,12 +134,12 @@ ComputePartyStrengthForKey::
 Func_061_40B4:: ; address name
     ld a, [wPartyCount]
     or a, a
-    jr nz, Jump_061_40BF
+    jr nz, .skip
     xor a, a
     ld [wPartyStrength], a
     ret
 
-Jump_061_40BF::
+.skip:
     ld b, a
     ld hl, $0000
     ld a, l
@@ -154,7 +154,7 @@ Jump_061_40BF::
     ld a, $0A
     ld [rRAMG], a
 
-Jump_061_40D7::
+.loop:
     push bc
     push hl
     ld a, [hl]
@@ -310,15 +310,15 @@ Jump_061_40D7::
     ld h, a
     ld a, h
     bit 7, a
-    jr z, Jump_061_41C4
+    jr z, .call_divide_hl_by_a
     ld hl, $0000
-    jr Jump_061_41C9
+    jr .read_temp6
 
-Jump_061_41C4::
+.call_divide_hl_by_a:
     ld a, $32
     call DivideHLByA
 
-Jump_061_41C9::
+.read_temp6:
     ldh a, [hTemp6]
     ld e, a
     ldh a, [hTemp7]
@@ -333,7 +333,7 @@ Jump_061_41C9::
     inc hl
     pop bc
     dec b
-    jp nz, Jump_061_40D7
+    jp nz, .loop
     xor a, a
     ld [rRAMG], a
     ldh a, [hTemp4]
@@ -346,22 +346,22 @@ Jump_061_41C9::
     ld d, a
     add hl, de
     bit 7, h
-    jr z, Jump_061_41F8
+    jr z, .read_party_count
     xor a, a
     ld [wPartyStrength], a
     ret
 
-Jump_061_41F8::
+.read_party_count:
     ld a, [wPartyCount]
     call DivideHLByA
     ld a, l
     cp a, $63
-    jr c, Jump_061_4209
+    jr c, .set_party_strength
     ld a, $63
     ld [wPartyStrength], a
     ret
 
-Jump_061_4209::
+.set_party_strength:
     ld [wPartyStrength], a
     ret
 
@@ -457,7 +457,7 @@ Jump_061_4261:: ; address name
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_42A5
+    jr z, .set_map_width_screens_to_04
     ld a, [hl+]
     ld e, a
     ld a, [hl+]
@@ -470,7 +470,7 @@ Jump_061_4261:: ; address name
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_061_42A5::
+.set_map_width_screens_to_04:
     ld a, $04
     ld [wMapWidthScreens], a
     ld [wMapHeightScreens], a
@@ -488,14 +488,14 @@ Jump_061_42A5::
     ld [wEncounterRate], a
     pop af
     cp a, $07
-    jr z, Jump_061_42D7
+    jr z, .set_map_move_type_to_05
     cp a, $09
-    jr z, Jump_061_42D7
+    jr z, .set_map_move_type_to_05
     xor a, a
     ld [wMapMoveType], a
     ret
 
-Jump_061_42D7::
+.set_map_move_type_to_05:
     ld a, $05
     ld [wMapMoveType], a
     ret
@@ -542,7 +542,7 @@ Jump_061_4325:: ; address name
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_4348
+    jr z, .set_max_blocking_tile_to_3F
     ld de, BGPaletteBufferData_6E_77E0
     ld b, $6E
     ld hl, wBGPaletteBuffer
@@ -551,7 +551,7 @@ Jump_061_4325:: ; address name
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_061_4348::
+.set_max_blocking_tile_to_3F:
     ld a, $3F
     ld [wMaxBlockingTile], a
     xor a, a
@@ -578,10 +578,10 @@ Jump_061_4348::
     sla a
     add a, e
     ld e, a
-    jr nc, Jump_061_4380
+    jr nc, .skip
     inc d
 
-Jump_061_4380::
+.skip:
     ld a, e
     add a, $05
     ld e, a
@@ -614,11 +614,11 @@ Jump_061_439F:: ; address name
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_061_43AE
+    jr z, .read_temp0
     ld hl, hTemp0
     inc [hl]
 
-Jump_061_43AE::
+.read_temp0:
     ldh a, [hTemp0]
     sub a, $61
     ld [wKeyWorldByte06], a
@@ -680,44 +680,44 @@ Jump_061_43CF:: ; address name
     ld b, a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_440A
+    jr z, .set_max_blocking_tile_to_3D
     ld hl, wBGPaletteBuffer
     ld c, $40
     call CopyFromBank
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_061_440A::
+.set_max_blocking_tile_to_3D:
     ld a, $3D
     ld [wMaxBlockingTile], a
     ld a, [wKeyWorldGoalKind]
     cp a, $04
-    jr z, Jump_061_441D
+    jr z, .clear_field_event_kind
     ld a, $02
     ld [wFieldEventKind], a
-    jr Jump_061_4421
+    jr .set_encounter_rate_to_A2
 
-Jump_061_441D::
+.clear_field_event_kind:
     xor a, a
     ld [wFieldEventKind], a
 
-Jump_061_4421::
+.set_encounter_rate_to_A2:
     ld a, $A2
     ld [wEncounterRate], a
     ld a, [wKeyWorldGoalKind]
     cp a, $01
-    jr z, Jump_061_4437
+    jr z, .set_map_move_type_to_04
     cp a, $07
-    jr z, Jump_061_4437
+    jr z, .set_map_move_type_to_04
     xor a, a
     ld [wMapMoveType], a
-    jr Jump_061_443C
+    jr .clear_map_tall_tile_min
 
-Jump_061_4437::
+.set_map_move_type_to_04:
     ld a, $04
     ld [wMapMoveType], a
 
-Jump_061_443C::
+.clear_map_tall_tile_min:
     xor a, a
     ld [wMapTallTileMin], a
     ld [wMapHeaderByte11], a
@@ -727,18 +727,18 @@ Jump_061_443C::
     ld a, [hl]
     ld [wMapSpriteKind], a
     and a, $0F
-    jr z, Jump_061_445B
+    jr z, .check_map_sprite_kind
     ld a, $29
     ld [wMapTallTileMin], a
 
-Jump_061_445B::
+.check_map_sprite_kind:
     ld a, [wMapSpriteKind]
     and a, $F0
-    jr z, Jump_061_4467
+    jr z, .return
     ld a, $2C
     ld [wMapHeaderByte11], a
 
-Jump_061_4467::
+.return:
     ret
 
 ; address loaded by LoadKeyWorldTilesetAndHeader
@@ -800,10 +800,10 @@ Jump_061_4490:: ; address name
     ld a, [hl]
     push hl
     cp a, $FF
-    jr nz, Jump_061_44BF
+    jr nz, .skip
     ld a, $00
 
-Jump_061_44BF::
+.skip:
     dec a
     and a, $01
     sla a
@@ -815,11 +815,11 @@ Jump_061_44BF::
     pop hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_061_44D7
+    jr z, .call_draw_door_tiles_for_key_world_floor
     and a, $01
     ret z
 
-Jump_061_44D7::
+.call_draw_door_tiles_for_key_world_floor:
     call DrawDoorTilesForKeyWorldFloor
     ret
 
@@ -834,17 +834,17 @@ Func_061_44DB:: ; address name
     ld de, wKeyWorldFloorState + $3
     add a, e
     ld e, a
-    jr nc, Jump_061_44E8
+    jr nc, .skip
     inc d
 
-Jump_061_44E8::
+.skip:
     ld c, $1A
     ld a, [de]
     cp a, $FF
-    jr nz, Jump_061_44F1
+    jr nz, .skip2
     ld c, $1C
 
-Jump_061_44F1::
+.skip2:
     ld hl, wScreenTileBuffer + $AC
     push hl
     ld a, c
@@ -906,10 +906,10 @@ Jump_061_4533:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_061_454E
+    jr nc, .skip
     inc d
 
-Jump_061_454E::
+.skip:
     ld a, e
     add a, $2C
     ld e, a
@@ -969,7 +969,7 @@ Jump_061_454E::
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_45E1
+    jr z, .call_draw_key_world_exit_tile
     ld a, l
     add a, $30
     ld l, a
@@ -1002,7 +1002,7 @@ Jump_061_454E::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_061_45E1::
+.call_draw_key_world_exit_tile:
     call DrawKeyWorldExitTile
     call CheckTwoWCDB0EntriesForKeyWorldArea
     ret
@@ -1022,29 +1022,29 @@ Func_061_45E8:: ; address name
     ld b, a
     ld a, [wKeyWorldArea]
     cp a, b
-    jr nz, Jump_061_4613
+    jr nz, .restore
     inc hl
     inc hl
     ld a, [hl+]
     ld b, a
     ld a, [hl]
     or a, a
-    jr z, Jump_061_460A
+    jr z, .next
     ld c, $80
-    jr Jump_061_460E
+    jr .call_check_two_wcdb0_entries_for_key_world
 
-Jump_061_460A::
+.next:
     dec hl
     dec hl
     ld a, [hl]
     ld c, a
 
-Jump_061_460E::
+.call_check_two_wcdb0_entries_for_key_world:
     push hl
     call CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
     pop hl
 
-Jump_061_4613::
+.restore:
     pop hl
     inc hl
     inc hl
@@ -1061,11 +1061,11 @@ Jump_061_4613::
     ld b, a
     ld a, [hl]
     or a, a
-    jr z, Jump_061_462B
+    jr z, .next2
     ld c, $80
     jr CheckTwoWCDB0EntriesForKeyWorldArea_WriteSVBK
 
-Jump_061_462B::
+.next2:
     dec hl
     dec hl
     ld a, [hl]
@@ -1090,24 +1090,24 @@ Func_061_462F:: ; address name
     cp a, e
     ret nz
     bit 7, c
-    jr nz, Jump_061_464C
+    jr nz, .read_key_world_floor
     ld a, $2C
-    jr Jump_061_464E
+    jr .read_key_world_floor2
 
-Jump_061_464C::
+.read_key_world_floor:
     ld a, $2E
 
-Jump_061_464E::
+.read_key_world_floor2:
     push af
     ld a, [wKeyWorldFloor]
     swap a
     ld de, wKeyWorldFloorState + $1
     add a, e
     ld e, a
-    jr nc, Jump_061_465C
+    jr nc, .skip
     inc d
 
-Jump_061_465C::
+.skip:
     ld a, [de]
     add a, a
     ld e, a
@@ -1116,10 +1116,10 @@ Jump_061_465C::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_061_466A
+    jr nc, .skip2
     inc d
 
-Jump_061_466A::
+.skip2:
     ld a, e
     add a, $2C
     ld e, a
@@ -1141,10 +1141,10 @@ Jump_061_466A::
     sla a
     add a, e
     ld e, a
-    jr nc, Jump_061_468E
+    jr nc, .skip3
     inc d
 
-Jump_061_468E::
+.skip3:
     ld a, e
     add a, $19
     ld e, a
@@ -1313,35 +1313,35 @@ Func_061_474C:: ; address name
     ld a, [hl]
     and a, $0F
     cp a, $0F
-    jr z, Jump_061_479B
+    jr z, .skip2
     ld de, DrawKeyWorldExitTile_Data
     add a, e
     ld e, a
-    jr nc, Jump_061_4797
+    jr nc, .skip
     inc d
 
-Jump_061_4797::
+.skip:
     ld a, [de]
     cp a, c
-    jr z, Jump_061_47AD
+    jr z, .check_temp0
 
-Jump_061_479B::
+.skip2:
     ld a, [hl]
     swap a
     and a, $0F
     ld de, DrawKeyWorldExitTile_Data
     add a, e
     ld e, a
-    jr nc, Jump_061_47A8
+    jr nc, .skip3
     inc d
 
-Jump_061_47A8::
+.skip3:
     ld a, [de]
     cp a, c
-    jr z, Jump_061_47B9
+    jr z, .check_temp02
     ret
 
-Jump_061_47AD::
+.check_temp0:
     ldh a, [hTemp0]
     dec a
     dec a
@@ -1349,9 +1349,9 @@ Jump_061_47AD::
     dec a
     sla a
     add a, $46
-    jr Jump_061_47C5
+    jr .skip4
 
-Jump_061_47B9::
+.check_temp02:
     ldh a, [hTemp0]
     dec a
     dec a
@@ -1362,7 +1362,7 @@ Jump_061_47B9::
     ld a, $48
     sub a, c
 
-Jump_061_47C5::
+.skip4:
     ld hl, wScreenTileBuffer + $A8
     ld [hl+], a
     inc a
@@ -1640,11 +1640,11 @@ Jump_061_541A:: ; address name
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_061_5429
+    jr z, .call_load_map_screen_from_chunk
     ld hl, hTemp0
     inc [hl]
 
-Jump_061_5429::
+.call_load_map_screen_from_chunk:
     call LoadMapScreenFromChunk
     ret
 
@@ -1740,7 +1740,7 @@ Jump_061_5443:: ; address name
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_54E2
+    jr z, .call_draw_key_world_objects_entry_tiles_for
     ld a, l
     add a, $30
     ld l, a
@@ -1773,7 +1773,7 @@ Jump_061_5443:: ; address name
     ld a, $00
     ldh [rSVBK], a
 
-Jump_061_54E2::
+.call_draw_key_world_objects_entry_tiles_for:
     call DrawKeyWorldObjectsEntryTilesForScreen
     call DrawWCD8BObjectTilesForScreen
     call DrawKeyWorldGoalAtScreen
@@ -1790,15 +1790,15 @@ Func_061_54EC:: ; address name
     ret nz
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_061_5548
+    jr z, .read_map_screen_x
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_061_5548
+    jr z, .read_map_screen_x
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_061_5548
+    jr nz, .read_map_screen_x
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1820,10 +1820,10 @@ Func_061_54EC:: ; address name
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_061_552D
+    jr nc, .skip
     inc d
 
-Jump_061_552D::
+.skip:
     sla e
     rl d
     sla e
@@ -1836,13 +1836,13 @@ Jump_061_552D::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_061_5546
+    jr nc, .skip2
     inc d
 
-Jump_061_5546::
-    jr Jump_061_5585
+.skip2:
+    jr .skip4
 
-Jump_061_5548::
+.read_map_screen_x:
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1864,10 +1864,10 @@ Jump_061_5548::
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_061_556D
+    jr nc, .skip3
     inc d
 
-Jump_061_556D::
+.skip3:
     sla e
     rl d
     sla e
@@ -1879,10 +1879,10 @@ Jump_061_556D::
     sla a
     add a, e
     ld e, a
-    jr nc, Jump_061_5585
+    jr nc, .skip4
     inc d
 
-Jump_061_5585::
+.skip4:
     push de
     ld a, e
     add a, $98
@@ -1919,10 +1919,10 @@ DrawKeyWorldObjectsEntryTilesForScreen::
 Func_061_55AF:: ; address name
     ld hl, wKeyWorldObjects
 
-Jump_061_55B2::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_061_562E
+    jr z, .return
     push hl
     dec hl
     dec hl
@@ -1936,24 +1936,24 @@ Jump_061_55B2::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jr nz, Jump_061_560E
+    jr nz, .next
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_061_560E
+    jr nz, .next
     ldh a, [hMapScreenY]
 
-Jump_061_55D1::
+.restore:
     pop hl
     ld de, wScreenTileBuffer + $A8
     dec hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_061_55E1
+    jr nz, .skip2
     ld a, $46
     call Write2x2TileBlockAtDE
-    jr Jump_061_55F6
+    jr .check_is_cgb
 
-Jump_061_55E1::
+.skip2:
     ld a, $70
     ld [de], a
     inc de
@@ -1973,10 +1973,10 @@ Jump_061_55E1::
     inc a
     ld [de], a
 
-Jump_061_55F6::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_562E
+    jr z, .return
     ld de, wWorkBuf + $B
     ld a, $02
     ldh [rSVBK], a
@@ -1984,9 +1984,9 @@ Jump_061_55F6::
     call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
-    jr Jump_061_562E
+    jr .return
 
-Jump_061_560E::
+.next:
     inc hl
     ld a, [hl]
     swap a
@@ -1997,22 +1997,22 @@ Jump_061_560E::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jr nz, Jump_061_5627
+    jr nz, .restore2
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_061_5627
+    jr nz, .restore2
     ldh a, [hMapScreenY]
-    jr Jump_061_55D1
+    jr .restore
 
-Jump_061_5627::
+.restore2:
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_061_55B2
+    jr .skip
 
-Jump_061_562E::
+.return:
     ret
 
 ; for the wCD8B object on the current screen draws its 4 x 2 or 2 x 2 tile blocks by kind (E-0130)
@@ -2023,7 +2023,7 @@ DrawWCD8BObjectTilesForScreen::
 Func_061_562F:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
 
-Jump_061_5632::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -2040,32 +2040,32 @@ Jump_061_5632::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jp nz, Jump_061_56DA
+    jp nz, .restore
     ldh a, [hMapScreenY]
     cp a, c
-    jp nz, Jump_061_56DA
+    jp nz, .restore
     pop hl
     ld de, wScreenTileBuffer + $A8
     dec hl
     dec hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_061_565B
+    jr nz, .skip2
     ret
 
-Jump_061_565B::
+.skip2:
     dec a
-    jr nz, Jump_061_5667
+    jr nz, .skip3
 
-Jump_061_565E::
+.call_write4x2_tile_block_at_de:
     ld a, $68
     call Write4x2TileBlockAtDE
     ld c, $01
-    jr Jump_061_56A6
+    jr .check_is_cgb
 
-Jump_061_5667::
+.skip3:
     dec a
-    jr nz, Jump_061_5680
+    jr nz, .skip4
     ld a, $4C
     call Write2x2TileBlockAtDE
     ld a, e
@@ -2077,51 +2077,51 @@ Jump_061_5667::
     ld a, $4E
     call Write2x2TileBlockAtDE
     ld c, $01
-    jr Jump_061_56A6
+    jr .check_is_cgb
 
-Jump_061_5680::
+.skip4:
     dec a
-    jr nz, Jump_061_568C
+    jr nz, .skip5
     ld a, $60
     call Write4x2TileBlockAtDE
     ld c, $01
-    jr Jump_061_56A6
+    jr .check_is_cgb
 
-Jump_061_568C::
+.skip5:
     dec a
-    jr nz, Jump_061_5698
+    jr nz, .skip6
     ld a, $4A
     call Write2x2TileBlockAtDE
     ld c, $00
-    jr Jump_061_56A6
+    jr .check_is_cgb
 
-Jump_061_5698::
+.skip6:
     dec a
-    jr nz, Jump_061_56A4
+    jr nz, .skip7
     ld a, $48
     call Write2x2TileBlockAtDE
     ld c, $00
-    jr Jump_061_56A6
+    jr .check_is_cgb
 
-Jump_061_56A4::
-    jr Jump_061_565E
+.skip7:
+    jr .call_write4x2_tile_block_at_de
 
-Jump_061_56A6::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_061_56E2
+    jr z, .return
     ld de, wWorkBuf + $B
     ld a, $02
     ldh [rSVBK], a
     bit 0, c
-    jr nz, Jump_061_56C2
+    jr nz, .call_write2x2_same_tile_at_de
     ld a, $05
     call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
-    jr Jump_061_56E2
+    jr .return
 
-Jump_061_56C2::
+.call_write2x2_same_tile_at_de:
     ld a, $06
     call Write2x2SameTileAtDE
     ld a, e
@@ -2134,17 +2134,17 @@ Jump_061_56C2::
     call Write2x2SameTileAtDE
     ld a, $00
     ldh [rSVBK], a
-    jr Jump_061_56E2
+    jr .return
 
-Jump_061_56DA::
+.restore:
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jp Jump_061_5632
+    jp .skip
 
-Jump_061_56E2::
+.return:
     ret
 
 ; writes tiles A, A+1 at DE and A+$10, A+$11 one 20-tile row below (E-0121)
@@ -2216,10 +2216,10 @@ Func_061_5718:: ; address name
     ld a, $13
     add a, e
     ld e, a
-    jr nc, Jump_061_5723
+    jr nc, .restore
     inc d
 
-Jump_061_5723::
+.restore:
     pop af
     ld [de], a
     inc de
@@ -2324,11 +2324,11 @@ CallF4268OnScreenY1::
 Func_061_5794:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
-    jr z, Jump_061_579D
+    jr z, .call_warp_to_linked_map_for_current_map
     ld c, $00
     ret
 
-Jump_061_579D::
+.call_warp_to_linked_map_for_current_map:
     farcall WarpToLinkedMapForCurrentMap
     ret
 
@@ -2340,13 +2340,13 @@ WarpByWCD89EntryAtScreen14::
 Func_061_57A4:: ; address name
     ld a, [wKeyWorldArea]
     or a, a
-    jr z, Jump_061_57AD
+    jr z, .read_key_world_floor
 
-Jump_061_57AA::
+.loop:
     ld c, $00
     ret
 
-Jump_061_57AD::
+.read_key_world_floor:
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -2354,13 +2354,13 @@ Jump_061_57AD::
     add_a_to_hl
     ld a, [hl]
     cp a, $05
-    jr nz, Jump_061_57AA
+    jr nz, .loop
     ldh a, [hMapScreenX]
     dec a
-    jr nz, Jump_061_57AA
+    jr nz, .loop
     ldh a, [hMapScreenY]
     cp a, $04
-    jr nz, Jump_061_57AA
+    jr nz, .loop
     dec hl
     ld a, [hl]
     swap a
@@ -2398,11 +2398,11 @@ WarpToScreen01Event83::
 Func_061_5807:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
-    jr z, Jump_061_5810
+    jr z, .clear_map_screen_x
     ld c, $00
     ret
 
-Jump_061_5810::
+.clear_map_screen_x:
     xor a, a
     ldh [hMapScreenX], a
     inc a
@@ -2446,11 +2446,11 @@ WarpByKeyWorldAreaExitsEntryAtScreenRow1::
 Func_061_585A:: ; address name
     ldh a, [hMapScreenY]
     cp a, $01
-    jr z, Jump_061_5863
+    jr z, .check_key_world_floor
     ld c, $00
     ret
 
-Jump_061_5863::
+.check_key_world_floor:
     ld a, [wKeyWorldFloor]
     and a, $7F
     sla a
@@ -2459,10 +2459,10 @@ Jump_061_5863::
     add_a_to_hl
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_061_587C
+    jr z, .skip
     inc hl
 
-Jump_061_587C::
+.skip:
     ld a, [hl]
     swap a
     and a, $0F
@@ -2518,26 +2518,26 @@ Func_061_58BC:: ; address name
     ld a, [hl]
     ld d, a
 
-Jump_061_58DB::
+.skip:
     push de
     ld a, [de]
     inc de
     cp a, $80
-    jr nz, Jump_061_58E6
+    jr nz, .cp_FD
     pop de
     ld c, $00
     ret
 
-Jump_061_58E6::
+.cp_FD:
     cp a, $FD
-    jr z, Jump_061_590B
+    jr z, .restore
     cp a, $FE
-    jr z, Jump_061_58F4
+    jr z, .set_warp_dest_facing
     cp a, $FF
-    jr z, Jump_061_58F4
-    jr Jump_061_590B
+    jr z, .set_warp_dest_facing
+    jr .restore
 
-Jump_061_58F4::
+.set_warp_dest_facing:
     ld [wWarpDestFacing], a
     inc de
     ld a, [de]
@@ -2545,17 +2545,17 @@ Jump_061_58F4::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_061_590B
+    jr nz, .restore
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_061_590B
-    jr Jump_061_5916
+    jr nz, .restore
+    jr .skip2
     db $F1
 
-Jump_061_590B::
+.restore:
     pop de
     ld a, e
     add a, $09
@@ -2563,12 +2563,12 @@ Jump_061_590B::
     ld a, d
     adc a, $00
     ld d, a
-    jr Jump_061_58DB
+    jr .skip
 
-Jump_061_5916::
+.skip2:
     ld a, [de]
     cp a, $FF
-    jr nz, Jump_061_5949
+    jr nz, .done
     inc de
     inc de
     inc de
@@ -2591,14 +2591,14 @@ Jump_061_5916::
     ldh [hMapScreenY], a
     ld a, $F0
     ld [wWarpDestFacing], a
-    jr Jump_061_594D
+    jr .call_start_palette_fade
 
-Jump_061_5949::
+.done:
     pop de
     ld c, $00
     ret
 
-Jump_061_594D::
+.call_start_palette_fade:
     ld a, $04
     call StartPaletteFade
     ld a, $04
@@ -2697,16 +2697,16 @@ CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc::
 Func_061_59AA:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_061_59B3
+    jr z, .check_player_y
 
-Jump_061_59B0::
+.loop:
     ld c, $00
     ret
 
-Jump_061_59B3::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_061_59B0
+    jr nz, .loop
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
@@ -2716,20 +2716,20 @@ Jump_061_59B3::
     ld de, wKeyWorldRoomTable + $1
     add a, e
     ld e, a
-    jr nc, Jump_061_59D0
+    jr nc, .check_key_world_area
     inc d
 
-Jump_061_59D0::
+.check_key_world_area:
     ld a, [wKeyWorldArea]
     dec a
     ld [wKeyWorldArea], a
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_061_59DD
+    jr nc, .skip
     inc d
 
-Jump_061_59DD::
+.skip:
     ld a, [de]
     swap a
     and a, $0F
@@ -2781,19 +2781,19 @@ CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
 Func_061_5A33:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_061_5A42
+    jr z, .check_player_y
 
-Jump_061_5A39::
+.loop:
     ldh a, [hPlayerStateFlags]
     and a, $7F
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
-Jump_061_5A42::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_061_5A39
+    jr nz, .loop
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
@@ -2814,18 +2814,18 @@ Jump_061_5A42::
     ld de, wKeyWorldRoomTable + $1
     add a, e
     ld e, a
-    jr nc, Jump_061_5A71
+    jr nc, .read_key_world_area
     inc d
 
-Jump_061_5A71::
+.read_key_world_area:
     ld a, [wKeyWorldArea]
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_061_5A7A
+    jr nc, .check_map_screen_x
     inc d
 
-Jump_061_5A7A::
+.check_map_screen_x:
     ldh a, [hMapScreenX]
     and a, $0F
     swap a
@@ -2837,14 +2837,14 @@ Jump_061_5A7A::
     ld a, [de]
     and a, $0F
     cp a, $0F
-    jp z, Jump_061_5A9B
+    jp z, .skip
     ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     cp a, b
-    jr z, Jump_061_5AB5
+    jr z, .check_key_world_area
 
-Jump_061_5A9B::
+.skip:
     ld a, [de]
     swap a
     and a, $0F
@@ -2852,20 +2852,20 @@ Jump_061_5A9B::
     add_a_to_hl
     ld a, [hl]
     cp a, b
-    jr z, Jump_061_5B18
+    jr z, .check_key_world_area3
     ldh a, [hPlayerStateFlags]
     and a, $7F
     ldh [hPlayerStateFlags], a
     ld c, $00
     ret
 
-Jump_061_5AB5::
+.check_key_world_area:
     ld a, [wKeyWorldArea]
     or a, a
-    jr nz, Jump_061_5B08
+    jr nz, .check_key_world_area2
     ldh a, [hTemp0]
     cp a, $04
-    jr nz, Jump_061_5B08
+    jr nz, .check_key_world_area2
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
@@ -2899,7 +2899,7 @@ Jump_061_5AB5::
     ld c, $01
     ret
 
-Jump_061_5B08::
+.check_key_world_area2:
     ld a, [wKeyWorldArea]
     dec a
     ld [wKeyWorldArea], a
@@ -2908,9 +2908,9 @@ Jump_061_5B08::
     ld a, [de]
     swap a
     and a, $0F
-    jr Jump_061_5B6B
+    jr .skip2
 
-Jump_061_5B18::
+.check_key_world_area3:
     ld a, [wKeyWorldArea]
     inc a
     ld [wKeyWorldArea], a
@@ -2918,7 +2918,7 @@ Jump_061_5B18::
     ld c, a
     ldh a, [hTemp1]
     cp a, c
-    jr nz, Jump_061_5B66
+    jr nz, .next
     ld a, $86
     ld [wMapType], a
     xor a, a
@@ -2949,13 +2949,13 @@ Jump_061_5B18::
     ld c, $01
     ret
 
-Jump_061_5B66::
+.next:
     inc de
     inc de
     ld a, [de]
     and a, $0F
 
-Jump_061_5B6B::
+.skip2:
     ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
@@ -3003,19 +3003,19 @@ CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc::
 Func_061_5BBB:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_061_5BC4
+    jr z, .check_player_y
 
-Jump_061_5BC1::
+.loop:
     ld c, $00
     ret
 
-Jump_061_5BC4::
+.check_player_y:
     ldh a, [hPlayerY]
     cp a, $30
-    jr nz, Jump_061_5BC1
+    jr nz, .loop
     ld a, [wMapToggleRequest]
     or a, a
-    jr z, Jump_061_5BC1
+    jr z, .loop
     xor a, a
     ld [wMapToggleRequest], a
     ld a, [wKeyWorldFloor]
@@ -3065,12 +3065,12 @@ Func_061_5C07:: ; address name
     ld a, [hl]
     ld d, a
 
-Jump_061_5C26::
+.skip:
     push de
     ld a, [de]
     inc de
     cp a, $80
-    jr nz, Jump_061_5C37
+    jr nz, .cp_FD
     pop de
     ldh a, [hPlayerStateFlags]
     and a, $7F
@@ -3078,12 +3078,12 @@ Jump_061_5C26::
     ld c, $00
     ret
 
-Jump_061_5C37::
+.cp_FD:
     cp a, $FD
-    jr z, Jump_061_5C3D
-    jr Jump_061_5C73
+    jr z, .set_warp_dest_facing
+    jr .restore2
 
-Jump_061_5C3D::
+.set_warp_dest_facing:
     ld a, [de]
     inc de
     ld [wWarpDestFacing], a
@@ -3093,39 +3093,39 @@ Jump_061_5C3D::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_061_5C72
+    jr nz, .restore
     pop af
     and a, $0F
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_061_5C73
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_061_5C73
+    jr nz, .restore2
     ld a, [de]
     inc de
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_061_5C73
+    jr nz, .restore2
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jr z, Jump_061_5C70
+    jr z, .skip2
     pop de
     ld c, $00
     ret
 
-Jump_061_5C70::
-    jr Jump_061_5C7E
+.skip2:
+    jr .skip3
 
-Jump_061_5C72::
+.restore:
     pop af
 
-Jump_061_5C73::
+.restore2:
     pop de
     ld a, e
     add a, $09
@@ -3133,12 +3133,12 @@ Jump_061_5C73::
     ld a, d
     adc a, $00
     ld d, a
-    jr Jump_061_5C26
+    jr .skip
 
-Jump_061_5C7E::
+.skip3:
     ld a, [de]
     cp a, $F2
-    jr nz, Jump_061_5CCB
+    jr nz, .done
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
@@ -3173,7 +3173,7 @@ Jump_061_5C7E::
     ld c, $01
     ret
 
-Jump_061_5CCB::
+.done:
     pop de
     ld c, $00
     ret
@@ -3195,63 +3195,63 @@ Func_061_5CD0:: ; address name
     xor a, a
     ldh [hTemp1], a
 
-Jump_061_5CD6::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_061_5CE6
+    jr nz, .skip2
     ldh a, [hPlayerStateFlags]
     and a, $5F
     ldh [hPlayerStateFlags], a
     xor a, a
     ret
 
-Jump_061_5CE3::
+.loop:
     pop hl
     xor a, a
     ret
 
-Jump_061_5CE6::
+.skip2:
     push hl
     dec hl
     dec hl
     ld a, [hl]
     ldh [hTemp2], a
     cp a, $04
-    jr z, Jump_061_5D11
+    jr z, .read_player_x
     cp a, $05
-    jr z, Jump_061_5D11
+    jr z, .read_player_x
     ldh a, [hPlayerX]
     swap a
     and a, $0F
     cp a, $04
-    jr z, Jump_061_5D02
+    jr z, .read_player_y
     cp a, $05
-    jr nz, Jump_061_5D0E
+    jr nz, .loop2
 
-Jump_061_5D02::
+.read_player_y:
     ldh a, [hPlayerY]
     swap a
     and a, $0F
     cp a, $04
-    jr nz, Jump_061_5D0E
-    jr Jump_061_5D25
+    jr nz, .loop2
+    jr .next
 
-Jump_061_5D0E::
-    jp Jump_061_5E7A
+.loop2:
+    jp .restore
 
-Jump_061_5D11::
+.read_player_x:
     ldh a, [hPlayerX]
     swap a
     and a, $0F
     cp a, $04
-    jr nz, Jump_061_5D0E
+    jr nz, .loop2
     ldh a, [hPlayerY]
     swap a
     and a, $0F
     cp a, $04
-    jr nz, Jump_061_5D0E
+    jr nz, .loop2
 
-Jump_061_5D25::
+.next:
     dec hl
     ld a, [hl]
     swap a
@@ -3262,18 +3262,18 @@ Jump_061_5D25::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jp nz, Jump_061_5E7A
+    jp nz, .restore
     ldh a, [hMapScreenY]
     cp a, c
-    jp nz, Jump_061_5E7A
+    jp nz, .restore
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jr nz, Jump_061_5CE3
+    jr nz, .loop
     ldh a, [hTemp2]
     cp a, $04
-    jp z, Jump_061_5E02
+    jp z, .clear_key_world_area2
     cp a, $05
-    jp z, Jump_061_5DE1
+    jp z, .clear_key_world_area
     ldh a, [hTemp1]
     ld [wKeyWorldFloor], a
     ld a, $83
@@ -3304,13 +3304,13 @@ Jump_061_5D25::
     add_a_to_hl
     ldh a, [hPlayerX]
     cp a, $40
-    jr z, Jump_061_5D92
+    jr z, .call_read_byte_in_bank
     inc hl
     inc hl
     inc hl
     inc hl
 
-Jump_061_5D92::
+.call_read_byte_in_bank:
     ld e, l
     ld d, h
     call ReadByteInBank
@@ -3350,7 +3350,7 @@ Jump_061_5D92::
     ld a, $01
     ret
 
-Jump_061_5DE1::
+.clear_key_world_area:
     xor a, a
     ld [wKeyWorldArea], a
     ld a, $01
@@ -3365,9 +3365,9 @@ Jump_061_5DE1::
     ld [wWarpDestFacing], a
     ld a, $03
     ld [wFieldTransitionKind], a
-    jr Jump_061_5E44
+    jr .read_temp1
 
-Jump_061_5E02::
+.clear_key_world_area2:
     xor a, a
     ld [wKeyWorldArea], a
     ldh a, [hTemp1]
@@ -3397,7 +3397,7 @@ Jump_061_5E02::
     ld a, $01
     ld [wFieldTransitionKind], a
 
-Jump_061_5E44::
+.read_temp1:
     ldh a, [hTemp1]
     ld [wKeyWorldFloor], a
     ld a, $85
@@ -3422,7 +3422,7 @@ Jump_061_5E44::
     ld a, $01
     ret
 
-Jump_061_5E7A::
+.restore:
     pop hl
     inc hl
     inc hl
@@ -3431,7 +3431,7 @@ Jump_061_5E7A::
     ldh a, [hTemp1]
     inc a
     ldh [hTemp1], a
-    jp Jump_061_5CD6
+    jp .skip
 
 ; address loaded by CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc
 CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -3446,15 +3446,15 @@ CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc::
 Func_061_5E8D:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_061_5ECF
+    jr z, .read_map_screen_x
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_061_5ECF
+    jr z, .read_map_screen_x
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_061_5ECF
+    jr nz, .read_map_screen_x
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -3463,7 +3463,7 @@ Func_061_5E8D:: ; address name
     ld c, a
     ld a, [wKeyWorldGoalCell]
     cp a, c
-    jr nz, Jump_061_5EC7
+    jr nz, .loop
     ldh a, [hPlayerX]
     and a, $F0
     ld c, a
@@ -3474,19 +3474,19 @@ Func_061_5E8D:: ; address name
     ld c, a
     ld a, [wKeyWorldGoal]
     cp a, c
-    jr nz, Jump_061_5EC7
-    jr Jump_061_5EF0
+    jr nz, .loop
+    jr .check_player_state_flags
 
-Jump_061_5EC7::
+.loop:
     ldh a, [hPlayerStateFlags]
     and a, $DF
     ldh [hPlayerStateFlags], a
 
-Jump_061_5ECD::
+.loop2:
     xor a, a
     ret
 
-Jump_061_5ECF::
+.read_map_screen_x:
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -3495,22 +3495,22 @@ Jump_061_5ECF::
     ld c, a
     ld a, [wKeyWorldGoalScreen]
     cp a, c
-    jr nz, Jump_061_5EC7
+    jr nz, .loop
     ld a, [wKeyWorldGoalPos]
     ld c, a
     ldh a, [hPlayerX]
     cp a, c
-    jr nz, Jump_061_5EC7
+    jr nz, .loop
     ld a, [wKeyWorldGoalPos2]
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_061_5EC7
+    jr nz, .loop
 
-Jump_061_5EF0::
+.check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 5, a
-    jr nz, Jump_061_5ECD
+    jr nz, .loop2
     ld a, $60
     call QueueSoundEffect
     xor a, a
@@ -3552,28 +3552,28 @@ Func_061_5F39:: ; address name
     ld c, a
     ldh a, [hPlayerY]
     cp a, c
-    jr nz, Jump_061_5F51
+    jr nz, .return_0
     swap a
     and a, $0F
     cp a, $04
-    jr nz, Jump_061_5F51
+    jr nz, .return_0
     ld hl, wKeyWorldObjects
 
-Jump_061_5F4C::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_061_5F56
+    jr nz, .skip2
 
-Jump_061_5F51::
+.return_0:
     xor a, a
     ret
 
-Jump_061_5F53::
+.loop:
     pop hl
     xor a, a
     ret
 
-Jump_061_5F56::
+.skip2:
     push hl
     dec hl
     dec hl
@@ -3587,13 +3587,13 @@ Jump_061_5F56::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jp nz, Jump_061_5FE0
+    jp nz, .next
     ldh a, [hMapScreenY]
     cp a, c
-    jp nz, Jump_061_5FE0
+    jp nz, .next
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jr nz, Jump_061_5F53
+    jr nz, .loop
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
@@ -3618,7 +3618,7 @@ Jump_061_5F56::
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_061_5FDF
+    jr nz, .return
     inc hl
     ld a, l
     sub a, $7B
@@ -3648,10 +3648,10 @@ Jump_061_5F56::
     ld a, $01
     ret
 
-Jump_061_5FDF::
+.return:
     ret
 
-Jump_061_5FE0::
+.next:
     inc hl
     ld a, [hl]
     swap a
@@ -3662,13 +3662,13 @@ Jump_061_5FE0::
     ld c, a
     ldh a, [hMapScreenX]
     cp a, b
-    jp nz, Jump_061_6065
+    jp nz, .restore
     ldh a, [hMapScreenY]
     cp a, c
-    jp nz, Jump_061_6065
+    jp nz, .restore
     ldh a, [hPlayerStateFlags]
     bit 7, a
-    jp nz, Jump_061_5F53
+    jp nz, .loop
     ld a, $40
     ld [wWarpDestX], a
     ld [wWarpDestY], a
@@ -3690,7 +3690,7 @@ Jump_061_5FE0::
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_061_6064
+    jr nz, .return2
     inc hl
     ld a, l
     sub a, $7B
@@ -3721,16 +3721,16 @@ Jump_061_5FE0::
     ld a, $01
     ret
 
-Jump_061_6064::
+.return2:
     ret
 
-Jump_061_6065::
+.restore:
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jp Jump_061_5F4C
+    jp .skip
 
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix)
@@ -3741,34 +3741,34 @@ KeyWorldAreaEncounterIndex::
 Func_061_606D:: ; address name
     ld a, [wKeyWorldFlags]
     bit 7, a
-    jr z, Jump_061_6079
+    jr z, .check_map_type
     ld a, $01
     ldh [hTemp0], a
     ret
 
-Jump_061_6079::
+.check_map_type:
     push hl
     push de
     ld a, [wMapType]
     cp a, $80
-    jr z, Jump_061_60AC
+    jr z, .read_map_screen_y
     cp a, $85
-    jr z, Jump_061_608A
+    jr z, .read_key_world_floor
     xor a, a
     ldh [hTemp0], a
     ret
 
-Jump_061_608A::
+.read_key_world_floor:
     ld a, [wKeyWorldFloor]
     add a, a
     add a, a
     ld de, wKeyWorldFloorInfo
     add a, e
     ld e, a
-    jr nc, Jump_061_6097
+    jr nc, .skip
     inc d
 
-Jump_061_6097::
+.skip:
     ld a, [de]
     and a, $0F
     srl a
@@ -3781,9 +3781,9 @@ Jump_061_6097::
     srl a
     srl a
     add a, l
-    jr Jump_061_60BB
+    jr .skip2
 
-Jump_061_60AC::
+.read_map_screen_y:
     ldh a, [hMapScreenY]
     srl a
     srl a
@@ -3794,7 +3794,7 @@ Jump_061_60AC::
     srl a
     add a, l
 
-Jump_061_60BB::
+.skip2:
     ld hl, wKeyWorldAreaInfo
     add_a_to_hl
     ld a, [hl]
@@ -4410,7 +4410,7 @@ Data_061_66FA:: ; address name
 KeyWorldWarps63::
     db $80 ; end
 
-; E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (Jump_060_63E0), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
+; E-0194 (C1: SetupTownObjectsForMap case 0 (band 0 (SetupTownObjectsForMap.set_map_object_count_to_0A), wMapObjectCount $0A) passes $6705 to RemoveMapObjectsEntryMatching; Func_060_64F3 picks a random screen inside wMapWidthScreens x wMapHeightScreens and reads, with ReadByteInBank B = $61, the pair at $6705 + (screen Y * width + screen X) * 8 + 2 * (random & 3): a first byte of $FE draws a new screen, $FF a new spot, otherwise its nibbles place the object; 64 screens).
 ; record: one screen: four candidate spots (two bytes each); $FE first byte = none on this screen, $FF = draw again
 TownObjectSpotGrid0::
 Data_061_6705:: ; address name

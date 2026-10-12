@@ -17,14 +17,14 @@ CopyMonsterTableBytesFromMonsterTable::
 Func_034_4008:: ; address name
     ld a, [wMonsterId + $1]
     cp a, $02
-    jr c, Jump_034_401D
+    jr c, .read_monster_id
     ld a, [wMonsterId]
     cp a, $50
-    jr c, Jump_034_401D
+    jr c, .read_monster_id
     farcall CopyMonsterTableBytesFrom4056
     ret
 
-Jump_034_401D::
+.read_monster_id:
     push de
     push bc
     ld a, [wMonsterId]
@@ -55,14 +55,14 @@ LoadMonsterRecordTo::
 Func_034_4040:: ; address name
     ld a, [wMonsterId + $1]
     cp a, $02
-    jr c, Jump_034_4055
+    jr c, .read_monster_id
     ld a, [wMonsterId]
     cp a, $50
-    jr c, Jump_034_4055
+    jr c, .read_monster_id
     farcall LoadMonsterRecordTo_Multiply8By16
     ret
 
-Jump_034_4055::
+.read_monster_id:
     push de
     ld a, [wMonsterId]
     ld c, a

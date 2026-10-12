@@ -11,14 +11,14 @@ Func_03B_4001:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4013
+    jr z, .skip
     ld a, c
     ld e, $1D
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_403C
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4013::
+.skip:
     ld a, c
     srl a
     srl a
@@ -37,7 +37,7 @@ Jump_03B_4013::
     ld a, [wRecordBufferData + $9]
     ld b, a
 
-Jump_03B_403C::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -54,14 +54,14 @@ Func_03B_4045:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4057
+    jr z, .skip
     ld a, c
     ld e, $21
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_4080
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4057::
+.skip:
     ld a, c
     srl a
     srl a
@@ -80,7 +80,7 @@ Jump_03B_4057::
     ld a, [wRecordBufferData + $B]
     ld b, a
 
-Jump_03B_4080::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -97,14 +97,14 @@ Func_03B_4089:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_409B
+    jr z, .skip
     ld a, c
     ld e, $23
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_40C4
+    jr .set_battle_stat_result_lo
 
-Jump_03B_409B::
+.skip:
     ld a, c
     srl a
     srl a
@@ -123,7 +123,7 @@ Jump_03B_409B::
     ld a, [wRecordBufferData + $D]
     ld b, a
 
-Jump_03B_40C4::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -140,14 +140,14 @@ Func_03B_40CD:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_40DF
+    jr z, .skip
     ld a, c
     ld e, $25
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_4108
+    jr .set_battle_stat_result_lo
 
-Jump_03B_40DF::
+.skip:
     ld a, c
     srl a
     srl a
@@ -166,7 +166,7 @@ Jump_03B_40DF::
     ld a, [wRecordBufferData + $F]
     ld b, a
 
-Jump_03B_4108::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -183,14 +183,14 @@ Func_03B_4111:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4123
+    jr z, .skip
     ld a, c
     ld e, $27
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_414C
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4123::
+.skip:
     ld a, c
     srl a
     srl a
@@ -209,7 +209,7 @@ Jump_03B_4123::
     ld a, [wRecordBufferData + $11]
     ld b, a
 
-Jump_03B_414C::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -226,14 +226,14 @@ Func_03B_4155:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4167
+    jr z, .skip
     ld a, c
     ld e, $29
     call BattlerRecordFieldAddress
     call LoadBCFromHL
-    jr Jump_03B_4190
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4167::
+.skip:
     ld a, c
     srl a
     srl a
@@ -252,7 +252,7 @@ Jump_03B_4167::
     ld a, [wRecordBufferData + $13]
     ld b, a
 
-Jump_03B_4190::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ld a, b
@@ -269,14 +269,14 @@ Func_03B_4199:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_41A9
+    jr z, .skip
     ld a, c
     ld e, $17
     call BattlerRecordFieldAddress
     ld c, [hl]
-    jr Jump_03B_41CE
+    jr .set_battle_stat_result_lo
 
-Jump_03B_41A9::
+.skip:
     ld a, c
     srl a
     srl a
@@ -293,7 +293,7 @@ Jump_03B_41A9::
     ld a, [wRecordBufferData + $7]
     ld c, a
 
-Jump_03B_41CE::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ret
@@ -308,14 +308,14 @@ Func_03B_41D3:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_41E3
+    jr z, .skip
     ld a, c
     ld e, $2D
     call BattlerRecordFieldAddress
     ld c, [hl]
-    jr Jump_03B_4208
+    jr .set_battle_stat_result_lo
 
-Jump_03B_41E3::
+.skip:
     ld a, c
     srl a
     srl a
@@ -332,7 +332,7 @@ Jump_03B_41E3::
     ld a, [wRecordBufferData + $14]
     ld c, a
 
-Jump_03B_4208::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ret
@@ -347,14 +347,14 @@ Func_03B_420D:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_421D
+    jr z, .skip
     ld a, c
     ld e, $30
     call BattlerRecordFieldAddress
     ld c, [hl]
-    jr Jump_03B_4242
+    jr .set_battle_stat_result_lo
 
-Jump_03B_421D::
+.skip:
     ld a, c
     srl a
     srl a
@@ -371,7 +371,7 @@ Jump_03B_421D::
     ld a, [wRecordBufferData + $16]
     ld c, a
 
-Jump_03B_4242::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ret
@@ -386,14 +386,14 @@ Func_03B_4247:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4257
+    jr z, .skip
     ld a, c
     ld e, $2E
     call BattlerRecordFieldAddress
     ld c, [hl]
-    jr Jump_03B_427C
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4257::
+.skip:
     ld a, c
     srl a
     srl a
@@ -410,7 +410,7 @@ Jump_03B_4257::
     ld a, [wRecordBufferData + $15]
     ld c, a
 
-Jump_03B_427C::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ret
@@ -425,14 +425,14 @@ Func_03B_4281:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_4291
+    jr z, .skip
     ld a, c
     ld e, $2F
     call BattlerRecordFieldAddress
     ld c, [hl]
-    jr Jump_03B_42B6
+    jr .set_battle_stat_result_lo
 
-Jump_03B_4291::
+.skip:
     ld a, c
     srl a
     srl a
@@ -449,7 +449,7 @@ Jump_03B_4291::
     ld a, [wRecordBufferData + $17]
     ld c, a
 
-Jump_03B_42B6::
+.set_battle_stat_result_lo:
     ld a, c
     ld [wBattleStatResultLo], a
     ret
@@ -463,7 +463,7 @@ Func_03B_42BB:: ; address name
     ld a, c
     and a, $03
     cp a, $03
-    jr z, Jump_03B_42E3
+    jr z, .done
     ld a, c
     ld e, $0A
     call BattlerRecordFieldAddress
@@ -478,12 +478,12 @@ Func_03B_42BB:: ; address name
     ld a, [wSpeciesRecord + $3]
     or a, c
     ld c, a
-    jr Jump_03B_42E5
+    jr .return
 
-Jump_03B_42E3::
+.done:
     ld c, $00
 
-Jump_03B_42E5::
+.return:
     ret
 
 ; the same 10 bytes as ReadBattleWordFromArray (36:7E5B)
@@ -541,44 +541,44 @@ Jump_03B_4314:: ; address name
     ld [wSlotsOccupiedFlag], a
     ld a, [wBattleFlag92]
     cp a, $10
-    jr z, Jump_03B_433E
+    jr z, .check_link_role
     cp a, $20
-    jr z, Jump_03B_434B
+    jr z, .check_link_role2
     and a, $07
     ld [wBattleTarget], a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03B_435D
+    jr nc, .read_battle_flag93
     ld a, [wBattleFlag93]
     cp a, $0C
-    jr z, Jump_03B_435D
-    jr Jump_03B_4364
+    jr z, .read_battle_flag93
+    jr .set_battle_action_id
 
-Jump_03B_433E::
+.check_link_role:
     ld c, $00
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03B_4356
+    jr z, .call_all_three_slots_from_c_occupied
     ld c, $04
-    jr Jump_03B_4356
+    jr .call_all_three_slots_from_c_occupied
 
-Jump_03B_434B::
+.check_link_role2:
     ld c, $04
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03B_4356
+    jr z, .call_all_three_slots_from_c_occupied
     ld c, $00
 
-Jump_03B_4356::
+.call_all_three_slots_from_c_occupied:
     call AllThreeSlotsFromCOccupied
     ld a, c
     ld [wBattleTarget], a
 
-Jump_03B_435D::
+.read_battle_flag93:
     ld a, [wBattleFlag93]
     ld [wBattleActionId], a
     ret
 
-Jump_03B_4364::
+.set_battle_action_id:
     ld [wBattleActionId], a
     farcall ShowActionBattleText
     ld a, $0D
@@ -591,13 +591,13 @@ AllThreeSlotsFromCOccupied::
 Func_03B_4373:: ; address name
     ld b, $03
 
-Jump_03B_4375::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     ret nc
     inc c
     dec b
-    jr nz, Jump_03B_4375
+    jr nz, .loop
     ret
 
 ; entry 1 of the `rst $00` table in Func_03B_42F4
@@ -621,59 +621,59 @@ Jump_03B_438A:: ; address name
     inc [hl]
     ld a, [wBattleActionId]
     cp a, $19
-    jr c, Jump_03B_43E9
+    jr c, .set_effect_flags_to_08
     cp a, $1E
-    jr nc, Jump_03B_43E9
+    jr nc, .set_effect_flags_to_08
     call TargetOnLocalSide_Bank3B
-    jr c, Jump_03B_43E9
+    jr c, .set_effect_flags_to_08
     ld a, [wBattleKind]
     cp a, $03
-    jr z, Jump_03B_43F5
+    jr z, .call_call774_c_with_battle_foe_count
     ld a, [wBattleTarget]
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_03B_43AD::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03B_43E5
+    jr c, .next
     ld a, c
     and a, $03
     ld hl, wBattleInitA1
     add_a_to_hl
     ld a, [hl]
     cp a, $07
-    jr z, Jump_03B_43F5
+    jr z, .call_call774_c_with_battle_foe_count
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     bit 6, a
-    jr nz, Jump_03B_4406
+    jr nz, .call_call774_c_with_battle_foe_count2
     and a, $8C
-    jr nz, Jump_03B_4417
+    jr nz, .call_call774_c_with_battle_foe_count3
     ld a, $05
     add_a_to_hl
     ld a, [hl]
     and a, $C0
-    jr nz, Jump_03B_4428
+    jr nz, .call_call774_c_with_battle_foe_count4
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_03B_4439
+    jr c, .call_call774_c_with_battle_foe_count5
 
-Jump_03B_43E5::
+.next:
     inc c
     dec b
-    jr nz, Jump_03B_43AD
+    jr nz, .loop
 
-Jump_03B_43E9::
+.set_effect_flags_to_08:
     ld a, $08
     ld [wEffectFlags], a
     farcall SelectEffectByEffectFlags
     ret
 
-Jump_03B_43F5::
+.call_call774_c_with_battle_foe_count:
     call Call774CWithBattleFoeCount
     ld d, $7E
     farcall ShowBattleTextCategory0
@@ -681,7 +681,7 @@ Jump_03B_43F5::
     ld [wBattleResolveStep], a
     ret
 
-Jump_03B_4406::
+.call_call774_c_with_battle_foe_count2:
     call Call774CWithBattleFoeCount
     ld d, $E6 ; battle text '0 can't eat while paralyzed!'
     farcall ShowBattleText
@@ -689,7 +689,7 @@ Jump_03B_4406::
     ld [wBattleResolveStep], a
     ret
 
-Jump_03B_4417::
+.call_call774_c_with_battle_foe_count3:
     call Call774CWithBattleFoeCount
     ld d, $7B
     farcall ShowBattleTextCategory0
@@ -697,7 +697,7 @@ Jump_03B_4417::
     ld [wBattleResolveStep], a
     ret
 
-Jump_03B_4428::
+.call_call774_c_with_battle_foe_count4:
     call Call774CWithBattleFoeCount
     ld d, $7D
     farcall ShowBattleTextCategory0
@@ -705,7 +705,7 @@ Jump_03B_4428::
     ld [wBattleResolveStep], a
     ret
 
-Jump_03B_4439::
+.call_call774_c_with_battle_foe_count5:
     call Call774CWithBattleFoeCount
     ld d, $7C
     farcall ShowBattleTextCategory0
@@ -765,25 +765,25 @@ Jump_03B_447B:: ; address name
     ld a, [wResolveMsgFlags]
     ld b, a
     bit 5, a
-    jr z, Jump_03B_449D
+    jr z, .check_resolve_msg_flags
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
     ld a, h
     or a, l
-    jr z, Jump_03B_4497
+    jr z, .set_resolve_msg_flags
     set 4, b
-    jr Jump_03B_4499
+    jr .set_resolve_msg_flags2
 
-Jump_03B_4497::
+.set_resolve_msg_flags:
     res 4, b
 
-Jump_03B_4499::
+.set_resolve_msg_flags2:
     ld a, b
     ld [wResolveMsgFlags], a
 
-Jump_03B_449D::
+.check_resolve_msg_flags:
     ld a, [wResolveMsgFlags]
     bit 4, a
     ret z
@@ -799,39 +799,39 @@ Jump_03B_449D::
     cp a, $01
     ret c
     cp a, $06
-    jr c, Jump_03B_44DA
+    jr c, .check_battle_target
     cp a, $0B
-    jr z, Jump_03B_44DA
-    jr c, Jump_03B_44EF
+    jr z, .check_battle_target
+    jr c, .check_battle_target2
     cp a, $0C
-    jr z, Jump_03B_44EF
+    jr z, .check_battle_target2
     cp a, $24
     ret c
     cp a, $28
-    jr c, Jump_03B_44FE
+    jr c, .read_battle_damage_lo
     ret
 
-Jump_03B_44DA::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Jump_03B_44FE
+    jr c, .read_battle_damage_lo
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
     srl h
     rr l
-    jr Jump_03B_450E
+    jr .call_add_hl_to_battle_meter_capped_at1800
 
-Jump_03B_44EF::
+.check_battle_target2:
     ld hl, $0064
     ld a, [wBattleTarget]
     cp a, $04
-    jr nc, Jump_03B_450E
+    jr nc, .call_add_hl_to_battle_meter_capped_at1800
     ld hl, $0005
-    jr Jump_03B_450A
+    jr .call_subtract_hl_from_battle_meter_floored
 
-Jump_03B_44FE::
+.read_battle_damage_lo:
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -839,11 +839,11 @@ Jump_03B_44FE::
     srl h
     rr l
 
-Jump_03B_450A::
+.call_subtract_hl_from_battle_meter_floored:
     call SubtractHLFromBattleMeterFloored
     ret
 
-Jump_03B_450E::
+.call_add_hl_to_battle_meter_capped_at1800:
     call AddHLToBattleMeterCappedAt1800
     ret
 
@@ -860,16 +860,16 @@ Jump_03B_4512:: ; address name
     inc [hl]
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_03B_4529
+    jr z, .read_resolve_msg_target
     ld a, [wResolveMsgActor]
     ld [wTemp0], a
-    jr Jump_03B_452F
+    jr .read_temp0
 
-Jump_03B_4529::
+.read_resolve_msg_target:
     ld a, [wResolveMsgTarget]
     ld [wTemp0], a
 
-Jump_03B_452F::
+.read_temp0:
     ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
@@ -907,9 +907,9 @@ Jump_03B_4548:: ; address name
     ld a, [wResolveMsgArg]
     and a, $C0
     cp a, $00
-    jr z, Jump_03B_459E
+    jr z, .return
     cp a, $40
-    jr z, Jump_03B_458B
+    jr z, .read_battle_target
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
@@ -926,15 +926,15 @@ Jump_03B_4548:: ; address name
     ld a, d
     sbc a, b
     ld d, a
-    jr c, Jump_03B_4580
+    jr c, .skip
     ld a, d
     ld [hl-], a
     ld [hl], e
     or a, e
-    jr nz, Jump_03B_458B
+    jr nz, .read_battle_target
     inc hl
 
-Jump_03B_4580::
+.skip:
     xor a, a
     ld [hl-], a
     ld [hl], a
@@ -943,7 +943,7 @@ Jump_03B_4580::
     xor a, a
     ld [wBattleSubStep2], a
 
-Jump_03B_458B::
+.read_battle_target:
     ld a, [wBattleTarget]
     call SetBit0OfLevelUpGainsIndexed_Bank3B
     ld a, [wBattleTarget]
@@ -952,7 +952,7 @@ Jump_03B_458B::
     call SetBit2OfLevelUpGainsIndexed_Bank3B
     ret
 
-Jump_03B_459E::
+.return:
     ret
 
 ; entry 9 of the `rst $00` table in Func_03B_42F4
@@ -973,26 +973,26 @@ Jump_03B_45A6:: ; address name
     inc [hl]
     ld a, [wBattleFlag93]
     cp a, $1F
-    jr z, Jump_03B_45CF
+    jr z, .check_defeat_flags_ba
     cp a, $1D
-    jr z, Jump_03B_45C7
+    jr z, .check_battle_target
     ld a, [wBattleFlag92]
     cp a, $10
-    jr z, Jump_03B_4627
+    jr z, .call_run_once4650_then4673
     cp a, $20
     ret nz
     ld a, [wBattleFlag93]
     cp a, $1E
-    jr nz, Jump_03B_4627
+    jr nz, .call_run_once4650_then4673
     ret
 
-Jump_03B_45C7::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret c
-    jr Jump_03B_4627
+    jr .call_run_once4650_then4673
 
-Jump_03B_45CF::
+.check_defeat_flags_ba:
     ld a, [wDefeatFlagsBA]
     bit 7, a
     call z, GroupTargetsBySpeciesToSpeciesGroups
@@ -1007,16 +1007,16 @@ Jump_03B_45CF::
     farcall TestSpeciesFlag
     ld a, c
     or a, a
-    jr z, Jump_03B_45FF
+    jr z, .call_show_battle_text_category0
     ld d, $2B
     farcall ShowBattleTextCategory0
-    jr Jump_03B_4607
+    jr .skip
 
-Jump_03B_45FF::
+.call_show_battle_text_category0:
     ld d, $2A
     farcall ShowBattleTextCategory0
 
-Jump_03B_4607::
+.skip:
     ld hl, wDefeatFlagsBA
     dec [hl]
     ld a, [hl]
@@ -1034,7 +1034,7 @@ Jump_03B_4607::
     ld [wBattleTarget], a
     ret
 
-Jump_03B_4627::
+.call_run_once4650_then4673:
     call RunOnce4650Then4673
     ret z
     ld a, c
@@ -1051,13 +1051,13 @@ RunOnce4650Then4673::
 Func_03B_4635:: ; address name
     ld a, [wDefeatFlagsBA]
     bit 7, a
-    jr nz, Jump_03B_4647
+    jr nz, .call_run_once4650_then4673_carry_unless
     call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wDefeatFlagsBA]
     or a, $80
     ld [wDefeatFlagsBA], a
 
-Jump_03B_4647::
+.call_run_once4650_then4673_carry_unless:
     call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_Sub02
     ld a, [wDefeatFlagsBA]
     and a, $7F
@@ -1074,26 +1074,26 @@ Func_03B_4650:: ; address name
     and a, $04
     ld c, a
 
-Jump_03B_4658::
+.loop:
     ld a, [wBattleTarget]
     cp a, c
-    jr z, Jump_03B_4668
+    jr z, .skip
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03B_4668
-    jr z, Jump_03B_466C
-    jr Jump_03B_466C
+    jr nc, .skip
+    jr z, .next
+    jr .next
 
-Jump_03B_4668::
+.skip:
     ld hl, wDefeatFlagsBA
     inc [hl]
 
-Jump_03B_466C::
+.next:
     inc c
     dec b
     ld a, b
     or a, a
-    jr nz, Jump_03B_4658
+    jr nz, .loop
     ret
 
 ; only called from RunOnce4650Then4673 (E-0047)
@@ -1111,27 +1111,27 @@ Func_03B_4673:: ; address name
     and a, $7F
     ret z
 
-Jump_03B_4680::
+.check_record_buffer_data:
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr nz, Jump_03B_4694
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, c
     and a, $03
-    jr nz, Jump_03B_4694
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wBattleTarget]
     and a, $04
     xor a, $04
     ld c, a
 
-Jump_03B_4694::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     ret nc
-    jr z, Jump_03B_469B
+    jr z, .next
 
-Jump_03B_469B::
+.next:
     inc c
-    jr Jump_03B_4680
+    jr .check_record_buffer_data
 
 ; entry 11 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
@@ -1144,12 +1144,12 @@ Jump_03B_469E:: ; address name
     inc [hl]
     ld a, [wResolveMsgArg]
     bit 0, a
-    jr nz, Jump_03B_46AE
+    jr nz, .read_battle_flag93
     ld a, [wSlotsOccupiedFlag]
     or a, a
     ret z
 
-Jump_03B_46AE::
+.read_battle_flag93:
     ld a, [wBattleFlag93]
     ld [wItemId], a
     ld a, [wCommandCursor]
@@ -1168,13 +1168,13 @@ Jump_03B_46AE::
     ret nz
     ld a, [wItemRecord + $3]
     cp a, $64
-    jr nz, Jump_03B_46E6
+    jr nz, .call_show_battle_text
     ld a, [wBattleFlag93]
     cp a, $1E
-    jr z, Jump_03B_46E6
+    jr z, .call_show_battle_text
     ret
 
-Jump_03B_46E6::
+.call_show_battle_text:
     ld d, $87 ; battle text 'The W shattered!'
     farcall ShowBattleText
     ret
@@ -1226,14 +1226,14 @@ Func_03B_4711:: ; address name
     farcall ListSideMonsterIdsToWC0A0
     ld a, d
     cp a, $03
-    jr z, Jump_03B_4735
+    jr z, .read_battle_target
     cp a, $02
-    jp z, Jump_03B_47CD
+    jp z, .read_battle_target2
     ld a, [wBattleTarget]
     ld [wSpeciesGroups], a
-    jp Jump_03B_4813
+    jp .skip3
 
-Jump_03B_4735::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld c, a
     ld a, c
@@ -1250,10 +1250,10 @@ Jump_03B_4735::
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03B_4785
+    jr nz, .next
     ld a, [hl]
     cp a, d
-    jr nz, Jump_03B_4785
+    jr nz, .next
     inc c
     ld a, c
     add a, a
@@ -1261,25 +1261,25 @@ Jump_03B_4735::
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03B_4775
+    jr nz, .check_battle_target
     ld a, [hl]
     cp a, d
-    jr nz, Jump_03B_4775
+    jr nz, .check_battle_target
     ld a, c
     or a, $80
     ld [wSpeciesGroups], a
-    jp Jump_03B_4813
+    jp .skip3
 
-Jump_03B_4775::
+.check_battle_target:
     ld a, [wBattleTarget]
     or a, $80
     ld [wSpeciesGroups + $1], a
     ld a, c
     ld d, a
     ld [wSpeciesGroups], a
-    jp Jump_03B_481F
+    jp .skip4
 
-Jump_03B_4785::
+.next:
     inc c
     ld a, c
     add a, a
@@ -1287,10 +1287,10 @@ Jump_03B_4785::
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03B_47A8
+    jr nz, .skip
     ld a, [hl]
     cp a, d
-    jr nz, Jump_03B_47A8
+    jr nz, .skip
     ld a, [wBattleTarget]
     or a, $80
     ld [wSpeciesGroups + $1], a
@@ -1298,9 +1298,9 @@ Jump_03B_4785::
     ld a, c
     ld d, a
     ld [wSpeciesGroups], a
-    jr Jump_03B_481F
+    jr .skip4
 
-Jump_03B_47A8::
+.skip:
     ld d, [hl]
     dec hl
     ld e, [hl]
@@ -1311,48 +1311,48 @@ Jump_03B_47A8::
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03B_4823
+    jr nz, .set_species_groups2
     ld a, [hl]
     cp a, d
-    jr nz, Jump_03B_4823
+    jr nz, .set_species_groups2
     ld a, [wBattleTarget]
     ld [wSpeciesGroups + $1], a
     ld a, c
     ld d, a
     or a, $80
     ld [wSpeciesGroups], a
-    jr Jump_03B_481F
+    jr .skip4
 
-Jump_03B_47CD::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld c, a
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03B_47E3
+    jr c, .next2
     inc c
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03B_47E9
+    jr c, .next3
     ld d, c
     dec c
     ld e, c
-    jr Jump_03B_47EE
+    jr .skip2
 
-Jump_03B_47E3::
+.next2:
     inc c
     ld e, c
     inc c
     ld d, c
-    jr Jump_03B_47EE
+    jr .skip2
 
-Jump_03B_47E9::
+.next3:
     dec c
     ld e, c
     inc c
     inc c
     ld d, c
 
-Jump_03B_47EE::
+.skip2:
     ld a, e
     add a, a
     ld hl, wTemp0
@@ -1366,29 +1366,29 @@ Jump_03B_47EE::
     add_a_to_hl
     ld a, [hl+]
     cp a, c
-    jr nz, Jump_03B_4817
+    jr nz, .set_species_groups
     ld a, [hl]
     cp a, b
-    jr nz, Jump_03B_4817
+    jr nz, .set_species_groups
     ld a, e
     or a, $80
     ld [wSpeciesGroups], a
 
-Jump_03B_4813::
+.skip3:
     ld a, $01
-    jr Jump_03B_4834
+    jr .set_defeat_flags_ba
 
-Jump_03B_4817::
+.set_species_groups:
     ld a, e
     ld [wSpeciesGroups + $1], a
     ld a, d
     ld [wSpeciesGroups], a
 
-Jump_03B_481F::
+.skip4:
     ld a, $02
-    jr Jump_03B_4834
+    jr .set_defeat_flags_ba
 
-Jump_03B_4823::
+.set_species_groups2:
     dec c
     ld a, c
     ld [wSpeciesGroups + $2], a
@@ -1400,7 +1400,7 @@ Jump_03B_4823::
     ld [wSpeciesGroups], a
     ld a, $03
 
-Jump_03B_4834::
+.set_defeat_flags_ba:
     or a, $80
     ld [wDefeatFlagsBA], a
     ret
@@ -1414,23 +1414,23 @@ RestoreTargetHPByActionAmount::
 Func_03B_483A:: ; address name
     ld a, [wBattleActionId]
     cp a, $03
-    jr z, Jump_03B_485F
+    jr z, .read_battle_target
     cp a, $01
-    jr z, Jump_03B_4854
+    jr z, .call_set_damage_random_in_range
     cp a, $38
-    jr z, Jump_03B_4854
+    jr z, .call_set_damage_random_in_range
     ld hl, $003C
     ld bc, $0046
     call SetDamageRandomInRange
-    jr Jump_03B_4873
+    jr .read_battle_target2
 
-Jump_03B_4854::
+.call_set_damage_random_in_range:
     ld hl, $001E
     ld bc, $0028
     call SetDamageRandomInRange
-    jr Jump_03B_4873
+    jr .read_battle_target2
 
-Jump_03B_485F::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank3B
@@ -1442,7 +1442,7 @@ Jump_03B_485F::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_03B_4873::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank3B
@@ -1457,12 +1457,12 @@ Jump_03B_4873::
     ld a, [wBattleTarget]
     call GetBattleMaxHP_Bank3B
     call CompareHLToBC
-    jr nc, Jump_03B_4896
+    jr nc, .restore
     call SetDamageDEMinusBCPlusHL
     ld b, h
     ld c, l
 
-Jump_03B_4896::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -1478,13 +1478,13 @@ RestoreTargetMPIfLow_SetDamageRandomInRange::
 Func_03B_489B:: ; address name
     ld a, [wBattleActionId]
     cp a, $05
-    jr z, Jump_03B_48AD
+    jr z, .read_battle_target
     ld hl, $0014
     ld bc, $001E
     call SetDamageRandomInRange
-    jr Jump_03B_48C1
+    jr .read_battle_target2
 
-Jump_03B_48AD::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleMaxMP
     call AddDoubleAToHL_Bank3B
@@ -1496,7 +1496,7 @@ Jump_03B_48AD::
     ld a, d
     ld [wBattleDamageHi], a
 
-Jump_03B_48C1::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank3B
@@ -1511,12 +1511,12 @@ Jump_03B_48C1::
     ld a, [wBattleTarget]
     call GetBattleMaxMP_Bank3B
     call CompareHLToBC
-    jr nc, Jump_03B_48E4
+    jr nc, .restore
     call SetDamageDEMinusBCPlusHL
     ld b, h
     ld c, l
 
-Jump_03B_48E4::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -1569,10 +1569,10 @@ Func_03B_48FA:: ; address name
     ld a, h
     sbc a, b
     ld b, a
-    jr nc, Jump_03B_4925
+    jr nc, .restore
     ld bc, $0000
 
-Jump_03B_4925::
+.restore:
     pop hl
     ld a, c
     ld [hl+], a
@@ -1616,10 +1616,10 @@ Func_03B_4953:: ; address name
     add hl, bc
     ld bc, $0708
     call CompareHLToBC
-    jr c, Jump_03B_4967
+    jr c, .set_battle_meter
     ld hl, $0708
 
-Jump_03B_4967::
+.set_battle_meter:
     ld a, l
     ld [wBattleMeter], a
     ld a, h
@@ -1645,10 +1645,10 @@ Func_03B_4970:: ; address name
     inc hl
     add hl, bc
     bit 7, h
-    jr z, Jump_03B_4987
+    jr z, .set_battle_meter
     ld hl, $0000
 
-Jump_03B_4987::
+.set_battle_meter:
     ld a, l
     ld [wBattleMeter], a
     ld a, h
@@ -1668,10 +1668,10 @@ Func_03B_4990:: ; address name
     ld de, RollTableDamageScaledByResistance_Data
     add a, e
     ld e, a
-    jr nc, Jump_03B_499F
+    jr nc, .skip
     inc d
 
-Jump_03B_499F::
+.skip:
     ld a, [de]
     ld l, a
     inc de
@@ -1686,40 +1686,40 @@ Jump_03B_499F::
     call SetDamageRandomInRange
     ld a, [wBattleActionId]
     cp a, $24
-    jr nz, Jump_03B_49BD
+    jr nz, .cp_25
     call TargetSlotResistancesByte1_Bank3B
     rlca
     rlca
     and a, $03
-    jr Jump_03B_49DE
+    jr .skip2
 
-Jump_03B_49BD::
+.cp_25:
     cp a, $25
-    jr nz, Jump_03B_49CA
+    jr nz, .cp_26
     call TargetSlotResistancesByte1_Bank3B
     swap a
     and a, $03
-    jr Jump_03B_49DE
+    jr .skip2
 
-Jump_03B_49CA::
+.cp_26:
     cp a, $26
-    jr nz, Jump_03B_49D7
+    jr nz, .call_target_slot_resistances_byte0_bank3_b
     call TargetSlotResistancesByte1_Bank3B
     rrca
     rrca
     and a, $03
-    jr Jump_03B_49DE
+    jr .skip2
 
-Jump_03B_49D7::
+.call_target_slot_resistances_byte0_bank3_b:
     call TargetSlotResistancesByte0_Bank3B
     swap a
     and a, $03
 
-Jump_03B_49DE::
+.skip2:
     and a, a
     ret z
     cp a, $01
-    jr nz, Jump_03B_4A03
+    jr nz, .cp_02
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -1738,9 +1738,9 @@ Jump_03B_49DE::
     ld [wBattleDamageHi], a
     ret
 
-Jump_03B_4A03::
+.cp_02:
     cp a, $02
-    jr nz, Jump_03B_4A1C
+    jr nz, .clear_battle_damage_lo
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -1753,7 +1753,7 @@ Jump_03B_4A03::
     ld [wBattleDamageHi], a
     ret
 
-Jump_03B_4A1C::
+.clear_battle_damage_lo:
     xor a, a
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
@@ -1804,7 +1804,7 @@ Func_03B_4A4C:: ; address name
 TargetSlotResistancesByte0_Bank3B::
 Func_03B_4A56:: ; address name
     ld de, wSlotResistances
-    jr Jump_03B_4A77
+    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; A = byte 1 of the target's 7-byte wDA72 record (E-0126)
 ; 3 call sites from 1 routine (e.g. RollTableDamageScaledByResistance)
@@ -1812,7 +1812,7 @@ Func_03B_4A56:: ; address name
 TargetSlotResistancesByte1_Bank3B::
 Func_03B_4A5B:: ; address name
     ld de, wSlotResistances + $1
-    jr Jump_03B_4A77
+    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; A = byte 2 of the target's 7-byte wDA72 record (wDA74 + 7 * target) (E-0124)
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
@@ -1820,17 +1820,18 @@ Func_03B_4A5B:: ; address name
 TargetWDA74Byte::
 Func_03B_4A60:: ; address name
     ld de, wSlotResistances + $2
-    jr Jump_03B_4A77
+    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte3_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 36:61B5; C0
 Func_03B_4A65:: ; address name
     ld de, wSlotResistances + $3
-    jr Jump_03B_4A77
+    jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
     db $11, $76, $DA, $18, $08, $11, $77, $DA, $18, $03, $11, $78, $DA
 
-Jump_03B_4A77::
+GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
+Jump_03B_4A77:: ; address name
     ld a, [wBattleTarget]
     ld b, a
     add a, a
@@ -1839,10 +1840,10 @@ Jump_03B_4A77::
     add a, b
     add a, e
     ld e, a
-    jr nc, Jump_03B_4A84
+    jr nc, .done
     inc d
 
-Jump_03B_4A84::
+.done:
     ld a, [de]
     ret
 
@@ -1851,20 +1852,20 @@ Jump_03B_4A84::
 RollChanceByHLBits6And7_Bank3B::
 Func_03B_4A86:: ; address name
     bit 6, [hl]
-    jr z, Jump_03B_4A8F
+    jr z, .skip
     call RollChanceByHLBits6And7_Bank3B_ReadRandomLo
-    jr Jump_03B_4A9B
+    jr .return
 
-Jump_03B_4A8F::
+.skip:
     bit 7, [hl]
-    jr z, Jump_03B_4A98
+    jr z, .call_roll_chance_for_level_a_bank3_b
     call RollChanceByLevel_100_100_75_0_Bank3B
-    jr Jump_03B_4A9B
+    jr .return
 
-Jump_03B_4A98::
+.call_roll_chance_for_level_a_bank3_b:
     call RollChanceForLevelA_Bank3B
 
-Jump_03B_4A9B::
+.return:
     ret
 
 ; level A: 0 returns carry; 1 and 2 take two chance rolls; 3 returns no carry (E-0122)
@@ -1873,21 +1874,21 @@ Jump_03B_4A9B::
 RollChanceForLevelA_Bank3B::
 Func_03B_4A9C:: ; address name
     and a, a
-    jr nz, Jump_03B_4AA1
+    jr nz, .cp_01
     scf
     ret
 
-Jump_03B_4AA1::
+.cp_01:
     cp a, $01
-    jr nz, Jump_03B_4AA8
-    jp Jump_03B_4AD5
+    jr nz, .cp_02
+    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom
 
-Jump_03B_4AA8::
+.cp_02:
     cp a, $02
-    jr nz, Jump_03B_4AAF
-    jp Jump_03B_4AE7
+    jr nz, .done
+    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3
 
-Jump_03B_4AAF::
+.done:
     scf
     ccf
     ret
@@ -1898,14 +1899,14 @@ Jump_03B_4AAF::
 RollChanceByLevel_100_100_75_0_Bank3B::
 Func_03B_4AB2:: ; address name
     cp a, $02
-    jr nc, Jump_03B_4AB7
+    jr nc, .skip
     ret
 
-Jump_03B_4AB7::
-    jr nz, Jump_03B_4ABC
-    jp Jump_03B_4ADE
+.skip:
+    jr nz, .done
+    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2
 
-Jump_03B_4ABC::
+.done:
     scf
     ccf
     ret
@@ -1916,44 +1917,48 @@ Jump_03B_4ABC::
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
 Func_03B_4ABF:: ; address name
     and a, a
-    jr nz, Jump_03B_4AC4
+    jr nz, .cp_01
     scf
     ret
 
-Jump_03B_4AC4::
+.cp_01:
     cp a, $01
-    jr nz, Jump_03B_4ACB
-    jp Jump_03B_4ADE
+    jr nz, .cp_02
+    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2
 
-Jump_03B_4ACB::
+.cp_02:
     cp a, $02
-    jr nz, Jump_03B_4AD2
-    jp Jump_03B_4AF0
+    jr nz, .done
+    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4
 
-Jump_03B_4AD2::
+.done:
     scf
     ccf
     ret
 
-Jump_03B_4AD5::
+RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom::
+Jump_03B_4AD5:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $D8
     ret
 
-Jump_03B_4ADE::
+RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2::
+Jump_03B_4ADE:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $BF
     ret
 
-Jump_03B_4AE7::
+RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3::
+Jump_03B_4AE7:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $7F
     ret
 
-Jump_03B_4AF0::
+RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4::
+Jump_03B_4AF0:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $66
@@ -2076,14 +2081,14 @@ Func_03B_4B92:: ; address name
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, Jump_03B_4BBA
+    jr z, .skip
     call RestoreTargetHPByActionAmount
     ld l, $37
     ld bc, $4090
-    jp Jump_03B_4ED6
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
-Jump_03B_4BBA::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; if the target's MP is below its max, runs Func_03B_489B and shows message $C3; otherwise the no-effect path (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2103,14 +2108,14 @@ Func_03B_4BBD:: ; address name
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, Jump_03B_4BE5
+    jr z, .skip
     call RestoreTargetMPIfLow_SetDamageRandomInRange
     ld l, $C3
     ld bc, $4090
-    jp Jump_03B_4ED6
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
-Jump_03B_4BE5::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; clears status byte 0 bits 0-1 of the target when set (message $4E); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2119,7 +2124,7 @@ CureTargetStatus0Bits01:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4BE8:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $03
-    jr z, Jump_03B_4BFB
+    jr z, .skip
     ld a, [hl]
     and a, $FC
     ld [hl], a
@@ -2127,8 +2132,8 @@ Func_03B_4BE8:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4BFB::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; clears status byte 0 bit 6 of the target when set (message $4F, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2139,7 +2144,7 @@ CureTargetStatus0Bit6:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4BFE:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $40
-    jr z, Jump_03B_4C1E
+    jr z, .skip
     ld a, [hl]
     and a, $BF
     ld [hl], a
@@ -2151,8 +2156,8 @@ Func_03B_4BFE:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4C1E::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; clears status byte 0 bit 5 of the target when set (message $51); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2161,7 +2166,7 @@ CureTargetStatus0Bit5:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C21:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $20
-    jr z, Jump_03B_4C34
+    jr z, .skip
     ld a, [hl]
     and a, $DF
     ld [hl], a
@@ -2169,8 +2174,8 @@ Func_03B_4C21:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4C34::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; clears status byte 0 bits 2, 3 and 7 of the target when set (message $82, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2181,7 +2186,7 @@ CureTargetStatus0Bits237:: ; code pointer of the table ActionIdEffectTable_3B; C
 Func_03B_4C37:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $8C
-    jr z, Jump_03B_4C57
+    jr z, .skip
     ld a, [hl]
     and a, $73
     ld [hl], a
@@ -2193,8 +2198,8 @@ Func_03B_4C37:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4C57::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; clears status byte 0 bit 4 of the target when set (message $83, wDA5B[target] = 3); otherwise takes the no-effect path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2205,7 +2210,7 @@ CureTargetStatus0Bit4:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C5A:: ; address name
     call ClearDamageAndReadTargetStatus0
     and a, $10
-    jr z, Jump_03B_4C7A
+    jr z, .skip
     ld a, [hl]
     and a, $EF
     ld [hl], a
@@ -2217,8 +2222,8 @@ Func_03B_4C5A:: ; address name
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4C7A::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
 ; if the target slot is occupied, far-calls ApplyTargetMaxHPAmount; otherwise one of two failure paths (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2228,16 +2233,16 @@ ApplyTargetMaxHPIfPresent:: ; code pointer of the table ActionIdEffectTable_3B; 
 Func_03B_4C7D:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03B_4C8E
-    jr z, Jump_03B_4C91
+    jr nc, .skip
+    jr z, .skip2
     farcall ApplyTargetMaxHPAmount
     ret
 
-Jump_03B_4C8E::
-    jp Jump_03B_4EE3
+.skip:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-Jump_03B_4C91::
-    jp Jump_03B_4F15
+.skip2:
+    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2253,68 +2258,68 @@ Func_03B_4C94:: ; address name
 ApplyTargetBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4C95:: ; address name
     call TargetOnLocalSide_Bank3B
-    jr c, Jump_03B_4C9F
+    jr c, .read_battle_target
     call AddActionAmountToBattleMeter
-    jr Jump_03B_4CC8
+    jr .check_battle_target
 
-Jump_03B_4C9F::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     bit 6, a
-    jr nz, Jump_03B_4CEA
+    jr nz, .skip2
     and a, $8C
-    jr nz, Jump_03B_4CF2
+    jr nz, .call_show_battle_text_category0
     ld a, $05
     add_a_to_hl
     ld a, [hl]
     and a, $C0
-    jr nz, Jump_03B_4D00
+    jr nz, .call_show_battle_text_category02
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
-    jr c, Jump_03B_4D0E
+    jr c, .call_show_battle_text_category03
     call SubtractActionAmountFromTargetBattleWordArray3F
 
-Jump_03B_4CC8::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $03
-    jr c, Jump_03B_4CE2
+    jr c, .skip
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
-    jr z, Jump_03B_4CE2
+    jr z, .skip
     ld l, $FD
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4CE2::
+.skip:
     ld l, $95
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4CEA::
+.skip2:
     ld h, $E6
     ld bc, $0080
-    jp Jump_03B_4EF6
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
-Jump_03B_4CF2::
+.call_show_battle_text_category0:
     ld d, $7B
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-Jump_03B_4D00::
+.call_show_battle_text_category02:
     ld d, $7D
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-Jump_03B_4D0E::
+.call_show_battle_text_category03:
     ld d, $7C
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; reduces the target's wD93F (or adds to wD89F for local targets); when status bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2324,45 +2329,45 @@ Jump_03B_4D0E::
 InflictStatus0Bit0WithBattleWordArray3FReduction:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4D1C:: ; address name
     call TargetOnLocalSide_Bank3B
-    jr c, Jump_03B_4D2C
+    jr c, .read_battle_target
     ld a, [wDefeatFlagsBA]
     or a, a
-    jr nz, Jump_03B_4D59
+    jr nz, .read_battle_target2
     call AddActionAmountToBattleMeter
-    jr Jump_03B_4D59
+    jr .read_battle_target2
 
-Jump_03B_4D2C::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     bit 6, a
-    jp nz, Jump_03B_4DD8
+    jp nz, .skip
     and a, $8C
-    jp nz, Jump_03B_4DE0
+    jp nz, .call_show_battle_text_category0
     ld a, $05
     add_a_to_hl
     ld a, [hl]
     and a, $C0
-    jp nz, Jump_03B_4DEE
+    jp nz, .call_show_battle_text_category02
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
-    jp c, Jump_03B_4DFC
+    jp c, .call_show_battle_text_category03
     call SubtractActionAmountFromTargetBattleWordArray3F
 
-Jump_03B_4D59::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr nz, Jump_03B_4DAC
+    jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
     push hl
     farcall RollTargetSlotResistancesByte4Bits01ChanceToE
     pop hl
     ld a, e
     or a, a
-    jr nz, Jump_03B_4DAC
+    jr nz, .call_set_wdac3_b5_and_resolve_msg_flags
     set 0, [hl]
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank3B
@@ -2374,63 +2379,63 @@ Jump_03B_4D59::
     ret nz
     ld a, [wBattleTarget]
     cp a, $03
-    jr c, Jump_03B_4DA3
+    jr c, .call_show_battle_text
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
-    jr z, Jump_03B_4DA3
+    jr z, .call_show_battle_text
     ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
-Jump_03B_4DA3::
+.call_show_battle_text:
     ld d, $96 ; battle text '0 ate the meat fearfully! 0'
     farcall ShowBattleText
     ret
 
-Jump_03B_4DAC::
+.call_set_wdac3_b5_and_resolve_msg_flags:
     call SetWDAC3B5AndResolveMsgFlagsTo0180
     ld a, [wDefeatFlagsBA]
     or a, a
     ret nz
     ld a, [wBattleTarget]
     cp a, $03
-    jr c, Jump_03B_4DCF
+    jr c, .call_show_battle_text2
     farcall ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
-    jr z, Jump_03B_4DCF
+    jr z, .call_show_battle_text2
     ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
-Jump_03B_4DCF::
+.call_show_battle_text2:
     ld d, $96 ; battle text '0 ate the meat fearfully! 0'
     farcall ShowBattleText
     ret
 
-Jump_03B_4DD8::
+.skip:
     ld h, $E6
     ld bc, $0080
-    jp Jump_03B_4EF6
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
-Jump_03B_4DE0::
+.call_show_battle_text_category0:
     ld d, $7B
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-Jump_03B_4DEE::
+.call_show_battle_text_category02:
     ld d, $7D
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-Jump_03B_4DFC::
+.call_show_battle_text_category03:
     ld d, $7C
     farcall ShowBattleTextCategory0
     ld bc, $0000
-    jp Jump_03B_4EFA
+    jp SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; wD894 = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2444,12 +2449,12 @@ Func_03B_4E0A:: ; address name
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
     db $C9
 
-; effect table entry that goes straight to the failure path Jump_03B_4F15 (E-0126)
+; effect table entry that goes straight to the failure path ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
 JumpToEffectFailurePath4F15:: ; code pointer of the table ActionIdEffectTable_3B; C0
 Func_03B_4E18:: ; address name
-    jp Jump_03B_4F15
+    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; unless already set, rolls the chance (Func_03B_4A34) and sets bit 0 of the target's wD80D status (message $3B); otherwise one of two failure paths (E-0124)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2462,9 +2467,9 @@ Func_03B_4E1B:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_03B_4E40
+    jr nz, .skip
     call InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B
-    jr nc, Jump_03B_4E43
+    jr nc, .skip2
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -2473,11 +2478,11 @@ Func_03B_4E1B:: ; address name
     ld bc, $4098
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4E40::
-    jp Jump_03B_4F15
+.skip:
+    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-Jump_03B_4E43::
-    jp Jump_03B_4EEA
+.skip2:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2
 
 ; sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2490,14 +2495,14 @@ Func_03B_4E46:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, Jump_03B_4E5D
+    jr nz, .skip
     set 2, [hl]
     ld l, $43
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
-Jump_03B_4E5D::
-    jp Jump_03B_4F15
+.skip:
+    jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target = $35/$B5, flags $A8, arg $80); entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2505,7 +2510,7 @@ Jump_03B_4E5D::
 RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
 Func_03B_4E60:: ; address name
     call RollTableDamageScaledByResistance
-    jp Jump_03B_4EB0
+    jp RaiseWord3FAndRestoreHP_Skip
 
 ; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2527,10 +2532,10 @@ Func_03B_4E66:: ; address name
     sub a, $03
     ld a, c
     sbc a, $E7
-    jr c, Jump_03B_4E82
+    jr c, .skip
     ld bc, $03E7
 
-Jump_03B_4E82::
+.skip:
     ld [hl], b
     dec hl
     ld [hl], c
@@ -2545,19 +2550,20 @@ Jump_03B_4E82::
     call AddDoubleAToHL_Bank3B
     deref_hl
     call CompareHLToBC
-    jr z, Jump_03B_4EAD
+    jr z, .skip2
     call RestoreTargetHPByActionAmount
     ld l, $37
     ld bc, $4090
-    jp Jump_03B_4ED6
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
-Jump_03B_4EAD::
-    jp Jump_03B_4EE3
+.skip2:
+    jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-Jump_03B_4EB0::
+RaiseWord3FAndRestoreHP_Skip::
+Jump_03B_4EB0:: ; address name
     ld hl, $B535
     ld bc, $80A8
-    jr Jump_03B_4EBE
+    jr UnreferencedStoreResolveMessage35D0_SetResolveMsgActor
 
 ; HL = $D035, BC = $88A8, then falls into the resolve-message store at $4EBE; skipped by the jr before it and no caller found (E-0236)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2567,7 +2573,8 @@ Func_03B_4EB8:: ; address name
     ld hl, $D035
     ld bc, $88A8
 
-Jump_03B_4EBE::
+UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
+Jump_03B_4EBE:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h
@@ -2587,7 +2594,8 @@ Func_03B_4ECF:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_03B_4ED6::
+ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
+Jump_03B_4ED6:: ; address name
     ld a, l
     ld [wResolveMsgActor], a
     ld a, c
@@ -2596,15 +2604,17 @@ Jump_03B_4ED6::
     ld [wResolveMsgArg], a
     ret
 
-Jump_03B_4EE3::
+ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
+Jump_03B_4EE3:: ; address name
     ld h, $CC
     ld bc, $0080
-    jr Jump_03B_4EF6
+    jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
-Jump_03B_4EEA::
+ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
+Jump_03B_4EEA:: ; address name
     ld h, $B5
     ld bc, $0080
-    jr Jump_03B_4EF6
+    jr SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 ; wDAC3 = $B5 and the word wDAC0 = $0180 (E-0122)
 ; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction)
@@ -2614,11 +2624,13 @@ Func_03B_4EF1:: ; address name
     ld h, $B5
     ld bc, $0180
 
-Jump_03B_4EF6::
+SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
+Jump_03B_4EF6:: ; address name
     ld a, h
     ld [wResolveMsgTarget], a
 
-Jump_03B_4EFA::
+SetWDAC3B5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
+Jump_03B_4EFA:: ; address name
     ld a, c
     ld [wResolveMsgFlags], a
     ld a, b
@@ -2641,7 +2653,8 @@ Func_03B_4F03:: ; address name
     ld a, [hl]
     ret
 
-Jump_03B_4F15::
+ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
+Jump_03B_4F15:: ; address name
     ld a, $0A
     ld [wBattleResolveStep], a
     ret
@@ -2653,7 +2666,7 @@ Jump_03B_4F15::
 GetBattleMaxHP_Bank3B::
 Func_03B_4F25:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_03B_4F48
+    jr GetBattleMP_Bank3B_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. RestoreTargetMPIfLow_SetDamageRandomInRange)
@@ -2661,24 +2674,25 @@ Func_03B_4F25:: ; address name
 GetBattleMaxMP_Bank3B::
 Func_03B_4F2A:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_03B_4F48
+    jr GetBattleMP_Bank3B_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
 GetBattleHP_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_03B_4F2F:: ; address name
     ld hl, wBattleHP
-    jr Jump_03B_4F48
+    jr GetBattleMP_Bank3B_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
 GetBattleMP_Bank3B:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_03B_4F34:: ; address name
     ld hl, wBattleMP
-    jr Jump_03B_4F48
+    jr GetBattleMP_Bank3B_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_03B_4F48::
+GetBattleMP_Bank3B_Skip::
+Jump_03B_4F48:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -2699,16 +2713,16 @@ ActorOnLocalSide_Bank3B:: ; heuristic: follows a terminator; C0
 Func_03B_4F59:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03B_4F6E
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03B_4F6E
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_03B_4F6E::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -2720,16 +2734,16 @@ TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03B_4F89
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03B_4F89
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_03B_4F89::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -2805,13 +2819,13 @@ Func_03B_4FD2:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03B_4FEE
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_03B_4FEE
+    jr nc, .skip
     ld l, $12
 
-Jump_03B_4FEE::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -2821,13 +2835,13 @@ Jump_03B_4FEE::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03B_5009
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_03B_5009
+    jr nc, .skip2
     ld l, $06
 
-Jump_03B_5009::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -2837,13 +2851,13 @@ Jump_03B_5009::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03B_5024
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_03B_5024
+    jr nc, .skip3
     ld l, $02
 
-Jump_03B_5024::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -2864,17 +2878,17 @@ Func_03B_5029:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_03B_5043
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_03B_5043
+    jr nz, .set_carry
     xor a, a
-    jr Jump_03B_5044
+    jr .skip
 
-Jump_03B_5043::
+.set_carry:
     scf
 
-Jump_03B_5044::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -2890,11 +2904,11 @@ Func_03B_5048:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_03B_5057
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_03B_5057::
+.done:
     pop hl
     ret
 
@@ -2988,7 +3002,7 @@ BuildOamFromSpriteTable_Bank3B::
 Func_03B_50E2:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $28
-    jr nc, Jump_03B_5132
+    jr nc, .return
     ldh a, [hSpriteSetIndex]
     ld l, a
     ld h, $00
@@ -3011,11 +3025,11 @@ Func_03B_50E2:: ; address name
     ld l, a
     ld h, $C0
 
-Jump_03B_5105::
+.loop:
     ld a, [de]
     inc de
     cp a, $80
-    jr z, Jump_03B_5132
+    jr z, .return
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, b
@@ -3044,9 +3058,9 @@ Jump_03B_5105::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr c, Jump_03B_5105
+    jr c, .loop
 
-Jump_03B_5132::
+.return:
     ret
 
 ; E-0147 (derived: meta-sprite set 0 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex)

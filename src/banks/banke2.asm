@@ -12,93 +12,93 @@ Func_0E2_4001:: ; address name
     farcall AnyFoeHasDEFAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_401A
+    jr nz, .call_at_least_two_foes_present
     ld bc, $0000
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_401A::
+.call_at_least_two_foes_present:
     farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_402A
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0001
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_402A::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_403A
+    jr nz, .call_check_foe_status7_bit2
     ld bc, $0002
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_403A::
+.call_check_foe_status7_bit2:
     farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_404E
+    jr z, .call_actor_lacks_status1_bits23_and4_bits01
     and a, a
-    jr nz, Jump_0E2_404E
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0003
     call AccumulateBank6WordToDA70
 
-Jump_0E2_404E::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_405E
+    jr nz, .call_set_c_to_zero
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_405E::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_406E
+    jr nz, .call_check_battle_kind_at_least2_or_link_mode
     ld bc, $0006
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_406E::
+.call_check_battle_kind_at_least2_or_link_mode:
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_407E
+    jr nz, .call_foe_hp_check_reads_wrong_slot
     ld bc, $0066
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_407E::
+.call_foe_hp_check_reads_wrong_slot:
     farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
-    jr nz, Jump_0E2_408E
+    jr nz, .call_check_actor_slot0_to3_or_link_mode_set
     ld bc, $0067
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_408E::
+.call_check_actor_slot0_to3_or_link_mode_set:
     farcall CheckActorSlot0To3OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_409E
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $0068
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_409E::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_40AE
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_40AE::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_40BE
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_40BE::
+.return:
     ret
 
 ; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -112,44 +112,44 @@ Func_0E2_40BF:: ; address name
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_40D8
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $0008
     call AccumulateBank6WordToDA70
 
-Jump_0E2_40D8::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_40E8
+    jr nz, .call_set_c_to_zero
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_40E8::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_40F8
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $000B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_40F8::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4108
+    jr nz, .call_ai_add_scores_for55_be_and5731
     ld bc, $000C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4108::
+.call_ai_add_scores_for55_be_and5731:
     call AIAddScoresFor55BEAnd5731
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_411B
+    jr nz, .return
     ld bc, $0010
     call AccumulateBank6WordToDA70
 
-Jump_0E2_411B::
+.return:
     ret
 
 ; AI scoring routine for 15 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 4 Firebal, 5 Firebane, 6 Firebolt, 7 Bang, 8 Boom, 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -163,82 +163,82 @@ Func_0E2_411C:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4139
+    jr z, .call_fail_if_foe_ai_damage_estimates_at_least
     and a, a
-    jr nz, Jump_0E2_4139
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4139::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4149
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4149::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4159
+    jr nz, .call_set_c_to_zero
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4159::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4169
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $000B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4169::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4179
+    jr nz, .call_ai_add_scores_for55_be_and5731
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4179::
+.call_ai_add_scores_for55_be_and5731:
     call AIAddScoresFor55BEAnd5731
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_418C
+    jr nz, .call_fewer_than_two_foes_present
     ld bc, $0014
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_418C::
+.call_fewer_than_two_foes_present:
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_419C
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_419C::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_41B0
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_41B0
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_41B0::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_41C4
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_41C4
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_41C4::
+.return:
     ret
 
 ; table-B AI score: AIScore_Beat, then adds a penalty word when the follow-up check fails (E-0122)
@@ -252,13 +252,13 @@ Func_0E2_41C5:: ; address name
     farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_41DF
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_41DF
+    jr nz, .return
     ld bc, $00B5
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_41DF::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -272,72 +272,72 @@ Func_0E2_41E0:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_41FD
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_41FD
+    jr nz, .call_set_c_to_zero
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_41FD::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4213
+    jr nz, .call_ai_add_scores_for55_be_and5731
     ld bc, $00CD
     call AccumulateBank6WordToDA6E
     ld bc, $00CF
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4213::
+.call_ai_add_scores_for55_be_and5731:
     call AIAddScoresFor55BEAnd5731
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4226
+    jr nz, .call_ai_gate_foe_wda74_bits45
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4226::
+.call_ai_gate_foe_wda74_bits45:
     farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_423A
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_423A
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $00B5
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_423A::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_424E
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_424E
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_424E::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4262
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_4262
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4262::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4276
+    jr z, .done
     and a, a
-    jr nz, Jump_0E2_4276
+    jr nz, .done
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4276::
+.done:
     ld c, $01
     ret
 
@@ -352,72 +352,72 @@ Func_0E2_4279:: ; address name
     farcall ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4292
+    jr nz, .call_all_other_allies_have_status0_bit6
     ld bc, $0017
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4292::
+.call_all_other_allies_have_status0_bit6:
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42A2
+    jr nz, .call_at_least_two_foes_present
     ld bc, $0017
     call AccumulateBank6WordToDA70
 
-Jump_0E2_42A2::
+.call_at_least_two_foes_present:
     farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42B2
+    jr nz, .call_any_ally_hp_at_most_three_quarters
     ld bc, $0011
     call AccumulateBank6WordToDA70
 
-Jump_0E2_42B2::
+.call_any_ally_hp_at_most_three_quarters:
     farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42C2
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $001B
     call AccumulateBank6WordToDA70
 
-Jump_0E2_42C2::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42D2
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_42D2::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42E8
+    jr nz, .call_ai_score_sacrifice_link_rule_check_wd044
     ld bc, $00CD
     call AccumulateBank6WordToDA6E
     ld bc, $00CF
     call AccumulateBank6WordToDA70
 
-Jump_0E2_42E8::
+.call_ai_score_sacrifice_link_rule_check_wd044:
     call AIScore_Sacrifice_LinkRuleCheckWD044Bit6
     farcall AIScore_Sacrifice_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
-    jr nz, Jump_0E2_42FB
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0019
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_42FB::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_430F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_430F
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_430F::
+.return:
     ret
 
 ; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -446,47 +446,47 @@ Func_0E2_432D:: ; address name
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr nz, Jump_0E2_433D
+    jr nz, .call_any_foe_has_clear_status3
     ld bc, $001A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_433D::
+.call_any_foe_has_clear_status3:
     farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr nz, Jump_0E2_434D
+    jr nz, .call_any_ally_hp_at_most_three_quarters
     ld bc, $001A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_434D::
+.call_any_ally_hp_at_most_three_quarters:
     farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_435D
+    jr nz, .read_battle_actor
     ld bc, $001B
     call AccumulateBank6WordToDA70
 
-Jump_0E2_435D::
+.read_battle_actor:
     ld a, [wBattleActor]
     call AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4373
+    jr nz, .call_set_c_to_zero
     ld bc, $0023
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4373::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4389
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $0024
     call AccumulateBank6WordToDA6E
     ld bc, $00C8
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4389::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     ret
 
@@ -502,21 +502,21 @@ Func_0E2_438D:: ; address name
     farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_43A9
+    jr nz, .call_fail_if_two_allies_below_half_hp
     ld bc, $0023
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_43A9::
+.call_fail_if_two_allies_below_half_hp:
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_43BD
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_43BD
+    jr nz, .return
     ld bc, $0069
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_43BD::
+.return:
     ret
 
 ; AI scoring routine for 3 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -541,13 +541,13 @@ Func_0E2_43C8:: ; address name
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_43E8
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_43E8
+    jr nz, .return
     ld bc, $002E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_43E8::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 32 Farewell. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -562,23 +562,23 @@ Func_0E2_43E9:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_440B
+    jr nz, .call_ai_gate_compare_ally_stat_averages
     ld bc, $00BC
     call AccumulateBank6WordToDA6E
     ld bc, $00C4
     call AccumulateBank6WordToDA70
 
-Jump_0E2_440B::
+.call_ai_gate_compare_ally_stat_averages:
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_441F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_441F
+    jr nz, .return
     ld bc, $002E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_441F::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 33 Antidote. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -644,21 +644,21 @@ Func_0E2_446C:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4485
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4485::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     call AIScore_Upper_CompareFoeAverageATKWithAllyDEF
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_449B
+    jr nz, .return
     ld bc, $00C1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_449B::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -672,73 +672,73 @@ Func_0E2_449C:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_44B5
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_44B5::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_44C9
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_44C9
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_44C9::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_44DD
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_44DD
+    jr nz, .call_set_c_to_zero
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_44DD::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_44F3
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CC
     call AccumulateBank6WordToDA6E
     ld bc, $00D1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_44F3::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_450A
+    jr z, .call_ai_score_sap_sub01_carry_unless_battle
     and a, a
-    jr nz, Jump_0E2_450A
+    jr nz, .call_ai_score_sap_sub01_carry_unless_battle
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_450A::
+.call_ai_score_sap_sub01_carry_unless_battle:
     call AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4521
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_4521
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4521::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4535
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4535
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4535::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -752,21 +752,21 @@ Func_0E2_4536:: ; address name
     farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
-    jr nz, Jump_0E2_454F
+    jr nz, .call_ally_average_agl_at_least_foes
     ld bc, $002D
     call AccumulateBank6WordToDA70
 
-Jump_0E2_454F::
+.call_ally_average_agl_at_least_foes:
     farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4563
+    jr z, .call_weigh_wd044_rule_bit5
     and a, a
-    jr nz, Jump_0E2_4563
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4563::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -781,72 +781,72 @@ Func_0E2_4567:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4584
+    jr z, .call_fastest_foe_agl_above31_percent_of_actor
     and a, a
-    jr nz, Jump_0E2_4584
+    jr nz, .call_fastest_foe_agl_above31_percent_of_actor
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4584::
+.call_fastest_foe_agl_above31_percent_of_actor:
     farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4594
+    jr nz, .call_ally_average_agl_at_least_foes
     ld bc, $002D
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4594::
+.call_ally_average_agl_at_least_foes:
     farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_45A8
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_45A8
+    jr nz, .call_set_c_to_zero
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_45A8::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_45BE
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CC
     call AccumulateBank6WordToDA6E
     ld bc, $00D1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_45BE::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_45D5
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_45D5
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_45D5::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_45E9
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_45E9
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_45E9::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_45FD
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_45FD
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_45FD::
+.return:
     ret
 
 ; table-B AI score: AIScore_TwinHits, then adds a penalty word when the follow-up check fails (E-0122)
@@ -860,13 +860,13 @@ Func_0E2_45FE:: ; address name
     farcall FailIfAllyCanUseSkill63Or64
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4618
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4618
+    jr nz, .return
     ld bc, $00B3
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4618::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 45 TwinHits. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -880,42 +880,42 @@ Func_0E2_4619:: ; address name
     farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4636
+    jr z, .call_ai_score_twin_hits_read_slot_ai_mode
     and a, a
-    jr nz, Jump_0E2_4636
+    jr nz, .call_ai_score_twin_hits_read_slot_ai_mode
     ld bc, $002F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4636::
+.call_ai_score_twin_hits_read_slot_ai_mode:
     farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_464A
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_464A
+    jr nz, .call_set_c_to_zero
     ld bc, $0030
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_464A::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_465A
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BA
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_465A::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FailIfAllyCanUseSkill63Or64
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4671
+    jr z, .done
     and a, a
-    jr nz, Jump_0E2_4671
+    jr nz, .done
     ld bc, $00B3
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4671::
+.done:
     ld c, $01
     ret
 
@@ -930,35 +930,35 @@ Func_0E2_4674:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4691
+    jr z, .call_check_lone_foe_hp_not_below_ai_damage
     and a, a
-    jr nz, Jump_0E2_4691
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4691::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_46A1
+    jr nz, .call_pass_if_foe_average_atk_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_46A1::
+.call_pass_if_foe_average_atk_at_most_twice:
     farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_46B5
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_46B5
+    jr nz, .call_set_c_to_zero
     ld bc, $0031
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_46B5::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_46D1
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BA
     call AccumulateBank6WordToDA70
     ld bc, $00CC
@@ -966,46 +966,46 @@ Jump_0E2_46B5::
     ld bc, $00D1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_46D1::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
-    jr nz, Jump_0E2_46E4
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0032
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_46E4::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_46F8
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_46F8
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_46F8::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_470C
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_470C
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_470C::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4720
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4720
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4720::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1019,52 +1019,52 @@ Func_0E2_4721:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_473E
+    jr z, .call_ally_average_agl_at_least_foes
     and a, a
-    jr nz, Jump_0E2_473E
+    jr nz, .call_ally_average_agl_at_least_foes
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_473E::
+.call_ally_average_agl_at_least_foes:
     farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4752
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_4752
+    jr nz, .call_set_c_to_zero
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4752::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4762
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BC
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4762::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4779
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_4779
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4779::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_478D
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_478D
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_478D::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 49 TakeMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1078,11 +1078,11 @@ Func_0E2_478E:: ; address name
     farcall ActorMPBelowThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_47A7
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0034
     call AccumulateBank6WordToDA70
 
-Jump_0E2_47A7::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -1099,11 +1099,11 @@ Func_0E2_47AB:: ; address name
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_47CA
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_47CA::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -1118,64 +1118,64 @@ Func_0E2_47CE:: ; address name
     farcall AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_47EB
+    jr z, .call_weigh_wd044_rule_bit5
     and a, a
-    jr nz, Jump_0E2_47EB
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0004
     call AccumulateBank6WordToDA70
 
-Jump_0E2_47EB::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4804
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
     ld bc, $00CC
     call AccumulateBank6WordToDA6E
     ld bc, $00D1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4804::
+.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4818
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_4818
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0036
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4818::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_482C
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_482C
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_482C::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4840
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_4840
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4840::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4854
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4854
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4854::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 52 PanicAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1189,42 +1189,42 @@ Func_0E2_4855:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_486E
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CA
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_486E::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4885
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_4885
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4885::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4899
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_4899
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4899::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_48AD
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_48AD
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_48AD::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 53 Ironize. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1240,11 +1240,11 @@ Func_0E2_48AE:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_48CB
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00D0
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_48CB::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -1259,21 +1259,21 @@ Func_0E2_48CF:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_48E8
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
     ld bc, $00C0
     call AccumulateBank6WordToDA70
 
-Jump_0E2_48E8::
+.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_48FC
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_48FC
+    jr nz, .return
     ld bc, $0036
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_48FC::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 56 Barrier. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1287,13 +1287,13 @@ Func_0E2_48FD:: ; address name
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_491A
+    jr z, .call_weigh_wd044_rule_bit5
     and a, a
-    jr nz, Jump_0E2_491A
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $003A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_491A::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -1309,13 +1309,13 @@ Func_0E2_491E:: ; address name
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_493E
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_493E
+    jr nz, .return
     ld bc, $0036
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_493E::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 58 Transform. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1329,31 +1329,31 @@ Func_0E2_493F:: ; address name
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_495C
+    jr z, .call_ai_score_transform_read_slot_ai_mode
     and a, a
-    jr nz, Jump_0E2_495C
+    jr nz, .call_ai_score_transform_read_slot_ai_mode
     ld bc, $003B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_495C::
+.call_ai_score_transform_read_slot_ai_mode:
     farcall AIScore_Transform_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4970
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_4970
+    jr nz, .call_set_c_to_zero
     ld bc, $003C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4970::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4980
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CE
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4980::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -1368,22 +1368,22 @@ Func_0E2_4984:: ; address name
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_49A1
+    jr z, .call_weigh_wd044_rule_bit5
     and a, a
-    jr nz, Jump_0E2_49A1
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $003A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_49A1::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AIScore_BeDragon_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
-    jr nz, Jump_0E2_49B4
+    jr nz, .return
     ld bc, $003D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_49B4::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 60 Chance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1397,38 +1397,38 @@ Func_0E2_49B5:: ; address name
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_49CE
+    jr nz, .call_actor_hp_is_not_one
     ld bc, $003F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_49CE::
+.call_actor_hp_is_not_one:
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_49DE
+    jr nz, .call_set_c_to_zero
     ld bc, $0040
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_49DE::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_49F4
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BF
     call AccumulateBank6WordToDA6E
     ld bc, $00C5
     call AccumulateBank6WordToDA70
 
-Jump_0E2_49F4::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A07
+    jr nz, .return
     ld bc, $0042
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A07::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 61 MegaMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1442,85 +1442,85 @@ Func_0E2_4A08:: ; address name
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A21
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0043
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A21::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A31
+    jr nz, .call_any_ally_lacks_status1_bits23_and4
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4A31::
+.call_any_ally_lacks_status1_bits23_and4:
     farcall AnyAllyLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A41
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $0044
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4A41::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A51
+    jr nz, .call_set_c_to_zero
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A51::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A61
+    jr nz, .call_ai_score_mega_magic_read_link_mode_and
     ld bc, $0045
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A61::
+.call_ai_score_mega_magic_read_link_mode_and:
     farcall AIScore_MegaMagic_ReadLinkModeAndBattleActor
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A71
+    jr nz, .call_link_rule_check_link_rule_turn_limit
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4A71::
+.call_link_rule_check_link_rule_turn_limit:
     farcall LinkRuleCheckLinkRuleTurnLimitTurnLimit
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A81
+    jr nz, .call_ally_slots_check_then_fewer_than_two
     ld bc, $0046
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A81::
+.call_ally_slots_check_then_fewer_than_two:
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4A91
+    jr nz, .call_ai_score_mega_magic_read_link_mode
     ld bc, $0047
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4A91::
+.call_ai_score_mega_magic_read_link_mode:
     farcall AIScore_MegaMagic_ReadLinkMode
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4AA1
+    jr nz, .call_ai_score_mega_magic_read_slot_ai_mode
     ld bc, $0048
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4AA1::
+.call_ai_score_mega_magic_read_slot_ai_mode:
     farcall AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4AB5
+    jr z, .return
     or a, a
-    jr nz, Jump_0E2_4AB5
+    jr nz, .return
     ld bc, $003E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4AB5::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1534,88 +1534,88 @@ Func_0E2_4AB6:: ; address name
     farcall ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4ACF
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0049
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4ACF::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4ADF
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4ADF::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4AEF
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4AEF::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4AFF
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4AFF::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall LinkRuleCheckLinkRuleTurnLimitTurnLimit
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B12
+    jr nz, .call_ally_slots_check_then_fewer_than_two
     ld bc, $0046
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4B12::
+.call_ally_slots_check_then_fewer_than_two:
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B22
+    jr nz, .call_fewer_than_two_foes_present
     ld bc, $0047
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4B22::
+.call_fewer_than_two_foes_present:
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B32
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4B32::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4B46
+    jr z, .call_check_battle_kind_not2_or3
     and a, a
-    jr nz, Jump_0E2_4B46
+    jr nz, .call_check_battle_kind_not2_or3
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4B46::
+.call_check_battle_kind_not2_or3:
     farcall CheckBattleKindNot2Or3
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B56
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4B56::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4B6A
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4B6A
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4B6A::
+.return:
     ret
 
 ; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire, 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1629,96 +1629,96 @@ Func_0E2_4B6B:: ; address name
     farcall AIScore_FireAir_ReadSlotAIModeIndexed_Bank05
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B84
+    jr nz, .call_at_least_two_foes_present
     ld bc, $004C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4B84::
+.call_at_least_two_foes_present:
     farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4B94
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0011
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4B94::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BA4
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4BA4::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BB4
+    jr nz, .call_actor_lacks_status4_bits45
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4BB4::
+.call_actor_lacks_status4_bits45:
     farcall ActorLacksStatus4Bits45
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BC4
+    jr nz, .call_set_c_to_zero
     ld bc, $004D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4BC4::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BD4
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $006A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4BD4::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BE4
+    jr nz, .call_weigh_wd044_rule_bit3
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4BE4::
+.call_weigh_wd044_rule_bit3:
     call WeighWD044RuleBit3
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4BF7
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4BF7::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4C0B
+    jr z, .call_any_ally_lacks_status2_bit2_5_d31
     and a, a
-    jr nz, Jump_0E2_4C0B
+    jr nz, .call_any_ally_lacks_status2_bit2_5_d31
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4C0B::
+.call_any_ally_lacks_status2_bit2_5_d31:
     farcall AnyAllyLacksStatus2Bit2_5D31
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4C1B
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4C1B::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4C2F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4C2F
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4C2F::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 72 WindBeast. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1743,46 +1743,46 @@ Func_0E2_4C49:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4C59
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4C59::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4C69
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4C69::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4C79
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4C79::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4C89
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4C89::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FailIfFoeHPAtLeast150PercentOfActor
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4CA0
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4CA0
+    jr nz, .return
     ld bc, $004F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4CA0::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1797,31 +1797,31 @@ Func_0E2_4CA1:: ; address name
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4CBD
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4CBD::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4CD1
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_4CD1
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4CD1::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4CE5
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4CE5
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4CE5::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 75 RockThrow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1835,72 +1835,72 @@ Func_0E2_4CE6:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4CFF
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4CFF::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D0F
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4D0F::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D1F
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4D1F::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D2F
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4D2F::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D42
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4D42::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4D56
+    jr z, .call_check_actor_slot0_to3_or_link_mode_set
     and a, a
-    jr nz, Jump_0E2_4D56
+    jr nz, .call_check_actor_slot0_to3_or_link_mode_set
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4D56::
+.call_check_actor_slot0_to3_or_link_mode_set:
     farcall CheckActorSlot0To3OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D66
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $006B
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4D66::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4D7A
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4D7A
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4D7A::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 76 Watershot. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1914,54 +1914,54 @@ Func_0E2_4D7B:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4D94
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4D94::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4DA4
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000D
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4DA4::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4DB4
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4DB4::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4DC4
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4DC4::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4DD7
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0010
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4DD7::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4DEB
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4DEB
+    jr nz, .return
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4DEB::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 77 Tidalwave. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -1975,64 +1975,64 @@ Func_0E2_4DEC:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E05
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E05::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E15
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E15::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E25
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4E25::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E35
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4E35::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E48
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4E48::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4E5C
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_4E5C
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E5C::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4E70
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4E70
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E70::
+.return:
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2046,92 +2046,92 @@ Func_0E2_4E71:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E8A
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E8A::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4E9A
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $0008
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4E9A::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4EAA
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4EAA::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4EBA
+    jr nz, .call_set_c_to_zero
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4EBA::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4ED0
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $00BE
     call AccumulateBank6WordToDA70
     ld bc, $00C5
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4ED0::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4EE0
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4EE0::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4EF3
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4EF3::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4F07
+    jr z, .call_fail_if_foe_hp_at_least150_percent_of
     and a, a
-    jr nz, Jump_0E2_4F07
+    jr nz, .call_fail_if_foe_hp_at_least150_percent_of
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4F07::
+.call_fail_if_foe_hp_at_least150_percent_of:
     farcall FailIfFoeHPAtLeast150PercentOfActor
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4F1B
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_4F1B
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $004F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4F1B::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4F2F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_4F2F
+    jr nz, .return
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4F2F::
+.return:
     ret
 
 ; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83 IceSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2145,86 +2145,86 @@ Func_0E2_4F30:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4F49
+    jr nz, .call_check_foe_status7_bit2
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4F49::
+.call_check_foe_status7_bit2:
     farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_4F5D
+    jr z, .call_fail_if_foe_ai_damage_estimates_at_least
     and a, a
-    jr nz, Jump_0E2_4F5D
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0003
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4F5D::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4F6D
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $0008
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4F6D::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4F7D
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4F7D::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4F8D
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0055
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4F8D::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4F9D
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4F9D::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4FB0
+    jr nz, .call_foe_hp_check_reads_wrong_slot
     ld bc, $0066
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4FB0::
+.call_foe_hp_check_reads_wrong_slot:
     farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4FC0
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $0067
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4FC0::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4FD0
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4FD0::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_4FE0
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_4FE0::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 84 SlimeBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2238,64 +2238,65 @@ Func_0E2_4FE1:: ; address name
     ld bc, $0052
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_4FF0::
+AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
+Jump_0E2_4FF0:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5000
+    jr nz, .call_check_foe_status7_bit2
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5000::
+.call_check_foe_status7_bit2:
     farcall CheckFoeStatus7Bit2
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5014
+    jr z, .call_actor_lacks_status1_bits23_and4_bits01
     and a, a
-    jr nz, Jump_0E2_5014
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0003
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5014::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5024
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $0053
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5024::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5037
+    jr nz, .call_foe_hp_check_reads_wrong_slot
     ld bc, $0066
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5037::
+.call_foe_hp_check_reads_wrong_slot:
     farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5067
+    jr nz, .return
     ld bc, $0067
     call AccumulateBank6WordToDA6E
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5057
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5057::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5067
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5067::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 85 DrakSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2308,7 +2309,7 @@ Func_0E2_5068:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 86 BeastCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2320,7 +2321,7 @@ Func_0E2_507A:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 87 BirdBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2332,7 +2333,7 @@ Func_0E2_508C:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 88 BugBlow. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2344,7 +2345,7 @@ Func_0E2_509E:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 89 Shears. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2356,7 +2357,7 @@ Func_0E2_50B0:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 90 DevilCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2368,7 +2369,7 @@ Func_0E2_50C2:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 91 ZombieCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2380,7 +2381,7 @@ Func_0E2_50D4:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 92 CleanCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2392,7 +2393,7 @@ Func_0E2_50E6:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 93 AquaCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2404,7 +2405,7 @@ Func_0E2_50F8:: ; address name
     ret z
     ld bc, $0052
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 94 MetalCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2416,7 +2417,7 @@ Func_0E2_510A:: ; address name
     ret z
     ld bc, $0053
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_4FF0
+    jp AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 95 PoisonHit. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2429,76 +2430,77 @@ Func_0E2_511C:: ; address name
     ld bc, $0054
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_512B::
+AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01::
+Jump_0E2_512B:: ; address name
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_513B
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $0055
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_513B::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_514E
+    jr nz, .call_foe_hp_check_reads_wrong_slot
     ld bc, $0066
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_514E::
+.call_foe_hp_check_reads_wrong_slot:
     farcall FoeHPCheckReadsWrongSlot
     ld a, c
     and a, a
-    jr nz, Jump_0E2_515E
+    jr nz, .call_check_actor_slot0_to3_or_link_mode_set
     ld bc, $0067
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_515E::
+.call_check_actor_slot0_to3_or_link_mode_set:
     farcall CheckActorSlot0To3OrLinkModeSet
     ld a, c
     and a, a
-    jr nz, Jump_0E2_516E
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $0039
     call AccumulateBank6WordToDA70
 
-Jump_0E2_516E::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_517E
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_517E::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_518E
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_518E::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_51A2
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_51A2
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_51A2::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_51B6
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_51B6
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_51B6::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 96 Paralyze. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2511,7 +2513,7 @@ Func_0E2_51B7:: ; address name
     ret z
     ld bc, $0054
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_512B
+    jp AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 97 NapAttack. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2523,7 +2525,7 @@ Func_0E2_51C9:: ; address name
     ret z
     ld bc, $0054
     call AccumulateBank6WordToDA6E
-    jp Jump_0E2_512B
+    jp AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01
 
 ; table-B AI score: AIScore_SquallHit, then adds a penalty word when the follow-up check fails (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2536,13 +2538,13 @@ Func_0E2_51DB:: ; address name
     farcall FailIfFoeHurtAndHealerCanCast
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_51F5
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_51F5
+    jr nz, .return
     ld bc, $00B4
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_51F5::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 98 SquallHit. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2558,54 +2560,54 @@ Func_0E2_51F6:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5213
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5213::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5223
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C8
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5223::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FailIfFoeHPAtMostFourFifthsAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5236
+    jr nz, .call_fail_if_foe_hurt_and_healer_can_cast
     ld bc, $0056
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5236::
+.call_fail_if_foe_hurt_and_healer_can_cast:
     farcall FailIfFoeHurtAndHealerCanCast
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_524A
+    jr z, .call_actor_status4_check_reads_address
     and a, a
-    jr nz, Jump_0E2_524A
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $00B4
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_524A::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_525A
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_525A::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_526A
+    jr nz, .done
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_526A::
+.done:
     ld c, $01
     ret
 
@@ -2620,78 +2622,78 @@ Func_0E2_526D:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5286
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5286::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5296
+    jr nz, .call_set_c_to_zero
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5296::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_52A6
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C8
     call AccumulateBank6WordToDA70
 
-Jump_0E2_52A6::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_52B9
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_52B9::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_52CD
+    jr z, .call_fail_if_foe_hp_at_most_four_fifths_ai
     and a, a
-    jr nz, Jump_0E2_52CD
+    jr nz, .call_fail_if_foe_hp_at_most_four_fifths_ai
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_52CD::
+.call_fail_if_foe_hp_at_most_four_fifths_ai:
     farcall FailIfFoeHPAtMostFourFifthsAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_52DD
+    jr nz, .call_ai_score_bi_attack_carry_unless_battle
     ld bc, $0056
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_52DD::
+.call_ai_score_bi_attack_carry_unless_battle:
     farcall AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_0E2_52ED
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $0056
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_52ED::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_52FD
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_52FD::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_530D
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_530D::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 101 RainSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2705,56 +2707,56 @@ Func_0E2_530E:: ; address name
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5327
+    jr nz, .call_set_c_to_zero
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5327::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_533D
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C3
     call AccumulateBank6WordToDA6E
     ld bc, $00CB
     call AccumulateBank6WordToDA70
 
-Jump_0E2_533D::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5350
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5350::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5364
+    jr z, .call_actor_status4_check_reads_address
     and a, a
-    jr nz, Jump_0E2_5364
+    jr nz, .call_actor_status4_check_reads_address
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5364::
+.call_actor_status4_check_reads_address:
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5374
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0005
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5374::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5384
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5384::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 102 MultiCut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2768,64 +2770,65 @@ Func_0E2_5385:: ; address name
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_53A2
+    jr z, AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates
     and a, a
-    jr nz, Jump_0E2_53A2
+    jr nz, AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_53A2::
+AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
+Jump_0E2_53A2:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_53B2
+    jr nz, .call_fail_if_foe_ai_damage_estimates_at_least
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_53B2::
+.call_fail_if_foe_ai_damage_estimates_at_least:
     farcall FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_53C2
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_53C2::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_53D2
+    jr nz, .call_inverted_result_of_fail_if_foe_ai_damage
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_53D2::
+.call_inverted_result_of_fail_if_foe_ai_damage:
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr nz, Jump_0E2_53E2
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_53E2::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_53F5
+    jr nz, .call_check_foe_status6_bit3
     ld bc, $0057
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_53F5::
+.call_check_foe_status6_bit3:
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5409
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5409
+    jr nz, .return
     ld bc, $004A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5409::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 103 GigaSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2839,12 +2842,12 @@ Func_0E2_540A:: ; address name
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5423
+    jr nz, .skip
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5423::
-    jp Jump_0E2_53A2
+.skip:
+    jp AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 104 ChargeUp. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2857,23 +2860,23 @@ Func_0E2_5426:: ; address name
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5443
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_5443
+    jr nz, .call_set_c_to_zero
     ld bc, $0058
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5443::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5459
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00BA
     call AccumulateBank6WordToDA6E
     ld bc, $00BF
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5459::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     ret
 
@@ -2888,47 +2891,47 @@ Func_0E2_545D:: ; address name
     farcall FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5476
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $002D
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5476::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5486
+    jr nz, .call_ally_average_agl_at_least_foes
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5486::
+.call_ally_average_agl_at_least_foes:
     farcall AllyAverageAGLAtLeastFoes
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_549A
+    jr z, .call_actor_lacks_status1_bits23_and4_bits01
     and a, a
-    jr nz, Jump_0E2_549A
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_549A::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_54AA
+    jr nz, .call_set_c_to_zero
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_54AA::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_54C0
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00BA
     call AccumulateBank6WordToDA6E
     ld bc, $00BF
     call AccumulateBank6WordToDA70
 
-Jump_0E2_54C0::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     ret
 
@@ -2943,48 +2946,48 @@ Func_0E2_54C4:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_54DD
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_54DD::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_54F1
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_54F1
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $0058
     call AccumulateBank6WordToDA70
 
-Jump_0E2_54F1::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5505
+    jr z, .call_actor_lacks_status1_bits23_and4_bits01
     and a, a
-    jr nz, Jump_0E2_5505
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0059
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5505::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5515
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $000A
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5515::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5528
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5528::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 107 EvilSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -2998,80 +3001,80 @@ Func_0E2_5529:: ; address name
     farcall AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5542
+    jr nz, .call_any_foe_has_clear_status3
     ld bc, $005A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5542::
+.call_any_foe_has_clear_status3:
     farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5552
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $005B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5552::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5562
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5562::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5576
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_5576
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $0058
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5576::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_558A
+    jr z, .call_actor_lacks_status1_bits23_and4_bits01
     and a, a
-    jr nz, Jump_0E2_558A
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0059
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_558A::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_559A
+    jr nz, .call_set_c_to_zero
     ld bc, $005C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_559A::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_55AA
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00BD
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_55AA::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_0E2_55BD
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $00B0
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_55BD::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_55CD
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_55CD::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 108 Massacre. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3085,36 +3088,36 @@ Func_0E2_55CE:: ; address name
     farcall AtLeastTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_55E7
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0011
     call AccumulateBank6WordToDA70
 
-Jump_0E2_55E7::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_55F7
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_55F7::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5607
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C4
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5607::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_561A
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_561A::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 109 TwinSlash. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3128,82 +3131,82 @@ Func_0E2_561B:: ; address name
     farcall AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5634
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $005E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5634::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5644
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5644::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5658
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_5658
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5658::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_566C
+    jr z, .call_actor_hp_is_not_one
     and a, a
-    jr nz, Jump_0E2_566C
+    jr nz, .call_actor_hp_is_not_one
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_566C::
+.call_actor_hp_is_not_one:
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_567C
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0060
     call AccumulateBank6WordToDA70
 
-Jump_0E2_567C::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_568C
+    jr nz, .call_set_c_to_zero
     ld bc, $005C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_568C::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_56A2
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C7
     call AccumulateBank6WordToDA6E
     ld bc, $00D0
     call AccumulateBank6WordToDA70
 
-Jump_0E2_56A2::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr nz, Jump_0E2_56B5
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0062
     call AccumulateBank6WordToDA70
 
-Jump_0E2_56B5::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_56C5
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_56C5::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 110 Berserker. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3219,108 +3222,108 @@ Func_0E2_56C6:: ; address name
     farcall AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr nz, Jump_0E2_56E3
+    jr nz, .call_all_other_allies_have_status0_bit6
     ld bc, $005A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_56E3::
+.call_all_other_allies_have_status0_bit6:
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_56F3
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0017
     call AccumulateBank6WordToDA70
 
-Jump_0E2_56F3::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5703
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5703::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5717
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_5717
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5717::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_572B
+    jr z, .call_actor_hp_is_not_one
     and a, a
-    jr nz, Jump_0E2_572B
+    jr nz, .call_actor_hp_is_not_one
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_572B::
+.call_actor_hp_is_not_one:
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_573B
+    jr nz, .call_actor_lacks_status1_bits23_and4_bits01
     ld bc, $0060
     call AccumulateBank6WordToDA70
 
-Jump_0E2_573B::
+.call_actor_lacks_status1_bits23_and4_bits01:
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_574B
+    jr nz, .call_set_c_to_zero
     ld bc, $005C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_574B::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5761
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C7
     call AccumulateBank6WordToDA6E
     ld bc, $00D0
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5761::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5774
+    jr nz, .call_ally_check_side0_flag_and_other_slots
     ld bc, $0063
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5774::
+.call_ally_check_side0_flag_and_other_slots:
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5784
+    jr nz, .call_ai_score_berserker_read_slot_ai_mode
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5784::
+.call_ai_score_berserker_read_slot_ai_mode:
     farcall AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5798
+    jr z, .call_actor_lacks_status2_bit1_and4_bits01
     and a, a
-    jr nz, Jump_0E2_5798
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $0064
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5798::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_57A8
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_57A8::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 111 Ramming. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3335,82 +3338,83 @@ Func_0E2_57A9:: ; address name
     farcall AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_57C2
+    jr nz, .call_all_other_allies_have_status0_bit6
     ld bc, $005E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_57C2::
+.call_all_other_allies_have_status0_bit6:
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_57D2
+    jr nz, .call_ai_score_ramming_read_slot_ai_mode
     ld bc, $0017
     call AccumulateBank6WordToDA70
 
-Jump_0E2_57D2::
+.call_ai_score_ramming_read_slot_ai_mode:
     farcall AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_57E6
+    jr z, AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates
     and a, a
-    jr nz, Jump_0E2_57E6
+    jr nz, AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates
     ld bc, $0064
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_57E6::
+AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
+Jump_0E2_57E6:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_57F6
+    jr nz, .call_pass_if_foes_average_resistance_at
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_57F6::
+.call_pass_if_foes_average_resistance_at:
     farcall PassIfFoesAverageResistanceAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5806
+    jr nz, .read_battle_actor
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5806::
+.read_battle_actor:
     ld a, [wBattleActor]
     call AIScore_Ramming_HPBandOfSlotTemp0
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_581C
+    jr nz, .call_set_c_to_zero
     ld bc, $005C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_581C::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5832
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00C7
     call AccumulateBank6WordToDA6E
     ld bc, $00D0
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5832::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5845
+    jr nz, .call_actor_lacks_status2_bit1_and4_bits01
     ld bc, $005F
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5845::
+.call_actor_lacks_status2_bit1_and4_bits01:
     farcall ActorLacksStatus2Bit1And4Bits01
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5855
+    jr nz, .return
     ld bc, $0033
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5855::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 112 Kamikaze. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3425,14 +3429,14 @@ Func_0E2_5856:: ; address name
     farcall AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5873
+    jr z, .skip
     and a, a
-    jr nz, Jump_0E2_5873
+    jr nz, .skip
     ld bc, $0064
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5873::
-    jp Jump_0E2_57E6
+.skip:
+    jp AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 113 SleepAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3445,52 +3449,54 @@ Func_0E2_5876:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_588F
+    jr nz, AIScore_SleepAir_CallWeighWD044RuleBit3
     ld bc, $00BC
     call AccumulateBank6WordToDA70
 
-Jump_0E2_588F::
+AIScore_SleepAir_CallWeighWD044RuleBit3::
+Jump_0E2_588F:: ; address name
     call WeighWD044RuleBit3
 
-Jump_0E2_5892::
+AIScore_SleepAir_CallFewerThanTwoFoesPresent::
+Jump_0E2_5892:: ; address name
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_58A2
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_58A2::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_58B6
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_58B6
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_58B6::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_58CA
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_58CA
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_58CA::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_58DE
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_58DE
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_58DE::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 114 PalsyAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3501,7 +3507,7 @@ Func_0E2_58DF:: ; address name
     ld a, c
     and a, a
     ret z
-    jr Jump_0E2_588F
+    jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 115 PoisonGas. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3511,7 +3517,7 @@ Func_0E2_58EA:: ; address name
     ld a, c
     and a, a
     ret z
-    jr Jump_0E2_588F
+    jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 116 PoisonAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3521,7 +3527,7 @@ Func_0E2_58F5:: ; address name
     ld a, c
     and a, a
     ret z
-    jr Jump_0E2_588F
+    jr AIScore_SleepAir_CallWeighWD044RuleBit3
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 117 Curse. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3534,13 +3540,13 @@ Func_0E2_5900:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5919
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BD
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5919::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
-    jp Jump_0E2_5892
+    jp AIScore_SleepAir_CallFewerThanTwoFoesPresent
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3555,34 +3561,34 @@ Func_0E2_591F:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5944
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00C2
     call AccumulateBank6WordToDA70
     ld bc, $00D2
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5944::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_595B
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_595B
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_595B::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_596F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_596F
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_596F::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 120 PaniDance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3596,7 +3602,7 @@ Func_0E2_5970:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5995
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00C2
     call AccumulateBank6WordToDA70
     ld bc, $00CA
@@ -3604,46 +3610,46 @@ Func_0E2_5970:: ; address name
     ld bc, $00D2
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5995::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_59A8
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_59A8::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_59BC
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_59BC
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_59BC::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_59D0
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_59D0
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_59D0::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_59E4
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_59E4
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_59E4::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 121 K.O.Dance. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3657,62 +3663,62 @@ Func_0E2_59E5:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5A04
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00CD
     call AccumulateBank6WordToDA6E
     ld bc, $00CF
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5A04::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5A17
+    jr nz, .call_ai_gate_foe_wda74_bits45
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5A17::
+.call_ai_gate_foe_wda74_bits45:
     farcall AIGateFoeWDA74Bits45
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5A2B
+    jr z, .call_fail_if_any_foe_fully_resistant
     and a, a
-    jr nz, Jump_0E2_5A2B
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $00B5
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5A2B::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5A3F
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_5A3F
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5A3F::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5A53
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5A53
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5A53::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5A67
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5A67
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5A67::
+.return:
     ret
 
 ; table-B AI score: AIScore_LureDance, then Func_0E2_67F9 when usable (E-0122)
@@ -3737,52 +3743,52 @@ Func_0E2_5A72:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5A91
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00C2
     call AccumulateBank6WordToDA70
     ld bc, $00D2
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5A91::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5AA4
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5AA4::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5AB8
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_5AB8
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5AB8::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5ACC
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5ACC
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5ACC::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5AE0
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7
     and a, a
-    jr nz, Jump_0E2_5AE0
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5AE0::
+.call_ai_add_scores_for5_ece_and5_fc7:
     call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
@@ -3798,40 +3804,40 @@ Func_0E2_5AE6:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B05
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00BC
     call AccumulateBank6WordToDA6E
     ld bc, $00C4
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5B05::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B18
+    jr nz, .call_pass_if_side0_flag_or_ally_slot_empty
     ld bc, $0029
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B18::
+.call_pass_if_side0_flag_or_ally_slot_empty:
     farcall PassIfSide0FlagOrAllySlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B28
+    jr nz, .call_ai_gate_compare_ally_stat_averages
     ld bc, $0029
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B28::
+.call_ai_gate_compare_ally_stat_averages:
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5B3C
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5B3C
+    jr nz, .return
     ld bc, $002E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5B3C::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 124 Hustle. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3848,62 +3854,62 @@ Func_0E2_5B3D:: ; address name
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B5C
+    jr nz, .call_any_foe_has_clear_status3
     ld bc, $001A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B5C::
+.call_any_foe_has_clear_status3:
     farcall AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B6C
+    jr nz, .call_any_ally_hp_at_most_three_quarters
     ld bc, $001A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B6C::
+.call_any_ally_hp_at_most_three_quarters:
     farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B7C
+    jr nz, .call_actor_hp_is_not_one
     ld bc, $001B
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5B7C::
+.call_actor_hp_is_not_one:
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B8C
+    jr nz, .call_fewer_than_two_allies_at_hp1
     ld bc, $0023
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B8C::
+.call_fewer_than_two_allies_at_hp1:
     farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5B9C
+    jr nz, .call_set_c_to_zero
     ld bc, $0023
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5B9C::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5BAC
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $0024
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5BAC::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5BC3
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5BC3
+    jr nz, .return
     ld bc, $0069
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5BC3::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 125 SideStep. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3917,46 +3923,46 @@ Func_0E2_5BC4:: ; address name
     farcall AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5BDD
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $006C
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5BDD::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5BED
+    jr nz, .call_pass_if_foe_average_atk_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5BED::
+.call_pass_if_foe_average_atk_at_most_twice:
     farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5C01
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_5C01
+    jr nz, .call_set_c_to_zero
     ld bc, $006D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C01::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C11
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $00BE
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C11::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C24
+    jr nz, .return
     ld bc, $0032
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C24::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 126 SandStorm. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -3968,80 +3974,81 @@ Func_0E2_5C25:: ; address name
     and a, a
     ret z
 
-Jump_0E2_5C2E::
+AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
+Jump_0E2_5C2E:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C3E
+    jr nz, .call_pass_if_foe_average_atk_at_most_twice
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5C3E::
+.call_pass_if_foe_average_atk_at_most_twice:
     farcall PassIfFoeAverageATKAtMostTwiceAllyDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5C52
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_5C52
+    jr nz, .call_set_c_to_zero
     ld bc, $006D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C52::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C62
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BA
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5C62::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C75
+    jr nz, .call_compare_foe_average_atk_with_ally_def
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C75::
+.call_compare_foe_average_atk_with_ally_def:
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5C85
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0032
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5C85::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5C99
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_5C99
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5C99::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5CAD
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5CAD
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5CAD::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5CC1
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5CC1
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5CC1::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 127 Radiant. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4052,7 +4059,7 @@ Func_0E2_5CC2:: ; address name
     ld a, c
     and a, a
     ret z
-    jp Jump_0E2_5C2E
+    jp AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 128 EerieLite. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -4065,52 +4072,52 @@ Func_0E2_5CCE:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5CED
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CC
     call AccumulateBank6WordToDA6E
     ld bc, $00D1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5CED::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5D00
+    jr nz, .call_fail_if_any_foe_fully_resistant
     ld bc, $0015
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5D00::
+.call_fail_if_any_foe_fully_resistant:
     farcall FailIfAnyFoeFullyResistant
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5D14
+    jr z, .call_resistance_average_gate_for_ai_side
     and a, a
-    jr nz, Jump_0E2_5D14
+    jr nz, .call_resistance_average_gate_for_ai_side
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5D14::
+.call_resistance_average_gate_for_ai_side:
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5D28
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5D28
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5D28::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5D3C
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5D3C
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5D3C::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 129 Surge. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4126,11 +4133,11 @@ Func_0E2_5D3D:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5D5C
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $00CA
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5D5C::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     ret
 
@@ -4147,11 +4154,11 @@ Func_0E2_5D60:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5D7F
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CC
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5D7F::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4168,21 +4175,21 @@ Func_0E2_5D83:: ; address name
     farcall AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5DA2
+    jr nz, .call_set_c_to_zero
     ld bc, $0070
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5DA2::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5DB8
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00C9
     call AccumulateBank6WordToDA70
     ld bc, $00CB
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5DB8::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4197,22 +4204,22 @@ Func_0E2_5DBC:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5DD5
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00C9
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5DD5::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5DEC
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_5DEC
+    jr nz, .return
     ld bc, $0072
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5DEC::
+.return:
     ret
 
 ; AI scoring routine for 4 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4226,23 +4233,23 @@ Func_0E2_5DED:: ; address name
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E06
+    jr nz, .call_check_lone_foe_hp_not_below_ai_damage
     ld bc, $0073
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5E06::
+.call_check_lone_foe_hp_not_below_ai_damage:
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E16
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5E16::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E32
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0074
     call AccumulateBank6WordToDA6E
     ld bc, $00BB
@@ -4250,16 +4257,16 @@ Jump_0E2_5E16::
     ld bc, $00C7
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5E32::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E45
+    jr nz, .return
     ld bc, $0075
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5E45::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 137 SuckAir. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4273,28 +4280,28 @@ Func_0E2_5E46:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E5F
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5E5F::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E6F
+    jr nz, .call_weigh_wd044_rule_bit3
     ld bc, $0076
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5E6F::
+.call_weigh_wd044_rule_bit3:
     call WeighWD044RuleBit3
     farcall AnyAllyLacksStatus2Bit2_5D31
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E82
+    jr nz, .return
     ld bc, $0077
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5E82::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 138 Focus. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4308,21 +4315,21 @@ Func_0E2_5E83:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5E9C
+    jr nz, .call_set_c_to_zero
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5E9C::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5EB2
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00C2
     call AccumulateBank6WordToDA6E
     ld bc, $00D2
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5EB2::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4348,32 +4355,32 @@ Func_0E2_5EC0:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5ED9
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0078
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5ED9::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5EF0
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5EF0
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5EF0::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5F04
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7
     and a, a
-    jr nz, Jump_0E2_5F04
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F04::
+.call_ai_add_scores_for5_ece_and5_fc7:
     call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
@@ -4389,60 +4396,60 @@ Func_0E2_5F0A:: ; address name
     farcall AnyFoeHasDEFAtLeast2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5F23
+    jr nz, .call_pass_if_foe_average_def_at_most_twice
     ld bc, $0079
     call AccumulateBank6WordToDA70
 
-Jump_0E2_5F23::
+.call_pass_if_foe_average_def_at_most_twice:
     farcall PassIfFoeAverageDEFAtMostTwiceAllyATK
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5F37
+    jr z, .call_pass_if_twice_atk_above_lowest_foe_def
     and a, a
-    jr nz, Jump_0E2_5F37
+    jr nz, .call_pass_if_twice_atk_above_lowest_foe_def
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F37::
+.call_pass_if_twice_atk_above_lowest_foe_def:
     farcall PassIfTwiceATKAboveLowestFoeDEF
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5F4B
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_5F4B
+    jr nz, .call_set_c_to_zero
     ld bc, $002C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F4B::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5F5B
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0078
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F5B::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5F72
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5F72
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F72::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5F86
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7
     and a, a
-    jr nz, Jump_0E2_5F86
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5F86::
+.call_ai_add_scores_for5_ece_and5_fc7:
     call AIAddScoresFor5ECEAnd5FC7
     ret
 
@@ -4468,32 +4475,32 @@ Func_0E2_5F94:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_5FAD
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $007B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5FAD::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5FC4
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_5FC4
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5FC4::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_5FD8
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7
     and a, a
-    jr nz, Jump_0E2_5FD8
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_5FD8::
+.call_ai_add_scores_for5_ece_and5_fc7:
     call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
@@ -4520,7 +4527,7 @@ Func_0E2_5FE8:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6013
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00C0
     call AccumulateBank6WordToDA6E
     ld bc, $00C3
@@ -4530,28 +4537,28 @@ Func_0E2_5FE8:: ; address name
     ld bc, $00D3
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6013::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_602A
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_602A
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_602A::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_603E
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7
     and a, a
-    jr nz, Jump_0E2_603E
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_603E::
+.call_ai_add_scores_for5_ece_and5_fc7:
     call AIAddScoresFor5ECEAnd5FC7
     ld c, $01
     ret
@@ -4567,32 +4574,32 @@ Func_0E2_6044:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_605D
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $007D
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_605D::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6074
+    jr z, .call_resistance_average_gate_for_foe_ai_mode3
     and a, a
-    jr nz, Jump_0E2_6074
+    jr nz, .call_resistance_average_gate_for_foe_ai_mode3
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6074::
+.call_resistance_average_gate_for_foe_ai_mode3:
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6088
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_6088
+    jr nz, .return
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6088::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 146 DanceShut. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4606,11 +4613,11 @@ Func_0E2_6089:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_60A2
+    jr nz, .call_weigh_wd044_rule_bit2
     ld bc, $007E
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_60A2::
+.call_weigh_wd044_rule_bit2:
     call WeighWD044RuleBit2
     ret
 
@@ -4625,21 +4632,21 @@ Func_0E2_60A6:: ; address name
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_60C3
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_60C3
+    jr nz, .call_set_c_to_zero
     ld bc, $007F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_60C3::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_60D3
+    jr nz, .call_weigh_wd044_rule_bit3
     ld bc, $0080
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_60D3::
+.call_weigh_wd044_rule_bit3:
     call WeighWD044RuleBit3
     ret
 
@@ -4659,21 +4666,21 @@ Func_0E2_60D7:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_60FA
+    jr nz, .call_fail_if_foe_skill3_d_threatens_actor_hp
     ld bc, $00C1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_60FA::
+.call_fail_if_foe_skill3_d_threatens_actor_hp:
     farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_610E
+    jr z, .call_weigh_wd044_rule_bit4
     and a, a
-    jr nz, Jump_0E2_610E
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $0000
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_610E::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     ret
 
@@ -4690,13 +4697,13 @@ Func_0E2_6112:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6135
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $0088
     call AccumulateBank6WordToDA6E
     ld bc, $00C1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6135::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4713,13 +4720,13 @@ Func_0E2_6139:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_615C
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $008A
     call AccumulateBank6WordToDA6E
     ld bc, $00C1
     call AccumulateBank6WordToDA70
 
-Jump_0E2_615C::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     ret
 
@@ -4739,13 +4746,13 @@ Func_0E2_6160:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6189
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00CD
     call AccumulateBank6WordToDA70
     ld bc, $00D1
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6189::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4760,25 +4767,26 @@ Func_0E2_618D:: ; address name
     call AIScore_TailWind_AccumulateBank6WordToDA70
     ret z
 
-Jump_0E2_619A::
+AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
+Jump_0E2_619A:: ; address name
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_61AE
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_61BE
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $003A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_61AE::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_61BE
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $008C
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_61BE::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     ret
 
@@ -4790,7 +4798,7 @@ Func_0E2_61C2:: ; address name
     ld a, c
     and a, a
     ret z
-    jr Jump_0E2_619A
+    jr AIScore_TailWind_CallFailIfFoeKnowsSkills42To47
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 155 AquaWall. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; no direct call (reached through a table, a jump or a vector)
@@ -4817,50 +4825,50 @@ Func_0E2_61E0:: ; address name
     farcall AIScore_SealPray_ReadQueuedActionId
     ld a, c
     and a, a
-    jr nz, Jump_0E2_61F9
+    jr nz, .call_fail_if_foe_knows_skills42_to47
     ld bc, $008D
     call AccumulateBank6WordToDA70
 
-Jump_0E2_61F9::
+.call_fail_if_foe_knows_skills42_to47:
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_620D
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_620D
+    jr nz, .call_set_c_to_zero
     ld bc, $008E
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_620D::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_621D
+    jr nz, .call_fail_if_foe_skill3_d_threatens_actor_hp
     ld bc, $00CB
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_621D::
+.call_fail_if_foe_skill3_d_threatens_actor_hp:
     farcall FailIfFoeSkill3DThreatensActorHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6231
+    jr z, .call_weigh_wd044_rule_bit5
     and a, a
-    jr nz, Jump_0E2_6231
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $008F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6231::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6248
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_6248
+    jr nz, .return
     ld bc, $0090
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6248::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 157 SuckAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4877,40 +4885,40 @@ Func_0E2_6249:: ; address name
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6266
+    jr nz, .call_any_ally_hp_at_most_three_quarters
     ld bc, $0091
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6266::
+.call_any_ally_hp_at_most_three_quarters:
     farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6276
+    jr nz, .read_battle_actor
     ld bc, $0092
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6276::
+.read_battle_actor:
     ld a, [wBattleActor]
     call AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6290
+    jr z, .call_weigh_wd044_rule_bit3
     and a, a
-    jr nz, Jump_0E2_6290
+    jr nz, .call_weigh_wd044_rule_bit3
     ld bc, $008E
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6290::
+.call_weigh_wd044_rule_bit3:
     call WeighWD044RuleBit3
     farcall AnyAllyLacksStatus2Bit2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_62A3
+    jr nz, .return
     ld bc, $0097
     call AccumulateBank6WordToDA70
 
-Jump_0E2_62A3::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 158 Imitate. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4926,42 +4934,42 @@ Func_0E2_62A4:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr nz, Jump_0E2_62C1
+    jr nz, .call_fail_if_foe_knows_skills42_to47
     ld bc, $0007
     call AccumulateBank6WordToDA70
 
-Jump_0E2_62C1::
+.call_fail_if_foe_knows_skills42_to47:
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_62D5
+    jr z, .call_set_c_to_zero
     and a, a
-    jr nz, Jump_0E2_62D5
+    jr nz, .call_set_c_to_zero
     ld bc, $0098
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_62D5::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_62EB
+    jr nz, .call_weigh_wd044_rule_bit5
     ld bc, $00BB
     call AccumulateBank6WordToDA70
     ld bc, $00C6
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_62EB::
+.call_weigh_wd044_rule_bit5:
     call WeighWD044RuleBit5
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6302
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_6302
+    jr nz, .return
     ld bc, $009A
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6302::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 159 Meditate. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -4978,32 +4986,32 @@ Func_0E2_6303:: ; address name
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6322
+    jr nz, .call_set_c_to_zero
     ld bc, $00A1
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6322::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6338
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $00C2
     call AccumulateBank6WordToDA6E
     ld bc, $00D2
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6338::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_634F
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_634F
+    jr nz, .return
     ld bc, $0069
     call AccumulateBank6WordToDA70
 
-Jump_0E2_634F::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 160 LifeSong. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5017,24 +5025,24 @@ Func_0E2_6350:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_636F
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $00CC
     call AccumulateBank6WordToDA70
     ld bc, $00D3
     call AccumulateBank6WordToDA70
 
-Jump_0E2_636F::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6386
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_6386
+    jr nz, .return
     ld bc, $002E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6386::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 161 LoveRain. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5049,33 +5057,33 @@ Func_0E2_6387:: ; address name
     farcall AnyAllyHPAtMostThreeQuarters
     ld a, c
     and a, a
-    jr nz, Jump_0E2_63A0
+    jr nz, .read_battle_actor
     ld bc, $001B
     call AccumulateBank6WordToDA70
 
-Jump_0E2_63A0::
+.read_battle_actor:
     ld a, [wBattleActor]
     call ForEachPresentSlotOfSideRun66DC
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_63B6
+    jr nz, .call_fewer_than_two_allies_at_hp1
     ld bc, $00A3
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_63B6::
+.call_fewer_than_two_allies_at_hp1:
     farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_63C6
+    jr nz, .call_set_c_to_zero
     ld bc, $00A4
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_63C6::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_63E2
+    jr nz, .call_weigh_wd044_rule_bit4
     ld bc, $00CC
     call AccumulateBank6WordToDA70
     ld bc, $00CF
@@ -5083,18 +5091,18 @@ Jump_0E2_63C6::
     ld bc, $00D3
     call AccumulateBank6WordToDA70
 
-Jump_0E2_63E2::
+.call_weigh_wd044_rule_bit4:
     call WeighWD044RuleBit4
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_63F9
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_63F9
+    jr nz, .return
     ld bc, $0069
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_63F9::
+.return:
     ret
 
 ; AI scoring routine for 8 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 162 Whistle, 163 Pheromone, 164 StepGuard, 165 Outside, 166 Informer, 167 Errand, 168 EagleEye, 169 MapMagic. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5115,11 +5123,11 @@ Func_0E2_6401:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_641A
+    jr nz, .call_weigh_wd044_rule_bit1
     ld bc, $00A5
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_641A::
+.call_weigh_wd044_rule_bit1:
     call WeighWD044RuleBit1
     ret
 
@@ -5143,35 +5151,35 @@ Func_0E2_6425:: ; address name
     farcall AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6442
+    jr nz, .call_all_other_allies_have_status0_bit6
     ld bc, $00A6
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6442::
+.call_all_other_allies_have_status0_bit6:
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6452
+    jr nz, .call_actor_hp_is_not_one
     ld bc, $00A7
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6452::
+.call_actor_hp_is_not_one:
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6462
+    jr nz, .call_set_c_to_zero
     ld bc, $00A8
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6462::
+.call_set_c_to_zero:
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6472
+    jr nz, .return
     ld bc, $00A9
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6472::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 173 PanicAll. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5185,11 +5193,11 @@ Func_0E2_6473:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_648C
+    jr nz, .return
     ld bc, $0037
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_648C::
+.return:
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (Data_030_5785 and Data_030_59E0, indexed by skill number): 174 Ironize. It runs checks and adds weights to wDA6E-wDA71 (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
@@ -5205,21 +5213,21 @@ Func_0E2_648D:: ; address name
     farcall SetCToZero
     ld a, c
     and a, a
-    jr nz, Jump_0E2_64AA
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
     ld bc, $0038
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_64AA::
+.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
     farcall AIModeAtLeast2AndFoeLacks6D1A
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_64BE
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_64BE
+    jr nz, .return
     ld bc, $0039
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_64BE::
+.return:
     ret
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
@@ -5230,16 +5238,16 @@ AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
     call ReadBank6TableWord
     cp a, $FF
-    jr nz, Jump_0E2_64DA
+    jr nz, .skip
     ld bc, $1388
-    jr Jump_0E2_64EE
+    jr .call_add_bc_to_word_at_hl
 
-Jump_0E2_64DA::
+.skip:
     bit 7, b
-    jr nz, Jump_0E2_64E0
-    jr Jump_0E2_64EE
+    jr nz, .skip2
+    jr .call_add_bc_to_word_at_hl
 
-Jump_0E2_64E0::
+.skip2:
     cpl
     ld c, a
     ld a, b
@@ -5248,13 +5256,13 @@ Jump_0E2_64E0::
     inc bc
     ld hl, wAISkillScore2
     call AddBCToWordAtHL
-    jr Jump_0E2_64F4
+    jr .return
 
-Jump_0E2_64EE::
+.call_add_bc_to_word_at_hl:
     ld hl, wAISkillScore
     call AddBCToWordAtHL
 
-Jump_0E2_64F4::
+.return:
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
@@ -5264,16 +5272,16 @@ AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
     call ReadBank6TableWord
     cp a, $FF
-    jr nz, Jump_0E2_6501
+    jr nz, .skip
     ld bc, $1388
-    jr Jump_0E2_6515
+    jr .call_add_bc_to_word_at_hl
 
-Jump_0E2_6501::
+.skip:
     bit 7, b
-    jr nz, Jump_0E2_6507
-    jr Jump_0E2_6515
+    jr nz, .skip2
+    jr .call_add_bc_to_word_at_hl
 
-Jump_0E2_6507::
+.skip2:
     cpl
     ld c, a
     ld a, b
@@ -5282,13 +5290,13 @@ Jump_0E2_6507::
     inc bc
     ld hl, wAISkillScore
     call AddBCToWordAtHL
-    jr Jump_0E2_651B
+    jr .return
 
-Jump_0E2_6515::
+.call_add_bc_to_word_at_hl:
     ld hl, wAISkillScore2
     call AddBCToWordAtHL
 
-Jump_0E2_651B::
+.return:
     ret
 
 ; the 16-bit word at [HL] += BC; HL is unchanged
@@ -5343,44 +5351,44 @@ Func_0E2_656D:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
     and a, a
-    jr z, Jump_0E2_6591
+    jr z, .call_accumulate_bank6_word_to_da70
     cp a, $01
-    jr z, Jump_0E2_6599
+    jr z, .call_accumulate_bank6_word_to_da702
     cp a, $02
-    jr z, Jump_0E2_65A1
+    jr z, .call_accumulate_bank6_word_to_da703
     cp a, $03
-    jr z, Jump_0E2_65A9
+    jr z, .call_accumulate_bank6_word_to_da704
     cp a, $04
-    jr z, Jump_0E2_65B1
+    jr z, .call_accumulate_bank6_word_to_da6_e
     ld bc, $0085
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_65B7
+    jr .return
 
-Jump_0E2_6591::
+.call_accumulate_bank6_word_to_da70:
     ld bc, $0083
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_65B7
+    jr .return
 
-Jump_0E2_6599::
+.call_accumulate_bank6_word_to_da702:
     ld bc, $0083
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_65B7
+    jr .return
 
-Jump_0E2_65A1::
+.call_accumulate_bank6_word_to_da703:
     ld bc, $0083
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_65B7
+    jr .return
 
-Jump_0E2_65A9::
+.call_accumulate_bank6_word_to_da704:
     ld bc, $0083
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_65B7
+    jr .return
 
-Jump_0E2_65B1::
+.call_accumulate_bank6_word_to_da6_e:
     ld bc, $0084
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_65B7::
+.return:
     ret
 
 ; only called from AIScore_AquaWall (E-0047)
@@ -5392,44 +5400,44 @@ Func_0E2_65B8:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
     and a, a
-    jr z, Jump_0E2_65DC
+    jr z, .call_accumulate_bank6_word_to_da6_e
     cp a, $01
-    jr z, Jump_0E2_65E4
+    jr z, .call_accumulate_bank6_word_to_da6_e2
     cp a, $02
-    jr z, Jump_0E2_65EC
+    jr z, .call_accumulate_bank6_word_to_da70
     cp a, $03
-    jr z, Jump_0E2_65F4
+    jr z, .call_accumulate_bank6_word_to_da702
     cp a, $04
-    jr z, Jump_0E2_65FC
+    jr z, .call_accumulate_bank6_word_to_da703
     ld bc, $0086
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_6602
+    jr .return
 
-Jump_0E2_65DC::
+.call_accumulate_bank6_word_to_da6_e:
     ld bc, $0081
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_6602
+    jr .return
 
-Jump_0E2_65E4::
+.call_accumulate_bank6_word_to_da6_e2:
     ld bc, $0082
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_6602
+    jr .return
 
-Jump_0E2_65EC::
+.call_accumulate_bank6_word_to_da70:
     ld bc, $0083
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_6602
+    jr .return
 
-Jump_0E2_65F4::
+.call_accumulate_bank6_word_to_da702:
     ld bc, $0084
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_6602
+    jr .return
 
-Jump_0E2_65FC::
+.call_accumulate_bank6_word_to_da703:
     ld bc, $0085
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6602::
+.return:
     ret
 
 ; only called from AIScore_SuckAll (E-0047)
@@ -5441,19 +5449,19 @@ Func_0E2_6603:: ; address name
     ld c, a
     ld b, $03
 
-Jump_0E2_6608::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0E2_6615
+    jr c, .next
     ldh [hTemp0], a
     push bc
     call AIScore_SuckAll_Sub01_HPBandOfSlotTemp0
     pop bc
 
-Jump_0E2_6615::
+.next:
     inc c
     dec b
-    jr nz, Jump_0E2_6608
+    jr nz, .loop
     ret
 
 ; only called from AIScore_SuckAll_Sub01 (E-0047)
@@ -5463,16 +5471,16 @@ Func_0E2_661A:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
     cp a, $02
-    jr nc, Jump_0E2_662D
+    jr nc, .call_accumulate_bank6_word_to_da70
     ld bc, $0093
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_6633
+    jr .return
 
-Jump_0E2_662D::
+.call_accumulate_bank6_word_to_da70:
     ld bc, $0094
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6633::
+.return:
     ret
 
 ; only called from AIScore_Meditate (E-0047)
@@ -5484,44 +5492,44 @@ Func_0E2_6634:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
     and a, a
-    jr z, Jump_0E2_6658
+    jr z, .call_accumulate_bank6_word_to_da70
     cp a, $01
-    jr z, Jump_0E2_6660
+    jr z, .call_accumulate_bank6_word_to_da702
     cp a, $02
-    jr z, Jump_0E2_6668
+    jr z, .call_accumulate_bank6_word_to_da703
     cp a, $03
-    jr z, Jump_0E2_6670
+    jr z, .call_accumulate_bank6_word_to_da6_e
     cp a, $04
-    jr z, Jump_0E2_6678
+    jr z, .call_accumulate_bank6_word_to_da6_e2
     ld bc, $00A0
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_667E
+    jr .return
 
-Jump_0E2_6658::
+.call_accumulate_bank6_word_to_da70:
     ld bc, $009B
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_667E
+    jr .return
 
-Jump_0E2_6660::
+.call_accumulate_bank6_word_to_da702:
     ld bc, $009C
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_667E
+    jr .return
 
-Jump_0E2_6668::
+.call_accumulate_bank6_word_to_da703:
     ld bc, $009D
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_667E
+    jr .return
 
-Jump_0E2_6670::
+.call_accumulate_bank6_word_to_da6_e:
     ld bc, $009E
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_667E
+    jr .return
 
-Jump_0E2_6678::
+.call_accumulate_bank6_word_to_da6_e2:
     ld bc, $009F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_667E::
+.return:
     ret
 
 ; only called from AIScore_HealUs_Sub01 (E-0047)
@@ -5533,19 +5541,19 @@ Func_0E2_667F:: ; address name
     ld c, a
     ld b, $03
 
-Jump_0E2_6684::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0E2_6691
+    jr c, .next
     ldh [hTemp0], a
     push bc
     call AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
     pop bc
 
-Jump_0E2_6691::
+.next:
     inc c
     dec b
-    jr nz, Jump_0E2_6684
+    jr nz, .loop
     ret
 
 ; only called from AIScore_HealUs_Sub01_Sub01 (E-0047)
@@ -5561,10 +5569,10 @@ Func_0E2_6696:: ; address name
     ld a, [wBattleActor]
     cp a, c
     ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66B9
-    jr z, Jump_0E2_66AC
+    jr z, .skip
     ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data_66BF
 
-Jump_0E2_66AC::
+.skip:
     ld a, b
     add_a_to_hl
     ld c, [hl]
@@ -5591,19 +5599,19 @@ Func_0E2_66C5:: ; address name
     ld c, a
     ld b, $03
 
-Jump_0E2_66CA::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0E2_66D7
+    jr c, .next
     ldh [hTemp0], a
     push bc
     call ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
     pop bc
 
-Jump_0E2_66D7::
+.next:
     inc c
     dec b
-    jr nz, Jump_0E2_66CA
+    jr nz, .loop
     ret
 
 ; only called from ForEachPresentSlotOfSideRun66DC (E-0047)
@@ -5619,10 +5627,10 @@ Func_0E2_66DC:: ; address name
     ld a, [wBattleActor]
     cp a, c
     ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_66FF
-    jr z, Jump_0E2_66F2
+    jr z, .skip
     ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data_6705
 
-Jump_0E2_66F2::
+.skip:
     ld a, b
     add_a_to_hl
     ld c, [hl]
@@ -5673,19 +5681,19 @@ Func_0E2_672D:: ; address name
     ld c, a
     ld b, $03
 
-Jump_0E2_6732::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0E2_673F
+    jr c, .next
     ldh [hTemp0], a
     push bc
     call AIScore_Cover_Sub01_HPBandOfSlotTemp0
     pop bc
 
-Jump_0E2_673F::
+.next:
     inc c
     dec b
-    jr nz, Jump_0E2_6732
+    jr nz, .loop
     ret
 
 ; only called from AIScore_Cover_Sub01 (E-0047)
@@ -5701,10 +5709,10 @@ Func_0E2_6744:: ; address name
     ld a, [wBattleActor]
     cp a, c
     ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_6767
-    jr z, Jump_0E2_675A
+    jr z, .skip
     ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data_676D
 
-Jump_0E2_675A::
+.skip:
     ld a, b
     add_a_to_hl
     ld c, [hl]
@@ -5729,16 +5737,16 @@ Func_0E2_6773:: ; address name
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6785
+    jr nz, .call_accumulate_bank6_word_to_da70
     ld bc, $002B
     call AccumulateBank6WordToDA6E
-    jr Jump_0E2_678B
+    jr .return
 
-Jump_0E2_6785::
+.call_accumulate_bank6_word_to_da70:
     ld bc, $0013
     call AccumulateBank6WordToDA70
 
-Jump_0E2_678B::
+.return:
     ret
 
 ; only called from AIScore_Sap (E-0047)
@@ -5748,16 +5756,16 @@ Func_0E2_678C:: ; address name
     farcall AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_0E2_679E
+    jr nz, .call_accumulate_bank6_word_to_da6_e
     ld bc, $0013
     call AccumulateBank6WordToDA70
-    jr Jump_0E2_67A4
+    jr .return
 
-Jump_0E2_679E::
+.call_accumulate_bank6_word_to_da6_e:
     ld bc, $002B
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_67A4::
+.return:
     ret
 
 ; C = (wD2CC & 1) ^ 1 and returns when non-zero; when bit 0 is set: wDA6E = 0, wDA70/wDA71 = $FFFF, C = 0 (E-0118)
@@ -5812,19 +5820,19 @@ Func_0E2_67D5:: ; address name
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a, a
-    jr nz, Jump_0E2_67E8
+    jr nz, .call_pass_if_side0_flag_or_ally_slot_empty
     ld bc, $0029
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_67E8::
+.call_pass_if_side0_flag_or_ally_slot_empty:
     farcall PassIfSide0FlagOrAllySlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_0E2_67F8
+    jr nz, .return
     ld bc, $0029
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_67F8::
+.return:
     ret
 
 ; adds score word $B1 when Func_005_5ECE fails and $B2 when Func_005_5FC7 fails (results of 1 count as passing) (E-0124)
@@ -5834,23 +5842,23 @@ Func_0E2_67F9:: ; address name
     farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_680D
+    jr z, .call_ai_add_scores_for5_ece_and5_fc7_read
     and a, a
-    jr nz, Jump_0E2_680D
+    jr nz, .call_ai_add_scores_for5_ece_and5_fc7_read
     ld bc, $00B1
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_680D::
+.call_ai_add_scores_for5_ece_and5_fc7_read:
     farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
-    jr z, Jump_0E2_6821
+    jr z, .return
     and a, a
-    jr nz, Jump_0E2_6821
+    jr nz, .return
     ld bc, $00B2
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6821::
+.return:
     ret
 
 ; adds score word $0E to wDA70 when Func_005_55BE fails and $0F to wDA6E when Func_005_5731 fails (E-0122)
@@ -5860,19 +5868,19 @@ Func_0E2_6822:: ; address name
     farcall LinkRuleCheckWD044Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6832
+    jr nz, .call_link_rule_check_link_rule_turn_limit
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6832::
+.call_link_rule_check_link_rule_turn_limit:
     farcall LinkRuleCheckLinkRuleTurnLimitTurnLimit
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6842
+    jr nz, .return
     ld bc, $000F
     call AccumulateBank6WordToDA6E
 
-Jump_0E2_6842::
+.return:
     ret
 
 ; only called from AIScore_Sacrifice (E-0047)
@@ -5882,11 +5890,11 @@ Func_0E2_6843:: ; address name
     farcall LinkRuleCheckWD044Bit6
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6853
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6853::
+.return:
     ret
 
 ; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
@@ -5896,11 +5904,11 @@ Func_0E2_6854:: ; address name
     farcall CheckWD044RuleBit5
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6864
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6864::
+.return:
     ret
 
 ; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
@@ -5910,11 +5918,11 @@ Func_0E2_6865:: ; address name
     farcall CheckWD044RuleBit4
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6875
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6875::
+.return:
     ret
 
 ; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
@@ -5924,11 +5932,11 @@ Func_0E2_6876:: ; address name
     farcall CheckWD044RuleBit3
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6886
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6886::
+.return:
     ret
 
 ; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
@@ -5938,11 +5946,11 @@ Func_0E2_6887:: ; address name
     farcall CheckWD044RuleBit2
     ld a, c
     and a, a
-    jr nz, Jump_0E2_6897
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_6897::
+.return:
     ret
 
 ; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
@@ -5952,11 +5960,11 @@ Func_0E2_6898:: ; address name
     farcall CheckWD044RuleBit1
     ld a, c
     and a, a
-    jr nz, Jump_0E2_68A8
+    jr nz, .return
     ld bc, $000E
     call AccumulateBank6WordToDA70
 
-Jump_0E2_68A8::
+.return:
     ret
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
@@ -5965,45 +5973,46 @@ Jump_0E2_68A8::
 GetBattleATK_BankE2:: ; heuristic: follows a terminator; C0
 Func_0E2_68A9:: ; address name
     ld hl, wBattleATK
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleDEF
 GetBattleDEF_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
 Func_0E2_68AE:: ; address name
     ld hl, wBattleDEF
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
 Func_0E2_68B3:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
 Func_0E2_68B8:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
 GetBattleHP_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_0E2_68BD:: ; address name
     ld hl, wBattleHP
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
 GetBattleMP_BankE2:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_0E2_68C2:: ; address name
     ld hl, wBattleMP
-    jr Jump_0E2_68D6
+    jr GetBattleMP_BankE2_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_0E2_68D6::
+GetBattleMP_BankE2_Skip::
+Jump_0E2_68D6:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -6024,16 +6033,16 @@ ActorOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0
 Func_0E2_68E7:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0E2_68FC
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0E2_68FC
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_0E2_68FC::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -6045,16 +6054,16 @@ TargetOnLocalSide_BankE2:: ; heuristic: follows a terminator; C0
 Func_0E2_6902:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0E2_6917
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0E2_6917
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_0E2_6917::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -6130,13 +6139,13 @@ Func_0E2_6960:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E2_697C
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_0E2_697C
+    jr nc, .skip
     ld l, $12
 
-Jump_0E2_697C::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -6146,13 +6155,13 @@ Jump_0E2_697C::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E2_6997
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_0E2_6997
+    jr nc, .skip2
     ld l, $06
 
-Jump_0E2_6997::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -6162,13 +6171,13 @@ Jump_0E2_6997::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E2_69B2
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_0E2_69B2
+    jr nc, .skip3
     ld l, $02
 
-Jump_0E2_69B2::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -6189,17 +6198,17 @@ Func_0E2_69B7:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0E2_69D1
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_0E2_69D1
+    jr nz, .set_carry
     xor a, a
-    jr Jump_0E2_69D2
+    jr .skip
 
-Jump_0E2_69D1::
+.set_carry:
     scf
 
-Jump_0E2_69D2::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -6215,11 +6224,11 @@ Func_0E2_69D6:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0E2_69E5
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_0E2_69E5::
+.done:
     pop hl
     ret
     ds $1619, $00

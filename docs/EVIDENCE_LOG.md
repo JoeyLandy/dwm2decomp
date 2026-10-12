@@ -2431,6 +2431,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0287 — Branch targets become local labels named by shape; two sound routines named
+
+- Kind: TOOL (naming of branch targets; C2 for the shape each name states, no claim about purpose).
+- **What changed.** Every branch target that had only an address name (`Jump_BBB_AAAA::` without an alias) now has a name. There were 13,086 of them. localize_jump_labels runs on the rendered text after fold_idioms.
+- **Local labels.** A target becomes an RGBDS local label (`.loop:`) when every code reference to it is in its own scope, between the same two global labels.
+- **Global targets.** A target referenced from another routine stays global. It is named `<Routine>_<Shape>` after the routine it falls in, and keeps its address name as an alias.
+- **Scope splitting.** A target that stays global splits the scope around it. The pass therefore repeats until the global set stops changing. A target that another file uses also stays global; the build is one assembly unit, so this only affects scope.
+- **Shapes.**
+  - `loop`: a conditional branch later in the same routine comes back to it. An unconditional jump back is a join and is named by what follows.
+  - `return`: a lone `ret`.
+  - `return_NN`, `return_0`, `return_carry`, `return_no_carry`: it sets A or the carry flag, then returns.
+  - First RAM store, RAM load or named call within three instructions and before any branch: `set_x` (`clear_x` after `xor a`, `set_x_to_NN` after `ld a, $NN`), `check_x` or `read_x`, `call_x`.
+  - `done`: it reaches `ret` first.
+  - First instruction: `cp_NN`, `check_bitN`, `next` (inc/dec of a counter or pointer), `restore` (pop), `set_carry`, `to_x` (`jp` to a named routine).
+  - `skip`: anything else (2,298 of them).
+  - A repeated shape in one scope is numbered: `.skip2`.
+- **Comments.** A comment that mentioned an address name now names the local as `Routine.local`.
+- **Counts after the change.**
+  - Shapes: `.call` 2,808; `.loop` 1,896; `.check` 1,264; `.set` 1,213; `.read` 876; `.next` 580; `.done` 529; `.return` 415; `.restore` 357; `.clear` 273; `.cp` 209.
+  - Branch targets with only an address name: 13,088 → 0.
+- **Two annotated targets named.** 00:3554 is StartChannelFromTrackHeader and 00:3938 is ComputeNotePitch, from their C2 annotations (E-0019). Before this, their annotations sat above bare address labels.
+- **Tests.**
+  - tests/test_local_labels.py covers 8 cases: a loop, the forward shapes, numbering, a target kept global with its alias, a reference from another file, scope splitting, comment rewriting, and that aliases are left alone.
+  - The operand test now recognises local labels and skips alias lines.
+- Binary verification: build/run382 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0286 — Key-world and field talk-event commands named from their triggers and calls
 
 - Kind: STATIC (C1 names; C2 for the trigger and call relations).

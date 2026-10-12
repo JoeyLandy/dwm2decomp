@@ -1,7 +1,7 @@
 SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
-; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to Jump_03A_48EC or the effect code, which is not read (E-0057)
+; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to ActionEffectTable_Flag3_ClearEffectFlags52 or the effect code, which is not read (E-0057)
 ; 15 call sites from 13 routines (e.g. RunBattleActions_Case00_Sub01_CompareActionIdWithCD, RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ...)
 ; reads: wBattleTarget, wBattleActionId, wEffectFlags, wDefeatByteBF, wRecordBufferData, wBattleActor, wBattleArg0, wEffectTileOffset
 ; writes: wBattleActor, wEffectRoutine, wEffectId, wEffectFrameCounter, wEffectFlags52, wBattleArg0, wEffectTileOffset, wEffectByteB5, ...
@@ -11,7 +11,7 @@ Func_03A_4001:: ; address name
     ld a, [wBattleTarget]
     and a, $03
     cp a, $03
-    jr nz, Jump_03A_4019
+    jr nz, .check_effect_flags
     ld a, [wBattleActionId]
     cp a, $85
     ret c
@@ -21,72 +21,72 @@ Func_03A_4001:: ; address name
     and a, $41
     ret z
 
-Jump_03A_4019::
+.check_effect_flags:
     ld a, [wEffectFlags]
     or a, a
     ret z
     bit 7, a
-    jr nz, Jump_03A_406E
+    jr nz, .skip2
     bit 6, a
-    jr nz, Jump_03A_4073
+    jr nz, .check_bit02
     bit 5, a
-    jr nz, Jump_03A_407B
+    jr nz, .read_battle_action_id
     bit 4, a
-    jr nz, Jump_03A_404D
+    jr nz, .check_bit0
     bit 3, a
-    jr nz, Jump_03A_4042
+    jr nz, .read_battle_target2
     bit 2, a
-    jr nz, Jump_03A_4037
+    jr nz, .read_battle_target
     ret
 
-Jump_03A_4037::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld hl, ActionEffectTable_Flag2
-    jr Jump_03A_407E
+    jr .read_battle_action_id2
 
-Jump_03A_4042::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld hl, ActionEffectTable_Flag3
-    jr Jump_03A_407E
+    jr .read_battle_action_id2
 
-Jump_03A_404D::
+.check_bit0:
     bit 0, a
     ret z
     srl a
     and a, $07
     cp a, $00
-    jr z, Jump_03A_4062
+    jr z, .call_target_on_local_side_bank3_a
     cp a, $01
-    jr z, Jump_03A_405D
+    jr z, .skip
     ret
 
-Jump_03A_405D::
+.skip:
     ld a, $14
-    jp Jump_03A_48EC
+    jp ActionEffectTable_Flag3_ClearEffectFlags52
 
-Jump_03A_4062::
+.call_target_on_local_side_bank3_a:
     call TargetOnLocalSide_Bank3A
     ld a, $02
-    jp c, Jump_03A_40B3
+    jp c, .set_effect_routine
     ld a, $03
-    jr Jump_03A_40B3
+    jr .set_effect_routine
 
-Jump_03A_406E::
+.skip2:
     ld hl, ActionEffectTable_Flag7
-    jr Jump_03A_407E
+    jr .read_battle_action_id2
 
-Jump_03A_4073::
+.check_bit02:
     bit 0, a
     ret z
     ld hl, ActionEffectTable_Flag6
-    jr Jump_03A_407E
+    jr .read_battle_action_id2
 
-Jump_03A_407B::
+.read_battle_action_id:
     ld hl, ActionEffectTable_Flag5
 
-Jump_03A_407E::
+.read_battle_action_id2:
     ld a, [wBattleActionId]
     push af
     ld c, a
@@ -95,32 +95,32 @@ Jump_03A_407E::
     add hl, bc
     pop af
     cp a, $6C
-    jr z, Jump_03A_40A2
+    jr z, .call_target_on_local_side_bank3_a2
     ld a, [wDefeatByteBF]
     bit 0, a
-    jr nz, Jump_03A_40A2
+    jr nz, .call_target_on_local_side_bank3_a2
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr z, Jump_03A_40A2
+    jr z, .call_target_on_local_side_bank3_a2
     call ActorOnLocalSide_Bank3A
-    jr nc, Jump_03A_40AA
+    jr nc, .skip3
     inc hl
-    jr Jump_03A_40AA
+    jr .skip3
 
-Jump_03A_40A2::
+.call_target_on_local_side_bank3_a2:
     call TargetOnLocalSide_Bank3A
-    jr c, Jump_03A_40AA
+    jr c, .skip3
     inc hl
-    jr Jump_03A_40AA
+    jr .skip3
 
-Jump_03A_40AA::
+.skip3:
     ld a, [hl]
     cp a, $FF
     ret z
     bit 7, a
-    jp z, Jump_03A_48EC
+    jp z, ActionEffectTable_Flag3_ClearEffectFlags52
 
-Jump_03A_40B3::
+.set_effect_routine:
     and a, $7F
     ld [wEffectRoutine], a
     ld a, $00
@@ -133,7 +133,7 @@ Jump_03A_40B3::
     ld [wEffectFrameCounter], a
     ret
 
-; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectFlags52; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag7::
 Data_03A_40CC:: ; address name
@@ -366,7 +366,7 @@ Data_03A_40CC:: ; address name
     db $FF, $FF ; id 226
     db $3B, $FF ; id 227
 
-; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 6 (with bit 0), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 6 (with bit 0), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectFlags52; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag6::
 Data_03A_4294:: ; address name
@@ -599,7 +599,7 @@ Data_03A_4294:: ; address name
     db $FF, $FF ; id 226
     db $FF, $FF ; id 227
 
-; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectFlags52; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 228 entries).
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag5::
 Data_03A_445C:: ; address name
@@ -1065,7 +1065,7 @@ Data_03A_4624:: ; address name
     db $FF, $FF ; id 226
     db $FF, $FF ; id 227
 
-; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 2 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 2 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectFlags52; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag2::
 Data_03A_47EC:: ; address name
@@ -1134,7 +1134,7 @@ Data_03A_47EC:: ; address name
     db $FF, $FF ; id 62
     db $FF, $FF ; id 63
 
-; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 3 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
+; E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 3 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectFlags52; the debug viewer DrawSkillByte0AndRun502BAnd53B9_Sub01 shows the first three tables; 64 entries).
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag3::
 Data_03A_486C:: ; address name
@@ -1203,42 +1203,43 @@ Data_03A_486C:: ; address name
     db $FF, $FF ; id 62
     db $FF, $FF ; id 63
 
-Jump_03A_48EC::
+ActionEffectTable_Flag3_ClearEffectFlags52::
+Jump_03A_48EC:: ; address name
     push af
     xor a, a
     ld [wEffectFlags52], a
     ld a, [wBattleActionId]
     cp a, $D7
-    jr z, Jump_03A_48FA
-    jr Jump_03A_48FF
+    jr z, .set_effect_flags52_to_01
+    jr .call_select_effect_by_effect_flags_write
 
-Jump_03A_48FA::
+.set_effect_flags52_to_01:
     ld a, $01
     ld [wEffectFlags52], a
 
-Jump_03A_48FF::
+.call_select_effect_by_effect_flags_write:
     pop af
     ld b, a
     call SelectEffectByEffectFlags_WriteBattleArg0
     call SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc
     ld a, b
-    jr nc, Jump_03A_492E
+    jr nc, .set_effect_tile_offset
     cp a, $2B
-    jr z, Jump_03A_492E
+    jr z, .set_effect_tile_offset
     cp a, $32
-    jr z, Jump_03A_492E
+    jr z, .set_effect_tile_offset
     cp a, $13
-    jr z, Jump_03A_4917
+    jr z, .check_battle_action_id
     ret
 
-Jump_03A_4917::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $32
-    jr z, Jump_03A_4921
+    jr z, .check_effect_flags
     cp a, $77
     ret nz
 
-Jump_03A_4921::
+.check_effect_flags:
     ld a, [wEffectFlags]
     cp a, $41
     ret nz
@@ -1246,45 +1247,45 @@ Jump_03A_4921::
     ld [wBattleArg0], a
     ld a, b
 
-Jump_03A_492E::
+.set_effect_tile_offset:
     ld [wEffectTileOffset], a
     ld [wEffectByteB5], a
     ld b, a
     call SelectEffectByEffectFlags_WaitEffectFlags
-    jr z, Jump_03A_4962
+    jr z, .set_effect_target_mode
     ld a, b
     cp a, $09
-    jr nz, Jump_03A_494A
+    jr nz, .cp_0D
     ld a, [wBattleActionId]
     cp a, $48
     ld a, b
-    jr nz, Jump_03A_494A
+    jr nz, .cp_0D
     xor a, a
-    jr Jump_03A_4962
+    jr .set_effect_target_mode
 
-Jump_03A_494A::
+.cp_0D:
     cp a, $0D
-    jr nz, Jump_03A_4959
+    jr nz, .skip
     ld hl, wEffectFlags
     bit 1, [hl]
-    jr z, Jump_03A_4959
+    jr z, .skip
     ld a, $00
-    jr Jump_03A_4962
+    jr .set_effect_target_mode
 
-Jump_03A_4959::
+.skip:
     ld hl, SelectEffectByEffectFlags_Data
     add_a_to_hl
     ld a, [hl]
 
-Jump_03A_4962::
+.set_effect_target_mode:
     ld [wEffectTargetMode], a
     cp a, $00
-    jr nz, Jump_03A_4970
+    jr nz, .clear_effect_sprite_x
     ld a, [wBattleArg0]
     call CarryUnlessBattleSlotOutSlotEmpty
     ret c
 
-Jump_03A_4970::
+.clear_effect_sprite_x:
     xor a, a
     ld [wEffectSpriteX], a
     ld a, $FF
@@ -1326,16 +1327,16 @@ SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc::
 Func_03A_49EB:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_4A00
+    jr nz, .check_battle_arg0
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_4A00
+    jr z, .check_battle_arg0
     ld a, [wBattleArg0]
     cp a, $04
     ccf
     ret
 
-Jump_03A_4A00::
+.check_battle_arg0:
     ld a, [wBattleArg0]
     cp a, $04
     ret
@@ -1365,21 +1366,21 @@ SelectEffectByEffectFlags_WriteBattleArg0::
 Func_03A_4A19:: ; address name
     ld a, [wEffectFlags]
     bit 3, a
-    jr nz, Jump_03A_4A33
+    jr nz, .read_battle_target
     ld a, [wBattleActionId]
     cp a, $3A
-    jr z, Jump_03A_4A2C
+    jr z, .read_battle_actor
     ld a, [wBattleTarget]
-    jr Jump_03A_4A2F
+    jr .set_battle_arg0
 
-Jump_03A_4A2C::
+.read_battle_actor:
     ld a, [wBattleActor]
 
-Jump_03A_4A2F::
+.set_battle_arg0:
     ld [wBattleArg0], a
     ret
 
-Jump_03A_4A33::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld [wBattleArg0], a
     ret
@@ -1393,34 +1394,34 @@ SetEffectSpriteXForTargets::
 Func_03A_4A3A:: ; address name
     ld a, [wEffectTargetMode]
     cp a, $00
-    jr z, Jump_03A_4A4F
+    jr z, .read_battle_foe_count
     cp a, $01
-    jr z, Jump_03A_4A79
+    jr z, .set_effect_sprite_x_to_50
     cp a, $02
-    jr z, Jump_03A_4A7F
+    jr z, .read_battle_foe_count2
     ld a, $00
     ld [wEffectSpriteX], a
     ret
 
-Jump_03A_4A4F::
+.read_battle_foe_count:
     ld a, [wBattleFoeCount]
     ld b, a
     ld a, b
     cp a, $03
-    jr z, Jump_03A_4A60
+    jr z, .skip
     cp a, $02
-    jr z, Jump_03A_4A64
+    jr z, .check_battle_arg0
     ld b, $05
-    jr Jump_03A_4A66
+    jr .check_battle_arg02
 
-Jump_03A_4A60::
+.skip:
     ld b, $00
-    jr Jump_03A_4A66
+    jr .check_battle_arg02
 
-Jump_03A_4A64::
+.check_battle_arg0:
     ld b, $03
 
-Jump_03A_4A66::
+.check_battle_arg02:
     ld a, [wBattleArg0]
     and a, $03
     add a, b
@@ -1430,44 +1431,44 @@ Jump_03A_4A66::
     ld [wEffectSpriteX], a
     ret
 
-Jump_03A_4A79::
+.set_effect_sprite_x_to_50:
     ld a, $50
     ld [wEffectSpriteX], a
     ret
 
-Jump_03A_4A7F::
+.read_battle_foe_count2:
     ld c, $04
     ld a, [wBattleFoeCount]
     ld b, a
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_4A95
+    jr nz, .skip2
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_4A95
+    jr z, .skip2
     ld c, $00
 
-Jump_03A_4A95::
+.skip2:
     ld e, $00
     ld a, b
     cp a, $03
-    jr z, Jump_03A_4AA4
+    jr z, .skip3
     cp a, $02
-    jr z, Jump_03A_4AA8
+    jr z, .call_carry_unless_battle_slot_out_slot_empty
     ld d, $05
-    jr Jump_03A_4A66
+    jr .check_battle_arg02
 
-Jump_03A_4AA4::
+.skip3:
     ld d, $00
-    jr Jump_03A_4AAA
+    jr .loop
 
-Jump_03A_4AA8::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld d, $03
 
-Jump_03A_4AAA::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_4ACA
+    jr c, .next
     ld a, e
     ld hl, wEffectStep
     add_a_to_hl
@@ -1482,10 +1483,10 @@ Jump_03A_4AAA::
     ld [hl], a
     inc e
 
-Jump_03A_4ACA::
+.next:
     inc c
     dec b
-    jr nz, Jump_03A_4AAA
+    jr nz, .loop
     ld a, [wEffectStep]
     ld [wEffectSpriteX], a
     ret
@@ -1504,10 +1505,10 @@ RunBattleEffectAnimation::
 Func_03A_4ADB:: ; address name
     ld a, [wEffectId]
     cp a, $00
-    jp z, Jump_03A_4C14
+    jp z, RunBattleEffectAnimation_Data_CallRunEffectRoutineEffectEvery5Frames
     ld a, [wEffectAnimState]
     cp a, $01
-    jr nz, Jump_03A_4B04
+    jr nz, .check_effect_anim_state
     ld a, [wEffectTileOffset]
     ld c, a
     call DecompressGraphicsAToTiles0
@@ -1520,33 +1521,33 @@ Func_03A_4ADB:: ; address name
     call SelectEffectByEffectFlags2Flags
     ret
 
-Jump_03A_4B04::
+.check_effect_anim_state:
     ld a, [wEffectAnimState]
     cp a, $02
-    jp nz, Jump_03A_4B87
+    jp nz, .skip
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_03A_4B18
+    jr nz, .call_advance_effect_sprite_x_by4_in_mode3
     farcall TickSequencePtrLoSequence
 
-Jump_03A_4B18::
+.call_advance_effect_sprite_x_by4_in_mode3:
     call AdvanceEffectSpriteXBy4InMode3
     ld a, [wEffectByteB3]
     or a, a
-    jr z, Jump_03A_4B2B
+    jr z, .check_effect_target_mode
     ld a, [wEffectActive]
     or a, a
-    jr z, Jump_03A_4B2B
+    jr z, .check_effect_target_mode
     call DrawEffectSpriteForEffectTileOffsetRange
     ret
 
-Jump_03A_4B2B::
+.check_effect_target_mode:
     ld a, [wEffectTargetMode]
     cp a, $02
-    jr nz, Jump_03A_4B74
+    jr nz, .check_effect_flags52
     ld a, [wEffectByte06]
     cp a, $FF
-    jr z, Jump_03A_4B53
+    jr z, .check_effect_counter
     ld a, [wEffectByte06]
     ld [wEffectSpriteX], a
     ld a, $FF
@@ -1559,10 +1560,10 @@ Jump_03A_4B2B::
     ld [wEffectFrameCounter], a
     ret
 
-Jump_03A_4B53::
+.check_effect_counter:
     ld a, [wEffectCounter]
     cp a, $FF
-    jr z, Jump_03A_4B74
+    jr z, .check_effect_flags52
     ld a, [wEffectCounter]
     ld [wEffectSpriteX], a
     ld a, $FF
@@ -1575,10 +1576,10 @@ Jump_03A_4B53::
     ld [wEffectFrameCounter], a
     ret
 
-Jump_03A_4B74::
+.check_effect_flags52:
     ld a, [wEffectFlags52]
     or a, a
-    jr nz, Jump_03A_4BB5
+    jr nz, .clear_effect_flags52
     xor a, a
     ld [wEffectAnimState], a
     ld [wEffectActive], a
@@ -1586,7 +1587,7 @@ Jump_03A_4B74::
     ld [wEffectId], a
     ret
 
-Jump_03A_4B87::
+.skip:
     ld hl, wEffectFrameCounter
     dec [hl]
     ld a, [hl]
@@ -1608,7 +1609,7 @@ Jump_03A_4B87::
     call SelectEffectByEffectFlags2Flags
     ret
 
-Jump_03A_4BB5::
+.clear_effect_flags52:
     xor a, a
     ld [wEffectFlags52], a
     ld a, [wBattleActionId]
@@ -1652,7 +1653,8 @@ RunBattleEffectAnimation_Data:: ; heuristic: pointer load in the same bank (bank
 Data_03A_4C12:: ; address name
     db $22, $00
 
-Jump_03A_4C14::
+RunBattleEffectAnimation_Data_CallRunEffectRoutineEffectEvery5Frames::
+Jump_03A_4C14:: ; address name
     call RunEffectRoutineEffectEvery5Frames
     call UploadBGPalettesWithFade
     ld a, [wEffectId]
@@ -1715,21 +1717,21 @@ Jump_03A_4C5E:: ; address name
     jp z, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_4C7F
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_4C7F
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     jr nc, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
-    jr Jump_03A_4C86
+    jr .read_battle_target
 
-Jump_03A_4C7F::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     jr c, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
 
-Jump_03A_4C86::
+.read_battle_target:
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, RunEffectRoutineEffectEvery5Frames_Table2_SetEffectId
@@ -1811,37 +1813,37 @@ EffectPositionIndexForTarget::
 Func_03A_4CF9:: ; address name
     ld a, [wBattleFoeCount]
     cp a, $01
-    jr z, Jump_03A_4D28
+    jr z, .return_00
     cp a, $02
-    jr z, Jump_03A_4D17
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     and a, $03
     cp a, $01
-    jr z, Jump_03A_4D28
-    jr c, Jump_03A_4D13
+    jr z, .return_00
+    jr c, .skip
     ld a, $04
-    jr Jump_03A_4D2A
+    jr .return
 
-Jump_03A_4D13::
+.skip:
     ld a, $03
-    jr Jump_03A_4D2A
+    jr .return
 
-Jump_03A_4D17::
+.check_battle_target:
     ld a, [wBattleTarget]
     and a, $03
     cp a, $01
-    jr z, Jump_03A_4D24
+    jr z, .skip2
     ld a, $01
-    jr Jump_03A_4D2A
+    jr .return
 
-Jump_03A_4D24::
+.skip2:
     ld a, $02
-    jr Jump_03A_4D2A
+    jr .return
 
-Jump_03A_4D28::
+.return_00:
     ld a, $00
 
-Jump_03A_4D2A::
+.return:
     ret
 
 ; copies rows of wD805 bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
@@ -1853,7 +1855,7 @@ Func_03A_4D2B:: ; address name
     ld a, [wEffectStep]
     ld b, a
 
-Jump_03A_4D30::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -1861,17 +1863,17 @@ Jump_03A_4D30::
     ei
     inc de
     dec b
-    jr nz, Jump_03A_4D30
+    jr nz, .loop
     pop de
     dec c
     ret z
     ld a, $20
     add a, e
     ld e, a
-    jr nc, Jump_03A_4D45
+    jr nc, .skip
     inc d
 
-Jump_03A_4D45::
+.skip:
     jr CopyVRAMRectToBuffer
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
@@ -2157,49 +2159,49 @@ Func_03A_4EC3:: ; address name
     ld c, $00
     ld hl, wDMGPaletteBGP
 
-Jump_03A_4ECE::
+.loop:
     ld a, [hl]
     and a, $03
     add a, $01
     cp a, $04
-    jr c, Jump_03A_4ED9
+    jr c, .skip
     ld a, $03
 
-Jump_03A_4ED9::
+.skip:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $0C
     add a, $04
     cp a, $0D
-    jr c, Jump_03A_4EE6
+    jr c, .skip2
     ld a, $0C
 
-Jump_03A_4EE6::
+.skip2:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $30
     add a, $10
     cp a, $31
-    jr c, Jump_03A_4EF3
+    jr c, .skip3
     ld a, $30
 
-Jump_03A_4EF3::
+.skip3:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $C0
     add a, $40
     cp a, $C1
-    jr c, Jump_03A_4F00
+    jr c, .skip4
     ld a, $C0
 
-Jump_03A_4F00::
+.skip4:
     or a, c
     ld [hl+], a
     dec b
-    jr nz, Jump_03A_4ECE
+    jr nz, .loop
     ret
 
 ; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
@@ -2516,12 +2518,12 @@ RunEffectRoutineEffectEvery5Frames_ReadEffectCounter::
 Jump_03A_507A:: ; address name
     ld a, [wEffectCounter]
     or a, a
-    jr nz, Jump_03A_5085
+    jr nz, .done
     ld hl, wEffectCounter
     inc [hl]
     ret
 
-Jump_03A_5085::
+.done:
     ld hl, wEffectCounter
     inc [hl]
     ret
@@ -2612,45 +2614,45 @@ Func_03A_50D9:: ; address name
     ld c, $00
     ld hl, wDMGPaletteBGP
 
-Jump_03A_50E4::
+.loop:
     ld a, [hl]
     and a, $03
     cp a, $00
-    jr z, Jump_03A_50ED
+    jr z, .skip
     sub a, $01
 
-Jump_03A_50ED::
+.skip:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $0C
     cp a, $00
-    jr z, Jump_03A_50F8
+    jr z, .skip2
     sub a, $04
 
-Jump_03A_50F8::
+.skip2:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $30
     cp a, $00
-    jr z, Jump_03A_5103
+    jr z, .skip3
     sub a, $10
 
-Jump_03A_5103::
+.skip3:
     or a, c
     ld c, a
     ld a, [hl]
     and a, $C0
     cp a, $00
-    jr z, Jump_03A_510E
+    jr z, .skip4
     sub a, $40
 
-Jump_03A_510E::
+.skip4:
     or a, c
     ld [hl+], a
     dec b
-    jr nz, Jump_03A_50E4
+    jr nz, .loop
     ret
 
 ; entry 11 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
@@ -2857,16 +2859,16 @@ Jump_03A_51DF:: ; address name
     cp a, $03
     jr z, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
     dec c
-    jr nz, Jump_03A_51FB
+    jr nz, .cp_04
     cp a, $04
     jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
-    jr Jump_03A_51FF
+    jr .read_battle_actor
 
-Jump_03A_51FB::
+.cp_04:
     cp a, $04
     jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
 
-Jump_03A_51FF::
+.read_battle_actor:
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
@@ -2948,37 +2950,37 @@ EffectPositionIndexForActor::
 Func_03A_5272:: ; address name
     ld a, [wBattleFoeCount]
     cp a, $01
-    jr z, Jump_03A_52A1
+    jr z, .return_00
     cp a, $02
-    jr z, Jump_03A_5290
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     and a, $03
     cp a, $01
-    jr z, Jump_03A_52A1
-    jr c, Jump_03A_528C
+    jr z, .return_00
+    jr c, .skip
     ld a, $04
-    jr Jump_03A_52A3
+    jr .return
 
-Jump_03A_528C::
+.skip:
     ld a, $03
-    jr Jump_03A_52A3
+    jr .return
 
-Jump_03A_5290::
+.check_battle_actor:
     ld a, [wBattleActor]
     and a, $03
     cp a, $01
-    jr z, Jump_03A_529D
+    jr z, .skip2
     ld a, $01
-    jr Jump_03A_52A3
+    jr .return
 
-Jump_03A_529D::
+.skip2:
     ld a, $02
-    jr Jump_03A_52A3
+    jr .return
 
-Jump_03A_52A1::
+.return_00:
     ld a, $00
 
-Jump_03A_52A3::
+.return:
     ret
 
 ; A = entry: decompresses the stream named by the 3-byte far pointer at Data_03A_52B9 + 3 * A to vTiles0 (DecompressToVRAM) (E-0118)
@@ -3090,29 +3092,29 @@ DrawEffectSpriteForEffectTileOffsetRange::
 Func_03A_5383:: ; address name
     ld a, [wEffectTileOffset]
     cp a, $0E
-    jr c, Jump_03A_539D
+    jr c, .call_draw_effect_sprite_at_effect_sprite_x
     cp a, $20
-    jr c, Jump_03A_53A4
+    jr c, .call_draw_effect_sprite_for_effect_tile
     cp a, $2D
-    jr c, Jump_03A_53AB
+    jr c, .call_draw_effect_sprite_for_effect_tile2
     cp a, $33
-    jr c, Jump_03A_53B2
+    jr c, .call_draw_effect_sprite_at_effect_sprite_x2
     farcall DrawEffectSpriteAtEffectSpriteX_Bank92
     ret
 
-Jump_03A_539D::
+.call_draw_effect_sprite_at_effect_sprite_x:
     farcall DrawEffectSpriteAtEffectSpriteX_Bank3E
     ret
 
-Jump_03A_53A4::
+.call_draw_effect_sprite_for_effect_tile:
     farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02
     ret
 
-Jump_03A_53AB::
+.call_draw_effect_sprite_for_effect_tile2:
     farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-Jump_03A_53B2::
+.call_draw_effect_sprite_at_effect_sprite_x2:
     farcall DrawEffectSpriteAtEffectSpriteX_Bank3B
     ret
 
@@ -3171,19 +3173,19 @@ Func_03A_540A:: ; address name
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_03A_5451
+    jr z, .next
     push hl
     push af
     and a, $0F
     cp a, $0A
-    jr nc, Jump_03A_5424
+    jr nc, .read_battle_arg0
     add a, $E0
-    jr Jump_03A_5426
+    jr .read_battle_arg02
 
-Jump_03A_5424::
+.read_battle_arg0:
     sub a, $02
 
-Jump_03A_5426::
+.read_battle_arg02:
     ld b, a
     ld a, [wBattleArg0]
     ld l, a
@@ -3195,14 +3197,14 @@ Jump_03A_5426::
     swap a
     and a, $0F
     cp a, $0A
-    jr nc, Jump_03A_5440
+    jr nc, .read_battle_arg03
     add a, $E0
-    jr Jump_03A_5442
+    jr .read_battle_arg04
 
-Jump_03A_5440::
+.read_battle_arg03:
     sub a, $02
 
-Jump_03A_5442::
+.read_battle_arg04:
     ld b, a
     ld a, [wBattleArg0]
     ld l, a
@@ -3213,22 +3215,22 @@ Jump_03A_5442::
     call WriteVRAMByte
     pop hl
 
-Jump_03A_5451::
+.next:
     dec hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_03A_548E
+    jr z, .return
     push af
     and a, $0F
     cp a, $0A
-    jr nc, Jump_03A_5462
+    jr nc, .read_battle_arg2
     add a, $E0
-    jr Jump_03A_5464
+    jr .read_battle_arg22
 
-Jump_03A_5462::
+.read_battle_arg2:
     sub a, $02
 
-Jump_03A_5464::
+.read_battle_arg22:
     ld b, a
     ld a, [wBattleArg2]
     ld l, a
@@ -3240,14 +3242,14 @@ Jump_03A_5464::
     swap a
     and a, $0F
     cp a, $0A
-    jr nc, Jump_03A_547E
+    jr nc, .read_battle_arg23
     add a, $E0
-    jr Jump_03A_5480
+    jr .read_battle_arg24
 
-Jump_03A_547E::
+.read_battle_arg23:
     sub a, $02
 
-Jump_03A_5480::
+.read_battle_arg24:
     ld b, a
     ld a, [wBattleArg2]
     ld l, a
@@ -3257,7 +3259,7 @@ Jump_03A_5480::
     ld a, b
     call WriteVRAMByte
 
-Jump_03A_548E::
+.return:
     ret
 
 ; only called from DrawHexByteAtBGMap8A (E-0047)
@@ -3306,7 +3308,7 @@ RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0::
 Func_03A_54DC:: ; address name
     ld a, [wEffectAnimState]
     cp a, $01
-    jr nz, Jump_03A_54F0
+    jr nz, .call_tick_sequence_ptr_lo_sequence
     ld a, [wEffectTileOffset]
     ld c, a
     call DecompressGraphicsAToTiles0
@@ -3314,19 +3316,19 @@ Func_03A_54DC:: ; address name
     ld [wEffectAnimState], a
     ret
 
-Jump_03A_54F0::
+.call_tick_sequence_ptr_lo_sequence:
     farcall TickSequencePtrLoSequence
     call AdvanceEffectSpriteXBy4InMode3
     ld a, [wEffectByteB3]
     or a, a
-    jr z, Jump_03A_5509
+    jr z, .clear_effect_anim_state
     ld a, [wEffectActive]
     or a, a
-    jr z, Jump_03A_5509
+    jr z, .clear_effect_anim_state
     call DrawEffectSpriteForEffectTileOffsetRange
     ret
 
-Jump_03A_5509::
+.clear_effect_anim_state:
     xor a, a
     ld [wEffectAnimState], a
     ld [wEffectActive], a
@@ -3354,12 +3356,12 @@ Func_03A_5516:: ; address name
     ld b, $08
     ld de, wOBJPaletteBuffer
 
-Jump_03A_552A::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_03A_552A
+    jr nz, .loop
     ld a, $80
     ld [wOBJPaletteUploadRequest], a
     ret
@@ -3377,76 +3379,76 @@ Func_03A_5536:: ; address name
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp a, [hl]
-    jp z, Jump_03A_564C
+    jp z, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0
     ld c, $69
 
-Jump_03A_5547::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5547
+    jr nz, .loop
     ld a, $80
     ldh [rBGPI], a
     ld hl, wBGPaletteBuffer
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_5557::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5557
+    jr nz, .loop2
     ld a, $88
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_5564::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5564
+    jr nz, .loop3
     ld a, $90
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_5571::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5571
+    jr nz, .loop4
     ld a, $98
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_557E::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_557E
+    jr nz, .loop5
     ld a, $A0
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_558B::
+.loop6:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_558B
+    jr nz, .loop6
     ld a, $A8
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_5598::
+.loop7:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5598
+    jr nz, .loop7
     ld a, $B0
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
 
-Jump_03A_55A5::
+.loop8:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_55A5
+    jr nz, .loop8
     ld a, $B8
     ldh [rBGPI], a
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp Jump_03A_564C
+    jp UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0
 
 ; only called from UploadBGPalettesWithFade (E-0047)
 ; 8 call sites from 1 routine (e.g. UploadBGPalettesWithFade)
@@ -3459,20 +3461,20 @@ Func_03A_55BB:: ; address name
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_55C9
+    jr nc, .skip
     inc d
 
-Jump_03A_55C9::
+.skip:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_55CF
+    jr nc, .loop
     inc h
 
-Jump_03A_55CF::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_55CF
+    jr nz, .loop
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3486,46 +3488,20 @@ Jump_03A_55CF::
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_55EC
+    jr nc, .skip2
     inc d
 
-Jump_03A_55EC::
+.skip2:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_55F2
+    jr nc, .loop2
     inc h
 
-Jump_03A_55F2::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_55F2
-    ld a, [hl+]
-    ldh [c], a
-    ld a, [hl]
-    ldh [c], a
-    pop hl
-    push hl
-    ld a, [wDMGPaletteBGP]
-    swap a
-    and a, $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
-    add a, e
-    ld e, a
-    jr nc, Jump_03A_560D
-    inc d
-
-Jump_03A_560D::
-    ld a, [de]
-    add a, l
-    ld l, a
-    jr nc, Jump_03A_5613
-    inc h
-
-Jump_03A_5613::
-    ldh a, [rSTAT]
-    bit 1, a
-    jr nz, Jump_03A_5613
+    jr nz, .loop2
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3534,26 +3510,52 @@ Jump_03A_5613::
     push hl
     ld a, [wDMGPaletteBGP]
     swap a
+    and a, $03
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    add a, e
+    ld e, a
+    jr nc, .skip3
+    inc d
+
+.skip3:
+    ld a, [de]
+    add a, l
+    ld l, a
+    jr nc, .loop3
+    inc h
+
+.loop3:
+    ldh a, [rSTAT]
+    bit 1, a
+    jr nz, .loop3
+    ld a, [hl+]
+    ldh [c], a
+    ld a, [hl]
+    ldh [c], a
+    pop hl
+    push hl
+    ld a, [wDMGPaletteBGP]
+    swap a
     srl a
     srl a
     and a, $03
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_5632
+    jr nc, .skip4
     inc d
 
-Jump_03A_5632::
+.skip4:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_5638
+    jr nc, .loop4
     inc h
 
-Jump_03A_5638::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5638
+    jr nz, .loop4
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3567,80 +3569,81 @@ Jump_03A_5638::
     ld h, a
     ret
 
-Jump_03A_564C::
+UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0::
+Jump_03A_564C:: ; address name
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp a, [hl]
-    jp z, Jump_03A_575D
+    jp z, UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT_Return
     ld c, $6B
 
-Jump_03A_5658::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5658
+    jr nz, .loop
     ld a, $80
     ldh [rOBPI], a
     ld hl, wOBJPaletteBuffer
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_5668::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5668
+    jr nz, .loop2
     ld a, $88
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_5675::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5675
+    jr nz, .loop3
     ld a, $90
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_5682::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5682
+    jr nz, .loop4
     ld a, $98
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_568F::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_568F
+    jr nz, .loop5
     ld a, $A0
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_569C::
+.loop6:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_569C
+    jr nz, .loop6
     ld a, $A8
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_56A9::
+.loop7:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_56A9
+    jr nz, .loop7
     ld a, $B0
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
 
-Jump_03A_56B6::
+.loop8:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_56B6
+    jr nz, .loop8
     ld a, $B8
     ldh [rOBPI], a
     call UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
     ld a, [wDMGPaletteOBP0]
     ld [wDMGPaletteBytes + $1], a
-    jp Jump_03A_575D
+    jp UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT_Return
 
 ; only called from UploadBGPalettesWithFade_Sub01 (E-0047)
 ; 8 call sites from 1 routine (e.g. UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT)
@@ -3653,20 +3656,20 @@ Func_03A_56CC:: ; address name
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_56DA
+    jr nc, .skip
     inc d
 
-Jump_03A_56DA::
+.skip:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_56E0
+    jr nc, .loop
     inc h
 
-Jump_03A_56E0::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_56E0
+    jr nz, .loop
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3680,46 +3683,20 @@ Jump_03A_56E0::
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_56FD
+    jr nc, .skip2
     inc d
 
-Jump_03A_56FD::
+.skip2:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_5703
+    jr nc, .loop2
     inc h
 
-Jump_03A_5703::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5703
-    ld a, [hl+]
-    ldh [c], a
-    ld a, [hl]
-    ldh [c], a
-    pop hl
-    push hl
-    ld a, [wDMGPaletteOBP0]
-    swap a
-    and a, $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
-    add a, e
-    ld e, a
-    jr nc, Jump_03A_571E
-    inc d
-
-Jump_03A_571E::
-    ld a, [de]
-    add a, l
-    ld l, a
-    jr nc, Jump_03A_5724
-    inc h
-
-Jump_03A_5724::
-    ldh a, [rSTAT]
-    bit 1, a
-    jr nz, Jump_03A_5724
+    jr nz, .loop2
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3728,26 +3705,52 @@ Jump_03A_5724::
     push hl
     ld a, [wDMGPaletteOBP0]
     swap a
+    and a, $03
+    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    add a, e
+    ld e, a
+    jr nc, .skip3
+    inc d
+
+.skip3:
+    ld a, [de]
+    add a, l
+    ld l, a
+    jr nc, .loop3
+    inc h
+
+.loop3:
+    ldh a, [rSTAT]
+    bit 1, a
+    jr nz, .loop3
+    ld a, [hl+]
+    ldh [c], a
+    ld a, [hl]
+    ldh [c], a
+    pop hl
+    push hl
+    ld a, [wDMGPaletteOBP0]
+    swap a
     srl a
     srl a
     and a, $03
     ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
     add a, e
     ld e, a
-    jr nc, Jump_03A_5743
+    jr nc, .skip4
     inc d
 
-Jump_03A_5743::
+.skip4:
     ld a, [de]
     add a, l
     ld l, a
-    jr nc, Jump_03A_5749
+    jr nc, .loop4
     inc h
 
-Jump_03A_5749::
+.loop4:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_03A_5749
+    jr nz, .loop4
     ld a, [hl+]
     ldh [c], a
     ld a, [hl]
@@ -3761,7 +3764,8 @@ Jump_03A_5749::
     ld h, a
     ret
 
-Jump_03A_575D::
+UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT_Return::
+Jump_03A_575D:: ; address name
     ret
 
 ; address loaded by UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT, UploadBGPalettesWithFade_Sub01_ReadDMGPaletteOBP0AndSTAT
@@ -3779,63 +3783,63 @@ Func_03A_5762:: ; address name
     or a, a
     ret z
     bit 7, a
-    jr nz, Jump_03A_5796
+    jr nz, .skip
     bit 6, a
-    jr nz, Jump_03A_579B
+    jr nz, .skip2
     bit 5, a
-    jr nz, Jump_03A_57A0
+    jr nz, .call_select_effect_by_effect_flags2_flags
     bit 3, a
-    jr nz, Jump_03A_57B1
+    jr nz, .read_battle_action_id
     bit 2, a
-    jr nz, Jump_03A_578B
+    jr nz, .read_battle_target2
     bit 0, a
-    jr nz, Jump_03A_5780
+    jr nz, .read_battle_target
     ret
 
-Jump_03A_5780::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld hl, ActionSoundTable_Flag0
-    jr Jump_03A_57B4
+    jr .read_battle_action_id2
 
-Jump_03A_578B::
+.read_battle_target2:
     ld a, [wBattleTarget]
     ld [wBattleActor], a
     ld hl, ActionSoundTable_Flag2
-    jr Jump_03A_57B4
+    jr .read_battle_action_id2
 
-Jump_03A_5796::
+.skip:
     ld hl, ActionSoundTable_Flag7
-    jr Jump_03A_57B4
+    jr .read_battle_action_id2
 
-Jump_03A_579B::
+.skip2:
     ld hl, ActionSoundTable_Flag6
-    jr Jump_03A_57B4
+    jr .read_battle_action_id2
 
-Jump_03A_57A0::
+.call_select_effect_by_effect_flags2_flags:
     ld b, a
     call SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags
     ret nz
     ld hl, ActionSoundTable_Flag5A
     bit 4, b
-    jr nz, Jump_03A_57B4
+    jr nz, .read_battle_action_id2
     ld hl, ActionSoundTable_Flag5B
-    jr Jump_03A_57B4
+    jr .read_battle_action_id2
 
-Jump_03A_57B1::
+.read_battle_action_id:
     ld hl, ActionSoundTable_Flag3
 
-Jump_03A_57B4::
+.read_battle_action_id2:
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00
     add hl, bc
     add hl, bc
     call ActorOnLocalSide_Bank3A
-    jr nc, Jump_03A_57C2
+    jr nc, .skip3
     inc hl
 
-Jump_03A_57C2::
+.skip3:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -3852,17 +3856,17 @@ Func_03A_57CA:: ; address name
     ret z
     ld a, [wBattleActionId]
     cp a, $15
-    jr z, Jump_03A_57E2
+    jr z, .skip
     cp a, $20
-    jr z, Jump_03A_57F1
+    jr z, .check_resolve_msg_flags
     cp a, $7B
-    jr z, Jump_03A_57F1
+    jr z, .check_resolve_msg_flags
     cp a, $D6
-    jr z, Jump_03A_57E2
+    jr z, .skip
     xor a, a
     ret
 
-Jump_03A_57E2::
+.skip:
     ld hl, wBattleDamageLo
     ld a, [hl+]
     sub a, $E8
@@ -3872,7 +3876,7 @@ Jump_03A_57E2::
     call QueueSoundEffect
     ret
 
-Jump_03A_57F1::
+.check_resolve_msg_flags:
     ld a, [wResolveMsgFlags]
     bit 6, a
     ret
@@ -5123,14 +5127,14 @@ Func_03A_6157:: ; address name
     call RedrawChangedSlotPanels
     ld a, [wEffectId]
     cp a, $FF
-    jr z, Jump_03A_6172
+    jr z, .read_battle_sub_phase
     ld a, [wLinkMode]
     or a, a
     ret nz
     farcall RunBattleEffectAnimation
     ret
 
-Jump_03A_6172::
+.read_battle_sub_phase:
     ld a, [wBattleSubPhase]
     rst $00
     dw RunBattleActions_Case00
@@ -5182,20 +5186,20 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
 Jump_03A_61AE:: ; address name
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr z, Jump_03A_61CB
+    jr z, .check_resolve_flag_b2
     and a, $0F
     cp a, $02
-    jr z, Jump_03A_61CB
+    jr z, .check_resolve_flag_b2
     cp a, $04
-    jr z, Jump_03A_61D7
+    jr z, .check_battle_action_id
     ld a, [wBattleActionId]
     cp a, $63
-    jr z, Jump_03A_61F4
+    jr z, .call_run_multi_hit_counter
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-Jump_03A_61CB::
+.check_resolve_flag_b2:
     ld a, [wResolveFlagB2]
     or a, a
     jp z, RunBattleStep4_Case03_WriteBattleTargetAndBattleSubPhaseEtc
@@ -5203,24 +5207,24 @@ Jump_03A_61CB::
     inc [hl]
     ret
 
-Jump_03A_61D7::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $64
-    jr z, Jump_03A_61F4
+    jr z, .call_run_multi_hit_counter
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_03A_61F0
+    jr nz, .call_roll_repeat_count_for_action
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-Jump_03A_61F0::
+.call_roll_repeat_count_for_action:
     call RollRepeatCountForAction
     ret
 
-Jump_03A_61F4::
+.call_run_multi_hit_counter:
     call RunMultiHitCounter
     ret
 
@@ -5233,47 +5237,47 @@ RunActionSpecificPostStep::
 Func_03A_61F8:: ; address name
     ld a, [wBattleActionId]
     cp a, $4E
-    jr z, Jump_03A_6211
+    jr z, .check_defeat_flags_ba
     cp a, $4F
-    jr z, Jump_03A_6211
+    jr z, .check_defeat_flags_ba
     cp a, $B9
-    jr z, Jump_03A_6230
+    jr z, .read_battle_actor
     cp a, $15
-    jr z, Jump_03A_624F
+    jr z, .set_battle_sub_phase_to_01
     cp a, $D6
-    jr z, Jump_03A_6245
-    jr Jump_03A_6264
+    jr z, .read_battle_actor2
+    jr .done
 
-Jump_03A_6211::
+.check_defeat_flags_ba:
     ld a, [wDefeatFlagsBA]
     or a, a
-    jr z, Jump_03A_6264
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 0, [hl]
-    jr z, Jump_03A_6264
+    jr z, .done
     res 0, [hl]
     ld d, $81 ; battle text 'The help went away!'
     farcall ShowBattleText
-    jr Jump_03A_6264
+    jr .done
 
-Jump_03A_6230::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     res 0, [hl]
     ld d, $86 ; battle text 'The giant went away laughing!'
     farcall ShowBattleText
-    jr Jump_03A_6264
+    jr .done
 
-Jump_03A_6245::
+.read_battle_actor2:
     ld a, [wBattleActor]
     ld [wSavedActorSlot], a
     xor a, a
     ld [wSavedActorByte], a
 
-Jump_03A_624F::
+.set_battle_sub_phase_to_01:
     ld a, $01
     ld [wBattleSubPhase], a
     ld a, $0E
@@ -5284,7 +5288,7 @@ Jump_03A_624F::
     set 0, [hl]
     ret
 
-Jump_03A_6264::
+.done:
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -5298,18 +5302,18 @@ RunBattleActions_ShowHeroBlewBackG::
 Jump_03A_6269:: ; address name
     ld a, [wResolveFlagB2]
     or a, a
-    jr z, Jump_03A_629F
+    jr z, .skip
     xor a, a
     ld [wResolveFlagB2], a
     ld a, $01
     ld [wActionRepeatFlag], a
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank3A
-    jr c, Jump_03A_629F
+    jr c, .skip
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 1, [hl]
-    jr z, Jump_03A_629F
+    jr z, .skip
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -5320,7 +5324,7 @@ Jump_03A_6269:: ; address name
     farcall ShowBattleText
     ret
 
-Jump_03A_629F::
+.skip:
     ld hl, wBattleSubPhase
     inc [hl]
 
@@ -5333,20 +5337,20 @@ RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty::
 Jump_03A_62A3:: ; address name
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_62FC
+    jr c, .skip
     ld hl, wBattleStatus4
     call AddAx9ToHL
     bit 6, [hl]
-    jr z, Jump_03A_62FC
+    jr z, .skip
     res 6, [hl]
     ld a, [wRecordBufferData + $7]
     bit 4, a
-    jr z, Jump_03A_62FC
+    jr z, .skip
     call CheckActionBDOrRun63B2And63D2
-    jr nc, Jump_03A_62C5
-    jr Jump_03A_62FC
+    jr nc, .clear_effect_flags
+    jr .skip
 
-Jump_03A_62C5::
+.clear_effect_flags:
     xor a, a
     ld [wEffectFlags], a
     ld a, $FF
@@ -5372,7 +5376,7 @@ Jump_03A_62C5::
     ld [wBattleTarget], a
     ret
 
-Jump_03A_62FC::
+.skip:
     ld hl, wBattleSubPhase
     inc [hl]
 
@@ -5390,7 +5394,7 @@ Jump_03A_6300:: ; address name
     xor a, a
     ld [wBattleScreenFlags], a
     call CheckActionBDOrRun63B2And63D2
-    jr nc, Jump_03A_6322
+    jr nc, .read_action_queue_pos
     ld hl, wBattlePhase
     inc [hl]
     xor a, a
@@ -5401,13 +5405,13 @@ Jump_03A_6300:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-Jump_03A_6322::
+.read_action_queue_pos:
     ld a, [wActionQueuePos]
     ld hl, wActionQueue
     add_a_to_hl
     ld a, [hl]
     cp a, $10
-    jr z, Jump_03A_635F
+    jr z, .loop
     ld a, [wBattleActor]
     ld hl, wSlotMarks
     add_a_to_hl
@@ -5419,7 +5423,7 @@ Jump_03A_6322::
     add_a_to_hl
     ld a, [hl]
     cp a, $CC
-    jr nz, Jump_03A_635E
+    jr nz, .check_action_queue_pos
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
@@ -5427,27 +5431,27 @@ Jump_03A_6322::
     and a, $F3
     ld [hl], a
 
-Jump_03A_635E::
+.check_action_queue_pos:
     pop hl
 
-Jump_03A_635F::
+.loop:
     ld a, [wActionQueuePos]
     inc a
     ld [wActionQueuePos], a
     cp a, $09
-    jr nc, Jump_03A_6390
+    jr nc, .set_battle_sub_phase_to_09
     ld a, [wActionQueuePos]
     ld hl, wActionQueue
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_03A_6390
+    jr z, .set_battle_sub_phase_to_09
     cp a, $10
-    jr z, Jump_03A_6383
+    jr z, .clear_battle_sub_phase
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_635F
+    jr c, .loop
 
-Jump_03A_6383::
+.clear_battle_sub_phase:
     xor a, a
     ld [wBattleSubPhase], a
     xor a, a
@@ -5456,7 +5460,7 @@ Jump_03A_6383::
     ld [wBattleSubStep], a
     ret
 
-Jump_03A_6390::
+.set_battle_sub_phase_to_09:
     ld a, $09
     ld [wBattleSubPhase], a
     xor a, a
@@ -5470,14 +5474,14 @@ CheckActionBDOrRun63B2And63D2::
 Func_03A_639A:: ; address name
     ld a, [wBattleActionId]
     cp a, $BD
-    jr nz, Jump_03A_63AA
+    jr nz, .call_check_action_bd_or_run63_b2_and63_d2
     ld a, [wDefeatFlagsBA]
     and a, $7F
-    jr z, Jump_03A_63AA
+    jr z, .call_check_action_bd_or_run63_b2_and63_d2
     xor a, a
     ret
 
-Jump_03A_63AA::
+.call_check_action_bd_or_run63_b2_and63_d2:
     call CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6
     ret c
     call CheckActionBDOrRun63B2And63D2_CarryUnlessBattleSlotOutSlotEmpty
@@ -5491,13 +5495,14 @@ Func_03A_63B2:: ; address name
     ld c, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_63C4
+    jr nz, CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_63C4
+    jr z, CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
     ld c, $04
 
-Jump_03A_63C4::
+CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6::
+Jump_03A_63C4:: ; address name
     call SlotPresentWithStatus0Bit6
     ret nc
     inc c
@@ -5515,14 +5520,14 @@ Func_03A_63D2:: ; address name
     ld c, $04
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_63E6
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_63C4
+    jr z, CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
     ld c, $00
-    jr Jump_03A_63C4
+    jr CheckActionBDOrRun63B2And63D2_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
 
-Jump_03A_63E6::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     ret nc
@@ -5598,7 +5603,7 @@ Jump_03A_6421:: ; address name
     ld b, $09
     ld hl, wBattleStatus
 
-Jump_03A_6440::
+.loop:
     inc hl
     inc hl
     inc hl
@@ -5609,7 +5614,7 @@ Jump_03A_6440::
     ld [hl+], a
     ld a, [hl]
     and a, $30
-    jr z, Jump_03A_6458
+    jr z, .next
     ld a, [hl]
     and a, $CF
     ld e, a
@@ -5619,7 +5624,7 @@ Jump_03A_6440::
     or a, e
     ld [hl], a
 
-Jump_03A_6458::
+.next:
     inc hl
     ld a, [hl]
     and a, $C0
@@ -5628,7 +5633,7 @@ Jump_03A_6458::
     ld [hl+], a
     ld a, [hl]
     and a, $03
-    jr z, Jump_03A_646E
+    jr z, .next2
     ld a, [hl]
     and a, $FC
     ld e, a
@@ -5638,10 +5643,10 @@ Jump_03A_6458::
     or a, e
     ld [hl], a
 
-Jump_03A_646E::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_03A_6440
+    jr nz, .loop
     xor a, a
     ld [wBattleActor], a
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -5667,16 +5672,16 @@ Jump_03A_6480:: ; address name
     ld d, a
     ld a, [hl]
     and a, $C0
-    jr z, Jump_03A_64AE
+    jr z, .return
     push hl
     push de
     sub a, $40
-    jr nz, Jump_03A_64A5
+    jr nz, .restore
     ld d, $84 ; battle text '0's Ironize wore off!'
     farcall ShowBattleText
     xor a, a
 
-Jump_03A_64A5::
+.restore:
     pop de
     pop hl
     or a, d
@@ -5684,7 +5689,7 @@ Jump_03A_64A5::
     ld a, $04
     ld [wBattleResolveStep], a
 
-Jump_03A_64AE::
+.return:
     ret
 
 ; entry 2 of the `rst $00` table in RunBattleActions_Case09
@@ -5705,18 +5710,18 @@ Jump_03A_64AF:: ; address name
     and a, $03
     ret z
     bit 0, a
-    jr nz, Jump_03A_64D1
+    jr nz, .set_battle_arg0_to_88
     ld b, $06
     ld a, $89
     ld [wBattleArg0], a
-    jr Jump_03A_64D8
+    jr .read_battle_actor
 
-Jump_03A_64D1::
+.set_battle_arg0_to_88:
     ld b, $10
     ld a, $88
     ld [wBattleArg0], a
 
-Jump_03A_64D8::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld [wBattleTarget], a
     call RunBattleActions_Case09_Case02_GetBattleMaxHP_Bank3A
@@ -5744,37 +5749,37 @@ Func_03A_64F8:: ; address name
     call DivideHLByA
     ld a, h
     or a, l
-    jr nz, Jump_03A_650A
+    jr nz, .restore
     ld hl, $0001
 
-Jump_03A_650A::
+.restore:
     pop bc
     ld a, b
     cp a, $06
-    jr z, Jump_03A_651E
+    jr z, .skip2
     ld a, h
     or a, a
-    jr nz, Jump_03A_6519
+    jr nz, .skip
     ld a, l
     cp a, $32
-    jr c, Jump_03A_652A
+    jr c, .set_battle_damage_lo2
 
-Jump_03A_6519::
+.skip:
     ld hl, $0032
-    jr Jump_03A_652A
+    jr .set_battle_damage_lo2
 
-Jump_03A_651E::
+.skip2:
     ld a, h
     or a, a
-    jr nz, Jump_03A_6527
+    jr nz, .set_battle_damage_lo
     ld a, l
     cp a, $96
-    jr c, Jump_03A_652A
+    jr c, .set_battle_damage_lo2
 
-Jump_03A_6527::
+.set_battle_damage_lo:
     ld hl, $0096
 
-Jump_03A_652A::
+.set_battle_damage_lo2:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5806,15 +5811,15 @@ Func_03A_6533:: ; address name
     ld a, d
     sbc a, b
     ld d, a
-    jr c, Jump_03A_655A
+    jr c, .skip
     ld a, d
     ld [hl-], a
     ld [hl], e
     or a, e
-    jr nz, Jump_03A_657D
+    jr nz, .read_battle_actor
     inc hl
 
-Jump_03A_655A::
+.skip:
     ld a, [hl-]
     ld b, a
     ld c, [hl]
@@ -5833,7 +5838,7 @@ Jump_03A_655A::
     ld a, $01
     ld [wLoadSlot], a
 
-Jump_03A_657D::
+.read_battle_actor:
     ld a, [wBattleActor]
     call SetBit0OfLevelUpGainsIndexed_Bank3A
     ret
@@ -5868,14 +5873,14 @@ Jump_03A_65A4:: ; address name
     inc [hl]
     ld a, [hl]
     cp a, $08
-    jr z, Jump_03A_65B8
+    jr z, .skip
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty
     ld a, $01
     ld [wBattleResolveStep], a
     ret
 
-Jump_03A_65B8::
+.skip:
     ld hl, wSlotMarks
     ld bc, $0008
     ld a, $FF
@@ -5892,10 +5897,10 @@ Jump_03A_65B8::
     ld d, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_65E2
+    jr z, .call_set_slot_marks_for_present_slots
     ld d, $01
 
-Jump_03A_65E2::
+.call_set_slot_marks_for_present_slots:
     call SetSlotMarksForPresentSlots
     ld b, $01
     ld d, $01
@@ -5903,30 +5908,30 @@ Jump_03A_65E2::
     ld hl, wBattleTurn
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_03A_65F5
+    jr z, .check_link_mode
     inc [hl]
 
-Jump_03A_65F5::
+.check_link_mode:
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_03A_6631
+    jr z, .clear_battle_step
     cp a, $02
-    jr z, Jump_03A_6631
+    jr z, .clear_battle_step
     ld a, [wLinkRules]
     or a, a
-    jr z, Jump_03A_6631
+    jr z, .clear_battle_step
     ld a, [wLinkRuleTurnLimit]
     bit 7, a
-    jr z, Jump_03A_6631
+    jr z, .clear_battle_step
     res 7, a
     sub a, [hl]
-    jr nc, Jump_03A_6619
+    jr nc, .skip2
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, $62
-    jr Jump_03A_663E
+    jr .set_string_index
 
-Jump_03A_6619::
+.skip2:
     inc a
     ld c, a
     ld b, $00
@@ -5936,13 +5941,13 @@ Jump_03A_6619::
     ld a, [hl]
     cp a, $01
     ld a, $61
-    jr nz, Jump_03A_662F
+    jr nz, .skip3
     ld a, $88
 
-Jump_03A_662F::
-    jr Jump_03A_663E
+.skip3:
+    jr .set_string_index
 
-Jump_03A_6631::
+.clear_battle_step:
     xor a, a
     ld [wBattleStep], a
     xor a, a
@@ -5951,7 +5956,7 @@ Jump_03A_6631::
     ld [wBattleResolveStep], a
     ret
 
-Jump_03A_663E::
+.set_string_index:
     ld [wStringIndex], a
     xor a, a
     ld [wStringCategory], a
@@ -5967,13 +5972,13 @@ SetSlotMarksForPresentSlots::
 Func_03A_6650:: ; address name
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_6660
+    jr c, .next
     ld a, c
     ld hl, wSlotMarks
     add_a_to_hl
     ld [hl], d
 
-Jump_03A_6660::
+.next:
     inc c
     dec b
     jr nz, SetSlotMarksForPresentSlots
@@ -6042,58 +6047,58 @@ RedrawChangedSlotPanels::
 Func_03A_66A9:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_66B7
+    jr nz, .read_battle_party_count
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_03A_66BF
+    jr nz, .read_battle_party_count2
 
-Jump_03A_66B7::
+.read_battle_party_count:
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
-    jr Jump_03A_66C5
+    jr .loop
 
-Jump_03A_66BF::
+.read_battle_party_count2:
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $04
 
-Jump_03A_66C5::
+.loop:
     push bc
     ld a, c
     ld hl, wLevelUpGains
     add_a_to_hl
     bit 0, [hl]
-    jr z, Jump_03A_66E3
+    jr z, .skip
     push hl
     farcall DrawSlotHPDigits
     farcall CopySlotPanelPart7AC8ToVRAM
     pop hl
     res 0, [hl]
 
-Jump_03A_66E3::
+.skip:
     bit 1, [hl]
-    jr z, Jump_03A_66F7
+    jr z, .skip2
     push hl
     farcall DrawSlotMPDigits
     farcall CopySlotPanelPart7ACEToVRAM
     pop hl
     res 1, [hl]
 
-Jump_03A_66F7::
+.skip2:
     bit 2, [hl]
-    jr z, Jump_03A_670B
+    jr z, .restore
     push hl
     farcall DrawSlotStatusMarks
     farcall CopySlotPanelRowToVRAM
     pop hl
     res 2, [hl]
 
-Jump_03A_670B::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_03A_66C5
+    jr nz, .loop
     ret
 
 ; only called from RunBattleStep4_Case03 (E-0047)
@@ -6127,37 +6132,37 @@ RunBattleStep4_Case03_Sub01_WriteDefeatFlagsBAAndSavedActorSlotEtc::
 Func_03A_6731:: ; address name
     ld a, [wDefeatFlagsBA]
     bit 7, a
-    jr nz, Jump_03A_6743
+    jr nz, .call_run_battle_step4_case03_sub01_sub01
     call RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wDefeatFlagsBA]
     or a, $80
     ld [wDefeatFlagsBA], a
 
-Jump_03A_6743::
+.call_run_battle_step4_case03_sub01_sub01:
     call RunBattleStep4_Case03_Sub01_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub02
     ld a, [wDefeatFlagsBA]
     and a, $7F
     ret nz
     ld a, [wBattleActionId]
     cp a, $15
-    jr z, Jump_03A_676F
+    jr z, .set_battle_sub_phase_to_01
     cp a, $20
-    jr z, Jump_03A_676F
+    jr z, .set_battle_sub_phase_to_01
     cp a, $7B
-    jr z, Jump_03A_676F
+    jr z, .set_battle_sub_phase_to_01
     cp a, $D6
-    jr z, Jump_03A_6765
+    jr z, .read_battle_actor
     ld hl, wBattleSubPhase
     inc [hl]
-    jr Jump_03A_6783
+    jr .return_0
 
-Jump_03A_6765::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld [wSavedActorSlot], a
     xor a, a
     ld [wSavedActorByte], a
 
-Jump_03A_676F::
+.set_battle_sub_phase_to_01:
     ld a, $01
     ld [wBattleSubPhase], a
     ld a, $0E
@@ -6167,7 +6172,7 @@ Jump_03A_676F::
     ld hl, wBattleScreenFlags
     set 0, [hl]
 
-Jump_03A_6783::
+.return_0:
     xor a, a
     ret
 
@@ -6180,55 +6185,55 @@ Func_03A_6785:: ; address name
     ld b, $04
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr nz, Jump_03A_6790
+    jr nz, .check_battle_target
     ld b, $08
 
-Jump_03A_6790::
+.check_battle_target:
     ld a, [wBattleTarget]
     and a, $04
     ld c, a
 
-Jump_03A_6796::
+.loop:
     ld a, [wBattleTarget]
     cp a, c
-    jr z, Jump_03A_67B9
+    jr z, .skip
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03A_67B9
-    jr z, Jump_03A_67BD
+    jr nc, .skip
+    jr z, .check_record_buffer_data
     ld a, [wBattleActionId]
     cp a, $20
-    jr z, Jump_03A_67B9
+    jr z, .skip
     cp a, $7B
-    jr z, Jump_03A_67B9
+    jr z, .skip
     cp a, $CE
-    jr z, Jump_03A_67B9
+    jr z, .skip
     cp a, $BB
-    jr z, Jump_03A_67B9
-    jr Jump_03A_67BD
+    jr z, .skip
+    jr .check_record_buffer_data
 
-Jump_03A_67B9::
+.skip:
     ld hl, wDefeatFlagsBA
     inc [hl]
 
-Jump_03A_67BD::
+.check_record_buffer_data:
     inc c
     dec b
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr nz, Jump_03A_67D3
+    jr nz, .skip2
     ld a, b
     cp a, $04
-    jr nz, Jump_03A_67D3
+    jr nz, .skip2
     ld a, [wBattleTarget]
     and a, $04
     xor a, $04
     ld c, a
 
-Jump_03A_67D3::
+.skip2:
     ld a, b
     or a, a
-    jr nz, Jump_03A_6796
+    jr nz, .loop
     ret
 
 ; only called from RunBattleStep4_Case03_Sub01_Sub01 (E-0047)
@@ -6246,24 +6251,24 @@ Func_03A_67D8:: ; address name
     and a, $7F
     ret z
 
-Jump_03A_67E5::
+.check_record_buffer_data:
     ld a, [wRecordBufferData + $4]
     cp a, $80
-    jr nz, Jump_03A_67FB
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, c
     and a, $03
-    jr nz, Jump_03A_67FB
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wBattleTarget]
     and a, $04
     xor a, $04
     ld c, a
-    jr nz, Jump_03A_67FB
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
 
-Jump_03A_67FB::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     ret nc
-    jr z, Jump_03A_6811
+    jr z, .next
     ld a, [wBattleActionId]
     cp a, $20
     ret z
@@ -6274,9 +6279,9 @@ Jump_03A_67FB::
     cp a, $BB
     ret z
 
-Jump_03A_6811::
+.next:
     inc c
-    jr Jump_03A_67E5
+    jr .check_record_buffer_data
 
 ; unless bit 7 of wDABA is set, rolls 1-4 (1-3 for foes outside link battles; doubled for action other than $4E) into wDABA with bit 7 set (E-0126)
 ; 2 call sites from 2 routines (e.g. RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc, RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc)
@@ -6287,29 +6292,29 @@ RollRepeatCountForAction::
 Func_03A_6814:: ; address name
     ld a, [wDefeatFlagsBA]
     bit 7, a
-    jp nz, Jump_03A_6877
+    jp nz, RunMultiHitCounter_Skip
     ld hl, $0001
     ld bc, $0004
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_6832
+    jr z, .check_battle_action_id
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_03A_6832
+    jr c, .check_battle_action_id
     ld c, $03
 
-Jump_03A_6832::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $4E
-    jr z, Jump_03A_683B
+    jr z, .call_random_in_range
     sla c
 
-Jump_03A_683B::
+.call_random_in_range:
     call RandomInRange
     ld a, e
     or a, $80
     ld [wDefeatFlagsBA], a
-    jr Jump_03A_688F
+    jr RunMultiHitCounter_CallChooseTargetForActor
 
 ; sets up and counts down the multi-hit counter in wDABA (1 or 3 hits for action $63), choosing a new target for $63 when the old one is gone (E-0128)
 ; 2 call sites from 2 routines (e.g. RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc, RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc)
@@ -6320,60 +6325,65 @@ RunMultiHitCounter::
 Func_03A_6846:: ; address name
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03A_6855
+    jr nc, .check_defeat_flags_ba
     ld a, $80
     ld [wDefeatFlagsBA], a
-    jr Jump_03A_68A4
+    jr RunMultiHitCounter_Done
 
-Jump_03A_6855::
+.check_defeat_flags_ba:
     ld a, [wDefeatFlagsBA]
     bit 7, a
-    jp nz, Jump_03A_6877
+    jp nz, RunMultiHitCounter_Skip
     ld a, [wBattleActionId]
     cp a, $63
     ld a, $81
-    jr z, Jump_03A_6868
+    jr z, .set_defeat_flags_ba
     ld a, $83
 
-Jump_03A_6868::
+.set_defeat_flags_ba:
     ld [wDefeatFlagsBA], a
-    jr nz, Jump_03A_68A9
+    jr nz, RunMultiHitCounter_ReadBattleActor
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03A_6899
-    jr Jump_03A_68A4
+    jr nc, RunMultiHitCounter_SetBattleSubPhaseTo01
+    jr RunMultiHitCounter_Done
 
-Jump_03A_6877::
+RunMultiHitCounter_Skip::
+Jump_03A_6877:: ; address name
     ld hl, wDefeatFlagsBA
     dec [hl]
     ld a, [hl]
     and a, $7F
-    jr z, Jump_03A_68A4
+    jr z, RunMultiHitCounter_Done
     ld a, [wBattleActionId]
     cp a, $63
-    jr nz, Jump_03A_68A9
+    jr nz, RunMultiHitCounter_ReadBattleActor
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03A_6899
+    jr nc, RunMultiHitCounter_SetBattleSubPhaseTo01
 
-Jump_03A_688F::
+RunMultiHitCounter_CallChooseTargetForActor::
+Jump_03A_688F:: ; address name
     farcall ChooseTargetForActor
     ld a, d
     ld [wBattleTarget], a
 
-Jump_03A_6899::
+RunMultiHitCounter_SetBattleSubPhaseTo01::
+Jump_03A_6899:: ; address name
     ld a, $01
     ld [wBattleSubPhase], a
     ld a, $01
     ld [wBattleResolveStep], a
     ret
 
-Jump_03A_68A4::
+RunMultiHitCounter_Done::
+Jump_03A_68A4:: ; address name
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-Jump_03A_68A9::
+RunMultiHitCounter_ReadBattleActor::
+Jump_03A_68A9:: ; address name
     ld a, [wBattleActor]
     ld hl, wSideControl
     add_a_to_hl
@@ -6388,7 +6398,7 @@ Jump_03A_68A9::
     pop af
     pop hl
     ld [hl], a
-    jr Jump_03A_6899
+    jr RunMultiHitCounter_SetBattleSubPhaseTo01
 
 ; battle fight step 4: the same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle)
 ; 2 call sites from 2 routines (e.g. BattleFight_Step4, RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleStep4)
@@ -6401,14 +6411,14 @@ Func_03A_68C9:: ; address name
     call RedrawChangedSlotPanels
     ld a, [wEffectId]
     cp a, $FF
-    jr z, Jump_03A_68E4
+    jr z, .read_battle_sub_phase
     ld a, [wLinkMode]
     or a, a
     ret nz
     farcall RunBattleEffectAnimation
     ret
 
-Jump_03A_68E4::
+.read_battle_sub_phase:
     ld a, [wBattleSubPhase]
     rst $00
     dw RunBattleStep4_Case00
@@ -6448,38 +6458,38 @@ Jump_03A_6906:: ; address name
     ld a, [wRecordBufferData + $4]
     and a, $0F
     cp a, $02
-    jr z, Jump_03A_691F
+    jr z, .call_run_battle_step4_case03_write_battle
     cp a, $04
-    jr z, Jump_03A_6923
+    jr z, .check_battle_action_id
     ld a, [wBattleActionId]
     cp a, $63
-    jr z, Jump_03A_6940
+    jr z, .call_run_multi_hit_counter
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-Jump_03A_691F::
+.call_run_battle_step4_case03_write_battle:
     call RunBattleStep4_Case03_WriteBattleTargetAndBattleSubPhaseEtc
     ret
 
-Jump_03A_6923::
+.check_battle_action_id:
     ld a, [wBattleActionId]
     cp a, $64
-    jr z, Jump_03A_6940
+    jr z, .call_run_multi_hit_counter
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_03A_693C
+    jr nz, .call_roll_repeat_count_for_action
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-Jump_03A_693C::
+.call_roll_repeat_count_for_action:
     call RollRepeatCountForAction
     ret
 
-Jump_03A_6940::
+.call_run_multi_hit_counter:
     call RunMultiHitCounter
     ret
 
@@ -6509,10 +6519,10 @@ Jump_03A_6948:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_03A_6963
+    jr nc, .skip
     inc d
 
-Jump_03A_6963::
+.skip:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -6523,10 +6533,10 @@ Jump_03A_6963::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_03A_6974
+    jr nc, .skip2
     inc d
 
-Jump_03A_6974::
+.skip2:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -6536,10 +6546,10 @@ Jump_03A_6974::
     ld de, wSlotMarks
     add a, e
     ld e, a
-    jr nc, Jump_03A_6984
+    jr nc, .skip3
     inc d
 
-Jump_03A_6984::
+.skip3:
     ld a, [hl]
     ld [de], a
     xor a, a
@@ -6601,12 +6611,12 @@ Jump_03A_69C2:: ; address name
     jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01
     ld a, [wFollowUpAction]
     bit 2, a
-    jr z, Jump_03A_69F2
+    jr z, .read_battle_target
     ld a, [wResolveMsgFlags]
     bit 4, a
     jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01
 
-Jump_03A_69F2::
+.read_battle_target:
     ld a, [wBattleTarget]
     call GetBattleMaxMP_Bank3A
     push hl
@@ -6629,8 +6639,8 @@ Jump_03A_69F2::
     ld [wBattleDamageHi], a
     add hl, de
     call CompareHLToBC
-    jr c, Jump_03A_6A3A
-    jr z, Jump_03A_6A3A
+    jr c, .read_battle_target2
+    jr z, .read_battle_target2
     ld a, l
     sub a, c
     ld l, a
@@ -6650,7 +6660,7 @@ Jump_03A_69F2::
     ld h, b
     ld l, c
 
-Jump_03A_6A3A::
+.read_battle_target2:
     push hl
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -6681,24 +6691,24 @@ Jump_03A_6A60:: ; address name
     inc [hl]
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_6AB6
+    jr c, .skip
     ld a, [wRecordBufferData + $7]
     bit 3, a
-    jr z, Jump_03A_6AB6
+    jr z, .skip
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_03A_6AB6
+    jr z, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $90
-    jr z, Jump_03A_6AB6
+    jr z, .skip
     push hl
     call AdvanceRandom
     call RollRandomBelowTargetThreshold
     pop hl
-    jr nc, Jump_03A_6AB6
+    jr nc, .skip
     bit 7, [hl]
     jr z, RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A
     ld a, [hl]
@@ -6714,7 +6724,7 @@ Jump_03A_6A60:: ; address name
     farcall ShowBattleText
     ret
 
-Jump_03A_6AB6::
+.skip:
     ld hl, wBattleResolveStep
     inc [hl]
     jr RunActionResolveStep_CheckActionBDOrRun63B2And63D2
@@ -6771,24 +6781,24 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04::
 Jump_03A_6AFE:: ; address name
     ld a, [wFollowUpAction]
     or a, a
-    jp nz, Jump_03A_6BE8
+    jp nz, .skip4
     ld a, [wBattleTarget]
     ld hl, wBattleStatus7
     call AddAx9ToHL
     bit 2, [hl]
-    jp z, Jump_03A_6BE8
+    jp z, .skip4
     ld a, [wRecordBufferData + $5]
     bit 7, a
-    jp z, Jump_03A_6BE8
+    jp z, .skip4
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, Jump_03A_6BE8
+    jp c, .skip4
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
-    jp c, Jump_03A_6BE8
+    jp c, .skip4
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jp z, Jump_03A_6BE8
+    jp z, .skip4
     ld a, [wBattleTarget]
     ld hl, wSlotFlags854
     call AddDoubleAToHL_Bank3A
@@ -6800,7 +6810,7 @@ Jump_03A_6AFE:: ; address name
     ld hl, wBattleStatus7
     call AddAx9ToHL
     bit 3, [hl]
-    jr z, Jump_03A_6B66
+    jr z, .read_battle_damage_lo
     pop hl
     ld a, [wBattleDamageLo]
     ld l, a
@@ -6811,9 +6821,9 @@ Jump_03A_6AFE:: ; address name
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_03A_6B7B
+    jr .skip
 
-Jump_03A_6B66::
+.read_battle_damage_lo:
     pop hl
     ld a, [wBattleDamageLo]
     ld l, a
@@ -6826,19 +6836,19 @@ Jump_03A_6B66::
     ld a, h
     ld [wBattleDamageHi], a
 
-Jump_03A_6B7B::
+.skip:
     ld a, h
     or a, l
-    jr z, Jump_03A_6B86
+    jr z, .set_effect_flags_to_10
     ld a, $11
     ld [wEffectFlags], a
-    jr Jump_03A_6B8B
+    jr .skip2
 
-Jump_03A_6B86::
+.set_effect_flags_to_10:
     ld a, $10
     ld [wEffectFlags], a
 
-Jump_03A_6B8B::
+.skip2:
     ld hl, wBattleActor
     ld a, [hl+]
     push af
@@ -6848,42 +6858,42 @@ Jump_03A_6B8B::
     ld [hl], a
     ld a, [wEffectFlags]
     bit 0, a
-    jr z, Jump_03A_6BB9
+    jr z, .call_show_battle_text
     ld a, [wBattleArg0]
     or a, a
-    jr z, Jump_03A_6BAB
+    jr z, .call_advance_random
     ld d, $31
     farcall ShowBattleTextCategory0
-    jr Jump_03A_6BCF
+    jr .skip3
 
-Jump_03A_6BAB::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr nz, Jump_03A_6BB9
+    jr nz, .call_show_battle_text
     ld d, $7C
-    jr Jump_03A_6BBB
+    jr .call_show_battle_text2
 
-Jump_03A_6BB9::
+.call_show_battle_text:
     ld d, $7D ; battle text '0 couldn't retaliate!'
 
-Jump_03A_6BBB::
+.call_show_battle_text2:
     farcall ShowBattleText
     ld a, [wEffectFlags]
     bit 0, a
-    jr z, Jump_03A_6BD8
+    jr z, .read_battle_actor
     ld a, [wRandomLo]
     and a, $01
-    jr nz, Jump_03A_6BD8
+    jr nz, .read_battle_actor
 
-Jump_03A_6BCF::
+.skip3:
     ld hl, wBattleResolveStep
     inc [hl]
     xor a, a
     ld [wBattleSubStep], a
     ret
 
-Jump_03A_6BD8::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld l, a
     ld a, [wBattleTarget]
@@ -6893,7 +6903,7 @@ Jump_03A_6BD8::
     ld a, h
     ld [wBattleActor], a
 
-Jump_03A_6BE8::
+.skip4:
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -6918,7 +6928,7 @@ Jump_03A_6BF8:: ; address name
     inc [hl]
     ld a, [wDefeatByteD1]
     cp a, $FF
-    jr z, Jump_03A_6C17
+    jr z, .check_battle_step
     ld [wBattleTarget], a
     ld b, a
     ld a, [wBattleActor]
@@ -6929,7 +6939,7 @@ Jump_03A_6BF8:: ; address name
     ld [wDefeatByteD1], a
     ret
 
-Jump_03A_6C17::
+.check_battle_step:
     ld a, [wBattleStep]
     cp a, $04
     jr z, RunActionResolveStep_RunDefeatStepMinus1Step
@@ -6958,10 +6968,10 @@ Func_03A_6C46:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_03A_6C4C
+    jr nc, .skip
     inc d
 
-Jump_03A_6C4C::
+.skip:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -6989,12 +6999,12 @@ Jump_03A_6C52:: ; address name
 RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08::
 Jump_03A_6C5E:: ; address name
     call CheckActionBDOrRun63B2And63D2
-    jr c, Jump_03A_6C68
+    jr c, .clear_defeat_flags_ba
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-Jump_03A_6C68::
+.clear_defeat_flags_ba:
     xor a, a
     ld [wDefeatFlagsBA], a
     ld a, $04
@@ -7017,17 +7027,17 @@ RollRandomBelowTargetThreshold::
 Func_03A_6C7A:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_6C8C
+    jr z, .check_random_lo
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Jump_03A_6C8C
+    jr c, .check_random_lo
     ld b, $40
-    jr Jump_03A_6C8E
+    jr .check_random_lo2
 
-Jump_03A_6C8C::
+.check_random_lo:
     ld b, $80
 
-Jump_03A_6C8E::
+.check_random_lo2:
     ld a, [wRandomLo]
     cp a, b
     ret
@@ -7058,9 +7068,9 @@ RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A::
 Jump_03A_6CAC:: ; address name
     call TargetOnLocalSide_Bank3A
     ld d, $85
-    jr c, Jump_03A_6CC9
+    jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
     ld d, $E8
-    jr Jump_03A_6CC9
+    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
 ; entry 1 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
@@ -7069,9 +7079,9 @@ RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A_Case01::
 Jump_03A_6CB7:: ; address name
     call TargetOnLocalSide_Bank3A
     ld d, $80
-    jr c, Jump_03A_6CC9
+    jr c, RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
     ld d, $E7
-    jr Jump_03A_6CC9
+    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
 ; entry 2 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
@@ -7079,7 +7089,7 @@ Jump_03A_6CB7:: ; address name
 RunDefeatStepMinus1Step_WriteDefeatStep::
 Jump_03A_6CC2:: ; address name
     ld d, $AC
-    jr Jump_03A_6CC9
+    jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
 ; entry 3 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
@@ -7094,7 +7104,8 @@ RunDefeatStepMinus1Step_ShowHeroWentAway::
 Jump_03A_6CC7:: ; address name
     ld d, $7F ; battle text '0 went away!'
 
-Jump_03A_6CC9::
+RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText::
+Jump_03A_6CC9:: ; address name
     farcall ShowBattleText
     xor a, a
     ld [wDefeatStep], a
@@ -7109,23 +7120,23 @@ RunActionResolveStep_Case09_CheckSlotStatusBlockWide_Bank3A::
 Func_03A_6CD4:: ; address name
     ld a, [wBattleStep]
     cp a, $04
-    jr z, Jump_03A_6D45
+    jr z, .clear_resolve_byte81
     ld a, [wFollowUpAction]
     or a, a
-    jr nz, Jump_03A_6D39
+    jr nz, .clear_follow_up_action
     ld a, [wBattleTarget]
     call CheckSlotStatusBlockWide_Bank3A
-    jr c, Jump_03A_6D45
+    jr c, .clear_resolve_byte81
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 3, [hl]
-    jr z, Jump_03A_6D45
+    jr z, .clear_resolve_byte81
     ld a, [wRecordBufferData + $7]
     bit 2, a
-    jr z, Jump_03A_6D3D
+    jr z, .call_show_battle_text
     ld a, [wBattleActionId]
     cp a, $6C
-    jr nz, Jump_03A_6D11
+    jr nz, .check_resolve_byte81
     ld a, [wBattleActor]
     and a, $04
     ld l, a
@@ -7133,15 +7144,15 @@ Func_03A_6CD4:: ; address name
     and a, $04
     add a, l
     and a, $04
-    jr z, Jump_03A_6D45
+    jr z, .clear_resolve_byte81
 
-Jump_03A_6D11::
+.check_resolve_byte81:
     ld a, [wResolveByte81]
     cp a, $01
-    jr z, Jump_03A_6D45
+    jr z, .clear_resolve_byte81
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, Jump_03A_6D45
+    jr z, .clear_resolve_byte81
     ld d, $7A ; battle text '0 struck back!'
     farcall ShowBattleText
     ld hl, wBattleStep
@@ -7155,15 +7166,15 @@ Jump_03A_6D11::
     xor a, a
     ret
 
-Jump_03A_6D39::
+.clear_follow_up_action:
     xor a, a
     ld [wFollowUpAction], a
 
-Jump_03A_6D3D::
+.call_show_battle_text:
     ld d, $7B ; battle text '0 couldn't strike back!'
     farcall ShowBattleText
 
-Jump_03A_6D45::
+.clear_resolve_byte81:
     xor a, a
     ld [wResolveByte81], a
     ld hl, wBattleSubPhase
@@ -7182,15 +7193,15 @@ Func_03A_6D53:: ; address name
     ld b, $08
     ld d, $00
 
-Jump_03A_6D5A::
+.loop:
     bit 0, d
-    jr nz, Jump_03A_6D64
+    jr nz, .next
     ld a, [hl]
     cp a, c
-    jr nz, Jump_03A_6D71
+    jr nz, .next2
     ld d, $01
 
-Jump_03A_6D64::
+.next:
     inc hl
     ld a, [hl]
     ld [hl], $FF
@@ -7198,14 +7209,14 @@ Jump_03A_6D64::
     ld [hl], a
     inc hl
     dec b
-    jr nz, Jump_03A_6D5A
+    jr nz, .loop
     ld [hl], $FF
     ret
 
-Jump_03A_6D71::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_03A_6D5A
+    jr nz, .loop
     ret
 
 ; D = Data_03A_6DAA[wBattleActionId]; returns at once when it is $FF; for action $CF first runs Func_03A_6D91; then ShowBattleText (E-0118)
@@ -7235,13 +7246,13 @@ Func_03A_6D91:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
     cp a, $80
-    jr c, Jump_03A_6DA2
+    jr c, .set_effect_byte6_f_to_01
     xor a, a
     ld [wEffectByte6F], a
     ld d, $91
     ret
 
-Jump_03A_6DA2::
+.set_effect_byte6_f_to_01:
     ld a, $01
     ld [wEffectByte6F], a
     ld d, $D6
@@ -7581,11 +7592,11 @@ Func_03A_6EE5:: ; address name
     add hl, bc
     ld a, [hl+]
     or a, [hl]
-    jr z, Jump_03A_6EF6
+    jr z, .set_string_index
     dec hl
     call JumpToWordAtHL
 
-Jump_03A_6EF6::
+.set_string_index:
     pop af
     ld [wStringIndex], a
     ld a, $00
@@ -7913,7 +7924,7 @@ Func_03A_710D:: ; address name
 BattleText0Hook0D:: ; code pointer of the table BattleTextCategory0HookTable; C0
 Func_03A_7110:: ; address name
     call ListSideMonsterIdsToWC0A0
-    jp Jump_03A_785D
+    jp WriteTargetNameOrTheMonsters_Skip
 
 ; handler 0E (entry 14 of BattleTextCategory0HookTable)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7923,7 +7934,7 @@ Func_03A_7110:: ; address name
 BattleText0Hook0E:: ; code pointer of the table BattleTextCategory0HookTable; C0
 Func_03A_7116:: ; address name
     call ListSideMonsterIdsToWC0A0
-    jp Jump_03A_77D6
+    jp CheckAllTargetsSame_Skip
 
 ; CopyActorNameToTextBuf0 (44 messages) (E-0210)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8019,14 +8030,14 @@ BattleText0Hook7E:: ; code pointer of the table BattleTextCategory0HookTable; C0
 Func_03A_7170:: ; address name
     ld a, [wBattleTarget]
     cp a, $03
-    jr c, Jump_03A_7182
+    jr c, .return
     call ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
-    jr nz, Jump_03A_7182
+    jr nz, .return
     call CopyTargetNameToTextBuf0
 
-Jump_03A_7182::
+.return:
     ret
 
 ; CopyTargetNameToTextBuf0, then the name of slot wDefeatByteD1 into wTextBuf1 (E-0210)
@@ -8056,11 +8067,11 @@ Func_03A_7193:: ; address name
     add hl, bc
     ld a, [hl+]
     or a, [hl]
-    jr z, Jump_03A_71A4
+    jr z, .set_string_index
     dec hl
     call JumpToWordAtHL
 
-Jump_03A_71A4::
+.set_string_index:
     pop af
     ld [wStringIndex], a
     ld a, $01
@@ -8343,14 +8354,14 @@ BattleTextPrepE6:: ; code pointer of the table BattleTextPrepTable; C0
 Func_03A_73B8:: ; address name
     ld a, [wBattleTarget]
     cp a, $03
-    jr c, Jump_03A_73CA
+    jr c, .return
     call ListSideMonsterIdsToWC0A0
     ld a, b
     cp a, $01
-    jr nz, Jump_03A_73CA
+    jr nz, .return
     call CopyTargetNameToTextBuf0
 
-Jump_03A_73CA::
+.return:
     ret
 
 ; prepares the arguments of battle text 01 (entry 1 of BattleTextPrepTable)
@@ -8397,15 +8408,15 @@ Func_03A_73E4:: ; address name
     ld c, a
     ld b, $03
 
-Jump_03A_73F1::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_03A_73FB
+    jr nc, .set_battle_target
     inc c
     dec b
-    jr nz, Jump_03A_73F1
+    jr nz, .loop
 
-Jump_03A_73FB::
+.set_battle_target:
     ld a, c
     ld [wBattleTarget], a
     call CopyTargetNameToTextBuf1
@@ -8423,15 +8434,15 @@ Func_03A_7409:: ; address name
     call CopyActorNameToTextBuf1
     call ListSideMonsterIdsToWC0A0
     call ActorOnLocalSide_Bank3A
-    jr c, Jump_03A_7417
+    jr c, .check_link_mode
     jp CopyTargetOrSideNameToTextBuf0_77C3
 
-Jump_03A_7417::
+.check_link_mode:
     ld a, [wLinkMode]
     or a, a
-    jp z, Jump_03A_774F
+    jp z, Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
     cp a, $02
-    jp z, Jump_03A_774F
+    jp z, Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
     ret
 
 ; prepares the arguments of battle text 0F (entry 15 of BattleTextPrepTable)
@@ -8444,11 +8455,11 @@ Func_03A_7424:: ; address name
     call CopyActorNameToTextBuf1
     ld a, [wLinkMode]
     cp a, $01
-    jp z, Jump_03A_77C8
+    jp z, CopyTargetOrSideNameToTextBuf0_77C3_CallCopyTargetSideNameToTextBuf0
     call ListSideMonsterIdsToWC0A0
     call TargetOnLocalSide_Bank3A
     jp c, CopyTargetOrSideNameToTextBuf0_77C3
-    jp Jump_03A_774F
+    jp Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
 
 ; prepares the arguments of battle text BE (entry 190 of BattleTextPrepTable)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8459,18 +8470,18 @@ Func_03A_743B:: ; address name
     call ListSideMonsterIdsToWC0A0
     call ActorOnLocalSide_Bank3A
     ld a, e
-    jr c, Jump_03A_7448
+    jr c, .cp_01
     ld a, b
 
-Jump_03A_7448::
+.cp_01:
     cp a, $01
-    jr nz, Jump_03A_7465
+    jr nz, .call_battle_text_prep_be_to_write_monsters
     ld hl, wTextBuf0
 
-Jump_03A_744F::
+.loop:
     ld a, [hl+]
     cp a, $F0
-    jr nz, Jump_03A_744F
+    jr nz, .loop
     dec hl
     ld a, $90
     ld [hl+], a
@@ -8484,7 +8495,7 @@ Jump_03A_744F::
     ld [hl], a
     ret
 
-Jump_03A_7465::
+.call_battle_text_prep_be_to_write_monsters:
     call BattleTextPrepBE_ToWriteMonstersWordToTextBuf0
     ld a, $90
     ld [hl+], a
@@ -8512,8 +8523,8 @@ Func_03A_747B:: ; address name
     jp c, CopyTargetOrSideNameToTextBuf0_77C3
     ld a, [wLinkMode]
     cp a, $01
-    jp z, Jump_03A_77C8
-    jp Jump_03A_774F
+    jp z, CopyTargetOrSideNameToTextBuf0_77C3_CallCopyTargetSideNameToTextBuf0
+    jp Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
 
 ; prepares the arguments of battle text 61 (entry 97 of BattleTextPrepTable)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8557,7 +8568,7 @@ Func_03A_74A8:: ; address name
     call CopyActionItemNameToTextBuf2
     call ListSideMonsterIdsToWC0A0
     call TargetOnLocalSide_Bank3A
-    jp nc, Jump_03A_774F
+    jp nc, Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
     call CopyTargetNameToTextBuf0
     ret
 
@@ -8571,7 +8582,7 @@ Func_03A_74BB:: ; address name
     call CopyPlayerNameToTextBuf1
     call ListSideMonsterIdsToWC0A0
     call TargetOnLocalSide_Bank3A
-    jp nc, Jump_03A_774F
+    jp nc, Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip
     call CopyTargetNameToTextBuf0
     ret
 
@@ -8651,7 +8662,7 @@ Func_03A_7508:: ; address name
     push de
     ld a, [wBattleActionId]
     cp a, $D0
-    jr nc, Jump_03A_7532
+    jr nc, .set_saved_actor_slot_to_01
     xor a, a
     ld [wSavedActorSlot], a
     call CopyActorNameToTextBuf0
@@ -8664,94 +8675,94 @@ Func_03A_7508:: ; address name
     ld hl, wTextBuf2
     ld [wNameSlot], a
     call CopySlotNameToHL
-    jr Jump_03A_753D
+    jr .restore
 
-Jump_03A_7532::
+.set_saved_actor_slot_to_01:
     ld a, $01
     ld [wSavedActorSlot], a
     call CopyActorNameToTextBuf0
     call CopyMappedSlotNameToTextBuf1
 
-Jump_03A_753D::
+.restore:
     pop de
     ld a, d
     cp a, $03
-    jp z, Jump_03A_7570
+    jp z, .check_saved_actor_slot
     cp a, $04
-    jp z, Jump_03A_7594
+    jp z, .check_saved_actor_slot3
     cp a, $05
-    jp z, Jump_03A_7580
+    jp z, .skip3
     cp a, $06
-    jp z, Jump_03A_7584
+    jp z, .check_saved_actor_slot2
     ld a, [wBattleActionId]
     ld hl, BuildActionMessageNames_Data_7603
     add_a_to_hl
     ld a, [hl]
     ld hl, BuildActionMessageNames_Data_76E7
     dec d
-    jr z, Jump_03A_7568
+    jr z, .skip
     ld hl, BuildActionMessageNames_Data_76FE
 
-Jump_03A_7568::
+.skip:
     add_a_to_hl
     ld a, [hl]
-    jr Jump_03A_75A4
+    jr .loop
 
-Jump_03A_7570::
+.check_saved_actor_slot:
     ld a, [wSavedActorSlot]
     bit 0, a
-    jr nz, Jump_03A_757B
+    jr nz, .skip2
     ld a, $49
-    jr Jump_03A_75A4
+    jr .loop
 
-Jump_03A_757B::
+.skip2:
     ld hl, BuildActionMessageNames_Data_75C7
-    jr Jump_03A_75B7
+    jr .read_battle_action_id
 
-Jump_03A_7580::
+.skip3:
     ld a, $4A
-    jr Jump_03A_75A4
+    jr .loop
 
-Jump_03A_7584::
+.check_saved_actor_slot2:
     ld a, [wSavedActorSlot]
     bit 0, a
-    jr nz, Jump_03A_758F
+    jr nz, .skip4
     ld a, $4B
-    jr Jump_03A_75A4
+    jr .loop
 
-Jump_03A_758F::
+.skip4:
     ld hl, BuildActionMessageNames_Data_75DB
-    jr Jump_03A_75B7
+    jr .read_battle_action_id
 
-Jump_03A_7594::
+.check_saved_actor_slot3:
     ld a, [wSavedActorSlot]
     bit 0, a
-    jr nz, Jump_03A_759F
+    jr nz, .skip5
     ld a, $4C
-    jr Jump_03A_75A4
+    jr .loop
 
-Jump_03A_759F::
+.skip5:
     ld hl, BuildActionMessageNames_Data_75EF
-    jr Jump_03A_75B7
+    jr .read_battle_action_id
 
-Jump_03A_75A4::
+.loop:
     cp a, $FF
-    jr z, Jump_03A_75B6
+    jr z, .return
     ld [wStringIndex], a
     ld a, $00
     ld [wStringCategory], a
     farcall BeginStringDisplay_Bank2F
 
-Jump_03A_75B6::
+.return:
     ret
 
-Jump_03A_75B7::
+.read_battle_action_id:
     ld a, [wBattleActionId]
     sub a, $D0
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_03A_75A4
+    jr nz, .loop
     ret
 
 ; address loaded by BuildActionMessageNames
@@ -8834,25 +8845,26 @@ Func_03A_774C:: ; address name
     ldh a, [hTemp0]
     ld b, a
 
-Jump_03A_774F::
+Call774CWithBattleFoeCount_WriteBattleStatResultLo_Skip::
+Jump_03A_774F:: ; address name
     ld a, b
     cp a, $01
-    jr z, Jump_03A_77CF
+    jr z, BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0
     xor a, a
     ld [wBattleStatResultLo], a
     ld a, [wBattleTarget]
     bit 2, a
     ld hl, wTemp0
-    jr z, Jump_03A_7765
+    jr z, .skip
     ld hl, wPauseMenuStep
 
-Jump_03A_7765::
+.skip:
     ld a, b
     sub a, $01
     ld e, a
     ld d, $01
 
-Jump_03A_776B::
+.loop:
     ld a, b
     sub a, d
     ld c, a
@@ -8863,29 +8875,29 @@ Jump_03A_776B::
     ld a, [hl+]
     ld d, a
 
-Jump_03A_7774::
+.loop2:
     ld a, e
     cp a, [hl]
     inc hl
-    jr nz, Jump_03A_7784
+    jr nz, .next
     ld a, d
     cp a, [hl]
-    jr nz, Jump_03A_7784
+    jr nz, .next
     ld a, [wBattleStatResultLo]
     inc a
     ld [wBattleStatResultLo], a
 
-Jump_03A_7784::
+.next:
     inc hl
     dec c
-    jr nz, Jump_03A_7774
+    jr nz, .loop2
     pop de
     pop hl
     inc d
     inc hl
     inc hl
     dec e
-    jr nz, Jump_03A_776B
+    jr nz, .loop
     ld a, b
     dec b
     ld c, b
@@ -8894,7 +8906,7 @@ Jump_03A_7784::
     rr l
     ld a, [wBattleStatResultLo]
     cp a, l
-    jr z, Jump_03A_77BE
+    jr z, .call_copy_target_name_to_text_buf0
     ld hl, wTextBuf0
     ld [hl], $16
     inc hl
@@ -8915,7 +8927,7 @@ Jump_03A_7784::
     ld [hl], $F0
     ret
 
-Jump_03A_77BE::
+.call_copy_target_name_to_text_buf0:
     call CopyTargetNameToTextBuf0
     jr BattleTextPrepBE_ToWriteMonstersWordToTextBuf0
 
@@ -8925,9 +8937,10 @@ CopyTargetOrSideNameToTextBuf0_77C3::
 Jump_03A_77C3:: ; address name
     ld a, e
     cp a, $01
-    jr z, Jump_03A_77CF
+    jr z, BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0
 
-Jump_03A_77C8::
+CopyTargetOrSideNameToTextBuf0_77C3_CallCopyTargetSideNameToTextBuf0::
+Jump_03A_77C8:: ; address name
     call CopyTargetSideNameToTextBuf0
 
 ; only called from BattleTextPrepBE (E-0047)
@@ -8937,7 +8950,8 @@ Func_03A_77CB:: ; address name
     call WriteMonstersWordToTextBuf0
     ret
 
-Jump_03A_77CF::
+BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0::
+Jump_03A_77CF:: ; address name
     call CopyTargetNameToTextBuf0
     ret
 
@@ -8951,25 +8965,26 @@ Func_03A_77D3:: ; address name
     ldh a, [hTemp0]
     ld b, a
 
-Jump_03A_77D6::
+CheckAllTargetsSame_Skip::
+Jump_03A_77D6:: ; address name
     ld a, b
     cp a, $01
-    jr z, Jump_03A_7856
+    jr z, CopyTargetOrSideNameToTextBuf0_784A_CallCopyTargetNameToTextBuf0
     xor a, a
     ld [wBattleStatResultLo], a
     ld a, [wBattleTarget]
     bit 2, a
     ld hl, wTemp0
-    jr z, Jump_03A_77EC
+    jr z, .skip
     ld hl, wPauseMenuStep
 
-Jump_03A_77EC::
+.skip:
     ld a, b
     sub a, $01
     ld e, a
     ld d, $01
 
-Jump_03A_77F2::
+.loop:
     ld a, b
     sub a, d
     ld c, a
@@ -8980,29 +8995,29 @@ Jump_03A_77F2::
     ld a, [hl+]
     ld d, a
 
-Jump_03A_77FB::
+.loop2:
     ld a, e
     cp a, [hl]
     inc hl
-    jr nz, Jump_03A_780B
+    jr nz, .next
     ld a, d
     cp a, [hl]
-    jr nz, Jump_03A_780B
+    jr nz, .next
     ld a, [wBattleStatResultLo]
     inc a
     ld [wBattleStatResultLo], a
 
-Jump_03A_780B::
+.next:
     inc hl
     dec c
-    jr nz, Jump_03A_77FB
+    jr nz, .loop2
     pop de
     pop hl
     inc d
     inc hl
     inc hl
     dec e
-    jr nz, Jump_03A_77F2
+    jr nz, .loop
     ld a, b
     dec b
     ld c, b
@@ -9011,7 +9026,7 @@ Jump_03A_780B::
     rr l
     ld a, [wBattleStatResultLo]
     cp a, l
-    jr z, Jump_03A_7845
+    jr z, .call_copy_target_name_to_text_buf0
     ld hl, wTextBuf0
     ld [hl], $16
     inc hl
@@ -9032,9 +9047,9 @@ Jump_03A_780B::
     ld [hl], $F0
     ret
 
-Jump_03A_7845::
+.call_copy_target_name_to_text_buf0:
     call CopyTargetNameToTextBuf0
-    jr Jump_03A_7852
+    jr CopyTargetOrSideNameToTextBuf0_784A_CallWriteMonstersWordToTextBuf0
 
 ; E = 1: copies the target's name to wC130; otherwise the target side's name followed by the word 'monsters' (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9042,14 +9057,16 @@ CopyTargetOrSideNameToTextBuf0_784A:: ; heuristic: follows a terminator; C0
 Func_03A_784A:: ; address name
     ld a, e
     cp a, $01
-    jr z, Jump_03A_7856
+    jr z, CopyTargetOrSideNameToTextBuf0_784A_CallCopyTargetNameToTextBuf0
     call CopyTargetSideNameToTextBuf0
 
-Jump_03A_7852::
+CopyTargetOrSideNameToTextBuf0_784A_CallWriteMonstersWordToTextBuf0::
+Jump_03A_7852:: ; address name
     call WriteMonstersWordToTextBuf0
     ret
 
-Jump_03A_7856::
+CopyTargetOrSideNameToTextBuf0_784A_CallCopyTargetNameToTextBuf0::
+Jump_03A_7856:: ; address name
     call CopyTargetNameToTextBuf0
     ret
 
@@ -9063,25 +9080,26 @@ Func_03A_785A:: ; address name
     ldh a, [hTemp0]
     ld b, a
 
-Jump_03A_785D::
+WriteTargetNameOrTheMonsters_Skip::
+Jump_03A_785D:: ; address name
     ld a, b
     cp a, $01
-    jp z, Jump_03A_78EA
+    jp z, CopyTargetOrSideNameToTextBuf0_78DE_CallCopyTargetNameToTextBuf0
     xor a, a
     ld [wBattleStatResultLo], a
     ld a, [wBattleTarget]
     bit 2, a
     ld hl, wTemp0
-    jr z, Jump_03A_7874
+    jr z, .skip
     ld hl, wPauseMenuStep
 
-Jump_03A_7874::
+.skip:
     ld a, b
     sub a, $01
     ld e, a
     ld d, $01
 
-Jump_03A_787A::
+.loop:
     ld a, b
     sub a, d
     ld c, a
@@ -9092,29 +9110,29 @@ Jump_03A_787A::
     ld a, [hl+]
     ld d, a
 
-Jump_03A_7883::
+.loop2:
     ld a, e
     cp a, [hl]
     inc hl
-    jr nz, Jump_03A_7893
+    jr nz, .next
     ld a, d
     cp a, [hl]
-    jr nz, Jump_03A_7893
+    jr nz, .next
     ld a, [wBattleStatResultLo]
     inc a
     ld [wBattleStatResultLo], a
 
-Jump_03A_7893::
+.next:
     inc hl
     dec c
-    jr nz, Jump_03A_7883
+    jr nz, .loop2
     pop de
     pop hl
     inc d
     inc hl
     inc hl
     dec e
-    jr nz, Jump_03A_787A
+    jr nz, .loop
     ld a, b
     dec b
     ld c, b
@@ -9123,7 +9141,7 @@ Jump_03A_7893::
     rr l
     ld a, [wBattleStatResultLo]
     cp a, l
-    jr z, Jump_03A_78D9
+    jr z, .call_copy_target_name_to_text_buf0
     ld hl, wTextBuf0
     ld [hl], $1D
     inc hl
@@ -9152,9 +9170,9 @@ Jump_03A_7893::
     ld [hl], $F0
     ret
 
-Jump_03A_78D9::
+.call_copy_target_name_to_text_buf0:
     call CopyTargetNameToTextBuf0
-    jr Jump_03A_78E6
+    jr CopyTargetOrSideNameToTextBuf0_78DE_CallWriteMonstersWordToTextBuf0
 
 ; E = 1: copies the target's name to wC130; otherwise the target side's name followed by the word 'monsters' (E-0122)
 ; no direct call (reached through a table, a jump or a vector)
@@ -9162,14 +9180,16 @@ CopyTargetOrSideNameToTextBuf0_78DE:: ; heuristic: follows a terminator; C0
 Func_03A_78DE:: ; address name
     ld a, e
     cp a, $01
-    jr z, Jump_03A_78EA
+    jr z, CopyTargetOrSideNameToTextBuf0_78DE_CallCopyTargetNameToTextBuf0
     call CopyTargetSideNameToTextBuf0
 
-Jump_03A_78E6::
+CopyTargetOrSideNameToTextBuf0_78DE_CallWriteMonstersWordToTextBuf0::
+Jump_03A_78E6:: ; address name
     call WriteMonstersWordToTextBuf0
     ret
 
-Jump_03A_78EA::
+CopyTargetOrSideNameToTextBuf0_78DE_CallCopyTargetNameToTextBuf0::
+Jump_03A_78EA:: ; address name
     call CopyTargetNameToTextBuf0
     ret
 
@@ -9348,7 +9368,7 @@ Func_03A_798D:: ; address name
 CopySlotNameToHL::
 Func_03A_799C:: ; address name
     cp a, $03
-    jr nc, Jump_03A_79BB
+    jr nc, CopyBattlerNameToHL_Skip
 
 ; A = battle slot (0-2 or 4-6): copies the name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and leaves HL on the $F0 terminator; BC kept (E-0077)
 ; 1 call site from 1 routine (e.g. CopyBattlerNameToHL_CopyStringHLToDE)
@@ -9366,31 +9386,33 @@ Func_03A_79A0:: ; address name
     call CopyFiveGlyphsPlusMarks
     pop hl
 
-Jump_03A_79B0::
+.skip:
     ld a, [hl]
     cp a, $F0
     ret z
     inc hl
-    jr Jump_03A_79B0
+    jr .skip
 
-Jump_03A_79B7::
+CopyBattlerNameToHL_Loop::
+Jump_03A_79B7:: ; address name
     ld a, b
     pop bc
     jr CopyBattlerNameToHL
 
-Jump_03A_79BB::
+CopyBattlerNameToHL_Skip::
+Jump_03A_79BB:: ; address name
     push bc
     ld b, a
     and a, $03
     cp a, $03
     ld a, b
     pop bc
-    jr z, Jump_03A_79E4
+    jr z, .call_copy_battler_name_to_hl_copy_string_hl
     push bc
     ld b, a
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_79B7
+    jr z, CopyBattlerNameToHL_Loop
     push hl
     ld a, b
     and a, $03
@@ -9399,14 +9421,14 @@ Jump_03A_79BB::
     ld a, [hl]
     pop hl
     cp a, $FF
-    jr nz, Jump_03A_79E1
+    jr nz, .restore
     ld a, b
 
-Jump_03A_79E1::
+.restore:
     pop bc
-    jr nz, Jump_03A_7A10
+    jr nz, CopyBattlerNameToHL_CopyStringHLToDE_CallCopyBattlerNameToHL
 
-Jump_03A_79E4::
+.call_copy_battler_name_to_hl_copy_string_hl:
     push af
     call CopyBattlerNameToHL_CopyStringHLToDE
     pop af
@@ -9440,7 +9462,8 @@ Func_03A_79ED:: ; address name
     call CopyStringHLToDE
     ret
 
-Jump_03A_7A10::
+CopyBattlerNameToHL_CopyStringHLToDE_CallCopyBattlerNameToHL::
+Jump_03A_7A10:: ; address name
     call CopyBattlerNameToHL
     ld a, $47
     ld [hl+], a
@@ -9450,68 +9473,68 @@ Jump_03A_7A10::
     ld a, [wNameSlot]
     and a, $03
     cp a, $01
-    jr z, Jump_03A_7A33
+    jr z, .skip
     cp a, $02
-    jr z, Jump_03A_7A3D
+    jr z, .skip2
     ld a, [hl+]
     cp a, [hl]
-    jr z, Jump_03A_7A59
+    jr z, .restore
     inc hl
     cp a, [hl]
-    jr z, Jump_03A_7A59
-    jr Jump_03A_7A68
+    jr z, .restore
+    jr .clear_battle_arg1
 
-Jump_03A_7A33::
+.skip:
     ld a, [hl+]
     cp a, [hl]
-    jr z, Jump_03A_7A5E
+    jr z, .set_battle_arg1_to_0B
     ld a, [hl+]
     cp a, [hl]
-    jr z, Jump_03A_7A59
-    jr Jump_03A_7A68
+    jr z, .restore
+    jr .clear_battle_arg1
 
-Jump_03A_7A3D::
+.skip2:
     ld d, $00
     inc hl
     inc hl
     ld a, [hl-]
     dec hl
     cp a, [hl]
-    jr nz, Jump_03A_7A47
+    jr nz, .next
     inc d
 
-Jump_03A_7A47::
+.next:
     inc hl
     cp a, [hl]
-    jr nz, Jump_03A_7A4C
+    jr nz, .skip3
     inc d
 
-Jump_03A_7A4C::
+.skip3:
     ld a, d
     or a, a
-    jr z, Jump_03A_7A68
+    jr z, .clear_battle_arg1
     cp a, $01
-    jr z, Jump_03A_7A5E
+    jr z, .set_battle_arg1_to_0B
     pop hl
     ld a, $0C
-    jr Jump_03A_7A61
+    jr .set_battle_arg1
 
-Jump_03A_7A59::
+.restore:
     pop hl
     ld a, $0A
-    jr Jump_03A_7A61
+    jr .set_battle_arg1
 
-Jump_03A_7A5E::
+.set_battle_arg1_to_0B:
     pop hl
     ld a, $0B
 
-Jump_03A_7A61::
+.set_battle_arg1:
     ld [wBattleArg1], a
     ld [hl+], a
     ld [hl], $F0
     ret
 
-Jump_03A_7A68::
+.clear_battle_arg1:
     pop hl
     xor a, a
     ld [wBattleArg1], a
@@ -9537,54 +9560,54 @@ Func_03A_7A6E:: ; address name
     ld d, [hl]
     ld e, a
 
-Jump_03A_7A87::
+.loop:
     ld a, c
     add a, a
     ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03A_7AA4
+    jr nz, .next
     ld a, [hl]
     cp a, d
-    jr nz, Jump_03A_7AA4
+    jr nz, .next
     ld a, [wBattleTemp7C]
     cp a, c
-    jp z, Jump_03A_7AA9
+    jp z, .check_temp0
     ld hl, wTemp0
     inc [hl]
 
-Jump_03A_7AA4::
+.next:
     inc c
     dec b
-    jr nz, Jump_03A_7A87
+    jr nz, .loop
     ret
 
-Jump_03A_7AA9::
+.check_temp0:
     ld a, [wTemp0]
     or a, a
-    jr nz, Jump_03A_7AC7
+    jr nz, .read_battle_temp7_a
     inc c
 
-Jump_03A_7AB0::
+.loop2:
     ld a, c
     add a, a
     ld hl, wBattleMonsterId
     add_a_to_hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_03A_7AC2
+    jr nz, .next2
     ld a, [hl]
     cp a, d
-    jr z, Jump_03A_7AC7
+    jr z, .read_battle_temp7_a
 
-Jump_03A_7AC2::
+.next2:
     inc c
     dec b
-    jr nz, Jump_03A_7AB0
+    jr nz, .loop2
     ret
 
-Jump_03A_7AC7::
+.read_battle_temp7_a:
     ld a, [wBattleTemp7A]
     ld l, a
     ld a, [wBattleTemp7B]
@@ -9593,14 +9616,14 @@ Jump_03A_7AC7::
     add a, $0A
     push af
 
-Jump_03A_7AD5::
+.skip:
     ld a, [hl]
     cp a, $F0
-    jr z, Jump_03A_7ADD
+    jr z, .restore
     inc hl
-    jr Jump_03A_7AD5
+    jr .skip
 
-Jump_03A_7ADD::
+.restore:
     pop af
     ld [hl+], a
     ld a, $F0
@@ -9621,19 +9644,19 @@ Func_03A_7AE3:: ; address name
     ld c, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_7B02
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_7B02
+    jr z, .call_carry_unless_battle_slot_out_slot_empty
     ld c, $04
 
-Jump_03A_7B02::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld b, $03
 
-Jump_03A_7B04::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_7B26
+    jr c, .next
     ld a, e
     add a, a
     ld hl, wTemp0
@@ -9644,10 +9667,10 @@ Jump_03A_7B04::
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_03A_7B1F
+    jr nc, .skip
     inc d
 
-Jump_03A_7B1F::
+.skip:
     ld a, [de]
     ld [hl+], a
     inc de
@@ -9656,26 +9679,26 @@ Jump_03A_7B1F::
     pop de
     inc e
 
-Jump_03A_7B26::
+.next:
     inc c
     dec b
-    jr nz, Jump_03A_7B04
+    jr nz, .loop
     ld c, $04
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_7B3C
+    jr nz, .call_carry_unless_battle_slot_out_slot_empty2
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_7B3C
+    jr z, .call_carry_unless_battle_slot_out_slot_empty2
     ld c, $00
 
-Jump_03A_7B3C::
+.call_carry_unless_battle_slot_out_slot_empty2:
     ld b, $03
 
-Jump_03A_7B3E::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_03A_7B60
+    jr c, .next2
     ld a, d
     add a, a
     ld hl, wPauseMenuStep
@@ -9686,10 +9709,10 @@ Jump_03A_7B3E::
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_03A_7B59
+    jr nc, .skip2
     inc d
 
-Jump_03A_7B59::
+.skip2:
     ld a, [de]
     ld [hl+], a
     inc de
@@ -9698,10 +9721,10 @@ Jump_03A_7B59::
     pop de
     inc d
 
-Jump_03A_7B60::
+.next2:
     inc c
     dec b
-    jr nz, Jump_03A_7B3E
+    jr nz, .loop2
     ld b, d
     ret
 
@@ -9712,20 +9735,20 @@ ActionEffect_Ironize_ReadLinkModeAndBattleTarget::
 Func_03A_7B66:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_7B77
+    jr z, .call_list_side_monster_ids_to_wc0_a0
     ld a, [wBattleTarget]
     cp a, $04
-    jr c, Jump_03A_7B77
+    jr c, .call_list_side_monster_ids_to_wc0_a0
 
-Jump_03A_7B74::
+.loop:
     ld d, $47
     ret
 
-Jump_03A_7B77::
+.call_list_side_monster_ids_to_wc0_a0:
     call ListSideMonsterIdsToWC0A0
     ld a, e
     cp a, $01
-    jr z, Jump_03A_7B74
+    jr z, .loop
     ld d, $46
     ret
 
@@ -9767,41 +9790,41 @@ Func_03A_7BA0:: ; address name
     call FillBytes
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_03A_7BB6
+    jr z, .read_link_role
     ld c, $04
-    jr Jump_03A_7BC0
+    jr .skip
 
-Jump_03A_7BB6::
+.read_link_role:
     ld a, [wLinkRole]
     sla a
     and a, $04
     xor a, $04
     ld c, a
 
-Jump_03A_7BC0::
+.skip:
     ld b, $03
     ld e, $00
 
-Jump_03A_7BC4::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr z, Jump_03A_7BDC
-    jr nc, Jump_03A_7BD2
+    jr z, .next
+    jr nc, .skip2
     ld a, [wBattleArg1]
     or a, a
-    jr z, Jump_03A_7BDC
+    jr z, .next
 
-Jump_03A_7BD2::
+.skip2:
     ld a, e
     ld hl, wSlotChoices
     add_a_to_hl
     ld [hl], c
 
-Jump_03A_7BDC::
+.next:
     inc e
     inc c
     dec b
-    jr nz, Jump_03A_7BC4
+    jr nz, .loop
     ld a, [wSlotChoices]
     ld hl, vTiles1 + $6D0
     call RunBattleSetup_Shared06_CopySlotNameToHL
@@ -9819,7 +9842,7 @@ Jump_03A_7BDC::
 RunBattleSetup_Shared06_CopySlotNameToHL::
 Func_03A_7BF9:: ; address name
     cp a, $FF
-    jr z, Jump_03A_7C14
+    jr z, .set_string_category_to_02
     push hl
     ld hl, wTextBuf0
     ld [wNameSlot], a
@@ -9829,15 +9852,15 @@ Func_03A_7BF9:: ; address name
     ld a, $05
     ld [wStringIndex], a
     pop hl
-    jr Jump_03A_7C1E
+    jr .read_text_window_tile_lo
 
-Jump_03A_7C14::
+.set_string_category_to_02:
     ld a, $02
     ld [wStringCategory], a
     ld a, $00
     ld [wStringIndex], a
 
-Jump_03A_7C1E::
+.read_text_window_tile_lo:
     ld de, $0A01
     ld a, [wTextWindowTileLo]
     ld c, a
@@ -9877,7 +9900,7 @@ Jump_03A_7C1E::
 GetBattleMaxHP_Bank3A::
 Func_03A_7C66:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_03A_7C89
+    jr GetBattleMP_Bank3A_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 1 call site from 1 routine (e.g. RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty)
@@ -9885,7 +9908,7 @@ Func_03A_7C66:: ; address name
 GetBattleMaxMP_Bank3A::
 Func_03A_7C6B:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_03A_7C89
+    jr GetBattleMP_Bank3A_Skip
     db $21, $BF, $D8, $18, $14
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
@@ -9894,10 +9917,11 @@ Func_03A_7C6B:: ; address name
 GetBattleMP_Bank3A::
 Func_03A_7C75:: ; address name
     ld hl, wBattleMP
-    jr Jump_03A_7C89
+    jr GetBattleMP_Bank3A_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_03A_7C89::
+GetBattleMP_Bank3A_Skip::
+Jump_03A_7C89:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -9918,16 +9942,16 @@ ActorOnLocalSide_Bank3A::
 Func_03A_7C9A:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_7CAF
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_7CAF
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_03A_7CAF::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -9939,16 +9963,16 @@ TargetOnLocalSide_Bank3A::
 Func_03A_7CB5:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_03A_7CCA
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_03A_7CCA
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_03A_7CCA::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -10024,13 +10048,13 @@ Func_03A_7D13:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03A_7D2F
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_03A_7D2F
+    jr nc, .skip
     ld l, $12
 
-Jump_03A_7D2F::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -10040,13 +10064,13 @@ Jump_03A_7D2F::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03A_7D4A
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_03A_7D4A
+    jr nc, .skip2
     ld l, $06
 
-Jump_03A_7D4A::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -10056,13 +10080,13 @@ Jump_03A_7D4A::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_03A_7D65
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_03A_7D65
+    jr nc, .skip3
     ld l, $02
 
-Jump_03A_7D65::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -10083,17 +10107,17 @@ Func_03A_7D6A:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_03A_7D84
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_03A_7D84
+    jr nz, .set_carry
     xor a, a
-    jr Jump_03A_7D85
+    jr .skip
 
-Jump_03A_7D84::
+.set_carry:
     scf
 
-Jump_03A_7D85::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -10109,11 +10133,11 @@ Func_03A_7D89:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_03A_7D98
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_03A_7D98::
+.done:
     pop hl
     ret
 

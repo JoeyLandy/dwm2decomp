@@ -24,22 +24,22 @@ Func_033_4001:: ; address name
     add hl, de
     pop de
 
-Jump_033_4019::
+.loop:
     push bc
     push hl
 
-Jump_033_401B::
+.loop2:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_033_401B
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_033_4019
+    jr nz, .loop
     ret
 
 ; E = block: copies the screen block from Data_033_405F[E] (word offset, width, rows, tiles) into wScreenTileBuffer like CopyBlockToTileBuffer, but writes tile $C3 for tiles $15-$A3 (the text glyphs) (E-0117)
@@ -65,29 +65,29 @@ Func_033_402B:: ; address name
     add hl, de
     pop de
 
-Jump_033_4043::
+.loop:
     push bc
     push hl
 
-Jump_033_4045::
+.loop2:
     ld a, [de]
     cp a, $15
-    jr c, Jump_033_4050
+    jr c, .skip
     cp a, $A4
-    jr nc, Jump_033_4050
+    jr nc, .skip
     ld a, $C3
 
-Jump_033_4050::
+.skip:
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_033_4045
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_033_4043
+    jr nz, .loop
     ret
 
 ; E-0232 (C1: CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText read the word at $405F + 2 * E and copy that record (word offset into wScreenTileBuffer, width, rows, tiles) into the screen buffer; 51 words, and the records tile $40C5-$51C6).
@@ -777,49 +777,49 @@ Func_033_51C6:: ; address name
     call LinkExchangeJoypadPerFrame
     ld a, [wLinkScreenState]
     or a, a
-    jr nz, Jump_033_51D0
+    jr nz, .check_screen_state
     ret
 
-Jump_033_51D0::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0C
-    jr z, Jump_033_51DC
+    jr z, .check_screen_sub_step
     cp a, $0D
-    jr z, Jump_033_51FB
+    jr z, .check_screen_step
     ret
 
-Jump_033_51DC::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     and a, a
     ret nz
     ld a, [wScreenStep]
     cp a, $20
-    jr z, Jump_033_51F4
+    jr z, .call_call_draw_party_species_sprites
     cp a, $15
-    jr z, Jump_033_51ED
+    jr z, .call_draw_list_entries_cell5_species_sprite
     ret
 
-Jump_033_51ED::
+.call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-Jump_033_51F4::
+.call_call_draw_party_species_sprites:
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-Jump_033_51FB::
+.check_screen_step:
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_033_5207
+    jr z, .call_draw_wca36_sprite_part_bank_f1
     cp a, $20
-    jr z, Jump_033_520E
+    jr z, .call_draw_record_buf_b_species_sprites
     ret
 
-Jump_033_5207::
+.call_draw_wca36_sprite_part_bank_f1:
     farcall DrawWCA36SpritePart_BankF1
     ret
 
-Jump_033_520E::
+.call_draw_record_buf_b_species_sprites:
     farcall DrawRecordBufBSpeciesSprites
     ret
 
@@ -830,7 +830,7 @@ RunLinkSession6Exchange_Case01_ReadLinkScreenStateAndLinkScreenSubStateEtc::
 Func_033_5215:: ; address name
     ld a, [wLinkScreenState]
     or a, a
-    jr nz, Jump_033_523B
+    jr nz, .check_fade_state
     ld a, [wLinkScreenSubState]
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
@@ -848,7 +848,7 @@ Func_033_5215:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case0D
 
-Jump_033_523B::
+.check_fade_state:
     ld a, [wFadeState]
     or a, a
     ret nz
@@ -937,7 +937,7 @@ RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case03::
 Jump_033_52BB:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_033_52D7
+    jr nz, .check_text_flags
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -948,13 +948,13 @@ Jump_033_52BB:: ; address name
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_52D7::
+.check_text_flags:
     ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wTextYesNoResult]
     and a, $01
-    jr z, Jump_033_52F8
+    jr z, .read_gold_lo
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -965,7 +965,7 @@ Jump_033_52D7::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_52F8::
+.read_gold_lo:
     ld a, [wGoldLo]
     sub a, $E8
     ld c, a
@@ -974,7 +974,7 @@ Jump_033_52F8::
     ld b, a
     ld a, [wGoldHi]
     sbc a, $00
-    jr nc, Jump_033_531E
+    jr nc, .set_gold_hi
     ld a, $00
     call BeginString_Bank07_Cat5
     ld a, [wLinkScreenSubState]
@@ -984,7 +984,7 @@ Jump_033_52F8::
     ld [wLinkSendByte], a
     ret
 
-Jump_033_531E::
+.set_gold_hi:
     ld [wGoldHi], a
     ld a, b
     ld [wGoldMid], a
@@ -1007,14 +1007,14 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc::
 Jump_033_5338:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_5348
+    jr z, .set_link_send_byte_to_FE
     cp a, $01
-    jr z, Jump_033_535D
+    jr z, .call_begin_string_bank07_cat5
     cp a, $10
-    jr z, Jump_033_536B
+    jr z, .call_begin_string_bank07_cat52
     ret
 
-Jump_033_5348::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1025,7 +1025,7 @@ Jump_033_5348::
     call BeginString_Bank07_Cat5
     ret
 
-Jump_033_535D::
+.call_begin_string_bank07_cat5:
     ld a, $07
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
@@ -1034,7 +1034,7 @@ Jump_033_535D::
     ld [wLinkSendByte], a
     ret
 
-Jump_033_536B::
+.call_begin_string_bank07_cat52:
     ld a, $01
     call BeginString_Bank07_Cat5
     ld hl, wLinkScreenSubState
@@ -1082,13 +1082,13 @@ Jump_033_5394:: ; address name
     ld hl, wScreenTileBuffer
     ld bc, $0104
 
-Jump_033_539F::
+.loop:
     ld a, $C3
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_033_539F
+    jr nz, .loop
     ld hl, wLinkScreenFlag
     inc [hl]
     ret
@@ -1135,7 +1135,7 @@ Jump_033_53D4:: ; address name
     ret nz
     ld a, [wTextYesNoResult]
     and a, $01
-    jr z, Jump_033_53F3
+    jr z, .read_gold_lo
     ld a, $05
     call BeginString_Bank07_Cat5
     ld a, $40
@@ -1146,7 +1146,7 @@ Jump_033_53D4:: ; address name
     inc [hl]
     ret
 
-Jump_033_53F3::
+.read_gold_lo:
     ld a, [wGoldLo]
     sub a, $E8
     ld c, a
@@ -1155,7 +1155,7 @@ Jump_033_53F3::
     ld b, a
     ld a, [wGoldHi]
     sbc a, $00
-    jr nc, Jump_033_5419
+    jr nc, .set_gold_hi
     ld a, $04
     call BeginString_Bank07_Cat5
     ld a, $30
@@ -1166,7 +1166,7 @@ Jump_033_53F3::
     inc [hl]
     ret
 
-Jump_033_5419::
+.set_gold_hi:
     ld [wGoldHi], a
     ld a, b
     ld [wGoldMid], a
@@ -1189,7 +1189,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case
 Jump_033_5433:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_5446
+    jr z, .set_link_send_byte_to_FE
     cp a, $20
     ret nz
     ld hl, wLinkScreenSubState
@@ -1198,7 +1198,7 @@ Jump_033_5433:: ; address name
     dec [hl]
     ret
 
-Jump_033_5446::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1218,18 +1218,18 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case
 Jump_033_545B:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_546E
+    jr z, .set_link_send_byte_to_FE
     cp a, $30
-    jr z, Jump_033_5469
+    jr z, .done
     cp a, $40
     ret nz
 
-Jump_033_5469::
+.done:
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
 
-Jump_033_546E::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1264,13 +1264,13 @@ RunLinkSession6Exchange_Case01_Sub01_BeginString_Bank07_Cat5_Case0B::
 Jump_033_5497:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_54ED
+    jr z, .set_link_send_byte_to_FE
     cp a, $10
-    jr z, Jump_033_54BE
+    jr z, .set_link_send_byte
     cp a, $20
-    jr z, Jump_033_54CF
+    jr z, .set_link_send_byte2
     cp a, $30
-    jr z, Jump_033_54DC
+    jr z, .set_link_send_byte3
     cp a, $40
     ret nz
     ld [wLinkSendByte], a
@@ -1282,7 +1282,7 @@ Jump_033_5497:: ; address name
     inc [hl]
     ret
 
-Jump_033_54BE::
+.set_link_send_byte:
     ld [wLinkSendByte], a
     ld a, $04
     call BeginString_Bank07_Cat5
@@ -1292,7 +1292,7 @@ Jump_033_54BE::
     inc [hl]
     ret
 
-Jump_033_54CF::
+.set_link_send_byte2:
     ld [wLinkSendByte], a
     ld a, $03
     call BeginString_Bank07_Cat5
@@ -1300,7 +1300,7 @@ Jump_033_54CF::
     inc [hl]
     ret
 
-Jump_033_54DC::
+.set_link_send_byte3:
     ld [wLinkSendByte], a
     ld a, $04
     call BeginString_Bank07_Cat5
@@ -1310,7 +1310,7 @@ Jump_033_54DC::
     inc [hl]
     ret
 
-Jump_033_54ED::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1329,18 +1329,18 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkScreenSubStateAndLinkSendByteEtc::
 Jump_033_5502:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_5515
+    jr z, .set_link_send_byte_to_FE
     or a, a
-    jr z, Jump_033_550F
+    jr z, .set_link_screen_sub_state_to_05
     cp a, $20
     ret nz
 
-Jump_033_550F::
+.set_link_screen_sub_state_to_05:
     ld a, $05
     ld [wLinkScreenSubState], a
     ret
 
-Jump_033_5515::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1359,15 +1359,15 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case
 Jump_033_552A:: ; address name
     ld a, [wLinkMessage]
     cp a, $10
-    jr z, Jump_033_553C
+    jr z, .set_link_send_byte_to_FE
     cp a, $30
-    jr z, Jump_033_553C
+    jr z, .set_link_send_byte_to_FE
     cp a, $40
-    jr z, Jump_033_553C
+    jr z, .set_link_send_byte_to_FE
     cp a, $FE
     ret nz
 
-Jump_033_553C::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld a, $01
@@ -1500,13 +1500,13 @@ Jump_033_55BC:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_033_55C8::
+.loop:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_033_55C8
+    jr nz, .loop
     ld hl, wGameMode
     ld a, $05
     ld [hl+], a
@@ -1637,7 +1637,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08::
 Jump_033_5676:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_033_5694
+    jr nz, .clear_menu_input_result
     ld a, $02
     ld [wScreenState], a
     xor a, a
@@ -1649,7 +1649,7 @@ Jump_033_5676:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_033_5694::
+.clear_menu_input_result:
     xor a, a
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -1657,30 +1657,30 @@ Jump_033_5694::
     and a, a
     ret z
     cp a, $FB
-    jr z, Jump_033_56B8
+    jr z, .read_screen_step
     cp a, $FC
-    jr z, Jump_033_56B8
+    jr z, .read_screen_step
     cp a, $FD
-    jr z, Jump_033_56C1
+    jr z, .read_screen_step2
     cp a, $FE
-    jr z, Jump_033_56CA
+    jr z, .set_screen_state_to_02
     cp a, $FF
-    jr z, Jump_033_56E1
+    jr z, .call_store_list_entries_cell5_record_in
     ret
 
-Jump_033_56B8::
+.read_screen_step:
     ld a, [wScreenStep]
     sub a, $07
     ld [wScreenStep], a
     ret
 
-Jump_033_56C1::
+.read_screen_step2:
     ld a, [wScreenStep]
     sub a, $04
     ld [wScreenStep], a
     ret
 
-Jump_033_56CA::
+.set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
     ld a, $09
@@ -1692,7 +1692,7 @@ Jump_033_56CA::
     ld [wLinkSendByte], a
     ret
 
-Jump_033_56E1::
+.call_store_list_entries_cell5_record_in:
     call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
     ld b, $BC
@@ -1756,7 +1756,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A::
 Jump_033_574F:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_033_576D
+    jr nz, .clear_arg5
     ld a, $02
     ld [wScreenState], a
     xor a, a
@@ -1768,7 +1768,7 @@ Jump_033_574F:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_033_576D::
+.clear_arg5:
     xor a, a
     ld [wArg5], a
     farcall HandleTwoChoiceCursorInput_0D
@@ -1776,20 +1776,20 @@ Jump_033_576D::
     and a, a
     ret z
     cp a, $FE
-    jr z, Jump_033_5785
+    jr z, .done
     cp a, $FF
-    jr z, Jump_033_578A
+    jr z, .check_choice_cursor
     ret
 
-Jump_033_5785::
+.done:
     ld hl, wScreenStep
     inc [hl]
     ret
 
-Jump_033_578A::
+.check_choice_cursor:
     ld a, [wChoiceCursor]
     and a, a
-    jr nz, Jump_033_57A9
+    jr nz, .call_store_list_entries_cell5_record_in
     ld a, [wScreenState]
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
@@ -1801,7 +1801,7 @@ Jump_033_578A::
     ld [wScreenState], a
     ret
 
-Jump_033_57A9::
+.call_store_list_entries_cell5_record_in:
     call StoreListEntriesCell5RecordInPickedRecords
     ld hl, wScreenStep
     inc [hl]
@@ -1870,12 +1870,12 @@ Jump_033_57F8:: ; address name
     ld [wLinkTimeoutHi], a
     ld b, $A5
 
-Jump_033_5816::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_033_5816
+    jr nz, .loop
     ld de, wRecordBufB
     ld a, e
     ld [wLinkBufferPtrLo], a
@@ -1900,7 +1900,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E::
 Jump_033_5839:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
-    jr z, Jump_033_585A
+    jr z, .set_link_buffer_count_lo
     cp a, $FE
     ret nz
     ld a, $02
@@ -1914,7 +1914,7 @@ Jump_033_5839:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_033_585A::
+.set_link_buffer_count_lo:
     ld hl, $00A5
     ld a, l
     ld [wLinkBufferCountLo], a
@@ -2156,7 +2156,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06::
 Jump_033_59D3:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_033_59F1
+    jr nz, .call_handle_three_choice_cursor_input_f1
     ld a, $02
     ld [wScreenState], a
     xor a, a
@@ -2168,18 +2168,18 @@ Jump_033_59D3:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_033_59F1::
+.call_handle_three_choice_cursor_input_f1:
     farcall HandleThreeChoiceCursorInput_F1
     ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
-    jr z, Jump_033_5A05
+    jr z, .set_screen_state_to_02
     cp a, $FF
-    jr z, Jump_033_5A1C
+    jr z, .check_two_choice_cursor
     ret
 
-Jump_033_5A05::
+.set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
     ld a, $09
@@ -2191,20 +2191,20 @@ Jump_033_5A05::
     ld [wLinkSendByte], a
     ret
 
-Jump_033_5A1C::
+.check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
     and a, a
-    jr z, Jump_033_5A28
+    jr z, .done
     cp a, $01
-    jr z, Jump_033_5A2D
-    jr Jump_033_5A05
+    jr z, .read_screen_state
+    jr .set_screen_state_to_02
 
-Jump_033_5A28::
+.done:
     ld hl, wScreenStep
     inc [hl]
     ret
 
-Jump_033_5A2D::
+.read_screen_state:
     ld a, [wScreenState]
     ld [wScreenByteB2], a
     ld a, [wScreenStep]
@@ -2249,7 +2249,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08::
 Jump_033_5A72:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_033_5A90
+    jr nz, .check_text_flags
     ld a, $02
     ld [wScreenState], a
     xor a, a
@@ -2261,13 +2261,13 @@ Jump_033_5A72:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_033_5A90::
+.check_text_flags:
     ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, [wTextYesNoResult]
     and a, $01
-    jr z, Jump_033_5AAA
+    jr z, .done
     ld a, $0D
     call BeginString_Bank07_Cat5
     ld hl, wScreenStep
@@ -2276,7 +2276,7 @@ Jump_033_5A90::
     dec [hl]
     ret
 
-Jump_033_5AAA::
+.done:
     ld hl, wScreenStep
     inc [hl]
     ret
@@ -2317,12 +2317,12 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B::
 Jump_033_5AC8:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_033_5AD4
+    jr z, .set_screen_state_to_02
     cp a, $01
-    jr z, Jump_033_5AEB
+    jr z, .clear_link_send_byte
     ret
 
-Jump_033_5AD4::
+.set_screen_state_to_02:
     ld a, $02
     ld [wScreenState], a
     xor a, a
@@ -2334,7 +2334,7 @@ Jump_033_5AD4::
     ld [wLinkSendByte], a
     ret
 
-Jump_033_5AEB::
+.clear_link_send_byte:
     xor a, a
     ld [wLinkSendByte], a
     ld hl, wScreenStep
@@ -2450,20 +2450,20 @@ Jump_033_5BA5:: ; address name
     ld [wLinkReady], a
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_033_5BC8
+    jr nz, .read_random_seed2_lo
     ld a, [wRandomLo]
     ld [wRandomSeed2Lo], a
     ld a, [wRandomHi]
     ld [wRandomSeed2Hi], a
-    jr Jump_033_5BD4
+    jr .check_screen_step
 
-Jump_033_5BC8::
+.read_random_seed2_lo:
     ld a, [wRandomSeed2Lo]
     ld [wRandomLo], a
     ld a, [wRandomSeed2Hi]
     ld [wRandomHi], a
 
-Jump_033_5BD4::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2867,7 +2867,7 @@ Jump_033_5E97:: ; address name
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
     cp a, $02
-    jr c, Jump_033_5EBE
+    jr c, .check_screen_step
     ld hl, wWindowTileBuffer + $12E
     call StoreC5BEC6AtHLStride2_Bank33
     ld hl, wWindowTileBuffer + $12F
@@ -2877,7 +2877,7 @@ Jump_033_5E97:: ; address name
     ld [wArg2], a
     farcall DrawPageOfPagesAtArg1_Bank1E
 
-Jump_033_5EBE::
+.check_screen_step:
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3019,19 +3019,19 @@ Func_033_5F99:: ; address name
     ld hl, wListEntries
     ld b, $1E
 
-Jump_033_5F9E::
+.loop:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_033_5F9E
+    jr nz, .loop
     ld hl, wListEntries2
     ld b, $1E
 
-Jump_033_5FA8::
+.loop2:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_033_5FA8
+    jr nz, .loop2
     xor a, a
     ld [wListCount], a
     ld a, $0A
@@ -3044,38 +3044,38 @@ Jump_033_5FA8::
     ld b, $00
     ld c, $00
 
-Jump_033_5FC7::
+.loop3:
     ld a, [de]
     and a, a
-    jr z, Jump_033_601D
+    jr z, .skip3
     cp a, $01
-    jr z, Jump_033_5FDD
+    jr z, .skip
     ld a, [wPickCount]
     cp a, $03
-    jr z, Jump_033_601D
+    jr z, .skip3
     ld a, [de]
     cp a, $02
-    jr z, Jump_033_5FDD
-    jr Jump_033_601D
+    jr z, .skip
+    jr .skip3
 
-Jump_033_5FDD::
+.skip:
     push de
     ld a, $6E
     add a, e
     ld e, a
-    jr nc, Jump_033_5FE5
+    jr nc, .skip2
     inc d
 
-Jump_033_5FE5::
+.skip2:
     ld a, [de]
     and a, a
-    jr nz, Jump_033_6015
+    jr nz, .check_records_flagged
     pop de
     ld a, [wPickCount]
     and a, a
-    jr z, Jump_033_6010
+    jr z, .next
     cp a, $03
-    jr nc, Jump_033_6010
+    jr nc, .next
     push hl
     push de
     push bc
@@ -3084,47 +3084,47 @@ Jump_033_5FE5::
     ld a, [wPickCount]
     ld b, a
 
-Jump_033_5FFF::
+.loop4:
     ld a, [hl+]
     cp a, d
-    jr z, Jump_033_600B
+    jr z, .restore
     dec b
-    jr nz, Jump_033_5FFF
+    jr nz, .loop4
     pop bc
     pop de
     pop hl
-    jr Jump_033_6010
+    jr .next
 
-Jump_033_600B::
+.restore:
     pop bc
     pop de
     pop hl
-    jr Jump_033_601D
+    jr .skip3
 
-Jump_033_6010::
+.next:
     inc c
     ld a, b
     ld [hl+], a
-    jr Jump_033_601D
+    jr .skip3
 
-Jump_033_6015::
+.check_records_flagged:
     pop de
     ld a, [wRecordsFlagged]
     inc a
     ld [wRecordsFlagged], a
 
-Jump_033_601D::
+.skip3:
     ld a, $A5
     add a, e
     ld e, a
-    jr nc, Jump_033_6024
+    jr nc, .next2
     inc d
 
-Jump_033_6024::
+.next2:
     inc b
     ld a, b
     cp a, $1E
-    jr c, Jump_033_5FC7
+    jr c, .loop3
     ld a, c
     ld [wListCount], a
     xor a, a
@@ -3200,12 +3200,12 @@ Func_033_6074:: ; address name
     ld de, wTextBuf0
     ld b, $0B
 
-Jump_033_6099::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_033_6099
+    jr nz, .loop
     xor a, a
     ld [rRAMB], a
     ld [rRAMG], a
@@ -3271,10 +3271,10 @@ Func_033_60D3:: ; address name
     srl a
     add a, e
     ld e, a
-    jr nc, Jump_033_60F7
+    jr nc, .skip
     inc d
 
-Jump_033_60F7::
+.skip:
     ld a, e
     ld l, a
     ld a, d
@@ -3356,16 +3356,16 @@ Func_033_6152:: ; address name
     push hl
     push bc
 
-Jump_033_6154::
+.loop:
     push hl
     push bc
 
-Jump_033_6156::
+.loop2:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_033_6156
+    jr nz, .loop2
     pop bc
     pop hl
     ld a, l
@@ -3375,7 +3375,7 @@ Jump_033_6156::
     adc a, $00
     ld h, a
     dec c
-    jp nz, Jump_033_6154
+    jp nz, .loop
     pop bc
     pop hl
     ld a, [wIsCGB]
@@ -3390,15 +3390,15 @@ Jump_033_6156::
     ld a, $02
     ldh [rSVBK], a
 
-Jump_033_617D::
+.loop3:
     push hl
     push bc
 
-Jump_033_617F::
+.loop4:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_033_617F
+    jr nz, .loop4
     pop bc
     pop hl
     ld a, l
@@ -3408,7 +3408,7 @@ Jump_033_617F::
     adc a, $00
     ld h, a
     dec c
-    jp nz, Jump_033_617D
+    jp nz, .loop3
     ld a, $00
     ldh [rSVBK], a
     ret
@@ -3434,52 +3434,52 @@ Func_033_6197:: ; address name
     ld hl, wScreenTileBuffer + $22
     ldh a, [hTemp2]
     and a, $0F
-    jr z, Jump_033_61C0
+    jr z, .read_temp1
     add a, $E0
     ld [hl], a
     set 0, c
 
-Jump_033_61C0::
+.read_temp1:
     inc hl
     ldh a, [hTemp1]
     swap a
     and a, $0F
-    jr nz, Jump_033_61CD
+    jr nz, .skip
     bit 0, c
-    jr z, Jump_033_61D2
+    jr z, .check_temp1
 
-Jump_033_61CD::
+.skip:
     add a, $E0
     ld [hl], a
     set 0, c
 
-Jump_033_61D2::
+.check_temp1:
     inc hl
     ldh a, [hTemp1]
     and a, $0F
-    jr nz, Jump_033_61DD
+    jr nz, .skip2
     bit 0, c
-    jr z, Jump_033_61E2
+    jr z, .read_temp0
 
-Jump_033_61DD::
+.skip2:
     add a, $E0
     ld [hl], a
     set 0, c
 
-Jump_033_61E2::
+.read_temp0:
     inc hl
     ldh a, [hTemp0]
     swap a
     and a, $0F
-    jr nz, Jump_033_61EF
+    jr nz, .skip3
     bit 0, c
-    jr z, Jump_033_61F2
+    jr z, .check_temp0
 
-Jump_033_61EF::
+.skip3:
     add a, $E0
     ld [hl], a
 
-Jump_033_61F2::
+.check_temp0:
     inc hl
     ldh a, [hTemp0]
     and a, $0F
@@ -3510,11 +3510,11 @@ Func_033_6204:: ; address name
     pop hl
     ld a, [wDigits + $1]
     or a, a
-    jr z, Jump_033_6217
+    jr z, .read_digits
     add a, $E0
     ld [hl], a
 
-Jump_033_6217::
+.read_digits:
     inc hl
     ld a, [wDigits + $2]
     add a, $E0
@@ -3535,7 +3535,7 @@ Func_033_6227:: ; address name
     ld b, a
     ld c, $00
 
-Jump_033_622B::
+.loop:
     ld a, c
     push bc
     ld b, $C3
@@ -3555,7 +3555,7 @@ Jump_033_622B::
     inc c
     ld a, c
     cp a, b
-    jr c, Jump_033_622B
+    jr c, .loop
     ret
 
 ; clears vTiles2 (size $0105), draws the 10-byte player name wC60C there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)

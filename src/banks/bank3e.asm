@@ -54,7 +54,7 @@ BuildOamFromSpriteTable_Bank3E::
 Func_03E_4040:: ; address name
     ldh a, [hOamNextEntry]
     cp a, $28
-    jr nc, Jump_03E_4090
+    jr nc, .return
     ldh a, [hSpriteSetIndex]
     ld l, a
     ld h, $00
@@ -77,11 +77,11 @@ Func_03E_4040:: ; address name
     ld l, a
     ld h, $C0
 
-Jump_03E_4063::
+.loop:
     ld a, [de]
     inc de
     cp a, $80
-    jr z, Jump_03E_4090
+    jr z, .return
     ld b, a
     ldh a, [hSpriteOriginY]
     add a, b
@@ -110,9 +110,9 @@ Jump_03E_4063::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr c, Jump_03E_4063
+    jr c, .loop
 
-Jump_03E_4090::
+.return:
     ret
 
 ; E-0147 (derived: meta-sprite set 0 of MetaSprites3E_4024Table: 32 frame pointer(s), chosen by hSpriteSubIndex)

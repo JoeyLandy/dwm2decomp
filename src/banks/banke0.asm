@@ -40,22 +40,22 @@ Jump_0E0_4011:: ; address name
     ld bc, $1412
     ld hl, vBGMap0
 
-Jump_0E0_4043::
+.loop:
     push bc
     push hl
 
-Jump_0E0_4045::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0E0_4045
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_0E0_4043
+    jr nz, .loop
     call RunDebugSubState_E0_WriteVRAMByte_Shared01
     call ShowSkillNumberAndName_BankE0
     call RunDebugSubState_E0_HLToDecimalDigits
@@ -75,27 +75,27 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
 Jump_0E0_406F:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
-    jr z, Jump_0E0_407C
+    jr z, .check_joypad_pressed_repeat
     ld a, $05
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_407C::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_0E0_408A
+    jr z, .check_bit7
     ld a, $04
     ld hl, vBGMap0 + $182
-    jr Jump_0E0_40A6
+    jr .set_debug_sub_state
 
-Jump_0E0_408A::
+.check_bit7:
     bit 7, a
-    jr z, Jump_0E0_4095
+    jr z, .skip
     ld a, $02
     ld hl, vBGMap0 + $A2
-    jr Jump_0E0_40A6
+    jr .set_debug_sub_state
 
-Jump_0E0_4095::
+.skip:
     and a, $30
     ret z
     ld a, [wDebugCursor]
@@ -105,7 +105,7 @@ Jump_0E0_4095::
     call RunDebugSubState_E0_WriteVRAMByte_Shared01
     ret
 
-Jump_0E0_40A6::
+.set_debug_sub_state:
     ld [wDebugSubState], a
     ld a, $BB
     call WriteVRAMByte
@@ -122,65 +122,65 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
 Jump_0E0_40B7:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
-    jr z, Jump_0E0_40C4
+    jr z, .check_joypad_pressed
     ld a, $05
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_40C4::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_0E0_40D3
+    jr z, .check_joypad_pressed_repeat
     xor a, a
     ld [wDebugValue0], a
     call ShowSkillNumberAndName_BankE0
     ret
 
-Jump_0E0_40D3::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_0E0_40E1
+    jr z, .check_bit7
     ld a, $01
     ld hl, vBGMap0 + $42
-    jr Jump_0E0_4112
+    jr .set_debug_sub_state
 
-Jump_0E0_40E1::
+.check_bit7:
     bit 7, a
-    jr z, Jump_0E0_40EC
+    jr z, .check_bit5
     ld a, $03
     ld hl, vBGMap0 + $122
-    jr Jump_0E0_4112
+    jr .set_debug_sub_state
 
-Jump_0E0_40EC::
+.check_bit5:
     bit 5, a
-    jr z, Jump_0E0_40FF
+    jr z, .check_bit4
     ld a, [wDebugValue0]
     dec a
     cp a, $FF
-    jr nz, Jump_0E0_40FA
+    jr nz, .set_debug_value0
     ld a, $E3
 
-Jump_0E0_40FA::
+.set_debug_value0:
     ld [wDebugValue0], a
-    jr Jump_0E0_410E
+    jr .call_show_skill_number_and_name_bank_e0
 
-Jump_0E0_40FF::
+.check_bit4:
     bit 4, a
     ret z
     ld a, [wDebugValue0]
     inc a
     cp a, $E4
-    jr nz, Jump_0E0_410B
+    jr nz, .set_debug_value02
     xor a, a
 
-Jump_0E0_410B::
+.set_debug_value02:
     ld [wDebugValue0], a
 
-Jump_0E0_410E::
+.call_show_skill_number_and_name_bank_e0:
     call ShowSkillNumberAndName_BankE0
     ret
 
-Jump_0E0_4112::
+.set_debug_sub_state:
     ld [wDebugSubState], a
     ld a, $BB
     call WriteVRAMByte
@@ -197,46 +197,46 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
 Jump_0E0_4123:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
-    jr z, Jump_0E0_4130
+    jr z, .check_joypad_pressed_repeat
     ld a, $05
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4130::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_0E0_413E
+    jr z, .check_bit7
     ld a, $02
     ld hl, vBGMap0 + $A2
-    jr Jump_0E0_4164
+    jr .set_debug_sub_state
 
-Jump_0E0_413E::
+.check_bit7:
     bit 7, a
-    jr z, Jump_0E0_4149
+    jr z, .check_bit5
     ld a, $04
     ld hl, vBGMap0 + $182
-    jr Jump_0E0_4164
+    jr .set_debug_sub_state
 
-Jump_0E0_4149::
+.check_bit5:
     bit 5, a
-    jr z, Jump_0E0_4156
+    jr z, .check_bit4
     ld a, [wDebugValue1]
     dec a
     ld [wDebugValue1], a
-    jr Jump_0E0_4160
+    jr .call_run_debug_sub_state_e0_hl_to_decimal
 
-Jump_0E0_4156::
+.check_bit4:
     bit 4, a
     ret z
     ld a, [wDebugValue1]
     inc a
     ld [wDebugValue1], a
 
-Jump_0E0_4160::
+.call_run_debug_sub_state_e0_hl_to_decimal:
     call RunDebugSubState_E0_HLToDecimalDigits
     ret
 
-Jump_0E0_4164::
+.set_debug_sub_state:
     ld [wDebugSubState], a
     ld a, $BB
     call WriteVRAMByte
@@ -253,27 +253,27 @@ RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag::
 Jump_0E0_4175:: ; address name
     ld a, [wJoypadPressed]
     bit 2, a
-    jr z, Jump_0E0_4182
+    jr z, .check_joypad_pressed_repeat
     ld a, $05
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4182::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_0E0_4190
+    jr z, .check_bit7
     ld a, $03
     ld hl, vBGMap0 + $122
-    jr Jump_0E0_41AC
+    jr .set_debug_sub_state
 
-Jump_0E0_4190::
+.check_bit7:
     bit 7, a
-    jr z, Jump_0E0_419B
+    jr z, .skip
     ld a, $01
     ld hl, vBGMap0 + $42
-    jr Jump_0E0_41AC
+    jr .set_debug_sub_state
 
-Jump_0E0_419B::
+.skip:
     and a, $30
     ret z
     ld a, [wBattleEndFlag]
@@ -283,7 +283,7 @@ Jump_0E0_419B::
     call RunDebugSubState_E0_WriteVRAMByte
     ret
 
-Jump_0E0_41AC::
+.set_debug_sub_state:
     ld [wDebugSubState], a
     ld a, $BB
     call WriteVRAMByte
@@ -314,10 +314,10 @@ Func_0E0_41C7:: ; address name
     ld de, $41E6
     add a, e
     ld e, a
-    jr nc, Jump_0E0_41D6
+    jr nc, .call_write_vram_byte
     inc d
 
-Jump_0E0_41D6::
+.call_write_vram_byte:
     ld a, [de]
     ld hl, vBGMap0 + $69
     call WriteVRAMByte
@@ -370,30 +370,30 @@ Func_0E0_421F:: ; address name
     ld hl, vBGMap0 + $14A
     ld a, [wDigits]
     or a, a
-    jr z, Jump_0E0_4239
+    jr z, .call_write_vram_byte_inc
     ld c, $01
     add a, $E0
-    jr Jump_0E0_423B
+    jr .call_write_vram_byte_inc2
 
-Jump_0E0_4239::
+.call_write_vram_byte_inc:
     ld a, $C3
 
-Jump_0E0_423B::
+.call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ld a, [wDigits + $1]
     or a, a
-    jr nz, Jump_0E0_4248
+    jr nz, .skip
     bit 0, c
-    jr z, Jump_0E0_424C
+    jr z, .call_write_vram_byte_inc3
 
-Jump_0E0_4248::
+.skip:
     add a, $E0
-    jr Jump_0E0_424E
+    jr .call_write_vram_byte_inc4
 
-Jump_0E0_424C::
+.call_write_vram_byte_inc3:
     ld a, $C3
 
-Jump_0E0_424E::
+.call_write_vram_byte_inc4:
     call WriteVRAMByteInc
     ld a, [wDigits + $2]
     add a, $E0
@@ -411,10 +411,10 @@ Func_0E0_425A:: ; address name
     ld de, $41E6
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4269
+    jr nc, .call_write_vram_byte
     inc d
 
-Jump_0E0_4269::
+.call_write_vram_byte:
     ld a, [de]
     ld hl, vBGMap0 + $1A9
     call WriteVRAMByte
@@ -561,14 +561,14 @@ RunDebugState_E0_DrawSlotHPMPStats_BankE0::
 Jump_0E0_448E:: ; address name
     ld a, [wDebugSubState]
     or a, a
-    jr nz, Jump_0E0_4498
+    jr nz, .call_draw_slot_hpmp_stats_bank_e0
     ld c, $00
-    jr Jump_0E0_449A
+    jr .call_draw_slot_hpmp_stats_bank_e02
 
-Jump_0E0_4498::
+.call_draw_slot_hpmp_stats_bank_e0:
     ld c, $04
 
-Jump_0E0_449A::
+.call_draw_slot_hpmp_stats_bank_e02:
     call DrawSlotHPMPStats_BankE0
     inc c
     call DrawSlotHPMPStats_BankE0
@@ -597,13 +597,13 @@ Func_0E0_44B3:: ; address name
     ld de, wBattleSlotOut
     add a, e
     ld e, a
-    jr nc, Jump_0E0_44CB
+    jr nc, .skip
     inc d
 
-Jump_0E0_44CB::
+.skip:
     ld a, [de]
     cp a, $FF
-    jr z, Jump_0E0_452D
+    jr z, .clear_temp0
     ld de, wBattleHP
     call DrawSlotHPMPStats_BankE0_Sub04
     ld de, wBattleMaxHP
@@ -638,7 +638,7 @@ Jump_0E0_44CB::
     call DrawSlotHPMPStats_BankE0_WriteVRAMByte
     ret
 
-Jump_0E0_452D::
+.clear_temp0:
     xor a, a
     ldh [hTemp0], a
     ldh [hTemp1], a
@@ -668,10 +668,10 @@ Func_0E0_455F:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4566
+    jr nc, .call_word_at_de_to_packed_bcd
     inc d
 
-Jump_0E0_4566::
+.call_word_at_de_to_packed_bcd:
     call WordAtDEToPackedBCD
     jr DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte_Sub03
 
@@ -683,10 +683,10 @@ Func_0E0_456B:: ; address name
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4571
+    jr nc, .set_digits
     inc d
 
-Jump_0E0_4571::
+.set_digits:
     push hl
     ld a, [de]
     ld [wDigits], a
@@ -756,12 +756,12 @@ Func_0E0_45AB:: ; address name
     swap a
     and a, $0F
     or a, a
-    jr z, Jump_0E0_45BD
+    jr z, .next
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_45BD::
+.next:
     inc hl
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
@@ -772,30 +772,30 @@ Func_0E0_45BE:: ; address name
     ldh a, [hTemp1]
     and a, $0F
     or a, a
-    jr nz, Jump_0E0_45C9
+    jr nz, .call_write_vram_byte
     bit 0, b
-    jr z, Jump_0E0_45D0
+    jr z, .read_temp0
 
-Jump_0E0_45C9::
+.call_write_vram_byte:
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_45D0::
+.read_temp0:
     inc hl
     ldh a, [hTemp0]
     swap a
     and a, $0F
     or a, a
-    jr nz, Jump_0E0_45DE
+    jr nz, .call_write_vram_byte2
     bit 0, b
-    jr z, Jump_0E0_45E3
+    jr z, .check_temp0
 
-Jump_0E0_45DE::
+.call_write_vram_byte2:
     add a, $E0
     call WriteVRAMByte
 
-Jump_0E0_45E3::
+.check_temp0:
     inc hl
     ldh a, [hTemp0]
     and a, $0F
@@ -854,10 +854,10 @@ Func_0E0_462B:: ; address name
     ld de, wSlotNameSuffix
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4634
+    jr nc, .skip
     inc d
 
-Jump_0E0_4634::
+.skip:
     ld a, c
     and a, $03
     ld hl, $464C
@@ -881,7 +881,7 @@ RunDebugState_E0_DrawFullScreenFromBankE0_5283::
 Jump_0E0_4663:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
-    jr z, Jump_0E0_46A3
+    jr z, .check_joypad_pressed
     ld hl, wWorkBuf
     ld a, [wBattlePartyCount]
     ld [hl+], a
@@ -908,18 +908,18 @@ Jump_0E0_4663:: ; address name
     ld [wEffectId], a
     ret
 
-Jump_0E0_46A3::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $08
-    jr z, Jump_0E0_46AF
+    jr z, .check_joypad_pressed2
     ld hl, wDebugState
     inc [hl]
     ret
 
-Jump_0E0_46AF::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and a, $30
-    jr z, Jump_0E0_46C4
+    jr z, .check_joypad_pressed3
     ld a, [wDebugSubState]
     inc a
     and a, $01
@@ -928,15 +928,15 @@ Jump_0E0_46AF::
     ld [wDebugState], a
     ret
 
-Jump_0E0_46C4::
+.check_joypad_pressed3:
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_0E0_46D1
+    jr z, .check_joypad_pressed4
     ld a, $04
     ld [wDebugState], a
     ret
 
-Jump_0E0_46D1::
+.check_joypad_pressed4:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
@@ -955,16 +955,16 @@ Jump_0E0_46DD:: ; address name
     ld hl, vBGMap0
     ld bc, $1412
 
-Jump_0E0_46E6::
+.loop:
     push bc
     push hl
 
-Jump_0E0_46E8::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0E0_46E8
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
@@ -973,28 +973,28 @@ Jump_0E0_46E8::
     sub a, b
     add a, e
     ld e, a
-    jr nc, Jump_0E0_46FE
+    jr nc, .next
     inc d
 
-Jump_0E0_46FE::
+.next:
     dec c
-    jr nz, Jump_0E0_46E6
+    jr nz, .loop
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0E0_4710
+    jr z, .loop3
     ld c, $04
 
-Jump_0E0_4710::
+.loop3:
     ld a, c
     ld hl, wLevelUpGains
     add_a_to_hl
     ld [hl], $07
     inc c
     dec b
-    jr nz, Jump_0E0_4710
+    jr nz, .loop3
     xor a, a
     ld [wDebugValue3], a
     ret
@@ -1098,7 +1098,7 @@ Func_0E0_4763:: ; address name
     ld a, c
     rlca
     rlca
-    jr Jump_0E0_47F1
+    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
 
 ; DE += 1, then writes bits 7-6 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 ; 6 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
@@ -1108,7 +1108,7 @@ Func_0E0_47E0:: ; address name
     ld a, [de]
     rlca
     rlca
-    jr Jump_0E0_47F1
+    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
 
 ; writes bits 5-4 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 ; 7 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
@@ -1116,7 +1116,7 @@ DrawBits54OfDEAsDigit::
 Func_0E0_47E6:: ; address name
     ld a, [de]
     swap a
-    jr Jump_0E0_47F1
+    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
 
 ; writes bits 3-2 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 ; 7 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
@@ -1125,7 +1125,7 @@ Func_0E0_47EB:: ; address name
     ld a, [de]
     rrca
     rrca
-    jr Jump_0E0_47F1
+    jr DrawBits10OfDEAsDigit_CallWriteVRAMByteInc
 
 ; writes bits 1-0 of [DE] as digit tile $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0112)
 ; 6 call sites from 1 routine (e.g. DrawPacked2BitFieldsInRows)
@@ -1133,7 +1133,8 @@ DrawBits10OfDEAsDigit::
 Func_0E0_47F0:: ; address name
     ld a, [de]
 
-Jump_0E0_47F1::
+DrawBits10OfDEAsDigit_CallWriteVRAMByteInc::
+Jump_0E0_47F1:: ; address name
     and a, $03
     add a, $E0
     call WriteVRAMByteInc
@@ -1161,22 +1162,22 @@ Func_0E0_4804:: ; address name
     ld hl, vBGMap0 + $20
     ld bc, $1410
 
-Jump_0E0_480D::
+.loop:
     push bc
     push hl
 
-Jump_0E0_480F::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0E0_480F
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_0E0_480D
+    jr nz, .loop
     ld hl, wDebugState
     inc [hl]
     ret
@@ -1229,7 +1230,7 @@ DrawFourBytesAsHexRows::
 Func_0E0_4870:: ; address name
     ld b, $04
 
-Jump_0E0_4872::
+.loop:
     ld a, [de]
     swap a
     and a, $0F
@@ -1246,7 +1247,7 @@ Jump_0E0_4872::
     inc de
     inc de
     dec b
-    jr nz, Jump_0E0_4872
+    jr nz, .loop
     ret
 
 ; A = 0-15: writes tile $E0 + A for 0-9, or A - 2 for 10-15, at HL (WriteVRAMByteInc) (E-0112)
@@ -1254,14 +1255,14 @@ Jump_0E0_4872::
 WriteHexDigitTile::
 Func_0E0_488E:: ; address name
     cp a, $0A
-    jr nc, Jump_0E0_4896
+    jr nc, .call_write_vram_byte_inc
     add a, $E0
-    jr Jump_0E0_4898
+    jr .call_write_vram_byte_inc2
 
-Jump_0E0_4896::
+.call_write_vram_byte_inc:
     sub a, $02
 
-Jump_0E0_4898::
+.call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ret
 
@@ -1315,56 +1316,56 @@ Func_0E0_48B7:: ; address name
     ldh a, [hTemp2]
     and a, $0F
     or a, a
-    jr z, Jump_0E0_48EC
+    jr z, .read_temp1
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_48EC::
+.read_temp1:
     inc hl
     ldh a, [hTemp1]
     swap a
     and a, $0F
     or a, a
-    jr nz, Jump_0E0_48FA
+    jr nz, .call_write_vram_byte
     bit 0, b
-    jr z, Jump_0E0_4901
+    jr z, .check_temp1
 
-Jump_0E0_48FA::
+.call_write_vram_byte:
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_4901::
+.check_temp1:
     inc hl
     ldh a, [hTemp1]
     and a, $0F
     or a, a
-    jr nz, Jump_0E0_490D
+    jr nz, .call_write_vram_byte2
     bit 0, b
-    jr z, Jump_0E0_4914
+    jr z, .read_temp0
 
-Jump_0E0_490D::
+.call_write_vram_byte2:
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_4914::
+.read_temp0:
     inc hl
     ldh a, [hTemp0]
     swap a
     and a, $0F
     or a, a
-    jr nz, Jump_0E0_4922
+    jr nz, .call_write_vram_byte3
     bit 0, b
-    jr z, Jump_0E0_4929
+    jr z, .check_temp0
 
-Jump_0E0_4922::
+.call_write_vram_byte3:
     add a, $E0
     call WriteVRAMByte
     ld b, $01
 
-Jump_0E0_4929::
+.check_temp0:
     inc hl
     ldh a, [hTemp0]
     and a, $0F
@@ -1427,14 +1428,14 @@ RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A::
 Jump_0E0_4A86:: ; address name
     ld a, [wEffectId]
     cp a, $FF
-    jr z, Jump_0E0_4A94
+    jr z, .check_joypad_pressed
     farcall RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0
     ret
 
-Jump_0E0_4A94::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $10
-    jr z, Jump_0E0_4AA8
+    jr z, .check_joypad_pressed2
     ld hl, wDebugSubState
     inc [hl]
     ld a, [hl]
@@ -1444,10 +1445,10 @@ Jump_0E0_4A94::
     ld [hl], a
     jr DrawHexByteAtBGMap8A
 
-Jump_0E0_4AA8::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and a, $20
-    jr z, Jump_0E0_4AE7
+    jr z, DrawHexByteAtBGMap8A_CheckJoypadPressed
     ld hl, wDebugSubState
     dec [hl]
     ld a, [hl]
@@ -1463,45 +1464,46 @@ Func_0E0_4ABB:: ; address name
     push af
     and a, $0F
     cp a, $0A
-    jr nc, Jump_0E0_4AC6
+    jr nc, .call_write_vram_byte
     add a, $E0
-    jr Jump_0E0_4AC8
+    jr .call_write_vram_byte2
 
-Jump_0E0_4AC6::
+.call_write_vram_byte:
     sub a, $02
 
-Jump_0E0_4AC8::
+.call_write_vram_byte2:
     ld hl, vBGMap0 + $8A
     call WriteVRAMByte
     pop af
     swap a
     and a, $0F
     cp a, $0A
-    jr nc, Jump_0E0_4ADB
+    jr nc, .call_write_vram_byte3
     add a, $E0
-    jr Jump_0E0_4ADD
+    jr .call_write_vram_byte4
 
-Jump_0E0_4ADB::
+.call_write_vram_byte3:
     sub a, $02
 
-Jump_0E0_4ADD::
+.call_write_vram_byte4:
     ld hl, vBGMap0 + $89
     call WriteVRAMByte
     call DrawSkillByte0AndRun502BAnd53B9
     ret
 
-Jump_0E0_4AE7::
+DrawHexByteAtBGMap8A_CheckJoypadPressed::
+Jump_0E0_4AE7:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_0E0_4AF8
+    jr z, .check_joypad_pressed
     farcall DrawHexByteAtBGMap8A_FillBytes
     call DrawHexByteAtBGMap8A_QueueSoundEffect
     ret
 
-Jump_0E0_4AF8::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $04
-    jr z, Jump_0E0_4B2D
+    jr z, DrawHexByteAtBGMap8A_CheckJoypadPressed2
     ld hl, wWorkBuf
     ld a, [hl+]
     ld [wBattlePartyCount], a
@@ -1524,7 +1526,8 @@ Jump_0E0_4AF8::
     call ReadBGTileAtDebugCounterCell
     ret
 
-Jump_0E0_4B2D::
+DrawHexByteAtBGMap8A_CheckJoypadPressed2::
+Jump_0E0_4B2D:: ; address name
     ld a, [wJoypadPressed]
     and a, $02
     ret z
@@ -1555,26 +1558,26 @@ Jump_0E0_4B54:: ; address name
     call BlinkWC0A0Tile
     ld a, [wJoypadPressed]
     and a, $08
-    jr z, Jump_0E0_4B74
+    jr z, .check_joypad_pressed
     ld hl, wDebugSubState
     inc [hl]
     ld a, [hl]
     cp a, $08
-    jr nz, Jump_0E0_4B69
+    jr nz, .call_draw_slot_status_bits_debug
     xor a, a
     ld [hl], a
 
-Jump_0E0_4B69::
+.call_draw_slot_status_bits_debug:
     call DrawSlotStatusBitsDebug
     xor a, a
     ld [wDebugCounter], a
     call ReadBGTileAtDebugCounterCell
     ret
 
-Jump_0E0_4B74::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $20
-    jr z, Jump_0E0_4B9C
+    jr z, .check_joypad_pressed2
     ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wDebugCounter
@@ -1583,24 +1586,24 @@ Jump_0E0_4B74::
     dec a
     and a, $0F
     cp a, $0F
-    jr nz, Jump_0E0_4B93
+    jr nz, .skip
     ld a, [hl]
     and a, $F0
     or a, $07
 
-Jump_0E0_4B93::
+.skip:
     push af
     ld a, [hl]
     and a, $F0
     pop bc
     or a, b
     ld [hl], a
-    jr Jump_0E0_4C10
+    jr .call_read_bg_tile_at_debug_counter_cell
 
-Jump_0E0_4B9C::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and a, $10
-    jr z, Jump_0E0_4BC2
+    jr z, .check_joypad_pressed3
     ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wDebugCounter
@@ -1609,23 +1612,23 @@ Jump_0E0_4B9C::
     inc a
     and a, $0F
     cp a, $08
-    jr nz, Jump_0E0_4BB9
+    jr nz, .skip2
     ld a, [hl]
     and a, $F0
 
-Jump_0E0_4BB9::
+.skip2:
     push af
     ld a, [hl]
     and a, $F0
     pop bc
     or a, b
     ld [hl], a
-    jr Jump_0E0_4C10
+    jr .call_read_bg_tile_at_debug_counter_cell
 
-Jump_0E0_4BC2::
+.check_joypad_pressed3:
     ld a, [wJoypadPressed]
     and a, $40
-    jr z, Jump_0E0_4BEB
+    jr z, .check_joypad_pressed4
     ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wDebugCounter
@@ -1634,24 +1637,24 @@ Jump_0E0_4BC2::
     sub a, $10
     and a, $F0
     cp a, $F0
-    jr nz, Jump_0E0_4BE2
+    jr nz, .skip3
     ld a, [hl]
     and a, $0F
     or a, $80
 
-Jump_0E0_4BE2::
+.skip3:
     push af
     ld a, [hl]
     and a, $0F
     pop bc
     or a, b
     ld [hl], a
-    jr Jump_0E0_4C10
+    jr .call_read_bg_tile_at_debug_counter_cell
 
-Jump_0E0_4BEB::
+.check_joypad_pressed4:
     ld a, [wJoypadPressed]
     and a, $80
-    jr z, Jump_0E0_4C14
+    jr z, .check_joypad_pressed5
     ld a, [wMenuRowCount]
     call WriteVRAMByte
     ld hl, wDebugCounter
@@ -1660,11 +1663,11 @@ Jump_0E0_4BEB::
     add a, $10
     and a, $F0
     cp a, $90
-    jr nz, Jump_0E0_4C09
+    jr nz, .skip4
     ld a, [hl]
     and a, $0F
 
-Jump_0E0_4C09::
+.skip4:
     push af
     ld a, [hl]
     and a, $0F
@@ -1672,14 +1675,14 @@ Jump_0E0_4C09::
     or a, b
     ld [hl], a
 
-Jump_0E0_4C10::
+.call_read_bg_tile_at_debug_counter_cell:
     call ReadBGTileAtDebugCounterCell
     ret
 
-Jump_0E0_4C14::
+.check_joypad_pressed5:
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_0E0_4C6B
+    jr z, .skip8
     ld a, [wMenuRowCount]
     xor a, $01
     ld [wMenuRowCount], a
@@ -1701,38 +1704,38 @@ Jump_0E0_4C14::
     add hl, bc
     ld a, [wMenuRowCount]
     and a, $01
-    jr z, Jump_0E0_4C5C
+    jr z, .skip6
     ld a, e
     ld de, $4C76
     and a, $0F
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4C58
+    jr nc, .skip5
     inc d
 
-Jump_0E0_4C58::
+.skip5:
     ld a, [de]
     or a, [hl]
     ld [hl], a
     ret
 
-Jump_0E0_4C5C::
+.skip6:
     ld a, e
     ld de, $4C6E
     and a, $0F
     add a, e
     ld e, a
-    jr nc, Jump_0E0_4C67
+    jr nc, .skip7
     inc d
 
-Jump_0E0_4C67::
+.skip7:
     ld a, [de]
     and a, [hl]
     ld [hl], a
     ret
 
-Jump_0E0_4C6B::
-    jp Jump_0E0_4B2D
+.skip8:
+    jp DrawHexByteAtBGMap8A_CheckJoypadPressed2
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
 ; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wC0A0/1 (E-0122)
@@ -1747,10 +1750,10 @@ Func_0E0_4C7E:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     ld a, $C3
-    jr z, Jump_0E0_4C92
+    jr z, .call_write_vram_byte
     ld a, [wMenuRowCount]
 
-Jump_0E0_4C92::
+.call_write_vram_byte:
     call WriteVRAMByte
     ret
 
@@ -1798,22 +1801,22 @@ Jump_0E0_4CAA:: ; address name
     ld bc, $1412
     ld hl, vBGMap0
 
-Jump_0E0_4CD9::
+.loop:
     push bc
     push hl
 
-Jump_0E0_4CDB::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0E0_4CDB
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_0E0_4CD9
+    jr nz, .loop
     xor a, a
     ld [wBattleActor], a
     ld a, $01
@@ -1853,7 +1856,7 @@ RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor::
 Jump_0E0_4D17:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, Jump_0E0_4D2A
+    jr z, .check_joypad_pressed_repeat
     ld a, $04
     ld [wDebugSubState], a
     xor a, a
@@ -1862,52 +1865,52 @@ Jump_0E0_4D17:: ; address name
     ld [hl], a
     ret
 
-Jump_0E0_4D2A::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jr z, Jump_0E0_4D37
+    jr z, .check_bit5
     ld a, $01
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4D37::
+.check_bit5:
     bit 5, a
-    jr z, Jump_0E0_4D4F
+    jr z, .check_bit4
 
-Jump_0E0_4D3B::
+.loop:
     ld a, [wBattleActor]
     dec a
     and a, $07
     ld [wBattleActor], a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr z, Jump_0E0_4D3B
+    jr z, .loop
     ld a, $01
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4D4F::
+.check_bit4:
     bit 4, a
-    jr z, Jump_0E0_4D67
+    jr z, .check_bit2
 
-Jump_0E0_4D53::
+.loop2:
     ld a, [wBattleActor]
     inc a
     and a, $07
     ld [wBattleActor], a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr z, Jump_0E0_4D53
+    jr z, .loop2
     ld a, $01
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4D67::
+.check_bit2:
     bit 2, a
-    jr z, Jump_0E0_4D71
+    jr z, .return
     ld a, $05
     ld [wDebugSubState], a
     ret
 
-Jump_0E0_4D71::
+.return:
     ret
 
 ; entry 4 of the `rst $00` table in RunDebugState_E0_Case0D
@@ -2011,11 +2014,11 @@ Func_0E0_4F28:: ; address name
     ld hl, wBattleStatus
     call AddAx9ToHL
 
-Jump_0E0_4F44::
+.loop:
     ld d, [hl]
     ld b, $00
 
-Jump_0E0_4F47::
+.loop2:
     push hl
     ld a, [wBattleArg0]
     ld l, a
@@ -2036,7 +2039,7 @@ Jump_0E0_4F47::
     inc b
     ld a, b
     cp a, $08
-    jr nz, Jump_0E0_4F47
+    jr nz, .loop2
     push hl
     ld a, [wBattleArg0]
     ld l, a
@@ -2053,7 +2056,7 @@ Jump_0E0_4F47::
     inc c
     ld a, c
     cp a, $09
-    jr nz, Jump_0E0_4F44
+    jr nz, .loop
     ret
 
 ; copies a 4 x 1 tile strip from bank $E0 (address from the word table at $4F9E + 2 * A) to vBGMap0 + $27 (CopyRectFromBankToVRAM) (E-0118)
@@ -2553,7 +2556,7 @@ Func_0E0_56C7:: ; address name
     ld [hl], a
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_0E0_570B
+    jr z, .call_ai_choose_action_resolve_step
     ld a, [wRandomSeed2Lo]
     ld l, a
     ld a, [wRandomSeed2Hi]
@@ -2578,7 +2581,7 @@ Func_0E0_56C7:: ; address name
     ld [wRandomSeed2Hi], a
     ret
 
-Jump_0E0_570B::
+.call_ai_choose_action_resolve_step:
     farcall AIChooseActionResolveStep
     call ChooseTargetIfUnset
     ret
@@ -2595,10 +2598,10 @@ Func_0E0_5715:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_0E0_572C
+    jr nz, .return
     farcall ChooseActionTarget
 
-Jump_0E0_572C::
+.return:
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
@@ -2616,14 +2619,14 @@ Func_0E0_572D:: ; address name
     ld hl, vBGMap0 + $23
     ld b, $04
 
-Jump_0E0_573D::
+.loop:
     di
     ld a, [de]
     call WriteVRAMByteInc
     ei
     inc de
     dec b
-    jr nz, Jump_0E0_573D
+    jr nz, .loop
     ld hl, vTiles1 + $1B0
     ld de, $0801
     ld a, l
@@ -2638,7 +2641,7 @@ Jump_0E0_573D::
     ld a, [wBattleActor]
     and a, $03
     cp a, $03
-    jr z, Jump_0E0_578A
+    jr z, .read_battle_actor
     ld a, [wBattleActor]
     ld hl, wSlotTactic
     add_a_to_hl
@@ -2652,15 +2655,15 @@ Jump_0E0_573D::
     ld de, $0801
     call ShowStringBank08AtTilesHLThenDefault_BankE0_5A79
 
-Jump_0E0_578A::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld de, wSlotAIMode
     add a, e
     ld e, a
-    jr nc, Jump_0E0_5795
+    jr nc, .skip
     inc d
 
-Jump_0E0_5795::
+.skip:
     ld a, [de]
     add a, $8D
     ld hl, vBGMap0 + $46
@@ -2689,11 +2692,11 @@ Jump_0E0_5795::
     ld a, [wLinkMode]
     cp a, $01
     ld a, [wBattleActor]
-    jr z, Jump_0E0_57DE
+    jr z, .skip2
     sub a, $04
-    jr nc, Jump_0E0_57F0
+    jr nc, .skip3
 
-Jump_0E0_57DE::
+.skip2:
     ld a, $C3
     ld hl, vBGMap0 + $1AF
     di
@@ -2701,17 +2704,17 @@ Jump_0E0_57DE::
     call WriteVRAMByteInc
     call WriteVRAMByte
     ei
-    jr Jump_0E0_581A
+    jr .read_battle_actor2
 
-Jump_0E0_57F0::
+.skip3:
     ld de, wEncounterMonsters + $1
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_0E0_57F9
+    jr nc, .skip4
     inc d
 
-Jump_0E0_57F9::
+.skip4:
     ld hl, vBGMap0 + $1AF
     ld a, [de]
     and a, $0F
@@ -2734,7 +2737,7 @@ Jump_0E0_57F9::
     call WriteVRAMByteInc
     ei
 
-Jump_0E0_581A::
+.read_battle_actor2:
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkillsPrefix
@@ -2744,7 +2747,7 @@ Jump_0E0_581A::
     ld hl, vBGMap0 + $A2
     ld b, $08
 
-Jump_0E0_582E::
+.loop2:
     push hl
     ld a, [de]
     and a, $0F
@@ -2774,19 +2777,19 @@ Jump_0E0_582E::
     pop de
     inc de
     dec b
-    jr nz, Jump_0E0_582E
+    jr nz, .loop2
     ld de, wAIWeights
     ld hl, vBGMap0 + $A8
     ld b, $0A
 
-Jump_0E0_5861::
+.loop3:
     ld a, [de]
     ld c, a
     inc de
     ld a, [de]
     and a, c
     cp a, $FF
-    jr nz, Jump_0E0_5898
+    jr nz, .skip5
     ld a, [de]
     and a, $F0
     swap a
@@ -2817,9 +2820,9 @@ Jump_0E0_5861::
     ei
     pop hl
     inc de
-    jr Jump_0E0_58C4
+    jr .next
 
-Jump_0E0_5898::
+.skip5:
     push hl
     push de
     push bc
@@ -2837,12 +2840,12 @@ Jump_0E0_5898::
     ld c, a
     ldh a, [hTemp2]
     or a, c
-    jr z, Jump_0E0_58BB
+    jr z, .skip6
     ld a, $99
     ldh [hTemp1], a
     ldh [hTemp0], a
 
-Jump_0E0_58BB::
+.skip6:
     push bc
     push hl
     ld c, $00
@@ -2850,14 +2853,14 @@ Jump_0E0_58BB::
     pop hl
     pop bc
 
-Jump_0E0_58C4::
+.next:
     inc de
     push de
     ld de, $0020
     add hl, de
     pop de
     dec b
-    jr nz, Jump_0E0_5861
+    jr nz, .loop3
     ld a, $04
     ld [wStringCategory], a
     ld a, [wBattleActor]
@@ -2867,13 +2870,13 @@ Jump_0E0_58C4::
     ld a, [hl]
     ld [wStringIndex], a
     or a, a
-    jr nz, Jump_0E0_58F0
+    jr nz, .call_show_string_bank08_at_tiles_hl_then
     ld a, $0E
     ld [wStringCategory], a
     ld a, $01
     ld [wStringIndex], a
 
-Jump_0E0_58F0::
+.call_show_string_bank08_at_tiles_hl_then:
     ld hl, vTiles1 + $120
     ld de, $0901
     call ShowStringBank08AtTilesHLThenDefault_BankE0_5A79
@@ -2882,10 +2885,10 @@ Jump_0E0_58F0::
     ld de, wBattleActionChoice
     add a, e
     ld e, a
-    jr nc, Jump_0E0_5905
+    jr nc, .skip7
     inc d
 
-Jump_0E0_5905::
+.skip7:
     ld a, [de]
     ld hl, vBGMap0 + $202
     and a, $F0
@@ -2908,27 +2911,27 @@ Jump_0E0_5905::
     ld hl, vBGMap0 + $20F
     ld b, $04
 
-Jump_0E0_592C::
+.loop4:
     di
     ld a, [de]
     call WriteVRAMByteInc
     ei
     inc de
     dec b
-    jr nz, Jump_0E0_592C
+    jr nz, .loop4
     ld b, $03
     ld c, $01
     ld hl, wAIChoiceOrder
 
-Jump_0E0_593D::
+.loop5:
     push bc
     push hl
     ld b, $03
 
-Jump_0E0_5941::
+.loop6:
     ld a, [hl+]
     cp a, c
-    jr nz, Jump_0E0_596D
+    jr nz, .next2
     ld de, $FFFC
     add hl, de
     ld a, [hl]
@@ -2950,23 +2953,23 @@ Jump_0E0_5941::
     call RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc
     pop hl
     pop bc
-    jr Jump_0E0_5970
+    jr .restore
 
-Jump_0E0_596D::
+.next2:
     dec b
-    jr nz, Jump_0E0_5941
+    jr nz, .loop6
 
-Jump_0E0_5970::
+.restore:
     pop hl
     pop bc
     inc c
     dec b
-    jr nz, Jump_0E0_593D
+    jr nz, .loop5
     ld hl, vBGMap0 + $131
     ld de, wAIChoiceOrder
     ld b, $03
 
-Jump_0E0_597E::
+.loop7:
     ld a, [de]
     and a, $0F
     inc a
@@ -2979,7 +2982,7 @@ Jump_0E0_597E::
     pop de
     inc de
     dec b
-    jr nz, Jump_0E0_597E
+    jr nz, .loop7
     ret
 
 ; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
@@ -3009,10 +3012,10 @@ Func_0E0_59A4:: ; address name
     ld de, wBattleTargetChoice
     add a, e
     ld e, a
-    jr nc, Jump_0E0_59B0
+    jr nc, .read_link_mode
     inc d
 
-Jump_0E0_59B0::
+.read_link_mode:
     ld a, [wLinkMode]
     ld hl, wLinkRole
     cp a, $01
@@ -3035,10 +3038,10 @@ Func_0E0_59C0:: ; address name
     or a, c
     ld c, a
     ld a, b
-    jr nz, Jump_0E0_59CE
+    jr nz, .call_write_vram_byte_inc
     ld a, $C2
 
-Jump_0E0_59CE::
+.call_write_vram_byte_inc:
     inc a
     di
     call WriteVRAMByteInc
@@ -3055,10 +3058,10 @@ Func_0E0_59D4:: ; address name
     or a, c
     ld c, a
     ld a, b
-    jr nz, Jump_0E0_59E0
+    jr nz, .call_write_vram_byte_inc
     ld a, $C2
 
-Jump_0E0_59E0::
+.call_write_vram_byte_inc:
     inc a
     di
     call WriteVRAMByteInc
@@ -3070,10 +3073,10 @@ Jump_0E0_59E0::
     or a, c
     ld c, a
     ld a, b
-    jr nz, Jump_0E0_59F4
+    jr nz, .call_write_vram_byte_inc2
     ld a, $C2
 
-Jump_0E0_59F4::
+.call_write_vram_byte_inc2:
     inc a
     di
     call WriteVRAMByteInc
@@ -3134,7 +3137,7 @@ RunDebugState_E0_Case0D_Case05_AIChooseActionForActor::
 Func_0E0_5A35:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_0E0_5A6C
+    jr z, .call_ai_choose_action_for_actor
     ld a, [wRandomSeed2Lo]
     ld l, a
     ld a, [wRandomSeed2Hi]
@@ -3159,7 +3162,7 @@ Func_0E0_5A35:: ; address name
     ld [wRandomSeed2Hi], a
     ret
 
-Jump_0E0_5A6C::
+.call_ai_choose_action_for_actor:
     farcall AIChooseActionForActor
     farcall ChooseActionTarget
     ret
@@ -3223,7 +3226,7 @@ DebugStaffRoll_Update_RunFieldEventFieldEventKind::
 Func_0E0_5AD3:: ; address name
     ld a, [wWorkBuf]
     or a, a
-    jp z, Jump_0E0_6FF7
+    jp z, DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case08_CheckWorkBuf
     farcall RunFieldEventFieldEventKind
     call IncrementSpriteSlotCounters
     ld a, [wWorkBuf + $2]
@@ -3292,7 +3295,7 @@ Jump_0E0_5B16:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_5BB2
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
@@ -3327,7 +3330,7 @@ Jump_0E0_5B16:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_0E0_5BB2::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, $03
@@ -3795,7 +3798,7 @@ Jump_0E0_5E83:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_5F07
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
@@ -3825,7 +3828,7 @@ Jump_0E0_5E83:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_0E0_5F07::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, $02
@@ -3979,7 +3982,7 @@ Jump_0E0_5FFE:: ; address name
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
-    jr nz, Jump_0E0_6022
+    jr nz, .read_work_buf
     call StepWD0A2Mod15
     ret nz
     ld a, $02
@@ -3991,7 +3994,7 @@ Jump_0E0_5FFE:: ; address name
     inc [hl]
     ret
 
-Jump_0E0_6022::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     ld c, a
     ld b, $00
@@ -4032,7 +4035,7 @@ Jump_0E0_605D:: ; address name
     call SetSpriteSlotByte5
     ld a, [wWorkBuf + $6]
     cp a, $20
-    jr nc, Jump_0E0_6086
+    jr nc, .call_step_wd0_a2_mod15
     and a, $0F
     ld c, a
     ld b, $00
@@ -4046,7 +4049,7 @@ Jump_0E0_605D:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_6086::
+.call_step_wd0_a2_mod15:
     call StepWD0A2Mod15
     ret nz
     xor a, a
@@ -4114,7 +4117,7 @@ Jump_0E0_60DF:: ; address name
     call SetSpriteSlotByte5
     ld a, [wObject1 + $2]
     cp a, $F0
-    jr nz, Jump_0E0_6113
+    jr nz, .set_object1
     ld a, $02
     ld [wSpriteSlotCount], a
     ld a, $00
@@ -4132,7 +4135,7 @@ Jump_0E0_60DF:: ; address name
     inc [hl]
     ret
 
-Jump_0E0_6113::
+.set_object1:
     sub a, $02
     ld [wObject1 + $2], a
     ld a, [wObject1 + $7]
@@ -4149,17 +4152,17 @@ Jump_0E0_6120:: ; address name
     call DrawSpriteSlots
     ld a, [wSpriteSlots + $2]
     cp a, $F0
-    jr z, Jump_0E0_6136
+    jr z, .check_sprite_slots
     sub a, $01
     ld [wSpriteSlots + $2], a
     ld a, [wSpriteSlots + $7]
     inc a
     ld [wSpriteSlots + $7], a
 
-Jump_0E0_6136::
+.check_sprite_slots:
     ld a, [wSpriteSlots + $A]
     cp a, $F0
-    jr nz, Jump_0E0_6158
+    jr nz, .set_sprite_slots
     ld a, $02
     ld [wSpriteSlotCount], a
     call StepWD0A2Mod15
@@ -4174,7 +4177,7 @@ Jump_0E0_6136::
     ld [wWorkBuf + $1], a
     ret
 
-Jump_0E0_6158::
+.set_sprite_slots:
     sub a, $01
     ld [wSpriteSlots + $A], a
     ld a, [wSpriteSlots + $F]
@@ -4194,14 +4197,14 @@ Jump_0E0_6165:: ; address name
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
-    jr nz, Jump_0E0_617E
+    jr nz, .read_work_buf
     xor a, a
     ld [wWorkBuf + $6], a
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
 
-Jump_0E0_617E::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     ld c, a
     ld b, $00
@@ -4226,14 +4229,14 @@ Jump_0E0_6194:: ; address name
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
-    jr nz, Jump_0E0_61AD
+    jr nz, .read_work_buf
     xor a, a
     ld [wWorkBuf + $6], a
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
 
-Jump_0E0_61AD::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     ld c, a
     ld b, $00
@@ -4258,14 +4261,14 @@ Jump_0E0_61C3:: ; address name
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
-    jr nz, Jump_0E0_61DC
+    jr nz, .read_work_buf
     xor a, a
     ld [wWorkBuf + $6], a
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
 
-Jump_0E0_61DC::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     ld c, a
     ld b, $00
@@ -4290,14 +4293,14 @@ Jump_0E0_61F2:: ; address name
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
-    jr nz, Jump_0E0_620B
+    jr nz, .read_work_buf
     xor a, a
     ld [wWorkBuf + $6], a
     ld hl, wWorkBuf + $1
     inc [hl]
     ret
 
-Jump_0E0_620B::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     ld c, a
     ld b, $00
@@ -4319,7 +4322,7 @@ Jump_0E0_6221:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_624A
+    jr nc, .call_step_wd0_a2_mod15
     and a, $07
     ld c, a
     ld b, $00
@@ -4336,7 +4339,7 @@ Jump_0E0_6221:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_624A::
+.call_step_wd0_a2_mod15:
     call StepWD0A2Mod15
     ret nz
     ld a, $02
@@ -4425,7 +4428,7 @@ Jump_0E0_62A0:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_636C
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
@@ -4470,7 +4473,7 @@ Jump_0E0_62A0:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_0E0_636C::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, $02
@@ -4731,7 +4734,7 @@ Jump_0E0_6514:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_653D
+    jr nc, .call_set_sprite_slot_byte5
     and a, $0F
     ld c, a
     ld b, $00
@@ -4748,7 +4751,7 @@ Jump_0E0_6514:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_653D::
+.call_set_sprite_slot_byte5:
     ld a, $05
     ld c, $00
     call SetSpriteSlotByte5
@@ -4769,7 +4772,7 @@ Jump_0E0_6551:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_657A
+    jr nc, .call_step_wd0_a2_mod30
     and a, $0F
     ld c, a
     ld b, $00
@@ -4786,7 +4789,7 @@ Jump_0E0_6551:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_657A::
+.call_step_wd0_a2_mod30:
     call StepWD0A2Mod30
     ret nz
     ld a, $04
@@ -5122,7 +5125,7 @@ Jump_0E0_67B1:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_67D3
+    jr nc, .call_step_wd0_a2_mod60
     and a, $0F
     ld c, a
     ld b, $00
@@ -5136,7 +5139,7 @@ Jump_0E0_67B1:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_67D3::
+.call_step_wd0_a2_mod60:
     call StepWD0A2Mod60
     ret nz
     ld a, $05
@@ -5271,7 +5274,7 @@ Jump_0E0_685B:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jp z, Jump_0E0_694D
+    jp z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
@@ -5326,7 +5329,7 @@ Jump_0E0_685B:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_0E0_694D::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, $06
@@ -5561,7 +5564,7 @@ Jump_0E0_6ABE:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_6AED
+    jr nc, .set_sprite_slot_count_to_05
     and a, $0F
     ld c, a
     ld b, $00
@@ -5580,7 +5583,7 @@ Jump_0E0_6ABE:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_6AED::
+.set_sprite_slot_count_to_05:
     ld a, $05
     ld [wSpriteSlotCount], a
     ld a, [wObject2 + $B]
@@ -5604,7 +5607,7 @@ Jump_0E0_6B0A:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_6B39
+    jr nc, .set_sprite_slot_count_to_04
     and a, $0F
     ld c, a
     ld b, $00
@@ -5623,7 +5626,7 @@ Jump_0E0_6B0A:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_6B39::
+.set_sprite_slot_count_to_04:
     ld a, $04
     ld [wSpriteSlotCount], a
     ld a, [wObject2 + $3]
@@ -5794,7 +5797,7 @@ Jump_0E0_6C2C:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_6CC8
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $49
@@ -5829,7 +5832,7 @@ Jump_0E0_6C2C:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_0E0_6CC8::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, $04
@@ -5990,7 +5993,7 @@ Jump_0E0_6DA7:: ; address name
     cp a, $07
     ret c
     cp a, $0F
-    jr c, Jump_0E0_6DDF
+    jr c, .call_set_sprite_slot_byte5
     xor a, a
     ld [wWorkBuf + $6], a
     ld [wWorkBuf + $7], a
@@ -5998,7 +6001,7 @@ Jump_0E0_6DA7:: ; address name
     inc [hl]
     ret
 
-Jump_0E0_6DDF::
+.call_set_sprite_slot_byte5:
     ld a, $02
     ld c, $03
     call SetSpriteSlotByte5
@@ -6016,7 +6019,7 @@ Jump_0E0_6DEE:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $20
-    jr nc, Jump_0E0_6E12
+    jr nc, .call_step_sprite_slot_toward
     and a, $1F
     ld c, a
     ld b, $00
@@ -6029,9 +6032,9 @@ Jump_0E0_6DEE:: ; address name
     ld d, $10
     ld a, $02
     call StepSpriteSlotToward
-    jr Jump_0E0_6E29
+    jr .read_work_buf
 
-Jump_0E0_6E12::
+.call_step_sprite_slot_toward:
     ld a, $02
     ld de, $10A0
     call StepSpriteSlotToward
@@ -6042,12 +6045,12 @@ Jump_0E0_6E12::
     ld a, $02
     call StepSpriteSlotToward
 
-Jump_0E0_6E29::
+.read_work_buf:
     ld a, [wWorkBuf + $6]
     sub a, $10
-    jr c, Jump_0E0_6E4E
+    jr c, .call_step_sprite_slot_toward2
     cp a, $20
-    jr nc, Jump_0E0_6E5E
+    jr nc, .call_step_sprite_slot_toward3
     and a, $1F
     ld c, a
     ld b, $00
@@ -6060,20 +6063,20 @@ Jump_0E0_6E29::
     ld d, $10
     ld a, $03
     call StepSpriteSlotToward
-    jr Jump_0E0_6E56
+    jr .check_work_buf
 
-Jump_0E0_6E4E::
+.call_step_sprite_slot_toward2:
     ld a, $03
     ld de, $3040
     call StepSpriteSlotToward
 
-Jump_0E0_6E56::
+.check_work_buf:
     ld a, [wWorkBuf + $6]
     inc a
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_6E5E::
+.call_step_sprite_slot_toward3:
     ld a, $03
     ld de, $10A0
     call StepSpriteSlotToward
@@ -6103,7 +6106,7 @@ Jump_0E0_6EA3:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
     cp a, $10
-    jr nc, Jump_0E0_6ECC
+    jr nc, .cp_20
     and a, $0F
     ld c, a
     ld b, $00
@@ -6120,7 +6123,7 @@ Jump_0E0_6EA3:: ; address name
     ld [wWorkBuf + $6], a
     ret
 
-Jump_0E0_6ECC::
+.cp_20:
     cp a, $20
     push af
     inc a
@@ -6311,17 +6314,18 @@ Jump_0E0_6FDE:: ; address name
     inc [hl]
     ret
 
-Jump_0E0_6FF7::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case08_CheckWorkBuf::
+Jump_0E0_6FF7:: ; address name
     ld a, [wWorkBuf + $2]
     or a, a
-    jr z, Jump_0E0_7007
+    jr z, .read_work_buf
     ld a, [wWorkBuf + $1]
     rst $00
     dw DebugStaffRoll_Update_Sub01_Table2_Case00
     dw DebugStaffRoll_Update_Sub01_Table2_Case01
     dw DebugStaffRoll_Update_Sub01_Table2_Case02
 
-Jump_0E0_7007::
+.read_work_buf:
     ld a, [wWorkBuf + $1]
     rst $00
     dw DebugStaffRoll_Update_Sub01_Table3_Case00
@@ -6336,7 +6340,7 @@ DebugStaffRoll_Update_Sub01_Table2_Case00::
 Jump_0E0_7011:: ; address name
     ld a, [wWorkBuf + $4]
     or a, a
-    jr nz, Jump_0E0_7036
+    jr nz, .read_work_buf
     ld hl, vTiles2 + $7F0
     ld de, $0101
     call FillTilesRequest
@@ -6351,14 +6355,14 @@ Jump_0E0_7011:: ; address name
     ld a, h
     ld [wWorkBuf + $9], a
 
-Jump_0E0_7036::
+.read_work_buf:
     ld a, [wWorkBuf + $8]
     ld l, a
     ld a, [wWorkBuf + $9]
     ld h, a
     ld a, [hl+]
     cp a, $FE
-    jp nz, Jump_0E0_719F
+    jp nz, .set_work_buf2
     ld a, l
     ld [wWorkBuf + $10], a
     ld a, h
@@ -6371,21 +6375,21 @@ Jump_0E0_7036::
     xor a, a
     ld [wWorkBuf + $A], a
 
-Jump_0E0_705B::
+.skip:
     ld a, [hl+]
     ld c, a
     cp a, $FF
-    jp z, Jump_0E0_70EB
+    jp z, .set_work_buf
     ld a, [wWorkBuf + $A]
     add a, c
     ld [wWorkBuf + $A], a
     ld a, c
     or a, a
-    jr nz, Jump_0E0_7070
+    jr nz, .read_work_buf2
     inc hl
-    jr Jump_0E0_70A5
+    jr .read_work_buf3
 
-Jump_0E0_7070::
+.read_work_buf2:
     push hl
     ld a, [wWorkBuf + $C]
     ld l, a
@@ -6409,12 +6413,12 @@ Jump_0E0_7070::
     ld a, [hl+]
     ld [wStringIndex], a
     cp a, $FF
-    jr z, Jump_0E0_70A5
+    jr z, .read_work_buf3
     push hl
     call ShowString_BankE0
     pop hl
 
-Jump_0E0_70A5::
+.read_work_buf3:
     ld a, [hl+]
     ld c, a
     ld a, [wWorkBuf + $A]
@@ -6423,11 +6427,11 @@ Jump_0E0_70A5::
     ld [wWorkBuf + $A], a
     ld a, c
     or a, a
-    jr nz, Jump_0E0_70B6
+    jr nz, .read_work_buf4
     inc hl
-    jr Jump_0E0_705B
+    jr .skip
 
-Jump_0E0_70B6::
+.read_work_buf4:
     push hl
     ld a, [wWorkBuf + $C]
     ld l, a
@@ -6453,16 +6457,16 @@ Jump_0E0_70B6::
     push hl
     call ShowString_BankE0
     pop hl
-    jp Jump_0E0_705B
+    jp .skip
 
-Jump_0E0_70EB::
+.set_work_buf:
     ld a, l
     ld [wWorkBuf + $8], a
     ld a, h
     ld [wWorkBuf + $9], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_710C
+    jr z, .skip2
     ld a, $01
     ldh [rVBK], a
     ld a, $00
@@ -6472,7 +6476,7 @@ Jump_0E0_70EB::
     ld a, $00
     ldh [rVBK], a
 
-Jump_0E0_710C::
+.skip2:
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
@@ -6488,14 +6492,14 @@ Jump_0E0_710C::
     ld a, b
     ld [wWorkBuf + $D], a
 
-Jump_0E0_712D::
+.read_work_buf5:
     ld a, [wWorkBuf + $10]
     ld l, a
     ld a, [wWorkBuf + $11]
     ld h, a
     ld a, [hl]
     cp a, $FF
-    jp z, Jump_0E0_7259
+    jp z, .check_sgb_active
     ld a, [wWorkBuf + $E]
     ld l, a
     ld a, [wWorkBuf + $F]
@@ -6528,11 +6532,11 @@ Jump_0E0_712D::
     ld a, h
     ld [wWorkBuf + $11], a
     pop hl
-    jr z, Jump_0E0_717B
+    jr z, .read_work_buf6
     ld de, $0020
     add hl, de
 
-Jump_0E0_717B::
+.read_work_buf6:
     ld a, [wWorkBuf + $C]
     ld b, a
     add a, $12
@@ -6550,16 +6554,16 @@ Jump_0E0_717B::
     ld [wWorkBuf + $E], a
     ld a, h
     ld [wWorkBuf + $F], a
-    jr Jump_0E0_712D
+    jr .read_work_buf5
 
-Jump_0E0_719F::
+.set_work_buf2:
     ld [wWorkBuf + $A], a
     or a, a
-    jr nz, Jump_0E0_71A8
+    jr nz, .skip3
     inc hl
-    jr Jump_0E0_71C4
+    jr .set_work_buf3
 
-Jump_0E0_71A8::
+.skip3:
     push hl
     ld hl, vTiles1
     ld de, $1202
@@ -6570,20 +6574,20 @@ Jump_0E0_71A8::
     ld a, [hl+]
     ld [wStringIndex], a
     cp a, $FF
-    jr z, Jump_0E0_71C4
+    jr z, .set_work_buf3
     push hl
     call ShowString_BankE0
     pop hl
 
-Jump_0E0_71C4::
+.set_work_buf3:
     ld a, [hl+]
     ld [wWorkBuf + $B], a
     or a, a
-    jr nz, Jump_0E0_71CE
+    jr nz, .skip4
     inc hl
-    jr Jump_0E0_71E7
+    jr .set_work_buf4
 
-Jump_0E0_71CE::
+.skip4:
     push hl
     ld hl, vTiles1 + $240
     ld de, $1206
@@ -6597,14 +6601,14 @@ Jump_0E0_71CE::
     call ShowString_BankE0
     pop hl
 
-Jump_0E0_71E7::
+.set_work_buf4:
     ld a, l
     ld [wWorkBuf + $8], a
     ld a, h
     ld [wWorkBuf + $9], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_7208
+    jr z, .skip5
     ld a, $01
     ldh [rVBK], a
     ld a, $00
@@ -6614,7 +6618,7 @@ Jump_0E0_71E7::
     ld a, $00
     ldh [rVBK], a
 
-Jump_0E0_7208::
+.skip5:
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
@@ -6643,11 +6647,11 @@ Jump_0E0_7208::
     ld a, [wWorkBuf + $A]
     ld c, a
     or a, a
-    jr z, Jump_0E0_7240
+    jr z, .skip6
     ld a, $80
     call FillVRAMRectWithTileSequence
 
-Jump_0E0_7240::
+.skip6:
     ld a, l
     and a, $E0
     ld l, a
@@ -6658,20 +6662,20 @@ Jump_0E0_7240::
     ld a, [wWorkBuf + $B]
     ld c, a
     or a, a
-    jr z, Jump_0E0_7259
+    jr z, .check_sgb_active
     ld a, $A4
     call FillVRAMRectWithTileSequence
 
-Jump_0E0_7259::
+.check_sgb_active:
     ld hl, wWorkBuf + $1
     inc [hl]
     ld a, [wSGBActive]
     or a, a
     ld hl, $01A4
-    jr z, Jump_0E0_7269
+    jr z, .read_work_buf7
     ld hl, $012C
 
-Jump_0E0_7269::
+.read_work_buf7:
     ld a, [wWorkBuf + $8]
     ld e, a
     ld a, [wWorkBuf + $9]
@@ -6681,37 +6685,37 @@ Jump_0E0_7269::
     dec de
     ld a, [de]
     cp a, $00
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $05
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $0F
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $13
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $14
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $15
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $16
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $17
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $18
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $19
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $1A
-    jr z, Jump_0E0_72AC
+    jr z, .set_work_buf5
     cp a, $1B
     cp a, $20
-    jr c, Jump_0E0_72AF
+    jr c, .set_work_buf6
     ld hl, $FFFF
-    jr Jump_0E0_72AF
+    jr .set_work_buf6
 
-Jump_0E0_72AC::
+.set_work_buf5:
     ld hl, $012C
 
-Jump_0E0_72AF::
+.set_work_buf6:
     ld a, l
     ld [wWorkBuf + $5], a
     ld a, h
@@ -6732,16 +6736,16 @@ Jump_0E0_72C0:: ; address name
     ld a, [hl+]
     and a, [hl]
     cp a, $FF
-    jr z, Jump_0E0_72DB
+    jr z, .read_sound_channel2
     ld a, [wWorkBuf + $5]
     sub a, $01
     ld [wWorkBuf + $5], a
     ld a, [wWorkBuf + $6]
     sbc a, $00
     ld [wWorkBuf + $6], a
-    jr Jump_0E0_732E
+    jr .skip
 
-Jump_0E0_72DB::
+.read_sound_channel2:
     ld a, [wSoundChannel2]
     ld hl, wSoundChannel2 + $1
     and a, [hl]
@@ -6783,7 +6787,7 @@ Jump_0E0_72DB::
     inc [hl]
     ret
 
-Jump_0E0_732E::
+.skip:
     ld hl, wWorkBuf + $5
     ld a, [hl+]
     or a, [hl]
@@ -6807,12 +6811,12 @@ Jump_0E0_733E:: ; address name
     ld a, [wWorkBuf + $4]
     dec a
     ld [wWorkBuf + $4], a
-    jr z, Jump_0E0_7351
+    jr z, .skip
     xor a, a
     ld [wWorkBuf + $1], a
     ret
 
-Jump_0E0_7351::
+.skip:
     ld hl, wWorkBuf + $2
     inc [hl]
     ld hl, wWorkBuf
@@ -6841,7 +6845,7 @@ Jump_0E0_735E:: ; address name
     call ShowString_BankE0
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0E0_73A2
+    jr z, .skip
     ld b, $48
     ld de, BGPaletteBufferData_48_4001
     ld hl, wBGPaletteBuffer
@@ -6856,7 +6860,7 @@ Jump_0E0_735E:: ; address name
     ld a, $00
     ldh [rVBK], a
 
-Jump_0E0_73A2::
+.skip:
     ld a, $7F
     ld hl, vBGMap0
     ld bc, $1412
@@ -6869,10 +6873,10 @@ Jump_0E0_73A2::
     ld a, [wSGBActive]
     or a, a
     ld hl, $0168
-    jr z, Jump_0E0_73C7
+    jr z, .set_work_buf
     ld hl, $00F0
 
-Jump_0E0_73C7::
+.set_work_buf:
     ld a, l
     ld [wWorkBuf + $5], a
     ld a, h
@@ -6931,13 +6935,13 @@ Func_0E0_740E:: ; address name
     push bc
     push hl
 
-Jump_0E0_7410::
+.loop:
     di
     call WriteVRAMByteInc
     ei
     inc a
     dec b
-    jr nz, Jump_0E0_7410
+    jr nz, .loop
     pop hl
     pop bc
     add hl, de
@@ -6958,7 +6962,7 @@ Func_0E0_7420:: ; address name
     ld b, a
     ld hl, wSpriteSlots
 
-Jump_0E0_7429::
+.loop:
     push bc
     ld a, [hl+]
     ld c, a
@@ -6980,7 +6984,7 @@ Jump_0E0_7429::
     ld a, c
     cp a, $02
     ld a, b
-    jr z, Jump_0E0_745E
+    jr z, .set_sprite_sub_index2
     ld a, e
     and a, $20
     srl a
@@ -6988,17 +6992,17 @@ Jump_0E0_7429::
     ld e, a
     ld a, b
     cp a, $03
-    jr nz, Jump_0E0_745C
+    jr nz, .set_sprite_sub_index
     ldh a, [hSpriteAttrXor]
     or a, $20
     ldh [hSpriteAttrXor], a
     ld a, $01
 
-Jump_0E0_745C::
+.set_sprite_sub_index:
     add a, a
     add a, e
 
-Jump_0E0_745E::
+.set_sprite_sub_index2:
     ldh [hSpriteSubIndex], a
     ld b, $00
     push hl
@@ -7017,7 +7021,7 @@ Jump_0E0_745E::
     pop hl
     pop bc
     dec b
-    jr nz, Jump_0E0_7429
+    jr nz, .loop
     ret
     db $01, $40, $25, $01, $40, $7F, $0A, $70, $7F
 
@@ -7029,7 +7033,7 @@ Func_0E0_7480:: ; address name
     ld b, $08
     ld hl, wSpriteSlots
 
-Jump_0E0_7485::
+.loop:
     inc hl
     inc hl
     inc hl
@@ -7040,7 +7044,7 @@ Jump_0E0_7485::
     inc [hl]
     inc hl
     dec b
-    jr nz, Jump_0E0_7485
+    jr nz, .loop
     ret
 
 ; A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved
@@ -7057,35 +7061,35 @@ Func_0E0_7492:: ; address name
     inc hl
     ld a, [hl]
     cp a, d
-    jr z, Jump_0E0_74AF
-    jr c, Jump_0E0_74AB
+    jr z, .next
+    jr c, .skip
     dec a
-    jr Jump_0E0_74AC
+    jr .skip2
 
-Jump_0E0_74AB::
+.skip:
     inc a
 
-Jump_0E0_74AC::
+.skip2:
     ld [hl], a
     ld c, $01
 
-Jump_0E0_74AF::
+.next:
     inc hl
     ld a, [hl]
     cp a, e
-    jr z, Jump_0E0_74BD
-    jr c, Jump_0E0_74B9
+    jr z, .next2
+    jr c, .skip3
     dec a
-    jr Jump_0E0_74BA
+    jr .skip4
 
-Jump_0E0_74B9::
+.skip3:
     inc a
 
-Jump_0E0_74BA::
+.skip4:
     ld [hl], a
     ld c, $01
 
-Jump_0E0_74BD::
+.next2:
     inc hl
     inc hl
     inc hl
@@ -7129,8 +7133,8 @@ Func_0E0_74D8:: ; address name
     ld a, [hl]
     ld b, a
     cp a, d
-    jr z, Jump_0E0_7513
-    jr c, Jump_0E0_7501
+    jr z, .next
+    jr c, .read_work_buf
     push hl
     ld a, [wWorkBuf + $A]
     ld hl, $7535
@@ -7139,9 +7143,9 @@ Func_0E0_74D8:: ; address name
     sub a, [hl]
     pop hl
     ld [hl], a
-    jr Jump_0E0_7511
+    jr .skip
 
-Jump_0E0_7501::
+.read_work_buf:
     push hl
     ld a, [wWorkBuf + $A]
     ld hl, $7535
@@ -7151,14 +7155,14 @@ Jump_0E0_7501::
     pop hl
     ld [hl], a
 
-Jump_0E0_7511::
+.skip:
     ld c, $01
 
-Jump_0E0_7513::
+.next:
     inc hl
     ld a, [hl]
     cp a, e
-    jr z, Jump_0E0_7532
+    jr z, .done
     ld b, a
     push hl
     ld a, [wWorkBuf + $A]
@@ -7173,7 +7177,7 @@ Jump_0E0_7513::
     ld [wWorkBuf + $A], a
     ld c, $01
 
-Jump_0E0_7532::
+.done:
     ld a, c
     or a, a
     ret
@@ -7247,7 +7251,7 @@ Func_0E0_758B:: ; address name
     push bc
     push hl
 
-Jump_0E0_758D::
+.loop:
     di
     push af
     call WaitForVRAMAccess
@@ -7267,7 +7271,7 @@ Jump_0E0_758D::
     ld l, a
     pop af
     dec b
-    jr nz, Jump_0E0_758D
+    jr nz, .loop
     pop hl
     push af
     ld a, h
@@ -7313,7 +7317,7 @@ Func_0E0_75BF:: ; address name
     call ResetFadeFromDMGPaletteBGP
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_0E0_7640
+    jr z, .return
     xor a, a
     ldh [rBGP], a
     ldh [rOBP0], a
@@ -7356,10 +7360,10 @@ Func_0E0_75BF:: ; address name
     ld bc, $0008
     call CopyBytes
 
-Jump_0E0_7640::
+.return:
     ret
 
-; E-0213 (C1: the routine before Jump_0E0_7640 copies these 8 bytes to wOBJPaletteBuffer + $20 with CopyBytes).
+; E-0213 (C1: the routine before ResetScreenPalettes_E0.return copies these 8 bytes to wOBJPaletteBuffer + $20 with CopyBytes).
 ; record: one CGB palette: 4 BGR555 colours
 Palette_E0_7641::
 Data_0E0_7641:: ; address name
@@ -7412,11 +7416,11 @@ BeginStringDisplay_BankE0::
 Func_0E0_76E0:: ; address name
     ld a, [wStringCategory]
     cp a, $01
-    jr c, Jump_0E0_76EE
+    jr c, .call_begin_string_display
     farcall BeginStringDisplay_BankE0_BeginStringDisplay
     ret
 
-Jump_0E0_76EE::
+.call_begin_string_display:
     ld de, $76FC
     call BeginStringDisplay
     ret
@@ -7652,45 +7656,46 @@ Data_0E0_79BA:: ; address name
 GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
 Func_0E0_79C9:: ; address name
     ld hl, wBattleATK
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleDEF
 GetBattleDEF_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
 Func_0E0_79CE:: ; address name
     ld hl, wBattleDEF
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
 Func_0E0_79D3:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
 Func_0E0_79D8:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
 GetBattleHP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_0E0_79DD:: ; address name
     ld hl, wBattleHP
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
 GetBattleMP_BankE0:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_0E0_79E2:: ; address name
     ld hl, wBattleMP
-    jr Jump_0E0_79F6
+    jr GetBattleMP_BankE0_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_0E0_79F6::
+GetBattleMP_BankE0_Skip::
+Jump_0E0_79F6:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -7711,16 +7716,16 @@ ActorOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
 Func_0E0_7A07:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0E0_7A1C
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0E0_7A1C
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_0E0_7A1C::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -7732,16 +7737,16 @@ TargetOnLocalSide_BankE0:: ; heuristic: follows a terminator; C0
 Func_0E0_7A22:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0E0_7A37
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0E0_7A37
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_0E0_7A37::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -7813,13 +7818,13 @@ Func_0E0_7A80:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E0_7A9C
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_0E0_7A9C
+    jr nc, .skip
     ld l, $12
 
-Jump_0E0_7A9C::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -7829,13 +7834,13 @@ Jump_0E0_7A9C::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E0_7AB7
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_0E0_7AB7
+    jr nc, .skip2
     ld l, $06
 
-Jump_0E0_7AB7::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -7845,13 +7850,13 @@ Jump_0E0_7AB7::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0E0_7AD2
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_0E0_7AD2
+    jr nc, .skip3
     ld l, $02
 
-Jump_0E0_7AD2::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -7872,17 +7877,17 @@ Func_0E0_7AD7:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0E0_7AF1
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_0E0_7AF1
+    jr nz, .set_carry
     xor a, a
-    jr Jump_0E0_7AF2
+    jr .skip
 
-Jump_0E0_7AF1::
+.set_carry:
     scf
 
-Jump_0E0_7AF2::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -7898,11 +7903,11 @@ Func_0E0_7AF6:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0E0_7B05
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_0E0_7B05::
+.done:
     pop hl
     ret
     ds $4F9, $00

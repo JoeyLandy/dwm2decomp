@@ -7,45 +7,46 @@ SECTION "Bank A1", ROMX[$4000], BANK[$A1]
 GetBattleATK_BankA1:: ; heuristic: follows a terminator; C0
 Func_0A1_4001:: ; address name
     ld hl, wBattleATK
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleDEF
 GetBattleDEF_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
 Func_0A1_4006:: ; address name
     ld hl, wBattleDEF
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
 Func_0A1_400B:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
 Func_0A1_4010:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
 GetBattleHP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_0A1_4015:: ; address name
     ld hl, wBattleHP
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
 GetBattleMP_BankA1:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_0A1_401A:: ; address name
     ld hl, wBattleMP
-    jr Jump_0A1_402E
+    jr GetBattleMP_BankA1_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_0A1_402E::
+GetBattleMP_BankA1_Skip::
+Jump_0A1_402E:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -66,16 +67,16 @@ ActorOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
 Func_0A1_403F:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0A1_4054
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0A1_4054
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_0A1_4054::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -87,16 +88,16 @@ TargetOnLocalSide_BankA1:: ; heuristic: follows a terminator; C0
 Func_0A1_405A:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0A1_406F
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0A1_406F
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_0A1_406F::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -180,13 +181,13 @@ Func_0A1_40B8:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A1_40D4
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_0A1_40D4
+    jr nc, .skip
     ld l, $12
 
-Jump_0A1_40D4::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -196,13 +197,13 @@ Jump_0A1_40D4::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A1_40EF
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_0A1_40EF
+    jr nc, .skip2
     ld l, $06
 
-Jump_0A1_40EF::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -212,13 +213,13 @@ Jump_0A1_40EF::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A1_410A
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_0A1_410A
+    jr nc, .skip3
     ld l, $02
 
-Jump_0A1_410A::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -239,17 +240,17 @@ Func_0A1_410F:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0A1_4129
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_0A1_4129
+    jr nz, .set_carry
     xor a, a
-    jr Jump_0A1_412A
+    jr .skip
 
-Jump_0A1_4129::
+.set_carry:
     scf
 
-Jump_0A1_412A::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -265,11 +266,11 @@ Func_0A1_412E:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0A1_413D
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_0A1_413D::
+.done:
     pop hl
     ret
 
@@ -304,28 +305,28 @@ Jump_0A1_4156:: ; address name
     ld bc, $0304
     ld hl, wSlotMarks + $4
 
-Jump_0A1_4164::
+.loop:
     ld a, [hl]
     ld e, $FF
     cp a, $FF
-    jr z, Jump_0A1_417F
+    jr z, .skip
     ld e, $03
     cp a, $FE
-    jr z, Jump_0A1_417F
+    jr z, .skip
     cp a, $FD
-    jr z, Jump_0A1_417F
+    jr z, .skip
     ld e, $03
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0A1_417F
+    jr c, .skip
     ld e, $01
 
-Jump_0A1_417F::
+.skip:
     ld [hl], e
     inc hl
     inc c
     dec b
-    jr nz, Jump_0A1_4164
+    jr nz, .loop
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -340,38 +341,38 @@ Jump_0A1_418A:: ; address name
     call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp a, $08
-    jr z, Jump_0A1_41BC
+    jr z, .skip
     ld e, a
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $01
-    jr z, Jump_0A1_41A9
+    jr z, .call_carry_unless_battle_slot_out_slot_empty
 
-Jump_0A1_41A2::
+.loop:
     inc e
     ld a, e
     ld [wBattleActor], a
-    jr Jump_0A1_41C2
+    jr .return
 
-Jump_0A1_41A9::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0A1_41A2
+    jr c, .loop
     ld [wBattleActor], a
     ld hl, wBattleSubPhase
     inc [hl]
     xor a, a
     ld [wBattleResolveStep], a
-    jr Jump_0A1_41C2
+    jr .return
 
-Jump_0A1_41BC::
+.skip:
     ld hl, wBattleSubPhase
     inc [hl]
     inc [hl]
     inc [hl]
 
-Jump_0A1_41C2::
+.return:
     ret
 
 ; entry 2 of the `rst $00` table in RunBattleCommandEntry_BankA1
@@ -433,16 +434,16 @@ Jump_0A1_41F4:: ; address name
     ld [wBattleTemp7B], a
     ld de, $0800
 
-Jump_0A1_422A::
+.loop:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0A1_4266
+    jr c, .next
     ld a, e
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $02
-    jr nz, Jump_0A1_4266
+    jr nz, .next
     ld a, e
     call RunBattleCommandEntry_BankA1_Case04_RandomInRange
     call RunBattleCommandEntry_BankA1_Case04_WriteRecordBufferAndBattleArg0Etc
@@ -462,10 +463,10 @@ Jump_0A1_422A::
     ld hl, wBattleTemp7A
     inc [hl]
 
-Jump_0A1_4266::
+.next:
     inc e
     dec d
-    jp nz, Jump_0A1_422A
+    jp nz, .loop
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -479,7 +480,7 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
 Jump_0A1_4270:: ; address name
     ld d, $08
 
-Jump_0A1_4272::
+.loop:
     ld hl, wBattleTemp7D
     ld a, l
     ld [wBattleTemp7A], a
@@ -492,9 +493,9 @@ Jump_0A1_4272::
     deref_hl
     ld e, $00
 
-Jump_0A1_4288::
+.call_compare_hl_to_bc:
     call CompareHLToBC
-    jr c, Jump_0A1_42C2
+    jr c, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -523,11 +524,11 @@ Jump_0A1_4288::
     ld [hl-], a
     ld [hl], b
 
-Jump_0A1_42C2::
+.next:
     inc e
     ld a, e
     cp a, d
-    jr z, Jump_0A1_42DB
+    jr z, .next2
     ld hl, wBattleTemp7A
     inc [hl]
     ld hl, wBattleTemp7A
@@ -538,33 +539,33 @@ Jump_0A1_42C2::
     ld c, a
     inc hl
     deref_hl
-    jr Jump_0A1_4288
+    jr .call_compare_hl_to_bc
 
-Jump_0A1_42DB::
+.next2:
     dec d
-    jr nz, Jump_0A1_4272
+    jr nz, .loop
     ld a, [wActionQueuePos]
     ld de, wActionQueue
     add a, e
     ld e, a
-    jr nc, Jump_0A1_42E9
+    jr nc, .read_action_queue_pos
     inc d
 
-Jump_0A1_42E9::
+.read_action_queue_pos:
     ld a, [wActionQueuePos]
     ld hl, wBattleArg0
     ld b, $09
 
-Jump_0A1_42F1::
+.loop2:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_0A1_42FB
+    jr z, .set_action_queue_pos_to_00
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_0A1_42F1
+    jr nz, .loop2
 
-Jump_0A1_42FB::
+.set_action_queue_pos_to_00:
     ld a, $00
     ld [wActionQueuePos], a
     ld hl, wBattleSubPhase
@@ -627,26 +628,26 @@ Func_0A1_4356:: ; address name
     ld c, $00
     ld b, $08
 
-Jump_0A1_435A::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0A1_4378
+    jr c, .next
     ld a, c
     add a, a
     ld hl, wBattleActionChoice
     add_a_to_hl
     ld a, [hl]
     cp a, $6E
-    jr nz, Jump_0A1_4378
+    jr nz, .next
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
     set 2, [hl]
 
-Jump_0A1_4378::
+.next:
     inc c
     dec b
-    jr nz, Jump_0A1_435A
+    jr nz, .loop
     ret
 
 ; only called from RunBattleCommandEntry_BankA1_Case04 (E-0047)
@@ -689,11 +690,11 @@ Func_0A1_43A1:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $62
-    jr z, Jump_0A1_4413
+    jr z, .skip
     cp a, $69
-    jr z, Jump_0A1_441D
+    jr z, .call_next_table_byte_second_stream
     cp a, $D8
-    jr z, Jump_0A1_4413
+    jr z, .skip
     push af
     push bc
     push de
@@ -737,19 +738,19 @@ Func_0A1_43A1:: ; address name
     pop af
     ld a, [wRecordBufferData + $5]
     bit 2, a
-    jr nz, Jump_0A1_4418
+    jr nz, .skip2
     ld hl, $000A
-    jr Jump_0A1_4430
+    jr .skip3
 
-Jump_0A1_4413::
+.skip:
     ld hl, $0BB8
-    jr Jump_0A1_4430
+    jr .skip3
 
-Jump_0A1_4418::
+.skip2:
     ld hl, $07D0
-    jr Jump_0A1_4430
+    jr .skip3
 
-Jump_0A1_441D::
+.call_next_table_byte_second_stream:
     call NextTableByteSecondStream
     ld a, [wRandomLo]
     ld b, a
@@ -758,14 +759,14 @@ Jump_0A1_441D::
     add a, $01
     ld c, a
     ld b, $00
-    jr Jump_0A1_4433
+    jr .done
 
-Jump_0A1_4430::
+.skip3:
     add hl, bc
     ld c, l
     ld b, h
 
-Jump_0A1_4433::
+.done:
     pop de
     ret
 
@@ -790,27 +791,27 @@ Func_0A1_4435:: ; address name
     add_a_to_hl
     ldh a, [hMapScreenY]
     bit 1, a
-    jr z, Jump_0A1_445C
+    jr z, .skip
     inc hl
 
-Jump_0A1_445C::
+.skip:
     ld c, $01
     bit 0, a
-    jr z, Jump_0A1_4464
+    jr z, .check_map_screen_x
     ld c, $10
 
-Jump_0A1_4464::
+.check_map_screen_x:
     ldh a, [hMapScreenX]
     and a, $03
-    jr z, Jump_0A1_4470
+    jr z, .skip2
     ld b, a
 
-Jump_0A1_446B::
+.loop:
     sla c
     dec b
-    jr nz, Jump_0A1_446B
+    jr nz, .loop
 
-Jump_0A1_4470::
+.skip2:
     ld a, [hl]
     or a, c
     ld [hl], a
@@ -825,10 +826,10 @@ Func_0A1_4474:: ; address name
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_0A1_447F
+    jr z, .skip
     inc hl
 
-Jump_0A1_447F::
+.skip:
     and a, $0F
     add a, a
     add a, a
@@ -850,29 +851,29 @@ Jump_0A1_447F::
     push af
     and a, $0F
     bit 1, a
-    jr z, Jump_0A1_44AE
+    jr z, .skip2
     inc hl
 
-Jump_0A1_44AE::
+.skip2:
     ld c, $01
     bit 0, a
-    jr z, Jump_0A1_44B6
+    jr z, .restore
     ld c, $10
 
-Jump_0A1_44B6::
+.restore:
     pop af
     swap a
     and a, $0F
     and a, $03
-    jr z, Jump_0A1_44C5
+    jr z, .skip3
     ld b, a
 
-Jump_0A1_44C0::
+.loop:
     sla c
     dec b
-    jr nz, Jump_0A1_44C0
+    jr nz, .loop
 
-Jump_0A1_44C5::
+.skip3:
     ld a, [hl]
     or a, c
     ld [hl], a
@@ -897,42 +898,42 @@ Func_0A1_44C9:: ; address name
     ldh [hMapScreenY], a
     ld c, $05
 
-Jump_0A1_44DB::
+.loop:
     ld b, $05
 
-Jump_0A1_44DD::
+.loop2:
     ld a, [wKeyWorldHeight]
     ld d, a
     ldh a, [hMapScreenY]
     bit 7, a
-    jr nz, Jump_0A1_4503
+    jr nz, .read_temp0
     cp a, d
-    jr nc, Jump_0A1_4503
+    jr nc, .read_temp0
     ld a, [wKeyWorldWidth]
     ld d, a
     ldh a, [hMapScreenX]
     bit 7, a
-    jr nz, Jump_0A1_44FC
+    jr nz, .skip
     cp a, d
-    jr nc, Jump_0A1_44FC
+    jr nc, .skip
     push bc
     call MarkVisitedMapScreenInVisitedScreens
     pop bc
 
-Jump_0A1_44FC::
+.skip:
     ld hl, hMapScreenX
     inc [hl]
     dec b
-    jr nz, Jump_0A1_44DD
+    jr nz, .loop2
 
-Jump_0A1_4503::
+.read_temp0:
     ldh a, [hTemp0]
     sub a, $02
     ldh [hMapScreenX], a
     ld hl, hMapScreenY
     inc [hl]
     dec c
-    jr nz, Jump_0A1_44DB
+    jr nz, .loop
     ldh a, [hTemp0]
     ldh [hMapScreenX], a
     ldh a, [hTemp1]
@@ -986,14 +987,14 @@ Jump_0A1_452D:: ; address name
     call RunGameMode2State_Case04_WriteVRAMByteInc
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_0A1_4573
+    jr nz, .call_run_game_mode2_state_case04_store_temp5
     call RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX
-    jr Jump_0A1_4576
+    jr .skip
 
-Jump_0A1_4573::
+.call_run_game_mode2_state_case04_store_temp5:
     call RunGameMode2State_Case04_StoreTemp5ValuesToCursorCellX_Sub01
 
-Jump_0A1_4576::
+.skip:
     ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
@@ -1003,15 +1004,15 @@ Jump_0A1_4576::
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0A1_45C0
+    jr z, .done
     ld a, $40
     ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
-    jr nc, Jump_0A1_4592
+    jr nc, .skip2
     inc d
 
-Jump_0A1_4592::
+.skip2:
     ld b, $7E
     ld hl, wOBJPaletteBuffer
     ld c, $08
@@ -1031,7 +1032,7 @@ Jump_0A1_4592::
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_0A1_45C0::
+.done:
     ld hl, wGameMode2State
     inc [hl]
     ret
@@ -1047,7 +1048,7 @@ Func_0A1_45C5:: ; address name
     ld hl, vBGMap0
     ld c, $12
 
-Jump_0A1_45D0::
+.loop:
     push hl
     ldh a, [hTemp5]
     ldh [hTemp9], a
@@ -1055,25 +1056,25 @@ Jump_0A1_45D0::
     ldh [hTempA], a
     ld b, $14
 
-Jump_0A1_45DB::
+.loop2:
     push bc
     push hl
     ldh a, [hTempA]
     bit 7, a
-    jr nz, Jump_0A1_4610
+    jr nz, .check_temp9
     ld c, a
     ldh a, [hTemp3]
     dec a
     cp a, c
-    jr c, Jump_0A1_4610
+    jr c, .check_temp9
     ldh a, [hTemp8]
     bit 7, a
-    jr nz, Jump_0A1_4610
+    jr nz, .check_temp9
     ld c, a
     ldh a, [hTemp4]
     dec a
     cp a, c
-    jr c, Jump_0A1_4610
+    jr c, .check_temp9
     push bc
     ldh a, [hTempA]
     and a, $0F
@@ -1087,42 +1088,42 @@ Jump_0A1_45DB::
     call IsMapScreenAVisited
     pop de
     or a, a
-    jr z, Jump_0A1_4610
+    jr z, .check_temp9
     call RunGameMode2State_Case04_Sub01_WriteTemp0AndTemp1
 
-Jump_0A1_4610::
+.check_temp9:
     ldh a, [hTemp9]
     inc a
     cp a, $05
-    jr nz, Jump_0A1_461D
+    jr nz, .set_temp9
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
     xor a, a
 
-Jump_0A1_461D::
+.set_temp9:
     ldh [hTemp9], a
     pop hl
     inc hl
     pop bc
     dec b
-    jr nz, Jump_0A1_45DB
+    jr nz, .loop2
     ldh a, [hTemp6]
     inc a
     cp a, $05
-    jr nz, Jump_0A1_4632
+    jr nz, .set_temp6
     ldh a, [hTemp8]
     inc a
     ldh [hTemp8], a
     xor a, a
 
-Jump_0A1_4632::
+.set_temp6:
     ldh [hTemp6], a
     pop hl
     ld a, $20
     add_a_to_hl
     dec c
-    jr nz, Jump_0A1_45D0
+    jr nz, .loop
     ret
 
 ; only called from RunGameMode2State_Case04_Sub01 (E-0047)
@@ -1263,14 +1264,14 @@ Func_0A1_46DF:: ; address name
     srl a
     inc a
     cp a, $05
-    jr c, Jump_0A1_471B
+    jr c, .set_temp5
     sub a, $05
     push af
     ld hl, hTemp7
     inc [hl]
     pop af
 
-Jump_0A1_471B::
+.set_temp5:
     ldh [hTemp5], a
     ldh a, [hPlayerY]
     swap a
@@ -1279,14 +1280,14 @@ Jump_0A1_471B::
     inc a
     inc a
     cp a, $05
-    jr c, Jump_0A1_4733
+    jr c, .set_temp6
     sub a, $05
     push af
     ld hl, hTemp8
     inc [hl]
     pop af
 
-Jump_0A1_4733::
+.set_temp6:
     ldh [hTemp6], a
     pop hl
     ld a, l
@@ -1338,10 +1339,10 @@ Jump_0A1_475B:: ; address name
     add_a_to_hl
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_0A1_4772
+    jr z, .skip
     inc hl
 
-Jump_0A1_4772::
+.skip:
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
@@ -1369,15 +1370,15 @@ RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer::
 Jump_0A1_4787:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_47B4
+    jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_0A1_47B4
+    jr z, .read_key_world_goal_screen
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_0A1_47B4
+    jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     call SetMapScreenFromAAndCenterPlayer
     ld a, [wKeyWorldGoal]
@@ -1389,7 +1390,7 @@ Jump_0A1_4787:: ; address name
     ldh [hPlayerY], a
     ret
 
-Jump_0A1_47B4::
+.read_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     call SetMapScreenFromAAndCenterPlayer
     ld a, [wKeyWorldGoalPos]
@@ -1430,7 +1431,7 @@ Func_0A1_47D8:: ; address name
     ld hl, vBGMap0
     ld c, $12
 
-Jump_0A1_47E9::
+.loop:
     push hl
     push de
     ldh a, [hTemp5]
@@ -1439,37 +1440,37 @@ Jump_0A1_47E9::
     ldh [hTempA], a
     ld b, $14
 
-Jump_0A1_47F5::
+.loop2:
     push bc
     push hl
     ldh a, [hTempA]
     bit 7, a
-    jr nz, Jump_0A1_481B
+    jr nz, .check_temp9
     ld c, a
     ldh a, [hTemp3]
     dec a
     cp a, c
-    jr c, Jump_0A1_481B
+    jr c, .check_temp9
     ldh a, [hTemp8]
     bit 7, a
-    jr nz, Jump_0A1_481B
+    jr nz, .check_temp9
     ld c, a
     ldh a, [hTemp4]
     dec a
     cp a, c
-    jr c, Jump_0A1_481B
+    jr c, .check_temp9
     ldh a, [hTemp2]
     ld b, a
     call ReadByteInBank
     ld a, c
     call WriteVRAMByte
 
-Jump_0A1_481B::
+.check_temp9:
     inc de
     ldh a, [hTemp9]
     inc a
     cp a, $05
-    jr nz, Jump_0A1_4831
+    jr nz, .set_temp9
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
@@ -1481,25 +1482,25 @@ Jump_0A1_481B::
     ld d, a
     xor a, a
 
-Jump_0A1_4831::
+.set_temp9:
     ldh [hTemp9], a
     pop hl
     inc hl
     pop bc
     dec b
-    jr nz, Jump_0A1_47F5
+    jr nz, .loop2
     pop de
     ld a, $05
     add a, e
     ld e, a
-    jr nc, Jump_0A1_4841
+    jr nc, .check_temp6
     inc d
 
-Jump_0A1_4841::
+.check_temp6:
     ldh a, [hTemp6]
     inc a
     cp a, $05
-    jr nz, Jump_0A1_4865
+    jr nz, .set_temp6
     ldh a, [hTemp8]
     inc a
     ldh [hTemp8], a
@@ -1522,13 +1523,13 @@ Jump_0A1_4841::
     pop bc
     xor a, a
 
-Jump_0A1_4865::
+.set_temp6:
     ldh [hTemp6], a
     pop hl
     ld a, $20
     add_a_to_hl
     dec c
-    jp nz, Jump_0A1_47E9
+    jp nz, .loop
     ret
 
 ; only called from RunGameMode2State_Case04_Sub02 (E-0047)
@@ -1617,7 +1618,7 @@ Func_0A1_4874:: ; address name
     srl a
     inc a
     cp a, $05
-    jr c, Jump_0A1_4915
+    jr c, .set_temp5
     sub a, $05
     push af
     ld hl, hTemp7
@@ -1638,7 +1639,7 @@ Func_0A1_4874:: ; address name
     ldh [hTemp1], a
     pop af
 
-Jump_0A1_4915::
+.set_temp5:
     ldh [hTemp5], a
     push af
     ldh a, [hTemp0]
@@ -1658,7 +1659,7 @@ Jump_0A1_4915::
     inc a
     inc a
     cp a, $05
-    jr c, Jump_0A1_4954
+    jr c, .set_temp6
     sub a, $05
     push af
     ld hl, hTemp8
@@ -1677,7 +1678,7 @@ Jump_0A1_4915::
     ldh [hTemp1], a
     pop af
 
-Jump_0A1_4954::
+.set_temp6:
     ldh [hTemp6], a
     ld c, a
     add a, a
@@ -1742,37 +1743,37 @@ Func_0A1_49A8:: ; address name
     ldh a, [hMapId]
     ld c, $01
     cp a, $29
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $02
     cp a, $45
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $03
     cp a, $68
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $04
     cp a, $9D
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $05
     cp a, $A4
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $06
     cp a, $AF
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $07
     cp a, $B2
-    jp z, Jump_0A1_4A31
+    jp z, .check_game_mode2_byte44
     ld c, $08
     cp a, $C5
-    jr z, Jump_0A1_4A31
+    jr z, .check_game_mode2_byte44
     ld c, $09
     cp a, $D0
-    jr z, Jump_0A1_4A31
+    jr z, .check_game_mode2_byte44
     ld c, $0A
     cp a, $D9
-    jr z, Jump_0A1_4A31
+    jr z, .check_game_mode2_byte44
     ld c, $0B
     cp a, $E2
-    jr z, Jump_0A1_4A31
+    jr z, .check_game_mode2_byte44
     cp a, $20
     ret z
     cp a, $30
@@ -1798,42 +1799,42 @@ Func_0A1_49A8:: ; address name
     ld c, a
     ld hl, WorldMapScreenPositionTable
 
-Jump_0A1_4A18::
+.skip:
     ld a, [hl]
     cp a, c
-    jr z, Jump_0A1_4A23
+    jr z, .check_last_warp_index
     inc hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_0A1_4A18
+    jr .skip
 
-Jump_0A1_4A23::
+.check_last_warp_index:
     ld a, [wLastWarpIndex]
     dec a
     dec a
-    jr nz, Jump_0A1_4A2C
+    jr nz, .call_load_map_position_from_hl
     inc hl
     inc hl
 
-Jump_0A1_4A2C::
+.call_load_map_position_from_hl:
     inc hl
     call LoadMapPositionFromHL
     ret
 
-Jump_0A1_4A31::
+.check_game_mode2_byte44:
     ld a, [wGameMode2Byte44]
     inc a
     ld c, a
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_4A67
+    jr z, .skip2
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr nz, Jump_0A1_4A67
+    jr nz, .skip2
     cp a, c
-    jr nz, Jump_0A1_4A67
+    jr nz, .skip2
     ld a, [wKeyWorldGoalCell]
     swap a
     and a, $0F
@@ -1850,7 +1851,7 @@ Jump_0A1_4A31::
     ldh [hPlayerY], a
     ret
 
-Jump_0A1_4A67::
+.skip2:
     ld a, c
     dec a
     add a, a
@@ -1909,7 +1910,7 @@ Jump_0A1_4AA6:: ; address name
     bit 1, a
     jr nz, RunGameMode2State_Case02_UploadBGPalettes
     bit 2, a
-    jr z, Jump_0A1_4ADC
+    jr z, RunGameMode2State_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8
 
 ; only called from RunGameMode2State_Case02 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_WriteGameMode2State)
@@ -1925,7 +1926,7 @@ Func_0A1_4AB1:: ; address name
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0A1_4AD7
+    jr z, .done
     ld hl, wBGPaletteBuffer
     ld bc, $0050
     ld a, $FF
@@ -1936,12 +1937,13 @@ Func_0A1_4AB1:: ; address name
     ld [wOBJPaletteUploadRequest], a
     call UploadBGPalettes
 
-Jump_0A1_4AD7::
+.done:
     ld hl, wGameMode2State
     inc [hl]
     ret
 
-Jump_0A1_4ADC::
+RunGameMode2State_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8::
+Jump_0A1_4ADC:: ; address name
     call DrawBlinkingMetaSprite8
     call RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc
     call RunGameMode2State_Case02_Sub01_WaitMapType
@@ -1957,47 +1959,47 @@ RunGameMode2State_Case02_Sub01_WriteTemp1AndTemp2::
 Func_0A1_4AEC:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_4B64
+    jp nz, .check_key_world_active2
     ldh a, [hMapId]
     ld c, $01
     cp a, $30
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $02
     cp a, $48
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $03
     cp a, $70
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $04
     cp a, $A0
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $05
     cp a, $A8
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $06
     cp a, $B0
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $07
     cp a, $B8
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $08
     cp a, $C8
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $09
     cp a, $D1
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $0A
     cp a, $DA
-    jr c, Jump_0A1_4B34
+    jr c, .check_key_world_active
     ld c, $0B
 
-Jump_0A1_4B34::
+.check_key_world_active:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_4B4E
+    jr z, .skip
     ld a, [wKeyWorldKey]
     cp a, c
-    jr nz, Jump_0A1_4B4E
+    jr nz, .skip
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
@@ -2005,7 +2007,7 @@ Jump_0A1_4B34::
     call RunGameMode2State_Case02_Sub01_Sub01_Multiply8
     ret
 
-Jump_0A1_4B4E::
+.skip:
     ld a, c
     dec a
     add a, a
@@ -2019,18 +2021,18 @@ Jump_0A1_4B4E::
     call RunGameMode2State_Case02_Sub01_Sub01_Multiply8
     ret
 
-Jump_0A1_4B64::
+.check_key_world_active2:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_4B88
+    jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_0A1_4B88
+    jr z, .read_key_world_goal_screen
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_0A1_4B88
+    jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
@@ -2038,7 +2040,7 @@ Jump_0A1_4B64::
     call RunGameMode2State_Case02_Sub01_Sub01_Multiply8
     ret
 
-Jump_0A1_4B88::
+.read_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
     ld a, [wKeyWorldGoalPos]
@@ -2065,9 +2067,9 @@ Func_0A1_4BA1:: ; address name
     and a, $0F
     sub a, c
     bit 7, a
-    jp nz, Jump_0A1_4C2D
+    jp nz, .return
     cp a, $05
-    jp nc, Jump_0A1_4C2D
+    jp nc, .return
     ld c, $28
     call Multiply8
     ld a, l
@@ -2078,9 +2080,9 @@ Func_0A1_4BA1:: ; address name
     and a, $0F
     sub a, c
     bit 7, a
-    jr nz, Jump_0A1_4C2D
+    jr nz, .return
     cp a, $05
-    jr nc, Jump_0A1_4C2D
+    jr nc, .return
     ld c, $28
     call Multiply8
     ld a, l
@@ -2131,7 +2133,7 @@ Func_0A1_4BA1:: ; address name
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
 
-Jump_0A1_4C2D::
+.return:
     ret
 
 ; only called from RunGameMode2State_Case02_Sub01 (E-0047)
@@ -2146,17 +2148,17 @@ Func_0A1_4C2E:: ; address name
     ret z
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_4CDD
+    jp nz, .read_map_object_count
     ld a, [wMapObjectCount]
     ld b, a
     ld de, wMapObjects
 
-Jump_0A1_4C42::
+.loop:
     push bc
     push de
     ld a, [de]
     bit 7, a
-    jp nz, Jump_0A1_4CCF
+    jp nz, .restore
     inc de
     inc de
     inc de
@@ -2168,9 +2170,9 @@ Jump_0A1_4C42::
     and a, $0F
     sub a, c
     bit 7, a
-    jp nz, Jump_0A1_4CCF
+    jp nz, .restore
     cp a, $05
-    jp nc, Jump_0A1_4CCF
+    jp nc, .restore
     ld c, $28
     push de
     call Multiply8
@@ -2183,9 +2185,9 @@ Jump_0A1_4C42::
     and a, $0F
     sub a, c
     bit 7, a
-    jr nz, Jump_0A1_4CCF
+    jr nz, .restore
     cp a, $05
-    jr nc, Jump_0A1_4CCF
+    jr nc, .restore
     ld c, $28
     push de
     call Multiply8
@@ -2239,31 +2241,31 @@ Jump_0A1_4C42::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
 
-Jump_0A1_4CCF::
+.restore:
     pop de
     ld a, $08
     add a, e
     ld e, a
-    jr nc, Jump_0A1_4CD7
+    jr nc, .restore2
     inc d
 
-Jump_0A1_4CD7::
+.restore2:
     pop bc
     dec b
-    jp nz, Jump_0A1_4C42
+    jp nz, .loop
     ret
 
-Jump_0A1_4CDD::
+.read_map_object_count:
     ld a, [wMapObjectCount]
     ld b, a
     ld de, wMapObjects
 
-Jump_0A1_4CE4::
+.loop2:
     push bc
     push de
     ld a, [de]
     bit 7, a
-    jp nz, Jump_0A1_4D86
+    jp nz, .restore3
     inc de
     inc de
     inc de
@@ -2275,9 +2277,9 @@ Jump_0A1_4CE4::
     and a, $0F
     sub a, c
     bit 7, a
-    jp nz, Jump_0A1_4D86
+    jp nz, .restore3
     cp a, $05
-    jp nc, Jump_0A1_4D86
+    jp nc, .restore3
     ld c, $28
     push de
     call Multiply8
@@ -2290,9 +2292,9 @@ Jump_0A1_4CE4::
     and a, $0F
     sub a, c
     bit 7, a
-    jr nz, Jump_0A1_4D86
+    jr nz, .restore3
     cp a, $05
-    jr nc, Jump_0A1_4D86
+    jr nc, .restore3
     ld c, $28
     push de
     call Multiply8
@@ -2349,18 +2351,18 @@ Jump_0A1_4CE4::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
 
-Jump_0A1_4D86::
+.restore3:
     pop de
     ld a, $08
     add a, e
     ld e, a
-    jr nc, Jump_0A1_4D8E
+    jr nc, .restore4
     inc d
 
-Jump_0A1_4D8E::
+.restore4:
     pop bc
     dec b
-    jp nz, Jump_0A1_4CE4
+    jp nz, .loop2
     ret
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
@@ -2372,7 +2374,7 @@ RunGameMode2State_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc::
 Func_0A1_4DA4:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_4E4D
+    jp nz, .skip
     ld a, [wGameMode2Byte44]
     add a, a
     ld hl, WorldMapMarkerLists
@@ -2387,7 +2389,7 @@ Func_0A1_4DA4:: ; address name
     inc de
     ld b, a
 
-Jump_0A1_4DC1::
+.loop:
     push bc
     push de
     ld a, [wCursorCellY]
@@ -2397,9 +2399,9 @@ Jump_0A1_4DC1::
     and a, $0F
     sub a, c
     bit 7, a
-    jp nz, Jump_0A1_4E44
+    jp nz, .restore
     cp a, $05
-    jp nc, Jump_0A1_4E44
+    jp nc, .restore
     ld c, $28
     push de
     call Multiply8
@@ -2412,9 +2414,9 @@ Jump_0A1_4DC1::
     and a, $0F
     sub a, c
     bit 7, a
-    jr nz, Jump_0A1_4E44
+    jr nz, .restore
     cp a, $05
-    jr nc, Jump_0A1_4E44
+    jr nc, .restore
     ld c, $28
     push de
     call Multiply8
@@ -2468,27 +2470,27 @@ Jump_0A1_4DC1::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
 
-Jump_0A1_4E44::
+.restore:
     pop de
     inc de
     inc de
     pop bc
     dec b
-    jp nz, Jump_0A1_4DC1
+    jp nz, .loop
     ret
 
-Jump_0A1_4E4D::
+.skip:
     ld de, wKeyWorldFloorInfo + $3
 
-Jump_0A1_4E50::
+.skip2:
     push de
     ld a, [de]
     cp a, $FF
-    jr nz, Jump_0A1_4E58
+    jr nz, .next
     pop de
     ret
 
-Jump_0A1_4E58::
+.next:
     dec de
     dec de
     dec de
@@ -2499,9 +2501,9 @@ Jump_0A1_4E58::
     and a, $0F
     sub a, c
     bit 7, a
-    jp nz, Jump_0A1_4EDF
+    jp nz, .restore2
     cp a, $05
-    jr nc, Jump_0A1_4EDF
+    jr nc, .restore2
     ld c, $28
     push de
     call Multiply8
@@ -2514,9 +2516,9 @@ Jump_0A1_4E58::
     and a, $0F
     sub a, c
     bit 7, a
-    jr nz, Jump_0A1_4EDF
+    jr nz, .restore2
     cp a, $05
-    jr nc, Jump_0A1_4EDF
+    jr nc, .restore2
     ld c, $28
     push de
     call Multiply8
@@ -2525,13 +2527,13 @@ Jump_0A1_4E58::
     ldh [hSpriteOriginY], a
     ld a, [wGameMode2Byte50]
     or a, a
-    jr nz, Jump_0A1_4E9F
+    jr nz, .read_cursor_cell_x
     ld a, [de]
     call IsMapScreenAVisited
     or a, a
-    jr z, Jump_0A1_4EDF
+    jr z, .restore2
 
-Jump_0A1_4E9F::
+.read_cursor_cell_x:
     ld a, [wCursorCellX]
     add a, a
     add a, a
@@ -2573,13 +2575,13 @@ Jump_0A1_4E9F::
     ldh [hSpriteOriginYHi], a
     farcall DrawMetaSprite
 
-Jump_0A1_4EDF::
+.restore2:
     pop de
     inc de
     inc de
     inc de
     inc de
-    jp Jump_0A1_4E50
+    jp .skip2
 
 ; only called from RunGameMode2State_Case02_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunGameMode2State_Case02_UploadBGPalettes)
@@ -2592,15 +2594,15 @@ Func_0A1_4EE7:: ; address name
     ret z
     ld de, wKeyWorldObjects
 
-Jump_0A1_4EF0::
+.skip:
     push de
     ld a, [de]
     cp a, $FF
-    jr nz, Jump_0A1_4EF8
+    jr nz, .next
     pop de
     ret
 
-Jump_0A1_4EF8::
+.next:
     dec de
     dec de
     dec de
@@ -2612,7 +2614,7 @@ Jump_0A1_4EF8::
     inc de
     inc de
     inc de
-    jp Jump_0A1_4EF0
+    jp .skip
 
 ; only called from RunGameMode2State_Case02_Sub01_Sub04 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_Sub01_WaitMapType)
@@ -2653,13 +2655,13 @@ Func_0A1_4F0A:: ; address name
     ldh [hSpriteOriginY], a
     ld a, [wGameMode2Byte50]
     or a, a
-    jr nz, Jump_0A1_4F48
+    jr nz, .read_cursor_cell_x
     ld a, [de]
     call IsMapScreenAVisited
     or a, a
     ret z
 
-Jump_0A1_4F48::
+.read_cursor_cell_x:
     ld a, [wCursorCellX]
     add a, a
     add a, a
@@ -2751,7 +2753,7 @@ Jump_0A1_4FB8:: ; address name
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0A1_4FDD
+    jr z, .done
     ld hl, wBGPaletteBuffer
     ld bc, $0040
     ld a, $FF
@@ -2760,7 +2762,7 @@ Jump_0A1_4FB8:: ; address name
     ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
 
-Jump_0A1_4FDD::
+.done:
     ld hl, wGameMode2State
     inc [hl]
     ret
@@ -2801,14 +2803,14 @@ Jump_0A1_4FE2:: ; address name
     call RunGameMode2State_Case01_WriteVRAMByteInc
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_0A1_5036
+    jr nz, .call_run_game_mode2_state_case01_centered_bg
     call RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC
-    jr Jump_0A1_5039
+    jr .skip
 
-Jump_0A1_5036::
+.call_run_game_mode2_state_case01_centered_bg:
     call RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC_Sub01
 
-Jump_0A1_5039::
+.skip:
     ld hl, wDMGPaletteBGP
     ld a, $D2
     ld [hl+], a
@@ -2818,15 +2820,15 @@ Jump_0A1_5039::
     ld [hl], a
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_0A1_5090
+    jr z, .done
     ld a, $40
     ld de, OBJPaletteBufferData_7E_4BBD
     add a, e
     ld e, a
-    jr nc, Jump_0A1_5055
+    jr nc, .skip2
     inc d
 
-Jump_0A1_5055::
+.skip2:
     ld b, $7E
     ld hl, wOBJPaletteBuffer
     ld c, $08
@@ -2851,7 +2853,7 @@ Jump_0A1_5055::
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_0A1_5090::
+.done:
     ld hl, wGameMode2State
     inc [hl]
     ret
@@ -2865,20 +2867,20 @@ RunGameMode2State_WriteGameMode2State::
 Jump_0A1_5095:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, Jump_0A1_50A5
+    jr z, .check_bit2
     call RunGameMode2State_Case02_UploadBGPalettes
     ld a, $06
     ld [wGameMode2State], a
     ret
 
-Jump_0A1_50A5::
+.check_bit2:
     bit 2, a
-    jr z, Jump_0A1_50AE
+    jr z, .call_run_game_mode2_state_case02_wait_frame
     ld hl, wGameMode2State
     inc [hl]
     ret
 
-Jump_0A1_50AE::
+.call_run_game_mode2_state_case02_wait_frame:
     call RunGameMode2State_Case02_WaitFrameCounterLo
     call RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY
     call RunGameMode2State_Case02_WaitMapType
@@ -2931,11 +2933,11 @@ Func_0A1_50BF:: ; address name
     ld b, a
     ld hl, wKeyWorldChunks
 
-Jump_0A1_50F8::
+.loop:
     push bc
     push hl
 
-Jump_0A1_50FA::
+.loop2:
     push bc
     push hl
     ld a, [hl+]
@@ -2967,10 +2969,10 @@ Jump_0A1_50FA::
     ld a, $1C
     add a, e
     ld e, a
-    jr nc, Jump_0A1_512C
+    jr nc, .set_temp0
     inc d
 
-Jump_0A1_512C::
+.set_temp0:
     ld a, e
     ldh [hTemp0], a
     ld a, d
@@ -2987,10 +2989,10 @@ Jump_0A1_512C::
     ld a, $1C
     add a, e
     ld e, a
-    jr nc, Jump_0A1_514C
+    jr nc, .set_temp02
     inc d
 
-Jump_0A1_514C::
+.set_temp02:
     ld a, e
     ldh [hTemp0], a
     ld a, d
@@ -3017,10 +3019,10 @@ Jump_0A1_514C::
     ld a, $1C
     add a, e
     ld e, a
-    jr nc, Jump_0A1_517A
+    jr nc, .set_temp03
     inc d
 
-Jump_0A1_517A::
+.set_temp03:
     ld a, e
     ldh [hTemp0], a
     ld a, d
@@ -3037,10 +3039,10 @@ Jump_0A1_517A::
     ld a, $1C
     add a, e
     ld e, a
-    jr nc, Jump_0A1_519A
+    jr nc, .set_temp04
     inc d
 
-Jump_0A1_519A::
+.set_temp04:
     ld a, e
     ldh [hTemp0], a
     ld a, d
@@ -3074,7 +3076,7 @@ Jump_0A1_519A::
     add_a_to_hl
     pop bc
     dec b
-    jp nz, Jump_0A1_50FA
+    jp nz, .loop2
     ldh a, [hTemp2]
     ld e, a
     ldh a, [hTemp3]
@@ -3082,10 +3084,10 @@ Jump_0A1_519A::
     ld a, $80
     add a, e
     ld e, a
-    jr nc, Jump_0A1_51DC
+    jr nc, .set_temp2
     inc d
 
-Jump_0A1_51DC::
+.set_temp2:
     ld a, e
     ldh [hTemp2], a
     ld a, d
@@ -3117,17 +3119,17 @@ Jump_0A1_51DC::
     add_a_to_hl
     pop bc
     dec c
-    jp nz, Jump_0A1_50F8
+    jp nz, .loop
     ld hl, vTiles1
     ld b, $58
 
-Jump_0A1_5214::
+.loop3:
     ld a, $FF
     call WriteVRAMByteInc
     xor a, a
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0A1_5214
+    jr nz, .loop3
     ld de, wNameGlyphBuf
     ld a, [wCurrentKeyIndex]
     call WriteKeyNameToDE
@@ -3138,12 +3140,12 @@ Jump_0A1_5214::
     ld hl, vBGMap0 + $204
     ld b, $0B
 
-Jump_0A1_5239::
+.loop4:
     ld a, e
     call WriteVRAMByteInc
     inc e
     dec b
-    jr nz, Jump_0A1_5239
+    jr nz, .loop4
     ret
 
 ; only called from RunGameMode2State_Case01_Sub01 (E-0047)
@@ -3154,7 +3156,7 @@ RunGameMode2State_Case01_Sub01_WriteTemp0::
 Func_0A1_5242:: ; address name
     sra a
     push af
-    jr c, Jump_0A1_5255
+    jr c, .skip
     ld a, $03
     add_a_to_hl
     ldh a, [hTemp0]
@@ -3163,7 +3165,7 @@ Func_0A1_5242:: ; address name
     pop af
     ret
 
-Jump_0A1_5255::
+.skip:
     push bc
     push hl
     ld e, l
@@ -3210,23 +3212,23 @@ Func_0A1_528B:: ; address name
     ld hl, wNameGlyphBuf
     ld bc, $0000
 
-Jump_0A1_5293::
+.loop:
     inc b
     ld a, [hl+]
     cp a, $8D
-    jr z, Jump_0A1_5293
+    jr z, .loop
     cp a, $8E
-    jr z, Jump_0A1_5293
+    jr z, .loop
     inc c
     cp a, $F0
-    jr z, Jump_0A1_52A4
-    jr Jump_0A1_5293
+    jr z, .skip
+    jr .loop
 
-Jump_0A1_52A4::
+.skip:
     ld a, $0D
     sub a, c
     srl a
-    jr z, Jump_0A1_52D1
+    jr z, .done
     ld c, b
     ld b, a
     ld a, c
@@ -3234,31 +3236,31 @@ Jump_0A1_52A4::
     ld de, wNameGlyphBuf
     add a, e
     ld e, a
-    jr nc, Jump_0A1_52B7
+    jr nc, .skip2
     inc d
 
-Jump_0A1_52B7::
+.skip2:
     ld a, c
     ld hl, wNameGlyphBuf
     add_a_to_hl
     inc c
 
-Jump_0A1_52C1::
+.loop2:
     ld a, [hl]
     ld [de], a
     dec hl
     dec de
     dec c
-    jr nz, Jump_0A1_52C1
+    jr nz, .loop2
     ld hl, wNameGlyphBuf
 
-Jump_0A1_52CB::
+.loop3:
     ld [hl], $90
     inc hl
     dec b
-    jr nz, Jump_0A1_52CB
+    jr nz, .loop3
 
-Jump_0A1_52D1::
+.done:
     pop de
     pop hl
     ret
@@ -3294,13 +3296,13 @@ Func_0A1_52D4:: ; address name
     ld hl, vTiles1
     ld b, $58
 
-Jump_0A1_52FB::
+.loop:
     ld a, $FF
     call WriteVRAMByteInc
     xor a, a
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_0A1_52FB
+    jr nz, .loop
     ldh a, [hMapId]
     add a, $0A
     ld [wStringIndex], a
@@ -3319,12 +3321,12 @@ Jump_0A1_52FB::
     ld hl, vBGMap0 + $204
     ld b, $0B
 
-Jump_0A1_5333::
+.loop2:
     ld a, e
     call WriteVRAMByteInc
     inc e
     dec b
-    jr nz, Jump_0A1_5333
+    jr nz, .loop2
     ret
 
 ; E-0167 (C1: RunGameMode2State_Case01_Sub02 takes entry 8 * wGameMode2Byte44, centres a rectangle of these rows and width (CenteredBGMapOriginForSizeBC) and copies it from bank $5D with CopyRectFromBankToVRAM; 11 entries whose rectangles are contiguous from $41B9 to $43AE).
@@ -3373,53 +3375,53 @@ RunGameMode2State_Case02_WriteTemp1::
 Func_0A1_5394:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_5406
+    jp nz, .check_key_world_active2
     ldh a, [hMapId]
     ld c, $01
     cp a, $30
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $02
     cp a, $48
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $03
     cp a, $70
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $04
     cp a, $A0
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $05
     cp a, $A8
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $06
     cp a, $B0
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $07
     cp a, $B8
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $08
     cp a, $C8
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $09
     cp a, $D1
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $0A
     cp a, $DA
-    jr c, Jump_0A1_53DC
+    jr c, .check_key_world_active
     ld c, $0B
 
-Jump_0A1_53DC::
+.check_key_world_active:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_53F1
+    jr z, .skip
     ld a, [wKeyWorldKey]
     cp a, c
-    jr nz, Jump_0A1_53F1
+    jr nz, .skip
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     call DrawCursorSpriteAtTemp1Cell
     ret
 
-Jump_0A1_53F1::
+.skip:
     ld a, c
     dec a
     sla a
@@ -3431,24 +3433,24 @@ Jump_0A1_53F1::
     call DrawCursorSpriteAtTemp1Cell
     ret
 
-Jump_0A1_5406::
+.check_key_world_active2:
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_5425
+    jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_0A1_5425
+    jr z, .read_key_world_goal_screen
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_0A1_5425
+    jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     ldh [hTemp1], a
     call DrawCursorSpriteAtTemp1Cell
     ret
 
-Jump_0A1_5425::
+.read_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     ldh [hTemp1], a
     call DrawCursorSpriteAtTemp1Cell
@@ -3509,41 +3511,41 @@ Func_0A1_5479:: ; address name
     ret z
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_55A1
+    jp nz, SetSpriteYFromCursorCellY_CheckMapType
     ldh a, [hMapId]
     ld c, $01
     cp a, $29
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $02
     cp a, $45
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $03
     cp a, $68
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $04
     cp a, $9D
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $05
     cp a, $A4
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $06
     cp a, $AF
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $07
     cp a, $B2
-    jp z, Jump_0A1_553D
+    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $08
     cp a, $C5
-    jr z, Jump_0A1_553D
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $09
     cp a, $D0
-    jr z, Jump_0A1_553D
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $0A
     cp a, $D9
-    jr z, Jump_0A1_553D
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     ld c, $0B
     cp a, $E2
-    jr z, Jump_0A1_553D
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
     cp a, $20
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $30
@@ -3569,26 +3571,26 @@ Func_0A1_5479:: ; address name
     ld c, a
     ld hl, WorldMapCursorCellTable
 
-Jump_0A1_5502::
+.skip:
     ld a, [hl]
     cp a, c
-    jr z, Jump_0A1_550D
+    jr z, .check_last_warp_index
     inc hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_0A1_5502
+    jr .skip
 
-Jump_0A1_550D::
+.check_last_warp_index:
     ld a, [wLastWarpIndex]
     dec a
     dec a
-    jr nz, Jump_0A1_5516
+    jr nz, .call_set_sprite_x_from_cursor_cell_x
     inc hl
     inc hl
 
-Jump_0A1_5516::
+.call_set_sprite_x_from_cursor_cell_x:
     inc hl
     ld a, [hl+]
     call SetSpriteXFromCursorCellX
@@ -3615,13 +3617,14 @@ Jump_0A1_5523:: ; address name
     call DrawMetaSpriteSet08
     ret
 
-Jump_0A1_553D::
+SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive::
+Jump_0A1_553D:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_5565
+    jr z, .check_key_world_goal_screen
     ld a, [wKeyWorldKey]
     cp a, c
-    jr nz, Jump_0A1_5565
+    jr nz, .check_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     and a, $F0
     swap a
@@ -3638,7 +3641,7 @@ Jump_0A1_553D::
     call DrawMetaSpriteSet08
     ret
 
-Jump_0A1_5565::
+.check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     and a, $F0
     swap a
@@ -3687,7 +3690,8 @@ Func_0A1_5591:: ; address name
     ldh [hSpriteOriginY], a
     ret
 
-Jump_0A1_55A1::
+SetSpriteYFromCursorCellY_CheckMapType::
+Jump_0A1_55A1:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
@@ -3714,10 +3718,10 @@ Jump_0A1_55B7:: ; address name
     add_a_to_hl
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, Jump_0A1_55D0
+    jr z, .call_set_sprite_xy_from_cell_a
     inc hl
 
-Jump_0A1_55D0::
+.call_set_sprite_xy_from_cell_a:
     ld a, [hl]
     call SetSpriteXYFromCellA
     ret
@@ -3745,20 +3749,20 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07::
 Jump_0A1_55E9:: ; address name
     ld a, [wKeyWorldActive]
     or a, a
-    jr z, Jump_0A1_5606
+    jr z, .read_key_world_goal_screen
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_0A1_5606
+    jr z, .read_key_world_goal_screen
     and a, $7F
     ld c, a
     ld a, [wKeyWorldSlot]
     cp a, c
-    jr nz, Jump_0A1_5606
+    jr nz, .read_key_world_goal_screen
     ld a, [wKeyWorldGoalCell]
     call SetSpriteXYFromCellA
     ret
 
-Jump_0A1_5606::
+.read_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     call SetSpriteXYFromCellA
     ret
@@ -3821,7 +3825,7 @@ RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY::
 Func_0A1_5654:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_0A1_5694
+    jr nz, .skip
     ld a, [wGameMode2Byte44]
     add a, a
     ld hl, WorldMapCursorSpriteLists
@@ -3836,7 +3840,7 @@ Func_0A1_5654:: ; address name
     inc de
     ld b, a
 
-Jump_0A1_5670::
+.loop:
     push bc
     push de
     ld a, [de]
@@ -3862,13 +3866,13 @@ Jump_0A1_5670::
     inc de
     pop bc
     dec b
-    jr nz, Jump_0A1_5670
+    jr nz, .loop
     ret
 
-Jump_0A1_5694::
+.skip:
     ld de, wKeyWorldFloorInfo + $3
 
-Jump_0A1_5697::
+.skip2:
     ld a, [de]
     cp a, $FF
     ret z
@@ -3879,13 +3883,13 @@ Jump_0A1_5697::
     ld a, [de]
     ld a, [wGameMode2Byte50]
     or a, a
-    jr nz, Jump_0A1_56AD
+    jr nz, .skip3
     ld a, [de]
     call IsMapScreenAVisited
     or a, a
-    jr z, Jump_0A1_56D2
+    jr z, .restore
 
-Jump_0A1_56AD::
+.skip3:
     ld a, [de]
     swap a
     and a, $0F
@@ -3913,16 +3917,16 @@ Jump_0A1_56AD::
     ldh [hSpriteOriginY], a
     call DrawMetaSpriteSet26
 
-Jump_0A1_56D2::
+.restore:
     pop de
     ld a, $04
     add a, e
     ld e, a
-    jr nc, Jump_0A1_56DA
+    jr nc, .skip4
     inc d
 
-Jump_0A1_56DA::
-    jr Jump_0A1_5697
+.skip4:
+    jr .skip2
 
 ; DrawMetaSprite with set $26, sub-index 0, tile offset $10, attribute XOR $01 (origin high bytes 0) (E-0118)
 ; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_WriteSpriteOriginXAndSpriteOriginY)
@@ -3954,7 +3958,7 @@ Func_0A1_56F7:: ; address name
     ret z
     ld de, wKeyWorldObjects
 
-Jump_0A1_5700::
+.skip:
     ld a, [de]
     cp a, $FF
     ret z
@@ -3969,11 +3973,11 @@ Jump_0A1_5700::
     ld a, $04
     add a, e
     ld e, a
-    jr nc, Jump_0A1_5717
+    jr nc, .skip2
     inc d
 
-Jump_0A1_5717::
-    jr Jump_0A1_5700
+.skip2:
+    jr .skip
 
 ; only called from RunGameMode2State_Case02_Sub05 (E-0047)
 ; 2 call sites from 1 routine (e.g. RunGameMode2State_Case02_WaitMapType)
@@ -3983,13 +3987,13 @@ RunGameMode2State_Case02_Sub05_IsMapScreenAVisited::
 Func_0A1_5719:: ; address name
     ld a, [wGameMode2Byte50]
     or a, a
-    jr nz, Jump_0A1_5725
+    jr nz, .skip
     ld a, [de]
     call IsMapScreenAVisited
     or a, a
     ret z
 
-Jump_0A1_5725::
+.skip:
     ld a, [de]
     swap a
     and a, $0F
@@ -4071,13 +4075,13 @@ Func_0A1_578E:: ; address name
     ld hl, vBGMap0
     ld bc, $0400
 
-Jump_0A1_5794::
+.loop:
     ld a, $57
     call WriteVRAMByteInc
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_0A1_5794
+    jr nz, .loop
     ret
 
 ; only called from RunGameMode2State_Case04 (E-0047)
@@ -4094,13 +4098,13 @@ Func_0A1_579F:: ; address name
     ld hl, vBGMap0
     ld bc, $0400
 
-Jump_0A1_57AF::
+.loop:
     xor a, a
     call WriteVRAMByteInc
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_0A1_57AF
+    jr nz, .loop
     ld c, $4F
     ld a, $00
     ldh [c], a
@@ -4120,31 +4124,31 @@ Func_0A1_57BE:: ; address name
     ld hl, vBGMap0
     ld bc, $0400
 
-Jump_0A1_57CE::
+.loop:
     ld a, $01
     call WriteVRAMByteInc
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_0A1_57CE
+    jr nz, .loop
     ld hl, vBGMap0 + $64
     ld c, $0C
 
-Jump_0A1_57DD::
+.loop2:
     push hl
     ld b, $0C
 
-Jump_0A1_57E0::
+.loop3:
     xor a, a
     call WriteVRAMByte
     inc hl
     dec b
-    jr nz, Jump_0A1_57E0
+    jr nz, .loop3
     pop hl
     ld a, $20
     add_a_to_hl
     dec c
-    jr nz, Jump_0A1_57DD
+    jr nz, .loop2
     ld c, $4F
     ld a, $00
     ldh [c], a
@@ -4222,37 +4226,37 @@ Func_0A1_58BA:: ; address name
     add_a_to_hl
     ldh a, [hTemp0]
     bit 1, a
-    jr z, Jump_0A1_58E0
+    jr z, .skip
     inc hl
 
-Jump_0A1_58E0::
+.skip:
     ld c, $01
     bit 0, a
-    jr z, Jump_0A1_58E8
+    jr z, .read_temp0
     ld c, $10
 
-Jump_0A1_58E8::
+.read_temp0:
     ldh a, [hTemp0]
     swap a
     and a, $03
-    jr z, Jump_0A1_58F6
+    jr z, .skip2
     ld b, a
 
-Jump_0A1_58F1::
+.loop:
     sla c
     dec b
-    jr nz, Jump_0A1_58F1
+    jr nz, .loop
 
-Jump_0A1_58F6::
+.skip2:
     ld a, [hl]
     and a, c
-    jr nz, Jump_0A1_58FE
+    jr nz, .skip3
     xor a, a
     pop hl
     pop bc
     ret
 
-Jump_0A1_58FE::
+.skip3:
     ld a, $01
     pop hl
     pop bc
@@ -4280,43 +4284,43 @@ Func_0A1_5903:: ; address name
     ret nz
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_0A1_59AE
+    jp nz, .set_temp0_to_01
     ldh a, [hMapId]
     cp a, $20
     ret c
     ld c, $00
     cp a, $30
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $48
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $70
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $A0
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $A8
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $B0
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $B8
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $C8
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $D1
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
     cp a, $DA
-    jr c, Jump_0A1_595D
+    jr c, .set_game_mode2_byte44
     inc c
 
-Jump_0A1_595D::
+.set_game_mode2_byte44:
     ld a, c
     ld [wGameMode2Byte44], a
     ld a, $01
@@ -4328,37 +4332,37 @@ Jump_0A1_595D::
     ld [wModeState], a
     ldh a, [hMapId]
     cp a, $20
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $30
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $48
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $70
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $A0
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $A8
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $B0
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $B8
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $C8
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $D1
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     cp a, $DA
-    jr z, Jump_0A1_59A9
+    jr z, .clear_game_mode2_state
     ld a, $03
     ld [wGameMode2State], a
     ret
 
-Jump_0A1_59A9::
+.clear_game_mode2_state:
     xor a, a
     ld [wGameMode2State], a
     ret
 
-Jump_0A1_59AE::
+.set_temp0_to_01:
     ld a, $01
     ldh [hTemp0], a
     ld a, $01
@@ -4368,18 +4372,18 @@ Jump_0A1_59AE::
     ld [wModeState], a
     ld a, [wMapType]
     and a, $7F
-    jr nz, Jump_0A1_59CE
+    jr nz, .set_game_mode2_state_to_03
     xor a, a
     ld [wGameMode2State], a
     ret
 
-Jump_0A1_59CE::
+.set_game_mode2_state_to_03:
     ld a, $03
     ld [wGameMode2State], a
     ret
     db $01, $01
 
-; E-0215 (C1: Jump_0A1_4A67 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes, so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists' first word).
+; E-0215 (C1: RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip2 reads the record at $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes, so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists' first word).
 ; record: screen X/Y and position X/Y nibbles; two bytes not read here
 WorldMapStartPositions::
 Data_0A1_59D6:: ; address name
@@ -4714,7 +4718,7 @@ Data_0A1_5A92:: ; address name
     db $DF, $09, $01, $00, $00 ; id 148
     db $E0, $09, $01, $00, $00 ; id 149
 
-; E-0215 (C1: the routine before Jump_0A1_4A18 scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E).
+; E-0215 (C1: the routine before RunGameMode2State_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip scans 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E).
 ; record: map id; screen / position nibbles; the same for wLastWarpIndex = 2
 WorldMapScreenPositionTable::
 Data_0A1_5D80:: ; address name

@@ -26,18 +26,18 @@ Func_039_4001:: ; address name
     add_a_to_hl
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_039_4037
+    jr z, .check_battle_actor
     cp a, $02
-    jr z, Jump_039_4037
+    jr z, .check_battle_actor
     xor a, a
-    jr Jump_039_403D
+    jr .skip
 
-Jump_039_4037::
+.check_battle_actor:
     ld a, [wBattleActor]
     and a, $04
     rrca
 
-Jump_039_403D::
+.skip:
     add_a_to_hl
     deref_hl
     add hl, bc
@@ -54,7 +54,7 @@ Func_039_404B:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    jp Jump_039_417C
+    jp TargetRandomOtherSlot_Skip
 
 ; target = the slot in wDA2D[2 * actor] when that slot is present, else TargetRandomFoe (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
@@ -69,10 +69,10 @@ Func_039_4055:: ; address name
     ld a, [hl]
     ld c, a
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_039_406A
+    jr nc, .read_battle_actor
     jr TargetRandomFoe
 
-Jump_039_406A::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -92,15 +92,15 @@ Func_039_4078:: ; address name
     ld c, a
     ld b, $03
 
-Jump_039_4082::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_039_408C
+    jr nc, .read_battle_actor
     inc c
     dec b
-    jr nz, Jump_039_4082
+    jr nz, .loop
 
-Jump_039_408C::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -116,7 +116,7 @@ TargetRandomAlly:: ; code pointer of the table ActionTargetRoutines0; C0
 Func_039_409A:: ; address name
     ld a, [wBattleActor]
     and a, $04
-    jp Jump_039_417C
+    jp TargetRandomOtherSlot_Skip
 
 ; target = the first present slot of the actor's own three (the actor included); base + 3 when none is present (E-0061)
 ; no direct call (reached through a table, a jump or a vector)
@@ -129,15 +129,15 @@ Func_039_40A2:: ; address name
     ld c, a
     ld b, $03
 
-Jump_039_40AA::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_039_40B4
+    jr nc, .read_battle_actor
     inc c
     dec b
-    jr nz, Jump_039_40AA
+    jr nz, .loop
 
-Jump_039_40B4::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -157,17 +157,17 @@ Func_039_40C2:: ; address name
     ld b, $03
     ld d, c
 
-Jump_039_40CB::
+.loop:
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_40D6
+    jr z, .next
     ld d, c
 
-Jump_039_40D6::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_40CB
+    jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -188,38 +188,38 @@ Func_039_40E8:: ; address name
     ld b, $03
     ld d, $FF
 
-Jump_039_40F3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_4110
+    jr c, .next
     ld a, c
     cp a, e
-    jr z, Jump_039_4110
+    jr z, .next
     ld a, d
     cp a, $FF
-    jr nz, Jump_039_4105
+    jr nz, .call_advance_random
     ld d, c
-    jr Jump_039_4110
+    jr .next
 
-Jump_039_4105::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_4110
+    jr z, .next
     ld d, c
 
-Jump_039_4110::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_40F3
+    jr nz, .loop
     ld a, d
     cp a, $FF
-    jr nz, Jump_039_411D
+    jr nz, .read_battle_actor
     ld a, e
     and a, $04
     ld d, a
 
-Jump_039_411D::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -265,17 +265,17 @@ Func_039_414F:: ; address name
     ld a, [wBattleActor]
     ld e, a
 
-Jump_039_4153::
+.loop:
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $07
     cp a, e
-    jr z, Jump_039_4153
+    jr z, .loop
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_4153
+    jr c, .loop
     and a, $03
     cp a, $03
-    jr z, Jump_039_4153
+    jr z, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -285,32 +285,33 @@ Jump_039_4153::
     ld [hl], a
     ret
 
-Jump_039_417C::
+TargetRandomOtherSlot_Skip::
+Jump_039_417C:: ; address name
     ld c, a
     ld b, $03
     ld d, $FF
 
-Jump_039_4181::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_419A
+    jr c, .next
     ld a, d
     cp a, $FF
-    jr nz, Jump_039_418F
+    jr nz, .call_advance_random
     ld d, c
-    jr Jump_039_419A
+    jr .next
 
-Jump_039_418F::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_419A
+    jr z, .next
     ld d, c
 
-Jump_039_419A::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_4181
+    jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -2681,51 +2682,51 @@ Func_039_5390:: ; address name
     ld c, a
     ld b, $03
 
-Jump_039_53A7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_53B2
+    jr c, .next
     call SlotStatus4Bits23
-    jr z, Jump_039_53BC
+    jr z, .read_battle_target
 
-Jump_039_53B2::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_53A7
+    jr nz, .loop
     call EstimateAndPickWeakestTarget
-    jp Jump_039_542B
+    jp .read_battle_actor
 
-Jump_039_53BC::
+.read_battle_target:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_53C2::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_53CD
+    jr c, .next2
     call AnySlotStatusMaskSet
-    jr z, Jump_039_53D7
+    jr z, .read_battle_target2
 
-Jump_039_53CD::
+.next2:
     inc c
     dec b
-    jr nz, Jump_039_53C2
+    jr nz, .loop2
     call EstimateThreeTargets
-    jp Jump_039_542B
+    jp .read_battle_actor
 
-Jump_039_53D7::
+.read_battle_target2:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_53DD::
+.loop3:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_540D
+    jr c, .set_battle_damage_lo_to_FF
     call AnySlotStatusMaskSet
-    jr nz, Jump_039_540D
+    jr nz, .set_battle_damage_lo_to_FF
     call ComputeDamageEstimateForAction
     ld a, c
     call GetBattleHP_Bank39
@@ -2739,22 +2740,22 @@ Jump_039_53DD::
     ld a, h
     sbc a, b
     ld h, a
-    jr nc, Jump_039_5403
+    jr nc, .set_battle_damage_lo
     ld hl, $0000
 
-Jump_039_5403::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_039_5415
+    jr .call_multiply_damage_by50_if_slot_damage
 
-Jump_039_540D::
+.set_battle_damage_lo_to_FF:
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_5415::
+.call_multiply_damage_by50_if_slot_damage:
     pop bc
     call MultiplyDamageBy50IfSlotDamageFlagsBit0
     ld a, [wBattleDamageLo]
@@ -2764,10 +2765,10 @@ Jump_039_5415::
     call StoreHLToTargetEstimatesSlotC
     inc c
     dec b
-    jr nz, Jump_039_53DD
+    jr nz, .loop3
     call PickWeakestEstimatedTarget
 
-Jump_039_542B::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -2794,77 +2795,77 @@ Func_039_543C:: ; address name
     ld c, a
     ld b, $03
 
-Jump_039_5453::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_545E
+    jr c, .next
     call SlotStatus4Bits23
-    jr z, Jump_039_5468
+    jr z, .read_battle_target
 
-Jump_039_545E::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5453
+    jr nz, .loop
     call EstimateAndPickWeakestTarget
-    jp Jump_039_5503
+    jp .read_battle_actor
 
-Jump_039_5468::
+.read_battle_target:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_546E::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_547E
+    jr c, .next2
     call AnySlotStatusMaskSet
-    jr z, Jump_039_5488
+    jr z, .read_battle_target2
     call TestSlotStatus2Bit3OrStatus5Bits67
-    jr z, Jump_039_5488
+    jr z, .read_battle_target2
 
-Jump_039_547E::
+.next2:
     inc c
     dec b
-    jr nz, Jump_039_546E
+    jr nz, .loop2
     call EstimateThreeTargets
-    jp Jump_039_5503
+    jp .read_battle_actor
 
-Jump_039_5488::
+.read_battle_target2:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_548E::
+.loop3:
     ld a, c
     call AnySlotStatusMaskSet
-    jr nz, Jump_039_549F
+    jr nz, .next3
     call TestSlotStatus2Bit3OrStatus5Bits67
-    jr nz, Jump_039_549F
+    jr nz, .next3
     ld a, c
     call CheckSlotStatusBlock
-    jr nc, Jump_039_54A9
+    jr nc, .read_battle_target3
 
-Jump_039_549F::
+.next3:
     inc c
     dec b
-    jr nz, Jump_039_548E
+    jr nz, .loop3
     call EstimateThreeTargets
-    jp Jump_039_5503
+    jp .read_battle_actor
 
-Jump_039_54A9::
+.read_battle_target3:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_54AF::
+.loop4:
     push bc
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_039_54E5
+    jr c, .set_battle_damage_lo_to_FF
     call AnySlotStatusMaskSet
-    jr nz, Jump_039_54E5
+    jr nz, .set_battle_damage_lo_to_FF
     call TestSlotStatus2Bit3OrStatus5Bits67
-    jr nz, Jump_039_54E5
+    jr nz, .set_battle_damage_lo_to_FF
     ld a, c
     call ComputeDamageEstimateForAction
     ld a, c
@@ -2879,22 +2880,22 @@ Jump_039_54AF::
     ld a, h
     sbc a, b
     ld h, a
-    jr nc, Jump_039_54DB
+    jr nc, .set_battle_damage_lo
     ld hl, $0000
 
-Jump_039_54DB::
+.set_battle_damage_lo:
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_039_54ED
+    jr .call_multiply_damage_by50_if_slot_damage
 
-Jump_039_54E5::
+.set_battle_damage_lo_to_FF:
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_54ED::
+.call_multiply_damage_by50_if_slot_damage:
     pop bc
     call MultiplyDamageBy50IfSlotDamageFlagsBit0
     ld a, [wBattleDamageLo]
@@ -2904,10 +2905,10 @@ Jump_039_54ED::
     call StoreHLToTargetEstimatesSlotC
     inc c
     dec b
-    jr nz, Jump_039_54AF
+    jr nz, .loop4
     call PickWeakestEstimatedTarget
 
-Jump_039_5503::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -2928,19 +2929,20 @@ Func_039_5514:: ; address name
     ld e, a
     ld d, $03
 
-Jump_039_551C::
+ChooseTarget_Heal_Loop::
+Jump_039_551C:: ; address name
     ld a, e
     ld [wBattleArg3], a
     ld a, d
     ld [wNameSlot], a
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_039_5532
+    jr nc, .skip
     ld bc, $0000
     ld hl, $0000
-    jr Jump_039_5553
+    jr .read_battle_arg3
 
-Jump_039_5532::
+.skip:
     ld a, e
     ld hl, wBattleHP
     add a, a
@@ -2951,15 +2953,15 @@ Jump_039_5532::
     ld a, e
     call GetBattleMaxHP_Bank39
     call CompareHLToBC
-    jr nz, Jump_039_5550
+    jr nz, .call_divide_hl_by_bc
     ld bc, $0001
     ld hl, $0000
-    jr Jump_039_5553
+    jr .read_battle_arg3
 
-Jump_039_5550::
+.call_divide_hl_by_bc:
     call DivideHLByBC
 
-Jump_039_5553::
+.read_battle_arg3:
     push hl
     ld a, [wBattleArg3]
     ld e, a
@@ -2992,7 +2994,7 @@ Jump_039_5553::
     ld d, a
     inc e
     dec d
-    jr nz, Jump_039_551C
+    jr nz, ChooseTarget_Heal_Loop
     call ChooseTarget_Heal_WriteTemp0AndTemp1Etc
     ret
 
@@ -3017,14 +3019,14 @@ Func_039_5593:: ; address name
     ld [hl+], a
     ld [hl], a
 
-Jump_039_55A8::
+.loop:
     ld a, c
     ld [wBattleArg3], a
     ld a, b
     ld [wNameSlot], a
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_55E4
+    jr c, .read_battle_arg3
     ld hl, wBattleArg0
     inc [hl]
     ld a, c
@@ -3033,21 +3035,21 @@ Jump_039_55A8::
     ld de, wSlotDamageFlags
     add a, e
     ld e, a
-    jr nc, Jump_039_55C7
+    jr nc, .skip
     inc d
 
-Jump_039_55C7::
+.skip:
     ld a, [de]
     bit 0, a
-    jr z, Jump_039_55D3
+    jr z, .read_temp0
     ld a, $1E
     call Multiply8By16
-    jr Jump_039_55D5
+    jr .read_temp02
 
-Jump_039_55D3::
+.read_temp0:
     ld e, $00
 
-Jump_039_55D5::
+.read_temp02:
     ldh a, [hTemp0]
     add a, l
     ldh [hTemp0], a
@@ -3058,14 +3060,14 @@ Jump_039_55D5::
     adc a, e
     ldh [hTemp2], a
 
-Jump_039_55E4::
+.read_battle_arg3:
     ld a, [wBattleArg3]
     ld c, a
     ld a, [wNameSlot]
     ld b, a
     inc c
     dec b
-    jr nz, Jump_039_55A8
+    jr nz, .loop
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -3087,14 +3089,14 @@ Jump_039_55E4::
     ld a, $FF
     ld [wBattleArg2], a
 
-Jump_039_561A::
+.loop2:
     ld a, e
     ld [wBattleArg0], a
     ld a, d
     ld [wBattleArg1], a
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_566D
+    jr c, .read_battle_arg0
     ld a, e
     ld hl, wBattleMaxHP
     add a, a
@@ -3105,41 +3107,41 @@ Jump_039_561A::
     ld a, e
     call GetBattleHP_Bank39
     call CompareHLToBC
-    jr z, Jump_039_566D
+    jr z, .read_battle_arg0
     ld a, [wBattleTemp7D]
     ld c, a
     ld a, [wBattleTemp7E]
     ld b, a
     call CompareHLToBC
-    jr z, Jump_039_565D
-    jr nc, Jump_039_566D
+    jr z, .call_advance_random
+    jr nc, .read_battle_arg0
     ld a, l
     ld [wBattleTemp7D], a
     ld a, h
     ld [wBattleTemp7E], a
     ld a, [wBattleArg0]
     ld [wBattleArg2], a
-    jr Jump_039_566D
+    jr .read_battle_arg0
 
-Jump_039_565D::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_566D
+    jr z, .read_battle_arg0
     ld a, [wBattleArg0]
     ld [wBattleArg2], a
 
-Jump_039_566D::
+.read_battle_arg0:
     ld a, [wBattleArg0]
     ld e, a
     ld a, [wBattleArg1]
     ld d, a
     inc e
     dec d
-    jr nz, Jump_039_561A
+    jr nz, .loop2
     ld a, [wBattleArg2]
     cp a, $FF
-    jr z, Jump_039_5691
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -3148,12 +3150,12 @@ Jump_039_566D::
     ld [hl], a
     ret
 
-Jump_039_5691::
+.check_battle_actor:
     ld a, [wBattleActor]
     and a, $04
     ld e, a
     ld d, $03
-    jp Jump_039_551C
+    jp ChooseTarget_Heal_Loop
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
@@ -3173,13 +3175,13 @@ Func_039_569C:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_56AF::
+.loop:
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     cp a, $01
-    jr nz, Jump_039_56CD
+    jr nz, .next
     ld a, c
     and a, $03
     ld hl, hTemp1
@@ -3188,50 +3190,50 @@ Jump_039_56AF::
     ld hl, hTemp0
     inc [hl]
 
-Jump_039_56CD::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_56AF
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
-    jr nz, Jump_039_56DC
+    jr nz, .skip
     ld a, [wBattleActor]
     ld c, a
-    jr Jump_039_5708
+    jr .read_battle_actor
 
-Jump_039_56DC::
+.skip:
     ld hl, hTemp1
     ld b, $02
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_039_56F0
+    jr nz, .loop2
     ld b, $01
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_039_56F0
+    jr nz, .loop2
     ld c, [hl]
-    jr Jump_039_5708
+    jr .read_battle_actor
 
-Jump_039_56F0::
+.loop2:
     ld c, a
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_039_5704
+    jr z, .skip2
     push af
     call AdvanceRandom
     ld a, [wRandomLo]
     ld e, a
     pop af
     bit 0, e
-    jr z, Jump_039_5704
+    jr z, .skip2
     ld c, a
 
-Jump_039_5704::
+.skip2:
     ld a, c
     dec b
-    jr nz, Jump_039_56F0
+    jr nz, .loop2
 
-Jump_039_5708::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -3256,104 +3258,104 @@ Func_039_5716:: ; address name
     ldh [hTemp3], a
     ld de, hTemp1
 
-Jump_039_5728::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5738
+    jr c, .next
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
     ld [de], a
 
-Jump_039_5738::
+.next:
     inc de
     inc c
     dec b
-    jr nz, Jump_039_5728
+    jr nz, .loop
     ld hl, hTemp1
     ld bc, $0300
     ld d, $00
 
-Jump_039_5745::
+.loop2:
     bit 1, [hl]
-    jr z, Jump_039_574D
+    jr z, .next2
     ld a, c
     ldh [hTemp0], a
     inc d
 
-Jump_039_574D::
+.next2:
     inc c
     inc hl
     dec b
-    jr nz, Jump_039_5745
+    jr nz, .loop2
     ld a, d
     or a, a
-    jr z, Jump_039_576C
+    jr z, .skip
     cp a, $01
-    jr z, Jump_039_57C1
+    jr z, .read_battle_actor
     cp a, $03
-    jr z, Jump_039_57B3
+    jr z, .call_advance_random
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_57C1
+    jr z, .read_battle_actor
     ld d, $02
-    jr Jump_039_57A2
+    jr .skip2
 
-Jump_039_576C::
+.skip:
     ld hl, hTemp1
     ld bc, $0300
     ld d, $00
 
-Jump_039_5774::
+.loop3:
     bit 0, [hl]
-    jr z, Jump_039_577C
+    jr z, .next3
     ld a, c
     ldh [hTemp0], a
     inc d
 
-Jump_039_577C::
+.next3:
     inc hl
     inc c
     dec b
-    jr nz, Jump_039_5774
+    jr nz, .loop3
     ld a, d
     or a, a
-    jr nz, Jump_039_578E
+    jr nz, .cp_01
     ld a, [wBattleActor]
     and a, $03
     ldh [hTemp0], a
-    jr Jump_039_57C1
+    jr .read_battle_actor
 
-Jump_039_578E::
+.cp_01:
     cp a, $01
-    jr z, Jump_039_57C1
+    jr z, .read_battle_actor
     cp a, $03
-    jr z, Jump_039_57B3
+    jr z, .call_advance_random
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_57C1
+    jr z, .read_battle_actor
     ld d, $01
 
-Jump_039_57A2::
+.skip2:
     ld hl, hTemp1
     ld c, $00
 
-Jump_039_57A7::
+.skip3:
     ld a, [hl+]
     and a, d
-    jr nz, Jump_039_57AE
+    jr nz, .set_temp0
     inc c
-    jr Jump_039_57A7
+    jr .skip3
 
-Jump_039_57AE::
+.set_temp0:
     ld a, c
     ldh [hTemp0], a
-    jr Jump_039_57C1
+    jr .read_battle_actor
 
-Jump_039_57B3::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     ld b, a
@@ -3361,7 +3363,7 @@ Jump_039_57B3::
     call DivideBByA
     ldh [hTemp0], a
 
-Jump_039_57C1::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -3391,17 +3393,17 @@ Func_039_57D8:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_039_57E9::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5831
+    jr c, .next
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     bit 6, a
-    jr nz, Jump_039_5831
+    jr nz, .next
     bit 2, [hl]
-    jr nz, Jump_039_5831
+    jr nz, .next
     ld a, c
     call GetBattleATK_Bank39
     push bc
@@ -3411,23 +3413,23 @@ Jump_039_57E9::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr z, Jump_039_581C
-    jr c, Jump_039_5831
+    jr z, .call_advance_random
+    jr c, .next
     ld a, c
     ldh [hTemp0], a
     ld a, l
     ldh [hTemp1], a
     ld a, h
     ldh [hTemp2], a
-    jr Jump_039_5831
+    jr .next
 
-Jump_039_581C::
+.call_advance_random:
     push hl
     call AdvanceRandom
     pop hl
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_5831
+    jr z, .next
     ld a, c
     ldh [hTemp0], a
     ld a, l
@@ -3435,17 +3437,17 @@ Jump_039_581C::
     ld a, h
     ldh [hTemp2], a
 
-Jump_039_5831::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_57E9
+    jr nz, .loop
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_5840
+    jr nz, .read_battle_actor
     ld a, [wBattleActor]
     ldh [hTemp0], a
 
-Jump_039_5840::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -3474,23 +3476,23 @@ Func_039_5857:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_039_5867::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5891
+    jr c, .restore
     call GetBattleDEF_Bank39
     push hl
     call BuffCapOfBaseDEF
     pop bc
     call CompareHLToBC
-    jr nc, Jump_039_5891
+    jr nc, .restore
     ldh a, [hTemp1]
     ld l, a
     ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
-    jr c, Jump_039_5891
+    jr c, .restore
     ld a, c
     ldh [hTemp1], a
     ld a, b
@@ -3500,18 +3502,18 @@ Jump_039_5867::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5891::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5867
+    jr nz, .loop
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_58A1
+    jr nz, .check_battle_actor
     ld a, [wBattleActor]
     and a, $03
 
-Jump_039_58A1::
+.check_battle_actor:
     ld c, a
     ld a, [wBattleActor]
     and a, $04
@@ -3543,46 +3545,46 @@ Func_039_58B7:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_58CD::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5909
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_039_5909
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
-    jr nz, Jump_039_58EE
+    jr nz, .call_read_byte_at_hl_plus4_a_plus3_c_bank39
     ld a, l
     cp a, $02
-    jr c, Jump_039_5909
+    jr c, .next
 
-Jump_039_58EE::
+.call_read_byte_at_hl_plus4_a_plus3_c_bank39:
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5909
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5909
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5909::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_58CD
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -3605,46 +3607,46 @@ Func_039_5911:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5927::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5963
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_039_5963
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     call GetBattleAGL_Bank39
     ld a, h
     or a, a
-    jr nz, Jump_039_5948
+    jr nz, .call_read_byte_at_hl_plus4_a_plus3_c_bank39
     ld a, l
     cp a, $02
-    jr c, Jump_039_5963
+    jr c, .next
 
-Jump_039_5948::
+.call_read_byte_at_hl_plus4_a_plus3_c_bank39:
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5963
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5963
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5963::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5927
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -3664,23 +3666,23 @@ Func_039_596B:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_039_597B::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_59A5
+    jr c, .restore
     call GetBattleAGL_Bank39
     push hl
     call BuffCapOfBaseAGL
     pop bc
     call CompareHLToBC
-    jr nc, Jump_039_59A5
+    jr nc, .restore
     ldh a, [hTemp1]
     ld l, a
     ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
-    jr c, Jump_039_59A5
+    jr c, .restore
     ld a, c
     ldh [hTemp1], a
     ld a, b
@@ -3690,18 +3692,18 @@ Jump_039_597B::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_59A5::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_597B
+    jr nz, .loop
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_59B5
+    jr nz, .check_battle_actor
     ld a, [wBattleActor]
     and a, $03
 
-Jump_039_59B5::
+.check_battle_actor:
     ld c, a
     ld a, [wBattleActor]
     and a, $04
@@ -3732,28 +3734,28 @@ Func_039_59CB:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_59E1::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5A1F
+    jr c, .next
     ldh [hTemp2], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
-    jr nz, Jump_039_5A02
+    jr nz, .set_temp3
     ld a, l
     cp a, $02
-    jr nc, Jump_039_5A02
+    jr nc, .set_temp3
     ld a, c
     call GetBattleAGL_Bank39
     ld a, h
     or a, a
-    jr nz, Jump_039_5A02
+    jr nz, .set_temp3
     ld a, l
     cp a, $02
-    jr c, Jump_039_5A1F
+    jr c, .next
 
-Jump_039_5A02::
+.set_temp3:
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $2
@@ -3761,20 +3763,20 @@ Jump_039_5A02::
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5A1F
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5A1F
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5A1F::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_59E1
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -3798,14 +3800,14 @@ Func_039_5A27:: ; address name
     ldh [hTemp4], a
     ldh [hTemp5], a
 
-Jump_039_5A40::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5A7B
+    jr c, .restore
     ldh [hTemp3], a
     cp a, e
-    jr z, Jump_039_5A7B
+    jr z, .restore
     ldh [hTemp4], a
     call GetBattleMaxHP_Bank39
     push hl
@@ -3819,7 +3821,7 @@ Jump_039_5A40::
     add hl, bc
     pop bc
     call CompareHLToBC
-    jr nc, Jump_039_5A7B
+    jr nc, .restore
     ldh a, [hTemp4]
     ldh [hTemp5], a
     ldh a, [hTemp1]
@@ -3827,7 +3829,7 @@ Jump_039_5A40::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_5A7B
+    jr nc, .restore
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -3835,11 +3837,11 @@ Jump_039_5A40::
     ldh a, [hTemp4]
     ldh [hTemp0], a
 
-Jump_039_5A7B::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5A40
+    jr nz, .loop
     call ChooseTarget_Cover_ReadBattleActorAndTemp0Etc
     ret
 
@@ -3863,19 +3865,19 @@ Func_039_5A84:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_5A9C::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5AD3
+    jr c, .next
     ldh [hTemp2], a
     call ChooseTarget_MouthShut_Sub01
-    jr z, Jump_039_5AD3
+    jr z, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_039_5AD3
+    jr nz, .next
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances + $6
@@ -3884,20 +3886,20 @@ Jump_039_5A9C::
     rlca
     rlca
     cp a, $03
-    jr z, Jump_039_5AD3
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5AD3
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5AD3::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5A9C
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
 
@@ -3921,32 +3923,32 @@ Func_039_5ADB:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_5AF3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5B38
+    jr c, .next
     ldh [hTemp2], a
     call GetBattleDEF_Bank39
     ld a, h
     or a, a
-    jr nz, Jump_039_5B07
+    jr nz, .set_temp3
     ld a, l
     cp a, $02
-    jr c, Jump_039_5B38
+    jr c, .next
 
-Jump_039_5B07::
+.set_temp3:
     ld a, c
     ldh [hTemp3], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $CC
-    jr nz, Jump_039_5B38
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_039_5B38
+    jr nz, .next
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances + $5
@@ -3955,20 +3957,20 @@ Jump_039_5B07::
     rrca
     rrca
     cp a, $03
-    jr z, Jump_039_5B38
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5B38
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5B38::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5AF3
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
 
@@ -3992,27 +3994,27 @@ Func_039_5B40:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_5B58::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5B9D
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wSlotDamageFlags
     add_a_to_hl
     bit 4, [hl]
-    jr nz, Jump_039_5B9D
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $DC
-    jr nz, Jump_039_5B9D
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_039_5B9D
+    jr nz, .next
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances + $5
@@ -4021,20 +4023,20 @@ Jump_039_5B58::
     rrca
     rrca
     cp a, $03
-    jr z, Jump_039_5B9D
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5B9D
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5B9D::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5B58
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
 
@@ -4057,21 +4059,21 @@ Func_039_5BA5:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5BBB::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5BF1
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $CC
-    jr nz, Jump_039_5BF1
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_039_5BF1
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $2
@@ -4080,20 +4082,20 @@ Jump_039_5BBB::
     rlca
     rlca
     cp a, $03
-    jr z, Jump_039_5BF1
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5BF1
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5BF1::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5BBB
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -4115,15 +4117,15 @@ Func_039_5BF9:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5C0F::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5C3B
+    jr c, .next
     ldh [hTemp2], a
     call GetBattleMP_Bank39
     ld a, h
     or a, l
-    jr z, Jump_039_5C3B
+    jr z, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $2
@@ -4132,20 +4134,20 @@ Jump_039_5C0F::
     rrca
     rrca
     cp a, $03
-    jr z, Jump_039_5C3B
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5C3B
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5C3B::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5C0F
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -4168,16 +4170,16 @@ Func_039_5C43:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5C59::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5C8E
+    jr c, .restore
     ldh [hTemp3], a
     ld hl, wSlotDamageFlags
     add_a_to_hl
     bit 0, [hl]
-    jr z, Jump_039_5C8E
+    jr z, .restore
     ld a, c
     call GetBattleHP_Bank39
     push hl
@@ -4190,7 +4192,7 @@ Jump_039_5C59::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr c, Jump_039_5C8E
+    jr c, .restore
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -4198,11 +4200,11 @@ Jump_039_5C59::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_5C8E::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5C59
+    jr nz, .loop
     call SetActorTargetFromTemp0OrTemp3
     ret
 
@@ -4297,36 +4299,36 @@ Func_039_5CCD:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5CE3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5D11
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr nz, Jump_039_5D11
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $4
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $03
     cp a, $03
-    jr z, Jump_039_5D11
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5D11
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5D11::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5CE3
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -4349,16 +4351,16 @@ Func_039_5D19:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5D2F::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5D5F
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $CC
-    jr nz, Jump_039_5D5F
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $5
@@ -4367,20 +4369,20 @@ Jump_039_5D2F::
     rlca
     rlca
     cp a, $03
-    jr z, Jump_039_5D5F
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5D5F
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5D5F::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5D2F
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -4403,21 +4405,21 @@ Func_039_5D67:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_5D7D::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5DB3
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $DC
-    jr nz, Jump_039_5DB3
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_039_5DB3
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $5
@@ -4426,20 +4428,20 @@ Jump_039_5D7D::
     rrca
     rrca
     cp a, $03
-    jr z, Jump_039_5DB3
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_5DB3
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5DB3::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5D7D
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -4462,11 +4464,11 @@ Func_039_5DBB:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_039_5DD2::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5DFA
+    jr c, .restore
     ldh [hTemp3], a
     call GetBattleMaxHP_Bank39
     push hl
@@ -4479,7 +4481,7 @@ Jump_039_5DD2::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr c, Jump_039_5DFA
+    jr c, .restore
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -4487,11 +4489,11 @@ Jump_039_5DD2::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_5DFA::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5DD2
+    jr nz, .loop
     call SetActorTargetFromTemp0OrTemp3
     ret
 
@@ -4518,69 +4520,69 @@ Func_039_5E03:: ; address name
     ld a, $FF
     ldh [hTemp5], a
 
-Jump_039_5E20::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5E53
+    jr c, .next
     ld hl, wBattleStatus2
     ldh [hTemp5], a
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_039_5E53
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5E53
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_5E4F
-    jr c, Jump_039_5E53
+    jr z, .skip
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     xor a, a
     ldh [hTemp2], a
 
-Jump_039_5E4F::
+.skip:
     ld hl, hTemp2
     inc [hl]
 
-Jump_039_5E53::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_5E20
+    jr nz, .loop
     ldh a, [hTemp2]
     or a, a
-    jr z, Jump_039_5EAC
+    jr z, .read_temp_a
     cp a, $01
-    jr z, Jump_039_5ED8
+    jr z, .read_temp_a2
     ldh a, [hTempA]
     ld c, a
     ld b, $03
 
-Jump_039_5E65::
+.loop2:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5EA5
+    jr c, .restore
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_039_5EA5
+    jr nz, .restore
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5EA5
+    jr z, .restore
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr nz, Jump_039_5EA5
+    jr nz, .restore
     ld a, c
     call GetBattleHP_Bank39
     ldh a, [hTemp3]
@@ -4588,7 +4590,7 @@ Jump_039_5E65::
     ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
-    jr c, Jump_039_5EA5
+    jr c, .restore
     ld a, l
     ldh [hTemp3], a
     ld a, h
@@ -4598,23 +4600,23 @@ Jump_039_5E65::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5EA5::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5E65
-    jr Jump_039_5EFA
+    jr nz, .loop2
+    jr .read_battle_actor
 
-Jump_039_5EAC::
+.read_temp_a:
     ldh a, [hTempA]
     ld c, a
     ld b, $03
 
-Jump_039_5EB1::
+.loop3:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5ED1
+    jr c, .restore2
     ldh [hTemp5], a
     call GetBattleHP_Bank39
     ldh a, [hTemp3]
@@ -4622,7 +4624,7 @@ Jump_039_5EB1::
     ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
-    jr c, Jump_039_5ED1
+    jr c, .restore2
     ld a, l
     ldh [hTemp3], a
     ld a, h
@@ -4630,41 +4632,41 @@ Jump_039_5EB1::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5ED1::
+.restore2:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_5EB1
-    jr Jump_039_5EFA
+    jr nz, .loop3
+    jr .read_battle_actor
 
-Jump_039_5ED8::
+.read_temp_a2:
     ldh a, [hTempA]
     ld c, a
     ld b, $03
     ldh a, [hTemp1]
     ld e, a
 
-Jump_039_5EE0::
+.loop4:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_5EF3
+    jr c, .next2
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $30
     swap a
     cp a, e
-    jr z, Jump_039_5EF7
+    jr z, .set_temp0
 
-Jump_039_5EF3::
+.next2:
     inc c
     dec b
-    jr nz, Jump_039_5EE0
+    jr nz, .loop4
 
-Jump_039_5EF7::
+.set_temp0:
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_5EFA::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -4697,13 +4699,13 @@ Func_039_5F0E:: ; address name
     ld e, $09
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_039_5F3A
+    jr z, .set_battle_arg0
     ld a, [wBattleActor]
     and a, $04
-    jr z, Jump_039_5F3A
+    jr z, .set_battle_arg0
     ld e, $0D
 
-Jump_039_5F3A::
+.set_battle_arg0:
     ld a, e
     ld [wBattleArg0], a
     farcall LoadSkillRecordPart
@@ -4726,17 +4728,17 @@ Jump_039_5F3A::
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_5F6B::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, Jump_039_5FF2
+    jp c, .restore
     ldh [hTemp3], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
-    jr nz, Jump_039_5FF2
+    jr nz, .restore
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances
@@ -4744,7 +4746,7 @@ Jump_039_5F6B::
     and a, $30
     swap a
     cp a, $03
-    jr z, Jump_039_5FF2
+    jr z, .restore
     ldh [hTemp6], a
     push bc
     call ChooseTarget_Blaze_Multiply8By16
@@ -4754,13 +4756,13 @@ Jump_039_5F6B::
     call GetBattleHP_Bank39
     pop bc
     call CompareHLToBC
-    jr c, Jump_039_5FD9
+    jr c, .read_battle_damage_lo
     ldh a, [hTemp6]
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_5FBE
-    jr c, Jump_039_5FF2
+    jr z, .read_target_estimates
+    jr c, .restore
     ld a, e
     ldh [hTemp1], a
     ldh a, [hTemp3]
@@ -4769,30 +4771,30 @@ Jump_039_5F6B::
     ld [wTargetEstimates], a
     ld a, h
     ld [wTargetEstimates + $1], a
-    jr Jump_039_5FF2
+    jr .restore
 
-Jump_039_5FBE::
+.read_target_estimates:
     ld a, [wTargetEstimates]
     ld c, a
     ld a, [wTargetEstimates + $1]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_5FF2
+    jr nc, .restore
     ld a, l
     ld [wTargetEstimates], a
     ld a, h
     ld [wTargetEstimates + $1], a
     ldh a, [hTemp3]
     ldh [hTemp5], a
-    jr Jump_039_5FF2
+    jr .restore
 
-Jump_039_5FD9::
+.read_battle_damage_lo:
     ld a, [wBattleDamageLo]
     ld c, a
     ld a, [wBattleDamageHi]
     ld b, a
     call CompareHLToBCFastZero
-    jr c, Jump_039_5FF2
+    jr c, .restore
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -4800,24 +4802,24 @@ Jump_039_5FD9::
     ldh a, [hTemp3]
     ldh [hTemp2], a
 
-Jump_039_5FF2::
+.restore:
     pop bc
     inc c
     dec b
-    jp nz, Jump_039_5F6B
+    jp nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hTemp2]
     cp a, $FF
-    jr nz, Jump_039_6012
+    jr nz, .done
     ldh a, [hTemp5]
     cp a, $FF
-    jr nz, Jump_039_6012
+    jr nz, .done
     ldh a, [hTemp3]
 
-Jump_039_6012::
+.done:
     ld [hl], a
     ret
 
@@ -4842,35 +4844,35 @@ Func_039_6014:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_039_602D::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6079
+    jr c, .restore
     ldh [hTemp3], a
     ld hl, wBattleStatus6
     call AddAx9ToHL
     ld a, [hl+]
     and a, $20
-    jr nz, Jump_039_6079
+    jr nz, .restore
     and a, $05
-    jr nz, Jump_039_6079
+    jr nz, .restore
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank39
     and a, $03
     cp a, $03
-    jr z, Jump_039_6079
+    jr z, .restore
     ld e, a
     ldh a, [hTemp4]
     cp a, e
-    jr z, Jump_039_6060
-    jr nc, Jump_039_6079
+    jr z, .call_get_battle_hp_bank39
+    jr nc, .restore
     ld a, c
     call GetBattleHP_Bank39
-    jr Jump_039_606F
+    jr .set_temp1
 
-Jump_039_6060::
+.call_get_battle_hp_bank39:
     ld a, c
     call GetBattleHP_Bank39
     ldh a, [hTemp1]
@@ -4878,9 +4880,9 @@ Jump_039_6060::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr c, Jump_039_6079
+    jr c, .restore
 
-Jump_039_606F::
+.set_temp1:
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -4888,28 +4890,28 @@ Jump_039_606F::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_6079::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_602D
+    jr nz, .loop
     ldh a, [hTemp0]
     cp a, $FF
-    jp nz, Jump_039_60E9
+    jp nz, .call_set_actor_target_from_temp0_or_temp3
     ldh a, [hTempA]
     ld c, a
     ld b, $03
 
-Jump_039_608A::
+.loop2:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_60B6
+    jr c, .restore2
     ldh [hTemp3], a
     ld hl, wBattleStatus7
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_039_60B6
+    jr nz, .restore2
     ld a, c
     call GetBattleHP_Bank39
     ldh a, [hTemp1]
@@ -4917,7 +4919,7 @@ Jump_039_608A::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr c, Jump_039_60B6
+    jr c, .restore2
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -4925,30 +4927,30 @@ Jump_039_608A::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_60B6::
+.restore2:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_608A
+    jr nz, .loop2
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_60E9
+    jr nz, .call_set_actor_target_from_temp0_or_temp3
     ldh a, [hTempA]
     ld c, a
     ld b, $03
 
-Jump_039_60C6::
+.loop3:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_60E4
+    jr c, .restore3
     ldh [hTemp3], a
     call GetBattleHP_Bank39
     ldh a, [hTemp1]
     ld c, a
     ldh a, [hTemp2]
     ld b, a
-    jr c, Jump_039_60E4
+    jr c, .restore3
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -4956,13 +4958,13 @@ Jump_039_60C6::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_60E4::
+.restore3:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_60C6
+    jr nz, .loop3
 
-Jump_039_60E9::
+.call_set_actor_target_from_temp0_or_temp3:
     call SetActorTargetFromTemp0OrTemp3
     ret
 
@@ -4986,26 +4988,26 @@ Func_039_60ED:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_6105::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6143
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $CC
-    jr nz, Jump_039_6143
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl-]
     or a, a
-    jr nz, Jump_039_6143
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld a, [hl]
     and a, $22
-    jr nz, Jump_039_6143
+    jr nz, .next
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances + $2
@@ -5014,20 +5016,20 @@ Jump_039_6105::
     rlca
     rlca
     cp a, $03
-    jr z, Jump_039_6143
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_6143
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_6143::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6105
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
 
@@ -5050,22 +5052,22 @@ Func_039_614B:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_6161::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6199
+    jr c, .next
     ldh [hTemp2], a
     call GetBattleMP_Bank39
     ld a, h
     or a, l
-    jr z, Jump_039_6199
+    jr z, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
-    jr nz, Jump_039_6199
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank39
@@ -5073,20 +5075,20 @@ Jump_039_6161::
     rrca
     rrca
     cp a, $03
-    jr z, Jump_039_6199
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_6199
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_6199::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6161
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5111,19 +5113,19 @@ Func_039_61A1:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_61BD::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_621A
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_621A
+    jr nz, .next
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_621A
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances
@@ -5133,15 +5135,15 @@ Jump_039_61BD::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_61F5
-    jr c, Jump_039_621A
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_61F5::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5156,7 +5158,7 @@ Jump_039_61F5::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_621A
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5164,10 +5166,10 @@ Jump_039_61F5::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_621A::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_61BD
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5192,19 +5194,19 @@ Func_039_6222:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_623E::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_629B
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_629B
+    jr nz, .next
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_629B
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $1
@@ -5214,15 +5216,15 @@ Jump_039_623E::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_6276
-    jr c, Jump_039_629B
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_6276::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5237,7 +5239,7 @@ Jump_039_6276::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_629B
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5245,10 +5247,10 @@ Jump_039_6276::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_629B::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_623E
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5273,19 +5275,19 @@ Func_039_62A3:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_62BF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_631C
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_631C
+    jr nz, .next
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_631C
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $1
@@ -5296,15 +5298,15 @@ Jump_039_62BF::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_62F7
-    jr c, Jump_039_631C
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_62F7::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5319,7 +5321,7 @@ Jump_039_62F7::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_631C
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5327,10 +5329,10 @@ Jump_039_62F7::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_631C::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_62BF
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5355,19 +5357,19 @@ Func_039_6324:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_6340::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_639D
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_639D
+    jr nz, .next
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_639D
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances + $1
@@ -5378,15 +5380,15 @@ Jump_039_6340::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_6378
-    jr c, Jump_039_639D
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_6378::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5401,7 +5403,7 @@ Jump_039_6378::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_639D
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5409,10 +5411,10 @@ Jump_039_6378::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_639D::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6340
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5436,10 +5438,10 @@ Func_039_63A5:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_63C1::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_640E
+    jr c, .next
     ldh [hTemp2], a
     ld a, c
     ldh [hTemp3], a
@@ -5451,15 +5453,15 @@ Jump_039_63C1::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_63E9
-    jr c, Jump_039_640E
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_63E9::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5474,7 +5476,7 @@ Jump_039_63E9::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_640E
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5482,10 +5484,10 @@ Jump_039_63E9::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_640E::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_63C1
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5511,50 +5513,50 @@ Func_039_6416:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_6435::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6440
+    jr c, .next
     call SlotStatus4Bits23
-    jr z, Jump_039_644A
+    jr z, .read_battle_target
 
-Jump_039_6440::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6435
+    jr nz, .loop
     call EstimateAndPickWeakestTarget
-    jp Jump_039_64CA
+    jp .read_battle_actor
 
-Jump_039_644A::
+.read_battle_target:
     ld b, $03
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_6450::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6460
+    jr c, .next2
     call AnySlotStatusMaskSet
-    jr z, Jump_039_646A
+    jr z, .loop3
     call TestSlotStatus2Bit3OrStatus5Bits67
-    jr z, Jump_039_646A
+    jr z, .loop3
 
-Jump_039_6460::
+.next2:
     inc c
     dec b
-    jr nz, Jump_039_6450
+    jr nz, .loop2
     call EstimateThreeTargets
-    jp Jump_039_64CA
+    jp .read_battle_actor
 
-Jump_039_646A::
+.loop3:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_64C2
+    jr c, .next3
     call TestSlotStatus2Bit3OrStatus5Bits67
-    jr nz, Jump_039_64C2
+    jr nz, .next3
     ld a, c
     call AnySlotStatusMaskSet
-    jr nz, Jump_039_64C2
+    jr nz, .next3
     ldh [hTemp2], a
     ld a, c
     ldh [hTemp3], a
@@ -5566,15 +5568,15 @@ Jump_039_646A::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_649D
-    jr c, Jump_039_64C2
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next3
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_649D::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5589,7 +5591,7 @@ Jump_039_649D::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_64C2
+    jr nc, .next3
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5597,14 +5599,14 @@ Jump_039_649D::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_64C2::
+.next3:
     inc c
     dec b
-    jr nz, Jump_039_646A
+    jr nz, .loop3
     call SetActorTargetFromHRAMChoice
     ret
 
-Jump_039_64CA::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -5634,19 +5636,19 @@ Func_039_64DB:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_64F7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6554
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_6554
+    jr nz, .next
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_6554
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld hl, wSlotResistances
@@ -5657,15 +5659,15 @@ Jump_039_64F7::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_652F
-    jr c, Jump_039_6554
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_652F::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5680,7 +5682,7 @@ Jump_039_652F::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_6554
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5688,10 +5690,10 @@ Jump_039_652F::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_6554::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_64F7
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5716,10 +5718,10 @@ Func_039_655C:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_6578::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_65C5
+    jr c, .next
     ldh [hTemp2], a
     ld a, c
     ldh [hTemp3], a
@@ -5731,15 +5733,15 @@ Jump_039_6578::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_65A0
-    jr c, Jump_039_65C5
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_65A0::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -5754,7 +5756,7 @@ Jump_039_65A0::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_65C5
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5762,10 +5764,10 @@ Jump_039_65A0::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_65C5::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6578
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -5795,11 +5797,11 @@ Func_039_65CD:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_65F4::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, Jump_039_666F
+    jp c, .restore
     ldh [hTemp3], a
     ld hl, wSlotResistances + $4
     call ReadByteAtHLPlus4APlus3C_Bank39
@@ -5808,7 +5810,7 @@ Jump_039_65F4::
     rrca
     swap a
     cp a, $03
-    jr z, Jump_039_666F
+    jr z, .restore
     ldh [hTemp6], a
     push bc
     call ChooseTarget_MegaMagic_GetBattleMP_Bank39
@@ -5818,13 +5820,13 @@ Jump_039_65F4::
     call GetBattleHP_Bank39
     pop bc
     call CompareHLToBC
-    jr c, Jump_039_6656
+    jr c, .read_battle_damage_lo
     ldh a, [hTemp6]
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_663B
-    jr c, Jump_039_666F
+    jr z, .read_target_estimates
+    jr c, .restore
     ld a, e
     ldh [hTemp1], a
     ldh a, [hTemp3]
@@ -5833,30 +5835,30 @@ Jump_039_65F4::
     ld [wTargetEstimates], a
     ld a, h
     ld [wTargetEstimates + $1], a
-    jr Jump_039_666F
+    jr .restore
 
-Jump_039_663B::
+.read_target_estimates:
     ld a, [wTargetEstimates]
     ld c, a
     ld a, [wTargetEstimates + $1]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_666F
+    jr nc, .restore
     ld a, l
     ld [wTargetEstimates], a
     ld a, h
     ld [wTargetEstimates + $1], a
     ldh a, [hTemp3]
     ldh [hTemp5], a
-    jr Jump_039_666F
+    jr .restore
 
-Jump_039_6656::
+.read_battle_damage_lo:
     ld a, [wBattleDamageLo]
     ld c, a
     ld a, [wBattleDamageHi]
     ld b, a
     call CompareHLToBCFastZero
-    jr c, Jump_039_666F
+    jr c, .restore
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -5864,24 +5866,24 @@ Jump_039_6656::
     ldh a, [hTemp3]
     ldh [hTemp2], a
 
-Jump_039_666F::
+.restore:
     pop bc
     inc c
     dec b
-    jp nz, Jump_039_65F4
+    jp nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hTemp2]
     cp a, $FF
-    jr nz, Jump_039_668F
+    jr nz, .done
     ldh a, [hTemp5]
     cp a, $FF
-    jr nz, Jump_039_668F
+    jr nz, .done
     ldh a, [hTemp3]
 
-Jump_039_668F::
+.done:
     ld [hl], a
     ret
 
@@ -5905,10 +5907,10 @@ Func_039_6691:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_66A9::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_66BD
+    jr c, .next
     ld hl, hTemp0
     ld a, [hl]
     inc [hl]
@@ -5916,10 +5918,10 @@ Jump_039_66A9::
     add_a_to_hl
     ld [hl], c
 
-Jump_039_66BD::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_66A9
+    jr nz, .loop
     call PickWeightedTargetCandidate
     ret
 
@@ -5949,10 +5951,10 @@ Func_039_66C5:: ; address name
     ld [wEffectTemp0], a
     ld [wEffectTemp1], a
 
-Jump_039_66EF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6722
+    jr c, .next
     ld hl, hTemp0
     ld e, [hl]
     ld a, e
@@ -5979,10 +5981,10 @@ Jump_039_66EF::
     ld [hl+], a
     ld [hl], d
 
-Jump_039_6722::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_66EF
+    jr nz, .loop
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5992,8 +5994,8 @@ Jump_039_6722::
     ld a, [wTargetEstimates + $1]
     ld b, a
     call CompareHLToBC
-    jr z, Jump_039_6757
-    jr c, Jump_039_6757
+    jr z, .read_target_estimates
+    jr c, .read_target_estimates
     ld a, l
     ld [wTargetEstimates], a
     ld a, h
@@ -6009,7 +6011,7 @@ Jump_039_6722::
     pop af
     ldh [hTemp2], a
 
-Jump_039_6757::
+.read_target_estimates:
     ld a, [wTargetEstimates]
     ld l, a
     ld a, [wTargetEstimates + $1]
@@ -6019,8 +6021,8 @@ Jump_039_6757::
     ld a, [wEffectTemp1]
     ld b, a
     call CompareHLToBC
-    jr z, Jump_039_6788
-    jr c, Jump_039_6788
+    jr z, .read_battle_damage_lo
+    jr c, .read_battle_damage_lo
     ld a, l
     ld [wEffectTemp0], a
     ld a, h
@@ -6036,7 +6038,7 @@ Jump_039_6757::
     pop af
     ldh [hTemp3], a
 
-Jump_039_6788::
+.read_battle_damage_lo:
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -6046,8 +6048,8 @@ Jump_039_6788::
     ld a, [wTargetEstimates + $1]
     ld b, a
     call CompareHLToBC
-    jr z, Jump_039_67A9
-    jr c, Jump_039_67A9
+    jr z, .call_pick_weighted_target_candidate
+    jr c, .call_pick_weighted_target_candidate
     ldh a, [hTemp1]
     push af
     ldh a, [hTemp2]
@@ -6055,7 +6057,7 @@ Jump_039_6788::
     pop af
     ldh [hTemp2], a
 
-Jump_039_67A9::
+.call_pick_weighted_target_candidate:
     call PickWeightedTargetCandidate
     ret
 
@@ -6085,17 +6087,17 @@ Func_039_67AD:: ; address name
     ld [wWorkBuf + $A], a
     ld [wWorkBuf + $B], a
 
-Jump_039_67DB::
+.loop:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_680E
+    jr c, .next
     call GetBattleHP_Bank39
     push hl
     ld a, e
     call GetBattleMaxHP_Bank39
     pop bc
     call CompareHLToBC
-    jr z, Jump_039_680E
+    jr z, .next
     push de
     call DivideHLByBC
     pop de
@@ -6107,10 +6109,10 @@ Jump_039_67DB::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_039_6802
+    jr nc, .skip
     inc d
 
-Jump_039_6802::
+.skip:
     ld a, l
     ld [de], a
     inc de
@@ -6124,10 +6126,10 @@ Jump_039_6802::
     ld [de], a
     pop de
 
-Jump_039_680E::
+.next:
     inc e
     dec d
-    jr nz, Jump_039_67DB
+    jr nz, .loop
     pop de
     ld a, $FF
     ldh [hTemp0], a
@@ -6137,10 +6139,10 @@ Jump_039_680E::
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_6820::
+.loop2:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6895
+    jr c, .next2
     ld hl, hTemp1
     ld a, [hl+]
     or a, [hl]
@@ -6148,7 +6150,7 @@ Jump_039_6820::
     or a, [hl]
     inc hl
     or a, [hl]
-    jr z, Jump_039_687A
+    jr z, .set_temp0
     ld a, e
     and a, $03
     ld hl, wWorkBuf
@@ -6165,7 +6167,7 @@ Jump_039_6820::
     or a, [hl]
     inc hl
     or a, [hl]
-    jr z, Jump_039_6895
+    jr z, .next2
     ldh a, [hTemp5]
     ld l, a
     ldh a, [hTemp6]
@@ -6178,11 +6180,11 @@ Jump_039_6820::
     ldh a, [hTemp2]
     ld h, a
     call CompareHLToBC
-    jr z, Jump_039_6864
-    jr nc, Jump_039_6895
-    jr Jump_039_687A
+    jr z, .read_temp5
+    jr nc, .next2
+    jr .set_temp0
 
-Jump_039_6864::
+.read_temp5:
     ldh a, [hTemp5]
     ld l, a
     ldh a, [hTemp6]
@@ -6197,9 +6199,9 @@ Jump_039_6864::
     ldh a, [hTemp4]
     ld h, a
     call CompareHLToBC
-    jr nc, Jump_039_6895
+    jr nc, .next2
 
-Jump_039_687A::
+.set_temp0:
     ld a, e
     ldh [hTemp0], a
     and a, $03
@@ -6216,20 +6218,20 @@ Jump_039_687A::
     ld a, [hl]
     ldh [hTemp4], a
 
-Jump_039_6895::
+.next2:
     inc e
     dec d
-    jr nz, Jump_039_6820
+    jr nz, .loop2
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_68AE
+    jr nz, .done
     ld a, [wBattleActor]
 
-Jump_039_68AE::
+.done:
     ld [hl], a
     ret
 
@@ -6260,10 +6262,10 @@ Func_039_68B0:: ; address name
     ld [wEffectTemp0], a
     ld [wEffectTemp1], a
 
-Jump_039_68DA::
+.loop:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_68F1
+    jr c, .next
     call GetBattleMaxHP_Bank39
     ldh a, [hTemp4]
     add a, l
@@ -6274,10 +6276,10 @@ Jump_039_68DA::
     ld hl, hTemp0
     inc [hl]
 
-Jump_039_68F1::
+.next:
     inc e
     dec d
-    jr nz, Jump_039_68DA
+    jr nz, .loop
     ldh a, [hTemp4]
     ld l, a
     ldh a, [hTemp5]
@@ -6292,26 +6294,26 @@ Jump_039_68F1::
     ldh [hTemp0], a
     pop de
 
-Jump_039_690A::
+.loop2:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_693C
+    jr c, .next2
     call GetBattleHP_Bank39
     ldh a, [hTemp4]
     ld c, a
     ldh a, [hTemp5]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_693C
+    jr nc, .next2
     ldh a, [hTemp0]
     ld bc, wBattleDamageLo
     add a, a
     add a, c
     ld c, a
-    jr nc, Jump_039_6929
+    jr nc, .skip
     inc b
 
-Jump_039_6929::
+.skip:
     ld a, l
     ld [bc], a
     inc bc
@@ -6324,17 +6326,17 @@ Jump_039_6929::
     add_a_to_hl
     ld [hl], e
 
-Jump_039_693C::
+.next2:
     inc e
     dec d
-    jr nz, Jump_039_690A
+    jr nz, .loop2
     ldh a, [hTemp0]
     or a, a
     jp z, ChooseTarget_Heal_67AD
     cp a, $01
-    jr z, Jump_039_6988
+    jr z, .read_battle_actor
     cp a, $02
-    jr z, Jump_039_696F
+    jr z, .read_target_estimates
     ld a, [wEffectTemp0]
     ld l, a
     ld a, [wEffectTemp1]
@@ -6344,7 +6346,7 @@ Jump_039_693C::
     ld a, [wTargetEstimates + $1]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_696F
+    jr nc, .read_target_estimates
     ld a, l
     ld [wTargetEstimates], a
     ld a, h
@@ -6352,7 +6354,7 @@ Jump_039_693C::
     ldh a, [hTemp3]
     ldh [hTemp2], a
 
-Jump_039_696F::
+.read_target_estimates:
     ld a, [wTargetEstimates]
     ld l, a
     ld a, [wTargetEstimates + $1]
@@ -6362,11 +6364,11 @@ Jump_039_696F::
     ld a, [wBattleDamageHi]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_6988
+    jr nc, .read_battle_actor
     ldh a, [hTemp2]
     ldh [hTemp1], a
 
-Jump_039_6988::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -6723,10 +6725,10 @@ Func_039_6A25:: ; address name
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-Jump_039_6A41::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6A8E
+    jr c, .next
     ldh [hTemp2], a
     ld a, c
     ldh [hTemp3], a
@@ -6738,15 +6740,15 @@ Jump_039_6A41::
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr z, Jump_039_6A69
-    jr c, Jump_039_6A8E
+    jr z, .call_get_battle_hp_bank39
+    jr c, .next
     ld a, $FF
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
     ld a, e
     ldh [hTemp1], a
 
-Jump_039_6A69::
+.call_get_battle_hp_bank39:
     push bc
     ld a, c
     call GetBattleHP_Bank39
@@ -6761,7 +6763,7 @@ Jump_039_6A69::
     ld b, a
     call CompareHLToBC
     pop bc
-    jr nc, Jump_039_6A8E
+    jr nc, .next
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
@@ -6769,10 +6771,10 @@ Jump_039_6A69::
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_6A8E::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6A41
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice
     ret
 
@@ -6814,26 +6816,26 @@ Func_039_6A9C:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_6AB4::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6AF2
+    jr c, .next
     ldh [hTemp2], a
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $CC
-    jr nz, Jump_039_6AF2
+    jr nz, .next
     inc hl
     inc hl
     ld a, [hl-]
     or a, a
-    jr nz, Jump_039_6AF2
+    jr nz, .next
     ld a, c
     ldh [hTemp3], a
     ld a, [hl]
     and a, $22
-    jr nz, Jump_039_6AF2
+    jr nz, .next
     ld a, c
     ldh [hTemp4], a
     ld hl, wSlotResistances + $3
@@ -6842,20 +6844,20 @@ Jump_039_6AB4::
     rlca
     rlca
     cp a, $03
-    jr z, Jump_039_6AF2
+    jr z, .next
     ld e, a
     ldh a, [hTemp1]
     cp a, e
-    jr c, Jump_039_6AF2
+    jr c, .next
     ld a, e
     ldh [hTemp1], a
     ld a, c
     ldh [hTemp0], a
 
-Jump_039_6AF2::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6AB4
+    jr nz, .loop
     call SetActorTargetFromHRAMChoice4
     ret
 
@@ -6879,7 +6881,7 @@ Func_039_6AFD:: ; address name
     and a, $04
     ld hl, wBattleStatus
     ld d, $03
-    jp Jump_039_6BE3
+    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of Data_039_41AC, 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; no direct call (reached through a table, a jump or a vector)
@@ -6899,17 +6901,17 @@ Func_039_6B0A:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_6B1D::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6B41
+    jr c, .restore
     call GetBattleDEF_Bank39
     push hl
     call BuffCapOfBaseDEF
     pop bc
     call CompareHLToBC
-    jr z, Jump_039_6B41
+    jr z, .restore
     ld hl, hTemp0
     ld a, [hl]
     inc [hl]
@@ -6919,11 +6921,11 @@ Jump_039_6B1D::
     ld [hl], c
     push bc
 
-Jump_039_6B41::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_6B1D
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
@@ -6953,17 +6955,17 @@ Func_039_6B5D:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_6B70::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6B94
+    jr c, .restore
     call GetBattleAGL_Bank39
     push hl
     call BuffCapOfBaseAGL
     pop bc
     call CompareHLToBC
-    jr z, Jump_039_6B94
+    jr z, .restore
     ld hl, hTemp0
     ld a, [hl]
     inc [hl]
@@ -6973,11 +6975,11 @@ Jump_039_6B70::
     ld [hl], c
     push bc
 
-Jump_039_6B94::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_6B70
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
@@ -6997,7 +6999,7 @@ Jump_039_6B94::
 ChooseTarget_Sap_6BB0:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6BB0:: ; address name
     ld de, GetBattleDEF_Bank39
-    jp Jump_039_6C30
+    jp TargetAllyWithStatusBit20_CheckBattleActor
 
 ; per-action target routine: DE = GetBattleAGL_Bank39, then the shared stat comparison at $6C30 (E-0219)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7007,7 +7009,7 @@ Func_039_6BB0:: ; address name
 TargetByAllyAGL:: ; code pointer of the table ActionTargetRoutines2; C0
 Func_039_6BB6:: ; address name
     ld de, GetBattleAGL_Bank39
-    jp Jump_039_6C30
+    jp TargetAllyWithStatusBit20_CheckBattleActor
 
 ; per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10 (shared code at $6BE3) (E-0219)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7020,7 +7022,7 @@ Func_039_6BBC:: ; address name
     and a, $04
     ld hl, wBattleStatus
     ld d, $10
-    jp Jump_039_6BE3
+    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
 ; as TargetAllyWithStatusBit10 with mask $40 (E-0219)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7033,7 +7035,7 @@ Func_039_6BC9:: ; address name
     and a, $04
     ld hl, wBattleStatus
     ld d, $40
-    jp Jump_039_6BE3
+    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
 ; as TargetAllyWithStatusBit10 with mask $20 (E-0219)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7046,9 +7048,10 @@ Func_039_6BD6:: ; address name
     and a, $04
     ld hl, wBattleStatus
     ld d, $20
-    jp Jump_039_6BE3
+    jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
-Jump_039_6BE3::
+TargetAllyWithStatusBit20_CallAddAx9ToHL::
+Jump_039_6BE3:: ; address name
     ld c, a
     ld b, $03
     call AddAx9ToHL
@@ -7059,13 +7062,13 @@ Jump_039_6BE3::
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_6BF4::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6C0E
+    jr c, .skip
     ld a, [hl]
     and a, d
-    jr z, Jump_039_6C0E
+    jr z, .skip
     push hl
     ld hl, hTemp0
     ld a, [hl]
@@ -7075,12 +7078,12 @@ Jump_039_6BF4::
     ld [hl], c
     pop hl
 
-Jump_039_6C0E::
+.skip:
     ld a, $09
     add_a_to_hl
     inc c
     dec b
-    jr nz, Jump_039_6BF4
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
     jp nz, PickWeightedTargetCandidate
@@ -7092,7 +7095,8 @@ Jump_039_6C0E::
     ld [hl], a
     ret
 
-Jump_039_6C30::
+TargetAllyWithStatusBit20_CheckBattleActor::
+Jump_039_6C30:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -7105,21 +7109,21 @@ Jump_039_6C30::
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_6C45::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6C67
+    jr c, .next
     ld h, d
     ld l, e
     call JumpToHL
     ld a, h
     or a, a
-    jr nz, Jump_039_6C59
+    jr nz, .skip
     ld a, l
     cp a, $02
-    jr c, Jump_039_6C67
+    jr c, .next
 
-Jump_039_6C59::
+.skip:
     ld hl, hTemp0
     ld a, [hl]
     inc [hl]
@@ -7127,10 +7131,10 @@ Jump_039_6C59::
     add_a_to_hl
     ld [hl], c
 
-Jump_039_6C67::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6C45
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
     jp z, TargetFoeWeightedBySlotOrder
@@ -7156,11 +7160,11 @@ Func_039_6C75:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_6C8A::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6CD4
+    jr c, .restore
     call GetBattleHP_Bank39
     push hl
     ld a, c
@@ -7173,26 +7177,26 @@ Jump_039_6C8A::
     ldh a, [hTemp2]
     sbc a, h
     ld d, a
-    jr c, Jump_039_6CC3
+    jr c, .set_temp1
     ld a, d
     or a, e
-    jr nz, Jump_039_6CD4
+    jr nz, .restore
     ldh a, [hTemp3]
     sub a, c
     ld e, a
     ldh a, [hTemp4]
     sbc a, b
     ld d, a
-    jr c, Jump_039_6CC3
+    jr c, .set_temp1
     ld a, d
     or a, e
-    jr nz, Jump_039_6CD4
+    jr nz, .restore
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_6CD4
+    jr z, .restore
 
-Jump_039_6CC3::
+.set_temp1:
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -7206,11 +7210,11 @@ Jump_039_6CC3::
     ldh [hTemp0], a
     push bc
 
-Jump_039_6CD4::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_6C8A
+    jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
@@ -7238,14 +7242,14 @@ Func_039_6CE9:: ; address name
     ldh [hTemp3], a
     ldh [hTemp4], a
 
-Jump_039_6CFE::
+.loop:
     push bc
     ld a, [wBattleActor]
     cp a, c
-    jr z, Jump_039_6D4E
+    jr z, .restore
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_6D4E
+    jr c, .restore
     call GetBattleMP_Bank39
     push hl
     ld a, c
@@ -7258,26 +7262,26 @@ Jump_039_6CFE::
     ldh a, [hTemp2]
     sbc a, h
     ld d, a
-    jr c, Jump_039_6D3D
+    jr c, .set_temp1
     ld a, d
     or a, e
-    jr nz, Jump_039_6D4E
+    jr nz, .restore
     ldh a, [hTemp3]
     sub a, c
     ld e, a
     ldh a, [hTemp4]
     sbc a, b
     ld d, a
-    jr c, Jump_039_6D3D
+    jr c, .set_temp1
     ld a, d
     or a, e
-    jr nz, Jump_039_6D4E
+    jr nz, .restore
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 7, a
-    jr z, Jump_039_6D4E
+    jr z, .restore
 
-Jump_039_6D3D::
+.set_temp1:
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -7291,21 +7295,21 @@ Jump_039_6D3D::
     ldh [hTemp0], a
     push bc
 
-Jump_039_6D4E::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_6CFE
+    jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a, a
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_6D68
+    jr nz, .done
     ld a, [wBattleActor]
 
-Jump_039_6D68::
+.done:
     ld [hl], a
     ret
 
@@ -7335,11 +7339,11 @@ Func_039_6D74:: ; address name
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_6D82::
+.loop:
     call StoreSlotHPPlusDEFToTargetEstimates
     inc c
     dec b
-    jr nz, Jump_039_6D82
+    jr nz, .loop
 
 ; picks the smallest of the three wD874 estimates (ties broken randomly) and adds its index to wBattleTarget (E-0125)
 ; 3 call sites from 3 routines (e.g. EstimateThreeTargets, ChooseTarget_SquallHit_543C, ChooseTarget_SquallHit)
@@ -7356,33 +7360,33 @@ Func_039_6D89:: ; address name
     ld b, a
     ld de, $0201
 
-Jump_039_6D97::
+.loop:
     ld a, e
     ld hl, wTargetEstimates
     add a, a
     add_a_to_hl
     deref_hl
     call CompareHLToBC
-    jr z, Jump_039_6DB2
-    jr nc, Jump_039_6DBC
+    jr z, .call_advance_random
+    jr nc, .next
 
-Jump_039_6DAB::
+.loop2:
     ld b, h
     ld c, l
     ld a, e
     ldh [hTemp0], a
-    jr Jump_039_6DBC
+    jr .next
 
-Jump_039_6DB2::
+.call_advance_random:
     call AdvanceRandom
     ld a, [wRandomLo]
     bit 1, a
-    jr z, Jump_039_6DAB
+    jr z, .loop2
 
-Jump_039_6DBC::
+.next:
     inc e
     dec d
-    jr nz, Jump_039_6D97
+    jr nz, .loop
     ld hl, wBattleTarget
     ldh a, [hTemp0]
     add a, [hl]
@@ -7404,7 +7408,7 @@ Func_039_6DC8:: ; address name
     call GetBattleDEF_Bank39
     ldh a, [hTemp1]
     or a, a
-    jr z, Jump_039_6DED
+    jr z, .restore
     push hl
     ld a, c
     ld hl, wBattleStatus6
@@ -7412,11 +7416,11 @@ Func_039_6DC8:: ; address name
     ld a, [hl]
     pop hl
     bit 2, a
-    jr z, Jump_039_6DED
+    jr z, .restore
     srl h
     rr l
 
-Jump_039_6DED::
+.restore:
     pop de
     add hl, de
     jr StoreHLToTargetEstimatesSlotC
@@ -7439,10 +7443,10 @@ Func_039_6DF4:: ; address name
     ld de, wTargetEstimates
     add a, e
     ld e, a
-    jr nc, Jump_039_6E00
+    jr nc, .skip
     inc d
 
-Jump_039_6E00::
+.skip:
     ld a, l
     ld [de], a
     inc de
@@ -7459,23 +7463,23 @@ Func_039_6E06:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $40
-    jr nz, Jump_039_6E26
+    jr nz, .return
     inc hl
     inc hl
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_6E26
+    jr nz, .return
     ld a, [hl+]
     and a, $0C
-    jr nz, Jump_039_6E26
+    jr nz, .return
     inc hl
     ld a, [hl+]
     and a, $20
-    jr nz, Jump_039_6E26
+    jr nz, .return
     ld a, [hl]
     and a, $07
 
-Jump_039_6E26::
+.return:
     ret
 
 ; fills the damage for wBattleActionId: the effect handler for 0 or ids from $48 (except $66), Func_01A_408F for low ids and $66, or the actor's ATK for $6B and $6C (E-0124)
@@ -7487,34 +7491,34 @@ Func_039_6E27:: ; address name
     push bc
     ld a, [wBattleActionId]
     cp a, $00
-    jr z, Jump_039_6E3F
+    jr z, .call_run_effect_handler_for_action_id
     cp a, $48
-    jr c, Jump_039_6E47
+    jr c, .call_compute_damage_estimate_for_action
     cp a, $66
-    jr z, Jump_039_6E47
+    jr z, .call_compute_damage_estimate_for_action
     cp a, $6B
-    jr z, Jump_039_6E4F
+    jr z, .read_battle_actor
     cp a, $6C
-    jr z, Jump_039_6E4F
+    jr z, .read_battle_actor
 
-Jump_039_6E3F::
+.call_run_effect_handler_for_action_id:
     farcall RunEffectHandlerForActionId
-    jr Jump_039_6E5F
+    jr .done
 
-Jump_039_6E47::
+.call_compute_damage_estimate_for_action:
     farcall ComputeDamageEstimateForAction_Multiply8By16
-    jr Jump_039_6E5F
+    jr .done
 
-Jump_039_6E4F::
+.read_battle_actor:
     ld a, [wBattleActor]
     call GetBattleATK_Bank39
     ld a, l
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jr Jump_039_6E5F
+    jr .done
 
-Jump_039_6E5F::
+.done:
     pop bc
     ret
 
@@ -7563,26 +7567,26 @@ Func_039_6E8B:: ; address name
     ld a, [wBattleTarget]
     ld c, a
 
-Jump_039_6E95::
+.loop:
     ld a, c
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_6EAB
+    jr nz, .call_store_ffff_to_target_estimates_slot_c
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_6EAB
+    jr nz, .call_store_ffff_to_target_estimates_slot_c
     call StoreSlotHPPlusDEFToTargetEstimates
-    jr Jump_039_6EAE
+    jr .next
 
-Jump_039_6EAB::
+.call_store_ffff_to_target_estimates_slot_c:
     call StoreFFFFToTargetEstimatesSlotC
 
-Jump_039_6EAE::
+.next:
     inc c
     dec b
-    jr nz, Jump_039_6E95
+    jr nz, .loop
     call PickWeakestEstimatedTarget
     ret
 
@@ -7600,7 +7604,7 @@ Func_039_6EB6:: ; address name
     ld a, $02
     ldh [hTemp2], a
 
-Jump_039_6EC2::
+.loop:
     ldh a, [hTemp1]
     ld hl, wTargetEstimates
     add a, a
@@ -7614,8 +7618,8 @@ Jump_039_6EC2::
     add_a_to_hl
     deref_hl
     call CompareHLToBC
-    jr c, Jump_039_6F06
-    jr nz, Jump_039_6F0A
+    jr c, .read_temp1
+    jr nz, .check_temp2
     ldh a, [hTemp1]
     ld hl, wBattleTemp7D
     add a, a
@@ -7629,19 +7633,19 @@ Jump_039_6EC2::
     add_a_to_hl
     deref_hl
     call CompareHLToBC
-    jr nc, Jump_039_6F0A
+    jr nc, .check_temp2
 
-Jump_039_6F06::
+.read_temp1:
     ldh a, [hTemp1]
     ldh [hTemp0], a
 
-Jump_039_6F0A::
+.check_temp2:
     ld hl, hTemp1
     inc [hl]
     ldh a, [hTemp2]
     dec a
     ldh [hTemp2], a
-    jr nz, Jump_039_6EC2
+    jr nz, .loop
     ldh a, [hTemp0]
     ld c, a
     ld a, [wBattleActor]
@@ -7668,26 +7672,26 @@ Func_039_6F32:: ; address name
     ld h, a
     ld bc, $03E7
     call CompareHLToBC
-    jr nc, Jump_039_6F65
+    jr nc, .return
     add hl, hl
     call CompareHLToBC
-    jr nc, Jump_039_6F62
+    jr nc, .done
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_039_6F5C
+    jr z, .call_compare_hl_to_bc
     ld a, [wBattleActor]
     and a, $04
-    jr nz, Jump_039_6F65
+    jr nz, .return
 
-Jump_039_6F5C::
+.call_compare_hl_to_bc:
     add hl, hl
     call CompareHLToBC
-    jr c, Jump_039_6F65
+    jr c, .return
 
-Jump_039_6F62::
+.done:
     ld hl, $03E7
 
-Jump_039_6F65::
+.return:
     ret
 
 ; HL = 999 when the base AGL doubled (quadrupled for allies or link battles) reaches 999, otherwise the base AGL times that factor (E-0124)
@@ -7702,26 +7706,26 @@ Func_039_6F66:: ; address name
     ld h, a
     ld bc, $03E7
     call CompareHLToBC
-    jr nc, Jump_039_6F99
+    jr nc, .return
     add hl, hl
     call CompareHLToBC
-    jr nc, Jump_039_6F96
+    jr nc, .done
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_039_6F90
+    jr z, .call_compare_hl_to_bc
     ld a, [wBattleActor]
     and a, $04
-    jr nz, Jump_039_6F99
+    jr nz, .return
 
-Jump_039_6F90::
+.call_compare_hl_to_bc:
     add hl, hl
     call CompareHLToBC
-    jr c, Jump_039_6F99
+    jr c, .return
 
-Jump_039_6F96::
+.done:
     ld hl, $03E7
 
-Jump_039_6F99::
+.return:
     ret
 
 ; only called from ChooseTarget_MouthShut (E-0047)
@@ -7735,27 +7739,27 @@ Func_039_6F9A:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_039_6FA8::
+.loop:
     ld a, [hl+]
     cp a, $40
-    jr c, Jump_039_6FC0
+    jr c, .next2
     cp a, $48
-    jr c, Jump_039_6FBF
+    jr c, .next
     cp a, $70
-    jr c, Jump_039_6FC0
+    jr c, .next2
     cp a, $76
-    jr c, Jump_039_6FBF
+    jr c, .next
     cp a, $89
-    jr z, Jump_039_6FBF
-    jr Jump_039_6FC0
+    jr z, .next
+    jr .next2
 
-Jump_039_6FBF::
+.next:
     inc c
 
-Jump_039_6FC0::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_039_6FA8
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -7773,10 +7777,10 @@ Func_039_6FC8:: ; address name
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_6FDC
+    jr nz, .check_temp_a
     ldh a, [hTemp3]
 
-Jump_039_6FDC::
+.check_temp_a:
     ld e, a
     ldh a, [hTempA]
     or a, e
@@ -7795,13 +7799,13 @@ Func_039_6FE2:: ; address name
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_6FFC
+    jr nz, .check_temp_a
     ldh a, [hTemp3]
     cp a, $FF
-    jr nz, Jump_039_6FFC
+    jr nz, .check_temp_a
     ldh a, [hTemp2]
 
-Jump_039_6FFC::
+.check_temp_a:
     ld e, a
     ldh a, [hTempA]
     or a, e
@@ -7820,16 +7824,16 @@ Func_039_7002:: ; address name
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_7022
+    jr nz, .check_temp_a
     ldh a, [hTemp4]
     cp a, $FF
-    jr nz, Jump_039_7022
+    jr nz, .check_temp_a
     ldh a, [hTemp3]
     cp a, $FF
-    jr nz, Jump_039_7022
+    jr nz, .check_temp_a
     ldh a, [hTemp2]
 
-Jump_039_7022::
+.check_temp_a:
     ld e, a
     ldh a, [hTempA]
     or a, e
@@ -7848,16 +7852,16 @@ Func_039_7028:: ; address name
     add_a_to_hl
     ldh a, [hTemp0]
     cp a, $FF
-    jr nz, Jump_039_7048
+    jr nz, .check_temp_a
     ldh a, [hTemp5]
     cp a, $FF
-    jr nz, Jump_039_7048
+    jr nz, .check_temp_a
     ldh a, [hTemp4]
     cp a, $FF
-    jr nz, Jump_039_7048
+    jr nz, .check_temp_a
     ldh a, [hTemp3]
 
-Jump_039_7048::
+.check_temp_a:
     ld e, a
     ldh a, [hTempA]
     or a, e
@@ -7872,37 +7876,37 @@ PickWeightedTargetCandidate::
 Func_039_704E:: ; address name
     ldh a, [hTemp0]
     cp a, $03
-    jr z, Jump_039_7069
+    jr z, .check_random_lo2
     cp a, $02
-    jr z, Jump_039_705C
+    jr z, .check_random_lo
     ldh a, [hTemp1]
-    jr Jump_039_7084
+    jr .read_battle_actor
 
-Jump_039_705C::
+.check_random_lo:
     ld a, [wRandomLo]
     cp a, $AB
     ldh a, [hTemp1]
-    jr c, Jump_039_7084
+    jr c, .read_battle_actor
     ldh a, [hTemp2]
-    jr Jump_039_7084
+    jr .read_battle_actor
 
-Jump_039_7069::
+.check_random_lo2:
     ld a, [wRandomLo]
     cp a, $80
     ld b, $00
-    jr c, Jump_039_707A
+    jr c, .skip
     cp a, $D5
     ld b, $01
-    jr c, Jump_039_707A
+    jr c, .skip
     ld b, $02
 
-Jump_039_707A::
+.skip:
     ld a, b
     ld hl, hTemp1
     add_a_to_hl
     ld a, [hl]
 
-Jump_039_7084::
+.read_battle_actor:
     ld b, a
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -7930,12 +7934,12 @@ Func_039_7093:: ; address name
     ldh [hTemp2], a
     ldh [hTemp3], a
 
-Jump_039_70A9::
+.loop:
     ld a, c
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_70F4
+    jr c, .restore
     ldh [hTemp3], a
     ld hl, wBattleMonsterId
     add a, a
@@ -7951,7 +7955,7 @@ Jump_039_70A9::
     pop de
     ld a, [wSpeciesRecord]
     cp a, d
-    jr nz, Jump_039_70F4
+    jr nz, .restore
     ld a, c
     call GetBattleHP_Bank39
     push hl
@@ -7964,7 +7968,7 @@ Jump_039_70A9::
     ldh a, [hTemp2]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_039_70F4
+    jr nc, .restore
     ld a, l
     ldh [hTemp1], a
     ld a, h
@@ -7972,11 +7976,11 @@ Jump_039_70A9::
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_70F4::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_70A9
+    jr nz, .loop
     call SetActorTargetFromTemp0OrTemp3
     ret
 
@@ -7997,12 +8001,12 @@ Func_039_70FD:: ; address name
     ldh [hTemp0], a
     ldh [hTemp3], a
 
-Jump_039_710F::
+.loop:
     ld a, c
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_039_714C
+    jr c, .restore
     ldh [hTemp3], a
     ld hl, wBattleMonsterId
     add a, a
@@ -8016,24 +8020,24 @@ Jump_039_710F::
     pop de
     ld a, [wSpeciesRecord]
     cp a, d
-    jr nz, Jump_039_714C
+    jr nz, .restore
     ldh a, [hTemp0]
     cp a, $FF
-    jr z, Jump_039_7148
+    jr z, .read_temp3
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $01
-    jr z, Jump_039_714C
+    jr z, .restore
 
-Jump_039_7148::
+.read_temp3:
     ldh a, [hTemp3]
     ldh [hTemp0], a
 
-Jump_039_714C::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_039_710F
+    jr nz, .loop
     call SetActorTargetFromTemp0OrTemp3
     ret
 
@@ -8049,29 +8053,29 @@ Func_039_7155:: ; address name
     ld h, a
     pop af
     or a, a
-    jr z, Jump_039_716D
+    jr z, .skip
     cp a, $01
-    jr z, Jump_039_716F
+    jr z, .call_multiply8_by16
     cp a, $02
-    jr z, Jump_039_717B
+    jr z, .done
     ld hl, $0000
-    jr Jump_039_717F
+    jr .return
 
-Jump_039_716D::
-    jr Jump_039_717F
+.skip:
+    jr .return
 
-Jump_039_716F::
+.call_multiply8_by16:
     ld a, $55
     call Multiply8By16
     ld a, $64
     call Divide24ByA
-    jr Jump_039_717F
+    jr .return
 
-Jump_039_717B::
+.done:
     sra h
     rr l
 
-Jump_039_717F::
+.return:
     ret
 
 ; only called from ChooseTarget_MegaMagic (E-0047)
@@ -8097,29 +8101,29 @@ Func_039_7180:: ; address name
     call Divide24ByA
     pop af
     or a, a
-    jr z, Jump_039_71B6
+    jr z, .skip
     cp a, $01
-    jr z, Jump_039_71B8
+    jr z, .call_multiply8_by16
     cp a, $02
-    jr z, Jump_039_71C4
+    jr z, .done
     ld hl, $0000
-    jr Jump_039_71C8
+    jr .return
 
-Jump_039_71B6::
-    jr Jump_039_71C8
+.skip:
+    jr .return
 
-Jump_039_71B8::
+.call_multiply8_by16:
     ld a, $55
     call Multiply8By16
     ld a, $64
     call Divide24ByA
-    jr Jump_039_71C8
+    jr .return
 
-Jump_039_71C4::
+.done:
     sra h
     rr l
 
-Jump_039_71C8::
+.return:
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
@@ -8157,7 +8161,7 @@ Func_039_71D4:: ; address name
 GetBattleATK_Bank39::
 Func_039_71E5:: ; address name
     ld hl, wBattleATK
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0060)
 ; 18 call sites from 18 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_SquallHit_66C5, StoreSlotHPPlusDEFToTargetEstimates, ChooseTarget_SickLick, ...)
@@ -8165,7 +8169,7 @@ Func_039_71E5:: ; address name
 GetBattleDEF_Bank39::
 Func_039_71EA:: ; address name
     ld hl, wBattleDEF
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0060)
 ; 7 call sites from 7 routines (e.g. ChooseTarget_Heal_68B0, ChooseTarget_Heal_5593, ChooseTarget_Heal, ChooseTarget_Heal_67AD, ...)
@@ -8173,7 +8177,7 @@ Func_039_71EA:: ; address name
 GetBattleMaxHP_Bank39::
 Func_039_71EF:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0060)
 ; 2 call sites from 2 routines (e.g. ChooseTarget_Transform, ChooseTarget_MPass)
@@ -8181,7 +8185,7 @@ Func_039_71EF:: ; address name
 GetBattleMaxMP_Bank39::
 Func_039_71F4:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0060)
 ; 28 call sites from 24 routines (e.g. ChooseTarget_GigaSlash_6A25, ChooseTarget_Heal_68B0, ChooseTarget_SquallHit_66C5, ChooseTarget_Heal_5593, ...)
@@ -8189,7 +8193,7 @@ Func_039_71F4:: ; address name
 GetBattleHP_Bank39::
 Func_039_71F9:: ; address name
     ld hl, wBattleHP
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
 ; 4 call sites from 4 routines (e.g. ChooseTarget_OddDance, ChooseTarget_MegaMagic_GetBattleMP_Bank39, ChooseTarget_RobMagic, ChooseTarget_MPass)
@@ -8197,7 +8201,7 @@ Func_039_71F9:: ; address name
 GetBattleMP_Bank39::
 Func_039_71FE:: ; address name
     ld hl, wBattleMP
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0060)
 ; 4 call sites from 4 routines (e.g. ChooseTarget_UltraDown, ChooseTarget_Slow, ChooseTarget_Speed, ChooseTarget_Speed_6B5D)
@@ -8205,7 +8209,7 @@ Func_039_71FE:: ; address name
 GetBattleAGL_Bank39::
 Func_039_7203:: ; address name
     ld hl, wBattleAGL
-    jr Jump_039_7212
+    jr ReadSlotAIModeIndexed_Bank39_Skip
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8217,7 +8221,8 @@ Func_039_7208:: ; address name
     ld a, [hl]
     ret
 
-Jump_039_7212::
+ReadSlotAIModeIndexed_Bank39_Skip::
+Jump_039_7212:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -8238,16 +8243,16 @@ ActorOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0
 Func_039_7223:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_039_7238
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_039_7238
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_039_7238::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -8259,16 +8264,16 @@ TargetOnLocalSide_Bank39:: ; heuristic: follows a terminator; C0
 Func_039_723E:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_039_7253
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_039_7253
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_039_7253::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -8344,13 +8349,13 @@ Func_039_729C:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_039_72B8
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_039_72B8
+    jr nc, .skip
     ld l, $12
 
-Jump_039_72B8::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -8360,13 +8365,13 @@ Jump_039_72B8::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_039_72D3
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_039_72D3
+    jr nc, .skip2
     ld l, $06
 
-Jump_039_72D3::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -8376,13 +8381,13 @@ Jump_039_72D3::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_039_72EE
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_039_72EE
+    jr nc, .skip3
     ld l, $02
 
-Jump_039_72EE::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -8403,17 +8408,17 @@ Func_039_72F3:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_730D
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_039_730D
+    jr nz, .set_carry
     xor a, a
-    jr Jump_039_730E
+    jr .skip
 
-Jump_039_730D::
+.set_carry:
     scf
 
-Jump_039_730E::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -8429,11 +8434,11 @@ Func_039_7312:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_039_7321
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_039_7321::
+.done:
     pop hl
     ret
     ds $CDD, $00

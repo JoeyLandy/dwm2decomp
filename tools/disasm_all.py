@@ -275,6 +275,234 @@ def fold_idioms(texts: list[str]) -> tuple[list[str], dict[str, int]]:
     return out, counts
 
 
+JUMP_NAME = re.compile(r"\bJump_[0-9A-F]{3}_[0-9A-F]{4}\b")
+DEF_LINE = re.compile(r"^([A-Za-z_]\w*)::(.*)$")
+
+
+def _split_comment(line: str) -> tuple[str, str]:
+    """(code, comment) at the first `;` outside a string."""
+    q = False
+    for i, ch in enumerate(line):
+        if ch == '"':
+            q = not q
+        elif ch == ";" and not q:
+            return line[:i], line[i:]
+    return line, ""
+
+
+def _snake(name: str) -> str:
+    """wSpriteSlotCount -> sprite_slot_count; QueueMusic_Bank12 -> queue_music_bank12."""
+    if re.match(r"[wsh][A-Z0-9]", name):
+        name = name[1:]
+    t = re.sub(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", "_", name).replace("__", "_")
+    return t.lower()
+
+
+def _clip(name: str, width: int = 40) -> str:
+    """Cut a snake_case name at the last word boundary within `width` characters."""
+    if len(name) <= width:
+        return name
+    cut = name.rfind("_", 0, width + 1)
+    return name[:cut] if cut > 0 else name[:width]
+
+
+def _target_shape(body: list[str], backward: bool) -> tuple[str, str]:
+    """(snake, Camel) description of a branch target from its first instructions (E-0287)."""
+    if backward:
+        return "loop", "Loop"
+    if body[:1] == ["ret"]:
+        return "return", "Return"
+    # a small return-value tail
+    if len(body) >= 2 and body[1] == "ret":
+        m = re.fullmatch(r"ld a, \$([0-9A-F]{2})", body[0])
+        if m:
+            return f"return_{m.group(1)}", f"Return{m.group(1)}"
+        if body[0] == "xor a, a":
+            return "return_0", "Return0"
+        if body[0] == "scf":
+            return "return_carry", "ReturnCarry"
+        if body[0] in ("and a, a", "or a, a"):
+            return "return_no_carry", "ReturnNoCarry"
+    ram = r"([wsh](?!l\b|li\b|ld\b)[A-Za-z]\w*)"
+    for k, t in enumerate(body[:3]):
+        m = re.match(r"ldh? \[" + ram + r"(?: \+ \$[0-9A-F]+)?\], a$", t)
+        if m and not re.fullmatch(r"[wsh][0-9A-F]{4}|hFF[0-9A-F]{2}", m.group(1)):
+            v = m.group(1)
+            prev = body[k - 1] if k > 0 else ""
+            c = re.fullmatch(r"ld a, \$([0-9A-F]{2})", prev)
+            if prev == "xor a, a":
+                return "clear_" + _snake(v), "Clear" + v[1:]
+            if c:
+                return f"set_{_snake(v)}_to_{c.group(1)}", f"Set{v[1:]}To{c.group(1)}"
+            return "set_" + _snake(v), "Set" + v[1:]
+        m = re.match(r"ldh? a, \[" + ram + r"(?: \+ \$[0-9A-F]+)?\]$", t)
+        if m and not re.fullmatch(r"[wsh][0-9A-F]{4}|hFF[0-9A-F]{2}", m.group(1)):
+            nxt = body[k + 1] if k + 1 < len(body) else ""
+            verb = "check" if re.match(r"(cp|and|or|bit|dec|inc) ", nxt) else "read"
+            return f"{verb}_" + _snake(m.group(1)), verb.capitalize() + m.group(1)[1:]
+        m = re.match(r"(?:farcall|call) ([A-Za-z]\w*)$", t)
+        if m and not m.group(1).startswith(("Func_", "Jump_")):
+            return "call_" + _clip(_snake(m.group(1))), "Call" + m.group(1)[:40]
+        if t == "ret":
+            return "done", "Done"
+        if t.startswith(("jp ", "jr ", "ret ", "rst ", "call ", "farcall ")) or t in ("reti", "jp hl"):
+            break
+    t = body[0] if body else ""
+    m = re.fullmatch(r"cp a, \$([0-9A-F]{2})", t)
+    if m:
+        return f"cp_{m.group(1)}", f"Cp{m.group(1)}"
+    m = re.fullmatch(r"bit (\d), a", t)
+    if m:
+        return f"check_bit{m.group(1)}", f"CheckBit{m.group(1)}"
+    if re.fullmatch(r"(inc|dec) (b|c|d|e|bc|de|hl)", t):
+        return "next", "Next"
+    if re.fullmatch(r"pop (af|bc|de|hl)", t):
+        return "restore", "Restore"
+    if t == "scf":
+        return "set_carry", "SetCarry"
+    m = re.fullmatch(r"jp ([A-Za-z]\w*)", t)
+    if m and not m.group(1).startswith(("Func_", "Jump_")):
+        return "to_" + _clip(_snake(m.group(1))), "To" + m.group(1)[:40]
+    return "skip", "Skip"
+
+
+def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
+    """E-0287: a branch target that still has only an address name (`Jump_BBB_AAAA::`, not an alias) gets a
+    name from its shape (_target_shape):
+    - `loop`: a conditional branch after it, in the same routine, comes back to it;
+    - `return`: it labels a lone `ret`; `return_NN`, `return_0`, `return_carry`, `return_no_carry`: it sets
+      A or the carry flag and returns;
+    - `set_x` (`clear_x`, `set_x_to_NN` after a constant), `check_x`/`read_x` or `call_x`: its first RAM store,
+      RAM load or named call (within three instructions and before any branch);
+    - `done`: it reaches `ret` first;
+    - `cp_NN`, `check_bitN`, `next` (inc/dec of a counter or pointer), `restore` (pop), `set_carry` or
+      `to_x` (jp to a named routine): its first instruction;
+    - `skip`: anything else.
+    When every code reference sits in the same scope (between the same two global labels), the target becomes
+    an RGBDS local label (`.loop`, `.set_sprite_slot_count`, numbered on repeats in one scope). A target
+    referenced from another scope stays global as <Routine>_<Shape>, after the global label it falls in, and
+    keeps its address name as an alias. The global set is iterated until it is stable, because a target that
+    stays global splits its scope. Comments name a local as `Routine.local`. Names change; bytes do not."""
+    files = [t.split("\n") for t in texts]
+    defs: dict[str, tuple[int, int]] = {}
+    alias_line: set[tuple[int, int]] = set()
+    for f, ls in enumerate(files):
+        for i, ln in enumerate(ls):
+            m = DEF_LINE.match(ln)
+            if m:
+                defs[m.group(1)] = (f, i)
+                if "address name" in m.group(2):
+                    alias_line.add((f, i))
+    cand = {n for n, (f, i) in defs.items() if JUMP_NAME.fullmatch(n) and (f, i) not in alias_line}
+    refs: dict[str, list[tuple[int, int]]] = collections.defaultdict(list)
+    for f, ls in enumerate(files):
+        for i, ln in enumerate(ls):
+            if ln.startswith(";") or not ln.strip():
+                continue
+            code, _ = _split_comment(ln)
+            if DEF_LINE.match(code):
+                continue
+            for n in JUMP_NAME.findall(code):
+                if n in cand:
+                    refs[n].append((f, i))
+    glob = {n for n in defs if n not in cand}
+    # the routine each line belongs to: the last label that was global before this pass
+    routine: dict[int, list[int]] = {}
+    for f, ls in enumerate(files):
+        cur, arr = -1, []
+        for i, ln in enumerate(ls):
+            m = DEF_LINE.match(ln)
+            if m and m.group(1) in glob:
+                cur = i
+            arr.append(cur)
+        routine[f] = arr
+    while True:
+        scope: dict[int, list[int]] = {}
+        for f, ls in enumerate(files):
+            cur, arr = -1, []
+            for i, ln in enumerate(ls):
+                m = DEF_LINE.match(ln)
+                if m and m.group(1) in glob:
+                    cur = i
+                arr.append(cur)
+            scope[f] = arr
+        bad = set()
+        for n in cand - glob:
+            f, d = defs[n]
+            sc = scope[f][d]
+            if sc < 0 or any(rf != f or scope[f][ri] != sc for rf, ri in refs[n]):
+                bad.add(n)
+        if not bad:
+            break
+        glob |= bad
+
+    def shown_name(f: int, line: int) -> str:
+        ls = files[f]
+        if (f, line) in alias_line and line > 0 and DEF_LINE.match(ls[line - 1]):
+            line -= 1
+        return DEF_LINE.match(ls[line]).group(1)
+
+    def shape(n: str) -> tuple[str, str]:
+        f, d = defs[n]
+        ls = files[f]
+        body, j = [], d + 1
+        while j < len(ls) and len(body) < 4:
+            code = _split_comment(ls[j])[0].strip()
+            m = DEF_LINE.match(code)
+            if m and m.group(1) in glob:
+                break
+            if code and not m:
+                body.append(code)
+            j += 1
+        # a loop: a conditional branch (or a counted `dec`/`jr nz`) comes back to it; an unconditional jump
+        # back is a join to a shared tail and is named by what it does
+        back = any(rf == f and ri > d and routine[f][ri] == routine[f][d]
+                   and "," in _split_comment(files[f][ri])[0] for rf, ri in refs[n])
+        return _target_shape(body, back)
+
+    names: dict[str, str] = {}  # code text for each renamed target
+    full: dict[str, str] = {}  # comment text
+    taken: dict[tuple[int, int], collections.Counter] = collections.defaultdict(collections.Counter)
+    used = set(defs)
+    gnames: dict[str, str] = {}
+    for n in sorted(cand, key=lambda n: defs[n]):
+        f, d = defs[n]
+        sn, cm = shape(n)
+        if n in glob:
+            prev = routine[f][d]
+            if prev < 0:
+                continue
+            new = f"{shown_name(f, prev)}_{cm}"
+            k = 1
+            while new in used:
+                k += 1
+                new = f"{shown_name(f, prev)}_{cm}{k}"
+            used.add(new)
+            gnames[n] = new
+            names[n] = full[n] = new
+            continue
+        sc = scope[f][d]
+        taken[(f, sc)][sn] += 1
+        k = taken[(f, sc)][sn]
+        names[n] = f".{sn}" + (str(k) if k > 1 else "")
+        full[n] = shown_name(f, sc) + names[n]
+    for f, ls in enumerate(files):
+        for i, ln in enumerate(ls):
+            if "Jump_" not in ln:
+                continue
+            m = DEF_LINE.match(ln)
+            if m and m.group(1) in names:
+                n = m.group(1)
+                ls[i] = (f"{gnames[n]}::{m.group(2)}\n{n}:: ; address name" if n in gnames
+                         else names[n] + ":" + m.group(2))
+                continue
+            code, com = _split_comment(ln)
+            code = JUMP_NAME.sub(lambda mm: names.get(mm.group(0), mm.group(0)), code)
+            com = JUMP_NAME.sub(lambda mm: full.get(mm.group(0), mm.group(0)), com)
+            ls[i] = code + com
+    return ["\n".join(ls) for ls in files], len(names)
+
+
 class Rom:
     def __init__(self, data: bytes):
         self.data = data
@@ -5126,6 +5354,8 @@ def main() -> int:
     texts = [rom.emit_bank(b) for b in range(rom.nbanks)]
     texts, folded = fold_idioms(texts)
     log(f"folded idioms: {folded}")
+    texts, nlocal = localize_jump_labels(texts)
+    log(f"branch targets made local labels: {nlocal}")
     out = ROOT / "src/banks"
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files and src/main.asm")

@@ -13,7 +13,7 @@ Func_026_4001:: ; address name
     ld hl, MetaSprites26Attrs
     add hl, de
     bit 0, [hl]
-    jr z, Jump_026_4017
+    jr z, .call_draw_meta_sprite_set_bank26_wait_oam
     ld a, [hl]
     and a, $F0
     ld e, a
@@ -21,7 +21,7 @@ Func_026_4001:: ; address name
     or a, e
     ldh [hSpriteAttrXor], a
 
-Jump_026_4017::
+.call_draw_meta_sprite_set_bank26_wait_oam:
     ld de, MetaSprites26Table
     call DrawMetaSpriteSet_Bank26_WaitOamNextEntry
     ret
@@ -354,86 +354,86 @@ Func_026_419E:: ; address name
     ld d, $C0
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jp nz, Jump_026_42E8
+    jp nz, .check_sprite_attr_xor
     ldh a, [hSpriteTileOffset]
     ld c, a
     ldh a, [hSpriteAttrXor]
     and a, $20
-    jr nz, Jump_026_4270
+    jr nz, .loop2
 
-Jump_026_41FA::
+.loop:
     ld a, [hl+]
     cp a, $80
     ret z
     ld b, a
-    jr nc, Jump_026_4212
+    jr nc, .read_meta_sprite_y_lo
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $00
-    jr nz, Jump_026_4221
+    jr nz, .next
     ld a, b
     cp a, $A8
-    jr c, Jump_026_4226
-    jr Jump_026_4221
+    jr c, .skip
+    jr .next
 
-Jump_026_4212::
+.read_meta_sprite_y_lo:
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $FF
-    jr nz, Jump_026_4221
+    jr nz, .next
     ld a, b
     cp a, $A8
-    jr c, Jump_026_4226
+    jr c, .skip
 
-Jump_026_4221::
+.next:
     inc hl
     inc hl
     inc hl
-    jr Jump_026_41FA
+    jr .loop
 
-Jump_026_4226::
+.skip:
     ld a, b
     ld [de], a
     inc e
     ld a, [hl+]
     ld b, a
     rlca
-    jr c, Jump_026_423F
+    jr c, .read_meta_sprite_x_lo
     ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteXHi]
     adc a, $00
-    jr nz, Jump_026_424E
+    jr nz, .next2
     ld a, b
     cp a, $B8
-    jr c, Jump_026_4255
-    jr Jump_026_424E
+    jr c, .skip2
+    jr .next2
 
-Jump_026_423F::
+.read_meta_sprite_x_lo:
     ldh a, [hMetaSpriteXLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteXHi]
     adc a, $FF
-    jr nz, Jump_026_424E
+    jr nz, .next2
     ld a, b
     cp a, $B8
-    jr c, Jump_026_4255
+    jr c, .skip2
 
-Jump_026_424E::
+.next2:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_026_41FA
+    jr .loop
 
-Jump_026_4255::
+.skip2:
     ld a, b
     ld [de], a
     inc e
@@ -453,83 +453,83 @@ Jump_026_4255::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_026_41FA
+    jr nz, .loop
     ret
 
-Jump_026_4270::
+.loop2:
     ld a, [hl+]
     cp a, $80
     ret z
     ld b, a
-    jr nc, Jump_026_4288
+    jr nc, .read_meta_sprite_y_lo2
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $00
-    jr nz, Jump_026_4297
+    jr nz, .next3
     ld a, b
     cp a, $A8
-    jr c, Jump_026_429C
-    jr Jump_026_4297
+    jr c, .skip3
+    jr .next3
 
-Jump_026_4288::
+.read_meta_sprite_y_lo2:
     ldh a, [hMetaSpriteYLo]
     add a, b
     ld b, a
     ldh a, [hMetaSpriteYHi]
     adc a, $FF
-    jr nz, Jump_026_4297
+    jr nz, .next3
     ld a, b
     cp a, $A8
-    jr c, Jump_026_429C
+    jr c, .skip3
 
-Jump_026_4297::
+.next3:
     inc hl
     inc hl
     inc hl
-    jr Jump_026_4270
+    jr .loop2
 
-Jump_026_429C::
+.skip3:
     ld a, b
     ld [de], a
     inc e
     ld a, [hl+]
     ld b, a
     rlca
-    jr c, Jump_026_42B7
+    jr c, .read_meta_sprite_x_flip_lo
     ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, $00
-    jr z, Jump_026_42CD
-    jr nz, Jump_026_42C6
+    jr z, .skip4
+    jr nz, .next4
     ld a, b
     cp a, $B8
-    jr c, Jump_026_42CD
-    jr Jump_026_42C6
+    jr c, .skip4
+    jr .next4
 
-Jump_026_42B7::
+.read_meta_sprite_x_flip_lo:
     ldh a, [hMetaSpriteXFlipLo]
     sub a, b
     ld b, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, $FF
-    jr nz, Jump_026_42C6
+    jr nz, .next4
     ld a, b
     cp a, $B8
-    jr c, Jump_026_42CD
+    jr c, .skip4
 
-Jump_026_42C6::
+.next4:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_026_4270
+    jr .loop2
 
-Jump_026_42CD::
+.skip4:
     ld a, b
     ld [de], a
     inc e
@@ -549,62 +549,62 @@ Jump_026_42CD::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_026_4270
+    jr nz, .loop2
     ret
 
-Jump_026_42E8::
+.check_sprite_attr_xor:
     ldh a, [hSpriteAttrXor]
     and a, $20
-    jr nz, Jump_026_4369
+    jr nz, .loop5
 
-Jump_026_42EE::
+.loop3:
     ld a, [hl+]
     cp a, $80
     ret z
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_026_42F9
+    jr nc, .read_meta_sprite_y_lo3
     dec b
 
-Jump_026_42F9::
+.read_meta_sprite_y_lo3:
     ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteYHi]
     adc a, b
-    jr nz, Jump_026_4324
+    jr nz, .next5
     ld a, c
     cp a, $B8
-    jr nc, Jump_026_4324
+    jr nc, .next5
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jr z, Jump_026_4329
+    jr z, .skip6
     cp a, $01
-    jr nz, Jump_026_4317
+    jr nz, .cp_02
     ld a, c
     cp a, $34
-    jr c, Jump_026_4324
-    jr Jump_026_4329
+    jr c, .next5
+    jr .skip6
 
-Jump_026_4317::
+.cp_02:
     cp a, $02
-    jr nz, Jump_026_4322
+    jr nz, .skip5
     ld a, c
     cp a, $71
-    jr c, Jump_026_4329
-    jr Jump_026_4324
+    jr c, .skip6
+    jr .next5
 
-Jump_026_4322::
-    jr Jump_026_4329
+.skip5:
+    jr .skip6
 
-Jump_026_4324::
+.next5:
     inc hl
     inc hl
     inc hl
-    jr Jump_026_42EE
+    jr .loop3
 
-Jump_026_4329::
+.skip6:
     ld a, c
     ld [de], a
     inc e
@@ -612,33 +612,33 @@ Jump_026_4329::
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_026_4334
+    jr nc, .read_meta_sprite_x_lo2
     dec b
 
-Jump_026_4334::
+.read_meta_sprite_x_lo2:
     ldh a, [hMetaSpriteXLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteXHi]
     adc a, b
-    jr nz, Jump_026_4342
+    jr nz, .loop4
     ld a, c
     cp a, $B8
-    jr c, Jump_026_4349
+    jr c, .call_bg_tile_under_point_is_sprite_hide_tile
 
-Jump_026_4342::
+.loop4:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_026_42EE
+    jr .loop3
 
-Jump_026_4349::
+.call_bg_tile_under_point_is_sprite_hide_tile:
     ld a, c
     ld [de], a
     call BGTileUnderPointIsSpriteHideTile_Bank26
-    jr nc, Jump_026_4342
+    jr nc, .loop4
     inc e
     ldh a, [hSpriteTileOffset]
     ld b, a
@@ -656,57 +656,57 @@ Jump_026_4349::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_026_42EE
+    jr nz, .loop3
     ret
 
-Jump_026_4369::
+.loop5:
     ld a, [hl+]
     cp a, $80
     ret z
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_026_4374
+    jr nc, .read_meta_sprite_y_lo4
     dec b
 
-Jump_026_4374::
+.read_meta_sprite_y_lo4:
     ldh a, [hMetaSpriteYLo]
     add a, c
     ld c, a
     ldh a, [hMetaSpriteYHi]
     adc a, b
-    jr nz, Jump_026_439F
+    jr nz, .next6
     ld a, c
     cp a, $B8
-    jr nc, Jump_026_439F
+    jr nc, .next6
     ldh a, [hSpriteWindowClipMode]
     or a, a
-    jr z, Jump_026_43A4
+    jr z, .skip8
     cp a, $01
-    jr nz, Jump_026_4392
+    jr nz, .cp_022
     ld a, c
     cp a, $34
-    jr c, Jump_026_439F
-    jr Jump_026_43A4
+    jr c, .next6
+    jr .skip8
 
-Jump_026_4392::
+.cp_022:
     cp a, $02
-    jr nz, Jump_026_439D
+    jr nz, .skip7
     ld a, c
     cp a, $71
-    jr c, Jump_026_43A4
-    jr Jump_026_439F
+    jr c, .skip8
+    jr .next6
 
-Jump_026_439D::
-    jr Jump_026_43A4
+.skip7:
+    jr .skip8
 
-Jump_026_439F::
+.next6:
     inc hl
     inc hl
     inc hl
-    jr Jump_026_4369
+    jr .loop5
 
-Jump_026_43A4::
+.skip8:
     ld a, c
     ld [de], a
     inc e
@@ -714,33 +714,33 @@ Jump_026_43A4::
     ld c, a
     ld b, $00
     rlca
-    jr nc, Jump_026_43AF
+    jr nc, .read_meta_sprite_x_flip_lo2
     dec b
 
-Jump_026_43AF::
+.read_meta_sprite_x_flip_lo2:
     ldh a, [hMetaSpriteXFlipLo]
     sub a, c
     ld c, a
     ldh a, [hMetaSpriteXFlipHi]
     sbc a, b
-    jr nz, Jump_026_43BD
+    jr nz, .loop6
     ld a, c
     cp a, $B8
-    jr c, Jump_026_43C4
+    jr c, .call_bg_tile_under_point_is_sprite_hide_tile2
 
-Jump_026_43BD::
+.loop6:
     inc hl
     inc hl
     dec e
     xor a, a
     ld [de], a
-    jr Jump_026_4369
+    jr .loop5
 
-Jump_026_43C4::
+.call_bg_tile_under_point_is_sprite_hide_tile2:
     ld a, c
     ld [de], a
     call BGTileUnderPointIsSpriteHideTile_Bank26
-    jr nc, Jump_026_43BD
+    jr nc, .loop6
     inc e
     ldh a, [hSpriteTileOffset]
     ld b, a
@@ -758,7 +758,7 @@ Jump_026_43C4::
     inc a
     ldh [hOamNextEntry], a
     cp a, $28
-    jr nz, Jump_026_4369
+    jr nz, .loop5
     ret
 
 ; DE = address of an X byte with its Y byte at DE - 1 (screen coordinates): HL = the $9800 BG map entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after rSTAT bit 1 clears (interrupts off) and compares with hFFBA: Z set when equal, A = the tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
@@ -799,10 +799,10 @@ Func_026_43E4:: ; address name
     ld b, a
     di
 
-Jump_026_440E::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_026_440E
+    jr nz, .loop
     ld a, [hl]
     ei
     cp a, b

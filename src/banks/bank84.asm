@@ -27,7 +27,7 @@ Func_084_4001:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
     ld de, wKeyWorldFloorState
 
-Jump_084_4029::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -55,11 +55,11 @@ Jump_084_4029::
     ld a, $10
     add a, e
     ld e, a
-    jr nc, Jump_084_405A
+    jr nc, .skip2
     inc d
 
-Jump_084_405A::
-    jr Jump_084_4029
+.skip2:
+    jr .skip
 
 ; debug automap: runs the routine for hFFC6 (jump table of seven) (E-0122)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldByte46AndTemp8Etc)
@@ -109,12 +109,12 @@ Jump_084_4072:: ; address name
     inc hl
     ld b, $0E
 
-Jump_084_408A::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_084_408A
+    jr nz, .loop
     ret
 
 ; entry 2 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -132,12 +132,12 @@ Jump_084_4091:: ; address name
     ld a, [wKeyRandomHi]
     srl a
     and a, $01
-    jr z, Jump_084_40B0
+    jr z, .read_temp8
     ld a, [de]
     or a, $80
     ld [de], a
 
-Jump_084_40B0::
+.read_temp8:
     inc de
     inc de
     ldh a, [hTemp8]
@@ -147,12 +147,12 @@ Jump_084_40B0::
     inc hl
     ld b, $0E
 
-Jump_084_40BB::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_084_40BB
+    jr nz, .loop
     ret
 
 ; entry 3 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -170,12 +170,12 @@ Jump_084_40C2:: ; address name
     ld a, [wKeyRandomHi]
     srl a
     and a, $01
-    jr z, Jump_084_40E1
+    jr z, .read_temp8
     ld a, [de]
     or a, $80
     ld [de], a
 
-Jump_084_40E1::
+.read_temp8:
     inc de
     inc de
     ldh a, [hTemp8]
@@ -185,12 +185,12 @@ Jump_084_40E1::
     inc hl
     ld b, $0E
 
-Jump_084_40EC::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_084_40EC
+    jr nz, .loop
     ret
 
 ; entry 4 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -228,17 +228,17 @@ Jump_084_40F3:: ; address name
     push de
     ld b, $0D
 
-Jump_084_4126::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_084_4126
+    jr nz, .loop
     pop de
     inc de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_084_4150
+    jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
@@ -249,7 +249,7 @@ Jump_084_4126::
     inc de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_084_4150
+    jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
@@ -257,7 +257,7 @@ Jump_084_4126::
     inc de
     ld [de], a
 
-Jump_084_4150::
+.call_run_debug_automap_case_temp0_random:
     ld a, $01
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
@@ -293,17 +293,17 @@ Jump_084_4156:: ; address name
     push de
     ld b, $0D
 
-Jump_084_417F::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_084_417F
+    jr nz, .loop
     pop de
     inc de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_084_41A9
+    jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
@@ -314,7 +314,7 @@ Jump_084_417F::
     inc de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_084_41A9
+    jr z, .call_run_debug_automap_case_temp0_random
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
@@ -322,7 +322,7 @@ Jump_084_417F::
     inc de
     ld [de], a
 
-Jump_084_41A9::
+.call_run_debug_automap_case_temp0_random:
     xor a, a
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
@@ -363,7 +363,7 @@ Func_084_41F2:: ; address name
     add_a_to_hl
     pop af
     or a, a
-    jr nz, Jump_084_4241
+    jr nz, .clear_temp2
     ld a, $A0
     ldh [hTemp2], a
     call NextRandomSeed
@@ -397,9 +397,9 @@ Func_084_41F2:: ; address name
     ld a, [wKeyWorldByte46]
     inc a
     ld [wKeyWorldByte46], a
-    jr Jump_084_427D
+    jr .check_temp0
 
-Jump_084_4241::
+.clear_temp2:
     xor a, a
     ldh [hTemp2], a
     ld c, $09
@@ -434,13 +434,13 @@ Jump_084_4241::
     inc a
     ld [wKeyWorldByte46], a
 
-Jump_084_427D::
+.check_temp0:
     ldh a, [hTemp0]
     dec a
     dec a
     ld b, a
 
-Jump_084_4282::
+.loop:
     push bc
     ldh a, [hTemp4]
     and a, $0F
@@ -448,18 +448,18 @@ Jump_084_4282::
     ld de, KeyWorldMonsterBaseRows
     add a, e
     ld e, a
-    jr nc, Jump_084_4291
+    jr nc, .call_random_below_c
     inc d
 
-Jump_084_4291::
+.call_random_below_c:
     ld c, $0A
     call RandomBelowC
     add a, e
     ld e, a
-    jr nc, Jump_084_429B
+    jr nc, .skip
     inc d
 
-Jump_084_429B::
+.skip:
     ld a, [de]
     ld b, a
     ld c, $08
@@ -484,10 +484,10 @@ Jump_084_429B::
     ld [wKeyWorldByte46], a
     pop bc
     dec b
-    jr nz, Jump_084_4282
+    jr nz, .loop
     ret
 
-; E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine).
+; E-0193 (C1: RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_Shared01_Sub01; 6 rows end at that routine).
 ; record: ten base values, then six zero bytes
 KeyWorldMonsterBaseRows::
 Data_084_42C7:: ; address name
@@ -519,10 +519,10 @@ Func_084_4327:: ; address name
     call ReadByteInBank
     ld h, c
 
-Jump_084_433C::
+.loop:
     call NextRandomSeed
     and a, $03
-    jr z, Jump_084_433C
+    jr z, .loop
     push hl
     dec a
     add_a_to_hl
@@ -534,7 +534,7 @@ Jump_084_433C::
     pop hl
     ldh a, [hTemp3]
     cp a, c
-    jr z, Jump_084_433C
+    jr z, .loop
     ld a, c
     ldh [hTemp4], a
     pop hl
@@ -564,10 +564,10 @@ Func_084_435C:: ; address name
     ld h, a
     push hl
 
-Jump_084_4374::
+.loop:
     call NextRandomSeed
     and a, $03
-    jr z, Jump_084_4374
+    jr z, .loop
     dec a
     add_a_to_hl
     ld a, l
@@ -579,10 +579,10 @@ Jump_084_4374::
     ldh [hTemp3], a
     pop hl
 
-Jump_084_438C::
+.loop2:
     call NextRandomSeed
     and a, $03
-    jr z, Jump_084_438C
+    jr z, .loop2
     push hl
     dec a
     add_a_to_hl
@@ -594,7 +594,7 @@ Jump_084_438C::
     pop hl
     ldh a, [hTemp3]
     cp a, c
-    jr z, Jump_084_438C
+    jr z, .loop2
     ld a, c
     ldh [hTemp4], a
     pop hl
@@ -620,29 +620,29 @@ ApplyMapScreenFlagEvents::
 Func_084_43B8:: ; address name
     ld hl, MapScreenFlagTiles
 
-Jump_084_43BB::
+.skip:
     push hl
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_084_43C3
+    jr nz, .check_map_id
     pop hl
     ret
 
-Jump_084_43C3::
+.check_map_id:
     ld c, a
     ldh a, [hMapId]
     cp a, c
-    jr nz, Jump_084_43E8
+    jr nz, .restore
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenX]
     cp a, c
-    jr nz, Jump_084_43E8
+    jr nz, .restore
     ld a, [hl+]
     ld c, a
     ldh a, [hMapScreenY]
     cp a, c
-    jr nz, Jump_084_43E8
+    jr nz, .restore
     ld a, [hl+]
     ldh [hTemp0], a
     ld a, [hl+]
@@ -650,16 +650,16 @@ Jump_084_43C3::
     ld a, [hl]
     ld d, a
     call TestFlagBit
-    jr nc, Jump_084_43E8
+    jr nc, .restore
     pop hl
     push hl
     call ApplyMapScreenFlagEvents_WriteSVBK
 
-Jump_084_43E8::
+.restore:
     pop hl
     ld a, $08
     add_a_to_hl
-    jr Jump_084_43BB
+    jr .skip
 
 ; only called from ApplyMapScreenFlagEvents (E-0047)
 ; 1 call site from 1 routine (e.g. ApplyMapScreenFlagEvents)
@@ -669,7 +669,7 @@ ApplyMapScreenFlagEvents_WriteSVBK::
 Func_084_43F2:: ; address name
     ldh a, [hTemp0]
     cp a, $FF
-    jr z, Jump_084_4412
+    jr z, .skip
     ld a, $06
     add_a_to_hl
     ld a, [hl+]
@@ -689,7 +689,7 @@ Func_084_43F2:: ; address name
     ld [de], a
     ret
 
-Jump_084_4412::
+.skip:
     ld a, $06
     add_a_to_hl
     ld a, [hl+]
@@ -711,10 +711,10 @@ Jump_084_4412::
     ld a, $13
     add a, e
     ld e, a
-    jr nc, Jump_084_4433
+    jr nc, .skip2
     inc d
 
-Jump_084_4433::
+.skip2:
     ld a, $50
     ld [de], a
     inc a
@@ -739,10 +739,10 @@ Jump_084_4433::
     ld a, $13
     add a, e
     ld e, a
-    jr nc, Jump_084_4457
+    jr nc, .skip3
     inc d
 
-Jump_084_4457::
+.skip3:
     ld a, $05
     ld [de], a
     inc de
@@ -1095,18 +1095,18 @@ Func_084_47C2:: ; address name
     ret nz
     ld a, [wMapType]
     bit 7, a
-    jp nz, Jump_084_48A9
+    jp nz, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80
     ldh a, [hMapId]
     cp a, $20
     ret c
     push af
     call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
     or a, a
-    jr z, Jump_084_47E0
+    jr z, .restore
     pop af
     ret
 
-Jump_084_47E0::
+.restore:
     pop af
     ld e, a
     ld hl, LogTwigSpotList
@@ -1125,61 +1125,61 @@ Jump_084_47E0::
     or a, b
     ld b, a
 
-Jump_084_47FB::
+.skip:
     push hl
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_084_481D
+    jr z, .read_map_id
     cp a, e
-    jr nz, Jump_084_4814
+    jr nz, .restore2
     ld a, [hl+]
     cp a, c
-    jr nz, Jump_084_4814
+    jr nz, .restore2
     ld a, [hl+]
     cp a, b
-    jr z, Jump_084_481B
+    jr z, .done
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_084_4814
+    jr z, .restore2
     cp a, b
-    jr z, Jump_084_481B
+    jr z, .done
 
-Jump_084_4814::
+.restore2:
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_084_47FB
+    jr .skip
 
-Jump_084_481B::
+.done:
     pop hl
     ret
 
-Jump_084_481D::
+.read_map_id:
     pop hl
     ldh a, [hMapId]
     ld d, a
     ld e, $00
     ld hl, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data
 
-Jump_084_4826::
+.skip2:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_084_4870
+    jr z, .set_key_world_active_to_01
     cp a, d
-    jr z, Jump_084_4834
+    jr z, .read_key_world_active
     inc e
     inc hl
     inc hl
     inc hl
-    jr Jump_084_4826
+    jr .skip2
 
-Jump_084_4834::
+.read_key_world_active:
     ld a, [wKeyWorldActive]
     ld [wSpriteSnapshot], a
     or a, a
-    jr z, Jump_084_4866
+    jr z, .next
     ld a, [wKeyWorldGoal]
     ld [wSnapshotByte3C], a
     ld a, [wKeyWorldGoalCell]
@@ -1188,28 +1188,28 @@ Jump_084_4834::
     ld [wSnapshotByte3E], a
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr nz, Jump_084_4866
+    jr nz, .next
     cp a, e
-    jr nz, Jump_084_4866
+    jr nz, .next
     ld a, [wKeyWorldGoal]
     cp a, b
-    jr nz, Jump_084_4870
+    jr nz, .set_key_world_active_to_01
     ld a, [wKeyWorldGoalCell]
     cp a, c
-    jr nz, Jump_084_4870
+    jr nz, .set_key_world_active_to_01
     ret
 
-Jump_084_4866::
+.next:
     inc hl
     ld a, [hl]
     cp a, b
-    jr nz, Jump_084_4870
+    jr nz, .set_key_world_active_to_01
     inc hl
     cp a, c
-    jr nz, Jump_084_4870
+    jr nz, .set_key_world_active_to_01
     ret
 
-Jump_084_4870::
+.set_key_world_active_to_01:
     ld a, $01
     ld [wKeyWorldActive], a
     ld a, b
@@ -1230,7 +1230,8 @@ Data_084_4887:: ; address name
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00, $FF
 
-Jump_084_48A9::
+ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
+Jump_084_48A9:: ; address name
     cp a, $80
     ret nz
     call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
@@ -1244,82 +1245,82 @@ Jump_084_48A9::
     ld c, a
     ldh a, [hPlayerX]
     cp a, $40
-    jr nz, Jump_084_48E4
+    jr nz, .check_player_y2
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_084_48E4
+    jr nz, .check_player_y2
     ld hl, wKeyWorldObjects
 
-Jump_084_48C9::
+.skip:
     push hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_084_48E3
+    jr z, .check_player_y
     dec hl
     dec hl
     dec hl
     ld a, [hl+]
     cp a, c
-    jp z, Jump_084_499F
+    jp z, .done
     ld a, [hl]
     cp a, c
-    jp z, Jump_084_499F
+    jp z, .done
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_084_48C9
+    jr .skip
 
-Jump_084_48E3::
+.check_player_y:
     pop hl
 
-Jump_084_48E4::
+.check_player_y2:
     ldh a, [hPlayerY]
     cp a, $40
-    jr nz, Jump_084_491A
+    jr nz, .read_key_world_active2
     ld hl, wKeyWorldFloorInfo + $3
 
-Jump_084_48ED::
+.skip2:
     push hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_084_4919
+    jr z, .read_key_world_active
     dec hl
     dec hl
     dec hl
     ld a, [hl]
     cp a, c
-    jr nz, Jump_084_4912
+    jr nz, .restore
     ldh a, [hPlayerX]
     cp a, $40
-    jp z, Jump_084_499F
+    jp z, .done
     inc hl
     ld a, [hl]
     cp a, $04
-    jr z, Jump_084_4912
+    jr z, .restore
     cp a, $05
-    jr z, Jump_084_4912
+    jr z, .restore
     ldh a, [hPlayerX]
     cp a, $50
-    jp z, Jump_084_499F
+    jp z, .done
 
-Jump_084_4912::
+.restore:
     pop hl
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_084_48ED
+    jr .skip2
 
-Jump_084_4919::
+.read_key_world_active:
     pop hl
 
-Jump_084_491A::
+.read_key_world_active2:
     ld a, [wKeyWorldActive]
     ld [wSpriteSnapshot], a
     or a, a
-    jr z, Jump_084_495F
+    jr z, .check_key_world_goal_screen
     ld a, [wKeyWorldGoal]
     ld [wSnapshotByte3C], a
     ld a, [wKeyWorldGoalCell]
@@ -1328,12 +1329,12 @@ Jump_084_491A::
     ld [wSnapshotByte3E], a
     ld a, [wKeyWorldKey]
     bit 7, a
-    jr z, Jump_084_495F
+    jr z, .check_key_world_goal_screen
     and a, $7F
     ld b, a
     ld a, [wKeyWorldSlot]
     cp a, b
-    jr nz, Jump_084_495F
+    jr nz, .check_key_world_goal_screen
     ldh a, [hPlayerX]
     and a, $F0
     ld b, a
@@ -1344,29 +1345,29 @@ Jump_084_491A::
     ld b, a
     ld a, [wKeyWorldGoal]
     cp a, b
-    jr nz, Jump_084_4978
+    jr nz, .check_player_x
     ld a, [wKeyWorldGoalCell]
     cp a, c
-    jr nz, Jump_084_4978
+    jr nz, .check_player_x
     ret
 
-Jump_084_495F::
+.check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp a, c
-    jr nz, Jump_084_4978
+    jr nz, .check_player_x
     ld a, [wKeyWorldGoalPos]
     ld b, a
     ldh a, [hPlayerX]
     cp a, b
-    jr nz, Jump_084_4978
+    jr nz, .check_player_x
     ld a, [wKeyWorldGoalPos2]
     ld b, a
     ldh a, [hPlayerY]
     cp a, b
-    jr nz, Jump_084_4978
+    jr nz, .check_player_x
     ret
 
-Jump_084_4978::
+.check_player_x:
     ldh a, [hPlayerX]
     and a, $F0
     ld b, a
@@ -1388,7 +1389,7 @@ Jump_084_4978::
     ldh [hTempA], a
     ret
 
-Jump_084_499F::
+.done:
     pop hl
     ret
 
@@ -1455,7 +1456,7 @@ ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc::
 Func_084_4A6A:: ; address name
     ld a, [wTriggerKind]
     cp a, $FF
-    jr z, Jump_084_4A87
+    jr z, .return_0
     ldh a, [hPlayerX]
     and a, $F0
     ld c, a
@@ -1466,11 +1467,11 @@ Func_084_4A6A:: ; address name
     ld c, a
     ld a, [wTriggerCell]
     cp a, c
-    jr nz, Jump_084_4A87
+    jr nz, .return_0
     ld a, $01
     ret
 
-Jump_084_4A87::
+.return_0:
     xor a, a
     ret
 
@@ -1484,23 +1485,23 @@ Func_084_4A89:: ; address name
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_084_4AFE
+    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX
     ldh a, [hMapId]
     ld c, a
     ld hl, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data
     ld b, $00
 
-Jump_084_4A9B::
+.skip:
     ld a, [hl]
     cp a, c
-    jr z, Jump_084_4AA5
+    jr z, .set_temp0
     inc b
     inc hl
     inc hl
     inc hl
-    jr Jump_084_4A9B
+    jr .skip
 
-Jump_084_4AA5::
+.set_temp0:
     ld a, b
     ldh [hTemp0], a
     ldh a, [hMapScreenX]
@@ -1511,30 +1512,30 @@ Jump_084_4AA5::
     ld c, a
     ld a, [wSpriteSnapshot]
     or a, a
-    jr z, Jump_084_4ACE
+    jr z, .next
     ld a, [wSnapshotByte3E]
     dec a
     cp a, b
-    jr nz, Jump_084_4ACE
+    jr nz, .next
     ld a, [wSnapshotByte3D]
     cp a, c
-    jp nz, Jump_084_4B46
+    jp nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wSnapshotByte3C]
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr Jump_084_4B46
+    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-Jump_084_4ACE::
+.next:
     inc hl
     inc hl
     ld a, [hl]
     cp a, c
-    jr nz, Jump_084_4B46
+    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     dec hl
     ld a, [hl]
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr Jump_084_4B46
+    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
 ; address loaded by RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc
 RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -1543,7 +1544,8 @@ Data_084_4ADC:: ; address name
     db $44, $00, $B0, $44, $01, $B8, $44, $44, $C8, $44, $01, $D1, $44, $00, $DA, $44
     db $00, $FF
 
-Jump_084_4AFE::
+RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
+Jump_084_4AFE:: ; address name
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1552,27 +1554,27 @@ Jump_084_4AFE::
     ld c, a
     ld a, [wSpriteSnapshot]
     or a, a
-    jr z, Jump_084_4B2C
+    jr z, .check_key_world_goal_screen
     ld a, [wSnapshotByte3E]
     bit 7, a
-    jr z, Jump_084_4B2C
+    jr z, .check_key_world_goal_screen
     and a, $7F
     ld b, a
     ld a, [wKeyWorldSlot]
     cp a, b
-    jr nz, Jump_084_4B2C
+    jr nz, .check_key_world_goal_screen
     ld a, [wSnapshotByte3D]
     cp a, c
-    jr nz, Jump_084_4B46
+    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wSnapshotByte3C]
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr Jump_084_4B46
+    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-Jump_084_4B2C::
+.check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp a, c
-    jr nz, Jump_084_4B46
+    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wKeyWorldGoalPos]
     and a, $F0
     ld c, a
@@ -1582,9 +1584,10 @@ Jump_084_4B2C::
     or a, c
     ld c, a
     call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr Jump_084_4B46
+    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-Jump_084_4B46::
+RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
+Jump_084_4B46:: ; address name
     ld a, [wKeyWorldGoal]
     and a, $0F
     ld l, a
@@ -1625,27 +1628,27 @@ Jump_084_4B46::
     pop hl
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_084_4BD6
+    jr z, .check_scroll_y
     ld c, $05
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_084_4BB9
+    jr nz, .skip
     ld c, $03
     ldh a, [hTemp0]
     cp a, $04
-    jr z, Jump_084_4BB9
+    jr z, .skip
     cp a, $0A
-    jr z, Jump_084_4BB9
+    jr z, .skip
     ld c, $05
     cp a, $05
-    jr z, Jump_084_4BB9
+    jr z, .skip
     cp a, $06
-    jr z, Jump_084_4BB9
+    jr z, .skip
     cp a, $07
-    jr z, Jump_084_4BB9
+    jr z, .skip
     ld c, $01
 
-Jump_084_4BB9::
+.skip:
     ld a, $02
     ldh [rSVBK], a
     ld a, l
@@ -1665,7 +1668,7 @@ Jump_084_4BB9::
     ld a, $00
     ldh [rSVBK], a
 
-Jump_084_4BD6::
+.check_scroll_y:
     ldh a, [hScrollY]
     and a, $F8
     ld e, a
@@ -1689,10 +1692,10 @@ Jump_084_4BD6::
     srl a
     add a, e
     ld e, a
-    jr nc, Jump_084_4BFE
+    jr nc, .call_draw_full_screen_buffer_to_bg_map
     inc d
 
-Jump_084_4BFE::
+.call_draw_full_screen_buffer_to_bg_map:
     ld l, e
     ld h, d
     call DrawFullScreenBufferToBGMap
@@ -1748,19 +1751,19 @@ Func_084_4C04:: ; address name
     ld c, $01
     ld a, [wMapType]
     bit 7, a
-    jr nz, Jump_084_4C61
+    jr nz, .skip2
     ld a, b
     ld de, RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data
     add a, e
     ld e, a
-    jr nc, Jump_084_4C5F
+    jr nc, .skip
     inc d
 
-Jump_084_4C5F::
+.skip:
     ld a, [de]
     ld c, a
 
-Jump_084_4C61::
+.skip2:
     ld a, $02
     ldh [rSVBK], a
     ld a, l
@@ -1811,7 +1814,7 @@ Func_084_4C84:: ; address name
     dec hl
     dec hl
     bit 7, a
-    jr z, Jump_084_4CB1
+    jr z, .skip
     ld a, [hl]
     ld c, a
     ld a, [wKeyWorldKey]
@@ -1824,7 +1827,7 @@ Func_084_4C84:: ; address name
     ld [wKeyWorldActive], a
     ret
 
-Jump_084_4CB1::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z

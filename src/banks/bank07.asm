@@ -573,28 +573,28 @@ GameMode5_Init_LoadSGBObjectPalettesFromPointers::
 Jump_007_48B2:: ; address name
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_48C8
+    jr z, .check_is_cgb
     ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
     farcall LoadSGBObjectPalettesFromPointers
-    jr Jump_007_48F3
+    jr .skip
 
-Jump_007_48C8::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_48F3
+    jr z, .skip
     ld b, $40
     ld hl, wBGPaletteBuffer
 
-Jump_007_48D3::
+.loop:
     ld a, $FF
     ld [hl+], a
     ld a, $7F
     ld [hl+], a
     dec b
-    jr nz, Jump_007_48D3
+    jr nz, .loop
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
     ld a, $01
@@ -606,7 +606,7 @@ Jump_007_48D3::
     ld a, $00
     ldh [rVBK], a
 
-Jump_007_48F3::
+.skip:
     ld b, $46
     ld de, Tiles1Gfx_46_4001
     ld hl, vTiles1
@@ -650,7 +650,7 @@ Jump_007_48F3::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; entry 1 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
@@ -670,7 +670,7 @@ Jump_007_4952:: ; address name
     call FillBytes
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_4985
+    jr z, .call_start_palette_fade
     ld a, $02
     call LoadSGBBorderForSetA
     call SpinDelay
@@ -680,7 +680,7 @@ Jump_007_4952:: ; address name
     ld [hl], $00
     farcall SendSGBPaletteSetPacket
 
-Jump_007_4985::
+.call_start_palette_fade:
     ld a, $FC
     call StartPaletteFade
     ld hl, hPlayerSpriteVariant
@@ -697,12 +697,12 @@ Jump_007_4985::
     ld [rRAMB], a
     ld a, [sSavedLinkByte94]
     or a, a
-    jr z, Jump_007_49B3
+    jr z, .set_link_byte94
     cp a, $01
-    jr z, Jump_007_49B3
+    jr z, .set_link_byte94
     xor a, a
 
-Jump_007_49B3::
+.set_link_byte94:
     ld [wLinkByte94], a
     xor a, a
     ld [rRAMB], a
@@ -766,7 +766,7 @@ Jump_007_49B3::
     farcall ShowString_Bank07
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_4A68
+    jr z, .call_fill_screen_tile_buffer_with_d
     ld a, $01
     ldh [rVBK], a
     ld d, $00
@@ -775,7 +775,7 @@ Jump_007_49B3::
     xor a, a
     ldh [rVBK], a
 
-Jump_007_4A68::
+.call_fill_screen_tile_buffer_with_d:
     ld d, $C3
     call FillScreenTileBufferWithD
     call DrawScreenBufferToBGMap0_Bank07
@@ -783,7 +783,7 @@ Jump_007_4A68::
     ldh a, [hTemp0]
     ld [wLinkScreenState], a
     or a, a
-    jr z, Jump_007_4A9B
+    jr z, .call_queue_music
     ld hl, SaveCheckScreenRects
     add a, a
     add_a_to_hl
@@ -792,14 +792,14 @@ Jump_007_4A68::
     call DrawScreenBufferToBGMap0_Bank07
     ld a, [wLinkScreenState]
     cp a, $01
-    jr z, Jump_007_4A9B
+    jr z, .call_queue_music
     ld a, $02
-    jr Jump_007_4A9D
+    jr .call_queue_music2
 
-Jump_007_4A9B::
+.call_queue_music:
     ld a, $09
 
-Jump_007_4A9D::
+.call_queue_music2:
     call QueueMusic
     ld hl, vTiles1
     ld de, $1202
@@ -830,7 +830,7 @@ Jump_007_4A9D::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $09
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; fills the 20 x 18 visible part of wScreenTileBuffer (32-byte rows) with D (E-0124)
 ; 5 call sites from 4 routines (e.g. GameMode5_Init_InitSoundHardware, RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
@@ -841,10 +841,10 @@ Func_007_4AE4:: ; address name
     ld bc, $1412
     ld a, d
 
-Jump_007_4AEB::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_007_4AEB
+    jr nz, .loop
     ld a, l
     add a, $0C
     ld l, a
@@ -854,7 +854,7 @@ Jump_007_4AEB::
     ld a, d
     ld b, $14
     dec c
-    jr nz, Jump_007_4AEB
+    jr nz, .loop
     ret
 
 ; the same effect as CopyRecordRectToScreenBuffer with the copy loop's instructions in a different order: HL = header (word offset, width, rows) followed by tile bytes, copied into wScreenTileBuffer + offset with rows 32 bytes apart (E-0071)
@@ -875,22 +875,22 @@ Func_007_4AFE:: ; address name
     add hl, de
     pop de
 
-Jump_007_4B0C::
+.loop:
     push bc
     push hl
 
-Jump_007_4B0E::
+.loop2:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_007_4B0E
+    jr nz, .loop2
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_007_4B0C
+    jr nz, .loop
     ret
 
 ; copies the 20 x 18 entries of wScreenTileBuffer to vBGMap0 (rows 32 apart) with CopyRect32StrideToVRAM_Bank07 (E-0073)
@@ -910,12 +910,12 @@ Func_007_4B27:: ; address name
     push de
     push hl
 
-Jump_007_4B2A::
+.loop:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_007_4B2A
+    jr nz, .loop
     pop hl
     ld bc, $0020
     add hl, bc
@@ -941,43 +941,43 @@ Jump_007_4B45:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_007_4B4B::
+.loop:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_4B4B
+    jr nz, .loop
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_4B6F
+    jr z, .check_is_cgb
     ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
     farcall SendSGBPaletteSetPacket
-    jr Jump_007_4B7B
+    jr .loop2
 
-Jump_007_4B6F::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_4B7B
+    jr z, .loop2
     farcall LoadPalette0FromData4ACC
 
-Jump_007_4B7B::
+.loop2:
     farcall RunSaveSteps
     ld a, [wSaveStep]
     bit 7, a
-    jr z, Jump_007_4B7B
+    jr z, .loop2
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_007_4B95
+    jr z, .call_start_palette_fade
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
 
-Jump_007_4B95::
+.call_start_palette_fade:
     ld a, $FC
     call StartPaletteFade
     ld b, $46
@@ -996,11 +996,11 @@ Jump_007_4B95::
     ld a, $02
     ldh [hSpriteWindowClipMode], a
 
-Jump_007_4BC4::
+.loop3:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
     and a, $03
-    jr nz, Jump_007_4BC4
+    jr nz, .loop3
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -1036,7 +1036,7 @@ Jump_007_4BC4::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $09
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; entry 3 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
@@ -1048,43 +1048,43 @@ Jump_007_4C24:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_007_4C2A::
+.loop:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_4C2A
+    jr nz, .loop
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_4C4E
+    jr z, .check_is_cgb
     ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
     farcall SendSGBPaletteSetPacket
-    jr Jump_007_4C5A
+    jr .loop2
 
-Jump_007_4C4E::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_4C5A
+    jr z, .loop2
     farcall LoadPalette0FromData4ACC
 
-Jump_007_4C5A::
+.loop2:
     farcall RunSaveSteps
     ld a, [wSaveStep]
     bit 7, a
-    jr z, Jump_007_4C5A
+    jr z, .loop2
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_007_4C74
+    jr z, .call_start_palette_fade
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
 
-Jump_007_4C74::
+.call_start_palette_fade:
     ld a, $FC
     call StartPaletteFade
     ld b, $46
@@ -1103,11 +1103,11 @@ Jump_007_4C74::
     ld a, $02
     ldh [hSpriteWindowClipMode], a
 
-Jump_007_4CA3::
+.loop3:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
     and a, $03
-    jr nz, Jump_007_4CA3
+    jr nz, .loop3
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -1141,7 +1141,7 @@ Jump_007_4CA3::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $09
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; entry 4 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
@@ -1156,31 +1156,31 @@ Jump_007_4CFF:: ; address name
     ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_4D1F
+    jr z, .check_is_cgb
     ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
     farcall SendSGBPaletteSetPacket
-    jr Jump_007_4D2B
+    jr .loop
 
-Jump_007_4D1F::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_4D2B
+    jr z, .loop
     farcall LoadPalette0FromData4ACC
 
-Jump_007_4D2B::
+.loop:
     farcall RunSaveSteps
     ld a, [wSaveStep]
     bit 7, a
-    jr z, Jump_007_4D2B
+    jr z, .loop
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_007_4D45
+    jr z, .call_start_palette_fade
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
 
-Jump_007_4D45::
+.call_start_palette_fade:
     ld a, $FC
     call StartPaletteFade
     ld b, $31
@@ -1244,7 +1244,7 @@ Jump_007_4D45::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $09
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; only called from GameMode5_Init_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Init_SendSGBPaletteSetPacket_Case04)
@@ -1254,23 +1254,23 @@ GameMode5_Init_Case04_ReadLinkSetupMode::
 Func_007_4DEC:: ; address name
     ld a, [wLinkSetupMode]
     cp a, $02
-    jr z, Jump_007_4DF8
+    jr z, .skip
     ld hl, $4E07
-    jr Jump_007_4DFB
+    jr .skip2
 
-Jump_007_4DF8::
+.skip:
     ld hl, wLinkRulesCopy
 
-Jump_007_4DFB::
+.skip2:
     ld de, wLinkRules
     ld b, $0A
 
-Jump_007_4E00::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_007_4E00
+    jr nz, .loop
     ret
     db $01, $00, $00, $63, $29, $01, $00, $00, $63, $80
 
@@ -1283,12 +1283,12 @@ Func_007_4E11:: ; address name
     ld de, wLinkRulesCopy
     ld b, $0A
 
-Jump_007_4E19::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_007_4E19
+    jr nz, .loop
     ret
 
 ; entry 5 of the `rst $00` table in GameMode5_Init
@@ -1302,13 +1302,13 @@ Jump_007_4E20:: ; address name
     ld bc, $0C00
     xor a, a
 
-Jump_007_4E27::
+.loop:
     di
 
-Jump_007_4E28::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_007_4E28
+    jr nz, .loop2
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -1316,7 +1316,7 @@ Jump_007_4E28::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_4E27
+    jr nz, .loop
 
 ; entry 6 of the `rst $00` table in GameMode5_Init
 ; no direct call (reached through a table, a jump or a vector)
@@ -1328,51 +1328,51 @@ Jump_007_4E37:: ; address name
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_007_4E3D::
+.loop:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_007_4E3D
+    jr nz, .loop
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_4E5F
+    jr z, .check_is_cgb
     ld hl, wSGBPaletteSet
     ld [hl], $00
     inc hl
     ld [hl], $00
     farcall SendSGBPaletteSetPacket
-    jr Jump_007_4E6B
+    jr .loop2
 
-Jump_007_4E5F::
+.check_is_cgb:
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_4E6B
+    jr z, .loop2
     farcall LoadPalette0FromData4ACC
 
-Jump_007_4E6B::
+.loop2:
     farcall RunSaveSteps
     ld a, [wSaveStep]
     bit 7, a
-    jr z, Jump_007_4E6B
+    jr z, .loop2
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_007_4E85
+    jr z, .skip
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
 
-Jump_007_4E85::
+.skip:
     ld hl, vBGMap0
     ld bc, $1412
 
-Jump_007_4E8B::
+.loop3:
     ld a, $C3
 
-Jump_007_4E8D::
+.loop4:
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_007_4E8D
+    jr nz, .loop4
     ld a, l
     add a, $0C
     ld l, a
@@ -1381,7 +1381,7 @@ Jump_007_4E8D::
     ld h, a
     ld b, $14
     dec c
-    jr nz, Jump_007_4E8B
+    jr nz, .loop3
     call GameMode5_Init_Case06_LoadSRAMRecordWord
     farcall FullyHealParty
     ld a, $FC
@@ -1401,11 +1401,11 @@ Jump_007_4E8D::
     ld a, $00
     ldh [hSpriteWindowClipMode], a
 
-Jump_007_4ED6::
+.loop5:
     farcall StepTextWindowOpenClose
     ld a, [wTextWindowState]
     and a, $03
-    jr nz, Jump_007_4ED6
+    jr nz, .loop5
     ld hl, wMenuState
     ld bc, $0008
     xor a, a
@@ -1436,7 +1436,7 @@ Jump_007_4ED6::
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $09
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; only called from GameMode5_Init_Case06 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Init_SendSGBPaletteSetPacket_Case06)
@@ -1452,7 +1452,7 @@ Func_007_4F29:: ; address name
     ld hl, wPartyList
     ld de, wBattleBuffer72
 
-Jump_007_4F38::
+.loop:
     push hl
     ld a, [hl]
     ld c, $5B
@@ -1481,7 +1481,7 @@ Jump_007_4F38::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_007_4F38
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -1538,52 +1538,52 @@ MoveVerticalCursorInListHL::
 Func_007_4F9D:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
-    jr nz, Jump_007_4FB3
+    jr nz, .check_sub_menu_cursor
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Jump_007_4FB0
+    jr nz, .call_write_bb_tile_at_word_table_entry_c
     call EraseCursorAtEntryHL_Bank07
-    jr Jump_007_4FB3
+    jr .check_sub_menu_cursor
 
-Jump_007_4FB0::
+.call_write_bb_tile_at_word_table_entry_c:
     call WriteBBTileAtWordTableEntryC_Bank07
 
-Jump_007_4FB3::
+.check_sub_menu_cursor:
     ld a, [wSubMenuCursor]
     cp a, $01
-    jr z, Jump_007_4FE4
+    jr z, .return
     ld c, [hl]
     ld a, [wJoypadPressedRepeat]
     and a, $40
-    jr z, Jump_007_4FD0
+    jr z, .check_joypad_pressed_repeat
     ld a, [hl]
     dec a
     ld [hl], a
     cp a, $FF
-    jr nz, Jump_007_4FE5
+    jr nz, .clear_frame_counter_lo
     ld a, [wSubMenuCursor]
     dec a
     ld [hl], a
-    jr Jump_007_4FE5
+    jr .clear_frame_counter_lo
 
-Jump_007_4FD0::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     and a, $80
-    jr z, Jump_007_4FE4
+    jr z, .return
     ld a, [wSubMenuCursor]
     dec a
     inc [hl]
     cp a, [hl]
     ccf
-    jr c, Jump_007_4FE5
+    jr c, .clear_frame_counter_lo
     xor a, a
     ld [hl], a
-    jr Jump_007_4FE5
+    jr .clear_frame_counter_lo
 
-Jump_007_4FE4::
+.return:
     ret
 
-Jump_007_4FE5::
+.clear_frame_counter_lo:
     xor a, a
     ld [wFrameCounterLo], a
     call WriteC3TileAtWordTableEntryC_Bank07
@@ -1600,49 +1600,49 @@ RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07::
 Func_007_4FF5:: ; address name
     ld a, [wFrameCounterLo]
     and a, $07
-    jr nz, Jump_007_500B
+    jr nz, .check_joypad_pressed_repeat
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Jump_007_5008
+    jr nz, .call_write_bb_tile_at_word_table_entry_c
     call EraseCursorAtEntryHL_Bank07
-    jr Jump_007_500B
+    jr .check_joypad_pressed_repeat
 
-Jump_007_5008::
+.call_write_bb_tile_at_word_table_entry_c:
     call WriteBBTileAtWordTableEntryC_Bank07
 
-Jump_007_500B::
+.check_joypad_pressed_repeat:
     ld c, [hl]
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_007_5021
+    jr z, .check_joypad_pressed_repeat2
     ld a, [hl]
     dec a
     ld [hl], a
     cp a, $FF
-    jr nz, Jump_007_5036
+    jr nz, .clear_frame_counter_lo
     ld a, [wSubMenuCursor2]
     dec a
     ld [hl], a
-    jr Jump_007_5036
+    jr .clear_frame_counter_lo
 
-Jump_007_5021::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     and a, $10
-    jr z, Jump_007_5035
+    jr z, .return
     ld a, [wSubMenuCursor2]
     dec a
     inc [hl]
     cp a, [hl]
     ccf
-    jr c, Jump_007_5036
+    jr c, .clear_frame_counter_lo
     xor a, a
     ld [hl], a
-    jr Jump_007_5036
+    jr .clear_frame_counter_lo
 
-Jump_007_5035::
+.return:
     ret
 
-Jump_007_5036::
+.clear_frame_counter_lo:
     xor a, a
     ld [wFrameCounterLo], a
     call WriteC3TileAtWordTableEntryC_Bank07
@@ -1669,15 +1669,15 @@ Func_007_5046:: ; address name
     ld a, $BB
     push af
 
-Jump_007_5056::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_007_5056
+    jr nz, .loop
 
-Jump_007_505C::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_007_505C
+    jr nz, .loop2
     pop af
     ld [hl], a
     pop hl
@@ -1707,15 +1707,15 @@ Func_007_5067:: ; address name
     ld a, $C3
     push af
 
-Jump_007_5076::
+.loop:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_007_5076
+    jr nz, .loop
 
-Jump_007_507C::
+.loop2:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_007_507C
+    jr nz, .loop2
     pop af
     ld [hl], a
     pop hl
@@ -1753,10 +1753,10 @@ Func_007_510D:: ; address name
     ld bc, $1412
     ld a, $C3
 
-Jump_007_5115::
+.loop:
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_007_5115
+    jr nz, .loop
     ld a, l
     add a, $0C
     ld l, a
@@ -1766,7 +1766,7 @@ Jump_007_5115::
     ld a, $C3
     ld b, $14
     dec c
-    jr nz, Jump_007_5115
+    jr nz, .loop
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank07 (E-0114)
@@ -1793,7 +1793,7 @@ Func_007_513A:: ; address name
     farcall ShowString_Bank07
     ret
 
-; E-0220 (C1: after CheckSaveData, Jump_007_4A68 reads the word at $5149 + 2 * hTemp0 (hTemp0 >= 1) and passes it to CopyRecordRectToScreenBuffer_Bank07; three words, so index 3 would read the offset word ($0000) of TileRect_07_514F, which follows; entry 0 is not read on that path).
+; E-0220 (C1: after CheckSaveData, GameMode5_Init_InitSoundHardware.call_fill_screen_tile_buffer_with_d reads the word at $5149 + 2 * hTemp0 (hTemp0 >= 1) and passes it to CopyRecordRectToScreenBuffer_Bank07; three words, so index 3 would read the offset word ($0000) of TileRect_07_514F, which follows; entry 0 is not read on that path).
 ; record: rectangle record for this CheckSaveData result ($0000 = none)
 SaveCheckScreenRects::
 Data_007_5149:: ; address name
@@ -2032,7 +2032,7 @@ GameMode5_Update_Case00_Case00_DecompressToVRAM::
 Jump_007_591A:: ; address name
     ld a, [wLinkScreenSubState]
     or a, a
-    jr z, Jump_007_596A
+    jr z, .skip
     ld b, $E1
     ld de, Tiles2Gfx_E1_4001
     ld hl, vTiles2
@@ -2043,7 +2043,7 @@ Jump_007_591A:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_595C
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
@@ -2058,14 +2058,14 @@ Jump_007_591A:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_007_595C::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
-Jump_007_596A::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -2084,18 +2084,18 @@ Jump_007_5976:: ; address name
     inc a
     ld [wWorkBuf], a
     cp a, $3C
-    jr c, Jump_007_5993
+    jr c, .check_joypad_pressed
     xor a, a
     ld [wWorkBuf], a
     ld a, [wWorkBuf + $1]
     inc a
     ld [wWorkBuf + $1], a
     cp a, $03
-    jr nc, Jump_007_59A8
+    jr nc, StartFadeToLinkScreenState1_Skip
     cp a, $02
     ret c
 
-Jump_007_5993::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $0B
     ret
@@ -2113,7 +2113,8 @@ Func_007_5999:: ; address name
     call StartPaletteFade
     ret
 
-Jump_007_59A8::
+StartFadeToLinkScreenState1_Skip::
+Jump_007_59A8:: ; address name
     ld hl, wLinkScreenState
     inc [hl]
     xor a, a
@@ -2142,7 +2143,7 @@ GameMode5_Update_Case00_Case01_DecompressToVRAM::
 Jump_007_59C0:: ; address name
     ld a, [wLinkScreenSubState]
     or a, a
-    jr z, Jump_007_5A10
+    jr z, .skip
     ld b, $E1
     ld de, Tiles2Gfx_E1_4116
     ld hl, vTiles2
@@ -2153,7 +2154,7 @@ Jump_007_59C0:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5A02
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
@@ -2168,14 +2169,14 @@ Jump_007_59C0:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_007_5A02::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
-Jump_007_5A10::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -2194,18 +2195,18 @@ Jump_007_5A1C:: ; address name
     inc a
     ld [wWorkBuf], a
     cp a, $3C
-    jr c, Jump_007_5A39
+    jr c, .check_joypad_pressed
     xor a, a
     ld [wWorkBuf], a
     ld a, [wWorkBuf + $1]
     inc a
     ld [wWorkBuf + $1], a
     cp a, $03
-    jr nc, Jump_007_5A4E
+    jr nc, StartFadeToLinkScreenState2_Skip
     cp a, $02
     ret c
 
-Jump_007_5A39::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $0B
     ret
@@ -2223,7 +2224,8 @@ Func_007_5A3F:: ; address name
     call StartPaletteFade
     ret
 
-Jump_007_5A4E::
+StartFadeToLinkScreenState2_Skip::
+Jump_007_5A4E:: ; address name
     ld hl, wLinkScreenState
     inc [hl]
     xor a, a
@@ -2252,7 +2254,7 @@ GameMode5_Update_Case00_Case02_DecompressToVRAM::
 Jump_007_5A66:: ; address name
     ld a, [wLinkScreenSubState]
     or a, a
-    jr z, Jump_007_5AB6
+    jr z, .skip
     ld b, $E1
     ld de, Tiles2Gfx_E1_4617
     ld hl, vTiles2
@@ -2263,7 +2265,7 @@ Jump_007_5A66:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5AA8
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
@@ -2278,14 +2280,14 @@ Jump_007_5A66:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_007_5AA8::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
 
-Jump_007_5AB6::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -2304,7 +2306,7 @@ Jump_007_5AC2:: ; address name
     inc a
     ld [wWorkBuf], a
     cp a, $5A
-    jr nc, Jump_007_5AE9
+    jr nc, .clear_work_buf
     cp a, $3C
     ret c
     ld a, [wJoypadPressed]
@@ -2320,7 +2322,7 @@ Jump_007_5AC2:: ; address name
     call StartPaletteFade
     ret
 
-Jump_007_5AE9::
+.clear_work_buf:
     xor a, a
     ld [wWorkBuf], a
     ld hl, wLinkScreenState
@@ -2387,17 +2389,17 @@ Jump_007_5B2A:: ; address name
     ld b, $10
     ld hl, vTiles2
 
-Jump_007_5B4A::
+.loop:
     di
     ld a, $FF
     call WriteVRAMByteInc
     ei
     dec b
-    jr nz, Jump_007_5B4A
+    jr nz, .loop
     ld hl, vBGMap0
     ld bc, $0400
 
-Jump_007_5B5A::
+.loop2:
     di
     ld a, $00
     call WriteVRAMByteInc
@@ -2405,16 +2407,16 @@ Jump_007_5B5A::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_5B5A
+    jr nz, .loop2
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5BAA
+    jr z, .skip
     ld a, $01
     ldh [rVBK], a
     ld hl, vBGMap0
     ld bc, $0400
 
-Jump_007_5B76::
+.loop3:
     di
     ld a, $FF
     call WriteVRAMByteInc
@@ -2422,7 +2424,7 @@ Jump_007_5B76::
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_5B76
+    jr nz, .loop3
     ld a, $00
     ldh [rVBK], a
     xor a, a
@@ -2440,7 +2442,7 @@ Jump_007_5B76::
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_007_5BAA::
+.skip:
     xor a, a
     ld hl, wWorkBuf
     ld bc, $004C
@@ -2571,7 +2573,7 @@ Jump_007_5C5F:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5CA9
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
@@ -2586,7 +2588,7 @@ Jump_007_5C5F:: ; address name
     ld c, $08
     call CopyFromBankWaitVRAM
 
-Jump_007_5CA9::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     call ResetLinkScreenPalettes
@@ -2642,7 +2644,7 @@ Jump_007_5CD8:: ; address name
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5D24
+    jr z, .call_reset_link_screen_palettes
     ld a, $01
     ldh [rVBK], a
     ld b, $E1
@@ -2657,7 +2659,7 @@ Jump_007_5CD8:: ; address name
     ld c, $40
     call CopyFromBankWaitVRAM
 
-Jump_007_5D24::
+.call_reset_link_screen_palettes:
     call ResetLinkScreenPalettes
     ld a, $FC
     call StartPaletteFade
@@ -2696,12 +2698,12 @@ Jump_007_5D56:: ; address name
     call RunGameMode5Case00SubStates_ReadWorkBufAndLinkScreenSubState
     ld a, [wLinkMenuCounter]
     cp a, $0A
-    jr nc, Jump_007_5D8B
+    jr nc, .read_work_buf
     ld a, [wLinkMenuEntry]
     inc a
     ld [wLinkMenuEntry], a
     and a, $07
-    jr nz, Jump_007_5D8B
+    jr nz, .read_work_buf
     ld a, [wLinkMenuCounter]
     ld hl, $5EE3
     call ReadWordTableEntry_Bank00
@@ -2711,7 +2713,7 @@ Jump_007_5D56:: ; address name
     ld [wLinkMenuCounter], a
     ret
 
-Jump_007_5D8B::
+.read_work_buf:
     ld a, [wWorkBuf]
     ld l, a
     ld a, [wWorkBuf + $1]
@@ -2802,7 +2804,7 @@ Func_007_5DF5:: ; address name
     ld a, [hl]
     pop hl
     or a, a
-    jr nz, Jump_007_5E11
+    jr nz, .skip
     push hl
     inc hl
     inc hl
@@ -2815,11 +2817,11 @@ Func_007_5DF5:: ; address name
     ld [hl], a
     cp a, c
     pop hl
-    jr Jump_007_5E56
+    jr .skip4
 
-Jump_007_5E11::
+.skip:
     dec a
-    jr nz, Jump_007_5E22
+    jr nz, .skip2
     push hl
     inc hl
     inc hl
@@ -2831,9 +2833,9 @@ Jump_007_5E11::
     ld [hl], a
     cp a, $30
     pop hl
-    jr Jump_007_5E56
+    jr .skip4
 
-Jump_007_5E22::
+.skip2:
     push hl
     inc hl
     inc hl
@@ -2844,10 +2846,10 @@ Jump_007_5E22::
     add a, $40
     ld [hl], a
     pop hl
-    jr nz, Jump_007_5E56
+    jr nz, .skip4
     ld a, [wLinkScreenSubState]
     cp a, $08
-    jr nc, Jump_007_5E47
+    jr nc, .skip3
     push hl
     inc hl
     inc hl
@@ -2860,9 +2862,9 @@ Jump_007_5E22::
     sub a, $28
     cp a, c
     pop hl
-    jr Jump_007_5E56
+    jr .skip4
 
-Jump_007_5E47::
+.skip3:
     push hl
     inc hl
     inc hl
@@ -2876,7 +2878,7 @@ Jump_007_5E47::
     cp a, c
     pop hl
 
-Jump_007_5E56::
+.skip4:
     push hl
     call z, RunGameMode5Case00SubStates_NextTableByte
     pop hl
@@ -2890,23 +2892,23 @@ Jump_007_5E56::
     ld de, $5EFB
     add a, e
     ld e, a
-    jr nc, Jump_007_5E6B
+    jr nc, .skip5
     inc d
 
-Jump_007_5E6B::
+.skip5:
     ld a, [de]
     pop de
     ld b, a
     ld a, c
     cp a, b
-    jr c, Jump_007_5E77
+    jr c, .call_run_game_mode5_case00_sub_states
     ld a, [hl]
     inc a
     ld [hl-], a
     xor a, a
     ld [hl+], a
 
-Jump_007_5E77::
+.call_run_game_mode5_case00_sub_states:
     call RunGameMode5Case00SubStates_Shared01_DrawMetaSprite
     pop bc
     dec b
@@ -2954,7 +2956,7 @@ Func_007_5EA2:: ; address name
     ld [hl+], a
     ld a, [wLinkScreenSubState]
     cp a, $03
-    jr nc, Jump_007_5EBE
+    jr nc, .cp_05
     ld a, [wWorkBuf + $1]
     ld [hl+], a
     xor a, a
@@ -2962,9 +2964,9 @@ Func_007_5EA2:: ; address name
     ld [hl+], a
     ret
 
-Jump_007_5EBE::
+.cp_05:
     cp a, $05
-    jr nc, Jump_007_5ED7
+    jr nc, .read_work_buf
     push hl
     call NextTableByte
     pop hl
@@ -2980,7 +2982,7 @@ Jump_007_5EBE::
     ld [hl+], a
     ret
 
-Jump_007_5ED7::
+.read_work_buf:
     ld a, [wWorkBuf + $1]
     sub a, $20
     ld [hl+], a
@@ -3031,7 +3033,7 @@ Jump_007_5F09:: ; address name
     call DecompressToRAMLocked
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_5F6D
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     ld b, $E1
@@ -3051,7 +3053,7 @@ Jump_007_5F09:: ; address name
     ld c, $10
     call CopyFromBankWaitVRAM
 
-Jump_007_5F6D::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     call ResetLinkScreenPalettes
@@ -3092,7 +3094,7 @@ GameMode5_Update_Case00_Case04_WriteWorkBufAndLinkScreenSubStateEtc::
 Jump_007_5F9D:: ; address name
     ld a, [wJoypadPressed]
     and a, $0B
-    jr nz, Jump_007_5FCF
+    jr nz, .call_start_palette_fade2
     ld a, [wSoundChannel2]
     ld hl, wSoundChannel3
     and a, [hl]
@@ -3105,10 +3107,10 @@ Jump_007_5F9D:: ; address name
     ld a, [wWorkBuf]
     dec a
     ld [wWorkBuf], a
-    jr z, Jump_007_5FC0
+    jr z, .call_start_palette_fade
     ret
 
-Jump_007_5FC0::
+.call_start_palette_fade:
     ld a, $04
     call StartPaletteFade
     xor a, a
@@ -3117,7 +3119,7 @@ Jump_007_5FC0::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_5FCF::
+.call_start_palette_fade2:
     ld a, $04
     call StartPaletteFade
     ld a, $01
@@ -3180,7 +3182,7 @@ Func_007_600E:: ; address name
     call ResetFadeFromDMGPaletteBGP
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_608F
+    jr z, .return
     xor a, a
     ldh [rBGP], a
     ldh [rOBP0], a
@@ -3223,7 +3225,7 @@ Func_007_600E:: ; address name
     ld bc, $0008
     call CopyBytes
 
-Jump_007_608F::
+.return:
     ret
 
 ; entry 1 of the `rst $00` table in GameMode5_Update
@@ -3258,14 +3260,14 @@ Jump_007_60B0:: ; address name
     call RunGameMode5Case01SubStates
     ld a, [wLinkScreenStep]
     or a, a
-    jr z, Jump_007_60E8
+    jr z, .return2
     ld a, [wLinkScreenStep]
     ld b, a
     xor a, a
     ld [wLinkScreenStep], a
     ld a, [wModeChangeRequest]
     or a, a
-    jr nz, Jump_007_60E8
+    jr nz, .return2
     ld a, $0F
     ld [wGridCursorX], a
     ld a, b
@@ -3274,19 +3276,19 @@ Jump_007_60B0:: ; address name
     ld a, $01
     ld [wGridCursorX], a
 
-Jump_007_60D8::
+.loop:
     ld a, [wLinkStatus]
     and a, $03
     cp a, $03
-    jr nz, Jump_007_60D8
+    jr nz, .loop
     ld a, [wModeChangeRequest]
     and a, a
-    jr nz, Jump_007_60E7
+    jr nz, .return
 
-Jump_007_60E7::
+.return:
     ret
 
-Jump_007_60E8::
+.return2:
     ret
 
 ; runs the routine for wD06B (jump table of three sub-states) (E-0122)
@@ -3321,19 +3323,19 @@ Jump_007_60F3:: ; address name
     ld hl, TileRect_07_514F
     ld a, [wLinkByte94]
     or a, a
-    jr z, Jump_007_611B
+    jr z, .call_copy_record_rect_to_screen_buffer_bank07
     ld hl, $5207
 
-Jump_007_611B::
+.call_copy_record_rect_to_screen_buffer_bank07:
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
     ld a, [wLinkByte94]
     and a, $01
     ld a, $07
-    jr z, Jump_007_612C
+    jr z, .set_sub_menu_cursor
     ld a, $08
 
-Jump_007_612C::
+.set_sub_menu_cursor:
     ld [wSubMenuCursor], a
     xor a, a
     ld [wSubMenuCursor2], a
@@ -3355,7 +3357,7 @@ RunGameMode5Case01SubStates_SerialSendByte_Case01::
 Jump_007_6145:: ; address name
     ld a, [wFadeState]
     and a, a
-    jr z, Jump_007_615D
+    jr z, .check_text_flags
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3365,10 +3367,10 @@ Jump_007_6145:: ; address name
     ld [wScreenStep], a
     ret
 
-Jump_007_615D::
+.check_text_flags:
     ld a, [wTextFlags]
     bit 0, a
-    jr z, Jump_007_6176
+    jr z, .check_joypad_pressed
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3378,28 +3380,28 @@ Jump_007_615D::
     ld [wScreenStep], a
     ret
 
-Jump_007_6176::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     bit 0, a
-    jr nz, Jump_007_6182
+    jr nz, .call_serial_send_byte
     call SendLinkByteForMenuOption
-    jr Jump_007_6187
+    jr .check_joypad_pressed2
 
-Jump_007_6182::
+.call_serial_send_byte:
     ld a, $C0
     call SerialSendByte
 
-Jump_007_6187::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_007_61F8
+    jr z, .check_menu_option
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_61CE
+    jr z, .check_menu_state
     ld a, [wMenuState]
     and a, $0F
     cp a, $02
-    jr c, Jump_007_61CE
+    jr c, .check_menu_state
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -3418,18 +3420,18 @@ Jump_007_6187::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_61CE::
+.check_menu_state:
     ld a, [wMenuState]
     and a, $0F
     ld b, $02
     ld c, $08
     cp a, c
-    jr nc, Jump_007_61DC
+    jr nc, .skip
     cp a, b
     ccf
 
-Jump_007_61DC::
-    jr c, Jump_007_61EE
+.skip:
+    jr c, .skip2
     ld a, [wMenuState]
     ld hl, CursorPositionWords_07_5086
     and a, $07
@@ -3437,14 +3439,14 @@ Jump_007_61DC::
     ld a, $69
     call QueueSoundEffect
 
-Jump_007_61EE::
+.skip2:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
     ld [wLinkScreenFlag], a
-    jr Jump_007_6212
+    jr .return
 
-Jump_007_61F8::
+.check_menu_option:
     ld de, CursorPositionWords_07_5086
     ld hl, wMenuState
     ld a, [wMenuOption]
@@ -3456,7 +3458,7 @@ Jump_007_61F8::
     ld a, [wMenuState]
     ld [wMenuOption], a
 
-Jump_007_6212::
+.return:
     ret
 
 ; wD781 = 0, sends the byte at $65BD + (wC471 & $0F) through SerialSendByte (stored in wD782), then wD781 = 1 (E-0122)
@@ -3470,10 +3472,10 @@ Func_007_6213:: ; address name
     and a, $0F
     add a, e
     ld e, a
-    jr nc, Jump_007_6220
+    jr nc, .clear_screen_step
     inc d
 
-Jump_007_6220::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, [de]
@@ -3570,18 +3572,18 @@ RunGameMode5Case01SubStates_Case02_Case00_FillBytes::
 Jump_007_62BA:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_007_62CE
+    jr z, .check_joypad_pressed
     ld hl, wLinkScreenFlag
     inc [hl]
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    jr Jump_007_62E9
+    jr .call_run_game_mode5_case01_sub_states_write
 
-Jump_007_62CE::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_62E9
+    jr z, .call_run_game_mode5_case01_sub_states_write
     ld hl, wScreenTileBuffer
     ld bc, $0240
     ld a, $C3
@@ -3592,7 +3594,7 @@ Jump_007_62CE::
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_62E9::
+.call_run_game_mode5_case01_sub_states_write:
     call RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc
     ret
 
@@ -3610,15 +3612,15 @@ Jump_007_62ED:: ; address name
     farcall LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_007_6319
+    jr z, .clear_field_return_phase
     cp a, $80
-    jr nz, Jump_007_6319
+    jr nz, .clear_field_return_phase
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
     ld a, [wKeyWorldHeight]
     ld [wMapHeightScreens], a
 
-Jump_007_6319::
+.clear_field_return_phase:
     xor a, a
     ld [wFieldReturnPhase], a
     xor a, a
@@ -3655,10 +3657,10 @@ Func_007_635A:: ; address name
     ld [rRAMB], a
     ld a, [wBattlerRecords]
     or a, a
-    jr z, Jump_007_639C
+    jr z, .skip
     ld a, [wTitleByte0A]
     or a, a
-    jr z, Jump_007_639C
+    jr z, .skip
     ld a, $29
     ldh [hSpriteSetIndex], a
     xor a, a
@@ -3682,7 +3684,7 @@ Func_007_635A:: ; address name
     farcall DrawMetaSprite
     ret
 
-Jump_007_639C::
+.skip:
     xor a, a
     ld [rRAMB], a
     xor a, a
@@ -3705,11 +3707,11 @@ Func_007_63AC:: ; address name
     ld hl, wScreenState
     ld b, $80
 
-Jump_007_63B1::
+.loop:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_007_63B1
+    jr nz, .loop
     ret
 
 ; entry 2 of the `rst $00` table in RunGameMode5Case01SubStates_Case02
@@ -3720,16 +3722,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc::
 Jump_007_63B7:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_63CD
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_63E7
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $F5
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_63CD::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3742,7 +3744,7 @@ Jump_007_63CD::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_63E7::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -3781,16 +3783,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case0
 Jump_007_641C:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_6432
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_644C
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $F6
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_6432::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3803,7 +3805,7 @@ Jump_007_6432::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_644C::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -3826,16 +3828,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case0
 Jump_007_646B:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_6481
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_649B
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $B7
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_6481::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3848,7 +3850,7 @@ Jump_007_6481::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_649B::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -3871,16 +3873,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case0
 Jump_007_64BA:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_64D0
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_64EA
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $E0
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_64D0::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3893,7 +3895,7 @@ Jump_007_64D0::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_64EA::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -3916,16 +3918,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case0
 Jump_007_6509:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_651F
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_6539
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $F1
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_651F::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3938,7 +3940,7 @@ Jump_007_651F::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_6539::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -3961,16 +3963,16 @@ RunGameMode5Case01SubStates_Case02_WriteJoypadReadFlagAndLinkScreenStepEtc_Case0
 Jump_007_6558:: ; address name
     ld a, [wSubMenuCursor2]
     cp a, $FF
-    jr z, Jump_007_656E
+    jr z, .clear_screen_step
     cp a, $FE
-    jr z, Jump_007_6588
+    jr z, .set_grid_cursor_x_to_02
     ld a, $00
     ld [wJoypadReadFlag], a
     ld a, $DC
     ld [wLinkScreenStep], a
     ret
 
-Jump_007_656E::
+.clear_screen_step:
     xor a, a
     ld [wScreenStep], a
     ld a, $F4
@@ -3983,7 +3985,7 @@ Jump_007_656E::
     call WriteTileSound69ThenWD06A4
     ret
 
-Jump_007_6588::
+.set_grid_cursor_x_to_02:
     ld a, $02
     ld [wGridCursorX], a
     xor a, a
@@ -4179,14 +4181,14 @@ Jump_007_66A2:: ; address name
     ld a, [wScriptRunning]
     bit 0, a
     ld a, $01
-    jr nz, Jump_007_66D2
+    jr nz, .skip
     ld a, [wMapType]
     bit 7, a
     ld a, $05
-    jr nz, Jump_007_66D2
+    jr nz, .skip
     ld a, $00
 
-Jump_007_66D2::
+.skip:
     ld [hl+], a
     ld a, $00
     ld [hl+], a
@@ -4403,7 +4405,7 @@ Jump_007_6856:: ; address name
     call FillBytes
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_007_687D
+    jr z, .call_draw_full_screen_buffer_to_bg_map
     ld a, $02
     ldh [rSVBK], a
     xor a, a
@@ -4413,24 +4415,24 @@ Jump_007_6856:: ; address name
     xor a, a
     ldh [rSVBK], a
 
-Jump_007_687D::
+.call_draw_full_screen_buffer_to_bg_map:
     ld hl, vBGMap0
     call DrawFullScreenBufferToBGMap
     ld a, [wSGBActive]
     or a, a
-    jr z, Jump_007_6897
+    jr z, .set_text_window_tile_lo
     ld hl, wOBJPaletteBuffer
     ld de, wOBJPaletteBuffer + $20
     ld b, $20
 
-Jump_007_6891::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_007_6891
+    jr nz, .loop
 
-Jump_007_6897::
+.set_text_window_tile_lo:
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -4473,11 +4475,11 @@ Jump_007_68C1:: ; address name
     ld [wWorkBuf], a
     ld de, $0000
     call TestFlagBit
-    jr c, Jump_007_68D9
+    jr c, .done
     xor a, a
     ld [wWorkBuf], a
 
-Jump_007_68D9::
+.done:
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
@@ -4518,12 +4520,12 @@ Jump_007_68E3:: ; address name
     ld hl, wPlayerName
     ld b, $0A
 
-Jump_007_690E::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_007_690E
+    jr nz, .loop
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
@@ -4813,10 +4815,10 @@ Func_007_6ADC:: ; address name
     ld a, $F0
     ld b, $07
 
-Jump_007_6AE9::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_007_6AE9
+    jr nz, .loop
     ret
 
 ; entry 2 of the `rst $00` table in GameMode5_Update
@@ -4827,22 +4829,22 @@ GameMode5_Update_LinkExchangeJoypadPerFrame::
 Jump_007_6AEE:: ; address name
     ld a, [wLinkSession]
     cp a, $05
-    jp z, Jump_007_7D38
+    jp z, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04_CallLinkExchangeJoypadPerFrame
     call LinkExchangeJoypadPerFrame
     ld a, [wLinkScreenState]
     cp a, $01
-    jr z, Jump_007_6B01
+    jr z, .check_screen_state
     ret
 
-Jump_007_6B01::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0C
-    jr z, Jump_007_6B7D
+    jr z, .check_screen_sub_step
     cp a, $0D
-    jp z, Jump_007_6B9C
+    jp z, .check_screen_step
     ld a, [wScreenByteEE]
     and a, a
-    jr z, Jump_007_6B23
+    jr z, .check_link_scene_byte4_b
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
     bit 7, a
@@ -4850,7 +4852,7 @@ Jump_007_6B01::
     xor a, a
     ld [wScreenByteEE], a
 
-Jump_007_6B23::
+.check_link_scene_byte4_b:
     ld a, [wLinkSceneByte4B]
     or a, a
     ret z
@@ -4890,38 +4892,38 @@ Jump_007_6B23::
     ld [wMessageMode], a
     ret
 
-Jump_007_6B7D::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     and a, a
     ret nz
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_007_6B8E
+    jr z, .call_draw_list_entries_cell5_species_sprite
     cp a, $20
-    jr z, Jump_007_6B95
+    jr z, .call_call_draw_party_species_sprites
     ret
 
-Jump_007_6B8E::
+.call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-Jump_007_6B95::
+.call_call_draw_party_species_sprites:
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-Jump_007_6B9C::
+.check_screen_step:
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_007_6BA8
+    jr z, .call_draw_wca36_sprite_part_bank_f1
     cp a, $20
-    jr z, Jump_007_6BAF
+    jr z, .call_draw_record_buf_b_species_sprites
     ret
 
-Jump_007_6BA8::
+.call_draw_wca36_sprite_part_bank_f1:
     farcall DrawWCA36SpritePart_BankF1
     ret
 
-Jump_007_6BAF::
+.call_draw_record_buf_b_species_sprites:
     farcall DrawRecordBufBSpeciesSprites
     ret
     db $C9
@@ -4934,10 +4936,10 @@ Jump_007_6BB7:: ; address name
     call LinkExchangeJoypadPerFrame
     ld a, [wLinkScreenState]
     cp a, $01
-    jr z, Jump_007_6BC2
+    jr z, .return
     ret
 
-Jump_007_6BC2::
+.return:
     ret
 
 ; entry 4 of the `rst $00` table in GameMode5_Update
@@ -4948,49 +4950,49 @@ Jump_007_6BC3:: ; address name
     call LinkExchangeJoypadPerFrame
     ld a, [wLinkScreenState]
     or a, a
-    jr nz, Jump_007_6BCD
+    jr nz, .check_screen_state
     ret
 
-Jump_007_6BCD::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0C
-    jr z, Jump_007_6BD9
+    jr z, .check_screen_sub_step
     cp a, $0D
-    jr z, Jump_007_6BF8
+    jr z, .check_screen_step
     ret
 
-Jump_007_6BD9::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     and a, a
     ret nz
     ld a, [wScreenStep]
     cp a, $20
-    jr z, Jump_007_6BF1
+    jr z, .call_call_draw_party_species_sprites
     cp a, $15
-    jr z, Jump_007_6BEA
+    jr z, .call_draw_list_entries_cell5_species_sprite
     ret
 
-Jump_007_6BEA::
+.call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-Jump_007_6BF1::
+.call_call_draw_party_species_sprites:
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-Jump_007_6BF8::
+.check_screen_step:
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_007_6C04
+    jr z, .call_draw_wca36_sprite_part_bank_f1
     cp a, $20
-    jr z, Jump_007_6C0B
+    jr z, .call_draw_record_buf_b_species_sprites
     ret
 
-Jump_007_6C04::
+.call_draw_wca36_sprite_part_bank_f1:
     farcall DrawWCA36SpritePart_BankF1
     ret
 
-Jump_007_6C0B::
+.call_draw_record_buf_b_species_sprites:
     farcall DrawRecordBufBSpeciesSprites
     ret
 
@@ -5059,7 +5061,7 @@ Func_007_6C59:: ; address name
     ld hl, wPartyList
     ld de, wBattleBuffer72
 
-Jump_007_6C68::
+.loop:
     push hl
     ld a, [hl]
     ld c, $5B
@@ -5088,7 +5090,7 @@ Jump_007_6C68::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_007_6C68
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -5146,7 +5148,7 @@ RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc::
 Jump_007_6CCD:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_007_6CEA
+    jr nz, .cp_FD
     ld a, $01
     ld [wLinkScreenSubState], a
     ld a, $01
@@ -5155,11 +5157,11 @@ Jump_007_6CCD:: ; address name
     ld [wLinkSendByte], a
     ld hl, wLinkScreenState
     inc [hl]
-    jp Jump_007_6DA8
+    jp .return
 
-Jump_007_6CEA::
+.cp_FD:
     cp a, $FD
-    jr nz, Jump_007_6D06
+    jr nz, .cp_FC
     ld a, $08
     ld [wBattleKind], a
     ld hl, wLinkScreenState
@@ -5170,65 +5172,65 @@ Jump_007_6CEA::
     inc [hl]
     xor a, a
     ld [wLinkSendByte], a
-    jp Jump_007_6DA8
+    jp .return
 
-Jump_007_6D06::
+.cp_FC:
     cp a, $FC
-    jr nz, Jump_007_6D19
+    jr nz, .cp_FB
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
     ld a, $01
     ld [wLinkSetupMode], a
-    jr Jump_007_6D2A
+    jr .set_link_screen_state_to_08
 
-Jump_007_6D19::
+.cp_FB:
     cp a, $FB
-    jr nz, Jump_007_6D32
+    jr nz, .call_move_vertical_cursor_in_list_hl
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
     ld a, $00
     ld [wLinkSetupMode], a
 
-Jump_007_6D2A::
+.set_link_screen_state_to_08:
     ld a, $08
     ld [wLinkScreenState], a
-    jp Jump_007_6DA8
+    jp .return
 
-Jump_007_6D32::
+.call_move_vertical_cursor_in_list_hl:
     ld de, $5096
     ld hl, wMenuState
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_007_6D90
+    jr z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuState]
     and a, $03
     cp a, $03
-    jr z, Jump_007_6D97
+    jr z, .set_link_send_byte_to_FE
     or a, a
-    jr z, Jump_007_6D64
+    jr z, .call_init_link_rules_preset_a
     cp a, $01
-    jr z, Jump_007_6D76
+    jr z, .call_init_link_rules_preset_b
     call LoadInvertedBit7FlagsToWorkBuf
     ld a, $08
     ld [wBattleKind], a
     ld de, $FD03
-    jr Jump_007_6D86
+    jr .set_link_screen_state
 
-Jump_007_6D64::
+.call_init_link_rules_preset_a:
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
     ld a, $00
     ld [wLinkSetupMode], a
     ld de, $FB05
-    jr Jump_007_6D86
+    jr .set_link_screen_state
 
-Jump_007_6D76::
+.call_init_link_rules_preset_b:
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
@@ -5236,19 +5238,19 @@ Jump_007_6D76::
     ld [wLinkSetupMode], a
     ld de, $FC05
 
-Jump_007_6D86::
+.set_link_screen_state:
     ld a, e
     ld [wLinkScreenState], a
     ld a, d
     ld [wLinkSendByte], a
-    jr Jump_007_6DA8
+    jr .return
 
-Jump_007_6D90::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_6DA8
+    jr z, .return
 
-Jump_007_6D97::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     xor a, a
@@ -5258,7 +5260,7 @@ Jump_007_6D97::
     ld hl, wLinkScreenState
     inc [hl]
 
-Jump_007_6DA8::
+.return:
     ret
 
 ; stores 0, 0, 0, $63, $29, $01, 0, 0, $63, $80 at wD043-wD04C (E-0120)
@@ -5373,21 +5375,21 @@ RunLinkSession4ScreenState_Case02_WriteBattleKindAndLinkScreenStateEtc::
 Jump_007_6E2A:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
-    jr z, Jump_007_6E8C
+    jr z, .clear_link_send_byte
     cp a, $FE
-    jr z, Jump_007_6E8C
+    jr z, .clear_link_send_byte
     cp a, $FB
-    jr z, Jump_007_6E42
+    jr z, .check_link_role
     cp a, $FC
-    jr z, Jump_007_6E5C
+    jr z, .check_link_role2
     cp a, $FD
-    jr z, Jump_007_6E76
+    jr z, .check_link_role3
     ret
 
-Jump_007_6E42::
+.check_link_role:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6E8C
+    jr z, .clear_link_send_byte
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
@@ -5397,10 +5399,10 @@ Jump_007_6E42::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_6E5C::
+.check_link_role2:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6E8C
+    jr z, .clear_link_send_byte
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
@@ -5410,10 +5412,10 @@ Jump_007_6E5C::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_6E76::
+.check_link_role3:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6E8C
+    jr z, .clear_link_send_byte
     ld a, $08
     ld [wBattleKind], a
     ld a, $04
@@ -5422,7 +5424,7 @@ Jump_007_6E76::
     ld [wLinkSendByte], a
     ret
 
-Jump_007_6E8C::
+.clear_link_send_byte:
     xor a, a
     ld [wLinkSendByte], a
     ld a, $01
@@ -5487,10 +5489,10 @@ Jump_007_6ECF:: ; address name
     ld hl, $0302
     ld a, [wLinkScreenFlag]
     or a, a
-    jr z, Jump_007_6ED9
+    jr z, .call_show_string_hl_bank07
     inc l
 
-Jump_007_6ED9::
+.call_show_string_hl_bank07:
     call ShowStringHL_Bank07
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -5606,19 +5608,19 @@ RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc::
 Jump_007_6F76:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_007_6F8B
+    jr z, .check_link_role
     cp a, $FD
-    jr z, Jump_007_6FA7
+    jr z, .check_link_role2
     cp a, $FB
-    jr z, Jump_007_6FBD
+    jr z, .check_link_role3
     cp a, $FC
-    jr z, Jump_007_6FD7
-    jr Jump_007_6FF1
+    jr z, .check_link_role4
+    jr .call_fill_screen_tile_buffer_with_d
 
-Jump_007_6F8B::
+.check_link_role:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6FF1
+    jr z, .call_fill_screen_tile_buffer_with_d
     ld a, $01
     ld [wLinkScreenSubState], a
     ld a, $01
@@ -5629,10 +5631,10 @@ Jump_007_6F8B::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_6FA7::
+.check_link_role2:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6FF1
+    jr z, .call_fill_screen_tile_buffer_with_d
     ld a, $08
     ld [wBattleKind], a
     ld a, $04
@@ -5641,10 +5643,10 @@ Jump_007_6FA7::
     ld [wLinkSendByte], a
     ret
 
-Jump_007_6FBD::
+.check_link_role3:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6FF1
+    jr z, .call_fill_screen_tile_buffer_with_d
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
@@ -5654,10 +5656,10 @@ Jump_007_6FBD::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_6FD7::
+.check_link_role4:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_6FF1
+    jr z, .call_fill_screen_tile_buffer_with_d
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
@@ -5667,7 +5669,7 @@ Jump_007_6FD7::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_6FF1::
+.call_fill_screen_tile_buffer_with_d:
     ld d, $C3
     call FillScreenTileBufferWithD
     ld hl, $54DB
@@ -5694,10 +5696,10 @@ Jump_007_7010:: ; address name
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_7021
+    jr z, .check_joypad_pressed
     ret
 
-Jump_007_7021::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -5753,14 +5755,14 @@ Jump_007_707C:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_7097
+    jr z, .check_joypad_pressed
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf], a
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_7097::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -5768,12 +5770,12 @@ Jump_007_7097::
     call QueueSoundEffect
     ld a, [wMenuSelectedMember]
     and a, $01
-    jr z, Jump_007_70AF
+    jr z, .skip
     ld a, $02
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_70AF::
+.skip:
     ld hl, wLinkRules
     ld a, $01
     ld [hl+], a
@@ -5917,7 +5919,7 @@ RunLinkSession4ScreenState_Case03_WriteLinkScreenStateAndLinkScreenSubStateEtc::
 Jump_007_7168:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_007_7183
+    jr nz, .cp_01
     ld a, $02
     ld [wLinkScreenState], a
     xor a, a
@@ -5928,7 +5930,7 @@ Jump_007_7168:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_007_7183::
+.cp_01:
     cp a, $01
     ret nz
     ld a, $01
@@ -5953,14 +5955,14 @@ Jump_007_719B:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_71B6
+    jr z, .check_joypad_pressed
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $1], a
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_71B6::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -5969,12 +5971,12 @@ Jump_007_71B6::
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $1], a
     or a, a
-    jr z, Jump_007_71CF
+    jr z, .skip
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_71CF::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -5999,82 +6001,82 @@ Jump_007_71D8:: ; address name
     ld b, a
     ld a, $02
     bit 6, c
-    jr z, Jump_007_71FA
+    jr z, .call_run_link_session4_screen_state_case03
     ld a, b
     rlca
     rlca
     and a, $01
 
-Jump_007_71FA::
+.call_run_link_session4_screen_state_case03:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 5, c
-    jr z, Jump_007_720B
+    jr z, .call_run_link_session4_screen_state_case032
     ld a, b
     rrca
     swap a
     and a, $01
 
-Jump_007_720B::
+.call_run_link_session4_screen_state_case032:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 4, c
-    jr z, Jump_007_721B
+    jr z, .call_run_link_session4_screen_state_case033
     ld a, b
     swap a
     and a, $01
 
-Jump_007_721B::
+.call_run_link_session4_screen_state_case033:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 3, c
-    jr z, Jump_007_722C
+    jr z, .call_run_link_session4_screen_state_case034
     ld a, b
     rrca
     rrca
     rrca
     and a, $01
 
-Jump_007_722C::
+.call_run_link_session4_screen_state_case034:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 2, c
-    jr z, Jump_007_723C
+    jr z, .call_run_link_session4_screen_state_case035
     ld a, b
     rrca
     rrca
     and a, $01
 
-Jump_007_723C::
+.call_run_link_session4_screen_state_case035:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 1, c
-    jr z, Jump_007_724B
+    jr z, .call_run_link_session4_screen_state_case036
     ld a, b
     rrca
     and a, $01
 
-Jump_007_724B::
+.call_run_link_session4_screen_state_case036:
     ld [de], a
     inc de
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     ld a, $02
     bit 0, c
-    jr z, Jump_007_7259
+    jr z, .call_run_link_session4_screen_state_case037
     ld a, b
     and a, $01
 
-Jump_007_7259::
+.call_run_link_session4_screen_state_case037:
     ld [de], a
     call RunLinkSession4ScreenState_Case03_Case0C_WriteVRAMByte
     xor a, a
@@ -6115,7 +6117,7 @@ Jump_007_7284:: ; address name
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_007_72AE
+    jr z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuCursor]
@@ -6129,14 +6131,14 @@ Jump_007_7284:: ; address name
     ld [hl], a
     ret
 
-Jump_007_72AE::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
     ld bc, $0000
     ld a, [wWorkBuf + $6]
     cp a, $02
-    jr z, Jump_007_72C6
+    jr z, .check_work_buf
     rrca
     rrca
     and a, $40
@@ -6144,10 +6146,10 @@ Jump_007_72AE::
     ld b, a
     set 6, c
 
-Jump_007_72C6::
+.check_work_buf:
     ld a, [wWorkBuf + $7]
     cp a, $02
-    jr z, Jump_007_72D6
+    jr z, .check_work_buf2
     swap a
     rlca
     and a, $20
@@ -6155,20 +6157,20 @@ Jump_007_72C6::
     ld b, a
     set 5, c
 
-Jump_007_72D6::
+.check_work_buf2:
     ld a, [wWorkBuf + $8]
     cp a, $02
-    jr z, Jump_007_72E5
+    jr z, .check_work_buf3
     swap a
     and a, $10
     or a, b
     ld b, a
     set 4, c
 
-Jump_007_72E5::
+.check_work_buf3:
     ld a, [wWorkBuf + $9]
     cp a, $02
-    jr z, Jump_007_72F5
+    jr z, .check_work_buf4
     swap a
     rrca
     and a, $08
@@ -6176,10 +6178,10 @@ Jump_007_72E5::
     ld b, a
     set 3, c
 
-Jump_007_72F5::
+.check_work_buf4:
     ld a, [wWorkBuf + $A]
     cp a, $02
-    jr z, Jump_007_7304
+    jr z, .check_work_buf5
     rlca
     rlca
     and a, $04
@@ -6187,26 +6189,26 @@ Jump_007_72F5::
     ld b, a
     set 2, c
 
-Jump_007_7304::
+.check_work_buf5:
     ld a, [wWorkBuf + $B]
     cp a, $02
-    jr z, Jump_007_7312
+    jr z, .check_work_buf6
     rlca
     and a, $02
     or a, b
     ld b, a
     set 1, c
 
-Jump_007_7312::
+.check_work_buf6:
     ld a, [wWorkBuf + $C]
     cp a, $02
-    jr z, Jump_007_731F
+    jr z, .set_link_rules
     and a, $01
     or a, b
     ld b, a
     set 0, c
 
-Jump_007_731F::
+.set_link_rules:
     ld a, c
     ld [wLinkRules + $1], a
     ld a, b
@@ -6381,14 +6383,14 @@ Jump_007_742F:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_744A
+    jr z, .check_joypad_pressed
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $2], a
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_744A::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -6397,12 +6399,12 @@ Jump_007_744A::
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $2], a
     or a, a
-    jr z, Jump_007_7463
+    jr z, .skip
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_7463::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -6447,10 +6449,10 @@ Jump_007_7498:: ; address name
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressedRepeat]
     and a, $30
-    jr z, Jump_007_7514
+    jr z, .check_joypad_pressed
     ld a, [wMenuCursor]
     and a, $01
-    jr nz, Jump_007_74EF
+    jr nz, .read_link_rules
     ld a, [wLinkRules + $4]
     ld l, a
     ld a, [wLinkRules + $5]
@@ -6461,61 +6463,61 @@ Jump_007_7498:: ; address name
     ld h, a
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_007_74D5
+    jr z, .next
     dec hl
     ld a, h
     or a, a
-    jr nz, Jump_007_74E1
+    jr nz, .set_link_rules
     ld a, l
     cp a, $03
-    jr nc, Jump_007_74E1
+    jr nc, .set_link_rules
     ld hl, $0003
-    jr Jump_007_74E1
+    jr .set_link_rules
 
-Jump_007_74D5::
+.next:
     inc hl
     ld a, l
     sub a, $29
     ld a, h
     sbc a, $01
-    jr c, Jump_007_74E1
+    jr c, .set_link_rules
     ld hl, $0129
 
-Jump_007_74E1::
+.set_link_rules:
     pop af
     or a, h
     ld [wLinkRules + $5], a
     ld a, l
     ld [wLinkRules + $4], a
     call RunLinkSession4ScreenState_HLToDecimalDigits_Shared02
-    jr Jump_007_7514
+    jr .check_joypad_pressed
 
-Jump_007_74EF::
+.read_link_rules:
     ld a, [wLinkRules + $3]
     ld l, a
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_007_7504
+    jr z, .skip
     dec hl
     ld a, l
     or a, a
-    jr nz, Jump_007_750D
+    jr nz, .set_link_rules2
     ld hl, $0001
-    jr Jump_007_750D
+    jr .set_link_rules2
 
-Jump_007_7504::
+.skip:
     inc l
     ld a, l
     cp a, $64
-    jr c, Jump_007_750D
+    jr c, .set_link_rules2
     ld hl, $0063
 
-Jump_007_750D::
+.set_link_rules2:
     ld a, l
     ld [wLinkRules + $3], a
     call RunLinkSession4ScreenState_HLToDecimalDigits_Shared03
 
-Jump_007_7514::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $03
     ret z
@@ -6552,10 +6554,10 @@ Func_007_7535:: ; address name
     sub a, $04
     ld a, d
     sbc a, $00
-    jr nc, Jump_007_7550
+    jr nc, .call_write_vram_byte_inc
     ld b, $C3
 
-Jump_007_7550::
+.call_write_vram_byte_inc:
     ld hl, vBGMap0 + $10E
     ld a, b
     call WriteVRAMByteInc
@@ -6563,21 +6565,21 @@ Jump_007_7550::
     ld a, [wDigits]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_7566
+    jr nz, .call_write_vram_byte_inc2
     ld c, $00
     ld a, $C3
 
-Jump_007_7566::
+.call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_7578
+    jr nz, .call_write_vram_byte_inc3
     bit 0, c
-    jr nz, Jump_007_7578
+    jr nz, .call_write_vram_byte_inc3
     ld a, $C3
 
-Jump_007_7578::
+.call_write_vram_byte_inc3:
     call WriteVRAMByteInc
     ld a, [wDigits + $2]
     add a, $E0
@@ -6587,10 +6589,10 @@ Jump_007_7578::
     sub a, $29
     ld a, d
     sbc a, $01
-    jr c, Jump_007_758F
+    jr c, .call_write_vram_byte
     ld b, $C3
 
-Jump_007_758F::
+.call_write_vram_byte:
     ld a, b
     call WriteVRAMByte
     ret
@@ -6609,10 +6611,10 @@ Func_007_7594:: ; address name
     ld b, $C5
     ld a, e
     cp a, $02
-    jr nc, Jump_007_75A8
+    jr nc, .call_write_vram_byte_inc
     ld b, $C3
 
-Jump_007_75A8::
+.call_write_vram_byte_inc:
     ld hl, vBGMap0 + $14E
     ld a, b
     call WriteVRAMByteInc
@@ -6621,10 +6623,10 @@ Jump_007_75A8::
     ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_75BF
+    jr nz, .call_write_vram_byte_inc2
     ld a, $C3
 
-Jump_007_75BF::
+.call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ld a, [wDigits + $2]
     add a, $E0
@@ -6632,10 +6634,10 @@ Jump_007_75BF::
     ld b, $C6
     ld a, e
     cp a, $63
-    jr c, Jump_007_75D3
+    jr c, .call_write_vram_byte
     ld b, $C3
 
-Jump_007_75D3::
+.call_write_vram_byte:
     ld a, b
     call WriteVRAMByte
     ret
@@ -6652,14 +6654,14 @@ Jump_007_75D8:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_75F3
+    jr z, .check_joypad_pressed
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $3], a
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_75F3::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -6668,12 +6670,12 @@ Jump_007_75F3::
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $3], a
     or a, a
-    jr z, Jump_007_760C
+    jr z, .skip
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_760C::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -6705,25 +6707,25 @@ Jump_007_762F:: ; address name
     call RunLinkSession4ScreenState_Case03_Case1A_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_7656
+    jr z, .check_joypad_pressed
     ld a, [wLinkRules + $6]
     and a, $7F
     cp a, $7F
-    jr nz, Jump_007_7651
+    jr nz, .clear_link_screen_sub_state
     ld a, [wLinkRules + $7]
     and a, $F0
     cp a, $F0
-    jr nz, Jump_007_7651
+    jr nz, .clear_link_screen_sub_state
     ld a, $84
     call QueueSoundEffect
     ret
 
-Jump_007_7651::
+.clear_link_screen_sub_state:
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_7656::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -6752,16 +6754,16 @@ Func_007_766B:: ; address name
     ld e, a
     ld a, [hl]
     and a, d
-    jr z, Jump_007_768C
+    jr z, .skip
     ld a, [hl]
     and a, e
-    jr Jump_007_768E
+    jr .done
 
-Jump_007_768C::
+.skip:
     ld a, [hl]
     or a, d
 
-Jump_007_768E::
+.done:
     ld [hl], a
     ret
 
@@ -6776,72 +6778,72 @@ Func_007_7690:: ; address name
     ld de, $7700
     ld a, [wFrameCounterLo]
     and a, $07
-    jr z, Jump_007_76AC
+    jr z, .check_joypad_pressed_repeat
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Jump_007_76A9
+    jr nz, .call_write_bb_tile_at_word_table_entry_c
     call EraseCursorAtEntryHL_Bank07
-    jr Jump_007_76AC
+    jr .check_joypad_pressed_repeat
 
-Jump_007_76A9::
+.call_write_bb_tile_at_word_table_entry_c:
     call WriteBBTileAtWordTableEntryC_Bank07
 
-Jump_007_76AC::
+.check_joypad_pressed_repeat:
     ld c, [hl]
     ld a, [wJoypadPressedRepeat]
     and a, $C0
-    jr z, Jump_007_76C3
+    jr z, .check_joypad_pressed_repeat2
     ld a, [hl]
     cp a, $05
-    jr c, Jump_007_76BF
-    jr z, Jump_007_76F4
+    jr c, .skip
+    jr z, .clear_frame_counter_lo
     sub a, $06
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76BF::
+.skip:
     add a, $06
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76C3::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_007_76DD
+    jr z, .check_joypad_pressed_repeat3
     ld a, [hl]
     or a, a
-    jr z, Jump_007_76D5
+    jr z, .skip2
     cp a, $06
-    jr z, Jump_007_76D9
+    jr z, .skip3
     dec a
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76D5::
+.skip2:
     ld a, $05
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76D9::
+.skip3:
     ld a, $0A
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76DD::
+.check_joypad_pressed_repeat3:
     ld a, [wJoypadPressedRepeat]
     and a, $10
     ret z
     ld a, [hl]
     cp a, $05
-    jr z, Jump_007_76EF
+    jr z, .skip4
     cp a, $0A
-    jr z, Jump_007_76F2
+    jr z, .skip5
     inc a
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76EF::
+.skip4:
     xor a, a
-    jr Jump_007_76F4
+    jr .clear_frame_counter_lo
 
-Jump_007_76F2::
+.skip5:
     ld a, $06
 
-Jump_007_76F4::
+.clear_frame_counter_lo:
     ld [hl], a
     xor a, a
     ld [wFrameCounterLo], a
@@ -6857,14 +6859,14 @@ RunLinkSession4ScreenState_Case03_Case19_Sub01::
 Func_007_7716:: ; address name
     ld bc, $0B00
 
-Jump_007_7719::
+.loop:
     push bc
     ld a, c
     call RunLinkSession4ScreenState_Shared05
     pop bc
     inc c
     dec b
-    jr nz, Jump_007_7719
+    jr nz, .loop
     ret
 
 ; only called from routines of RunLinkSession4ScreenState (E-0098)
@@ -6886,10 +6888,10 @@ Func_007_7724:: ; address name
     ld a, e
     and a, d
     ld a, $C3
-    jr nz, Jump_007_7749
+    jr nz, .call_write_vram_byte
     ld a, c
 
-Jump_007_7749::
+.call_write_vram_byte:
     call WriteVRAMByte
     ret
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $01, $80
@@ -6907,14 +6909,14 @@ Jump_007_7763:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_007_777E
+    jr z, .check_joypad_pressed
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $4], a
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_777E::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
     ret z
@@ -6923,12 +6925,12 @@ Jump_007_777E::
     ld a, [wMenuSelectedMember]
     ld [wWorkBuf + $4], a
     or a, a
-    jr z, Jump_007_7797
+    jr z, .skip
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_7797::
+.skip:
     ld hl, wLinkScreenSubState
     inc [hl]
     xor a, a
@@ -6959,48 +6961,48 @@ RunLinkSession4ScreenState_Case03_QueueSoundEffect_Case1D::
 Jump_007_77BA:: ; address name
     ld a, [wJoypadPressed]
     and a, $03
-    jr z, Jump_007_77CB
+    jr z, .check_joypad_pressed_repeat
     ld a, $69
     call QueueSoundEffect
     xor a, a
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_77CB::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_007_77E8
+    jr z, .check_joypad_pressed_repeat2
     ld a, [wLinkRuleTurnLimit]
     and a, $80
     ld d, a
     ld a, [wLinkRuleTurnLimit]
     and a, $7F
     cp a, $0B
-    jr c, Jump_007_7806
+    jr c, .return
     dec a
     or a, d
     ld [wLinkRuleTurnLimit], a
-    jr Jump_007_7803
+    jr .call_run_link_session4_screen_state_hl_to
 
-Jump_007_77E8::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     and a, $10
-    jr z, Jump_007_7806
+    jr z, .return
     ld a, [wLinkRuleTurnLimit]
     and a, $80
     ld d, a
     ld a, [wLinkRuleTurnLimit]
     and a, $7F
     cp a, $63
-    jr nc, Jump_007_7806
+    jr nc, .return
     inc a
     or a, d
     ld [wLinkRuleTurnLimit], a
 
-Jump_007_7803::
+.call_run_link_session4_screen_state_hl_to:
     call RunLinkSession4ScreenState_HLToDecimalDigits
 
-Jump_007_7806::
+.return:
     ret
 
 ; only called from routines of RunLinkSession4ScreenState (E-0098)
@@ -7018,25 +7020,25 @@ Func_007_7807:: ; address name
     ld bc, wLinkTradeByte
     pop af
     cp a, $0B
-    jr nc, Jump_007_781D
+    jr nc, .cp_63
     ld b, $C3
 
-Jump_007_781D::
+.cp_63:
     cp a, $63
-    jr c, Jump_007_7823
+    jr c, .call_write_vram_byte_inc
     ld c, $C3
 
-Jump_007_7823::
+.call_write_vram_byte_inc:
     ld hl, vBGMap0 + $12E
     ld a, b
     call WriteVRAMByteInc
     ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_7835
+    jr nz, .call_write_vram_byte_inc2
     ld a, $C3
 
-Jump_007_7835::
+.call_write_vram_byte_inc2:
     call WriteVRAMByteInc
     ld a, [wDigits + $2]
     add a, $E0
@@ -7095,14 +7097,14 @@ RunLinkSession4ScreenState_Case04_InitLinkRulesPresetA::
 Jump_007_7880:: ; address name
     ld a, [wLinkMessage]
     cp a, $FB
-    jr z, Jump_007_7891
+    jr z, .call_init_link_rules_preset_a
     cp a, $FC
-    jr z, Jump_007_78A4
+    jr z, .call_init_link_rules_preset_b
     cp a, $FD
-    jr z, Jump_007_78B7
-    jr Jump_007_78C2
+    jr z, .set_battle_kind_to_08
+    jr .call_copy_record_rect_to_screen_buffer_bank07
 
-Jump_007_7891::
+.call_init_link_rules_preset_a:
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
@@ -7112,7 +7114,7 @@ Jump_007_7891::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_78A4::
+.call_init_link_rules_preset_b:
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
@@ -7122,14 +7124,14 @@ Jump_007_78A4::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_78B7::
+.set_battle_kind_to_08:
     ld a, $08
     ld [wBattleKind], a
     ld a, $04
     ld [wLinkScreenState], a
     ret
 
-Jump_007_78C2::
+.call_copy_record_rect_to_screen_buffer_bank07:
     ld hl, TileRect_07_52FF
     call CopyRecordRectToScreenBuffer_Bank07
     ld hl, vBGMap0 + $1A0
@@ -7176,7 +7178,7 @@ RunLinkSession4ScreenState_Case04_WriteLinkScreenStateAndLinkScreenSubStateEtc::
 Jump_007_78F2:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
-    jr nz, Jump_007_790E
+    jr nz, .cp_01
     ld a, $02
     ld [wLinkScreenState], a
     ld a, $00
@@ -7187,7 +7189,7 @@ Jump_007_78F2:: ; address name
     ld [wLinkSendByte], a
     ret
 
-Jump_007_790E::
+.cp_01:
     cp a, $01
     ret nz
     ld hl, $0305
@@ -7292,12 +7294,12 @@ Jump_007_7990:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_007_79BB
+    jr z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuSelectedMember]
     and a, $01
-    jr nz, Jump_007_79C1
+    jr nz, .set_link_send_byte_to_FE
     ld a, $02
     ld [wLinkSetupMode], a
     ld a, $01
@@ -7306,12 +7308,12 @@ Jump_007_7990:: ; address name
     inc [hl]
     ret
 
-Jump_007_79BB::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
 
-Jump_007_79C1::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld hl, wLinkScreenSubState
@@ -7370,21 +7372,21 @@ RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc::
 Jump_007_79FC:: ; address name
     ld a, [wLinkScreenSubState]
     and a, a
-    jr z, Jump_007_7A05
-    jp Jump_007_7AA7
+    jr z, .check_link_message
+    jp .skip
 
-Jump_007_7A05::
+.check_link_message:
     ld a, [wLinkMessage]
     cp a, $FE
-    jr z, Jump_007_7A12
+    jr z, .check_link_role
     cp a, $FD
-    jr z, Jump_007_7A2F
-    jr Jump_007_7A45
+    jr z, .check_link_role2
+    jr .check_link_message2
 
-Jump_007_7A12::
+.check_link_role:
     ld a, [wLinkRole]
     bit 1, a
-    jp z, Jump_007_7A9C
+    jp z, .set_link_screen_state_to_08
     ld a, $01
     ld [wLinkScreenSubState], a
     ld a, $01
@@ -7395,10 +7397,10 @@ Jump_007_7A12::
     ld [wLinkScreenState], a
     ret
 
-Jump_007_7A2F::
+.check_link_role2:
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_7A9C
+    jr z, .set_link_screen_state_to_08
     ld a, $08
     ld [wBattleKind], a
     ld a, $04
@@ -7407,24 +7409,24 @@ Jump_007_7A2F::
     ld [wLinkSendByte], a
     ret
 
-Jump_007_7A45::
+.check_link_message2:
     ld a, [wLinkMessage]
     cp a, $FC
-    jr z, Jump_007_7A52
+    jr z, .check_menu_state
     cp a, $FB
-    jr z, Jump_007_7A52
-    jr Jump_007_7A9C
+    jr z, .check_menu_state
+    jr .set_link_screen_state_to_08
 
-Jump_007_7A52::
+.check_menu_state:
     ld a, [wMenuState]
     and a, a
-    jr z, Jump_007_7A7A
+    jr z, .check_link_message3
     ld a, [wLinkMessage]
     cp a, $FC
-    jr z, Jump_007_7A9C
+    jr z, .set_link_screen_state_to_08
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_7A9C
+    jr z, .set_link_screen_state_to_08
     call InitLinkRulesPresetA
     ld a, $08
     ld [wBattleKind], a
@@ -7432,15 +7434,15 @@ Jump_007_7A52::
     ld [wLinkSetupMode], a
     ld a, $05
     ld [wLinkScreenState], a
-    jr Jump_007_7A9C
+    jr .set_link_screen_state_to_08
 
-Jump_007_7A7A::
+.check_link_message3:
     ld a, [wLinkMessage]
     cp a, $FB
-    jr z, Jump_007_7A9C
+    jr z, .set_link_screen_state_to_08
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_007_7A9C
+    jr z, .set_link_screen_state_to_08
     call InitLinkRulesPresetB
     ld a, $09
     ld [wBattleKind], a
@@ -7448,16 +7450,16 @@ Jump_007_7A7A::
     ld [wLinkSetupMode], a
     ld a, $05
     ld [wLinkScreenState], a
-    jr Jump_007_7A9C
+    jr .set_link_screen_state_to_08
 
-Jump_007_7A9C::
+.set_link_screen_state_to_08:
     ld a, $08
     ld [wLinkScreenState], a
     ld a, $00
     ld [wLinkScreenSubState], a
     ret
 
-Jump_007_7AA7::
+.skip:
     ld hl, wScreenTileBuffer
     ld bc, $0280
     ld a, $C3
@@ -7528,10 +7530,10 @@ Func_007_7AD4:: ; address name
 WriteBCTileAtHLOrHLPlusBC::
 Func_007_7B29:: ; address name
     or a, a
-    jr z, Jump_007_7B2D
+    jr z, .done
     add hl, bc
 
-Jump_007_7B2D::
+.done:
     ld [hl], $BC
     ret
 
@@ -7547,76 +7549,76 @@ Func_007_7B30:: ; address name
     ld hl, wScreenTileBuffer + $E7
     ld a, $16
     bit 6, c
-    jr z, Jump_007_7B48
+    jr z, .skip
     ld a, b
     rlca
     rlca
     and a, $01
     add a, $E0
 
-Jump_007_7B48::
+.skip:
     ld [hl+], a
     ld a, $16
     bit 5, c
-    jr z, Jump_007_7B57
+    jr z, .skip2
     ld a, b
     rrca
     swap a
     and a, $01
     add a, $E0
 
-Jump_007_7B57::
+.skip2:
     ld [hl+], a
     ld a, $16
     bit 4, c
-    jr z, Jump_007_7B65
+    jr z, .skip3
     ld a, b
     swap a
     and a, $01
     add a, $E0
 
-Jump_007_7B65::
+.skip3:
     ld [hl+], a
     ld a, $16
     bit 3, c
-    jr z, Jump_007_7B74
+    jr z, .skip4
     ld a, b
     rlca
     swap a
     and a, $01
     add a, $E0
 
-Jump_007_7B74::
+.skip4:
     ld [hl+], a
     ld a, $16
     bit 2, c
-    jr z, Jump_007_7B82
+    jr z, .skip5
     ld a, b
     rrca
     rrca
     and a, $01
     add a, $E0
 
-Jump_007_7B82::
+.skip5:
     ld [hl+], a
     ld a, $16
     bit 1, c
-    jr z, Jump_007_7B8F
+    jr z, .skip6
     ld a, b
     rrca
     and a, $01
     add a, $E0
 
-Jump_007_7B8F::
+.skip6:
     ld [hl+], a
     ld a, $16
     bit 0, c
-    jr z, Jump_007_7B9B
+    jr z, .done
     ld a, b
     and a, $01
     add a, $E0
 
-Jump_007_7B9B::
+.done:
     ld [hl+], a
     ret
 
@@ -7628,21 +7630,21 @@ Func_007_7B9D:: ; address name
     ld de, $7BFD
     ld a, [wLinkRules + $5]
     bit 6, a
-    jr z, Jump_007_7BB2
+    jr z, .read_link_rules
     ld de, $7C02
     ld a, [wLinkRules + $3]
     ld c, a
     ld b, $00
-    jr Jump_007_7BBC
+    jr .skip
 
-Jump_007_7BB2::
+.read_link_rules:
     ld a, [wLinkRules + $4]
     ld c, a
     ld a, [wLinkRules + $5]
     and a, $01
     ld b, a
 
-Jump_007_7BBC::
+.skip:
     push bc
     ld hl, wScreenTileBuffer + $126
     ld a, [de]
@@ -7667,21 +7669,21 @@ Jump_007_7BBC::
     ld a, [wDigits]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_7BE5
+    jr nz, .read_digits
     ld c, $00
     ld a, $C3
 
-Jump_007_7BE5::
+.read_digits:
     ld [hl+], a
     ld a, [wDigits + $1]
     add a, $E0
     cp a, $E0
-    jr nz, Jump_007_7BF5
+    jr nz, .read_digits2
     bit 0, c
-    jr nz, Jump_007_7BF5
+    jr nz, .read_digits2
     ld a, $C3
 
-Jump_007_7BF5::
+.read_digits2:
     ld [hl+], a
     ld a, [wDigits + $2]
     add a, $E0
@@ -7701,80 +7703,80 @@ Func_007_7C07:: ; address name
     ld hl, wScreenTileBuffer + $163
     xor a, a
     bit 6, e
-    jr nz, Jump_007_7C18
+    jr nz, .skip
     ld [hl], a
 
-Jump_007_7C18::
+.skip:
     inc a
     inc hl
     bit 5, e
-    jr nz, Jump_007_7C1F
+    jr nz, .skip2
     ld [hl], a
 
-Jump_007_7C1F::
+.skip2:
     inc a
     inc hl
     bit 4, e
-    jr nz, Jump_007_7C26
+    jr nz, .skip3
     ld [hl], a
 
-Jump_007_7C26::
+.skip3:
     inc a
     inc hl
     bit 3, e
-    jr nz, Jump_007_7C2D
+    jr nz, .skip4
     ld [hl], a
 
-Jump_007_7C2D::
+.skip4:
     inc a
     inc hl
     bit 2, e
-    jr nz, Jump_007_7C34
+    jr nz, .skip5
     ld [hl], a
 
-Jump_007_7C34::
+.skip5:
     inc a
     inc hl
     bit 1, e
-    jr nz, Jump_007_7C3B
+    jr nz, .skip6
     ld [hl], a
 
-Jump_007_7C3B::
+.skip6:
     inc a
     inc hl
     bit 0, e
-    jr nz, Jump_007_7C42
+    jr nz, .skip7
     ld [hl], a
 
-Jump_007_7C42::
+.skip7:
     inc a
     inc hl
     bit 7, d
-    jr nz, Jump_007_7C49
+    jr nz, .skip8
     ld [hl], a
 
-Jump_007_7C49::
+.skip8:
     inc a
     inc hl
     bit 6, d
-    jr nz, Jump_007_7C50
+    jr nz, .skip9
     ld [hl], a
 
-Jump_007_7C50::
+.skip9:
     inc a
     inc hl
     bit 5, d
-    jr nz, Jump_007_7C57
+    jr nz, .skip10
     ld [hl], a
 
-Jump_007_7C57::
+.skip10:
     inc a
     inc hl
     bit 4, d
-    jr nz, Jump_007_7C5E
+    jr nz, .return
     ld [hl], a
 
-Jump_007_7C5E::
+.return:
     ret
 
 ; only called from DrawWorkBufSelectionTilesAndPanels (E-0047)
@@ -7790,11 +7792,11 @@ Func_007_7C5F:: ; address name
     ld hl, wWindowTileBuffer + $46
     ld a, [wDigits + $1]
     or a, a
-    jr z, Jump_007_7C76
+    jr z, .read_digits
     add a, $E0
     ld [hl], a
 
-Jump_007_7C76::
+.read_digits:
     inc hl
     ld a, [wDigits + $2]
     add a, $E0
@@ -7854,24 +7856,24 @@ Jump_007_7CB7:: ; address name
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_007_7CE4
+    jr z, .check_joypad_pressed
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuSelectedMember]
     and a, $01
-    jr nz, Jump_007_7CEA
+    jr nz, .set_link_send_byte_to_FE
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
 
-Jump_007_7CE4::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
     ret z
 
-Jump_007_7CEA::
+.set_link_send_byte_to_FE:
     ld a, $FE
     ld [wLinkSendByte], a
     ld hl, wLinkScreenSubState
@@ -7929,19 +7931,20 @@ Jump_007_7D24:: ; address name
     ld [wLinkScreenFlag], a
     ret
 
-Jump_007_7D38::
+RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04_CallLinkExchangeJoypadPerFrame::
+Jump_007_7D38:: ; address name
     call LinkExchangeJoypadPerFrame
     ld a, [wLinkScreenState]
     cp a, $01
-    jr z, Jump_007_7D43
+    jr z, .check_screen_state
     ret
 
-Jump_007_7D43::
+.check_screen_state:
     ld a, [wScreenState]
     cp a, $0C
-    jr z, Jump_007_7DAB
+    jr z, .check_screen_sub_step
     cp a, $0D
-    jr z, Jump_007_7DCA
+    jr z, .check_screen_step
     ld a, [wLinkSceneByte4B]
     or a, a
     ret z
@@ -7982,38 +7985,38 @@ Jump_007_7D43::
     ld [wMessageMode], a
     ret
 
-Jump_007_7DAB::
+.check_screen_sub_step:
     ld a, [wScreenSubStep]
     and a, a
     ret nz
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_007_7DBC
+    jr z, .call_draw_list_entries_cell5_species_sprite
     cp a, $20
-    jr z, Jump_007_7DC3
+    jr z, .call_call_draw_party_species_sprites
     ret
 
-Jump_007_7DBC::
+.call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-Jump_007_7DC3::
+.call_call_draw_party_species_sprites:
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-Jump_007_7DCA::
+.check_screen_step:
     ld a, [wScreenStep]
     cp a, $15
-    jr z, Jump_007_7DD6
+    jr z, .call_draw_wca36_sprite_part_bank_f1
     cp a, $20
-    jr z, Jump_007_7DDD
+    jr z, .call_draw_record_buf_b_species_sprites
     ret
 
-Jump_007_7DD6::
+.call_draw_wca36_sprite_part_bank_f1:
     farcall DrawWCA36SpritePart_BankF1
     ret
 
-Jump_007_7DDD::
+.call_draw_record_buf_b_species_sprites:
     farcall DrawRecordBufBSpeciesSprites
     ret
     db $C9
@@ -8027,7 +8030,7 @@ RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild::
 Func_007_7DE5:: ; address name
     ld a, [wLinkRole]
     bit 1, a
-    jp z, Jump_007_7E6E
+    jp z, .clear_link_byte_eb
     ld a, $02
     ld [wArg1], a
     farcall ComputeBreedingChild
@@ -8056,12 +8059,12 @@ Func_007_7DE5:: ; address name
     ld de, wChildRecord
     ld b, $A5
 
-Jump_007_7E37::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec b
-    jr nz, Jump_007_7E37
+    jr nz, .loop
     xor a, a
     ld [rRAMG2], a
     xor a, a
@@ -8081,33 +8084,33 @@ Jump_007_7E37::
     ld hl, wPackWork
     ld b, $07
 
-Jump_007_7E69::
+.loop2:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_007_7E69
+    jr nz, .loop2
 
-Jump_007_7E6E::
+.clear_link_byte_eb:
     xor a, a
     ld [wLinkByteEB], a
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
 
-Jump_007_7E79::
+.loop3:
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
     bit 7, a
-    jr z, Jump_007_7E79
+    jr z, .loop3
     ld hl, wScreenState
     ld bc, $006F
 
-Jump_007_7E8C::
+.loop4:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_007_7E8C
+    jr nz, .loop4
     ret
     ds $16C, $00

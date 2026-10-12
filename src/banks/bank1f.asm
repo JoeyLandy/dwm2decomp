@@ -358,11 +358,11 @@ Func_01F_5040:: ; address name
     ret z
     ld a, [wSGBPacketIndex]
     cp a, $FF
-    jr nz, Jump_01F_5051
+    jr nz, .skip
     ld hl, wSGBPacketBuffer
-    jr Jump_01F_505E
+    jr .skip2
 
-Jump_01F_5051::
+.skip:
     ld l, a
     ld h, $00
     add hl, hl
@@ -374,14 +374,14 @@ Jump_01F_5051::
     push de
     pop hl
 
-Jump_01F_505E::
+.skip2:
     ld a, [hl]
     and a, $07
     ret z
     ld b, a
     ld c, $00
 
-Jump_01F_5065::
+.skip3:
     push bc
     ld a, $00
     ldh [c], a
@@ -389,26 +389,26 @@ Jump_01F_5065::
     ldh [c], a
     ld b, $10
 
-Jump_01F_506E::
+.loop:
     ld e, $08
     ld a, [hl+]
     ld d, a
 
-Jump_01F_5072::
+.loop2:
     bit 0, d
     ld a, $10
-    jr nz, Jump_01F_507A
+    jr nz, .skip4
     ld a, $20
 
-Jump_01F_507A::
+.skip4:
     ldh [c], a
     ld a, $30
     ldh [c], a
     rr d
     dec e
-    jr nz, Jump_01F_5072
+    jr nz, .loop2
     dec b
-    jr nz, Jump_01F_506E
+    jr nz, .loop
     ld a, $20
     ldh [c], a
     ld a, $30
@@ -417,7 +417,7 @@ Jump_01F_507A::
     dec b
     ret z
     call SpinDelay
-    jr Jump_01F_5065
+    jr .skip3
 
 ; E-0179 (C1: SendSGBPacketSet reads the word $5094 + 2 * wSGBPacketIndex ($FF selects wSGBPacketBuffer instead) and sends byte-0 & 7 packets of 16 bytes from there through the joypad register).
 ; record: first 16-byte SGB packet of this set
@@ -1269,24 +1269,24 @@ Func_01F_5C15:: ; address name
     add_a_to_hl
     ld c, $00
 
-Jump_01F_5C2F::
+.loop:
     ld a, [wListLastRow]
     cp a, $04
-    jr c, Jump_01F_5C3B
+    jr c, .check_list_pages
     ld a, [wListCount]
-    jr Jump_01F_5C4A
+    jr .read_list_page_index
 
-Jump_01F_5C3B::
+.check_list_pages:
     ld a, [wListPages]
     cp a, $01
-    jr nz, Jump_01F_5C47
+    jr nz, .read_list_count
     ld a, [wListCount]
-    jr Jump_01F_5C4A
+    jr .read_list_page_index
 
-Jump_01F_5C47::
+.read_list_count:
     ld a, [wListCount]
 
-Jump_01F_5C4A::
+.read_list_page_index:
     ld b, a
     ld a, [wListPageIndex]
     push bc
@@ -1297,7 +1297,7 @@ Jump_01F_5C4A::
     pop bc
     add a, c
     cp a, b
-    jr nc, Jump_01F_5C90
+    jr nc, .check_screen_step
     push hl
     push bc
     ld a, [hl]
@@ -1309,11 +1309,11 @@ Jump_01F_5C4A::
     push bc
     ld a, c
     cp a, $04
-    jr nz, Jump_01F_5C71
+    jr nz, .skip
     call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F
-    jr Jump_01F_5C81
+    jr .restore
 
-Jump_01F_5C71::
+.skip:
     ld a, c
     add a, a
     ld hl, DrawRecordListPageNames_Data
@@ -1323,19 +1323,19 @@ Jump_01F_5C71::
     ld d, [hl]
     call CopyGlyphTilesToVRAM
 
-Jump_01F_5C81::
+.restore:
     pop bc
     pop hl
     inc hl
     inc c
     ld a, [wListCount]
     cp a, c
-    jr z, Jump_01F_5C90
+    jr z, .check_screen_step
     ld a, c
     cp a, $05
-    jr c, Jump_01F_5C2F
+    jr c, .loop
 
-Jump_01F_5C90::
+.check_screen_step:
     xor a, a
     ld [rRAMG2], a
     ld a, [wScreenStep]
@@ -1360,22 +1360,22 @@ Func_01F_5CA6:: ; address name
     ld [wGlyphListStart], a
     ld hl, wNameGlyphBuf
 
-Jump_01F_5CB0::
+.read_glyph_list_pos:
     ld a, [wGlyphListPos]
     push hl
     add_a_to_hl
     ld a, [hl]
     cp a, $F0
-    jp z, Jump_01F_5CEF
+    jp z, .clear_glyph_list_start
     cp a, $8D
-    jr z, Jump_01F_5CCF
+    jr z, .check_glyph_list_start
     cp a, $8E
-    jr z, Jump_01F_5CCF
+    jr z, .check_glyph_list_start
     call GlyphCopyArgsForA
     call CopyFromBankWaitVRAM
-    jr Jump_01F_5CDE
+    jr .check_glyph_list_start2
 
-Jump_01F_5CCF::
+.check_glyph_list_start:
     push af
     ld a, [wGlyphListStart]
     dec a
@@ -1384,7 +1384,7 @@ Jump_01F_5CCF::
     call GlyphCopyArgsForA
     call OrFromBankWaitVRAM
 
-Jump_01F_5CDE::
+.check_glyph_list_start2:
     pop hl
     ld a, [wGlyphListStart]
     inc a
@@ -1392,9 +1392,9 @@ Jump_01F_5CDE::
     ld a, [wGlyphListPos]
     inc a
     ld [wGlyphListPos], a
-    jr Jump_01F_5CB0
+    jr .read_glyph_list_pos
 
-Jump_01F_5CEF::
+.clear_glyph_list_start:
     pop hl
     xor a, a
     ld [wGlyphListStart], a
@@ -1457,23 +1457,23 @@ Func_01F_5D2A:: ; address name
     ld a, [wArg6]
     ld l, a
 
-Jump_01F_5D3B::
+.loop:
     push hl
     push bc
 
-Jump_01F_5D3D::
+.loop2:
     di
 
-Jump_01F_5D3E::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01F_5D3E
+    jr nz, .loop3
     ld a, [de]
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_01F_5D54
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -1481,36 +1481,36 @@ Jump_01F_5D3E::
     sbc a, $00
     ld h, a
 
-Jump_01F_5D54::
+.next:
     inc de
     dec b
-    jr nz, Jump_01F_5D3D
+    jr nz, .loop2
     pop bc
     pop hl
     push hl
     push bc
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01F_5D89
+    jr z, .restore
     ld a, [wArg7]
     and a, a
-    jr nz, Jump_01F_5D89
+    jr nz, .restore
     ld a, $01
     ldh [rVBK], a
 
-Jump_01F_5D6C::
+.loop4:
     di
 
-Jump_01F_5D6D::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01F_5D6D
+    jr nz, .loop5
     xor a, a
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_01F_5D83
+    jr nz, .next2
     ld a, l
     sub a, $20
     ld l, a
@@ -1518,13 +1518,13 @@ Jump_01F_5D6D::
     sbc a, $00
     ld h, a
 
-Jump_01F_5D83::
+.next2:
     dec b
-    jr nz, Jump_01F_5D6C
+    jr nz, .loop4
     xor a, a
     ldh [rVBK], a
 
-Jump_01F_5D89::
+.restore:
     pop bc
     pop hl
     ld a, $20
@@ -1533,7 +1533,7 @@ Jump_01F_5D89::
     and a, $9B
     ld h, a
     dec c
-    jr nz, Jump_01F_5D3B
+    jr nz, .loop
     ret
 
 ; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB, unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186, correcting E-0129)
@@ -1555,23 +1555,23 @@ Func_01F_5D9A:: ; address name
     ld a, [wArg6]
     ld l, a
 
-Jump_01F_5DB2::
+.loop:
     push hl
     push bc
 
-Jump_01F_5DB4::
+.loop2:
     di
 
-Jump_01F_5DB5::
+.loop3:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01F_5DB5
+    jr nz, .loop3
     ld a, [de]
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_01F_5DCB
+    jr nz, .next
     ld a, l
     sub a, $20
     ld l, a
@@ -1579,35 +1579,35 @@ Jump_01F_5DB5::
     sbc a, $00
     ld h, a
 
-Jump_01F_5DCB::
+.next:
     dec b
-    jr nz, Jump_01F_5DB4
+    jr nz, .loop2
     pop bc
     pop hl
     push hl
     push bc
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01F_5DFF
+    jr z, .restore
     ld a, [wArg7]
     and a, a
-    jr nz, Jump_01F_5DFF
+    jr nz, .restore
     ld a, $01
     ldh [rVBK], a
 
-Jump_01F_5DE2::
+.loop4:
     di
 
-Jump_01F_5DE3::
+.loop5:
     ldh a, [rSTAT]
     bit 1, a
-    jr nz, Jump_01F_5DE3
+    jr nz, .loop5
     xor a, a
     ld [hl+], a
     ei
     ld a, l
     and a, $1F
-    jr nz, Jump_01F_5DF9
+    jr nz, .next2
     ld a, l
     sub a, $20
     ld l, a
@@ -1615,13 +1615,13 @@ Jump_01F_5DE3::
     sbc a, $00
     ld h, a
 
-Jump_01F_5DF9::
+.next2:
     dec b
-    jr nz, Jump_01F_5DE2
+    jr nz, .loop4
     xor a, a
     ldh [rVBK], a
 
-Jump_01F_5DFF::
+.restore:
     pop bc
     pop hl
     ld a, $20
@@ -1632,7 +1632,7 @@ Jump_01F_5DFF::
     dec c
     ld a, c
     and a, a
-    jr nz, Jump_01F_5DB2
+    jr nz, .loop
     ret
 
 ; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
@@ -2124,7 +2124,7 @@ Data_01F_71EF:: ; address name
     db $B6, $C3, $13, $36, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; E-0187 (C1: Jump_024_513A sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375).
+; E-0187 (C1: GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24 sets wArg1/wArg2 = $720D + (wScreenByteBD - 1) * $78, wArg3 = 20, wArg4 = 6, wArg7 = 1 and far-calls DrawTileRectFromArg1Params at the scroll origin + $E0; three panels fill $720D-$7375).
 ; record: one 20 x 6 tile panel (wScreenByteBD selects it)
 TileRect_1F_720D::
 Data_01F_720D:: ; address name
@@ -2153,16 +2153,16 @@ LoadSixteenGlyphTilesFromTable73BC::
 Func_01F_7375:: ; address name
     ld c, $00
 
-Jump_01F_7377::
+.loop:
     push bc
     ld a, c
     ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73BC
     add a, e
     ld e, a
-    jr nc, Jump_01F_7381
+    jr nc, .skip
     inc d
 
-Jump_01F_7381::
+.skip:
     ld a, [de]
     ld e, a
     ld d, $00
@@ -2184,10 +2184,10 @@ Jump_01F_7381::
     ld de, LoadSixteenGlyphTilesFromTable73BC_Data_73CC
     add a, e
     ld e, a
-    jr nc, Jump_01F_73A7
+    jr nc, .skip2
     inc d
 
-Jump_01F_73A7::
+.skip2:
     ld a, [de]
     ld l, a
     inc de
@@ -2201,7 +2201,7 @@ Jump_01F_73A7::
     inc c
     ld a, c
     cp a, $10
-    jr c, Jump_01F_7377
+    jr c, .loop
     ret
 
 ; address loaded by LoadSixteenGlyphTilesFromTable73BC
@@ -2223,7 +2223,7 @@ DrawWCA36MonsterPictureInTwoSteps::
 Func_01F_73EC:: ; address name
     ld a, [wScreenSubStep]
     and a, a
-    jp nz, Jump_01F_7436
+    jp nz, .check_is_cgb
     call BGMapAddressAtScroll_Bank1F
     ld de, $0161
     add hl, de
@@ -2255,10 +2255,10 @@ Func_01F_73EC:: ; address name
     ld [wScreenSubStep], a
     ret
 
-Jump_01F_7436::
+.check_is_cgb:
     ld a, [wIsCGB]
     and a, a
-    jr z, Jump_01F_745C
+    jr z, .call_bg_map_address_at_scroll_bank1_f
     ld a, [wRecordBufB + $B]
     ld e, a
     ld a, [wRecordBufB + $C]
@@ -2275,7 +2275,7 @@ Jump_01F_7436::
     pop de
     call LoadMonsterPictureAttributes
 
-Jump_01F_745C::
+.call_bg_map_address_at_scroll_bank1_f:
     call BGMapAddressAtScroll_Bank1F
     ld de, $0161
     add hl, de
@@ -2496,12 +2496,12 @@ ShowRecordBufBSkillNamesOrNone::
 Func_01F_7601:: ; address name
     ld a, [wRecordBufB + $34]
     cp a, $FF
-    jr z, Jump_01F_760D
+    jr z, .set_text_window_tile_lo
     and a, a
-    jr z, Jump_01F_760D
-    jr Jump_01F_764E
+    jr z, .set_text_window_tile_lo
+    jr .skip
 
-Jump_01F_760D::
+.set_text_window_tile_lo:
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2528,14 +2528,14 @@ Jump_01F_760D::
     ld a, $0E
     ld [wStringIndex], a
     farcall ShowString_Bank08
-    jr Jump_01F_769E
+    jr .set_text_window_tile_lo2
 
-Jump_01F_764E::
+.skip:
     ld hl, vTiles2 + $200
     ld c, $34
     ld b, $08
 
-Jump_01F_7655::
+.loop:
     push bc
     push hl
     ld a, l
@@ -2552,22 +2552,22 @@ Jump_01F_7655::
     add_a_to_hl
     ld a, [hl]
     and a, a
-    jr z, Jump_01F_767D
+    jr z, .call_fill_tiles_from_request
     cp a, $FF
-    jr z, Jump_01F_767D
-    jr Jump_01F_7682
+    jr z, .call_fill_tiles_from_request
+    jr .set_string_index
 
-Jump_01F_767D::
+.call_fill_tiles_from_request:
     call FillTilesFromRequest
-    jr Jump_01F_7690
+    jr .restore
 
-Jump_01F_7682::
+.set_string_index:
     ld [wStringIndex], a
     ld a, $04
     ld [wStringCategory], a
     farcall ShowString_Bank08
 
-Jump_01F_7690::
+.restore:
     pop hl
     ld a, l
     add a, $90
@@ -2578,9 +2578,9 @@ Jump_01F_7690::
     pop bc
     inc c
     dec b
-    jr nz, Jump_01F_7655
+    jr nz, .loop
 
-Jump_01F_769E::
+.set_text_window_tile_lo2:
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2740,10 +2740,10 @@ Func_01F_77AB:: ; address name
     srl a
     add a, e
     ld e, a
-    jr nc, Jump_01F_77CF
+    jr nc, .skip
     inc d
 
-Jump_01F_77CF::
+.skip:
     ld a, e
     ld l, a
     ld a, d

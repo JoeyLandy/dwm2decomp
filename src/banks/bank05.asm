@@ -7,7 +7,7 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
 GetBattleATK_Bank05::
 Func_005_4001:: ; address name
     ld hl, wBattleATK
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
 ; 19 call sites from 16 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty, ...)
@@ -15,7 +15,7 @@ Func_005_4001:: ; address name
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
     ld hl, wBattleDEF
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
 ; 19 call sites from 14 routines (e.g. AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05, AIScore_BeDragon_GetBattleMaxHP_Bank05, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, ...)
@@ -23,7 +23,7 @@ Func_005_4006:: ; address name
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
 ; 12 call sites from 7 routines (e.g. AIScore_BeDragon_GetBattleMaxHP_Bank05, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_CarryUnlessBattleSlotOutSlotEmpty, ...)
@@ -31,7 +31,7 @@ Func_005_400B:: ; address name
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
 ; 26 call sites from 22 routines (e.g. UnreferencedEstimateStrongestFoeHit, FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05, ...)
@@ -39,7 +39,7 @@ Func_005_4010:: ; address name
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
     ld hl, wBattleHP
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0064)
 ; 9 call sites from 9 routines (e.g. FailIfAllyLacksMPForSkillList5AF8, FailIfFoeSkill3DThreatensActorHP, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, ...)
@@ -47,7 +47,7 @@ Func_005_4015:: ; address name
 GetBattleMP_Bank05::
 Func_005_401A:: ; address name
     ld hl, wBattleMP
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
 ; 10 call sites from 8 routines (e.g. AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05, AIScore_BeDragon_GetBattleMaxHP_Bank05, AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty, AverageAGLOfSideA, ...)
@@ -55,7 +55,7 @@ Func_005_401A:: ; address name
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
     ld hl, wBattleAGL
-    jr Jump_005_402E
+    jr ReadSlotAIModeIndexed_Bank05_4024_Skip
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
 ; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024, AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024, ...)
@@ -67,7 +67,8 @@ Func_005_4024:: ; address name
     ld a, [hl]
     ret
 
-Jump_005_402E::
+ReadSlotAIModeIndexed_Bank05_4024_Skip::
+Jump_005_402E:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -88,16 +89,16 @@ ActorOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_403F:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_005_4054
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_005_4054
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_005_4054::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -109,16 +110,16 @@ TargetOnLocalSide_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_405A:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_005_406F
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_005_406F
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_005_406F::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -202,13 +203,13 @@ Func_005_40B8:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_005_40D4
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_005_40D4
+    jr nc, .skip
     ld l, $12
 
-Jump_005_40D4::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -218,13 +219,13 @@ Jump_005_40D4::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_005_40EF
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_005_40EF
+    jr nc, .skip2
     ld l, $06
 
-Jump_005_40EF::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -234,13 +235,13 @@ Jump_005_40EF::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_005_410A
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_005_410A
+    jr nc, .skip3
     ld l, $02
 
-Jump_005_410A::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -261,17 +262,17 @@ Func_005_410F:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_005_4129
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_005_4129
+    jr nz, .set_carry
     xor a, a
-    jr Jump_005_412A
+    jr .skip
 
-Jump_005_4129::
+.set_carry:
     scf
 
-Jump_005_412A::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -287,11 +288,11 @@ Func_005_412E:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_005_413D
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_005_413D::
+.done:
     pop hl
     ret
 
@@ -307,27 +308,27 @@ Func_005_413F:: ; address name
     add_a_to_hl
     ld a, [wRecordBufferData]
     or a, a
-    jr z, Jump_005_4166
+    jr z, .done2
     cp a, $FF
-    jr nz, Jump_005_415B
+    jr nz, .skip
     ld a, [hl+]
     or a, [hl]
-    jr nz, Jump_005_4166
-    jr Jump_005_4163
+    jr nz, .done2
+    jr .done
 
-Jump_005_415B::
+.skip:
     ld c, a
     ld a, [hl+]
     sub a, c
     ld a, [hl]
     sbc a, $00
-    jr nc, Jump_005_4166
+    jr nc, .done2
 
-Jump_005_4163::
+.done:
     ld c, $00
     ret
 
-Jump_005_4166::
+.done2:
     ld c, $FF
     ret
 
@@ -339,16 +340,16 @@ SkillPassesStatus1Bit0Check:: ; heuristic: follows a terminator; C0
 Func_005_4169:: ; address name
     ld a, [wRecordBufferData + $5]
     bit 6, a
-    jr z, Jump_005_4180
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr z, Jump_005_4180
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4180::
+.done:
     ld c, $FF
     ret
 
@@ -360,16 +361,16 @@ PassUnlessWCFF3Bit4AndActorStatusBit7:: ; heuristic: follows a terminator; C0
 Func_005_4183:: ; address name
     ld a, [wRecordBufferData + $5]
     bit 4, a
-    jr z, Jump_005_419B
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jp z, Jump_005_419B
+    jp z, .done
     ld c, $00
     ret
 
-Jump_005_419B::
+.done:
     ld c, $FF
     ret
 
@@ -381,16 +382,16 @@ PassUnlessWCFF3Bit5AndActorStatusBit6:: ; heuristic: follows a terminator; C0
 Func_005_419E:: ; address name
     ld a, [wRecordBufferData + $5]
     bit 5, a
-    jr z, Jump_005_41B6
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jp z, Jump_005_41B6
+    jp z, .done
     ld c, $00
     ret
 
-Jump_005_41B6::
+.done:
     ld c, $FF
     ret
 
@@ -404,19 +405,19 @@ Func_005_41B9:: ; address name
     ld a, [hl+]
     or a, [hl]
     and a, $08
-    jr z, Jump_005_41D3
+    jr z, .done2
     ld a, [wRecordBuffer]
     cp a, $84
-    jr z, Jump_005_41D0
+    jr z, .done
     ld a, [wRecordBufferData + $5]
     bit 6, a
-    jr z, Jump_005_41D3
+    jr z, .done2
 
-Jump_005_41D0::
+.done:
     ld c, $00
     ret
 
-Jump_005_41D3::
+.done2:
     ld c, $FF
     ret
 
@@ -427,14 +428,14 @@ SkillPassesRepeatCheck::
 Func_005_41D6:: ; address name
     ld a, [wRecordBufferData + $8]
     bit 7, a
-    jr z, Jump_005_41E8
+    jr z, .done
     ld a, [wRecordBuffer]
     call QueuedActionMatches
-    jr nz, Jump_005_41E8
+    jr nz, .done
     ld c, $00
     ret
 
-Jump_005_41E8::
+.done:
     ld c, $FF
     ret
 
@@ -495,39 +496,39 @@ Func_005_4221:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_422B::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_423E
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl]
     and a, $C0
     and a, a
-    jr z, Jump_005_4244
+    jr z, .call_add_ax9_to_hl
 
-Jump_005_423E::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_422B
-    jr Jump_005_4253
+    jr nz, .loop
+    jr .done
 
-Jump_005_4244::
+.call_add_ax9_to_hl:
     ld a, c
     ld hl, wBattleStatus4
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
     and a, a
-    jr z, Jump_005_4256
-    jr Jump_005_423E
+    jr z, .done2
+    jr .next
 
-Jump_005_4253::
+.done:
     ld c, $00
     ret
 
-Jump_005_4256::
+.done2:
     ld c, $FF
     ret
 
@@ -543,29 +544,29 @@ Func_005_4259:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4263::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_427C
+    jr c, .next
     ld hl, wBattleMP
     ld a, c
     swap a
     add_a_to_hl
     ld a, [hl+]
     and a, a
-    jr nz, Jump_005_4283
+    jr nz, .done
     ld a, [hl+]
     and a, a
-    jr nz, Jump_005_4283
+    jr nz, .done
 
-Jump_005_427C::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4263
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4283::
+.done:
     ld c, $FF
     ret
 
@@ -579,7 +580,7 @@ Func_005_4286:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jp c, Jump_005_4319
+    jp c, .done
     ld a, [wRecordBuffer]
     ld l, a
     ld a, [wRecordBuffer + $1]
@@ -591,20 +592,20 @@ Func_005_4286:: ; address name
     xor a, $04
     ld e, a
 
-Jump_005_42A4::
+.loop:
     ld a, e
     ld hl, wBattleSkillsPrefix
     swap a
     add_a_to_hl
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_42F4
+    jr c, .skip
     ld c, $00
 
-Jump_005_42B7::
+.loop2:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_005_42F4
+    jr z, .skip
     ld [wRecordBuffer], a
     xor a, a
     ld [wRecordBuffer + $1], a
@@ -626,28 +627,28 @@ Jump_005_42B7::
     pop hl
     ldh a, [hTemp0]
     bit 0, a
-    jr nz, Jump_005_430D
+    jr nz, .set_record_buffer
     inc c
     inc hl
     inc hl
     ld a, c
     cp a, $08
-    jr c, Jump_005_42B7
-    jr Jump_005_42FD
+    jr c, .loop2
+    jr .next
 
-Jump_005_42F4::
+.skip:
     ld a, $08
     sub a, c
     add a, a
     add a, l
     ld l, a
-    jr nc, Jump_005_42FD
+    jr nc, .next
     inc h
 
-Jump_005_42FD::
+.next:
     inc e
     dec b
-    jr nz, Jump_005_42A4
+    jr nz, .loop
     pop hl
     ld a, l
     ld [wRecordBuffer], a
@@ -656,7 +657,7 @@ Jump_005_42FD::
     ld c, $00
     ret
 
-Jump_005_430D::
+.set_record_buffer:
     pop hl
     ld a, l
     ld [wRecordBuffer], a
@@ -665,7 +666,7 @@ Jump_005_430D::
     ld c, $FF
     ret
 
-Jump_005_4319::
+.done:
     ld c, $01
     ret
 
@@ -694,7 +695,7 @@ Func_005_432E:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_4370
+    jr c, .done
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -704,34 +705,34 @@ Func_005_432E:: ; address name
     ld b, $03
     ld d, $40
 
-Jump_005_4348::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_435E
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_005_435E
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr nz, Jump_005_4369
+    jr nz, .set_record_buffer
 
-Jump_005_435E::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4348
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_4369::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
     ret
 
-Jump_005_4370::
+.done:
     ld c, $01
     ret
 
@@ -744,7 +745,7 @@ Func_005_4373:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_43AA
+    jr c, .done
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -754,29 +755,29 @@ Func_005_4373:: ; address name
     ld b, $03
     ld d, $10
 
-Jump_005_438D::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4398
+    jr c, .next
     call SlotHasSkillWithFlagD
-    jr nz, Jump_005_43A3
+    jr nz, .set_record_buffer
 
-Jump_005_4398::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_438D
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_43A3::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
     ret
 
-Jump_005_43AA::
+.done:
     ld c, $01
     ret
 
@@ -790,7 +791,7 @@ Func_005_43AD:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_43EF
+    jr c, .done
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -800,34 +801,34 @@ Func_005_43AD:: ; address name
     ld b, $03
     ld d, $20
 
-Jump_005_43C7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_43DD
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_005_43DD
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr nz, Jump_005_43E8
+    jr nz, .set_record_buffer
 
-Jump_005_43DD::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_43C7
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_43E8::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
     ret
 
-Jump_005_43EF::
+.done:
     ld c, $01
     ret
 
@@ -839,7 +840,7 @@ AnyFoeNotFullyResistant::
 Func_005_43F2:: ; address name
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_4438
+    jr z, .done
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a, a
@@ -860,18 +861,18 @@ Func_005_43F2:: ; address name
     add a, d
     add a, l
     ld l, a
-    jr nc, Jump_005_441C
+    jr nc, .loop
     inc h
 
-Jump_005_441C::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4429
+    jr c, .skip
     call Get2BitFieldEOfHL
     cp a, $03
-    jr nz, Jump_005_4438
+    jr nz, .done
 
-Jump_005_4429::
+.skip:
     ld a, l
     add a, $07
     ld l, a
@@ -880,11 +881,11 @@ Jump_005_4429::
     ld h, a
     inc c
     dec b
-    jr nz, Jump_005_441C
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4438::
+.done:
     ld c, $FF
     ret
 
@@ -899,26 +900,26 @@ Func_005_443B:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4445::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4457
+    jr c, .next
     call GetBattleDEF_Bank05
     ld a, h
     or a, a
-    jr nz, Jump_005_445E
+    jr nz, .done
     ld a, l
     cp a, $02
-    jr nc, Jump_005_445E
+    jr nc, .done
 
-Jump_005_4457::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4445
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_445E::
+.done:
     ld c, $FF
     ret
 
@@ -933,26 +934,26 @@ Func_005_4461:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_446B::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_447D
+    jr c, .next
     call GetBattleAGL_Bank05
     ld a, h
     or a, a
-    jr nz, Jump_005_4484
+    jr nz, .done
     ld a, l
     cp a, $02
-    jr nc, Jump_005_4484
+    jr nc, .done
 
-Jump_005_447D::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_446B
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4484::
+.done:
     ld c, $FF
     ret
 
@@ -1041,7 +1042,7 @@ Func_005_44E1:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_4524
+    jr c, .done
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -1051,35 +1052,35 @@ Func_005_44E1:: ; address name
     ld b, $03
     ld d, $08
 
-Jump_005_44FB::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4512
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl]
     and a, $C1
-    jr nz, Jump_005_4512
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr nz, Jump_005_451D
+    jr nz, .set_record_buffer
 
-Jump_005_4512::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_44FB
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_451D::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
     ret
 
-Jump_005_4524::
+.done:
     ld c, $01
     ret
 
@@ -1110,31 +1111,31 @@ Func_005_4539:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4543::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4561
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $01
-    jr nz, Jump_005_4561
+    jr nz, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl]
     and a, $02
-    jr z, Jump_005_4568
+    jr z, .done
 
-Jump_005_4561::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4543
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4568::
+.done:
     ld c, $FF
     ret
 
@@ -1150,31 +1151,31 @@ Func_005_456B:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4575::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4593
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $02
-    jr nz, Jump_005_4593
+    jr nz, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl]
     and a, $02
-    jr z, Jump_005_459A
+    jr z, .done
 
-Jump_005_4593::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4575
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_459A::
+.done:
     ld c, $FF
     ret
 
@@ -1190,31 +1191,31 @@ Func_005_459D:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_45A7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_45C5
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus5
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr nz, Jump_005_45C5
+    jr nz, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl]
     and a, $02
-    jr z, Jump_005_45CC
+    jr z, .done
 
-Jump_005_45C5::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_45A7
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_45CC::
+.done:
     ld c, $FF
     ret
 
@@ -1274,17 +1275,17 @@ Func_005_4605:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_460F::
+.loop:
     ld a, c
     call CheckSlotStatusBlock
-    jr nc, Jump_005_461C
+    jr nc, .done
     inc c
     dec b
-    jr nz, Jump_005_460F
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_461C::
+.done:
     ld c, $FF
     ret
 
@@ -1302,15 +1303,15 @@ Func_005_461F:: ; address name
     ld hl, wSlotDamageFlags
     add a, l
     ld l, a
-    jr nc, Jump_005_4631
+    jr nc, .loop
     inc h
 
-Jump_005_4631::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4659
+    jr c, .next
     bit 4, [hl]
-    jr nz, Jump_005_4659
+    jr nz, .next
     push hl
     ld a, c
     ld hl, wBattleStatus3
@@ -1319,7 +1320,7 @@ Jump_005_4631::
     pop hl
     and a, $C0
     and a, a
-    jr nz, Jump_005_4659
+    jr nz, .next
     push hl
     ld a, c
     ld hl, wBattleStatus3
@@ -1328,17 +1329,17 @@ Jump_005_4631::
     pop hl
     and a, $0C
     and a, a
-    jr z, Jump_005_4661
+    jr z, .done
 
-Jump_005_4659::
+.next:
     inc hl
     inc c
     dec b
-    jr nz, Jump_005_4631
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4661::
+.done:
     ld c, $FF
     ret
 
@@ -1366,43 +1367,43 @@ Func_005_4676:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_46B1
+    jr c, .done3
     call TestWCFEF
-    jr z, Jump_005_46AE
+    jr z, .done2
     cp a, $03
-    jr nz, Jump_005_46AE
+    jr nz, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_4693::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_46A5
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
-    jr nz, Jump_005_46AB
+    jr nz, .done
 
-Jump_005_46A5::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4693
-    jr Jump_005_46AE
+    jr nz, .loop
+    jr .done2
 
-Jump_005_46AB::
+.done:
     ld c, $00
     ret
 
-Jump_005_46AE::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_46B1::
+.done3:
     ld c, $01
     ret
 
@@ -1415,44 +1416,44 @@ Func_005_46B4:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_46F0
+    jr c, .done3
     call TestWCFEF
-    jr z, Jump_005_46ED
+    jr z, .done2
     cp a, $03
-    jr nz, Jump_005_46ED
+    jr nz, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_46D1::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_46E4
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $40
     and a, a
-    jr nz, Jump_005_46EA
+    jr nz, .done
 
-Jump_005_46E4::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_46D1
-    jr Jump_005_46ED
+    jr nz, .loop
+    jr .done2
 
-Jump_005_46EA::
+.done:
     ld c, $00
     ret
 
-Jump_005_46ED::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_46F0::
+.done3:
     ld c, $01
     ret
 
@@ -1467,11 +1468,11 @@ Func_005_46F3:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr z, Jump_005_4704
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4704::
+.done:
     ld c, $FF
     ret
 
@@ -1486,11 +1487,11 @@ Func_005_4707:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $C0
-    jr z, Jump_005_4718
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4718::
+.done:
     ld c, $FF
     ret
 
@@ -1504,11 +1505,11 @@ Func_005_471B:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
-    jr z, Jump_005_472B
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_472B::
+.done:
     ld c, $FF
     ret
 
@@ -1522,11 +1523,11 @@ Func_005_472E:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 3, [hl]
-    jr z, Jump_005_473E
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_473E::
+.done:
     ld c, $FF
     ret
 
@@ -1540,11 +1541,11 @@ Func_005_4741:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 0, [hl]
-    jr z, Jump_005_4751
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4751::
+.done:
     ld c, $FF
     ret
 
@@ -1558,11 +1559,11 @@ Func_005_4754:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 6, [hl]
-    jr z, Jump_005_4764
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4764::
+.done:
     ld c, $FF
     ret
 
@@ -1593,30 +1594,30 @@ Func_005_4777:: ; address name
     ld b, $03
     ld d, $00
 
-Jump_005_4782::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_4797
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4797
+    jr c, .next
     inc d
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 6, [hl]
-    jr z, Jump_005_47A2
+    jr z, .done
 
-Jump_005_4797::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4782
+    jr nz, .loop
     ld a, d
     or a, a
-    jr z, Jump_005_47A2
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_47A2::
+.done:
     ld c, $FF
     ret
 
@@ -1684,22 +1685,23 @@ Func_005_47E5:: ; address name
     ld a, [wBattleActor]
     and a, $04
 
-Jump_005_47EA::
+AnyAllyWDA76Bits2To5NotAllSet_Skip::
+Jump_005_47EA:: ; address name
     ld c, a
     ld b, $03
     ld hl, wSlotResistances + $4
     call ReadByteAtHLPlus4APlus3C_Bank05
 
-Jump_005_47F3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4800
+    jr c, .skip
     ld a, [hl]
     and a, $3C
     cp a, $3C
-    jr nz, Jump_005_480F
+    jr nz, .done
 
-Jump_005_4800::
+.skip:
     ld a, l
     add a, $07
     ld l, a
@@ -1708,11 +1710,11 @@ Jump_005_4800::
     ld h, a
     inc c
     dec b
-    jr nz, Jump_005_47F3
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_480F::
+.done:
     ld c, $FF
     ret
 
@@ -1724,7 +1726,7 @@ Func_005_4812:: ; address name
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
-    jp Jump_005_47EA
+    jp AnyAllyWDA76Bits2To5NotAllSet_Skip
 
 ; only called from AIScore_SlimeBlow_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SlimeBlow_Conditions)
@@ -1818,26 +1820,26 @@ Func_005_4858:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4862::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4874
+    jr c, .next
     ld hl, wSlotDamageFlags
     add_a_to_hl
     bit 0, [hl]
-    jr nz, Jump_005_487A
+    jr nz, .done
 
-Jump_005_4874::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4862
-    jr Jump_005_487D
+    jr nz, .loop
+    jr .done2
 
-Jump_005_487A::
+.done:
     ld c, $00
     ret
 
-Jump_005_487D::
+.done2:
     ld c, $FF
     ret
 
@@ -1853,43 +1855,43 @@ Func_005_4880:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_488A::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_48BF
+    jr c, .next
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
-    jr z, Jump_005_48BF
+    jr z, .next
     ld a, c
     call GetBattleDEF_Bank05
     ld a, h
-    jr nz, Jump_005_48C6
+    jr nz, .done
     ld a, l
     cp a, $02
-    jr nc, Jump_005_48C6
+    jr nc, .done
     ld a, c
     call GetBattleAGL_Bank05
     ld a, h
-    jr nz, Jump_005_48C6
+    jr nz, .done
     ld a, l
     cp a, $02
-    jr nc, Jump_005_48C6
+    jr nc, .done
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr z, Jump_005_48C6
+    jr z, .done
 
-Jump_005_48BF::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_488A
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_48C6::
+.done:
     ld c, $FF
     ret
 
@@ -1905,37 +1907,37 @@ Func_005_48C9:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_48D3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_48FA
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_005_48FA
+    jr nz, .next
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     and a, $03
-    jr nz, Jump_005_48FA
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $1
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
-    jr nz, Jump_005_4901
+    jr nz, .done
 
-Jump_005_48FA::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_48D3
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4901::
+.done:
     ld c, $FF
     ret
 
@@ -1955,34 +1957,34 @@ Func_005_4904:: ; address name
     ld b, $03
     ld d, $40
 
-Jump_005_4914::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4937
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_005_4937
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr z, Jump_005_4937
+    jr z, .next
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
-    jr nz, Jump_005_4942
+    jr nz, .set_record_buffer
 
-Jump_005_4937::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4914
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_4942::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
@@ -1999,29 +2001,29 @@ Func_005_4949:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4953::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_496D
+    jr c, .next
     call GetBattleMP_Bank05
     ld a, h
     or a, l
-    jr z, Jump_005_496D
+    jr z, .next
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
-    jr nz, Jump_005_4974
+    jr nz, .done
 
-Jump_005_496D::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4953
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4974::
+.done:
     ld c, $FF
     ret
 
@@ -2036,34 +2038,34 @@ Func_005_4977:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4981::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_49A0
+    jr c, .next
     call GetBattleDEF_Bank05
     ld a, h
     or a, a
-    jr nz, Jump_005_4993
+    jr nz, .call_read_byte_at_hl_plus4_a_plus3_c_bank05
     ld a, l
     cp a, $02
-    jr c, Jump_005_49A0
+    jr c, .next
 
-Jump_005_4993::
+.call_read_byte_at_hl_plus4_a_plus3_c_bank05:
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
-    jr nz, Jump_005_49A7
+    jr nz, .done
 
-Jump_005_49A0::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4981
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_49A7::
+.done:
     ld c, $FF
     ret
 
@@ -2078,34 +2080,34 @@ Func_005_49AA:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_49B4::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_49D3
+    jr c, .next
     call GetBattleAGL_Bank05
     ld a, h
     or a, a
-    jr nz, Jump_005_49C6
+    jr nz, .call_read_byte_at_hl_plus4_a_plus3_c_bank05
     ld a, l
     cp a, $02
-    jr c, Jump_005_49D3
+    jr c, .next
 
-Jump_005_49C6::
+.call_read_byte_at_hl_plus4_a_plus3_c_bank05:
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
-    jr nz, Jump_005_49DA
+    jr nz, .done
 
-Jump_005_49D3::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_49B4
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_49DA::
+.done:
     ld c, $FF
     ret
 
@@ -2121,31 +2123,31 @@ Func_005_49DD:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_49E7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4A06
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $03
-    jr nz, Jump_005_4A06
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $4
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
-    jr nz, Jump_005_4A0D
+    jr nz, .done
 
-Jump_005_4A06::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_49E7
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4A0D::
+.done:
     ld c, $FF
     ret
 
@@ -2161,31 +2163,31 @@ Func_005_4A10:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4A1A::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4A39
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $40
-    jr nz, Jump_005_4A39
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $5
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
-    jr nz, Jump_005_4A40
+    jr nz, .done
 
-Jump_005_4A39::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4A1A
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4A40::
+.done:
     ld c, $FF
     ret
 
@@ -2201,31 +2203,31 @@ Func_005_4A43:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4A4D::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4A6C
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     and a, $20
-    jr nz, Jump_005_4A6C
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $5
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $30
     cp a, $30
-    jr nz, Jump_005_4A73
+    jr nz, .done
 
-Jump_005_4A6C::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4A4D
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4A73::
+.done:
     ld c, $FF
     ret
 
@@ -2245,34 +2247,34 @@ Func_005_4A76:: ; address name
     ld b, $03
     ld d, $20
 
-Jump_005_4A86::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4AA9
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_005_4AA9
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr z, Jump_005_4AA9
+    jr z, .next
     ld a, c
     ld hl, wSlotResistances + $5
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $03
-    jr nz, Jump_005_4AB4
+    jr nz, .set_record_buffer
 
-Jump_005_4AA9::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4A86
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_4AB4::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
@@ -2294,34 +2296,34 @@ Func_005_4ABB:: ; address name
     ld b, $03
     ld d, $10
 
-Jump_005_4ACB::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4AEE
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_4AEE
+    jr nz, .next
     call SlotHasSkillWithFlagD
-    jr z, Jump_005_4AEE
+    jr z, .next
     ld a, c
     ld hl, wSlotResistances + $6
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
-    jr nz, Jump_005_4AF9
+    jr nz, .set_record_buffer
 
-Jump_005_4AEE::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4ACB
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_4AF9::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
@@ -2340,19 +2342,19 @@ Func_005_4B00:: ; address name
     add_a_to_hl
     ld b, $03
 
-Jump_005_4B10::
+.loop:
     ld a, [hl+]
     cp a, $01
-    jr z, Jump_005_4B3A
+    jr z, .done2
     dec b
-    jr nz, Jump_005_4B10
+    jr nz, .loop
     ld b, $03
 
-Jump_005_4B1A::
+.loop2:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4B31
+    jr c, .restore
     call GetBattleMaxHP_Bank05
     push hl
     ld a, c
@@ -2361,20 +2363,20 @@ Jump_005_4B1A::
     add hl, hl
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_4B39
+    jr c, .done
 
-Jump_005_4B31::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_005_4B1A
+    jr nz, .loop2
     ld c, $00
     ret
 
-Jump_005_4B39::
+.done:
     pop bc
 
-Jump_005_4B3A::
+.done2:
     ld c, $FF
     ret
 
@@ -2390,23 +2392,23 @@ Func_005_4B3D:: ; address name
     ld b, $03
     ld e, $00
 
-Jump_005_4B49::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4B50
+    jr c, .next
     inc e
 
-Jump_005_4B50::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4B49
+    jr nz, .loop
     ld a, e
     cp a, $02
-    jr nc, Jump_005_4B5C
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_4B5C::
+.done:
     ld c, $FF
     ret
 
@@ -2423,14 +2425,14 @@ Func_005_4B5F:: ; address name
     add_a_to_hl
     ld a, [hl]
     or a, a
-    jr z, Jump_005_4B74
-    jr Jump_005_4B77
+    jr z, .done
+    jr .done2
 
-Jump_005_4B74::
+.done:
     ld c, $00
     ret
 
-Jump_005_4B77::
+.done2:
     ld c, $FF
     ret
 
@@ -2446,16 +2448,16 @@ Func_005_4B7A:: ; address name
     add_a_to_hl
     ld b, $03
 
-Jump_005_4B89::
+.loop:
     ld a, [hl+]
     cp a, $01
-    jr z, Jump_005_4B94
+    jr z, .done
     dec b
-    jr nz, Jump_005_4B89
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4B94::
+.done:
     ld c, $FF
     ret
 
@@ -2480,39 +2482,39 @@ Func_005_4B97:: ; address name
     ld b, $03
     ld de, $0000
 
-Jump_005_4BB7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4BCE
+    jr c, .next
     call GetBattleAGL_Bank05
     ld a, h
     cp a, d
-    jr z, Jump_005_4BC8
-    jr c, Jump_005_4BCE
-    jr Jump_005_4BCC
+    jr z, .skip
+    jr c, .next
+    jr .skip2
 
-Jump_005_4BC8::
+.skip:
     ld a, l
     cp a, e
-    jr c, Jump_005_4BCE
+    jr c, .next
 
-Jump_005_4BCC::
+.skip2:
     ld d, h
     ld e, l
 
-Jump_005_4BCE::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4BB7
+    jr nz, .loop
     pop hl
     ld b, d
     ld c, e
     call CompareHLToBC
-    jp c, Jump_005_4BDE
+    jp c, .done
     ld c, $00
     ret
 
-Jump_005_4BDE::
+.done:
     ld c, $FF
     ret
 
@@ -2527,22 +2529,22 @@ Func_005_4BE1:: ; address name
     ld b, $03
     ld d, $00
 
-Jump_005_4BEB::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4BF8
+    jr c, .next
     call CompareHPWithThreeQuartersMax
-    jr c, Jump_005_4BFF
-    jr z, Jump_005_4BFF
+    jr c, .done
+    jr z, .done
 
-Jump_005_4BF8::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4BEB
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4BFF::
+.done:
     ld c, $FF
     ret
 
@@ -2557,22 +2559,22 @@ Func_005_4C02:: ; address name
     ld b, $03
     ld d, $00
 
-Jump_005_4C0C::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4C19
+    jr c, .next
     call CompareMPWithThreeQuartersMax
-    jr c, Jump_005_4C20
-    jr z, Jump_005_4C20
+    jr c, .done
+    jr z, .done
 
-Jump_005_4C19::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4C0C
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4C20::
+.done:
     ld c, $FF
     ret
 
@@ -2586,21 +2588,21 @@ Func_005_4C23:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4C2B::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4C36
+    jr c, .next
     call AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05
-    jr c, Jump_005_4C3D
+    jr c, .done
 
-Jump_005_4C36::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4C2B
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4C3D::
+.done:
     ld c, $FF
     ret
 
@@ -2614,21 +2616,21 @@ Func_005_4C40:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4C48::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4C53
+    jr c, .next
     call AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05
-    jr c, Jump_005_4C5A
+    jr c, .done
 
-Jump_005_4C53::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4C48
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4C5A::
+.done:
     ld c, $FF
     ret
 
@@ -2645,20 +2647,20 @@ Func_005_4C5D:: ; address name
     ld b, $03
     ld e, $00
 
-Jump_005_4C69::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4C71
+    jr c, .next
     inc e
     ld d, c
 
-Jump_005_4C71::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4C69
+    jr nz, .loop
     ld a, e
     cp a, $02
-    jr nc, Jump_005_4C99
+    jr nc, .done
     ld a, d
     call GetBattleHP_Bank05
     push hl
@@ -2673,11 +2675,11 @@ Jump_005_4C71::
     ld b, a
     pop hl
     call CompareHLToBC
-    jr nc, Jump_005_4C99
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_4C99::
+.done:
     ld c, $FF
     ret
 
@@ -2690,7 +2692,7 @@ NoUnflaggedFoeSpeciesOrLink:: ; heuristic: follows a terminator; C0
 Func_005_4C9C:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_005_4CE2
+    jr nz, .done
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -2699,10 +2701,10 @@ Func_005_4C9C:: ; address name
     xor a, a
     ldh [hTemp0], a
 
-Jump_005_4CAF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4CD6
+    jr c, .next
     ld hl, wBattleMonsterId
     add a, a
     add_a_to_hl
@@ -2715,21 +2717,21 @@ Jump_005_4CAF::
     ld a, c
     pop bc
     or a, a
-    jr nz, Jump_005_4CD6
+    jr nz, .next
     ld hl, hTemp0
     inc [hl]
 
-Jump_005_4CD6::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4CAF
+    jr nz, .loop
     ldh a, [hTemp0]
     or a, a
-    jr z, Jump_005_4CE2
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4CE2::
+.done:
     ld c, $FF
     ret
 
@@ -2742,39 +2744,39 @@ Func_005_4CE5:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_4D17
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_4CF9::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4D0B
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
     inc hl
     bit 2, [hl]
-    jr nz, Jump_005_4D11
+    jr nz, .done
 
-Jump_005_4D0B::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4CF9
-    jr Jump_005_4D14
+    jr nz, .loop
+    jr .done2
 
-Jump_005_4D11::
+.done:
     ld c, $00
     ret
 
-Jump_005_4D14::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_4D17::
+.done3:
     ld c, $01
     ret
 
@@ -2789,31 +2791,31 @@ Func_005_4D1A:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4D22::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4D3C
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_005_4D3C
+    jr nz, .next
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     and a, $03
-    jr z, Jump_005_4D43
+    jr z, .done
 
-Jump_005_4D3C::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4D22
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4D43::
+.done:
     ld c, $FF
     ret
 
@@ -2842,11 +2844,11 @@ Func_005_4D56:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr z, Jump_005_4D67
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4D67::
+.done:
     ld c, $FF
     ret
 
@@ -2861,41 +2863,41 @@ Func_005_4D6A:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4D72::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4D9B
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     or a, a
-    jr nz, Jump_005_4DA2
+    jr nz, .done
     ld a, [hl+]
     and a, $C3
-    jr nz, Jump_005_4DA2
+    jr nz, .done
     inc hl
     inc hl
     inc hl
     ld a, [hl+]
     and a, $03
-    jr nz, Jump_005_4DA2
+    jr nz, .done
     ld a, [hl+]
     and a, $80
-    jr nz, Jump_005_4DA2
+    jr nz, .done
     inc hl
     ld a, [hl]
     and a, $80
-    jr nz, Jump_005_4DA2
+    jr nz, .done
 
-Jump_005_4D9B::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4D72
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_4DA2::
+.done:
     ld c, $FF
     ret
 
@@ -2911,36 +2913,36 @@ Func_005_4DA5:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_4DAF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4DD8
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     ld a, [hl+]
     and a, $3C
-    jr nz, Jump_005_4DF2
+    jr nz, .done
     ld a, [hl+]
     and a, $6F
-    jr nz, Jump_005_4DF2
+    jr nz, .done
     inc hl
     inc hl
     ld a, [hl+]
     and a, $CC
-    jr nz, Jump_005_4DF2
+    jr nz, .done
     ld a, [hl+]
     and a, $40
-    jr nz, Jump_005_4DF2
+    jr nz, .done
     inc hl
     ld a, [hl]
     and a, $40
-    jr nz, Jump_005_4DF2
+    jr nz, .done
 
-Jump_005_4DD8::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4DAF
+    jr nz, .loop
     ld a, [wBattleActor]
     and a, $04
     or a, $03
@@ -2948,11 +2950,11 @@ Jump_005_4DD8::
     add_a_to_hl
     ld a, [hl]
     or a, a
-    jr z, Jump_005_4DF2
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_4DF2::
+.done:
     ld c, $FF
     ret
 
@@ -2970,11 +2972,11 @@ Func_005_4DF5:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $01
-    jr nz, Jump_005_4E0C
+    jr nz, .done
     ld c, $00
     ret
 
-Jump_005_4E0C::
+.done:
     ld c, $FF
     ret
 
@@ -2985,15 +2987,15 @@ CheckBattleKindNot4Or5:: ; heuristic: follows a terminator; C0
 Func_005_4E0F:: ; address name
     ld a, [wBattleKind]
     cp a, $04
-    jr z, Jump_005_4E1A
+    jr z, .done
     cp a, $05
-    jr nz, Jump_005_4E1D
+    jr nz, .done2
 
-Jump_005_4E1A::
+.done:
     ld c, $00
     ret
 
-Jump_005_4E1D::
+.done2:
     ld c, $FF
     ret
 
@@ -3004,27 +3006,27 @@ AIScore_SealPray_ReadQueuedActionId:: ; heuristic: follows a terminator; C0
 Func_005_4E20:: ; address name
     ld a, [wQueuedActionId]
     and a, a
-    jr z, Jump_005_4E45
+    jr z, .done2
     cp a, $3D
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $3E
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $3F
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $43
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $47
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $66
-    jr z, Jump_005_4E42
+    jr z, .done
     cp a, $67
-    jr nz, Jump_005_4E45
+    jr nz, .done2
 
-Jump_005_4E42::
+.done:
     ld c, $00
     ret
 
-Jump_005_4E45::
+.done2:
     ld c, $FF
     ret
 
@@ -3041,10 +3043,10 @@ Func_005_4E48:: ; address name
     ld b, $03
     ld hl, wAIDamageEstimates
 
-Jump_005_4E55::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_4E70
+    jr c, .next
     push hl
     push bc
     call FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc
@@ -3055,24 +3057,24 @@ Jump_005_4E55::
     inc hl
     ld a, [hl]
     cp a, d
-    jr c, Jump_005_4E70
+    jr c, .next
     dec hl
     ld a, [hl+]
     cp a, e
-    jr c, Jump_005_4E70
-    jr Jump_005_4E76
+    jr c, .next
+    jr .done
 
-Jump_005_4E70::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_4E55
-    jr Jump_005_4E79
+    jr nz, .loop
+    jr .done2
 
-Jump_005_4E76::
+.done:
     ld c, $00
     ret
 
-Jump_005_4E79::
+.done2:
     ld c, $FF
     ret
 
@@ -3084,23 +3086,23 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc
 Func_005_4E7C:: ; address name
     ld a, [wRecordBuffer]
     cp a, $48
-    jr z, Jump_005_4EBD
+    jr z, .read_battle_actor
     cp a, $49
-    jr z, Jump_005_4F01
+    jr z, .read_battle_actor2
     cp a, $4A
-    jp z, Jump_005_4F44
+    jp z, .read_battle_actor3
     cp a, $4E
-    jp z, Jump_005_4F9C
+    jp z, .read_battle_actor4
     cp a, $4F
-    jp z, Jump_005_4FCB
+    jp z, .read_battle_actor5
     cp a, $50
-    jp z, Jump_005_5010
+    jp z, .skip19
     cp a, $51
-    jp z, Jump_005_5010
+    jp z, .skip19
     cp a, $52
-    jp z, Jump_005_5010
+    jp z, .skip19
     cp a, $53
-    jp z, Jump_005_5010
+    jp z, .skip19
     ld a, [wRecordBufferData + $9]
     ld l, a
     ld a, [wRecordBufferData + $B]
@@ -3113,7 +3115,7 @@ Func_005_4E7C:: ; address name
     ld h, a
     ret
 
-Jump_005_4EBD::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -3121,41 +3123,41 @@ Jump_005_4EBD::
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_4ED9
+    jr z, .skip
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_4EE4
+    jr nc, .skip2
 
-Jump_005_4ED9::
+.skip:
     ld a, l
     add a, $0A
     add hl, hl
     add_a_to_hl
-    jr Jump_005_4EEC
+    jr .call_multiply_hl_by_a_percent
 
-Jump_005_4EE4::
+.skip2:
     ld a, l
     srl a
     add a, l
     ld l, a
-    jr nc, Jump_005_4EEC
+    jr nc, .call_multiply_hl_by_a_percent
     inc h
 
-Jump_005_4EEC::
+.call_multiply_hl_by_a_percent:
     ld a, $73
     call MultiplyHLByAPercent
     ld a, h
     or a, a
-    jr nz, Jump_005_4EFB
+    jr nz, .skip3
     ld a, l
     cp a, $B4
-    jp c, Jump_005_4FF9
+    jp c, .skip18
 
-Jump_005_4EFB::
+.skip3:
     ld hl, $00B4
-    jp Jump_005_4FF9
+    jp .skip18
 
-Jump_005_4F01::
+.read_battle_actor2:
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -3163,40 +3165,40 @@ Jump_005_4F01::
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_4F1D
+    jr z, .skip4
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_4F27
+    jr nc, .skip5
 
-Jump_005_4F1D::
+.skip4:
     ld a, $1E
     add hl, hl
     add_a_to_hl
-    jr Jump_005_4F2F
+    jr .call_multiply_hl_by_a_percent2
 
-Jump_005_4F27::
+.skip5:
     ld a, l
     srl a
     add a, l
     ld l, a
-    jr nc, Jump_005_4F2F
+    jr nc, .call_multiply_hl_by_a_percent2
     inc h
 
-Jump_005_4F2F::
+.call_multiply_hl_by_a_percent2:
     ld a, $6E
     call MultiplyHLByAPercent
     ld a, h
     or a, a
-    jr nz, Jump_005_4F3E
+    jr nz, .skip6
     ld a, l
     cp a, $96
-    jp c, Jump_005_4FF9
+    jp c, .skip18
 
-Jump_005_4F3E::
+.skip6:
     ld hl, $0096
-    jp Jump_005_4FF9
+    jp .skip18
 
-Jump_005_4F44::
+.read_battle_actor3:
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -3204,26 +3206,26 @@ Jump_005_4F44::
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_4F60
+    jr z, .skip7
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_4F6A
+    jr nc, .skip8
 
-Jump_005_4F60::
+.skip7:
     ld a, $14
     add hl, hl
     add_a_to_hl
-    jr Jump_005_4F72
+    jr .call_multiply_hl_by_a_percent3
 
-Jump_005_4F6A::
+.skip8:
     ld a, l
     srl a
     add a, l
     ld l, a
-    jr nc, Jump_005_4F72
+    jr nc, .call_multiply_hl_by_a_percent3
     inc h
 
-Jump_005_4F72::
+.call_multiply_hl_by_a_percent3:
     ld a, $6E
     push bc
     call MultiplyHLByAPercent
@@ -3231,31 +3233,31 @@ Jump_005_4F72::
     push hl
     call SlotFamilyBelowWater
     pop hl
-    jr z, Jump_005_4F8E
+    jr z, .skip10
     ld a, h
     or a, a
-    jr nz, Jump_005_4F89
+    jr nz, .skip9
     ld a, l
     cp a, $B4
-    jr c, Jump_005_4FF9
+    jr c, .skip18
 
-Jump_005_4F89::
+.skip9:
     ld hl, $00B4
-    jr Jump_005_4FF9
+    jr .skip18
 
-Jump_005_4F8E::
+.skip10:
     ld a, h
     or a, a
-    jr nz, Jump_005_4F97
+    jr nz, .skip11
     ld a, l
     cp a, $DC
-    jr c, Jump_005_4FF9
+    jr c, .skip18
 
-Jump_005_4F97::
+.skip11:
     ld hl, $00DC
-    jr Jump_005_4FF9
+    jr .skip18
 
-Jump_005_4F9C::
+.read_battle_actor4:
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -3263,29 +3265,29 @@ Jump_005_4F9C::
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_4FB8
+    jr z, .skip12
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_4FC0
+    jr nc, .skip13
 
-Jump_005_4FB8::
+.skip12:
     add hl, hl
     add_a_to_hl
-    jr Jump_005_4FC8
+    jr .skip14
 
-Jump_005_4FC0::
+.skip13:
     ld a, l
     srl a
     add a, l
     ld l, a
-    jr nc, Jump_005_4FC8
+    jr nc, .skip14
     inc h
 
-Jump_005_4FC8::
+.skip14:
     add hl, hl
-    jr Jump_005_4FF9
+    jr .skip18
 
-Jump_005_4FCB::
+.read_battle_actor5:
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -3293,57 +3295,57 @@ Jump_005_4FCB::
     ld h, $00
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_4FE7
+    jr z, .skip15
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_4FEF
+    jr nc, .skip16
 
-Jump_005_4FE7::
+.skip15:
     add hl, hl
     add_a_to_hl
-    jr Jump_005_4FF7
+    jr .skip17
 
-Jump_005_4FEF::
+.skip16:
     ld a, l
     srl a
     add a, l
     ld l, a
-    jr nc, Jump_005_4FF7
+    jr nc, .skip17
     inc h
 
-Jump_005_4FF7::
+.skip17:
     add hl, hl
     add hl, hl
 
-Jump_005_4FF9::
+.skip18:
     ld a, c
     cp a, $03
     ld c, $00
-    jr z, Jump_005_5028
+    jr z, .skip20
     cp a, $02
     ld c, $32
-    jr z, Jump_005_5028
+    jr z, .skip20
     cp a, $01
     ld c, $55
-    jr z, Jump_005_5028
+    jr z, .skip20
     ld c, $64
-    jr Jump_005_5028
+    jr .skip20
 
-Jump_005_5010::
+.skip19:
     deref_hl
     ld a, c
     cp a, $03
     ld c, $1E
-    jr z, Jump_005_5028
+    jr z, .skip20
     cp a, $02
     ld c, $4B
-    jr z, Jump_005_5028
+    jr z, .skip20
     cp a, $01
     ld c, $73
-    jr z, Jump_005_5028
+    jr z, .skip20
     ld c, $82
 
-Jump_005_5028::
+.skip20:
     ld a, c
 
 ; HL = HL * A / 100 (24-bit intermediate: Multiply8By16 then Divide24ByA), A = the remainder (E-0114)
@@ -3386,7 +3388,7 @@ PassIfFoesAverageResistanceAtLeast2::
 Func_005_5052:: ; address name
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_50B4
+    jr z, .done2
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a, a
@@ -3410,10 +3412,10 @@ Func_005_5052:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_5081::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5095
+    jr c, .skip
     ldh a, [hTemp0]
     inc a
     ldh [hTemp0], a
@@ -3423,7 +3425,7 @@ Jump_005_5081::
     add a, d
     ldh [hTemp1], a
 
-Jump_005_5095::
+.skip:
     ld a, l
     add a, $07
     ld l, a
@@ -3432,22 +3434,22 @@ Jump_005_5095::
     ld h, a
     inc c
     dec b
-    jr nz, Jump_005_5081
+    jr nz, .loop
     ldh a, [hTemp1]
     or a, a
-    jr z, Jump_005_50B1
+    jr z, .done
     ld b, a
     ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
-    jr nc, Jump_005_50B4
+    jr nc, .done2
 
-Jump_005_50B1::
+.done:
     ld c, $00
     ret
 
-Jump_005_50B4::
+.done2:
     ld c, $FF
     ret
 
@@ -3459,7 +3461,7 @@ Func_005_50B7:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_50E0
+    jr c, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3470,15 +3472,15 @@ Func_005_50B7:: ; address name
     call AverageAGLOfSideA
     pop bc
     call CompareHLToBC
-    jr nc, Jump_005_50DD
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_50DD::
+.done:
     ld c, $FF
     ret
 
-Jump_005_50E0::
+.done2:
     ld c, $01
     ret
 
@@ -3492,7 +3494,7 @@ Func_005_50E3:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jp c, Jump_005_517A
+    jp c, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3503,10 +3505,10 @@ Func_005_50E3:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_005_50FF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5117
+    jr c, .next
     ld hl, hTemp0
     inc [hl]
     ld a, c
@@ -3518,10 +3520,10 @@ Jump_005_50FF::
     adc a, h
     ldh [hTemp2], a
 
-Jump_005_5117::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_50FF
+    jr nz, .loop
     ldh a, [hTemp1]
     ld l, a
     ldh a, [hTemp2]
@@ -3541,10 +3543,10 @@ Jump_005_5117::
     ldh [hTemp4], a
     ldh [hTemp5], a
 
-Jump_005_513B::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5152
+    jr c, .next2
     call GetBattleATK_Bank05
     ldh a, [hTemp4]
     add a, l
@@ -3555,10 +3557,10 @@ Jump_005_513B::
     ld hl, hTemp3
     inc [hl]
 
-Jump_005_5152::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_513B
+    jr nz, .loop2
     ldh a, [hTemp4]
     ld l, a
     ldh a, [hTemp5]
@@ -3574,16 +3576,16 @@ Jump_005_5152::
     ld h, a
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_5177
-    jr z, Jump_005_5177
+    jr c, .done
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5177::
+.done:
     ld c, $FF
     ret
 
-Jump_005_517A::
+.done2:
     ld c, $01
     ret
 
@@ -3596,7 +3598,7 @@ Func_005_517D:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_51E7
+    jr c, .done4
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     add hl, hl
@@ -3610,16 +3612,16 @@ Func_005_517D:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_519E::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_51AA
+    jr nc, .call_get_battle_def_bank05
     inc c
     dec b
-    jr nz, Jump_005_519E
-    jr Jump_005_51E0
+    jr nz, .loop
+    jr .done
 
-Jump_005_51AA::
+.call_get_battle_def_bank05:
     call GetBattleDEF_Bank05
     ld a, l
     ldh [hTemp0], a
@@ -3627,50 +3629,50 @@ Jump_005_51AA::
     ldh [hTemp1], a
     inc c
     dec b
-    jr z, Jump_005_51D2
+    jr z, .read_temp0
 
-Jump_005_51B7::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_51CE
+    jr c, .next
     call GetBattleDEF_Bank05
     ldh a, [hTemp0]
     sub a, l
     ldh a, [hTemp1]
     sbc a, h
-    jr nc, Jump_005_51CE
+    jr nc, .next
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
-Jump_005_51CE::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_51B7
+    jr nz, .loop2
 
-Jump_005_51D2::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
     ld h, a
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_51E4
-    jr Jump_005_51E1
+    jr c, .done3
+    jr .done2
 
-Jump_005_51E0::
+.done:
     pop bc
 
-Jump_005_51E1::
+.done2:
     ld c, $00
     ret
 
-Jump_005_51E4::
+.done3:
     ld c, $FF
     ret
 
-Jump_005_51E7::
+.done4:
     ld c, $01
     ret
 
@@ -3682,7 +3684,7 @@ Func_005_51EA:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_5225
+    jr c, .done3
     call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
@@ -3693,28 +3695,28 @@ Func_005_51EA:: ; address name
     sla c
     rl b
     call CompareHLToBC
-    jr c, Jump_005_5210
-    jr z, Jump_005_5210
-    jr Jump_005_5222
+    jr c, .skip
+    jr z, .skip
+    jr .done2
 
-Jump_005_5210::
+.skip:
     sra b
     rr c
     sra b
     rr c
     call CompareHLToBC
-    jr nc, Jump_005_521F
-    jr Jump_005_5222
+    jr nc, .done
+    jr .done2
 
-Jump_005_521F::
+.done:
     ld c, $00
     ret
 
-Jump_005_5222::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5225::
+.done3:
     ld c, $01
     ret
 
@@ -3726,17 +3728,17 @@ Func_005_5228:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_5272
+    jr c, .done3
     call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wBattleActor]
     and a, $04
     ld e, a
     ld d, $03
 
-Jump_005_523D::
+.loop:
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5266
+    jr c, .next
     call GetBattleATK_Bank05
     ldh a, [hTemp0]
     ld c, a
@@ -3745,33 +3747,33 @@ Jump_005_523D::
     sla c
     rl b
     call CompareHLToBC
-    jr c, Jump_005_5259
-    jr z, Jump_005_5259
-    jr Jump_005_5266
+    jr c, .skip
+    jr z, .skip
+    jr .next
 
-Jump_005_5259::
+.skip:
     sra b
     rr c
     sra b
     rr c
     call CompareHLToBC
-    jr nc, Jump_005_526C
+    jr nc, .done
 
-Jump_005_5266::
+.next:
     inc e
     dec d
-    jr nz, Jump_005_523D
-    jr Jump_005_526F
+    jr nz, .loop
+    jr .done2
 
-Jump_005_526C::
+.done:
     ld c, $00
     ret
 
-Jump_005_526F::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5272::
+.done3:
     ld c, $01
     ret
 
@@ -3785,7 +3787,7 @@ Func_005_5275:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jp c, Jump_005_5314
+    jp c, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -3796,12 +3798,12 @@ Func_005_5275:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_005_5291::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_52AE
+    jr c, .next
     call SlotStatus0Bit1OrStatus4Bits01
-    jr nz, Jump_005_52AE
+    jr nz, .next
     ld hl, hTemp0
     inc [hl]
     ld a, c
@@ -3813,17 +3815,17 @@ Jump_005_5291::
     adc a, h
     ldh [hTemp2], a
 
-Jump_005_52AE::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5291
+    jr nz, .loop
     ldh a, [hTemp1]
     ld l, a
     ldh a, [hTemp2]
     ld h, a
     ldh a, [hTemp0]
     or a, a
-    jr z, Jump_005_5311
+    jr z, .done
     call DivideHLByA
     ld a, l
     ldh [hTemp1], a
@@ -3838,10 +3840,10 @@ Jump_005_52AE::
     ldh [hTemp4], a
     ldh [hTemp5], a
 
-Jump_005_52D5::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_52EC
+    jr c, .next2
     call GetBattleDEF_Bank05
     ldh a, [hTemp4]
     add a, l
@@ -3852,10 +3854,10 @@ Jump_005_52D5::
     ld hl, hTemp3
     inc [hl]
 
-Jump_005_52EC::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_52D5
+    jr nz, .loop2
     ldh a, [hTemp4]
     ld l, a
     ldh a, [hTemp5]
@@ -3871,16 +3873,16 @@ Jump_005_52EC::
     ld h, a
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_5311
-    jr z, Jump_005_5311
+    jr c, .done
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5311::
+.done:
     ld c, $FF
     ret
 
-Jump_005_5314::
+.done2:
     ld c, $01
     ret
 
@@ -3900,7 +3902,7 @@ Func_005_5317:: ; address name
     pop bc
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_537F
+    jr nc, .done
     ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     srl h
@@ -3910,7 +3912,7 @@ Func_005_5317:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_5383
+    jr nc, .done2
     ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     ld a, $03
@@ -3920,7 +3922,7 @@ Func_005_5317:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_5387
+    jr nc, .done3
     ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     srl h
@@ -3932,7 +3934,7 @@ Func_005_5317:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_538B
+    jr nc, .done4
     ldh a, [hTemp0]
     call GetBattleMaxHP_Bank05
     ld a, $0A
@@ -3942,35 +3944,35 @@ Func_005_5317:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_538F
-    jr Jump_005_5393
+    jr nc, .done5
+    jr .done6
 
-Jump_005_537F::
+.done:
     pop hl
     ld c, $00
     ret
 
-Jump_005_5383::
+.done2:
     pop hl
     ld c, $01
     ret
 
-Jump_005_5387::
+.done3:
     pop hl
     ld c, $02
     ret
 
-Jump_005_538B::
+.done4:
     pop hl
     ld c, $03
     ret
 
-Jump_005_538F::
+.done5:
     pop hl
     ld c, $04
     ret
 
-Jump_005_5393::
+.done6:
     pop hl
     ld c, $05
     ret
@@ -3982,11 +3984,11 @@ ActorHPIsNotOne:: ; heuristic: follows a terminator; C0
 Func_005_5397:: ; address name
     ld a, [wBattleActor]
     call CompareSlotHPWith1
-    jr nz, Jump_005_53A2
+    jr nz, .done
     ld c, $00
     ret
 
-Jump_005_53A2::
+.done:
     ld c, $FF
     ret
 
@@ -4001,25 +4003,25 @@ Func_005_53A5:: ; address name
     ld b, $03
     ld d, $00
 
-Jump_005_53AF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_53BB
+    jr c, .next
     call CompareSlotHPWith1
-    jr nz, Jump_005_53BB
+    jr nz, .next
     inc d
 
-Jump_005_53BB::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_53AF
+    jr nz, .loop
     ld a, d
     cp a, $02
-    jr c, Jump_005_53C7
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_53C7::
+.done:
     ld c, $FF
     ret
 
@@ -4034,19 +4036,19 @@ Func_005_53CA:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_005_53E0
+    jr nz, .done
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     and a, $03
-    jr z, Jump_005_53E3
+    jr z, .done2
 
-Jump_005_53E0::
+.done:
     ld c, $00
     ret
 
-Jump_005_53E3::
+.done2:
     ld c, $FF
     ret
 
@@ -4061,11 +4063,11 @@ Func_005_53E6:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $30
-    jr z, Jump_005_53F7
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_53F7::
+.done:
     ld c, $FF
     ret
 
@@ -4078,56 +4080,56 @@ Func_005_53FA:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_544C
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_540E::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5440
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_5440
+    jr nz, .next
     ld hl, wBattleSkills
     swap a
     add_a_to_hl
     ld d, $08
 
-Jump_005_542B::
+.loop2:
     ld a, [hl+]
     cp a, $42
-    jr z, Jump_005_5446
+    jr z, .done
     cp a, $43
-    jr z, Jump_005_5446
+    jr z, .done
     cp a, $46
-    jr z, Jump_005_5446
+    jr z, .done
     cp a, $47
-    jr z, Jump_005_5446
+    jr z, .done
     inc hl
     dec d
-    jr nz, Jump_005_542B
+    jr nz, .loop2
 
-Jump_005_5440::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_540E
-    jr Jump_005_5449
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5446::
+.done:
     ld c, $00
     ret
 
-Jump_005_5449::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_544C::
+.done3:
     ld c, $01
     ret
 
@@ -4141,7 +4143,7 @@ Func_005_544F:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jp c, Jump_005_54FA
+    jp c, .done3
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
     ld a, l
@@ -4172,23 +4174,23 @@ Func_005_544F:: ; address name
     ld e, a
     ld d, $03
 
-Jump_005_5494::
+.loop:
     xor a, a
     ldh [hTemp8], a
     ld a, e
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_54EE
+    jr c, .next
     call GetBattleMaxHP_Bank05
     ldh a, [hTemp0]
     ld c, a
     ldh a, [hTemp1]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_005_54AF
+    jr nc, .call_get_battle_max_mp_bank05
     ld hl, hTemp8
     inc [hl]
 
-Jump_005_54AF::
+.call_get_battle_max_mp_bank05:
     ld a, e
     call GetBattleMaxMP_Bank05
     ldh a, [hTemp2]
@@ -4196,11 +4198,11 @@ Jump_005_54AF::
     ldh a, [hTemp3]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_005_54C2
+    jr nc, .call_get_battle_atk_bank05
     ld hl, hTemp8
     inc [hl]
 
-Jump_005_54C2::
+.call_get_battle_atk_bank05:
     ld a, e
     call GetBattleATK_Bank05
     ldh a, [hTemp4]
@@ -4208,11 +4210,11 @@ Jump_005_54C2::
     ldh a, [hTemp5]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_005_54D5
+    jr nc, .call_get_battle_def_bank05
     ld hl, hTemp8
     inc [hl]
 
-Jump_005_54D5::
+.call_get_battle_def_bank05:
     ld a, e
     call GetBattleDEF_Bank05
     ldh a, [hTemp6]
@@ -4220,30 +4222,30 @@ Jump_005_54D5::
     ldh a, [hTemp7]
     ld b, a
     call CompareHLToBC
-    jr nc, Jump_005_54E8
+    jr nc, .check_temp8
     ld hl, hTemp8
     inc [hl]
 
-Jump_005_54E8::
+.check_temp8:
     ldh a, [hTemp8]
     cp a, $03
-    jr nc, Jump_005_54F4
+    jr nc, .done
 
-Jump_005_54EE::
+.next:
     inc e
     dec d
-    jr nz, Jump_005_5494
-    jr Jump_005_54F7
+    jr nz, .loop
+    jr .done2
 
-Jump_005_54F4::
+.done:
     ld c, $00
     ret
 
-Jump_005_54F7::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_54FA::
+.done3:
     ld c, $01
     ret
 
@@ -4263,7 +4265,7 @@ Func_005_5500:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_557B
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -4274,27 +4276,27 @@ Func_005_5500:: ; address name
     ld hl, wBattleSkills
     add a, l
     ld l, a
-    jr nc, Jump_005_551F
+    jr nc, .loop
     inc h
 
-Jump_005_551F::
+.loop:
     ld d, $08
 
-Jump_005_5521::
+.loop2:
     ld a, [hl+]
     cp a, $3D
-    jr z, Jump_005_5530
+    jr z, .call_get_battle_mp_bank05
     inc hl
     dec d
-    jr nz, Jump_005_5521
+    jr nz, .loop2
 
-Jump_005_552A::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_551F
-    jr Jump_005_5578
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5530::
+.call_get_battle_mp_bank05:
     ld a, c
     ld hl, wBattleMP
     call GetBattleMP_Bank05
@@ -4322,25 +4324,25 @@ Jump_005_5530::
     ld c, e
     pop hl
     call CompareHLToBC
-    jr nc, Jump_005_5574
+    jr nc, .done
     pop bc
     ld a, c
     inc a
     sla a
     ld hl, wBattleSkills
     add_a_to_hl
-    jr Jump_005_552A
+    jr .next
 
-Jump_005_5574::
+.done:
     pop bc
     ld c, $00
     ret
 
-Jump_005_5578::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_557B::
+.done3:
     ld c, $01
     ret
 
@@ -4351,11 +4353,11 @@ Func_005_557E:: ; address name
     call FailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a, a
-    jr z, Jump_005_5588
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5588::
+.done:
     ld c, $FF
     ret
 
@@ -4377,11 +4379,11 @@ Func_005_558B:: ; address name
     add hl, hl
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_55A7
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_55A7::
+.done:
     ld c, $FF
     ret
 
@@ -4396,11 +4398,11 @@ Func_005_55AA:: ; address name
     call AddAx9ToHL
     ld a, [hl]
     and a, $22
-    jr z, Jump_005_55BB
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_55BB::
+.done:
     ld c, $FF
     ret
 
@@ -4412,17 +4414,17 @@ LinkRuleCheckWD044Bit6::
 Func_005_55BE:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_55F0
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_55F0
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_55F0
+    jr z, .done2
     bit 6, [hl]
-    jr z, Jump_005_55F0
+    jr z, .done2
     inc hl
     bit 6, [hl]
-    jr z, Jump_005_55ED
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4430,13 +4432,13 @@ Func_005_55BE:: ; address name
     srl a
     add_a_to_hl
     bit 6, [hl]
-    jr z, Jump_005_55F0
+    jr z, .done2
 
-Jump_005_55ED::
+.done:
     ld c, $00
     ret
 
-Jump_005_55F0::
+.done2:
     ld c, $FF
     ret
 
@@ -4448,17 +4450,17 @@ CheckWD044RuleBit5:: ; heuristic: follows a terminator; C0
 Func_005_55F3:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_5625
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_5625
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_5625
+    jr z, .done2
     bit 5, [hl]
-    jr z, Jump_005_5625
+    jr z, .done2
     inc hl
     bit 5, [hl]
-    jr z, Jump_005_5622
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4466,13 +4468,13 @@ Func_005_55F3:: ; address name
     srl a
     add_a_to_hl
     bit 5, [hl]
-    jr z, Jump_005_5625
+    jr z, .done2
 
-Jump_005_5622::
+.done:
     ld c, $00
     ret
 
-Jump_005_5625::
+.done2:
     ld c, $FF
     ret
 
@@ -4484,17 +4486,17 @@ CheckWD044RuleBit4:: ; heuristic: follows a terminator; C0
 Func_005_5628:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_565A
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_565A
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_565A
+    jr z, .done2
     bit 4, [hl]
-    jr z, Jump_005_565A
+    jr z, .done2
     inc hl
     bit 4, [hl]
-    jr z, Jump_005_5657
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4502,13 +4504,13 @@ Func_005_5628:: ; address name
     srl a
     add_a_to_hl
     bit 4, [hl]
-    jr z, Jump_005_565A
+    jr z, .done2
 
-Jump_005_5657::
+.done:
     ld c, $00
     ret
 
-Jump_005_565A::
+.done2:
     ld c, $FF
     ret
 
@@ -4520,17 +4522,17 @@ CheckWD044RuleBit3:: ; heuristic: follows a terminator; C0
 Func_005_565D:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_568F
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_568F
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_568F
+    jr z, .done2
     bit 3, [hl]
-    jr z, Jump_005_568F
+    jr z, .done2
     inc hl
     bit 3, [hl]
-    jr z, Jump_005_568C
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4538,13 +4540,13 @@ Func_005_565D:: ; address name
     srl a
     add_a_to_hl
     bit 3, [hl]
-    jr z, Jump_005_568F
+    jr z, .done2
 
-Jump_005_568C::
+.done:
     ld c, $00
     ret
 
-Jump_005_568F::
+.done2:
     ld c, $FF
     ret
 
@@ -4556,17 +4558,17 @@ CheckWD044RuleBit2:: ; heuristic: follows a terminator; C0
 Func_005_5692:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_56C4
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_56C4
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_56C4
+    jr z, .done2
     bit 2, [hl]
-    jr z, Jump_005_56C4
+    jr z, .done2
     inc hl
     bit 2, [hl]
-    jr z, Jump_005_56C1
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4574,13 +4576,13 @@ Func_005_5692:: ; address name
     srl a
     add_a_to_hl
     bit 2, [hl]
-    jr z, Jump_005_56C4
+    jr z, .done2
 
-Jump_005_56C1::
+.done:
     ld c, $00
     ret
 
-Jump_005_56C4::
+.done2:
     ld c, $FF
     ret
 
@@ -4592,17 +4594,17 @@ CheckWD044RuleBit1:: ; heuristic: follows a terminator; C0
 Func_005_56C7:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_56F9
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_56F9
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_56F9
+    jr z, .done2
     bit 1, [hl]
-    jr z, Jump_005_56F9
+    jr z, .done2
     inc hl
     bit 1, [hl]
-    jr z, Jump_005_56F6
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4610,13 +4612,13 @@ Func_005_56C7:: ; address name
     srl a
     add_a_to_hl
     bit 1, [hl]
-    jr z, Jump_005_56F9
+    jr z, .done2
 
-Jump_005_56F6::
+.done:
     ld c, $00
     ret
 
-Jump_005_56F9::
+.done2:
     ld c, $FF
     ret
 
@@ -4628,17 +4630,17 @@ AIScore_MegaMagic_ReadLinkModeAndBattleActor:: ; heuristic: follows a terminator
 Func_005_56FC:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_572E
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_572E
+    jr z, .done2
     ld hl, wLinkRules + $1
     bit 7, [hl]
-    jr z, Jump_005_572E
+    jr z, .done2
     bit 0, [hl]
-    jr z, Jump_005_572E
+    jr z, .done2
     inc hl
     bit 0, [hl]
-    jr z, Jump_005_572B
+    jr z, .done
     ld a, [wBattleActor]
     ld hl, wLinkRuleWork57
     and a, $04
@@ -4646,13 +4648,13 @@ Func_005_56FC:: ; address name
     srl a
     add_a_to_hl
     bit 0, [hl]
-    jr z, Jump_005_572E
+    jr z, .done2
 
-Jump_005_572B::
+.done:
     ld c, $00
     ret
 
-Jump_005_572E::
+.done2:
     ld c, $FF
     ret
 
@@ -4664,27 +4666,27 @@ LinkRuleCheckLinkRuleTurnLimitTurnLimit::
 Func_005_5731:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_5755
+    jr z, .done2
     cp a, $02
-    jr z, Jump_005_5755
+    jr z, .done2
     ld hl, wLinkRuleTurnLimit
     bit 7, [hl]
-    jr z, Jump_005_5755
+    jr z, .done2
     ld a, [hl]
     and a, $7F
     ld b, a
     ld a, [wBattleTurn]
     sub a, b
     bit 7, a
-    jr nz, Jump_005_5752
+    jr nz, .done
     cp a, $04
-    jr nc, Jump_005_5755
+    jr nc, .done2
 
-Jump_005_5752::
+.done:
     ld c, $00
     ret
 
-Jump_005_5755::
+.done2:
     ld c, $FF
     ret
 
@@ -4699,29 +4701,29 @@ Func_005_5758:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5761::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_576D
+    jr nc, .skip
     ld a, c
     cp a, e
-    jr z, Jump_005_577C
-    jr Jump_005_5771
+    jr z, .done
+    jr .next
 
-Jump_005_576D::
+.skip:
     ld a, c
     cp a, e
-    jr nz, Jump_005_577C
+    jr nz, .done
 
-Jump_005_5771::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5761
+    jr nz, .loop
     call FewerThanTwoFoesPresent
     ret
     db $0E, $00, $C9
 
-Jump_005_577C::
+.done:
     ld c, $FF
     ret
 
@@ -4737,23 +4739,23 @@ Func_005_577F:: ; address name
     ld b, $03
     ld e, $00
 
-Jump_005_578B::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5792
+    jr c, .next
     inc e
 
-Jump_005_5792::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_578B
+    jr nz, .loop
     ld a, e
     cp a, $02
-    jr c, Jump_005_579E
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_579E::
+.done:
     ld c, $FF
     ret
 
@@ -4765,35 +4767,35 @@ Func_005_57A1:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_57CC
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_57B5::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_57C0
+    jr c, .next
     call CountSkillsInList6D1A
-    jr nz, Jump_005_57C6
+    jr nz, .done
 
-Jump_005_57C0::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_57B5
-    jr Jump_005_57C9
+    jr nz, .loop
+    jr .done2
 
-Jump_005_57C6::
+.done:
     ld c, $00
     ret
 
-Jump_005_57C9::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_57CC::
+.done3:
     ld c, $01
     ret
 
@@ -4806,38 +4808,38 @@ Func_005_57CF:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5800
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_57E3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_57F4
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit 3, [hl]
-    jr nz, Jump_005_57FA
+    jr nz, .done
 
-Jump_005_57F4::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_57E3
-    jr Jump_005_57FD
+    jr nz, .loop
+    jr .done2
 
-Jump_005_57FA::
+.done:
     ld c, $00
     ret
 
-Jump_005_57FD::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5800::
+.done3:
     ld c, $01
     ret
 
@@ -4855,56 +4857,56 @@ Func_005_5803:: ; address name
     call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_581D
-    jr Jump_005_585A
+    jr c, .read_battle_actor
+    jr .done
 
-Jump_005_581D::
+.read_battle_actor:
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5826::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_5830
+    jr z, .next
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_5836
+    jr nc, .check_battle_actor
 
-Jump_005_5830::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5826
-    jr Jump_005_585A
+    jr nz, .loop
+    jr .done
 
-Jump_005_5836::
+.check_battle_actor:
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5840::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5853
+    jr c, .next2
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $03
     cp a, $02
-    jr nc, Jump_005_585A
+    jr nc, .done
 
-Jump_005_5853::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_5840
+    jr nz, .loop2
     ld c, $00
     ret
 
-Jump_005_585A::
+.done:
     ld c, $FF
     ret
 
@@ -4924,10 +4926,10 @@ Func_005_585D:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_586E::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5882
+    jr c, .next
     call GetBattleATK_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -4937,10 +4939,10 @@ Jump_005_586E::
     ldh [hTemp1], a
     inc e
 
-Jump_005_5882::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_586E
+    jr nz, .loop
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4958,10 +4960,10 @@ Jump_005_5882::
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_58A1::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_58B5
+    jr c, .next2
     call GetBattleDEF_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -4971,10 +4973,10 @@ Jump_005_58A1::
     ldh [hTemp1], a
     inc e
 
-Jump_005_58B5::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_58A1
+    jr nz, .loop2
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -4985,8 +4987,8 @@ Jump_005_58B5::
     ld b, h
     pop hl
     call CompareHLToBC
-    jr c, Jump_005_5916
-    jr z, Jump_005_5916
+    jr c, .done
+    jr z, .done
     ld a, l
     sub a, c
     ld l, a
@@ -5003,10 +5005,10 @@ Jump_005_58B5::
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_58E3::
+.loop3:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_58F7
+    jr c, .next3
     call GetBattleMaxHP_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -5016,10 +5018,10 @@ Jump_005_58E3::
     ldh [hTemp1], a
     inc e
 
-Jump_005_58F7::
+.next3:
     inc c
     dec b
-    jr nz, Jump_005_58E3
+    jr nz, .loop3
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -5032,12 +5034,12 @@ Jump_005_58F7::
     ld b, h
     pop hl
     call CompareHLToBC
-    jr c, Jump_005_5916
-    jr z, Jump_005_5916
+    jr c, .done
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5916::
+.done:
     ld c, $FF
     ret
 
@@ -5050,7 +5052,7 @@ Func_005_5919:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jp c, Jump_005_59BA
+    jp c, .done3
     ld a, [wBattleActor]
     ld e, a
     and a, $04
@@ -5058,20 +5060,20 @@ Func_005_5919:: ; address name
     ld b, $03
     ld d, $00
 
-Jump_005_592F::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_595C
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_595C
-    jr z, Jump_005_595C
+    jr nc, .next
+    jr z, .next
     inc d
     inc c
     dec b
-    jr nz, Jump_005_592F
+    jr nz, .loop
     ld a, d
     cp a, $01
-    jr nz, Jump_005_59B7
+    jr nz, .done2
     ld a, [wBattleActor]
     ld e, a
     and a, $04
@@ -5080,79 +5082,79 @@ Jump_005_592F::
     ld d, $00
     ld l, $00
 
-Jump_005_5951::
+.loop2:
     ld a, c
     cp a, e
-    jr z, Jump_005_595C
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_595C
+    jr c, .next
     inc d
     ld l, c
 
-Jump_005_595C::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5951
+    jr nz, .loop2
     ld a, d
     cp a, $01
-    jr nz, Jump_005_59B7
+    jr nz, .done2
     ld e, l
     ld a, l
     call GetBattleMP_Bank05
     ld a, h
     and a, a
-    jr nz, Jump_005_59B7
+    jr nz, .done2
     ld a, l
     cp a, $14
-    jr c, Jump_005_5977
-    jr z, Jump_005_5977
-    jr Jump_005_59B7
+    jr c, .skip
+    jr z, .skip
+    jr .done2
 
-Jump_005_5977::
+.skip:
     ld a, e
     swap a
     ld hl, wBattleSkills
     add_a_to_hl
     ld b, $08
 
-Jump_005_5984::
+.loop3:
     ld a, [hl+]
     cp a, $A0
-    jr z, Jump_005_59B4
+    jr z, .done
     inc hl
     dec b
-    jr nz, Jump_005_5984
+    jr nz, .loop3
     ld a, e
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 0, [hl]
-    jr nz, Jump_005_59B7
+    jr nz, .done2
     ld a, e
     swap a
     ld hl, wBattleSkills
     add_a_to_hl
     ld b, $08
 
-Jump_005_59A5::
+.loop4:
     ld a, [hl+]
     cp a, $1E
-    jr z, Jump_005_59B4
+    jr z, .done
     cp a, $1F
-    jr z, Jump_005_59B4
+    jr z, .done
     inc hl
     dec b
-    jr nz, Jump_005_59A5
-    jr Jump_005_59B7
+    jr nz, .loop4
+    jr .done2
 
-Jump_005_59B4::
+.done:
     ld c, $00
     ret
 
-Jump_005_59B7::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_59BA::
+.done3:
     ld c, $01
     ret
 
@@ -5165,56 +5167,56 @@ Func_005_59BD:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5A30
+    jr c, .done2
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_59D0::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_59D9
+    jr z, .loop2
     call CheckSlotStatusBlock
-    jr nc, Jump_005_59DF
+    jr nc, .call_add_ax9_to_hl
 
-Jump_005_59D9::
+.loop2:
     inc c
     dec b
-    jr nz, Jump_005_59D0
-    jr Jump_005_5A2D
+    jr nz, .loop
+    jr .done
 
-Jump_005_59DF::
+.call_add_ax9_to_hl:
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_005_59D9
+    jr nz, .loop2
     ld a, c
     swap a
     ld hl, wBattleSkills
     add_a_to_hl
     ld d, $08
 
-Jump_005_59F7::
+.loop3:
     ld a, [hl+]
     cp a, $16
-    jr z, Jump_005_5A12
+    jr z, .skip
     cp a, $17
-    jr z, Jump_005_5A12
+    jr z, .skip
     cp a, $18
-    jr z, Jump_005_5A12
+    jr z, .skip
     cp a, $19
-    jr z, Jump_005_5A12
+    jr z, .skip
     cp a, $1A
-    jr z, Jump_005_5A12
+    jr z, .skip
     inc hl
     dec d
-    jr nz, Jump_005_59F7
-    jr Jump_005_5A2D
+    jr nz, .loop3
+    jr .done
 
-Jump_005_5A12::
+.skip:
     ld hl, HealSkillMPCosts
     sub a, $16
     add_a_to_hl
@@ -5224,18 +5226,18 @@ Jump_005_5A12::
     call GetBattleMP_Bank05
     ld a, h
     and a, a
-    jr nz, Jump_005_59D9
+    jr nz, .loop2
     ld a, l
     cp a, d
-    jr nc, Jump_005_59D9
+    jr nc, .loop2
     ld c, $00
     ret
 
-Jump_005_5A2D::
+.done:
     ld c, $FF
     ret
 
-Jump_005_5A30::
+.done2:
     ld c, $01
     ret
 
@@ -5258,42 +5260,42 @@ Func_005_5A38:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5A70
+    jr c, .done2
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5A4B::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_5A54
+    jr z, .loop2
     call CheckSlotStatusBlock
-    jr nc, Jump_005_5A5A
+    jr nc, .call_add_ax9_to_hl
 
-Jump_005_5A54::
+.loop2:
     inc c
     dec b
-    jr nz, Jump_005_5A4B
-    jr Jump_005_5A6D
+    jr nz, .loop
+    jr .done
 
-Jump_005_5A5A::
+.call_add_ax9_to_hl:
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jr nz, Jump_005_5A54
+    jr nz, .loop2
     call CountSkillsInList6D1A
-    jr z, Jump_005_5A54
+    jr z, .loop2
     ld c, $00
     ret
 
-Jump_005_5A6D::
+.done:
     ld c, $FF
     ret
 
-Jump_005_5A70::
+.done2:
     ld c, $01
     ret
 
@@ -5306,62 +5308,62 @@ Func_005_5A73:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5AF5
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5A85::
+.loop:
     ld a, [wBattleActor]
     ld e, a
     ld a, c
     cp a, e
-    jr z, Jump_005_5A92
+    jr z, .next
     call CheckSlotStatusBlock
-    jr nc, Jump_005_5A98
+    jr nc, .skip
 
-Jump_005_5A92::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5A85
-    jr Jump_005_5AF2
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5A98::
+.skip:
     ld a, c
     swap a
     ld hl, wBattleSkills
     add_a_to_hl
     ld d, $08
 
-Jump_005_5AA5::
+.loop2:
     ld a, [hl+]
     ld e, $00
     cp a, $4D
-    jr z, Jump_005_5ACB
+    jr z, .skip2
     inc e
     cp a, $3D
-    jr z, Jump_005_5ACB
+    jr z, .skip2
     inc e
     cp a, $3E
-    jr z, Jump_005_5ACB
+    jr z, .skip2
     inc e
     cp a, $3F
-    jr z, Jump_005_5ACB
+    jr z, .skip2
     inc e
     cp a, $66
-    jr z, Jump_005_5ACB
+    jr z, .skip2
     inc e
     cp a, $67
-    jr z, Jump_005_5ACB
+    jr z, .skip2
 
-Jump_005_5AC5::
+.next2:
     inc hl
     dec d
-    jr nz, Jump_005_5AA5
-    jr Jump_005_5AF2
+    jr nz, .loop2
+    jr .done2
 
-Jump_005_5ACB::
+.skip2:
     push hl
     push bc
     ld hl, AllySkillMPCosts_5AF8
@@ -5374,30 +5376,30 @@ Jump_005_5ACB::
     call GetBattleMP_Bank05
     ld a, h
     and a, a
-    jr nz, Jump_005_5AEA
+    jr nz, .restore
     ld a, l
     cp a, d
-    jr nc, Jump_005_5AEA
+    jr nc, .restore
     pop de
     pop bc
     pop hl
-    jr Jump_005_5AEF
+    jr .done
 
-Jump_005_5AEA::
+.restore:
     pop de
     pop bc
     pop hl
-    jr Jump_005_5AC5
+    jr .next2
 
-Jump_005_5AEF::
+.done:
     ld c, $00
     ret
 
-Jump_005_5AF2::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5AF5::
+.done3:
     ld c, $01
     ret
 
@@ -5421,61 +5423,61 @@ Func_005_5AFE:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5B54
+    jr c, .done3
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5B11::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_5B1A
+    jr z, .loop2
     call CheckSlotStatusBlock
-    jr nc, Jump_005_5B20
+    jr nc, .call_add_ax9_to_hl
 
-Jump_005_5B1A::
+.loop2:
     inc c
     dec b
-    jr nz, Jump_005_5B11
-    jr Jump_005_5B51
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5B20::
+.call_add_ax9_to_hl:
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_5B1A
+    jr nz, .loop2
     ld hl, wBattleSkills
     swap a
     add_a_to_hl
     ld d, $08
 
-Jump_005_5B37::
+.loop3:
     ld a, [hl+]
     cp a, $42
-    jr z, Jump_005_5B4E
+    jr z, .done
     cp a, $43
-    jr z, Jump_005_5B4E
+    jr z, .done
     cp a, $46
-    jr z, Jump_005_5B4E
+    jr z, .done
     cp a, $47
-    jr z, Jump_005_5B4E
+    jr z, .done
     inc hl
     dec d
-    jr nz, Jump_005_5B37
-    jr Jump_005_5B1A
+    jr nz, .loop3
+    jr .loop2
 
-Jump_005_5B4E::
+.done:
     ld c, $00
     ret
 
-Jump_005_5B51::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5B54::
+.done3:
     ld c, $01
     ret
 
@@ -5488,67 +5490,67 @@ Func_005_5B57:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5BB9
+    jr c, .done3
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5B6A::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_5B73
+    jr z, .loop2
     call CheckSlotStatusBlock
-    jr nc, Jump_005_5B79
+    jr nc, .call_add_ax9_to_hl
 
-Jump_005_5B73::
+.loop2:
     inc c
     dec b
-    jr nz, Jump_005_5B6A
-    jr Jump_005_5BB6
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5B79::
+.call_add_ax9_to_hl:
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 6, [hl]
-    jr z, Jump_005_5B73
+    jr z, .loop2
     ld hl, wBattleSkills
     swap a
     add_a_to_hl
     ld d, $08
 
-Jump_005_5B90::
+.loop3:
     ld a, [hl+]
     cp a, $78
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $79
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $7A
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $7B
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $7C
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $7D
-    jr z, Jump_005_5BB3
+    jr z, .done
     cp a, $92
-    jr z, Jump_005_5BB3
+    jr z, .done
     inc hl
     dec d
-    jr nz, Jump_005_5B90
-    jr Jump_005_5B73
+    jr nz, .loop3
+    jr .loop2
 
-Jump_005_5BB3::
+.done:
     ld c, $00
     ret
 
-Jump_005_5BB6::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5BB9::
+.done3:
     ld c, $01
     ret
 
@@ -5595,57 +5597,57 @@ Func_005_5BBC:: ; address name
     ld h, a
     ld bc, $03E7
     call CompareHLToBC
-    jr c, Jump_005_5C09
+    jr c, .read_temp2
     inc e
 
-Jump_005_5C09::
+.read_temp2:
     ldh a, [hTemp2]
     ld l, a
     ldh a, [hTemp3]
     ld h, a
     ld bc, $012C
     call CompareHLToBC
-    jr c, Jump_005_5C18
+    jr c, .read_temp4
     inc e
 
-Jump_005_5C18::
+.read_temp4:
     ldh a, [hTemp4]
     ld l, a
     ldh a, [hTemp5]
     ld h, a
     ld bc, $012C
     call CompareHLToBC
-    jr c, Jump_005_5C27
+    jr c, .read_temp6
     inc e
 
-Jump_005_5C27::
+.read_temp6:
     ldh a, [hTemp6]
     ld l, a
     ldh a, [hTemp7]
     ld h, a
     ld bc, $00C8
     call CompareHLToBC
-    jr c, Jump_005_5C36
+    jr c, .read_temp8
     inc e
 
-Jump_005_5C36::
+.read_temp8:
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
     ld h, a
     ld bc, $011E
     call CompareHLToBC
-    jr c, Jump_005_5C45
+    jr c, .skip
     inc e
 
-Jump_005_5C45::
+.skip:
     ld a, e
     cp a, $03
-    jr c, Jump_005_5C4D
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_5C4D::
+.done:
     ld c, $FF
     ret
 
@@ -5661,39 +5663,39 @@ Func_005_5C50:: ; address name
     add_a_to_hl
     ld b, $08
 
-Jump_005_5C5F::
+.loop:
     ld a, [hl+]
     cp a, $83
-    jr z, Jump_005_5C89
+    jr z, .done2
     inc hl
     dec b
-    jr nz, Jump_005_5C5F
+    jr nz, .loop
     ld a, [wBattleActor]
     and a, $04
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5C72::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5C80
+    jr c, .next
     call CountActiveStatusEffectsOfSlotC
     ld a, d
     cp a, $01
-    jr nc, Jump_005_5C86
+    jr nc, .done
 
-Jump_005_5C80::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5C72
-    jr Jump_005_5C89
+    jr nz, .loop2
+    jr .done2
 
-Jump_005_5C86::
+.done:
     ld c, $00
     ret
 
-Jump_005_5C89::
+.done2:
     ld c, $FF
     ret
 
@@ -5709,10 +5711,10 @@ Func_005_5C8C:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5C96::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5CC1
+    jr c, .next
     and a, $03
     ld hl, wAIDamageEstimates
     sla a
@@ -5733,21 +5735,21 @@ Jump_005_5C96::
     ld b, h
     pop hl
     call CompareHLToBC
-    jr nc, Jump_005_5CC7
+    jr nc, .done
     pop bc
 
-Jump_005_5CC1::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5C96
-    jr Jump_005_5CCB
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5CC7::
+.done:
     pop bc
     ld c, $00
     ret
 
-Jump_005_5CCB::
+.done2:
     ld c, $FF
     ret
 
@@ -5758,16 +5760,16 @@ CheckBattleKindNot2Or3::
 Func_005_5CCE:: ; address name
     ld a, [wBattleKind]
     cp a, $02
-    jr z, Jump_005_5CDB
+    jr z, .done
     cp a, $03
-    jr z, Jump_005_5CDB
-    jr Jump_005_5CDE
+    jr z, .done
+    jr .done2
 
-Jump_005_5CDB::
+.done:
     ld c, $00
     ret
 
-Jump_005_5CDE::
+.done2:
     ld c, $FF
     ret
 
@@ -5778,13 +5780,13 @@ AIScore_MegaMagic_ReadLinkMode:: ; heuristic: follows a terminator; C0
 Func_005_5CE1:: ; address name
     ld a, [wLinkMode]
     and a, a
-    jr z, Jump_005_5CEE
+    jr z, .done
     cp a, $02
-    jr z, Jump_005_5CEE
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5CEE::
+.done:
     ld c, $FF
     ret
 
@@ -5795,37 +5797,37 @@ PassIfSide0FlagOrAllySlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_5CF1:: ; address name
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_5CFD
+    jr nc, .check_side1_flag
     ld a, [wSide0Flag]
-    jr Jump_005_5D00
+    jr .cp_01
 
-Jump_005_5CFD::
+.check_side1_flag:
     ld a, [wSide1Flag]
 
-Jump_005_5D00::
+.cp_01:
     cp a, $01
-    jr z, Jump_005_5D1D
+    jr z, .done
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5D0D::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_5D16
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_5D1D
+    jr nc, .done
 
-Jump_005_5D16::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5D0D
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_5D1D::
+.done:
     ld c, $FF
     ret
 
@@ -5868,7 +5870,7 @@ Func_005_5D44:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_5D86
+    jr c, .done3
     ld a, [wBattleActor]
     call GetBattleHP_Bank05
     ld c, l
@@ -5884,10 +5886,10 @@ Func_005_5D44:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5D67::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5D7A
+    jr c, .next
     call GetBattleHP_Bank05
     ld a, l
     sub a, e
@@ -5896,23 +5898,23 @@ Jump_005_5D67::
     sbc a, d
     ld h, a
     bit 7, h
-    jr z, Jump_005_5D80
+    jr z, .done
 
-Jump_005_5D7A::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5D67
-    jr Jump_005_5D83
+    jr nz, .loop
+    jr .done2
 
-Jump_005_5D80::
+.done:
     ld c, $00
     ret
 
-Jump_005_5D83::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_5D86::
+.done3:
     ld c, $01
     ret
 
@@ -5923,14 +5925,14 @@ FailIfLinkModeZeroAndPlayerStateFlagsBit3:: ; heuristic: follows a terminator; C
 Func_005_5D89:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_005_5D98
+    jr nz, .done
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr z, Jump_005_5D98
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_5D98::
+.done:
     ld c, $FF
     ret
 
@@ -5946,30 +5948,30 @@ Func_005_5D9B:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5DA5::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5DC3
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_5DC3
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $2
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
-    jr nz, Jump_005_5DCA
+    jr nz, .done
 
-Jump_005_5DC3::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5DA5
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_5DCA::
+.done:
     ld c, $FF
     ret
 
@@ -5985,31 +5987,31 @@ Func_005_5DCD:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5DD7::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5DF5
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus3
     call AddAx9ToHL
     ld a, [hl]
     and a, a
-    jr nz, Jump_005_5DF5
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $5
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $0C
     cp a, $0C
-    jr nz, Jump_005_5DFC
+    jr nz, .done
 
-Jump_005_5DF5::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5DD7
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_5DFC::
+.done:
     ld c, $FF
     ret
 
@@ -6031,24 +6033,24 @@ Func_005_5DFF:: ; address name
     add a, c
     add a, e
     ld e, a
-    jr nc, Jump_005_5E15
+    jr nc, .loop
     inc d
 
-Jump_005_5E15::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5E2D
+    jr c, .skip
     ld a, c
     ld hl, wBattleStatus8
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_5E2D
+    jr nz, .skip
     ld a, [de]
     and a, $30
     cp a, $30
-    jr nz, Jump_005_5E3C
+    jr nz, .done
 
-Jump_005_5E2D::
+.skip:
     ld a, e
     add a, $07
     ld e, a
@@ -6057,11 +6059,11 @@ Jump_005_5E2D::
     ld d, a
     inc c
     dec b
-    jr nz, Jump_005_5E15
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_5E3C::
+.done:
     ld c, $FF
     ret
 
@@ -6072,11 +6074,11 @@ PassIfBattleTurnNonZero:: ; heuristic: follows a terminator; C0
 Func_005_5E3F:: ; address name
     ld a, [wBattleTurn]
     and a, a
-    jr nz, Jump_005_5E48
+    jr nz, .done
     ld c, $00
     ret
 
-Jump_005_5E48::
+.done:
     ld c, $FF
     ret
 
@@ -6117,30 +6119,30 @@ Func_005_5E6F:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5E79::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5E97
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit 4, [hl]
-    jr nz, Jump_005_5E97
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $3
     call ReadByteAtHLPlus4APlus3C_Bank05
     and a, $C0
     cp a, $C0
-    jr nz, Jump_005_5E9E
+    jr nz, .done
 
-Jump_005_5E97::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5E79
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_5E9E::
+.done:
     ld c, $FF
     ret
 
@@ -6156,30 +6158,30 @@ Func_005_5EA1:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_5EAB::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_5EC4
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_005_5ECB
+    jr nz, .done
     inc hl
     inc hl
     ld a, [hl]
     and a, $3F
-    jr nz, Jump_005_5ECB
+    jr nz, .done
 
-Jump_005_5EC4::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5EAB
+    jr nz, .loop
     ld c, $FF
     ret
 
-Jump_005_5ECB::
+.done:
     ld c, $00
     ret
 
@@ -6192,50 +6194,50 @@ Func_005_5ECE:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $04
-    jr c, Jump_005_5F10
+    jr c, .done3
     ld a, [wAIFlag]
     or a, a
-    jr z, Jump_005_5F0A
+    jr z, .done
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld de, wSlotMarks
     add a, e
     ld e, a
-    jr nc, Jump_005_5EED
+    jr nc, .skip
     inc d
 
-Jump_005_5EED::
+.skip:
     ld c, a
     ld b, $03
 
-Jump_005_5EF0::
+.loop:
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_005_5F05
+    jr c, .next
     ld a, [de]
     cp a, $02
-    jr nz, Jump_005_5F05
+    jr nz, .next
     call SlotActionIs9C33Or92Or93
-    jr nz, Jump_005_5F05
+    jr nz, .next
     call WDA77EntryHasBits2And3_Bank05_5F2A
-    jr nz, Jump_005_5F0D
+    jr nz, .done2
 
-Jump_005_5F05::
+.next:
     inc de
     inc c
     dec b
-    jr nz, Jump_005_5EF0
+    jr nz, .loop
 
-Jump_005_5F0A::
+.done:
     ld c, $FF
     ret
 
-Jump_005_5F0D::
+.done2:
     ld c, $00
     ret
 
-Jump_005_5F10::
+.done3:
     ld c, $01
     ret
 
@@ -6283,53 +6285,53 @@ Func_005_5F3D:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $04
-    jr c, Jump_005_5F8A
+    jr c, .done3
     ld a, [wAIFlag]
     or a, a
-    jr z, Jump_005_5F84
+    jr z, .done
     ld a, [wBattleActor]
     ld d, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5F56::
+.loop:
     ld a, c
     cp a, d
-    jr z, Jump_005_5F80
+    jr z, .next
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_005_5F80
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 2, [hl]
-    jr nz, Jump_005_5F80
+    jr nz, .next
     ld a, c
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $03
-    jr nc, Jump_005_5F80
+    jr nc, .next
     push de
     call SlotCLacksSkill63Or64WithMP
     pop de
-    jr nc, Jump_005_5F87
+    jr nc, .done2
 
-Jump_005_5F80::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5F56
+    jr nz, .loop
 
-Jump_005_5F84::
+.done:
     ld c, $FF
     ret
 
-Jump_005_5F87::
+.done2:
     ld c, $00
     ret
 
-Jump_005_5F8A::
+.done3:
     ld c, $01
     ret
 
@@ -6344,32 +6346,32 @@ Func_005_5F8D:: ; address name
     add_a_to_hl
     ld e, $08
 
-Jump_005_5F9A::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_005_5FAB
+    jr z, .return_carry
     cp a, $63
-    jr z, Jump_005_5FAD
+    jr z, .skip
     cp a, $64
-    jr z, Jump_005_5FB1
+    jr z, .skip2
 
-Jump_005_5FA7::
+.loop2:
     inc hl
     dec e
-    jr nz, Jump_005_5F9A
+    jr nz, .loop
 
-Jump_005_5FAB::
+.return_carry:
     scf
     ret
 
-Jump_005_5FAD::
+.skip:
     ld d, $03
-    jr Jump_005_5FB3
+    jr .skip3
 
-Jump_005_5FB1::
+.skip2:
     ld d, $06
 
-Jump_005_5FB3::
+.skip3:
     push hl
     ld a, c
     ld hl, wBattleMP
@@ -6380,7 +6382,7 @@ Jump_005_5FB3::
     ld a, [hl]
     sbc a, $00
     pop hl
-    jr c, Jump_005_5FA7
+    jr c, .loop2
     ret
 
 ; only called from AIAddScoresFor5ECEAnd5FC7 (E-0047)
@@ -6392,47 +6394,47 @@ Func_005_5FC7:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $04
-    jr c, Jump_005_600B
+    jr c, .done3
     ld a, [wAIFlag]
     or a, a
-    jr z, Jump_005_6005
+    jr z, .done
     ld a, [wBattleActor]
     ld d, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_5FE0::
+.loop:
     ld a, c
     cp a, d
-    jr z, Jump_005_6001
+    jr z, .next
     call CheckSlotStatusBlock
-    jr c, Jump_005_6001
+    jr c, .next
     ld a, c
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $03
-    jr nc, Jump_005_6001
+    jr nc, .next
     call SlotCHasMP3AndSkill6B
-    jr c, Jump_005_6001
+    jr c, .next
     call WDA77EntryHasBits2And3_Bank05
-    jr nz, Jump_005_6008
+    jr nz, .done2
 
-Jump_005_6001::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_5FE0
+    jr nz, .loop
 
-Jump_005_6005::
+.done:
     ld c, $FF
     ret
 
-Jump_005_6008::
+.done2:
     ld c, $00
     ret
 
-Jump_005_600B::
+.done3:
     ld c, $01
     ret
 
@@ -6456,17 +6458,17 @@ Func_005_600E:: ; address name
     add_a_to_hl
     ld e, $08
 
-Jump_005_602C::
+.loop:
     ld a, [hl+]
     cp a, $6B
-    jr z, Jump_005_6037
+    jr z, .return_0
     inc hl
     dec e
-    jr nz, Jump_005_602C
+    jr nz, .loop
     dec e
     ret
 
-Jump_005_6037::
+.return_0:
     xor a, a
     ret
 
@@ -6495,17 +6497,17 @@ Func_005_604C:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $04
-    jr c, Jump_005_60B7
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_6060::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6087
+    jr c, .next
     ld a, c
     ld hl, wBattleHP
     add a, a
@@ -6523,48 +6525,48 @@ Jump_005_6060::
     sub a, e
     ld a, [hl]
     sbc a, d
-    jr nc, Jump_005_608D
+    jr nc, .skip
 
-Jump_005_6087::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6060
-    jr Jump_005_60B1
+    jr nz, .loop
+    jr .done
 
-Jump_005_608D::
+.skip:
     ld a, c
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_6093::
+.loop2:
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_005_60AD
+    jr c, .next2
     ld hl, wSlotPersonalityLo
     add_a_to_hl
     ld a, [hl]
     cp a, $C0
-    jr c, Jump_005_60AD
+    jr c, .next2
     push bc
     call SlotCHasCastableHealSkill
     pop bc
-    jr nc, Jump_005_60B4
+    jr nc, .done2
 
-Jump_005_60AD::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_6093
+    jr nz, .loop2
 
-Jump_005_60B1::
+.done:
     ld c, $FF
     ret
 
-Jump_005_60B4::
+.done2:
     ld c, $00
     ret
 
-Jump_005_60B7::
+.done3:
     ld c, $01
     ret
 
@@ -6580,58 +6582,58 @@ Func_005_60BA:: ; address name
     add_a_to_hl
     ld b, $08
 
-Jump_005_60C7::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_005_60ED
+    jr z, .return_carry
     ld e, a
     cp a, $16
-    jr c, Jump_005_60E9
+    jr c, .loop2
     ld d, $1B
     cp a, $1B
-    jr c, Jump_005_60EF
+    jr c, .call_test_slot_status1_bit0_or_side_flag_bit3
     ld d, $05
     cp a, $7B
-    jr z, Jump_005_60FA
+    jr z, .call_test_slot_status1_bit6
     ld d, $06
     cp a, $7C
-    jr z, Jump_005_60FA
+    jr z, .call_test_slot_status1_bit6
     ld d, $07
     cp a, $A1
-    jr z, Jump_005_6101
+    jr z, .check_queued_action_id
 
-Jump_005_60E9::
+.loop2:
     inc hl
     dec b
-    jr nz, Jump_005_60C7
+    jr nz, .loop
 
-Jump_005_60ED::
+.return_carry:
     scf
     ret
 
-Jump_005_60EF::
+.call_test_slot_status1_bit0_or_side_flag_bit3:
     push hl
     call TestSlotStatus1Bit0OrSideFlagBit3
     pop hl
-    jr nz, Jump_005_60E9
+    jr nz, .loop2
     ld a, e
     sub a, d
-    jr Jump_005_6102
+    jr .check_queued_action_id2
 
-Jump_005_60FA::
+.call_test_slot_status1_bit6:
     push hl
     call TestSlotStatus1Bit6
     pop hl
-    jr nz, Jump_005_60E9
+    jr nz, .loop2
 
-Jump_005_6101::
+.check_queued_action_id:
     ld a, d
 
-Jump_005_6102::
+.check_queued_action_id2:
     ld d, a
     ld a, [wQueuedActionId]
     cp a, e
-    jr z, Jump_005_60E9
+    jr z, .loop2
     ld a, d
     push hl
     ld hl, SlotCHasCastableHealSkill_Data
@@ -6646,7 +6648,7 @@ Jump_005_6102::
     ld a, [hl]
     sbc a, $00
     pop hl
-    jr c, Jump_005_60E9
+    jr c, .loop2
     ret
 
 ; C = slot: NZ when its status byte 1 bit 0 is set; otherwise the result of testing bit 3 of its side flag (wD80A for slots 0-3, wD80B for 4-7) (E-0117)
@@ -6693,23 +6695,23 @@ Func_005_6153:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $04
-    jr c, Jump_005_6195
+    jr c, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_6167::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_618B
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus2
     call AddAx9ToHL
     ld a, [hl]
     and a, $2A
-    jr nz, Jump_005_618B
+    jr nz, .next
     ld a, c
     ld hl, wSlotResistances + $2
     add a, a
@@ -6719,20 +6721,20 @@ Jump_005_6167::
     add_a_to_hl
     ld a, [hl]
     and a, $30
-    jr z, Jump_005_6192
+    jr z, .done
 
-Jump_005_618B::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6167
+    jr nz, .loop
     ld c, $FF
     ret
 
-Jump_005_6192::
+.done:
     ld c, $00
     ret
 
-Jump_005_6195::
+.done2:
     ld c, $01
     ret
 
@@ -6744,18 +6746,18 @@ Func_005_6198:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_61AE
+    jr c, .done2
     ld a, [wAIFlag]
     or a, a
-    jr nz, Jump_005_61AB
+    jr nz, .done
     ld c, $FF
     ret
 
-Jump_005_61AB::
+.done:
     ld c, $00
     ret
 
-Jump_005_61AE::
+.done2:
     ld c, $01
     ret
 
@@ -6769,11 +6771,11 @@ Func_005_61B1:: ; address name
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit 3, [hl]
-    jr nz, Jump_005_61C1
+    jr nz, .done
     ld c, $FF
     ret
 
-Jump_005_61C1::
+.done:
     ld c, $00
     ret
 
@@ -6785,7 +6787,7 @@ Func_005_61C4:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_6226
+    jr c, UnreferencedReturnC0_05_6223_Done
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -6793,28 +6795,28 @@ Func_005_61C4:: ; address name
     ld b, $03
     ld de, $FFFF
 
-Jump_005_61DB::
+.loop:
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_005_61EF
+    jr c, .next
     call GetBattleATK_Bank05
     push bc
     ld b, d
     ld c, e
     call CompareHLToBC
     pop bc
-    jr nc, Jump_005_61EF
+    jr nc, .next
     ld d, h
     ld e, l
 
-Jump_005_61EF::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_61DB
+    jr nz, .loop
     ld a, d
     and a, e
     cp a, $FF
-    jr z, Jump_005_6220
+    jr z, .done
     ld a, [wBattleActor]
     call GetBattleDEF_Bank05
     srl h
@@ -6826,10 +6828,10 @@ Jump_005_61EF::
     sbc a, h
     ld d, a
     bit 7, a
-    jr z, Jump_005_6210
+    jr z, .read_battle_actor
     ld de, $0001
 
-Jump_005_6210::
+.read_battle_actor:
     ld a, [wBattleActor]
     call GetBattleHP_Bank05
     ld a, l
@@ -6839,9 +6841,9 @@ Jump_005_6210::
     sbc a, d
     ld h, a
     bit 7, a
-    jr nz, Jump_005_6220
+    jr nz, .done
 
-Jump_005_6220::
+.done:
     ld c, $FF
     ret
 
@@ -6852,7 +6854,8 @@ Func_005_6223:: ; address name
     ld c, $00
     ret
 
-Jump_005_6226::
+UnreferencedReturnC0_05_6223_Done::
+Jump_005_6226:: ; address name
     ld c, $01
     ret
 
@@ -6887,20 +6890,20 @@ Func_005_623B:: ; address name
     push af
     ld d, $02
 
-Jump_005_6250::
+.loop:
     inc hl
     ld a, [hl+]
     ld [wRecordBuffer], a
     call SlotHasSkillWithFlagD
-    jr nz, Jump_005_6264
+    jr nz, .set_record_buffer
     dec b
-    jr nz, Jump_005_6250
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_6264::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
@@ -6916,18 +6919,18 @@ Func_005_626B:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_6273::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_627F
+    jr nc, .call_any_ally_hp_below6298_get_battle_max_hp
 
-Jump_005_6279::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6273
-    jr Jump_005_6292
+    jr nz, .loop
+    jr .done
 
-Jump_005_627F::
+.call_any_ally_hp_below6298_get_battle_max_hp:
     push bc
     ld a, c
     call AnyAllyHPBelow6298_GetBattleMaxHP_Bank05
@@ -6937,14 +6940,14 @@ Jump_005_627F::
     pop bc
     call CompareHLToBC
     pop bc
-    jr c, Jump_005_6295
-    jr Jump_005_6279
+    jr c, .done2
+    jr .next
 
-Jump_005_6292::
+.done:
     ld c, $00
     ret
 
-Jump_005_6295::
+.done2:
     ld c, $FF
     ret
 
@@ -6957,21 +6960,21 @@ Func_005_6298:: ; address name
     call GetBattleMaxHP_Bank05
     ld a, [wRecordBuffer]
     cp a, $16
-    jr z, Jump_005_62BB
+    jr z, .call_divide_hl_by_a
     cp a, $17
-    jr z, Jump_005_62CC
+    jr z, .skip
     cp a, $18
-    jr z, Jump_005_62D9
+    jr z, .call_divide_hl_by_a2
     cp a, $19
-    jr z, Jump_005_62CC
+    jr z, .skip
     cp a, $1A
-    jr z, Jump_005_62D9
+    jr z, .call_divide_hl_by_a2
     cp a, $7C
-    jr z, Jump_005_62CC
+    jr z, .skip
     cp a, $A1
-    jr z, Jump_005_62CC
+    jr z, .skip
 
-Jump_005_62BB::
+.call_divide_hl_by_a:
     push hl
     ld a, $0A
     call DivideHLByA
@@ -6987,7 +6990,7 @@ Jump_005_62BB::
     pop bc
     ret
 
-Jump_005_62CC::
+.skip:
     srl h
     rr l
     ld b, h
@@ -6998,7 +7001,7 @@ Jump_005_62CC::
     pop bc
     ret
 
-Jump_005_62D9::
+.call_divide_hl_by_a2:
     ld a, $03
     call DivideHLByA
     add hl, hl
@@ -7016,20 +7019,20 @@ Func_005_62E1:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_62EA::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_62F3
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_62F9
+    jr nc, .call_get_battle_mp_bank05
 
-Jump_005_62F3::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_62EA
-    jr Jump_005_630C
+    jr nz, .loop
+    jr .done
 
-Jump_005_62F9::
+.call_get_battle_mp_bank05:
     push bc
     ld a, c
     call GetBattleMP_Bank05
@@ -7039,14 +7042,14 @@ Jump_005_62F9::
     pop bc
     call CompareHLToBC
     pop bc
-    jr c, Jump_005_630F
-    jr Jump_005_62F3
+    jr c, .done2
+    jr .next
 
-Jump_005_630C::
+.done:
     ld c, $00
     ret
 
-Jump_005_630F::
+.done2:
     ld c, $FF
     ret
 
@@ -7066,7 +7069,7 @@ Func_005_6312:: ; address name
     pop bc
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_637A
+    jr nc, .done
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     srl h
@@ -7076,7 +7079,7 @@ Func_005_6312:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_637E
+    jr nc, .done2
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     ld a, $03
@@ -7086,7 +7089,7 @@ Func_005_6312:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_6382
+    jr nc, .done3
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     srl h
@@ -7098,7 +7101,7 @@ Func_005_6312:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_6386
+    jr nc, .done4
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
     ld a, $0A
@@ -7108,35 +7111,35 @@ Func_005_6312:: ; address name
     pop hl
     push hl
     call CompareHLToBC
-    jr nc, Jump_005_638A
-    jr Jump_005_638E
+    jr nc, .done5
+    jr .done6
 
-Jump_005_637A::
+.done:
     pop hl
     ld c, $00
     ret
 
-Jump_005_637E::
+.done2:
     pop hl
     ld c, $01
     ret
 
-Jump_005_6382::
+.done3:
     pop hl
     ld c, $02
     ret
 
-Jump_005_6386::
+.done4:
     pop hl
     ld c, $03
     ret
 
-Jump_005_638A::
+.done5:
     pop hl
     ld c, $04
     ret
 
-Jump_005_638E::
+.done6:
     pop hl
     ld c, $05
     ret
@@ -7149,25 +7152,25 @@ Func_005_6392:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_63CF
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
     ld c, a
     ld b, $03
 
-Jump_005_63A6::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_63B2
+    jr nc, .call_get_battle_hp_bank05
 
-Jump_005_63AC::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_63A6
-    jr Jump_005_63C9
+    jr nz, .loop
+    jr .done
 
-Jump_005_63B2::
+.call_get_battle_hp_bank05:
     push bc
     ld a, c
     call GetBattleHP_Bank05
@@ -7179,18 +7182,18 @@ Jump_005_63B2::
     ld bc, $0578
     call CompareHLToBC
     pop bc
-    jr nc, Jump_005_63CC
-    jr Jump_005_63AC
+    jr nc, .done2
+    jr .next
 
-Jump_005_63C9::
+.done:
     ld c, $00
     ret
 
-Jump_005_63CC::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_63CF::
+.done3:
     ld c, $01
     ret
 
@@ -7210,28 +7213,28 @@ Func_005_63D2:: ; address name
     ld b, $03
     ld d, $10
 
-Jump_005_63E2::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_63F8
+    jr c, .next
     ld a, c
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 7, [hl]
-    jr nz, Jump_005_63F8
+    jr nz, .next
     call SlotCSkillFlagMatchD
-    jr nz, Jump_005_6403
+    jr nz, .set_record_buffer
 
-Jump_005_63F8::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_63E2
+    jr nz, .loop
     pop af
     ld [wRecordBuffer], a
     ld c, $00
     ret
 
-Jump_005_6403::
+.set_record_buffer:
     pop af
     ld [wRecordBuffer], a
     ld c, $FF
@@ -7261,12 +7264,12 @@ Func_005_640A:: ; address name
     ld b, $08
     ld c, d
 
-Jump_005_642E::
+.loop:
     ld a, [hl]
     cp a, $89
-    jr z, Jump_005_6449
+    jr z, .next
     cp a, $9D
-    jr z, Jump_005_6449
+    jr z, .next
     push bc
     push hl
     ld [wRecordBuffer], a
@@ -7275,16 +7278,16 @@ Jump_005_642E::
     pop bc
     ldh a, [hTemp0]
     and a, c
-    jr nz, Jump_005_644F
+    jr nz, .done
 
-Jump_005_6449::
+.next:
     inc hl
     inc hl
     dec b
-    jr nz, Jump_005_642E
+    jr nz, .loop
     xor a, a
 
-Jump_005_644F::
+.done:
     ld d, c
     pop bc
     ret
@@ -7296,39 +7299,39 @@ AllyCheckSide0FlagAndOtherSlots:: ; heuristic: follows a terminator; C0
 Func_005_6452:: ; address name
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_645E
+    jr nc, .check_side1_flag
     ld a, [wSide0Flag]
-    jr Jump_005_6461
+    jr .cp_01
 
-Jump_005_645E::
+.check_side1_flag:
     ld a, [wSide1Flag]
 
-Jump_005_6461::
+.cp_01:
     cp a, $01
-    jr z, Jump_005_647B
+    jr z, .done
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_646E::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_6477
+    jr z, .next
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_647E
+    jr nc, .done2
 
-Jump_005_6477::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_646E
+    jr nz, .loop
 
-Jump_005_647B::
+.done:
     ld c, $00
     ret
 
-Jump_005_647E::
+.done2:
     ld c, $FF
     ret
 
@@ -7339,14 +7342,14 @@ CheckBattleKindAtLeast2OrLinkModeSet::
 Func_005_6481:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_005_6491
+    jr nz, .done
     ld a, [wBattleKind]
     cp a, $02
-    jr nc, Jump_005_6491
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_6491::
+.done:
     ld c, $FF
     ret
 
@@ -7362,10 +7365,10 @@ Func_005_6494:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_649E::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_64C1
+    jr c, .next
     push bc
     ld a, c
     and a, $03
@@ -7380,18 +7383,18 @@ Jump_005_649E::
     pop bc
     call CompareHLToBC
     pop bc
-    jr c, Jump_005_64C6
+    jr c, .done
 
-Jump_005_64C1::
+.next:
     dec b
-    jr nz, Jump_005_649E
-    jr Jump_005_64C9
+    jr nz, .loop
+    jr .done2
 
-Jump_005_64C6::
+.done:
     ld c, $00
     ret
 
-Jump_005_64C9::
+.done2:
     ld c, $FF
     ret
 
@@ -7402,14 +7405,14 @@ CheckActorSlot0To3OrLinkModeSet::
 Func_005_64CC:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_005_64DC
+    jr nz, .done
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_005_64DC
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_64DC::
+.done:
     ld c, $FF
     ret
 
@@ -7428,11 +7431,11 @@ Func_005_64DF:: ; address name
     call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_64FB
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_64FB::
+.done:
     ld c, $FF
     ret
 
@@ -7446,10 +7449,10 @@ Func_005_64FE:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
-    jr c, Jump_005_6553
+    jr c, .done3
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_6550
+    jr z, .done2
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a, a
@@ -7473,31 +7476,31 @@ Func_005_64FE:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6537::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6549
+    jr c, .next
     ldh a, [hTemp0]
     inc a
     ldh [hTemp0], a
     call Get2BitFieldEOfHL
     cp a, $03
-    jr z, Jump_005_654D
+    jr z, .done
 
-Jump_005_6549::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6537
+    jr nz, .loop
 
-Jump_005_654D::
+.done:
     ld c, $00
     ret
 
-Jump_005_6550::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_6553::
+.done3:
     ld c, $01
     ret
 
@@ -7510,25 +7513,25 @@ Func_005_6556:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $03
-    jr c, Jump_005_65A9
+    jr c, .done2
     ld a, [wBattleActor]
     ld hl, wBattleSkillsPrefix
     swap a
     add_a_to_hl
     ld b, $08
     call SkillListHas19Or1AOr7COrA1
-    jr nz, Jump_005_65A9
+    jr nz, .done2
     ld a, [wBattleActor]
     and a, $04
     ld c, a
     ld b, $03
     ld e, $00
 
-Jump_005_657E::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6599
+    jr c, .restore
     ld a, c
     call GetBattleMaxHP_Bank05
     srl h
@@ -7538,25 +7541,25 @@ Jump_005_657E::
     call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
-    jr nc, Jump_005_6599
+    jr nc, .restore
     inc e
 
-Jump_005_6599::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_005_657E
+    jr nz, .loop
     ld a, e
     cp a, $02
-    jr c, Jump_005_65A6
+    jr c, .done
     ld c, $00
     ret
 
-Jump_005_65A6::
+.done:
     ld c, $FF
     ret
 
-Jump_005_65A9::
+.done2:
     ld c, $01
     ret
 
@@ -7595,10 +7598,10 @@ Func_005_65C1:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_65D0::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_65E4
+    jr c, .next
     call GetBattleATK_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -7608,10 +7611,10 @@ Jump_005_65D0::
     ldh [hTemp1], a
     inc e
 
-Jump_005_65E4::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_65D0
+    jr nz, .loop
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -7630,10 +7633,10 @@ Jump_005_65E4::
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6605::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6619
+    jr c, .next2
     call GetBattleDEF_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -7643,10 +7646,10 @@ Jump_005_6605::
     ldh [hTemp1], a
     inc e
 
-Jump_005_6619::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_6605
+    jr nz, .loop2
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -7657,8 +7660,8 @@ Jump_005_6619::
     ld b, h
     pop hl
     call CompareHLToBC
-    jr c, Jump_005_667C
-    jr z, Jump_005_667C
+    jr c, .done
+    jr z, .done
     ld a, l
     sub a, c
     ld l, a
@@ -7676,10 +7679,10 @@ Jump_005_6619::
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6649::
+.loop3:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_665D
+    jr c, .next3
     call GetBattleHP_Bank05
     ldh a, [hTemp0]
     add a, l
@@ -7689,10 +7692,10 @@ Jump_005_6649::
     ldh [hTemp1], a
     inc e
 
-Jump_005_665D::
+.next3:
     inc c
     dec b
-    jr nz, Jump_005_6649
+    jr nz, .loop3
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -7705,12 +7708,12 @@ Jump_005_665D::
     ld b, h
     pop hl
     call CompareHLToBC
-    jr c, Jump_005_667C
-    jr z, Jump_005_667C
+    jr c, .done
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_667C::
+.done:
     ld c, $FF
     ret
 
@@ -7724,14 +7727,14 @@ Func_005_667F:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $04
-    jp c, Jump_005_671D
+    jp c, .done3
     ld a, [wBattleActor]
     ld hl, wBattleSkillsPrefix
     swap a
     add_a_to_hl
     ld b, $08
     call SkillListHasAnyOf16To1A7C9FA1
-    jr nz, Jump_005_671D
+    jr nz, .done3
     ld a, [wBattleActor]
     and a, $04
     ld c, a
@@ -7742,22 +7745,22 @@ Func_005_667F:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_005_66AF::
+.loop:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_66BB
-    jr z, Jump_005_66BB
+    jr nc, .restore
+    jr z, .restore
     call AddSlotStatSumToTemp0
 
-Jump_005_66BB::
+.restore:
     pop bc
     inc c
     dec b
-    jr nz, Jump_005_66AF
+    jr nz, .loop
     ld a, d
     or a, a
-    jr z, Jump_005_6717
+    jr z, .done
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -7780,18 +7783,18 @@ Jump_005_66BB::
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_005_66E8::
+.loop2:
     push bc
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_66F2
+    jr c, .restore2
     call AddSlotStatSumToTemp0
 
-Jump_005_66F2::
+.restore2:
     pop bc
     inc c
     dec b
-    jr nz, Jump_005_66E8
+    jr nz, .loop2
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -7809,17 +7812,17 @@ Jump_005_66F2::
     ldh a, [hTemp4]
     ld b, a
     call CompareHLToBCFastZero
-    jr c, Jump_005_671A
+    jr c, .done2
 
-Jump_005_6717::
+.done:
     ld c, $00
     ret
 
-Jump_005_671A::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_671D::
+.done3:
     ld c, $01
     ret
 
@@ -7900,10 +7903,10 @@ Func_005_676E:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_6778::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_67A6
+    jr c, .next
     push bc
     ld a, c
     and a, $03
@@ -7925,19 +7928,19 @@ Jump_005_6778::
     pop bc
     call CompareHLToBC
     pop bc
-    jr c, Jump_005_67AC
+    jr c, .done
 
-Jump_005_67A6::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6778
-    jr Jump_005_67AF
+    jr nz, .loop
+    jr .done2
 
-Jump_005_67AC::
+.done:
     ld c, $00
     ret
 
-Jump_005_67AF::
+.done2:
     ld c, $FF
     ret
 
@@ -7950,7 +7953,7 @@ Func_005_67B2:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $02
-    jr c, Jump_005_681D
+    jr c, .done3
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -7959,20 +7962,20 @@ Func_005_67B2:: ; address name
     ld e, $00
     ld d, $00
 
-Jump_005_67CA::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_67D2
+    jr c, .next
     ld e, c
     inc d
 
-Jump_005_67D2::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_67CA
+    jr nz, .loop
     ld a, d
     cp a, $02
-    jr c, Jump_005_681A
+    jr c, .done2
     ld a, [wBattleActor]
     call GetBattleAGL_Bank05
     ld a, e
@@ -7988,7 +7991,7 @@ Jump_005_67D2::
     pop bc
     call CompareHLToBC
     pop de
-    jr nc, Jump_005_681A
+    jr nc, .done2
     ld a, e
     and a, $03
     add a, a
@@ -8001,18 +8004,18 @@ Jump_005_67D2::
     call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
-    jr c, Jump_005_6817
-    jr nz, Jump_005_681A
+    jr c, .done
+    jr nz, .done2
 
-Jump_005_6817::
+.done:
     ld c, $00
     ret
 
-Jump_005_681A::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_681D::
+.done3:
     ld c, $01
     ret
 
@@ -8025,7 +8028,7 @@ Func_005_6820:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $02
-    jr c, Jump_005_6899
+    jr c, .done2
     ld a, [wBattleActor]
     and a, $04
     xor a, $04
@@ -8034,24 +8037,24 @@ Func_005_6820:: ; address name
     ld e, $00
     ld d, $00
 
-Jump_005_6838::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6840
+    jr c, .next
     ld e, c
     inc d
 
-Jump_005_6840::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6838
+    jr nz, .loop
     ld a, d
     cp a, $02
-    jr c, Jump_005_6896
+    jr c, .done
     ld c, e
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_6896
+    jr z, .done
     push de
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
@@ -8072,7 +8075,7 @@ Jump_005_6840::
     call Get2BitFieldEOfHL
     cp a, $02
     pop de
-    jr nc, Jump_005_6896
+    jr nc, .done
     ld a, e
     call GetBattleHP_Bank05
     push hl
@@ -8086,15 +8089,15 @@ Jump_005_6840::
     call Divide24ByA
     pop bc
     call CompareHLToBC
-    jr nc, Jump_005_6896
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_6896::
+.done:
     ld c, $FF
     ret
 
-Jump_005_6899::
+.done2:
     ld c, $01
     ret
 
@@ -8107,56 +8110,56 @@ Func_005_689C:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $03
-    jp c, Jump_005_696F
+    jp c, .done3
     ld a, [wLinkMode]
     or a, a
-    jp nz, Jump_005_696C
+    jp nz, .done2
     ld a, [wBattleKind]
     cp a, $02
-    jp nc, Jump_005_696C
+    jp nc, .done2
     ld a, [wAIFlag]
     or a, a
-    jp z, Jump_005_696C
+    jp z, .done2
     ld a, [wBattleActor]
     ld e, a
     and a, $04
     ld c, a
     ld b, $03
 
-Jump_005_68C6::
+.loop:
     ld a, c
     cp a, e
-    jr z, Jump_005_68F5
+    jr z, .next
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_68F5
+    jr c, .next
     ld a, c
     call ReadSlotAIModeIndexed_Bank05_4024
     cp a, $03
-    jr c, Jump_005_68F5
+    jr c, .next
     push de
     call AIScore_Kamikaze_Sub01_Sub01
     pop de
-    jr nz, Jump_005_68F5
+    jr nz, .next
     ld a, c
     push de
     call CheckSlotStatusBlock
     pop de
-    jr c, Jump_005_68F5
+    jr c, .next
     ld a, c
     ld hl, wSlotMarks
     add_a_to_hl
     ld a, [hl]
     cp a, $03
-    jr c, Jump_005_68FB
+    jr c, .read_battle_actor
 
-Jump_005_68F5::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_68C6
-    jr Jump_005_696C
+    jr nz, .loop
+    jr .done2
 
-Jump_005_68FB::
+.read_battle_actor:
     ld a, [wBattleActor]
     call GetBattleHP_Bank05
     srl h
@@ -8166,7 +8169,7 @@ Jump_005_68FB::
     call GetBattleHP_Bank05
     pop bc
     call CompareHLToBC
-    jr nc, Jump_005_696C
+    jr nc, .done2
     ld de, $0064
     add hl, de
     ld a, [wBattleActor]
@@ -8175,12 +8178,12 @@ Jump_005_68FB::
     ld c, a
     ld b, $03
 
-Jump_005_6920::
+.loop2:
     push hl
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     pop hl
-    jr c, Jump_005_6963
+    jr c, .next2
     push bc
     push hl
     push hl
@@ -8190,10 +8193,10 @@ Jump_005_6920::
     call CompareHLToBC
     pop hl
     pop bc
-    jr c, Jump_005_6963
+    jr c, .next2
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_696C
+    jr z, .done2
     push bc
     push hl
     dec a
@@ -8215,23 +8218,23 @@ Jump_005_6920::
     pop hl
     pop bc
     cp a, $02
-    jr c, Jump_005_6969
+    jr c, .done
 
-Jump_005_6963::
+.next2:
     inc c
     dec b
-    jr nz, Jump_005_6920
-    jr Jump_005_696C
+    jr nz, .loop2
+    jr .done2
 
-Jump_005_6969::
+.done:
     ld c, $00
     ret
 
-Jump_005_696C::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_696F::
+.done3:
     ld c, $01
     ret
 
@@ -8245,11 +8248,11 @@ Func_005_6972:: ; address name
     ld hl, wBattleStatus4
     call AddAx9ToHL
     and a, $03
-    jr z, Jump_005_6982
+    jr z, .done
     ld c, $00
     ret
 
-Jump_005_6982::
+.done:
     ld c, $FF
     ret
 
@@ -8270,10 +8273,10 @@ Func_005_6985:: ; address name
     ldh [hTemp4], a
     ldh [hTemp5], a
 
-Jump_005_6996::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_69AD
+    jr c, .next
     call GetBattleDEF_Bank05
     ldh a, [hTemp4]
     add a, l
@@ -8284,10 +8287,10 @@ Jump_005_6996::
     ld hl, hTemp3
     inc [hl]
 
-Jump_005_69AD::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6996
+    jr nz, .loop
     ldh a, [hTemp4]
     ld l, a
     ldh a, [hTemp5]
@@ -8306,11 +8309,11 @@ Jump_005_69AD::
     add hl, de
     pop bc
     call CompareHLToBC
-    jr nc, Jump_005_69D7
+    jr nc, .done
     ld c, $00
     ret
 
-Jump_005_69D7::
+.done:
     ld c, $FF
     ret
 
@@ -8325,18 +8328,18 @@ Func_005_69DA:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $02
-    jr nz, Jump_005_69EF
+    jr nz, .done
     inc hl
     inc hl
     ld a, [hl]
     and a, $03
-    jr z, Jump_005_69F2
+    jr z, .done2
 
-Jump_005_69EF::
+.done:
     ld c, $00
     ret
 
-Jump_005_69F2::
+.done2:
     ld c, $FF
     ret
 
@@ -8349,15 +8352,15 @@ ResistanceAverageGateForAISide:: ; heuristic: follows a terminator; C0
 Func_005_69F5:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_6A03
+    jr z, .check_record_buffer_data
     ld a, [wBattleActor]
     cp a, $04
-    jr nc, Jump_005_6A68
+    jr nc, .done3
 
-Jump_005_6A03::
+.check_record_buffer_data:
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_6A65
+    jr z, .done2
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a, a
@@ -8381,10 +8384,10 @@ Jump_005_6A03::
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6A32::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6A46
+    jr c, .skip
     ldh a, [hTemp0]
     inc a
     ldh [hTemp0], a
@@ -8394,7 +8397,7 @@ Jump_005_6A32::
     add a, d
     ldh [hTemp1], a
 
-Jump_005_6A46::
+.skip:
     ld a, l
     add a, $07
     ld l, a
@@ -8403,26 +8406,26 @@ Jump_005_6A46::
     ld h, a
     inc c
     dec b
-    jr nz, Jump_005_6A32
+    jr nz, .loop
     ldh a, [hTemp1]
     or a, a
-    jr z, Jump_005_6A62
+    jr z, .done
     ld b, a
     ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
-    jr nc, Jump_005_6A65
+    jr nc, .done2
 
-Jump_005_6A62::
+.done:
     ld c, $00
     ret
 
-Jump_005_6A65::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_6A68::
+.done3:
     ld c, $01
     ret
 
@@ -8435,16 +8438,16 @@ ResistanceAverageGateForFoeAIMode3:: ; heuristic: follows a terminator; C0
 Func_005_6A6B:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr z, Jump_005_6AE5
+    jr z, .done3
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_005_6AE5
+    jr c, .done3
     call ReadSlotAIModeIndexed_Bank05
     cp a, $03
-    jr c, Jump_005_6AE5
+    jr c, .done3
     ld a, [wRecordBufferData + $1]
     or a, a
-    jr z, Jump_005_6AE2
+    jr z, .done2
     dec a
     ld hl, AnyFoeNotFullyResistant_Data
     add a, a
@@ -8468,10 +8471,10 @@ Func_005_6A6B:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6AAF::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6AC3
+    jr c, .skip
     ldh a, [hTemp0]
     inc a
     ldh [hTemp0], a
@@ -8481,7 +8484,7 @@ Jump_005_6AAF::
     add a, d
     ldh [hTemp1], a
 
-Jump_005_6AC3::
+.skip:
     ld a, l
     add a, $07
     ld l, a
@@ -8490,26 +8493,26 @@ Jump_005_6AC3::
     ld h, a
     inc c
     dec b
-    jr nz, Jump_005_6AAF
+    jr nz, .loop
     ldh a, [hTemp1]
     or a, a
-    jr z, Jump_005_6ADF
+    jr z, .done
     ld b, a
     ldh a, [hTemp0]
     call DivideBByA
     ld a, b
     cp a, $02
-    jr nc, Jump_005_6AE2
+    jr nc, .done2
 
-Jump_005_6ADF::
+.done:
     ld c, $00
     ret
 
-Jump_005_6AE2::
+.done2:
     ld c, $FF
     ret
 
-Jump_005_6AE5::
+.done3:
     ld c, $01
     ret
 
@@ -8574,7 +8577,7 @@ Func_005_6B20:: ; address name
     sub a, $E7
     ld a, h
     sbc a, $03
-    jr nc, Jump_005_6B5B
+    jr nc, .return_0
     push hl
     push bc
     farcall GetBaseDEF
@@ -8589,31 +8592,31 @@ Func_005_6B20:: ; address name
     rl d
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_005_6B4C
+    jr z, .skip
     cp a, $02
-    jr nz, Jump_005_6B51
+    jr nz, .skip2
 
-Jump_005_6B4C::
+.skip:
     ld a, c
     cp a, $04
-    jr nc, Jump_005_6B55
+    jr nc, .skip3
 
-Jump_005_6B51::
+.skip2:
     sla e
     rl d
 
-Jump_005_6B55::
+.skip3:
     ld a, e
     sub a, l
     ld a, d
     sbc a, h
-    jr nc, Jump_005_6B5D
+    jr nc, .return_carry
 
-Jump_005_6B5B::
+.return_0:
     xor a, a
     ret
 
-Jump_005_6B5D::
+.return_carry:
     scf
     ret
 
@@ -8627,7 +8630,7 @@ Func_005_6B5F:: ; address name
     sub a, $E7
     ld a, h
     sbc a, $03
-    jr nc, Jump_005_6B9A
+    jr nc, .return_0
     push hl
     push bc
     farcall GetBaseAGL
@@ -8642,31 +8645,31 @@ Func_005_6B5F:: ; address name
     rl d
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_005_6B8B
+    jr z, .skip
     cp a, $02
-    jr nz, Jump_005_6B90
+    jr nz, .skip2
 
-Jump_005_6B8B::
+.skip:
     ld a, c
     cp a, $04
-    jr nc, Jump_005_6B94
+    jr nc, .skip3
 
-Jump_005_6B90::
+.skip2:
     sla e
     rl d
 
-Jump_005_6B94::
+.skip3:
     ld a, e
     sub a, l
     ld a, d
     sbc a, h
-    jr nc, Jump_005_6B9C
+    jr nc, .return_carry
 
-Jump_005_6B9A::
+.return_0:
     xor a, a
     ret
 
-Jump_005_6B9C::
+.return_carry:
     scf
     ret
 
@@ -8788,7 +8791,7 @@ Func_005_6C02:: ; address name
     ld b, $08
     ld c, d
 
-Jump_005_6C26::
+.loop:
     push bc
     push hl
     ld a, [hl]
@@ -8798,14 +8801,14 @@ Jump_005_6C26::
     pop bc
     ldh a, [hTemp0]
     and a, c
-    jr nz, Jump_005_6C3F
+    jr nz, .done
     inc hl
     inc hl
     dec b
-    jr nz, Jump_005_6C26
+    jr nz, .loop
     xor a, a
 
-Jump_005_6C3F::
+.done:
     ld d, c
     pop bc
     ret
@@ -8833,10 +8836,10 @@ Func_005_6C42:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_005_6C66::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_005_6C7E
+    jr z, .next
     push bc
     push hl
     ld [wRecordBuffer], a
@@ -8845,13 +8848,13 @@ Jump_005_6C66::
     pop bc
     ldh a, [hTemp0]
     or a, a
-    jr nz, Jump_005_6C7E
+    jr nz, .next
     inc c
 
-Jump_005_6C7E::
+.next:
     inc hl
     dec b
-    jr nz, Jump_005_6C66
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -8863,31 +8866,31 @@ Get2BitFieldEOfHL::
 Func_005_6C86:: ; address name
     ld a, e
     or a, a
-    jr z, Jump_005_6C97
+    jr z, .skip
     cp a, $01
-    jr z, Jump_005_6C9A
+    jr z, .skip2
     cp a, $02
-    jr z, Jump_005_6C9F
+    jr z, .skip3
     ld a, [hl]
     rlca
     rlca
-    jr Jump_005_6CA2
+    jr .done
 
-Jump_005_6C97::
+.skip:
     ld a, [hl]
-    jr Jump_005_6CA2
+    jr .done
 
-Jump_005_6C9A::
+.skip2:
     ld a, [hl]
     rrca
     rrca
-    jr Jump_005_6CA2
+    jr .done
 
-Jump_005_6C9F::
+.skip3:
     ld a, [hl]
     swap a
 
-Jump_005_6CA2::
+.done:
     and a, $03
     ret
 
@@ -8926,16 +8929,16 @@ Func_005_6CC2:: ; address name
     ldh [hTemp0], a
     ldh [hTemp1], a
 
-Jump_005_6CD1::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr nc, Jump_005_6CDD
+    jr nc, .call_get_battle_def_bank05
     inc c
     dec b
-    jr nz, Jump_005_6CD1
-    jr Jump_005_6D06
+    jr nz, .loop
+    jr .return
 
-Jump_005_6CDD::
+.call_get_battle_def_bank05:
     ld a, c
     call GetBattleDEF_Bank05
     ld a, l
@@ -8944,29 +8947,29 @@ Jump_005_6CDD::
     ldh [hTemp1], a
     inc c
     dec b
-    jr z, Jump_005_6D06
+    jr z, .return
 
-Jump_005_6CEB::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6D02
+    jr c, .next
     call GetBattleDEF_Bank05
     ldh a, [hTemp0]
     sub a, l
     ldh a, [hTemp1]
     sbc a, h
-    jr c, Jump_005_6D02
+    jr c, .next
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
-Jump_005_6D02::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6CEB
+    jr nz, .loop2
 
-Jump_005_6D06::
+.return:
     ret
 
 ; slot C: returns NZ when bit 1 of status byte 0 is set, otherwise A = status byte 4 & 3 with flags from it (E-0122)
@@ -8978,7 +8981,7 @@ Func_005_6D07:: ; address name
     ld hl, wBattleStatus1
     call AddAx9ToHL
     bit 1, [hl]
-    jr nz, Jump_005_6D19
+    jr nz, .return
     inc hl
     inc hl
     inc hl
@@ -8986,7 +8989,7 @@ Func_005_6D07:: ; address name
     ld a, [hl]
     and a, $03
 
-Jump_005_6D19::
+.return:
     ret
 
 ; A = how many of slot A's eight skills are $03, $06, $09, $0C, $0F, $12, $13 or $14 (Z set when none); BC kept (E-0175)
@@ -9000,33 +9003,33 @@ Func_005_6D1A:: ; address name
     push bc
     ld bc, $0800
 
-Jump_005_6D28::
+.loop:
     ld a, [hl+]
     cp a, $03
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $06
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $09
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $0C
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $0F
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $12
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $13
-    jr z, Jump_005_6D4B
+    jr z, .next
     cp a, $14
-    jr z, Jump_005_6D4B
-    jr Jump_005_6D4C
+    jr z, .next
+    jr .next2
 
-Jump_005_6D4B::
+.next:
     inc c
 
-Jump_005_6D4C::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_005_6D28
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -9043,41 +9046,41 @@ Func_005_6D54:: ; address name
     push bc
     ld bc, $0800
 
-Jump_005_6D62::
+.loop:
     ld a, [hl+]
     cp a, $03
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $06
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $09
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $0C
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $0F
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $12
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $13
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $14
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $15
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $3D
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $3E
-    jr z, Jump_005_6D95
+    jr z, .next
     cp a, $3F
-    jr z, Jump_005_6D95
-    jr Jump_005_6D96
+    jr z, .next
+    jr .next2
 
-Jump_005_6D95::
+.next:
     inc c
 
-Jump_005_6D96::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_005_6D62
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -9094,34 +9097,34 @@ Func_005_6D9E:: ; address name
     push bc
     ld bc, $0800
 
-Jump_005_6DAC::
+.loop:
     ld a, [hl+]
     or a, a
-    jr z, Jump_005_6DD1
+    jr z, .next2
     cp a, $FF
-    jr z, Jump_005_6DD1
+    jr z, .next2
     cp a, $16
-    jr c, Jump_005_6DD1
+    jr c, .next2
     cp a, $25
-    jr c, Jump_005_6DD0
+    jr c, .next
     cp a, $7B
-    jr c, Jump_005_6DD1
+    jr c, .next2
     cp a, $7D
-    jr c, Jump_005_6DD0
+    jr c, .next
     cp a, $81
-    jr z, Jump_005_6DD0
+    jr z, .next
     cp a, $9F
-    jr c, Jump_005_6DD1
+    jr c, .next2
     cp a, $A1
-    jr nc, Jump_005_6DD1
+    jr nc, .next2
 
-Jump_005_6DD0::
+.next:
     inc c
 
-Jump_005_6DD1::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_005_6DAC
+    jr nz, .loop
     ld a, c
     pop bc
     or a, a
@@ -9138,23 +9141,23 @@ Func_005_6DD9:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_005_6DE7::
+.loop:
     ld a, [hl+]
     cp a, $16
-    jr c, Jump_005_6DF9
+    jr c, .next2
     cp a, $1B
-    jr c, Jump_005_6DF8
+    jr c, .next
     cp a, $1E
-    jr c, Jump_005_6DF9
+    jr c, .next2
     cp a, $21
-    jr nc, Jump_005_6DF9
+    jr nc, .next2
 
-Jump_005_6DF8::
+.next:
     inc c
 
-Jump_005_6DF9::
+.next2:
     dec b
-    jr nz, Jump_005_6DE7
+    jr nz, .loop
     ld a, c
     pop bc
     ret
@@ -9173,10 +9176,10 @@ Func_005_6DFF:: ; address name
     ldh [hTemp1], a
     ldh [hTemp2], a
 
-Jump_005_6E09::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6E20
+    jr c, .next
     call GetBattleAGL_Bank05
     ldh a, [hTemp1]
     add a, l
@@ -9187,10 +9190,10 @@ Jump_005_6E09::
     ld hl, hTemp0
     inc [hl]
 
-Jump_005_6E20::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6E09
+    jr nz, .loop
     ldh a, [hTemp1]
     ld l, a
     ldh a, [hTemp2]
@@ -9276,12 +9279,12 @@ Func_005_6E8B:: ; address name
     ld [wBattleArg3], a
     ld b, $08
 
-Jump_005_6EAF::
+.loop:
     push bc
     ld a, [hl+]
     ld [wRecordBuffer], a
     cp a, $FF
-    jr z, Jump_005_6ECA
+    jr z, .restore
     push de
     push hl
     farcall LoadSkillRecordPart
@@ -9290,14 +9293,14 @@ Jump_005_6EAF::
     inc d
     ldh a, [hTemp2]
     bit 6, [hl]
-    jr z, Jump_005_6ECA
+    jr z, .restore
     inc e
 
-Jump_005_6ECA::
+.restore:
     pop bc
     inc hl
     dec b
-    jr nz, Jump_005_6EAF
+    jr nz, .loop
     pop bc
     ret
 
@@ -9313,28 +9316,28 @@ Func_005_6ED1:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_005_6EE0::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_005_6EF9
+    jr z, .next2
     or a, a
-    jr z, Jump_005_6EF9
+    jr z, .next2
     cp a, $16
-    jr c, Jump_005_6EF8
+    jr c, .next
     cp a, $2E
-    jr c, Jump_005_6EF9
+    jr c, .next2
     cp a, $31
-    jr z, Jump_005_6EF9
+    jr z, .next2
     cp a, $35
-    jr nc, Jump_005_6EF9
+    jr nc, .next2
 
-Jump_005_6EF8::
+.next:
     inc c
 
-Jump_005_6EF9::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_005_6EE0
+    jr nz, .loop
     ld a, c
     pop bc
     or a, a
@@ -9351,18 +9354,18 @@ Func_005_6F01:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_005_6F0F::
+.loop:
     ld a, [hl+]
     cp a, $40
-    jr c, Jump_005_6F19
+    jr c, .next
     cp a, $48
-    jr nc, Jump_005_6F19
+    jr nc, .next
     inc c
 
-Jump_005_6F19::
+.next:
     inc hl
     dec b
-    jr nz, Jump_005_6F0F
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -9379,36 +9382,36 @@ Func_005_6F21:: ; address name
     add_a_to_hl
     ld bc, $0800
 
-Jump_005_6F2F::
+.loop:
     ld a, [hl+]
     or a, a
-    jr z, Jump_005_6F58
+    jr z, .next2
     cp a, $FF
-    jr z, Jump_005_6F58
+    jr z, .next2
     cp a, $16
-    jr c, Jump_005_6F57
+    jr c, .next
     cp a, $40
-    jr c, Jump_005_6F58
+    jr c, .next2
     cp a, $68
-    jr c, Jump_005_6F57
+    jr c, .next
     cp a, $6A
-    jr c, Jump_005_6F58
+    jr c, .next2
     cp a, $71
-    jr c, Jump_005_6F57
+    jr c, .next
     cp a, $8B
-    jr c, Jump_005_6F58
+    jr c, .next2
     cp a, $94
-    jr c, Jump_005_6F57
+    jr c, .next
     cp a, $AA
-    jr nz, Jump_005_6F58
+    jr nz, .next2
 
-Jump_005_6F57::
+.next:
     inc c
 
-Jump_005_6F58::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_005_6F2F
+    jr nz, .loop
     ld a, c
     or a, a
     pop bc
@@ -9440,10 +9443,10 @@ AnySlotLacksStatusMask::
 Func_005_6FA1:: ; address name
     ld c, a
 
-Jump_005_6FA2::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6FB3
+    jr c, .next
     push hl
     ld a, c
     call AddAx9ToHL
@@ -9451,16 +9454,16 @@ Jump_005_6FA2::
     pop hl
     and a, e
     and a, a
-    jr z, Jump_005_6FBA
+    jr z, .done
 
-Jump_005_6FB3::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6FA2
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_6FBA::
+.done:
     ld c, $FF
     ret
 
@@ -9470,10 +9473,10 @@ AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_6FBD:: ; address name
     ld c, a
 
-Jump_005_6FBE::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6FCF
+    jr c, .next
     push hl
     ld a, c
     call AddAx9ToHL
@@ -9481,16 +9484,16 @@ Jump_005_6FBE::
     pop hl
     and a, e
     and a, a
-    jr nz, Jump_005_6FD6
+    jr nz, .done
 
-Jump_005_6FCF::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6FBE
+    jr nz, .loop
     ld c, $00
     ret
 
-Jump_005_6FD6::
+.done:
     ld c, $FF
     ret
 
@@ -9505,27 +9508,27 @@ Func_005_6FD9:: ; address name
     ld c, a
     ld b, $03
 
-Jump_005_6FE3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_005_6FF1
+    jr c, .next
     push de
     call GetSlotSpeciesFamily
     pop de
     cp a, e
-    jr z, Jump_005_6FF7
+    jr z, .done
 
-Jump_005_6FF1::
+.next:
     inc c
     dec b
-    jr nz, Jump_005_6FE3
-    jr Jump_005_6FFA
+    jr nz, .loop
+    jr .done2
 
-Jump_005_6FF7::
+.done:
     ld c, $00
     ret
 
-Jump_005_6FFA::
+.done2:
     ld c, $FF
     ret
 
@@ -9618,30 +9621,30 @@ Func_005_7058:: ; address name
     add hl, de
     ld e, $08
 
-Jump_005_7061::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_005_707A
+    jr z, .done
     cp a, $16
-    jr c, Jump_005_7076
+    jr c, .next
     cp a, $1B
-    jr c, Jump_005_707E
+    jr c, .return_0
     cp a, $7C
-    jr z, Jump_005_707E
+    jr z, .return_0
     cp a, $A1
-    jr z, Jump_005_707E
+    jr z, .return_0
 
-Jump_005_7076::
+.next:
     inc hl
     dec b
-    jr nz, Jump_005_7061
+    jr nz, .loop
 
-Jump_005_707A::
+.done:
     ld a, $01
     or a, a
     ret
 
-Jump_005_707E::
+.return_0:
     xor a, a
     ret
 
@@ -9652,10 +9655,10 @@ Func_005_7080:: ; address name
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7088
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7088::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9666,38 +9669,38 @@ Func_005_708C:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_70C5
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_70C5::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9708,38 +9711,38 @@ Func_005_70C9:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     farcall CheckBattleKindNot2Or3
     ld a, c
     and a, a
-    jr z, Jump_005_7105
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7105::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9750,54 +9753,54 @@ Func_005_7109:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call AIGateFoeStatus1Mask22
     ld a, c
     cp a, $01
-    jr z, Jump_005_714C
+    jr z, .call_check_side0_flag_not1
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_714C::
+.call_check_side0_flag_not1:
     call CheckSide0FlagNot1
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     call CheckBattleKindNot2Or3
     ld a, c
     and a, a
-    jr z, Jump_005_715B
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_715B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9808,26 +9811,26 @@ Func_005_715F:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7183
+    jr z, .call_reset_ai_skill_score
     call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
-    jr z, Jump_005_7183
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_7183
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7183
+    jr z, .call_reset_ai_skill_score
     call AnyAllyHPBelow6298
     ld a, c
     and a, a
-    jr z, Jump_005_7183
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7183::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9837,26 +9840,26 @@ AIScore_MPass_ActorLacksStatus4Bits67:: ; heuristic: follows a terminator; C0
 Func_005_7187:: ; address name
     ld a, c
     and a, a
-    jr z, Jump_005_71A8
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_71A8
+    jr z, .call_reset_ai_skill_score
     call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_71A8
+    jr z, .call_reset_ai_skill_score
     call SetCToZero
     ld a, c
     and a, a
-    jr z, Jump_005_71A8
+    jr z, .call_reset_ai_skill_score
     call AIScore_MPass_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_71A8
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_71A8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9871,10 +9874,10 @@ Func_005_71AC:: ; address name
     call AnyOwnSideSlotOutIs1
     ld a, c
     and a, a
-    jr z, Jump_005_71BA
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_71BA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9889,18 +9892,18 @@ Func_005_71BE:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_71DA
+    jr z, .call_reset_ai_skill_score
     call AnyOwnSideSlotOutIs1
     ld a, c
     and a, a
-    jr z, Jump_005_71DA
+    jr z, .call_reset_ai_skill_score
     call CheckSide0FlagNot1
     ld a, c
     and a, a
-    jr z, Jump_005_71DA
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_71DA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -9915,11 +9918,11 @@ Func_005_71DE:: ; address name
     call AIScore_Antidote_Conditions_AnySlotHasStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_71EE
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_71EE::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -9935,11 +9938,11 @@ Func_005_71F4:: ; address name
     call AIScore_DeChaos_Conditions_AnySlotHasStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_7204
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7204::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -9955,11 +9958,11 @@ Func_005_720A:: ; address name
     call AIScore_NumbOff_Conditions_AnySlotHasStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_721A
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_721A::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -9975,11 +9978,11 @@ Func_005_7220:: ; address name
     call AIScore_CurseOff_Conditions_AnySlotHasStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_7230
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7230::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -9995,14 +9998,14 @@ Func_005_7236:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_724B
+    jr z, .call_reset_ai_skill_score
     call AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_724B
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_724B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10017,10 +10020,10 @@ Func_005_724F:: ; address name
     call AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_725D
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_725D::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10035,14 +10038,14 @@ Func_005_7261:: ; address name
     call AnyFoeLacksStatus2Mask22
     ld a, c
     and a, a
-    jr z, Jump_005_7276
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7276
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7276::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10057,14 +10060,14 @@ Func_005_727A:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_728F
+    jr z, .call_reset_ai_skill_score
     call AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_728F
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_728F::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10079,14 +10082,14 @@ Func_005_7293:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_72A8
+    jr z, .call_reset_ai_skill_score
     call AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_72A8
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_72A8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10101,10 +10104,10 @@ Func_005_72AC:: ; address name
     call AnyAllyLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr z, Jump_005_72BA
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_72BA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10119,18 +10122,18 @@ Func_005_72BE:: ; address name
     call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr z, Jump_005_72DA
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_72DA
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA73Field0
     ld a, c
     and a, a
-    jr z, Jump_005_72DA
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_72DA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10145,14 +10148,14 @@ Func_005_72DE:: ; address name
     call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr z, Jump_005_72F3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA74Field3
     ld a, c
     and a, a
-    jr z, Jump_005_72F3
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_72F3::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10167,26 +10170,26 @@ Func_005_72F7:: ; address name
     call AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_005_7308
+    jr z, .call_any_foe_lacks_status0_bit6
     and a, a
-    jr z, Jump_005_731E
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7308::
+.call_any_foe_lacks_status0_bit6:
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_731E
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_731E
+    jr z, .call_reset_ai_skill_score
     call AIScore_TakeMagic_Conditions_AddAx9ToHL
     ld a, c
     and a, a
-    jr z, Jump_005_731E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_731E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10201,18 +10204,18 @@ Func_005_7322:: ; address name
     call AnyFoeHasMPReadsWrongOffset
     ld a, c
     and a, a
-    jr z, Jump_005_7341
+    jr z, .call_reset_ai_skill_score
     call AnyFoeWithMPOpenToWDA74Field1
     ld a, c
     and a, a
-    jr z, Jump_005_7341
+    jr z, .call_reset_ai_skill_score
     farcall ActorMPBelowThreeQuarters
     ld a, c
     and a, a
-    jr z, Jump_005_7341
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7341::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10227,26 +10230,26 @@ Func_005_7345:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_736C
+    jr z, .call_reset_ai_skill_score
     call AnyActiveFoeHasSkillFlag40
     ld a, c
     cp a, $01
-    jr z, Jump_005_735D
+    jr z, .call_any_foe_lacks_status1_bit0
     and a, a
-    jr z, Jump_005_736C
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_735D::
+.call_any_foe_lacks_status1_bit0:
     call AnyFoeLacksStatus1Bit0
     ld a, c
     and a, a
-    jr z, Jump_005_736C
+    jr z, .call_reset_ai_skill_score
     call AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_736C
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_736C::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10261,22 +10264,22 @@ Func_005_7370:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7393
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_7393
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
-    jr z, Jump_005_7393
+    jr z, .call_reset_ai_skill_score
     call AnyFoeVulnerableByWDA75Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7393
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7393::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10291,38 +10294,38 @@ Func_005_7397:: ; address name
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     call CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_73CB
+    jr z, .call_ally_check_side0_flag_and_other_slots
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_73CB::
+.call_ally_check_side0_flag_and_other_slots:
     call AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_73D3
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_73D3::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10337,34 +10340,34 @@ Func_005_73D7:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
     call AnyActiveFoeHasSkillFlag40
     ld a, c
     cp a, $01
-    jr z, Jump_005_73EF
+    jr z, .call_any_foe_not_blocked
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_73EF::
+.call_any_foe_not_blocked:
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
     call AIScore_MagicBack_Conditions_AddAx9ToHL
     ld a, c
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
     call CheckWD044RuleBit5
     ld a, c
     and a, a
-    jr z, Jump_005_740C
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_740C::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10379,34 +10382,34 @@ Func_005_7410:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasSkillFlag10
     ld a, c
     cp a, $01
-    jr z, Jump_005_7428
+    jr z, .call_any_foe_lacks_status1_bit7
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7428::
+.call_any_foe_lacks_status1_bit7:
     call AnyFoeLacksStatus1Bit7
     ld a, c
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
     call AnyAllyLacksStatus2Bit2
     ld a, c
     and a, a
-    jr z, Jump_005_7445
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7445::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10421,34 +10424,34 @@ Func_005_7449:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
     call AnyActiveFoeHasSkillFlag40
     ld a, c
     cp a, $01
-    jr z, Jump_005_7461
+    jr z, .call_any_foe_lacks_status1_bit0
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7461::
+.call_any_foe_lacks_status1_bit0:
     call AnyFoeLacksStatus1Bit0
     ld a, c
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
     call AIScore_MagicWall_Conditions_AnySlotLacksStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_747E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_747E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10463,10 +10466,10 @@ Func_005_7482:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7490
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7490::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10477,22 +10480,22 @@ Func_005_7494:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_74B1
+    jr z, .call_reset_ai_skill_score
     call SkillPassesStatus1Bit0Check
     ld a, c
     and a, a
-    jr z, Jump_005_74B1
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_74B1
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_74B1
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_74B1::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10507,14 +10510,14 @@ Func_005_74B5:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_74CD
+    jr z, .call_reset_ai_skill_score
     farcall CheckBattleKindAtLeast2OrLinkModeSet
     ld a, c
     and a, a
-    jr z, Jump_005_74CD
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_74CD::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10525,26 +10528,26 @@ Func_005_74D1:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_74F5
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_74F5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_74F5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
-    jr z, Jump_005_74F5
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_74F5
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_74F5::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10559,14 +10562,14 @@ Func_005_74F9:: ; address name
     call PassUnlessWCFF3Bit4AndActorStatusBit7
     ld a, c
     and a, a
-    jr z, Jump_005_750E
+    jr z, .call_reset_ai_skill_score
     call AIScore_FireAir_Sub02_AnySlotLacksStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_750E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_750E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10581,10 +10584,10 @@ Func_005_7512:: ; address name
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7520
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7520::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10599,11 +10602,11 @@ Func_005_7524:: ; address name
     call AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_7534
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7534::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10619,11 +10622,11 @@ Func_005_753A:: ; address name
     call AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_754A
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_754A::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10639,11 +10642,11 @@ Func_005_7550:: ; address name
     call AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_7560
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7560::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10659,11 +10662,11 @@ Func_005_7566:: ; address name
     call AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_7576
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7576::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10679,11 +10682,11 @@ Func_005_757C:: ; address name
     call AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_758C
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_758C::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10699,11 +10702,11 @@ Func_005_7592:: ; address name
     call AIScore_Shears_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_75A2
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_75A2::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10719,11 +10722,11 @@ Func_005_75A8:: ; address name
     call AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_75B8
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_75B8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10739,11 +10742,11 @@ Func_005_75BE:: ; address name
     call AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_75CE
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_75CE::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10759,11 +10762,11 @@ Func_005_75D4:: ; address name
     call AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_75E4
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_75E4::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10779,11 +10782,11 @@ Func_005_75EA:: ; address name
     call AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
-    jr nz, Jump_005_75FA
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_75FA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10799,11 +10802,11 @@ Func_005_7600:: ; address name
     call AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr nz, Jump_005_7610
+    jr nz, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7610::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10815,26 +10818,26 @@ Func_005_7616:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_763A
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_763A
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_763A
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
-    jr z, Jump_005_763A
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_763A
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_763A::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10849,15 +10852,15 @@ Func_005_763E:: ; address name
     call AnyFoeLacksStatus0Bits01
     ld a, c
     and a, a
-    jr z, Jump_005_7655
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA76Field0
     ld a, c
     and a, a
-    jr z, Jump_005_7655
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7655::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10873,11 +10876,11 @@ Func_005_765B:: ; address name
     call AnyFoeOpenToWDA77Field3
     ld a, c
     and a, a
-    jr z, Jump_005_766B
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_766B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10892,11 +10895,11 @@ Func_005_7671:: ; address name
     ret z
     call AnyFoeOpenToWDA74Field3
     ld a, c
-    jr z, Jump_005_7680
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7680::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10912,15 +10915,15 @@ Func_005_7686:: ; address name
     call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr z, Jump_005_769D
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_769D
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_769D::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10936,26 +10939,26 @@ Func_005_76A3:: ; address name
     call AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_76CA
+    jr z, .call_reset_ai_skill_score
     call FastestFoeAGLAbove31PercentOfActor
     ld a, c
     and a, a
-    jr z, Jump_005_76CA
+    jr z, .call_reset_ai_skill_score
     call PassIfBattleTurnNonZero
     ld a, c
     and a, a
-    jr z, Jump_005_76CA
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_76C9
+    jr z, .return
     and a, a
-    jr z, Jump_005_76CA
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_76C9::
+.return:
     ret
 
-Jump_005_76CA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -10970,10 +10973,10 @@ Func_005_76CE:: ; address name
     call AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_76DC
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_76DC::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -10989,11 +10992,11 @@ Func_005_76E2:: ; address name
     call AtLeastTwoFoesPresent
     ld a, c
     and a, a
-    jr z, Jump_005_76F2
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_76F2::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -11009,10 +11012,10 @@ Func_005_76F8:: ; address name
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_7706
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7706::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11023,22 +11026,22 @@ Func_005_770A:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7727
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7727
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7727
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
-    jr z, Jump_005_7727
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7727::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11049,22 +11052,22 @@ Func_005_772B:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_774B
+    jr z, .call_reset_ai_skill_score
     call CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr z, Jump_005_774B
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
-    jr z, Jump_005_774B
+    jr z, .call_reset_ai_skill_score
     farcall ActorStatus4CheckReadsAddress
     ld a, c
     and a, a
-    jr z, Jump_005_774B
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_774B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11075,26 +11078,26 @@ Func_005_774F:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7773
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7773
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus2Bit3
     ld a, c
     and a, a
-    jr z, Jump_005_7773
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7773
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7773
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7773::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11106,10 +11109,10 @@ Func_005_7777:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7782
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7782::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11124,14 +11127,14 @@ Func_005_7786:: ; address name
     call AnyFoeHasDEFAtLeast2
     ld a, c
     and a, a
-    jr z, Jump_005_779B
+    jr z, .call_reset_ai_skill_score
     call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_779B
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_779B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11142,26 +11145,26 @@ Func_005_779F:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_77C3
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_77C3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_77C3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_77C3
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_77C3
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_77C3::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11176,14 +11179,14 @@ Func_005_77C7:: ; address name
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_77DC
+    jr z, .call_reset_ai_skill_score
     call ActorHPIsNotOne
     ld a, c
     and a, a
-    jr z, Jump_005_77DC
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_77DC::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11198,14 +11201,14 @@ Func_005_77E0:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_77F5
+    jr z, .call_reset_ai_skill_score
     call AllOtherAlliesHaveStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_77F5
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_77F5::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11220,14 +11223,14 @@ Func_005_77F9:: ; address name
     call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr z, Jump_005_780E
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA74Field3
     ld a, c
     and a, a
-    jr z, Jump_005_780E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_780E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11242,10 +11245,10 @@ Func_005_7812:: ; address name
     call PassUnlessWCFF3Bit4AndActorStatusBit7
     ld a, c
     and a, a
-    jr z, Jump_005_7820
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7820::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11260,18 +11263,18 @@ Func_005_7824:: ; address name
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7843
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA77Field3
     ld a, c
     and a, a
-    jr z, Jump_005_7843
+    jr z, .call_reset_ai_skill_score
     farcall CheckBattleKindNot2Or3
     ld a, c
     and a, a
-    jr z, Jump_005_7843
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7843::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11286,14 +11289,14 @@ Func_005_7847:: ; address name
     call AnyFoeLacksStatus0Bits01
     ld a, c
     and a, a
-    jr z, Jump_005_785C
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA76Field0
     ld a, c
     and a, a
-    jr z, Jump_005_785C
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_785C::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11308,14 +11311,14 @@ Func_005_7860:: ; address name
     call AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_7875
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA76Field0
     ld a, c
     and a, a
-    jr z, Jump_005_7875
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7875::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11326,30 +11329,30 @@ Func_005_7879:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit4AndActorStatusBit7
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     call AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     call AIScore_Curse_Conditions_AnySlotLacksStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_78A4
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_78A4::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11364,19 +11367,19 @@ Func_005_78A8:: ; address name
     call AnyFoeHasMPReadsWrongOffset
     ld a, c
     and a, a
-    jr z, Jump_005_78C6
+    jr z, .call_reset_ai_skill_score
     call AnyFoeWithMPOpenToWDA74Field1
     ld a, c
     and a, a
-    jr z, Jump_005_78C6
+    jr z, .call_reset_ai_skill_score
     call ActorMPBelowThreeQuarters
     ld a, c
     and a, a
-    jr z, Jump_005_78C6
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_78C6::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -11392,18 +11395,18 @@ Func_005_78CC:: ; address name
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_78E8
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
-    jr z, Jump_005_78E8
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_78E8
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_78E8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11414,22 +11417,22 @@ Func_005_78EC:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7909
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit5AndActorStatusBit6
     ld a, c
     and a, a
-    jr z, Jump_005_7909
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7909
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7909
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7909::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11444,10 +11447,10 @@ Func_005_790D:: ; address name
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_791B
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_791B::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11462,22 +11465,22 @@ Func_005_791F:: ; address name
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7942
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7942
+    jr z, .call_reset_ai_skill_score
     call AnyFoeVulnerableByWDA77Bits23
     ld a, c
     and a, a
-    jr z, Jump_005_7942
+    jr z, .call_reset_ai_skill_score
     call AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_7942
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7942::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11488,30 +11491,30 @@ Func_005_7946:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit5AndActorStatusBit6
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     call AnyOwnSideSlotOutIs1
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     call CheckSide0FlagNot1
     ld a, c
     and a, a
-    jr z, Jump_005_7971
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7971::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11522,22 +11525,22 @@ Func_005_7975:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7992
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit5AndActorStatusBit6
     ld a, c
     and a, a
-    jr z, Jump_005_7992
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7992
+    jr z, .call_reset_ai_skill_score
     call AnyAllyHPBelow6298
     ld a, c
     and a, a
-    jr z, Jump_005_7992
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7992::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11548,30 +11551,30 @@ Func_005_7996:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit5AndActorStatusBit6
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     call AIScore_SideStep_Conditions_AddAx9ToHL
     ld a, c
     and a, a
-    jr z, Jump_005_79C1
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_79C1::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11586,18 +11589,18 @@ Func_005_79C5:: ; address name
     call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr z, Jump_005_79E1
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_79E1
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA73Field0
     ld a, c
     and a, a
-    jr z, Jump_005_79E1
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_79E1::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11608,26 +11611,26 @@ Func_005_79E5:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A09
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7A09
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr z, Jump_005_7A09
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7A09
+    jr z, .call_reset_ai_skill_score
     call AnyFoeOpenToWDA73Field0
     ld a, c
     and a, a
-    jr z, Jump_005_7A09
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7A09::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11638,18 +11641,18 @@ Func_005_7A0D:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A23
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_7A23
+    jr z, .call_reset_ai_skill_score
     call AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7A23
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7A23::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11660,15 +11663,15 @@ Func_005_7A27:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A38
+    jr z, .call_reset_ai_skill_score
     call AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7A38
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7A38::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -11680,15 +11683,15 @@ Func_005_7A3E:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A4F
+    jr z, .call_reset_ai_skill_score
     call AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7A4F
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7A4F::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -11700,15 +11703,15 @@ Func_005_7A55:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A66
+    jr z, .call_reset_ai_skill_score
     call AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7A66
+    jr z, .call_reset_ai_skill_score
     ld c, $FF
     ret
 
-Jump_005_7A66::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ld c, $00
     ret
@@ -11720,26 +11723,26 @@ Func_005_7A6C:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7A8D
+    jr z, .call_reset_ai_skill_score
     call SkillPassesSideFlagBit3Check
     ld a, c
     and a, a
-    jr z, Jump_005_7A8D
+    jr z, .call_reset_ai_skill_score
     call AnyActiveFoeHasSkillFlag40
     ld a, c
     cp a, $01
-    jr z, Jump_005_7A85
+    jr z, .call_any_foe_has_mp_reads_wrong_offset
     and a, a
-    jr z, Jump_005_7A8D
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7A85::
+.call_any_foe_has_mp_reads_wrong_offset:
     call AnyFoeHasMPReadsWrongOffset
     ld a, c
     and a, a
-    jr z, Jump_005_7A8D
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7A8D::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11750,14 +11753,14 @@ Func_005_7A91:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7AA0
+    jr z, .call_reset_ai_skill_score
     call AIScore_TatsuCall_Conditions_ReadBattleActor
     ld a, c
     and a, a
-    jr z, Jump_005_7AA0
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7AA0::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11768,26 +11771,26 @@ Func_005_7AA4:: ; address name
     call PassUnlessWCFF3Bit4AndActorStatusBit7
     ld a, c
     and a, a
-    jr z, Jump_005_7AC8
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7AC8
+    jr z, .call_reset_ai_skill_score
     call AIScore_SuckAir_Conditions_ReadBattleActor
     ld a, c
     and a, a
-    jr z, Jump_005_7AC8
+    jr z, .call_reset_ai_skill_score
     call ActorLacksStatus4Bits45
     ld a, c
     and a, a
-    jr z, Jump_005_7AC8
+    jr z, .call_reset_ai_skill_score
     call AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD
     ld a, c
     and a, a
-    jr z, Jump_005_7AC8
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7AC8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11798,10 +11801,10 @@ Func_005_7ACC:: ; address name
     call ActorLacksStatus4Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7AD4
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7AD4::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11812,34 +11815,34 @@ Func_005_7AD8:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     call AnyFoeVulnerableByWDA77Bits23
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_7B0D
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7B0D::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11850,30 +11853,30 @@ Func_005_7B11:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     call AnyFoeVulnerableByWDA77Bits23
     ld a, c
     and a, a
-    jr z, Jump_005_7B3C
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7B3C::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11888,14 +11891,14 @@ Func_005_7B40:: ; address name
     call AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7B58
+    jr z, .call_reset_ai_skill_score
     farcall AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_7B58
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7B58::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11906,26 +11909,26 @@ Func_005_7B5C:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7B80
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7B80
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7B80
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotFullyResistant
     ld a, c
     and a, a
-    jr z, Jump_005_7B80
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasClearStatus3
     ld a, c
     and a, a
-    jr z, Jump_005_7B80
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7B80::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11936,38 +11939,38 @@ Func_005_7B84:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     call PassUnlessWCFF3Bit5AndActorStatusBit6
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     call AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_005_7BAB
+    jr z, .call_ai_score_dance_shut_conditions_any_slot
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7BAB::
+.call_ai_score_dance_shut_conditions_any_slot:
     call AIScore_DanceShut_Conditions_AnySlotLacksStatusMask
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     call AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
-    jr z, Jump_005_7BBA
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7BBA::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -11978,26 +11981,26 @@ Func_005_7BBE:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7BE2
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7BE2
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7BE2
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus1Bit7
     ld a, c
     and a, a
-    jr z, Jump_005_7BE2
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasSkillWithFlagD
     ld a, c
     and a, a
-    jr z, Jump_005_7BE2
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7BE2::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12022,22 +12025,22 @@ Func_005_7BEE:: ; address name
     call CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
     and a, a
-    jr z, Jump_005_7C0E
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_7C06
+    jr z, .call_pass_if_battle_turn_non_zero
     and a, a
-    jr z, Jump_005_7C0E
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7C06::
+.call_pass_if_battle_turn_non_zero:
     call PassIfBattleTurnNonZero
     ld a, c
     and a, a
-    jr z, Jump_005_7C0E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C0E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12052,10 +12055,10 @@ Func_005_7C12:: ; address name
     call AnyFoeLacksStatus5Bits01And1Bit1
     ld a, c
     and a, a
-    jr z, Jump_005_7C20
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C20::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12066,22 +12069,22 @@ Func_005_7C24:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7C41
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7C41
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7C41
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7C41
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C41::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12096,22 +12099,22 @@ Func_005_7C45:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7C65
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_7C5D
+    jr z, .call_pass_if_battle_turn_non_zero
     and a, a
-    jr z, Jump_005_7C65
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7C5D::
+.call_pass_if_battle_turn_non_zero:
     call PassIfBattleTurnNonZero
     ld a, c
     and a, a
-    jr z, Jump_005_7C65
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C65::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12126,14 +12129,14 @@ Func_005_7C69:: ; address name
     call AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_7C7E
+    jr z, .call_reset_ai_skill_score
     call ActorHPIsNotOne
     ld a, c
     and a, a
-    jr z, Jump_005_7C7E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C7E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12148,18 +12151,18 @@ Func_005_7C82:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7C9E
+    jr z, .call_reset_ai_skill_score
     call AIScore_TailWind_Conditions_AddAx9ToHL
     ld a, c
     and a, a
-    jr z, Jump_005_7C9E
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasSkillWithFlagD
     ld a, c
     and a, a
-    jr z, Jump_005_7C9E
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7C9E::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12174,18 +12177,18 @@ Func_005_7CA2:: ; address name
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7CBE
+    jr z, .call_reset_ai_skill_score
     call AnyAllyLacksStatus2Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7CBE
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasSkillWithFlagD
     ld a, c
     and a, a
-    jr z, Jump_005_7CBE
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7CBE::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12196,26 +12199,26 @@ Func_005_7CC2:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7CE3
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7CE3
+    jr z, .call_reset_ai_skill_score
     call AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
-    jr z, Jump_005_7CDB
+    jr z, .call_ai_score_aqua_wall_conditions_add_ax9_to
     and a, a
-    jr z, Jump_005_7CE3
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7CDB::
+.call_ai_score_aqua_wall_conditions_add_ax9_to:
     call AIScore_AquaWall_Conditions_AddAx9ToHL
     ld a, c
     and a, a
-    jr z, Jump_005_7CE3
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7CE3::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12226,10 +12229,10 @@ Func_005_7CE7:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7CEF
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7CEF::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12240,66 +12243,66 @@ Func_005_7CF3:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus3And4Bits
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasMPReadsWrongOffset
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeHasSkillFlag10
     ld a, c
     cp a, $01
-    jr z, Jump_005_7D21
+    jr z, .call_any_foe_lacks_status0_bit4
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7D21::
+.call_any_foe_lacks_status0_bit4:
     call AnyFoeLacksStatus0Bit4
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus1Bit7
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AnyAllyLacksStatus2Bit6
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call ActorHPIsNotOne
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_7D48
+    jr z, .call_actor_lacks_status4_bits45
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7D48::
+.call_actor_lacks_status4_bits45:
     call ActorLacksStatus4Bits45
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     call AllyCheckSide0FlagAndOtherSlots
     ld a, c
     and a, a
-    jr z, Jump_005_7D57
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7D57::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12310,38 +12313,38 @@ Func_005_7D5B:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_7D89
+    jr z, .call_pass_if_battle_turn_non_zero
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7D89::
+.call_pass_if_battle_turn_non_zero:
     call PassIfBattleTurnNonZero
     ld a, c
     and a, a
-    jr z, Jump_005_7D91
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7D91::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12352,14 +12355,14 @@ Func_005_7D95:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7DA4
+    jr z, .call_reset_ai_skill_score
     call AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7DA4
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7DA4::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12370,18 +12373,18 @@ Func_005_7DA8:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7DBE
+    jr z, .call_reset_ai_skill_score
     call AnyOwnSideSlotOutIs1
     ld a, c
     and a, a
-    jr z, Jump_005_7DBE
+    jr z, .call_reset_ai_skill_score
     call CheckSide0FlagNot1
     ld a, c
     and a, a
-    jr z, Jump_005_7DBE
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7DBE::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12392,18 +12395,18 @@ Func_005_7DC2:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
-    jr z, Jump_005_7DD8
+    jr z, .call_reset_ai_skill_score
     call SkillPassesRepeatCheck
     ld a, c
     and a, a
-    jr z, Jump_005_7DD8
+    jr z, .call_reset_ai_skill_score
     call AnyAllyHPBelow6298
     ld a, c
     and a, a
-    jr z, Jump_005_7DD8
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7DD8::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12414,10 +12417,10 @@ Func_005_7DDC:: ; address name
     call SetCToZero
     ld a, c
     and a, a
-    jr z, Jump_005_7DE4
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7DE4::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
 
@@ -12428,30 +12431,30 @@ Func_005_7DE8:: ; address name
     call AnyFoeLacksStatus5Bits67
     ld a, c
     and a, a
-    jr z, Jump_005_7E10
+    jr z, .call_reset_ai_skill_score
     call AnyFoeLacksStatus0MaskCC
     ld a, c
     and a, a
-    jr z, Jump_005_7E10
+    jr z, .call_reset_ai_skill_score
     call AnyFoeNotBlocked
     ld a, c
     and a, a
-    jr z, Jump_005_7E10
+    jr z, .call_reset_ai_skill_score
     call CheckAIFlagSetModeGated
     ld a, c
     cp a, $01
-    jr z, Jump_005_7E08
+    jr z, .call_pass_if_battle_turn_non_zero
     and a, a
-    jr z, Jump_005_7E10
+    jr z, .call_reset_ai_skill_score
 
-Jump_005_7E08::
+.call_pass_if_battle_turn_non_zero:
     call PassIfBattleTurnNonZero
     ld a, c
     and a, a
-    jr z, Jump_005_7E10
+    jr z, .call_reset_ai_skill_score
     ret
 
-Jump_005_7E10::
+.call_reset_ai_skill_score:
     call ResetAISkillScore
     ret
     ds $1EC, $00

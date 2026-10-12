@@ -8,11 +8,11 @@ DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01::
 Func_00E_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $88
-    jr c, Jump_00E_400F
+    jr c, .call_begin_string_display
     farcall DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay
     ret
 
-Jump_00E_400F::
+.call_begin_string_display:
     ld de, MessageStrings_Bank0E
     call BeginStringDisplay
     ret
@@ -24,11 +24,11 @@ CopyStringToBuffer_Bank0E:: ; heuristic: follows a terminator; C0
 Func_00E_4016:: ; address name
     ld a, [wStringIndex]
     cp a, $88
-    jr c, Jump_00E_4024
+    jr c, .call_copy_string_to_buffer
     farcall CopyStringToBuffer_Bank0E_Overflow
     ret
 
-Jump_00E_4024::
+.call_copy_string_to_buffer:
     ld de, MessageStrings_Bank0E
     call CopyStringToBuffer
     ret
@@ -997,11 +997,11 @@ Func_00E_5688:: ; address name
     ld hl, wChildRecord
     ld b, $A5
 
-Jump_00E_568D::
+.loop:
     xor a, a
     ld [hl+], a
     dec b
-    jr nz, Jump_00E_568D
+    jr nz, .loop
     ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
@@ -1022,82 +1022,82 @@ Jump_00E_568D::
     pop hl
     ld c, $00
 
-Jump_00E_56AE::
+.next:
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_570D
+    jr z, .skip2
     cp a, $FE
-    jr z, Jump_00E_56E2
+    jr z, .next3
     cp a, $FD
-    jr z, Jump_00E_5705
+    jr z, .next4
     cp a, $FC
-    jr z, Jump_00E_56DA
+    jr z, .next2
     cp a, $FB
-    jr z, Jump_00E_56D1
+    jr z, .check_arg1
     dec hl
     push hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_00E_5708
+    jr nz, .restore
     ld a, [hl]
     cp a, d
-    jr nz, Jump_00E_5708
-    jp Jump_00E_5710
+    jr nz, .restore
+    jp .restore2
 
-Jump_00E_56D1::
+.check_arg1:
     ld a, [wArg1]
     cp a, $02
-    jr nz, Jump_00E_570D
-    jr Jump_00E_5705
+    jr nz, .skip2
+    jr .next4
 
-Jump_00E_56DA::
+.next2:
     dec hl
     push hl
     ld b, [hl]
     ld hl, wRecordBufA + $6D
-    jr Jump_00E_56E8
+    jr .skip
 
-Jump_00E_56E2::
+.next3:
     dec hl
     push hl
     ld b, [hl]
     ld hl, wRecordBufB + $6D
 
-Jump_00E_56E8::
+.skip:
     ld a, [hl]
     cp a, b
-    jp nc, Jump_00E_56EF
-    jr Jump_00E_5708
+    jp nc, .read_record_buf_a
+    jr .restore
 
-Jump_00E_56EF::
+.read_record_buf_a:
     ld a, [wRecordBufA + $B]
     ld l, a
     ld a, [wRecordBufA + $C]
     ld h, a
     ld a, [wRecordBufB + $B]
     cp a, l
-    jr nz, Jump_00E_5708
+    jr nz, .restore
     ld a, [wRecordBufB + $C]
     cp a, h
-    jr nz, Jump_00E_5708
-    jr Jump_00E_5710
+    jr nz, .restore
+    jr .restore2
 
-Jump_00E_5705::
+.next4:
     dec hl
     push hl
     inc c
 
-Jump_00E_5708::
+.restore:
     pop hl
     inc hl
     inc hl
-    jr Jump_00E_56AE
+    jr .next
 
-Jump_00E_570D::
-    jp Jump_00E_5737
+.skip2:
+    jp .skip3
 
-Jump_00E_5710::
+.restore2:
     pop hl
     push bc
     ld hl, wRecordBufA + $B
@@ -1120,9 +1120,9 @@ Jump_00E_5710::
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    jp Jump_00E_5862
+    jp .read_arg6
 
-Jump_00E_5737::
+.skip3:
     ld hl, wRecordBufA + $B
     ld e, [hl]
     inc hl
@@ -1143,39 +1143,39 @@ Jump_00E_5737::
     pop hl
     ld c, $00
 
-Jump_00E_5754::
+.skip4:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_5777
+    jr z, .skip6
     cp a, $FE
-    jr z, Jump_00E_575F
-    jr Jump_00E_576A
+    jr z, .check_arg12
+    jr .skip5
 
-Jump_00E_575F::
+.check_arg12:
     ld a, [wArg1]
     cp a, $02
-    jr nz, Jump_00E_5777
+    jr nz, .skip6
     inc hl
     inc c
-    jr Jump_00E_5754
+    jr .skip4
 
-Jump_00E_576A::
+.skip5:
     push hl
     ld a, [hl]
     cp a, e
-    jr nz, Jump_00E_5772
-    jp Jump_00E_577A
+    jr nz, .restore3
+    jp .restore4
 
-Jump_00E_5772::
+.restore3:
     pop hl
     inc hl
     inc c
-    jr Jump_00E_5754
+    jr .skip4
 
-Jump_00E_5777::
-    jp Jump_00E_57A1
+.skip6:
+    jp .skip7
 
-Jump_00E_577A::
+.restore4:
     pop hl
     push bc
     ld hl, wRecordBufA + $B
@@ -1198,9 +1198,9 @@ Jump_00E_577A::
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    jp Jump_00E_5862
+    jp .read_arg6
 
-Jump_00E_57A1::
+.skip7:
     ld hl, wRecordBufA + $D
     ld a, [hl]
     and a, $0F
@@ -1219,38 +1219,38 @@ Jump_00E_57A1::
     pop hl
     ld c, $00
 
-Jump_00E_57BE::
+.next5:
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_57DD
+    jr z, .skip8
     cp a, $FD
-    jr z, Jump_00E_57D5
+    jr z, .next6
     dec hl
     push hl
     ld a, [hl+]
     cp a, e
-    jr nz, Jump_00E_57D8
+    jr nz, .restore5
     ld a, [hl]
     cp a, d
-    jr nz, Jump_00E_57D8
-    jp Jump_00E_57E0
+    jr nz, .restore5
+    jp .restore6
 
-Jump_00E_57D5::
+.next6:
     dec hl
     push hl
     inc c
 
-Jump_00E_57D8::
+.restore5:
     pop hl
     inc hl
     inc hl
-    jr Jump_00E_57BE
+    jr .next5
 
-Jump_00E_57DD::
-    jp Jump_00E_5808
+.skip8:
+    jp .skip9
 
-Jump_00E_57E0::
+.restore6:
     pop hl
     push bc
     ld hl, wRecordBufA + $D
@@ -1271,9 +1271,9 @@ Jump_00E_57E0::
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    jp Jump_00E_5862
+    jp .read_arg6
 
-Jump_00E_5808::
+.skip9:
     ld hl, wRecordBufA + $D
     ld a, [hl]
     and a, $0F
@@ -1294,17 +1294,17 @@ Jump_00E_5808::
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_5854
+    jr z, .set_arg6
     cp a, $FE
-    jr z, Jump_00E_583F
+    jr z, .set_arg6_to_FF
     dec hl
     ld a, [hl+]
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    jp Jump_00E_5862
+    jp .read_arg6
 
-Jump_00E_583F::
+.set_arg6_to_FF:
     ld a, $FF
     ld [wArg6], a
     ld a, $FF
@@ -1315,15 +1315,15 @@ Jump_00E_583F::
     ld [wArg5], a
     ret
 
-Jump_00E_5854::
+.set_arg6:
     ld hl, wRecordBufA + $B
     ld a, [hl+]
     ld [wArg6], a
     ld a, [hl]
     ld [wArg7], a
-    jp Jump_00E_5862
+    jp .read_arg6
 
-Jump_00E_5862::
+.read_arg6:
     ld hl, wChildRecord + $B
     ld a, [wArg6]
     ld [hl+], a
@@ -1369,7 +1369,7 @@ Jump_00E_5862::
     ld c, $00
     ld b, $08
 
-Jump_00E_58BB::
+.loop2:
     push hl
     ld a, c
     ld hl, ComputeBreedingChild_Data
@@ -1383,19 +1383,19 @@ Jump_00E_58BB::
     ld de, ComputeBreedingChild_Data
     add a, e
     ld e, a
-    jr nc, Jump_00E_58D7
+    jr nc, .skip10
     inc d
 
-Jump_00E_58D7::
+.skip10:
     ld a, [de]
     pop de
     push de
     add a, e
     ld e, a
-    jr nc, Jump_00E_58DF
+    jr nc, .skip11
     inc d
 
-Jump_00E_58DF::
+.skip11:
     push bc
     ld c, [hl]
     inc hl
@@ -1422,10 +1422,10 @@ Jump_00E_58DF::
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_00E_5904
+    jr nc, .skip12
     inc d
 
-Jump_00E_5904::
+.skip12:
     ld a, l
     ld [de], a
     inc de
@@ -1436,20 +1436,20 @@ Jump_00E_5904::
     pop hl
     inc c
     dec b
-    jr nz, Jump_00E_58BB
+    jr nz, .loop2
     ld a, $6F
     add_a_to_hl
     ld a, $6F
     add a, e
     ld e, a
-    jr nc, Jump_00E_591E
+    jr nc, .skip13
     inc d
 
-Jump_00E_591E::
+.skip13:
     ld c, $00
     ld b, $04
 
-Jump_00E_5922::
+.loop3:
     push hl
     push de
     push bc
@@ -1471,23 +1471,23 @@ Jump_00E_5922::
     inc de
     inc c
     dec b
-    jr nz, Jump_00E_5922
+    jr nz, .loop3
     ld hl, wRecordBufA + $6D
     ld de, wRecordBufB + $6D
     ld a, [wArg1]
     and a, a
-    jr z, Jump_00E_594F
+    jr z, .skip14
     ld a, [hl]
-    jr Jump_00E_5955
+    jr .skip15
 
-Jump_00E_594F::
+.skip14:
     ld b, [hl]
     ld a, [de]
     cp a, b
-    jr nc, Jump_00E_5955
+    jr nc, .skip15
     ld a, [hl]
 
-Jump_00E_5955::
+.skip15:
     ld b, a
     push bc
     ld hl, wRecordBufA + $56
@@ -1496,40 +1496,40 @@ Jump_00E_5955::
     ld a, [de]
     add a, b
     cp a, $64
-    jr nc, Jump_00E_5974
+    jr nc, .skip16
     cp a, $4C
-    jr nc, Jump_00E_5978
+    jr nc, .skip17
     cp a, $3C
-    jr nc, Jump_00E_597C
+    jr nc, .skip18
     cp a, $28
-    jr nc, Jump_00E_5980
+    jr nc, .skip19
     ld b, $01
-    jr Jump_00E_5982
+    jr .skip20
 
-Jump_00E_5974::
+.skip16:
     ld b, $05
-    jr Jump_00E_5982
+    jr .skip20
 
-Jump_00E_5978::
+.skip17:
     ld b, $04
-    jr Jump_00E_5982
+    jr .skip20
 
-Jump_00E_597C::
+.skip18:
     ld b, $03
-    jr Jump_00E_5982
+    jr .skip20
 
-Jump_00E_5980::
+.skip19:
     ld b, $02
 
-Jump_00E_5982::
+.skip20:
     ld a, b
     pop bc
     add a, b
     cp a, $64
-    jr c, Jump_00E_598B
+    jr c, .skip21
     ld a, $63
 
-Jump_00E_598B::
+.skip21:
     ld hl, wChildRecord + $6D
     ld [hl], a
     ld hl, wChildRecord + $B
@@ -1550,17 +1550,17 @@ Jump_00E_598B::
     add_a_to_hl
     ld a, h
     and a, a
-    jr z, Jump_00E_59BD
+    jr z, .skip22
     ld a, $63
-    jr Jump_00E_59C4
+    jr .call_roll_wcade_from_species_flag
 
-Jump_00E_59BD::
+.skip22:
     ld a, l
     cp a, $64
-    jr c, Jump_00E_59C4
+    jr c, .call_roll_wcade_from_species_flag
     ld a, $63
 
-Jump_00E_59C4::
+.call_roll_wcade_from_species_flag:
     ld hl, wChildRecord + $57
     ld [hl], a
     call RollWCADEFromSpeciesFlag
@@ -1581,7 +1581,7 @@ AdjustStatForWCA2AAndWCACF::
 Func_00E_59E1:: ; address name
     ld a, [wRecordBufA + $A4]
     and a, a
-    jr z, Jump_00E_5A25
+    jr z, .check_record_buf_b2
     ld b, a
     push hl
     ld a, c
@@ -1593,30 +1593,30 @@ Func_00E_59E1:: ; address name
     inc hl
     ld d, [hl]
 
-Jump_00E_59F7::
+.skip:
     ld a, [de]
     cp a, $FF
-    jr z, Jump_00E_5A02
+    jr z, .restore
     cp a, b
-    jr z, Jump_00E_5A05
+    jr z, .restore2
     inc de
-    jr Jump_00E_59F7
+    jr .skip
 
-Jump_00E_5A02::
+.restore:
     pop de
-    jr Jump_00E_5A24
+    jr .check_record_buf_b
 
-Jump_00E_5A05::
+.restore2:
     pop de
     ld a, d
     cp a, $03
-    jr c, Jump_00E_5A12
+    jr c, .skip2
     ld a, e
     cp a, $E7
-    jr c, Jump_00E_5A12
-    jr Jump_00E_5A24
+    jr c, .skip2
+    jr .check_record_buf_b
 
-Jump_00E_5A12::
+.skip2:
     ld a, b
     ld hl, AdjustStatForWCA2AAndWCACF_Data_5A8E
     add_a_to_hl
@@ -1629,10 +1629,10 @@ Jump_00E_5A12::
     sbc a, $00
     ld d, a
 
-Jump_00E_5A24::
+.check_record_buf_b:
     pop hl
 
-Jump_00E_5A25::
+.check_record_buf_b2:
     ld a, [wRecordBufB + $A4]
     and a, a
     ret z
@@ -1643,10 +1643,10 @@ Jump_00E_5A25::
     ld de, AdjustStatForWCA2AAndWCACF_Data_5A6B
     add a, e
     ld e, a
-    jr nc, Jump_00E_5A36
+    jr nc, .skip3
     inc d
 
-Jump_00E_5A36::
+.skip3:
     push hl
     ld a, [de]
     ld l, a
@@ -1654,38 +1654,38 @@ Jump_00E_5A36::
     ld a, [de]
     ld h, a
 
-Jump_00E_5A3C::
+.skip4:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_5A47
+    jr z, .restore3
     cp a, b
-    jr z, Jump_00E_5A4A
+    jr z, .restore4
     inc hl
-    jr Jump_00E_5A3C
+    jr .skip4
 
-Jump_00E_5A47::
+.restore3:
     pop hl
-    jr Jump_00E_5A69
+    jr .done
 
-Jump_00E_5A4A::
+.restore4:
     pop hl
     ld a, h
     cp a, $03
-    jr c, Jump_00E_5A57
+    jr c, .skip5
     ld a, l
     cp a, $E7
-    jr c, Jump_00E_5A57
-    jr Jump_00E_5A69
+    jr c, .skip5
+    jr .done
 
-Jump_00E_5A57::
+.skip5:
     ld a, b
     ld de, AdjustStatForWCA2AAndWCACF_Data_5A8E
     add a, e
     ld e, a
-    jr nc, Jump_00E_5A60
+    jr nc, .skip6
     inc d
 
-Jump_00E_5A60::
+.skip6:
     ld a, [de]
     ld b, a
     ld a, l
@@ -1695,7 +1695,7 @@ Jump_00E_5A60::
     sbc a, $00
     ld h, a
 
-Jump_00E_5A69::
+.done:
     pop de
     ret
 
@@ -1748,11 +1748,11 @@ Func_00E_5AA4:: ; address name
     ld hl, wChildRecord + $34
     ld c, $08
 
-Jump_00E_5AA9::
+.loop:
     ld a, $FF
     ld [hl+], a
     dec c
-    jr nz, Jump_00E_5AA9
+    jr nz, .loop
     ld hl, wChildRecord + $B
     call LoadSpeciesBytes8To10FromHL
     ld hl, wChildRecord + $3C
@@ -1784,24 +1784,24 @@ Func_00E_5AEA:: ; address name
     ld hl, wChildRecord + $3C
     ld c, $19
 
-Jump_00E_5AEF::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_00E_5AFE
+    jr z, .next
     ld de, SkillLineBaseTable
     add a, e
     ld e, a
-    jr nc, Jump_00E_5AFC
+    jr nc, .skip
     inc d
 
-Jump_00E_5AFC::
+.skip:
     ld a, [de]
     ld [hl], a
 
-Jump_00E_5AFE::
+.next:
     inc hl
     dec c
-    jr nz, Jump_00E_5AEF
+    jr nz, .loop
     ret
 
 ; E-0200 (C1: MapWCB0CEntriesThroughTable5B03 replaces each of the $19 skill bytes at wChildRecord + $3C (other than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat for runs of related skills (for example 1-3 map to 1, 4-6 to 4), so the table maps a skill to the first of its line; 176 entries, skills 0-$AF).
@@ -1828,21 +1828,21 @@ Func_00E_5BB3:: ; address name
     ld de, wChildRecord + $3C
     ld c, $19
 
-Jump_00E_5BBB::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_00E_5BC5
+    jr nz, .skip
     inc hl
     dec c
-    jr nz, Jump_00E_5BBB
+    jr nz, .loop
     ret
 
-Jump_00E_5BC5::
+.skip:
     ld [de], a
     inc de
     inc hl
     dec c
-    jr nz, Jump_00E_5BBB
+    jr nz, .loop
     ret
 
 ; only called from BuildWCB0CCandidateList (E-0047)
@@ -1852,51 +1852,51 @@ Func_00E_5BCC:: ; address name
     ld hl, wChildRecord + $3C
     ld c, $00
 
-Jump_00E_5BD1::
+.loop:
     ld a, [hl]
     and a, a
-    jr z, Jump_00E_5BDB
+    jr z, .skip
     cp a, $FF
-    jr z, Jump_00E_5BDB
-    jr Jump_00E_5BE0
+    jr z, .skip
+    jr .skip2
 
-Jump_00E_5BDB::
+.skip:
     ld a, $FF
     ld [hl], a
-    jr Jump_00E_5BF8
+    jr .next2
 
-Jump_00E_5BE0::
+.skip2:
     ld b, a
     push hl
     ld a, c
     cp a, $19
-    jr z, Jump_00E_5BF7
+    jr z, .restore
     ld e, a
     inc hl
 
-Jump_00E_5BE9::
+.loop2:
     ld a, [hl]
     cp a, b
-    jr nz, Jump_00E_5BF0
+    jr nz, .next
     ld a, $FF
     ld [hl], a
 
-Jump_00E_5BF0::
+.next:
     inc hl
     inc e
     ld a, e
     cp a, $19
-    jr c, Jump_00E_5BE9
+    jr c, .loop2
 
-Jump_00E_5BF7::
+.restore:
     pop hl
 
-Jump_00E_5BF8::
+.next2:
     inc hl
     inc c
     ld a, c
     cp a, $19
-    jr c, Jump_00E_5BD1
+    jr c, .loop
     ret
 
 ; copies 8 bytes from DE to HL (E-0122)
@@ -1905,12 +1905,12 @@ CopyEightBytesDEToHL::
 Func_00E_5C00:: ; address name
     ld c, $08
 
-Jump_00E_5C02::
+.loop:
     ld a, [de]
     ld [hl+], a
     inc de
     dec c
-    jr nz, Jump_00E_5C02
+    jr nz, .loop
     ret
 
 ; stores B, C and A at HL onward; HL += 3; AF kept (E-0114)
@@ -1977,12 +1977,12 @@ Func_00E_5C50:: ; address name
     ld hl, sRecords
     ld c, $1E
 
-Jump_00E_5C5E::
+.loop:
     push hl
     push bc
     ld a, [hl]
     and a, a
-    jr z, Jump_00E_5CA1
+    jr z, .restore
     push hl
     ld a, $0B
     add_a_to_hl
@@ -1999,7 +1999,7 @@ Jump_00E_5C5E::
     ld b, $1B
     ld c, $00
 
-Jump_00E_5C8C::
+.loop2:
     push hl
     push bc
     ld a, c
@@ -2012,15 +2012,15 @@ Jump_00E_5C8C::
     ld [hl+], a
     inc c
     dec b
-    jr nz, Jump_00E_5C8C
+    jr nz, .loop2
 
-Jump_00E_5CA1::
+.restore:
     pop bc
     pop hl
     ld a, $A5
     add_a_to_hl
     dec c
-    jr nz, Jump_00E_5C5E
+    jr nz, .loop
     xor a, a
     ld [rRAMG], a
     ret
@@ -2042,51 +2042,51 @@ Func_00E_5CB2:: ; address name
     ld b, $1B
     ld c, $00
 
-Jump_00E_5CCD::
+.loop:
     push bc
     ld a, c
     ld [wArg4], a
     call LoadWD01AByteArg4
     ld a, [wArg5]
     cp a, $03
-    jr nc, Jump_00E_5D01
+    jr nc, .restore
     pop bc
     push bc
     ld a, [wArg5]
     cp a, $02
-    jr z, Jump_00E_5CF4
+    jr z, .call_sum_func5_dcd_of_wc9_f9_and_wca9_e
     ld b, $03
     call SumFunc5DCDOfWC9F9AndWCA9E
     ld a, b
     cp a, $FF
-    jr z, Jump_00E_5D01
+    jr z, .restore
     call RollWCB3DForCaseB_5D16
-    jr Jump_00E_5D01
+    jr .restore
 
-Jump_00E_5CF4::
+.call_sum_func5_dcd_of_wc9_f9_and_wca9_e:
     ld b, $05
     call SumFunc5DCDOfWC9F9AndWCA9E
     ld a, b
     cp a, $FF
-    jr z, Jump_00E_5D01
+    jr z, .restore
     call RollWCB3DForCaseB_5D77
 
-Jump_00E_5D01::
+.restore:
     pop bc
     ld de, wChildRecord + $73
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_00E_5D0B
+    jr nc, .check_arg5
     inc d
 
-Jump_00E_5D0B::
+.check_arg5:
     ld a, [wArg5]
     and a, $03
     ld [de], a
     inc c
     dec b
-    jr nz, Jump_00E_5CCD
+    jr nz, .loop
     ret
 
 ; when wCB3D is set rolls RollWCB3DChanceOrIncArg5 with factor 1, 3 or 10 (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125)
@@ -2099,44 +2099,44 @@ Func_00E_5D16:: ; address name
     ld hl, wChildRecord + $6D
     ld a, [hl]
     and a, a
-    jr nz, Jump_00E_5D20
+    jr nz, .skip
     pop bc
     ret
 
-Jump_00E_5D20::
+.skip:
     ld a, b
     cp a, $03
-    jr z, Jump_00E_5D3B
+    jr z, .skip2
     cp a, $04
-    jr z, Jump_00E_5D3F
+    jr z, .skip3
     cp a, $05
-    jr z, Jump_00E_5D43
+    jr z, .call_roll_wcb3_d_chance_or_inc_arg52
     ld a, [wArg5]
     inc a
     ld [wArg5], a
     ld a, $05
 
-Jump_00E_5D36::
+.call_roll_wcb3_d_chance_or_inc_arg5:
     call RollWCB3DChanceOrIncArg5
 
-Jump_00E_5D39::
+.loop:
     pop bc
     ret
 
-Jump_00E_5D3B::
+.skip2:
     ld a, $01
-    jr Jump_00E_5D36
+    jr .call_roll_wcb3_d_chance_or_inc_arg5
 
-Jump_00E_5D3F::
+.skip3:
     ld a, $03
-    jr Jump_00E_5D36
+    jr .call_roll_wcb3_d_chance_or_inc_arg5
 
-Jump_00E_5D43::
+.call_roll_wcb3_d_chance_or_inc_arg52:
     ld a, $0A
     call RollWCB3DChanceOrIncArg5
     cp a, $FF
-    jr z, Jump_00E_5D39
-    jr Jump_00E_5D3F
+    jr z, .loop
+    jr .skip3
 
 ; chance = A * wCB3D; if below 100 and a random value is below it, A = $FF; otherwise wD7F5 += 1 and A = 0 (E-0124)
 ; 3 call sites from 2 routines (e.g. RollWCB3DForCaseB_5D16, RollWCB3DForCaseB_5D77)
@@ -2150,10 +2150,10 @@ Func_00E_5D4E:: ; address name
     call Multiply8
     ld a, h
     and a, a
-    jr nz, Jump_00E_5D6E
+    jr nz, .check_arg5
     ld a, l
     cp a, $64
-    jr nc, Jump_00E_5D6E
+    jr nc, .check_arg5
     push af
     push bc
     ld b, $0F
@@ -2161,11 +2161,11 @@ Func_00E_5D4E:: ; address name
     pop bc
     pop af
     cp a, l
-    jr nc, Jump_00E_5D6E
+    jr nc, .check_arg5
     ld a, $FF
     ret
 
-Jump_00E_5D6E::
+.check_arg5:
     ld a, [wArg5]
     inc a
     ld [wArg5], a
@@ -2182,25 +2182,25 @@ Func_00E_5D77:: ; address name
     ld hl, wChildRecord + $6D
     ld a, [hl]
     and a, a
-    jr nz, Jump_00E_5D81
+    jr nz, .skip
 
-Jump_00E_5D7F::
+.loop:
     pop bc
     ret
 
-Jump_00E_5D81::
+.skip:
     ld a, b
     cp a, $05
-    jr z, Jump_00E_5D8D
+    jr z, .skip2
     ld a, $02
     call RollWCB3DChanceOrIncArg5
     pop bc
     ret
 
-Jump_00E_5D8D::
+.skip2:
     ld hl, wChildRecord + $6D
     cp a, $01
-    jr z, Jump_00E_5D7F
+    jr z, .loop
     ld a, [hl]
     push af
     push bc
@@ -2209,12 +2209,12 @@ Jump_00E_5D8D::
     pop bc
     pop af
     cp a, l
-    jr nc, Jump_00E_5DA5
+    jr nc, .check_arg5
     ld a, $FF
     pop bc
     ret
 
-Jump_00E_5DA5::
+.check_arg5:
     ld a, [wArg5]
     inc a
     ld [wArg5], a
@@ -2229,19 +2229,19 @@ Func_00E_5DAF:: ; address name
     ld hl, wRecordBufA + $73
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
-    jr z, Jump_00E_5DCA
+    jr z, .done
     ld e, a
     ld hl, wRecordBufB + $73
     call SumFunc5DCDOfWC9F9AndWCA9E_Sub01
     cp a, $FF
-    jr z, Jump_00E_5DCA
+    jr z, .done
     add a, e
     cp a, b
-    jr c, Jump_00E_5DCA
+    jr c, .done
     ld b, a
     ret
 
-Jump_00E_5DCA::
+.done:
     ld b, $FF
     ret
 
@@ -2254,13 +2254,13 @@ Func_00E_5DCD:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $02
-    jr z, Jump_00E_5DDB
+    jr z, .restore
 
-Jump_00E_5DD9::
+.done:
     pop hl
     ret
 
-Jump_00E_5DDB::
+.restore:
     pop hl
     push hl
     push af
@@ -2268,23 +2268,23 @@ Jump_00E_5DDB::
     add_a_to_hl
     ld a, [hl]
     and a, a
-    jr z, Jump_00E_5DFF
+    jr z, .restore2
     cp a, $1C
-    jr nc, Jump_00E_5DFF
+    jr nc, .restore2
     dec a
     ld hl, SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data
     add_a_to_hl
     ld a, [hl]
     cp a, c
-    jr nz, Jump_00E_5DFF
+    jr nz, .restore2
     pop af
     pop hl
     ld a, $FF
     ret
 
-Jump_00E_5DFF::
+.restore2:
     pop af
-    jr Jump_00E_5DD9
+    jr .done
 
 ; address loaded by SumFunc5DCDOfWC9F9AndWCA9E_Sub01
 SumFunc5DCDOfWC9F9AndWCA9E_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2313,18 +2313,18 @@ Func_00E_5E2D:: ; address name
     ld a, [hl]
     and a, $10
     and a, a
-    jr nz, Jump_00E_5E3B
+    jr nz, .skip
     ld de, CopySixBytesByWCADDBit4Table_Data_5E61
-    jr Jump_00E_5E3E
+    jr .skip2
 
-Jump_00E_5E3B::
+.skip:
     ld de, CopySixBytesByWCADDBit4Table_Data_5E6D
 
-Jump_00E_5E3E::
+.skip2:
     ld c, $00
     ld b, $06
 
-Jump_00E_5E42::
+.loop:
     push de
     ld a, [de]
     ld l, a
@@ -2347,7 +2347,7 @@ Jump_00E_5E42::
     inc de
     inc c
     dec b
-    jr nz, Jump_00E_5E42
+    jr nz, .loop
     ret
 
 ; address loaded by CopySixBytesByWCADDBit4Table
@@ -2374,12 +2374,12 @@ Func_00E_5E85:: ; address name
     ld de, wChildRecord + $F
     ld c, $0A
 
-Jump_00E_5E8D::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec c
-    jr nz, Jump_00E_5E8D
+    jr nz, .loop
     ret
 
 ; copies four 10-byte names from the addresses in Data_00E_5ED0 (or 5ED8 with bit 4 of wCADD) to the addresses in Data_00E_5EE0 (E-0125)
@@ -2390,18 +2390,18 @@ Func_00E_5E94:: ; address name
     ld a, [hl]
     and a, $10
     and a, a
-    jr nz, Jump_00E_5EA2
+    jr nz, .skip
     ld de, CopyFourNamesByWCADDBit4Table_Data_5ED0
-    jr Jump_00E_5EA5
+    jr .skip2
 
-Jump_00E_5EA2::
+.skip:
     ld de, CopyFourNamesByWCADDBit4Table_Data_5ED8
 
-Jump_00E_5EA5::
+.skip2:
     ld c, $00
     ld b, $04
 
-Jump_00E_5EA9::
+.loop:
     push de
     ld a, [de]
     ld l, a
@@ -2420,19 +2420,19 @@ Jump_00E_5EA9::
     push bc
     ld b, $0A
 
-Jump_00E_5EC1::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_00E_5EC1
+    jr nz, .loop2
     pop bc
     pop de
     inc de
     inc de
     inc c
     dec b
-    jr nz, Jump_00E_5EA9
+    jr nz, .loop
     ret
 
 ; address loaded by CopyFourNamesByWCADDBit4Table
@@ -2460,61 +2460,61 @@ Func_00E_5EE8:: ; address name
     ld c, $00
     ld a, [wArg5]
     and a, a
-    jr nz, Jump_00E_5EF7
+    jr nz, .skip
     ld a, c
     add a, $05
     ld c, a
 
-Jump_00E_5EF7::
+.skip:
     ld hl, wRecordBufA + $57
     ld a, [hl-]
     ld b, a
     ld a, [hl]
     cp a, b
-    jr nz, Jump_00E_5F0D
+    jr nz, .skip2
     ld hl, wRecordBufB + $57
     ld a, [hl-]
     ld b, a
     ld a, [hl]
     cp a, b
-    jr nz, Jump_00E_5F0D
+    jr nz, .skip2
     ld a, c
     add a, $05
     ld c, a
 
-Jump_00E_5F0D::
+.skip2:
     ld hl, wRecordBufA + $6D
     ld a, [hl]
     cp a, $05
-    jr c, Jump_00E_5F27
+    jr c, .check_arg1
     ld b, a
     ld hl, wRecordBufB + $6D
     ld a, [hl]
     cp a, $05
-    jr c, Jump_00E_5F27
+    jr c, .check_arg1
     add a, b
     bit 0, a
-    jr nz, Jump_00E_5F27
+    jr nz, .check_arg1
     ld a, c
     add a, $02
     ld c, a
 
-Jump_00E_5F27::
+.check_arg1:
     ld a, [wArg1]
     and a, a
-    jr z, Jump_00E_5F31
+    jr z, .skip3
     ld a, c
     add a, $03
     ld c, a
 
-Jump_00E_5F31::
+.skip3:
     ld a, c
     and a, a
     ret z
     ld b, $08
     ld de, ApplyBreedingBonusToChildStats_Data
 
-Jump_00E_5F39::
+.loop:
     push de
     push bc
     ld hl, wChildRecord
@@ -2532,10 +2532,10 @@ Jump_00E_5F39::
     ld a, $64
     call DivideHLByA
     and a, a
-    jr z, Jump_00E_5F58
+    jr z, .restore
     inc hl
 
-Jump_00E_5F58::
+.restore:
     pop bc
     pop de
     push de
@@ -2544,10 +2544,10 @@ Jump_00E_5F58::
     ld a, [de]
     add a, c
     ld c, a
-    jr nc, Jump_00E_5F65
+    jr nc, .skip4
     inc b
 
-Jump_00E_5F65::
+.skip4:
     push bc
     ld a, [bc]
     ld e, a
@@ -2557,17 +2557,17 @@ Jump_00E_5F65::
     add hl, de
     ld a, h
     cp a, $03
-    jr c, Jump_00E_5F7C
-    jr nz, Jump_00E_5F78
+    jr c, .restore2
+    jr nz, .skip5
     ld a, l
     cp a, $E8
-    jr c, Jump_00E_5F7C
+    jr c, .restore2
 
-Jump_00E_5F78::
+.skip5:
     ld h, $03
     ld l, $E7
 
-Jump_00E_5F7C::
+.restore2:
     pop bc
     ld a, l
     ld [bc], a
@@ -2578,7 +2578,7 @@ Jump_00E_5F7C::
     pop de
     inc de
     dec b
-    jr nz, Jump_00E_5F39
+    jr nz, .loop
     ret
 
 ; address loaded by ApplyBreedingBonusToChildStats
@@ -2622,10 +2622,10 @@ Func_00E_5F91:: ; address name
     ld de, PersonalityPairValueToArg5_Data
     add a, e
     ld e, a
-    jr nc, Jump_00E_5FCB
+    jr nc, .skip
     inc d
 
-Jump_00E_5FCB::
+.skip:
     ld a, [de]
     ld c, a
     ld a, [hl]
@@ -2634,32 +2634,32 @@ Jump_00E_5FCB::
     ld a, b
     and a, $03
     and a, a
-    jr z, Jump_00E_5FE1
+    jr z, .skip2
     cp a, $01
-    jr z, Jump_00E_5FEA
+    jr z, .skip3
     cp a, $02
-    jr z, Jump_00E_5FEF
+    jr z, .skip4
     ld a, c
-    jr Jump_00E_5FF4
+    jr .set_arg5
 
-Jump_00E_5FE1::
-    ld a, c
-    swap a
-    srl a
-    srl a
-    jr Jump_00E_5FF4
-
-Jump_00E_5FEA::
+.skip2:
     ld a, c
     swap a
-    jr Jump_00E_5FF4
+    srl a
+    srl a
+    jr .set_arg5
 
-Jump_00E_5FEF::
+.skip3:
+    ld a, c
+    swap a
+    jr .set_arg5
+
+.skip4:
     ld a, c
     srl a
     srl a
 
-Jump_00E_5FF4::
+.set_arg5:
     ld [wArg5], a
     pop af
     ret
@@ -2812,78 +2812,78 @@ Func_00E_615A:: ; address name
     ld a, [wArg7]
     ld h, a
     cp a, $01
-    jr nz, Jump_00E_6175
+    jr nz, .skip
     ld a, l
     cp a, $11
-    jr c, Jump_00E_61AF
+    jr c, .skip9
     cp a, $39
-    jr c, Jump_00E_61B3
+    jr c, .skip10
     cp a, $5C
-    jr c, Jump_00E_61B7
-    jr Jump_00E_61BB
+    jr c, .skip11
+    jr .set_arg5_to_0A
 
-Jump_00E_6175::
+.skip:
     ld a, l
     cp a, $1B
-    jr c, Jump_00E_6194
+    jr c, .skip2
     cp a, $43
-    jr c, Jump_00E_6197
+    jr c, .skip3
     cp a, $67
-    jr c, Jump_00E_619B
+    jr c, .skip4
     cp a, $85
-    jr c, Jump_00E_619F
+    jr c, .skip5
     cp a, $A8
-    jr c, Jump_00E_61A3
+    jr c, .skip6
     cp a, $CA
-    jr c, Jump_00E_61A7
+    jr c, .skip7
     cp a, $F1
-    jr c, Jump_00E_61AB
-    jr Jump_00E_61AF
+    jr c, .skip8
+    jr .skip9
 
-Jump_00E_6194::
+.skip2:
     xor a, a
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_6197::
+.skip3:
     ld a, $01
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_619B::
+.skip4:
     ld a, $02
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_619F::
+.skip5:
     ld a, $03
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61A3::
+.skip6:
     ld a, $04
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61A7::
+.skip7:
     ld a, $05
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61AB::
+.skip8:
     ld a, $06
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61AF::
+.skip9:
     ld a, $07
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61B3::
+.skip10:
     ld a, $08
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61B7::
+.skip11:
     ld a, $09
-    jr Jump_00E_61BD
+    jr .set_arg5
 
-Jump_00E_61BB::
+.set_arg5_to_0A:
     ld a, $0A
 
-Jump_00E_61BD::
+.set_arg5:
     ld [wArg5], a
     ret
 
@@ -2900,7 +2900,7 @@ Func_00E_61C1:: ; address name
     farcall LoadSpeciesRecordWord0
     ld a, [wSpeciesRecord + $1]
     and a, a
-    jr z, Jump_00E_61F4
+    jr z, .skip
     and a, $03
     ld hl, RollWCADEFromSpeciesFlag_Data
     add_a_to_hl
@@ -2912,14 +2912,14 @@ Func_00E_61C1:: ; address name
     pop bc
     pop af
     cp a, l
-    jr c, Jump_00E_61F4
+    jr c, .skip
     ld b, $01
-    jr Jump_00E_61F6
+    jr .skip2
 
-Jump_00E_61F4::
+.skip:
     ld b, $00
 
-Jump_00E_61F6::
+.skip2:
     ld a, b
     ld hl, wChildRecord + $E
     ld [hl], a

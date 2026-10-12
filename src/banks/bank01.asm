@@ -30,7 +30,7 @@ Func_001_4001:: ; address name
     ld a, $03
     ld [wLCDCShadow], a
     ld a, $01
-    jp Jump_000_077A
+    jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; only called from GameMode0_Init (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode0_Init)
@@ -225,7 +225,7 @@ Jump_001_4424:: ; address name
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_001_445A
+    jr z, .skip
     ld a, $01
     ldh [rVBK], a
     xor a, a
@@ -235,7 +235,7 @@ Jump_001_4424:: ; address name
     ld a, $00
     ldh [rVBK], a
 
-Jump_001_445A::
+.skip:
     xor a, a
     ld hl, wDebugCursor
     ld [hl+], a
@@ -407,11 +407,11 @@ Jump_001_4472:: ; address name
     ld hl, wScreenState
     ld b, $60
 
-Jump_001_45E2::
+.loop:
     xor a, a
     ld [wScreenState], a
     dec b
-    jr nz, Jump_001_45E2
+    jr nz, .loop
     ret
 
 ; init for debug-mode state 0: the screen shows the debug menu (E-0041)
@@ -620,7 +620,7 @@ Jump_001_4743:: ; address name
     call CopyRectFromBankToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_001_47C4
+    jr z, .set_debug_value0_to_00
     ld c, $4F
     ld a, $01
     ldh [c], a
@@ -633,7 +633,7 @@ Jump_001_4743:: ; address name
     ld a, $00
     ldh [c], a
 
-Jump_001_47C4::
+.set_debug_value0_to_00:
     ld a, $00
     ld [wDebugValue0], a
     ld a, $80
@@ -824,11 +824,11 @@ Func_001_4A75:: ; address name
     push hl
     ld d, b
 
-Jump_001_4A77::
+.loop:
     ld [hl+], a
     inc a
     dec b
-    jr nz, Jump_001_4A77
+    jr nz, .loop
     ld b, d
     ld e, a
     pop hl
@@ -913,7 +913,7 @@ Jump_001_4AF0:: ; address name
     ret nz
     ld a, [wJoypadPressed]
     and a, $01
-    jp z, Jump_001_4C56
+    jp z, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
     ld a, [wTemp1]
@@ -1203,10 +1203,11 @@ Jump_001_4C4F:: ; address name
     farcall BeginStringDisplay_Bank1B_480C
     ret
 
-Jump_001_4C56::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat::
+Jump_001_4C56:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
-    jr z, Jump_001_4C86
+    jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
     cp a, $00
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
@@ -1218,18 +1219,18 @@ Jump_001_4C56::
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
     ld a, [wMenuState]
     sub a, $01
-    jr nc, Jump_001_4C7E
+    jr nc, .set_menu_state
     ld a, $02
 
-Jump_001_4C7E::
+.set_menu_state:
     ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
-Jump_001_4C86::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     and a, $80
-    jr z, Jump_001_4CB8
+    jr z, .read_menu_state
     ld a, [wMenuState]
     cp a, $00
     call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
@@ -1242,15 +1243,15 @@ Jump_001_4C86::
     ld a, [wMenuState]
     add a, $01
     cp a, $03
-    jr nz, Jump_001_4CB0
+    jr nz, .set_menu_state2
     ld a, $00
 
-Jump_001_4CB0::
+.set_menu_state2:
     ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
-Jump_001_4CB8::
+.read_menu_state:
     ld a, [wMenuState]
     ld c, a
     ld b, $00
@@ -1258,27 +1259,27 @@ Jump_001_4CB8::
     add hl, bc
     ld a, [wJoypadPressedRepeat]
     and a, $10
-    jr z, Jump_001_4CCF
+    jr z, .check_joypad_pressed_repeat2
     inc [hl]
     call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
-    jr Jump_001_4CE5
+    jr .call_queue_sound_effect
 
-Jump_001_4CCF::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_001_4CDC
+    jr z, .check_joypad_pressed
     dec [hl]
     call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
-    jr Jump_001_4CE5
+    jr .call_queue_sound_effect
 
-Jump_001_4CDC::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $08
-    jr z, Jump_001_4D44
+    jr z, .check_joypad_pressed2
     xor a, a
     ld [hl], a
 
-Jump_001_4CE5::
+.call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuState]
@@ -1294,13 +1295,13 @@ Jump_001_4CE5::
     ld a, [hl]
     pop hl
     cp a, $00
-    jr z, Jump_001_4D0C
+    jr z, .check_menu_state
     ld e, [hl]
     inc hl
     ld d, [hl]
     ld a, [de]
 
-Jump_001_4D0C::
+.check_menu_state:
     ld b, a
     ld a, [wMenuState]
     cp a, $01
@@ -1314,11 +1315,11 @@ Jump_001_4D0C::
     ld a, [hl]
     pop hl
     cp a, $00
-    jr nz, Jump_001_4D2C
+    jr nz, .skip
     ld a, [hl]
-    jr Jump_001_4D3B
+    jr .check_menu_state2
 
-Jump_001_4D2C::
+.skip:
     ld c, [hl]
     inc hl
     ld b, [hl]
@@ -1329,26 +1330,26 @@ Jump_001_4D2C::
     add_a_to_hl
     ld a, [hl]
 
-Jump_001_4D3B::
+.check_menu_state2:
     ld b, a
     ld a, [wMenuState]
     cp a, $02
     call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
 
-Jump_001_4D44::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_001_4D54
+    jr z, .check_menu_state3
     xor a, a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
 
-Jump_001_4D54::
+.check_menu_state3:
     ld a, [wMenuState]
     cp a, $00
-    jr nz, Jump_001_4D79
+    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
@@ -1356,7 +1357,7 @@ Jump_001_4D54::
     ld hl, vBGMap0 + $6D
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
@@ -1366,12 +1367,13 @@ Func_001_4D6E:: ; address name
     ld a, [wTemp0]
     ld de, vBGMap0 + $6D
     call WriteHexByteTilesAtDE
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-Jump_001_4D79::
+DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState::
+Jump_001_4D79:: ; address name
     ld a, [wMenuState]
     cp a, $01
-    jr nz, Jump_001_4D9E
+    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
@@ -1379,7 +1381,7 @@ Jump_001_4D79::
     ld hl, vBGMap0 + $AD
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
@@ -1389,9 +1391,10 @@ Func_001_4D93:: ; address name
     ld a, [wTemp1]
     ld de, vBGMap0 + $AD
     call WriteHexByteTilesAtDE
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-Jump_001_4D9E::
+DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo::
+Jump_001_4D9E:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
@@ -1399,7 +1402,7 @@ Jump_001_4D9E::
     ld hl, vBGMap0 + $ED
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C)
@@ -1409,33 +1412,34 @@ Func_001_4DB1:: ; address name
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
     call WriteHexByteTilesAtDE
-    jr Jump_001_4DBC
+    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
 
-Jump_001_4DBC::
+DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState::
+Jump_001_4DBC:: ; address name
     ld a, [wMenuState]
     cp a, $00
-    jr z, Jump_001_4DCC
+    jr z, .check_menu_state
     ld a, [wTemp0]
     ld de, vBGMap0 + $6D
     call WriteHexByteTilesAtDE
 
-Jump_001_4DCC::
+.check_menu_state:
     ld a, [wMenuState]
     cp a, $01
-    jr z, Jump_001_4DDC
+    jr z, .check_menu_state2
     ld a, [wTemp1]
     ld de, vBGMap0 + $AD
     call WriteHexByteTilesAtDE
 
-Jump_001_4DDC::
+.check_menu_state2:
     ld a, [wMenuState]
     cp a, $02
-    jr z, Jump_001_4DEC
+    jr z, .return
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ED
     call WriteHexByteTilesAtDE
 
-Jump_001_4DEC::
+.return:
     ret
 
 ; only called from DebugMessageTest_Update_Case21 (E-0047)
@@ -1450,41 +1454,41 @@ Func_001_4DED:: ; address name
     add_a_to_hl
     ld a, b
     cp a, $FF
-    jr z, Jump_001_4E0C
+    jr z, .check_menu_state
     ld a, [hl]
     inc b
     cp a, b
-    jr nz, Jump_001_4E05
+    jr nz, .next
     ld [hl], $00
 
-Jump_001_4E05::
+.next:
     dec b
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_001_4E0C
+    jr nz, .check_menu_state
     ld [hl], b
 
-Jump_001_4E0C::
+.check_menu_state:
     ld a, [wMenuState]
     cp a, $00
-    jr nz, Jump_001_4E1B
+    jr nz, .check_menu_state2
     ld de, vBGMap0 + $6D
     ld a, [wTemp0]
-    jr Jump_001_4E30
+    jr .call_write_hex_byte_tiles_at_de
 
-Jump_001_4E1B::
+.check_menu_state2:
     ld a, [wMenuState]
     cp a, $01
-    jr nz, Jump_001_4E2A
+    jr nz, .read_menu_row_count
     ld de, vBGMap0 + $AD
     ld a, [wTemp1]
-    jr Jump_001_4E30
+    jr .call_write_hex_byte_tiles_at_de
 
-Jump_001_4E2A::
+.read_menu_row_count:
     ld de, vBGMap0 + $ED
     ld a, [wMenuRowCount]
 
-Jump_001_4E30::
+.call_write_hex_byte_tiles_at_de:
     add_a_to_hl
     ld a, [hl]
     call WriteHexByteTilesAtDE
@@ -1499,20 +1503,20 @@ DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount::
 Func_001_4E3B:: ; address name
     ld a, [wMenuState]
     cp a, $00
-    jr nz, Jump_001_4E4B
+    jr nz, .cp_01
     xor a, a
     ld [wTemp1], a
     xor a, a
     ld [wMenuRowCount], a
     ret
 
-Jump_001_4E4B::
+.cp_01:
     cp a, $01
-    jr nz, Jump_001_4E53
+    jr nz, .return
     xor a, a
     ld [wMenuRowCount], a
 
-Jump_001_4E53::
+.return:
     ret
 
 ; E-0233 (C1: DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to the first sub-list).
@@ -1569,7 +1573,7 @@ DebugMonsterRecordViewer_Update::
 Jump_001_4ED4:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, Jump_001_4EE7
+    jr z, .check_joypad_pressed_repeat
     xor a, a
     ld [wGameMode], a
     ld [wModeState], a
@@ -1577,22 +1581,22 @@ Jump_001_4ED4:: ; address name
     inc [hl]
     ret
 
-Jump_001_4EE7::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 5, a
-    jr z, Jump_001_4F34
+    jr z, .check_joypad_pressed_repeat2
     ld a, [wJoypadHeld]
     bit 2, a
-    jr nz, Jump_001_4F07
+    jr nz, .read_debug_cursor
     ld a, [wDebugCursor]
     sub a, $01
     ld [wDebugCursor], a
     ld a, [wDebugValue0]
     sbc a, $00
     ld [wDebugValue0], a
-    jr Jump_001_4F1F
+    jr .read_debug_cursor2
 
-Jump_001_4F07::
+.read_debug_cursor:
     ld a, [wDebugCursor]
     ld l, a
     ld a, [wDebugValue0]
@@ -1608,7 +1612,7 @@ Jump_001_4F07::
     ld a, h
     ld [wDebugValue0], a
 
-Jump_001_4F1F::
+.read_debug_cursor2:
     ld a, [wDebugCursor]
     ld l, a
     ld a, [wDebugValue0]
@@ -1619,22 +1623,22 @@ Jump_001_4F1F::
     ld hl, $02AB
     jr DebugShowMonsterRecord
 
-Jump_001_4F34::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     bit 4, a
-    jp z, Jump_001_50EC
+    jp z, DebugShowMonsterRecord_Return
     ld a, [wJoypadHeld]
     bit 2, a
-    jr nz, Jump_001_4F55
+    jr nz, .read_debug_cursor3
     ld a, [wDebugCursor]
     add a, $01
     ld [wDebugCursor], a
     ld a, [wDebugValue0]
     adc a, $00
     ld [wDebugValue0], a
-    jr Jump_001_4F6D
+    jr .read_debug_cursor4
 
-Jump_001_4F55::
+.read_debug_cursor3:
     ld a, [wDebugCursor]
     ld l, a
     ld a, [wDebugValue0]
@@ -1650,7 +1654,7 @@ Jump_001_4F55::
     ld a, h
     ld [wDebugValue0], a
 
-Jump_001_4F6D::
+.read_debug_cursor4:
     ld a, [wDebugCursor]
     ld l, a
     ld a, [wDebugValue0]
@@ -1811,7 +1815,8 @@ Func_001_4F80:: ; address name
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
 
-Jump_001_50EC::
+DebugShowMonsterRecord_Return::
+Jump_001_50EC:: ; address name
     ret
 
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
@@ -1823,7 +1828,7 @@ DebugSkillViewer_Update::
 Jump_001_50ED:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, Jump_001_5100
+    jr z, .check_joypad_pressed_repeat
     xor a, a
     ld [wGameMode], a
     ld [wModeState], a
@@ -1831,31 +1836,31 @@ Jump_001_50ED:: ; address name
     inc [hl]
     ret
 
-Jump_001_5100::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 5, a
-    jr z, Jump_001_5117
+    jr z, .check_joypad_pressed_repeat2
     ld a, [wDebugCursor]
     dec a
     ld [wDebugCursor], a
     cp a, $AF
-    jr c, Jump_001_5117
+    jr c, .check_joypad_pressed_repeat2
     ld a, $AE
     ld [wDebugCursor], a
 
-Jump_001_5117::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     bit 4, a
-    jr z, Jump_001_512D
+    jr z, .skip
     ld a, [wDebugCursor]
     inc a
     ld [wDebugCursor], a
     cp a, $AF
-    jr c, Jump_001_512D
+    jr c, .skip
     xor a, a
     ld [wDebugCursor], a
 
-Jump_001_512D::
+.skip:
     ld hl, wDebugCursor
     ld a, [hl+]
     cp a, [hl]
@@ -1886,12 +1891,12 @@ Jump_001_512D::
     ld [wStringCategory], a
     ld a, [wRecordBuffer]
     or a, a
-    jr nz, Jump_001_517F
+    jr nz, .set_string_index
     ld a, $0E
     ld [wStringCategory], a
     ld a, $01
 
-Jump_001_517F::
+.set_string_index:
     ld [wStringIndex], a
     ld hl, vTiles1 + $200
     ld de, $0901
@@ -2037,11 +2042,11 @@ Func_001_52CD:: ; address name
     or a, e
     ld e, a
     ld a, c
-    jr z, Jump_001_52DD
+    jr z, .call_write_vram_byte_inc
     ld a, d
     add a, b
 
-Jump_001_52DD::
+.call_write_vram_byte_inc:
     di
     call WriteVRAMByteInc
     ei
@@ -2051,11 +2056,11 @@ Jump_001_52DD::
     or a, e
     ld e, a
     ld a, c
-    jr z, Jump_001_52EE
+    jr z, .call_write_vram_byte_inc2
     ld a, d
     add a, b
 
-Jump_001_52EE::
+.call_write_vram_byte_inc2:
     di
     call WriteVRAMByteInc
     ei
@@ -2066,11 +2071,11 @@ Jump_001_52EE::
     or a, e
     ld e, a
     ld a, c
-    jr z, Jump_001_5301
+    jr z, .call_write_vram_byte_inc3
     ld a, d
     add a, b
 
-Jump_001_5301::
+.call_write_vram_byte_inc3:
     di
     call WriteVRAMByteInc
     ei
@@ -2090,34 +2095,34 @@ Func_001_5311:: ; address name
     ret z
     ld c, $01
     cp a, $11
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $12
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $14
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $21
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $22
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $31
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $32
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $40
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
     cp a, $80
-    jr z, Jump_001_5342
+    jr z, .done
     inc c
 
-Jump_001_5342::
+.done:
     ld a, c
     ret
 
@@ -2128,17 +2133,17 @@ Func_001_5344:: ; address name
     ld d, a
     ld e, $00
 
-Jump_001_5347::
+.loop:
     push hl
     ld a, e
     ld hl, DebugSkillViewer_Update_WriteVRAMByte_Data
     add_a_to_hl
     ld a, d
     and a, [hl]
-    jr z, Jump_001_5357
+    jr z, .skip
     ld a, $01
 
-Jump_001_5357::
+.skip:
     add a, c
     pop hl
     di
@@ -2147,7 +2152,7 @@ Jump_001_5357::
     inc hl
     inc e
     dec b
-    jr nz, Jump_001_5347
+    jr nz, .loop
     ret
 
 ; address loaded by DebugSkillViewer_Update_WriteVRAMByte
@@ -2179,14 +2184,14 @@ Func_001_536C:: ; address name
     or a, e
     ld e, a
     ld a, d
-    jr nz, Jump_001_538E
+    jr nz, .call_write_vram_byte_inc
     ld a, c
-    jr Jump_001_538F
+    jr .call_write_vram_byte_inc2
 
-Jump_001_538E::
+.call_write_vram_byte_inc:
     add a, b
 
-Jump_001_538F::
+.call_write_vram_byte_inc2:
     di
     call WriteVRAMByteInc
     ei
@@ -2197,14 +2202,14 @@ Jump_001_538F::
     or a, e
     ld e, a
     ld a, d
-    jr nz, Jump_001_53A3
+    jr nz, .call_write_vram_byte_inc3
     ld a, c
-    jr Jump_001_53A4
+    jr .call_write_vram_byte_inc4
 
-Jump_001_53A3::
+.call_write_vram_byte_inc3:
     add a, b
 
-Jump_001_53A4::
+.call_write_vram_byte_inc4:
     di
     call WriteVRAMByteInc
     ei
@@ -2214,14 +2219,14 @@ Jump_001_53A4::
     or a, e
     ld e, a
     ld a, d
-    jr nz, Jump_001_53B6
+    jr nz, .call_write_vram_byte_inc5
     ld a, c
-    jr Jump_001_53B7
+    jr .call_write_vram_byte_inc6
 
-Jump_001_53B6::
+.call_write_vram_byte_inc5:
     add a, b
 
-Jump_001_53B7::
+.call_write_vram_byte_inc6:
     di
     call WriteVRAMByteInc
     ei
@@ -2232,14 +2237,14 @@ Jump_001_53B7::
     or a, e
     ld e, a
     ld a, d
-    jr nz, Jump_001_53CB
+    jr nz, .call_write_vram_byte_inc7
     ld a, c
-    jr Jump_001_53CC
+    jr .call_write_vram_byte_inc8
 
-Jump_001_53CB::
+.call_write_vram_byte_inc7:
     add a, b
 
-Jump_001_53CC::
+.call_write_vram_byte_inc8:
     di
     call WriteVRAMByteInc
     ei
@@ -2256,28 +2261,28 @@ Jump_001_53CC::
 WriteDecimalByteTiles_Bank01::
 Func_001_53DC:: ; address name
     cp a, $64
-    jr nc, Jump_001_53EE
+    jr nc, .call_div_mod_a_by_e_bank01
     call WriteTileCAtHL
     inc hl
     cp a, $0A
-    jr nc, Jump_001_53F7
+    jr nc, .call_div_mod_a_by_e_bank012
     call WriteTileCAtHL
     inc hl
-    jr Jump_001_5400
+    jr .call_write_tile_d_plus_b_at_hl
 
-Jump_001_53EE::
+.call_div_mod_a_by_e_bank01:
     ld e, $64
     call DivModAByE_Bank01
     call WriteTileDPlusBAtHL
     inc hl
 
-Jump_001_53F7::
+.call_div_mod_a_by_e_bank012:
     ld e, $0A
     call DivModAByE_Bank01
     call WriteTileDPlusBAtHL
     inc hl
 
-Jump_001_5400::
+.call_write_tile_d_plus_b_at_hl:
     ld d, a
     call WriteTileDPlusBAtHL
     ret
@@ -2288,10 +2293,10 @@ DivModAByE_Bank01::
 Func_001_5405:: ; address name
     ld d, $FF
 
-Jump_001_5407::
+.loop:
     inc d
     sub a, e
-    jr nc, Jump_001_5407
+    jr nc, .loop
     add a, e
     ret
 
@@ -2358,103 +2363,103 @@ DebugResultsDisplay_Update::
 Jump_001_543A:: ; address name
     ld a, [wScreenState]
     and a, a
-    jp z, Jump_001_56F1
+    jp z, DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat
     cp a, $01
-    jp z, Jump_001_5564
+    jp z, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jp nz, Jump_001_59DC
+    jp nz, DebugToggleArg1Marker_CheckScreenCounter
     bit 1, a
-    jp nz, Jump_001_59BA
+    jp nz, DebugToggleArg1Marker_ClearDebugCursor
     bit 4, a
-    jp nz, Jump_001_54C1
+    jp nz, .call_debug_results_display_update_hl_to2
     bit 5, a
-    jp nz, Jump_001_54D5
+    jp nz, .call_debug_results_display_update_hl_to3
     bit 6, a
-    jp nz, Jump_001_547A
+    jp nz, .check_debug_cursor
     bit 7, a
-    jp nz, Jump_001_549D
+    jp nz, .check_debug_cursor2
     bit 3, a
-    jr nz, Jump_001_546F
+    jr nz, .call_debug_results_display_update_hl_to
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
-Jump_001_546F::
+.call_debug_results_display_update_hl_to:
     call DebugResultsDisplay_Update_HLToDecimalDigits
     xor a, a
     ld [wScreenState], a
     ld [wScreenByteBD], a
     ret
 
-Jump_001_547A::
+.check_debug_cursor:
     ld a, [wDebugCursor]
     cp a, $04
-    jr nz, Jump_001_5486
+    jr nz, .read_screen_byte_bd
     ld hl, wGridCursorY
-    jr Jump_001_5489
+    jr .read_screen_byte_bd2
 
-Jump_001_5486::
+.read_screen_byte_bd:
     ld hl, wDebugResultsBuf
 
-Jump_001_5489::
+.read_screen_byte_bd2:
     ld a, [wScreenByteBD]
     add_a_to_hl
     ld a, [hl]
     and a, a
-    jr nz, Jump_001_5497
+    jr nz, .call_debug_results_display_update_write_debug
     ld a, $04
 
-Jump_001_5497::
+.call_debug_results_display_update_write_debug:
     dec a
     ld [hl], a
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
-Jump_001_549D::
+.check_debug_cursor2:
     ld a, [wDebugCursor]
     cp a, $04
-    jr nz, Jump_001_54A9
+    jr nz, .read_screen_byte_bd3
     ld hl, wGridCursorY
-    jr Jump_001_54AC
+    jr .read_screen_byte_bd4
 
-Jump_001_54A9::
+.read_screen_byte_bd3:
     ld hl, wDebugResultsBuf
 
-Jump_001_54AC::
+.read_screen_byte_bd4:
     ld a, [wScreenByteBD]
     add_a_to_hl
     ld a, [hl]
     cp a, $03
-    jr c, Jump_001_54BB
+    jr c, .call_debug_results_display_update_write_debug2
     ld a, $FF
 
-Jump_001_54BB::
+.call_debug_results_display_update_write_debug2:
     inc a
     ld [hl], a
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
-Jump_001_54C1::
+.call_debug_results_display_update_hl_to2:
     call DebugResultsDisplay_Update_HLToDecimalDigits
     ld a, [wScreenByteBD]
     cp a, $1A
-    jr c, Jump_001_54CD
+    jr c, .set_screen_byte_bd
     ld a, $FF
 
-Jump_001_54CD::
+.set_screen_byte_bd:
     inc a
     ld [wScreenByteBD], a
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
-Jump_001_54D5::
+.call_debug_results_display_update_hl_to3:
     call DebugResultsDisplay_Update_HLToDecimalDigits
     ld a, [wScreenByteBD]
     and a, a
-    jr nz, Jump_001_54E0
+    jr nz, .set_screen_byte_bd2
     ld a, $1B
 
-Jump_001_54E0::
+.set_screen_byte_bd2:
     dec a
     ld [wScreenByteBD], a
     call DebugResultsDisplay_Update_WriteDebugCounter
@@ -2473,7 +2478,7 @@ Func_001_54E8:: ; address name
     cp a, $10
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits
     cp a, $18
-    jr c, Jump_001_552A
+    jr c, DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb
     xor a, a
     ld [wDebugCounter], a
 
@@ -2485,14 +2490,14 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
 Func_001_54FB:: ; address name
     ld a, [wDebugCursor]
     cp a, $04
-    jr nz, Jump_001_5507
+    jr nz, .read_screen_byte_bd
     ld hl, wGridCursorY
-    jr Jump_001_550A
+    jr .read_screen_byte_bd2
 
-Jump_001_5507::
+.read_screen_byte_bd:
     ld hl, wDebugResultsBuf
 
-Jump_001_550A::
+.read_screen_byte_bd2:
     ld a, [wScreenByteBD]
     add_a_to_hl
     ld a, [hl]
@@ -2510,7 +2515,8 @@ Jump_001_550A::
     ei
     ret
 
-Jump_001_552A::
+DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb::
+Jump_001_552A:: ; address name
     call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
     di
     call WaitForVRAMAccess
@@ -2526,22 +2532,22 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
 Func_001_5535:: ; address name
     ld a, [wDebugCursor]
     cp a, $04
-    jr nz, Jump_001_5541
+    jr nz, .check_screen_byte_bd
     ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_555C
-    jr Jump_001_5544
+    jr .check_screen_byte_bd2
 
-Jump_001_5541::
+.check_screen_byte_bd:
     ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560
 
-Jump_001_5544::
+.check_screen_byte_bd2:
     ld a, [wScreenByteBD]
     cp a, $0E
-    jr c, Jump_001_554F
+    jr c, .skip
     sub a, $0E
     inc de
     inc de
 
-Jump_001_554F::
+.skip:
     push af
     ld a, [de]
     ld l, a
@@ -2562,16 +2568,17 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560:: ; he
 Data_001_5560:: ; address name
     db $E6, $99, $06, $9A
 
-Jump_001_5564::
+DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data_5560_CheckArg1::
+Jump_001_5564:: ; address name
     ld a, [wArg1]
     and a, a
-    jr z, Jump_001_5572
+    jr z, .call_compute_breeding_child
     cp a, $02
-    jr z, Jump_001_5572
+    jr z, .call_compute_breeding_child
     xor a, a
     ld [wArg1], a
 
-Jump_001_5572::
+.call_compute_breeding_child:
     farcall ComputeBreedingChild
     ld a, [wArg5]
     cp a, $FF
@@ -2580,12 +2587,12 @@ Jump_001_5572::
     push af
     ld a, [wArg7]
     cp a, $FF
-    jr nz, Jump_001_5590
+    jr nz, .read_arg6
     ld a, [wArg6]
     cp a, $FF
-    jr z, Jump_001_55D8
+    jr z, .call_debug_results_display_update_sub02_sub01
 
-Jump_001_5590::
+.read_arg6:
     ld a, [wArg6]
     ld [wArg1], a
     ld a, [wArg7]
@@ -2598,7 +2605,7 @@ Jump_001_5590::
     farcall TestBitInFieldAtArg3
     ld a, [wArg5]
     cp a, $FF
-    jr z, Jump_001_561F
+    jr z, .set_text_window_tile_lo
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
@@ -2613,9 +2620,9 @@ Jump_001_5590::
     call FillTilesFromRequest
     ld de, vTiles2 + $500
     call CopyGlyphTilesToVRAM
-    jr Jump_001_5638
+    jr .set_text_window_tile_lo2
 
-Jump_001_55D8::
+.call_debug_results_display_update_sub02_sub01:
     call DebugResultsDisplay_Update_Sub02_Sub01_Sub02
     ld hl, vTiles2 + $500
     ld a, l
@@ -2646,7 +2653,7 @@ Jump_001_55D8::
     ld [wNameEntryState], a
     ret
 
-Jump_001_561F::
+.set_text_window_tile_lo:
     ld hl, vTiles2 + $500
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2659,7 +2666,7 @@ Jump_001_561F::
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
 
-Jump_001_5638::
+.set_text_window_tile_lo2:
     ld hl, vTiles2 + $200
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2708,7 +2715,7 @@ Jump_001_5638::
     ld de, vBGMap0 + $6
     ld c, $00
 
-Jump_001_56A2::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2719,11 +2726,11 @@ Jump_001_56A2::
     inc c
     ld a, c
     cp a, $0E
-    jr c, Jump_001_56A2
+    jr c, .loop
     ld de, vBGMap0 + $26
     ld c, $00
 
-Jump_001_56B7::
+.loop2:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2734,7 +2741,7 @@ Jump_001_56B7::
     inc c
     ld a, c
     cp a, $0D
-    jr c, Jump_001_56B7
+    jr c, .loop2
     pop af
     ld [wArg1], a
     xor a, a
@@ -2768,28 +2775,29 @@ Func_001_56D3:: ; address name
     ei
     ret
 
-Jump_001_56F1::
+DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat::
+Jump_001_56F1:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jp nz, Jump_001_59DC
+    jp nz, DebugToggleArg1Marker_CheckScreenCounter
     bit 1, a
-    jp nz, Jump_001_59BA
+    jp nz, DebugToggleArg1Marker_ClearDebugCursor
     bit 6, a
-    jp nz, Jump_001_5822
+    jp nz, DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor
     bit 7, a
-    jp nz, Jump_001_5832
+    jp nz, DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2
     bit 4, a
-    jp nz, Jump_001_5843
+    jp nz, DebugToggleArg1Marker_CheckDebugCursor2
     bit 5, a
-    jp nz, Jump_001_58C6
+    jp nz, DebugToggleArg1Marker_CheckDebugCursor3
     bit 3, a
-    jp nz, Jump_001_5800
+    jp nz, DebugToggleArg1Marker_CheckDebugCursor
     bit 2, a
-    jp nz, Jump_001_5720
+    jp nz, .read_debug_value0
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5720::
+.read_debug_value0:
     ld a, [wDebugValue0]
     ld [wArg2], a
     ld a, [wDebugValue1]
@@ -2818,7 +2826,7 @@ Jump_001_5720::
     ld de, vBGMap0 + $186
     ld c, $00
 
-Jump_001_5774::
+.loop:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2829,11 +2837,11 @@ Jump_001_5774::
     inc c
     ld a, c
     cp a, $0E
-    jr c, Jump_001_5774
+    jr c, .loop
     ld de, vBGMap0 + $1A6
     ld c, $00
 
-Jump_001_5789::
+.loop2:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2844,12 +2852,12 @@ Jump_001_5789::
     inc c
     ld a, c
     cp a, $0D
-    jr c, Jump_001_5789
+    jr c, .loop2
     ld hl, wDebugResultsBuf
     ld de, vBGMap0 + $1E6
     ld c, $00
 
-Jump_001_57A1::
+.loop3:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2860,11 +2868,11 @@ Jump_001_57A1::
     inc c
     ld a, c
     cp a, $0E
-    jr c, Jump_001_57A1
+    jr c, .loop3
     ld de, vBGMap0 + $206
     ld c, $00
 
-Jump_001_57B6::
+.loop4:
     di
     call WaitForVRAMAccess
     ld a, [hl+]
@@ -2875,7 +2883,7 @@ Jump_001_57B6::
     inc c
     ld a, c
     cp a, $0D
-    jr c, Jump_001_57B6
+    jr c, .loop4
     ret
 
 ; for C up to $1A, loads byte C of wD01A (LoadWD01AByteArg4) and stores it at DE (E-0122)
@@ -2908,16 +2916,16 @@ DebugToggleArg1Marker::
 Func_001_57E1:: ; address name
     ld a, [wArg1]
     and a, a
-    jr nz, Jump_001_57EE
+    jr nz, .clear_arg1
     ld a, $02
     ld [wArg1], a
-    jr Jump_001_57F2
+    jr .call_wait_for_vram_access
 
-Jump_001_57EE::
+.clear_arg1:
     xor a, a
     ld [wArg1], a
 
-Jump_001_57F2::
+.call_wait_for_vram_access:
     di
     call WaitForVRAMAccess
     ld a, [wArg1]
@@ -2926,17 +2934,18 @@ Jump_001_57F2::
     ei
     ret
 
-Jump_001_5800::
+DebugToggleArg1Marker_CheckDebugCursor::
+Jump_001_5800:: ; address name
     ld a, [wDebugCursor]
     cp a, $04
-    jr z, Jump_001_5812
+    jr z, .call_draw_debug_field_value_debug_cursor
     cp a, $07
-    jr z, Jump_001_5812
+    jr z, .call_draw_debug_field_value_debug_cursor
     call DebugToggleArg1Marker
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5812::
+.call_draw_debug_field_value_debug_cursor:
     call DrawDebugFieldValueDebugCursor
     ld a, [wScreenState]
     inc a
@@ -2946,7 +2955,8 @@ Jump_001_5812::
     ld [wScreenByteBD], a
     ret
 
-Jump_001_5822::
+DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
+Jump_001_5822:: ; address name
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     and a, a
@@ -2956,7 +2966,8 @@ Jump_001_5822::
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5832::
+DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
+Jump_001_5832:: ; address name
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
     cp a, $09
@@ -2966,34 +2977,35 @@ Jump_001_5832::
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5843::
+DebugToggleArg1Marker_CheckDebugCursor2::
+Jump_001_5843:: ; address name
     ld a, [wDebugCursor]
     and a, a
-    jr z, Jump_001_5876
+    jr z, .skip6
     cp a, $01
-    jr z, Jump_001_5858
+    jr z, .skip
     cp a, $02
-    jr z, Jump_001_5871
+    jr z, .skip5
     cp a, $03
-    jr z, Jump_001_585D
-    jp Jump_001_5923
+    jr z, .skip2
+    jp DebugToggleArg1Marker_Cp04
 
-Jump_001_5858::
+.skip:
     ld hl, wDebugValue2
-    jr Jump_001_5860
+    jr .skip3
 
-Jump_001_585D::
+.skip2:
     ld hl, wDebugSubState
 
-Jump_001_5860::
+.skip3:
     push hl
     ld a, [hl]
     ld c, a
     and a, a
-    jr z, Jump_001_5868
+    jr z, .skip4
     ld a, $FF
 
-Jump_001_5868::
+.skip4:
     inc a
     ld c, a
     pop hl
@@ -3002,27 +3014,27 @@ Jump_001_5868::
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5871::
+.skip5:
     ld hl, wDebugValue3
-    jr Jump_001_5879
+    jr .skip7
 
-Jump_001_5876::
+.skip6:
     ld hl, wDebugValue0
 
-Jump_001_5879::
+.skip7:
     push hl
     ld a, [hl+]
     ld c, a
     ld a, [hl]
     ld b, a
     cp a, $01
-    jr c, Jump_001_588A
+    jr c, .next
     ld a, c
     cp a, $74
-    jr c, Jump_001_588A
+    jr c, .next
     ld bc, $FFFF
 
-Jump_001_588A::
+.next:
     inc bc
     pop hl
     ld a, c
@@ -3032,16 +3044,18 @@ Jump_001_588A::
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp a, $02
-    jr z, Jump_001_58A2
+    jr z, DebugToggleArg1Marker_Loop
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
-    jr Jump_001_58A8
+    jr DebugToggleArg1Marker_Skip
 
-Jump_001_58A2::
+DebugToggleArg1Marker_Loop::
+Jump_001_58A2:: ; address name
     ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
-Jump_001_58A8::
+DebugToggleArg1Marker_Skip::
+Jump_001_58A8:: ; address name
     push de
     push hl
     ld a, l
@@ -3059,60 +3073,61 @@ Jump_001_58A8::
     call DrawMonsterNameForWordAtDE_Bank01
     ret
 
-Jump_001_58C6::
+DebugToggleArg1Marker_CheckDebugCursor3::
+Jump_001_58C6:: ; address name
     ld a, [wDebugCursor]
     and a, a
-    jr z, Jump_001_58F2
+    jr z, .skip5
     cp a, $01
-    jr z, Jump_001_58DB
+    jr z, .skip
     cp a, $02
-    jr z, Jump_001_58F7
+    jr z, .skip6
     cp a, $03
-    jr z, Jump_001_58E0
-    jp Jump_001_596F
+    jr z, .skip2
+    jp DebugToggleArg1Marker_Cp042
 
-Jump_001_58DB::
+.skip:
     ld hl, wDebugValue2
-    jr Jump_001_58E3
+    jr .skip3
 
-Jump_001_58E0::
+.skip2:
     ld hl, wDebugSubState
 
-Jump_001_58E3::
+.skip3:
     push hl
     ld a, [hl]
     cp a, $01
-    jr z, Jump_001_58EB
+    jr z, .skip4
     ld a, $02
 
-Jump_001_58EB::
+.skip4:
     dec a
     pop hl
     ld [hl], a
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_58F2::
+.skip5:
     ld hl, wDebugValue0
-    jr Jump_001_58FA
+    jr .skip7
 
-Jump_001_58F7::
+.skip6:
     ld hl, wDebugValue3
 
-Jump_001_58FA::
+.skip7:
     push hl
     ld a, [hl+]
     ld c, a
     ld a, [hl]
     ld b, a
     and a, a
-    jr nz, Jump_001_5909
+    jr nz, .next
     ld a, c
     and a, a
-    jr nz, Jump_001_5909
+    jr nz, .next
     ld bc, $0175
 
-Jump_001_5909::
+.next:
     dec bc
     pop hl
     ld a, c
@@ -3122,124 +3137,127 @@ Jump_001_5909::
     call StepDebugCursorDebugCounter
     ld a, [wDebugCursor]
     cp a, $02
-    jp z, Jump_001_58A2
+    jp z, DebugToggleArg1Marker_Loop
     ld de, wDebugValue0
     ld hl, vTiles2 + $300
-    jp Jump_001_58A8
+    jp DebugToggleArg1Marker_Skip
 
-Jump_001_5923::
+DebugToggleArg1Marker_Cp04::
+Jump_001_5923:: ; address name
     cp a, $04
-    jr z, Jump_001_5939
+    jr z, .skip
     cp a, $05
-    jr z, Jump_001_5953
+    jr z, .skip5
     cp a, $06
-    jr z, Jump_001_5961
+    jr z, .skip7
     cp a, $07
-    jr z, Jump_001_5940
+    jr z, .skip2
     cp a, $08
-    jr z, Jump_001_595A
-    jr Jump_001_5968
+    jr z, .skip6
+    jr .skip8
 
-Jump_001_5939::
+.skip:
     ld hl, wScreenStep
     ld c, $63
-    jr Jump_001_5945
+    jr .skip3
 
-Jump_001_5940::
+.skip2:
     ld hl, wScreenSubStep
     ld c, $63
 
-Jump_001_5945::
+.skip3:
     push hl
     ld a, [hl]
     cp a, c
-    jr c, Jump_001_594C
+    jr c, .skip4
     ld a, $FF
 
-Jump_001_594C::
+.skip4:
     inc a
     pop hl
     ld [hl], a
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_5953::
+.skip5:
     ld hl, wScreenCounter
     ld c, $63
-    jr Jump_001_5945
+    jr .skip3
 
-Jump_001_595A::
+.skip6:
     ld hl, wGlyphListPos
     ld c, $63
-    jr Jump_001_5945
+    jr .skip3
 
-Jump_001_5961::
+.skip7:
     ld hl, wGlyphListStart
     ld c, $1B
-    jr Jump_001_5945
+    jr .skip3
 
-Jump_001_5968::
+.skip8:
     ld hl, wGridCursorX
     ld c, $1B
-    jr Jump_001_5945
+    jr .skip3
 
-Jump_001_596F::
+DebugToggleArg1Marker_Cp042::
+Jump_001_596F:: ; address name
     cp a, $04
-    jr z, Jump_001_5985
+    jr z, .skip
     cp a, $05
-    jr z, Jump_001_599E
+    jr z, .skip5
     cp a, $06
-    jr z, Jump_001_59AC
+    jr z, .skip7
     cp a, $07
-    jr z, Jump_001_598C
+    jr z, .skip2
     cp a, $08
-    jr z, Jump_001_59A5
-    jr Jump_001_59B3
+    jr z, .skip6
+    jr .skip8
 
-Jump_001_5985::
+.skip:
     ld hl, wScreenStep
     ld c, $64
-    jr Jump_001_5991
+    jr .skip3
 
-Jump_001_598C::
+.skip2:
     ld hl, wScreenSubStep
     ld c, $64
 
-Jump_001_5991::
+.skip3:
     push hl
     ld a, [hl]
     and a, a
-    jr nz, Jump_001_5997
+    jr nz, .skip4
     ld a, c
 
-Jump_001_5997::
+.skip4:
     dec a
     pop hl
     ld [hl], a
     call StepDebugCursorDebugCounter
     ret
 
-Jump_001_599E::
+.skip5:
     ld hl, wScreenCounter
     ld c, $64
-    jr Jump_001_5991
+    jr .skip3
 
-Jump_001_59A5::
+.skip6:
     ld hl, wGlyphListPos
     ld c, $64
-    jr Jump_001_5991
+    jr .skip3
 
-Jump_001_59AC::
+.skip7:
     ld hl, wGlyphListStart
     ld c, $1C
-    jr Jump_001_5991
+    jr .skip3
 
-Jump_001_59B3::
+.skip8:
     ld hl, wGridCursorX
     ld c, $1C
-    jr Jump_001_5991
+    jr .skip3
 
-Jump_001_59BA::
+DebugToggleArg1Marker_ClearDebugCursor::
+Jump_001_59BA:: ; address name
     xor a, a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
@@ -3255,7 +3273,8 @@ Jump_001_59BA::
     inc [hl]
     ret
 
-Jump_001_59DC::
+DebugToggleArg1Marker_CheckScreenCounter::
+Jump_001_59DC:: ; address name
     ld a, [wScreenCounter]
     cp a, $0A
     ret c
@@ -3268,20 +3287,20 @@ Jump_001_59DC::
     ld b, a
     ld a, [de]
     cp a, b
-    jr nz, Jump_001_59F5
+    jr nz, .skip
     ret
 
-Jump_001_59F5::
+.skip:
     ld hl, wRecordBufA
     ld bc, $01EF
 
-Jump_001_59FB::
+.loop:
     xor a, a
     ld [hl+], a
     dec bc
     ld a, b
     or a, c
-    jr nz, Jump_001_59FB
+    jr nz, .loop
     ld hl, wRecordBufA + $B
     ld a, [wDebugValue0]
     ld [hl+], a
@@ -3336,24 +3355,24 @@ Jump_001_59FB::
     ld de, wRecordBufA + $73
     ld b, $1B
 
-Jump_001_5A8A::
+.loop2:
     ld a, [hl]
     ld [de], a
     inc hl
     inc de
     dec b
-    jr nz, Jump_001_5A8A
+    jr nz, .loop2
     ld hl, wDebugResultsBuf
     ld de, wRecordBufB + $73
     ld b, $1B
 
-Jump_001_5A99::
+.loop3:
     ld a, [hl]
     ld [de], a
     inc hl
     inc de
     dec b
-    jr nz, Jump_001_5A99
+    jr nz, .loop3
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -3361,7 +3380,7 @@ Jump_001_5A99::
     ld [wNameEntryState], a
     ret
 
-; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at Jump_001_5B45, then wraps to 0 (E-0126)
+; debug: wC5FF += 1; below $10 continues at Func_001_5AC0, below $18 at PackTwoDigitsOfCAsBCD_ReadDebugCursor, then wraps to 0 (E-0126)
 ; 10 call sites from 2 routines (e.g. DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess, DebugToggleArg1Marker)
 ; reads: wDebugCounter, wDebugCursor
 ; writes: wDebugCounter
@@ -3373,7 +3392,7 @@ Func_001_5AAC:: ; address name
     cp a, $10
     jr c, DrawDebugFieldValueDebugCursor
     cp a, $18
-    jp c, Jump_001_5B45
+    jp c, PackTwoDigitsOfCAsBCD_ReadDebugCursor
     xor a, a
     ld [wDebugCounter], a
 
@@ -3387,10 +3406,10 @@ Func_001_5AC0:: ; address name
     ld de, DrawDebugFieldValueDebugCursor_Data_5B70
     add a, e
     ld e, a
-    jr nc, Jump_001_5ACD
+    jr nc, .skip
     inc d
 
-Jump_001_5ACD::
+.skip:
     ld a, [de]
     ld l, a
     inc de
@@ -3403,9 +3422,9 @@ Jump_001_5ACD::
     ld b, a
     ld a, [wDebugCursor]
     cp a, $04
-    jr nc, Jump_001_5B14
+    jr nc, .read_debug_cursor2
     bit 0, a
-    jr nz, Jump_001_5AF8
+    jr nz, .read_debug_cursor
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
@@ -3418,7 +3437,7 @@ Jump_001_5ACD::
     call WriteThreeHexDigitsAtDE
     ret
 
-Jump_001_5AF8::
+.read_debug_cursor:
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
@@ -3436,7 +3455,7 @@ Jump_001_5AF8::
     ei
     ret
 
-Jump_001_5B14::
+.read_debug_cursor2:
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
@@ -3470,7 +3489,8 @@ Func_001_5B2D:: ; address name
     pop de
     ret
 
-Jump_001_5B45::
+PackTwoDigitsOfCAsBCD_ReadDebugCursor::
+Jump_001_5B45:: ; address name
     ld a, [wDebugCursor]
     sla a
     ld hl, DrawDebugFieldValueDebugCursor_Data_5B84
@@ -3581,13 +3601,13 @@ Func_001_5BE8:: ; address name
     ld c, $00
     ld hl, wNameGlyphBuf
 
-Jump_001_5BED::
+.loop:
     ld a, $98
     ld [hl+], a
     inc c
     ld a, c
     cp a, $09
-    jr c, Jump_001_5BED
+    jr c, .loop
     ld a, $F0
     ld [hl], a
     ret
@@ -3601,23 +3621,23 @@ DebugAutomap_Update::
 Jump_001_5BFA:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
-    jp z, Jump_001_5C14
+    jp z, .check_bit1
     ld a, [wDebugState]
     cp a, $FF
-    jr z, Jump_001_5C10
+    jr z, .call_debug_automap_update_roll_key_contents
     ld a, [wDebugSubState]
     bit 7, a
-    jr nz, Jump_001_5C18
+    jr nz, .check_debug_state
 
-Jump_001_5C10::
+.call_debug_automap_update_roll_key_contents:
     call DebugAutomap_Update_RollKeyContentsForLevelTemp0
     ret
 
-Jump_001_5C14::
+.check_bit1:
     bit 1, a
-    jr z, Jump_001_5C8D
+    jr z, .check_bit3
 
-Jump_001_5C18::
+.check_debug_state:
     ld a, [wDebugState]
     cp a, $FF
     ret z
@@ -3629,7 +3649,7 @@ Jump_001_5C18::
     ldh [hMapScreenY], a
     ld a, [wDebugSubState]
     bit 7, a
-    jr z, Jump_001_5C5B
+    jr z, .check_debug_state2
     ld a, [wDebugState]
     and a, $1F
     ld hl, DebugAutomap_Update_Data
@@ -3648,7 +3668,7 @@ Jump_001_5C18::
     inc [hl]
     ret
 
-Jump_001_5C5B::
+.check_debug_state2:
     ld a, [wDebugState]
     and a, $7F
     ld [wKeyWorldSlot], a
@@ -3669,9 +3689,9 @@ Jump_001_5C5B::
     inc [hl]
     ret
 
-Jump_001_5C8D::
+.check_bit3:
     bit 3, a
-    jr z, Jump_001_5CA0
+    jr z, .check_joypad_pressed_repeat
     ld a, $00
     ld [wGameMode], a
     ld a, $00
@@ -3680,133 +3700,133 @@ Jump_001_5C8D::
     inc [hl]
     ret
 
-Jump_001_5CA0::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_001_5CB6
+    jr z, .check_bit7
     ld a, [wDebugCursor]
     dec a
     cp a, $FF
-    jr nz, Jump_001_5CB1
+    jr nz, .set_debug_cursor
     ld a, $03
 
-Jump_001_5CB1::
+.set_debug_cursor:
     ld [wDebugCursor], a
-    jr Jump_001_5CC6
+    jr .check_joypad_pressed_repeat2
 
-Jump_001_5CB6::
+.check_bit7:
     bit 7, a
-    jr z, Jump_001_5CC6
+    jr z, .check_joypad_pressed_repeat2
     ld a, [wDebugCursor]
     inc a
     cp a, $04
-    jr nz, Jump_001_5CC3
+    jr nz, .set_debug_cursor2
     xor a, a
 
-Jump_001_5CC3::
+.set_debug_cursor2:
     ld [wDebugCursor], a
 
-Jump_001_5CC6::
+.check_joypad_pressed_repeat2:
     ld c, $00
     ld a, [wJoypadPressedRepeat]
     bit 5, a
-    jr z, Jump_001_5CD3
+    jr z, .check_bit4
     ld c, $FF
-    jr Jump_001_5CD9
+    jr .skip
 
-Jump_001_5CD3::
+.check_bit4:
     bit 4, a
-    jr z, Jump_001_5CD9
+    jr z, .skip
     ld c, $01
 
-Jump_001_5CD9::
+.skip:
     bit 0, c
-    jr z, Jump_001_5D3C
+    jr z, .check_debug_value0
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_5D00
+    jr nz, .skip2
     ld a, [wDebugValue0]
     add a, c
     cp a, $20
-    jr nz, Jump_001_5CEE
+    jr nz, .cp_FF
     xor a, a
-    jr Jump_001_5CF4
+    jr .set_debug_value0
 
-Jump_001_5CEE::
+.cp_FF:
     cp a, $FF
-    jr nz, Jump_001_5CF4
+    jr nz, .set_debug_value0
     ld a, $13
 
-Jump_001_5CF4::
+.set_debug_value0:
     or a, $80
     ld [wDebugValue0], a
     and a, $7F
     call LoadKeyEntryFieldsToDebugState
-    jr Jump_001_5D3C
+    jr .check_debug_value0
 
-Jump_001_5D00::
+.skip2:
     dec a
-    jr nz, Jump_001_5D22
+    jr nz, .skip3
     ld a, [wDebugSubState]
     bit 7, a
-    jr nz, Jump_001_5D22
+    jr nz, .skip3
     ld a, [wDebugValue1]
     add a, c
     cp a, $64
-    jr nz, Jump_001_5D15
+    jr nz, .cp_FF2
     xor a, a
-    jr Jump_001_5D1B
+    jr .set_debug_value1
 
-Jump_001_5D15::
+.cp_FF2:
     cp a, $FF
-    jr nz, Jump_001_5D1B
+    jr nz, .set_debug_value1
     ld a, $63
 
-Jump_001_5D1B::
+.set_debug_value1:
     or a, $80
     ld [wDebugValue1], a
-    jr Jump_001_5D3C
+    jr .check_debug_value0
 
-Jump_001_5D22::
+.skip3:
     dec a
-    jr nz, Jump_001_5D30
+    jr nz, .skip4
     ld a, [wDebugValue2]
     add a, c
     and a, $0F
     ld [wDebugValue2], a
-    jr Jump_001_5D3C
+    jr .check_debug_value0
 
-Jump_001_5D30::
+.skip4:
     dec a
-    jr nz, Jump_001_5D3C
+    jr nz, .check_debug_value0
     ld a, [wDebugValue3]
     add a, c
     and a, $0F
     ld [wDebugValue3], a
 
-Jump_001_5D3C::
+.check_debug_value0:
     ld a, [wDebugValue0]
     bit 7, a
-    jr z, Jump_001_5D46
+    jr z, .check_debug_value02
     call DebugAutomap_Update_CopyGlyphTilesToVRAM
 
-Jump_001_5D46::
+.check_debug_value02:
     ld a, [wDebugValue0]
     bit 7, a
-    jr z, Jump_001_5D55
+    jr z, .check_debug_value03
     and a, $7F
     ld de, vBGMap0 + $10A
     call WriteHexByteTilesAtDE
 
-Jump_001_5D55::
+.check_debug_value03:
     ld a, [wDebugValue0]
     bit 7, a
-    jr nz, Jump_001_5D63
+    jr nz, .check_debug_value04
     ld a, [wDebugValue1]
     bit 7, a
-    jr z, Jump_001_5D76
+    jr z, .read_debug_value2
 
-Jump_001_5D63::
+.check_debug_value04:
     ld a, [wDebugValue0]
     and a, $7F
     ld [wDebugValue0], a
@@ -3815,7 +3835,7 @@ Jump_001_5D63::
     ld [wDebugValue1], a
     call DebugAutomap_Update_WriteHexByteTilesAtDE
 
-Jump_001_5D76::
+.read_debug_value2:
     ld a, [wDebugValue2]
     ld de, vBGMap0 + $14A
     call WriteHexByteTilesAtDE
@@ -3825,25 +3845,25 @@ Jump_001_5D76::
     ld hl, vBGMap0 + $109
     ld b, $00
 
-Jump_001_5D8D::
+.loop:
     ld a, [wDebugCursor]
     cp a, b
-    jr z, Jump_001_5D9A
+    jr z, .call_write_vram_byte
     ld a, $80
     call WriteVRAMByte
-    jr Jump_001_5D9F
+    jr .skip5
 
-Jump_001_5D9A::
+.call_write_vram_byte:
     ld a, $F8
     call WriteVRAMByte
 
-Jump_001_5D9F::
+.skip5:
     ld a, $20
     add_a_to_hl
     inc b
     ld a, b
     cp a, $05
-    jr nz, Jump_001_5D8D
+    jr nz, .loop
     ret
 
 ; address loaded by DebugAutomap_Update
@@ -3875,7 +3895,7 @@ Func_001_5DBA:: ; address name
     ld h, a
     ld a, [wDebugState]
     cp a, $FF
-    jr nz, Jump_001_5DEF
+    jr nz, .skip
     push hl
     farcall FindSRAMSlotMarkerIndex
     pop hl
@@ -3883,14 +3903,14 @@ Func_001_5DBA:: ; address name
     cp a, $FF
     ret z
     ld [hl+], a
-    jr Jump_001_5DF3
+    jr .set_key_world_slot
 
-Jump_001_5DEF::
+.skip:
     ld a, [hl]
     and a, $7F
     ld [hl+], a
 
-Jump_001_5DF3::
+.set_key_world_slot:
     ld [wKeyWorldSlot], a
     ldh a, [hTemp1]
     ld [hl+], a
@@ -3974,17 +3994,17 @@ DebugAutomap_Update_WriteHexByteTilesAtDE::
 Func_001_5E8A:: ; address name
     ld a, [wDebugState]
     cp a, $FF
-    jr z, Jump_001_5EA4
+    jr z, .clear_debug_value1
     ld a, [wDebugSubState]
     bit 7, a
-    jr nz, Jump_001_5EA4
+    jr nz, .clear_debug_value1
     ld a, [wDebugValue1]
     and a, $7F
     ld de, vBGMap0 + $12A
     call WriteHexByteTilesAtDE
     ret
 
-Jump_001_5EA4::
+.clear_debug_value1:
     xor a, a
     ld [wDebugValue1], a
     ld de, vBGMap0 + $12A
@@ -4020,10 +4040,10 @@ Func_001_5EAF:: ; address name
     call CopyGlyphTilesToVRAM
     ld a, [wDebugSubState]
     bit 7, a
-    jr z, Jump_001_5F1C
+    jr z, .check_debug_sub_state
     ld a, [wDebugState]
     cp a, $FF
-    jr nz, Jump_001_5F1C
+    jr nz, .check_debug_sub_state
     ld a, $29
     ld [wNameGlyphBuf], a
     ld a, $2A
@@ -4040,10 +4060,10 @@ Func_001_5EAF:: ; address name
     call CopyGlyphTilesToVRAM
     ret
 
-Jump_001_5F1C::
+.check_debug_sub_state:
     ld a, [wDebugSubState]
     bit 7, a
-    jr z, Jump_001_5F44
+    jr z, .check_debug_value0
     ld a, [wDebugState]
     dec a
     swap a
@@ -4052,17 +4072,17 @@ Jump_001_5F1C::
     add_a_to_hl
     ld de, wNameGlyphBuf
 
-Jump_001_5F36::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     cp a, $F0
-    jr nz, Jump_001_5F36
+    jr nz, .loop
     ld de, vTiles2 + $200
     call CopyGlyphTilesToVRAM
     ret
 
-Jump_001_5F44::
+.check_debug_value0:
     ld a, [wDebugValue0]
     and a, $1F
     ld de, wNameGlyphBuf
@@ -4096,24 +4116,24 @@ DebugMapEditor_Update::
 Jump_001_5FFE:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 0, a
-    jr z, Jump_001_604B
+    jr z, .check_joypad_pressed_repeat
     ld a, [wDebugValue0]
     ldh [hTemp0], a
     call DebugMapEditor_Update_WriteROMB0AndTemp0
     or a, a
-    jr z, Jump_001_601F
+    jr z, .read_debug_value0
     ld b, $08
     ld hl, vBGMap0 + $1A5
     ld a, $F0
 
-Jump_001_6017::
+.loop:
     call WriteVRAMByteInc
     inc a
     dec b
-    jr nz, Jump_001_6017
+    jr nz, .loop
     ret
 
-Jump_001_601F::
+.read_debug_value0:
     ld a, [wDebugValue0]
     ldh [hMapId], a
     ld a, [wDebugValue1]
@@ -4134,87 +4154,87 @@ Jump_001_601F::
     inc [hl]
     ret
 
-Jump_001_604B::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_001_6061
+    jr z, .check_bit7
     ld a, [wDebugCursor]
     dec a
     cp a, $FF
-    jr nz, Jump_001_605C
+    jr nz, .set_debug_cursor
     ld a, $04
 
-Jump_001_605C::
+.set_debug_cursor:
     ld [wDebugCursor], a
-    jr Jump_001_6071
+    jr .check_frame_counter_lo
 
-Jump_001_6061::
+.check_bit7:
     bit 7, a
-    jr z, Jump_001_6071
+    jr z, .check_frame_counter_lo
     ld a, [wDebugCursor]
     inc a
     cp a, $05
-    jr nz, Jump_001_606E
+    jr nz, .set_debug_cursor2
     xor a, a
 
-Jump_001_606E::
+.set_debug_cursor2:
     ld [wDebugCursor], a
 
-Jump_001_6071::
+.check_frame_counter_lo:
     ld c, $00
     ld a, [wFrameCounterLo]
     and a, $03
-    jr nz, Jump_001_608B
+    jr nz, .skip
     ld a, [wJoypadHeld]
     bit 5, a
-    jr z, Jump_001_6085
+    jr z, .check_bit4
     ld c, $FF
-    jr Jump_001_608B
+    jr .skip
 
-Jump_001_6085::
+.check_bit4:
     bit 4, a
-    jr z, Jump_001_608B
+    jr z, .skip
     ld c, $01
 
-Jump_001_608B::
+.skip:
     bit 0, c
-    jr z, Jump_001_60E7
+    jr z, .check_debug_sub_state
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_60A8
+    jr nz, .skip2
     ld a, [wDebugValue0]
     add a, c
     cp a, $FF
-    jr nz, Jump_001_609F
+    jr nz, .set_debug_value0
     ld a, $E1
 
-Jump_001_609F::
+.set_debug_value0:
     ld [wDebugValue0], a
     ld hl, wDebugSubState
     inc [hl]
-    jr Jump_001_60E7
+    jr .check_debug_sub_state
 
-Jump_001_60A8::
+.skip2:
     dec a
-    jr nz, Jump_001_60B6
+    jr nz, .skip3
     ld a, [wDebugValue1]
     add a, c
     and a, $0F
     ld [wDebugValue1], a
-    jr Jump_001_60E7
+    jr .check_debug_sub_state
 
-Jump_001_60B6::
+.skip3:
     dec a
-    jr nz, Jump_001_60C4
+    jr nz, .skip4
     ld a, [wDebugValue3]
     add a, c
     and a, $0F
     ld [wDebugValue3], a
-    jr Jump_001_60E7
+    jr .check_debug_sub_state
 
-Jump_001_60C4::
+.skip4:
     dec a
-    jr nz, Jump_001_60D8
+    jr nz, .skip5
     sla c
     sla c
     sla c
@@ -4222,9 +4242,9 @@ Jump_001_60C4::
     ld a, [wDebugValue2]
     add a, c
     ld [wDebugValue2], a
-    jr Jump_001_60E7
+    jr .check_debug_sub_state
 
-Jump_001_60D8::
+.skip5:
     sla c
     sla c
     sla c
@@ -4233,10 +4253,10 @@ Jump_001_60D8::
     add a, c
     ld [wDebugState], a
 
-Jump_001_60E7::
+.check_debug_sub_state:
     ld a, [wDebugSubState]
     or a, a
-    jr z, Jump_001_6119
+    jr z, .read_debug_value1
     ld a, [wDebugValue0]
     add a, $0A
     ld [wStringIndex], a
@@ -4256,7 +4276,7 @@ Jump_001_60E7::
     xor a, a
     ld [wDebugSubState], a
 
-Jump_001_6119::
+.read_debug_value1:
     ld a, [wDebugValue1]
     ld de, vBGMap0 + $10A
     call WriteHexByteTilesAtDE
@@ -4276,25 +4296,25 @@ Jump_001_6119::
     ld hl, vBGMap0 + $E9
     ld b, $00
 
-Jump_001_614A::
+.loop2:
     ld a, [wDebugCursor]
     cp a, b
-    jr z, Jump_001_6157
+    jr z, .call_write_vram_byte
     ld a, $80
     call WriteVRAMByte
-    jr Jump_001_615C
+    jr .skip6
 
-Jump_001_6157::
+.call_write_vram_byte:
     ld a, $F8
     call WriteVRAMByte
 
-Jump_001_615C::
+.skip6:
     ld a, $20
     add_a_to_hl
     inc b
     ld a, b
     cp a, $05
-    jr nz, Jump_001_614A
+    jr nz, .loop2
     ret
 
 ; update for debug-mode state 0: the screen shows the debug menu (E-0041)
@@ -4306,45 +4326,45 @@ DebugMainMenu_Update::
 Jump_001_616A:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $90
-    jr z, Jump_001_617D
+    jr z, .check_joypad_pressed_repeat
     ld a, [wDebugCursor]
     inc a
     cp a, $0C
-    jr nz, Jump_001_618E
+    jr nz, .set_debug_cursor
     ld a, $00
-    jr Jump_001_618E
+    jr .set_debug_cursor
 
-Jump_001_617D::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     and a, $60
-    jr z, Jump_001_6191
+    jr z, .read_debug_cursor
     ld a, [wDebugCursor]
     dec a
     cp a, $FF
-    jr nz, Jump_001_618E
+    jr nz, .set_debug_cursor
     ld a, $0B
 
-Jump_001_618E::
+.set_debug_cursor:
     ld [wDebugCursor], a
 
-Jump_001_6191::
+.read_debug_cursor:
     ld a, [wDebugCursor]
     swap a
     add a, $A0
     ld hl, vBGMap0 + $122
     ld b, $10
 
-Jump_001_619D::
+.loop:
     call WriteVRAMByteInc
     inc a
     dec b
-    jr nz, Jump_001_619D
+    jr nz, .loop
     ld a, [wJoypadPressed]
     and a, $01
     ret z
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_61C3
+    jr nz, .skip
     ld a, $01
     ld [wGameMode], a
     ld hl, wModeChangeRequest
@@ -4355,9 +4375,9 @@ Jump_001_619D::
     ld [wKeyWorldRefresh], a
     ret
 
-Jump_001_61C3::
+.skip:
     dec a
-    jr nz, Jump_001_61D5
+    jr nz, .skip2
     ld a, $00
     ld [wGameMode], a
     ld a, $02
@@ -4366,9 +4386,9 @@ Jump_001_61C3::
     inc [hl]
     ret
 
-Jump_001_61D5::
+.skip2:
     dec a
-    jr nz, Jump_001_61E7
+    jr nz, .skip3
     ld a, $00
     ld [wGameMode], a
     ld a, $03
@@ -4377,9 +4397,9 @@ Jump_001_61D5::
     inc [hl]
     ret
 
-Jump_001_61E7::
+.skip3:
     dec a
-    jr nz, Jump_001_61FE
+    jr nz, .skip4
     ld a, $00
     ld [wGameMode], a
     ld a, $04
@@ -4390,9 +4410,9 @@ Jump_001_61E7::
     inc [hl]
     ret
 
-Jump_001_61FE::
+.skip4:
     dec a
-    jr nz, Jump_001_6210
+    jr nz, .skip5
     ld a, $00
     ld [wGameMode], a
     ld a, $05
@@ -4401,9 +4421,9 @@ Jump_001_61FE::
     inc [hl]
     ret
 
-Jump_001_6210::
+.skip5:
     dec a
-    jr nz, Jump_001_6222
+    jr nz, .skip6
     ld a, $00
     ld [wGameMode], a
     ld a, $06
@@ -4412,9 +4432,9 @@ Jump_001_6210::
     inc [hl]
     ret
 
-Jump_001_6222::
+.skip6:
     dec a
-    jr nz, Jump_001_6234
+    jr nz, .skip7
     ld a, $00
     ld [wGameMode], a
     ld a, $07
@@ -4423,9 +4443,9 @@ Jump_001_6222::
     inc [hl]
     ret
 
-Jump_001_6234::
+.skip7:
     dec a
-    jr nz, Jump_001_6246
+    jr nz, .skip8
     ld a, $00
     ld [wGameMode], a
     ld a, $08
@@ -4434,9 +4454,9 @@ Jump_001_6234::
     inc [hl]
     ret
 
-Jump_001_6246::
+.skip8:
     dec a
-    jr nz, Jump_001_6258
+    jr nz, .skip9
     ld a, $00
     ld [wGameMode], a
     ld a, $09
@@ -4445,9 +4465,9 @@ Jump_001_6246::
     inc [hl]
     ret
 
-Jump_001_6258::
+.skip9:
     dec a
-    jr nz, Jump_001_626A
+    jr nz, .skip10
     ld a, $00
     ld [wGameMode], a
     ld a, $0A
@@ -4456,9 +4476,9 @@ Jump_001_6258::
     inc [hl]
     ret
 
-Jump_001_626A::
+.skip10:
     dec a
-    jr nz, Jump_001_627C
+    jr nz, .read_debug_menu_flag0
     ld a, $00
     ld [wGameMode], a
     ld a, $0B
@@ -4467,7 +4487,7 @@ Jump_001_626A::
     inc [hl]
     ret
 
-Jump_001_627C::
+.read_debug_menu_flag0:
     ld hl, wGameMode
     ld a, [wDebugMenuFlag0]
     ld [hl+], a
@@ -4490,16 +4510,16 @@ DebugMonsterPictureViewer_Update::
 Jump_001_6294:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, Jump_001_62A6
+    jr z, .check_bit1
     ld a, [wDebugState]
     inc a
     and a, $03
     ld [wDebugState], a
-    jr Jump_001_62B9
+    jr .check_joypad_pressed
 
-Jump_001_62A6::
+.check_bit1:
     bit 1, a
-    jr z, Jump_001_62B9
+    jr z, .check_joypad_pressed
     ld a, $00
     ld [wGameMode], a
     ld a, $00
@@ -4508,26 +4528,26 @@ Jump_001_62A6::
     inc [hl]
     ret
 
-Jump_001_62B9::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $C0
-    jr z, Jump_001_62CA
+    jr z, .read_debug_cursor
     ld a, [wDebugCursor]
     inc a
     and a, $01
     ld [wDebugCursor], a
     ret
 
-Jump_001_62CA::
+.read_debug_cursor:
     ld a, [wDebugCursor]
     sla a
     ld de, wDebugValue0
     add a, e
     ld e, a
-    jr nc, Jump_001_62D7
+    jr nc, .skip
     inc d
 
-Jump_001_62D7::
+.skip:
     ld a, [de]
     ld l, a
     inc de
@@ -4535,7 +4555,7 @@ Jump_001_62D7::
     ld h, a
     ld a, [wJoypadPressedRepeat]
     bit 5, a
-    jr z, Jump_001_6318
+    jr z, .check_bit4
     dec hl
     ld a, h
     or a, $80
@@ -4545,10 +4565,10 @@ Jump_001_62D7::
     ld [de], a
     ld a, h
     cp a, $FF
-    jr nz, Jump_001_634E
+    jr nz, .check_debug_value1
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_6307
+    jr nz, .skip2
     ld hl, $017E
     ld a, h
     or a, $80
@@ -4557,9 +4577,9 @@ Jump_001_62D7::
     ld [wDebugValue0], a
     ld a, h
     ld [wDebugValue1], a
-    jr Jump_001_634E
+    jr .check_debug_value1
 
-Jump_001_6307::
+.skip2:
     ld hl, $017E
     ld a, h
     or a, $80
@@ -4568,42 +4588,42 @@ Jump_001_6307::
     ld [wDebugValue2], a
     ld a, h
     ld [wDebugValue3], a
-    jr Jump_001_634E
+    jr .check_debug_value1
 
-Jump_001_6318::
+.check_bit4:
     bit 4, a
-    jr z, Jump_001_634E
+    jr z, .check_debug_value1
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_6334
+    jr nz, .skip3
     ld a, $7E
     cp a, l
-    jr nz, Jump_001_6346
+    jr nz, .next
     ld a, $01
     cp a, h
-    jr nz, Jump_001_6346
+    jr nz, .next
     ld a, $80
     ld [de], a
     dec de
     xor a, a
     ld [de], a
-    jr Jump_001_634E
+    jr .check_debug_value1
 
-Jump_001_6334::
+.skip3:
     ld a, $7E
     cp a, l
-    jr nz, Jump_001_6346
+    jr nz, .next
     ld a, $01
     cp a, h
-    jr nz, Jump_001_6346
+    jr nz, .next
     ld a, $80
     ld [de], a
     dec de
     xor a, a
     ld [de], a
-    jr Jump_001_634E
+    jr .check_debug_value1
 
-Jump_001_6346::
+.next:
     inc hl
     ld a, h
     or a, $80
@@ -4612,10 +4632,10 @@ Jump_001_6346::
     ld a, l
     ld [de], a
 
-Jump_001_634E::
+.check_debug_value1:
     ld a, [wDebugValue1]
     bit 7, a
-    jr z, Jump_001_6387
+    jr z, .check_debug_value3
     and a, $7F
     ld [wDebugValue1], a
     ld a, [wDebugValue0]
@@ -4627,7 +4647,7 @@ Jump_001_634E::
     call LoadMonsterPicture
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_001_6387
+    jr z, .check_debug_value3
     ld hl, vBGMap0 + $124
     ld a, $01
     ldh [hTemp0], a
@@ -4639,10 +4659,10 @@ Jump_001_634E::
     ld a, $7F
     ld [wBGPaletteUploadRequest], a
 
-Jump_001_6387::
+.check_debug_value3:
     ld a, [wDebugValue3]
     bit 7, a
-    jr z, Jump_001_63F5
+    jr z, .check_debug_cursor
     and a, $7F
     ld [wDebugValue3], a
     ld a, [wDebugValue2]
@@ -4674,7 +4694,7 @@ Jump_001_6387::
     call DecompressToVRAM
     ld a, [wIsCGB]
     or a, a
-    jr z, Jump_001_63F5
+    jr z, .check_debug_cursor
     ld a, [wDebugValue2]
     ld l, a
     ld a, [wDebugValue3]
@@ -4694,7 +4714,7 @@ Jump_001_6387::
     ld hl, wOBJPaletteBuffer
     ld c, $08
 
-Jump_001_63E5::
+.loop:
     push bc
     call ReadByteInBank
     ld a, c
@@ -4702,27 +4722,27 @@ Jump_001_63E5::
     pop bc
     inc de
     dec c
-    jr nz, Jump_001_63E5
+    jr nz, .loop
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
 
-Jump_001_63F5::
+.check_debug_cursor:
     ld hl, wDebugSubState
     inc [hl]
     ld a, [wDebugCursor]
     or a, a
-    jr nz, Jump_001_6415
+    jr nz, .read_debug_value0
     ld a, [wDebugSubState]
     bit 3, a
-    jr z, Jump_001_6415
+    jr z, .read_debug_value0
     xor a, a
     ld hl, vBGMap0 + $AB
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByteInc
-    jr Jump_001_6423
+    jr .check_debug_cursor2
 
-Jump_001_6415::
+.read_debug_value0:
     ld a, [wDebugValue0]
     ld c, a
     ld a, [wDebugValue1]
@@ -4730,21 +4750,21 @@ Jump_001_6415::
     ld de, vBGMap0 + $AB
     call WriteThreeHexDigitsAtDE
 
-Jump_001_6423::
+.check_debug_cursor2:
     ld a, [wDebugCursor]
     or a, a
-    jr z, Jump_001_643F
+    jr z, .read_debug_value2
     ld a, [wDebugSubState]
     bit 3, a
-    jr z, Jump_001_643F
+    jr z, .read_debug_value2
     xor a, a
     ld hl, vBGMap0 + $CB
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByteInc
-    jr Jump_001_644D
+    jr .set_sprite_attr_xor_to_00
 
-Jump_001_643F::
+.read_debug_value2:
     ld a, [wDebugValue2]
     ld c, a
     ld a, [wDebugValue3]
@@ -4752,17 +4772,17 @@ Jump_001_643F::
     ld de, vBGMap0 + $CB
     call WriteThreeHexDigitsAtDE
 
-Jump_001_644D::
+.set_sprite_attr_xor_to_00:
     ld a, $00
     ldh [hSpriteAttrXor], a
     ld a, [wDebugState]
     cp a, $03
-    jr nz, Jump_001_645E
+    jr nz, .read_frame_counter_lo
     ld a, $20
     ldh [hSpriteAttrXor], a
     ld a, $01
 
-Jump_001_645E::
+.read_frame_counter_lo:
     sla a
     ld c, a
     ld a, [wFrameCounterLo]
@@ -4805,18 +4825,18 @@ Jump_001_645E::
     ldh [hSpriteSetIndex], a
     ld a, [wDebugValue3]
     or a, a
-    jr nz, Jump_001_64B9
+    jr nz, .call_draw_meta_sprite_set_bank27
     ld a, [wDebugValue2]
     bit 7, a
-    jr nz, Jump_001_64B2
+    jr nz, .call_draw_meta_sprite_set_bank26
     farcall DrawMetaSpriteSet_Bank25
     ret
 
-Jump_001_64B2::
+.call_draw_meta_sprite_set_bank26:
     farcall DrawMetaSpriteSet_Bank26
     ret
 
-Jump_001_64B9::
+.call_draw_meta_sprite_set_bank27:
     farcall DrawMetaSpriteSet_Bank27
     ret
 
@@ -4829,10 +4849,10 @@ DebugSoundTest_Update::
 Jump_001_64C0:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
-    jr z, Jump_001_64F0
+    jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
     or a, a
-    jr nz, Jump_001_64E0
+    jr nz, .read_temp1
     call InitSoundHardware
     ld a, [wTemp0]
     ld hl, DebugSoundTestMusic
@@ -4841,7 +4861,7 @@ Jump_001_64C0:: ; address name
     call QueueMusic
     ret
 
-Jump_001_64E0::
+.read_temp1:
     ld a, [wTemp1]
     ld hl, DebugSoundTestEffects
     add_a_to_hl
@@ -4849,27 +4869,27 @@ Jump_001_64E0::
     call QueueSoundEffect
     ret
 
-Jump_001_64F0::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     and a, $C0
-    jr z, Jump_001_6512
+    jr z, .read_menu_state2
     ld a, [wMenuState]
     or a, a
-    jr nz, Jump_001_6502
+    jr nz, .call_debug_sound_test_update_write_hex_byte
     call DebugSoundTest_Update_WriteHexByteTilesAtDE
-    jr Jump_001_6505
+    jr .read_menu_state
 
-Jump_001_6502::
+.call_debug_sound_test_update_write_hex_byte:
     call DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
 
-Jump_001_6505::
+.read_menu_state:
     ld a, [wMenuState]
     xor a, $01
     ld [wMenuState], a
     ld a, $69
     call QueueSoundEffect
 
-Jump_001_6512::
+.read_menu_state2:
     ld a, [wMenuState]
     ld c, a
     ld b, $00
@@ -4877,25 +4897,25 @@ Jump_001_6512::
     add hl, bc
     ld a, [wJoypadPressedRepeat]
     and a, $10
-    jr z, Jump_001_6526
+    jr z, .check_joypad_pressed_repeat2
     inc [hl]
-    jr Jump_001_6539
+    jr .call_queue_sound_effect
 
-Jump_001_6526::
+.check_joypad_pressed_repeat2:
     ld a, [wJoypadPressedRepeat]
     and a, $20
-    jr z, Jump_001_6530
+    jr z, .check_joypad_pressed
     dec [hl]
-    jr Jump_001_6539
+    jr .call_queue_sound_effect
 
-Jump_001_6530::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_001_654F
+    jr z, .check_joypad_pressed2
     xor a, a
     ld [hl], a
 
-Jump_001_6539::
+.call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuState]
@@ -4906,20 +4926,20 @@ Jump_001_6539::
     cp a, $01
     call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
 
-Jump_001_654F::
+.check_joypad_pressed2:
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_001_655F
+    jr z, .check_menu_state
     xor a, a
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
     ret
 
-Jump_001_655F::
+.check_menu_state:
     ld a, [wMenuState]
     or a, a
-    jr nz, Jump_001_6583
+    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE
@@ -4927,7 +4947,7 @@ Jump_001_655F::
     ld hl, vBGMap0 + $E9
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_659F
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
@@ -4937,9 +4957,10 @@ Func_001_6578:: ; address name
     ld a, [wTemp0]
     ld de, vBGMap0 + $E9
     call WriteHexByteTilesAtDE
-    jr Jump_001_659F
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
-Jump_001_6583::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
+Jump_001_6583:: ; address name
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
@@ -4947,7 +4968,7 @@ Jump_001_6583::
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_659F
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
 
 ; only called from DebugSoundTest_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugSoundTest_Update)
@@ -4958,7 +4979,8 @@ Func_001_6596:: ; address name
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
-Jump_001_659F::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return::
+Jump_001_659F:: ; address name
     ret
 
 ; only called from DebugSoundTest_Update (E-0047)
@@ -4973,31 +4995,31 @@ Func_001_65A0:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, b
-    jr nz, Jump_001_65B2
+    jr nz, .skip
     ld [hl], $00
 
-Jump_001_65B2::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_001_65B9
+    jr nz, .check_menu_state
     dec b
     ld [hl], b
 
-Jump_001_65B9::
+.check_menu_state:
     ld a, [wMenuState]
     or a, a
-    jr nz, Jump_001_65CA
+    jr nz, .read_temp1
     ld hl, DebugSoundTestMusic
     ld de, vBGMap0 + $EC
     ld a, [wTemp0]
-    jr Jump_001_65D3
+    jr .call_write_hex_byte_tiles_at_de
 
-Jump_001_65CA::
+.read_temp1:
     ld hl, DebugSoundTestEffects
     ld de, vBGMap0 + $10C
     ld a, [wTemp1]
 
-Jump_001_65D3::
+.call_write_hex_byte_tiles_at_de:
     add_a_to_hl
     ld a, [hl]
     call WriteHexByteTilesAtDE
@@ -5041,7 +5063,7 @@ Data_001_65DE:: ; address name
     db $CF ; id 30
     db $D6 ; id 31
 
-; E-0238 (C1: DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at Jump_001_65CA draws it in hex at vBGMap0 + $10C; 84 entries up to the next routine).
+; E-0238 (C1: DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at DebugSoundTest_Update_ReadMenuStateAndTemp0Etc.read_temp1 draws it in hex at vBGMap0 + $10C; 84 entries up to the next routine).
 ; record: sound effect number
 DebugSoundTestEffects::
 Data_001_65FE:: ; address name
@@ -5139,21 +5161,22 @@ DebugBattleSetup_Update::
 Jump_001_6652:: ; address name
     ld a, [wJoypadPressed]
     and a, $08
-    jp z, Jump_001_66E8
+    jp z, DebugBattleSetupLoadWords_CheckJoypadPressed
     ld a, [wWorkBuf]
     ld [wEncounterKind], a
     ld a, [wWorkBuf + $8]
     sra a
     ld [wBattleKind], a
     or a, a
-    jr nz, Jump_001_66BD
+    jr nz, DebugBattleSetupLoadWords_SetEncounterMonsters
     ld hl, wEncounterMonsters
     ld de, wWorkBuf + $2
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
 
-Jump_001_667A::
+DebugBattleSetup_Update_ClearMenuState::
+Jump_001_667A:: ; address name
     xor a, a
     ld [wMenuState], a
     xor a, a
@@ -5162,14 +5185,14 @@ Jump_001_667A::
     ld [wDebugValue1], a
     ld a, [wWorkBuf + $8]
     or a, a
-    jr nz, Jump_001_6693
+    jr nz, .call_debug_battle_setup_update_write_map_id
     call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01
-    jr Jump_001_6696
+    jr .set_game_mode_to_04
 
-Jump_001_6693::
+.call_debug_battle_setup_update_write_map_id:
     call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
 
-Jump_001_6696::
+.set_game_mode_to_04:
     ld a, $04
     ld [wGameMode], a
     xor a, a
@@ -5202,7 +5225,8 @@ Func_001_66AD:: ; address name
     inc hl
     ret
 
-Jump_001_66BD::
+DebugBattleSetupLoadWords_SetEncounterMonsters::
+Jump_001_66BD:: ; address name
     ld hl, wWorkBuf + $C
     ld a, [hl+]
     ld [wEncounterMonsters], a
@@ -5224,12 +5248,13 @@ Jump_001_66BD::
     ld [wEncounterMonsters + $5], a
     ld a, [hl+]
     ld [wWildByteE5], a
-    jr Jump_001_667A
+    jr DebugBattleSetup_Update_ClearMenuState
 
-Jump_001_66E8::
+DebugBattleSetupLoadWords_CheckJoypadPressed::
+Jump_001_66E8:: ; address name
     ld a, [wJoypadPressed]
     and a, $01
-    jr z, Jump_001_6701
+    jr z, .check_joypad_pressed
     ld a, [wMenuState]
     add a, a
     ld hl, wWorkBuf
@@ -5237,12 +5262,12 @@ Jump_001_66E8::
     xor a, a
     ld [hl+], a
     ld [hl], a
-    jp Jump_001_6801
+    jp .clear_frame_counter_lo
 
-Jump_001_6701::
+.check_joypad_pressed:
     ld a, [wJoypadPressed]
     and a, $02
-    jr z, Jump_001_6734
+    jr z, .check_joypad_pressed_repeat
     ld a, [wWorkBuf]
     ld [wEncounterKind], a
     ld hl, wEncounterMonsters
@@ -5262,38 +5287,38 @@ Jump_001_6701::
     inc [hl]
     ret
 
-Jump_001_6734::
+.check_joypad_pressed_repeat:
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr z, Jump_001_674E
+    jr z, .check_bit7
     call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     dec a
     cp a, $FF
-    jr nz, Jump_001_6748
+    jr nz, .set_menu_state
     ld a, $0B
 
-Jump_001_6748::
+.set_menu_state:
     ld [wMenuState], a
-    jp Jump_001_6801
+    jp .clear_frame_counter_lo
 
-Jump_001_674E::
+.check_bit7:
     bit 7, a
-    jr z, Jump_001_6764
+    jr z, .skip
     call DrawDebugValueHexForMenuState
     ld a, [wMenuState]
     inc a
     cp a, $0C
-    jr nz, Jump_001_675E
+    jr nz, .set_menu_state2
     xor a, a
 
-Jump_001_675E::
+.set_menu_state2:
     ld [wMenuState], a
-    jp Jump_001_6801
+    jp .clear_frame_counter_lo
 
-Jump_001_6764::
+.skip:
     and a, $30
-    jr z, Jump_001_67C9
+    jr z, .read_menu_state
     ld a, [wMenuState]
     add a, a
     ld hl, wWorkBuf
@@ -5304,10 +5329,10 @@ Jump_001_6764::
     dec hl
     ld a, [wJoypadPressedRepeat]
     bit 4, a
-    jr z, Jump_001_67A4
+    jr z, .check_joypad_held
     ld a, [wJoypadHeld]
     bit 2, a
-    jr z, Jump_001_679B
+    jr z, .call_subtract_de_from_debug_limit
     inc de
     inc de
     inc de
@@ -5325,20 +5350,20 @@ Jump_001_6764::
     inc de
     inc de
     call ClampDebugValueToTableLimit
-    jr Jump_001_679F
+    jr .call_draw_debug_value_hex_for_menu_state
 
-Jump_001_679B::
+.call_subtract_de_from_debug_limit:
     inc de
     call SubtractDEFromDebugLimit
 
-Jump_001_679F::
+.call_draw_debug_value_hex_for_menu_state:
     call DrawDebugValueHexForMenuState
-    jr Jump_001_6801
+    jr .clear_frame_counter_lo
 
-Jump_001_67A4::
+.check_joypad_held:
     ld a, [wJoypadHeld]
     bit 2, a
-    jr z, Jump_001_67C0
+    jr z, .call_subtract_de_from_debug_limit2
     dec de
     dec de
     dec de
@@ -5356,17 +5381,17 @@ Jump_001_67A4::
     dec de
     dec de
     call ClampDebugValueToTableLimit
-    jr Jump_001_67C4
+    jr .call_draw_debug_value_hex_for_menu_state2
 
-Jump_001_67C0::
+.call_subtract_de_from_debug_limit2:
     dec de
     call SubtractDEFromDebugLimit
 
-Jump_001_67C4::
+.call_draw_debug_value_hex_for_menu_state2:
     call DrawDebugValueHexForMenuState
-    jr Jump_001_6801
+    jr .clear_frame_counter_lo
 
-Jump_001_67C9::
+.read_menu_state:
     ld a, [wMenuState]
     ld hl, DebugBattleSetupLoadWords_Data
     add a, a
@@ -5374,14 +5399,14 @@ Jump_001_67C9::
     deref_hl
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, Jump_001_67EB
+    jr nz, .read_menu_state2
     xor a, a
     call WriteVRAMByteInc
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr Jump_001_6808
+    jr .return
 
-Jump_001_67EB::
+.read_menu_state2:
     push hl
     ld a, [wMenuState]
     add a, a
@@ -5392,14 +5417,14 @@ Jump_001_67EB::
     ld b, [hl]
     pop de
     call WriteThreeHexDigitsAtDE
-    jr Jump_001_6808
+    jr .return
 
-Jump_001_6801::
+.clear_frame_counter_lo:
     xor a, a
     ld [wFrameCounterLo], a
     call DebugBattleSetupShowFieldString
 
-Jump_001_6808::
+.return:
     ret
 
 ; writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)
@@ -5441,7 +5466,7 @@ Func_001_682B:: ; address name
     ld a, d
     and a, e
     cp a, $FF
-    jr z, Jump_001_6850
+    jr z, .skip
     ld a, c
     sub a, e
     ld c, a
@@ -5449,17 +5474,17 @@ Func_001_682B:: ; address name
     sbc a, d
     ld b, a
     bit 7, b
-    jr z, Jump_001_6852
+    jr z, .restore
     xor a, a
     ld d, a
     ld e, a
-    jr Jump_001_6852
+    jr .restore
 
-Jump_001_6850::
+.skip:
     ld d, b
     ld e, c
 
-Jump_001_6852::
+.restore:
     pop hl
     ld [hl], e
     inc hl
@@ -5483,20 +5508,20 @@ Func_001_6857:: ; address name
     ld l, e
     inc bc
     call CompareHLToBC
-    jr c, Jump_001_687B
+    jr c, .restore
     dec bc
     bit 7, h
-    jr nz, Jump_001_6879
+    jr nz, .skip
     xor a, a
     ld d, a
     ld e, a
-    jr Jump_001_687B
+    jr .restore
 
-Jump_001_6879::
+.skip:
     ld d, b
     ld e, c
 
-Jump_001_687B::
+.restore:
     pop hl
     ld [hl], e
     inc hl
@@ -5511,45 +5536,45 @@ DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
 Func_001_6880:: ; address name
     ld a, [wPartyCount]
     or a, a
-    jr z, Jump_001_68B4
+    jr z, .call_check_save_data
     cp a, $04
-    jr nc, Jump_001_68B4
+    jr nc, .call_check_save_data
     ld b, a
     ld hl, wPartyList
     ld a, [wFarmLevel]
     cp a, $03
-    jr nc, Jump_001_68B4
+    jr nc, .call_check_save_data
     ld c, $0A
     cp a, $00
-    jr z, Jump_001_68A3
+    jr z, .loop
     ld c, $14
     cp a, $01
-    jr z, Jump_001_68A3
+    jr z, .loop
     ld c, $1E
 
-Jump_001_68A3::
+.loop:
     ld a, [hl+]
     cp a, c
-    jr nc, Jump_001_68B4
+    jr nc, .call_check_save_data
     push bc
     push hl
     call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped
     pop hl
     pop bc
-    jr nz, Jump_001_68B4
+    jr nz, .call_check_save_data
     dec b
-    jr nz, Jump_001_68A3
+    jr nz, .loop
     ret
 
-Jump_001_68B4::
+.call_check_save_data:
     farcall CheckSaveData
     ldh a, [hTemp0]
     or a, a
-    jr nz, Jump_001_68C6
+    jr nz, .call_debug_battle_setup_update_write_map_id
     farcall RunSaveSteps
     ret
 
-Jump_001_68C6::
+.call_debug_battle_setup_update_write_map_id:
     call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
     ret
 
@@ -5586,11 +5611,11 @@ Func_001_6903:: ; address name
     or a, a
     ret z
     cp a, $04
-    jr z, Jump_001_6976
+    jr z, .read_work_buf
     cp a, $05
-    jp z, Jump_001_69C2
+    jp z, .clear_string_index
     cp a, $06
-    jp nc, Jump_001_6A0C
+    jp nc, .read_menu_state
     ld hl, wWorkBuf
     add a, a
     add_a_to_hl
@@ -5637,7 +5662,7 @@ Func_001_6903:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-Jump_001_6976::
+.read_work_buf:
     ld a, [wWorkBuf + $8]
     ld [wStringIndex], a
     ld a, $02
@@ -5675,7 +5700,7 @@ Jump_001_6976::
     ld [wTextWindowWidth], a
     ret
 
-Jump_001_69C2::
+.clear_string_index:
     xor a, a
     ld [wStringIndex], a
     ld a, $04
@@ -5683,7 +5708,7 @@ Jump_001_69C2::
     ld hl, vTiles2 + $450
     ld de, $0901
 
-Jump_001_69D1::
+.read_text_window_tile_lo:
     ld a, [wTextWindowTileLo]
     ld c, a
     ld a, [wTextWindowTileHi]
@@ -5715,18 +5740,18 @@ Jump_001_69D1::
     ld [wTextWindowWidth], a
     ret
 
-Jump_001_6A0C::
+.read_menu_state:
     ld a, [wMenuState]
     ld hl, wWorkBuf
     add a, a
     add_a_to_hl
     ld a, [wMenuState]
     cp a, $07
-    jr z, Jump_001_6A46
+    jr z, .call_divide_b_by_a
     cp a, $09
-    jr z, Jump_001_6A46
+    jr z, .call_divide_b_by_a
     cp a, $0B
-    jr z, Jump_001_6A46
+    jr z, .call_divide_b_by_a
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl]
@@ -5738,9 +5763,9 @@ Jump_001_6A0C::
     add_a_to_hl
     deref_hl
     ld de, $0901
-    jr Jump_001_69D1
+    jr .read_text_window_tile_lo
 
-Jump_001_6A46::
+.call_divide_b_by_a:
     ld b, [hl]
     ld a, $0A
     call DivideBByA
@@ -5960,7 +5985,7 @@ Func_001_6BDC:: ; address name
     xor a, a
     ld [wBattleArg0], a
 
-Jump_001_6BE2::
+.loop:
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -5973,7 +5998,7 @@ Jump_001_6BE2::
     ld hl, wBattleArg0
     inc [hl]
     dec b
-    jr nz, Jump_001_6BE2
+    jr nz, .loop
     ld a, $0A
     ld [rRAMG], a
     xor a, a
@@ -5987,11 +6012,11 @@ Jump_001_6BE2::
     ld [hl], $02
     ld b, $1B
 
-Jump_001_6C14::
+.loop2:
     add hl, de
     ld [hl], $01
     dec b
-    jr nz, Jump_001_6C14
+    jr nz, .loop2
     xor a, a
     ld [rRAMG], a
     ret
@@ -6055,19 +6080,19 @@ Func_001_6C48:: ; address name
     inc hl
     ld a, [wBattleArg1]
     cp a, $FF
-    jr nz, Jump_001_6C82
+    jr nz, .skip
     ld a, [wRandomHi]
     and a, $01
-    jr Jump_001_6C8D
+    jr .skip2
 
-Jump_001_6C82::
+.skip:
     push hl
     ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70AA
     add_a_to_hl
     ld a, [hl]
     pop hl
 
-Jump_001_6C8D::
+.skip2:
     ld [hl+], a
     ld de, wPlayerName
     ld b, $0B
@@ -6115,10 +6140,10 @@ Jump_001_6C8D::
     ld d, a
     ld a, d
     cp a, $04
-    jr c, Jump_001_6CE1
+    jr c, .skip3
     ld de, $03E7
 
-Jump_001_6CE1::
+.skip3:
     ld a, e
     ld [hl+], a
     ld a, d
@@ -6153,7 +6178,7 @@ Jump_001_6CE1::
     ld [hl+], a
     ld a, [wBattleArg2]
     or a, a
-    jr z, Jump_001_6D30
+    jr z, .skip4
     push hl
     call NextTableByte
     pop hl
@@ -6162,14 +6187,14 @@ Jump_001_6CE1::
     ld a, [wRandomHi]
     and a, $01
     ld [hl+], a
-    jr Jump_001_6D33
+    jr .skip5
 
-Jump_001_6D30::
+.skip4:
     xor a, a
     ld [hl+], a
     ld [hl+], a
 
-Jump_001_6D33::
+.skip5:
     xor a, a
     ld [hl+], a
     ld [hl+], a
@@ -6234,7 +6259,7 @@ Jump_001_6D33::
     ld [hl], $00
     ld a, [wBattleArg1]
     cp a, $FF
-    jr nz, Jump_001_6DD9
+    jr nz, .skip6
     call NextTableByte
     ld a, [wRandomLo]
     ld b, a
@@ -6249,9 +6274,9 @@ Jump_001_6D33::
     ld a, h
     ld [wWorkBuf + $3], a
     farcall CreateMonsterRecordOfKindTemp1_Sub01_Sub01_ReadWorkBuf
-    jr Jump_001_6DF4
+    jr .read_species_id_lo
 
-Jump_001_6DD9::
+.skip6:
     push hl
     ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data_70B3
     add a, a
@@ -6269,7 +6294,7 @@ Jump_001_6DD9::
     ld b, $0A
     call CopyBBytesDEToHL_Bank01
 
-Jump_001_6DF4::
+.read_species_id_lo:
     ld a, [wSpeciesIdLo]
     ld l, a
     ld a, [wSpeciesIdHi]
@@ -6324,10 +6349,10 @@ Func_001_6E31:: ; address name
     ld a, $F0
     ld b, $07
 
-Jump_001_6E3E::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_001_6E3E
+    jr nz, .loop
     ld a, $00
     ld [hl+], a
     ret
@@ -6356,17 +6381,17 @@ Func_001_6E46:: ; address name
     call CreateMonsterRecordOfKindTemp1_WriteBattleArg0
     ldh a, [hTemp1]
     cp a, $01
-    jr z, Jump_001_6E73
+    jr z, .read_battle_arg0
     cp a, $02
-    jr nz, Jump_001_6E7D
+    jr nz, .done
 
-Jump_001_6E73::
+.read_battle_arg0:
     ld a, [wBattleArg0]
     ld c, $6E
     call SRAMRecordAddress
     ld [hl], $01
 
-Jump_001_6E7D::
+.done:
     xor a, a
     ld [rRAMG], a
     ret
@@ -6402,7 +6427,7 @@ Func_001_6E98:: ; address name
     ld hl, wKeyList
     ld b, $20
 
-Jump_001_6EA0::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
@@ -6416,7 +6441,7 @@ Jump_001_6EA0::
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_001_6EA0
+    jr nz, .loop
     ret
 
 ; address loaded by DebugBattleSetup_Update_Shared01_Sub02

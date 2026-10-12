@@ -101,21 +101,21 @@ Func_060_408F:: ; address name
     ld a, d
     ldh [hTemp1], a
 
-Jump_060_409A::
+.loop:
     ld hl, wKeyWorldMonsterBands
 
-Jump_060_409D::
+.loop2:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_060_409A
+    jr z, .loop
     push hl
     push af
     ld a, [wKeyWorldBandAdjust]
     cp a, $10
-    jr c, Jump_060_40AD
+    jr c, .skip
     ld a, $10
 
-Jump_060_40AD::
+.skip:
     ld e, a
     ld d, $00
     sla e
@@ -137,10 +137,10 @@ Jump_060_40AD::
     and a, $0F
     add a, e
     ld e, a
-    jr nc, Jump_060_40D5
+    jr nc, .skip2
     inc d
 
-Jump_060_40D5::
+.skip2:
     ld a, [de]
     add a, a
     ld c, a
@@ -149,17 +149,17 @@ Jump_060_40D5::
     ld de, KeyWorldBandSpeciesTable
     add a, e
     ld e, a
-    jr nc, Jump_060_40E3
+    jr nc, .skip3
     inc d
 
-Jump_060_40E3::
+.skip3:
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_060_40E9
+    jr nc, .skip4
     inc d
 
-Jump_060_40E9::
+.skip4:
     ld a, [de]
     ld l, a
     inc de
@@ -167,24 +167,24 @@ Jump_060_40E9::
     ld h, a
     ld a, [hl+]
     or a, a
-    jr nz, Jump_060_40F5
+    jr nz, .skip5
     pop hl
-    jr Jump_060_409D
+    jr .loop2
 
-Jump_060_40F5::
+.skip5:
     dec a
-    jr z, Jump_060_4105
+    jr z, .read_temp0
     inc a
     ld c, a
 
-Jump_060_40FA::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
-    jr nc, Jump_060_40FA
+    jr nc, .loop3
 
-Jump_060_4105::
+.read_temp0:
     add a, a
     add_a_to_hl
     ldh a, [hTemp0]
@@ -203,7 +203,7 @@ Jump_060_4105::
     ldh [hTemp1], a
     pop hl
     dec b
-    jp nz, Jump_060_409D
+    jp nz, .loop2
     ret
 
 ; E-0192 (C1: RollKeyWorldMonsterTableKeyWorldBossMonsters reads the byte at $4123 + 8 * wKeyWorldBandAdjust + (random & 7), doubles it and reads the band-list pointer at $6D6D + $90 + that offset; it retries when the list is empty; 34 rows end at FillWCD11LevelsForPartyStrength ($4233); higher rows pick from more bands).
@@ -255,7 +255,7 @@ Func_060_4233:: ; address name
     ld a, [wKeyWorldLevelBase]
     ld c, a
 
-Jump_060_423C::
+.loop:
     push bc
     push bc
     push de
@@ -275,15 +275,15 @@ Jump_060_423C::
     add_a_to_hl
     ld a, h
     or a, a
-    jr nz, Jump_060_4265
+    jr nz, .skip
     ld a, l
     cp a, $64
-    jr c, Jump_060_4267
+    jr c, .skip2
 
-Jump_060_4265::
+.skip:
     ld l, $63
 
-Jump_060_4267::
+.skip2:
     ld c, l
     sla c
     ld a, [de]
@@ -293,7 +293,7 @@ Jump_060_4267::
     inc de
     pop bc
     dec b
-    jr nz, Jump_060_423C
+    jr nz, .loop
     ret
 
 ; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
@@ -308,25 +308,25 @@ Func_060_4274:: ; address name
     ld de, wKeyWorldMonsters
     add a, e
     ld e, a
-    jr nc, Jump_060_4280
+    jr nc, .set_temp0
     inc d
 
-Jump_060_4280::
+.set_temp0:
     ld a, e
     ldh [hTemp0], a
     ld a, d
     ldh [hTemp1], a
 
-Jump_060_4286::
+.loop:
     ld a, $09
     swap a
     ld de, KeyWorldBandSpeciesTable
     add a, e
     ld e, a
-    jr nc, Jump_060_4292
+    jr nc, .call_next_random_seed
     inc d
 
-Jump_060_4292::
+.call_next_random_seed:
     push de
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -334,29 +334,29 @@ Jump_060_4292::
     ld de, KeyWorldBossBandPickRows
     add a, e
     ld e, a
-    jr nc, Jump_060_42A3
+    jr nc, .read_key_world_band_adjust
     inc d
 
-Jump_060_42A3::
+.read_key_world_band_adjust:
     ld a, [wKeyWorldBandAdjust]
     sla a
     sla a
     sla a
     add a, e
     ld e, a
-    jr nc, Jump_060_42B1
+    jr nc, .skip
     inc d
 
-Jump_060_42B1::
+.skip:
     ld a, [de]
     add a, a
     pop de
     add a, e
     ld e, a
-    jr nc, Jump_060_42B9
+    jr nc, .skip2
     inc d
 
-Jump_060_42B9::
+.skip2:
     ld a, [de]
     ld l, a
     inc de
@@ -364,23 +364,23 @@ Jump_060_42B9::
     ld h, a
     ld a, [hl+]
     or a, a
-    jr nz, Jump_060_42C4
-    jr Jump_060_4286
+    jr nz, .skip3
+    jr .loop
 
-Jump_060_42C4::
+.skip3:
     dec a
-    jr z, Jump_060_42D4
+    jr z, .read_temp0
     inc a
     ld c, a
 
-Jump_060_42C9::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
-    jr nc, Jump_060_42C9
+    jr nc, .loop2
 
-Jump_060_42D4::
+.read_temp0:
     sla a
     add_a_to_hl
     ldh a, [hTemp0]
@@ -398,7 +398,7 @@ Jump_060_42D4::
     ld a, d
     ldh [hTemp1], a
     dec b
-    jp nz, Jump_060_4286
+    jp nz, .loop
     ret
 
 ; for 8 entries from wCD51 ORs 2 * min(wC969 + 15 * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0127)
@@ -411,14 +411,14 @@ Func_060_42F2:: ; address name
     ld de, wKeyWorldMonsters + $1
     add a, e
     ld e, a
-    jr nc, Jump_060_42FE
+    jr nc, .read_key_world_level_base
     inc d
 
-Jump_060_42FE::
+.read_key_world_level_base:
     ld a, [wKeyWorldLevelBase]
     ld c, a
 
-Jump_060_4302::
+.loop:
     push bc
     push bc
     push de
@@ -436,15 +436,15 @@ Jump_060_4302::
     add_a_to_hl
     ld a, h
     or a, a
-    jr nz, Jump_060_4329
+    jr nz, .skip
     ld a, l
     cp a, $64
-    jr c, Jump_060_432B
+    jr c, .skip2
 
-Jump_060_4329::
+.skip:
     ld l, $63
 
-Jump_060_432B::
+.skip2:
     ld c, l
     sla c
     ld a, [de]
@@ -454,7 +454,7 @@ Jump_060_432B::
     inc de
     pop bc
     dec b
-    jr nz, Jump_060_4302
+    jr nz, .loop
     ret
 
 ; for 8 entries from wCD51 ORs 2 * min(wCD05 + 3 * (wCD05 / 10), 99) into every other byte (E-0125)
@@ -478,17 +478,17 @@ Func_060_4338:: ; address name
     ld de, wKeyWorldMonsters + $1
     add a, e
     ld e, a
-    jr nc, Jump_060_4356
+    jr nc, .loop
     inc d
 
-Jump_060_4356::
+.loop:
     ld a, c
     cp a, $64
-    jr c, Jump_060_435E
+    jr c, .skip
     ld a, $63
     ld c, a
 
-Jump_060_435E::
+.skip:
     push bc
     sla c
     ld a, [de]
@@ -498,7 +498,7 @@ Jump_060_435E::
     inc de
     pop bc
     dec b
-    jr nz, Jump_060_4356
+    jr nz, .loop
     ret
 
 ; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
@@ -542,15 +542,15 @@ Func_060_436B:: ; address name
     ld de, wKeyWorldMonsterBands
     push hl
 
-Jump_060_43A6::
+.skip:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_060_43AF
+    jr z, .skip2
     ld [de], a
     inc de
-    jr Jump_060_43A6
+    jr .skip
 
-Jump_060_43AF::
+.skip2:
     ld [de], a
     pop hl
     ld a, $06
@@ -560,10 +560,10 @@ Jump_060_43AF::
     ld a, [hl]
     add a, c
     bit 7, a
-    jr z, Jump_060_43C3
+    jr z, .set_key_world_band_adjust
     xor a, a
 
-Jump_060_43C3::
+.set_key_world_band_adjust:
     ld [wKeyWorldBandAdjust], a
     ret
 
@@ -660,24 +660,24 @@ Func_060_4597:: ; address name
     ld hl, wKeyWorldEncounterTable
     xor a, a
 
-Jump_060_459D::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_060_459D
+    jr nz, .loop
     ld a, [wPartyStrength]
     call BandForA_4773
     dec a
     dec a
     bit 7, a
-    jr z, Jump_060_45AE
+    jr z, .set_temp0
     xor a, a
 
-Jump_060_45AE::
+.set_temp0:
     ldh [hTemp0], a
     ld hl, wKeyWorldObjects
     ld de, wKeyWorldEncounterTable
 
-Jump_060_45B6::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -709,10 +709,10 @@ Jump_060_45B6::
     ldh [hTemp2], a
     push de
 
-Jump_060_45E7::
+.loop2:
     call PickRandomKeyWorldMonsterBandsEntry
     call PickRandomMonsterFromBandList
-    jr nc, Jump_060_45E7
+    jr nc, .loop2
     ld l, e
     ld h, d
     pop de
@@ -733,7 +733,7 @@ Jump_060_45E7::
     inc hl
     inc hl
     inc hl
-    jp Jump_060_45B6
+    jp .skip
 
 ; like RollKeyWorldEncounterTable, with each entry's level from wCD05 / 5 * 7 plus the area value, capped at 99 (E-0129)
 ; no direct call (reached through a table, a jump or a vector)
@@ -746,24 +746,24 @@ Func_060_4607:: ; address name
     ld hl, wKeyWorldEncounterTable
     xor a, a
 
-Jump_060_460D::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_060_460D
+    jr nz, .loop
     ld a, [wPartyStrength]
     call BandForA_4773
     dec a
     dec a
     bit 7, a
-    jr z, Jump_060_461E
+    jr z, .set_temp0
     xor a, a
 
-Jump_060_461E::
+.set_temp0:
     ldh [hTemp0], a
     ld hl, wKeyWorldObjects
     ld de, wKeyWorldEncounterTable
 
-Jump_060_4626::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -803,25 +803,25 @@ Jump_060_4626::
     add_a_to_hl
     ld a, h
     or a, a
-    jr nz, Jump_060_4670
+    jr nz, .skip2
     ld a, l
     cp a, $64
-    jr c, Jump_060_4672
+    jr c, .skip3
 
-Jump_060_4670::
+.skip2:
     ld l, $63
 
-Jump_060_4672::
+.skip3:
     ld a, l
     pop de
     pop hl
     ldh [hTemp2], a
     push de
 
-Jump_060_4678::
+.loop2:
     call PickRandomKeyWorldMonsterBandsEntry
     call PickRandomMonsterFromBandList
-    jr nc, Jump_060_4678
+    jr nc, .loop2
     ld l, e
     ld h, d
     pop de
@@ -842,7 +842,7 @@ Jump_060_4678::
     inc hl
     inc hl
     inc hl
-    jp Jump_060_4626
+    jp .skip
 
 ; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
@@ -854,10 +854,10 @@ Func_060_4698:: ; address name
     call BandForA_4773
     ldh [hTemp0], a
 
-Jump_060_46A0::
+.loop:
     call PickRandomKeyWorldMonsterBandsEntry
     call PickRandomMonsterFromBandList
-    jr nc, Jump_060_46A0
+    jr nc, .loop
     ld a, e
     ld [wKeyWorldEncounter], a
     ld a, d
@@ -865,7 +865,7 @@ Jump_060_46A0::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $07
-    jr nz, Jump_060_46CF
+    jr nz, .check_temp0
     ld hl, $0000
     ld a, l
     ld [wKeyWorldEncounter + $3], a
@@ -875,21 +875,21 @@ Jump_060_46A0::
     ld [wKeyWorldEncounter + $6], a
     ld a, h
     ld [wKeyWorldEncounter + $7], a
-    jr Jump_060_46F2
+    jr .read_key_world_level_monster
 
-Jump_060_46CF::
+.check_temp0:
     ldh a, [hTemp0]
     dec a
     dec a
     bit 7, a
-    jr z, Jump_060_46D8
+    jr z, .set_temp0
     xor a, a
 
-Jump_060_46D8::
+.set_temp0:
     ldh [hTemp0], a
     call PickRandomKeyWorldMonsterBandsEntry
     call PickRandomMonsterFromBandList
-    jr nc, Jump_060_46A0
+    jr nc, .loop
     ld a, e
     ld [wKeyWorldEncounter + $3], a
     ld a, d
@@ -899,14 +899,14 @@ Jump_060_46D8::
     ld a, d
     ld [wKeyWorldEncounter + $7], a
 
-Jump_060_46F2::
+.read_key_world_level_monster:
     ld a, [wKeyWorldLevelMonster]
     ld [wKeyWorldEncounter + $2], a
     cp a, $05
-    jr nc, Jump_060_46FE
+    jr nc, .skip
     ld a, $05
 
-Jump_060_46FE::
+.skip:
     dec a
     dec a
     dec a
@@ -928,17 +928,17 @@ Func_060_4709:: ; address name
     ld hl, wKeyWorldMonsterBands
     add a, l
     ld l, a
-    jr nc, Jump_060_4719
+    jr nc, .skip
     inc h
 
-Jump_060_4719::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_060_4721
+    jr nz, .set_temp1
     dec hl
-    jr Jump_060_4719
+    jr .skip
 
-Jump_060_4721::
+.set_temp1:
     ldh [hTemp1], a
     ret
 
@@ -952,18 +952,18 @@ Func_060_4724:: ; address name
     ld de, KeyWorldBandSpeciesTable
     add a, e
     ld e, a
-    jr nc, Jump_060_4730
+    jr nc, .read_temp0
     inc d
 
-Jump_060_4730::
+.read_temp0:
     ldh a, [hTemp0]
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_060_4738
+    jr nc, .skip
     inc d
 
-Jump_060_4738::
+.skip:
     ld a, [de]
     ld l, a
     inc de
@@ -971,26 +971,26 @@ Jump_060_4738::
     ld h, a
     ld a, [hl+]
     or a, a
-    jr nz, Jump_060_4743
+    jr nz, .skip2
 
-Jump_060_4741::
+.loop:
     sub a, a
     ret
 
-Jump_060_4743::
+.skip2:
     dec a
-    jr z, Jump_060_4753
+    jr z, .skip3
     inc a
     ld c, a
 
-Jump_060_4748::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $07
     cp a, c
-    jr nc, Jump_060_4748
+    jr nc, .loop2
 
-Jump_060_4753::
+.skip3:
     sla a
     add_a_to_hl
     ld a, [hl+]
@@ -998,19 +998,19 @@ Jump_060_4753::
     ld a, [hl]
     ld d, a
     or a, a
-    jr nz, Jump_060_476C
+    jr nz, .skip4
     ld a, e
     cp a, $A4
-    jr z, Jump_060_4741
+    jr z, .loop
     cp a, $A5
-    jr z, Jump_060_4741
+    jr z, .loop
     scf
     ret
 
-Jump_060_476C::
+.skip4:
     ld a, e
     cp a, $74
-    jr z, Jump_060_4741
+    jr z, .loop
     scf
     ret
 
@@ -1019,47 +1019,47 @@ Jump_060_476C::
 BandForA_4773::
 Func_060_4773:: ; address name
     cp a, $14
-    jr nc, Jump_060_477A
+    jr nc, .cp_28
     ld a, $02
     ret
 
-Jump_060_477A::
+.cp_28:
     cp a, $28
-    jr nc, Jump_060_4781
+    jr nc, .cp_3C
     ld a, $03
     ret
 
-Jump_060_4781::
+.cp_3C:
     cp a, $3C
-    jr nc, Jump_060_4788
+    jr nc, .cp_46
     ld a, $04
     ret
 
-Jump_060_4788::
+.cp_46:
     cp a, $46
-    jr nc, Jump_060_478F
+    jr nc, .cp_50
     ld a, $05
     ret
 
-Jump_060_478F::
+.cp_50:
     cp a, $50
-    jr nc, Jump_060_4796
+    jr nc, .cp_5A
     ld a, $05
     ret
 
-Jump_060_4796::
+.cp_5A:
     cp a, $5A
-    jr nc, Jump_060_479D
+    jr nc, .cp_5F
     ld a, $06
     ret
 
-Jump_060_479D::
+.cp_5F:
     cp a, $5F
-    jr nc, Jump_060_47A4
+    jr nc, .return_07
     ld a, $06
     ret
 
-Jump_060_47A4::
+.return_07:
     ld a, $07
     ret
 
@@ -1208,10 +1208,10 @@ Func_060_4AE5:: ; address name
     ld hl, wVisitedScreens
     ld b, $08
 
-Jump_060_4AF2::
+.loop:
     ld [hl+], a
     dec b
-    jr nz, Jump_060_4AF2
+    jr nz, .loop
     call PickRandomNonzeroFromKeyWorldGoalKindRows
     ld a, [wPartyStrength]
     ld l, a
@@ -1224,12 +1224,12 @@ Jump_060_4AF2::
     ld l, a
     ld h, $00
 
-Jump_060_4B0C::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
-    jr nc, Jump_060_4B0C
+    jr nc, .loop2
     add_a_to_hl
     ld a, l
     add a, $F4
@@ -1240,18 +1240,18 @@ Jump_060_4B0C::
     ld a, [hl]
     swap a
     and a, $0F
-    jr nz, Jump_060_4B2E
+    jr nz, .set_key_world_width
     ld a, $0A
 
-Jump_060_4B2E::
+.set_key_world_width:
     ld [wKeyWorldWidth], a
     ld [wMapWidthScreens], a
     ld a, [hl]
     and a, $0F
-    jr nz, Jump_060_4B3B
+    jr nz, .set_key_world_height
     ld a, $0A
 
-Jump_060_4B3B::
+.set_key_world_height:
     ld [wKeyWorldHeight], a
     ld [wMapHeightScreens], a
     ld a, [wKeyWorldWidth]
@@ -1283,7 +1283,7 @@ Jump_060_4B3B::
     ld de, wKeyWorldAreas
     ld b, $04
 
-Jump_060_4B7D::
+.loop3:
     ld a, $FF
     ld [hl], a
     ld a, $04
@@ -1292,21 +1292,21 @@ Jump_060_4B7D::
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_060_4B7D
+    jr nz, .loop3
     ld hl, wKeyWorldChunks + $3
     ld de, wKeyWorldAreas
     ldh a, [hTemp8]
     or a, a
-    jr z, Jump_060_4BC3
+    jr z, .check_temp9
     ld c, a
     ld b, $00
 
-Jump_060_4B9C::
+.loop4:
     push hl
     push de
     ld a, b
     cp a, c
-    jr c, Jump_060_4BB3
+    jr c, .restore
     ld [hl], $FE
     ld a, $08
     add_a_to_hl
@@ -1317,7 +1317,7 @@ Jump_060_4B9C::
     inc de
     ld [de], a
 
-Jump_060_4BB3::
+.restore:
     pop de
     inc de
     pop hl
@@ -1326,23 +1326,23 @@ Jump_060_4BB3::
     inc b
     ld a, b
     cp a, $02
-    jr nz, Jump_060_4B9C
+    jr nz, .loop4
 
-Jump_060_4BC3::
+.check_temp9:
     ld hl, wKeyWorldChunks + $3
     ld de, wKeyWorldAreas
     ldh a, [hTemp9]
     or a, a
-    jr z, Jump_060_4BF3
+    jr z, .return
     ld c, a
     ld b, $00
 
-Jump_060_4BD1::
+.loop5:
     push hl
     push de
     ld a, b
     cp a, c
-    jr c, Jump_060_4BE2
+    jr c, .restore2
     ld a, $FE
     ld [hl], a
     inc hl
@@ -1354,7 +1354,7 @@ Jump_060_4BD1::
     inc de
     ld [de], a
 
-Jump_060_4BE2::
+.restore2:
     pop de
     inc de
     inc de
@@ -1364,9 +1364,9 @@ Jump_060_4BE2::
     inc b
     ld a, b
     cp a, $02
-    jr nz, Jump_060_4BD1
+    jr nz, .loop5
 
-Jump_060_4BF3::
+.return:
     ret
     db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
     ds $5A, $88
@@ -1519,7 +1519,7 @@ Func_060_4DA1:: ; address name
     xor a, a
     ldh [hTemp7], a
 
-Jump_060_4DB8::
+.loop:
     push bc
     ldh a, [hTemp0]
     ld l, a
@@ -1527,16 +1527,16 @@ Jump_060_4DB8::
     ld h, a
     ld a, [hl]
     cp a, $FF
-    jr nz, Jump_060_4DCE
+    jr nz, .read_temp5
 
-Jump_060_4DC4::
+.loop2:
     call RunRandomPatternCase
     or a, a
-    jr z, Jump_060_4DC4
+    jr z, .loop2
     ld hl, hTemp7
     inc [hl]
 
-Jump_060_4DCE::
+.read_temp5:
     ldh a, [hTemp5]
     ld e, a
     ldh a, [hTemp6]
@@ -1560,7 +1560,7 @@ Jump_060_4DCE::
     inc b
     ld a, b
     cp a, $04
-    jr nz, Jump_060_4DB8
+    jr nz, .loop
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
@@ -1572,7 +1572,7 @@ Func_060_4DF6:: ; address name
     ld hl, wKeyWorldAreas
     ld de, wKeyWorldAreaInfo
 
-Jump_060_4DFE::
+.loop:
     ld a, [hl+]
     and a, $0F
     ld c, a
@@ -1581,7 +1581,7 @@ Jump_060_4DFE::
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_060_4DFE
+    jr nz, .loop
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
@@ -1593,48 +1593,48 @@ DebugAutomap_Update_Sub01_Sub01_NextRandomSeed::
 Func_060_4E0A:: ; address name
     ldh a, [hTemp7]
     cp a, $01
-    jp z, Jump_060_4F4B
+    jp z, .skip4
     ld c, a
     ld b, a
 
-Jump_060_4E13::
+.loop:
     push bc
 
-Jump_060_4E14::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $03
     cp a, c
-    jr nc, Jump_060_4E14
+    jr nc, .loop2
     ldh [hTemp0], a
 
-Jump_060_4E21::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $03
     cp a, c
-    jr nc, Jump_060_4E21
+    jr nc, .loop3
     ld c, a
     ldh a, [hTemp0]
     cp a, c
-    jr z, Jump_060_4E6C
+    jr z, .restore
     ld a, c
     ldh [hTemp1], a
     ld hl, wKeyWorldAreas
     ld b, $04
 
-Jump_060_4E3A::
+.loop4:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_060_4E68
+    jr z, .next
     cp a, $FE
-    jr z, Jump_060_4E68
+    jr z, .next
     swap a
     and a, $0F
     ld c, a
     ldh a, [hTemp0]
     cp a, c
-    jr nz, Jump_060_4E59
+    jr nz, .check_temp1
     ldh a, [hTemp1]
     swap a
     ld c, a
@@ -1642,12 +1642,12 @@ Jump_060_4E3A::
     and a, $0F
     or a, c
     ld [hl], a
-    jr Jump_060_4E68
+    jr .next
 
-Jump_060_4E59::
+.check_temp1:
     ldh a, [hTemp1]
     cp a, c
-    jr nz, Jump_060_4E68
+    jr nz, .next
     ldh a, [hTemp0]
     swap a
     ld c, a
@@ -1656,178 +1656,178 @@ Jump_060_4E59::
     or a, c
     ld [hl], a
 
-Jump_060_4E68::
+.next:
     inc hl
     dec b
-    jr nz, Jump_060_4E3A
+    jr nz, .loop4
 
-Jump_060_4E6C::
+.restore:
     pop bc
     dec b
-    jr nz, Jump_060_4E13
+    jr nz, .loop
     ld b, $00
 
-Jump_060_4E72::
+.loop5:
     push bc
     ld hl, wKeyWorldAreas
     ld e, $00
     ld c, $00
 
-Jump_060_4E7A::
+.loop6:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_060_4E94
+    jr z, .next2
     cp a, $FE
-    jr z, Jump_060_4E94
+    jr z, .next2
     swap a
     and a, $0F
     cp a, b
-    jr nz, Jump_060_4E94
+    jr nz, .next2
     ld a, [hl]
     and a, $0F
     cp a, e
-    jr c, Jump_060_4E94
+    jr c, .next2
     ld e, a
     ld a, c
     ldh [hTemp0], a
 
-Jump_060_4E94::
+.next2:
     inc hl
     inc c
     ld a, c
     cp a, $04
-    jr nz, Jump_060_4E7A
+    jr nz, .loop6
     ldh a, [hTemp0]
     and a, $0C
-    jr z, Jump_060_4EC2
+    jr z, .check_temp0
     ldh a, [hTemp0]
     dec a
     dec a
     ld de, wKeyWorldAreas
     add a, e
     ld e, a
-    jr nc, Jump_060_4EAD
+    jr nc, .skip
     inc d
 
-Jump_060_4EAD::
+.skip:
     ld a, [de]
     swap a
     and a, $0F
     dec a
     cp a, b
-    jr nz, Jump_060_4EC2
+    jr nz, .check_temp0
     ld a, [de]
     and a, $0F
-    jp z, Jump_060_4F42
+    jp z, .check_temp7
     call SwapDEByteWithMatchingKeyWorldAreas
-    jp Jump_060_4F42
+    jp .check_temp7
 
-Jump_060_4EC2::
+.check_temp0:
     ldh a, [hTemp0]
     and a, $01
-    jr z, Jump_060_4EE6
+    jr z, .check_temp02
     ldh a, [hTemp0]
     dec a
     ld de, wKeyWorldAreas
     add a, e
     ld e, a
-    jr nc, Jump_060_4ED3
+    jr nc, .skip2
     inc d
 
-Jump_060_4ED3::
+.skip2:
     ld a, [de]
     swap a
     and a, $0F
     dec a
     cp a, b
-    jr nz, Jump_060_4EE6
+    jr nz, .check_temp02
     ld a, [de]
     and a, $0F
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     call SwapDEByteWithMatchingKeyWorldAreas
-    jr Jump_060_4F42
+    jr .check_temp7
 
-Jump_060_4EE6::
+.check_temp02:
     ldh a, [hTemp0]
     and a, $02
     cp a, $02
-    jr z, Jump_060_4F16
+    jr z, .check_temp03
     ldh a, [hTemp0]
     inc a
     inc a
     ld de, wKeyWorldAreas
     add a, e
     ld e, a
-    jr nc, Jump_060_4EFA
+    jr nc, .skip3
     inc d
 
-Jump_060_4EFA::
+.skip3:
     ld a, [de]
     cp a, $FF
-    jr z, Jump_060_4F16
+    jr z, .check_temp03
     cp a, $FE
-    jr z, Jump_060_4F16
+    jr z, .check_temp03
     ld a, [de]
     swap a
     and a, $0F
     dec a
     cp a, b
-    jr nz, Jump_060_4F16
+    jr nz, .check_temp03
     ld a, [de]
     and a, $0F
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     call SwapDEByteWithMatchingKeyWorldAreas
-    jr Jump_060_4F42
+    jr .check_temp7
 
-Jump_060_4F16::
+.check_temp03:
     ldh a, [hTemp0]
     and a, $01
     cp a, $01
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     ldh a, [hTemp0]
     inc a
     ld de, wKeyWorldAreas
     add a, e
     ld e, a
-    jr nc, Jump_060_4F29
+    jr nc, .cp_FF
     inc d
 
-Jump_060_4F29::
+.cp_FF:
     cp a, $FF
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     cp a, $FE
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     ld a, [de]
     swap a
     and a, $0F
     dec a
     cp a, b
-    jr nz, Jump_060_4F42
+    jr nz, .check_temp7
     ld a, [de]
     and a, $0F
-    jr z, Jump_060_4F42
+    jr z, .check_temp7
     call SwapDEByteWithMatchingKeyWorldAreas
 
-Jump_060_4F42::
+.check_temp7:
     pop bc
     inc b
     ldh a, [hTemp7]
     dec a
     cp a, b
-    jp nz, Jump_060_4E72
+    jp nz, .loop5
 
-Jump_060_4F4B::
+.skip4:
     ld b, $04
     ld hl, wKeyWorldAreas
     ld de, wKeyWorldAreaInfo
 
-Jump_060_4F53::
+.loop7:
     ld a, [hl+]
     and a, $F0
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_060_4F53
+    jr nz, .loop7
     ret
 
 ; swaps [DE] with the first of the four wCD70 bytes whose high nibble matches [DE]'s (E-0124)
@@ -1843,13 +1843,13 @@ Func_060_4F5C:: ; address name
     ld c, $04
     ld hl, wKeyWorldAreas
 
-Jump_060_4F66::
+.loop:
     push bc
     ld a, [hl]
     ld c, a
     ldh a, [hTemp1]
     cp a, c
-    jr nz, Jump_060_4F76
+    jr nz, .next
     pop bc
     ld a, [hl]
     ld c, a
@@ -1859,11 +1859,11 @@ Jump_060_4F66::
     ld [de], a
     ret
 
-Jump_060_4F76::
+.next:
     inc hl
     pop bc
     dec c
-    jr nz, Jump_060_4F66
+    jr nz, .loop
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
@@ -1876,7 +1876,7 @@ Func_060_4F7C:: ; address name
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
 
-Jump_060_4F81::
+.loop:
     push hl
     xor a, a
     ld [hl+], a
@@ -1887,15 +1887,15 @@ Jump_060_4F81::
     inc hl
     inc hl
     dec b
-    jr nz, Jump_060_4F81
+    jr nz, .loop
     ld hl, wKeyWorldAreaExits
     ldh a, [hTemp7]
     dec a
-    jr z, Jump_060_4FE4
+    jr z, .next2
     ld b, a
     ld c, $00
 
-Jump_060_4F98::
+.loop2:
     push bc
     push hl
     ld de, wKeyWorldAreas
@@ -1903,45 +1903,45 @@ Jump_060_4F98::
     xor a, a
     ldh [hTemp0], a
 
-Jump_060_4FA2::
+.loop3:
     push bc
     ld a, [de]
     cp a, $FF
-    jr z, Jump_060_4FCF
+    jr z, .next
     cp a, $FE
-    jr z, Jump_060_4FCF
+    jr z, .next
     swap a
     and a, $0F
     cp a, c
-    jr nz, Jump_060_4FC3
+    jr nz, .skip
     ldh a, [hTemp0]
     ld c, a
     ld a, [de]
     and a, $0F
     cp a, c
-    jr c, Jump_060_4FCF
+    jr c, .next
     ldh [hTemp0], a
     ld a, b
     ldh [hTemp1], a
-    jr Jump_060_4FCF
+    jr .next
 
-Jump_060_4FC3::
+.skip:
     dec a
     cp a, c
-    jr nz, Jump_060_4FCF
+    jr nz, .next
     ld a, [de]
     and a, $0F
-    jr nz, Jump_060_4FCF
+    jr nz, .next
     ld a, b
     ldh [hTemp2], a
 
-Jump_060_4FCF::
+.next:
     inc de
     pop bc
     inc b
     ld a, b
     cp a, $04
-    jr nz, Jump_060_4FA2
+    jr nz, .loop3
     call PlaceTwoRandomOpenCells
     pop hl
     inc hl
@@ -1951,9 +1951,9 @@ Jump_060_4FCF::
     pop bc
     inc c
     dec b
-    jr nz, Jump_060_4F98
+    jr nz, .loop2
 
-Jump_060_4FE4::
+.next2:
     inc hl
     inc hl
     inc hl
@@ -2007,15 +2007,15 @@ Func_060_4FEA:: ; address name
     dec hl
     ld a, [hl]
     cp a, c
-    jr nz, Jump_060_5034
+    jr nz, .check_temp2
     pop hl
     jr PlaceTwoRandomOpenCells
 
-Jump_060_5034::
+.check_temp2:
     pop hl
     inc hl
 
-Jump_060_5036::
+.loop:
     ldh a, [hTemp2]
     and a, $FE
     add a, a
@@ -2041,7 +2041,7 @@ Jump_060_5036::
     ldh [hTemp3], a
     call ReadKeyWorldCellIsSolid
     or a, a
-    jr z, Jump_060_5036
+    jr z, .loop
     ldh a, [hTemp3]
     and a, $0F
     swap a
@@ -2120,12 +2120,12 @@ Func_060_5075:: ; address name
     call ReadByteInBank
     ld a, c
     cp a, $FF
-    jr nz, Jump_060_50E0
+    jr nz, .done
     xor a, a
     pop hl
     ret
 
-Jump_060_50E0::
+.done:
     ld a, $01
     pop hl
     ret
@@ -2151,7 +2151,7 @@ Func_060_50E5:: ; address name
     ld hl, wKeyWorldFloorInfo + $3
     ld de, wKeyWorldFloorState + $3
 
-Jump_060_50F4::
+.skip:
     ld a, [hl]
     cp a, $FF
     ret z
@@ -2160,38 +2160,38 @@ Jump_060_50F4::
     dec hl
     ld a, [hl]
     cp a, $04
-    jr z, Jump_060_5106
+    jr z, .skip2
     cp a, $05
-    jr z, Jump_060_5106
-    jr Jump_060_5159
+    jr z, .skip2
+    jr .read_temp03
 
-Jump_060_5106::
+.skip2:
     ld a, [de]
     dec a
-    jr z, Jump_060_5147
+    jr z, .read_temp0
     dec a
-    jr z, Jump_060_5159
+    jr z, .read_temp03
 
-Jump_060_510D::
+.loop:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_510D
+    jr nc, .loop
     cp a, $05
-    jr nc, Jump_060_5122
+    jr nc, .cp_1E
     ld a, $03
     ld [de], a
-    jr Jump_060_5151
+    jr .read_temp02
 
-Jump_060_5122::
+.cp_1E:
     cp a, $1E
-    jr nc, Jump_060_512B
+    jr nc, .call_next_random_seed
     ld a, $01
     ld [de], a
-    jr Jump_060_5147
+    jr .read_temp0
 
-Jump_060_512B::
+.call_next_random_seed:
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $3F
@@ -2205,24 +2205,24 @@ Jump_060_512B::
     ld h, a
     pop af
     ld [hl], a
-    jr Jump_060_5159
+    jr .read_temp03
 
-Jump_060_5147::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
     ld h, a
     ld [hl], $80
-    jr Jump_060_5159
+    jr .read_temp03
 
-Jump_060_5151::
+.read_temp02:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
     ld h, a
     ld [hl], $81
 
-Jump_060_5159::
+.read_temp03:
     ldh a, [hTemp0]
     add a, $01
     ldh [hTemp0], a
@@ -2235,11 +2235,11 @@ Jump_060_5159::
     ld a, $10
     add a, e
     ld e, a
-    jr nc, Jump_060_5174
+    jr nc, .skip3
     inc d
 
-Jump_060_5174::
-    jp Jump_060_50F4
+.skip3:
+    jp .skip
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
 DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -2258,28 +2258,28 @@ DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc_Sub09::
 Func_060_51B7:: ; address name
     ldh a, [hTemp7]
     cp a, $01
-    jr z, Jump_060_51F9
+    jr z, .read_key_world_area_count
     ld e, a
     ld b, $00
     xor a, a
     ldh [hTemp0], a
 
-Jump_060_51C3::
+.loop:
     xor a, a
     ldh [hTemp1], a
     ld hl, wKeyWorldAreas
     ld c, $04
 
-Jump_060_51CB::
+.loop2:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_060_51E8
+    jr z, .next
     cp a, $FE
-    jr z, Jump_060_51E8
+    jr z, .next
     swap a
     and a, $0F
     cp a, b
-    jr nz, Jump_060_51E8
+    jr nz, .next
     ldh a, [hTemp0]
     ld d, a
     ld a, [hl]
@@ -2290,10 +2290,10 @@ Jump_060_51CB::
     inc a
     ldh [hTemp1], a
 
-Jump_060_51E8::
+.next:
     inc hl
     dec c
-    jr nz, Jump_060_51CB
+    jr nz, .loop2
     ldh a, [hTemp0]
     ld c, a
     ldh a, [hTemp1]
@@ -2302,9 +2302,9 @@ Jump_060_51E8::
     inc b
     ld a, b
     cp a, e
-    jr nz, Jump_060_51C3
+    jr nz, .loop
 
-Jump_060_51F9::
+.read_key_world_area_count:
     ld a, [wKeyWorldAreaCount]
     sla a
     ld hl, KeyWorldAreaLayoutTable_Bank60
@@ -2327,7 +2327,7 @@ Jump_060_51F9::
     inc a
     ld b, a
 
-Jump_060_5220::
+.loop3:
     ld a, [wKeyWorldWidth]
     dec a
     srl a
@@ -2336,7 +2336,7 @@ Jump_060_5220::
     add a, c
     ld c, a
     dec b
-    jr nz, Jump_060_5220
+    jr nz, .loop3
     ldh a, [hTemp5]
     ld h, a
     ld l, $00
@@ -2364,7 +2364,7 @@ Jump_060_5220::
     ld b, $00
     ld c, $00
 
-Jump_060_5259::
+.read_temp2:
     ldh a, [hTemp2]
     ld l, a
     ldh a, [hTemp3]
@@ -2375,37 +2375,37 @@ Jump_060_5259::
     ld d, a
     add hl, de
 
-Jump_060_5266::
+.skip:
     ld a, h
     or a, a
-    jr nz, Jump_060_5273
+    jr nz, .call_place_object_in_area_c
     ld a, l
     ldh [hTemp2], a
     ld a, h
     ldh [hTemp3], a
     inc c
-    jr Jump_060_5259
+    jr .read_temp2
 
-Jump_060_5273::
+.call_place_object_in_area_c:
     push hl
     push bc
     call PlaceObjectInAreaC
     or a, a
-    jr nz, Jump_060_5288
+    jr nz, .done
     pop bc
     pop hl
     inc b
     ldh a, [hTemp5]
     cp a, b
-    jr z, Jump_060_5286
+    jr z, .return_0
     dec h
-    jr Jump_060_5266
+    jr .skip
 
-Jump_060_5286::
+.return_0:
     xor a, a
     ret
 
-Jump_060_5288::
+.done:
     pop bc
     pop hl
     ret
@@ -2423,29 +2423,29 @@ Func_060_528B:: ; address name
     ld hl, wKeyWorldAreas
     ld b, $00
 
-Jump_060_5294::
+.loop:
     ld a, [hl+]
     cp a, $FF
-    jr z, Jump_060_52A0
+    jr z, .next
     cp a, $FE
-    jr z, Jump_060_52A0
+    jr z, .next
     cp a, c
-    jr z, Jump_060_52A9
+    jr z, .read_temp3
 
-Jump_060_52A0::
+.next:
     inc b
     ld a, b
     cp a, $04
-    jr nz, Jump_060_5294
+    jr nz, .loop
     pop bc
     xor a, a
     ret
 
-Jump_060_52A9::
+.read_temp3:
     ldh a, [hTemp3]
     ldh [hTemp6], a
 
-Jump_060_52AD::
+.loop2:
     ld a, b
     srl a
     add a, a
@@ -2476,46 +2476,46 @@ Jump_060_52AD::
     ld c, a
     ld hl, wKeyWorldObjects
 
-Jump_060_52DF::
+.skip:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_060_52F8
+    jr z, .skip2
     dec hl
     dec hl
     ld a, [hl]
     cp a, c
-    jr z, Jump_060_5365
+    jr z, .check_temp_a
     dec hl
     ld a, [hl]
     cp a, c
-    jr z, Jump_060_5365
+    jr z, .check_temp_a
     ld a, $07
     add_a_to_hl
-    jr Jump_060_52DF
+    jr .skip
 
-Jump_060_52F8::
+.skip2:
     ld hl, wKeyWorldFloorInfo + $3
 
-Jump_060_52FB::
+.skip3:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_060_5310
+    jr z, .call_read_key_world_cell_is_solid
     dec hl
     dec hl
     dec hl
     ld a, [hl]
     cp a, c
-    jr z, Jump_060_5365
+    jr z, .check_temp_a
     ld a, $07
     add_a_to_hl
-    jr Jump_060_52FB
+    jr .skip3
 
-Jump_060_5310::
+.call_read_key_world_cell_is_solid:
     push bc
     call ReadKeyWorldCellIsSolid
     pop bc
     or a, a
-    jr z, Jump_060_5365
+    jr z, .check_temp_a
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -2544,10 +2544,10 @@ Jump_060_5310::
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_060_5348
+    jr nc, .call_read_byte_in_bank
     inc d
 
-Jump_060_5348::
+.call_read_byte_in_bank:
     push bc
     ld b, $84
     call ReadByteInBank
@@ -2570,12 +2570,12 @@ Jump_060_5348::
     xor a, a
     ret
 
-Jump_060_5365::
+.check_temp_a:
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
     cp a, $64
-    jp nz, Jump_060_52AD
+    jp nz, .loop2
     pop bc
     ld a, $01
     ret
@@ -2590,7 +2590,7 @@ Func_060_5373:: ; address name
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
 
-Jump_060_5379::
+.loop:
     ld [wKeyWorldBand], a
     ld hl, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data
     add_a_to_hl
@@ -2599,7 +2599,7 @@ Jump_060_5379::
     ld b, a
     ld de, wMapObjects
 
-Jump_060_538C::
+.loop2:
     push de
     push bc
     ld a, b
@@ -2607,27 +2607,27 @@ Jump_060_538C::
     call RollKeyWorldObjectKind
     call PlaceKeyWorldObjectAtRandomCell
     or a, a
-    jr nz, Jump_060_53A7
+    jr nz, .read_map_object_count
     pop bc
     pop de
     ld a, $08
     add a, e
     ld e, a
-    jr nc, Jump_060_53A3
+    jr nc, .next
     inc d
 
-Jump_060_53A3::
+.next:
     dec b
-    jr nz, Jump_060_538C
+    jr nz, .loop2
     ret
 
-Jump_060_53A7::
+.read_map_object_count:
     pop bc
     pop de
     ld a, [wMapObjectCount]
     sub a, b
     ld [wMapObjectCount], a
-    jr z, Jump_060_5379
+    jr z, .loop
     ret
 
 ; address loaded by DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
@@ -2641,17 +2641,17 @@ Data_060_53B3:: ; address name
 SetKeyWorldBandForA::
 Func_060_53C3:: ; address name
     cp a, $0B
-    jr nc, Jump_060_53CB
+    jr nc, .cp_50
     ld a, $00
-    jr Jump_060_53DF
+    jr .set_key_world_band
 
-Jump_060_53CB::
+.cp_50:
     cp a, $50
-    jr c, Jump_060_53D3
+    jr c, .skip
     ld a, $0F
-    jr Jump_060_53DF
+    jr .set_key_world_band
 
-Jump_060_53D3::
+.skip:
     sub a, $0A
     ld l, a
     ld h, $00
@@ -2660,7 +2660,7 @@ Jump_060_53D3::
     ld a, l
     inc a
 
-Jump_060_53DF::
+.set_key_world_band:
     and a, $0F
     ld [wKeyWorldBand], a
     ret
@@ -2675,26 +2675,26 @@ Func_060_53E5:: ; address name
     ld [wKeyWorldPlaceFlag], a
     push de
 
-Jump_060_53EA::
+.loop:
     ld a, [wKeyWorldWidth]
     ld c, a
 
-Jump_060_53EE::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
-    jr nc, Jump_060_53EE
+    jr nc, .loop2
     ldh [hTemp3], a
     ld a, [wKeyWorldHeight]
     ld c, a
 
-Jump_060_53FF::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
-    jr nc, Jump_060_53FF
+    jr nc, .loop3
     ldh [hTemp4], a
     ldh a, [hTemp3]
     swap a
@@ -2707,20 +2707,20 @@ Jump_060_53FF::
     ld b, a
     ld a, [wMapObjectCount]
     sub a, b
-    jr z, Jump_060_5433
+    jr z, .check_temp4
     ld b, a
     ld hl, wMapObjects + $4
 
-Jump_060_5424::
+.loop4:
     ld a, [hl]
     cp a, c
-    jp z, Jump_060_54AB
+    jp z, .check_key_world_place_flag
     ld a, $08
     add_a_to_hl
     dec b
-    jr nz, Jump_060_5424
+    jr nz, .loop4
 
-Jump_060_5433::
+.check_temp4:
     ldh a, [hTemp4]
     and a, $FC
     add a, a
@@ -2781,7 +2781,7 @@ Jump_060_5433::
     call ReadByteInBank
     ld a, c
     cp a, $FF
-    jr z, Jump_060_54AB
+    jr z, .check_key_world_place_flag
     pop de
     inc de
     inc de
@@ -2795,12 +2795,12 @@ Jump_060_5433::
     ld a, $00
     ret
 
-Jump_060_54AB::
+.check_key_world_place_flag:
     ld a, [wKeyWorldPlaceFlag]
     inc a
     ld [wKeyWorldPlaceFlag], a
     cp a, $64
-    jp nz, Jump_060_53EA
+    jp nz, .loop
     pop de
     ld a, $01
     ret
@@ -2827,32 +2827,32 @@ Func_060_54BB:: ; address name
     adc a, $55
     ld h, a
 
-Jump_060_54CF::
+.loop:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_54CF
+    jr nc, .loop
     ld c, a
     ld b, $00
 
-Jump_060_54DE::
+.skip:
     ld a, [hl+]
     or a, a
-    jr z, Jump_060_54E5
+    jr z, .next
     cp a, c
-    jr nc, Jump_060_54E8
+    jr nc, .skip2
 
-Jump_060_54E5::
+.next:
     inc b
-    jr Jump_060_54DE
+    jr .skip
 
-Jump_060_54E8::
+.skip2:
     ld a, b
     or a, a
-    jr z, Jump_060_5514
+    jr z, .read_key_world_band
     dec a
-    jr z, Jump_060_555B
+    jr z, .done
     inc de
     ld a, b
     dec a
@@ -2860,12 +2860,12 @@ Jump_060_54E8::
     ld [de], a
     dec de
 
-Jump_060_54F5::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_54F5
+    jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
     ld hl, RollKeyWorldObjectKind_Data
@@ -2875,18 +2875,18 @@ Jump_060_54F5::
     ret
     db $3E, $02, $12, $C9
 
-Jump_060_5514::
+.read_key_world_band:
     ld a, $01
     ld [de], a
     ld a, [wKeyWorldBand]
     ld c, a
 
-Jump_060_551B::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_551B
+    jr nc, .loop3
     call Multiply8
     ld a, l
     ldh [hTemp0], a
@@ -2895,12 +2895,12 @@ Jump_060_551B::
     ld a, [wKeyWorldBand]
     ld c, a
 
-Jump_060_5534::
+.loop4:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
-    jr nc, Jump_060_5534
+    jr nc, .loop4
     call Multiply8
     ldh a, [hTemp0]
     ld c, a
@@ -2913,16 +2913,16 @@ Jump_060_5534::
     pop de
     ld a, l
     or a, a
-    jr nz, Jump_060_5557
+    jr nz, .next2
     ld a, $01
 
-Jump_060_5557::
+.next2:
     inc de
     ld [de], a
     dec de
     ret
 
-Jump_060_555B::
+.done:
     ld a, $03
     ld [de], a
     ret
@@ -3019,32 +3019,32 @@ Func_060_596F:: ; address name
     adc a, $5A
     ld h, a
 
-Jump_060_5985::
+.loop:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_5985
+    jr nc, .loop
     ld c, a
     ld b, $00
 
-Jump_060_5994::
+.skip:
     ld a, [hl+]
     or a, a
-    jr z, Jump_060_599B
+    jr z, .next
     cp a, c
-    jr nc, Jump_060_599E
+    jr nc, .skip2
 
-Jump_060_599B::
+.next:
     inc b
-    jr Jump_060_5994
+    jr .skip
 
-Jump_060_599E::
+.skip2:
     ld a, b
     or a, a
-    jr z, Jump_060_59CE
+    jr z, .read_key_world_band
     dec a
-    jr z, Jump_060_5A15
+    jr z, .done2
     inc de
     ld a, b
     dec a
@@ -3052,40 +3052,40 @@ Jump_060_599E::
     ld [de], a
     dec de
 
-Jump_060_59AB::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_59AB
+    jr nc, .loop2
     ld c, a
     ld a, [wKeyWorldBand]
     ld hl, FieldModeStateDispatch_NextRandomSeed_Data
     add_a_to_hl
     ld a, [hl]
     cp a, c
-    jr nc, Jump_060_59CA
+    jr nc, .done
     xor a, a
     ld [de], a
     ret
 
-Jump_060_59CA::
+.done:
     ld a, $02
     ld [de], a
     ret
 
-Jump_060_59CE::
+.read_key_world_band:
     ld a, $01
     ld [de], a
     ld a, [wKeyWorldBand]
     ld c, a
 
-Jump_060_59D5::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $7F
     cp a, $64
-    jr nc, Jump_060_59D5
+    jr nc, .loop3
     call Multiply8
     ld a, l
     ldh [hTemp0], a
@@ -3094,12 +3094,12 @@ Jump_060_59D5::
     ld a, [wKeyWorldBand]
     ld c, a
 
-Jump_060_59EE::
+.loop4:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, $0A
-    jr nc, Jump_060_59EE
+    jr nc, .loop4
     call Multiply8
     ldh a, [hTemp0]
     ld c, a
@@ -3112,16 +3112,16 @@ Jump_060_59EE::
     pop de
     ld a, l
     or a, a
-    jr nz, Jump_060_5A11
+    jr nz, .next2
     ld a, $01
 
-Jump_060_5A11::
+.next2:
     inc de
     ld [de], a
     dec de
     ret
 
-Jump_060_5A15::
+.done2:
     ld a, $03
     ld [de], a
     ret
@@ -3275,12 +3275,12 @@ Func_060_5E42:: ; address name
     call ReadByteInBank
     ld a, c
     cp a, $FF
-    jr nz, Jump_060_5EBE
+    jr nz, .skip2
 
-Jump_060_5EBC::
-    jr Jump_060_5EBC
+.skip:
+    jr .skip
 
-Jump_060_5EBE::
+.skip2:
     sla a
     ld hl, DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc_Data
     add_a_to_hl
@@ -3331,20 +3331,20 @@ Jump_060_5F0C:: ; address name
     ld a, b
     and a, $01
     cp a, $01
-    jr nz, Jump_060_5F15
+    jr nz, .skip
 
-Jump_060_5F13::
+.loop:
     xor a, a
     ret
 
-Jump_060_5F15::
+.skip:
     ld a, b
     cp a, $02
-    jr c, Jump_060_5F1C
+    jr c, .read_temp0
     xor a, a
     ret
 
-Jump_060_5F1C::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -3353,14 +3353,14 @@ Jump_060_5F1C::
     add_a_to_hl
     ld a, [hl]
     cp a, $FE
-    jr z, Jump_060_5F13
+    jr z, .loop
     cp a, $FF
-    jr nz, Jump_060_5F13
+    jr nz, .loop
     ld a, $08
     add_a_to_hl
     ld a, [hl]
     cp a, $FE
-    jr z, Jump_060_5F13
+    jr z, .loop
     ld a, l
     sub a, $04
     ld l, a
@@ -3369,7 +3369,7 @@ Jump_060_5F1C::
     ld h, a
     ld a, [hl]
     cp a, $FE
-    jr z, Jump_060_5F13
+    jr z, .loop
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $1F
@@ -3379,10 +3379,10 @@ Jump_060_5F1C::
     ld de, RunRandomPatternCase_WriteTempA_Case03_Data
     add a, e
     ld e, a
-    jr nc, Jump_060_5F5E
+    jr nc, .call_store_three_bytes_before_temp0_pointer
     inc d
 
-Jump_060_5F5E::
+.call_store_three_bytes_before_temp0_pointer:
     call StoreThreeBytesBeforeTemp0Pointer
     ld [hl], $00
     ld hl, $0004
@@ -3448,13 +3448,13 @@ Jump_060_5FBF:: ; address name
     ld a, b
     and a, $01
     cp a, $01
-    jr nz, Jump_060_5FC8
+    jr nz, .read_temp0
 
-Jump_060_5FC6::
+.loop:
     xor a, a
     ret
 
-Jump_060_5FC8::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -3463,9 +3463,9 @@ Jump_060_5FC8::
     add_a_to_hl
     ld a, [hl]
     cp a, $FE
-    jr z, Jump_060_5FC6
+    jr z, .loop
     cp a, $FF
-    jr nz, Jump_060_5FC6
+    jr nz, .loop
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $1F
@@ -3475,10 +3475,10 @@ Jump_060_5FC8::
     ld de, RunRandomPatternCase_WriteTempA_Case02_Data
     add a, e
     ld e, a
-    jr nc, Jump_060_5FF2
+    jr nc, .call_store_three_bytes_before_temp0_pointer
     inc d
 
-Jump_060_5FF2::
+.call_store_three_bytes_before_temp0_pointer:
     call StoreThreeBytesBeforeTemp0Pointer
     ld [hl], $00
     ld hl, $0004
@@ -3525,13 +3525,13 @@ RunRandomPatternCase_WriteTempA::
 Jump_060_6031:: ; address name
     ld a, b
     cp a, $02
-    jr c, Jump_060_6038
+    jr c, .read_temp0
 
-Jump_060_6036::
+.loop:
     xor a, a
     ret
 
-Jump_060_6038::
+.read_temp0:
     ldh a, [hTemp0]
     ld l, a
     ldh a, [hTemp1]
@@ -3540,7 +3540,7 @@ Jump_060_6038::
     add_a_to_hl
     ld a, [hl]
     cp a, $FE
-    jr z, Jump_060_6036
+    jr z, .loop
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $1F
@@ -3550,10 +3550,10 @@ Jump_060_6038::
     ld de, RunRandomPatternCase_WriteTempA_Data
     add a, e
     ld e, a
-    jr nc, Jump_060_605E
+    jr nc, .call_store_three_bytes_before_temp0_pointer
     inc d
 
-Jump_060_605E::
+.call_store_three_bytes_before_temp0_pointer:
     call StoreThreeBytesBeforeTemp0Pointer
     ld [hl], $00
     ld hl, $0008
@@ -3608,10 +3608,10 @@ Jump_060_609E:: ; address name
     ld de, KeyWorldChunkLists
     add a, e
     ld e, a
-    jr nc, Jump_060_60B2
+    jr nc, .call_store_three_bytes_before_temp0_pointer
     inc d
 
-Jump_060_60B2::
+.call_store_three_bytes_before_temp0_pointer:
     call StoreThreeBytesBeforeTemp0Pointer
     ld [hl], $00
     ldh a, [hTemp7]
@@ -3901,7 +3901,7 @@ Func_060_62F9:: ; address name
     ld b, a
     ld de, wMapObjects
 
-Jump_060_6333::
+.loop:
     push de
     push bc
     ld a, b
@@ -3909,21 +3909,21 @@ Jump_060_6333::
     call RollKeyWorldObjectKind
     call PlaceKeyWorldObjectAtRandomCell
     or a, a
-    jr nz, Jump_060_634E
+    jr nz, .read_map_object_count
     pop bc
     pop de
     ld a, $08
     add a, e
     ld e, a
-    jr nc, Jump_060_634A
+    jr nc, .next
     inc d
 
-Jump_060_634A::
+.next:
     dec b
-    jr nz, Jump_060_6333
+    jr nz, .loop
     ret
 
-Jump_060_634E::
+.read_map_object_count:
     pop bc
     pop de
     ld a, [wMapObjectCount]
@@ -3947,10 +3947,10 @@ Jump_060_634E::
     ld a, [wMapObjectCount]
     ld b, a
 
-Jump_060_6377::
+.loop2:
     ld a, [hl]
     cp a, c
-    jr nz, Jump_060_6382
+    jr nz, .skip
     dec hl
     dec hl
     dec hl
@@ -3958,11 +3958,11 @@ Jump_060_6377::
     set 7, [hl]
     ret
 
-Jump_060_6382::
+.skip:
     ld a, $08
     add_a_to_hl
     dec b
-    jr nz, Jump_060_6377
+    jr nz, .loop2
     ret
 
 ; address loaded by RefreshKeyWorldObjectsOnEntry
@@ -3984,35 +3984,35 @@ Func_060_639D:: ; address name
     ret z
     ldh a, [hMapId]
     cp a, $20
-    jr z, Jump_060_63E0
+    jr z, .set_map_object_count_to_0A
     cp a, $30
-    jr z, Jump_060_63F8
+    jr z, .set_map_object_count_to_0A2
     cp a, $48
-    jr z, Jump_060_6410
+    jr z, .set_map_object_count_to_0F
     cp a, $70
-    jr z, Jump_060_6428
+    jr z, .set_map_object_count_to_0F2
     cp a, $A8
-    jp z, Jump_060_6440
+    jp z, .set_map_object_count_to_0A3
     cp a, $B0
-    jp z, Jump_060_6458
+    jp z, .set_map_object_count_to_02
     cp a, $B8
-    jp z, Jump_060_6470
+    jp z, .set_map_object_count_to_08
     cp a, $A0
-    jr z, Jump_060_63DB
+    jr z, .clear_map_object_count
     cp a, $C8
-    jr z, Jump_060_63DB
+    jr z, .clear_map_object_count
     cp a, $D1
-    jr z, Jump_060_63DB
+    jr z, .clear_map_object_count
     cp a, $DA
-    jr z, Jump_060_63DB
+    jr z, .clear_map_object_count
     ret
 
-Jump_060_63DB::
+.clear_map_object_count:
     xor a, a
     ld [wMapObjectCount], a
     ret
 
-Jump_060_63E0::
+.set_map_object_count_to_0A:
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $00
@@ -4024,7 +4024,7 @@ Jump_060_63E0::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_63F8::
+.set_map_object_count_to_0A2:
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $03
@@ -4036,7 +4036,7 @@ Jump_060_63F8::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_6410::
+.set_map_object_count_to_0F:
     ld a, $0F
     ld [wMapObjectCount], a
     ld a, $06
@@ -4048,7 +4048,7 @@ Jump_060_6410::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_6428::
+.set_map_object_count_to_0F2:
     ld a, $0F
     ld [wMapObjectCount], a
     ld a, $09
@@ -4060,7 +4060,7 @@ Jump_060_6428::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_6440::
+.set_map_object_count_to_0A3:
     ld a, $0A
     ld [wMapObjectCount], a
     ld a, $0B
@@ -4072,7 +4072,7 @@ Jump_060_6440::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_6458::
+.set_map_object_count_to_02:
     ld a, $02
     ld [wMapObjectCount], a
     ld a, $0B
@@ -4084,7 +4084,7 @@ Jump_060_6458::
     call MarkMapObjectsEntryForKeyWorldGoalCell
     ret
 
-Jump_060_6470::
+.set_map_object_count_to_08:
     ld a, $08
     ld [wMapObjectCount], a
     ld a, $0D
@@ -4114,7 +4114,7 @@ Func_060_6488:: ; address name
     ld b, a
     ld de, wMapObjects
 
-Jump_060_649D::
+.loop:
     push de
     push bc
     ld a, b
@@ -4122,21 +4122,21 @@ Jump_060_649D::
     call RollKeyWorldObjectKind
     call RemoveMapObjectsEntryMatching_NextRandomSeed
     or a, a
-    jr z, Jump_060_64B8
+    jr z, .read_map_object_count
     pop bc
     pop de
     ld a, $08
     add a, e
     ld e, a
-    jr nc, Jump_060_64B4
+    jr nc, .next
     inc d
 
-Jump_060_64B4::
+.next:
     dec b
-    jr nz, Jump_060_649D
+    jr nz, .loop
     ret
 
-Jump_060_64B8::
+.read_map_object_count:
     pop bc
     pop de
     ld a, [wMapObjectCount]
@@ -4165,10 +4165,10 @@ Func_060_64C2:: ; address name
     ld a, [wMapObjectCount]
     ld b, a
 
-Jump_060_64DD::
+.loop:
     ld a, [hl]
     cp a, c
-    jr nz, Jump_060_64E8
+    jr nz, .skip
     dec hl
     dec hl
     dec hl
@@ -4176,11 +4176,11 @@ Jump_060_64DD::
     set 7, [hl]
     ret
 
-Jump_060_64E8::
+.skip:
     ld a, $08
     add_a_to_hl
     dec b
-    jr nz, Jump_060_64DD
+    jr nz, .loop
     ret
 
 ; only called from RemoveMapObjectsEntryMatching (E-0047)
@@ -4193,26 +4193,26 @@ Func_060_64F3:: ; address name
     xor a, a
     ldh [hTempA], a
 
-Jump_060_64F7::
+.loop:
     ld a, [wMapWidthScreens]
     ld c, a
 
-Jump_060_64FB::
+.loop2:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
-    jr nc, Jump_060_64FB
+    jr nc, .loop2
     ldh [hTemp3], a
     ld a, [wMapHeightScreens]
     ld c, a
 
-Jump_060_650C::
+.loop3:
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and a, $0F
     cp a, c
-    jr nc, Jump_060_650C
+    jr nc, .loop3
     ldh [hTemp4], a
     ldh a, [hTemp3]
     swap a
@@ -4225,30 +4225,30 @@ Jump_060_650C::
     ld b, a
     ld a, [wMapObjectCount]
     sub a, b
-    jr z, Jump_060_654B
+    jr z, .read_map_width_screens
     ld b, a
     ld hl, wMapObjects + $4
 
-Jump_060_6531::
+.loop4:
     ld a, [hl]
     cp a, c
-    jr nz, Jump_060_6541
+    jr nz, .skip
     ldh a, [hTempA]
     inc a
     ldh [hTempA], a
     cp a, $64
-    jr nz, Jump_060_64F7
+    jr nz, .loop
     pop de
     xor a, a
     ret
 
-Jump_060_6541::
+.skip:
     ld a, $08
     add_a_to_hl
     dec b
-    jr nz, Jump_060_6531
+    jr nz, .loop4
 
-Jump_060_654B::
+.read_map_width_screens:
     ld a, [wMapWidthScreens]
     add a, a
     add a, a
@@ -4269,7 +4269,7 @@ Jump_060_654B::
     ld h, a
     add hl, de
 
-Jump_060_656A::
+.call_next_random_seed:
     push hl
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -4282,17 +4282,17 @@ Jump_060_656A::
     call ReadByteInBank
     ld a, c
     cp a, $FE
-    jr nz, Jump_060_6589
+    jr nz, .cp_FF
     pop hl
-    jp Jump_060_64F7
+    jp .loop
 
-Jump_060_6589::
+.cp_FF:
     cp a, $FF
-    jr nz, Jump_060_6590
+    jr nz, .restore
     pop hl
-    jr Jump_060_656A
+    jr .call_next_random_seed
 
-Jump_060_6590::
+.restore:
     pop hl
     swap a
     ld c, a
@@ -4324,58 +4324,58 @@ FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc::
 Func_060_65AA:: ; address name
     ld a, [wMapType]
     bit 7, a
-    jr z, Jump_060_65B5
+    jr z, .check_map_id
     call FieldModeStateDispatch_Case04_Sub02_WriteScreenTriggerCountAndWarpPending
     ret
 
-Jump_060_65B5::
+.check_map_id:
     ldh a, [hMapId]
     cp a, $39
-    jr nz, Jump_060_65C6
+    jr nz, .check_map_id2
     ldh a, [hMapScreenX]
     cp a, $01
-    jr nz, Jump_060_65C6
+    jr nz, .check_map_id2
     ldh a, [hMapScreenY]
     cp a, $01
     ret z
 
-Jump_060_65C6::
+.check_map_id2:
     ldh a, [hMapId]
     cp a, $2B
-    jr nz, Jump_060_65D7
+    jr nz, .read_map_id
     ldh a, [hMapScreenX]
     cp a, $01
-    jr nz, Jump_060_65D7
+    jr nz, .read_map_id
     ldh a, [hMapScreenY]
     cp a, $02
     ret z
 
-Jump_060_65D7::
+.read_map_id:
     ldh a, [hMapId]
     ld c, a
     ld hl, FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc_Data_663F
     ld b, $00
 
-Jump_060_65DF::
+.skip:
     ld a, [hl+]
     cp a, $FF
-    jr nz, Jump_060_65E9
+    jr nz, .skip2
 
-Jump_060_65E4::
+.loop:
     xor a, a
     ld [wScreenTriggerCount], a
     ret
 
-Jump_060_65E9::
+.skip2:
     cp a, c
-    jr z, Jump_060_65EF
+    jr z, .check_warp_pending
     inc b
-    jr Jump_060_65DF
+    jr .skip
 
-Jump_060_65EF::
+.check_warp_pending:
     ld a, [wWarpPending]
     or a, a
-    jr z, Jump_060_65E4
+    jr z, .loop
     xor a, a
     ld [wWarpPending], a
     ld a, b
@@ -4395,7 +4395,7 @@ Jump_060_65EF::
     ld b, $03
     ld de, wScreenTriggers
 
-Jump_060_661E::
+.loop2:
     push de
     push bc
     call FieldModeStateDispatch_NextRandomSeed
@@ -4409,7 +4409,7 @@ Jump_060_661E::
     inc de
     inc de
     dec b
-    jr nz, Jump_060_661E
+    jr nz, .loop2
     ret
 
 ; address loaded by FieldModeStateDispatch_Case04_WriteScreenTriggerCountAndWarpPendingEtc
@@ -4507,17 +4507,17 @@ Func_060_686C:: ; address name
     ld a, [wMapType]
     and a, $07
     cp a, $05
-    jr z, Jump_060_687A
+    jr z, .check_key_world_area
 
-Jump_060_6875::
+.loop:
     xor a, a
     ld [wScreenTriggerCount], a
     ret
 
-Jump_060_687A::
+.check_key_world_area:
     ld a, [wKeyWorldArea]
     or a, a
-    jr z, Jump_060_6875
+    jr z, .loop
     ld c, a
     ld a, [wKeyWorldFloor]
     swap a
@@ -4525,17 +4525,17 @@ Jump_060_687A::
     add_a_to_hl
     ld a, [hl]
     cp a, c
-    jr z, Jump_060_6875
+    jr z, .loop
     inc hl
     inc hl
     inc hl
     inc hl
     ld a, [hl]
     cp a, c
-    jr z, Jump_060_6875
+    jr z, .loop
     ld a, [wWarpPending]
     or a, a
-    jr z, Jump_060_6875
+    jr z, .loop
     xor a, a
     ld [wWarpPending], a
     ld a, [wCurrentKeyIndex]
@@ -4556,7 +4556,7 @@ Jump_060_687A::
     ld b, $02
     ld de, wScreenTriggers
 
-Jump_060_68C2::
+.loop2:
     push de
     push bc
     call FieldModeStateDispatch_NextRandomSeed
@@ -4568,7 +4568,7 @@ Jump_060_68C2::
     inc de
     inc de
     dec b
-    jr nz, Jump_060_68C2
+    jr nz, .loop2
     ld a, [wScreenTriggers + $2]
     ld c, a
     ld a, [wScreenTriggers + $6]
@@ -4633,18 +4633,18 @@ Func_060_6916:: ; address name
     ld c, a
     ld b, $00
 
-Jump_060_6934::
+.skip:
     ld a, [hl+]
     or a, a
-    jr z, Jump_060_693B
+    jr z, .next
     cp a, c
-    jr nc, Jump_060_693E
+    jr nc, .set_temp1
 
-Jump_060_693B::
+.next:
     inc b
-    jr Jump_060_6934
+    jr .skip
 
-Jump_060_693E::
+.set_temp1:
     ld a, b
     ldh [hTemp1], a
     pop af
@@ -4656,14 +4656,14 @@ Jump_060_693E::
     ld c, a
     ld b, $00
 
-Jump_060_6951::
+.skip2:
     ld a, [hl+]
     cp a, c
-    jr nc, Jump_060_6958
+    jr nc, .set_temp2
     inc b
-    jr Jump_060_6951
+    jr .skip2
 
-Jump_060_6958::
+.set_temp2:
     ld a, b
     ldh [hTemp2], a
     ret
@@ -4747,10 +4747,10 @@ Func_060_6C61:: ; address name
     ld b, $14
     ld c, $50
 
-Jump_060_6C75::
+.loop:
     ld a, [hl]
     cp a, c
-    jr nz, Jump_060_6C8E
+    jr nz, .skip
     ld a, l
     add a, $95
     ld l, a
@@ -4762,11 +4762,11 @@ Jump_060_6C75::
     ldh [hTemp0], a
     inc c
     dec b
-    jr nz, Jump_060_6C75
+    jr nz, .loop
     ld a, $FF
     ldh [hTemp0], a
 
-Jump_060_6C8E::
+.skip:
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
@@ -4838,11 +4838,11 @@ Func_060_6CD1:: ; address name
     ld c, a
     ld a, [hl+]
     cp a, c
-    jr nz, Jump_060_6D05
+    jr nz, .skip
     ld bc, $0194
     call CopyBytes
 
-Jump_060_6D05::
+.skip:
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a

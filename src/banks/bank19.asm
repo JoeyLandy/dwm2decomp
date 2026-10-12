@@ -29,7 +29,7 @@ Func_019_4001:: ; address name
     call GameMode4_Init_Sub01_FillBytes
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_019_4069
+    jr nz, .call_game_mode4_init_sub01_write_species_id
     ld hl, wWorkBuf
     ld bc, $0200
     xor a, a
@@ -48,9 +48,9 @@ Func_019_4001:: ; address name
     ld [wBattleInitA3], a
     ld a, $00
     ld [rRAMG], a
-    jr Jump_019_4069
+    jr .call_game_mode4_init_sub01_write_species_id
 
-Jump_019_4069::
+.call_game_mode4_init_sub01_write_species_id:
     call GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi
     call GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03
@@ -67,18 +67,18 @@ GameMode4_Init_Sub01_FillBytes::
 Func_019_4079:: ; address name
     ld a, [wBattleKind]
     cp a, $04
-    jr z, Jump_019_408B
+    jr z, .set_battle_setup_d7_to_01
     cp a, $05
-    jr z, Jump_019_408B
+    jr z, .set_battle_setup_d7_to_01
     cp a, $09
-    jr z, Jump_019_408B
+    jr z, .set_battle_setup_d7_to_01
     xor a, a
-    jr Jump_019_408D
+    jr .set_battle_setup_d7
 
-Jump_019_408B::
+.set_battle_setup_d7_to_01:
     ld a, $01
 
-Jump_019_408D::
+.set_battle_setup_d7:
     ld [wBattleSetupD7], a
     ld a, $FF
     ld [wEffectId], a
@@ -136,7 +136,7 @@ Jump_019_408D::
     ld [wBattleSetupD8 + $2], a
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_019_4140
+    jr nz, .set_battle_kind_flags_to_03
     ld a, [wPartyCount]
     ld [wBattlePartyCount], a
     ld [wSide0Flag], a
@@ -148,14 +148,14 @@ Jump_019_408D::
     ld [wBattleSetupDB], a
     ld a, [wMenuSaveByte34]
     ld [wBattleKindFlags], a
-    jr Jump_019_417E
+    jr .clear_link_rule_work57
 
-Jump_019_4140::
+.set_battle_kind_flags_to_03:
     ld a, $03
     ld [wBattleKindFlags], a
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, Jump_019_4166
+    jr nz, .call_game_mode4_init_sub01_sub01_sub01
     ld hl, wBattlerRecords + $17
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattlePartyCount], a
@@ -164,9 +164,9 @@ Jump_019_4140::
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattleFoeCount], a
     ld [wSide1Flag], a
-    jr Jump_019_417E
+    jr .clear_link_rule_work57
 
-Jump_019_4166::
+.call_game_mode4_init_sub01_sub01_sub01:
     ld hl, wBattlerRecords + $17
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattleFoeCount], a
@@ -176,7 +176,7 @@ Jump_019_4166::
     ld [wBattlePartyCount], a
     ld [wSide1Flag], a
 
-Jump_019_417E::
+.clear_link_rule_work57:
     xor a, a
     ld [wLinkRuleWork57], a
     ld [wBattleInitByte58], a
@@ -191,15 +191,15 @@ Func_019_4186:: ; address name
     add hl, de
     ld a, [hl]
     or a, a
-    jr z, Jump_019_4199
+    jr z, .done
     ld c, $02
     add hl, de
     ld a, [hl]
     or a, a
-    jr z, Jump_019_4199
+    jr z, .done
     ld c, $03
 
-Jump_019_4199::
+.done:
     ld a, c
     ret
 
@@ -228,41 +228,41 @@ Func_019_41CB:: ; address name
     ld de, wBattlerRecordSlot4 + $A
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_019_41D8
+    jr z, .call_game_mode4_init_sub01_sub03_load_monster
     ld de, wBattlerRecords + $A
 
-Jump_019_41D8::
+.call_game_mode4_init_sub01_sub03_load_monster:
     ld hl, vTiles2 + $140
     ld c, $01
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
     cp a, $01
-    jr z, Jump_019_4218
+    jr z, .return
     ld de, wBattlerRecordSlot5 + $A
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_019_41F4
+    jr z, .call_game_mode4_init_sub01_sub03_load_monster2
     ld de, wBattlerRecordSlot1 + $A
 
-Jump_019_41F4::
+.call_game_mode4_init_sub01_sub03_load_monster2:
     ld hl, vTiles2 + $380
     ld c, $03
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
     cp a, $02
-    jr z, Jump_019_4218
+    jr z, .return
     ld de, wBattlerRecordSlot6 + $A
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_019_4210
+    jr z, .call_game_mode4_init_sub01_sub03_load_monster3
     ld de, wBattlerRecordSlot2 + $A
 
-Jump_019_4210::
+.call_game_mode4_init_sub01_sub03_load_monster3:
     ld hl, vTiles2 + $5C0
     ld c, $05
     call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
 
-Jump_019_4218::
+.return:
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub03 (E-0047)
@@ -291,41 +291,41 @@ Func_019_4224:: ; address name
     ld c, $00
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_019_4235
+    jr z, .loop
     ld a, [wBattleFoeCount]
     ld b, a
 
-Jump_019_4235::
+.loop:
     call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
     inc c
     dec b
-    jr nz, Jump_019_4235
+    jr nz, .loop
     ld a, [wBattleFoeCount]
     ld b, a
     ld c, $04
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_019_424D
+    jr z, .loop2
     ld a, [wBattlePartyCount]
     ld b, a
 
-Jump_019_424D::
+.loop2:
     call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
     inc c
     dec b
-    jr nz, Jump_019_424D
+    jr nz, .loop2
     call AdjustSkillsForBattleStart
     ld de, wSlotDamageFlags
     ld bc, $0800
 
-Jump_019_425D::
+.loop3:
     push bc
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_019_4291
+    jr z, .restore
     ld a, c
     add a, a
     ld hl, wBattleMonsterId
@@ -344,12 +344,12 @@ Jump_019_425D::
     or a, h
     ld [de], a
 
-Jump_019_4291::
+.restore:
     pop bc
     inc de
     inc c
     dec b
-    jr nz, Jump_019_425D
+    jr nz, .loop3
     ret
 
 ; wDA53[C] = 0-4 by slot C's INT: below 30, 100, 550, 900, or more (E-0127)
@@ -373,47 +373,47 @@ Func_019_4298:: ; address name
     ld a, h
     sbc a, $00
     ld h, a
-    jr c, Jump_019_42E8
+    jr c, .skip4
     ld a, l
     sub a, $46
     ld l, a
     ld a, h
     sbc a, $00
     ld h, a
-    jr c, Jump_019_42E4
+    jr c, .skip3
     ld a, l
     sub a, $C2
     ld l, a
     ld a, h
     sbc a, $01
     ld h, a
-    jr c, Jump_019_42E0
+    jr c, .skip2
     ld a, l
     sub a, $5E
     ld l, a
     ld a, h
     sbc a, $01
     ld h, a
-    jr c, Jump_019_42DC
+    jr c, .skip
     ld a, $04
-    jr Jump_019_42EA
+    jr .restore
 
-Jump_019_42DC::
+.skip:
     ld a, $03
-    jr Jump_019_42EA
+    jr .restore
 
-Jump_019_42E0::
+.skip2:
     ld a, $02
-    jr Jump_019_42EA
+    jr .restore
 
-Jump_019_42E4::
+.skip3:
     ld a, $01
-    jr Jump_019_42EA
+    jr .restore
 
-Jump_019_42E8::
+.skip4:
     ld a, $00
 
-Jump_019_42EA::
+.restore:
     pop hl
     ld [hl], a
     pop bc
@@ -478,18 +478,18 @@ Func_019_42FD:: ; address name
     ld a, [wRandomHi]
     ld h, a
 
-Jump_019_4332::
+.call_compare_hl_to_bc:
     call CompareHLToBC
-    jr c, Jump_019_433F
+    jr c, .restore
     ld a, l
     sub a, c
     ld l, a
     ld a, h
     sbc a, b
     ld h, a
-    jr Jump_019_4332
+    jr .call_compare_hl_to_bc
 
-Jump_019_433F::
+.restore:
     pop bc
     add hl, bc
     pop bc
@@ -524,21 +524,21 @@ Func_019_434D:: ; address name
     add_a_to_hl
     ld b, $08
 
-Jump_019_435A::
+.loop:
     ld a, $00
     ld [hl+], a
     ld a, $FF
     ld [hl+], a
     dec b
-    jr nz, Jump_019_435A
+    jr nz, .loop
     push bc
     ld a, c
     cp a, $04
-    jr c, Jump_019_436B
+    jr c, .call_multiply8
     dec a
     ld c, a
 
-Jump_019_436B::
+.call_multiply8:
     ld a, $4E
     call Multiply8
     pop bc
@@ -553,45 +553,45 @@ Jump_019_436B::
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_019_4384
+    jr nc, .skip
     inc d
 
-Jump_019_4384::
+.skip:
     ld b, $08
 
-Jump_019_4386::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     inc de
     ld a, [hl]
     or a, a
-    jr z, Jump_019_4395
+    jr z, .skip2
     cp a, $FF
-    jr z, Jump_019_4395
+    jr z, .skip2
     dec b
-    jr nz, Jump_019_4386
+    jr nz, .loop2
 
-Jump_019_4395::
+.skip2:
     ld a, c
     ld de, wBattleSkills
     swap a
     add a, e
     ld e, a
-    jr nc, Jump_019_43A0
+    jr nc, .read_battle_arg0
     inc d
 
-Jump_019_43A0::
+.read_battle_arg0:
     ld b, $08
     ld a, [wBattleArg0]
     push af
     xor a, a
     ld [wRecordBuffer + $1], a
 
-Jump_019_43AA::
+.loop3:
     ld a, [de]
     cp a, $FF
-    jr z, Jump_019_43E4
+    jr z, .set_battle_arg0
     push bc
     ld a, [de]
     ld [wRecordBuffer], a
@@ -620,9 +620,9 @@ Jump_019_43AA::
     inc de
     pop bc
     dec b
-    jr nz, Jump_019_43AA
+    jr nz, .loop3
 
-Jump_019_43E4::
+.set_battle_arg0:
     pop af
     ld [wBattleArg0], a
     or a, a
@@ -638,59 +638,59 @@ Func_019_43ED:: ; address name
     ld bc, $0800
     ld hl, wSlotNameSuffix
 
-Jump_019_43F3::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_019_43FE
+    jr c, .next
     ld a, [hl]
     or a, a
     call z, ReplaceSkill8FWithAAInSlotC
 
-Jump_019_43FE::
+.next:
     inc c
     inc hl
     dec b
-    jr nz, Jump_019_43F3
+    jr nz, .loop
     ld a, [wLinkMode]
     or a, a
     ret nz
     ld bc, $0304
     ld hl, wBattleSkills + $40
 
-Jump_019_440E::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_019_4430
+    jr c, .next3
     ld d, $04
 
-Jump_019_4416::
+.loop3:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_019_4430
+    jr z, .next3
     cp a, $34
-    jr nz, Jump_019_4424
+    jr nz, .cp_35
     call StoreTileADAtHL
-    jr Jump_019_442B
+    jr .next2
 
-Jump_019_4424::
+.cp_35:
     cp a, $35
-    jr nz, Jump_019_442B
+    jr nz, .next2
     call StoreTileAEAtHL
 
-Jump_019_442B::
+.next2:
     inc hl
     inc hl
     dec d
-    jr nz, Jump_019_4416
+    jr nz, .loop3
 
-Jump_019_4430::
+.next3:
     inc c
     ld a, c
     swap a
     ld hl, wBattleSkills
     add_a_to_hl
     dec b
-    jr nz, Jump_019_440E
+    jr nz, .loop2
     ret
 
 ; in slot C's skill list replaces the first skill $8F by $AA, stopping at $FF (E-0124)
@@ -705,23 +705,23 @@ Func_019_4440:: ; address name
     add_a_to_hl
     ld d, $08
 
-Jump_019_444E::
+.loop:
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_019_4459
+    jr z, .done
     cp a, $8F
-    jr nz, Jump_019_445B
+    jr nz, .next
     ld [hl], $AA
 
-Jump_019_4459::
+.done:
     pop hl
     ret
 
-Jump_019_445B::
+.next:
     inc hl
     inc hl
     dec d
-    jr nz, Jump_019_444E
+    jr nz, .loop
     pop hl
     ret
 
@@ -750,22 +750,22 @@ Func_019_4468:: ; address name
     ld de, wBattleSlotOut
     add a, e
     ld e, a
-    jr nc, Jump_019_4472
+    jr nc, .skip
     inc d
 
-Jump_019_4472::
+.skip:
     bit 7, [hl]
-    jr z, Jump_019_447B
+    jr z, .check_battle_kind
     ld a, $01
     ld [de], a
-    jr Jump_019_44A1
+    jr .done
 
-Jump_019_447B::
+.check_battle_kind:
     ld a, $00
     ld [de], a
     ld a, [wBattleKind]
     cp a, $04
-    jr z, Jump_019_44A1
+    jr z, .done
     ld a, c
     ld de, wBattleStatus
     add a, a
@@ -774,23 +774,23 @@ Jump_019_447B::
     add a, c
     add a, e
     ld e, a
-    jr nc, Jump_019_4492
+    jr nc, .skip2
     inc d
 
-Jump_019_4492::
+.skip2:
     bit 0, [hl]
-    jr z, Jump_019_4499
+    jr z, .skip3
     ld a, $20
     ld [de], a
 
-Jump_019_4499::
+.skip3:
     bit 2, [hl]
-    jr z, Jump_019_44A1
+    jr z, .done
     ld a, [de]
     or a, $01
     ld [de], a
 
-Jump_019_44A1::
+.done:
     pop hl
     ret
 
@@ -801,10 +801,10 @@ Func_019_44A3:: ; address name
     ld a, c
     add a, e
     ld e, a
-    jr nc, Jump_019_44A9
+    jr nc, .done
     inc d
 
-Jump_019_44A9::
+.done:
     ld a, [hl+]
     ld [de], a
     ret
@@ -817,10 +817,10 @@ Func_019_44AC:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, Jump_019_44B3
+    jr nc, .skip
     inc d
 
-Jump_019_44B3::
+.skip:
     ld a, [hl+]
     ld [de], a
     inc de
@@ -869,7 +869,7 @@ Func_019_44C9:: ; address name
     inc de
     ld b, $05
 
-Jump_019_44EC::
+.loop:
     ld a, [hl+]
     sla a
     sla a
@@ -886,7 +886,7 @@ Jump_019_44EC::
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_44EC
+    jr nz, .loop
     ld a, [hl+]
     sla a
     sla a
@@ -908,29 +908,29 @@ Func_019_4516:: ; address name
     ld de, wScreenTileBuffer
     ld bc, $1412
 
-Jump_019_451C::
+.loop:
     push bc
     push hl
 
-Jump_019_451E::
+.loop2:
     ld a, [de]
     inc de
     call WriteVRAMByteInc
     dec b
-    jr nz, Jump_019_451E
+    jr nz, .loop2
     ld a, $0C
     add a, e
     ld e, a
-    jr nc, Jump_019_452D
+    jr nc, .restore
     inc d
 
-Jump_019_452D::
+.restore:
     pop hl
     ld bc, $0020
     add hl, bc
     pop bc
     dec c
-    jr nz, Jump_019_451C
+    jr nz, .loop
     ret
 
 ; HL = (HL * 8) / 10 with 16-bit arithmetic (the multiply can overflow above 8191); BC and DE kept (E-0118)
@@ -955,18 +955,18 @@ GameMode4_Init_Sub01_QueueMusic::
 Func_019_4544:: ; address name
     ld a, [wBattleKind]
     or a, a
-    jr z, Jump_019_454D
+    jr z, .skip
     dec a
-    jr nz, Jump_019_4551
+    jr nz, .call_queue_music
 
-Jump_019_454D::
+.skip:
     ld a, $0F
-    jr Jump_019_4553
+    jr .call_queue_music2
 
-Jump_019_4551::
+.call_queue_music:
     ld a, $13
 
-Jump_019_4553::
+.call_queue_music2:
     call QueueMusic
     ret
 
@@ -981,13 +981,13 @@ Func_019_4557:: ; address name
     ld c, $00
     ld de, wBattlerRecords
 
-Jump_019_4560::
+.loop:
     push bc
     call GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped
     pop bc
     inc c
     dec b
-    jr nz, Jump_019_4560
+    jr nz, .loop
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub06 (E-0047)
@@ -999,12 +999,12 @@ Func_019_456A:: ; address name
     call SRAMRecordAddressMapped
     ld b, $0A
 
-Jump_019_4572::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_4572
+    jr nz, .loop
     ld a, l
     add a, $00
     ld l, a
@@ -1043,12 +1043,12 @@ Jump_019_4572::
     ld h, a
     ld b, $08
 
-Jump_019_45A6::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_45A6
+    jr nz, .loop2
     ld a, l
     add a, $19
     ld l, a
@@ -1075,12 +1075,12 @@ Jump_019_45A6::
     ld h, a
     ld b, $15
 
-Jump_019_45CC::
+.loop3:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_45CC
+    jr nz, .loop3
     ld a, l
     add a, $02
     ld l, a
@@ -1089,12 +1089,12 @@ Jump_019_45CC::
     ld h, a
     ld b, $04
 
-Jump_019_45DC::
+.loop4:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_45DC
+    jr nz, .loop4
     ld a, l
     add a, $00
     ld l, a
@@ -1103,12 +1103,12 @@ Jump_019_45DC::
     ld h, a
     ld b, $1B
 
-Jump_019_45EC::
+.loop5:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_45EC
+    jr nz, .loop5
     ld a, l
     add a, $16
     ld l, a
@@ -1147,22 +1147,22 @@ Func_019_4605:: ; address name
     ld de, IncrementOffsetRows_19
     add a, e
     ld e, a
-    jr nc, Jump_019_4622
+    jr nc, .skip
     inc d
 
-Jump_019_4622::
+.skip:
     ld a, [de]
     cp a, $80
-    jr nz, Jump_019_4629
+    jr nz, .call_increment_table_byte_capped_at3
     pop de
     ret
 
-Jump_019_4629::
+.call_increment_table_byte_capped_at3:
     ld l, a
     ld h, $FF
     call IncrementTableByteCappedAt3
     inc de
-    jr Jump_019_4622
+    jr .skip
 
 ; increments the byte at HL + the word hFFC6/hFFC7 unless it is already 3 or more (E-0118)
 ; 1 call site from 1 routine (e.g. ApplyIncrementOffsetRows19ForA0DTo13)
@@ -1205,10 +1205,10 @@ Func_019_46B1:: ; address name
     and a, $03
     ld c, a
     cp a, $01
-    jr z, Jump_019_46C1
+    jr z, .skip
     ld de, wBattlerRecordSlot4
 
-Jump_019_46C1::
+.skip:
     push de
     ld a, e
     add a, $0D
@@ -1244,21 +1244,21 @@ Func_019_46DD:: ; address name
     ld de, wBattlerRecordSlot4
     ld a, [wBattleKind]
     cp a, $05
-    jr z, Jump_019_46F3
+    jr z, .loop
     and a, $01
-    jr z, Jump_019_46F3
-    jr Jump_019_46FD
+    jr z, .loop
+    jr .loop2
 
-Jump_019_46F3::
+.loop:
     push bc
     call LoadMonsterAndSpeciesForListEntryC
     pop bc
     inc c
     dec b
-    jr nz, Jump_019_46F3
+    jr nz, .loop
     ret
 
-Jump_019_46FD::
+.loop2:
     push bc
     call GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc
     pop bc
@@ -1270,7 +1270,7 @@ Jump_019_46FD::
     adc a, $00
     ld d, a
     dec b
-    jr nz, Jump_019_46FD
+    jr nz, .loop2
     ret
 
 ; loads monster wCFDD[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
@@ -1333,11 +1333,11 @@ Func_019_4752:: ; address name
     ld a, [hl]
     ldh [hTemp1], a
     or a, a
-    jr nz, Jump_019_4771
+    jr nz, .skip
     ld a, $01
     ldh [hTemp1], a
 
-Jump_019_4771::
+.skip:
     ld a, c
     add a, a
     ld hl, wEncounterMonsters
@@ -1526,55 +1526,55 @@ Func_019_48B1:: ; address name
     call Divide24ByA
     ld a, [wBattleKind]
     cp a, $03
-    jr nz, Jump_019_48EB
+    jr nz, .check_battle_arg0
     ld a, [wBattleArg0]
     cp a, $01
-    jr nz, Jump_019_48EB
+    jr nz, .check_battle_arg0
     ld a, [wBattleIntroFlag]
     cp a, $01
     ld a, $05
-    jr z, Jump_019_493C
+    jr z, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, [wBattleArg1]
     cp a, $01
     ld a, $02
-    jr nz, Jump_019_493C
+    jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, $05
-    jr Jump_019_493C
+    jr ScaleWordBy6Or12Capped10000_CallMultiply24By8
 
-Jump_019_48EB::
+.check_battle_arg0:
     ld a, [wBattleArg0]
     cp a, $02
-    jr z, Jump_019_48FB
+    jr z, .check_battle_kind
     cp a, $03
-    jr z, Jump_019_490C
+    jr z, .check_battle_kind2
     ld bc, $03E7
-    jr Jump_019_491F
+    jr .skip2
 
-Jump_019_48FB::
+.check_battle_kind:
     ld a, [wBattleKind]
     cp a, $03
-    jr z, Jump_019_4907
+    jr z, .skip
     ld bc, $0258
-    jr Jump_019_491F
+    jr .skip2
 
-Jump_019_4907::
+.skip:
     ld bc, $02BC
-    jr Jump_019_491F
+    jr .skip2
 
-Jump_019_490C::
+.check_battle_kind2:
     ld bc, $02BC
     ld a, [wBattleKind]
     cp a, $03
-    jr nz, Jump_019_491F
+    jr nz, .skip2
     ld a, [wSpeciesRecord + $3]
     or a, a
-    jr z, Jump_019_491F
+    jr z, .skip2
     ld bc, $03E7
 
-Jump_019_491F::
+.skip2:
     ld a, e
     or a, a
-    jr nz, Jump_019_4948
+    jr nz, ScaleWordBy6Or12Capped10000_Restore
     push bc
     ld a, c
     sub a, l
@@ -1583,9 +1583,9 @@ Jump_019_491F::
     sbc a, h
     ld b, a
     bit 7, b
-    jr nz, Jump_019_4948
+    jr nz, ScaleWordBy6Or12Capped10000_Restore
     pop bc
-    jr Jump_019_494B
+    jr ScaleWordBy6Or12Capped10000_SetTemp2
 
 ; multiplies by 6 (or 12 when wD869 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0127)
 ; no direct call (reached through a table, a jump or a vector)
@@ -1596,23 +1596,26 @@ Func_019_4931:: ; address name
     ld a, [wBattleArg1]
     cp a, $01
     ld a, $06
-    jr nz, Jump_019_493C
+    jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, $0C
 
-Jump_019_493C::
+ScaleWordBy6Or12Capped10000_CallMultiply24By8::
+Jump_019_493C:: ; address name
     call Multiply24By8
     ld a, d
     or a, e
-    jr z, Jump_019_494B
+    jr z, ScaleWordBy6Or12Capped10000_SetTemp2
     ld hl, $2710
-    jr Jump_019_494B
+    jr ScaleWordBy6Or12Capped10000_SetTemp2
 
-Jump_019_4948::
+ScaleWordBy6Or12Capped10000_Restore::
+Jump_019_4948:: ; address name
     pop bc
     ld l, c
     ld h, b
 
-Jump_019_494B::
+ScaleWordBy6Or12Capped10000_SetTemp2::
+Jump_019_494B:: ; address name
     ld a, l
     ldh [hTemp2], a
     ld a, h
@@ -1645,12 +1648,12 @@ Func_019_4963:: ; address name
     ld de, wSpeciesRecord + $12
     ld b, $1B
 
-Jump_019_4968::
+.loop:
     ld a, [de]
     inc de
     ld [hl+], a
     dec b
-    jr nz, Jump_019_4968
+    jr nz, .loop
     ret
 
 ; field $0D of record wD86A: values 1, 2 and others roll with thresholds 2, $80 and $E6 and become 1 or 0; with wD068 set bit 4 is cleared (E-0125)
@@ -1666,22 +1669,22 @@ Func_019_496F:: ; address name
     ld h, a
     ld a, [hl]
     or a, a
-    jr z, Jump_019_49A7
+    jr z, .check_new_record_byte0_d2
     cp a, $01
-    jr z, Jump_019_498B
+    jr z, .skip
     cp a, $02
-    jr z, Jump_019_498F
+    jr z, .skip2
     ld b, $E6
-    jr Jump_019_4991
+    jr .skip3
 
-Jump_019_498B::
+.skip:
     ld b, $02
-    jr Jump_019_4991
+    jr .skip3
 
-Jump_019_498F::
+.skip2:
     ld b, $80
 
-Jump_019_4991::
+.skip3:
     push af
     push bc
     push de
@@ -1693,14 +1696,14 @@ Jump_019_4991::
     pop af
     ld a, [wRandomLo]
     cp a, b
-    jr c, Jump_019_49A5
+    jr c, .check_new_record_byte0_d
     xor a, a
-    jr Jump_019_49A7
+    jr .check_new_record_byte0_d2
 
-Jump_019_49A5::
+.check_new_record_byte0_d:
     ld a, $01
 
-Jump_019_49A7::
+.check_new_record_byte0_d2:
     ld [hl], a
     ld a, [wNewRecordByte0D]
     or a, a
@@ -1737,7 +1740,7 @@ Func_019_49B1:: ; address name
     ld b, a
     ld c, $01
 
-Jump_019_49D6::
+.loop:
     push bc
     ldh a, [hTemp7]
     ld l, a
@@ -1748,7 +1751,7 @@ Jump_019_49D6::
     call Multiply24By8
     ld a, [wBattleKind]
     cp a, $03
-    jr z, Jump_019_49F5
+    jr z, .read_temp4
     ld a, $14
     call Divide24ByA
     ld c, a
@@ -1756,7 +1759,7 @@ Jump_019_49D6::
     add a, c
     ldh [hTemp9], a
 
-Jump_019_49F5::
+.read_temp4:
     ldh a, [hTemp4]
     add a, l
     ldh [hTemp4], a
@@ -1769,7 +1772,7 @@ Jump_019_49F5::
     pop bc
     inc c
     dec b
-    jr nz, Jump_019_49D6
+    jr nz, .loop
     ldh a, [hTemp9]
     ld b, a
     ld a, $14
@@ -1795,7 +1798,7 @@ Jump_019_49F5::
     call Divide24ByA
     ld a, [wBattleKind]
     cp a, $03
-    jr nz, Jump_019_4A45
+    jr nz, .skip
     sra e
     rr h
     rr l
@@ -1803,14 +1806,14 @@ Jump_019_49F5::
     rr h
     rr l
 
-Jump_019_4A45::
+.skip:
     ld a, e
     or a, h
     or a, l
-    jr nz, Jump_019_4A4D
+    jr nz, .set_temp6
     ld hl, $0001
 
-Jump_019_4A4D::
+.set_temp6:
     ld a, e
     ldh [hTemp6], a
     ld a, h
@@ -1827,10 +1830,10 @@ Jump_019_4A4D::
     ld l, a
     ld a, d
     or a, e
-    jr z, Jump_019_4A68
+    jr z, .restore
     ld hl, $FFFF
 
-Jump_019_4A68::
+.restore:
     pop bc
     ld a, l
     ld [bc], a
@@ -1888,11 +1891,11 @@ Func_019_4A9A:: ; address name
     ld b, $0A
     ld a, $FF
 
-Jump_019_4A9F::
+.loop:
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_4A9F
+    jr nz, .loop
     ld a, [wRecordBuffer]
     ld [de], a
     inc de
@@ -1904,20 +1907,20 @@ Jump_019_4A9F::
     ld b, $04
     ld hl, wRecordBufferData
 
-Jump_019_4AB5::
+.loop2:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_4AB5
+    jr nz, .loop2
     ld a, $FF
     ld b, $04
 
-Jump_019_4ABF::
+.loop3:
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_4ABF
+    jr nz, .loop3
     ld a, $00
     ld [de], a
     inc de
@@ -2003,10 +2006,10 @@ Jump_019_4ABF::
     ld a, $1C
     add a, e
     ld e, a
-    jr nc, Jump_019_4B31
+    jr nc, .read_record_buffer_data
     inc d
 
-Jump_019_4B31::
+.read_record_buffer_data:
     ld a, [wRecordBufferData + $6]
     ld [de], a
     pop bc
@@ -2020,31 +2023,31 @@ Func_019_4B37:: ; address name
     ld a, $0C
     add a, e
     ld e, a
-    jr nc, Jump_019_4B3E
+    jr nc, .read_species_record
     inc d
 
-Jump_019_4B3E::
+.read_species_record:
     ld a, [wSpeciesRecord]
     ld [de], a
     inc de
     ld a, [wSpeciesRecord + $1]
     or a, a
-    jr z, Jump_019_4B71
+    jr z, .check_new_record_byte0_d2
     cp a, $01
-    jr z, Jump_019_4B55
+    jr z, .skip
     cp a, $02
-    jr z, Jump_019_4B59
+    jr z, .skip2
     ld b, $E6
-    jr Jump_019_4B5B
+    jr .skip3
 
-Jump_019_4B55::
+.skip:
     ld b, $02
-    jr Jump_019_4B5B
+    jr .skip3
 
-Jump_019_4B59::
+.skip2:
     ld b, $80
 
-Jump_019_4B5B::
+.skip3:
     push af
     push bc
     push de
@@ -2056,38 +2059,38 @@ Jump_019_4B5B::
     pop af
     ld a, [wRandomLo]
     cp a, b
-    jr c, Jump_019_4B6F
+    jr c, .check_new_record_byte0_d
     xor a, a
-    jr Jump_019_4B71
+    jr .check_new_record_byte0_d2
 
-Jump_019_4B6F::
+.check_new_record_byte0_d:
     ld a, $01
 
-Jump_019_4B71::
+.check_new_record_byte0_d2:
     ld [de], a
     ld a, [wNewRecordByte0D]
     or a, a
-    jr z, Jump_019_4B7B
+    jr z, .skip4
     res 4, a
     ld [de], a
 
-Jump_019_4B7B::
+.skip4:
     ld a, $24
     add a, e
     ld e, a
-    jr nc, Jump_019_4B82
+    jr nc, .skip5
     inc d
 
-Jump_019_4B82::
+.skip5:
     ld b, $1B
     ld hl, wSpeciesRecord + $12
 
-Jump_019_4B87::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_019_4B87
+    jr nz, .loop
     inc de
     inc de
     pop bc
@@ -2104,14 +2107,14 @@ Func_019_4B91:: ; address name
     jr nz, LoadBattleSlotFromBattlerRecord_4BA8
     ld a, c
     cp a, $04
-    jr nc, Jump_019_4BA1
+    jr nc, .call_load_battle_slot_from_battler_record_4
     call LoadBattleSlotFromBattlerRecord_4BA8
-    jr Jump_019_4BA4
+    jr .call_clear_species_record_buffer_bank19
 
-Jump_019_4BA1::
+.call_load_battle_slot_from_battler_record_4:
     call LoadBattleSlotFromBattlerRecord_4CF8
 
-Jump_019_4BA4::
+.call_clear_species_record_buffer_bank19:
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
@@ -2130,10 +2133,10 @@ Func_019_4BA8:: ; address name
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_019_4BB8
+    jr nc, .skip
     inc d
 
-Jump_019_4BB8::
+.skip:
     ld a, l
     add a, $0A
     ld l, a
@@ -2150,49 +2153,49 @@ Jump_019_4BB8::
     ld de, wSlotNameSuffix
     add a, e
     ld e, a
-    jr nc, Jump_019_4BCF
+    jr nc, .skip2
     inc d
 
-Jump_019_4BCF::
+.skip2:
     ld a, [hl]
     and a, $0F
     ld [de], a
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_019_4BF5
+    jr z, .skip5
     ld a, c
     ld de, wSlotTactic
     add a, e
     ld e, a
-    jr nc, Jump_019_4BE2
+    jr nc, .skip3
     inc d
 
-Jump_019_4BE2::
+.skip3:
     ld a, $00
     ld [de], a
     ld a, c
     ld de, wSlotLastTactic
     add a, e
     ld e, a
-    jr nc, Jump_019_4BEE
+    jr nc, .skip4
     inc d
 
-Jump_019_4BEE::
+.skip4:
     ld a, $00
     ld [de], a
     inc hl
     push af
-    jr Jump_019_4C19
+    jr .skip7
 
-Jump_019_4BF5::
+.skip5:
     ld a, c
     ld de, wSlotTactic
     add a, e
     ld e, a
-    jr nc, Jump_019_4BFE
+    jr nc, .skip6
     inc d
 
-Jump_019_4BFE::
+.skip6:
     ld a, [hl+]
     swap a
     and a, $0F
@@ -2206,49 +2209,49 @@ Jump_019_4BFE::
     ld de, wSlotLastTactic
     add a, e
     ld e, a
-    jr nc, Jump_019_4C13
+    jr nc, .restore
     inc d
 
-Jump_019_4C13::
+.restore:
     pop af
     rrca
     rrca
     and a, $03
     ld [de], a
 
-Jump_019_4C19::
+.skip7:
     ld a, c
     cp a, $04
-    jr nc, Jump_019_4C2D
+    jr nc, .restore3
     ld a, c
     ld de, wBattleSetupD8
     add a, e
     ld e, a
-    jr nc, Jump_019_4C27
+    jr nc, .restore2
     inc d
 
-Jump_019_4C27::
+.restore2:
     pop af
     and a, $03
     ld [de], a
-    jr Jump_019_4C2E
+    jr .check_battle_arg0
 
-Jump_019_4C2D::
+.restore3:
     pop af
 
-Jump_019_4C2E::
+.check_battle_arg0:
     push hl
     push bc
     ld a, [wBattleArg0]
     or a, a
-    jr nz, Jump_019_4C3B
+    jr nz, .call_set_c_from_battle_arg0_then_run_load
     call LoadSlotSkillsFromBattlerRecord
-    jr Jump_019_4C3E
+    jr .restore4
 
-Jump_019_4C3B::
+.call_set_c_from_battle_arg0_then_run_load:
     call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
-Jump_019_4C3E::
+.restore4:
     pop bc
     pop hl
     ld a, l
@@ -2268,7 +2271,7 @@ Jump_019_4C3E::
     inc hl
     ld a, [wLoadSlot]
     or a, a
-    jr z, Jump_019_4C71
+    jr z, .call_store_word_at_de_plus2_c_bank19
     inc hl
     inc hl
     ld de, wBattleMaxHP
@@ -2277,9 +2280,9 @@ Jump_019_4C3E::
     inc hl
     ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
-    jr Jump_019_4C89
+    jr .call_store_word_at_de_plus2_c_bank192
 
-Jump_019_4C71::
+.call_store_word_at_de_plus2_c_bank19:
     ld de, wBattleHP
     call StoreWordAtDEPlus2C_Bank19
     ld de, wBattleMaxHP
@@ -2289,7 +2292,7 @@ Jump_019_4C71::
     ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
 
-Jump_019_4C89::
+.call_store_word_at_de_plus2_c_bank192:
     ld de, wBattleATK
     call StoreWordAtDEPlus2C_Bank19
     ld de, wBattleDEF
@@ -2302,7 +2305,7 @@ Jump_019_4C89::
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
     or a, a
-    jr z, Jump_019_4CCA
+    jr z, .call_store_byte_at_de_plus_c_bank19
     ld a, [wBattleArg0]
     push hl
     ld l, a
@@ -2315,14 +2318,14 @@ Jump_019_4C89::
     ld a, [hl]
     and a, $30
     pop hl
-    jr nz, Jump_019_4CCA
+    jr nz, .call_store_byte_at_de_plus_c_bank19
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_019_4CE2
+    jr .skip8
 
-Jump_019_4CCA::
+.call_store_byte_at_de_plus_c_bank19:
     ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_Bank19
     ld de, wSlotPersonalityLo
@@ -2332,7 +2335,7 @@ Jump_019_4CCA::
     ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_Bank19
 
-Jump_019_4CE2::
+.skip8:
     ld a, c
     add a, a
     add a, c
@@ -2341,10 +2344,10 @@ Jump_019_4CE2::
     ld de, wSlotResistances
     add a, e
     ld e, a
-    jr nc, Jump_019_4CEF
+    jr nc, .call_pack_resistance_fields_to_de
     inc d
 
-Jump_019_4CEF::
+.call_pack_resistance_fields_to_de:
     push bc
     call PackResistanceFieldsToDE
     pop bc
@@ -2365,10 +2368,10 @@ Func_019_4CF8:: ; address name
     ld de, wBattleMonsterId
     add a, e
     ld e, a
-    jr nc, Jump_019_4D07
+    jr nc, .skip
     inc d
 
-Jump_019_4D07::
+.skip:
     ld a, l
     add a, $0A
     ld l, a
@@ -2385,34 +2388,34 @@ Jump_019_4D07::
     ld de, wSlotNameSuffix
     add a, e
     ld e, a
-    jr nc, Jump_019_4D1E
+    jr nc, .skip2
     inc d
 
-Jump_019_4D1E::
+.skip2:
     ld a, [hl+]
     ld [de], a
     ld a, c
     ld de, wSlotTactic
     add a, e
     ld e, a
-    jr nc, Jump_019_4D29
+    jr nc, .skip3
     inc d
 
-Jump_019_4D29::
+.skip3:
     ld a, $00
     ld [de], a
     push hl
     push bc
     ld a, [wBattleArg0]
     or a, a
-    jr nz, Jump_019_4D39
+    jr nz, .call_set_c_from_battle_arg0_then_run_load
     call LoadSlotSkillsFromBattlerRecord
-    jr Jump_019_4D3C
+    jr .restore
 
-Jump_019_4D39::
+.call_set_c_from_battle_arg0_then_run_load:
     call SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord
 
-Jump_019_4D3C::
+.restore:
     pop bc
     pop hl
     ld a, l
@@ -2432,7 +2435,7 @@ Jump_019_4D3C::
     inc hl
     ld a, [wLoadSlot]
     or a, a
-    jr z, Jump_019_4D6F
+    jr z, .call_store_word_at_de_plus2_c_bank19
     inc hl
     inc hl
     ld de, wBattleMaxHP
@@ -2441,9 +2444,9 @@ Jump_019_4D3C::
     inc hl
     ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
-    jr Jump_019_4D96
+    jr .call_store_word_at_de_plus2_c_bank192
 
-Jump_019_4D6F::
+.call_store_word_at_de_plus2_c_bank19:
     ld de, wBattleHP
     call StoreWordAtDEPlus2C_Bank19
     push de
@@ -2464,7 +2467,7 @@ Jump_019_4D6F::
     ld de, wBattleMaxMP
     call StoreWordAtDEPlus2C_Bank19
 
-Jump_019_4D96::
+.call_store_word_at_de_plus2_c_bank192:
     ld de, wBattleATK
     call StoreWordAtDEPlus2C_Bank19
     ld de, wBattleDEF
@@ -2477,7 +2480,7 @@ Jump_019_4D96::
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
     or a, a
-    jr z, Jump_019_4DD7
+    jr z, .call_store_byte_at_de_plus_c_bank19
     ld a, [wBattleArg0]
     push hl
     ld l, a
@@ -2490,14 +2493,14 @@ Jump_019_4D96::
     ld a, [hl]
     and a, $30
     pop hl
-    jr nz, Jump_019_4DD7
+    jr nz, .call_store_byte_at_de_plus_c_bank19
     inc hl
     inc hl
     inc hl
     inc hl
-    jr Jump_019_4DEF
+    jr .skip4
 
-Jump_019_4DD7::
+.call_store_byte_at_de_plus_c_bank19:
     ld de, wSlotPersonalityHi
     call StoreByteAtDEPlusC_Bank19
     ld de, wSlotPersonalityLo
@@ -2507,7 +2510,7 @@ Jump_019_4DD7::
     ld de, wSlotPersonalityMid
     call StoreByteAtDEPlusC_Bank19
 
-Jump_019_4DEF::
+.skip4:
     ld a, c
     add a, a
     add a, c
@@ -2516,10 +2519,10 @@ Jump_019_4DEF::
     ld de, wSlotResistances
     add a, e
     ld e, a
-    jr nc, Jump_019_4DFC
+    jr nc, .call_pack_resistance_fields_to_de
     inc d
 
-Jump_019_4DFC::
+.call_pack_resistance_fields_to_de:
     push bc
     call PackResistanceFieldsToDE
     pop bc
@@ -2531,13 +2534,13 @@ Jump_019_4DFC::
 BattlerRecordAddress_Bank19::
 Func_019_4E05:: ; address name
     cp a, $03
-    jr c, Jump_019_4E0E
+    jr c, .call_multiply8
     ret z
     cp a, $07
     ret z
     dec a
 
-Jump_019_4E0E::
+.call_multiply8:
     ld c, $4E
     call Multiply8
     ld a, l
@@ -2556,56 +2559,56 @@ GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
 Func_019_4E1C:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_019_4E3E
+    jr nz, .skip2
     ld hl, wSlotMarks + $4
     ld bc, $0404
 
-Jump_019_4E28::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr z, Jump_019_4E32
+    jr z, .skip
     ld [hl], $01
-    jr Jump_019_4E34
+    jr .next
 
-Jump_019_4E32::
+.skip:
     ld [hl], $FF
 
-Jump_019_4E34::
+.next:
     inc hl
     inc c
     dec b
-    jr nz, Jump_019_4E28
+    jr nz, .loop
     ld bc, $0400
-    jr Jump_019_4E41
+    jr .call_carry_unless_battle_slot_out_slot_empty
 
-Jump_019_4E3E::
+.skip2:
     ld bc, $0800
 
-Jump_019_4E41::
+.call_carry_unless_battle_slot_out_slot_empty:
     ld hl, wSlotMarks
 
-Jump_019_4E44::
+.loop2:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr z, Jump_019_4E58
+    jr z, .skip4
     ld a, c
     call CheckSlotStatusBlock
-    jr c, Jump_019_4E54
+    jr c, .skip3
     ld [hl], $00
-    jr Jump_019_4E5A
+    jr .next2
 
-Jump_019_4E54::
+.skip3:
     ld [hl], $01
-    jr Jump_019_4E5A
+    jr .next2
 
-Jump_019_4E58::
+.skip4:
     ld [hl], $FF
 
-Jump_019_4E5A::
+.next2:
     inc c
     inc hl
     dec b
-    jr nz, Jump_019_4E44
+    jr nz, .loop2
     ret
 
 ; E-0148 (C1: LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0).

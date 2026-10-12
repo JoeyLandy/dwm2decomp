@@ -7,45 +7,46 @@ SECTION "Bank A3", ROMX[$4000], BANK[$A3]
 GetBattleATK_BankA3:: ; heuristic: follows a terminator; C0
 Func_0A3_4001:: ; address name
     ld hl, wBattleATK
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleDEF
 GetBattleDEF_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4006; C0
 Func_0A3_4006:: ; address name
     ld hl, wBattleDEF
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:400B; C0
 Func_0A3_400B:: ; address name
     ld hl, wBattleMaxHP
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4010; C0
 Func_0A3_4010:: ; address name
     ld hl, wBattleMaxMP
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleHP
 GetBattleHP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:4015; C0
 Func_0A3_4015:: ; address name
     ld hl, wBattleHP
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
 
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleMP
 GetBattleMP_BankA3:: ; heuristic: same first 16 bytes (in-bank addresses taken relative) as the routine at 05:401A; C0
 Func_0A3_401A:: ; address name
     ld hl, wBattleMP
-    jr Jump_0A3_402E
+    jr GetBattleMP_BankA3_Skip
     db $21, $1F, $D9, $18, $0A, $21, $53, $DA, $85, $6F, $30, $01, $24, $7E, $C9
 
-Jump_0A3_402E::
+GetBattleMP_BankA3_Skip::
+Jump_0A3_402E:: ; address name
     add a, a
     add_a_to_hl
     deref_hl
@@ -66,16 +67,16 @@ ActorOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
 Func_0A3_403F:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0A3_4054
+    jr nz, .check_battle_actor
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0A3_4054
+    jr z, .check_battle_actor
     ld a, [wBattleActor]
     cp a, $04
     ccf
     ret
 
-Jump_0A3_4054::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
     ret
@@ -87,16 +88,16 @@ TargetOnLocalSide_BankA3:: ; heuristic: follows a terminator; C0
 Func_0A3_405A:: ; address name
     ld a, [wLinkMode]
     cp a, $01
-    jr nz, Jump_0A3_406F
+    jr nz, .check_battle_target
     ld a, [wLinkRole]
     bit 1, a
-    jr z, Jump_0A3_406F
+    jr z, .check_battle_target
     ld a, [wBattleTarget]
     cp a, $04
     ccf
     ret
 
-Jump_0A3_406F::
+.check_battle_target:
     ld a, [wBattleTarget]
     cp a, $04
     ret
@@ -180,13 +181,13 @@ Func_0A3_40B8:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_40D4
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_0A3_40D4
+    jr nc, .skip
     ld l, $12
 
-Jump_0A3_40D4::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -196,13 +197,13 @@ Jump_0A3_40D4::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_40EF
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_0A3_40EF
+    jr nc, .skip2
     ld l, $06
 
-Jump_0A3_40EF::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -212,13 +213,13 @@ Jump_0A3_40EF::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_410A
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_0A3_410A
+    jr nc, .skip3
     ld l, $02
 
-Jump_0A3_410A::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -239,17 +240,17 @@ Func_0A3_410F:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0A3_4129
+    jr nz, .set_carry
     ld a, [hl]
     and a, $0C
-    jr nz, Jump_0A3_4129
+    jr nz, .set_carry
     xor a, a
-    jr Jump_0A3_412A
+    jr .skip
 
-Jump_0A3_4129::
+.set_carry:
     scf
 
-Jump_0A3_412A::
+.skip:
     ld a, c
     pop bc
     pop hl
@@ -265,11 +266,11 @@ Func_0A3_412E:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0A3_413D
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_0A3_413D::
+.done:
     pop hl
     ret
 
@@ -306,19 +307,19 @@ Func_0A3_414F:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_0A3_417D
+    jr z, .set_temp02
     sla a
     ld hl, ActorFormationSlotToTemp0_Data
     add_a_to_hl
     ld a, [hl+]
     cp a, c
-    jr nz, Jump_0A3_417C
+    jr nz, .set_temp0
     ld a, [hl]
 
-Jump_0A3_417C::
+.set_temp0:
     add a, b
 
-Jump_0A3_417D::
+.set_temp02:
     ldh [hTemp0], a
     pop bc
     ret
@@ -339,12 +340,12 @@ Func_0A3_4187:: ; address name
     ld hl, wBattleActionChoice
     ld de, wSavedActionChoices
 
-Jump_0A3_418F::
+.loop:
     ld a, [hl+]
     ld [de], a
     inc de
     dec b
-    jr nz, Jump_0A3_418F
+    jr nz, .loop
     ld a, $FF
     ld [wFormationSlot0], a
     ld [wFormationSlot1], a
@@ -354,12 +355,12 @@ Jump_0A3_418F::
     ld de, wBattleActionChoice
     call FindFormationForSide
     or a, a
-    jr z, Jump_0A3_41B5
+    jr z, .check_link_mode
     ld de, wBattleActionChoice
     call SaveActionChoicesAndPickFormations_DivideBByA
     ld [wFormationSlot0], a
 
-Jump_0A3_41B5::
+.check_link_mode:
     ld a, [wLinkMode]
     or a, a
     ret z
@@ -386,84 +387,84 @@ Func_0A3_41CF:: ; address name
     ld b, $00
     ld hl, FormationTable
 
-Jump_0A3_41DB::
+.skip:
     push hl
     ld a, [hl]
     or a, a
-    jr nz, Jump_0A3_41E4
+    jr nz, .skip2
 
-Jump_0A3_41E0::
+.loop:
     pop hl
     ld a, $00
     ret
 
-Jump_0A3_41E4::
+.skip2:
     push de
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_0A3_41FD
+    jr z, .next
     ld c, a
     ld a, [de]
     cp a, c
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
     ldh a, [hTemp0]
     call CheckSlotStatusBlock
-    jr c, Jump_0A3_4257
+    jr c, .restore
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_BankA3_4278
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
 
-Jump_0A3_41FD::
+.next:
     inc de
     inc de
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_0A3_421A
+    jr z, .next2
     ld c, a
     ld a, [de]
     cp a, c
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
     ldh a, [hTemp0]
     inc a
     call CheckSlotStatusBlock
-    jr c, Jump_0A3_4257
+    jr c, .restore
     ldh a, [hTemp0]
     inc a
     call SlotHasStatus3Or4Bits_BankA3_4278
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
 
-Jump_0A3_421A::
+.next2:
     inc de
     inc de
     inc hl
     ld a, [hl]
     cp a, $FF
-    jr z, Jump_0A3_4239
+    jr z, .check_link_mode
     ld c, a
     ld a, [de]
     cp a, c
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
     ldh a, [hTemp0]
     inc a
     inc a
     call CheckSlotStatusBlock
-    jr c, Jump_0A3_4257
+    jr c, .restore
     ldh a, [hTemp0]
     inc a
     inc a
     call SlotHasStatus3Or4Bits_BankA3_4278
-    jr nz, Jump_0A3_4257
+    jr nz, .restore
 
-Jump_0A3_4239::
+.check_link_mode:
     pop de
     ld a, [wLinkMode]
     cp a, $02
-    jr z, Jump_0A3_4264
+    jr z, .next3
     inc hl
     ld a, [hl]
     cp a, $01
-    jr nz, Jump_0A3_41E0
+    jr nz, .loop
     inc hl
     push bc
     push hl
@@ -471,20 +472,20 @@ Jump_0A3_4239::
     pop hl
     pop bc
     or a, a
-    jr z, Jump_0A3_41E0
+    jr z, .loop
     ld a, [hl]
     ldh [hTemp0], a
-    jr Jump_0A3_4274
+    jr .done
 
-Jump_0A3_4257::
+.restore:
     pop de
     pop hl
     ld a, $05
     add_a_to_hl
     inc b
-    jp Jump_0A3_41DB
+    jp .skip
 
-Jump_0A3_4264::
+.next3:
     inc hl
     inc hl
     push bc
@@ -493,11 +494,11 @@ Jump_0A3_4264::
     pop hl
     pop bc
     or a, a
-    jp z, Jump_0A3_41E0
+    jp z, .loop
     ld a, [hl]
     ldh [hTemp0], a
 
-Jump_0A3_4274::
+.done:
     pop hl
     ld a, $01
     ret
@@ -512,11 +513,11 @@ Func_0A3_4278:: ; address name
     call AddAx9ToHL
     ld a, [hl+]
     and a, $C0
-    jr nz, Jump_0A3_4287
+    jr nz, .done
     ld a, [hl]
     and a, $0C
 
-Jump_0A3_4287::
+.done:
     pop hl
     ret
 
@@ -650,9 +651,9 @@ Func_0A3_44C4:: ; address name
     ld a, $03
     call DivideBByA
     or a, a
-    jr z, Jump_0A3_4505
+    jr z, .call_personality_index_of_slot_bank_a3_497_e
     dec a
-    jr z, Jump_0A3_453A
+    jr z, .call_personality_index_of_slot_bank_a3_497_e2
     ld a, $01
     call PersonalityIndexOfSlot_BankA3_497E
     push af
@@ -682,13 +683,13 @@ Func_0A3_44C4:: ; address name
     ld a, [wSlotTrait + $2]
     add a, c
     ld c, a
-    jr nc, Jump_0A3_4503
+    jr nc, .skip
     inc b
 
-Jump_0A3_4503::
-    jr Jump_0A3_456D
+.skip:
+    jr .read_temp0
 
-Jump_0A3_4505::
+.call_personality_index_of_slot_bank_a3_497_e:
     ld a, $00
     call PersonalityIndexOfSlot_BankA3_497E
     push af
@@ -718,13 +719,13 @@ Jump_0A3_4505::
     ld a, [wSlotTrait + $1]
     add a, c
     ld c, a
-    jr nc, Jump_0A3_4538
+    jr nc, .skip2
     inc b
 
-Jump_0A3_4538::
-    jr Jump_0A3_456D
+.skip2:
+    jr .read_temp0
 
-Jump_0A3_453A::
+.call_personality_index_of_slot_bank_a3_497_e2:
     ld a, $00
     call PersonalityIndexOfSlot_BankA3_497E
     push af
@@ -754,10 +755,10 @@ Jump_0A3_453A::
     ld a, [wSlotTrait + $2]
     add a, c
     ld c, a
-    jr nc, Jump_0A3_456D
+    jr nc, .read_temp0
     inc b
 
-Jump_0A3_456D::
+.read_temp0:
     ldh a, [hTemp0]
     call Multiply8By16
     ld c, h
@@ -773,21 +774,21 @@ Jump_0A3_456D::
     call DivideHLByA
     ld a, h
     or a, a
-    jr z, Jump_0A3_458F
+    jr z, .loop
     ld l, $FF
 
-Jump_0A3_458F::
+.loop:
     call AdvanceRandom
     ld a, [wRandomLo]
     and a, $7F
     cp a, $64
-    jr nc, Jump_0A3_458F
+    jr nc, .loop
     cp a, l
-    jr c, Jump_0A3_45A0
+    jr c, .return_01
     xor a, a
     ret
 
-Jump_0A3_45A0::
+.return_01:
     ld a, $01
     ret
 
@@ -860,12 +861,12 @@ Func_0A3_4917:: ; address name
     pop de
     pop bc
     or a, a
-    jr z, Jump_0A3_4928
+    jr z, .read_temp0
     dec a
-    jr z, Jump_0A3_4938
-    jr Jump_0A3_494E
+    jr z, .read_temp02
+    jr .read_temp03
 
-Jump_0A3_4928::
+.read_temp0:
     ldh a, [hTemp0]
     ld [de], a
     inc de
@@ -880,7 +881,7 @@ Jump_0A3_4928::
     ld a, $00
     ret
 
-Jump_0A3_4938::
+.read_temp02:
     ldh a, [hTemp0]
     ld [de], a
     inc de
@@ -901,7 +902,7 @@ Jump_0A3_4938::
     ld a, $01
     ret
 
-Jump_0A3_494E::
+.read_temp03:
     inc de
     inc de
     ldh a, [hTemp0]
@@ -931,14 +932,14 @@ Func_0A3_4960:: ; address name
     add_a_to_hl
     ld a, [hl]
     cp a, $D0
-    jr c, Jump_0A3_497A
+    jr c, .clear_temp0
     cp a, $E4
-    jr nc, Jump_0A3_497A
+    jr nc, .clear_temp0
     ld a, $01
     ldh [hTemp0], a
     ret
 
-Jump_0A3_497A::
+.clear_temp0:
     xor a, a
     ldh [hTemp0], a
     ret
@@ -957,13 +958,13 @@ Func_0A3_497E:: ; address name
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_499A
+    jr nc, .skip
     ld l, $09
     cp a, $40
-    jr nc, Jump_0A3_499A
+    jr nc, .skip
     ld l, $12
 
-Jump_0A3_499A::
+.skip:
     ld a, l
     add a, b
     ld b, a
@@ -973,13 +974,13 @@ Jump_0A3_499A::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_49B5
+    jr nc, .skip2
     ld l, $03
     cp a, $40
-    jr nc, Jump_0A3_49B5
+    jr nc, .skip2
     ld l, $06
 
-Jump_0A3_49B5::
+.skip2:
     ld a, l
     add a, b
     ld b, a
@@ -989,13 +990,13 @@ Jump_0A3_49B5::
     ld a, [hl]
     ld l, $00
     cp a, $C0
-    jr nc, Jump_0A3_49D0
+    jr nc, .skip3
     ld l, $01
     cp a, $40
-    jr nc, Jump_0A3_49D0
+    jr nc, .skip3
     ld l, $02
 
-Jump_0A3_49D0::
+.skip3:
     ld a, l
     add a, b
     pop bc
@@ -1011,21 +1012,21 @@ RollRandomLoBelowChance_WriteTemp0::
 Func_0A3_49D5:: ; address name
     ld a, [wLinkMode]
     or a, a
-    jr z, Jump_0A3_49DF
+    jr z, .check_battle_actor
     cp a, $02
-    jr nz, Jump_0A3_49EB
+    jr nz, .read_battle_actor
 
-Jump_0A3_49DF::
+.check_battle_actor:
     ld a, [wBattleActor]
     cp a, $04
-    jr c, Jump_0A3_49EB
+    jr c, .read_battle_actor
     ld de, MonsterResolveChanceTable_Foes
-    jr Jump_0A3_49EE
+    jr .read_battle_actor2
 
-Jump_0A3_49EB::
+.read_battle_actor:
     ld de, MonsterResolveChanceTable
 
-Jump_0A3_49EE::
+.read_battle_actor2:
     ld a, [wBattleActor]
     add a, a
     ld hl, wBattleMonsterId
@@ -1060,13 +1061,13 @@ Func_0A3_4A02:: ; address name
     cp a, $CF
     ret z
     cp a, $D0
-    jr nc, Jump_0A3_4A2B
+    jr nc, .read_battle_target
     ld [hl], $00
     inc hl
     ld [hl], $FF
     ret
 
-Jump_0A3_4A2B::
+.read_battle_target:
     ld a, [wBattleTarget]
     ld hl, wSlotMarks
     add_a_to_hl
@@ -1083,15 +1084,15 @@ Func_0A3_4A39:: ; address name
     ld b, $08
     ld d, $00
 
-Jump_0A3_4A41::
+.loop:
     bit 0, d
-    jr nz, Jump_0A3_4A4B
+    jr nz, .next
     ld a, [hl]
     cp a, c
-    jr nz, Jump_0A3_4A59
+    jr nz, .next2
     ld d, $01
 
-Jump_0A3_4A4B::
+.next:
     inc hl
     ld a, [hl]
     ld [hl], $FF
@@ -1099,15 +1100,15 @@ Jump_0A3_4A4B::
     ld [hl], a
     inc hl
     dec b
-    jr nz, Jump_0A3_4A41
+    jr nz, .loop
     ld [hl], $FF
     pop de
     ret
 
-Jump_0A3_4A59::
+.next2:
     inc hl
     dec b
-    jr nz, Jump_0A3_4A41
+    jr nz, .loop
     pop de
     ret
 
@@ -1130,29 +1131,29 @@ Func_0A3_4A5F:: ; address name
     ld b, $03
     ld e, $00
 
-Jump_0A3_4A7A::
+.loop:
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, Jump_0A3_4A8E
+    jr c, .next
     cp a, d
-    jr z, Jump_0A3_4A7A
+    jr z, .loop
     ld a, e
     ld hl, wSlotChoices
     add_a_to_hl
     ld [hl], c
     inc e
 
-Jump_0A3_4A8E::
+.next:
     inc c
     dec b
-    jr nz, Jump_0A3_4A7A
+    jr nz, .loop
     ld a, e
     or a, a
-    jr nz, Jump_0A3_4A99
+    jr nz, .skip
     ld c, $FF
     ret
 
-Jump_0A3_4A99::
+.skip:
     ld hl, $0000
     ld b, $00
     dec e
@@ -1181,20 +1182,20 @@ Func_0A3_4AAF:: ; address name
     ld c, a
     ld a, [wLinkMode]
     or a, a
-    jr nz, Jump_0A3_4AF3
+    jr nz, .skip2
     ld a, [wBattleKind]
     cp a, $02
-    jr z, Jump_0A3_4AE2
+    jr z, .skip
     cp a, $03
-    jr z, Jump_0A3_4AE2
+    jr z, .skip
     cp a, $05
-    jr z, Jump_0A3_4AE2
+    jr z, .skip
     ld a, [wBattleActor]
     bit 2, a
     ret z
-    jr Jump_0A3_4AF3
+    jr .skip2
 
-Jump_0A3_4AE2::
+.skip:
     ld a, c
     cp a, $B3
     jr z, ActionEffect_Chance_AdvanceRandom
@@ -1205,7 +1206,7 @@ Jump_0A3_4AE2::
     cp a, $BD
     jr z, ActionEffect_Chance_AdvanceRandom
 
-Jump_0A3_4AF3::
+.skip2:
     ld a, c
     cp a, $B0
     jr z, ActionEffect_Chance_AdvanceRandom
@@ -1232,11 +1233,11 @@ Func_0A3_4B0B:: ; address name
     ld hl, wPartyList
     ld de, wBattleBuffer72
 
-Jump_0A3_4B1A::
+.loop:
     inc de
     ld a, [de]
     cp a, $FF
-    jr z, Jump_0A3_4B4C
+    jr z, .call_clamp_party_hp_and_mp_to_max
     dec de
     push hl
     ld a, [hl]
@@ -1270,9 +1271,9 @@ Jump_0A3_4B1A::
     pop hl
     inc hl
     dec b
-    jr nz, Jump_0A3_4B1A
+    jr nz, .loop
 
-Jump_0A3_4B4C::
+.call_clamp_party_hp_and_mp_to_max:
     farcall ClampPartyHPAndMPToMax
     xor a, a
     ld [rRAMG], a
