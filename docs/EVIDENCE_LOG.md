@@ -2430,6 +2430,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0265 — Skill prerequisite lists named by skill
+
+- Kind: TOOL (C1 names from E-0159 and E-0026).
+- `target_names` gains `"by": "skill"`, which uses skill names from StringTable_SkillNames (08:$4558). SkillPrerequisitePointers uses it, so each $FF-terminated list is labelled SkillPrerequisites_<skill>.
+- The lists overlap: skill 1 (Blaze) points at [2, 3], and skill 2 at its tail [3]. The empty list is shared by many skills and takes the name of the first named skill that uses it.
+- Binary verification: build/run345 PASS, 0 differing bytes; tests OK.
+
 ### E-0264 — Blocks copied into RAM, named after their destination
 
 - Kind: TOOL (derived from call sites; C1).

@@ -886,60 +886,60 @@ Data_01A_5005:: ; heuristic: pointer load in the same bank (bank assumed); C0
 SkillPrerequisitePointers::
 Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 0
-    dw Data_01A_5D41 ; id 1
-    dw Data_01A_5D42 ; id 2
+    dw SkillPrerequisites_Blaze ; id 1
+    dw SkillPrerequisites_Blazemore ; id 2
     dw SkillPrerequisiteLists ; id 3
-    dw Data_01A_5D44 ; id 4
-    dw Data_01A_5D45 ; id 5
+    dw SkillPrerequisites_Firebal ; id 4
+    dw SkillPrerequisites_Firebane ; id 5
     dw SkillPrerequisiteLists ; id 6
-    dw Data_01A_5D47 ; id 7
-    dw Data_01A_5D48 ; id 8
+    dw SkillPrerequisites_Bang ; id 7
+    dw SkillPrerequisites_Boom ; id 8
     dw SkillPrerequisiteLists ; id 9
-    dw Data_01A_5D4A ; id 10
-    dw Data_01A_5D4B ; id 11
+    dw SkillPrerequisites_Infernos ; id 10
+    dw SkillPrerequisites_Infermore ; id 11
     dw SkillPrerequisiteLists ; id 12
-    dw Data_01A_5D4D ; id 13
-    dw Data_01A_5D4E ; id 14
+    dw SkillPrerequisites_Bolt ; id 13
+    dw SkillPrerequisites_Zap ; id 14
     dw SkillPrerequisiteLists ; id 15
-    dw Data_01A_5D50 ; id 16
-    dw Data_01A_5D51 ; id 17
+    dw SkillPrerequisites_IceBolt ; id 16
+    dw SkillPrerequisites_SnowStorm ; id 17
     dw SkillPrerequisiteLists ; id 18
-    dw Data_01A_5D53 ; id 19
+    dw SkillPrerequisites_Beat ; id 19
     dw SkillPrerequisiteLists ; id 20
     dw SkillPrerequisiteLists ; id 21
-    dw Data_01A_5D55 ; id 22
-    dw Data_01A_5D56 ; id 23
+    dw SkillPrerequisites_Heal ; id 22
+    dw SkillPrerequisites_HealMore ; id 23
     dw SkillPrerequisiteLists ; id 24
-    dw Data_01A_5D58 ; id 25
+    dw SkillPrerequisites_HealUs ; id 25
     dw SkillPrerequisiteLists ; id 26
-    dw Data_01A_5D5A ; id 27
-    dw Data_01A_5D5B ; id 28
+    dw SkillPrerequisites_MPass ; id 27
+    dw SkillPrerequisites_MPassmore ; id 28
     dw SkillPrerequisiteLists ; id 29
-    dw Data_01A_5D5D ; id 30
+    dw SkillPrerequisites_Vivify ; id 30
     dw SkillPrerequisiteLists ; id 31
     dw SkillPrerequisiteLists ; id 32
     dw SkillPrerequisiteLists ; id 33
     dw SkillPrerequisiteLists ; id 34
     dw SkillPrerequisiteLists ; id 35
     dw SkillPrerequisiteLists ; id 36
-    dw Data_01A_5D5F ; id 37
+    dw SkillPrerequisites_Upper ; id 37
     dw SkillPrerequisiteLists ; id 38
-    dw Data_01A_5D61 ; id 39
+    dw SkillPrerequisites_Sap ; id 39
     dw SkillPrerequisiteLists ; id 40
-    dw Data_01A_5D63 ; id 41
+    dw SkillPrerequisites_Speed ; id 41
     dw SkillPrerequisiteLists ; id 42
-    dw Data_01A_5D65 ; id 43
+    dw SkillPrerequisites_Slow ; id 43
     dw SkillPrerequisiteLists ; id 44
     dw SkillPrerequisiteLists ; id 45
     dw SkillPrerequisiteLists ; id 46
-    dw Data_01A_5D67 ; id 47
+    dw SkillPrerequisites_Sleep ; id 47
     dw SkillPrerequisiteLists ; id 48
     dw SkillPrerequisiteLists ; id 49
     dw SkillPrerequisiteLists ; id 50
     dw SkillPrerequisiteLists ; id 51
     dw SkillPrerequisiteLists ; id 52
     dw SkillPrerequisiteLists ; id 53
-    dw Data_01A_5D69 ; id 54
+    dw SkillPrerequisites_MagicBack ; id 54
     dw SkillPrerequisiteLists ; id 55
     dw SkillPrerequisiteLists ; id 56
     dw SkillPrerequisiteLists ; id 57
@@ -949,21 +949,21 @@ Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 61
     dw SkillPrerequisiteLists ; id 62
     dw SkillPrerequisiteLists ; id 63
-    dw Data_01A_5D6B ; id 64
-    dw Data_01A_5D6C ; id 65
-    dw Data_01A_5D6D ; id 66
+    dw SkillPrerequisites_FireAir ; id 64
+    dw SkillPrerequisites_BlazeAir ; id 65
+    dw SkillPrerequisites_Scorching ; id 66
     dw SkillPrerequisiteLists ; id 67
-    dw Data_01A_5D6F ; id 68
-    dw Data_01A_5D70 ; id 69
-    dw Data_01A_5D71 ; id 70
+    dw SkillPrerequisites_FrigidAir ; id 68
+    dw SkillPrerequisites_IceAir ; id 69
+    dw SkillPrerequisites_IceStorm ; id 70
     dw SkillPrerequisiteLists ; id 71
-    dw Data_01A_5D73 ; id 72
+    dw SkillPrerequisites_WindBeast ; id 72
     dw SkillPrerequisiteLists ; id 73
     dw SkillPrerequisiteLists ; id 74
     dw SkillPrerequisiteLists ; id 75
-    dw Data_01A_5D75 ; id 76
+    dw SkillPrerequisites_Watershot ; id 76
     dw SkillPrerequisiteLists ; id 77
-    dw Data_01A_5D77 ; id 78
+    dw SkillPrerequisites_CallHelp ; id 78
     dw SkillPrerequisiteLists ; id 79
     dw SkillPrerequisiteLists ; id 80
     dw SkillPrerequisiteLists ; id 81
@@ -984,7 +984,7 @@ Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 96
     dw SkillPrerequisiteLists ; id 97
     dw SkillPrerequisiteLists ; id 98
-    dw Data_01A_5D79 ; id 99
+    dw SkillPrerequisites_BiAttack ; id 99
     dw SkillPrerequisiteLists ; id 100
     dw SkillPrerequisiteLists ; id 101
     dw SkillPrerequisiteLists ; id 102
@@ -1000,10 +1000,10 @@ Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 112
     dw SkillPrerequisiteLists ; id 113
     dw SkillPrerequisiteLists ; id 114
-    dw Data_01A_5D7B ; id 115
+    dw SkillPrerequisites_PoisonGas ; id 115
     dw SkillPrerequisiteLists ; id 116
     dw SkillPrerequisiteLists ; id 117
-    dw Data_01A_5D7D ; id 118
+    dw SkillPrerequisites_OddDance ; id 118
     dw SkillPrerequisiteLists ; id 119
     dw SkillPrerequisiteLists ; id 120
     dw SkillPrerequisiteLists ; id 121
@@ -1018,15 +1018,15 @@ Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 130
     dw SkillPrerequisiteLists ; id 131
     dw SkillPrerequisiteLists ; id 132
-    dw Data_01A_5D7F ; id 133
-    dw Data_01A_5D80 ; id 134
-    dw Data_01A_5D81 ; id 135
+    dw SkillPrerequisites_TatsuCall ; id 133
+    dw SkillPrerequisites_DiagoCall ; id 134
+    dw SkillPrerequisites_SamsiCall ; id 135
     dw SkillPrerequisiteLists ; id 136
     dw SkillPrerequisiteLists ; id 137
     dw SkillPrerequisiteLists ; id 138
-    dw Data_01A_5D83 ; id 139
+    dw SkillPrerequisites_LushLicks ; id 139
     dw SkillPrerequisiteLists ; id 140
-    dw Data_01A_5D85 ; id 141
+    dw SkillPrerequisites_LegSweep ; id 141
     dw SkillPrerequisiteLists ; id 142
     dw SkillPrerequisiteLists ; id 143
     dw SkillPrerequisiteLists ; id 144
@@ -1036,9 +1036,9 @@ Data_01A_5BEC:: ; address name
     dw SkillPrerequisiteLists ; id 148
     dw SkillPrerequisiteLists ; id 149
     dw SkillPrerequisiteLists ; id 150
-    dw Data_01A_5D87 ; id 151
+    dw SkillPrerequisites_Cover ; id 151
     dw SkillPrerequisiteLists ; id 152
-    dw Data_01A_5D89 ; id 153
+    dw SkillPrerequisites_TailWind ; id 153
     dw SkillPrerequisiteLists ; id 154
     dw SkillPrerequisiteLists ; id 155
     dw SkillPrerequisiteLists ; id 156
@@ -1059,124 +1059,169 @@ Data_01A_5BEC:: ; address name
 ; E-0159 (C1: the lists SkillPrerequisitePointers points into; a list runs from its label to the next $FF, and several lists end in the same bytes).
 ; record: skill number, or $FF ending a list
 SkillPrerequisiteLists::
+SkillPrerequisites_Blazemost:: ; heuristic: skill prerequisite list; C0
 Data_01A_5D40:: ; address name
     db $FF ; entry 0
-Data_01A_5D41:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Blaze:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D41:: ; address name
     db $02 ; entry 1
-Data_01A_5D42:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Blazemore:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D42:: ; address name
     db $03 ; entry 2
     db $FF ; entry 3
-Data_01A_5D44:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Firebal:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D44:: ; address name
     db $05 ; entry 4
-Data_01A_5D45:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Firebane:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D45:: ; address name
     db $06 ; entry 5
     db $FF ; entry 6
-Data_01A_5D47:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Bang:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D47:: ; address name
     db $08 ; entry 7
-Data_01A_5D48:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Boom:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D48:: ; address name
     db $09 ; entry 8
     db $FF ; entry 9
-Data_01A_5D4A:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Infernos:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D4A:: ; address name
     db $0B ; entry 10
-Data_01A_5D4B:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Infermore:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D4B:: ; address name
     db $0C ; entry 11
     db $FF ; entry 12
-Data_01A_5D4D:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Bolt:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D4D:: ; address name
     db $0E ; entry 13
-Data_01A_5D4E:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Zap:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D4E:: ; address name
     db $0F ; entry 14
     db $FF ; entry 15
-Data_01A_5D50:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_IceBolt:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D50:: ; address name
     db $11 ; entry 16
-Data_01A_5D51:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_SnowStorm:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D51:: ; address name
     db $12 ; entry 17
     db $FF ; entry 18
-Data_01A_5D53:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Beat:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D53:: ; address name
     db $14 ; entry 19
     db $FF ; entry 20
-Data_01A_5D55:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Heal:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D55:: ; address name
     db $17 ; entry 21
-Data_01A_5D56:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_HealMore:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D56:: ; address name
     db $18 ; entry 22
     db $FF ; entry 23
-Data_01A_5D58:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_HealUs:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D58:: ; address name
     db $1A ; entry 24
     db $FF ; entry 25
-Data_01A_5D5A:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_MPass:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D5A:: ; address name
     db $1C ; entry 26
-Data_01A_5D5B:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_MPassmore:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D5B:: ; address name
     db $1D ; entry 27
     db $FF ; entry 28
-Data_01A_5D5D:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Vivify:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D5D:: ; address name
     db $1F ; entry 29
     db $FF ; entry 30
-Data_01A_5D5F:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Upper:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D5F:: ; address name
     db $26 ; entry 31
     db $FF ; entry 32
-Data_01A_5D61:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Sap:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D61:: ; address name
     db $28 ; entry 33
     db $FF ; entry 34
-Data_01A_5D63:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Speed:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D63:: ; address name
     db $2A ; entry 35
     db $FF ; entry 36
-Data_01A_5D65:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Slow:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D65:: ; address name
     db $2C ; entry 37
     db $FF ; entry 38
-Data_01A_5D67:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Sleep:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D67:: ; address name
     db $30 ; entry 39
     db $FF ; entry 40
-Data_01A_5D69:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_MagicBack:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D69:: ; address name
     db $37 ; entry 41
     db $FF ; entry 42
-Data_01A_5D6B:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_FireAir:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D6B:: ; address name
     db $41 ; entry 43
-Data_01A_5D6C:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_BlazeAir:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D6C:: ; address name
     db $42 ; entry 44
-Data_01A_5D6D:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Scorching:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D6D:: ; address name
     db $43 ; entry 45
     db $FF ; entry 46
-Data_01A_5D6F:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_FrigidAir:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D6F:: ; address name
     db $45 ; entry 47
-Data_01A_5D70:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_IceAir:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D70:: ; address name
     db $46 ; entry 48
-Data_01A_5D71:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_IceStorm:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D71:: ; address name
     db $47 ; entry 49
     db $FF ; entry 50
-Data_01A_5D73:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_WindBeast:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D73:: ; address name
     db $49 ; entry 51
     db $FF ; entry 52
-Data_01A_5D75:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Watershot:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D75:: ; address name
     db $4D ; entry 53
     db $FF ; entry 54
-Data_01A_5D77:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_CallHelp:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D77:: ; address name
     db $4F ; entry 55
     db $FF ; entry 56
-Data_01A_5D79:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_BiAttack:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D79:: ; address name
     db $64 ; entry 57
     db $FF ; entry 58
-Data_01A_5D7B:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_PoisonGas:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D7B:: ; address name
     db $74 ; entry 59
     db $FF ; entry 60
-Data_01A_5D7D:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_OddDance:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D7D:: ; address name
     db $77 ; entry 61
     db $FF ; entry 62
-Data_01A_5D7F:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_TatsuCall:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D7F:: ; address name
     db $86 ; entry 63
-Data_01A_5D80:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_DiagoCall:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D80:: ; address name
     db $87 ; entry 64
-Data_01A_5D81:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_SamsiCall:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D81:: ; address name
     db $88 ; entry 65
     db $FF ; entry 66
-Data_01A_5D83:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_LushLicks:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D83:: ; address name
     db $8C ; entry 67
     db $FF ; entry 68
-Data_01A_5D85:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_LegSweep:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D85:: ; address name
     db $8E ; entry 69
     db $FF ; entry 70
-Data_01A_5D87:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_Cover:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D87:: ; address name
     db $98 ; entry 71
     db $FF ; entry 72
-Data_01A_5D89:: ; heuristic: skill prerequisite list; C0
+SkillPrerequisites_TailWind:: ; heuristic: skill prerequisite list; C0
+Data_01A_5D89:: ; address name
     db $9A ; entry 73
     db $FF ; entry 74
 

@@ -2127,7 +2127,11 @@
           "reason": "skill prerequisite list"
         }
       ],
-      "note": "E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists)."
+      "note": "E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists).",
+      "target_names": {
+        "by": "skill",
+        "prefix": "SkillPrerequisites_"
+      }
     },
     {
       "bank": "1A",

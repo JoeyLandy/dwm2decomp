@@ -3234,7 +3234,8 @@ class Rom:
                 continue
             for i in (list(range(1, t["count"])) + [0]) if tn["by"] != "index" else range(t["count"]):
                 nm = self.item_name(i) if tn["by"] == "item" else (
-                    self.monster_name(i) if tn["by"] == "monster" and 0 < i < 0x180 else "")
+                    self.monster_name(i) if tn["by"] == "monster" and 0 < i < 0x180 else (
+                        self.skill_name(i) if tn["by"] == "skill" else ""))
                 nm = re.sub(r"[^A-Za-z0-9]", "", nm)
                 give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"{tn['prefix']}{nm or f'{i:02X}'}")
         it = next((t for t in self.schemas if t["label"] == "ItemDescriptionTable"), None)
@@ -3696,6 +3697,15 @@ class Rom:
                 out.append(f"    dw ${ev['target']:04X} ; byte offset of the called section from the track start")
             else:
                 out.append(f"    db ${ev['b0']:02X}, ${ev['b1']:02X} ; {ev['text']}")
+
+    def skill_name(self, i: int) -> str:
+        """Name of skill i: StringTable_SkillNames (bank 8, $4558), E-0026."""
+        q = 8 * BANK + self._u16(8, 0x4558 + 2 * i) - BANK
+        chars = []
+        while self.data[q] != 0xF0 and len(chars) < 16:
+            chars.append(gb_text.BYTE_TO_TEXT.get(self.data[q], "?"))
+            q += 1
+        return "".join(chars)
 
     def item_name(self, i: int) -> str:
         """Name of item i: StringTable_ItemNames (bank 8, $4716), E-0026."""
