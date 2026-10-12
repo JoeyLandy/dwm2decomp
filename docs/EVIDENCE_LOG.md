@@ -2431,6 +2431,39 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0298 — MonsterTable bytes 6-9; the battler record fields (BATTLER_*)
+
+- Kind: STATIC (C1) and TOOL.
+- **The battler builder.** LoadMonsterAndSpeciesForListEntryC loads a MonsterTable entry (LoadMonsterRecord into wRecordBuffer). Its helper LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData then writes a battler record at DE. Simulating the routine gives this layout:
+
+  | Battler offset | Contents |
+  | --- | --- |
+  | $00-$09 | $FF (a blank name) |
+  | $0A-$0B | MonsterTable bytes 0-1, which are also the wSpeciesIdLo/Hi used next |
+  | $0E-$11 | skills (bytes 2-5) |
+  | $12-$15 | $FF |
+  | $16 | 0 |
+  | $17 | MonsterTable byte 9 |
+  | $18-$19 | MonsterTable bytes 6-7 |
+  | $1A | 0 |
+  | $1B / $1D | HP / max HP (both base HP) |
+  | $1F / $21 | MP / max MP |
+  | $23 / $25 / $27 / $29 | ATK / DEF / AGL / INT |
+  | $2B | the word $03E7 |
+  | $2D-$30 | MonsterTable bytes 22, 23, 25, 24 |
+  | $4D | MonsterTable byte 8 |
+
+  The offsets $1D and $21-$29 are the ones GetBaseHP and the other base-stat accessors read (E-0062, E-0124), so this is the 78-byte battler record.
+- **MonsterTable bytes.** Byte 9 (values 0-99) is the level. It sits right before a 24-bit EXP, matching the monster record's level-then-EXP order. Bytes 6-7 (up to $E8EE) are that EXP's low word. Byte 8 (values 0-7) goes to battler byte $4D, whose meaning is not established. Both MonsterTable layouts (banks $34 and $A2) now say so.
+- **Generator.** name_record_offsets now takes the register and the buffer names as parameters. A second run handles the battler record:
+  - `ld e, $NN` before BattlerRecordFieldAddress;
+  - operands inside wBattlerRecords or wBattlerRecordSlot1-6.
+
+  config/record_fields.json gains a "battler" section with 14 fields (name, species, skills, level, EXP, HP, max HP, MP, max MP, ATK, DEF, AGL, INT, personality). src/records.inc defines them as BATTLER_*. 82 battler references are named.
+- **Fix.** Name fields are marked "text". An operand inside a name now keeps its number instead of becoming `NAME + n`. Before this fix, `wBattlerRecords + $4`, the start of a 25-byte copy, was rendered as BATTLER_NAME + 4.
+- **Tests.** One new test covers the E-register form, including an `ld de` that blocks it.
+- Binary verification: build/run410 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0297 — Parent fields of the monster record; buffer operands named by field
 
 - Kind: STATIC (C2 for the copies; C1 for "master").

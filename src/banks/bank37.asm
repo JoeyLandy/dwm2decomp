@@ -1469,7 +1469,7 @@ Jump_037_4EF9:: ; address name
     ld [wLinkTimeoutLo], a
     ld a, h
     ld [wLinkTimeoutHi], a
-    ld hl, wBattlerRecordSlot1 + $F
+    ld hl, wBattlerRecordSlot1 + BATTLER_SKILLS + 1
     ld a, l
     ld [wLinkBufferPtrLo], a
     ld a, h
@@ -3644,7 +3644,7 @@ Func_037_5BC6:: ; address name
 UnpackLinkRecordToRecordBufB::
 Func_037_5C4E:: ; address name
     ld hl, wRecordBufB
-    ld de, wBattlerRecordSlot1 + $F
+    ld de, wBattlerRecordSlot1 + BATTLER_SKILLS + 1
     ld a, [de]
     ld [hl+], a
     inc de
@@ -4008,7 +4008,7 @@ Func_037_5DEB:: ; address name
     pop hl
     push de
     push hl
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
     ld b, $21
     ld a, $FF
 
@@ -4018,7 +4018,7 @@ Func_037_5DEB:: ; address name
     dec b
     jr nz, .loop2
     ld b, $08
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
 
 .loop3:
     ld a, [hl+]
@@ -4031,7 +4031,7 @@ Func_037_5DEB:: ; address name
     dec b
     jr nz, .loop3
     ld b, $19
-    ld de, wBattlerRecordSlot5 + $18
+    ld de, wBattlerRecordSlot5 + BATTLER_EXP
 
 .loop4:
     ld a, [hl+]
@@ -4045,7 +4045,7 @@ Func_037_5DEB:: ; address name
     jr nz, .loop4
     pop hl
     ld b, $21
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
 
 .loop5:
     ld a, [de]
@@ -4247,7 +4247,7 @@ Func_037_5EF7:: ; address name
     pop hl
     push de
     push hl
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
     ld b, $21
     ld a, $FF
 
@@ -4257,7 +4257,7 @@ Func_037_5EF7:: ; address name
     dec b
     jr nz, .loop2
     ld b, $08
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
 
 .loop3:
     ld a, [hl+]
@@ -4270,7 +4270,7 @@ Func_037_5EF7:: ; address name
     dec b
     jr nz, .loop3
     ld b, $19
-    ld de, wBattlerRecordSlot5 + $18
+    ld de, wBattlerRecordSlot5 + BATTLER_EXP
 
 .loop4:
     ld a, [hl+]
@@ -4284,7 +4284,7 @@ Func_037_5EF7:: ; address name
     jr nz, .loop4
     pop hl
     ld b, $21
-    ld de, wBattlerRecordSlot5 + $10
+    ld de, wBattlerRecordSlot5 + BATTLER_SKILLS + 2
 
 .loop5:
     ld a, [de]

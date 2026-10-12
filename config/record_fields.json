@@ -2,15 +2,15 @@
   "_comment": "Offsets into the $A5-byte SRAM monster record (E-0262) that have evidence. tools/disasm_all.py writes them to src/records.inc as MON_* constants and uses them for the offset a record-access routine takes in C (E-0290). Offsets without an entry stay numeric.",
   "fields": {
     "00": {"const": "MON_STATE", "note": "state: 0 empty, 1 or 2 in use", "evidence": "E-0104"},
-    "01": {"size": 10, "const": "MON_NAME", "note": "name, 10 bytes ending in $F0", "evidence": "E-0034"},
+    "01": {"size": 10, "text": true, "const": "MON_NAME", "note": "name, 10 bytes ending in $F0", "evidence": "E-0034"},
     "0B": {"size": 2, "const": "MON_SPECIES", "note": "word compared with monster ids by talk events $29/$47 (C1: the species id)", "evidence": "E-0236"},
     "0D": {"const": "MON_FAMILY", "note": "low nibble = family", "evidence": "E-0122"},
     "0E": {"const": "MON_SEX", "note": "bit 0 = sex (C1): after the first parent is chosen, breeding steps back when no other listed record has a different bit 0; the record list draws mark tile $CC + bit 0 when byte $6E is 2", "evidence": "E-0291"},
-    "0F": {"size": 10, "const": "MON_MASTER_NAME", "note": "the master's name, 10 bytes: ComputeBreedingChild stores the player name here (CopyPlayerNameToWCADF) and copies each parent's into the child's parent master names (E-0297); called 'second name' in E-0034", "evidence": "E-0034, E-0297"},
+    "0F": {"size": 10, "text": true, "const": "MON_MASTER_NAME", "note": "the master's name, 10 bytes: ComputeBreedingChild stores the player name here (CopyPlayerNameToWCADF) and copies each parent's into the child's parent master names (E-0297); called 'second name' in E-0034", "evidence": "E-0034, E-0297"},
     "1A": {"size": 2, "const": "MON_PARENT1_SPECIES", "note": "species word of the first parent (from its $0B; CopySixBytesByWCADDBit4Table, the order swapped by bit 4 of $0D)", "evidence": "E-0297"},
     "1C": {"size": 2, "const": "MON_PARENT2_SPECIES", "note": "species word of the second parent", "evidence": "E-0297"},
-    "1E": {"size": 10, "const": "MON_PARENT1_MASTER", "note": "master name of the first parent (from its $0F; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
-    "29": {"size": 10, "const": "MON_PARENT2_MASTER", "note": "master name of the second parent", "evidence": "E-0297"},
+    "1E": {"size": 10, "text": true, "const": "MON_PARENT1_MASTER", "note": "master name of the first parent (from its $0F; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
+    "29": {"size": 10, "text": true, "const": "MON_PARENT2_MASTER", "note": "master name of the second parent", "evidence": "E-0297"},
     "34": {"size": 8, "const": "MON_SKILLS", "note": "skills, 8 bytes", "evidence": "E-0122"},
     "3C": {"size": 25, "const": "MON_SKILL_LIST", "note": "the list AppendMappedSkillsToWCA67 appends to, up to $FF", "evidence": "E-0237"},
     "55": {"const": "MON_STATUS", "note": "status bits (bit 2 read as poison)", "evidence": "E-0085"},
@@ -29,9 +29,9 @@
     "6D": {"const": "MON_PLUS", "note": "the breeding plus value (C1): when non-zero, the monster's info screen (WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03) draws glyph $FC and the value in one or two digits after the member number; BreedMenu_CopyToChildThenTalkEvent16 copies it to the child record", "evidence": "E-0296"},
     "6E": {"const": "MON_EGG", "note": "non-zero marks an egg (C1): when CountRecordsByField6E counts none the battle-end flow shows 'You have no eggs.', the egg lists (ListRecordsInUseWithByte6ESet, 'Switch which egg?') take records with it set, CreateMonsterRecordOfKindTemp1 sets it to 1 for kinds 1 and 2, and DrawRecordListPageMarks shows the sex mark only when it is 2", "evidence": "E-0296"},
     "6F": {"size": 4, "const": "MON_PERSONALITY", "note": "four personality axes, $6F-$72, from MonsterTable bytes 22-25", "evidence": "E-0034"},
-    "8E": {"size": 10, "const": "MON_PARENT1_NAME", "note": "name of the first parent (from its $01; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
+    "8E": {"size": 10, "text": true, "const": "MON_PARENT1_NAME", "note": "name of the first parent (from its $01; CopyFourNamesByWCADDBit4Table)", "evidence": "E-0297"},
     "98": {"const": "MON_PARENT1_PLUS", "note": "plus value of the first parent (from its $6D)", "evidence": "E-0297"},
-    "99": {"size": 10, "const": "MON_PARENT2_NAME", "note": "name of the second parent", "evidence": "E-0297"},
+    "99": {"size": 10, "text": true, "const": "MON_PARENT2_NAME", "note": "name of the second parent", "evidence": "E-0297"},
     "A3": {"const": "MON_PARENT2_PLUS", "note": "plus value of the second parent", "evidence": "E-0297"},
     "A4": {"const": "MON_ITEM", "note": "equipped item", "evidence": "E-0125"}
   },
@@ -41,5 +41,25 @@
     "StoreTemp0BytesToSRAMRecord", "AddToRecordFieldWordCapped", "StoreHLToRecordField",
     "AddAToRecordWordPairCapped", "SubtractAFromRecordWordPairFloor1", "LoadRecordThreeBytesToTemp0",
     "AddToRecordFieldByteCapped", "SubtractFromRecordFieldByteFloored"
-  ]
+  ],
+  "battler": {
+    "callees": ["BattlerRecordFieldAddress"],
+    "buffers": ["wBattlerRecords", "wBattlerRecordSlot1", "wBattlerRecordSlot2", "wBattlerRecordSlot3", "wBattlerRecordSlot4", "wBattlerRecordSlot5", "wBattlerRecordSlot6"],
+    "fields": {
+      "00": {"size": 10, "text": true, "const": "BATTLER_NAME", "note": "name, 10 bytes ($FF-filled by LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData for a wild monster)", "evidence": "E-0298"},
+      "0A": {"size": 2, "const": "BATTLER_SPECIES", "note": "species word (MonsterTable bytes 0-1, also wSpeciesIdLo/Hi)", "evidence": "E-0298"},
+      "0E": {"size": 4, "const": "BATTLER_SKILLS", "note": "four skills (MonsterTable bytes 2-5)", "evidence": "E-0298"},
+      "17": {"const": "BATTLER_LEVEL", "note": "level (MonsterTable byte 9 for a wild monster)", "evidence": "E-0298"},
+      "18": {"size": 3, "const": "BATTLER_EXP", "note": "experience, 24 bits (MonsterTable bytes 6-7 and a zero high byte for a wild monster)", "evidence": "E-0298"},
+      "1B": {"size": 2, "const": "BATTLER_HP", "note": "HP word (MonsterTable base HP)", "evidence": "E-0298"},
+      "1D": {"size": 2, "const": "BATTLER_MAX_HP", "note": "maximum HP word (GetBaseHP)", "evidence": "E-0062, E-0298"},
+      "1F": {"size": 2, "const": "BATTLER_MP", "note": "MP word", "evidence": "E-0298"},
+      "21": {"size": 2, "const": "BATTLER_MAX_MP", "note": "maximum MP word (GetBaseMP)", "evidence": "E-0124, E-0298"},
+      "23": {"size": 2, "const": "BATTLER_ATK", "note": "ATK word (GetBaseATK)", "evidence": "E-0124"},
+      "25": {"size": 2, "const": "BATTLER_DEF", "note": "DEF word (GetBaseDEF)", "evidence": "E-0124"},
+      "27": {"size": 2, "const": "BATTLER_AGL", "note": "AGL word (GetBaseAGL)", "evidence": "E-0124"},
+      "29": {"size": 2, "const": "BATTLER_INT", "note": "INT word (GetBaseINT)", "evidence": "E-0124"},
+      "2D": {"size": 4, "const": "BATTLER_PERSONALITY", "note": "personality bytes (MonsterTable bytes 22, 23, 25, 24 in that order)", "evidence": "E-0298"}
+    }
+  }
 }

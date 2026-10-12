@@ -6726,7 +6726,7 @@ Func_036_669E:: ; address name
     cp a, $03
     jr z, .skip
     ld a, b
-    ld e, $0E
+    ld e, BATTLER_SKILLS
     call BattlerRecordFieldAddress
     ld b, $08
     jr .return

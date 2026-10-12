@@ -156,22 +156,22 @@ Func_019_4079:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .call_game_mode4_init_sub01_sub01_sub01
-    ld hl, wBattlerRecords + $17
+    ld hl, wBattlerRecords + BATTLER_LEVEL
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattlePartyCount], a
     ld [wSide0Flag], a
-    ld hl, wBattlerRecordSlot4 + $17
+    ld hl, wBattlerRecordSlot4 + BATTLER_LEVEL
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattleFoeCount], a
     ld [wSide1Flag], a
     jr .clear_link_rule_work57
 
 .call_game_mode4_init_sub01_sub01_sub01:
-    ld hl, wBattlerRecords + $17
+    ld hl, wBattlerRecords + BATTLER_LEVEL
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattleFoeCount], a
     ld [wSide0Flag], a
-    ld hl, wBattlerRecordSlot4 + $17
+    ld hl, wBattlerRecordSlot4 + BATTLER_LEVEL
     call GameMode4_Init_Sub01_Sub01_Sub01
     ld [wBattlePartyCount], a
     ld [wSide1Flag], a
@@ -225,11 +225,11 @@ Func_019_419B:: ; address name
 ; reads: wLinkRole, wBattleFoeCount
 GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03::
 Func_019_41CB:: ; address name
-    ld de, wBattlerRecordSlot4 + $A
+    ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
     jr z, .call_game_mode4_init_sub01_sub03_load_monster
-    ld de, wBattlerRecords + $A
+    ld de, wBattlerRecords + BATTLER_SPECIES
 
 .call_game_mode4_init_sub01_sub03_load_monster:
     ld hl, vTiles2 + $140
@@ -238,11 +238,11 @@ Func_019_41CB:: ; address name
     ld a, [wBattleFoeCount]
     cp a, $01
     jr z, .return
-    ld de, wBattlerRecordSlot5 + $A
+    ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
     jr z, .call_game_mode4_init_sub01_sub03_load_monster2
-    ld de, wBattlerRecordSlot1 + $A
+    ld de, wBattlerRecordSlot1 + BATTLER_SPECIES
 
 .call_game_mode4_init_sub01_sub03_load_monster2:
     ld hl, vTiles2 + $380
@@ -251,11 +251,11 @@ Func_019_41CB:: ; address name
     ld a, [wBattleFoeCount]
     cp a, $02
     jr z, .return
-    ld de, wBattlerRecordSlot6 + $A
+    ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
     jr z, .call_game_mode4_init_sub01_sub03_load_monster3
-    ld de, wBattlerRecordSlot2 + $A
+    ld de, wBattlerRecordSlot2 + BATTLER_SPECIES
 
 .call_game_mode4_init_sub01_sub03_load_monster3:
     ld hl, vTiles2 + $5C0

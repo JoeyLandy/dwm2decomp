@@ -9130,7 +9130,7 @@ Func_016_75EE:: ; address name
     ld b, $0A
     call CopyBytesDEFromHL_Bank16
     ld hl, sSavedPlayTime
-    ld de, wBattlerRecords + $B
+    ld de, wBattlerRecords + BATTLER_SPECIES + 1
     ld b, $05
     call CopyBytesDEFromHL_Bank16
     ld a, [sSavedPartyCount]
@@ -9150,7 +9150,7 @@ Func_016_75EE:: ; address name
     push af
     ld a, [sSaveData + $101]
     ld [wWorkBuf], a
-    ld de, wBattlerRecords + $1D
+    ld de, wBattlerRecords + BATTLER_MAX_HP
     ld a, e
     ld [wWorkBuf + $1], a
     ld a, d
@@ -9161,7 +9161,7 @@ Func_016_75EE:: ; address name
     jr z, .read_saved_arena_byte37
     ld a, [sSaveData + $102]
     ld [wWorkBuf], a
-    ld de, wBattlerRecords + $29
+    ld de, wBattlerRecords + BATTLER_INT
     ld a, e
     ld [wWorkBuf + $1], a
     ld a, d
@@ -9523,10 +9523,10 @@ Jump_016_77A6:: ; address name
     ld hl, wTitlePartySummary
     call DrawSaveSummaryPartyEntryC
     ld c, $01
-    ld hl, wBattlerRecords + $1D
+    ld hl, wBattlerRecords + BATTLER_MAX_HP
     call DrawSaveSummaryPartyEntryC
     ld c, $02
-    ld hl, wBattlerRecords + $29
+    ld hl, wBattlerRecords + BATTLER_INT
     call DrawSaveSummaryPartyEntryC
     call BlankTwoTileCellByGameMode
     call ShowKeyNameOrStringForTitleKeyFlag

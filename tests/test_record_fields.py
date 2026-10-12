@@ -10,6 +10,7 @@ import disasm_all  # noqa: E402
 
 FIELDS = {0x5B: {"const": "MON_HP", "size": 2}, 0x56: {"const": "MON_LEVEL"}}
 CALLEES = {"SRAMRecordAddress", "LoadSRAMRecordByte"}
+NL = chr(10)
 
 
 def run(text):
@@ -34,6 +35,15 @@ class RecordFields(unittest.TestCase):
     def test_an_offset_inside_a_sized_field_is_field_plus_n(self):
         out, n = run("    ld c, $5C\n    call SRAMRecordAddress\n")
         self.assertEqual((out, n), ("    ld c, MON_HP + 1\n    call SRAMRecordAddress\n", 1))
+
+    def test_the_battler_form_uses_register_e_and_leaves_c_alone(self):
+        fields = {0x17: {"const": "BATTLER_LEVEL"}}
+        text = "    ld e, $17" + NL + "    ld a, c" + NL + "    call BattlerRecordFieldAddress" + NL
+        (out,), n = disasm_all.name_record_offsets([text], fields, {"BattlerRecordFieldAddress"}, "e", ())
+        self.assertEqual((out, n), (text.replace("$17", "BATTLER_LEVEL"), 1))
+        blocked = "    ld e, $17" + NL + "    ld de, wTemp0" + NL + "    call BattlerRecordFieldAddress" + NL
+        self.assertEqual(disasm_all.name_record_offsets([blocked], fields, {"BattlerRecordFieldAddress"}, "e", ()),
+                         ([blocked], 0))
 
     def test_other_callees_and_unknown_offsets_stay_numeric(self):
         for text in ("    ld c, $5B\n    call Multiply8\n", "    ld c, $57\n    call SRAMRecordAddress\n"):

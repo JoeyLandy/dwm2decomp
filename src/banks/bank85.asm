@@ -2724,7 +2724,7 @@ Jump_085_5086:: ; address name
     ldh a, [hTemp0]
     cp a, e
     jr nz, .call_hl_to_decimal_digits
-    ld hl, wRecordBufB + MON_PARENT2_MASTER + 2
+    ld hl, wRecordBufB + $2B
     call StartMessageHL_B85
     ret
 
@@ -2745,7 +2745,7 @@ Jump_085_5086:: ; address name
     inc de
     ld a, $F0
     ld [de], a
-    ld hl, wRecordBufB + MON_PARENT2_MASTER + 1
+    ld hl, wRecordBufB + $2A
     call StartMessageHL_B85
     ret
 

@@ -268,17 +268,17 @@
         {
           "type": "db",
           "size": 2,
-          "name": "16-bit value, up to $E8EE (meaning not established)"
+          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 8, values 0-7"
+          "name": "byte 8, values 0-7: copied to battler byte $4D (meaning not established; E-0298)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 9, values 0-99"
+          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)"
         },
         {
           "type": "db",
@@ -19583,17 +19583,17 @@
         {
           "type": "db",
           "size": 2,
-          "name": "16-bit value, up to $E8EE (meaning not established)"
+          "name": "EXP, 16 bits (copied to battler $18-$19, the low word of a 24-bit EXP; C1, E-0298)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 8, values 0-7"
+          "name": "byte 8, values 0-7: copied to battler byte $4D (meaning not established; E-0298)"
         },
         {
           "type": "db",
           "size": 1,
-          "name": "byte 9, values 0-99"
+          "name": "level 0-99 (copied to battler $17, BATTLER_LEVEL; C1, E-0298)"
         },
         {
           "type": "db",

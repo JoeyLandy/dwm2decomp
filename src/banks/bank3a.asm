@@ -9376,7 +9376,7 @@ CopyBattlerNameToHL::
 Func_03A_79A0:: ; address name
     push hl
     push bc
-    ld e, $00
+    ld e, BATTLER_NAME
     call BattlerRecordFieldAddress
     ld e, l
     ld d, h

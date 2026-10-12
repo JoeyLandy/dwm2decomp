@@ -1271,7 +1271,7 @@ Func_0E0_488E:: ; address name
 Run48B7ForThreeBattlerRecords::
 Func_0E0_489C:: ; address name
     ld de, $004E
-    ld hl, wBattlerRecords + $18
+    ld hl, wBattlerRecords + BATTLER_EXP
     add hl, de
     add hl, de
     add hl, de

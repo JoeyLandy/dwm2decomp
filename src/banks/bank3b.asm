@@ -13,7 +13,7 @@ Func_03B_4001:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $1D
+    ld e, BATTLER_MAX_HP
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -56,7 +56,7 @@ Func_03B_4045:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $21
+    ld e, BATTLER_MAX_MP
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -99,7 +99,7 @@ Func_03B_4089:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $23
+    ld e, BATTLER_ATK
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -142,7 +142,7 @@ Func_03B_40CD:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $25
+    ld e, BATTLER_DEF
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -185,7 +185,7 @@ Func_03B_4111:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $27
+    ld e, BATTLER_AGL
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -228,7 +228,7 @@ Func_03B_4155:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $29
+    ld e, BATTLER_INT
     call BattlerRecordFieldAddress
     call LoadBCFromHL
     jr .set_battle_stat_result_lo
@@ -271,7 +271,7 @@ Func_03B_4199:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $17
+    ld e, BATTLER_LEVEL
     call BattlerRecordFieldAddress
     ld c, [hl]
     jr .set_battle_stat_result_lo
@@ -310,7 +310,7 @@ Func_03B_41D3:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $2D
+    ld e, BATTLER_PERSONALITY
     call BattlerRecordFieldAddress
     ld c, [hl]
     jr .set_battle_stat_result_lo
@@ -349,7 +349,7 @@ Func_03B_420D:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $30
+    ld e, BATTLER_PERSONALITY + 3
     call BattlerRecordFieldAddress
     ld c, [hl]
     jr .set_battle_stat_result_lo
@@ -388,7 +388,7 @@ Func_03B_4247:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $2E
+    ld e, BATTLER_PERSONALITY + 1
     call BattlerRecordFieldAddress
     ld c, [hl]
     jr .set_battle_stat_result_lo
@@ -427,7 +427,7 @@ Func_03B_4281:: ; address name
     cp a, $03
     jr z, .skip
     ld a, c
-    ld e, $2F
+    ld e, BATTLER_PERSONALITY + 2
     call BattlerRecordFieldAddress
     ld c, [hl]
     jr .set_battle_stat_result_lo
@@ -465,7 +465,7 @@ Func_03B_42BB:: ; address name
     cp a, $03
     jr z, .done
     ld a, c
-    ld e, $0A
+    ld e, BATTLER_SPECIES
     call BattlerRecordFieldAddress
     ld a, [hl+]
     ld [wSpeciesIdLo], a

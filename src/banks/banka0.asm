@@ -1204,41 +1204,41 @@ ComputeWildEncounterLevel::
 Func_0A0_46CC:: ; address name
     push bc
     ld de, $0000
-    ld hl, wBattlerRecords + $27
+    ld hl, wBattlerRecords + BATTLER_AGL
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $29
+    ld hl, wBattlerRecords + BATTLER_INT
     call AddWordAtHLToDE
     srl d
     rr e
-    ld hl, wBattlerRecords + $1D
+    ld hl, wBattlerRecords + BATTLER_MAX_HP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $21
+    ld hl, wBattlerRecords + BATTLER_MAX_MP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $23
+    ld hl, wBattlerRecords + BATTLER_ATK
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $25
+    ld hl, wBattlerRecords + BATTLER_DEF
     call AddWordAtHLToDE
     ld h, d
     ld l, e
     ld a, $32
     call DivideHLByA
     push hl
-    ld a, [wBattlerRecords + $17]
+    ld a, [wBattlerRecords + BATTLER_LEVEL]
     ld c, $18
     call Multiply8
     push hl
     ld de, $0000
-    ld hl, wBattlerRecords + $1D
+    ld hl, wBattlerRecords + BATTLER_MAX_HP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $21
+    ld hl, wBattlerRecords + BATTLER_MAX_MP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $23
+    ld hl, wBattlerRecords + BATTLER_ATK
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $25
+    ld hl, wBattlerRecords + BATTLER_DEF
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $27
+    ld hl, wBattlerRecords + BATTLER_AGL
     call AddWordAtHLToDE
-    ld hl, wBattlerRecords + $29
+    ld hl, wBattlerRecords + BATTLER_INT
     call AddWordAtHLToDE
     pop hl
     ld a, e
@@ -1290,41 +1290,41 @@ Func_0A0_46CC:: ; address name
 .skip3:
     push hl
     ld de, $0000
-    ld hl, wBattlerRecordSlot1 + $27
+    ld hl, wBattlerRecordSlot1 + BATTLER_AGL
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $29
+    ld hl, wBattlerRecordSlot1 + BATTLER_INT
     call AddWordAtHLToDE
     srl d
     rr e
-    ld hl, wBattlerRecordSlot1 + $1D
+    ld hl, wBattlerRecordSlot1 + BATTLER_MAX_HP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $21
+    ld hl, wBattlerRecordSlot1 + BATTLER_MAX_MP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $23
+    ld hl, wBattlerRecordSlot1 + BATTLER_ATK
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $25
+    ld hl, wBattlerRecordSlot1 + BATTLER_DEF
     call AddWordAtHLToDE
     ld h, d
     ld l, e
     ld a, $32
     call DivideHLByA
     push hl
-    ld a, [wBattlerRecordSlot1 + $17]
+    ld a, [wBattlerRecordSlot1 + BATTLER_LEVEL]
     ld c, $18
     call Multiply8
     push hl
     ld de, $0000
-    ld hl, wBattlerRecordSlot1 + $1D
+    ld hl, wBattlerRecordSlot1 + BATTLER_MAX_HP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $21
+    ld hl, wBattlerRecordSlot1 + BATTLER_MAX_MP
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $23
+    ld hl, wBattlerRecordSlot1 + BATTLER_ATK
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $25
+    ld hl, wBattlerRecordSlot1 + BATTLER_DEF
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $27
+    ld hl, wBattlerRecordSlot1 + BATTLER_AGL
     call AddWordAtHLToDE
-    ld hl, wBattlerRecordSlot1 + $29
+    ld hl, wBattlerRecordSlot1 + BATTLER_INT
     call AddWordAtHLToDE
     pop hl
     ld a, e

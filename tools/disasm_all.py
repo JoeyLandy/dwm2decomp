@@ -503,29 +503,34 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
     return ["\n".join(ls) for ls in files], len(names)
 
 
-def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[str]) -> tuple[list[str], int]:
+def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[str], reg: str = "c",
+                        buffers: tuple[str, ...] = ("wRecordBufA", "wRecordBufB", "wChildRecord")) -> tuple[list[str], int]:
     """E-0290: `ld c, $NN` whose value reaches a record-access routine that takes the field offset in C
     (config/record_fields.json "callees") becomes `ld c, MON_<FIELD>` when the offset has an entry. Only
     instructions that leave C alone may sit between the load and the call (at most three). The constant
-    has the same value, so the bytes do not change."""
-    load = re.compile(r"^(\s+ld c, )\$([0-9A-F]{2})(\s*(?:;.*)?)$")
+    has the same value, so the bytes do not change. E-0298: the register and the buffers are parameters, so
+    the battler record (offset in E for BattlerRecordFieldAddress) uses the same pass."""
+    load = re.compile(r"^(\s+ld " + reg + r", )\$([0-9A-F]{2})(\s*(?:;.*)?)$")
     call = re.compile(r"^\s+(?:call|farcall|jp) (\w+)\s*(?:;.*)?$")
-    keeps_c = re.compile(r"^\s+(?:ldh? a, .*|ld (?:hl|de|b|d|e|h|l), .*|push \w+|xor a, a|ld a, \w+|add_a_to_hl|"
-                         r"inc (?:a|hl|de)|dec (?:a|hl|de))\s*(?:;.*)?$")
+    pair = {"c": "bc", "b": "bc", "e": "de", "d": "de"}[reg]
+    others = "|".join(r for r in ("b", "c", "d", "e", "h", "l") if r != reg)
+    pairs = "|".join(p for p in ("hl", "de", "bc") if p != pair)
+    keeps_c = re.compile(r"^\s+(?:ldh? a, .*|ld (?:" + pairs + "|" + others + r"), .*|push \w+|xor a, a|ld a, \w+|"
+                         r"add_a_to_hl|inc (?:a|" + pairs + ")|dec (?:a|" + pairs + r"))\s*(?:;.*)?$")
 
-    def field_expr(off: int) -> str | None:  # E-0296: MON_X, or MON_X + n inside a field with a "size"
+    def field_expr(off: int, inside_text: bool = True) -> str | None:  # E-0296: MON_X, or MON_X + n inside a sized field
         if off in fields:
             return fields[off]["const"]
         for start, f in fields.items():
-            if start < off < start + f.get("size", 1):
+            if start < off < start + f.get("size", 1) and (inside_text or not f.get("text")):
                 return f"{f['const']} + {off - start}"
         return None
 
     # E-0297: an operand inside one of the $A5-byte record buffers is written buffer + MON_FIELD
-    bufs = re.compile(r"\b(wRecordBufA|wRecordBufB|wChildRecord) \+ \$([0-9A-F]{1,2})\b")
+    bufs = re.compile(r"\b(" + "|".join(buffers) + r") \+ \$([0-9A-F]{1,2})\b")
 
     def buf_sub(mm: re.Match) -> str:
-        e = field_expr(int(mm.group(2), 16))
+        e = field_expr(int(mm.group(2), 16), False)  # E-0298: no offsets into a name for a buffer operand
         return f"{mm.group(1)} + {e}" if e else mm.group(0)
 
     n = 0
@@ -533,7 +538,7 @@ def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[
     for text in texts:
         ls = text.split("\n")
         for i, ln in enumerate(ls):
-            if "Rec" in ln and ln.startswith("    ") and bufs.search(ln):
+            if buffers and ln.startswith("    ") and bufs.search(ln):
                 code, sep, com = ln.partition(";")
                 new = bufs.sub(buf_sub, code)
                 if new != code:
@@ -5580,6 +5585,10 @@ def main() -> int:
     rec_fields = {int(k, 16): v for k, v in rec_cfg["fields"].items()}
     texts, nrec = name_record_offsets(texts, rec_fields, set(rec_cfg["callees"]))
     log(f"record field offsets named: {nrec}")
+    bat_cfg = rec_cfg.get("battler", {"fields": {}, "callees": [], "buffers": []})
+    bat_fields = {int(k, 16): v for k, v in bat_cfg["fields"].items()}
+    texts, nbat = name_record_offsets(texts, bat_fields, set(bat_cfg["callees"]), "e", tuple(bat_cfg["buffers"]))
+    log(f"battler field offsets named: {nbat}")
     out = ROOT / "src/banks"
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files and src/main.asm")
@@ -5599,7 +5608,9 @@ def main() -> int:
         encoding="utf-8", newline="\n")
     (ROOT / "src/records.inc").write_text(
         "; Offsets into the $A5-byte SRAM monster record that have evidence (config/record_fields.json, E-0290).\n"
-        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(rec_fields.items())),
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(rec_fields.items()))
+        + "\n; Offsets into the $4E-byte battler record (wBattlerRecords; config/record_fields.json \"battler\", E-0298).\n"
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(bat_fields.items())),
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")

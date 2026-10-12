@@ -87,9 +87,9 @@ Func_024_4001:: ; address name
     cp a, $08
     jr nz, .call_game_mode6_init_load_monster_picture
     ld a, [wRecordBufA + MON_SPECIES]
-    ld [wBattlerRecords + $A], a
+    ld [wBattlerRecords + BATTLER_SPECIES], a
     ld a, [wRecordBufA + MON_SPECIES + 1]
-    ld [wBattlerRecords + $B], a
+    ld [wBattlerRecords + BATTLER_SPECIES + 1], a
 
 .call_game_mode6_init_load_monster_picture:
     call GameMode6_Init_LoadMonsterPicture
@@ -2593,8 +2593,8 @@ Func_024_5064:: ; address name
     ld a, [wIsCGB]
     and a, a
     jp z, .check_battle_scene
-    ld hl, wBattlerRecords + $A
-    ld de, wBattlerRecordSlot4 + $A
+    ld hl, wBattlerRecords + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld e, a
@@ -2614,8 +2614,8 @@ Func_024_5064:: ; address name
     ld a, [wScreenByteBD]
     cp a, $01
     jr z, .check_battle_scene
-    ld hl, wBattlerRecordSlot1 + $A
-    ld de, wBattlerRecordSlot5 + $A
+    ld hl, wBattlerRecordSlot1 + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld e, a
@@ -2635,8 +2635,8 @@ Func_024_5064:: ; address name
     ld a, [wScreenByteBD]
     cp a, $02
     jr z, .check_battle_scene
-    ld hl, wBattlerRecordSlot2 + $A
-    ld de, wBattlerRecordSlot6 + $A
+    ld hl, wBattlerRecordSlot2 + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld e, a
@@ -2847,8 +2847,8 @@ Func_024_5201:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr nz, .call_game_mode6_init_read_link_scene_byte4_b
-    ld hl, wBattlerRecords + $A
-    ld de, wBattlerRecordSlot4 + $A
+    ld hl, wBattlerRecords + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld e, a
@@ -2861,8 +2861,8 @@ Func_024_5201:: ; address name
     ret
 
 .call_game_mode6_init_read_link_scene_byte4_b:
-    ld hl, wBattlerRecords + $A
-    ld de, wBattlerRecordSlot4 + $A
+    ld hl, wBattlerRecords + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld e, a
@@ -2870,8 +2870,8 @@ Func_024_5201:: ; address name
     ld hl, vTiles2
     ld c, $01
     call LoadMonsterPicture
-    ld hl, wBattlerRecordSlot1 + $A
-    ld de, wBattlerRecordSlot5 + $A
+    ld hl, wBattlerRecordSlot1 + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld b, a
@@ -2890,8 +2890,8 @@ Func_024_5201:: ; address name
     ld hl, vTiles2 + $240
     ld c, $03
     call LoadMonsterPicture
-    ld hl, wBattlerRecordSlot2 + $A
-    ld de, wBattlerRecordSlot6 + $A
+    ld hl, wBattlerRecordSlot2 + BATTLER_SPECIES
+    ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     call GameMode6_Init_ReadLinkSceneByte4B
     ld a, [hl+]
     ld b, a
