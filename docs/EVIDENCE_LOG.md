@@ -2430,6 +2430,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0223 — Species pair-check lists (bank $81)
+
+- Kind: OBSERVATION (reading; C1).
+- **Table.** The routine at 81:$4001 reads the word at SpeciesPairCheckTable ($4167) + 2 * parent B's species. It parses that list twice with CallFunc4001InBank81KeepRegs_Sub01_Sub01, once with the parents swapped.
+- **List format.** A list is groups of: kind, count, a key word, then count words.
+  - Kind 0 applies when the key's low byte equals the family; kind 1 when the key equals the species.
+  - Each word matches the other parent: a species when bit 15 is set, otherwise a family in the low byte.
+  - Kind $FF ends the list.
+  - When neither order matches, bit 4 of wRecordBufB + $D is set.
+- **Layout.** The table has 321 words, and the lists tile $43E9-$5453 exactly (`lists` with `until`, one line per list). Bank $81 has no INCBIN left.
+- **Limits.** What bit 4 of the record's byte $D means is not read.
+- Binary verification: build/run271 PASS, 0 differing bytes.
+
 ### E-0222 — Key-world screens found by tiling gaps
 
 - Kind: TOOL (C1).

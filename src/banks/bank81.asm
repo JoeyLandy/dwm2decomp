@@ -229,1355 +229,2258 @@ Jump_081_415D::
 
 Jump_081_4165::
     jr Jump_081_4126
-    dw Data_081_43E9
-    dw Data_081_43EB
-    dw Data_081_43F3
-    dw Data_081_43FB
-    dw Data_081_4403
-    dw Data_081_440B
-    dw Data_081_4413
-    dw Data_081_441B
-    dw Data_081_4427
-    dw Data_081_442F
-    dw Data_081_4431
-    dw Data_081_4433
-    dw Data_081_4441
-    dw Data_081_4453
-    dw Data_081_4463
-    dw Data_081_44A3
-    dw Data_081_44AB
-    dw Data_081_44D5
-    dw Data_081_44DD
-    dw Data_081_44E5
-    dw Data_081_4525
-    dw Data_081_4527
-    dw Data_081_4529
-    dw Data_081_452B
-    dw Data_081_453F
-    dw Data_081_4555
-    dw Data_081_4557
-    dw Data_081_4559
-    dw Data_081_455B
-    dw Data_081_455D
-    dw Data_081_455F
-    dw Data_081_4561
-    dw Data_081_4569
-    dw Data_081_4571
-    dw Data_081_4579
-    dw Data_081_4581
-    dw Data_081_4589
-    dw Data_081_4591
-    dw Data_081_4599
-    dw Data_081_45A1
-    dw Data_081_45A3
-    dw Data_081_45AB
-    dw Data_081_45B3
-    dw Data_081_45C1
-    dw Data_081_45DD
-    dw Data_081_45E5
-    dw Data_081_45ED
-    dw Data_081_466B
-    dw Data_081_4673
-    dw Data_081_4675
-    dw Data_081_4677
-    dw Data_081_4681
-    dw Data_081_46A5
-    dw Data_081_46AD
-    dw Data_081_46B5
-    dw Data_081_46F9
-    dw Data_081_470D
-    dw Data_081_471D
-    dw Data_081_4725
-    dw Data_081_4727
-    dw Data_081_472F
-    dw Data_081_4731
-    dw Data_081_4739
-    dw Data_081_4741
-    dw Data_081_4749
-    dw Data_081_4751
-    dw Data_081_4759
-    dw Data_081_480D
-    dw Data_081_4815
-    dw Data_081_4823
-    dw Data_081_4825
-    dw Data_081_482D
-    dw Data_081_4867
-    dw Data_081_486F
-    dw Data_081_4877
-    dw Data_081_487F
-    dw Data_081_4893
-    dw Data_081_48DB
-    dw Data_081_48DD
-    dw Data_081_48DF
-    dw Data_081_48E1
-    dw Data_081_48E9
-    dw Data_081_48F1
-    dw Data_081_4923
-    dw Data_081_492D
-    dw Data_081_493B
-    dw Data_081_4987
-    dw Data_081_49A5
-    dw Data_081_49AD
-    dw Data_081_49B5
-    dw Data_081_49BD
-    dw Data_081_49BF
-    dw Data_081_49C7
-    dw Data_081_49CF
-    dw Data_081_49D7
-    dw Data_081_49DF
-    dw Data_081_49E7
-    dw Data_081_49EF
-    dw Data_081_49F7
-    dw Data_081_49FF
-    dw Data_081_4A01
-    dw Data_081_4A09
-    dw Data_081_4A0B
-    dw Data_081_4A0D
-    dw Data_081_4A15
-    dw Data_081_4A1D
-    dw Data_081_4A45
-    dw Data_081_4A53
-    dw Data_081_4A55
-    dw Data_081_4A73
-    dw Data_081_4A89
-    dw Data_081_4AA3
-    dw Data_081_4AA5
-    dw Data_081_4AFD
-    dw Data_081_4B05
-    dw Data_081_4B0D
-    dw Data_081_4B0F
-    dw Data_081_4B11
-    dw Data_081_4B13
-    dw Data_081_4B15
-    dw Data_081_4B17
-    dw Data_081_4B19
-    dw Data_081_4B21
-    dw Data_081_4B29
-    dw Data_081_4B31
-    dw Data_081_4B39
-    dw Data_081_4B41
-    dw Data_081_4B49
-    dw Data_081_4B51
-    dw Data_081_4B59
-    dw Data_081_4B5B
-    dw Data_081_4B63
-    dw Data_081_4B6B
-    dw Data_081_4B79
-    dw Data_081_4B81
-    dw Data_081_4B83
-    dw Data_081_4B91
-    dw Data_081_4B9F
-    dw Data_081_4BA7
-    dw Data_081_4BBD
-    dw Data_081_4BC5
-    dw Data_081_4BCD
-    dw Data_081_4BCF
-    dw Data_081_4BD7
-    dw Data_081_4BD9
-    dw Data_081_4BDB
-    dw Data_081_4BDD
-    dw Data_081_4BDF
-    dw Data_081_4BE1
-    dw Data_081_4BE3
-    dw Data_081_4BE5
-    dw Data_081_4BE7
-    dw Data_081_4BEF
-    dw Data_081_4BF7
-    dw Data_081_4BFF
-    dw Data_081_4C07
-    dw Data_081_4C0F
-    dw Data_081_4C17
-    dw Data_081_4C1F
-    dw Data_081_4C27
-    dw Data_081_4C29
-    dw Data_081_4C31
-    dw Data_081_4C33
-    dw Data_081_4C41
-    dw Data_081_4C55
-    dw Data_081_4C63
-    dw Data_081_4C71
-    dw Data_081_4C9D
-    dw Data_081_4CA5
-    dw Data_081_4CB9
-    dw Data_081_4CBB
-    dw Data_081_4CBD
-    dw Data_081_4CCB
-    dw Data_081_4CCD
-    dw Data_081_4CD5
-    dw Data_081_4CDD
-    dw Data_081_4CDF
-    dw Data_081_4CE1
-    dw Data_081_4CE3
-    dw Data_081_4CE5
-    dw Data_081_4CE7
-    dw Data_081_4CE9
-    dw Data_081_4CF1
-    dw Data_081_4D59
-    dw Data_081_4D73
-    dw Data_081_4D7B
-    dw Data_081_4D83
-    dw Data_081_4D8B
-    dw Data_081_4D93
-    dw Data_081_4D9B
-    dw Data_081_4D9D
-    dw Data_081_4DB1
-    dw Data_081_4DB9
-    dw Data_081_4DD3
-    dw Data_081_4DE1
-    dw Data_081_4DEF
-    dw Data_081_4DF7
-    dw Data_081_4E29
-    dw Data_081_4E7F
-    dw Data_081_4E87
-    dw Data_081_4E89
-    dw Data_081_4EA9
-    dw Data_081_4EB7
-    dw Data_081_4EBF
-    dw Data_081_4EC1
-    dw Data_081_4EDB
-    dw Data_081_4EEF
-    dw Data_081_4F09
-    dw Data_081_4F17
-    dw Data_081_4F25
-    dw Data_081_4F27
-    dw Data_081_4F29
-    dw Data_081_4F31
-    dw Data_081_4F6F
-    dw Data_081_4F77
-    dw Data_081_4F7F
-    dw Data_081_4F87
-    dw Data_081_4F8F
-    dw Data_081_4F97
-    dw Data_081_4F9F
-    dw Data_081_4FA1
-    dw Data_081_4FA9
-    dw Data_081_4FC3
-    dw Data_081_4FD7
-    dw Data_081_4FE5
-    dw Data_081_4FF9
-    dw Data_081_4FFB
-    dw Data_081_4FFD
-    dw Data_081_4FFF
-    dw Data_081_504D
-    dw Data_081_50B5
-    dw Data_081_50F3
-    dw Data_081_5159
-    dw Data_081_5167
-    dw Data_081_5169
-    dw Data_081_516B
-    dw Data_081_5197
-    dw Data_081_5199
-    dw Data_081_519B
-    dw Data_081_519D
-    dw Data_081_519F
-    dw Data_081_51A1
-    dw Data_081_51A9
-    dw Data_081_51B1
-    dw Data_081_51B9
-    dw Data_081_51C1
-    dw Data_081_51C9
-    dw Data_081_51D1
-    dw Data_081_51D9
-    dw Data_081_51E1
-    dw Data_081_51E3
-    dw Data_081_51EB
-    dw Data_081_520B
-    dw Data_081_5255
-    dw Data_081_5269
-    dw Data_081_52A1
-    dw Data_081_52AF
-    dw Data_081_52B1
-    dw Data_081_52D5
-    dw Data_081_52D7
-    dw Data_081_52E5
-    dw Data_081_5317
-    dw Data_081_5327
-    dw Data_081_5337
-    dw Data_081_5345
-    dw Data_081_5347
-    dw Data_081_534F
-    dw Data_081_5357
-    dw Data_081_5367
-    dw Data_081_5375
-    dw Data_081_537D
-    dw Data_081_537F
-    dw Data_081_5381
-    dw Data_081_5383
-    dw Data_081_5385
-    dw Data_081_5387
-    dw Data_081_5389
-    dw Data_081_538B
-    dw Data_081_538D
-    dw Data_081_538F
-    dw Data_081_5391
-    dw Data_081_5393
-    dw Data_081_5395
-    dw Data_081_5397
-    dw Data_081_5399
-    dw Data_081_539B
-    dw Data_081_539D
-    dw Data_081_539F
-    dw Data_081_53A1
-    dw Data_081_53A3
-    dw Data_081_53A5
-    dw Data_081_53A7
-    dw Data_081_53A9
-    dw Data_081_53AB
-    dw Data_081_53AD
-    dw Data_081_53AF
-    dw Data_081_53B1
-    dw Data_081_53B3
-    dw Data_081_53B5
-    dw Data_081_53B7
-    dw Data_081_53B9
-    dw Data_081_53BB
-    dw Data_081_53C5
-    dw Data_081_53CD
-    dw Data_081_53CF
-    dw Data_081_53D7
-    dw Data_081_53DF
-    dw Data_081_53E1
-    dw Data_081_53E9
-    dw Data_081_53F7
-    dw Data_081_53F9
-    dw Data_081_5401
-    dw Data_081_5403
-    dw Data_081_540B
-    dw Data_081_5413
-    dw Data_081_541B
-    dw Data_081_5423
-    dw Data_081_5439
-    dw Data_081_5441
-    dw Data_081_5449
-    dw Data_081_5451
-
-Data_081_43E9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $FF
-
-Data_081_43EB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $01, $00, $FF, $00
-
-Data_081_43F3:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $02, $00, $FF, $00
-
-Data_081_43FB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $03, $00, $FF, $00
-
-Data_081_4403:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $04, $00, $FF, $00
-
-Data_081_440B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $05, $00, $FF, $00
-
-Data_081_4413:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $06, $00, $FF, $00
-
-Data_081_441B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $03, $00, $00, $07, $00, $BE, $80, $2A, $80, $FF, $00
-
-Data_081_4427:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $08, $00, $FF, $00
-
-Data_081_442F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4431:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4433:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $04, $00, $00, $4A, $80, $80, $80, $8D, $80, $0D, $81, $FF, $00
-
-Data_081_4441:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $06, $00, $00, $48, $80, $62, $80, $60, $80, $4C, $80, $61, $80, $5F, $80
-    db $FF, $00
-
-Data_081_4453:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $00, $00, $33, $81, $32, $81, $FC, $80, $C7, $80, $34, $81, $FF, $00
-
-Data_081_4463:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $05, $0D, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05
-    db $06, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05, $01, $00
-    db $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05, $12, $00, $38, $80
-    db $3E, $80, $2B, $80, $37, $80, $3D, $80, $00, $01, $00, $00, $29, $81, $FF, $00
-
-Data_081_44A3:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $4D, $80, $FF, $00
-
-Data_081_44AB:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $0A, $00, $0A, $80, $00, $01, $00, $00, $0A, $00, $01, $0C, $0E, $00
-    db $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80, $EB, $80, $3D, $80
-    db $79, $80, $5C, $80, $7F, $80, $08, $81, $FF, $00
-
-Data_081_44D5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $00, $00, $24, $81, $FF, $00
-
-Data_081_44DD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $11, $00, $11, $80, $FF, $00
-
-Data_081_44E5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $0C, $10, $00, $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80
-    db $EB, $80, $3D, $80, $79, $80, $5C, $80, $7F, $80, $08, $81, $01, $0C, $17, $00
-    db $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80, $EB, $80, $3D, $80
-    db $79, $80, $5C, $80, $7F, $80, $08, $81, $01, $01, $02, $00, $02, $80, $FF, $00
-
-Data_081_4525:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4527:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4529:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_452B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $10, $00, $24, $81, $01, $01, $13, $00, $24, $81, $01, $01, $12, $00
-    db $12, $80, $FF, $00
-
-Data_081_453F:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $10, $00, $35, $81, $01, $01, $13, $00, $35, $81, $01, $02, $17, $00
-    db $35, $81, $17, $80, $FF, $00
-
-Data_081_4555:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4557:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4559:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_455B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_455D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_455F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $00
-
-Data_081_4561:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $00, $00, $FF, $01
-
-Data_081_4569:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $02, $00, $FF, $01
-
-Data_081_4571:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $03, $00, $FF, $01
-
-Data_081_4579:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $04, $00, $FF, $01
-
-Data_081_4581:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $05, $00, $FF, $01
-
-Data_081_4589:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $06, $00, $FF, $01
-
-Data_081_4591:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $07, $00, $FF, $01
-
-Data_081_4599:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $08, $00, $FF, $01
-
-Data_081_45A1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $01
-
-Data_081_45A3:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $1F, $00, $24, $80, $FF, $01
-
-Data_081_45AB:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $6A, $80, $FF, $01
-
-Data_081_45B3:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $4C, $80, $01, $01, $22, $00, $02, $00, $FF, $01
-
-Data_081_45C1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $79, $80, $01, $08, $24, $00, $E0, $80, $EA, $80, $62, $80
-    db $E3, $80, $9B, $80, $5F, $80, $03, $80, $DF, $80, $FF, $01
-
-Data_081_45DD:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $23, $81, $FF, $01
-
-Data_081_45E5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $BA, $80, $FF, $01
-
-Data_081_45ED:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2045ED, $7E
-
-Data_081_466B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $07, $80, $FF, $01
-
-Data_081_4673:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $01
-
-Data_081_4675:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $01
-
-Data_081_4677:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $01, $00, $C0, $80, $C7, $80, $FF, $01
-
-Data_081_4681:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $28, $00, $2D, $80, $01, $01, $1F, $00, $24, $80, $00, $09, $01, $00
-    db $EA, $80, $10, $80, $7D, $80, $EB, $80, $3D, $80, $13, $80, $17, $80, $5C, $80
-    db $7F, $80, $FF, $01
-
-Data_081_46A5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $75, $80, $FF, $01
-
-Data_081_46AD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $34, $00, $39, $80, $FF, $01
-
-Data_081_46B5:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2046B5, $44
-
-Data_081_46F9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $2E, $00, $D4, $80, $01, $01, $33, $00, $D4, $80, $00, $01, $01, $00
-    db $0A, $00, $FF, $01
-
-Data_081_470D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $05, $01, $00, $E8, $80, $E2, $80, $60, $80, $EC, $80, $DF, $80, $FF, $01
-
-Data_081_471D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $01, $00, $7C, $80, $FF, $01
-
-Data_081_4725:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $01
-
-Data_081_4727:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $39, $00, $3C, $80, $FF, $01
-
-Data_081_472F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $01
-
-Data_081_4731:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $00, $00, $FF, $02
-
-Data_081_4739:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $01, $00, $FF, $02
-
-Data_081_4741:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $03, $00, $FF, $02
-
-Data_081_4749:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $04, $00, $FF, $02
-
-Data_081_4751:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $05, $00, $FF, $02
-
-Data_081_4759:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204759, $B4
-
-Data_081_480D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $07, $00, $FF, $02
-
-Data_081_4815:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $3F, $00, $03, $00, $00, $01, $02, $00, $08, $00, $FF, $02
-
-Data_081_4823:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02
-
-Data_081_4825:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $41, $00, $01, $00, $FF, $02
-
-Data_081_482D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $0C, $42, $00, $19, $81, $DD, $80, $9B, $80, $04, $80, $0C, $80, $2F, $80
-    db $80, $80, $D6, $80, $8D, $80, $0D, $81, $2F, $81, $B6, $80, $01, $0C, $3D, $00
-    db $19, $81, $DD, $80, $9B, $80, $04, $80, $0C, $80, $2F, $80, $80, $80, $D6, $80
-    db $8D, $80, $0D, $81, $2F, $81, $B6, $80, $FF, $02
-
-Data_081_4867:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $25, $80, $FF, $02
-
-Data_081_486F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $6E, $80, $FF, $02
-
-Data_081_4877:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $96, $80, $FF, $02
-
-Data_081_487F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $07, $02, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81
-    db $06, $00, $FF, $02
-
-Data_081_4893:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204893, $48
-
-Data_081_48DB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02
-
-Data_081_48DD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02
-
-Data_081_48DF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02
-
-Data_081_48E1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $26, $81, $FF, $02
-
-Data_081_48E9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $32, $80, $FF, $02
-
-Data_081_48F1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $4C, $00, $00, $00, $01, $01, $54, $00, $00, $00, $01, $01, $4B, $00
-    db $00, $00, $01, $01, $53, $00, $00, $00, $01, $01, $42, $00, $00, $00, $01, $01
-    db $55, $00, $00, $00, $01, $01, $3D, $00, $00, $00, $00, $01, $02, $00, $0C, $80
-    db $FF, $02
-
-Data_081_4923:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $02, $02, $00, $01, $80, $29, $80, $FF, $02
-
-Data_081_492D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $3E, $00, $01, $00, $00, $01, $02, $00, $6F, $80, $FF, $02
-
-Data_081_493B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $20493B, $4C
-
-Data_081_4987:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $06, $01, $01, $62, $80, $51, $80, $4C, $80, $61, $80, $5F, $80, $5C, $80
-    db $01, $04, $55, $00, $35, $81, $5F, $80, $25, $81, $24, $81, $FF, $02
-
-Data_081_49A5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $0A, $00, $FF, $02
-
-Data_081_49AD:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $2D, $80, $FF, $02
-
-Data_081_49B5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $02, $00, $D8, $80, $FF, $02
-
-Data_081_49BD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $02
-
-Data_081_49BF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $00, $00, $FF, $03
-
-Data_081_49C7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $01, $00, $FF, $03
-
-Data_081_49CF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $02, $00, $FF, $03
-
-Data_081_49D7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $04, $00, $FF, $03
-
-Data_081_49DF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $05, $00, $FF, $03
-
-Data_081_49E7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $06, $00, $FF, $03
-
-Data_081_49EF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $07, $00, $FF, $03
-
-Data_081_49F7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $08, $00, $FF, $03
-
-Data_081_49FF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4A01:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $5B, $00, $00, $00, $FF, $03
-
-Data_081_4A09:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4A0B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4A0D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $0D, $80, $FF, $03
-
-Data_081_4A15:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $5D, $00, $02, $00, $FF, $03
-
-Data_081_4A1D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $5C, $00, $07, $00, $01, $00, $01, $02, $6D, $00, $07, $00, $01, $00
-    db $01, $02, $6A, $00, $07, $00, $01, $00, $01, $02, $69, $00, $07, $00, $01, $00
-    db $00, $01, $03, $00, $BF, $80, $FF, $03
-
-Data_081_4A45:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $68, $00, $06, $00, $00, $01, $03, $00, $1C, $81, $FF, $03
-
-Data_081_4A53:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4A55:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $0C, $03, $00, $56, $80, $0A, $81, $5D, $80, $07, $81, $51, $80, $F7, $80
-    db $5F, $80, $12, $80, $2E, $81, $0B, $81, $11, $80, $08, $81, $FF, $03
-
-Data_081_4A73:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $08, $03, $00, $DE, $80, $52, $80, $2C, $81, $55, $80, $4C, $80, $01, $80
-    db $0D, $81, $2D, $81, $FF, $03
-
-Data_081_4A89:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $6D, $00, $2C, $81, $01, $01, $6A, $00, $2C, $81, $01, $01, $70, $00
-    db $2C, $81, $00, $01, $03, $00, $0A, $00, $FF, $03
-
-Data_081_4AA3:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4AA5:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204AA5, $58
-
-Data_081_4AFD:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $03, $00, $98, $80, $FF, $03
-
-Data_081_4B05:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $6C, $00, $7C, $80, $FF, $03
-
-Data_081_4B0D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B0F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B11:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B13:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B15:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B17:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $03
-
-Data_081_4B19:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $00, $00, $FF, $04
-
-Data_081_4B21:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $01, $00, $FF, $04
-
-Data_081_4B29:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $03, $00, $FF, $04
-
-Data_081_4B31:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $02, $00, $FF, $04
-
-Data_081_4B39:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $05, $00, $FF, $04
-
-Data_081_4B41:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $06, $00, $FF, $04
-
-Data_081_4B49:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $07, $00, $FF, $04
-
-Data_081_4B51:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $08, $00, $FF, $04
-
-Data_081_4B59:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4B5B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $80, $00, $02, $00, $FF, $04
-
-Data_081_4B63:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $B2, $80, $FF, $04
-
-Data_081_4B6B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $79, $00, $02, $00, $00, $01, $04, $00, $1D, $81, $FF, $04
-
-Data_081_4B79:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $D3, $80, $FF, $04
-
-Data_081_4B81:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4B83:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $88, $00, $01, $00, $00, $01, $04, $00, $01, $81, $FF, $04
-
-Data_081_4B91:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $84, $00, $06, $00, $00, $01, $04, $00, $80, $80, $FF, $04
-
-Data_081_4B9F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $4A, $80, $FF, $04
-
-Data_081_4BA7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $08, $04, $00, $1F, $81, $D8, $80, $B3, $80, $D7, $80, $0D, $80, $6E, $80
-    db $63, $80, $BD, $80, $FF, $04
-
-Data_081_4BBD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $8A, $00, $9E, $80, $FF, $04
-
-Data_081_4BC5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $8B, $00, $9F, $80, $FF, $04
-
-Data_081_4BCD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BCF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $04, $00, $0A, $00, $FF, $04
-
-Data_081_4BD7:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BD9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BDB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BDD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BDF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BE1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BE3:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BE5:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $04
-
-Data_081_4BE7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $00, $00, $FF, $05
-
-Data_081_4BEF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $01, $00, $FF, $05
-
-Data_081_4BF7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $02, $00, $FF, $05
-
-Data_081_4BFF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $03, $00, $FF, $05
-
-Data_081_4C07:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $04, $00, $FF, $05
-
-Data_081_4C0F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $06, $00, $FF, $05
-
-Data_081_4C17:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $07, $00, $FF, $05
-
-Data_081_4C1F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $08, $00, $FF, $05
-
-Data_081_4C27:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4C29:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $97, $00, $00, $00, $FF, $05
-
-Data_081_4C31:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4C33:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $9B, $00, $04, $00, $00, $01, $05, $00, $8F, $80, $FF, $05
-
-Data_081_4C41:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $9C, $00, $08, $00, $01, $01, $A6, $00, $01, $00, $00, $01, $05, $00
-    db $52, $80, $FF, $05
-
-Data_081_4C55:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $98, $00, $02, $00, $00, $01, $05, $00, $94, $80, $FF, $05
-
-Data_081_4C63:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $9A, $00, $06, $00, $00, $01, $05, $00, $4B, $80, $FF, $05
-
-Data_081_4C71:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $03, $9A, $00, $B3, $80, $BB, $80, $BD, $80, $01, $03, $A2, $00, $B3, $80
-    db $BB, $80, $BD, $80, $01, $03, $A4, $00, $B3, $80, $BB, $80, $BD, $80, $01, $01
-    db $9D, $00, $00, $00, $00, $01, $05, $00, $F6, $80, $FF, $05
-
-Data_081_4C9D:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $FB, $80, $FF, $05
-
-Data_081_4CA5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $A6, $00, $07, $00, $01, $01, $A4, $00, $07, $00, $00, $01, $05, $00
-    db $5B, $80, $FF, $05
-
-Data_081_4CB9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CBB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CBD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $9E, $00, $B7, $80, $01, $01, $A3, $00, $06, $00, $FF, $05
-
-Data_081_4CCB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CCD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $AB, $00, $C4, $80, $FF, $05
-
-Data_081_4CD5:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $05, $00, $0A, $00, $FF, $05
-
-Data_081_4CDD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CDF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CE1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CE3:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CE5:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CE7:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $05
-
-Data_081_4CE9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $00, $00, $FF, $06
-
-Data_081_4CF1:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204CF1, $68
-
-Data_081_4D59:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BF, $00, $01, $00, $01, $01, $BB, $00, $01, $00, $01, $01, $BC, $00
-    db $01, $00, $01, $01, $C0, $00, $01, $00, $FF, $06
-
-Data_081_4D73:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $03, $00, $FF, $06
-
-Data_081_4D7B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $04, $00, $FF, $06
-
-Data_081_4D83:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $05, $00, $FF, $06
-
-Data_081_4D8B:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $07, $00, $FF, $06
-
-Data_081_4D93:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $08, $00, $FF, $06
-
-Data_081_4D9B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $06
-
-Data_081_4D9D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BA, $00, $00, $00, $01, $01, $B5, $00, $00, $00, $01, $01, $B8, $00
-    db $00, $00, $FF, $06
-
-Data_081_4DB1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $02, $00, $FF, $06
-
-Data_081_4DB9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BF, $00, $07, $00, $01, $01, $B9, $00, $07, $00, $01, $01, $BE, $00
-    db $07, $00, $00, $01, $06, $00, $01, $00, $FF, $06
-
-Data_081_4DD3:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $B6, $00, $07, $00, $00, $01, $06, $00, $29, $80, $FF, $06
-
-Data_081_4DE1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $B6, $00, $02, $00, $00, $01, $06, $00, $61, $80, $FF, $06
-
-Data_081_4DEF:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $9D, $80, $FF, $06
-
-Data_081_4DF7:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $04, $CC, $00, $29, $81, $4C, $80, $C7, $80, $5C, $80, $01, $04, $C8, $00
-    db $29, $81, $4C, $80, $C7, $80, $5C, $80, $01, $04, $B7, $00, $29, $81, $4C, $80
-    db $C7, $80, $5C, $80, $01, $01, $C5, $00, $01, $00, $00, $01, $06, $00, $54, $80
-    db $FF, $06
-
-Data_081_4E29:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204E29, $56
-
-Data_081_4E7F:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BE, $00, $DC, $80, $FF, $06
-
-Data_081_4E87:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $06
-
-Data_081_4E89:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BF, $00, $02, $00, $01, $01, $BB, $00, $02, $00, $01, $01, $BC, $00
-    db $02, $00, $01, $01, $C0, $00, $02, $00, $00, $01, $06, $00, $2F, $80, $FF, $06
-
-Data_081_4EA9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $B6, $00, $E3, $80, $01, $01, $C8, $00, $E6, $80, $FF, $06
-
-Data_081_4EB7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $06, $00, $20, $81, $FF, $06
-
-Data_081_4EBF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $06
-
-Data_081_4EC1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $BB, $00, $07, $00, $01, $01, $BC, $00, $07, $00, $01, $01, $C0, $00
-    db $07, $00, $00, $01, $06, $00, $63, $80, $FF, $06
-
-Data_081_4EDB:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $B6, $00, $01, $00, $01, $01, $C4, $00, $02, $00, $01, $01, $C5, $00
-    db $02, $00, $FF, $06
-
-Data_081_4EEF:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $B6, $00, $08, $00, $01, $01, $C4, $00, $08, $00, $01, $01, $C5, $00
-    db $08, $00, $00, $01, $06, $00, $BC, $80, $FF, $06
-
-Data_081_4F09:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $C9, $00, $81, $80, $01, $01, $72, $00, $E6, $80, $FF, $06
-
-Data_081_4F17:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $0D, $01, $EB, $80, $01, $01, $CD, $00, $35, $81, $FF, $06
-
-Data_081_4F25:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $06
-
-Data_081_4F27:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $06
-
-Data_081_4F29:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $00, $00, $FF, $07
-
-Data_081_4F31:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $E7, $00, $01, $00, $01, $01, $E4, $00, $01, $00, $01, $01, $D4, $00
-    db $01, $00, $01, $01, $E6, $00, $01, $00, $01, $01, $E5, $00, $01, $00, $00, $07
-    db $07, $00, $33, $80, $38, $80, $40, $80, $2B, $80, $3D, $80, $3C, $80, $30, $80
-    db $00, $04, $01, $00, $07, $81, $F7, $80, $0B, $81, $08, $81, $FF, $07
-
-Data_081_4F6F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $02, $00, $FF, $07
-
-Data_081_4F77:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $03, $00, $FF, $07
-
-Data_081_4F7F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $04, $00, $FF, $07
-
-Data_081_4F87:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $05, $00, $FF, $07
-
-Data_081_4F8F:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $06, $00, $FF, $07
-
-Data_081_4F97:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $08, $00, $FF, $07
-
-Data_081_4F9F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_4FA1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $D3, $00, $02, $00, $FF, $07
-
-Data_081_4FA9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $0A, $07, $00, $56, $80, $B0, $80, $0C, $80, $98, $80, $BF, $80, $80, $80
-    db $47, $80, $08, $80, $8D, $80, $B6, $80, $FF, $07
-
-Data_081_4FC3:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $EB, $00, $06, $00, $01, $01, $D8, $00, $06, $00, $00, $01, $07, $00
-    db $71, $80, $FF, $07
-
-Data_081_4FD7:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $07, $00, $4E, $80, $01, $01, $D6, $00, $03, $00, $FF, $07
-
-Data_081_4FE5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $DC, $00, $06, $00, $01, $01, $D3, $00, $06, $00, $00, $01, $07, $00
-    db $B4, $80, $FF, $07
-
-Data_081_4FF9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_4FFB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_4FFD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_4FFF:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $204FFF, $4E
-
-Data_081_504D:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $20504D, $68
-
-Data_081_50B5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $07, $DC, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80, $8F, $80, $C4, $80
-    db $77, $80, $01, $07, $D9, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80, $8F, $80
-    db $C4, $80, $77, $80, $01, $07, $D7, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80
-    db $8F, $80, $C4, $80, $77, $80, $01, $01, $DC, $00, $FF, $80, $FF, $07
-
-Data_081_50F3:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $2050F3, $66
-
-Data_081_5159:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $E7, $00, $0A, $81, $01, $01, $E5, $00, $06, $00, $FF, $07
-
-Data_081_5167:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_5169:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_516B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $E7, $00, $03, $00, $01, $01, $E4, $00, $03, $00, $01, $01, $D9, $00
-    db $03, $00, $01, $01, $D4, $00, $03, $00, $01, $01, $E6, $00, $03, $00, $01, $01
-    db $DD, $00, $03, $00, $00, $01, $07, $00, $01, $00, $FF, $07
-
-Data_081_5197:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_5199:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_519B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_519D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_519F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $07
-
-Data_081_51A1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $00, $00, $FF, $08
-
-Data_081_51A9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $01, $00, $FF, $08
-
-Data_081_51B1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $02, $00, $FF, $08
-
-Data_081_51B9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $03, $00, $FF, $08
-
-Data_081_51C1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $04, $00, $FF, $08
-
-Data_081_51C9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $05, $00, $FF, $08
-
-Data_081_51D1:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $06, $00, $FF, $08
-
-Data_081_51D9:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $01, $08, $00, $07, $00, $FF, $08
-
-Data_081_51E1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $08
-
-Data_081_51E3:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $F1, $00, $00, $00, $FF, $08
-
-Data_081_51EB:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $04, $0B, $01, $0D, $80, $05, $80, $06, $80, $01, $80, $01, $04, $0A, $01
-    db $0D, $80, $05, $80, $06, $80, $01, $80, $00, $01, $08, $00, $B6, $80, $FF, $08
 
-Data_081_520B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $20520B, $4A
-
-Data_081_5255:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $06, $01, $06, $00, $01, $01, $05, $01, $06, $00, $00, $01, $08, $00
-    db $0A, $00, $FF, $08
-
-Data_081_5269:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $04, $0B, $01, $78, $80, $7C, $80, $80, $80, $77, $80, $01, $04, $F2, $00
-    db $78, $80, $7C, $80, $80, $80, $77, $80, $01, $04, $0A, $01, $78, $80, $7C, $80
-    db $80, $80, $77, $80, $01, $04, $FB, $00, $78, $80, $7C, $80, $80, $80, $77, $80
-    db $00, $01, $08, $00, $B5, $80, $FF, $08
-
-Data_081_52A1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $01, $01, $03, $00, $00, $01, $08, $00, $90, $80, $FF, $08
-
-Data_081_52AF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $08
-
-Data_081_52B1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $08, $FE, $00, $E2, $80, $0A, $81, $38, $80, $E6, $80, $07, $81, $0E, $80
-    db $EC, $80, $5C, $80, $00, $05, $08, $00, $60, $80, $55, $80, $D9, $80, $4C, $80
-    db $5F, $80, $FF, $08
-
-Data_081_52D5:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $08
-
-Data_081_52D7:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $04, $01, $06, $00, $00, $01, $08, $00, $05, $80, $FF, $08
-
-Data_081_52E5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $06, $F7, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80
-    db $01, $06, $F3, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80
-    db $01, $06, $FA, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80
-    db $FF, $08
-
-Data_081_5317:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $05, $FC, $00, $DE, $80, $60, $80, $7D, $80, $EB, $80, $3C, $80, $FF, $08
-
-Data_081_5327:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $01, $01, $60, $80, $01, $02, $FC, $00, $F7, $80, $08, $81, $FF, $08
-
-Data_081_5337:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $01, $01, $07, $00, $00, $01, $08, $00, $08, $80, $FF, $08
-
-Data_081_5345:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $08
-
-Data_081_5347:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $FA, $00, $22, $81, $FF, $08
-
-Data_081_534F:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $09, $01, $31, $81, $FF, $08
-
-Data_081_5357:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $0A, $01, $32, $81, $00, $02, $08, $00, $C7, $80, $C4, $80, $FF, $08
-
-Data_081_5367:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $01, $01, $05, $00, $01, $01, $F6, $00, $1E, $81, $FF, $08
-
-Data_081_5375:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $06, $01, $2D, $81, $FF, $08
-
-Data_081_537D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $08
-
-Data_081_537F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5381:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5383:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5385:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5387:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5389:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_538B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_538D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_538F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5391:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5393:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5395:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5397:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_5399:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_539B:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_539D:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_539F:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53A1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53A3:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53A5:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53A7:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53A9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53AB:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53AD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53AF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53B1:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53B3:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53B5:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53B7:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53B9:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $09
-
-Data_081_53BB:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $E8, $00, $33, $80, $38, $80, $FF, $0A
-
-Data_081_53C5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $2D, $01, $40, $80, $FF, $0A
-
-Data_081_53CD:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $0A
-
-Data_081_53CF:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $E5, $00, $17, $80, $FF, $0A
-
-Data_081_53D7:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $CF, $00, $A2, $80, $FF, $0A
-
-Data_081_53DF:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $0A
-
-Data_081_53E1:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $30, $01, $3C, $80, $FF, $0A
-
-Data_081_53E9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $2D, $01, $65, $81, $01, $01, $2E, $01, $65, $81, $FF, $0A
-
-Data_081_53F7:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $0A
-
-Data_081_53F9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $D0, $00, $40, $80, $FF, $0A
-
-Data_081_5401:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $0A
-
-Data_081_5403:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $36, $01, $60, $80, $FF, $0A
-
-Data_081_540B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $38, $01, $18, $80, $FF, $0A
-
-Data_081_5413:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $39, $01, $37, $80, $FF, $0A
-
-Data_081_541B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $33, $01, $61, $80, $FF, $0A
-
-Data_081_5423:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $02, $34, $01, $6B, $81, $6C, $81, $01, $01, $39, $01, $66, $81, $01, $01
-    db $3A, $01, $66, $81, $FF, $0A
-
-Data_081_5439:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $3C, $01, $C6, $80, $FF, $0A
-
-Data_081_5441:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $3D, $01, $6D, $81, $FF, $0A
-
-Data_081_5449:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $01, $3E, $01, $A5, $80, $FF, $0A
-
-Data_081_5451:: ; heuristic: target of a monotone pointer table; C0
-    db $FF, $0A
+; E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CallFunc4001InBank81KeepRegs_Sub01_Sub01 over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453).
+; record: pair-check list for this species
+SpeciesPairCheckTable::
+Data_081_4167:: ; address name
+    dw SpeciesPairChecks000 ; id 0
+    dw SpeciesPairChecks001 ; id 1 DrakSlime
+    dw SpeciesPairChecks002 ; id 2 SpotSlime
+    dw SpeciesPairChecks003 ; id 3 WingSlime
+    dw SpeciesPairChecks004 ; id 4 TreeSlime
+    dw SpeciesPairChecks005 ; id 5 Snaily
+    dw SpeciesPairChecks006 ; id 6 SlimeNite
+    dw SpeciesPairChecks007 ; id 7 Babble
+    dw SpeciesPairChecks008 ; id 8 BoxSlime
+    dw SpeciesPairChecks009 ; id 9 PearlGel
+    dw SpeciesPairChecks00A ; id 10 Slime
+    dw SpeciesPairChecks00B ; id 11 Healer
+    dw SpeciesPairChecks00C ; id 12 FangSlime
+    dw SpeciesPairChecks00D ; id 13 RockSlime
+    dw SpeciesPairChecks00E ; id 14 SlimeBorg
+    dw SpeciesPairChecks00F ; id 15 Slabbit
+    dw SpeciesPairChecks010 ; id 16 KingSlime
+    dw SpeciesPairChecks011 ; id 17 Metaly
+    dw SpeciesPairChecks012 ; id 18 Metabble
+    dw SpeciesPairChecks013 ; id 19 SpotKing
+    dw SpeciesPairChecks014 ; id 20 TropicGel
+    dw SpeciesPairChecks015 ; id 21 MimeSlime
+    dw SpeciesPairChecks016 ; id 22 HaloSlime
+    dw SpeciesPairChecks017 ; id 23 MetalKing
+    dw SpeciesPairChecks018 ; id 24 GoldSlime
+    dw SpeciesPairChecks019 ; id 25 GranSlime
+    dw SpeciesPairChecks01A ; id 26 WonderEgg
+    dw SpeciesPairChecks01B ; id 27 Butch
+    dw SpeciesPairChecks01C ; id 28 ?
+    dw SpeciesPairChecks01D ; id 29 ?
+    dw SpeciesPairChecks01E ; id 30 ?
+    dw SpeciesPairChecks01F ; id 31 ?
+    dw SpeciesPairChecks020 ; id 32 ?
+    dw SpeciesPairChecks021 ; id 33 ?
+    dw SpeciesPairChecks022 ; id 34 ?
+    dw SpeciesPairChecks023 ; id 35 ?
+    dw SpeciesPairChecks024 ; id 36 DragonKid
+    dw SpeciesPairChecks025 ; id 37 Tortragon
+    dw SpeciesPairChecks026 ; id 38 Pteranod
+    dw SpeciesPairChecks027 ; id 39 Gasgon
+    dw SpeciesPairChecks028 ; id 40 FairyDrak
+    dw SpeciesPairChecks029 ; id 41 LizardMan
+    dw SpeciesPairChecks02A ; id 42 Poisongon
+    dw SpeciesPairChecks02B ; id 43 Swordgon
+    dw SpeciesPairChecks02C ; id 44 Drygon
+    dw SpeciesPairChecks02D ; id 45 Dragon
+    dw SpeciesPairChecks02E ; id 46 MiniDrak
+    dw SpeciesPairChecks02F ; id 47 MadDragon
+    dw SpeciesPairChecks030 ; id 48 Rayburn
+    dw SpeciesPairChecks031 ; id 49 Chamelgon
+    dw SpeciesPairChecks032 ; id 50 LizardFly
+    dw SpeciesPairChecks033 ; id 51 Andreal
+    dw SpeciesPairChecks034 ; id 52 KingCobra
+    dw SpeciesPairChecks035 ; id 53 Vampirus
+    dw SpeciesPairChecks036 ; id 54 SnakeBat
+    dw SpeciesPairChecks037 ; id 55 Spikerous
+    dw SpeciesPairChecks038 ; id 56 GreatDrak
+    dw SpeciesPairChecks039 ; id 57 Crestpent
+    dw SpeciesPairChecks03A ; id 58 WingSnake
+    dw SpeciesPairChecks03B ; id 59 Coatol
+    dw SpeciesPairChecks03C ; id 60 Orochi
+    dw SpeciesPairChecks03D ; id 61 BattleRex
+    dw SpeciesPairChecks03E ; id 62 SkyDragon
+    dw SpeciesPairChecks03F ; id 63 Serpentia
+    dw SpeciesPairChecks040 ; id 64 Divinegon
+    dw SpeciesPairChecks041 ; id 65 Orligon
+    dw SpeciesPairChecks042 ; id 66 GigaDraco
+    dw SpeciesPairChecks043 ; id 67 ?
+    dw SpeciesPairChecks044 ; id 68 ?
+    dw SpeciesPairChecks045 ; id 69 ?
+    dw SpeciesPairChecks046 ; id 70 ?
+    dw SpeciesPairChecks047 ; id 71 Tonguella
+    dw SpeciesPairChecks048 ; id 72 Almiraj
+    dw SpeciesPairChecks049 ; id 73 CatFly
+    dw SpeciesPairChecks04A ; id 74 PillowRat
+    dw SpeciesPairChecks04B ; id 75 Saccer
+    dw SpeciesPairChecks04C ; id 76 GulpBeast
+    dw SpeciesPairChecks04D ; id 77 Skullroo
+    dw SpeciesPairChecks04E ; id 78 WindBeast
+    dw SpeciesPairChecks04F ; id 79 Beavern
+    dw SpeciesPairChecks050 ; id 80 Antbear
+    dw SpeciesPairChecks051 ; id 81 SuperTen
+    dw SpeciesPairChecks052 ; id 82 IronTurt
+    dw SpeciesPairChecks053 ; id 83 Mommonja
+    dw SpeciesPairChecks054 ; id 84 HammerMan
+    dw SpeciesPairChecks055 ; id 85 Grizzly
+    dw SpeciesPairChecks056 ; id 86 Yeti
+    dw SpeciesPairChecks057 ; id 87 ArrowDog
+    dw SpeciesPairChecks058 ; id 88 NoctoKing
+    dw SpeciesPairChecks059 ; id 89 BeastNite
+    dw SpeciesPairChecks05A ; id 90 MadGopher
+    dw SpeciesPairChecks05B ; id 91 FairyRat
+    dw SpeciesPairChecks05C ; id 92 Unicorn
+    dw SpeciesPairChecks05D ; id 93 Goategon
+    dw SpeciesPairChecks05E ; id 94 WildApe
+    dw SpeciesPairChecks05F ; id 95 Trumpeter
+    dw SpeciesPairChecks060 ; id 96 KingLeo
+    dw SpeciesPairChecks061 ; id 97 DarkHorn
+    dw SpeciesPairChecks062 ; id 98 MadCat
+    dw SpeciesPairChecks063 ; id 99 BigEye
+    dw SpeciesPairChecks064 ; id 100 Gorago
+    dw SpeciesPairChecks065 ; id 101 CatMage
+    dw SpeciesPairChecks066 ; id 102 Dumbira
+    dw SpeciesPairChecks067 ; id 103 ?
+    dw SpeciesPairChecks068 ; id 104 ?
+    dw SpeciesPairChecks069 ; id 105 ?
+    dw SpeciesPairChecks06A ; id 106 Picky
+    dw SpeciesPairChecks06B ; id 107 Wyvern
+    dw SpeciesPairChecks06C ; id 108 BullBird
+    dw SpeciesPairChecks06D ; id 109 Florajay
+    dw SpeciesPairChecks06E ; id 110 DuckKite
+    dw SpeciesPairChecks06F ; id 111 MadPecker
+    dw SpeciesPairChecks070 ; id 112 MadRaven
+    dw SpeciesPairChecks071 ; id 113 MistyWing
+    dw SpeciesPairChecks072 ; id 114 AquaHawk
+    dw SpeciesPairChecks073 ; id 115 Dracky
+    dw SpeciesPairChecks074 ; id 116 KiteHawk
+    dw SpeciesPairChecks075 ; id 117 BigRoost
+    dw SpeciesPairChecks076 ; id 118 StubBird
+    dw SpeciesPairChecks077 ; id 119 LandOwl
+    dw SpeciesPairChecks078 ; id 120 MadGoose
+    dw SpeciesPairChecks079 ; id 121 MadCondor
+    dw SpeciesPairChecks07A ; id 122 Emyu
+    dw SpeciesPairChecks07B ; id 123 Blizzardy
+    dw SpeciesPairChecks07C ; id 124 Phoenix
+    dw SpeciesPairChecks07D ; id 125 ZapBird
+    dw SpeciesPairChecks07E ; id 126 Garudian
+    dw SpeciesPairChecks07F ; id 127 WhipBird
+    dw SpeciesPairChecks080 ; id 128 FunkyBird
+    dw SpeciesPairChecks081 ; id 129 RainHawk
+    dw SpeciesPairChecks082 ; id 130 Azurile
+    dw SpeciesPairChecks083 ; id 131 Shantak
+    dw SpeciesPairChecks084 ; id 132 CragDevil
+    dw SpeciesPairChecks085 ; id 133 ?
+    dw SpeciesPairChecks086 ; id 134 ?
+    dw SpeciesPairChecks087 ; id 135 ?
+    dw SpeciesPairChecks088 ; id 136 ?
+    dw SpeciesPairChecks089 ; id 137 ?
+    dw SpeciesPairChecks08A ; id 138 ?
+    dw SpeciesPairChecks08B ; id 139 ?
+    dw SpeciesPairChecks08C ; id 140 ?
+    dw SpeciesPairChecks08D ; id 141 MadPlant
+    dw SpeciesPairChecks08E ; id 142 FireWeed
+    dw SpeciesPairChecks08F ; id 143 FloraMan
+    dw SpeciesPairChecks090 ; id 144 WingTree
+    dw SpeciesPairChecks091 ; id 145 CactiBall
+    dw SpeciesPairChecks092 ; id 146 Gulpple
+    dw SpeciesPairChecks093 ; id 147 Toadstool
+    dw SpeciesPairChecks094 ; id 148 AmberWeed
+    dw SpeciesPairChecks095 ; id 149 Slurperon
+    dw SpeciesPairChecks096 ; id 150 Stubsuck
+    dw SpeciesPairChecks097 ; id 151 Oniono
+    dw SpeciesPairChecks098 ; id 152 DanceVegi
+    dw SpeciesPairChecks099 ; id 153 TreeBoy
+    dw SpeciesPairChecks09A ; id 154 Devipine
+    dw SpeciesPairChecks09B ; id 155 FaceTree
+    dw SpeciesPairChecks09C ; id 156 HerbMan
+    dw SpeciesPairChecks09D ; id 157 BeanMan
+    dw SpeciesPairChecks09E ; id 158 EvilSeed
+    dw SpeciesPairChecks09F ; id 159 ManEater
+    dw SpeciesPairChecks0A0 ; id 160 Snapper
+    dw SpeciesPairChecks0A1 ; id 161 GhosTree
+    dw SpeciesPairChecks0A2 ; id 162 Rosevine
+    dw SpeciesPairChecks0A3 ; id 163 Egdracil
+    dw SpeciesPairChecks0A4 ; id 164 Warubou
+    dw SpeciesPairChecks0A5 ; id 165 Watabou
+    dw SpeciesPairChecks0A6 ; id 166 Eggplaton
+    dw SpeciesPairChecks0A7 ; id 167 FooHero
+    dw SpeciesPairChecks0A8 ; id 168 ?
+    dw SpeciesPairChecks0A9 ; id 169 ?
+    dw SpeciesPairChecks0AA ; id 170 ?
+    dw SpeciesPairChecks0AB ; id 171 ?
+    dw SpeciesPairChecks0AC ; id 172 ?
+    dw SpeciesPairChecks0AD ; id 173 ?
+    dw SpeciesPairChecks0AE ; id 174 ?
+    dw SpeciesPairChecks0AF ; id 175 ?
+    dw SpeciesPairChecks0B0 ; id 176 GiantSlug
+    dw SpeciesPairChecks0B1 ; id 177 Catapila
+    dw SpeciesPairChecks0B2 ; id 178 Gophecada
+    dw SpeciesPairChecks0B3 ; id 179 Butterfly
+    dw SpeciesPairChecks0B4 ; id 180 WeedBug
+    dw SpeciesPairChecks0B5 ; id 181 GiantWorm
+    dw SpeciesPairChecks0B6 ; id 182 Lipsy
+    dw SpeciesPairChecks0B7 ; id 183 StagBug
+    dw SpeciesPairChecks0B8 ; id 184 Pyuro
+    dw SpeciesPairChecks0B9 ; id 185 ArmyAnt
+    dw SpeciesPairChecks0BA ; id 186 GoHopper
+    dw SpeciesPairChecks0BB ; id 187 TailEater
+    dw SpeciesPairChecks0BC ; id 188 ArmorPede
+    dw SpeciesPairChecks0BD ; id 189 Eyeder
+    dw SpeciesPairChecks0BE ; id 190 GiantMoth
+    dw SpeciesPairChecks0BF ; id 191 Droll
+    dw SpeciesPairChecks0C0 ; id 192 ArmyCrab
+    dw SpeciesPairChecks0C1 ; id 193 MadHornet
+    dw SpeciesPairChecks0C2 ; id 194 Belzebub
+    dw SpeciesPairChecks0C3 ; id 195 WarMantis
+    dw SpeciesPairChecks0C4 ; id 196 HornBeet
+    dw SpeciesPairChecks0C5 ; id 197 Sickler
+    dw SpeciesPairChecks0C6 ; id 198 Armorpion
+    dw SpeciesPairChecks0C7 ; id 199 Digster
+    dw SpeciesPairChecks0C8 ; id 200 Skularach
+    dw SpeciesPairChecks0C9 ; id 201 MultiEyes
+    dw SpeciesPairChecks0CA ; id 202 ?
+    dw SpeciesPairChecks0CB ; id 203 ?
+    dw SpeciesPairChecks0CC ; id 204 ?
+    dw SpeciesPairChecks0CD ; id 205 ?
+    dw SpeciesPairChecks0CE ; id 206 ?
+    dw SpeciesPairChecks0CF ; id 207 ?
+    dw SpeciesPairChecks0D0 ; id 208 ?
+    dw SpeciesPairChecks0D1 ; id 209 ?
+    dw SpeciesPairChecks0D2 ; id 210 ?
+    dw SpeciesPairChecks0D3 ; id 211 Pixy
+    dw SpeciesPairChecks0D4 ; id 212 MedusaEye
+    dw SpeciesPairChecks0D5 ; id 213 AgDevil
+    dw SpeciesPairChecks0D6 ; id 214 Demonite
+    dw SpeciesPairChecks0D7 ; id 215 DarkEye
+    dw SpeciesPairChecks0D8 ; id 216 EyeBall
+    dw SpeciesPairChecks0D9 ; id 217 SkulRider
+    dw SpeciesPairChecks0DA ; id 218 EvilBeast
+    dw SpeciesPairChecks0DB ; id 219 Bubblemon
+    dw SpeciesPairChecks0DC ; id 220 1EyeClown
+    dw SpeciesPairChecks0DD ; id 221 Gremlin
+    dw SpeciesPairChecks0DE ; id 222 ArcDemon
+    dw SpeciesPairChecks0DF ; id 223 Lionex
+    dw SpeciesPairChecks0E0 ; id 224 GoatHorn
+    dw SpeciesPairChecks0E1 ; id 225 Orc
+    dw SpeciesPairChecks0E2 ; id 226 Ogre
+    dw SpeciesPairChecks0E3 ; id 227 GateGuard
+    dw SpeciesPairChecks0E4 ; id 228 ChopClown
+    dw SpeciesPairChecks0E5 ; id 229 BossTroll
+    dw SpeciesPairChecks0E6 ; id 230 Grendal
+    dw SpeciesPairChecks0E7 ; id 231 Akubar
+    dw SpeciesPairChecks0E8 ; id 232 MadKnight
+    dw SpeciesPairChecks0E9 ; id 233 EvilWell
+    dw SpeciesPairChecks0EA ; id 234 Gigantes
+    dw SpeciesPairChecks0EB ; id 235 Centasaur
+    dw SpeciesPairChecks0EC ; id 236 EvilArmor
+    dw SpeciesPairChecks0ED ; id 237 Jamirus
+    dw SpeciesPairChecks0EE ; id 238 Durran
+    dw SpeciesPairChecks0EF ; id 239 Titanis
+    dw SpeciesPairChecks0F0 ; id 240 LampGenie
+    dw SpeciesPairChecks0F1 ; id 241 ?
+    dw SpeciesPairChecks0F2 ; id 242 ?
+    dw SpeciesPairChecks0F3 ; id 243 ?
+    dw SpeciesPairChecks0F4 ; id 244 ?
+    dw SpeciesPairChecks0F5 ; id 245 ?
+    dw SpeciesPairChecks0F6 ; id 246 Spooky
+    dw SpeciesPairChecks0F7 ; id 247 Skullgon
+    dw SpeciesPairChecks0F8 ; id 248 PutrePup
+    dw SpeciesPairChecks0F9 ; id 249 RotRaven
+    dw SpeciesPairChecks0FA ; id 250 Mummy
+    dw SpeciesPairChecks0FB ; id 251 DarkCrab
+    dw SpeciesPairChecks0FC ; id 252 DeadNite
+    dw SpeciesPairChecks0FD ; id 253 Shadow
+    dw SpeciesPairChecks0FE ; id 254 Skulpent
+    dw SpeciesPairChecks0FF ; id 255 Hork
+    dw SpeciesPairChecks100 ; id 256 Mudron
+    dw SpeciesPairChecks101 ; id 257 NiteWhip
+    dw SpeciesPairChecks102 ; id 258 WindMerge
+    dw SpeciesPairChecks103 ; id 259 Reaper
+    dw SpeciesPairChecks104 ; id 260 Inverzon
+    dw SpeciesPairChecks105 ; id 261 FoxFire
+    dw SpeciesPairChecks106 ; id 262 CaptDead
+    dw SpeciesPairChecks107 ; id 263 DeadNoble
+    dw SpeciesPairChecks108 ; id 264 WhiteKing
+    dw SpeciesPairChecks109 ; id 265 BoneSlave
+    dw SpeciesPairChecks10A ; id 266 Skeletor
+    dw SpeciesPairChecks10B ; id 267 Servant
+    dw SpeciesPairChecks10C ; id 268 Lazamanus
+    dw SpeciesPairChecks10D ; id 269 Copycat
+    dw SpeciesPairChecks10E ; id 270 MadSpirit
+    dw SpeciesPairChecks10F ; id 271 PomPomBom
+    dw SpeciesPairChecks110 ; id 272 Niterich
+    dw SpeciesPairChecks111 ; id 273 ?
+    dw SpeciesPairChecks112 ; id 274 ?
+    dw SpeciesPairChecks113 ; id 275 ?
+    dw SpeciesPairChecks114 ; id 276 ?
+    dw SpeciesPairChecks115 ; id 277 ?
+    dw SpeciesPairChecks116 ; id 278 ?
+    dw SpeciesPairChecks117 ; id 279 ?
+    dw SpeciesPairChecks118 ; id 280 ?
+    dw SpeciesPairChecks119 ; id 281 JewelBag
+    dw SpeciesPairChecks11A ; id 282 EvilWand
+    dw SpeciesPairChecks11B ; id 283 MadCandle
+    dw SpeciesPairChecks11C ; id 284 CoilBird
+    dw SpeciesPairChecks11D ; id 285 Facer
+    dw SpeciesPairChecks11E ; id 286 SpikyBoy
+    dw SpeciesPairChecks11F ; id 287 MadMirror
+    dw SpeciesPairChecks120 ; id 288 RogueNite
+    dw SpeciesPairChecks121 ; id 289 Puppetor
+    dw SpeciesPairChecks122 ; id 290 Goopi
+    dw SpeciesPairChecks123 ; id 291 Voodoll
+    dw SpeciesPairChecks124 ; id 292 MetalDrak
+    dw SpeciesPairChecks125 ; id 293 Balzak
+    dw SpeciesPairChecks126 ; id 294 SabreMan
+    dw SpeciesPairChecks127 ; id 295 CurseLamp
+    dw SpeciesPairChecks128 ; id 296 Brushead
+    dw SpeciesPairChecks129 ; id 297 Roboster
+    dw SpeciesPairChecks12A ; id 298 Roboster2
+    dw SpeciesPairChecks12B ; id 299 EvilPot
+    dw SpeciesPairChecks12C ; id 300 Gismo
+    dw SpeciesPairChecks12D ; id 301 LavaMan
+    dw SpeciesPairChecks12E ; id 302 IceMan
+    dw SpeciesPairChecks12F ; id 303 Mimic
+    dw SpeciesPairChecks130 ; id 304 Exaucers
+    dw SpeciesPairChecks131 ; id 305 MudDoll
+    dw SpeciesPairChecks132 ; id 306 Golem
+    dw SpeciesPairChecks133 ; id 307 StoneMan
+    dw SpeciesPairChecks134 ; id 308 BombCrag
+    dw SpeciesPairChecks135 ; id 309 GoldGolem
+    dw SpeciesPairChecks136 ; id 310 DarkMate
+    dw SpeciesPairChecks137 ; id 311 ProtoMech
+    dw SpeciesPairChecks138 ; id 312 CloudKing
+    dw SpeciesPairChecks139 ; id 313 ?
+    dw SpeciesPairChecks13A ; id 314 ?
+    dw SpeciesPairChecks13B ; id 315 ?
+    dw SpeciesPairChecks13C ; id 316 Petiteel
+    dw SpeciesPairChecks13D ; id 317 Moray
+    dw SpeciesPairChecks13E ; id 318 WalrusMan
+    dw SpeciesPairChecks13F ; id 319 RayGigas
+    dw SpeciesPairChecks140 ; id 320 Anemon
+
+; E-0199 (derived: list for entry $00 of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks000::
+Data_081_43E9:: ; address name
+    db $FF, $FF ; id 0
+
+; E-0199 (derived: list for entry $01 (DrakSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks001::
+Data_081_43EB:: ; address name
+    db $00, $01, $00, $00, $01, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $02 (SpotSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks002::
+Data_081_43F3:: ; address name
+    db $00, $01, $00, $00, $02, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $03 (WingSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks003::
+Data_081_43FB:: ; address name
+    db $00, $01, $00, $00, $03, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $04 (TreeSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks004::
+Data_081_4403:: ; address name
+    db $00, $01, $00, $00, $04, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $05 (Snaily) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks005::
+Data_081_440B:: ; address name
+    db $00, $01, $00, $00, $05, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $06 (SlimeNite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks006::
+Data_081_4413:: ; address name
+    db $00, $01, $00, $00, $06, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $07 (Babble) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks007::
+Data_081_441B:: ; address name
+    db $00, $03, $00, $00, $07, $00, $BE, $80, $2A, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $08 (BoxSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks008::
+Data_081_4427:: ; address name
+    db $00, $01, $00, $00, $08, $00, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $09 (PearlGel) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks009::
+Data_081_442F:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0A (Slime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00A::
+Data_081_4431:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0B (Healer) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00B::
+Data_081_4433:: ; address name
+    db $00, $04, $00, $00, $4A, $80, $80, $80, $8D, $80, $0D, $81, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0C (FangSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00C::
+Data_081_4441:: ; address name
+    db $00, $06, $00, $00, $48, $80, $62, $80, $60, $80, $4C, $80, $61, $80, $5F, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0D (RockSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00D::
+Data_081_4453:: ; address name
+    db $00, $05, $00, $00, $33, $81, $32, $81, $FC, $80, $C7, $80, $34, $81, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0E (SlimeBorg) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00E::
+Data_081_4463:: ; address name
+    db $01, $05, $0D, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05, $06, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05, $01, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $01, $05, $12, $00, $38, $80, $3E, $80, $2B, $80, $37, $80, $3D, $80, $00, $01, $00, $00, $29, $81, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $0F (Slabbit) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks00F::
+Data_081_44A3:: ; address name
+    db $00, $01, $00, $00, $4D, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $10 (KingSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks010::
+Data_081_44AB:: ; address name
+    db $01, $01, $0A, $00, $0A, $80, $00, $01, $00, $00, $0A, $00, $01, $0C, $0E, $00, $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80, $EB, $80, $3D, $80, $79, $80, $5C, $80, $7F, $80, $08, $81, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $11 (Metaly) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks011::
+Data_081_44D5:: ; address name
+    db $00, $01, $00, $00, $24, $81, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $12 (Metabble) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks012::
+Data_081_44DD:: ; address name
+    db $01, $01, $11, $00, $11, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $13 (SpotKing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks013::
+Data_081_44E5:: ; address name
+    db $01, $0C, $10, $00, $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80, $EB, $80, $3D, $80, $79, $80, $5C, $80, $7F, $80, $08, $81, $01, $0C, $17, $00, $EA, $80, $60, $80, $38, $80, $7D, $80, $07, $81, $40, $80, $EB, $80, $3D, $80, $79, $80, $5C, $80, $7F, $80, $08, $81, $01, $01, $02, $00, $02, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $14 (TropicGel) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks014::
+Data_081_4525:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $15 (MimeSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks015::
+Data_081_4527:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $16 (HaloSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks016::
+Data_081_4529:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $17 (MetalKing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks017::
+Data_081_452B:: ; address name
+    db $01, $01, $10, $00, $24, $81, $01, $01, $13, $00, $24, $81, $01, $01, $12, $00, $12, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $18 (GoldSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks018::
+Data_081_453F:: ; address name
+    db $01, $01, $10, $00, $35, $81, $01, $01, $13, $00, $35, $81, $01, $02, $17, $00, $35, $81, $17, $80, $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $19 (GranSlime) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks019::
+Data_081_4555:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1A (WonderEgg) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01A::
+Data_081_4557:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1B (Butch) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01B::
+Data_081_4559:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1C (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01C::
+Data_081_455B:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1D (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01D::
+Data_081_455D:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1E (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01E::
+Data_081_455F:: ; address name
+    db $FF, $00 ; id 0
+
+; E-0199 (derived: list for entry $1F (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks01F::
+Data_081_4561:: ; address name
+    db $00, $01, $01, $00, $00, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $20 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks020::
+Data_081_4569:: ; address name
+    db $00, $01, $01, $00, $02, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $21 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks021::
+Data_081_4571:: ; address name
+    db $00, $01, $01, $00, $03, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $22 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks022::
+Data_081_4579:: ; address name
+    db $00, $01, $01, $00, $04, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $23 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks023::
+Data_081_4581:: ; address name
+    db $00, $01, $01, $00, $05, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $24 (DragonKid) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks024::
+Data_081_4589:: ; address name
+    db $00, $01, $01, $00, $06, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $25 (Tortragon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks025::
+Data_081_4591:: ; address name
+    db $00, $01, $01, $00, $07, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $26 (Pteranod) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks026::
+Data_081_4599:: ; address name
+    db $00, $01, $01, $00, $08, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $27 (Gasgon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks027::
+Data_081_45A1:: ; address name
+    db $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $28 (FairyDrak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks028::
+Data_081_45A3:: ; address name
+    db $01, $01, $1F, $00, $24, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $29 (LizardMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks029::
+Data_081_45AB:: ; address name
+    db $00, $01, $01, $00, $6A, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2A (Poisongon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02A::
+Data_081_45B3:: ; address name
+    db $00, $01, $01, $00, $4C, $80, $01, $01, $22, $00, $02, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2B (Swordgon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02B::
+Data_081_45C1:: ; address name
+    db $00, $01, $01, $00, $79, $80, $01, $08, $24, $00, $E0, $80, $EA, $80, $62, $80, $E3, $80, $9B, $80, $5F, $80, $03, $80, $DF, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2C (Drygon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02C::
+Data_081_45DD:: ; address name
+    db $00, $01, $01, $00, $23, $81, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2D (Dragon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02D::
+Data_081_45E5:: ; address name
+    db $00, $01, $01, $00, $BA, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2E (MiniDrak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02E::
+Data_081_45ED:: ; address name
+    db $00, $01, $01, $00, $92, $80, $01, $0C, $39, $00, $DE, $80, $E7, $80, $E0, $80, $E2, $80, $5D, $80, $32, $81, $07, $81, $5F, $80, $80, $80, $79, $80, $DF, $80, $7F, $80, $01, $0C, $2A, $00, $DE, $80, $E7, $80, $E0, $80, $E2, $80, $5D, $80, $32, $81, $07, $81, $5F, $80, $80, $80, $79, $80, $DF, $80, $7F, $80, $01, $0C, $38, $00, $DE, $80, $E7, $80, $E0, $80, $E2, $80, $5D, $80, $32, $81, $07, $81, $5F, $80, $80, $80, $79, $80, $DF, $80, $7F, $80, $01, $0C, $22, $00, $DE, $80, $E7, $80, $E0, $80, $E2, $80, $5D, $80, $32, $81, $07, $81, $5F, $80, $80, $80, $79, $80, $DF, $80, $7F, $80, $00, $01, $01, $00, $92, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $2F (MadDragon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks02F::
+Data_081_466B:: ; address name
+    db $00, $01, $01, $00, $07, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $30 (Rayburn) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks030::
+Data_081_4673:: ; address name
+    db $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $31 (Chamelgon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks031::
+Data_081_4675:: ; address name
+    db $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $32 (LizardFly) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks032::
+Data_081_4677:: ; address name
+    db $00, $02, $01, $00, $C0, $80, $C7, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $33 (Andreal) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks033::
+Data_081_4681:: ; address name
+    db $01, $01, $28, $00, $2D, $80, $01, $01, $1F, $00, $24, $80, $00, $09, $01, $00, $EA, $80, $10, $80, $7D, $80, $EB, $80, $3D, $80, $13, $80, $17, $80, $5C, $80, $7F, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $34 (KingCobra) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks034::
+Data_081_46A5:: ; address name
+    db $00, $01, $01, $00, $75, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $35 (Vampirus) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks035::
+Data_081_46AD:: ; address name
+    db $01, $01, $34, $00, $39, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $36 (SnakeBat) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks036::
+Data_081_46B5:: ; address name
+    db $01, $01, $35, $00, $3A, $80, $01, $04, $39, $00, $E8, $80, $33, $81, $61, $80, $0D, $81, $01, $04, $38, $00, $E8, $80, $33, $81, $61, $80, $0D, $81, $01, $04, $22, $00, $E8, $80, $33, $81, $61, $80, $0D, $81, $01, $04, $21, $00, $E8, $80, $33, $81, $61, $80, $0D, $81, $01, $04, $24, $00, $E8, $80, $33, $81, $61, $80, $0D, $81, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $37 (Spikerous) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks037::
+Data_081_46F9:: ; address name
+    db $01, $01, $2E, $00, $D4, $80, $01, $01, $33, $00, $D4, $80, $00, $01, $01, $00, $0A, $00, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $38 (GreatDrak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks038::
+Data_081_470D:: ; address name
+    db $00, $05, $01, $00, $E8, $80, $E2, $80, $60, $80, $EC, $80, $DF, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $39 (Crestpent) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks039::
+Data_081_471D:: ; address name
+    db $00, $01, $01, $00, $7C, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $3A (WingSnake) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03A::
+Data_081_4725:: ; address name
+    db $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $3B (Coatol) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03B::
+Data_081_4727:: ; address name
+    db $01, $01, $39, $00, $3C, $80, $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $3C (Orochi) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03C::
+Data_081_472F:: ; address name
+    db $FF, $01 ; id 0
+
+; E-0199 (derived: list for entry $3D (BattleRex) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03D::
+Data_081_4731:: ; address name
+    db $00, $01, $02, $00, $00, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $3E (SkyDragon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03E::
+Data_081_4739:: ; address name
+    db $00, $01, $02, $00, $01, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $3F (Serpentia) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks03F::
+Data_081_4741:: ; address name
+    db $00, $01, $02, $00, $03, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $40 (Divinegon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks040::
+Data_081_4749:: ; address name
+    db $00, $01, $02, $00, $04, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $41 (Orligon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks041::
+Data_081_4751:: ; address name
+    db $00, $01, $02, $00, $05, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $42 (GigaDraco) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks042::
+Data_081_4759:: ; address name
+    db $01, $06, $48, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $01, $0C, $4C, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $00, $01, $0B, $54, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $0D, $4B, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $00, $06, $00, $01, $06, $53, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $01, $0B, $52, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $06, $55, $00, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $00, $01, $05, $3D, $00, $0A, $81, $07, $81, $F7, $80, $C7, $80, $08, $81, $01, $01, $59, $00, $01, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $43 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks043::
+Data_081_480D:: ; address name
+    db $00, $01, $02, $00, $07, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $44 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks044::
+Data_081_4815:: ; address name
+    db $01, $01, $3F, $00, $03, $00, $00, $01, $02, $00, $08, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $45 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks045::
+Data_081_4823:: ; address name
+    db $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $46 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks046::
+Data_081_4825:: ; address name
+    db $01, $01, $41, $00, $01, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $47 (Tonguella) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks047::
+Data_081_482D:: ; address name
+    db $01, $0C, $42, $00, $19, $81, $DD, $80, $9B, $80, $04, $80, $0C, $80, $2F, $80, $80, $80, $D6, $80, $8D, $80, $0D, $81, $2F, $81, $B6, $80, $01, $0C, $3D, $00, $19, $81, $DD, $80, $9B, $80, $04, $80, $0C, $80, $2F, $80, $80, $80, $D6, $80, $8D, $80, $0D, $81, $2F, $81, $B6, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $48 (Almiraj) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks048::
+Data_081_4867:: ; address name
+    db $00, $01, $02, $00, $25, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $49 (CatFly) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks049::
+Data_081_486F:: ; address name
+    db $00, $01, $02, $00, $6E, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4A (PillowRat) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04A::
+Data_081_4877:: ; address name
+    db $00, $01, $02, $00, $96, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4B (Saccer) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04B::
+Data_081_487F:: ; address name
+    db $00, $07, $02, $00, $33, $81, $29, $81, $32, $81, $2E, $81, $24, $81, $2D, $81, $06, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4C (GulpBeast) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04C::
+Data_081_4893:: ; address name
+    db $01, $06, $48, $00, $3E, $80, $2B, $80, $2F, $80, $3D, $80, $27, $80, $26, $80, $01, $06, $54, $00, $3E, $80, $2B, $80, $2F, $80, $3D, $80, $27, $80, $26, $80, $01, $06, $58, $00, $3E, $80, $2B, $80, $2F, $80, $3D, $80, $27, $80, $26, $80, $01, $06, $53, $00, $3E, $80, $2B, $80, $2F, $80, $3D, $80, $27, $80, $26, $80, $00, $01, $02, $00, $E1, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4D (Skullroo) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04D::
+Data_081_48DB:: ; address name
+    db $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4E (WindBeast) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04E::
+Data_081_48DD:: ; address name
+    db $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $4F (Beavern) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks04F::
+Data_081_48DF:: ; address name
+    db $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $50 (Antbear) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks050::
+Data_081_48E1:: ; address name
+    db $00, $01, $02, $00, $26, $81, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $51 (SuperTen) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks051::
+Data_081_48E9:: ; address name
+    db $00, $01, $02, $00, $32, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $52 (IronTurt) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks052::
+Data_081_48F1:: ; address name
+    db $01, $01, $4C, $00, $00, $00, $01, $01, $54, $00, $00, $00, $01, $01, $4B, $00, $00, $00, $01, $01, $53, $00, $00, $00, $01, $01, $42, $00, $00, $00, $01, $01, $55, $00, $00, $00, $01, $01, $3D, $00, $00, $00, $00, $01, $02, $00, $0C, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $53 (Mommonja) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks053::
+Data_081_4923:: ; address name
+    db $00, $02, $02, $00, $01, $80, $29, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $54 (HammerMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks054::
+Data_081_492D:: ; address name
+    db $01, $01, $3E, $00, $01, $00, $00, $01, $02, $00, $6F, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $55 (Grizzly) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks055::
+Data_081_493B:: ; address name
+    db $01, $04, $4C, $00, $7D, $80, $79, $80, $77, $80, $7F, $80, $01, $04, $4B, $00, $7D, $80, $79, $80, $77, $80, $7F, $80, $01, $0B, $42, $00, $7D, $80, $79, $80, $77, $80, $7F, $80, $33, $81, $29, $81, $32, $81, $25, $81, $2E, $81, $24, $81, $2D, $81, $01, $04, $3D, $00, $7D, $80, $79, $80, $77, $80, $7F, $80, $01, $01, $54, $00, $5E, $80, $01, $01, $47, $00, $01, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $56 (Yeti) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks056::
+Data_081_4987:: ; address name
+    db $01, $06, $01, $01, $62, $80, $51, $80, $4C, $80, $61, $80, $5F, $80, $5C, $80, $01, $04, $55, $00, $35, $81, $5F, $80, $25, $81, $24, $81, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $57 (ArrowDog) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks057::
+Data_081_49A5:: ; address name
+    db $00, $01, $02, $00, $0A, $00, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $58 (NoctoKing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks058::
+Data_081_49AD:: ; address name
+    db $00, $01, $02, $00, $2D, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $59 (BeastNite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks059::
+Data_081_49B5:: ; address name
+    db $00, $01, $02, $00, $D8, $80, $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $5A (MadGopher) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05A::
+Data_081_49BD:: ; address name
+    db $FF, $02 ; id 0
+
+; E-0199 (derived: list for entry $5B (FairyRat) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05B::
+Data_081_49BF:: ; address name
+    db $00, $01, $03, $00, $00, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $5C (Unicorn) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05C::
+Data_081_49C7:: ; address name
+    db $00, $01, $03, $00, $01, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $5D (Goategon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05D::
+Data_081_49CF:: ; address name
+    db $00, $01, $03, $00, $02, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $5E (WildApe) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05E::
+Data_081_49D7:: ; address name
+    db $00, $01, $03, $00, $04, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $5F (Trumpeter) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks05F::
+Data_081_49DF:: ; address name
+    db $00, $01, $03, $00, $05, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $60 (KingLeo) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks060::
+Data_081_49E7:: ; address name
+    db $00, $01, $03, $00, $06, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $61 (DarkHorn) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks061::
+Data_081_49EF:: ; address name
+    db $00, $01, $03, $00, $07, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $62 (MadCat) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks062::
+Data_081_49F7:: ; address name
+    db $00, $01, $03, $00, $08, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $63 (BigEye) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks063::
+Data_081_49FF:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $64 (Gorago) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks064::
+Data_081_4A01:: ; address name
+    db $01, $01, $5B, $00, $00, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $65 (CatMage) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks065::
+Data_081_4A09:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $66 (Dumbira) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks066::
+Data_081_4A0B:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $67 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks067::
+Data_081_4A0D:: ; address name
+    db $00, $01, $03, $00, $0D, $80, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $68 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks068::
+Data_081_4A15:: ; address name
+    db $01, $01, $5D, $00, $02, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $69 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks069::
+Data_081_4A1D:: ; address name
+    db $01, $02, $5C, $00, $07, $00, $01, $00, $01, $02, $6D, $00, $07, $00, $01, $00, $01, $02, $6A, $00, $07, $00, $01, $00, $01, $02, $69, $00, $07, $00, $01, $00, $00, $01, $03, $00, $BF, $80, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6A (Picky) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06A::
+Data_081_4A45:: ; address name
+    db $01, $01, $68, $00, $06, $00, $00, $01, $03, $00, $1C, $81, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6B (Wyvern) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06B::
+Data_081_4A53:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6C (BullBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06C::
+Data_081_4A55:: ; address name
+    db $00, $0C, $03, $00, $56, $80, $0A, $81, $5D, $80, $07, $81, $51, $80, $F7, $80, $5F, $80, $12, $80, $2E, $81, $0B, $81, $11, $80, $08, $81, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6D (Florajay) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06D::
+Data_081_4A73:: ; address name
+    db $00, $08, $03, $00, $DE, $80, $52, $80, $2C, $81, $55, $80, $4C, $80, $01, $80, $0D, $81, $2D, $81, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6E (DuckKite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06E::
+Data_081_4A89:: ; address name
+    db $01, $01, $6D, $00, $2C, $81, $01, $01, $6A, $00, $2C, $81, $01, $01, $70, $00, $2C, $81, $00, $01, $03, $00, $0A, $00, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $6F (MadPecker) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks06F::
+Data_081_4AA3:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $70 (MadRaven) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks070::
+Data_081_4AA5:: ; address name
+    db $01, $06, $69, $00, $33, $81, $32, $81, $0D, $80, $0E, $80, $C7, $80, $24, $81, $01, $06, $6E, $00, $33, $81, $32, $81, $0D, $80, $0E, $80, $C7, $80, $24, $81, $01, $06, $6A, $00, $33, $81, $32, $81, $0D, $80, $0E, $80, $C7, $80, $24, $81, $01, $06, $6C, $00, $33, $81, $32, $81, $0D, $80, $0E, $80, $C7, $80, $24, $81, $01, $06, $68, $00, $33, $81, $32, $81, $0D, $80, $0E, $80, $C7, $80, $24, $81, $00, $01, $03, $00, $98, $80, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $71 (MistyWing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks071::
+Data_081_4AFD:: ; address name
+    db $00, $01, $03, $00, $98, $80, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $72 (AquaHawk) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks072::
+Data_081_4B05:: ; address name
+    db $01, $01, $6C, $00, $7C, $80, $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $73 (Dracky) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks073::
+Data_081_4B0D:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $74 (KiteHawk) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks074::
+Data_081_4B0F:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $75 (BigRoost) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks075::
+Data_081_4B11:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $76 (StubBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks076::
+Data_081_4B13:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $77 (LandOwl) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks077::
+Data_081_4B15:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $78 (MadGoose) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks078::
+Data_081_4B17:: ; address name
+    db $FF, $03 ; id 0
+
+; E-0199 (derived: list for entry $79 (MadCondor) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks079::
+Data_081_4B19:: ; address name
+    db $00, $01, $04, $00, $00, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7A (Emyu) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07A::
+Data_081_4B21:: ; address name
+    db $00, $01, $04, $00, $01, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7B (Blizzardy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07B::
+Data_081_4B29:: ; address name
+    db $00, $01, $04, $00, $03, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7C (Phoenix) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07C::
+Data_081_4B31:: ; address name
+    db $00, $01, $04, $00, $02, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7D (ZapBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07D::
+Data_081_4B39:: ; address name
+    db $00, $01, $04, $00, $05, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7E (Garudian) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07E::
+Data_081_4B41:: ; address name
+    db $00, $01, $04, $00, $06, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $7F (WhipBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks07F::
+Data_081_4B49:: ; address name
+    db $00, $01, $04, $00, $07, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $80 (FunkyBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks080::
+Data_081_4B51:: ; address name
+    db $00, $01, $04, $00, $08, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $81 (RainHawk) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks081::
+Data_081_4B59:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $82 (Azurile) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks082::
+Data_081_4B5B:: ; address name
+    db $01, $01, $80, $00, $02, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $83 (Shantak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks083::
+Data_081_4B63:: ; address name
+    db $00, $01, $04, $00, $B2, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $84 (CragDevil) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks084::
+Data_081_4B6B:: ; address name
+    db $01, $01, $79, $00, $02, $00, $00, $01, $04, $00, $1D, $81, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $85 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks085::
+Data_081_4B79:: ; address name
+    db $00, $01, $04, $00, $D3, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $86 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks086::
+Data_081_4B81:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $87 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks087::
+Data_081_4B83:: ; address name
+    db $01, $01, $88, $00, $01, $00, $00, $01, $04, $00, $01, $81, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $88 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks088::
+Data_081_4B91:: ; address name
+    db $01, $01, $84, $00, $06, $00, $00, $01, $04, $00, $80, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $89 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks089::
+Data_081_4B9F:: ; address name
+    db $00, $01, $04, $00, $4A, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8A (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08A::
+Data_081_4BA7:: ; address name
+    db $00, $08, $04, $00, $1F, $81, $D8, $80, $B3, $80, $D7, $80, $0D, $80, $6E, $80, $63, $80, $BD, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8B (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08B::
+Data_081_4BBD:: ; address name
+    db $01, $01, $8A, $00, $9E, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8C (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08C::
+Data_081_4BC5:: ; address name
+    db $01, $01, $8B, $00, $9F, $80, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8D (MadPlant) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08D::
+Data_081_4BCD:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8E (FireWeed) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08E::
+Data_081_4BCF:: ; address name
+    db $00, $01, $04, $00, $0A, $00, $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $8F (FloraMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks08F::
+Data_081_4BD7:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $90 (WingTree) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks090::
+Data_081_4BD9:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $91 (CactiBall) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks091::
+Data_081_4BDB:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $92 (Gulpple) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks092::
+Data_081_4BDD:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $93 (Toadstool) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks093::
+Data_081_4BDF:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $94 (AmberWeed) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks094::
+Data_081_4BE1:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $95 (Slurperon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks095::
+Data_081_4BE3:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $96 (Stubsuck) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks096::
+Data_081_4BE5:: ; address name
+    db $FF, $04 ; id 0
+
+; E-0199 (derived: list for entry $97 (Oniono) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks097::
+Data_081_4BE7:: ; address name
+    db $00, $01, $05, $00, $00, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $98 (DanceVegi) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks098::
+Data_081_4BEF:: ; address name
+    db $00, $01, $05, $00, $01, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $99 (TreeBoy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks099::
+Data_081_4BF7:: ; address name
+    db $00, $01, $05, $00, $02, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9A (Devipine) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09A::
+Data_081_4BFF:: ; address name
+    db $00, $01, $05, $00, $03, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9B (FaceTree) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09B::
+Data_081_4C07:: ; address name
+    db $00, $01, $05, $00, $04, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9C (HerbMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09C::
+Data_081_4C0F:: ; address name
+    db $00, $01, $05, $00, $06, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9D (BeanMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09D::
+Data_081_4C17:: ; address name
+    db $00, $01, $05, $00, $07, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9E (EvilSeed) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09E::
+Data_081_4C1F:: ; address name
+    db $00, $01, $05, $00, $08, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $9F (ManEater) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks09F::
+Data_081_4C27:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A0 (Snapper) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A0::
+Data_081_4C29:: ; address name
+    db $01, $01, $97, $00, $00, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A1 (GhosTree) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A1::
+Data_081_4C31:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A2 (Rosevine) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A2::
+Data_081_4C33:: ; address name
+    db $01, $01, $9B, $00, $04, $00, $00, $01, $05, $00, $8F, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A3 (Egdracil) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A3::
+Data_081_4C41:: ; address name
+    db $01, $01, $9C, $00, $08, $00, $01, $01, $A6, $00, $01, $00, $00, $01, $05, $00, $52, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A4 (Warubou) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A4::
+Data_081_4C55:: ; address name
+    db $01, $01, $98, $00, $02, $00, $00, $01, $05, $00, $94, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A5 (Watabou) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A5::
+Data_081_4C63:: ; address name
+    db $01, $01, $9A, $00, $06, $00, $00, $01, $05, $00, $4B, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A6 (Eggplaton) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A6::
+Data_081_4C71:: ; address name
+    db $01, $03, $9A, $00, $B3, $80, $BB, $80, $BD, $80, $01, $03, $A2, $00, $B3, $80, $BB, $80, $BD, $80, $01, $03, $A4, $00, $B3, $80, $BB, $80, $BD, $80, $01, $01, $9D, $00, $00, $00, $00, $01, $05, $00, $F6, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A7 (FooHero) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A7::
+Data_081_4C9D:: ; address name
+    db $00, $01, $05, $00, $FB, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A8 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A8::
+Data_081_4CA5:: ; address name
+    db $01, $01, $A6, $00, $07, $00, $01, $01, $A4, $00, $07, $00, $00, $01, $05, $00, $5B, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $A9 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0A9::
+Data_081_4CB9:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AA (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AA::
+Data_081_4CBB:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AB (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AB::
+Data_081_4CBD:: ; address name
+    db $01, $01, $9E, $00, $B7, $80, $01, $01, $A3, $00, $06, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AC (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AC::
+Data_081_4CCB:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AD (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AD::
+Data_081_4CCD:: ; address name
+    db $01, $01, $AB, $00, $C4, $80, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AE (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AE::
+Data_081_4CD5:: ; address name
+    db $00, $01, $05, $00, $0A, $00, $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $AF (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0AF::
+Data_081_4CDD:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B0 (GiantSlug) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B0::
+Data_081_4CDF:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B1 (Catapila) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B1::
+Data_081_4CE1:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B2 (Gophecada) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B2::
+Data_081_4CE3:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B3 (Butterfly) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B3::
+Data_081_4CE5:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B4 (WeedBug) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B4::
+Data_081_4CE7:: ; address name
+    db $FF, $05 ; id 0
+
+; E-0199 (derived: list for entry $B5 (GiantWorm) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B5::
+Data_081_4CE9:: ; address name
+    db $00, $01, $06, $00, $00, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $B6 (Lipsy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B6::
+Data_081_4CF1:: ; address name
+    db $01, $0C, $CC, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7D, $80, $5F, $80, $13, $80, $17, $80, $24, $81, $3C, $80, $7F, $80, $01, $0C, $C8, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7D, $80, $5F, $80, $13, $80, $17, $80, $24, $81, $3C, $80, $7F, $80, $01, $0C, $B7, $00, $33, $80, $33, $81, $10, $80, $60, $80, $38, $80, $7D, $80, $5F, $80, $13, $80, $17, $80, $24, $81, $3C, $80, $7F, $80, $01, $01, $C4, $00, $01, $00, $01, $01, $C5, $00, $07, $00, $00, $01, $06, $00, $0A, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $B7 (StagBug) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B7::
+Data_081_4D59:: ; address name
+    db $01, $01, $BF, $00, $01, $00, $01, $01, $BB, $00, $01, $00, $01, $01, $BC, $00, $01, $00, $01, $01, $C0, $00, $01, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $B8 (Pyuro) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B8::
+Data_081_4D73:: ; address name
+    db $00, $01, $06, $00, $03, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $B9 (ArmyAnt) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0B9::
+Data_081_4D7B:: ; address name
+    db $00, $01, $06, $00, $04, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BA (GoHopper) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BA::
+Data_081_4D83:: ; address name
+    db $00, $01, $06, $00, $05, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BB (TailEater) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BB::
+Data_081_4D8B:: ; address name
+    db $00, $01, $06, $00, $07, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BC (ArmorPede) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BC::
+Data_081_4D93:: ; address name
+    db $00, $01, $06, $00, $08, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BD (Eyeder) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BD::
+Data_081_4D9B:: ; address name
+    db $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BE (GiantMoth) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BE::
+Data_081_4D9D:: ; address name
+    db $01, $01, $BA, $00, $00, $00, $01, $01, $B5, $00, $00, $00, $01, $01, $B8, $00, $00, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $BF (Droll) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0BF::
+Data_081_4DB1:: ; address name
+    db $00, $01, $06, $00, $02, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C0 (ArmyCrab) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C0::
+Data_081_4DB9:: ; address name
+    db $01, $01, $BF, $00, $07, $00, $01, $01, $B9, $00, $07, $00, $01, $01, $BE, $00, $07, $00, $00, $01, $06, $00, $01, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C1 (MadHornet) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C1::
+Data_081_4DD3:: ; address name
+    db $01, $01, $B6, $00, $07, $00, $00, $01, $06, $00, $29, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C2 (Belzebub) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C2::
+Data_081_4DE1:: ; address name
+    db $01, $01, $B6, $00, $02, $00, $00, $01, $06, $00, $61, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C3 (WarMantis) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C3::
+Data_081_4DEF:: ; address name
+    db $00, $01, $06, $00, $9D, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C4 (HornBeet) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C4::
+Data_081_4DF7:: ; address name
+    db $01, $04, $CC, $00, $29, $81, $4C, $80, $C7, $80, $5C, $80, $01, $04, $C8, $00, $29, $81, $4C, $80, $C7, $80, $5C, $80, $01, $04, $B7, $00, $29, $81, $4C, $80, $C7, $80, $5C, $80, $01, $01, $C5, $00, $01, $00, $00, $01, $06, $00, $54, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C5 (Sickler) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C5::
+Data_081_4E29:: ; address name
+    db $01, $01, $C4, $00, $07, $00, $01, $0A, $CC, $00, $3B, $80, $07, $81, $F7, $80, $0E, $80, $2B, $80, $BE, $80, $79, $80, $71, $80, $A2, $80, $08, $81, $01, $0A, $C8, $00, $3B, $80, $07, $81, $F7, $80, $0E, $80, $2B, $80, $BE, $80, $79, $80, $71, $80, $A2, $80, $08, $81, $01, $0A, $B7, $00, $3B, $80, $07, $81, $F7, $80, $0E, $80, $2B, $80, $BE, $80, $79, $80, $71, $80, $A2, $80, $08, $81, $01, $01, $B8, $00, $D6, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C6 (Armorpion) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C6::
+Data_081_4E7F:: ; address name
+    db $01, $01, $BE, $00, $DC, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C7 (Digster) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C7::
+Data_081_4E87:: ; address name
+    db $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C8 (Skularach) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C8::
+Data_081_4E89:: ; address name
+    db $01, $01, $BF, $00, $02, $00, $01, $01, $BB, $00, $02, $00, $01, $01, $BC, $00, $02, $00, $01, $01, $C0, $00, $02, $00, $00, $01, $06, $00, $2F, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $C9 (MultiEyes) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0C9::
+Data_081_4EA9:: ; address name
+    db $01, $01, $B6, $00, $E3, $80, $01, $01, $C8, $00, $E6, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CA (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CA::
+Data_081_4EB7:: ; address name
+    db $00, $01, $06, $00, $20, $81, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CB (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CB::
+Data_081_4EBF:: ; address name
+    db $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CC (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CC::
+Data_081_4EC1:: ; address name
+    db $01, $01, $BB, $00, $07, $00, $01, $01, $BC, $00, $07, $00, $01, $01, $C0, $00, $07, $00, $00, $01, $06, $00, $63, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CD (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CD::
+Data_081_4EDB:: ; address name
+    db $01, $01, $B6, $00, $01, $00, $01, $01, $C4, $00, $02, $00, $01, $01, $C5, $00, $02, $00, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CE (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CE::
+Data_081_4EEF:: ; address name
+    db $01, $01, $B6, $00, $08, $00, $01, $01, $C4, $00, $08, $00, $01, $01, $C5, $00, $08, $00, $00, $01, $06, $00, $BC, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $CF (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0CF::
+Data_081_4F09:: ; address name
+    db $01, $01, $C9, $00, $81, $80, $01, $01, $72, $00, $E6, $80, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $D0 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D0::
+Data_081_4F17:: ; address name
+    db $01, $01, $0D, $01, $EB, $80, $01, $01, $CD, $00, $35, $81, $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $D1 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D1::
+Data_081_4F25:: ; address name
+    db $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $D2 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D2::
+Data_081_4F27:: ; address name
+    db $FF, $06 ; id 0
+
+; E-0199 (derived: list for entry $D3 (Pixy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D3::
+Data_081_4F29:: ; address name
+    db $00, $01, $07, $00, $00, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D4 (MedusaEye) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D4::
+Data_081_4F31:: ; address name
+    db $01, $01, $E7, $00, $01, $00, $01, $01, $E4, $00, $01, $00, $01, $01, $D4, $00, $01, $00, $01, $01, $E6, $00, $01, $00, $01, $01, $E5, $00, $01, $00, $00, $07, $07, $00, $33, $80, $38, $80, $40, $80, $2B, $80, $3D, $80, $3C, $80, $30, $80, $00, $04, $01, $00, $07, $81, $F7, $80, $0B, $81, $08, $81, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D5 (AgDevil) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D5::
+Data_081_4F6F:: ; address name
+    db $00, $01, $07, $00, $02, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D6 (Demonite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D6::
+Data_081_4F77:: ; address name
+    db $00, $01, $07, $00, $03, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D7 (DarkEye) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D7::
+Data_081_4F7F:: ; address name
+    db $00, $01, $07, $00, $04, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D8 (EyeBall) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D8::
+Data_081_4F87:: ; address name
+    db $00, $01, $07, $00, $05, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $D9 (SkulRider) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0D9::
+Data_081_4F8F:: ; address name
+    db $00, $01, $07, $00, $06, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DA (EvilBeast) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DA::
+Data_081_4F97:: ; address name
+    db $00, $01, $07, $00, $08, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DB (Bubblemon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DB::
+Data_081_4F9F:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DC (1EyeClown) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DC::
+Data_081_4FA1:: ; address name
+    db $01, $01, $D3, $00, $02, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DD (Gremlin) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DD::
+Data_081_4FA9:: ; address name
+    db $00, $0A, $07, $00, $56, $80, $B0, $80, $0C, $80, $98, $80, $BF, $80, $80, $80, $47, $80, $08, $80, $8D, $80, $B6, $80, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DE (ArcDemon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DE::
+Data_081_4FC3:: ; address name
+    db $01, $01, $EB, $00, $06, $00, $01, $01, $D8, $00, $06, $00, $00, $01, $07, $00, $71, $80, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $DF (Lionex) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0DF::
+Data_081_4FD7:: ; address name
+    db $00, $01, $07, $00, $4E, $80, $01, $01, $D6, $00, $03, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E0 (GoatHorn) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E0::
+Data_081_4FE5:: ; address name
+    db $01, $01, $DC, $00, $06, $00, $01, $01, $D3, $00, $06, $00, $00, $01, $07, $00, $B4, $80, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E1 (Orc) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E1::
+Data_081_4FF9:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E2 (Ogre) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E2::
+Data_081_4FFB:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E3 (GateGuard) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E3::
+Data_081_4FFD:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E4 (ChopClown) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E4::
+Data_081_4FFF:: ; address name
+    db $01, $05, $EB, $00, $DE, $80, $29, $81, $E3, $80, $24, $81, $DF, $80, $01, $06, $E7, $00, $DE, $80, $29, $81, $E3, $80, $24, $81, $DF, $80, $0D, $81, $01, $06, $E6, $00, $DE, $80, $29, $81, $E3, $80, $24, $81, $DF, $80, $0D, $81, $01, $06, $DD, $00, $DE, $80, $29, $81, $E3, $80, $24, $81, $DF, $80, $0D, $81, $01, $02, $D9, $00, $FC, $80, $0D, $81, $01, $01, $D4, $00, $0D, $81, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E5 (BossTroll) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E5::
+Data_081_504D:: ; address name
+    db $01, $0A, $E7, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7D, $80, $13, $80, $7B, $80, $17, $80, $7F, $80, $01, $0A, $E4, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7D, $80, $13, $80, $7B, $80, $17, $80, $7F, $80, $01, $0A, $D4, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7D, $80, $13, $80, $7B, $80, $17, $80, $7F, $80, $01, $0A, $E8, $00, $33, $80, $10, $80, $60, $80, $38, $80, $35, $81, $7D, $80, $13, $80, $7B, $80, $17, $80, $7F, $80, $00, $01, $07, $00, $0A, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E6 (Grendal) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E6::
+Data_081_50B5:: ; address name
+    db $01, $07, $DC, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80, $8F, $80, $C4, $80, $77, $80, $01, $07, $D9, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80, $8F, $80, $C4, $80, $77, $80, $01, $07, $D7, $00, $78, $80, $DD, $80, $0D, $80, $0E, $80, $8F, $80, $C4, $80, $77, $80, $01, $01, $DC, $00, $FF, $80, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E7 (Akubar) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E7::
+Data_081_50F3:: ; address name
+    db $01, $09, $DC, $00, $33, $81, $E2, $80, $62, $80, $55, $80, $32, $81, $4C, $80, $70, $80, $79, $80, $DA, $80, $01, $09, $D9, $00, $33, $81, $E2, $80, $62, $80, $55, $80, $32, $81, $4C, $80, $70, $80, $79, $80, $DA, $80, $01, $09, $DD, $00, $33, $81, $E2, $80, $62, $80, $55, $80, $32, $81, $4C, $80, $70, $80, $79, $80, $DA, $80, $01, $09, $D7, $00, $33, $81, $E2, $80, $62, $80, $55, $80, $32, $81, $4C, $80, $70, $80, $79, $80, $DA, $80, $01, $01, $EB, $00, $01, $00, $01, $01, $E6, $00, $09, $81, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E8 (MadKnight) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E8::
+Data_081_5159:: ; address name
+    db $01, $01, $E7, $00, $0A, $81, $01, $01, $E5, $00, $06, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $E9 (EvilWell) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0E9::
+Data_081_5167:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $EA (Gigantes) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0EA::
+Data_081_5169:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $EB (Centasaur) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0EB::
+Data_081_516B:: ; address name
+    db $01, $01, $E7, $00, $03, $00, $01, $01, $E4, $00, $03, $00, $01, $01, $D9, $00, $03, $00, $01, $01, $D4, $00, $03, $00, $01, $01, $E6, $00, $03, $00, $01, $01, $DD, $00, $03, $00, $00, $01, $07, $00, $01, $00, $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $EC (EvilArmor) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0EC::
+Data_081_5197:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $ED (Jamirus) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0ED::
+Data_081_5199:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $EE (Durran) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0EE::
+Data_081_519B:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $EF (Titanis) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0EF::
+Data_081_519D:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $F0 (LampGenie) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F0::
+Data_081_519F:: ; address name
+    db $FF, $07 ; id 0
+
+; E-0199 (derived: list for entry $F1 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F1::
+Data_081_51A1:: ; address name
+    db $00, $01, $08, $00, $00, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F2 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F2::
+Data_081_51A9:: ; address name
+    db $00, $01, $08, $00, $01, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F3 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F3::
+Data_081_51B1:: ; address name
+    db $00, $01, $08, $00, $02, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F4 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F4::
+Data_081_51B9:: ; address name
+    db $00, $01, $08, $00, $03, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F5 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F5::
+Data_081_51C1:: ; address name
+    db $00, $01, $08, $00, $04, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F6 (Spooky) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F6::
+Data_081_51C9:: ; address name
+    db $00, $01, $08, $00, $05, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F7 (Skullgon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F7::
+Data_081_51D1:: ; address name
+    db $00, $01, $08, $00, $06, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F8 (PutrePup) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F8::
+Data_081_51D9:: ; address name
+    db $00, $01, $08, $00, $07, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $F9 (RotRaven) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0F9::
+Data_081_51E1:: ; address name
+    db $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FA (Mummy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FA::
+Data_081_51E3:: ; address name
+    db $01, $01, $F1, $00, $00, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FB (DarkCrab) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FB::
+Data_081_51EB:: ; address name
+    db $01, $04, $0B, $01, $0D, $80, $05, $80, $06, $80, $01, $80, $01, $04, $0A, $01, $0D, $80, $05, $80, $06, $80, $01, $80, $00, $01, $08, $00, $B6, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FC (DeadNite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FC::
+Data_081_520B:: ; address name
+    db $01, $07, $2E, $00, $33, $81, $29, $81, $10, $80, $32, $81, $F7, $80, $0E, $80, $C7, $80, $01, $07, $33, $00, $33, $81, $29, $81, $10, $80, $32, $81, $F7, $80, $0E, $80, $C7, $80, $01, $07, $32, $00, $33, $81, $29, $81, $10, $80, $32, $81, $F7, $80, $0E, $80, $C7, $80, $01, $01, $01, $01, $01, $00, $01, $01, $FC, $00, $01, $00, $00, $01, $08, $00, $33, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FD (Shadow) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FD::
+Data_081_5255:: ; address name
+    db $01, $01, $06, $01, $06, $00, $01, $01, $05, $01, $06, $00, $00, $01, $08, $00, $0A, $00, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FE (Skulpent) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FE::
+Data_081_5269:: ; address name
+    db $01, $04, $0B, $01, $78, $80, $7C, $80, $80, $80, $77, $80, $01, $04, $F2, $00, $78, $80, $7C, $80, $80, $80, $77, $80, $01, $04, $0A, $01, $78, $80, $7C, $80, $80, $80, $77, $80, $01, $04, $FB, $00, $78, $80, $7C, $80, $80, $80, $77, $80, $00, $01, $08, $00, $B5, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $FF (Hork) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks0FF::
+Data_081_52A1:: ; address name
+    db $01, $01, $01, $01, $03, $00, $00, $01, $08, $00, $90, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $100 (Mudron) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks100::
+Data_081_52AF:: ; address name
+    db $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $101 (NiteWhip) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks101::
+Data_081_52B1:: ; address name
+    db $01, $08, $FE, $00, $E2, $80, $0A, $81, $38, $80, $E6, $80, $07, $81, $0E, $80, $EC, $80, $5C, $80, $00, $05, $08, $00, $60, $80, $55, $80, $D9, $80, $4C, $80, $5F, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $102 (WindMerge) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks102::
+Data_081_52D5:: ; address name
+    db $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $103 (Reaper) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks103::
+Data_081_52D7:: ; address name
+    db $01, $01, $04, $01, $06, $00, $00, $01, $08, $00, $05, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $104 (Inverzon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks104::
+Data_081_52E5:: ; address name
+    db $01, $06, $F7, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80, $01, $06, $F3, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80, $01, $06, $FA, $00, $9E, $80, $8E, $80, $6B, $80, $01, $80, $7C, $80, $71, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $105 (FoxFire) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks105::
+Data_081_5317:: ; address name
+    db $01, $05, $FC, $00, $DE, $80, $60, $80, $7D, $80, $EB, $80, $3C, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $106 (CaptDead) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks106::
+Data_081_5327:: ; address name
+    db $01, $01, $01, $01, $60, $80, $01, $02, $FC, $00, $F7, $80, $08, $81, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $107 (DeadNoble) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks107::
+Data_081_5337:: ; address name
+    db $01, $01, $01, $01, $07, $00, $00, $01, $08, $00, $08, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $108 (WhiteKing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks108::
+Data_081_5345:: ; address name
+    db $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $109 (BoneSlave) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks109::
+Data_081_5347:: ; address name
+    db $01, $01, $FA, $00, $22, $81, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10A (Skeletor) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10A::
+Data_081_534F:: ; address name
+    db $01, $01, $09, $01, $31, $81, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10B (Servant) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10B::
+Data_081_5357:: ; address name
+    db $01, $01, $0A, $01, $32, $81, $00, $02, $08, $00, $C7, $80, $C4, $80, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10C (Lazamanus) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10C::
+Data_081_5367:: ; address name
+    db $01, $01, $01, $01, $05, $00, $01, $01, $F6, $00, $1E, $81, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10D (Copycat) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10D::
+Data_081_5375:: ; address name
+    db $01, $01, $06, $01, $2D, $81, $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10E (MadSpirit) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10E::
+Data_081_537D:: ; address name
+    db $FF, $08 ; id 0
+
+; E-0199 (derived: list for entry $10F (PomPomBom) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks10F::
+Data_081_537F:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $110 (Niterich) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks110::
+Data_081_5381:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $111 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks111::
+Data_081_5383:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $112 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks112::
+Data_081_5385:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $113 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks113::
+Data_081_5387:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $114 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks114::
+Data_081_5389:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $115 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks115::
+Data_081_538B:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $116 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks116::
+Data_081_538D:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $117 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks117::
+Data_081_538F:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $118 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks118::
+Data_081_5391:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $119 (JewelBag) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks119::
+Data_081_5393:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11A (EvilWand) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11A::
+Data_081_5395:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11B (MadCandle) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11B::
+Data_081_5397:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11C (CoilBird) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11C::
+Data_081_5399:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11D (Facer) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11D::
+Data_081_539B:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11E (SpikyBoy) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11E::
+Data_081_539D:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $11F (MadMirror) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks11F::
+Data_081_539F:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $120 (RogueNite) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks120::
+Data_081_53A1:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $121 (Puppetor) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks121::
+Data_081_53A3:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $122 (Goopi) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks122::
+Data_081_53A5:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $123 (Voodoll) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks123::
+Data_081_53A7:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $124 (MetalDrak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks124::
+Data_081_53A9:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $125 (Balzak) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks125::
+Data_081_53AB:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $126 (SabreMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks126::
+Data_081_53AD:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $127 (CurseLamp) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks127::
+Data_081_53AF:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $128 (Brushead) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks128::
+Data_081_53B1:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $129 (Roboster) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks129::
+Data_081_53B3:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $12A (Roboster2) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12A::
+Data_081_53B5:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $12B (EvilPot) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12B::
+Data_081_53B7:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $12C (Gismo) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12C::
+Data_081_53B9:: ; address name
+    db $FF, $09 ; id 0
+
+; E-0199 (derived: list for entry $12D (LavaMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12D::
+Data_081_53BB:: ; address name
+    db $01, $02, $E8, $00, $33, $80, $38, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $12E (IceMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12E::
+Data_081_53C5:: ; address name
+    db $01, $01, $2D, $01, $40, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $12F (Mimic) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks12F::
+Data_081_53CD:: ; address name
+    db $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $130 (Exaucers) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks130::
+Data_081_53CF:: ; address name
+    db $01, $01, $E5, $00, $17, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $131 (MudDoll) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks131::
+Data_081_53D7:: ; address name
+    db $01, $01, $CF, $00, $A2, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $132 (Golem) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks132::
+Data_081_53DF:: ; address name
+    db $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $133 (StoneMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks133::
+Data_081_53E1:: ; address name
+    db $01, $01, $30, $01, $3C, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $134 (BombCrag) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks134::
+Data_081_53E9:: ; address name
+    db $01, $01, $2D, $01, $65, $81, $01, $01, $2E, $01, $65, $81, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $135 (GoldGolem) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks135::
+Data_081_53F7:: ; address name
+    db $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $136 (DarkMate) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks136::
+Data_081_53F9:: ; address name
+    db $01, $01, $D0, $00, $40, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $137 (ProtoMech) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks137::
+Data_081_5401:: ; address name
+    db $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $138 (CloudKing) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks138::
+Data_081_5403:: ; address name
+    db $01, $01, $36, $01, $60, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $139 (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks139::
+Data_081_540B:: ; address name
+    db $01, $01, $38, $01, $18, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13A (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13A::
+Data_081_5413:: ; address name
+    db $01, $01, $39, $01, $37, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13B (?) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13B::
+Data_081_541B:: ; address name
+    db $01, $01, $33, $01, $61, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13C (Petiteel) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13C::
+Data_081_5423:: ; address name
+    db $01, $02, $34, $01, $6B, $81, $6C, $81, $01, $01, $39, $01, $66, $81, $01, $01, $3A, $01, $66, $81, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13D (Moray) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13D::
+Data_081_5439:: ; address name
+    db $01, $01, $3C, $01, $C6, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13E (WalrusMan) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13E::
+Data_081_5441:: ; address name
+    db $01, $01, $3D, $01, $6D, $81, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $13F (RayGigas) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks13F::
+Data_081_5449:: ; address name
+    db $01, $01, $3E, $01, $A5, $80, $FF, $0A ; id 0
+
+; E-0199 (derived: list for entry $140 (Anemon) of SpeciesPairCheckTable; it runs to the next list)
+; record: groups of kind, count, key word, count words; $FF ends
+SpeciesPairChecks140::
+Data_081_5451:: ; address name
+    db $FF, $0A ; id 0
 
 ; copies three bytes of table $555D entry ($5486[wD0A6] * $129 + 3 * (wD0E8 - 1)) to wD0EA (E-0121)
 ; 1 call site from 1 routine (e.g. UnpackLinkRecordToWorkBuf)

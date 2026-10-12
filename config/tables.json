@@ -14151,6 +14151,36 @@
       ],
       "record": "offset $0000; 20 x 7 tiles",
       "note": "E-0221 (C1: a rectangle record of PartyCountRects (offset, width, rows, tiles))."
+    },
+    {
+      "bank": "81",
+      "addr": "4167",
+      "label": "SpeciesPairCheckTable",
+      "count": 321,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "pair-check list for this species",
+          "reason": "species pair-check list"
+        }
+      ],
+      "lists": {
+        "until": "5453",
+        "size": 1,
+        "one_line": true,
+        "label": "SpeciesPairChecks",
+        "fields": [
+          {
+            "type": "db",
+            "size": 1,
+            "name": "groups: kind (0 = by family, 1 = by species, $FF = end), count, key word, then count words (bit 15 set = species, else family in the low byte)"
+          }
+        ],
+        "record": "groups of kind, count, key word, count words; $FF ends"
+      },
+      "note": "E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CallFunc4001InBank81KeepRegs_Sub01_Sub01 over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453)."
     }
   ]
 }
