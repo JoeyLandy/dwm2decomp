@@ -18162,19 +18162,39 @@
         {
           "type": "text",
           "size": 10,
-          "name": "second name, bytes 15-24 (E-0034)"
+          "name": "master name, $0F-$18 (E-0034, E-0297)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "$19-$28"
+          "size": 1,
+          "name": "$19"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "$1A, $1C: species of parent 1 and 2 (E-0297)"
         },
         {
           "type": "db",
-          "size": 11,
+          "size": 10,
           "line": true,
-          "name": "$29-$33"
+          "name": "$1E: master name of parent 1 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$28"
+        },
+        {
+          "type": "db",
+          "size": 10,
+          "line": true,
+          "name": "$29: master name of parent 2 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$33"
         },
         {
           "type": "db",
@@ -18231,21 +18251,31 @@
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 27,
           "line": true,
-          "name": "$73-$82"
+          "name": "$73-$8D"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 10,
           "line": true,
-          "name": "$83-$92"
+          "name": "$8E: name of parent 1 (E-0297)"
         },
         {
           "type": "db",
-          "size": 17,
+          "size": 1,
+          "name": "$98: plus value of parent 1 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 10,
           "line": true,
-          "name": "$93-$A3"
+          "name": "$99: name of parent 2 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$A3: plus value of parent 2 (E-0297)"
         },
         {
           "type": "db",
@@ -18905,19 +18935,39 @@
         {
           "type": "text",
           "size": 10,
-          "name": "second name, bytes 15-24 (E-0034)"
+          "name": "master name, $0F-$18 (E-0034, E-0297)"
         },
         {
           "type": "db",
-          "size": 16,
-          "line": true,
-          "name": "$19-$28"
+          "size": 1,
+          "name": "$19"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "name": "$1A, $1C: species of parent 1 and 2 (E-0297)"
         },
         {
           "type": "db",
-          "size": 11,
+          "size": 10,
           "line": true,
-          "name": "$29-$33"
+          "name": "$1E: master name of parent 1 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$28"
+        },
+        {
+          "type": "db",
+          "size": 10,
+          "line": true,
+          "name": "$29: master name of parent 2 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$33"
         },
         {
           "type": "db",
@@ -18974,21 +19024,31 @@
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 27,
           "line": true,
-          "name": "$73-$82"
+          "name": "$73-$8D"
         },
         {
           "type": "db",
-          "size": 16,
+          "size": 10,
           "line": true,
-          "name": "$83-$92"
+          "name": "$8E: name of parent 1 (E-0297)"
         },
         {
           "type": "db",
-          "size": 17,
+          "size": 1,
+          "name": "$98: plus value of parent 1 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 10,
           "line": true,
-          "name": "$93-$A3"
+          "name": "$99: name of parent 2 (E-0297)"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "$A3: plus value of parent 2 (E-0297)"
         },
         {
           "type": "db",

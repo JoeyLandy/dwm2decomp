@@ -2277,11 +2277,11 @@ Jump_0F1_4EA7:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld hl, wRecordBufA + $E
-    ld a, [wRecordBufA + $E]
+    ld hl, wRecordBufA + MON_SEX
+    ld a, [wRecordBufA + MON_SEX]
     and a, $01
     ld b, a
-    ld a, [wRecordBufB + $E]
+    ld a, [wRecordBufB + MON_SEX]
     and a, $01
     cp a, b
     jr nz, .call_personality_pair_value_to_arg5
@@ -2315,16 +2315,16 @@ Jump_0F1_4EA7:: ; address name
 .cp_02:
     cp a, $02
     jr nz, .clear_link_send_byte
-    ld a, [wRecordBufA + $56]
+    ld a, [wRecordBufA + MON_LEVEL]
     cp a, $28
     jr c, .loop
-    ld a, [wRecordBufA + $6D]
+    ld a, [wRecordBufA + MON_PLUS]
     cp a, $05
     jr c, .loop
-    ld a, [wRecordBufB + $56]
+    ld a, [wRecordBufB + MON_LEVEL]
     cp a, $28
     jr c, .loop
-    ld a, [wRecordBufB + $6D]
+    ld a, [wRecordBufB + MON_PLUS]
     cp a, $05
     jr c, .loop
 
@@ -2664,7 +2664,7 @@ Jump_0F1_50FF:: ; address name
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -3020,7 +3020,7 @@ Func_0F1_5344:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0501
     call FillTilesBxC
-    ld hl, wRecordBufB + $1
+    ld hl, wRecordBufB + MON_NAME
     call CopyShortStringToNameGlyphBuf_BankF1
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
@@ -3242,9 +3242,9 @@ Jump_0F1_5478:: ; address name
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7, wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 Jump_0F1_549E:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
@@ -3647,9 +3647,9 @@ Jump_0F1_56DC:: ; address name
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart_BankF1::
 Func_0F1_5719:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
@@ -3738,11 +3738,11 @@ Func_0F1_57BA:: ; address name
 ; points at: wTextWindowTileLo
 DrawWCA2CNameAndWCA36String::
 Func_0F1_57CD:: ; address name
-    ld hl, wRecordBufB + $1
+    ld hl, wRecordBufB + MON_NAME
     call CopyShortStringToNameGlyphBuf_BankF1
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl]
@@ -4435,7 +4435,7 @@ Func_0F1_5BA5:: ; address name
     dec b
     jr nz, .loop3
     xor a, a
-    ld [wRecordBufB + $6E], a
+    ld [wRecordBufB + MON_EGG], a
     ld [wScreenByteEE], a
     ret
 

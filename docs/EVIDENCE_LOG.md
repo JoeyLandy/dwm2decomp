@@ -2431,6 +2431,30 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0297 — Parent fields of the monster record; buffer operands named by field
+
+- Kind: STATIC (C2 for the copies; C1 for "master").
+- **The copies.** ComputeBreedingChild fills the child record (wChildRecord, $CAD0) from the two parents: wRecordBufA at $C986 and wRecordBufB at $CA2B. It uses two address tables, and bit 4 of the child's byte $0D (wCADD) selects the alternate source table, which swaps the two parents.
+  - CopyFourNamesByWCADDBit4Table: sources 0E:$5ED0, or $5ED8 when the bit is set; destinations 0E:$5EE0. Parent A $01 → child $8E, parent B $01 → $99, parent A $0F → $1E, parent B $0F → $29.
+  - CopySixBytesByWCADDBit4Table: sources 0E:$5E61 / $5E6D; destinations 0E:$5E79. Parent A $0B-$0C → child $1A-$1B, parent B's → $1C-$1D, parent A $6D → $98, parent B's → $A3.
+  - CopyPlayerNameToWCADF stores the player name at the child's $0F.
+- **New fields.**
+  - $1A / $1C: parent species words.
+  - $1E / $29: parent master names.
+  - $8E / $99: parent names.
+  - $98 / $A3: parent plus values.
+
+  Which parent is the father and which the mother is not established, so they are numbered 1 and 2. DrawRecordParentNames uses this area (E-0131).
+- **Rename.** $0F is the master's name. The player's own name goes there, and it is passed on as a parent's master name. MON_SECOND_NAME is now MON_MASTER_NAME; E-0034 had called it the "second name".
+- **Battle results placeholder.** RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder fills these same parent fields with "???" names and $FF species. This fits a record whose parents are unknown.
+- **Generator.** Operands inside the three record buffers are now written buffer + field, for example `ld a, [wRecordBufB + MON_LEVEL]` and `ld hl, wChildRecord + MON_PARENT1_NAME`. Fields with a size also give `+ n`. Record field references: 445 → 755.
+- **Still unread.**
+  - $19: ComputeBreedingChild stores wSaveByte16 there.
+  - $28 and $33: set to $FF by the placeholder.
+  - $73-$8D: 27 bytes that the debug results display copies and shows as numbers.
+- **Table layouts.** The monster record layouts are split to match the new fields.
+- Binary verification: build/run407 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0296 — Record bytes $57, $6B, $6D, $6E read; offsets inside fields named
 
 - Kind: STATIC (C1) and TOOL.

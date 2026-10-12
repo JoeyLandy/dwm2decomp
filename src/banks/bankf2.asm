@@ -252,7 +252,7 @@ Jump_0F2_4185:: ; address name
     ld de, wTextBuf0
     ld c, $0A
     call GameMode8_Update_Case0C_Sub01
-    ld de, wChildRecord + $B
+    ld de, wChildRecord + MON_SPECIES
     ld a, [de]
     ld l, a
     inc de
@@ -1003,7 +1003,7 @@ Func_0F2_4A61:: ; address name
     call CopyTileBytesToVRAMCounted_BankF2
     ld hl, $2940
     call CopyTileBytesToVRAMCounted_BankF2
-    ld hl, wRecordBufB + $F
+    ld hl, wRecordBufB + MON_MASTER_NAME
     call CopyShortStringToNameGlyphBuf_BankF2
     ld de, vTiles2 + $290
     ld a, $F0
@@ -1049,19 +1049,19 @@ Func_0F2_4A94:: ; address name
 ; reads: wRecordBufB
 CombinedPersonalityLevelIndex::
 Func_0F2_4AD3:: ; address name
-    ld a, [wRecordBufB + $6F]
+    ld a, [wRecordBufB + MON_PERSONALITY]
     call PersonalityLevelOfA
     ld a, $09
     call Multiply8
     ld b, l
-    ld a, [wRecordBufB + $72]
+    ld a, [wRecordBufB + MON_PERSONALITY + 3]
     call PersonalityLevelOfA
     ld a, c
     add a, a
     add a, c
     add a, b
     ld b, a
-    ld a, [wRecordBufB + $70]
+    ld a, [wRecordBufB + MON_PERSONALITY + 1]
     call PersonalityLevelOfA
     ld a, c
     add a, b
@@ -1095,11 +1095,11 @@ Func_0F2_4AFE:: ; address name
 ; points at: hTemp2
 DrawWCA83ExpAndToNextLevel::
 Func_0F2_4B05:: ; address name
-    ld a, [wRecordBufB + $58]
+    ld a, [wRecordBufB + MON_EXP]
     ld [wDigits], a
-    ld a, [wRecordBufB + $59]
+    ld a, [wRecordBufB + MON_EXP + 1]
     ld [wDigits + $1], a
-    ld a, [wRecordBufB + $5A]
+    ld a, [wRecordBufB + MON_EXP + 2]
     ld [wDigits + $2], a
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsArg1_Bank1E
@@ -1108,9 +1108,9 @@ Func_0F2_4B05:: ; address name
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
     call DrawSevenDigitsFromArg1_BankF2
-    ld a, [wRecordBufB + $56]
+    ld a, [wRecordBufB + MON_LEVEL]
     ldh [hTemp0], a
-    ld a, [wRecordBufB + $57]
+    ld a, [wRecordBufB + MON_MAX_LEVEL]
     ldh [hTemp1], a
     ld b, a
     ldh a, [hTemp0]
@@ -1119,9 +1119,9 @@ Func_0F2_4B05:: ; address name
     ldh a, [hTemp0]
     ld b, a
     push bc
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wSpeciesExpCurve]
@@ -1141,11 +1141,11 @@ Func_0F2_4B05:: ; address name
     ld e, a
     push bc
     push de
-    ld a, [wRecordBufB + $58]
+    ld a, [wRecordBufB + MON_EXP]
     ldh [hTemp0], a
-    ld a, [wRecordBufB + $59]
+    ld a, [wRecordBufB + MON_EXP + 1]
     ldh [hTemp1], a
-    ld a, [wRecordBufB + $5A]
+    ld a, [wRecordBufB + MON_EXP + 2]
     ldh [hTemp2], a
     pop de
     pop bc
@@ -1199,7 +1199,7 @@ Func_0F2_4B05:: ; address name
 ; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowWCACFCategory11StringAtTiles2320::
 Func_0F2_4BD0:: ; address name
-    ld a, [wRecordBufB + $A4]
+    ld a, [wRecordBufB + MON_ITEM]
     ld [wStringIndex], a
     ld a, $0B
     ld [wStringCategory], a
@@ -1224,9 +1224,9 @@ Func_0F2_4BD0:: ; address name
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
 Func_0F2_4BFC:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wSpeciesRecord + $B]
@@ -1261,7 +1261,7 @@ Func_0F2_4C36:: ; address name
 ; points at: wRecordBufB
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
 Func_0F2_4C3D:: ; address name
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     and a, $10
     and a, a
     jr nz, .skip
@@ -1438,7 +1438,7 @@ Data_0F2_4D6A:: ; address name
 ; writes: wArg1, wArg5, wArg2, wArg3, wArg4
 RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
 Func_0F2_4D72:: ; address name
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     and a, $10
     and a, a
     jr nz, .skip
@@ -1649,7 +1649,7 @@ Func_0F2_4E76:: ; address name
 
 .loop:
     push bc
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     and a, $10
     jr nz, .skip
     ld de, DecompressRecordBufBSpeciesGraphics_Data_4F41
@@ -1729,7 +1729,7 @@ Func_0F2_4EDD:: ; address name
 
 .loop:
     push bc
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     ldh [hTemp0], a
     and a, $10
     jr nz, .skip
@@ -1811,7 +1811,7 @@ Data_0F2_4F44:: ; address name
 ; writes: hTemp0, hTemp1
 DrawLevelAndStatusRowForWCA81::
 Func_0F2_4F47:: ; address name
-    ld hl, wRecordBufB + $56
+    ld hl, wRecordBufB + MON_LEVEL
     ld a, [hl+]
     ldh [hTemp0], a
     ld a, [hl]
@@ -1872,7 +1872,7 @@ Func_0F2_4F47:: ; address name
     ei
     inc hl
     call WriteThreeC3TilesAtHL_BankF2
-    ld a, [wRecordBufB + $55]
+    ld a, [wRecordBufB + MON_STATUS]
     push af
     bit 0, a
     call nz, WriteTileC1AtHL_BankF2
@@ -1887,7 +1887,7 @@ Func_0F2_4F47:: ; address name
     call nz, WriteTileC2AtHL_BankF2
     inc hl
     inc hl
-    ld a, [wRecordBufB + $E]
+    ld a, [wRecordBufB + MON_SEX]
     and a, $01
     add a, $CC
     ld e, a
@@ -2112,7 +2112,7 @@ Func_0F2_50C6:: ; address name
 DrawFamilyIconAndCountForWCA38::
 Func_0F2_50E2:: ; address name
     push bc
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     and a, $0F
     ld [wWorkBuf], a
     ld a, [wArg4]

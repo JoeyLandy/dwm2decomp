@@ -521,11 +521,25 @@ def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[
                 return f"{f['const']} + {off - start}"
         return None
 
+    # E-0297: an operand inside one of the $A5-byte record buffers is written buffer + MON_FIELD
+    bufs = re.compile(r"\b(wRecordBufA|wRecordBufB|wChildRecord) \+ \$([0-9A-F]{1,2})\b")
+
+    def buf_sub(mm: re.Match) -> str:
+        e = field_expr(int(mm.group(2), 16))
+        return f"{mm.group(1)} + {e}" if e else mm.group(0)
+
     n = 0
     out = []
     for text in texts:
         ls = text.split("\n")
         for i, ln in enumerate(ls):
+            if "Rec" in ln and ln.startswith("    ") and bufs.search(ln):
+                code, sep, com = ln.partition(";")
+                new = bufs.sub(buf_sub, code)
+                if new != code:
+                    ls[i] = new + sep + com
+                    n += 1
+                continue
             m = load.match(ln)
             if not m or field_expr(int(m.group(2), 16)) is None:
                 continue

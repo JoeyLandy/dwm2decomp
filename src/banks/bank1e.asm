@@ -6887,7 +6887,7 @@ Func_01E_6EE2:: ; address name
     call CopyTileBytesToVRAM_Bank1E
     pop hl
     ld a, [hl]
-    ld c, MON_SECOND_NAME
+    ld c, MON_MASTER_NAME
     call CopyRecordNameToNameGlyphBuf
     ld de, vTiles2 + $290
     ld a, $F0

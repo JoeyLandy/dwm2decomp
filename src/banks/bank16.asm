@@ -7292,7 +7292,7 @@ Jump_016_6B57:: ; address name
     ld b, $0A
     ld de, wWorkBuf + $1
     call CopyBBytesDEToHL_Bank16
-    ld de, wRecordBufA + $B
+    ld de, wRecordBufA + MON_SPECIES
     ld b, $9A
     call CopyBBytesDEToHL_Bank16
     ld a, $00
@@ -8752,7 +8752,7 @@ Func_016_7364:: ; address name
     ld c, a
 
 .read_record_buf_a:
-    ld a, [wRecordBufA + $56]
+    ld a, [wRecordBufA + MON_LEVEL]
     add a, c
     bit 7, a
     jr nz, .set_record_buf_a_to_01
@@ -8767,10 +8767,10 @@ Func_016_7364:: ; address name
     ld a, $01
 
 .set_record_buf_a:
-    ld [wRecordBufA + $56], a
-    ld a, [wRecordBufA + $B]
+    ld [wRecordBufA + MON_LEVEL], a
+    ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -8779,79 +8779,79 @@ Func_016_7364:: ; address name
     farcall LoadSpeciesRecord
     ld a, [wSpeciesRecord + $6]
     ld c, a
-    ld a, [wRecordBufA + $56]
+    ld a, [wRecordBufA + MON_LEVEL]
     cp a, c
     jr c, .set_record_buf_a2
     ld c, a
 
 .set_record_buf_a2:
     ld a, c
-    ld [wRecordBufA + $57], a
+    ld [wRecordBufA + MON_MAX_LEVEL], a
     ld a, [wBattleKind]
     cp a, $02
     jp z, .call_battle_end_step3_sub01_load_species
-    ld a, [wRecordBufA + $5D]
+    ld a, [wRecordBufA + MON_MAX_HP]
     ld c, a
-    ld a, [wRecordBufA + $5E]
+    ld a, [wRecordBufA + MON_MAX_HP + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16
     ld a, l
-    ld [wRecordBufA + $5D], a
+    ld [wRecordBufA + MON_MAX_HP], a
     ld a, h
-    ld [wRecordBufA + $5E], a
+    ld [wRecordBufA + MON_MAX_HP + 1], a
     ld a, l
-    ld [wRecordBufA + $5B], a
+    ld [wRecordBufA + MON_HP], a
     ld a, h
-    ld [wRecordBufA + $5C], a
-    ld a, [wRecordBufA + $61]
+    ld [wRecordBufA + MON_HP + 1], a
+    ld a, [wRecordBufA + MON_MAX_MP]
     ld c, a
-    ld a, [wRecordBufA + $62]
+    ld a, [wRecordBufA + MON_MAX_MP + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
     ld a, l
-    ld [wRecordBufA + $61], a
+    ld [wRecordBufA + MON_MAX_MP], a
     ld a, h
-    ld [wRecordBufA + $62], a
+    ld [wRecordBufA + MON_MAX_MP + 1], a
     ld a, l
-    ld [wRecordBufA + $5F], a
+    ld [wRecordBufA + MON_MP], a
     ld a, h
-    ld [wRecordBufA + $60], a
-    ld a, [wRecordBufA + $63]
+    ld [wRecordBufA + MON_MP + 1], a
+    ld a, [wRecordBufA + MON_ATK]
     ld c, a
-    ld a, [wRecordBufA + $64]
+    ld a, [wRecordBufA + MON_ATK + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
     ld a, l
-    ld [wRecordBufA + $63], a
+    ld [wRecordBufA + MON_ATK], a
     ld a, h
-    ld [wRecordBufA + $64], a
-    ld a, [wRecordBufA + $65]
+    ld [wRecordBufA + MON_ATK + 1], a
+    ld a, [wRecordBufA + MON_DEF]
     ld c, a
-    ld a, [wRecordBufA + $66]
+    ld a, [wRecordBufA + MON_DEF + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
     ld a, l
-    ld [wRecordBufA + $65], a
+    ld [wRecordBufA + MON_DEF], a
     ld a, h
-    ld [wRecordBufA + $66], a
-    ld a, [wRecordBufA + $67]
+    ld [wRecordBufA + MON_DEF + 1], a
+    ld a, [wRecordBufA + MON_AGL]
     ld c, a
-    ld a, [wRecordBufA + $68]
+    ld a, [wRecordBufA + MON_AGL + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
     ld a, l
-    ld [wRecordBufA + $67], a
+    ld [wRecordBufA + MON_AGL], a
     ld a, h
-    ld [wRecordBufA + $68], a
-    ld a, [wRecordBufA + $69]
+    ld [wRecordBufA + MON_AGL + 1], a
+    ld a, [wRecordBufA + MON_INT]
     ld c, a
-    ld a, [wRecordBufA + $6A]
+    ld a, [wRecordBufA + MON_INT + 1]
     ld b, a
     call BattleEnd_Step3_Sub01_Multiply8By16_Sub02
     ld a, l
-    ld [wRecordBufA + $69], a
+    ld [wRecordBufA + MON_INT], a
     ld a, h
-    ld [wRecordBufA + $6A], a
+    ld [wRecordBufA + MON_INT + 1], a
     ld a, [wRecordBufAByte71]
     ld c, a
     ld b, $00
@@ -8906,7 +8906,7 @@ Func_016_7364:: ; address name
 
 .read_record_buf_a3:
     push hl
-    ld a, [wRecordBufA + $56]
+    ld a, [wRecordBufA + MON_LEVEL]
     ld c, $19
     call Multiply8
     pop de
@@ -8931,9 +8931,9 @@ Func_016_7364:: ; address name
 
 .set_record_buf_a3:
     ld a, l
-    ld [wRecordBufA + $6B], a
+    ld [wRecordBufA + MON_WLD], a
     ld a, h
-    ld [wRecordBufA + $6C], a
+    ld [wRecordBufA + MON_WLD + 1], a
     ret
 
 ; only called from BattleEnd_Step3_Sub01 (E-0047)

@@ -2939,9 +2939,9 @@ Func_019_7380:: ; address name
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadTable4E60EntryForWC991ToWC9DE::
 Func_019_73A2:: ; address name
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -2951,7 +2951,7 @@ Func_019_73A2:: ; address name
     ld a, [wSpeciesExpCurve]
     ld bc, $0129
     call Multiply8By16
-    ld a, [wRecordBufA + $56]
+    ld a, [wRecordBufA + MON_LEVEL]
     dec a
     ld c, a
     ld b, $00
@@ -2964,7 +2964,7 @@ Func_019_73A2:: ; address name
     ld a, h
     adc a, $4E
     ld h, a
-    ld de, wRecordBufA + $58
+    ld de, wRecordBufA + MON_EXP
     ld a, [hl+]
     ld [de], a
     inc de
@@ -2981,9 +2981,9 @@ Func_019_73A2:: ; address name
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadTable4E60EntryForWCA36ToWCA83::
 Func_019_73DF:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -2993,7 +2993,7 @@ Func_019_73DF:: ; address name
     ld a, [wSpeciesExpCurve]
     ld bc, $0129
     call Multiply8By16
-    ld a, [wRecordBufB + $56]
+    ld a, [wRecordBufB + MON_LEVEL]
     dec a
     ld c, a
     ld b, $00
@@ -3006,7 +3006,7 @@ Func_019_73DF:: ; address name
     ld a, h
     adc a, $4E
     ld h, a
-    ld de, wRecordBufB + $58
+    ld de, wRecordBufB + MON_EXP
     ld a, [hl+]
     ld [de], a
     inc de

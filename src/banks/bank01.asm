@@ -2682,7 +2682,7 @@ Jump_001_5564:: ; address name
     ld b, a
     ld de, vBGMap0 + $6A
     call WriteThreeHexDigitsAtDE
-    ld hl, wChildRecord + $E
+    ld hl, wChildRecord + MON_SEX
     ld a, [hl]
     and a, $01
     add a, $FE
@@ -2693,19 +2693,19 @@ Jump_001_5564:: ; address name
     ld a, c
     ld [hl], a
     ei
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $2
     call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
-    ld hl, wChildRecord + $56
+    ld hl, wChildRecord + MON_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
     call PackTwoDigitsOfCAsBCD
     call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
-    ld hl, wChildRecord + $57
+    ld hl, wChildRecord + MON_MAX_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
@@ -3301,20 +3301,20 @@ Jump_001_59DC:: ; address name
     ld a, b
     or a, c
     jr nz, .loop
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld a, [wDebugValue0]
     ld [hl+], a
     ld a, [wDebugValue1]
     ld [hl+], a
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     ld a, [wDebugValue3]
     ld [hl+], a
     ld a, [wDebugState]
     ld [hl+], a
-    ld hl, wRecordBufA + $E
+    ld hl, wRecordBufA + MON_SEX
     ld a, [wDebugValue2]
     ld [hl], a
-    ld hl, wRecordBufB + $E
+    ld hl, wRecordBufB + MON_SEX
     ld a, [wDebugSubState]
     ld [hl], a
     ld a, [wDebugValue0]
@@ -3323,7 +3323,7 @@ Jump_001_59DC:: ; address name
     ld [wArg7], a
     farcall FamilyForSpeciesIdArg6
     ld a, [wArg5]
-    ld hl, wRecordBufA + $D
+    ld hl, wRecordBufA + MON_FAMILY
     ld [hl], a
     ld a, [wDebugValue3]
     ld [wArg6], a
@@ -3331,24 +3331,24 @@ Jump_001_59DC:: ; address name
     ld [wArg7], a
     farcall FamilyForSpeciesIdArg6
     ld a, [wArg5]
-    ld hl, wRecordBufB + $D
+    ld hl, wRecordBufB + MON_FAMILY
     ld [hl], a
-    ld hl, wRecordBufA + $6D
+    ld hl, wRecordBufA + MON_PLUS
     ld a, [wScreenStep]
     ld [hl], a
-    ld hl, wRecordBufB + $6D
+    ld hl, wRecordBufB + MON_PLUS
     ld a, [wScreenSubStep]
     ld [hl], a
-    ld hl, wRecordBufA + $56
+    ld hl, wRecordBufA + MON_LEVEL
     ld a, [wScreenCounter]
     ld [hl], a
-    ld hl, wRecordBufB + $56
+    ld hl, wRecordBufB + MON_LEVEL
     ld a, [wGlyphListPos]
     ld [hl], a
-    ld hl, wRecordBufA + $A4
+    ld hl, wRecordBufA + MON_ITEM
     ld a, [wGlyphListStart]
     ld [hl], a
-    ld hl, wRecordBufB + $A4
+    ld hl, wRecordBufB + MON_ITEM
     ld a, [wGridCursorX]
     ld [hl], a
     ld hl, wGridCursorY
@@ -6127,7 +6127,7 @@ Func_001_6C48:: ; address name
     ld [hl+], a
     ld a, [wRecordBufferData + $7]
     ld [hl+], a
-    ld [wRecordBufA + $56], a
+    ld [wRecordBufA + MON_LEVEL], a
     ld a, l
     add a, $04
     ld l, a
@@ -6300,18 +6300,18 @@ Func_001_6C48:: ; address name
     ld a, [wSpeciesIdHi]
     ld h, a
     ld a, l
-    ld [wRecordBufA + $B], a
+    ld [wRecordBufA + MON_SPECIES], a
     ld a, h
-    ld [wRecordBufA + $C], a
+    ld [wRecordBufA + MON_SPECIES + 1], a
     farcall LoadTable4E60EntryForWC991ToWC9DE
     ld a, [wBattleArg0]
     ld c, MON_EXP
     call SRAMRecordAddress
-    ld a, [wRecordBufA + $58]
+    ld a, [wRecordBufA + MON_EXP]
     ld [hl+], a
-    ld a, [wRecordBufA + $59]
+    ld a, [wRecordBufA + MON_EXP + 1]
     ld [hl+], a
-    ld a, [wRecordBufA + $5A]
+    ld a, [wRecordBufA + MON_EXP + 2]
     ld [hl+], a
     farcall SetSpeciesFlag
     ret

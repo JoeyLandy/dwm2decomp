@@ -86,9 +86,9 @@ Func_024_4001:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr nz, .call_game_mode6_init_load_monster_picture
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ld [wBattlerRecords + $A], a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld [wBattlerRecords + $B], a
 
 .call_game_mode6_init_load_monster_picture:
@@ -261,7 +261,7 @@ Jump_024_4178:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
-    ld hl, wRecordBufA + $1
+    ld hl, wRecordBufA + MON_NAME
     ld de, wTextBuf0
     ld bc, $000A
     call CopyBytes
@@ -433,9 +433,9 @@ Jump_024_42B3:: ; address name
     inc de
     dec b
     jr nz, .loop
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -1178,9 +1178,9 @@ Jump_024_475C:: ; address name
     inc de
     dec b
     jr nz, .loop
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -1552,9 +1552,9 @@ Jump_024_49E8:: ; address name
     inc de
     dec b
     jr nz, .loop
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall SetSpeciesFlag
     xor a, a
@@ -2347,7 +2347,7 @@ Func_024_4EE8:: ; address name
 ; points at: wTextBuf0
 CopyWCA2CNameToTextBuf0::
 Func_024_4F0C:: ; address name
-    ld hl, wRecordBufB + $1
+    ld hl, wRecordBufB + MON_NAME
     jp CopyWC987NameToTextBuf0_Skip
 
 ; copies up to 10 name bytes from wC987 (stopping at $F0) to wC130 with a $F0 terminator (E-0124)
@@ -2355,7 +2355,7 @@ Func_024_4F0C:: ; address name
 ; points at: wTextBuf0
 CopyWC987NameToTextBuf0::
 Func_024_4F12:: ; address name
-    ld hl, wRecordBufA + $1
+    ld hl, wRecordBufA + MON_NAME
 
 CopyWC987NameToTextBuf0_Skip::
 Jump_024_4F15:: ; address name
@@ -3020,9 +3020,13 @@ Data_024_52ED:: ; address name
     dw $00D4 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $16, $1B, $40, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -3033,9 +3037,11 @@ Data_024_52ED:: ; address name
     dw $008A, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00 ; $73-$82
-    db $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
@@ -3215,7 +3221,7 @@ Jump_024_548A:: ; address name
 ; writes: wObject5, wScreenSubStep
 GameMode6_Update_Save_ObjectScene_WriteObject5AndScreenSubStep::
 Jump_024_54A3:: ; address name
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr z, .check_screen_sub_step
     ld a, $80
@@ -3233,7 +3239,7 @@ Jump_024_54A3:: ; address name
 ; writes: wObject2, wScreenSubStep
 GameMode6_Update_Save_ObjectScene_WriteObject2AndScreenSubStep::
 Jump_024_54B6:: ; address name
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr nz, .check_screen_sub_step
     ld a, [wObject2 + $9]
@@ -3432,7 +3438,7 @@ Jump_024_55B1:: ; address name
 ; writes: wObject5, wScreenSubStep
 GameMode6_Update_SavePrompt_ObjectScene_WriteObject5AndScreenSubStep::
 Jump_024_55C7:: ; address name
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr z, .check_screen_sub_step
     ld a, $80
@@ -3450,7 +3456,7 @@ Jump_024_55C7:: ; address name
 ; writes: wObject2, wScreenSubStep
 GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndScreenSubStep::
 Jump_024_55DA:: ; address name
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr nz, .check_screen_sub_step
     ld a, [wObject2 + $9]
@@ -3566,7 +3572,7 @@ Jump_024_5653:: ; address name
 GameMode6_Update_UpdateAndDrawSpriteSlots::
 Func_024_567C:: ; address name
     farcall UpdateAndDrawSpriteSlots
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     ret z
     farcall DrawFieldSprites
@@ -3615,7 +3621,7 @@ Func_024_568E:: ; address name
     ld b, $06
     call CopyBytesDEFromHL_Bank24
     farcall DecompressGraphicsTemp0ToTemp4
-    ld a, [wRecordBufB + $6E]
+    ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr nz, .set_temp0_to_0D
     ld hl, GameMode6_Update_Save_TestFlagBit_Data_5BE3
@@ -3628,16 +3634,16 @@ Func_024_568E:: ; address name
     and a, $01
     and a, a
     jr nz, .read_record_buf_a
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ldh [hTemp0], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ldh [hTemp1], a
     jr .call_decompress_graphics_temp0_to_temp4
 
 .read_record_buf_a:
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ldh [hTemp0], a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ldh [hTemp1], a
 
 .call_decompress_graphics_temp0_to_temp4:
@@ -3664,16 +3670,16 @@ Func_024_568E:: ; address name
     and a, $01
     and a, a
     jr nz, .read_record_buf_a2
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wObject2 + $2], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wObject2 + $3], a
     jr .set_sprite_slot_count_to_03
 
 .read_record_buf_a2:
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ld [wObject2 + $2], a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld [wObject2 + $3], a
 
 .set_sprite_slot_count_to_03:

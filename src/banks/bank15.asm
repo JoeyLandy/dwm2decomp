@@ -1246,7 +1246,7 @@ Jump_015_47E1:: ; address name
     ld a, [wArg7]
     ld h, a
     call CopyMonsterNameToBuffer_B15
-    ld hl, wChildRecord + $D
+    ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and a, $0F
     ld [wWorkBuf], a
@@ -1593,7 +1593,7 @@ Jump_015_4A4D:: ; address name
 ; points at: wMonsterLibraryBuf, wNameGlyphBuf, wTextBuf0
 BreedMenu_ChooseParents_TestBitInFieldAtArg3::
 Jump_015_4B02:: ; address name
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -1609,7 +1609,7 @@ Jump_015_4B02:: ; address name
     jr .skip
 
 .set_species_id_lo:
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wSpeciesIdLo], a
     ld a, [hl]
@@ -1621,7 +1621,7 @@ Jump_015_4B02:: ; address name
     jr .skip
 
 .set_arg1:
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -1636,7 +1636,7 @@ Jump_015_4B02:: ; address name
     jr nz, .set_two_choice_cursor_to_01
 
 .skip:
-    ld de, wChildRecord + $B
+    ld de, wChildRecord + MON_SPECIES
     ld a, [de]
     ld l, a
     inc de
@@ -1659,7 +1659,7 @@ Jump_015_4B02:: ; address name
     ld a, $A2
     ld [de], a
     inc de
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ld l, a
     ld h, $00
@@ -1708,7 +1708,7 @@ Jump_015_4B02:: ; address name
 ; points at: wMonsterLibraryBuf
 BreedMenu_ChooseParents_TestBitInFieldAtArg3_Case28::
 Jump_015_4BBE:: ; address name
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -1721,7 +1721,7 @@ Jump_015_4BBE:: ; address name
     call TestBitInFieldAtArg3
     cp a, $FF
     jr z, .clear_two_choice_cursor
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wSpeciesIdLo], a
     ld a, [hl]
@@ -2087,7 +2087,7 @@ Jump_015_4DF3:: ; address name
 ; points at: wTextWindowTileLo
 BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits::
 Jump_015_4E1D:: ; address name
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ldh [hTemp0], a
     call TenTimesTemp0PlusTenToDigits
@@ -2225,7 +2225,7 @@ Jump_015_4E47:: ; address name
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -2355,7 +2355,7 @@ Jump_015_4F9A:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, .loop
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ldh [hTemp0], a
     call TenTimesTemp0PlusTen
@@ -2417,7 +2417,7 @@ Jump_015_501D:: ; address name
 ; points at: wListEntries2, wListEntries
 BreedMenu_ChooseParents_TenTimesTemp0PlusTen::
 Jump_015_5030:: ; address name
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ldh [hTemp0], a
     call TenTimesTemp0PlusTen
@@ -4492,15 +4492,15 @@ Jump_015_5E62:: ; address name
     ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
-    ld [wChildRecord + $B], a
+    ld [wChildRecord + MON_SPECIES], a
     ldh a, [hTemp1]
-    ld [wChildRecord + $C], a
+    ld [wChildRecord + MON_SPECIES + 1], a
     pop hl
     ld a, [hl]
     ld c, MON_PLUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
-    ld [wChildRecord + $6D], a
+    ld [wChildRecord + MON_PLUS], a
     xor a, a
     ld [rRAMG2], a
     ld a, [wScriptStartRequest]
@@ -4617,7 +4617,7 @@ Jump_015_5F51:: ; address name
     ld a, [wFadeState]
     and a, a
     ret nz
-    ld de, wChildRecord + $B
+    ld de, wChildRecord + MON_SPECIES
     ld a, [de]
     ld l, a
     inc de
@@ -7221,14 +7221,14 @@ Func_015_6EA5:: ; address name
     xor a, a
     ld [wArg1], a
     ld de, wCounterPtr0Lo
-    ld a, [wRecordBufA + $A4]
+    ld a, [wRecordBufA + MON_ITEM]
     and a, a
     call nz, PrepareWCF8BCountersAndRequestScript_WriteTemp0AndArg1
     ld a, [wLinkMode]
     and a, a
     jr nz, .skip
     ld de, wCounterPtr1Lo
-    ld a, [wRecordBufB + $A4]
+    ld a, [wRecordBufB + MON_ITEM]
     and a, a
     call nz, PrepareWCF8BCountersAndRequestScript_WriteTemp0AndArg1
 

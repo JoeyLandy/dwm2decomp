@@ -1506,11 +1506,11 @@ Jump_037_4F5E:: ; address name
     ld a, [wTextFlags]
     and a, a
     ret nz
-    ld hl, wRecordBufA + $E
-    ld a, [wRecordBufA + $E]
+    ld hl, wRecordBufA + MON_SEX
+    ld a, [wRecordBufA + MON_SEX]
     and a, $01
     ld b, a
-    ld a, [wRecordBufB + $E]
+    ld a, [wRecordBufB + MON_SEX]
     and a, $01
     cp a, b
     jr nz, .clear_link_send_byte
@@ -1853,7 +1853,7 @@ Func_037_5172:: ; address name
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -2279,7 +2279,7 @@ Func_037_542C:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, wRecordBufB + $1
+    ld hl, wRecordBufB + MON_NAME
     call CopyF0NameToNameGlyphBuf
     ld de, vTiles1 + $500
     call CopyGlyphTilesToVRAM
@@ -2525,9 +2525,9 @@ Jump_037_55A0:: ; address name
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, hSpriteHideTile, wArg7, wScreenStep
 RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 Jump_037_55C6:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
@@ -2944,9 +2944,9 @@ Jump_037_5821:: ; address name
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 DrawWCA36SpritePart:: ; heuristic: follows a terminator; C0
 Func_037_5870:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wArg2], a
     xor a, a
     ld [wArg3], a
@@ -3038,11 +3038,11 @@ Func_037_5912:: ; address name
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DrawWCA2CNameAndWCA36String_Bank37::
 Func_037_5929:: ; address name
-    ld hl, wRecordBufB + $1
+    ld hl, wRecordBufB + MON_NAME
     call CopyF0NameToNameGlyphBuf
     ld de, vTiles1 + $780
     call CopyGlyphTilesToVRAM
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     ld a, [hl+]
     ld [wStringIndex], a
     ld a, [hl]

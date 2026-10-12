@@ -2243,9 +2243,9 @@ Func_01F_73EC:: ; address name
     xor a, a
     ld [wArg7], a
     call DrawTileRectFromArg1Params
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld e, a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld d, a
     ld hl, vTiles2 + $200
     ld c, $01
@@ -2259,9 +2259,9 @@ Func_01F_73EC:: ; address name
     ld a, [wIsCGB]
     and a, a
     jr z, .call_bg_map_address_at_scroll_bank1_f
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld e, a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld d, a
     push de
     ld a, $7F
@@ -2494,7 +2494,7 @@ Func_01F_7591:: ; address name
 ; points at: wRecordBufB
 ShowRecordBufBSkillNamesOrNone::
 Func_01F_7601:: ; address name
-    ld a, [wRecordBufB + $34]
+    ld a, [wRecordBufB + MON_SKILLS]
     cp a, $FF
     jr z, .set_text_window_tile_lo
     and a, a

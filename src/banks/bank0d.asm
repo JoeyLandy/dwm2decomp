@@ -6148,16 +6148,16 @@ Func_00D_6B55:: ; address name
     call WriteBlankName10_Bank0D
     ld a, [wRecordBuffer]
     ld [hl+], a
-    ld [wChildRecord + $B], a
+    ld [wChildRecord + MON_SPECIES], a
     ld a, [wRecordBuffer + $1]
     ld [hl+], a
-    ld [wChildRecord + $C], a
+    ld [wChildRecord + MON_SPECIES + 1], a
     ld a, [wSpeciesRecord]
     ld [hl+], a
     push hl
     farcall RollWCADEFromSpeciesFlag
     pop hl
-    ld a, [wChildRecord + $E]
+    ld a, [wChildRecord + MON_SEX]
     ld [hl+], a
     ld de, wPlayerName
     ld c, $00
@@ -7149,12 +7149,12 @@ Jump_00D_72F4:: ; address name
     inc de
     dec b
     jr nz, .loop
-    ld hl, wRecordBufA + $E
+    ld hl, wRecordBufA + MON_SEX
     ld a, [hl]
     and a, $01
     inc a
     and a, $01
-    ld hl, wRecordBufB + $E
+    ld hl, wRecordBufB + MON_SEX
     ld [hl], a
     ld a, [wScreenStep]
     inc a
@@ -7322,7 +7322,7 @@ Jump_00D_73F1:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
     ld [wOBJPaletteUploadRequest], a
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg1], a
     ld a, [hl]
@@ -7718,7 +7718,7 @@ Func_00D_76D0:: ; address name
     ld [de], a
     inc de
     push de
-    ld a, [wChildRecord + $6D]
+    ld a, [wChildRecord + MON_PLUS]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
@@ -7933,9 +7933,13 @@ Data_00D_78F6:: ; address name
     dw $004A ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $25, $36, $61, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -7946,9 +7950,11 @@ Data_00D_78F6:: ; address name
     dw $007F, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00 ; $73-$82
-    db $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_01:: ; heuristic: preset monster record; C0
 Data_00D_799B:: ; address name
@@ -7957,9 +7963,13 @@ Data_00D_799B:: ; address name
     dw $011E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $07, $0D, $6B, $6F, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -7970,9 +7980,11 @@ Data_00D_799B:: ; address name
     dw $00E2, $0110, $0132, $02F1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $0A, $C8, $B4, $DC ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00 ; $73-$82
-    db $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_02:: ; heuristic: preset monster record; C0
 Data_00D_7A40:: ; address name
@@ -7981,9 +7993,13 @@ Data_00D_7A40:: ; address name
     dw $00BC ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $05 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $13, $33, $6D, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -7994,9 +8010,11 @@ Data_00D_7A40:: ; address name
     dw $0077, $00A6, $00B4, $0165 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $46, $64, $AA, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00 ; $73-$82
-    db $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_03:: ; heuristic: preset monster record; C0
 Data_00D_7AE5:: ; address name
@@ -8005,9 +8023,13 @@ Data_00D_7AE5:: ; address name
     dw $0092 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $04 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $19, $2F, $3C, $9B, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8018,9 +8040,11 @@ Data_00D_7AE5:: ; address name
     dw $00D6, $00D4, $009B, $02EB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $D2, $28, $96, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00 ; $73-$82
-    db $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_04:: ; heuristic: preset monster record; C0
 Data_00D_7B8A:: ; address name
@@ -8029,9 +8053,13 @@ Data_00D_7B8A:: ; address name
     dw $005E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $20, $34, $63, $90, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8042,9 +8070,11 @@ Data_00D_7B8A:: ; address name
     dw $00C6, $004F, $0098, $01C5 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $C8, $96, $96, $1E ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00 ; $73-$82
-    db $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_05:: ; heuristic: preset monster record; C0
 Data_00D_7C2F:: ; address name
@@ -8053,9 +8083,13 @@ Data_00D_7C2F:: ; address name
     dw $0080 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $03 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $79, $7B, $92, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8066,9 +8100,11 @@ Data_00D_7C2F:: ; address name
     dw $0169, $0147, $01CB, $01B1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $64, $96, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00 ; $73-$82
-    db $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_06:: ; heuristic: preset monster record; C0
 Data_00D_7CD4:: ; address name
@@ -8077,9 +8113,13 @@ Data_00D_7CD4:: ; address name
     dw $010D ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $3A, $3B, $A0, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8090,9 +8130,11 @@ Data_00D_7CD4:: ; address name
     dw $00F8, $01A1, $01CA, $01F4 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $14, $C8, $64, $B4 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00 ; $73-$82
-    db $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_07:: ; heuristic: preset monster record; C0
 Data_00D_7D79:: ; address name
@@ -8101,9 +8143,13 @@ Data_00D_7D79:: ; address name
     dw $0033 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $01 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $19, $82, $9C, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8114,9 +8160,11 @@ Data_00D_7D79:: ; address name
     dw $01AD, $01BF, $01E9, $01AB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $B4, $8C, $64, $8C ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00 ; $73-$82
-    db $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_08:: ; heuristic: preset monster record; C0
 Data_00D_7E1E:: ; address name
@@ -8125,9 +8173,13 @@ Data_00D_7E1E:: ; address name
     dw $010A ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $50, $51, $52, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8138,9 +8190,11 @@ Data_00D_7E1E:: ; address name
     dw $015D, $013D, $010B, $0191 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $82, $64, $5A ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00 ; $73-$82
-    db $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
 PresetMonsterRecords_09:: ; heuristic: preset monster record; C0
 Data_00D_7EC3:: ; address name
@@ -8149,9 +8203,13 @@ Data_00D_7EC3:: ; address name
     dw $0133 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
     db $00 ; $0E: bit 0 = sex (C1, E-0291)
-    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
-    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
-    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; master name, $0F-$18 (E-0034, E-0297)
+    db $00 ; $19
+    dw $FFFF, $FFFF ; $1A, $1C: species of parent 1 and 2 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $1E: master name of parent 1 (E-0297)
+    db $00 ; $28
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $29: master name of parent 2 (E-0297)
+    db $00 ; $33
     db $6F, $81, $91, $00, $00, $00, $00, $00 ; skills, $34-$3B (E-0122)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
@@ -8162,8 +8220,10 @@ Data_00D_7EC3:: ; address name
     dw $01AC, $0178, $014B, $01E0 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
     db $00, $00, $00, $00 ; $6B WLD word, $6D plus value, $6E egg flag (C1, E-0296)
     db $78, $64, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
-    db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00 ; $73-$82
-    db $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02, $98, $98, $98, $F0, $F0 ; $83-$92
-    db $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $93-$A3
+    db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02 ; $73-$8D
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $8E: name of parent 1 (E-0297)
+    db $00 ; $98: plus value of parent 1 (E-0297)
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; $99: name of parent 2 (E-0297)
+    db $00 ; $A3: plus value of parent 2 (E-0297)
     db $00 ; $A4: equipped item (E-0125)
     ds $98, $00

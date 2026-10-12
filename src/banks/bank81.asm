@@ -7,20 +7,20 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 ; writes: wAIWeights, wSpeciesIdLo, wSpeciesIdHi, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, ...
 CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
 Func_081_4001:: ; address name
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     ld h, a
     push hl
     ld a, l
     ld [wAIWeights], a
     ld a, h
     ld [wAIWeights + $1], a
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     ld [wAIWeights + $6], a
-    ld a, [wRecordBufB + $1A]
+    ld a, [wRecordBufB + MON_PARENT1_SPECIES]
     ld l, a
-    ld a, [wRecordBufB + $1B]
+    ld a, [wRecordBufB + MON_PARENT1_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wAIWeights + $2], a
@@ -33,9 +33,9 @@ Func_081_4001:: ; address name
     farcall LoadSpeciesFamily
     ld a, [wSpeciesRecord]
     ld [wAIWeights + $7], a
-    ld a, [wRecordBufB + $1C]
+    ld a, [wRecordBufB + MON_PARENT2_SPECIES]
     ld l, a
-    ld a, [wRecordBufB + $1D]
+    ld a, [wRecordBufB + MON_PARENT2_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wAIWeights + $4], a
@@ -110,9 +110,9 @@ Func_081_4001:: ; address name
     ld a, c
     or a, a
     jr nz, .set_species_id_lo
-    ld a, [wRecordBufB + $D]
+    ld a, [wRecordBufB + MON_FAMILY]
     set 4, a
-    ld [wRecordBufB + $D], a
+    ld [wRecordBufB + MON_FAMILY], a
 
 .set_species_id_lo:
     pop hl

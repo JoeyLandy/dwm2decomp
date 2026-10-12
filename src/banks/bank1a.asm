@@ -2220,9 +2220,9 @@ Func_01A_624B:: ; address name
     ld bc, $0019
     ld a, $FF
     call FillBytes
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld h, a
     ld a, l
     ld [wSpeciesIdLo], a
@@ -2244,7 +2244,7 @@ Func_01A_624B:: ; address name
     ld [hl+], a
     dec b
     jr nz, .loop
-    ld hl, wRecordBufA + $3C
+    ld hl, wRecordBufA + MON_SKILL_LIST
     ld b, $19
     ld a, $FF
 
@@ -2253,7 +2253,7 @@ Func_01A_624B:: ; address name
     dec b
     jr nz, .loop2
     ld de, wWorkBuf
-    ld hl, wRecordBufA + $3C
+    ld hl, wRecordBufA + MON_SKILL_LIST
     ld b, $19
 
 .loop3:
@@ -2367,7 +2367,7 @@ Func_01A_62D0:: ; address name
 BattleEnd_Step3_Shared01::
 Func_01A_6306:: ; address name
     push bc
-    ld hl, wRecordBufA + $34
+    ld hl, wRecordBufA + MON_SKILLS
     ld b, $08
 
 .loop:

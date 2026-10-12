@@ -1002,7 +1002,7 @@ Func_00E_5688:: ; address name
     ld [hl+], a
     dec b
     jr nz, .loop
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1015,7 +1015,7 @@ Func_00E_5688:: ; address name
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1055,14 +1055,14 @@ Func_00E_5688:: ; address name
     dec hl
     push hl
     ld b, [hl]
-    ld hl, wRecordBufA + $6D
+    ld hl, wRecordBufA + MON_PLUS
     jr .skip
 
 .next3:
     dec hl
     push hl
     ld b, [hl]
-    ld hl, wRecordBufB + $6D
+    ld hl, wRecordBufB + MON_PLUS
 
 .skip:
     ld a, [hl]
@@ -1071,14 +1071,14 @@ Func_00E_5688:: ; address name
     jr .restore
 
 .read_record_buf_a:
-    ld a, [wRecordBufA + $B]
+    ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
-    ld a, [wRecordBufA + $C]
+    ld a, [wRecordBufA + MON_SPECIES + 1]
     ld h, a
-    ld a, [wRecordBufB + $B]
+    ld a, [wRecordBufB + MON_SPECIES]
     cp a, l
     jr nz, .restore
-    ld a, [wRecordBufB + $C]
+    ld a, [wRecordBufB + MON_SPECIES + 1]
     cp a, h
     jr nz, .restore
     jr .restore2
@@ -1100,7 +1100,7 @@ Func_00E_5688:: ; address name
 .restore2:
     pop hl
     push bc
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1123,7 +1123,7 @@ Func_00E_5688:: ; address name
     jp .read_arg6
 
 .skip3:
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1136,7 +1136,7 @@ Func_00E_5688:: ; address name
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wRecordBufB + $D
+    ld hl, wRecordBufB + MON_FAMILY
     ld a, [hl]
     and a, $0F
     ld e, a
@@ -1178,7 +1178,7 @@ Func_00E_5688:: ; address name
 .restore4:
     pop hl
     push bc
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1201,7 +1201,7 @@ Func_00E_5688:: ; address name
     jp .read_arg6
 
 .skip7:
-    ld hl, wRecordBufA + $D
+    ld hl, wRecordBufA + MON_FAMILY
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1212,7 +1212,7 @@ Func_00E_5688:: ; address name
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -1253,7 +1253,7 @@ Func_00E_5688:: ; address name
 .restore6:
     pop hl
     push bc
-    ld hl, wRecordBufA + $D
+    ld hl, wRecordBufA + MON_FAMILY
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1274,7 +1274,7 @@ Func_00E_5688:: ; address name
     jp .read_arg6
 
 .skip9:
-    ld hl, wRecordBufA + $D
+    ld hl, wRecordBufA + MON_FAMILY
     ld a, [hl]
     and a, $0F
     add a, a
@@ -1285,7 +1285,7 @@ Func_00E_5688:: ; address name
     ld h, [hl]
     ld l, e
     push hl
-    ld hl, wRecordBufB + $D
+    ld hl, wRecordBufB + MON_FAMILY
     ld a, [hl]
     and a, $0F
     pop hl
@@ -1316,7 +1316,7 @@ Func_00E_5688:: ; address name
     ret
 
 .set_arg6:
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     ld a, [hl+]
     ld [wArg6], a
     ld a, [hl]
@@ -1324,12 +1324,12 @@ Func_00E_5688:: ; address name
     jp .read_arg6
 
 .read_arg6:
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [wArg6]
     ld [hl+], a
     ld a, [wArg7]
     ld [hl], a
-    ld hl, wRecordBufA + $E
+    ld hl, wRecordBufA + MON_SEX
     ld a, [hl]
     and a, $01
     swap a
@@ -1340,14 +1340,14 @@ Func_00E_5688:: ; address name
     pop bc
     or a, b
     ld b, a
-    ld hl, wChildRecord + $D
+    ld hl, wChildRecord + MON_FAMILY
     ld [hl], b
     xor a, a
-    ld hl, wChildRecord + $55
+    ld hl, wChildRecord + MON_STATUS
     ld [hl], a
-    ld hl, wChildRecord + $A4
+    ld hl, wChildRecord + MON_ITEM
     ld [hl], a
-    ld hl, wChildRecord + $58
+    ld hl, wChildRecord + MON_EXP
     ld [hl+], a
     ld [hl+], a
     ld [hl], a
@@ -1355,11 +1355,11 @@ Func_00E_5688:: ; address name
     ld hl, wChildRecord + $19
     ld [hl], a
     ld a, $01
-    ld hl, wChildRecord + $56
+    ld hl, wChildRecord + MON_LEVEL
     ld [hl], a
     ld hl, wChildRecord
     ld [hl], a
-    ld hl, wChildRecord + $6E
+    ld hl, wChildRecord + MON_EGG
     ld [hl], a
     call CopyFourNamesByWCADDBit4Table
     call CopyPlayerNameToWCADF
@@ -1417,7 +1417,7 @@ Func_00E_5688:: ; address name
     rr l
     pop bc
     push bc
-    ld de, wChildRecord + $5B
+    ld de, wChildRecord + MON_HP
     ld a, c
     add a, a
     add a, e
@@ -1460,7 +1460,7 @@ Func_00E_5688:: ; address name
     ld e, a
     pop bc
     push bc
-    ld hl, wChildRecord + $6F
+    ld hl, wChildRecord + MON_PERSONALITY
     ld a, c
     add_a_to_hl
     ld [hl], e
@@ -1472,8 +1472,8 @@ Func_00E_5688:: ; address name
     inc c
     dec b
     jr nz, .loop3
-    ld hl, wRecordBufA + $6D
-    ld de, wRecordBufB + $6D
+    ld hl, wRecordBufA + MON_PLUS
+    ld de, wRecordBufB + MON_PLUS
     ld a, [wArg1]
     and a, a
     jr z, .skip14
@@ -1490,8 +1490,8 @@ Func_00E_5688:: ; address name
 .skip15:
     ld b, a
     push bc
-    ld hl, wRecordBufA + $56
-    ld de, wRecordBufB + $56
+    ld hl, wRecordBufA + MON_LEVEL
+    ld de, wRecordBufB + MON_LEVEL
     ld b, [hl]
     ld a, [de]
     add a, b
@@ -1530,9 +1530,9 @@ Func_00E_5688:: ; address name
     ld a, $63
 
 .skip21:
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld [hl], a
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wSpeciesIdLo], a
     ld a, [hl]
@@ -1541,7 +1541,7 @@ Func_00E_5688:: ; address name
     ld a, [wSpeciesRecord + $6]
     ld b, a
     push bc
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     ld c, $03
     call Multiply8
@@ -1561,7 +1561,7 @@ Func_00E_5688:: ; address name
     ld a, $63
 
 .call_roll_wcade_from_species_flag:
-    ld hl, wChildRecord + $57
+    ld hl, wChildRecord + MON_MAX_LEVEL
     ld [hl], a
     call RollWCADEFromSpeciesFlag
     call ApplyBreedingBonusToChildStats
@@ -1579,7 +1579,7 @@ Func_00E_5688:: ; address name
 ; reads: wRecordBufA, wRecordBufB
 AdjustStatForWCA2AAndWCACF::
 Func_00E_59E1:: ; address name
-    ld a, [wRecordBufA + $A4]
+    ld a, [wRecordBufA + MON_ITEM]
     and a, a
     jr z, .check_record_buf_b2
     ld b, a
@@ -1633,7 +1633,7 @@ Func_00E_59E1:: ; address name
     pop hl
 
 .check_record_buf_b2:
-    ld a, [wRecordBufB + $A4]
+    ld a, [wRecordBufB + MON_ITEM]
     and a, a
     ret z
     ld b, a
@@ -1745,7 +1745,7 @@ Data_00E_5A8E:: ; address name
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 BuildWCB0CCandidateList::
 Func_00E_5AA4:: ; address name
-    ld hl, wChildRecord + $34
+    ld hl, wChildRecord + MON_SKILLS
     ld c, $08
 
 .loop:
@@ -1753,23 +1753,23 @@ Func_00E_5AA4:: ; address name
     ld [hl+], a
     dec c
     jr nz, .loop
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     call LoadSpeciesBytes8To10FromHL
-    ld hl, wChildRecord + $3C
+    ld hl, wChildRecord + MON_SKILL_LIST
     call StoreBCAAtHL
     push hl
-    ld hl, wRecordBufA + $B
+    ld hl, wRecordBufA + MON_SPECIES
     call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
     push hl
-    ld hl, wRecordBufB + $B
+    ld hl, wRecordBufB + MON_SPECIES
     call LoadSpeciesBytes8To10FromHL
     pop hl
     call StoreBCAAtHL
-    ld de, wRecordBufA + $34
+    ld de, wRecordBufA + MON_SKILLS
     call CopyEightBytesDEToHL
-    ld de, wRecordBufB + $34
+    ld de, wRecordBufB + MON_SKILLS
     call CopyEightBytesDEToHL
     call MapWCB0CEntriesThroughTable5B03
     call BuildWCB0CCandidateList_Sub01
@@ -1781,7 +1781,7 @@ Func_00E_5AA4:: ; address name
 ; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
 MapWCB0CEntriesThroughTable5B03::
 Func_00E_5AEA:: ; address name
-    ld hl, wChildRecord + $3C
+    ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $19
 
 .loop:
@@ -1824,8 +1824,8 @@ Data_00E_5B03:: ; address name
 ; 1 call site from 1 routine (e.g. BuildWCB0CCandidateList)
 CompactWCB0CRemovingFF::
 Func_00E_5BB3:: ; address name
-    ld hl, wChildRecord + $3C
-    ld de, wChildRecord + $3C
+    ld hl, wChildRecord + MON_SKILL_LIST
+    ld de, wChildRecord + MON_SKILL_LIST
     ld c, $19
 
 .loop:
@@ -1849,7 +1849,7 @@ Func_00E_5BB3:: ; address name
 ; 2 call sites from 1 routine (e.g. BuildWCB0CCandidateList)
 BuildWCB0CCandidateList_Sub01::
 Func_00E_5BCC:: ; address name
-    ld hl, wChildRecord + $3C
+    ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $00
 
 .loop:
@@ -2031,7 +2031,7 @@ Func_00E_5C50:: ; address name
 ; writes: wArg2, wSpeciesIdLo, wArg3, wSpeciesIdHi, wArg4
 RollChildResistancesToWCB43::
 Func_00E_5CB2:: ; address name
-    ld hl, wChildRecord + $B
+    ld hl, wChildRecord + MON_SPECIES
     ld a, [hl+]
     ld [wArg2], a
     ld [wSpeciesIdLo], a
@@ -2096,7 +2096,7 @@ Func_00E_5CB2:: ; address name
 RollWCB3DForCaseB_5D16::
 Func_00E_5D16:: ; address name
     push bc
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     and a, a
     jr nz, .skip
@@ -2145,7 +2145,7 @@ Func_00E_5D16:: ; address name
 RollWCB3DChanceOrIncArg5::
 Func_00E_5D4E:: ; address name
     ld c, a
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     call Multiply8
     ld a, h
@@ -2179,7 +2179,7 @@ Func_00E_5D4E:: ; address name
 RollWCB3DForCaseB_5D77::
 Func_00E_5D77:: ; address name
     push bc
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
     and a, a
     jr nz, .skip
@@ -2198,7 +2198,7 @@ Func_00E_5D77:: ; address name
     ret
 
 .skip2:
-    ld hl, wChildRecord + $6D
+    ld hl, wChildRecord + MON_PLUS
     cp a, $01
     jr z, .loop
     ld a, [hl]
@@ -2309,7 +2309,7 @@ Func_00E_5E1D:: ; address name
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 CopySixBytesByWCADDBit4Table::
 Func_00E_5E2D:: ; address name
-    ld hl, wChildRecord + $D
+    ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and a, $10
     and a, a
@@ -2371,7 +2371,7 @@ Data_00E_5E79:: ; address name
 CopyPlayerNameToWCADF::
 Func_00E_5E85:: ; address name
     ld hl, wPlayerName
-    ld de, wChildRecord + $F
+    ld de, wChildRecord + MON_MASTER_NAME
     ld c, $0A
 
 .loop:
@@ -2386,7 +2386,7 @@ Func_00E_5E85:: ; address name
 ; 1 call site from 1 routine (e.g. ComputeBreedingChild)
 CopyFourNamesByWCADDBit4Table::
 Func_00E_5E94:: ; address name
-    ld hl, wChildRecord + $D
+    ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
     and a, $10
     and a, a
@@ -2466,13 +2466,13 @@ Func_00E_5EE8:: ; address name
     ld c, a
 
 .skip:
-    ld hl, wRecordBufA + $57
+    ld hl, wRecordBufA + MON_MAX_LEVEL
     ld a, [hl-]
     ld b, a
     ld a, [hl]
     cp a, b
     jr nz, .skip2
-    ld hl, wRecordBufB + $57
+    ld hl, wRecordBufB + MON_MAX_LEVEL
     ld a, [hl-]
     ld b, a
     ld a, [hl]
@@ -2483,12 +2483,12 @@ Func_00E_5EE8:: ; address name
     ld c, a
 
 .skip2:
-    ld hl, wRecordBufA + $6D
+    ld hl, wRecordBufA + MON_PLUS
     ld a, [hl]
     cp a, $05
     jr c, .check_arg1
     ld b, a
-    ld hl, wRecordBufB + $6D
+    ld hl, wRecordBufB + MON_PLUS
     ld a, [hl]
     cp a, $05
     jr c, .check_arg1
@@ -2893,9 +2893,9 @@ Func_00E_615A:: ; address name
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 RollWCADEFromSpeciesFlag::
 Func_00E_61C1:: ; address name
-    ld a, [wChildRecord + $B]
+    ld a, [wChildRecord + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wChildRecord + $C]
+    ld a, [wChildRecord + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecordWord0
     ld a, [wSpeciesRecord + $1]
@@ -2921,7 +2921,7 @@ Func_00E_61C1:: ; address name
 
 .skip2:
     ld a, b
-    ld hl, wChildRecord + $E
+    ld hl, wChildRecord + MON_SEX
     ld [hl], a
     ret
 

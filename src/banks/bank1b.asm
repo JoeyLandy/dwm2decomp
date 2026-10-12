@@ -6194,7 +6194,7 @@ Jump_01B_6CC8:: ; address name
     xor a, a
     ld [rRAMB], a
     ld hl, sRecords + $F
-    ld de, wRecordBufA + $F
+    ld de, wRecordBufA + MON_MASTER_NAME
     ld b, $0A
     jr .loop
 

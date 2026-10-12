@@ -3761,7 +3761,7 @@ Jump_0A0_56D2:: ; address name
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
-    ld hl, wRecordBufA + $1
+    ld hl, wRecordBufA + MON_NAME
     ld de, wTextBuf0
     ld bc, $000A
     call CopyBytes
@@ -3927,106 +3927,106 @@ Jump_0A0_57C8:: ; address name
     ld a, $01
     ld [wRecordBufB], a
     ld a, $FF
-    ld [wRecordBufB + $1A], a
-    ld [wRecordBufB + $1B], a
-    ld [wRecordBufB + $1C], a
-    ld [wRecordBufB + $1D], a
-    ld hl, wRecordBufB + $1E
+    ld [wRecordBufB + MON_PARENT1_SPECIES], a
+    ld [wRecordBufB + MON_PARENT1_SPECIES + 1], a
+    ld [wRecordBufB + MON_PARENT2_SPECIES], a
+    ld [wRecordBufB + MON_PARENT2_SPECIES + 1], a
+    ld hl, wRecordBufB + MON_PARENT1_MASTER
     call WriteUnknownNamePlaceholder
     ld a, $FF
     ld [wRecordBufB + $28], a
-    ld hl, wRecordBufB + $29
+    ld hl, wRecordBufB + MON_PARENT2_MASTER
     call WriteUnknownNamePlaceholder
     ld a, $FF
     ld [wRecordBufB + $33], a
     call AppendMappedSkillsToWCA67
     xor a, a
-    ld [wRecordBufB + $55], a
+    ld [wRecordBufB + MON_STATUS], a
     ld a, $01
-    ld [wRecordBufB + $56], a
+    ld [wRecordBufB + MON_LEVEL], a
     xor a, a
-    ld [wRecordBufB + $58], a
-    ld [wRecordBufB + $59], a
-    ld [wRecordBufB + $5A], a
-    ld a, [wRecordBufB + $5D]
+    ld [wRecordBufB + MON_EXP], a
+    ld [wRecordBufB + MON_EXP + 1], a
+    ld [wRecordBufB + MON_EXP + 2], a
+    ld a, [wRecordBufB + MON_MAX_HP]
     ld l, a
-    ld a, [wRecordBufB + $5E]
+    ld a, [wRecordBufB + MON_MAX_HP + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $5D], a
+    ld [wRecordBufB + MON_MAX_HP], a
     ld a, h
-    ld [wRecordBufB + $5E], a
+    ld [wRecordBufB + MON_MAX_HP + 1], a
     ld a, l
-    ld [wRecordBufB + $5B], a
+    ld [wRecordBufB + MON_HP], a
     ld a, h
-    ld [wRecordBufB + $5C], a
-    ld a, [wRecordBufB + $61]
+    ld [wRecordBufB + MON_HP + 1], a
+    ld a, [wRecordBufB + MON_MAX_MP]
     ld l, a
-    ld a, [wRecordBufB + $62]
+    ld a, [wRecordBufB + MON_MAX_MP + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $61], a
+    ld [wRecordBufB + MON_MAX_MP], a
     ld a, h
-    ld [wRecordBufB + $62], a
+    ld [wRecordBufB + MON_MAX_MP + 1], a
     ld a, l
-    ld [wRecordBufB + $5F], a
+    ld [wRecordBufB + MON_MP], a
     ld a, h
-    ld [wRecordBufB + $60], a
-    ld a, [wRecordBufB + $63]
+    ld [wRecordBufB + MON_MP + 1], a
+    ld a, [wRecordBufB + MON_ATK]
     ld l, a
-    ld a, [wRecordBufB + $64]
+    ld a, [wRecordBufB + MON_ATK + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $63], a
+    ld [wRecordBufB + MON_ATK], a
     ld a, h
-    ld [wRecordBufB + $64], a
-    ld a, [wRecordBufB + $65]
+    ld [wRecordBufB + MON_ATK + 1], a
+    ld a, [wRecordBufB + MON_DEF]
     ld l, a
-    ld a, [wRecordBufB + $66]
+    ld a, [wRecordBufB + MON_DEF + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $65], a
+    ld [wRecordBufB + MON_DEF], a
     ld a, h
-    ld [wRecordBufB + $66], a
-    ld a, [wRecordBufB + $67]
+    ld [wRecordBufB + MON_DEF + 1], a
+    ld a, [wRecordBufB + MON_AGL]
     ld l, a
-    ld a, [wRecordBufB + $68]
+    ld a, [wRecordBufB + MON_AGL + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $67], a
+    ld [wRecordBufB + MON_AGL], a
     ld a, h
-    ld [wRecordBufB + $68], a
-    ld a, [wRecordBufB + $69]
+    ld [wRecordBufB + MON_AGL + 1], a
+    ld a, [wRecordBufB + MON_INT]
     ld l, a
-    ld a, [wRecordBufB + $6A]
+    ld a, [wRecordBufB + MON_INT + 1]
     ld h, a
     call QuarterHLAtLeast1
     ld a, l
-    ld [wRecordBufB + $69], a
+    ld [wRecordBufB + MON_INT], a
     ld a, h
-    ld [wRecordBufB + $6A], a
+    ld [wRecordBufB + MON_INT + 1], a
     xor a, a
-    ld [wRecordBufB + $6B], a
-    ld [wRecordBufB + $6C], a
+    ld [wRecordBufB + MON_WLD], a
+    ld [wRecordBufB + MON_WLD + 1], a
     xor a, a
-    ld [wRecordBufB + $6D], a
+    ld [wRecordBufB + MON_PLUS], a
     ld a, $01
-    ld [wRecordBufB + $6E], a
-    ld hl, wRecordBufB + $8E
+    ld [wRecordBufB + MON_EGG], a
+    ld hl, wRecordBufB + MON_PARENT1_NAME
     call WriteUnknownNamePlaceholder
     xor a, a
-    ld [wRecordBufB + $98], a
-    ld hl, wRecordBufB + $99
+    ld [wRecordBufB + MON_PARENT1_PLUS], a
+    ld hl, wRecordBufB + MON_PARENT2_NAME
     call WriteUnknownNamePlaceholder
     xor a, a
-    ld [wRecordBufB + $A3], a
+    ld [wRecordBufB + MON_PARENT2_PLUS], a
     xor a, a
-    ld [wRecordBufB + $A4], a
+    ld [wRecordBufB + MON_ITEM], a
     ld a, $04
     call StartPaletteFade
     ld a, $06
@@ -4100,7 +4100,7 @@ Func_0A0_591A:: ; address name
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
 AppendMappedSkillsToWCA67::
 Func_0A0_5939:: ; address name
-    ld de, wRecordBufB + $3C
+    ld de, wRecordBufB + MON_SKILL_LIST
     ld b, $19
 
 .loop:
@@ -4114,7 +4114,7 @@ Func_0A0_5939:: ; address name
 
 .skip:
     ld b, $08
-    ld hl, wRecordBufB + $34
+    ld hl, wRecordBufB + MON_SKILLS
 
 .loop2:
     ld a, [hl]
@@ -4149,7 +4149,7 @@ Func_0A0_5939:: ; address name
     jr nz, .loop2
 
 .skip4:
-    ld hl, wRecordBufB + $34
+    ld hl, wRecordBufB + MON_SKILLS
     ld b, $08
 
 .loop3:
