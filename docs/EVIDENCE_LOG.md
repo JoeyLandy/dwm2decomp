@@ -2430,6 +2430,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0241 — Last uncommented INCBIN (F0:$70C5)
+
+- Kind: OBSERVATION (C0).
+- **UnreferencedBytes_F0_70C5 ($70C5-$7245, 24 rows of 16).** No reference was found in any bank: no address load, no word, and no split high/low load. The values are 0-7, in runs that climb to 6 or 7 separated by zeros. The meaning is unknown.
+- After this entry, every INCBIN left in src/ carries an asset comment (an LZSS stream with its expanded size, an SGB transfer, and so on). build/measure2.py reports 0 unidentified bytes.
+- Binary verification: build/run303 PASS, 0 differing bytes; tests OK.
+
 ### E-0240 — MonsterTableA2, sequence frame lists (bank $32), pointer words inside streams; a stricter measure
 
 - Kind: OBSERVATION (reading; C1) and TOOL.
