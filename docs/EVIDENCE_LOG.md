@@ -2431,6 +2431,21 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0317 — Reading notes are grounded in the code they describe (with a negative control)
+
+- Kind: TOOL (a consistency check of the 4,318 code names in config/names.json).
+- **The check.** tools/check_note_grounding.py takes every RAM symbol and routine name a code note mentions: 4,369 mentions in 3,286 notes. Each must be connected to the named routine in the generated code, in one of these ways:
+  - its body or its own sub-labels;
+  - its xref lines;
+  - its callers, direct or through a `dw`/`dfar` table and that table's owner;
+  - its callees, up to three levels;
+  - or a mention only as a comparison ("like X", "as X", "see X").
+- **Result.** All 4,369 mentions are connected.
+- **Negative control.** One random RAM symbol per note is accepted 113 times in 4,318 (2.6%), and one random routine per note 7 times in 4,318 (0.16%). So the check tells real references from unrelated ones. A note that named a routine, table or variable its code does not reach would fail.
+- **Tests.** tests/test_note_grounding.py asserts both results: no ungrounded mention, and controls below 10%.
+- **What it does not show.** That a note describes its routine's game meaning correctly. That still rests on each entry's evidence, and on execution for the readings tested in E-0314 and E-0315.
+- Binary verification: unchanged (build/run440 PASS, 0 differing bytes); tests OK (skipped=3).
+
 ### E-0316 — Rule-made names checked against their instructions; a padding mis-trace from E-0305 found and fixed
 
 - Kind: TOOL (C2 for the mechanical claims: each name is checked against the code it describes).
