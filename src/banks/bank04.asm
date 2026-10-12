@@ -3341,10 +3341,10 @@ Func_004_55BB:: ; address name
     ld [wScriptStep], a
     ret
 
-; starts a message through script command $0A: DE is stored in wMessageIndex (low) and wMessageGroup (high); then wC5DC = 1, wC920 = $0A, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 is overwritten)
-; 102 call sites from 102 routines (e.g. Msg01FA, Msg01F9, Msg01F8, Msg01F7, ...)
+; starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 (E-0269)
+; 102 call sites from 102 routines (e.g. ChestItem_LoveWater_Flag01FA, ChestItem_Starry, ChestItem_Fight, ChestItem_Herb_Flag01F7, ...)
 ; writes: wMessageIndex, wMessageGroup, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
-StartMessageScriptDE_B04::
+StartTreasureFlagDE_B04::
 Func_004_55DF:: ; address name
     ld a, e
     ld [wMessageIndex], a
@@ -3892,8 +3892,8 @@ Func_004_58C2:: ; address name
     dw DispatchTalkEvent_Case03_Sub01_Case07
     dw TalkMsg080A_HeroPeeredIntoTheBarrelA
     dw TalkMsg080B_HeroPeeredIntoTheBarrelIt
-    dw DispatchTalkEvent_Case03_Sub01_Case0A
-    dw DispatchTalkEvent_Case03_Sub01_Case0B
+    dw BarrelItem_TinyMedal
+    dw BarrelItem_Warp
     dw TalkMsg088A_HeroPeeredIntoTheVaseIt
     dw TalkMsg0889_HeroPeeredIntoTheOvenIt
     dw TalkMsg0037_HeroTriedToOpenTheChest
@@ -3925,7 +3925,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg088D_HeroPeeredIntoTheOvenTwo
     dw DispatchTalkEvent_Case03_Sub01_Case29
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
-    dw DispatchTalkEvent_Case03_Sub01_Case2B
+    dw BarrelItem_TinyMedal_Flag0063
     dw DispatchTalkEvent_Case03_Sub01_Case2C
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
@@ -3935,12 +3935,12 @@ Func_004_58C2:: ; address name
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
     dw DispatchTalkEvent_Case03_Sub01_Case33
     dw DispatchTalkEvent_Case03_Sub01_Case34
-    dw DispatchTalkEvent_Case03_Sub01_Case35
-    dw DispatchTalkEvent_Case03_Sub01_Case36
-    dw DispatchTalkEvent_Case03_Sub01_Case37
-    dw DispatchTalkEvent_Case03_Sub01_Case38
-    dw DispatchTalkEvent_Case03_Sub01_Case39
-    dw DispatchTalkEvent_Case03_Sub01_Case3A
+    dw ChestItem_Rib
+    dw ChestItem_LoveWater
+    dw ChestItem_LoveWater_Flag0069
+    dw ChestItem_ExitBell
+    dw ChestItem_MermScale
+    dw ChestItem_Warp
     dw TalkMsg0843_ISawAChildCrossThe
     dw TalkMsg0844_WatchMeDanceAndYoullWant
     dw DispatchTalkEvent_Case03_Sub01_Case3D
@@ -3960,32 +3960,32 @@ Func_004_58C2:: ; address name
     dw DispatchTalkEvent_Case03_Sub01_Case4B
     dw DispatchTalkEvent_Case03_Sub01_Case4C
     dw DispatchTalkEvent_Case03_Sub01_Case4D
-    dw DispatchTalkEvent_Case03_Sub01_Case4E
+    dw ChestItem_LogTwig
     dw DispatchTalkEvent_Case03_Sub01_Case4F
     dw DispatchTalkEvent_Case03_Sub01_Case50
     dw DispatchTalkEvent_Case03_Sub01_Case51
     dw DispatchTalkEvent_Case03_Sub01_Case52
     dw DispatchTalkEvent_Case03_Sub01_Case53
-    dw DispatchTalkEvent_Case03_Sub01_Case54
-    dw DispatchTalkEvent_Case03_Sub01_Case55
-    dw DispatchTalkEvent_Case03_Sub01_Case56
-    dw DispatchTalkEvent_Case03_Sub01_Case57
-    dw DispatchTalkEvent_Case03_Sub01_Case58
+    dw ChestItem_Repellent
+    dw ChestItem_Warp_Flag00E1
+    dw ChestItem_WorldLeaf
+    dw ChestItem_LifeAcorn
+    dw ChestItem_DEFseed
     dw TalkMsg088C_HeroPeeredIntoTheVaseThere
-    dw DispatchTalkEvent_Case03_Sub01_Case5A
-    dw DispatchTalkEvent_Case03_Sub01_Case5B
-    dw DispatchTalkEvent_Case03_Sub01_Case5C
-    dw DispatchTalkEvent_Case03_Sub01_Case5D
-    dw DispatchTalkEvent_Case03_Sub01_Case5E
+    dw ChestItem_WorldDew
+    dw ChestItem_War
+    dw VaseItem_Antidote
+    dw VaseItem_LoveWater
+    dw VaseItem_Warp
     dw TalkMsg0861_HeroPeeredIntoTheBarrelA
-    dw DispatchTalkEvent_Case03_Sub01_Case60
-    dw DispatchTalkEvent_Case03_Sub01_Case61
-    dw DispatchTalkEvent_Case03_Sub01_Case62
-    dw DispatchTalkEvent_Case03_Sub01_Case63
-    dw DispatchTalkEvent_Case03_Sub01_Case64
-    dw DispatchTalkEvent_Case03_Sub01_Case65
-    dw DispatchTalkEvent_Case03_Sub01_Case66
-    dw DispatchTalkEvent_Case03_Sub01_Case67
+    dw BarrelItem_BadMeat
+    dw BarrelItem_PorkChop
+    dw ChestItem_OrcaCape
+    dw ChestItem_Repellent_Flag00EC
+    dw ChestItem_WorldLeaf_Flag00ED
+    dw ChestItem_AGLseed
+    dw BarrelItem_Potion
+    dw BarrelItem_INTseed
     dw TalkMsg0862_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
     dw DispatchTalkEvent_Case03_Sub01_Case6A
@@ -4120,30 +4120,30 @@ Jump_004_5A3C:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 10 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story flag $0061 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case0A)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case0A::
+BarrelItem_TinyMedal::
 Jump_004_5A43:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0061
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 11 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $28, story flag $0062 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case0B)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case0B::
+BarrelItem_Warp::
 Jump_004_5A54:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
     ld de, $0062
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $088A through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case0C)
@@ -4520,17 +4520,17 @@ Jump_004_5C25:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 43 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story flag $0063 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case2B)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case2B::
+BarrelItem_TinyMedal_Flag0063::
 Jump_004_5C2C:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0063
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 44 of the `rst $00` table in Func_004_58C2
@@ -4752,82 +4752,82 @@ Jump_004_5D68::
     call StartScriptAtHL_B04
     ret
 
-; entry 53 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $1B, story flag $0067 in DE: when the flag is clear it gives item $1B (Rib) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case35)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case35::
+ChestItem_Rib::
 Jump_004_5D6F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $1B
     ld [wScriptParam1], a
     ld de, $0067
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 54 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $0068 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case36)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case36::
+ChestItem_LoveWater::
 Jump_004_5D80:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $0068
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 55 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $0069 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case37)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case37::
+ChestItem_LoveWater_Flag0069::
 Jump_004_5D91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $0069
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 56 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $006A in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case38)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case38::
+ChestItem_ExitBell::
 Jump_004_5DA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $006A
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 57 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $46, story flag $006B in DE: when the flag is clear it gives item $46 (MermScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case39)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case39::
+ChestItem_MermScale::
 Jump_004_5DB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $46
     ld [wScriptParam1], a
     ld de, $006B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 58 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $28, story flag $006C in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case3A)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case3A::
+ChestItem_Warp::
 Jump_004_5DC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
     ld de, $006C
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0843 through StartMessageCommand09HL (script command $09); that string begins 'I saw a child cross the sea' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case3B)
@@ -5097,17 +5097,17 @@ Jump_004_5F1F:: ; address name
     ld [wSpriteSlots + $7], a
     ret
 
-; entry 78 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2E, story flag $0079 in DE: when the flag is clear it gives item $2E (LogTwig) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case4E)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case4E::
+ChestItem_LogTwig::
 Jump_004_5F24:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2E
     ld [wScriptParam1], a
     ld de, $0079
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 79 of the `rst $00` table in Func_004_58C2
@@ -5183,69 +5183,69 @@ Jump_004_5F8A:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 84 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $20, story flag $00E0 in DE: when the flag is clear it gives item $20 (Repellent) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case54)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case54::
+ChestItem_Repellent::
 Jump_004_5F91:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $20
     ld [wScriptParam1], a
     ld de, $00E0
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 85 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $28, story flag $00E1 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case55)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case55::
+ChestItem_Warp_Flag00E1::
 Jump_004_5FA2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
     ld de, $00E1
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 86 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0C, story flag $00E2 in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case56)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case56::
+ChestItem_WorldLeaf::
 Jump_004_5FB3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0C
     ld [wScriptParam1], a
     ld de, $00E2
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 87 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $11, story flag $00E3 in DE: when the flag is clear it gives item $11 (LifeAcorn) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case57)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case57::
+ChestItem_LifeAcorn::
 Jump_004_5FC4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $11
     ld [wScriptParam1], a
     ld de, $00E3
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 88 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0E, story flag $00E4 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case58)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case58::
+ChestItem_DEFseed::
 Jump_004_5FD5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0E
     ld [wScriptParam1], a
     ld de, $00E4
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $088C through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. There were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case59)
@@ -5256,69 +5256,69 @@ Jump_004_5FE6:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 90 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $00E5 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5A)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case5A::
+ChestItem_WorldDew::
 Jump_004_5FED:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
     ld de, $00E5
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 91 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5C, story flag $00E6 in DE: when the flag is clear it gives item $5C (War) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5B)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case5B::
+ChestItem_War::
 Jump_004_5FFE:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5C
     ld [wScriptParam1], a
     ld de, $00E6
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 92 of the `rst $00` table in Func_004_58C2
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story flag $00E7 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5C)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case5C::
+VaseItem_Antidote::
 Jump_004_600F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
     ld de, $00E7
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 93 of the `rst $00` table in Func_004_58C2
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $02, story flag $00E8 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5D)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case5D::
+VaseItem_LoveWater::
 Jump_004_6020:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $00E8
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 94 of the `rst $00` table in Func_004_58C2
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $28, story flag $00F2 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case5E)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case5E::
+VaseItem_Warp::
 Jump_004_6031:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $28
     ld [wScriptParam1], a
     ld de, $00F2
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0861 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. A mummified' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case5F)
@@ -5329,108 +5329,108 @@ Jump_004_6042:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 96 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1D, story flag $00E9 in DE: when the flag is clear it gives item $1D (BadMeat) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case60)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case60::
+BarrelItem_BadMeat::
 Jump_004_6049:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $1D
     ld [wScriptParam1], a
     ld de, $00E9
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 97 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $1A, story flag $00EA in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case61)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case61::
+BarrelItem_PorkChop::
 Jump_004_605A:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $1A
     ld [wScriptParam1], a
     ld de, $00EA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 98 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $51, story flag $00EB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case62)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case62::
+ChestItem_OrcaCape::
 Jump_004_606B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $51
     ld [wScriptParam1], a
     ld de, $00EB
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 99 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $20, story flag $00EC in DE: when the flag is clear it gives item $20 (Repellent) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case63)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case63::
+ChestItem_Repellent_Flag00EC::
 Jump_004_607C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $20
     ld [wScriptParam1], a
     ld de, $00EC
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 100 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0C, story flag $00ED in DE: when the flag is clear it gives item $0C (WorldLeaf) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case64)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case64::
+ChestItem_WorldLeaf_Flag00ED::
 Jump_004_608D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0C
     ld [wScriptParam1], a
     ld de, $00ED
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 101 of the `rst $00` table in Func_004_58C2
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0F, story flag $00EE in DE: when the flag is clear it gives item $0F (AGLseed) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case65)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case65::
+ChestItem_AGLseed::
 Jump_004_609E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0F
     ld [wScriptParam1], a
     ld de, $00EE
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 102 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $04, story flag $00EF in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case66)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case66::
+BarrelItem_Potion::
 Jump_004_60AF:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $04
     ld [wScriptParam1], a
     ld de, $00EF
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 103 of the `rst $00` table in Func_004_58C2
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $10, story flag $00F0 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case03_Sub01_Case67)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case03_Sub01_Case67::
+BarrelItem_INTseed::
 Jump_004_60C0:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $10
     ld [wScriptParam1], a
     ld de, $00F0
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0862 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. There were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case68)
@@ -5520,7 +5520,7 @@ Func_004_612B:: ; address name
     dw TalkMsg0135_TheLogsNavelWhatIsThat
     dw TalkMsg0136_TheLogsNavelLetMeThink
     dw TalkMsg0137_HeroCheckedTheOvenASharp
-    dw DispatchTalkEvent_Case02_Sub01_Case08
+    dw VaseItem_Herb
     dw TalkMsg0138_TheUndergroundCanalIsAhead
     dw DispatchTalkEvent_Case02_Sub01_Case0A
     dw TalkMsg0139_TheKingCalledACircusTroupe
@@ -5538,7 +5538,7 @@ Func_004_612B:: ; address name
     dw DispatchTalkEvent_Case02_Sub01_Case17
     dw DispatchTalkEvent_Case02_Sub01_Case18
     dw TalkMsg014F_HeroPeeredIntoTheVaseIt
-    dw DispatchTalkEvent_Case02_Sub01_Case1A
+    dw VaseItem_Antidote_Flag0047
     dw TalkMsg0137_HeroCheckedTheOvenASharp_046456
     dw IfFlag056Msg018F_WeDidntHelpTheThievesOne
     dw TalkMsg01BE_HeroCheckedTheDresserThere
@@ -5559,14 +5559,14 @@ Func_004_612B:: ; address name
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
     dw TalkMsg0167_HumphAMirageLakeHeSays
     dw DispatchTalkEvent_Case02_Sub01_Case2E
-    dw DispatchTalkEvent_Case02_Sub01_Case2F
-    dw DispatchTalkEvent_Case02_Sub01_Case30
-    dw DispatchTalkEvent_Case02_Sub01_Case31
-    dw DispatchTalkEvent_Case02_Sub01_Case32
-    dw DispatchTalkEvent_Case02_Sub01_Case33
-    dw DispatchTalkEvent_Case02_Sub01_Case34
-    dw DispatchTalkEvent_Case02_Sub01_Case35
-    dw DispatchTalkEvent_Case02_Sub01_Case36
+    dw VaseItem_Herb_Flag004B
+    dw VaseItem_PorkChop
+    dw VaseItem_TinyMedal
+    dw VaseItem_Bookmark
+    dw ChestItem_ExitBell_Flag004F
+    dw ChestItem_Wind
+    dw ChestItem_WarpWing
+    dw ChestItem_AGL
     dw DispatchTalkEvent_Case02_Sub01_Case37
     dw DispatchTalkEvent_Case02_Sub01_Case38
     dw DispatchTalkEvent_Case02_Sub01_Case39
@@ -5578,7 +5578,7 @@ Func_004_612B:: ; address name
     dw TalkMsg01BD_HeroPeeredIntoTheVaseIt
     dw TalkMsg01C0_HeroCheckedTheTreasureChest
     dw TalkMsg01BF_HeroPeeredIntoTheVaseThe
-    dw DispatchTalkEvent_Case02_Sub01_Case42
+    dw VaseItem_BeefJerky
     dw DispatchTalkEvent_Case02_Sub01_Case43
     dw DispatchTalkEvent_Case02_Sub01_Case44
     dw DispatchTalkEvent_Case02_Sub01_Case45
@@ -5687,17 +5687,17 @@ Jump_004_6237:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 8 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story flag $0046 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case08::
+VaseItem_Herb::
 Jump_004_623E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0046
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; tests story flags (flag 005A then jr c, Jump_004_627C; flag 0053 then jr c, Jump_004_6275; flag 004A then jr c, Jump_004_626E); starts message $0138 through StartMessageCommand09HL (script command $09); that string begins 'The underground canal is ahead. The last' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case09)
@@ -6039,17 +6039,17 @@ Jump_004_643E:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 26 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $06, story flag $0047 in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case1A::
+VaseItem_Antidote_Flag0047::
 Jump_004_6445:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
     ld de, $0047
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0137 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. A sharp, spicy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case1B)
@@ -6407,108 +6407,108 @@ Jump_004_6637:: ; address name
     call SetFlagBit
     ret
 
-; entry 47 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $01, story flag $004B in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case2F)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case2F::
+VaseItem_Herb_Flag004B::
 Jump_004_664B:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $004B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 48 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $1A, story flag $004C in DE: when the flag is clear it gives item $1A (PorkChop) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case30)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case30::
+VaseItem_PorkChop::
 Jump_004_665C:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $1A
     ld [wScriptParam1], a
     ld de, $004C
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 49 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $004D in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case31)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case31::
+VaseItem_TinyMedal::
 Jump_004_666D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $004D
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 50 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2B, story flag $004E in DE: when the flag is clear it gives item $2B (Bookmark) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case32)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case32::
+VaseItem_Bookmark::
 Jump_004_667E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2B
     ld [wScriptParam1], a
     ld de, $004E
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 51 of the `rst $00` table in Func_004_612B
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $004F in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case33)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case33::
+ChestItem_ExitBell_Flag004F::
 Jump_004_668F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $004F
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 52 of the `rst $00` table in Func_004_612B
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $24, story flag $0050 in DE: when the flag is clear it gives item $24 (Wind) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case34)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case34::
+ChestItem_Wind::
 Jump_004_66A0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $24
     ld [wScriptParam1], a
     ld de, $0050
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 53 of the `rst $00` table in Func_004_612B
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $29, story flag $0051 in DE: when the flag is clear it gives item $29 (WarpWing) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case35)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case35::
+ChestItem_WarpWing::
 Jump_004_66B1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $29
     ld [wScriptParam1], a
     ld de, $0051
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 54 of the `rst $00` table in Func_004_612B
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $48, story flag $0052 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case36)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case36::
+ChestItem_AGL::
 Jump_004_66C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $48
     ld [wScriptParam1], a
     ld de, $0052
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 55 of the `rst $00` table in Func_004_612B
@@ -6688,17 +6688,17 @@ Jump_004_67D4:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 66 of the `rst $00` table in Func_004_612B
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $19, story flag $005B in DE: when the flag is clear it gives item $19 (BeefJerky) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case02_Sub01_Case42)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case02_Sub01_Case42::
+VaseItem_BeefJerky::
 Jump_004_67DB:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $19
     ld [wScriptParam1], a
     ld de, $005B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 67 of the `rst $00` table in Func_004_612B
@@ -7267,14 +7267,14 @@ Func_004_6A35:: ; address name
     dw TalkMsg0730_HorridMonstersThatAttack
     dw DispatchTalkEvent_Case07_Sub01_Case11
     dw DispatchTalkEvent_Case07_Sub01_Case12
-    dw DispatchTalkEvent_Case07_Sub01_Case13
-    dw DispatchTalkEvent_Case07_Sub01_Case14
-    dw DispatchTalkEvent_Case07_Sub01_Case15
+    dw VaseItem_TinyMedal_Flag0153
+    dw VaseItem_INTseed
+    dw VaseItem_Potion
     dw TalkMsg0756_HeroPeeredIntoTheVaseIt
     dw TalkMsg0758_HeroCheckedTheOvenStewSimmered
-    dw DispatchTalkEvent_Case07_Sub01_Case18
-    dw DispatchTalkEvent_Case07_Sub01_Case19
-    dw DispatchTalkEvent_Case07_Sub01_Case1A
+    dw ChestItem_WorldDew_Flag0156
+    dw ChestItem_ExitBell_Flag0157
+    dw ChestItem_MysticNut
     dw TalkMsg0757_HeroCheckedTheOvenASharp
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7284,12 +7284,12 @@ Func_004_6A35:: ; address name
     dw Talk075A_PiiGgzzPiiiiii
     dw TalkMsg0760_HeroCheckedTheBookshelfA
     dw TalkMsg0761_HeroCheckedTheBookshelfA
-    dw DispatchTalkEvent_Case07_Sub01_Case24
+    dw VaseItem_TinyMedal_Flag015B
     dw TalkMsg0762_HeroPeeredIntoTheVaseRolled
     dw TalkMsg0763_HeroPeeredIntoTheBarrelIt
     dw TalkMsg0764_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0765_HeroPeeredIntoTheBarrelThere
-    dw DispatchTalkEvent_Case07_Sub01_Case29
+    dw BarrelItem_WorldDew
     dw TalkMsg0766_HeroPeeredIntoTheBarrelA
     dw Talk0768_HeroPeeredIntoThe
     dw Talk0768_HeroPeeredIntoThe_70FC
@@ -7321,18 +7321,18 @@ Func_004_6A35:: ; address name
     dw StartScript6496Or64A6ByFlag1BA
     dw Talk07BF_HeroFoundThePretty
     dw StartScript6509Or652CByFlag1C2
-    dw Msg01C8_ThisIsAGreat
-    dw Msg01C9_ThisIsAGreat
+    dw VaseItem_DEFseed
+    dw VaseItem_TinyMedal_Flag01C9
     dw TalkMsg0CFB_HeroTriedToOpenTheChest
     dw TalkMsg0CFA_HeroPeeredIntoTheOvenA
     dw TalkMsg0CFC_HeroPeeredIntoTheVaseCold
-    dw DispatchTalkEvent_Case07_Sub01_Case4E
+    dw VaseItem_Potion_Flag01CA
     dw TalkMsg0CFD_HeroPeeredIntoTheOvenMeat
-    dw Msg01CB_ThisIsAGreat
+    dw ChestItem_Laurel
     dw TalkMsg0CFE
-    dw Msg01CC_ThisIsAGreat
-    dw Msg01CD_ThisIsAGreat
-    dw Msg01CE_ThisIsAGreat
+    dw ChestItem_ExitBell_Flag01CC
+    dw ChestItem_TinyMedal
+    dw ChestItem_Friend
     dw DispatchTalkEvent_Case07_Sub01_Case55
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7352,22 +7352,22 @@ Func_004_6A35:: ; address name
     dw DispatchTalkEvent_Case07_Sub01_Case63
     dw DispatchTalkEvent_Case07_Sub01_Case63
     dw Talk0C17
-    dw Msg01D5
-    dw Msg01D6
-    dw Msg01D8
-    dw Msg01DA
-    dw Msg01DB
-    dw Msg01DC
-    dw Msg01DE
-    dw Msg01DF
-    dw Msg0169_WereWorriedAboutThe
-    dw Msg016B_TheKingIsSo
-    dw Msg016C_SoHaveYouDiscovered
-    dw Msg016D_KingTheCanalIs
-    dw Msg016F_KingWhatNeverMind
-    dw Msg0170_IFeelBadlyFor
-    dw Msg0171_WhatOpenTheCanal
-    dw Msg0172_KingArrghIKnow
+    dw ChestItem_TinyMedal_Flag01D5
+    dw ChestItem_AGL_Flag01D6
+    dw ChestItem_SkyBell
+    dw ChestItem_Herb
+    dw ChestItem_OrcaCape_Flag01DB
+    dw ChestItem_LoveWater_Flag01DC
+    dw ChestItem_LoveWater_Flag01DE
+    dw ChestItem_StoneFang
+    dw ChestItem_Herb_Flag0169
+    dw ChestItem_LoveWater_Flag016B
+    dw ChestItem_Sailor
+    dw ChestItem_SilvrCape
+    dw ChestItem_MagicCape
+    dw ChestItem_DracoCape
+    dw ChestItem_Herb_Flag0171
+    dw ChestItem_TinyMedal_Flag0172
     dw DispatchTalkEvent_Case07_Sub01_Case78
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7384,22 +7384,22 @@ Func_004_6A35:: ; address name
     dw DispatchTalkEvent_Case07_Sub01_Case83
     dw DispatchTalkEvent_Case07_Sub01_Case83
     dw Talk0C2F
-    dw Msg0175_ImMakingANew
-    dw Msg0176_GaahYoureTooStrong
-    dw Msg0177_KingWhatSoThats
-    dw Msg0179_KingThisShouldSolve
-    dw Msg017A_OhYouSayThat
-    dw Msg017B_TheWellHasAmple
-    dw Msg017D_HiDidYouHear
-    dw Msg017E_TheKingSolvedOur
-    dw Msg017F_OurKingWorkedTo
-    dw Msg00D6_IllShowYouHow
-    dw Msg00D7_HmMyRivalIs
-    dw Msg00D8_FinallySomeoneToIgnite
-    dw Msg00DA_YouHaveRaisedYour
-    dw Msg00DB_WhatHowDidYou
-    dw Msg00DC_AllThoseWhoStood
-    dw Msg00DD_LetMeShowYou
+    dw ChestItem_SkyBell_Flag0175
+    dw ChestItem_Smart
+    dw ChestItem_ExitBell_Flag0177
+    dw ChestItem_Herb_Flag0179
+    dw ChestItem_AwakeSand
+    dw ChestItem_Cleric
+    dw ChestItem_ExitBell_Flag017D
+    dw ChestItem_BraveCape
+    dw ChestItem_MoonHerb
+    dw ChestItem_MermScale_Flag00D6
+    dw ChestItem_LoveWater_Flag00D7
+    dw ChestItem_Thief
+    dw ChestItem_Herb_Flag00DA
+    dw ChestItem_GoldCape
+    dw ChestItem_Mage
+    dw ChestItem_Antidote
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7416,22 +7416,22 @@ Func_004_6A35:: ; address name
     dw DispatchTalkEvent_Case07_Sub01_CaseA3
     dw DispatchTalkEvent_Case07_Sub01_CaseA3
     dw Talk0C47
-    dw Msg00F5_ItIsAnItem
-    dw Msg00F6_HelloWhatCanI
-    dw Msg00F7_HelloWhatCanI
-    dw Msg00F9_HelloWhatCanI
-    dw Msg00FA_HelloWhatCanI
-    dw Msg00FB_THEEND
-    dw Msg00FD_HeyThatsMine0
-    dw Msg00FE_TerryHereJustTake
-    dw Msg00FF_Composing
-    dw Msg01F3
-    dw Msg01F4
-    dw Msg01F5
-    dw Msg01F7
-    dw Msg01F8
-    dw Msg01F9
-    dw Msg01FA
+    dw ChestItem_ExitBell_Flag00F5
+    dw ChestItem_War_Flag00F6
+    dw ChestItem_WorldDew_Flag00F7
+    dw ChestItem_TinyMedal_Flag00F9
+    dw ChestItem_SteelFang
+    dw ChestItem_DrakScale
+    dw ChestItem_Life
+    dw ChestItem_Divine
+    dw ChestItem_Herb_Flag00FF
+    dw ChestItem_PltnmCape
+    dw ChestItem_Wise
+    dw ChestItem_ExitBell_Flag01F5
+    dw ChestItem_Herb_Flag01F7
+    dw ChestItem_Fight
+    dw ChestItem_Starry
+    dw ChestItem_LoveWater_Flag01FA
     ds $10, $00
 
 ; entry 0 of the `rst $00` table in Func_004_6A35
@@ -7970,43 +7970,43 @@ Jump_004_6F0B:: ; address name
     call SetFlagBit
     ret
 
-; entry 19 of the `rst $00` table in Func_004_6A35
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $0153 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case13)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case13::
+VaseItem_TinyMedal_Flag0153::
 Jump_004_6F1F:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0153
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 20 of the `rst $00` table in Func_004_6A35
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $10, story flag $0154 in DE: when the flag is clear it gives item $10 (INTseed) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case14)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case14::
+VaseItem_INTseed::
 Jump_004_6F30:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $10
     ld [wScriptParam1], a
     ld de, $0154
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 21 of the `rst $00` table in Func_004_6A35
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story flag $0155 in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case15)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case15::
+VaseItem_Potion::
 Jump_004_6F41:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $04
     ld [wScriptParam1], a
     ld de, $0155
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0756 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case16)
@@ -8025,43 +8025,43 @@ Jump_004_6F59:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 24 of the `rst $00` table in Func_004_6A35
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $0156 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case18)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case18::
+ChestItem_WorldDew_Flag0156::
 Jump_004_6F60:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
     ld de, $0156
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 25 of the `rst $00` table in Func_004_6A35
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $0157 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case19)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case19::
+ChestItem_ExitBell_Flag0157::
 Jump_004_6F71:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $0157
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; entry 26 of the `rst $00` table in Func_004_6A35
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $12, story flag $0158 in DE: when the flag is clear it gives item $12 (MysticNut) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case1A::
+ChestItem_MysticNut::
 Jump_004_6F82:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $12
     ld [wScriptParam1], a
     ld de, $0158
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0757 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. A sharp aroma' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case1B)
@@ -8221,17 +8221,17 @@ Jump_004_709A:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 36 of the `rst $00` table in Func_004_6A35
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $015B in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case24)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case24::
+VaseItem_TinyMedal_Flag015B::
 Jump_004_70A1:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $015B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0762 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. Rolled blueprints' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case25)
@@ -8266,17 +8266,17 @@ Jump_004_70C7:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 41 of the `rst $00` table in Func_004_6A35
+; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $03, story flag $015C in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case29)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case29::
+BarrelItem_WorldDew::
 Jump_004_70CE:: ; address name
     ld a, $02
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
     ld de, $015C
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0766 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. A quite' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case2A)
@@ -9165,30 +9165,30 @@ Jump_004_7666::
     call StartScriptAtHL_B04
     ret
 
-; wScriptParam0 = 01, wScriptParam1 = 0E, then StartMessageScriptDE_B04 with DE = $01C8: starts message group 1, string $C8; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $0E, story flag $01C8 in DE: when the flag is clear it gives item $0E (DEFseed) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was Msg01C8_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01C8_ThisIsAGreat::
+VaseItem_DEFseed::
 Jump_004_766D:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $0E
     ld [wScriptParam1], a
     ld de, $01C8
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 01, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01C9: starts message group 1, string $C9; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $2C, story flag $01C9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was Msg01C9_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01C9_ThisIsAGreat::
+VaseItem_TinyMedal_Flag01C9::
 Jump_004_767E:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01C9
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0CFB through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4B)
@@ -9215,17 +9215,17 @@ Jump_004_769D:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 78 of the `rst $00` table in Func_004_6A35
+; a one-time vase: script command $0A with wScriptParam0 = 1 (kind) and wScriptParam1 = $04, story flag $01CA in DE: when the flag is clear it gives item $04 (Potion) and sets the flag (message $A3 of group 0; $A4 when the flag is already set, $A5 when there is no room) (E-0269; was DispatchTalkEvent_Case07_Sub01_Case4E)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-DispatchTalkEvent_Case07_Sub01_Case4E::
+VaseItem_Potion_Flag01CA::
 Jump_004_76A4:: ; address name
     ld a, $01
     ld [wScriptParam0], a
     ld a, $04
     ld [wScriptParam1], a
     ld de, $01CA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0CFD through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. Meat sizzled' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_Case4F)
@@ -9236,17 +9236,17 @@ Jump_004_76B5:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 08, then StartMessageScriptDE_B04 with DE = $01CB: starts message group 1, string $CB; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $08, story flag $01CB in DE: when the flag is clear it gives item $08 (Laurel) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CB_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01CB_ThisIsAGreat::
+ChestItem_Laurel::
 Jump_004_76BC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $08
     ld [wScriptParam1], a
     ld de, $01CB
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; tests story flags in turn (flag $01C3 set: jr to Jump_004_76DC); when none of them branches, starts message $0CFE through StartMessageCommand09HL_B04 (script command $09); that string is empty (E-0082)
@@ -9265,43 +9265,43 @@ Jump_004_76DC::
     call StartMessageCommand09HL_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $01CC: starts message group 1, string $CC; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $01CC in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CC_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01CC_ThisIsAGreat::
+ChestItem_ExitBell_Flag01CC::
 Jump_004_76E3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $01CC
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01CD: starts message group 1, string $CD; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $01CD in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CD_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01CD_ThisIsAGreat::
+ChestItem_TinyMedal::
 Jump_004_76F4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01CD
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 23, then StartMessageScriptDE_B04 with DE = $01CE: starts message group 1, string $CE; on the normal ShowMessageHL path the string begins 'This is a great spot to' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $23, story flag $01CE in DE: when the flag is clear it gives item $23 (Friend) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01CE_ThisIsAGreat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01CE_ThisIsAGreat::
+ChestItem_Friend::
 Jump_004_7705:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $23
     ld [wScriptParam1], a
     ld de, $01CE
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 85 of the `rst $00` table in Func_004_6A35
@@ -9373,212 +9373,212 @@ Jump_004_775D::
     call StartMessageCommand09HL_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $01D5: starts message group 1, string $D5; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $01D5 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D5)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01D5::
+ChestItem_TinyMedal_Flag01D5::
 Jump_004_7764:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $01D5
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 48, then StartMessageScriptDE_B04 with DE = $01D6: starts message group 1, string $D6; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $48, story flag $01D6 in DE: when the flag is clear it gives item $48 (AGL) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D6)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01D6::
+ChestItem_AGL_Flag01D6::
 Jump_004_7775:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $48
     ld [wScriptParam1], a
     ld de, $01D6
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 0A, then StartMessageScriptDE_B04 with DE = $01D8: starts message group 1, string $D8; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0A, story flag $01D8 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01D8)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01D8::
+ChestItem_SkyBell::
 Jump_004_7786:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0A
     ld [wScriptParam1], a
     ld de, $01D8
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $01DA: starts message group 1, string $DA; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $01DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DA)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01DA::
+ChestItem_Herb::
 Jump_004_7797:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $01DA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 51, then StartMessageScriptDE_B04 with DE = $01DB: starts message group 1, string $DB; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $51, story flag $01DB in DE: when the flag is clear it gives item $51 (OrcaCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DB)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01DB::
+ChestItem_OrcaCape_Flag01DB::
 Jump_004_77A8:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $51
     ld [wScriptParam1], a
     ld de, $01DB
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01DC: starts message group 1, string $DC; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01DC in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DC)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01DC::
+ChestItem_LoveWater_Flag01DC::
 Jump_004_77B9:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01DC
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01DE: starts message group 1, string $DE; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01DE in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DE)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01DE::
+ChestItem_LoveWater_Flag01DE::
 Jump_004_77CA:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01DE
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 44, then StartMessageScriptDE_B04 with DE = $01DF: starts message group 1, string $DF; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $44, story flag $01DF in DE: when the flag is clear it gives item $44 (StoneFang) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01DF)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01DF::
+ChestItem_StoneFang::
 Jump_004_77DB:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $44
     ld [wScriptParam1], a
     ld de, $01DF
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0169: starts message group 1, string $69; on the normal ShowMessageHL path the string begins 'We're worried about the well. The' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0169 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0169_WereWorriedAboutThe)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0169_WereWorriedAboutThe::
+ChestItem_Herb_Flag0169::
 Jump_004_77EC:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0169
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $016B: starts message group 1, string $6B; on the normal ShowMessageHL path the string begins 'The King is so frivolous. A' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $016B in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016B_TheKingIsSo)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg016B_TheKingIsSo::
+ChestItem_LoveWater_Flag016B::
 Jump_004_77FD:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $016B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5F, then StartMessageScriptDE_B04 with DE = $016C: starts message group 1, string $6C; on the normal ShowMessageHL path the string begins 'So, have you discovered what concerns' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5F, story flag $016C in DE: when the flag is clear it gives item $5F (Sailor) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016C_SoHaveYouDiscovered)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg016C_SoHaveYouDiscovered::
+ChestItem_Sailor::
 Jump_004_780E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5F
     ld [wScriptParam1], a
     ld de, $016C
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4E, then StartMessageScriptDE_B04 with DE = $016D: starts message group 1, string $6D; on the normal ShowMessageHL path the string begins 'King The canal is managed by' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4E, story flag $016D in DE: when the flag is clear it gives item $4E (SilvrCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016D_KingTheCanalIs)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg016D_KingTheCanalIs::
+ChestItem_SilvrCape::
 Jump_004_781F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4E
     ld [wScriptParam1], a
     ld de, $016D
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4C, then StartMessageScriptDE_B04 with DE = $016F: starts message group 1, string $6F; on the normal ShowMessageHL path the string begins 'King What? Never mind, then! I'll' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4C, story flag $016F in DE: when the flag is clear it gives item $4C (MagicCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg016F_KingWhatNeverMind)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg016F_KingWhatNeverMind::
+ChestItem_MagicCape::
 Jump_004_7830:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4C
     ld [wScriptParam1], a
     ld de, $016F
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4D, then StartMessageScriptDE_B04 with DE = $0170: starts message group 1, string $70; on the normal ShowMessageHL path the string begins 'I feel badly for his Majesty,' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4D, story flag $0170 in DE: when the flag is clear it gives item $4D (DracoCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0170_IFeelBadlyFor)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0170_IFeelBadlyFor::
+ChestItem_DracoCape::
 Jump_004_7841:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4D
     ld [wScriptParam1], a
     ld de, $0170
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0171: starts message group 1, string $71; on the normal ShowMessageHL path the string begins 'What? Open the Canal Gate more?' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0171 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0171_WhatOpenTheCanal)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0171_WhatOpenTheCanal::
+ChestItem_Herb_Flag0171::
 Jump_004_7852:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0171
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $0172: starts message group 1, string $72; on the normal ShowMessageHL path the string begins 'King Arrgh! I know that! I' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $0172 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0172_KingArrghIKnow)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0172_KingArrghIKnow::
+ChestItem_TinyMedal_Flag0172::
 Jump_004_7863:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $0172
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; entry 120 of the `rst $00` table in Func_004_6A35
@@ -9650,212 +9650,212 @@ Jump_004_78BB::
     call StartMessageCommand09HL_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 0A, then StartMessageScriptDE_B04 with DE = $0175: starts message group 1, string $75; on the normal ShowMessageHL path the string begins 'I'm making a new home for' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $0A, story flag $0175 in DE: when the flag is clear it gives item $0A (SkyBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0175_ImMakingANew)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0175_ImMakingANew::
+ChestItem_SkyBell_Flag0175::
 Jump_004_78C2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $0A
     ld [wScriptParam1], a
     ld de, $0175
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4A, then StartMessageScriptDE_B04 with DE = $0176: starts message group 1, string $76; on the normal ShowMessageHL path the string begins 'Gaah! You're too strong! You win!' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4A, story flag $0176 in DE: when the flag is clear it gives item $4A (Smart) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0176_GaahYoureTooStrong)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0176_GaahYoureTooStrong::
+ChestItem_Smart::
 Jump_004_78D3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4A
     ld [wScriptParam1], a
     ld de, $0176
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $0177: starts message group 1, string $77; on the normal ShowMessageHL path the string begins 'King What? So that's the truth?' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $0177 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0177_KingWhatSoThats)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0177_KingWhatSoThats::
+ChestItem_ExitBell_Flag0177::
 Jump_004_78E4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $0177
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $0179: starts message group 1, string $79; on the normal ShowMessageHL path the string begins 'King This should solve the water' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $0179 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg0179_KingThisShouldSolve)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg0179_KingThisShouldSolve::
+ChestItem_Herb_Flag0179::
 Jump_004_78F5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $0179
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 09, then StartMessageScriptDE_B04 with DE = $017A: starts message group 1, string $7A; on the normal ShowMessageHL path the string begins 'Oh? You say that a monster' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $09, story flag $017A in DE: when the flag is clear it gives item $09 (AwakeSand) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017A_OhYouSayThat)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg017A_OhYouSayThat::
+ChestItem_AwakeSand::
 Jump_004_7906:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $09
     ld [wScriptParam1], a
     ld de, $017A
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 61, then StartMessageScriptDE_B04 with DE = $017B: starts message group 1, string $7B; on the normal ShowMessageHL path the string begins 'The well has ample water again.' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $61, story flag $017B in DE: when the flag is clear it gives item $61 (Cleric) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017B_TheWellHasAmple)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg017B_TheWellHasAmple::
+ChestItem_Cleric::
 Jump_004_7917:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $61
     ld [wScriptParam1], a
     ld de, $017B
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $017D: starts message group 1, string $7D; on the normal ShowMessageHL path the string begins 'Hi! Did you hear the news?' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $017D in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017D_HiDidYouHear)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg017D_HiDidYouHear::
+ChestItem_ExitBell_Flag017D::
 Jump_004_7928:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $017D
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 52, then StartMessageScriptDE_B04 with DE = $017E: starts message group 1, string $7E; on the normal ShowMessageHL path the string begins 'The King solved our water shortage' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $52, story flag $017E in DE: when the flag is clear it gives item $52 (BraveCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017E_TheKingSolvedOur)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg017E_TheKingSolvedOur::
+ChestItem_BraveCape::
 Jump_004_7939:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $52
     ld [wScriptParam1], a
     ld de, $017E
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 07, then StartMessageScriptDE_B04 with DE = $017F: starts message group 1, string $7F; on the normal ShowMessageHL path the string begins 'Our King worked to save all' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $07, story flag $017F in DE: when the flag is clear it gives item $07 (MoonHerb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg017F_OurKingWorkedTo)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg017F_OurKingWorkedTo::
+ChestItem_MoonHerb::
 Jump_004_794A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $07
     ld [wScriptParam1], a
     ld de, $017F
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 46, then StartMessageScriptDE_B04 with DE = $00D6: starts message group 0, string $D6; on the normal ShowMessageHL path the string begins 'I'll show you how small you' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $46, story flag $00D6 in DE: when the flag is clear it gives item $46 (MermScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D6_IllShowYouHow)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00D6_IllShowYouHow::
+ChestItem_MermScale_Flag00D6::
 Jump_004_795B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $46
     ld [wScriptParam1], a
     ld de, $00D6
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $00D7: starts message group 0, string $D7; on the normal ShowMessageHL path the string begins 'Hm? My rival is here? Come' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $00D7 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D7_HmMyRivalIs)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00D7_HmMyRivalIs::
+ChestItem_LoveWater_Flag00D7::
 Jump_004_796C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $00D7
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 60, then StartMessageScriptDE_B04 with DE = $00D8: starts message group 0, string $D8; on the normal ShowMessageHL path the string begins 'Finally, someone to ignite my soul!' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $60, story flag $00D8 in DE: when the flag is clear it gives item $60 (Thief) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00D8_FinallySomeoneToIgnite)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00D8_FinallySomeoneToIgnite::
+ChestItem_Thief::
 Jump_004_797D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $60
     ld [wScriptParam1], a
     ld de, $00D8
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $00DA: starts message group 0, string $DA; on the normal ShowMessageHL path the string begins 'You have raised your charges well.' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $00DA in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DA_YouHaveRaisedYour)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00DA_YouHaveRaisedYour::
+ChestItem_Herb_Flag00DA::
 Jump_004_798E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $00DA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4F, then StartMessageScriptDE_B04 with DE = $00DB: starts message group 0, string $DB; on the normal ShowMessageHL path the string begins 'What? How did you get here?' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4F, story flag $00DB in DE: when the flag is clear it gives item $4F (GoldCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DB_WhatHowDidYou)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00DB_WhatHowDidYou::
+ChestItem_GoldCape::
 Jump_004_799F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4F
     ld [wScriptParam1], a
     ld de, $00DB
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5D, then StartMessageScriptDE_B04 with DE = $00DC: starts message group 0, string $DC; on the normal ShowMessageHL path the string begins 'All those who stood before me' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5D, story flag $00DC in DE: when the flag is clear it gives item $5D (Mage) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DC_AllThoseWhoStood)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00DC_AllThoseWhoStood::
+ChestItem_Mage::
 Jump_004_79B0:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5D
     ld [wScriptParam1], a
     ld de, $00DC
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 06, then StartMessageScriptDE_B04 with DE = $00DD: starts message group 0, string $DD; on the normal ShowMessageHL path the string begins 'Let me show you why your' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $06, story flag $00DD in DE: when the flag is clear it gives item $06 (Antidote) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00DD_LetMeShowYou)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00DD_LetMeShowYou::
+ChestItem_Antidote::
 Jump_004_79C1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $06
     ld [wScriptParam1], a
     ld de, $00DD
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; starts message $0C33 through StartMessageCommand09HL (script command $09); that string begins 'It's brutal up ahead. I wouldn't push' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case07_Sub01_CaseA0)
@@ -9918,212 +9918,212 @@ Jump_004_7A12::
     call StartMessageCommand09HL_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $00F5: starts message group 0, string $F5; on the normal ShowMessageHL path the string begins 'It is an item with a' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $00F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F5_ItIsAnItem)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00F5_ItIsAnItem::
+ChestItem_ExitBell_Flag00F5::
 Jump_004_7A19:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $00F5
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5C, then StartMessageScriptDE_B04 with DE = $00F6: starts message group 0, string $F6; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5C, story flag $00F6 in DE: when the flag is clear it gives item $5C (War) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F6_HelloWhatCanI)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00F6_HelloWhatCanI::
+ChestItem_War_Flag00F6::
 Jump_004_7A2A:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5C
     ld [wScriptParam1], a
     ld de, $00F6
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 03, then StartMessageScriptDE_B04 with DE = $00F7: starts message group 0, string $F7; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $03, story flag $00F7 in DE: when the flag is clear it gives item $03 (WorldDew) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F7_HelloWhatCanI)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00F7_HelloWhatCanI::
+ChestItem_WorldDew_Flag00F7::
 Jump_004_7A3B:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $03
     ld [wScriptParam1], a
     ld de, $00F7
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2C, then StartMessageScriptDE_B04 with DE = $00F9: starts message group 0, string $F9; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2C, story flag $00F9 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00F9_HelloWhatCanI)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00F9_HelloWhatCanI::
+ChestItem_TinyMedal_Flag00F9::
 Jump_004_7A4C:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2C
     ld [wScriptParam1], a
     ld de, $00F9
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 45, then StartMessageScriptDE_B04 with DE = $00FA: starts message group 0, string $FA; on the normal ShowMessageHL path the string begins 'Hello! What can I do for' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $45, story flag $00FA in DE: when the flag is clear it gives item $45 (SteelFang) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FA_HelloWhatCanI)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00FA_HelloWhatCanI::
+ChestItem_SteelFang::
 Jump_004_7A5D:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $45
     ld [wScriptParam1], a
     ld de, $00FA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 47, then StartMessageScriptDE_B04 with DE = $00FB: starts message group 0, string $FB; on the normal ShowMessageHL path the string begins 'THE END' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $47, story flag $00FB in DE: when the flag is clear it gives item $47 (DrakScale) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FB_THEEND)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00FB_THEEND::
+ChestItem_DrakScale::
 Jump_004_7A6E:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $47
     ld [wScriptParam1], a
     ld de, $00FB
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5A, then StartMessageScriptDE_B04 with DE = $00FD: starts message group 0, string $FD; on the normal ShowMessageHL path the string begins 'Hey, that's mine! 0 obtained a' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5A, story flag $00FD in DE: when the flag is clear it gives item $5A (Life) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FD_HeyThatsMine0)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00FD_HeyThatsMine0::
+ChestItem_Life::
 Jump_004_7A7F:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5A
     ld [wScriptParam1], a
     ld de, $00FD
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5B, then StartMessageScriptDE_B04 with DE = $00FE: starts message group 0, string $FE; on the normal ShowMessageHL path the string begins 'Terry Here, just take this. 0' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5B, story flag $00FE in DE: when the flag is clear it gives item $5B (Divine) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FE_TerryHereJustTake)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00FE_TerryHereJustTake::
+ChestItem_Divine::
 Jump_004_7A90:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5B
     ld [wScriptParam1], a
     ld de, $00FE
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $00FF: starts message group 0, string $FF; on the normal ShowMessageHL path the string begins 'Composing' (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $00FF in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg00FF_Composing)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg00FF_Composing::
+ChestItem_Herb_Flag00FF::
 Jump_004_7AA1:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $00FF
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 50, then StartMessageScriptDE_B04 with DE = $01F3: starts message group 1, string $F3; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $50, story flag $01F3 in DE: when the flag is clear it gives item $50 (PltnmCape) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F3)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F3::
+ChestItem_PltnmCape::
 Jump_004_7AB2:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $50
     ld [wScriptParam1], a
     ld de, $01F3
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 4B, then StartMessageScriptDE_B04 with DE = $01F4: starts message group 1, string $F4; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $4B, story flag $01F4 in DE: when the flag is clear it gives item $4B (Wise) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F4)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F4::
+ChestItem_Wise::
 Jump_004_7AC3:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $4B
     ld [wScriptParam1], a
     ld de, $01F4
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 2A, then StartMessageScriptDE_B04 with DE = $01F5: starts message group 1, string $F5; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $2A, story flag $01F5 in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F5)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F5::
+ChestItem_ExitBell_Flag01F5::
 Jump_004_7AD4:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $2A
     ld [wScriptParam1], a
     ld de, $01F5
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 01, then StartMessageScriptDE_B04 with DE = $01F7: starts message group 1, string $F7; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $01, story flag $01F7 in DE: when the flag is clear it gives item $01 (Herb) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F7)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F7::
+ChestItem_Herb_Flag01F7::
 Jump_004_7AE5:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $01
     ld [wScriptParam1], a
     ld de, $01F7
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 5E, then StartMessageScriptDE_B04 with DE = $01F8: starts message group 1, string $F8; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $5E, story flag $01F8 in DE: when the flag is clear it gives item $5E (Fight) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F8)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F8::
+ChestItem_Fight::
 Jump_004_7AF6:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $5E
     ld [wScriptParam1], a
     ld de, $01F8
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 49, then StartMessageScriptDE_B04 with DE = $01F9: starts message group 1, string $F9; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $49, story flag $01F9 in DE: when the flag is clear it gives item $49 (Starry) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01F9)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01F9::
+ChestItem_Starry::
 Jump_004_7B07:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $49
     ld [wScriptParam1], a
     ld de, $01F9
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
-; wScriptParam0 = 00, wScriptParam1 = 02, then StartMessageScriptDE_B04 with DE = $01FA: starts message group 1, string $FA; on the normal ShowMessageHL path the string is empty (E-0081)
+; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 = $02, story flag $01FA in DE: when the flag is clear it gives item $02 (LoveWater) and sets the flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was Msg01FA)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptParam1
-Msg01FA::
+ChestItem_LoveWater_Flag01FA::
 Jump_004_7B18:: ; address name
     ld a, $00
     ld [wScriptParam0], a
     ld a, $02
     ld [wScriptParam1], a
     ld de, $01FA
-    call StartMessageScriptDE_B04
+    call StartTreasureFlagDE_B04
     ret
 
 ; only called from DispatchTalkEvent_Case09 (E-0047)

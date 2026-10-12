@@ -472,7 +472,7 @@ Func_05F_69F3:: ; address name
     ld h, a
 
 ; L = string index (wStringIndex, category 0), H & $3F = message group, which selects one of 12 table entries (rst $00); when wCC44 has bit 7 set and is not $80 another path is taken (not read) (E-0079)
-; 1 call site from 1 routine (e.g. ScriptCommand0A_Run_Case02)
+; 1 call site from 1 routine (e.g. RunOneTimeTreasure_Case02)
 ; reads: wMapType
 ; writes: wStringIndex, wStringCategory
 ShowMessageHL::
@@ -3105,25 +3105,25 @@ Jump_05F_7933::
 Data_05F_7959:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
-; implements script command type 0A; reached through ScriptCommand0A in bank $10 (E-0038)
+; implements script command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest with a Magic Key), wScriptParam1 = item, wMessageIndex/Group = story flag. If the flag is set it shows group-0 message $A1 + 3 * kind (empty); otherwise it adds the item (or a key entry for kind 3) and sets the flag, showing $A0 + 3 * kind, or $A2 + 3 * kind when there is no room (E-0038, E-0269)
 ; 1 call site from 1 routine (e.g. ScriptCommand0A)
 ; reads: wScriptStep
-ScriptCommand0A_Run::
+RunOneTimeTreasure::
 Func_05F_7969:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand0A_Run_Case00
-    dw ScriptCommand0A_Run_Case01
-    dw ScriptCommand0A_Run_Case02
-    dw ScriptCommand0A_Run_Case03
-    dw ScriptCommand0A_Run_Case04
+    dw RunOneTimeTreasure_Case00
+    dw RunOneTimeTreasure_Case01
+    dw RunOneTimeTreasure_Case02
+    dw RunOneTimeTreasure_Case03
+    dw RunOneTimeTreasure_Case04
 
-; entry 0 of the `rst $00` table in ScriptCommand0A_Run
+; entry 0 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wMessageIndex, wMessageGroup, wInventory, wGameFlags836, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wGameFlags836
 ; points at: wScriptStep, wScriptParam0, wInventory
-ScriptCommand0A_Run_Case00::
+RunOneTimeTreasure_Case00::
 Jump_05F_7977:: ; address name
     ld a, [wScriptParam0]
     cp a, $03
@@ -3210,12 +3210,12 @@ Jump_05F_79F5::
     jr z, Jump_05F_79E8
     jr Jump_05F_79D8
 
-; entry 1 of the `rst $00` table in ScriptCommand0A_Run
+; entry 1 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScriptStep
-ScriptCommand0A_Run_Case01::
+RunOneTimeTreasure_Case01::
 Jump_05F_7A02:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -3246,11 +3246,11 @@ Jump_05F_7A3D::
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in ScriptCommand0A_Run
+; entry 2 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wTextWindowState, wScriptParam0
 ; points at: wScriptStep
-ScriptCommand0A_Run_Case02::
+RunOneTimeTreasure_Case02::
 Jump_05F_7A42:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -3268,12 +3268,12 @@ Jump_05F_7A4F::
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in ScriptCommand0A_Run
+; entry 3 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wTextWindowState, wTextWindowStep
 ; points at: wScriptStep
-ScriptCommand0A_Run_Case03::
+RunOneTimeTreasure_Case03::
 Jump_05F_7A5D:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -3300,11 +3300,11 @@ Jump_05F_7A87::
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in ScriptCommand0A_Run
+; entry 4 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wScriptCommandType, wScriptRunning, wModeState
-ScriptCommand0A_Run_Case04::
+RunOneTimeTreasure_Case04::
 Jump_05F_7A8C:: ; address name
     ld a, [wTextWindowState]
     and a, $03

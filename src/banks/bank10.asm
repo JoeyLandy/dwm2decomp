@@ -1815,7 +1815,7 @@ Func_010_49E7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand0A:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49EE:: ; address name
-    farcall ScriptCommand0A_Run
+    farcall RunOneTimeTreasure
     ret
 
 ; runs one frame of script command type 09 (entry 8 of ScriptCommandHandlers)

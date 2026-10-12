@@ -845,6 +845,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 ### E-0081 — Message stubs named from their text
 
 - Kind: OBSERVATION (pattern match plus decoding of ROM text; C1 for what each stub displays).
+- **Superseded by E-0269:** DE is a story flag and the stubs are one-time treasures (ChestItem_* etc.); the message reading below is wrong.
 - **The stubs.** 69 routines (54 in bank $04, 15 in bank $13) share one shape: `ld a, P0 / ld [wScriptParam0], a / ld a, P1 / ld [wScriptParam1], a / ld de, W / call SetRequestPtrC924FromDE / ret`. That helper stores DE as the message word and starts script command $0A, whose case 2 is ShowMessageHL (E-0079), so it is renamed StartMessageScriptDE_B04/_B13.
 - **Decoding the text.** Each stub's text was found with the E-0080 tables: group = high byte & $3F, then the bank from ShowMessageHL's dispatch, then string = low byte, using the bank's table below its threshold and the overflow table above it. It was rendered with the game charmap by a script (`build/msg_stubs.py`, not committed).
 - **Names.** Stubs are named `MsgGGII_FirstWords` after the message word and the first words of the string; notes quote at most six words.
@@ -2429,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **CursorCellTable7880 / CursorCellTable788A.** Screen-buffer addresses used with StoreBAtWordTableEntry_Bank1E for cursor cells.
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
+
+### E-0269 — One-time treasures (script command $0A); a correction to E-0081
+
+- Kind: OBSERVATION (reading plus ROM text; C1). **Correction** to E-0081.
+- **Command $0A (RunOneTimeTreasure, was ScriptCommand0A_Run).** It reads three things:
+  - wScriptParam0 = kind: 0 chest, 1 vase, 2 barrel, 3 chest with a Magic Key;
+  - wScriptParam1 = item;
+  - the word in wMessageIndex/wMessageGroup, passed to TestFlagBit and SetFlagBit, so a story flag.
+  - When the flag is set it shows group-0 message $A1 + 3 * kind ("But it was empty"). Otherwise it adds the item to wInventory (kind 3: GenerateNewKeyEntry), sets the flag, and shows $A0 + 3 * kind ("0 obtained the Y."). When there is no room it shows $A2 + 3 * kind.
+- **E-0081 had read DE as a message word.** The helper is renamed StartTreasureFlagDE_B04/_B13 (was StartMessageScriptDE_*). Its 69 configured MsgWWWW stubs and 69 more routines with the same shape are renamed ChestItem_<item>, VaseItem_<item>, BarrelItem_<item> or ChestMagicKey, with _FlagFFFF added for duplicates. The notes give kind, item and flag.
+  - Their old names quoted unrelated strings: the "message word" was a flag number.
+- Binary verification: build/run350 PASS, 0 differing bytes; tests OK.
 
 ### E-0268 — Talk-event cases named from their message (the E-0082 shape)
 
