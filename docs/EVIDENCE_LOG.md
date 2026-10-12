@@ -2430,6 +2430,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0226 — "ClearRect" wrappers copy from DE; bank-$1D tile runs
+
+- Kind: OBSERVATION (reading; C1) and a correction to E-0121 and E-0124.
+- **Correction.** ClearRectSetTextCursorLoPlus21_Bank1D (1D:$5A32), ClearRectBothBanksSetTextCursorLoPlus1C1_Bank1D (1D:$59F0) and ClearRectBothBanksSetTextCursorLoPlus1C1 (1C:$67D0) do not clear.
+  - They call CopyRectToBGMapWrapped with the rectangle at DE (B columns, C rows), set wTextCursorLo/Hi, and the two "both banks" versions copy again on CGB with VRAM bank 1 selected and WRAM bank 2 switched in.
+  - They are renamed DrawRectSetTextCursorLoPlus21_Bank1D, DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D and DrawRectBothBanksSetTextCursorLoPlus1C1.
+- **Raw rectangles.** The three wrappers are added to the E-0161 raw-rectangle copiers. 206 raw rectangles are now derived, including the 12 x 9 rectangles at 1D:$48FC and $4968.
+- **BGMap1TileRun_1D_44E3 / _4547.** ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes to vBGMap1 + $300 until $7F: 99 tiles each.
+- Unidentified INCBIN is 9,571 bytes.
+- Binary verification: build/run276 PASS, 0 differing bytes.
+
 ### E-0225 — Tile copy lists derived from their copiers
 
 - Kind: TOOL (C1).

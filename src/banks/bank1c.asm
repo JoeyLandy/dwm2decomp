@@ -1543,7 +1543,7 @@ Jump_01C_48F5:: ; address name
     add hl, de
     ld bc, $1309
     ld de, vBGMap1 + $300
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2373,7 +2373,7 @@ Jump_01C_4E05::
     add hl, de
     ld bc, $0403
     ld de, vBGMap1 + $3B0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, $06
@@ -2943,7 +2943,7 @@ Jump_01C_516C::
     jp c, Jump_01C_516C
     pop hl
     pop hl
-    ld de, Data_01C_6302
+    ld de, TileRect_1C_6302
     ld bc, $0605
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, $6C
@@ -3175,7 +3175,7 @@ Func_01C_52E8:: ; address name
     add hl, de
     ld bc, $0403
     ld de, vBGMap1 + $3B0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $06
     ld [wScreenStep], a
     xor a, a
@@ -4264,7 +4264,7 @@ Jump_01C_59D2::
     add hl, de
     ld bc, $0703
     ld de, vBGMap1 + $3B0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, $05
@@ -4944,7 +4944,7 @@ Jump_01C_5DEC:: ; address name
     add hl, de
     ld bc, $0703
     ld de, vBGMap1 + $3B0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $01
     ld [wScreenStep], a
     xor a, a
@@ -5327,10 +5327,15 @@ Data_01C_62ED:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $C3, $BE, $C3, $C3, $B7, $B3, $B4
     db $B4, $B4, $B4, $B4, $B5
 
-; address loaded by ScriptCommandE2_Run_Case03_Case0B
-Data_01C_6302:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0, $B1, $B1, $B1, $B1, $B2, $B6, $C3, $CE, $CF, $DF, $B7, $B6, $C3, $C3, $C3
-    db $C3, $B7, $B6, $C3, $A5, $EE, $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B5
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 6 x 5 tiles, one row per line
+TileRect_1C_6302::
+Data_01C_6302:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $CE, $CF, $DF, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $A5, $EE, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by ScriptCommandE2_Run_Shared03
 Data_01C_6320:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -5762,11 +5767,11 @@ Func_01C_67AF:: ; address name
     add_a_to_hl
     ret
 
-; clears a rectangle (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1; on CGB also clears the attribute map in VRAM bank 1 (E-0121)
+; copies the B x C rectangle at DE to the BG map at HL (Func_01C_6823 with A = 0) and sets wC554 = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2 switched in (E-0121; a copy, not a clear: E-0226)
 ; 11 call sites from 9 routines (e.g. DrawTwoBoxesAndRequestScript80, ScriptCommandE2_Run_Case03_Case09, ScriptCommandE2_Run_Case04_Case0C, ScriptCommandE2_Run_Case04_Case08, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
-ClearRectBothBanksSetTextCursorLoPlus1C1::
+DrawRectBothBanksSetTextCursorLoPlus1C1::
 Func_01C_67D0:: ; address name
     push de
     push bc
@@ -5831,7 +5836,7 @@ Func_01C_6806:: ; address name
     ret
 
 ; copies a B x C rectangle from DE to the BG map at HL, wrapping at the screen and map edges (E-0129)
-; 3 call sites from 2 routines (e.g. ClearRectSetTextCursorLoPlus1C1_Bank1C, ClearRectBothBanksSetTextCursorLoPlus1C1)
+; 3 call sites from 2 routines (e.g. ClearRectSetTextCursorLoPlus1C1_Bank1C, DrawRectBothBanksSetTextCursorLoPlus1C1)
 ; reads: hScrollX, rSTAT, hVRAMByteTemp
 ; writes: hVRAMByteTemp
 CopyRectToBGMapWrapped_1C::
@@ -6445,7 +6450,7 @@ Jump_01C_6B53:: ; address name
     ld de, $01A0
     add hl, de
     ld bc, $1405
-    ld de, Data_01C_6B7D
+    ld de, TileRect_1C_6B7D
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld c, $24
     ld de, vTiles1
@@ -6462,19 +6467,15 @@ Jump_01C_6B68::
     ld [wTextCounter0], a
     jp Func_01C_6AF7_Case01
 
-; address loaded by Func_01C_6AF7_Case00
-Data_01C_6B7D:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0
-    ds $12, $B1
-    db $B2, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B6
-    ds $12, $C3
-    db $B7, $B3
-    ds $12, $B4
-    db $B5
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 5 tiles, one row per line
+TileRect_1C_6B7D::
+Data_01C_6B7D:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; address loaded by Func_01C_6AF7_Case00
 Data_01C_6BE1:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6490,7 +6491,7 @@ Jump_01C_6BF1:: ; address name
     ld de, $01A0
     add hl, de
     ld bc, $1405
-    ld de, Data_01C_6C0C
+    ld de, TileRect_1C_6C0C
     call ClearRectSetTextCursorLoPlus1C1_Bank1C
     ld a, [wTextCounter0]
     inc a
@@ -6498,17 +6499,15 @@ Jump_01C_6BF1:: ; address name
     jp Func_01C_6AF7_Case02
     db $C9
 
-; address loaded by Func_01C_6AF7_Case01
-Data_01C_6C0C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $B0
-    ds $12, $B1
-    db $B2, $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D
-    db $8E, $8F, $90, $91, $B7, $B6
-    ds $12, $C3
-    db $B7, $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F
-    db $A0, $A1, $A2, $A3, $B7, $B3
-    ds $12, $B4
-    db $B5
+; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
+; record: 20 x 5 tiles, one row per line
+TileRect_1C_6C0C::
+Data_01C_6C0C:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8A, $8B, $8C, $8D, $8E, $8F, $90, $91, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; entry 2 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
@@ -7011,7 +7010,7 @@ Jump_01C_6F64:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld bc, $0B09
     ld de, vBGMap1 + $300
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -7269,13 +7268,13 @@ Jump_01C_70D4:: ; address name
     add hl, de
     ld bc, $0C09
     ld de, vBGMap1 + $370
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
     ld bc, $0703
     ld de, vBGMap1 + $3E0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld a, $03
     ld [wScreenStep], a
     xor a, a
@@ -7326,13 +7325,13 @@ Jump_01C_7132:: ; address name
     add hl, de
     ld bc, $0C09
     ld de, vBGMap1 + $370
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0140
     add hl, de
     ld bc, $0703
     ld de, vBGMap1 + $3E0
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, $04
@@ -7396,7 +7395,7 @@ Func_01C_7196:: ; address name
     add hl, de
     ld de, vBGMap1 + $370
     ld bc, $0D03
-    call ClearRectBothBanksSetTextCursorLoPlus1C1
+    call DrawRectBothBanksSetTextCursorLoPlus1C1
     ld hl, vTiles2 + $700
     ld de, vTiles1 + $4C0
     call CopyTileBytesToVRAM_Bank1C

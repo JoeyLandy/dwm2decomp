@@ -14291,6 +14291,76 @@
         }
       ],
       "note": "E-0224 (C1: the second $FFFF-terminated destination list, right after the first; it ends at the source list Data_014_5A84)."
+    },
+    {
+      "bank": "1D",
+      "addr": "44E3",
+      "label": "BGMap1TileRun_1D_44E3",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 3,
+          "line": true,
+          "name": "start of a fourth row"
+        }
+      ],
+      "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
+      "note": "E-0226 (C1: ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState = 3))."
+    },
+    {
+      "bank": "1D",
+      "addr": "4547",
+      "label": "BGMap1TileRun_1D_4547",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 32,
+          "line": true,
+          "name": "BG map row"
+        },
+        {
+          "type": "db",
+          "size": 3,
+          "line": true,
+          "name": "start of a fourth row"
+        }
+      ],
+      "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
+      "note": "E-0226 (C1: ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
     }
   ]
 }

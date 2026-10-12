@@ -2394,7 +2394,9 @@ class Rom:
         # source rows are contiguous. Copies of a canonical routine (same first 16 bytes) count too.
         canon = {(b, a) for (b, a), info in self.names.items() if not info.get("data") and
                  info["name"] in ("CopyRectToBGMap", "CopyRectToBGMapWrapped", "CopyRectToBGMapWrapped_Bank1D",
-                                  "CopyRectToBGMapWrapped_1C", "CopyRectTo20ByteRowsJp_Bank24")}
+                                  "CopyRectToBGMapWrapped_1C", "CopyRectTo20ByteRowsJp_Bank24",
+                                  "DrawRectSetTextCursorLoPlus21_Bank1D", "DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D",
+                                  "DrawRectBothBanksSetTextCursorLoPlus1C1")}  # E-0226: wrappers that copy from DE
         canon |= {(int(f["canonical"][:2], 16), int(f["canonical"][3:], 16)) for f in self.families
                   if f["name"] == "CopyRectTo20ByteRows"}
         sig = lambda b, a: bytes(self.data[b * BANK + a - self.base(b):b * BANK + a - self.base(b) + 16])
