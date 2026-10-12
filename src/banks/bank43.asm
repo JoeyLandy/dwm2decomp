@@ -6,118 +6,119 @@ SECTION "Bank 43", ROMX[$4000], BANK[$43]
 SoundRecords_Bank43::
 Data_043_4001:: ; address name
     db $00, $03 ; id 168
-    dw Data_043_40DD
+    dw SoundTrack_43_00
     db $00, $03 ; id 169
-    dw Data_043_40F9
+    dw SoundTrack_43_01
     db $00, $03 ; id 170
-    dw Data_043_411D
+    dw SoundTrack_43_02
     db $00, $03 ; id 171
-    dw Data_043_413F
+    dw SoundTrack_43_03
     db $00, $00 ; id 172
-    dw Data_043_416B
+    dw SoundTrack_43_04
     db $20, $03 ; id 173
-    dw Data_043_41A9
+    dw SoundTrack_43_05
     db $00, $00 ; id 174
-    dw Data_043_41BF
+    dw SoundTrack_43_06
     db $20, $03 ; id 175
-    dw Data_043_4235
+    dw SoundTrack_43_07
     db $00, $03 ; id 176
-    dw Data_043_4253
+    dw SoundTrack_43_08
     db $00, $03 ; id 177
-    dw Data_043_426B
+    dw SoundTrack_43_09
     db $00, $00 ; id 178
-    dw Data_043_429D
+    dw SoundTrack_43_0A
     db $20, $03 ; id 179
-    dw Data_043_42CB
+    dw SoundTrack_43_0B
     db $00, $03 ; id 180
-    dw Data_043_42E1
+    dw SoundTrack_43_0C
     db $20, $00 ; id 181
-    dw Data_043_4301
+    dw SoundTrack_43_0D
     db $00, $00 ; id 182
-    dw Data_043_4307
+    dw SoundTrack_43_0E
     db $20, $03 ; id 183
-    dw Data_043_4359
+    dw SoundTrack_43_0F
     db $00, $00 ; id 184
-    dw Data_043_4379
+    dw SoundTrack_43_10
     db $20, $03 ; id 185
-    dw Data_043_438F
+    dw SoundTrack_43_11
     db $00, $00 ; id 186
-    dw Data_043_43CF
+    dw SoundTrack_43_12
     db $20, $03 ; id 187
-    dw Data_043_4431
+    dw SoundTrack_43_13
     db $00, $03 ; id 188
-    dw Data_043_4449
+    dw SoundTrack_43_14
     db $00, $00 ; id 189
-    dw Data_043_447B
+    dw SoundTrack_43_15
     db $20, $03 ; id 190
-    dw Data_043_4509
+    dw SoundTrack_43_16
     db $00, $00 ; id 191
-    dw Data_043_4521
+    dw SoundTrack_43_17
     db $20, $03 ; id 192
-    dw Data_043_4559
+    dw SoundTrack_43_18
     db $00, $00 ; id 193
-    dw Data_043_457B
+    dw SoundTrack_43_19
     db $20, $03 ; id 194
-    dw Data_043_4591
+    dw SoundTrack_43_1A
     db $00, $00 ; id 195
-    dw Data_043_45AD
+    dw SoundTrack_43_1B
     db $20, $03 ; id 196
-    dw Data_043_45E1
+    dw SoundTrack_43_1C
     db $00, $00 ; id 197
-    dw Data_043_4611
+    dw SoundTrack_43_1D
     db $20, $03 ; id 198
-    dw Data_043_4641
+    dw SoundTrack_43_1E
     db $00, $00 ; id 199
-    dw Data_043_465F
+    dw SoundTrack_43_1F
     db $20, $03 ; id 200
-    dw Data_043_469F
+    dw SoundTrack_43_20
     db $00, $00 ; id 201
-    dw Data_043_46C1
+    dw SoundTrack_43_21
     db $20, $03 ; id 202
-    dw Data_043_471F
+    dw SoundTrack_43_22
     db $00, $03 ; id 203
-    dw Data_043_4731
+    dw SoundTrack_43_23
     db $40, $00 ; id 204
-    dw Data_043_4769
+    dw SoundTrack_43_24
     db $60, $01 ; id 205
-    dw Data_043_4F29
+    dw SoundTrack_43_25
     db $80, $02 ; id 206
-    dw Data_043_5849
+    dw SoundTrack_43_26
     db $40, $00 ; id 207
-    dw Data_043_59B7
+    dw SoundTrack_43_27
     db $60, $01 ; id 208
-    dw Data_043_5C95
+    dw SoundTrack_43_28
     db $80, $02 ; id 209
-    dw Data_043_5EB3
+    dw SoundTrack_43_29
     db $00, $00 ; id 210
-    dw Data_043_61F5
+    dw SoundTrack_43_2A
     db $20, $01 ; id 211
-    dw Data_043_622F
+    dw SoundTrack_43_2B
     db $00, $00 ; id 212
-    dw Data_043_6271
+    dw SoundTrack_43_2C
     db $20, $01 ; id 213
-    dw Data_043_6299
+    dw SoundTrack_43_2D
     db $40, $00 ; id 214
-    dw Data_043_62C1
+    dw SoundTrack_43_2E
     db $60, $01 ; id 215
-    dw Data_043_6305
+    dw SoundTrack_43_2F
     db $80, $02 ; id 216
-    dw Data_043_6341
+    dw SoundTrack_43_30
     db $00, $03 ; id 217
-    dw Data_043_6373
+    dw SoundTrack_43_31
     db $00, $00 ; id 218
-    dw Data_043_63AB
+    dw SoundTrack_43_32
     db $20, $03 ; id 219
-    dw Data_043_63EB
+    dw SoundTrack_43_33
     db $00, $03 ; id 220
-    dw Data_043_6409
+    dw SoundTrack_43_34
     db $40, $00 ; id 221
-    dw Data_043_641D
+    dw SoundTrack_43_35
     db $60, $01 ; id 222
-    dw Data_043_650D
+    dw SoundTrack_43_36
 
 ; sound track, 12 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_40DD:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_00:: ; heuristic: track stream of a sound record; C0
+Data_043_40DD:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $23, $02 ; note D#2 dur 2
     db $31, $04 ; note C#3 dur 4
@@ -133,7 +134,8 @@ Data_043_40DD:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 16 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_40F9:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_01:: ; heuristic: track stream of a sound record; C0
+Data_043_40F9:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $40, $02 ; note C4 dur 2
     db $60, $03 ; note C6 dur 3
@@ -153,7 +155,8 @@ Data_043_40F9:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 15 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_411D:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_02:: ; heuristic: track stream of a sound record; C0
+Data_043_411D:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C7, $20 ; env $20
     db $50, $01 ; note C5 dur 1
@@ -172,7 +175,8 @@ Data_043_411D:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 20 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_413F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_03:: ; heuristic: track stream of a sound record; C0
+Data_043_413F:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $60, $04 ; note C6 dur 4
     db $30, $02 ; note C3 dur 2
@@ -196,7 +200,8 @@ Data_043_413F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 29 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_416B:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_04:: ; heuristic: track stream of a sound record; C0
+Data_043_416B:: ; address name
     db $00, $02, $0F, $25 ; header: param=0 byte1=$02 volume=$0F byte3=$25
     db $12, $06 ; note D1 dur 6
     db $1F, $01 ; rest-note $1F dur 1
@@ -229,7 +234,8 @@ Data_043_416B:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 9 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_41A9:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_05:: ; heuristic: track stream of a sound record; C0
+Data_043_41A9:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $1F, $55 ; rest-note $1F dur 85
     db $40, $03 ; note C4 dur 3
@@ -242,7 +248,8 @@ Data_043_41A9:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 57 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_41BF:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_06:: ; heuristic: track stream of a sound record; C0
+Data_043_41BF:: ; address name
     db $00, $00, $0F, $26 ; header: param=0 byte1=$00 volume=$0F byte3=$26
     db $A0, $0A ; volume $0A
     db $26, $03 ; note F#2 dur 3
@@ -303,7 +310,8 @@ Data_043_41BF:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 13 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4235:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_07:: ; heuristic: track stream of a sound record; C0
+Data_043_4235:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C3, $7F ; env $7F
     db $11, $20 ; note C#1 dur 32
@@ -320,7 +328,8 @@ Data_043_4235:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 10 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4253:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_08:: ; heuristic: track stream of a sound record; C0
+Data_043_4253:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C3, $0A ; env $0A
     db $21, $03 ; note C#2 dur 3
@@ -334,7 +343,8 @@ Data_043_4253:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 23 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_426B:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_09:: ; heuristic: track stream of a sound record; C0
+Data_043_426B:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $50, $02 ; note C5 dur 2
     db $42, $02 ; note D4 dur 2
@@ -361,7 +371,8 @@ Data_043_426B:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 21 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_429D:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0A:: ; heuristic: track stream of a sound record; C0
+Data_043_429D:: ; address name
     db $00, $02, $09, $16 ; header: param=0 byte1=$02 volume=$09 byte3=$16
     db $A0, $06 ; volume $06
     db $1F, $26 ; rest-note $1F dur 38
@@ -386,7 +397,8 @@ Data_043_429D:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 9 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_42CB:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0B:: ; heuristic: track stream of a sound record; C0
+Data_043_42CB:: ; address name
     db $00, $00, $0D, $00 ; header: param=0 byte1=$00 volume=$0D byte3=$00
     db $1F, $03 ; rest-note $1F dur 3
     db $CC, $2E ; env $2E
@@ -399,7 +411,8 @@ Data_043_42CB:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 14 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_42E1:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0C:: ; heuristic: track stream of a sound record; C0
+Data_043_42E1:: ; address name
     db $00, $00, $0E, $00 ; header: param=0 byte1=$00 volume=$0E byte3=$00
     db $53, $06 ; note D#5 dur 6
     db $43, $02 ; note D#4 dur 2
@@ -417,12 +430,14 @@ Data_043_42E1:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 1 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4301:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0D:: ; heuristic: track stream of a sound record; C0
+Data_043_4301:: ; address name
     db $00, $00, $00, $00 ; header: param=0 byte1=$00 volume=$00 byte3=$00
     db $FF, $FF ; end
 
 ; sound track, 39 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4307:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0E:: ; heuristic: track stream of a sound record; C0
+Data_043_4307:: ; address name
     db $00, $00, $0C, $1D ; header: param=0 byte1=$00 volume=$0C byte3=$1D
     db $1F, $10 ; rest-note $1F dur 16
     db $30, $03 ; note C3 dur 3
@@ -465,7 +480,8 @@ Data_043_4307:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 14 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4359:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_0F:: ; heuristic: track stream of a sound record; C0
+Data_043_4359:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C3, $10 ; env $10
     db $1D, $01 ; rest-note $1D dur 1
@@ -483,7 +499,8 @@ Data_043_4359:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 9 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4379:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_10:: ; heuristic: track stream of a sound record; C0
+Data_043_4379:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C1, $50 ; env $50
     db $58, $02 ; note G#5 dur 2
@@ -496,7 +513,8 @@ Data_043_4379:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 30 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_438F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_11:: ; heuristic: track stream of a sound record; C0
+Data_043_438F:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C1, $50 ; env $50
     db $12, $20 ; note D1 dur 32
@@ -530,7 +548,8 @@ Data_043_438F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 47 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_43CF:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_12:: ; heuristic: track stream of a sound record; C0
+Data_043_43CF:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $63, $02 ; note D#6 dur 2
     db $1F, $02 ; rest-note $1F dur 2
@@ -581,7 +600,8 @@ Data_043_43CF:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 10 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4431:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_13:: ; heuristic: track stream of a sound record; C0
+Data_043_4431:: ; address name
     db $00, $00, $0A, $00 ; header: param=0 byte1=$00 volume=$0A byte3=$00
     db $23, $02 ; note D#2 dur 2
     db $21, $10 ; note C#2 dur 16
@@ -595,7 +615,8 @@ Data_043_4431:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 23 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4449:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_14:: ; heuristic: track stream of a sound record; C0
+Data_043_4449:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $1C, $01 ; rest-note $1C dur 1
     db $1F, $01 ; rest-note $1F dur 1
@@ -622,7 +643,8 @@ Data_043_4449:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 69 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_447B:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_15:: ; heuristic: track stream of a sound record; C0
+Data_043_447B:: ; address name
     db $00, $01, $0F, $00 ; header: param=0 byte1=$01 volume=$0F byte3=$00
     db $63, $02 ; note D#6 dur 2
     db $1F, $01 ; rest-note $1F dur 1
@@ -695,7 +717,8 @@ Data_043_447B:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 10 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4509:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_16:: ; heuristic: track stream of a sound record; C0
+Data_043_4509:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $1F, $4B ; rest-note $1F dur 75
     db $A0, $08 ; volume $08
@@ -709,7 +732,8 @@ Data_043_4509:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 26 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4521:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_17:: ; heuristic: track stream of a sound record; C0
+Data_043_4521:: ; address name
     db $00, $00, $0F, $1F ; header: param=0 byte1=$00 volume=$0F byte3=$1F
     db $1F, $44 ; rest-note $1F dur 68
     db $40, $02 ; note C4 dur 2
@@ -739,7 +763,8 @@ Data_043_4521:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 15 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4559:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_18:: ; heuristic: track stream of a sound record; C0
+Data_043_4559:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $CC, $20 ; env $20
     db $50, $1E ; note C5 dur 30
@@ -758,7 +783,8 @@ Data_043_4559:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 9 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_457B:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_19:: ; heuristic: track stream of a sound record; C0
+Data_043_457B:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C1, $40 ; env $40
     db $70, $06 ; note C7 dur 6
@@ -771,7 +797,8 @@ Data_043_457B:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 12 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4591:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1A:: ; heuristic: track stream of a sound record; C0
+Data_043_4591:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $20, $05 ; note C2 dur 5
     db $C1, $30 ; env $30
@@ -787,7 +814,8 @@ Data_043_4591:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 24 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_45AD:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1B:: ; heuristic: track stream of a sound record; C0
+Data_043_45AD:: ; address name
     db $00, $00, $0F, $1C ; header: param=0 byte1=$00 volume=$0F byte3=$1C
     db $1F, $16 ; rest-note $1F dur 22
     db $40, $05 ; note C4 dur 5
@@ -815,7 +843,8 @@ Data_043_45AD:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 22 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_45E1:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1C:: ; heuristic: track stream of a sound record; C0
+Data_043_45E1:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $58, $02 ; note G#5 dur 2
     db $50, $07 ; note C5 dur 7
@@ -841,7 +870,8 @@ Data_043_45E1:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 22 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4611:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1D:: ; heuristic: track stream of a sound record; C0
+Data_043_4611:: ; address name
     db $00, $00, $0F, $1E ; header: param=0 byte1=$00 volume=$0F byte3=$1E
     db $1F, $46 ; rest-note $1F dur 70
     db $40, $05 ; note C4 dur 5
@@ -867,7 +897,8 @@ Data_043_4611:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 13 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4641:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1E:: ; heuristic: track stream of a sound record; C0
+Data_043_4641:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $59, $02 ; note A5 dur 2
     db $50, $07 ; note C5 dur 7
@@ -884,7 +915,8 @@ Data_043_4641:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 30 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_465F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_1F:: ; heuristic: track stream of a sound record; C0
+Data_043_465F:: ; address name
     db $00, $00, $0F, $27 ; header: param=0 byte1=$00 volume=$0F byte3=$27
     db $20, $05 ; note C2 dur 5
     db $26, $05 ; note F#2 dur 5
@@ -918,7 +950,8 @@ Data_043_465F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 15 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_469F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_20:: ; heuristic: track stream of a sound record; C0
+Data_043_469F:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $5B, $08 ; note B5 dur 8
     db $50, $04 ; note C5 dur 4
@@ -937,7 +970,8 @@ Data_043_469F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 45 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_46C1:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_21:: ; heuristic: track stream of a sound record; C0
+Data_043_46C1:: ; address name
     db $00, $01, $0F, $00 ; header: param=0 byte1=$01 volume=$0F byte3=$00
     db $A0, $0F ; volume $0F
     db $A1, $17 ; duty $17
@@ -986,7 +1020,8 @@ Data_043_46C1:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 7 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_471F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_22:: ; heuristic: track stream of a sound record; C0
+Data_043_471F:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C1, $7F ; env $7F
     db $46, $20 ; note F#4 dur 32
@@ -997,7 +1032,8 @@ Data_043_471F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 26 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4731:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_23:: ; heuristic: track stream of a sound record; C0
+Data_043_4731:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $2C, $03 ; rest-note $2C dur 3
     db $1F, $01 ; rest-note $1F dur 1
@@ -1027,7 +1063,8 @@ Data_043_4731:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 990 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4769:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_24:: ; heuristic: track stream of a sound record; C0
+Data_043_4769:: ; address name
     db $08, $00, $09, $00 ; header: param=8 byte1=$00 volume=$09 byte3=$00
     db $FD, $F3 ; label 3
     db $AF, $08 ; param $08
@@ -2021,7 +2058,8 @@ Data_043_4769:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 1166 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_4F29:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_25:: ; heuristic: track stream of a sound record; C0
+Data_043_4F29:: ; address name
     db $08, $02, $09, $00 ; header: param=8 byte1=$02 volume=$09 byte3=$00
     db $FD, $F3 ; label 3
     db $AF, $08 ; param $08
@@ -3191,7 +3229,8 @@ Data_043_4F29:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 181 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_5849:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_26:: ; heuristic: track stream of a sound record; C0
+Data_043_5849:: ; address name
     db $08, $FF, $02, $0F ; header: param=8 byte1=$FF volume=$02 byte3=$0F
     db $FD, $F3 ; label 3
     db $AF, $08 ; param $08
@@ -3376,7 +3415,8 @@ Data_043_5849:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 365 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_59B7:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_27:: ; heuristic: track stream of a sound record; C0
+Data_043_59B7:: ; address name
     db $02, $02, $09, $00 ; header: param=2 byte1=$02 volume=$09 byte3=$00
     db $FD, $F2 ; label 2
     db $A2, $01 ; duty2 $01
@@ -3745,7 +3785,8 @@ Data_043_59B7:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 269 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_5C95:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_28:: ; heuristic: track stream of a sound record; C0
+Data_043_5C95:: ; address name
     db $02, $02, $0F, $00 ; header: param=2 byte1=$02 volume=$0F byte3=$00
     db $FD, $F2 ; label 2
     db $A2, $02 ; duty2 $02
@@ -4018,7 +4059,8 @@ Data_043_5C95:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 415 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_5EB3:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_29:: ; heuristic: track stream of a sound record; C0
+Data_043_5EB3:: ; address name
     db $02, $00, $02, $0F ; header: param=2 byte1=$00 volume=$02 byte3=$0F
     db $FD, $F2 ; label 2
     db $A1, $0F ; duty $0F
@@ -4437,7 +4479,8 @@ Data_043_5EB3:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 27 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_61F5:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2A:: ; heuristic: track stream of a sound record; C0
+Data_043_61F5:: ; address name
     db $00, $01, $0F, $00 ; header: param=0 byte1=$01 volume=$0F byte3=$00
     db $63, $04 ; note D#6 dur 4
     db $66, $04 ; note F#6 dur 4
@@ -4468,7 +4511,8 @@ Data_043_61F5:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 31 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_622F:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2B:: ; heuristic: track stream of a sound record; C0
+Data_043_622F:: ; address name
     db $00, $01, $08, $00 ; header: param=0 byte1=$01 volume=$08 byte3=$00
     db $1F, $07 ; rest-note $1F dur 7
     db $63, $04 ; note D#6 dur 4
@@ -4503,7 +4547,8 @@ Data_043_622F:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 18 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6271:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2C:: ; heuristic: track stream of a sound record; C0
+Data_043_6271:: ; address name
     db $00, $02, $0F, $36 ; header: param=0 byte1=$02 volume=$0F byte3=$36
     db $13, $06 ; note D#1 dur 6
     db $1F, $01 ; rest-note $1F dur 1
@@ -4525,7 +4570,8 @@ Data_043_6271:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 18 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6299:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2D:: ; heuristic: track stream of a sound record; C0
+Data_043_6299:: ; address name
     db $00, $02, $09, $00 ; header: param=0 byte1=$02 volume=$09 byte3=$00
     db $13, $06 ; note D#1 dur 6
     db $1F, $01 ; rest-note $1F dur 1
@@ -4547,7 +4593,8 @@ Data_043_6299:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 32 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_62C1:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2E:: ; heuristic: track stream of a sound record; C0
+Data_043_62C1:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $C2, $40 ; env $40
     db $A0, $0D ; volume $0D
@@ -4583,7 +4630,8 @@ Data_043_62C1:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 28 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6305:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_2F:: ; heuristic: track stream of a sound record; C0
+Data_043_6305:: ; address name
     db $00, $00, $0D, $00 ; header: param=0 byte1=$00 volume=$0D byte3=$00
     db $C2, $40 ; env $40
     db $1F, $0A ; rest-note $1F dur 10
@@ -4615,7 +4663,8 @@ Data_043_6305:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 23 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6341:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_30:: ; heuristic: track stream of a sound record; C0
+Data_043_6341:: ; address name
     db $00, $30, $02, $02 ; header: param=0 byte1=$30 volume=$02 byte3=$02
     db $A2, $70 ; duty2 $70
     db $A1, $09 ; duty $09
@@ -4642,7 +4691,8 @@ Data_043_6341:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 26 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6373:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_31:: ; heuristic: track stream of a sound record; C0
+Data_043_6373:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $60, $0E ; note C6 dur 14
     db $A0, $06 ; volume $06
@@ -4672,7 +4722,8 @@ Data_043_6373:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 30 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_63AB:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_32:: ; heuristic: track stream of a sound record; C0
+Data_043_63AB:: ; address name
     db $00, $02, $0F, $3D ; header: param=0 byte1=$02 volume=$0F byte3=$3D
     db $AE, $10 ; tuning $10
     db $C2, $09 ; env $09
@@ -4706,7 +4757,8 @@ Data_043_63AB:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 13 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_63EB:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_33:: ; heuristic: track stream of a sound record; C0
+Data_043_63EB:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $1E, $02 ; rest-note $1E dur 2
     db $23, $02 ; note D#2 dur 2
@@ -4723,7 +4775,8 @@ Data_043_63EB:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 8 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_6409:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_34:: ; heuristic: track stream of a sound record; C0
+Data_043_6409:: ; address name
     db $00, $00, $0F, $00 ; header: param=0 byte1=$00 volume=$0F byte3=$00
     db $CC, $02 ; env $02
     db $40, $10 ; note C4 dur 16
@@ -4735,7 +4788,8 @@ Data_043_6409:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 118 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_641D:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_35:: ; heuristic: track stream of a sound record; C0
+Data_043_641D:: ; address name
     db $05, $00, $0F, $00 ; header: param=5 byte1=$00 volume=$0F byte3=$00
     db $1F, $24 ; rest-note $1F dur 36
     db $A5, $0F ; pan $0F
@@ -4857,7 +4911,8 @@ Data_043_641D:: ; heuristic: track stream of a sound record; C0
     db $FF, $FF ; end
 
 ; sound track, 127 events after the header (E-0019: grammar C2, meaning C0)
-Data_043_650D:: ; heuristic: track stream of a sound record; C0
+SoundTrack_43_36:: ; heuristic: track stream of a sound record; C0
+Data_043_650D:: ; address name
     db $05, $01, $07, $00 ; header: param=5 byte1=$01 volume=$07 byte3=$00
     db $A5, $F0 ; pan $F0
     db $1F, $2C ; rest-note $1F dur 44

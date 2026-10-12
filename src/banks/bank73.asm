@@ -7001,7 +7001,7 @@ Jump_073_6868::
     ld de, $6D99
     ld b, $56
     call SceneKamehaEscape_Shared01
-    ld de, Data_056_4301
+    ld de, Map30Screens0_Y0X0
     ld b, $56
 
 ; only called from SceneKamehaEscape_Case03 (E-0047)

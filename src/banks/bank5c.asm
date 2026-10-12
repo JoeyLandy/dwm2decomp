@@ -43,33 +43,37 @@ Data_05C_4B04:: ; address name
 ; record: compressed 20 x 18 screen; its ROM bank
 MapC9Screens0::
 Data_05C_4B44:: ; address name
-    dfar Data_05C_4B50 ; entry 0
-    dfar Data_05C_4C09 ; entry 1
+    dfar MapC9Screens0_Y0X0 ; entry 0
+    dfar MapC9Screens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapC9Attrs0::
 Data_05C_4B4A:: ; address name
-    dfar Data_05C_4CB7 ; entry 0
-    dfar Data_05C_4CF5 ; entry 1
+    dfar MapC9Attrs0_Y0X0 ; entry 0
+    dfar MapC9Attrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 185 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4B50:: ; heuristic: map screen stream; C0
+MapC9Screens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_4B50:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170B50, $B9
 
 ; LZSS-compressed asset: 174 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4C09:: ; heuristic: map screen stream; C0
+MapC9Screens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_4C09:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170C09, $AE
 
 ; LZSS-compressed asset: 62 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4CB7:: ; heuristic: map screen stream; C0
+MapC9Attrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_4CB7:: ; address name
     db $68, $01, $01, $04, $01, $00, $0F, $1A, $03, $03, $01, $2A, $06, $01, $00, $04
     db $01, $FE, $F2, $01, $FE, $F6, $01, $34, $0A, $01, $2E, $02, $01, $FE, $FA, $01
     db $FE, $F6, $02, $01, $7E, $03, $01, $00, $08, $01, $7E, $0C, $01, $7E, $04, $01
     db $7E, $08, $01, $A2, $0F, $4D, $01, $DA, $0F, $19, $01, $7A, $0F, $13
 
 ; LZSS-compressed asset: 64 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4CF5:: ; heuristic: map screen stream; C0
+MapC9Attrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_4CF5:: ; address name
     db $68, $01, $01, $04, $01, $00, $01, $02, $01, $06, $03, $01, $00, $02, $01, $00
     db $0F, $2B, $03, $03, $01, $04, $08, $01, $52, $00, $04, $04, $01, $FE, $F0, $01
     db $06, $06, $01, $FE, $F4, $01, $04, $0F, $13, $01, $06, $04, $01, $06, $08, $01
@@ -79,60 +83,68 @@ Data_05C_4CF5:: ; heuristic: map screen stream; C0
 ; record: compressed 20 x 18 screen; its ROM bank
 MapCAScreens0::
 Data_05C_4D35:: ; address name
-    dfar Data_05C_4D41 ; entry 0
-    dfar Data_05C_4E01 ; entry 1
+    dfar MapCAScreens0_Y0X0 ; entry 0
+    dfar MapCAScreens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapCAAttrs0::
 Data_05C_4D3B:: ; address name
-    dfar Data_05C_4ED4 ; entry 0
-    dfar Data_05C_4F27 ; entry 1
+    dfar MapCAAttrs0_Y0X0 ; entry 0
+    dfar MapCAAttrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 192 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4D41:: ; heuristic: map screen stream; C0
+MapCAScreens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_4D41:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170D41, $C0
 
 ; LZSS-compressed asset: 211 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4E01:: ; heuristic: map screen stream; C0
+MapCAScreens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_4E01:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170E01, $D3
 
 ; LZSS-compressed asset: 83 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4ED4:: ; heuristic: map screen stream; C0
+MapCAAttrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_4ED4:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170ED4, $53
 
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4F27:: ; heuristic: map screen stream; C0
+MapCAAttrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_4F27:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170F27, $4A
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapCEScreens0::
 Data_05C_4F71:: ; address name
-    dfar Data_05C_4F7D ; entry 0
-    dfar Data_05C_506E ; entry 1
+    dfar MapCEScreens0_Y0X0 ; entry 0
+    dfar MapCEScreens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapCEAttrs0::
 Data_05C_4F77:: ; address name
-    dfar Data_05C_513C ; entry 0
-    dfar Data_05C_5189 ; entry 1
+    dfar MapCEAttrs0_Y0X0 ; entry 0
+    dfar MapCEAttrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 241 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_4F7D:: ; heuristic: map screen stream; C0
+MapCEScreens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_4F7D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $170F7D, $F1
 
 ; LZSS-compressed asset: 206 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_506E:: ; heuristic: map screen stream; C0
+MapCEScreens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_506E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17106E, $CE
 
 ; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_513C:: ; heuristic: map screen stream; C0
+MapCEAttrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_513C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17113C, $4D
 
 ; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5189:: ; heuristic: map screen stream; C0
+MapCEAttrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_5189:: ; address name
     db $68, $01, $00, $06, $06, $04, $00, $02, $01, $02, $02, $00, $02, $02, $04, $04
     db $06, $06, $00, $00, $0F, $2F, $02, $00, $56, $03, $00, $4A, $0F, $4D, $00, $6E
     db $0E, $00, $68, $02, $00, $C2, $0F, $0D, $00, $D0, $06, $00, $EC, $0F, $0D, $00
@@ -161,33 +173,37 @@ Data_05C_5437:: ; address name
 ; record: compressed 20 x 18 screen; its ROM bank
 MapD1Screens0::
 Data_05C_5477:: ; address name
-    dfar Data_05C_5483 ; entry 0
-    dfar Data_05C_54EB ; entry 1
+    dfar MapD1Screens0_Y0X0 ; entry 0
+    dfar MapD1Screens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapD1Attrs0::
 Data_05C_547D:: ; address name
-    dfar Data_05C_5567 ; entry 0
-    dfar Data_05C_55A0 ; entry 1
+    dfar MapD1Attrs0_Y0X0 ; entry 0
+    dfar MapD1Attrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 104 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5483:: ; heuristic: map screen stream; C0
+MapD1Screens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_5483:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $171483, $68
 
 ; LZSS-compressed asset: 124 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_54EB:: ; heuristic: map screen stream; C0
+MapD1Screens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_54EB:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1714EB, $7C
 
 ; LZSS-compressed asset: 57 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5567:: ; heuristic: map screen stream; C0
+MapD1Attrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_5567:: ; address name
     db $68, $01, $00, $03, $00, $00, $0F, $46, $01, $01, $01, $01, $00, $4A, $0F, $0D
     db $00, $5A, $00, $01, $01, $02, $02, $02, $02, $00, $74, $0F, $09, $00, $7E, $0F
     db $13, $00, $58, $02, $00, $84, $0A, $00, $CA, $0F, $01, $00, $CC, $0F, $13, $00
     db $58, $00, $00, $D0, $0C, $00, $18, $1F, $29
 
 ; LZSS-compressed asset: 67 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_55A0:: ; heuristic: map screen stream; C0
+MapD1Attrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_55A0:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1715A0, $43
 
 ; compressed tileset of map $D2 (the first map record using it)
@@ -213,30 +229,34 @@ Data_05C_5ADB:: ; address name
 ; record: compressed 20 x 18 screen; its ROM bank
 MapD7Screens0::
 Data_05C_5B1B:: ; address name
-    dfar Data_05C_5B27 ; entry 0
-    dfar Data_05C_5C2B ; entry 1
+    dfar MapD7Screens0_Y0X0 ; entry 0
+    dfar MapD7Screens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapD7Attrs0::
 Data_05C_5B21:: ; address name
-    dfar Data_05C_5D02 ; entry 0
-    dfar Data_05C_5D4F ; entry 1
+    dfar MapD7Attrs0_Y0X0 ; entry 0
+    dfar MapD7Attrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 260 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5B27:: ; heuristic: map screen stream; C0
+MapD7Screens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_5B27:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $171B27, $104
 
 ; LZSS-compressed asset: 215 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5C2B:: ; heuristic: map screen stream; C0
+MapD7Screens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_5C2B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $171C2B, $D7
 
 ; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5D02:: ; heuristic: map screen stream; C0
+MapD7Attrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_5D02:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $171D02, $4D
 
 ; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_5D4F:: ; heuristic: map screen stream; C0
+MapD7Attrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_5D4F:: ; address name
     db $68, $01, $00, $06, $06, $04, $00, $02, $01, $02, $02, $00, $02, $02, $04, $04
     db $06, $06, $00, $00, $0F, $2F, $02, $00, $56, $03, $00, $4A, $0F, $4D, $00, $6E
     db $0E, $00, $68, $02, $00, $C2, $0F, $0D, $00, $D0, $06, $00, $EC, $0F, $0D, $00
@@ -265,33 +285,37 @@ Data_05C_60CD:: ; address name
 ; record: compressed 20 x 18 screen; its ROM bank
 MapDAScreens0::
 Data_05C_610D:: ; address name
-    dfar Data_05C_6119 ; entry 0
-    dfar Data_05C_617D ; entry 1
+    dfar MapDAScreens0_Y0X0 ; entry 0
+    dfar MapDAScreens0_Y0X1 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapDAAttrs0::
 Data_05C_6113:: ; address name
-    dfar Data_05C_6206 ; entry 0
-    dfar Data_05C_623B ; entry 1
+    dfar MapDAAttrs0_Y0X0 ; entry 0
+    dfar MapDAAttrs0_Y0X1 ; entry 1
 
 ; LZSS-compressed asset: 100 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_6119:: ; heuristic: map screen stream; C0
+MapDAScreens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_6119:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $172119, $64
 
 ; LZSS-compressed asset: 137 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_617D:: ; heuristic: map screen stream; C0
+MapDAScreens0_Y0X1:: ; heuristic: map screen stream; C0
+Data_05C_617D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17217D, $89
 
 ; LZSS-compressed asset: 53 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_6206:: ; heuristic: map screen stream; C0
+MapDAAttrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_6206:: ; address name
     db $68, $01, $00, $03, $00, $00, $0F, $44, $02, $00, $58, $03, $00, $4C, $0F, $0B
     db $00, $58, $04, $00, $5A, $08, $00, $7E, $0E, $00, $7E, $0A, $00, $9E, $0F, $07
     db $00, $56, $02, $00, $56, $0C, $00, $CE, $0F, $01, $00, $4E, $0A, $00, $F0, $0F
     db $11, $00, $00, $0F, $2D
 
 ; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_623B:: ; heuristic: map screen stream; C0
+MapDAAttrs0_Y0X1:: ; heuristic: map screen stream; C0
+Data_05C_623B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17223B, $41
 
 ; compressed tileset of map $DB (the first map record using it)
@@ -317,30 +341,34 @@ Data_05C_6776:: ; address name
 ; record: compressed 20 x 18 screen; its ROM bank
 MapE0Screens0::
 Data_05C_67B6:: ; address name
-    dfar Data_05C_67C2 ; entry 0
-    dfar Data_05C_68B7 ; entry 1
+    dfar MapE0Screens0_Y0X0 ; entry 0
+    dfar MapE0Screens0_Y1X0 ; entry 1
 
 ; E-0142 (derived: 2 screen far pointers, row by row)
 ; record: compressed 20 x 18 screen; its ROM bank
 MapE0Attrs0::
 Data_05C_67BC:: ; address name
-    dfar Data_05C_6976 ; entry 0
-    dfar Data_05C_69C3 ; entry 1
+    dfar MapE0Attrs0_Y0X0 ; entry 0
+    dfar MapE0Attrs0_Y1X0 ; entry 1
 
 ; LZSS-compressed asset: 245 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_67C2:: ; heuristic: map screen stream; C0
+MapE0Screens0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_67C2:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1727C2, $F5
 
 ; LZSS-compressed asset: 191 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_68B7:: ; heuristic: map screen stream; C0
+MapE0Screens0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_68B7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1728B7, $BF
 
 ; LZSS-compressed asset: 77 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_6976:: ; heuristic: map screen stream; C0
+MapE0Attrs0_Y0X0:: ; heuristic: map screen stream; C0
+Data_05C_6976:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $172976, $4D
 
 ; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_05C_69C3:: ; heuristic: map screen stream; C0
+MapE0Attrs0_Y1X0:: ; heuristic: map screen stream; C0
+Data_05C_69C3:: ; address name
     db $68, $01, $00, $06, $06, $04, $00, $02, $01, $02, $02, $00, $02, $02, $04, $04
     db $06, $06, $00, $00, $0F, $2F, $02, $00, $56, $03, $00, $4A, $0F, $4D, $00, $6E
     db $0E, $00, $68, $02, $00, $C2, $0F, $0D, $00, $D0, $06, $00, $EC, $0F, $0D, $00

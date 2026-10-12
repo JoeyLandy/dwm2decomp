@@ -3271,7 +3271,7 @@ Jump_0E0_5B16:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
-    ld de, Data_046_496B
+    ld de, Map00Screens0_Y2X1
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -3280,7 +3280,7 @@ Jump_0E0_5B16:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
-    ld de, Data_046_5301
+    ld de, Map00Attrs0_Y2X1
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
@@ -3774,7 +3774,7 @@ Jump_0E0_5E83:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $46
-    ld de, Data_046_777A
+    ld de, Map02Screens0_Y0X2
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -3783,7 +3783,7 @@ Jump_0E0_5E83:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $46
-    ld de, Data_046_7A9D
+    ld de, Map02Attrs0_Y0X2
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
@@ -4404,7 +4404,7 @@ Jump_0E0_62A0:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
-    ld de, Data_048_523C
+    ld de, Map18Screens0_Y0X1
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -4413,7 +4413,7 @@ Jump_0E0_62A0:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_048_54BF
+    ld de, Map18Attrs0_Y0X1
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
@@ -5250,7 +5250,7 @@ Jump_0E0_685B:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $48
-    ld de, Data_048_5C7D
+    ld de, Map19Screens0_Y0X0
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -5259,7 +5259,7 @@ Jump_0E0_685B:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $48
-    ld de, Data_048_61F2
+    ld de, Map19Attrs0_Y0X0
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
@@ -5773,7 +5773,7 @@ Jump_0E0_6C2C:: ; address name
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $49
-    ld de, Data_049_531F
+    ld de, Map1AScreens0_Y0X0
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -5782,7 +5782,7 @@ Jump_0E0_6C2C:: ; address name
     ld a, $02
     ldh [rSVBK], a
     ld b, $49
-    ld de, Data_049_572D
+    ld de, Map1AAttrs0_Y0X0
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00

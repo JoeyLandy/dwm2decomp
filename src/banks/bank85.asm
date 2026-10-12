@@ -2326,8 +2326,8 @@ Jump_085_4E61::
 ; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute map
 ScreenAnimationTable::
 Data_085_4E7A:: ; address name
-    dw Data_093_5A91 ; id 0
-    dw Data_093_6124
+    dw Map2FScreens0_Y1X0 ; id 0
+    dw Map2FAttrs0_Y1X0
     dw Data_093_5B36
     dw Data_093_6153
     dw Data_093_5B36 ; id 1
@@ -2348,8 +2348,8 @@ Data_085_4E7A:: ; address name
     dw Data_093_623C
     dw Data_093_5DF5 ; id 5
     dw Data_093_623C
-    dw Data_093_5E96
-    dw Data_093_6266
+    dw Map2FScreens4_Y1X0
+    dw Map2FAttrs4_Y1X0
 
 ; entry 0 of the `rst $00` table in ScenePoorChurch
 ; no direct call (reached through a table, a jump or a vector)

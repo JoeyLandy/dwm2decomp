@@ -1740,7 +1740,7 @@ class Rom:
         dfar = lambda name, reason, stream: [
             {"type": "ptr", "bank_from": None, "name": name, "reason": reason, **({"stream": True} if stream else {})},
             {"type": "db", "size": 1, "name": "its ROM bank"}]
-        arrays: dict[tuple[int, int], tuple[int, str]] = {}
+        arrays: dict[tuple[int, int], tuple[int, str, int]] = {}  # (count, label, width in screens)
         palettes: dict[tuple[int, int], str] = {}
         named: set[tuple[int, int]] = set()
         added = 0
@@ -1765,7 +1765,7 @@ class Rom:
                 if not (screens_ok(tb, ta, wd * ht) and screens_ok(ab, aa, wd * ht)):
                     break
                 for (bb, aa_, kind) in ((tb, ta, "Screens"), (ab, aa, "Attrs")):
-                    arrays.setdefault((bb, aa_), (wd * ht, f"Map{tag}{kind}{k}"))
+                    arrays.setdefault((bb, aa_), (wd * ht, f"Map{tag}{kind}{k}", wd))
                 fields += dfar(f"variant {k} screens", "map screen array", False) + \
                     dfar(f"variant {k} attributes", "map screen array", False)
                 k, q = k + 1, q + 6
@@ -1795,7 +1795,7 @@ class Rom:
                 for j, kind in ((0x14, "Screens"), (0x17, "Attrs")):
                     tb, ta = fp(sm["bank"], r + j)
                     if screens_ok(tb, ta, wd * ht):
-                        arrays.setdefault((tb, ta), (wd * ht, f"SpecialMap{i:02X}{kind}"))
+                        arrays.setdefault((tb, ta), (wd * ht, f"SpecialMap{i:02X}{kind}", wd))
         kc = next((t for t in self.schemas if t["label"] == "KeyWorldChunkLists"), None)
         chunk_groups: list[tuple[int, int, int]] = []
         if kc:  # key-world chunk groups (E-0146): n sub-chunks of $60 bytes, then n order bytes
@@ -1826,12 +1826,13 @@ class Rom:
             if not t["label"].startswith(("MapRecord",)):
                 size = sum(2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"]) * t["count"] + t.get("tail", 0)
                 taken.append((t["bank"], t["addr"], t["addr"] + size))
-        for (bank, addr), (n, label) in sorted(arrays.items()):
+        for (bank, addr), (n, label, wd) in sorted(arrays.items()):
             if any(b == bank and lo < addr + 3 * n and addr < hi for b, lo, hi in taken):
                 continue  # arrays that overlap another stay inside it
             taken.append((bank, addr, addr + 3 * n))
             self.schemas.append({"bank": bank, "addr": addr, "label": label, "count": n,
                                  "fields": dfar("compressed 20 x 18 screen", "map screen stream", True),
+                                 "screen_width": wd,  # E-0250: names the streams by screen row and column
                                  "note": f"E-0142 (derived: {n} screen far pointers, row by row)"})
             self.schemas[-1]["fields"][0]["bank_from"] = 1
             added += 1
@@ -3072,6 +3073,42 @@ class Rom:
                 give(ob, tgt, f"Message_{g:02X}_{idx:02X}" if g is not None else f"MessageBank0E_{idx:02X}")
                 i += 1
         log(f"strings named by identity: {named}")
+        # E-0250: map screen streams, by array and screen position (row by row, screen_width wide)
+        before = named
+        for t in self.schemas:
+            wd = t.get("screen_width")
+            if not wd:
+                continue
+            for i in range(t["count"]):
+                q = t["addr"] + 3 * i
+                tgt, tb = self._u16(t["bank"], q), self.data[t["bank"] * BANK + q + 2 - self.base(t["bank"])]
+                if 0 < tb < self.nbanks:
+                    give(tb, tgt, f"{t['label']}_Y{i // wd}X{i % wd}")
+        log(f"map screen streams named by position: {named - before}")
+        # E-0250: key-world chunk groups (E-0146): sub-chunk k, screen i of its 4 x 4 grid
+        before = named
+        for t in self.schemas:
+            m = re.match(r"^KeyWorldChunkGroup([0-9A-F]{2})$", t["label"])
+            if not m:
+                continue
+            for k in range(t["count"]):
+                for i in range(16):
+                    stem = f"KeyWorld{m.group(1)}_{k}_Y{i // 4}X{i % 4}"
+                    for j, part in ((i, "Header"), (16 + i, "Attrs")):
+                        q = t["addr"] + 0x60 * k + 3 * j
+                        tgt, tb = self._u16(t["bank"], q), self.data[t["bank"] * BANK + q + 2 - self.base(t["bank"])]
+                        if 0 < tb < self.nbanks:
+                            give(tb, tgt, f"{stem}_{part}")
+                            if part == "Header":
+                                give(tb, tgt + 8, f"{stem}_Tiles")
+        log(f"key-world screens named by chunk group and position: {named - before}")
+        # E-0250: sound track streams, by bank and the first record (E-0019) that points at them
+        before = named
+        for t in self.schemas:
+            if t.get("tracks") and t["label"].startswith("SoundRecords_Bank"):
+                for i in range(t["count"]):
+                    give(t["bank"], self._u16(t["bank"], t["addr"] + 4 * i + 2), f"SoundTrack_{t['bank']:02X}_{i:02X}")
+        log(f"sound tracks named by record: {named - before}")
 
     def prepare_tracks(self) -> None:
         """Decode the sound track regions named by tables flagged "tracks" (E-0019).

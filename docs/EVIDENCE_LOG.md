@@ -2430,6 +2430,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0250 — Map screens, key-world screens and sound tracks labelled by position
+
+- Kind: TOOL (derived from E-0142, E-0144, E-0146 and E-0019 layouts; C2 for the positions).
+- **Map screen streams** (2,352) are named `<array>_Y<row>X<column>`, for example Map49Screens0_Y0X0. The array is MapNNScreensK/AttrsK or SpecialMapNNScreens/Attrs, read row by row, and the width comes from the map record.
+- **Key-world chunk groups** (732 labels) give `KeyWorldGG_K_Y<row>X<column>_Header/_Tiles/_Attrs`: sub-chunk K, the screen's place in its 4 x 4 grid, and the header (with the tile map 8 bytes after it) or the attribute map.
+- **Sound tracks** (218) are named SoundTrack_BB_RR, after the bank and the first record of SoundRecords_BankBB that points at them.
+- Address-named data labels went from 12,533 to 3,652, mostly guesses from monotone pointer tables and same-bank pointer loads.
+- Binary verification: build/run320 PASS, 0 differing bytes; tests OK.
+
 ### E-0249 — Strings labelled by identity
 
 - Kind: TOOL (derived from the E-0217 string tables, the E-0080 overflow tables and the E-0243 lookup; C2 for the identities).
