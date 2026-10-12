@@ -4377,1033 +4377,1932 @@ Data_011_6788:: ; address name
     dfar MapE0Screens0
     dfar MapE0Attrs0
 
-; E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table).
+; E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table). E-0231: the lists are laid out as 9-byte entries ending with $80 (CheckWarpAtPlayer: a facing byte, $FD = skip, $FE/$FF = any facing, then screen and position matched against the player).
 ; record: list of warps for this map number (hMapId); a list ends with $80; maps without warps share one empty list
 MapWarpTable::
 Data_011_67A6:: ; address name
-    dw Data_011_69A7 ; entry 0
-    dw Data_011_69D5 ; entry 1
-    dw Data_011_6A5D ; entry 2
-    dw Data_011_6A70 ; entry 3
-    dw Data_011_6A7A ; entry 4
-    dw Data_011_6A96 ; entry 5
-    dw Data_011_6AB2 ; entry 6
-    dw Data_011_6ABC ; entry 7
+    dw MapWarps00 ; entry 0
+    dw MapWarps01 ; entry 1
+    dw MapWarps02 ; entry 2
+    dw MapWarps03 ; entry 3
+    dw MapWarps04 ; entry 4
+    dw MapWarps05 ; entry 5
+    dw MapWarps06 ; entry 6
+    dw MapWarps07 ; entry 7
 Data_011_67B6:: ; heuristic: label inside a table; C0
-    dw Data_011_6ACF ; entry 8
-    dw Data_011_6AD9 ; entry 9
-    dw Data_011_6AE3 ; entry 10
-    dw Data_011_69A6 ; entry 11
-    dw Data_011_6AF6 ; entry 12
-    dw Data_011_6B1B ; entry 13
-    dw Data_011_6B37 ; entry 14
-    dw Data_011_6B41 ; entry 15
-    dw Data_011_6B5D ; entry 16
-    dw Data_011_6B67 ; entry 17
-    dw Data_011_6B71 ; entry 18
-    dw Data_011_6B7B ; entry 19
-    dw Data_011_69A6 ; entry 20
-    dw Data_011_6B85 ; entry 21
-    dw Data_011_6B8F ; entry 22
-    dw Data_011_6B99 ; entry 23
-    dw Data_011_6BA3 ; entry 24
-    dw Data_011_6BC8 ; entry 25
-    dw Data_011_6BDB ; entry 26
-    dw Data_011_6BEE ; entry 27
-    dw Data_011_69A6 ; entry 28
-    dw Data_011_69A6 ; entry 29
-    dw Data_011_69A6 ; entry 30
-    dw Data_011_69A6 ; entry 31
-    dw Data_011_6BF8 ; entry 32
-    dw Data_011_6C2F ; entry 33
-    dw Data_011_6C54 ; entry 34
-    dw Data_011_6C5E ; entry 35
-    dw Data_011_6C68 ; entry 36
-    dw Data_011_6CA8 ; entry 37
-    dw Data_011_6CD6 ; entry 38
-    dw Data_011_69A6 ; entry 39
-    dw Data_011_6CE0 ; entry 40
-    dw Data_011_6CEA ; entry 41
-    dw Data_011_6CEB ; entry 42
-    dw Data_011_6CFE ; entry 43
-    dw Data_011_69A6 ; entry 44
-    dw Data_011_6D11 ; entry 45
-    dw Data_011_6D1B ; entry 46
-    dw Data_011_6D25 ; entry 47
-    dw Data_011_6D6E ; entry 48
-    dw Data_011_6DC0 ; entry 49
-    dw Data_011_6DCA ; entry 50
-    dw Data_011_6DEF ; entry 51
-    dw Data_011_6DF9 ; entry 52
-    dw Data_011_6E03 ; entry 53
-    dw Data_011_6E0D ; entry 54
-    dw Data_011_6E29 ; entry 55
-    dw Data_011_6E3C ; entry 56
-    dw Data_011_6E58 ; entry 57
-    dw Data_011_6E74 ; entry 58
-    dw Data_011_6E87 ; entry 59
-    dw Data_011_6E91 ; entry 60
-    dw Data_011_6EA4 ; entry 61
+    dw MapWarps08 ; entry 8
+    dw MapWarps09 ; entry 9
+    dw MapWarps0A ; entry 10
+    dw MapWarps0B ; entry 11
+    dw MapWarps0C ; entry 12
+    dw MapWarps0D ; entry 13
+    dw MapWarps0E ; entry 14
+    dw MapWarps0F ; entry 15
+    dw MapWarps10 ; entry 16
+    dw MapWarps11 ; entry 17
+    dw MapWarps12 ; entry 18
+    dw MapWarps13 ; entry 19
+    dw MapWarps0B ; entry 20
+    dw MapWarps15 ; entry 21
+    dw MapWarps16 ; entry 22
+    dw MapWarps17 ; entry 23
+    dw MapWarps18 ; entry 24
+    dw MapWarps19 ; entry 25
+    dw MapWarps1A ; entry 26
+    dw MapWarps1B ; entry 27
+    dw MapWarps0B ; entry 28
+    dw MapWarps0B ; entry 29
+    dw MapWarps0B ; entry 30
+    dw MapWarps0B ; entry 31
+    dw MapWarps20 ; entry 32
+    dw MapWarps21 ; entry 33
+    dw MapWarps22 ; entry 34
+    dw MapWarps23 ; entry 35
+    dw MapWarps24 ; entry 36
+    dw MapWarps25 ; entry 37
+    dw MapWarps26 ; entry 38
+    dw MapWarps0B ; entry 39
+    dw MapWarps28 ; entry 40
+    dw MapWarps29 ; entry 41
+    dw MapWarps2A ; entry 42
+    dw MapWarps2B ; entry 43
+    dw MapWarps0B ; entry 44
+    dw MapWarps2D ; entry 45
+    dw MapWarps2E ; entry 46
+    dw MapWarps2F ; entry 47
+    dw MapWarps30 ; entry 48
+    dw MapWarps31 ; entry 49
+    dw MapWarps32 ; entry 50
+    dw MapWarps33 ; entry 51
+    dw MapWarps34 ; entry 52
+    dw MapWarps35 ; entry 53
+    dw MapWarps36 ; entry 54
+    dw MapWarps37 ; entry 55
+    dw MapWarps38 ; entry 56
+    dw MapWarps39 ; entry 57
+    dw MapWarps3A ; entry 58
+    dw MapWarps3B ; entry 59
+    dw MapWarps3C ; entry 60
+    dw MapWarps3D ; entry 61
 Data_011_6822:: ; heuristic: label inside a table; C0
-    dw Data_011_6EAE ; entry 62
-    dw Data_011_6EDC ; entry 63
-    dw Data_011_6F2E ; entry 64
-    dw Data_011_6F38 ; entry 65
-    dw Data_011_6F39 ; entry 66
-    dw Data_011_6F55 ; entry 67
-    dw Data_011_6F71 ; entry 68
-    dw Data_011_6F7B ; entry 69
-    dw Data_011_69A6 ; entry 70
-    dw Data_011_69A6 ; entry 71
-    dw Data_011_6F7C ; entry 72
-    dw Data_011_7031 ; entry 73
-    dw Data_011_703B ; entry 74
-    dw Data_011_7072 ; entry 75
-    dw Data_011_707C ; entry 76
-    dw Data_011_7086 ; entry 77
-    dw Data_011_7090 ; entry 78
-    dw Data_011_70A3 ; entry 79
-    dw Data_011_70BF ; entry 80
-    dw Data_011_70D2 ; entry 81
-    dw Data_011_70DC ; entry 82
-    dw Data_011_7113 ; entry 83
-    dw Data_011_7165 ; entry 84
-    dw Data_011_716F ; entry 85
+    dw MapWarps3E ; entry 62
+    dw MapWarps3F ; entry 63
+    dw MapWarps40 ; entry 64
+    dw MapWarps41 ; entry 65
+    dw MapWarps42 ; entry 66
+    dw MapWarps43 ; entry 67
+    dw MapWarps44 ; entry 68
+    dw MapWarps45 ; entry 69
+    dw MapWarps0B ; entry 70
+    dw MapWarps0B ; entry 71
+    dw MapWarps48 ; entry 72
+    dw MapWarps49 ; entry 73
+    dw MapWarps4A ; entry 74
+    dw MapWarps4B ; entry 75
+    dw MapWarps4C ; entry 76
+    dw MapWarps4D ; entry 77
+    dw MapWarps4E ; entry 78
+    dw MapWarps4F ; entry 79
+    dw MapWarps50 ; entry 80
+    dw MapWarps51 ; entry 81
+    dw MapWarps52 ; entry 82
+    dw MapWarps53 ; entry 83
+    dw MapWarps54 ; entry 84
+    dw MapWarps55 ; entry 85
 Data_011_6852:: ; heuristic: label inside a table; C0
-    dw Data_011_7179 ; entry 86
-    dw Data_011_718C ; entry 87
-    dw Data_011_71A8 ; entry 88
-    dw Data_011_71CD ; entry 89
-    dw Data_011_71D7 ; entry 90
-    dw Data_011_7217 ; entry 91
-    dw Data_011_722A ; entry 92
-    dw Data_011_723D ; entry 93
-    dw Data_011_7247 ; entry 94
-    dw Data_011_727E ; entry 95
-    dw Data_011_7288 ; entry 96
-    dw Data_011_729B ; entry 97
-    dw Data_011_72A5 ; entry 98
-    dw Data_011_72AF ; entry 99
-    dw Data_011_72C2 ; entry 100
-    dw Data_011_7314 ; entry 101
-    dw Data_011_736F ; entry 102
-    dw Data_011_738B ; entry 103
-    dw Data_011_7395 ; entry 104
-    dw Data_011_69A6 ; entry 105
-    dw Data_011_69A6 ; entry 106
-    dw Data_011_69A6 ; entry 107
-    dw Data_011_69A6 ; entry 108
-    dw Data_011_69A6 ; entry 109
+    dw MapWarps56 ; entry 86
+    dw MapWarps57 ; entry 87
+    dw MapWarps58 ; entry 88
+    dw MapWarps59 ; entry 89
+    dw MapWarps5A ; entry 90
+    dw MapWarps5B ; entry 91
+    dw MapWarps5C ; entry 92
+    dw MapWarps5D ; entry 93
+    dw MapWarps5E ; entry 94
+    dw MapWarps5F ; entry 95
+    dw MapWarps60 ; entry 96
+    dw MapWarps61 ; entry 97
+    dw MapWarps62 ; entry 98
+    dw MapWarps63 ; entry 99
+    dw MapWarps64 ; entry 100
+    dw MapWarps65 ; entry 101
+    dw MapWarps66 ; entry 102
+    dw MapWarps67 ; entry 103
+    dw MapWarps68 ; entry 104
+    dw MapWarps0B ; entry 105
+    dw MapWarps0B ; entry 106
+    dw MapWarps0B ; entry 107
+    dw MapWarps0B ; entry 108
+    dw MapWarps0B ; entry 109
 Data_011_6882:: ; heuristic: label inside a table; C0
-    dw Data_011_69A6 ; entry 110
-    dw Data_011_69A6 ; entry 111
-    dw Data_011_7396 ; entry 112
-    dw Data_011_7442 ; entry 113
-    dw Data_011_7467 ; entry 114
-    dw Data_011_7471 ; entry 115
-    dw Data_011_7496 ; entry 116
-    dw Data_011_74CD ; entry 117
-    dw Data_011_74F2 ; entry 118
-    dw Data_011_74FC ; entry 119
-    dw Data_011_750F ; entry 120
-    dw Data_011_752B ; entry 121
-    dw Data_011_7535 ; entry 122
-    dw Data_011_753F ; entry 123
-    dw Data_011_7552 ; entry 124
-    dw Data_011_7577 ; entry 125
-    dw Data_011_758A ; entry 126
-    dw Data_011_7594 ; entry 127
-    dw Data_011_759E ; entry 128
-    dw Data_011_75B1 ; entry 129
-    dw Data_011_75C4 ; entry 130
-    dw Data_011_7616 ; entry 131
-    dw Data_011_7656 ; entry 132
-    dw Data_011_7660 ; entry 133
-    dw Data_011_767C ; entry 134
-    dw Data_011_76A1 ; entry 135
-    dw Data_011_76C6 ; entry 136
-    dw Data_011_76D9 ; entry 137
-    dw Data_011_76EC ; entry 138
-    dw Data_011_7708 ; entry 139
-    dw Data_011_772D ; entry 140
-    dw Data_011_7740 ; entry 141
-    dw Data_011_775C ; entry 142
-    dw Data_011_778A ; entry 143
-    dw Data_011_77A6 ; entry 144
-    dw Data_011_77B9 ; entry 145
-    dw Data_011_77C3 ; entry 146
-    dw Data_011_77CD ; entry 147
-    dw Data_011_77E9 ; entry 148
-    dw Data_011_77FC ; entry 149
-    dw Data_011_7818 ; entry 150
-    dw Data_011_7834 ; entry 151
-    dw Data_011_7847 ; entry 152
-    dw Data_011_785A ; entry 153
-    dw Data_011_786D ; entry 154
-    dw Data_011_7880 ; entry 155
-    dw Data_011_69A6 ; entry 156
-    dw Data_011_788A ; entry 157
-    dw Data_011_69A6 ; entry 158
-    dw Data_011_69A6 ; entry 159
-    dw Data_011_788B ; entry 160
-    dw Data_011_7895 ; entry 161
-    dw Data_011_78A8 ; entry 162
-    dw Data_011_78C4 ; entry 163
-    dw Data_011_78CE ; entry 164
-    dw Data_011_69A6 ; entry 165
-    dw Data_011_69A6 ; entry 166
-    dw Data_011_69A6 ; entry 167
-    dw Data_011_78CF ; entry 168
-    dw Data_011_78FD ; entry 169
-    dw Data_011_7919 ; entry 170
-    dw Data_011_7923 ; entry 171
-    dw Data_011_792D ; entry 172
-    dw Data_011_7937 ; entry 173
-    dw Data_011_794A ; entry 174
-    dw Data_011_795D ; entry 175
-    dw Data_011_795E ; entry 176
-    dw Data_011_7968 ; entry 177
-    dw Data_011_69A6 ; entry 178
-    dw Data_011_797B ; entry 179
-    dw Data_011_798E ; entry 180
-    dw Data_011_79A1 ; entry 181
-    dw Data_011_79BD ; entry 182
-    dw Data_011_69A6 ; entry 183
-    dw Data_011_79C7 ; entry 184
-    dw Data_011_79EC ; entry 185
-    dw Data_011_7A11 ; entry 186
-    dw Data_011_7A1B ; entry 187
-    dw Data_011_7A2E ; entry 188
-    dw Data_011_7A38 ; entry 189
-    dw Data_011_7A42 ; entry 190
-    dw Data_011_7A55 ; entry 191
-    dw Data_011_7A68 ; entry 192
-    dw Data_011_7A7B ; entry 193
-    dw Data_011_7A8E ; entry 194
-    dw Data_011_7AA1 ; entry 195
-    dw Data_011_7AB4 ; entry 196
-    dw Data_011_69A6 ; entry 197
-    dw Data_011_69A6 ; entry 198
-    dw Data_011_69A6 ; entry 199
-    dw Data_011_7AC7 ; entry 200
-    dw Data_011_7AD1 ; entry 201
-    dw Data_011_7AE4 ; entry 202
-    dw Data_011_7AF7 ; entry 203
-    dw Data_011_7B0A ; entry 204
-    dw Data_011_7B1D ; entry 205
-    dw Data_011_7B30 ; entry 206
-    dw Data_011_69A6 ; entry 207
-    dw Data_011_69A6 ; entry 208
-    dw Data_011_7B3A ; entry 209
-    dw Data_011_7B44 ; entry 210
-    dw Data_011_7B57 ; entry 211
-    dw Data_011_7B6A ; entry 212
-    dw Data_011_7B7D ; entry 213
-    dw Data_011_7B90 ; entry 214
-    dw Data_011_7BA3 ; entry 215
-    dw Data_011_69A6 ; entry 216
-    dw Data_011_69A6 ; entry 217
-    dw Data_011_7BAD ; entry 218
-    dw Data_011_7BB7 ; entry 219
-    dw Data_011_7BCA ; entry 220
-    dw Data_011_7BDD ; entry 221
-    dw Data_011_7BF0 ; entry 222
-    dw Data_011_7C03 ; entry 223
-    dw Data_011_7C16 ; entry 224
-    dw Data_011_69A6 ; entry 225
-    dw Data_011_69A6 ; entry 226
-    dw Data_011_69A6 ; entry 227
-    dw Data_011_69A6 ; entry 228
-    dw Data_011_69A6 ; entry 229
-    dw Data_011_69A6 ; entry 230
-    dw Data_011_69A6 ; entry 231
-    dw Data_011_69A6 ; entry 232
-    dw Data_011_69A6 ; entry 233
-    dw Data_011_69A6 ; entry 234
-    dw Data_011_69A6 ; entry 235
-    dw Data_011_69A6 ; entry 236
-    dw Data_011_69A6 ; entry 237
-    dw Data_011_69A6 ; entry 238
-    dw Data_011_69A6 ; entry 239
-    dw Data_011_69A6 ; entry 240
-    dw Data_011_69A6 ; entry 241
-    dw Data_011_69A6 ; entry 242
-    dw Data_011_69A6 ; entry 243
-    dw Data_011_69A6 ; entry 244
-    dw Data_011_69A6 ; entry 245
-    dw Data_011_69A6 ; entry 246
-    dw Data_011_69A6 ; entry 247
-    dw Data_011_69A6 ; entry 248
-    dw Data_011_69A6 ; entry 249
-    dw Data_011_69A6 ; entry 250
-    dw Data_011_69A6 ; entry 251
-    dw Data_011_69A6 ; entry 252
-    dw Data_011_69A6 ; entry 253
-    dw Data_011_69A6 ; entry 254
-    dw Data_011_69A6 ; entry 255
-
-Data_011_69A6:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_69A7:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $02, $40, $40, $06, $00, $00, $04, $08, $FF, $00, $00, $01, $02, $02, $00
-    db $90, $00, $02, $10, $40, $00, $01, $03, $02, $04, $08, $FF, $00, $01, $00, $01
-    db $03, $02, $90, $00, $FD, $21, $60, $30, $07, $00, $10, $06, $03, $80
-
-Data_011_69D5:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0469D5, $88
-
-Data_011_6A5D:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $FF, $01, $00, $02, $00, $80, $FF, $00, $03, $00, $00, $01, $01
-    db $70, $00, $80
-
-Data_011_6A70:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $50, $50, $05, $00, $10, $05, $05, $80
-
-Data_011_6A7A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $20, $40, $40, $0C, $01, $10, $04, $04, $FF, $00, $02, $01, $18, $82, $00
-    db $00, $A0, $FF, $00, $01, $01, $18, $81, $00, $00, $80, $80
-
-Data_011_6A96:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $FF, $01, $02, $12, $05, $05, $FD, $00, $50, $50, $03, $00, $10
-    db $05, $05, $FD, $00, $50, $10, $0D, $00, $31, $05, $08, $80
-
-Data_011_6AB2:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $00, $80, $02, $04, $04, $80
-
-Data_011_6ABC:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $60, $30, $00, $02, $11, $06, $03, $FD, $00, $50, $00, $0D, $03, $31
-    db $05, $08, $80
-
-Data_011_6ACF:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $80, $02, $04, $04, $80
-
-Data_011_6AD9:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $81, $01, $03, $04, $80
-
-Data_011_6AE3:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $82, $01, $05, $05, $FD, $00, $80, $40, $0D, $01, $11
-    db $08, $04, $80
-
-Data_011_6AF6:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $01, $01, $81, $02, $02, $03, $FD, $10, $40, $40, $04, $02, $10
-    db $04, $04, $FD, $00, $30, $40, $0E, $00, $00, $03, $08, $FD, $00, $70, $40, $12
-    db $00, $00, $07, $08, $80
-
-Data_011_6B1B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $11, $80, $40, $0A, $00, $10, $08, $04, $FE, $00, $00, $02, $05, $80, $10
-    db $05, $01, $FE, $00, $03, $02, $07, $80, $10, $05, $00, $80
-
-Data_011_6B37:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $0C, $80, $00, $03, $04, $80
-
-Data_011_6B41:: ; heuristic: warp list of the map warp table; C0
-    db $00, $00, $40, $80, $0C, $80, $00, $02, $01, $00, $00, $20, $80, $0C, $80, $00
-    db $02, $01, $00, $00, $70, $80, $0C, $80, $00, $07, $01, $80
-
-Data_011_6B5D:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $0C, $80, $00, $07, $01, $80
-
-Data_011_6B67:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $02, $01, $80, $01, $00, $D0, $80
-
-Data_011_6B71:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $0C, $80, $00, $07, $04, $80
-
-Data_011_6B7B:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $81, $01, $02, $01, $80
-
-Data_011_6B85:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $80, $00, $05, $05, $80
-
-Data_011_6B8F:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $80, $02, $06, $01, $80
-
-Data_011_6B99:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $01, $81, $00, $03, $04, $80
-
-Data_011_6BA3:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $20, $40, $20, $04, $02, $00, $04, $08, $FD, $20, $50, $20, $04, $02, $00
-    db $05, $08, $FD, $10, $40, $00, $04, $01, $00, $04, $08, $FD, $10, $50, $00, $04
-    db $01, $00, $05, $08, $80
-
-Data_011_6BC8:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $02, $01, $81, $00, $05, $00, $FD, $11, $50, $40, $1A, $01, $10
-    db $05, $04, $80
-
-Data_011_6BDB:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $50, $40, $19, $01, $11, $05, $04, $FD, $20, $40, $30, $1B, $00, $10
-    db $04, $03, $80
-
-Data_011_6BEE:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $30, $1A, $02, $10, $04, $03, $80
-
-Data_011_6BF8:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $21, $40, $40, $21, $00, $30, $05, $08, $FD, $21, $50, $40, $21, $00, $30
-    db $05, $08, $FD, $25, $40, $40, $24, $00, $31, $05, $08, $FD, $25, $50, $40, $24
-    db $00, $31, $05, $08, $FD, $55, $40, $40, $2F, $00, $31, $06, $08, $FD, $55, $50
-    db $40, $2F, $00, $31, $06, $08, $80
-
-Data_011_6C2F:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $20, $02, $11, $04, $04, $FE, $00, $02, $00, $20, $02, $11
-    db $04, $04, $FD, $00, $50, $10, $22, $00, $00, $05, $08, $FD, $10, $20, $20, $2A
-    db $00, $00, $02, $08, $80
-
-Data_011_6C54:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $21, $80, $00, $05, $01, $80
-
-Data_011_6C5E:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $24, $81, $01, $03, $02, $80
-
-Data_011_6C68:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $FF, $00, $20, $02, $15, $04, $04, $FE, $00, $02, $01, $20, $02, $15
-    db $04, $04, $FE, $00, $00, $02, $20, $02, $15, $04, $04, $FD, $00, $40, $00, $25
-    db $00, $00, $04, $08, $FD, $00, $50, $00, $25, $00, $00, $05, $08, $FD, $11, $30
-    db $20, $23, $00, $00, $04, $08, $FD, $11, $20, $50, $2B, $23, $33, $02, $00, $80
-
-Data_011_6CA8:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $01, $24, $80, $00, $00, $80, $FD, $00, $40, $00, $26, $00, $00
-    db $04, $08, $FD, $00, $50, $00, $26, $00, $00, $05, $08, $FD, $00, $20, $60, $2E
-    db $00, $10, $02, $06, $FD, $10, $80, $30, $2D, $00, $10, $08, $03, $80
-
-Data_011_6CD6:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $01, $25, $80, $00, $00, $80, $80
-
-Data_011_6CE0:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $2F, $81, $10, $04, $03, $80
-
-Data_011_6CEA:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_6CEB:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $21, $81, $00, $02, $02, $FD, $00, $10, $20, $2B, $11, $10
-    db $01, $02, $80
-
-Data_011_6CFE:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $10, $20, $2A, $00, $10, $01, $02, $FE, $00, $03, $02, $24, $01, $11
-    db $02, $05, $80
-
-Data_011_6D11:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $80, $30, $25, $01, $10, $08, $03, $80
-
-Data_011_6D1B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $20, $60, $25, $00, $10, $02, $06, $80
-
-Data_011_6D25:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $046D25, $49
-
-Data_011_6D6E:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $046D6E, $52
-
-Data_011_6DC0:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $30, $05, $16, $04, $04, $80
-
-Data_011_6DCA:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $FF, $30, $04, $12, $04, $04, $FE, $00, $02, $00, $30, $04, $12
-    db $04, $04, $FD, $10, $40, $10, $33, $00, $01, $04, $08, $FD, $11, $40, $20, $34
-    db $00, $00, $04, $08, $80
-
-Data_011_6DEF:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $32, $81, $00, $04, $01, $80
-
-Data_011_6DF9:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $32, $81, $01, $04, $02, $80
-
-Data_011_6E03:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $04, $30, $00, $13, $04, $04, $80
-
-Data_011_6E0D:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $20, $37, $02, $30, $04, $08, $FD, $00, $50, $20, $37, $02, $30
-    db $04
-
-Data_011_6E1E:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $FE, $00, $00, $01, $30, $05, $15, $04, $05, $80
-
-Data_011_6E29:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $01, $36, $80, $10, $04, $02, $FD, $20, $20, $50, $42, $02, $10
-    db $02, $05, $80
-
-Data_011_6E3C:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $04, $30, $05, $13, $04, $04, $FD, $01, $40, $40, $39, $00, $10
-    db $04, $04, $FD, $31, $40, $40, $39, $03, $10, $04, $04, $80
-
-Data_011_6E58:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $38, $00, $11, $04, $04, $FD, $30, $40, $40, $38, $03, $11
-    db $04, $04, $FD, $02, $40, $40, $3A, $02, $11, $04, $04, $80
-
-Data_011_6E74:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $01, $03, $3B, $80, $00, $00, $80, $FD, $21, $40, $40, $39, $00, $12
-    db $04, $04, $80
-
-Data_011_6E87:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $FF, $3A, $01, $02, $00, $80, $80
-
-Data_011_6E91:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $01, $30, $02, $14, $04, $04, $FD, $10, $70, $20, $3D, $00, $30
-    db $07, $08, $80
-
-Data_011_6EA4:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $3C, $81, $10, $07, $02, $80
-
-Data_011_6EAE:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $30, $06, $12, $04, $04, $FD, $00, $60, $30, $3E, $01, $10
-    db $06, $03, $FD, $10, $60, $30, $3E, $00, $10, $06, $03, $FD, $10, $30, $30, $3F
-    db $00, $10, $03, $03, $FD, $11, $10, $60, $3F, $00, $11, $01, $06, $80
-
-Data_011_6EDC:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $046EDC, $52
-
-Data_011_6F2E:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $40, $3F, $01, $11, $04, $04, $80
-
-Data_011_6F38:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_6F39:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $20, $20, $50, $37, $02, $10, $02, $05, $FD, $00, $80, $10, $43, $00, $10
-    db $08, $02, $FD, $00, $50, $40, $43, $00, $10, $05, $04, $80
-
-Data_011_6F55:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $80, $20, $42, $00, $10, $08, $01, $FD, $00, $50, $40, $42, $00, $10
-    db $05, $04, $FD, $20, $40, $40, $44, $00, $30, $04, $08, $80
-
-Data_011_6F71:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $43, $82, $10, $04, $04, $80
-
-Data_011_6F7B:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_6F7C:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $046F7C, $A9
-
-Data_011_7025:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $08, $FD, $50, $50, $40, $49, $00, $30, $04, $08, $80
-
-Data_011_7031:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $48, $05, $10, $04, $04, $80
-
-Data_011_703B:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $00, $48, $08, $12, $04, $04, $FE, $00, $00, $02, $48, $08, $12
-    db $04, $04, $FE, $00, $01, $02, $48, $08, $12, $04, $04, $FD, $10, $70, $40, $4B
-    db $00, $30, $07, $08, $FD, $00, $40, $00, $4C, $00, $01, $04, $08, $FD, $00, $50
-    db $00, $4C, $00, $01, $05, $08, $80
-
-Data_011_7072:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $4A, $81, $10, $07, $04, $80
-
-Data_011_707C:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $02, $4A, $80, $10, $00, $80, $80
-
-Data_011_7086:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $60, $20, $4C, $00, $10, $06, $01, $80
-
-Data_011_7090:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $48, $07, $13, $04, $04, $FD, $02, $40, $40, $48, $07, $14
-    db $04, $04, $80
-
-Data_011_70A3:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $FF, $48, $07, $15, $04, $04, $FE, $00, $FF, $00, $48, $07, $15
-    db $04, $04, $FD, $00, $20, $40, $50, $00, $30, $03, $08, $80
-
-Data_011_70BF:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $4F, $80, $10, $02, $04, $FD, $00, $50, $10, $51, $00, $10
-    db $05, $01, $80
-
-Data_011_70D2:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $50, $10, $50, $00, $10, $05, $01, $80
-
-Data_011_70DC:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $48, $04, $16, $04, $04, $FE, $00, $02, $01, $48, $04, $16
-    db $06, $04, $FD, $00, $40, $00, $53, $20, $33, $04, $08, $FD, $00, $50, $00, $53
-    db $20, $33, $05, $08, $FD, $20, $40, $00, $53, $12, $33, $04, $08, $FD, $20, $50
-    db $00, $53, $12, $33, $05, $08, $80
-
-Data_011_7113:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $047113, $52
-
-Data_011_7165:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $20, $40, $53, $30, $12, $02, $04, $80
-
-Data_011_716F:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $60, $30, $53, $33, $11, $06, $03, $80
-
-Data_011_7179:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $02, $70, $20, $53, $31, $11, $07, $02, $FD, $00, $40, $70, $57, $31, $10
-    db $04, $07, $80
-
-Data_011_718C:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $40, $70, $56, $30, $10, $04, $07, $FF, $00, $00, $01, $53, $B0, $00
-    db $00, $80, $FF, $00, $02, $01, $53, $B2, $00, $00, $80, $80
-
-Data_011_71A8:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $FF, $00, $48, $04, $18, $04, $04, $FE, $00, $FF, $01, $48, $04, $18
-    db $04, $04, $FE, $00, $00, $02, $48, $04, $18, $04, $04, $FD, $01, $80, $40, $59
-    db $00, $30, $08, $08, $80
-
-Data_011_71CD:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $58, $80, $11, $08, $04, $80
-
-Data_011_71D7:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $FF, $00, $48, $02, $19, $04, $04, $FE, $00, $00, $01, $48, $02, $19
-    db $04, $04, $FE, $00, $02, $00, $48, $02, $19, $04, $04, $FE, $00, $01, $01, $48
-    db $02, $19, $04, $04, $FD, $10, $30, $30, $5B, $01, $31, $04, $08, $FD, $10, $40
-    db $30, $5B, $01, $31, $05, $08, $FD, $00, $40, $10, $5C, $00, $31, $03, $08, $80
-
-Data_011_7217:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $01, $02, $5A, $81, $10, $F0, $B0, $FD, $00, $70, $20, $5C, $00, $10
-    db $07, $03, $80
-
-Data_011_722A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $70, $30, $5B, $00, $10, $07, $02, $FE, $00, $00, $02, $5A, $80, $30
-    db $04, $01, $80
-
-Data_011_723D:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $FF, $48, $05, $1A, $04, $03, $80
-
-Data_011_7247:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $FF, $01, $48, $09, $19, $04, $04, $FE, $00, $01, $02, $48, $09, $19
-    db $04, $04, $FE, $00, $02, $01, $48, $09, $19, $04, $04, $FD, $11, $20, $20, $5F
-    db $00, $30, $02, $08, $FD, $10, $40, $00, $60, $00, $32, $04, $08, $FD, $10, $50
-    db $00, $60, $00, $32, $05, $08, $80
-
-Data_011_727E:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $5E, $81, $11, $02, $02, $80
-
-Data_011_7288:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $03, $5E, $81, $00, $00, $80, $FD, $01, $80, $60, $61, $00, $11
-    db $08, $06, $80
-
-Data_011_729B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $80, $60, $60, $00, $11, $08, $06, $80
-
-Data_011_72A5:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $04, $48, $0A, $15, $04, $04, $80
-
-Data_011_72AF:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $FF, $48, $08, $17, $04, $04, $FD, $11, $10, $70, $64, $01, $11
-    db $01, $07, $80
-
-Data_011_72C2:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0472C2, $52
-
-Data_011_7314:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $047314, $4C
-
-Data_011_7360:: ; heuristic: target of a monotone pointer table; C0
-    db $66, $00, $10, $01, $02, $FD, $01, $10, $60, $66, $00, $11, $01, $06, $80
-
-Data_011_736F:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $10
-
-Data_011_7372:: ; heuristic: target of a monotone pointer table; C0
-    db $20, $65, $00, $10, $01, $02, $FD, $01, $10, $60, $65, $00, $11, $01, $06, $FD
-    db $10, $40
-
-Data_011_7384:: ; heuristic: target of a monotone pointer table; C0
-    db $40, $67, $00, $10, $04, $04, $80
-
-Data_011_738B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $66, $01, $10, $04, $04, $80
-
-Data_011_7395:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_7396:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $B1, $40, $40, $71, $01, $30, $04, $08, $FD, $A4, $40, $40, $77, $12, $30
-    db $04, $08
-
-Data_011_73A8:: ; heuristic: target of a monotone pointer table; C0
-    db $FD, $94, $40, $40, $77, $20, $30, $04, $08, $FD, $56, $40, $40, $78, $00, $31
-    db $04, $08
-
-Data_011_73BA:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0473BA, $88
-
-Data_011_7442:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $70, $0B, $11, $04, $04, $FE, $00, $01, $01, $70, $0B, $11
-    db $04, $04, $FD, $20, $20, $20, $72, $00, $30, $03, $08, $FE, $00, $01, $FF, $89
-    db $00, $31, $04, $08, $80
-
-Data_011_7467:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $71, $82, $10, $02, $02, $80
-
-Data_011_7471:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $89, $00, $11, $05, $06, $FD, $00, $40, $40, $74, $00, $10
-    db $04, $04, $FD, $01, $60, $20, $74, $00, $11, $06, $02, $FD, $11, $50, $50, $74
-    db $01, $11, $05, $05, $80
-
-Data_011_7496:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $73, $00, $10, $04, $04, $FD, $01, $60, $20, $73, $00, $11
-    db $06, $02, $FD, $11, $50, $50, $73, $01, $11, $05, $05, $FD, $10, $50, $40, $75
-    db $01, $10, $05, $04, $FD, $01, $40, $50, $75, $00, $11, $04, $05, $FD, $11, $30
-    db $20, $75, $01, $11, $03, $02, $80
-
-Data_011_74CD:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $50, $40, $74, $01, $10, $05, $04, $FD, $01, $40, $50, $74, $00, $11
-    db $04, $05, $FD, $11, $30, $20, $74, $01, $11, $03, $02, $FD, $01, $40, $20, $76
-    db $00, $11, $04, $02, $80
-
-Data_011_74F2:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $20, $75, $00, $11, $04, $02, $80
-
-Data_011_74FC:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $02, $01, $70, $0A, $14, $04, $04, $FE, $00, $00, $01, $70, $09, $14
-    db $04, $04, $80
-
-Data_011_750F:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $70, $05, $16, $04, $04, $FE, $00, $02, $01, $70, $05, $16
-    db $04, $04, $FD, $11, $60, $30, $79, $00, $11, $06, $03, $80
-
-Data_011_752B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $60, $30, $78, $01, $11, $06, $03, $80
-
-Data_011_7535:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $70, $00, $14, $04, $04, $80
-
-Data_011_753F:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $70, $03, $16, $04, $04, $FD, $02, $40, $40, $70, $03, $17
-    db $04, $04, $80
-
-Data_011_7552:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $02, $70, $05, $19, $04, $04, $FD, $11, $20, $40, $7D, $00, $30
-    db $02, $08, $FD, $00, $40, $40, $7F, $00, $31, $04, $08, $FD, $00, $50, $40, $7F
-    db $00, $31, $05, $08, $80
-
-Data_011_7577:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $7C, $81, $11, $02, $04, $FD, $00, $10, $60, $7E, $00, $10
-    db $01, $06, $80
-
-Data_011_758A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $10, $60, $7D, $00, $10, $01, $06, $80
-
-Data_011_7594:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $02, $7C, $80, $10, $00, $C0, $80
-
-Data_011_759E:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $70, $08, $19, $04, $04, $FE, $00, $02, $01, $70, $09, $19
-    db $04, $04, $80
-
-Data_011_75B1:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $70, $05, $1B, $04, $04, $FD, $00, $40, $20, $82, $01, $32
-    db $04, $08, $80
-
-Data_011_75C4:: ; heuristic: warp list of the map warp table; C0
-    INCBIN "dwm2-cobi-us.gbc", $0475C4, $52
-
-Data_011_7616:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $60, $60, $82, $00, $10, $06, $06, $FD, $10, $30, $60, $82, $01, $10
-    db $03, $06, $FD, $20, $40, $60, $82, $02, $10, $04, $06, $FD, $01, $70, $20, $82
-    db $00, $11, $07, $02, $FD, $01, $40, $60, $82, $00, $11, $04, $06, $FD, $21, $20
-    db $20, $82, $02, $11, $02, $02, $FD, $22, $70, $60, $82, $02, $12, $07, $06, $80
-
-Data_011_7656:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $20, $50, $82, $00, $12, $02, $05, $80
-
-Data_011_7660:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $70, $01, $1B, $04, $04, $FD, $00, $20, $30, $86, $00, $10
-    db $02, $03, $FD, $10, $80, $50, $86, $01, $10, $08, $05, $80
-
-Data_011_767C:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $20, $30, $85, $00, $10, $02, $03, $FD, $10, $80, $50, $85, $01, $10
-    db $08, $05, $FD, $10, $60, $20, $87, $01, $10, $06, $02, $FD, $10, $80, $30, $87
-    db $01, $10, $08, $03, $80
-
-Data_011_76A1:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $60, $20, $86, $01, $10, $06, $02, $FD, $10, $80, $30, $86, $01, $10
-    db $08, $03, $FD, $10, $80, $50, $88, $01, $10, $08, $05, $FD, $01, $20, $60, $88
-    db $00, $11, $02, $06, $80
-
-Data_011_76C6:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $80, $50, $87, $01, $10, $08, $05, $FD, $01, $20, $60, $87, $00, $11
-    db $02, $06, $80
-
-Data_011_76D9:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $71, $01, $10, $04, $00, $FD, $01, $50, $50, $73, $00, $31
-    db $05, $08, $80
-
-Data_011_76EC:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $70, $0B, $1A, $04, $04, $FD, $00, $40, $40, $8B, $01, $33
-    db $04, $08, $FD, $00, $50, $40, $8B, $01, $33, $05, $08, $80
-
-Data_011_7708:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $01, $04, $8A, $80, $10, $00, $C0, $FD, $01, $20, $60, $8C, $00, $11
-    db $02, $06, $FD, $21, $70, $60, $8C, $02, $11, $07, $06, $FD, $21, $60, $10, $8D
-    db $00, $30, $04, $08, $80
-
-Data_011_772D:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $20, $60, $8B, $00, $11, $02, $06, $FD, $21, $70, $60, $8B, $02, $11
-    db $07, $06, $80
-
-Data_011_7740:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $8B, $82, $11, $06, $01, $FD, $00, $40, $10, $8E, $02, $32
-    db $04, $08, $FD, $00, $50, $10, $8E, $02, $32, $05, $08, $80
-
-Data_011_775C:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $02, $03, $8D, $80, $10, $00, $90, $FD, $00, $10, $10, $8F, $00, $10
-    db $01, $07, $FD, $10, $50, $60, $90, $01, $11, $05, $06, $FD, $10, $40, $10, $91
-    db $00, $30, $04, $08, $FD, $10, $50, $10, $91, $00, $30, $05, $08, $80
-
-Data_011_778A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $10, $70, $8E, $00, $10, $01, $01, $FD, $00, $10, $00, $90, $00, $31
-    db $01, $08, $FD, $00, $20, $00, $90, $00, $31, $02, $08, $80
-
-Data_011_77A6:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $02, $8F, $80, $10, $00, $80, $FD, $11, $50, $60, $8E, $01, $10
-    db $05, $06, $80
-
-Data_011_77B9:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $01, $8E, $81, $10, $00, $90, $80
-
-Data_011_77C3:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $70, $05, $12, $04, $04, $80
-
-Data_011_77CD:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $70, $04, $11, $04, $04, $FD, $00, $40, $20, $94, $00, $32
-    db $04, $08, $FD, $00, $50, $20, $94, $00, $32, $05, $08, $80
-
-Data_011_77E9:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $03, $93, $80, $10, $00, $A0, $FD, $10, $40, $40, $95, $00, $10
-    db $04, $04, $80
-
-Data_011_77FC:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $94, $01, $10, $04, $04, $FD, $01, $40, $40, $96, $00, $11
-    db $04, $04, $FD, $11, $40, $40, $96, $01, $11, $04, $04, $80
-
-Data_011_7818:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $40, $95, $00, $11, $04, $04, $FD, $11, $40, $40, $95, $01, $11
-    db $04, $04, $FD, $01, $10, $70, $97, $00, $10, $01, $07, $80
-
-Data_011_7834:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $10, $70, $96, $00, $11, $01, $07, $FD, $00, $80, $70, $98, $00, $10
-    db $08, $07, $80
-
-Data_011_7847:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $80, $70, $97, $00, $10, $08, $07, $FD, $00, $80, $10, $99, $00, $10
-    db $08, $01, $80
-
-Data_011_785A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $80, $10, $98, $00, $10, $08, $01, $FD, $00, $10, $10, $9A, $00, $10
-    db $01, $01, $80
-
-Data_011_786D:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $10, $10, $99, $00, $10, $01, $01, $FD, $00, $10, $70, $9B, $00, $12
-    db $01, $07, $80
-
-Data_011_7880:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $02, $10, $70, $9A, $00, $10, $01, $07, $80
-
-Data_011_788A:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_788B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $12, $40, $40, $A1, $00, $32, $04, $08, $80
-
-Data_011_7895:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $03, $A0, $01, $12, $04, $04, $FF, $00, $00, $FF, $A2, $01, $32
-    db $00, $80, $80
-
-Data_011_78A8:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $01, $03, $A1, $00, $10, $00, $80, $FD, $10, $40, $10, $A3, $00, $31
-    db $04, $08, $FD, $10, $50, $10, $A3, $00, $31, $05, $08, $80
-
-Data_011_78C4:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $02, $A2, $81, $10, $00, $90, $80
-
-Data_011_78CE:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_78CF:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $24, $40, $40, $A9, $00, $31, $04, $08, $FD, $24, $50, $40, $A9, $00, $31
-    db $04, $08, $FD, $11, $40, $40, $AA, $00, $31, $04, $08, $FD, $43, $40, $40, $AB
-    db $00, $30, $04, $08, $FD, $51, $40, $40, $AD, $01, $33, $04, $08, $80
-
-Data_011_78FD:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $01, $00, $02, $A8, $02, $14, $04, $04, $FE, $10, $02, $00, $A8, $02, $14
-    db $04, $04, $FE, $11, $01, $02, $A8, $02, $14, $04, $04, $80
-
-Data_011_7919:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $01, $00, $02, $A8, $01, $11, $04, $04, $80
-
-Data_011_7923:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $A8, $04, $13, $04, $04, $80
-
-Data_011_792D:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $AE, $01, $00, $04, $00, $80
-
-Data_011_7937:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $04, $A8, $05, $11, $04, $04, $FF, $00, $02, $FF, $AE, $02, $03
-    db $00, $80, $80
-
-Data_011_794A:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $01, $FF, $AC, $00, $30, $04, $08, $FF, $00, $02, $04, $AD, $02, $00
-    db $00, $80, $80
-
-Data_011_795D:: ; heuristic: warp list of the map warp table; C0
-    db $80
-
-Data_011_795E:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $40, $40, $B1, $00, $30, $04, $08, $80
-
-Data_011_7968:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $B0, $01, $10, $04, $04, $FD, $00, $10, $30, $B3, $00, $11
-    db $01, $03, $80
-
-Data_011_797B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $10, $30, $B1, $00, $10, $01, $03, $FD, $11, $50, $40, $B4, $01, $11
-    db $05, $04, $80
-
-Data_011_798E:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $11, $50, $40, $B3, $01, $11, $05, $04, $FD, $01, $20, $50, $B5, $00, $11
-    db $02, $05, $80
-
-Data_011_79A1:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $20, $50, $B4, $00, $11, $02, $05, $FD, $11, $40, $00, $B6, $00, $30
-    db $04, $08, $FD, $11, $50, $00, $B6, $00, $30, $04, $08, $80
-
-Data_011_79BD:: ; heuristic: warp list of the map warp table; C0
-    db $FF, $00, $00, $01, $B5, $81, $11, $00, $80, $80
-
-Data_011_79C7:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $43, $40, $40, $B9, $00, $31, $04, $08, $FD, $43, $50, $40, $B9, $00, $31
-    db $04, $08, $FD, $11, $30, $50, $BA, $00, $31, $03, $08, $FD, $40, $40, $40, $BB
-    db $00, $31, $04, $08, $80
-
-Data_011_79EC:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $FF, $B8, $04, $13, $04, $04, $FE, $00, $00, $02, $B8, $04, $13
-    db $04, $04, $FE, $00, $01, $02, $B8, $04, $13, $04, $04, $FD, $11, $50, $20, $BC
-    db $00, $30, $05, $08, $80
-
-Data_011_7A11:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $B8, $01, $11, $03, $05, $80
-
-Data_011_7A1B:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $01, $00, $02, $B8, $04, $10, $04, $04, $FD, $00, $40, $00, $BE, $00, $00
-    db $04, $08, $80
-
-Data_011_7A2E:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $B9, $81, $11, $05, $02, $80
-
-Data_011_7A38:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $50, $70, $C4, $00, $10, $05, $07, $80
-
-Data_011_7A42:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $01, $BB, $80, $00, $04, $00, $FD, $00, $40, $30, $BF, $00, $10
-    db $04, $03, $80
-
-Data_011_7A55:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $30, $BE, $00, $10, $04, $03, $FD, $11, $50, $50, $C0, $01, $11
-    db $05, $05, $80
-
-Data_011_7A68:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $11, $50, $50, $BF, $01, $11, $05, $05, $FD, $10, $70, $20, $C1, $01, $10
-    db $07, $02, $80
-
-Data_011_7A7B:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $70, $20, $C0, $01, $10, $07, $02, $FD, $00, $70, $20, $C2, $00, $10
-    db $07, $02, $80
-
-Data_011_7A8E:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $70, $20, $C1, $00, $10, $07, $02, $FD, $10, $40, $50, $C3, $01, $10
-    db $04, $05, $80
-
-Data_011_7AA1:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $40, $50, $C2, $01, $10, $04, $05, $FD, $00, $70, $20, $C4, $00, $10
-    db $07, $02, $80
-
-Data_011_7AB4:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $70, $20, $C3, $00, $10, $07, $02, $FD, $00, $50, $70, $BD, $00, $10
-    db $05, $07, $80
-
-Data_011_7AC7:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $00, $40, $40, $C9, $00, $31, $04, $08, $80
-
-Data_011_7AD1:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $C8, $00, $10, $04, $04, $FD, $00, $40, $50, $CA, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 273 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7AE4:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $C9, $00, $10, $04, $05, $FD, $00, $40, $50, $CB, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 265 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7AF7:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $CA, $00, $10, $04, $05, $FD, $00, $40, $50, $CC, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 274 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B0A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $CB, $00, $10, $04, $05, $FD, $00, $40, $50, $CD, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 286 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B1D:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $CC, $00, $10, $04, $05, $FD, $00, $40, $50, $CE, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 315 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B30:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $CD, $00, $10, $04, $05, $80
-
-Data_011_7B3A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $40, $D2, $00, $31, $04, $08, $80
-
-Data_011_7B44:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $D1, $00, $11, $04, $04, $FD, $00, $40, $50, $D3, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 325 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B57:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $D2, $00, $10, $04, $05, $FD, $00, $40, $50, $D4, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 334 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B6A:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $D3, $00, $10, $04, $05, $FD, $00, $40, $50, $D5, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 345 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B7D:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $D4, $00, $10, $04, $05, $FD, $00, $40, $50, $D6, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 358 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7B90:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $D5, $00, $10, $04, $05, $FD, $00, $40, $50, $D7, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 373 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7BA3:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $D6, $00, $10, $04, $05, $80
-
-Data_011_7BAD:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $10, $40, $40, $DB, $00, $31, $04, $08, $80
-
-Data_011_7BB7:: ; heuristic: warp list of the map warp table; C0
-    db $FE, $00, $00, $02, $DA, $01, $10, $04, $04, $FD, $00, $40, $50, $DC, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 410 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7BCA:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $DB, $00, $10, $04, $05, $FD, $00, $40, $50, $DD, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 437 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7BDD:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $DC, $00, $10, $04, $05, $FD, $00, $40, $50, $DE, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 466 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7BF0:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $DD, $00, $10, $04, $05, $FD, $00, $40, $50, $DF, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 496 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7C03:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $DE, $00, $10, $04, $05, $FD, $00, $40, $50, $E0, $00, $11
-    db $04, $05, $80
-
-; LZSS-compressed asset: 512 bytes expand to 509 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_011_7C16:: ; heuristic: warp list of the map warp table; C0
-    db $FD, $01, $40, $50, $DF, $00, $10, $04, $05, $80
+    dw MapWarps0B ; entry 110
+    dw MapWarps0B ; entry 111
+    dw MapWarps70 ; entry 112
+    dw MapWarps71 ; entry 113
+    dw MapWarps72 ; entry 114
+    dw MapWarps73 ; entry 115
+    dw MapWarps74 ; entry 116
+    dw MapWarps75 ; entry 117
+    dw MapWarps76 ; entry 118
+    dw MapWarps77 ; entry 119
+    dw MapWarps78 ; entry 120
+    dw MapWarps79 ; entry 121
+    dw MapWarps7A ; entry 122
+    dw MapWarps7B ; entry 123
+    dw MapWarps7C ; entry 124
+    dw MapWarps7D ; entry 125
+    dw MapWarps7E ; entry 126
+    dw MapWarps7F ; entry 127
+    dw MapWarps80 ; entry 128
+    dw MapWarps81 ; entry 129
+    dw MapWarps82 ; entry 130
+    dw MapWarps83 ; entry 131
+    dw MapWarps84 ; entry 132
+    dw MapWarps85 ; entry 133
+    dw MapWarps86 ; entry 134
+    dw MapWarps87 ; entry 135
+    dw MapWarps88 ; entry 136
+    dw MapWarps89 ; entry 137
+    dw MapWarps8A ; entry 138
+    dw MapWarps8B ; entry 139
+    dw MapWarps8C ; entry 140
+    dw MapWarps8D ; entry 141
+    dw MapWarps8E ; entry 142
+    dw MapWarps8F ; entry 143
+    dw MapWarps90 ; entry 144
+    dw MapWarps91 ; entry 145
+    dw MapWarps92 ; entry 146
+    dw MapWarps93 ; entry 147
+    dw MapWarps94 ; entry 148
+    dw MapWarps95 ; entry 149
+    dw MapWarps96 ; entry 150
+    dw MapWarps97 ; entry 151
+    dw MapWarps98 ; entry 152
+    dw MapWarps99 ; entry 153
+    dw MapWarps9A ; entry 154
+    dw MapWarps9B ; entry 155
+    dw MapWarps0B ; entry 156
+    dw MapWarps9D ; entry 157
+    dw MapWarps0B ; entry 158
+    dw MapWarps0B ; entry 159
+    dw MapWarpsA0 ; entry 160
+    dw MapWarpsA1 ; entry 161
+    dw MapWarpsA2 ; entry 162
+    dw MapWarpsA3 ; entry 163
+    dw MapWarpsA4 ; entry 164
+    dw MapWarps0B ; entry 165
+    dw MapWarps0B ; entry 166
+    dw MapWarps0B ; entry 167
+    dw MapWarpsA8 ; entry 168
+    dw MapWarpsA9 ; entry 169
+    dw MapWarpsAA ; entry 170
+    dw MapWarpsAB ; entry 171
+    dw MapWarpsAC ; entry 172
+    dw MapWarpsAD ; entry 173
+    dw MapWarpsAE ; entry 174
+    dw MapWarpsAF ; entry 175
+    dw MapWarpsB0 ; entry 176
+    dw MapWarpsB1 ; entry 177
+    dw MapWarps0B ; entry 178
+    dw MapWarpsB3 ; entry 179
+    dw MapWarpsB4 ; entry 180
+    dw MapWarpsB5 ; entry 181
+    dw MapWarpsB6 ; entry 182
+    dw MapWarps0B ; entry 183
+    dw MapWarpsB8 ; entry 184
+    dw MapWarpsB9 ; entry 185
+    dw MapWarpsBA ; entry 186
+    dw MapWarpsBB ; entry 187
+    dw MapWarpsBC ; entry 188
+    dw MapWarpsBD ; entry 189
+    dw MapWarpsBE ; entry 190
+    dw MapWarpsBF ; entry 191
+    dw MapWarpsC0 ; entry 192
+    dw MapWarpsC1 ; entry 193
+    dw MapWarpsC2 ; entry 194
+    dw MapWarpsC3 ; entry 195
+    dw MapWarpsC4 ; entry 196
+    dw MapWarps0B ; entry 197
+    dw MapWarps0B ; entry 198
+    dw MapWarps0B ; entry 199
+    dw MapWarpsC8 ; entry 200
+    dw MapWarpsC9 ; entry 201
+    dw MapWarpsCA ; entry 202
+    dw MapWarpsCB ; entry 203
+    dw MapWarpsCC ; entry 204
+    dw MapWarpsCD ; entry 205
+    dw MapWarpsCE ; entry 206
+    dw MapWarps0B ; entry 207
+    dw MapWarps0B ; entry 208
+    dw MapWarpsD1 ; entry 209
+    dw MapWarpsD2 ; entry 210
+    dw MapWarpsD3 ; entry 211
+    dw MapWarpsD4 ; entry 212
+    dw MapWarpsD5 ; entry 213
+    dw MapWarpsD6 ; entry 214
+    dw MapWarpsD7 ; entry 215
+    dw MapWarps0B ; entry 216
+    dw MapWarps0B ; entry 217
+    dw MapWarpsDA ; entry 218
+    dw MapWarpsDB ; entry 219
+    dw MapWarpsDC ; entry 220
+    dw MapWarpsDD ; entry 221
+    dw MapWarpsDE ; entry 222
+    dw MapWarpsDF ; entry 223
+    dw MapWarpsE0 ; entry 224
+    dw MapWarps0B ; entry 225
+    dw MapWarps0B ; entry 226
+    dw MapWarps0B ; entry 227
+    dw MapWarps0B ; entry 228
+    dw MapWarps0B ; entry 229
+    dw MapWarps0B ; entry 230
+    dw MapWarps0B ; entry 231
+    dw MapWarps0B ; entry 232
+    dw MapWarps0B ; entry 233
+    dw MapWarps0B ; entry 234
+    dw MapWarps0B ; entry 235
+    dw MapWarps0B ; entry 236
+    dw MapWarps0B ; entry 237
+    dw MapWarps0B ; entry 238
+    dw MapWarps0B ; entry 239
+    dw MapWarps0B ; entry 240
+    dw MapWarps0B ; entry 241
+    dw MapWarps0B ; entry 242
+    dw MapWarps0B ; entry 243
+    dw MapWarps0B ; entry 244
+    dw MapWarps0B ; entry 245
+    dw MapWarps0B ; entry 246
+    dw MapWarps0B ; entry 247
+    dw MapWarps0B ; entry 248
+    dw MapWarps0B ; entry 249
+    dw MapWarps0B ; entry 250
+    dw MapWarps0B ; entry 251
+    dw MapWarps0B ; entry 252
+    dw MapWarps0B ; entry 253
+    dw MapWarps0B ; entry 254
+    dw MapWarps0B ; entry 255
+
+; E-0157 (derived: list for entry $0B of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0B::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $00 of MapWarpTable; 5 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps00::
+Data_011_69A7:: ; address name
+    db $FD, $02, $40, $40, $06, $00, $00, $04, $08 ; id 0
+    db $FF, $00, $00, $01, $02, $02, $00, $90, $00 ; id 1
+    db $02, $10, $40, $00, $01, $03, $02, $04, $08 ; id 2
+    db $FF, $00, $01, $00, $01, $03, $02, $90, $00 ; id 3
+    db $FD, $21, $60, $30, $07, $00, $10, $06, $03 ; id 4
+    db $80 ; end
+
+; E-0157 (derived: list for entry $01 of MapWarpTable; 15 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps01::
+Data_011_69D5:: ; address name
+    db $FD, $22, $50, $50, $05, $02, $30, $05, $00 ; id 0
+    db $FD, $00, $50, $50, $15, $00, $00, $05, $08 ; id 1
+    db $FD, $10, $30, $40, $17, $00, $00, $05, $08 ; id 2
+    db $FD, $10, $50, $00, $19, $01, $01, $05, $08 ; id 3
+    db $FD, $01, $40, $50, $11, $00, $01, $04, $08 ; id 4
+    db $FD, $01, $50, $50, $11, $00, $01, $05, $08 ; id 5
+    db $FD, $11, $30, $40, $09, $00, $00, $03, $08 ; id 6
+    db $FD, $11, $20, $10, $13, $00, $00, $02, $08 ; id 7
+    db $FD, $21, $50, $50, $0A, $00, $00, $05, $08 ; id 8
+    db $FD, $02, $40, $40, $08, $00, $00, $04, $08 ; id 9
+    db $FD, $02, $60, $10, $16, $00, $00, $06, $08 ; id 10
+    db $FF, $00, $00, $03, $02, $00, $00, $00, $80 ; id 11
+    db $FD, $12, $20, $30, $0C, $01, $00, $03, $08 ; id 12
+    db $FF, $00, $04, $02, $00, $02, $00, $70, $00 ; id 13
+    db $FF, $00, $03, $03, $00, $01, $01, $00, $80 ; id 14
+    db $80 ; end
+
+; E-0157 (derived: list for entry $02 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps02::
+Data_011_6A5D:: ; address name
+    db $FF, $00, $00, $FF, $01, $00, $02, $00, $80 ; id 0
+    db $FF, $00, $03, $00, $00, $01, $01, $70, $00 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $03 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps03::
+Data_011_6A70:: ; address name
+    db $FD, $00, $50, $50, $05, $00, $10, $05, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $04 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps04::
+Data_011_6A7A:: ; address name
+    db $FD, $20, $40, $40, $0C, $01, $10, $04, $04 ; id 0
+    db $FF, $00, $02, $01, $18, $82, $00, $00, $A0 ; id 1
+    db $FF, $00, $01, $01, $18, $81, $00, $00, $80 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $05 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps05::
+Data_011_6A96:: ; address name
+    db $FE, $00, $02, $FF, $01, $02, $12, $05, $05 ; id 0
+    db $FD, $00, $50, $50, $03, $00, $10, $05, $05 ; id 1
+    db $FD, $00, $50, $10, $0D, $00, $31, $05, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $06 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps06::
+Data_011_6AB2:: ; address name
+    db $FE, $00, $00, $01, $00, $80, $02, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $07 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps07::
+Data_011_6ABC:: ; address name
+    db $FD, $00, $60, $30, $00, $02, $11, $06, $03 ; id 0
+    db $FD, $00, $50, $00, $0D, $03, $31, $05, $08 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $08 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps08::
+Data_011_6ACF:: ; address name
+    db $FE, $00, $00, $01, $01, $80, $02, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $09 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps09::
+Data_011_6AD9:: ; address name
+    db $FE, $00, $00, $01, $01, $81, $01, $03, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $0A of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0A::
+Data_011_6AE3:: ; address name
+    db $FE, $00, $00, $01, $01, $82, $01, $05, $05 ; id 0
+    db $FD, $00, $80, $40, $0D, $01, $11, $08, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $0C of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0C::
+Data_011_6AF6:: ; address name
+    db $FE, $00, $01, $01, $01, $81, $02, $02, $03 ; id 0
+    db $FD, $10, $40, $40, $04, $02, $10, $04, $04 ; id 1
+    db $FD, $00, $30, $40, $0E, $00, $00, $03, $08 ; id 2
+    db $FD, $00, $70, $40, $12, $00, $00, $07, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $0D of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0D::
+Data_011_6B1B:: ; address name
+    db $FD, $11, $80, $40, $0A, $00, $10, $08, $04 ; id 0
+    db $FE, $00, $00, $02, $05, $80, $10, $05, $01 ; id 1
+    db $FE, $00, $03, $02, $07, $80, $10, $05, $00 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $0E of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0E::
+Data_011_6B37:: ; address name
+    db $FE, $00, $00, $01, $0C, $80, $00, $03, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $0F of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps0F::
+Data_011_6B41:: ; address name
+    db $00, $00, $40, $80, $0C, $80, $00, $02, $01 ; id 0
+    db $00, $00, $20, $80, $0C, $80, $00, $02, $01 ; id 1
+    db $00, $00, $70, $80, $0C, $80, $00, $07, $01 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $10 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps10::
+Data_011_6B5D:: ; address name
+    db $FE, $00, $00, $01, $0C, $80, $00, $07, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $11 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps11::
+Data_011_6B67:: ; address name
+    db $FF, $00, $00, $02, $01, $80, $01, $00, $D0 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $12 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps12::
+Data_011_6B71:: ; address name
+    db $FE, $00, $00, $01, $0C, $80, $00, $07, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $13 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps13::
+Data_011_6B7B:: ; address name
+    db $FE, $00, $00, $01, $01, $81, $01, $02, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $15 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps15::
+Data_011_6B85:: ; address name
+    db $FE, $00, $00, $01, $01, $80, $00, $05, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $16 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps16::
+Data_011_6B8F:: ; address name
+    db $FE, $00, $00, $01, $01, $80, $02, $06, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $17 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps17::
+Data_011_6B99:: ; address name
+    db $FE, $00, $00, $01, $01, $81, $00, $03, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $18 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps18::
+Data_011_6BA3:: ; address name
+    db $FD, $20, $40, $20, $04, $02, $00, $04, $08 ; id 0
+    db $FD, $20, $50, $20, $04, $02, $00, $05, $08 ; id 1
+    db $FD, $10, $40, $00, $04, $01, $00, $04, $08 ; id 2
+    db $FD, $10, $50, $00, $04, $01, $00, $05, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $19 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps19::
+Data_011_6BC8:: ; address name
+    db $FE, $00, $01, $02, $01, $81, $00, $05, $00 ; id 0
+    db $FD, $11, $50, $40, $1A, $01, $10, $05, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $1A of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps1A::
+Data_011_6BDB:: ; address name
+    db $FD, $10, $50, $40, $19, $01, $11, $05, $04 ; id 0
+    db $FD, $20, $40, $30, $1B, $00, $10, $04, $03 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $1B of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps1B::
+Data_011_6BEE:: ; address name
+    db $FD, $00, $40, $30, $1A, $02, $10, $04, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $20 of MapWarpTable; 6 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps20::
+Data_011_6BF8:: ; address name
+    db $FD, $21, $40, $40, $21, $00, $30, $05, $08 ; id 0
+    db $FD, $21, $50, $40, $21, $00, $30, $05, $08 ; id 1
+    db $FD, $25, $40, $40, $24, $00, $31, $05, $08 ; id 2
+    db $FD, $25, $50, $40, $24, $00, $31, $05, $08 ; id 3
+    db $FD, $55, $40, $40, $2F, $00, $31, $06, $08 ; id 4
+    db $FD, $55, $50, $40, $2F, $00, $31, $06, $08 ; id 5
+    db $80 ; end
+
+; E-0157 (derived: list for entry $21 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps21::
+Data_011_6C2F:: ; address name
+    db $FE, $00, $00, $01, $20, $02, $11, $04, $04 ; id 0
+    db $FE, $00, $02, $00, $20, $02, $11, $04, $04 ; id 1
+    db $FD, $00, $50, $10, $22, $00, $00, $05, $08 ; id 2
+    db $FD, $10, $20, $20, $2A, $00, $00, $02, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $22 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps22::
+Data_011_6C54:: ; address name
+    db $FE, $00, $00, $01, $21, $80, $00, $05, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $23 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps23::
+Data_011_6C5E:: ; address name
+    db $FE, $00, $00, $01, $24, $81, $01, $03, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $24 of MapWarpTable; 7 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps24::
+Data_011_6C68:: ; address name
+    db $FE, $00, $FF, $00, $20, $02, $15, $04, $04 ; id 0
+    db $FE, $00, $02, $01, $20, $02, $15, $04, $04 ; id 1
+    db $FE, $00, $00, $02, $20, $02, $15, $04, $04 ; id 2
+    db $FD, $00, $40, $00, $25, $00, $00, $04, $08 ; id 3
+    db $FD, $00, $50, $00, $25, $00, $00, $05, $08 ; id 4
+    db $FD, $11, $30, $20, $23, $00, $00, $04, $08 ; id 5
+    db $FD, $11, $20, $50, $2B, $23, $33, $02, $00 ; id 6
+    db $80 ; end
+
+; E-0157 (derived: list for entry $25 of MapWarpTable; 5 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps25::
+Data_011_6CA8:: ; address name
+    db $FF, $00, $00, $01, $24, $80, $00, $00, $80 ; id 0
+    db $FD, $00, $40, $00, $26, $00, $00, $04, $08 ; id 1
+    db $FD, $00, $50, $00, $26, $00, $00, $05, $08 ; id 2
+    db $FD, $00, $20, $60, $2E, $00, $10, $02, $06 ; id 3
+    db $FD, $10, $80, $30, $2D, $00, $10, $08, $03 ; id 4
+    db $80 ; end
+
+; E-0157 (derived: list for entry $26 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps26::
+Data_011_6CD6:: ; address name
+    db $FF, $00, $00, $01, $25, $80, $00, $00, $80 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $28 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps28::
+Data_011_6CE0:: ; address name
+    db $FE, $00, $00, $02, $2F, $81, $10, $04, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $29 of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps29::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $2A of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps2A::
+Data_011_6CEB:: ; address name
+    db $FE, $00, $00, $01, $21, $81, $00, $02, $02 ; id 0
+    db $FD, $00, $10, $20, $2B, $11, $10, $01, $02 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $2B of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps2B::
+Data_011_6CFE:: ; address name
+    db $FD, $10, $10, $20, $2A, $00, $10, $01, $02 ; id 0
+    db $FE, $00, $03, $02, $24, $01, $11, $02, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $2D of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps2D::
+Data_011_6D11:: ; address name
+    db $FD, $00, $80, $30, $25, $01, $10, $08, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $2E of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps2E::
+Data_011_6D1B:: ; address name
+    db $FD, $00, $20, $60, $25, $00, $10, $02, $06 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $2F of MapWarpTable; 8 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps2F::
+Data_011_6D25:: ; address name
+    db $FE, $00, $FF, $00, $20, $05, $15, $04, $04 ; id 0
+    db $FE, $00, $FF, $01, $20, $05, $15, $04, $04 ; id 1
+    db $FE, $00, $00, $FF, $20, $05, $15, $04, $04 ; id 2
+    db $FE, $00, $01, $FF, $20, $05, $15, $04, $04 ; id 3
+    db $FE, $00, $02, $00, $20, $05, $15, $04, $04 ; id 4
+    db $FE, $00, $02, $01, $20, $05, $15, $04, $04 ; id 5
+    db $FE, $00, $00, $02, $20, $05, $15, $04, $04 ; id 6
+    db $FE, $00, $01, $02, $20, $05, $15, $04, $04 ; id 7
+    db $80 ; end
+
+; E-0157 (derived: list for entry $30 of MapWarpTable; 9 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps30::
+Data_011_6D6E:: ; address name
+    db $FD, $56, $40, $40, $31, $00, $31, $04, $08 ; id 0
+    db $FD, $56, $50, $40, $31, $00, $31, $04, $08 ; id 1
+    db $FD, $42, $40, $40, $32, $00, $10, $06, $00 ; id 2
+    db $FD, $42, $50, $40, $32, $00, $10, $06, $00 ; id 3
+    db $FD, $24, $40, $40, $3C, $01, $30, $04, $08 ; id 4
+    db $FD, $24, $50, $40, $3C, $01, $30, $04, $08 ; id 5
+    db $FD, $03, $40, $40, $35, $01, $33, $04, $08 ; id 6
+    db $FD, $62, $40, $40, $3E, $00, $31, $04, $08 ; id 7
+    db $FD, $53, $40, $40, $38, $02, $33, $04, $08 ; id 8
+    db $80 ; end
+
+; E-0157 (derived: list for entry $31 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps31::
+Data_011_6DC0:: ; address name
+    db $FE, $00, $00, $02, $30, $05, $16, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $32 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps32::
+Data_011_6DCA:: ; address name
+    db $FE, $00, $00, $FF, $30, $04, $12, $04, $04 ; id 0
+    db $FE, $00, $02, $00, $30, $04, $12, $04, $04 ; id 1
+    db $FD, $10, $40, $10, $33, $00, $01, $04, $08 ; id 2
+    db $FD, $11, $40, $20, $34, $00, $00, $04, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $33 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps33::
+Data_011_6DEF:: ; address name
+    db $FE, $00, $00, $02, $32, $81, $00, $04, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $34 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps34::
+Data_011_6DF9:: ; address name
+    db $FE, $00, $00, $01, $32, $81, $01, $04, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $35 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps35::
+Data_011_6E03:: ; address name
+    db $FE, $00, $01, $04, $30, $00, $13, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $36 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps36::
+Data_011_6E0D:: ; address name
+    db $FD, $00, $40, $20, $37, $02, $30, $04, $08 ; id 0
+    db $FD, $00, $50, $20, $37, $02, $30, $04, $08 ; id 1
+    db $FE, $00, $00, $01, $30, $05, $15, $04, $05 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $37 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps37::
+Data_011_6E29:: ; address name
+    db $FE, $00, $02, $01, $36, $80, $10, $04, $02 ; id 0
+    db $FD, $20, $20, $50, $42, $02, $10, $02, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $38 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps38::
+Data_011_6E3C:: ; address name
+    db $FE, $00, $02, $04, $30, $05, $13, $04, $04 ; id 0
+    db $FD, $01, $40, $40, $39, $00, $10, $04, $04 ; id 1
+    db $FD, $31, $40, $40, $39, $03, $10, $04, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $39 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps39::
+Data_011_6E58:: ; address name
+    db $FD, $00, $40, $40, $38, $00, $11, $04, $04 ; id 0
+    db $FD, $30, $40, $40, $38, $03, $11, $04, $04 ; id 1
+    db $FD, $02, $40, $40, $3A, $02, $11, $04, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3A of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3A::
+Data_011_6E74:: ; address name
+    db $FF, $00, $01, $03, $3B, $80, $00, $00, $80 ; id 0
+    db $FD, $21, $40, $40, $39, $00, $12, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3B of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3B::
+Data_011_6E87:: ; address name
+    db $FF, $00, $00, $FF, $3A, $01, $02, $00, $80 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3C of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3C::
+Data_011_6E91:: ; address name
+    db $FE, $00, $01, $01, $30, $02, $14, $04, $04 ; id 0
+    db $FD, $10, $70, $20, $3D, $00, $30, $07, $08 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3D of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3D::
+Data_011_6EA4:: ; address name
+    db $FE, $00, $00, $01, $3C, $81, $10, $07, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3E of MapWarpTable; 5 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3E::
+Data_011_6EAE:: ; address name
+    db $FE, $00, $00, $02, $30, $06, $12, $04, $04 ; id 0
+    db $FD, $00, $60, $30, $3E, $01, $10, $06, $03 ; id 1
+    db $FD, $10, $60, $30, $3E, $00, $10, $06, $03 ; id 2
+    db $FD, $10, $30, $30, $3F, $00, $10, $03, $03 ; id 3
+    db $FD, $11, $10, $60, $3F, $00, $11, $01, $06 ; id 4
+    db $80 ; end
+
+; E-0157 (derived: list for entry $3F of MapWarpTable; 9 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps3F::
+Data_011_6EDC:: ; address name
+    db $FD, $00, $30, $30, $3E, $01, $10, $03, $03 ; id 0
+    db $FD, $01, $10, $60, $3E, $01, $11, $01, $06 ; id 1
+    db $FD, $00, $60, $30, $3F, $01, $10, $06, $03 ; id 2
+    db $FD, $10, $60, $30, $3F, $00, $10, $06, $03 ; id 3
+    db $FD, $10, $20, $30, $3F, $01, $11, $02, $03 ; id 4
+    db $FD, $11, $20, $30, $3F, $01, $10, $02, $03 ; id 5
+    db $FD, $10, $60, $70, $3F, $01, $11, $06, $07 ; id 6
+    db $FD, $11, $60, $70, $3F, $01, $10, $06, $07 ; id 7
+    db $FD, $11, $40, $40, $40, $00, $11, $04, $04 ; id 8
+    db $80 ; end
+
+; E-0157 (derived: list for entry $40 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps40::
+Data_011_6F2E:: ; address name
+    db $FD, $01, $40, $40, $3F, $01, $11, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $41 of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps41::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $42 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps42::
+Data_011_6F39:: ; address name
+    db $FD, $20, $20, $50, $37, $02, $10, $02, $05 ; id 0
+    db $FD, $00, $80, $10, $43, $00, $10, $08, $02 ; id 1
+    db $FD, $00, $50, $40, $43, $00, $10, $05, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $43 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps43::
+Data_011_6F55:: ; address name
+    db $FD, $00, $80, $20, $42, $00, $10, $08, $01 ; id 0
+    db $FD, $00, $50, $40, $42, $00, $10, $05, $04 ; id 1
+    db $FD, $20, $40, $40, $44, $00, $30, $04, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $44 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps44::
+Data_011_6F71:: ; address name
+    db $FE, $00, $00, $01, $43, $82, $10, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $45 of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps45::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $48 of MapWarpTable; 20 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps48::
+Data_011_6F7C:: ; address name
+    db $FD, $82, $40, $40, $4A, $00, $31, $05, $08 ; id 0
+    db $FD, $82, $50, $40, $4A, $00, $31, $05, $08 ; id 1
+    db $FD, $73, $40, $40, $4E, $10, $10, $04, $04 ; id 2
+    db $FD, $74, $40, $40, $4E, $20, $12, $04, $04 ; id 3
+    db $FD, $75, $40, $40, $4F, $00, $10, $00, $06 ; id 4
+    db $FD, $75, $50, $40, $4F, $00, $10, $00, $06 ; id 5
+    db $FD, $46, $40, $40, $52, $00, $30, $04, $08 ; id 6
+    db $FD, $46, $60, $40, $52, $02, $30, $04, $08 ; id 7
+    db $FD, $48, $40, $40, $58, $00, $31, $04, $08 ; id 8
+    db $FD, $48, $50, $40, $58, $00, $31, $04, $08 ; id 9
+    db $FD, $29, $40, $40, $5A, $01, $30, $04, $08 ; id 10
+    db $FD, $29, $50, $40, $5A, $01, $30, $04, $08 ; id 11
+    db $FD, $5A, $40, $30, $5D, $02, $10, $04, $00 ; id 12
+    db $FD, $5A, $50, $30, $5D, $02, $10, $04, $00 ; id 13
+    db $FD, $99, $40, $40, $5E, $01, $31, $04, $08 ; id 14
+    db $FD, $99, $50, $40, $5E, $01, $31, $04, $08 ; id 15
+    db $FD, $A5, $40, $40, $62, $01, $33, $04, $08 ; id 16
+    db $FD, $87, $40, $40, $63, $00, $10, $04, $00 ; id 17
+    db $FD, $50, $40, $40, $49, $00, $30, $04, $08 ; id 18
+    db $FD, $50, $50, $40, $49, $00, $30, $04, $08 ; id 19
+    db $80 ; end
+
+; E-0157 (derived: list for entry $49 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps49::
+Data_011_7031:: ; address name
+    db $FE, $00, $00, $01, $48, $05, $10, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4A of MapWarpTable; 6 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4A::
+Data_011_703B:: ; address name
+    db $FE, $00, $02, $00, $48, $08, $12, $04, $04 ; id 0
+    db $FE, $00, $00, $02, $48, $08, $12, $04, $04 ; id 1
+    db $FE, $00, $01, $02, $48, $08, $12, $04, $04 ; id 2
+    db $FD, $10, $70, $40, $4B, $00, $30, $07, $08 ; id 3
+    db $FD, $00, $40, $00, $4C, $00, $01, $04, $08 ; id 4
+    db $FD, $00, $50, $00, $4C, $00, $01, $05, $08 ; id 5
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4B of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4B::
+Data_011_7072:: ; address name
+    db $FE, $00, $00, $01, $4A, $81, $10, $07, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4C of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4C::
+Data_011_707C:: ; address name
+    db $FF, $00, $00, $02, $4A, $80, $10, $00, $80 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4D of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4D::
+Data_011_7086:: ; address name
+    db $FD, $00, $60, $20, $4C, $00, $10, $06, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4E of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4E::
+Data_011_7090:: ; address name
+    db $FD, $00, $40, $40, $48, $07, $13, $04, $04 ; id 0
+    db $FD, $02, $40, $40, $48, $07, $14, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $4F of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps4F::
+Data_011_70A3:: ; address name
+    db $FE, $00, $01, $FF, $48, $07, $15, $04, $04 ; id 0
+    db $FE, $00, $FF, $00, $48, $07, $15, $04, $04 ; id 1
+    db $FD, $00, $20, $40, $50, $00, $30, $03, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $50 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps50::
+Data_011_70BF:: ; address name
+    db $FE, $00, $00, $01, $4F, $80, $10, $02, $04 ; id 0
+    db $FD, $00, $50, $10, $51, $00, $10, $05, $01 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $51 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps51::
+Data_011_70D2:: ; address name
+    db $FD, $00, $50, $10, $50, $00, $10, $05, $01 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $52 of MapWarpTable; 6 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps52::
+Data_011_70DC:: ; address name
+    db $FE, $00, $00, $01, $48, $04, $16, $04, $04 ; id 0
+    db $FE, $00, $02, $01, $48, $04, $16, $06, $04 ; id 1
+    db $FD, $00, $40, $00, $53, $20, $33, $04, $08 ; id 2
+    db $FD, $00, $50, $00, $53, $20, $33, $05, $08 ; id 3
+    db $FD, $20, $40, $00, $53, $12, $33, $04, $08 ; id 4
+    db $FD, $20, $50, $00, $53, $12, $33, $05, $08 ; id 5
+    db $80 ; end
+
+; E-0157 (derived: list for entry $53 of MapWarpTable; 9 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps53::
+Data_011_7113:: ; address name
+    db $FE, $00, $00, $04, $52, $B0, $00, $04, $00 ; id 0
+    db $FE, $00, $02, $04, $52, $B2, $00, $04, $00 ; id 1
+    db $FD, $02, $20, $40, $54, $30, $10, $02, $04 ; id 2
+    db $FD, $31, $60, $30, $55, $31, $10, $06, $03 ; id 3
+    db $FD, $11, $70, $20, $56, $30, $12, $07, $02 ; id 4
+    db $FD, $00, $20, $00, $57, $30, $30, $02, $08 ; id 5
+    db $FD, $00, $30, $00, $57, $30, $30, $03, $08 ; id 6
+    db $FD, $20, $60, $00, $57, $32, $30, $06, $08 ; id 7
+    db $FD, $20, $70, $00, $57, $32, $30, $07, $08 ; id 8
+    db $80 ; end
+
+; E-0157 (derived: list for entry $54 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps54::
+Data_011_7165:: ; address name
+    db $FD, $00, $20, $40, $53, $30, $12, $02, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $55 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps55::
+Data_011_716F:: ; address name
+    db $FD, $10, $60, $30, $53, $33, $11, $06, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $56 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps56::
+Data_011_7179:: ; address name
+    db $FD, $02, $70, $20, $53, $31, $11, $07, $02 ; id 0
+    db $FD, $00, $40, $70, $57, $31, $10, $04, $07 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $57 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps57::
+Data_011_718C:: ; address name
+    db $FD, $10, $40, $70, $56, $30, $10, $04, $07 ; id 0
+    db $FF, $00, $00, $01, $53, $B0, $00, $00, $80 ; id 1
+    db $FF, $00, $02, $01, $53, $B2, $00, $00, $80 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $58 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps58::
+Data_011_71A8:: ; address name
+    db $FE, $00, $FF, $00, $48, $04, $18, $04, $04 ; id 0
+    db $FE, $00, $FF, $01, $48, $04, $18, $04, $04 ; id 1
+    db $FE, $00, $00, $02, $48, $04, $18, $04, $04 ; id 2
+    db $FD, $01, $80, $40, $59, $00, $30, $08, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $59 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps59::
+Data_011_71CD:: ; address name
+    db $FE, $00, $00, $01, $58, $80, $11, $08, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5A of MapWarpTable; 7 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5A::
+Data_011_71D7:: ; address name
+    db $FE, $00, $FF, $00, $48, $02, $19, $04, $04 ; id 0
+    db $FE, $00, $00, $01, $48, $02, $19, $04, $04 ; id 1
+    db $FE, $00, $02, $00, $48, $02, $19, $04, $04 ; id 2
+    db $FE, $00, $01, $01, $48, $02, $19, $04, $04 ; id 3
+    db $FD, $10, $30, $30, $5B, $01, $31, $04, $08 ; id 4
+    db $FD, $10, $40, $30, $5B, $01, $31, $05, $08 ; id 5
+    db $FD, $00, $40, $10, $5C, $00, $31, $03, $08 ; id 6
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5B of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5B::
+Data_011_7217:: ; address name
+    db $FF, $00, $01, $02, $5A, $81, $10, $F0, $B0 ; id 0
+    db $FD, $00, $70, $20, $5C, $00, $10, $07, $03 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5C of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5C::
+Data_011_722A:: ; address name
+    db $FD, $00, $70, $30, $5B, $00, $10, $07, $02 ; id 0
+    db $FE, $00, $00, $02, $5A, $80, $30, $04, $01 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5D of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5D::
+Data_011_723D:: ; address name
+    db $FE, $00, $02, $FF, $48, $05, $1A, $04, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5E of MapWarpTable; 6 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5E::
+Data_011_7247:: ; address name
+    db $FE, $00, $FF, $01, $48, $09, $19, $04, $04 ; id 0
+    db $FE, $00, $01, $02, $48, $09, $19, $04, $04 ; id 1
+    db $FE, $00, $02, $01, $48, $09, $19, $04, $04 ; id 2
+    db $FD, $11, $20, $20, $5F, $00, $30, $02, $08 ; id 3
+    db $FD, $10, $40, $00, $60, $00, $32, $04, $08 ; id 4
+    db $FD, $10, $50, $00, $60, $00, $32, $05, $08 ; id 5
+    db $80 ; end
+
+; E-0157 (derived: list for entry $5F of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps5F::
+Data_011_727E:: ; address name
+    db $FE, $00, $00, $01, $5E, $81, $11, $02, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $60 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps60::
+Data_011_7288:: ; address name
+    db $FF, $00, $00, $03, $5E, $81, $00, $00, $80 ; id 0
+    db $FD, $01, $80, $60, $61, $00, $11, $08, $06 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $61 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps61::
+Data_011_729B:: ; address name
+    db $FD, $01, $80, $60, $60, $00, $11, $08, $06 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $62 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps62::
+Data_011_72A5:: ; address name
+    db $FE, $00, $01, $04, $48, $0A, $15, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $63 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps63::
+Data_011_72AF:: ; address name
+    db $FE, $00, $00, $FF, $48, $08, $17, $04, $04 ; id 0
+    db $FD, $11, $10, $70, $64, $01, $11, $01, $07 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $64 of MapWarpTable; 9 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps64::
+Data_011_72C2:: ; address name
+    db $FD, $11, $10, $70, $63, $01, $11, $01, $07 ; id 0
+    db $FD, $10, $80, $20, $65, $01, $10, $08, $02 ; id 1
+    db $FD, $10, $60, $40, $65, $01, $10, $06, $04 ; id 2
+    db $FD, $10, $40, $60, $65, $01, $10, $04, $06 ; id 3
+    db $FD, $01, $40, $20, $65, $00, $11, $04, $02 ; id 4
+    db $FD, $01, $60, $40, $65, $00, $11, $06, $04 ; id 5
+    db $FD, $01, $80, $60, $65, $00, $11, $08, $06 ; id 6
+    db $FD, $11, $80, $20, $65, $01, $11, $08, $02 ; id 7
+    db $FD, $11, $80, $70, $65, $01, $11, $08, $07 ; id 8
+    db $80 ; end
+
+; E-0157 (derived: list for entry $65 of MapWarpTable; 10 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps65::
+Data_011_7314:: ; address name
+    db $FD, $10, $80, $20, $64, $01, $10, $08, $02 ; id 0
+    db $FD, $10, $60, $40, $64, $01, $10, $06, $04 ; id 1
+    db $FD, $10, $40, $60, $64, $01, $10, $04, $06 ; id 2
+    db $FD, $01, $40, $20, $64, $00, $11, $04, $02 ; id 3
+    db $FD, $01, $60, $40, $64, $00, $11, $06, $04 ; id 4
+    db $FD, $01, $80, $60, $64, $00, $11, $08, $06 ; id 5
+    db $FD, $11, $80, $20, $64, $01, $11, $08, $02 ; id 6
+    db $FD, $11, $80, $70, $64, $01, $11, $08, $07 ; id 7
+    db $FD, $00, $10, $20 ; id 8
+Data_011_7360:: ; heuristic: label inside a table; C0
+    db $66, $00, $10, $01, $02
+    db $FD, $01, $10, $60, $66, $00, $11, $01, $06 ; id 9
+    db $80 ; end
+
+; E-0157 (derived: list for entry $66 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps66::
+Data_011_736F:: ; address name
+    db $FD, $00, $10, $20, $65, $00, $10, $01, $02 ; id 0
+    db $FD, $01, $10, $60, $65, $00, $11, $01, $06 ; id 1
+    db $FD, $10, $40, $40, $67, $00, $10, $04, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $67 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps67::
+Data_011_738B:: ; address name
+    db $FD, $00, $40, $40, $66, $01, $10, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $68 of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps68::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $70 of MapWarpTable; 19 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps70::
+Data_011_7396:: ; address name
+    db $FD, $B1, $40, $40, $71, $01, $30, $04, $08 ; id 0
+    db $FD, $A4, $40, $40, $77, $12, $30, $04, $08 ; id 1
+Data_011_73A8:: ; heuristic: label inside a table; C0
+    db $FD, $94, $40, $40, $77, $20, $30, $04, $08 ; id 2
+    db $FD, $56, $40, $40, $78, $00, $31, $04, $08 ; id 3
+Data_011_73BA:: ; heuristic: label inside a table; C0
+    db $FD, $56, $50, $40, $78, $00, $31, $04, $08 ; id 4
+    db $FD, $04, $40, $40, $7A, $00, $31, $04, $08 ; id 5
+    db $FD, $36, $40, $40, $7B, $10, $10, $04, $04 ; id 6
+    db $FD, $37, $40, $40, $7B, $20, $12, $04, $04 ; id 7
+    db $FD, $59, $40, $40, $7C, $01, $31, $05, $08 ; id 8
+    db $FD, $59, $50, $40, $7C, $01, $31, $05, $08 ; id 9
+    db $FD, $89, $40, $40, $80, $10, $30, $04, $08 ; id 10
+    db $FD, $99, $40, $40, $80, $22, $30, $04, $08 ; id 11
+    db $FD, $5B, $40, $40, $81, $00, $10, $04, $04 ; id 12
+    db $FD, $1B, $40, $40, $85, $00, $31, $04, $08 ; id 13
+    db $FD, $BA, $40, $40, $8A, $00, $30, $04, $08 ; id 14
+    db $FD, $BA, $50, $40, $8A, $00, $30, $04, $08 ; id 15
+    db $FD, $52, $40, $40, $92, $00, $30, $04, $08 ; id 16
+    db $FD, $41, $40, $40, $93, $00, $30, $04, $08 ; id 17
+    db $FD, $41, $50, $40, $93, $00, $30, $04, $08 ; id 18
+    db $80 ; end
+
+; E-0157 (derived: list for entry $71 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps71::
+Data_011_7442:: ; address name
+    db $FE, $00, $00, $01, $70, $0B, $11, $04, $04 ; id 0
+    db $FE, $00, $01, $01, $70, $0B, $11, $04, $04 ; id 1
+    db $FD, $20, $20, $20, $72, $00, $30, $03, $08 ; id 2
+    db $FE, $00, $01, $FF, $89, $00, $31, $04, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $72 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps72::
+Data_011_7467:: ; address name
+    db $FE, $00, $00, $01, $71, $82, $10, $02, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $73 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps73::
+Data_011_7471:: ; address name
+    db $FE, $00, $00, $02, $89, $00, $11, $05, $06 ; id 0
+    db $FD, $00, $40, $40, $74, $00, $10, $04, $04 ; id 1
+    db $FD, $01, $60, $20, $74, $00, $11, $06, $02 ; id 2
+    db $FD, $11, $50, $50, $74, $01, $11, $05, $05 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $74 of MapWarpTable; 6 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps74::
+Data_011_7496:: ; address name
+    db $FD, $00, $40, $40, $73, $00, $10, $04, $04 ; id 0
+    db $FD, $01, $60, $20, $73, $00, $11, $06, $02 ; id 1
+    db $FD, $11, $50, $50, $73, $01, $11, $05, $05 ; id 2
+    db $FD, $10, $50, $40, $75, $01, $10, $05, $04 ; id 3
+    db $FD, $01, $40, $50, $75, $00, $11, $04, $05 ; id 4
+    db $FD, $11, $30, $20, $75, $01, $11, $03, $02 ; id 5
+    db $80 ; end
+
+; E-0157 (derived: list for entry $75 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps75::
+Data_011_74CD:: ; address name
+    db $FD, $10, $50, $40, $74, $01, $10, $05, $04 ; id 0
+    db $FD, $01, $40, $50, $74, $00, $11, $04, $05 ; id 1
+    db $FD, $11, $30, $20, $74, $01, $11, $03, $02 ; id 2
+    db $FD, $01, $40, $20, $76, $00, $11, $04, $02 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $76 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps76::
+Data_011_74F2:: ; address name
+    db $FD, $01, $40, $20, $75, $00, $11, $04, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $77 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps77::
+Data_011_74FC:: ; address name
+    db $FE, $00, $02, $01, $70, $0A, $14, $04, $04 ; id 0
+    db $FE, $00, $00, $01, $70, $09, $14, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $78 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps78::
+Data_011_750F:: ; address name
+    db $FE, $00, $00, $02, $70, $05, $16, $04, $04 ; id 0
+    db $FE, $00, $02, $01, $70, $05, $16, $04, $04 ; id 1
+    db $FD, $11, $60, $30, $79, $00, $11, $06, $03 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $79 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps79::
+Data_011_752B:: ; address name
+    db $FD, $01, $60, $30, $78, $01, $11, $06, $03 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7A of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7A::
+Data_011_7535:: ; address name
+    db $FE, $00, $00, $02, $70, $00, $14, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7B of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7B::
+Data_011_753F:: ; address name
+    db $FD, $00, $40, $40, $70, $03, $16, $04, $04 ; id 0
+    db $FD, $02, $40, $40, $70, $03, $17, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7C of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7C::
+Data_011_7552:: ; address name
+    db $FE, $00, $01, $02, $70, $05, $19, $04, $04 ; id 0
+    db $FD, $11, $20, $40, $7D, $00, $30, $02, $08 ; id 1
+    db $FD, $00, $40, $40, $7F, $00, $31, $04, $08 ; id 2
+    db $FD, $00, $50, $40, $7F, $00, $31, $05, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7D of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7D::
+Data_011_7577:: ; address name
+    db $FE, $00, $00, $01, $7C, $81, $11, $02, $04 ; id 0
+    db $FD, $00, $10, $60, $7E, $00, $10, $01, $06 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7E of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7E::
+Data_011_758A:: ; address name
+    db $FD, $00, $10, $60, $7D, $00, $10, $01, $06 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $7F of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps7F::
+Data_011_7594:: ; address name
+    db $FF, $00, $00, $02, $7C, $80, $10, $00, $C0 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $80 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps80::
+Data_011_759E:: ; address name
+    db $FE, $00, $00, $01, $70, $08, $19, $04, $04 ; id 0
+    db $FE, $00, $02, $01, $70, $09, $19, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $81 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps81::
+Data_011_75B1:: ; address name
+    db $FD, $00, $40, $40, $70, $05, $1B, $04, $04 ; id 0
+    db $FD, $00, $40, $20, $82, $01, $32, $04, $08 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $82 of MapWarpTable; 9 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps82::
+Data_011_75C4:: ; address name
+    db $FE, $00, $01, $03, $81, $00, $10, $04, $03 ; id 0
+    db $FD, $00, $60, $60, $83, $00, $10, $06, $06 ; id 1
+    db $FD, $10, $30, $60, $83, $01, $10, $03, $06 ; id 2
+    db $FD, $20, $40, $60, $83, $02, $10, $04, $06 ; id 3
+    db $FD, $01, $70, $20, $83, $00, $11, $07, $02 ; id 4
+    db $FD, $01, $40, $60, $83, $00, $11, $04, $06 ; id 5
+    db $FD, $21, $20, $20, $83, $02, $11, $02, $02 ; id 6
+    db $FD, $22, $70, $60, $83, $02, $12, $07, $06 ; id 7
+    db $FD, $02, $20, $50, $84, $00, $10, $02, $05 ; id 8
+    db $80 ; end
+
+; E-0157 (derived: list for entry $83 of MapWarpTable; 7 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps83::
+Data_011_7616:: ; address name
+    db $FD, $00, $60, $60, $82, $00, $10, $06, $06 ; id 0
+    db $FD, $10, $30, $60, $82, $01, $10, $03, $06 ; id 1
+    db $FD, $20, $40, $60, $82, $02, $10, $04, $06 ; id 2
+    db $FD, $01, $70, $20, $82, $00, $11, $07, $02 ; id 3
+    db $FD, $01, $40, $60, $82, $00, $11, $04, $06 ; id 4
+    db $FD, $21, $20, $20, $82, $02, $11, $02, $02 ; id 5
+    db $FD, $22, $70, $60, $82, $02, $12, $07, $06 ; id 6
+    db $80 ; end
+
+; E-0157 (derived: list for entry $84 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps84::
+Data_011_7656:: ; address name
+    db $FD, $00, $20, $50, $82, $00, $12, $02, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $85 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps85::
+Data_011_7660:: ; address name
+    db $FE, $00, $00, $02, $70, $01, $1B, $04, $04 ; id 0
+    db $FD, $00, $20, $30, $86, $00, $10, $02, $03 ; id 1
+    db $FD, $10, $80, $50, $86, $01, $10, $08, $05 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $86 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps86::
+Data_011_767C:: ; address name
+    db $FD, $00, $20, $30, $85, $00, $10, $02, $03 ; id 0
+    db $FD, $10, $80, $50, $85, $01, $10, $08, $05 ; id 1
+    db $FD, $10, $60, $20, $87, $01, $10, $06, $02 ; id 2
+    db $FD, $10, $80, $30, $87, $01, $10, $08, $03 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $87 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps87::
+Data_011_76A1:: ; address name
+    db $FD, $10, $60, $20, $86, $01, $10, $06, $02 ; id 0
+    db $FD, $10, $80, $30, $86, $01, $10, $08, $03 ; id 1
+    db $FD, $10, $80, $50, $88, $01, $10, $08, $05 ; id 2
+    db $FD, $01, $20, $60, $88, $00, $11, $02, $06 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $88 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps88::
+Data_011_76C6:: ; address name
+    db $FD, $10, $80, $50, $87, $01, $10, $08, $05 ; id 0
+    db $FD, $01, $20, $60, $87, $00, $11, $02, $06 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $89 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps89::
+Data_011_76D9:: ; address name
+    db $FE, $00, $00, $02, $71, $01, $10, $04, $00 ; id 0
+    db $FD, $01, $50, $50, $73, $00, $31, $05, $08 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8A of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8A::
+Data_011_76EC:: ; address name
+    db $FE, $00, $00, $01, $70, $0B, $1A, $04, $04 ; id 0
+    db $FD, $00, $40, $40, $8B, $01, $33, $04, $08 ; id 1
+    db $FD, $00, $50, $40, $8B, $01, $33, $05, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8B of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8B::
+Data_011_7708:: ; address name
+    db $FF, $00, $01, $04, $8A, $80, $10, $00, $C0 ; id 0
+    db $FD, $01, $20, $60, $8C, $00, $11, $02, $06 ; id 1
+    db $FD, $21, $70, $60, $8C, $02, $11, $07, $06 ; id 2
+    db $FD, $21, $60, $10, $8D, $00, $30, $04, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8C of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8C::
+Data_011_772D:: ; address name
+    db $FD, $01, $20, $60, $8B, $00, $11, $02, $06 ; id 0
+    db $FD, $21, $70, $60, $8B, $02, $11, $07, $06 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8D of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8D::
+Data_011_7740:: ; address name
+    db $FE, $00, $00, $01, $8B, $82, $11, $06, $01 ; id 0
+    db $FD, $00, $40, $10, $8E, $02, $32, $04, $08 ; id 1
+    db $FD, $00, $50, $10, $8E, $02, $32, $05, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8E of MapWarpTable; 5 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8E::
+Data_011_775C:: ; address name
+    db $FF, $00, $02, $03, $8D, $80, $10, $00, $90 ; id 0
+    db $FD, $00, $10, $10, $8F, $00, $10, $01, $07 ; id 1
+    db $FD, $10, $50, $60, $90, $01, $11, $05, $06 ; id 2
+    db $FD, $10, $40, $10, $91, $00, $30, $04, $08 ; id 3
+    db $FD, $10, $50, $10, $91, $00, $30, $05, $08 ; id 4
+    db $80 ; end
+
+; E-0157 (derived: list for entry $8F of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps8F::
+Data_011_778A:: ; address name
+    db $FD, $00, $10, $70, $8E, $00, $10, $01, $01 ; id 0
+    db $FD, $00, $10, $00, $90, $00, $31, $01, $08 ; id 1
+    db $FD, $00, $20, $00, $90, $00, $31, $02, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $90 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps90::
+Data_011_77A6:: ; address name
+    db $FF, $00, $00, $02, $8F, $80, $10, $00, $80 ; id 0
+    db $FD, $11, $50, $60, $8E, $01, $10, $05, $06 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $91 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps91::
+Data_011_77B9:: ; address name
+    db $FF, $00, $00, $01, $8E, $81, $10, $00, $90 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $92 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps92::
+Data_011_77C3:: ; address name
+    db $FE, $00, $00, $01, $70, $05, $12, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $93 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps93::
+Data_011_77CD:: ; address name
+    db $FE, $00, $00, $01, $70, $04, $11, $04, $04 ; id 0
+    db $FD, $00, $40, $20, $94, $00, $32, $04, $08 ; id 1
+    db $FD, $00, $50, $20, $94, $00, $32, $05, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $94 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps94::
+Data_011_77E9:: ; address name
+    db $FF, $00, $00, $03, $93, $80, $10, $00, $A0 ; id 0
+    db $FD, $10, $40, $40, $95, $00, $10, $04, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $95 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps95::
+Data_011_77FC:: ; address name
+    db $FD, $00, $40, $40, $94, $01, $10, $04, $04 ; id 0
+    db $FD, $01, $40, $40, $96, $00, $11, $04, $04 ; id 1
+    db $FD, $11, $40, $40, $96, $01, $11, $04, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $96 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps96::
+Data_011_7818:: ; address name
+    db $FD, $01, $40, $40, $95, $00, $11, $04, $04 ; id 0
+    db $FD, $11, $40, $40, $95, $01, $11, $04, $04 ; id 1
+    db $FD, $01, $10, $70, $97, $00, $10, $01, $07 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $97 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps97::
+Data_011_7834:: ; address name
+    db $FD, $00, $10, $70, $96, $00, $11, $01, $07 ; id 0
+    db $FD, $00, $80, $70, $98, $00, $10, $08, $07 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $98 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps98::
+Data_011_7847:: ; address name
+    db $FD, $00, $80, $70, $97, $00, $10, $08, $07 ; id 0
+    db $FD, $00, $80, $10, $99, $00, $10, $08, $01 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $99 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps99::
+Data_011_785A:: ; address name
+    db $FD, $00, $80, $10, $98, $00, $10, $08, $01 ; id 0
+    db $FD, $00, $10, $10, $9A, $00, $10, $01, $01 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $9A of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps9A::
+Data_011_786D:: ; address name
+    db $FD, $00, $10, $10, $99, $00, $10, $01, $01 ; id 0
+    db $FD, $00, $10, $70, $9B, $00, $12, $01, $07 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $9B of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps9B::
+Data_011_7880:: ; address name
+    db $FD, $02, $10, $70, $9A, $00, $10, $01, $07 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $9D of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarps9D::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A0 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA0::
+Data_011_788B:: ; address name
+    db $FD, $12, $40, $40, $A1, $00, $32, $04, $08 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A1 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA1::
+Data_011_7895:: ; address name
+    db $FE, $00, $00, $03, $A0, $01, $12, $04, $04 ; id 0
+    db $FF, $00, $00, $FF, $A2, $01, $32, $00, $80 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A2 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA2::
+Data_011_78A8:: ; address name
+    db $FF, $00, $01, $03, $A1, $00, $10, $00, $80 ; id 0
+    db $FD, $10, $40, $10, $A3, $00, $31, $04, $08 ; id 1
+    db $FD, $10, $50, $10, $A3, $00, $31, $05, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A3 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA3::
+Data_011_78C4:: ; address name
+    db $FF, $00, $00, $02, $A2, $81, $10, $00, $90 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A4 of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA4::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A8 of MapWarpTable; 5 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA8::
+Data_011_78CF:: ; address name
+    db $FD, $24, $40, $40, $A9, $00, $31, $04, $08 ; id 0
+    db $FD, $24, $50, $40, $A9, $00, $31, $04, $08 ; id 1
+    db $FD, $11, $40, $40, $AA, $00, $31, $04, $08 ; id 2
+    db $FD, $43, $40, $40, $AB, $00, $30, $04, $08 ; id 3
+    db $FD, $51, $40, $40, $AD, $01, $33, $04, $08 ; id 4
+    db $80 ; end
+
+; E-0157 (derived: list for entry $A9 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsA9::
+Data_011_78FD:: ; address name
+    db $FE, $01, $00, $02, $A8, $02, $14, $04, $04 ; id 0
+    db $FE, $10, $02, $00, $A8, $02, $14, $04, $04 ; id 1
+    db $FE, $11, $01, $02, $A8, $02, $14, $04, $04 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AA of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAA::
+Data_011_7919:: ; address name
+    db $FE, $01, $00, $02, $A8, $01, $11, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AB of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAB::
+Data_011_7923:: ; address name
+    db $FE, $00, $00, $01, $A8, $04, $13, $04, $04 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AC of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAC::
+Data_011_792D:: ; address name
+    db $FE, $00, $00, $01, $AE, $01, $00, $04, $00 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AD of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAD::
+Data_011_7937:: ; address name
+    db $FE, $00, $01, $04, $A8, $05, $11, $04, $04 ; id 0
+    db $FF, $00, $02, $FF, $AE, $02, $03, $00, $80 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AE of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAE::
+Data_011_794A:: ; address name
+    db $FE, $00, $01, $FF, $AC, $00, $30, $04, $08 ; id 0
+    db $FF, $00, $02, $04, $AD, $02, $00, $00, $80 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $AF of MapWarpTable; 0 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsAF::
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B0 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB0::
+Data_011_795E:: ; address name
+    db $FD, $10, $40, $40, $B1, $00, $30, $04, $08 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B1 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB1::
+Data_011_7968:: ; address name
+    db $FE, $00, $00, $01, $B0, $01, $10, $04, $04 ; id 0
+    db $FD, $00, $10, $30, $B3, $00, $11, $01, $03 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B3 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB3::
+Data_011_797B:: ; address name
+    db $FD, $01, $10, $30, $B1, $00, $10, $01, $03 ; id 0
+    db $FD, $11, $50, $40, $B4, $01, $11, $05, $04 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B4 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB4::
+Data_011_798E:: ; address name
+    db $FD, $11, $50, $40, $B3, $01, $11, $05, $04 ; id 0
+    db $FD, $01, $20, $50, $B5, $00, $11, $02, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B5 of MapWarpTable; 3 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB5::
+Data_011_79A1:: ; address name
+    db $FD, $01, $20, $50, $B4, $00, $11, $02, $05 ; id 0
+    db $FD, $11, $40, $00, $B6, $00, $30, $04, $08 ; id 1
+    db $FD, $11, $50, $00, $B6, $00, $30, $04, $08 ; id 2
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B6 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB6::
+Data_011_79BD:: ; address name
+    db $FF, $00, $00, $01, $B5, $81, $11, $00, $80 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B8 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB8::
+Data_011_79C7:: ; address name
+    db $FD, $43, $40, $40, $B9, $00, $31, $04, $08 ; id 0
+    db $FD, $43, $50, $40, $B9, $00, $31, $04, $08 ; id 1
+    db $FD, $11, $30, $50, $BA, $00, $31, $03, $08 ; id 2
+    db $FD, $40, $40, $40, $BB, $00, $31, $04, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $B9 of MapWarpTable; 4 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsB9::
+Data_011_79EC:: ; address name
+    db $FE, $00, $00, $FF, $B8, $04, $13, $04, $04 ; id 0
+    db $FE, $00, $00, $02, $B8, $04, $13, $04, $04 ; id 1
+    db $FE, $00, $01, $02, $B8, $04, $13, $04, $04 ; id 2
+    db $FD, $11, $50, $20, $BC, $00, $30, $05, $08 ; id 3
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BA of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBA::
+Data_011_7A11:: ; address name
+    db $FE, $00, $00, $02, $B8, $01, $11, $03, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BB of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBB::
+Data_011_7A1B:: ; address name
+    db $FE, $01, $00, $02, $B8, $04, $10, $04, $04 ; id 0
+    db $FD, $00, $40, $00, $BE, $00, $00, $04, $08 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BC of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBC::
+Data_011_7A2E:: ; address name
+    db $FE, $00, $00, $01, $B9, $81, $11, $05, $02 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BD of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBD::
+Data_011_7A38:: ; address name
+    db $FD, $00, $50, $70, $C4, $00, $10, $05, $07 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BE of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBE::
+Data_011_7A42:: ; address name
+    db $FE, $00, $00, $01, $BB, $80, $00, $04, $00 ; id 0
+    db $FD, $00, $40, $30, $BF, $00, $10, $04, $03 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $BF of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsBF::
+Data_011_7A55:: ; address name
+    db $FD, $00, $40, $30, $BE, $00, $10, $04, $03 ; id 0
+    db $FD, $11, $50, $50, $C0, $01, $11, $05, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C0 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC0::
+Data_011_7A68:: ; address name
+    db $FD, $11, $50, $50, $BF, $01, $11, $05, $05 ; id 0
+    db $FD, $10, $70, $20, $C1, $01, $10, $07, $02 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C1 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC1::
+Data_011_7A7B:: ; address name
+    db $FD, $10, $70, $20, $C0, $01, $10, $07, $02 ; id 0
+    db $FD, $00, $70, $20, $C2, $00, $10, $07, $02 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C2 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC2::
+Data_011_7A8E:: ; address name
+    db $FD, $00, $70, $20, $C1, $00, $10, $07, $02 ; id 0
+    db $FD, $10, $40, $50, $C3, $01, $10, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C3 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC3::
+Data_011_7AA1:: ; address name
+    db $FD, $10, $40, $50, $C2, $01, $10, $04, $05 ; id 0
+    db $FD, $00, $70, $20, $C4, $00, $10, $07, $02 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C4 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC4::
+Data_011_7AB4:: ; address name
+    db $FD, $00, $70, $20, $C3, $00, $10, $07, $02 ; id 0
+    db $FD, $00, $50, $70, $BD, $00, $10, $05, $07 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C8 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC8::
+Data_011_7AC7:: ; address name
+    db $FD, $00, $40, $40, $C9, $00, $31, $04, $08 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $C9 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsC9::
+Data_011_7AD1:: ; address name
+    db $FE, $00, $00, $02, $C8, $00, $10, $04, $04 ; id 0
+    db $FD, $00, $40, $50, $CA, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $CA of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsCA::
+Data_011_7AE4:: ; address name
+    db $FD, $01, $40, $50, $C9, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $CB, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $CB of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsCB::
+Data_011_7AF7:: ; address name
+    db $FD, $01, $40, $50, $CA, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $CC, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $CC of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsCC::
+Data_011_7B0A:: ; address name
+    db $FD, $01, $40, $50, $CB, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $CD, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $CD of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsCD::
+Data_011_7B1D:: ; address name
+    db $FD, $01, $40, $50, $CC, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $CE, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $CE of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsCE::
+Data_011_7B30:: ; address name
+    db $FD, $01, $40, $50, $CD, $00, $10, $04, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D1 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD1::
+Data_011_7B3A:: ; address name
+    db $FD, $01, $40, $40, $D2, $00, $31, $04, $08 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D2 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD2::
+Data_011_7B44:: ; address name
+    db $FE, $00, $00, $02, $D1, $00, $11, $04, $04 ; id 0
+    db $FD, $00, $40, $50, $D3, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D3 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD3::
+Data_011_7B57:: ; address name
+    db $FD, $01, $40, $50, $D2, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $D4, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D4 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD4::
+Data_011_7B6A:: ; address name
+    db $FD, $01, $40, $50, $D3, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $D5, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D5 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD5::
+Data_011_7B7D:: ; address name
+    db $FD, $01, $40, $50, $D4, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $D6, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D6 of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD6::
+Data_011_7B90:: ; address name
+    db $FD, $01, $40, $50, $D5, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $D7, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $D7 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsD7::
+Data_011_7BA3:: ; address name
+    db $FD, $01, $40, $50, $D6, $00, $10, $04, $05 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DA of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDA::
+Data_011_7BAD:: ; address name
+    db $FD, $10, $40, $40, $DB, $00, $31, $04, $08 ; id 0
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DB of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDB::
+Data_011_7BB7:: ; address name
+    db $FE, $00, $00, $02, $DA, $01, $10, $04, $04 ; id 0
+    db $FD, $00, $40, $50, $DC, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DC of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDC::
+Data_011_7BCA:: ; address name
+    db $FD, $01, $40, $50, $DB, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $DD, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DD of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDD::
+Data_011_7BDD:: ; address name
+    db $FD, $01, $40, $50, $DC, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $DE, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DE of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDE::
+Data_011_7BF0:: ; address name
+    db $FD, $01, $40, $50, $DD, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $DF, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $DF of MapWarpTable; 2 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsDF::
+Data_011_7C03:: ; address name
+    db $FD, $01, $40, $50, $DE, $00, $10, $04, $05 ; id 0
+    db $FD, $00, $40, $50, $E0, $00, $11, $04, $05 ; id 1
+    db $80 ; end
+
+; E-0157 (derived: list for entry $E0 of MapWarpTable; 1 record(s), then $80)
+; record: facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes
+MapWarpsE0::
+Data_011_7C16:: ; address name
+    db $FD, $01, $40, $50, $DF, $00, $10, $04, $05 ; id 0
+    db $80 ; end
     ds $3E0, $00

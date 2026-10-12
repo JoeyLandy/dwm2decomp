@@ -434,7 +434,25 @@
           "reason": "warp list of the map warp table"
         }
       ],
-      "note": "E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table)."
+      "note": "E-0036 (C1: CheckWarpAtPlayer indexes it with hMapId; the lists hold entries matched against the player's facing and position, and a match queues sound effect $60 and loads a new map number and position; all 256 words point into the bank; the first list starts at $69A6, directly after the table). E-0231: the lists are laid out as 9-byte entries ending with $80 (CheckWarpAtPlayer: a facing byte, $FD = skip, $FE/$FF = any facing, then screen and position matched against the player).",
+      "lists": {
+        "size": 9,
+        "end": 128,
+        "label": "MapWarps",
+        "record": "facing (0-3; $FE/$FF any facing; $FD skipped), screen X/Y nibbles, player X, player Y; then destination map, screen and position bytes",
+        "fields": [
+          {
+            "type": "db",
+            "size": 4,
+            "name": "facing, screen X/Y nibbles, player X, player Y"
+          },
+          {
+            "type": "db",
+            "size": 5,
+            "name": "destination (map number, screen, position, ...)"
+          }
+        ]
+      }
     },
     {
       "bank": "10",

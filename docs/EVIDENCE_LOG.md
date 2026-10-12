@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0231 — Map warp lists laid out
+
+- Kind: OBSERVATION (reading CheckWarpAtPlayer; C1).
+- **Format.** CheckWarpAtPlayer walks the list at MapWarpTable[hMapId] in 9-byte entries until $80:
+  - a facing byte (0-3 must equal hPlayerFacing; $FE/$FF match any facing; $FD skips the entry);
+  - screen X/Y nibbles, player X and player Y (all matched);
+  - five destination bytes.
+- **Generator.** MapWarpTable now carries a `lists` option, so every list is a table (MapWarpsNN). 1,305 record lists are derived in all.
+  - 15 pointer-run "streams" inside the lists are no longer registered (E-0203's rule), so the stream count is 4,701.
+- Unidentified INCBIN is 7,503 bytes.
+- Binary verification: build/run283 PASS, 0 differing bytes; tests OK.
+
 ### E-0230 — Streams found by tiling the gap after another stream
 
 - Kind: TOOL (C1).
