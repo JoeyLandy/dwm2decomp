@@ -77,8 +77,8 @@ How far the names can be trusted (E-0316):
 | Kind of name | Count | Confidence |
 | --- | --- | --- |
 | Rule-made names that describe their instructions: branch targets (`.loop`, `.set_x`, `.call_x`, ...) and steps (`Parent_To<X>`, `_Set<V>To<NN>`, `_Write<V>`, `_Wait<V>`, ...) | 12,814 | C2: tests/test_name_claims.py checks every claim against the code |
-| Strings, messages, streams, screens and table records, named by what sits at the address | about 9,500 | C2: named from the bytes themselves (E-0249 to E-0267) |
-| Names given by reading (config/names.json): game meaning of routines and data | 5,520 | C1 or C2 as each entry's evidence states; 10 readings also executed in tools/sm83.py (E-0314, E-0315) |
+| Strings and messages named by their identity (`String_BB_CC_II`, `Message_GG_II`, ...), plus streams, screens, sound tracks and table records named from their contents | 6,090 strings and messages, plus over 1,000 others | C2: named from the bytes themselves (E-0249 to E-0267) |
+| Names given by reading (config/names.json): game meaning of routines and data | 5,443 | C1 or C2 as each entry's evidence states; 10 readings also executed in tools/sm83.py (E-0314, E-0315) |
 
 Open questions:
 - Answered since E-0308: MON_SEX bit 0 is 0 male, 1 female (E-0311); MON_EGG is 0 none, 1 unappraised egg, 2 appraised egg (E-0311); gifts go to an Egg whose record is wGiftRecord: they raise its max HP and shift its family scores, which pick its species (E-0312).
