@@ -3265,9 +3265,9 @@ Func_073_5378:: ; address name
     set 1, a
     ld [wStoryFlags + $68], a
     ld a, $50
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, $70
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -3367,19 +3367,19 @@ Jump_073_53D8:: ; address name
 SceneMercy::
 Func_073_541D:: ; address name
     ld a, $10
-    ld [wObject2 + $C], a
+    ld [wObject2 + OBJ_Y], a
     xor a, a
     ld [wSpriteSlots + $7], a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B73
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
     ld a, [wSpriteSlots + $C]
     inc a
     inc a
     ld [wSpriteSlots + $C], a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $B0
     ret nz
     ld a, $80
@@ -3607,9 +3607,9 @@ Jump_073_555E:: ; address name
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $20
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3699,9 +3699,9 @@ Jump_073_55D1:: ; address name
     ld a, [wSpriteSlots + $C]
     sub a, h
     ld [wSpriteSlots + $C], a
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     sub a, h
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld a, $00
     ld [wStepPtrHi], a
     ld a, $01
@@ -3730,19 +3730,19 @@ Jump_073_55D1:: ; address name
 ; points at: wScriptStep
 SceneTooStrong_SetBit2AtHL_B73::
 Jump_073_562C:: ; address name
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
     ld a, $01
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $B]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_X]
     cp a, $60
     jr z, .call_clear_bit2_at_hl_bank73
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ret
 
 .call_clear_bit2_at_hl_bank73:
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank73
     ld hl, $0300
     ld a, l
@@ -3765,13 +3765,13 @@ Jump_073_5659:: ; address name
     ld a, $40
     ldh [hTemp1], a
     farcall ScriptStepBlinkObjectTemp0
-    ld a, [wObject2 + $C]
+    ld a, [wObject2 + OBJ_Y]
     cp a, $40
     jr z, .set_object3
     ld a, $30
 
 .set_object3:
-    ld [wObject3 + $C], a
+    ld [wObject3 + OBJ_Y], a
     ldh a, [hTemp0]
     or a, a
     ret z
@@ -3780,7 +3780,7 @@ Jump_073_5659:: ; address name
     dec a
     ld [wSpriteSlotCount], a
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, $0725 ; 'Tch, I can't enjoy my meal'
     call StartMessageHL_B73b
     ld hl, wScriptStep
@@ -3805,17 +3805,17 @@ Func_073_568E:: ; address name
 ; writes: wObject2, wObject1, wScriptStartRequest
 SceneRoltElder_ClearBit2AtHL_Bank73::
 Jump_073_569A:: ; address name
-    ld a, [wObject2 + $C]
+    ld a, [wObject2 + OBJ_Y]
     dec a
-    ld [wObject2 + $C], a
-    ld a, [wObject1 + $C]
+    ld [wObject2 + OBJ_Y], a
+    ld a, [wObject1 + OBJ_Y]
     dec a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $50
     ret nz
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank73
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call ClearBit2AtHL_Bank73
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3828,17 +3828,17 @@ Jump_073_569A:: ; address name
 ; points at: wScriptStep
 SceneRoltElder_WriteObject2AndObject1::
 Jump_073_56BD:: ; address name
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
-    ld a, [wObject1 + $B]
+    ld [wObject2 + OBJ_X], a
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $60
     ret nz
     ld a, $02
-    ld [wObject1 + $7], a
-    ld [wObject2 + $7], a
+    ld [wObject1 + OBJ_STATE], a
+    ld [wObject2 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3850,16 +3850,16 @@ Jump_073_56BD:: ; address name
 ; points at: wScriptStep
 SceneRoltElder_WriteObject1AndObject2::
 Jump_073_56DB:: ; address name
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
-    ld a, [wObject2 + $C]
+    ld [wObject1 + OBJ_X], a
+    ld a, [wObject2 + OBJ_Y]
     dec a
-    ld [wObject2 + $C], a
+    ld [wObject2 + OBJ_Y], a
     cp a, $60
     ret nz
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -3871,20 +3871,20 @@ Jump_073_56DB:: ; address name
 ; points at: wScriptStep
 SceneRoltElder_SetBit2AtHL_B73::
 Jump_073_56F6:: ; address name
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B73
-    ld a, [wObject2 + $C]
+    ld a, [wObject2 + OBJ_Y]
     dec a
-    ld [wObject2 + $C], a
-    ld a, [wObject1 + $C]
+    ld [wObject2 + OBJ_Y], a
+    ld a, [wObject1 + OBJ_Y]
     dec a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $60
     ret nz
     ld a, $01
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -4139,11 +4139,11 @@ Func_073_587A:: ; address name
 ; writes: wObject5, hTemp0, wScriptStartRequest
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_Case04::
 Jump_073_5888:: ; address name
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
@@ -4202,9 +4202,9 @@ Jump_073_58E0:: ; address name
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $50
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $80
     ld [wObject5], a
     ld hl, wScriptStep
@@ -4258,12 +4258,12 @@ Func_073_5919:: ; address name
 
 .set_object1_to_20:
     ld a, $20
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     jr .check_script_param0
 
 .set_object1_to_E0:
     ld a, $E0
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
 
 .check_script_param0:
     ld a, [wScriptParam0]
@@ -4272,7 +4272,7 @@ Func_073_5919:: ; address name
     cp a, $78
     ret nz
     ld a, $20
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld a, $36
     ldh [hTemp0], a
     farcall FindTemp0InInventoryList
@@ -5191,9 +5191,9 @@ Jump_073_5EBD:: ; address name
     inc [hl]
     call SceneMadcondor_WriteMessageIndexAndMessageGroupEtc
     add a, $10
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld a, [wSpriteSlots + $B]
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, [wSpriteSlots + $B]
     cp a, $E0
     ret nz
@@ -5311,11 +5311,11 @@ Func_073_5F55:: ; address name
     add a, c
     ld hl, wFollowerRecords
     add_a_to_hl
-    ld a, [wObject3 + $7]
+    ld a, [wObject3 + OBJ_STATE]
     ld [hl+], a
-    ld a, [wObject3 + $B]
+    ld a, [wObject3 + OBJ_X]
     ld [hl+], a
-    ld a, [wObject3 + $C]
+    ld a, [wObject3 + OBJ_Y]
     ld [hl], a
     ld a, [wPartyCount]
     dec a
@@ -5356,7 +5356,7 @@ Jump_073_5FC4:: ; address name
     ld a, [wScriptParam0]
     and a, $03
     jr nz, .call_step_script_param0_counter_bank73
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
 
 .call_step_script_param0_counter_bank73:
@@ -5397,12 +5397,12 @@ Jump_073_5FE4:: ; address name
     inc hl
     ld a, [hl]
     and a, $F0
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, [hl]
     and a, $0F
     swap a
     add a, $F8
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     pop hl
     ld hl, wScriptStep
     inc [hl]
@@ -5488,9 +5488,9 @@ Jump_073_6083:: ; address name
     call StepScriptParam0Counter_Bank73
     ret nc
     ld a, $40
-    ld [wObject2 + $C], a
+    ld [wObject2 + OBJ_Y], a
     ld a, $50
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     xor a, a
     ld [wObject5], a
     ld a, $03
@@ -5508,14 +5508,14 @@ Jump_073_6083:: ; address name
 ; points at: wScriptStep
 SceneRealKing_QueueSoundEffect::
 Jump_073_60A7:: ; address name
-    ld a, [wObject2 + $C]
+    ld a, [wObject2 + OBJ_Y]
     inc a
     inc a
-    ld [wObject2 + $C], a
-    ld a, [wObject1 + $C]
+    ld [wObject2 + OBJ_Y], a
+    ld a, [wObject1 + OBJ_Y]
     dec a
     dec a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $48
     ret nz
     xor a, a
@@ -5540,20 +5540,20 @@ Jump_073_60CD:: ; address name
     ld [wScriptParam0], a
     and a, $03
     ret nz
-    ld hl, wObject2 + $C
+    ld hl, wObject2 + OBJ_Y
     dec [hl]
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     inc a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $58
     ret nz
     ld a, $0C
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $48
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5576,9 +5576,9 @@ Func_073_60FE:: ; address name
     ld [wSpriteSlotCount], a
 
 .check_object1:
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     inc a
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     cp a, $70
     ret nz
     ld a, $02
@@ -5712,7 +5712,7 @@ Jump_073_61BF:: ; address name
     inc a
     inc a
     and a, $03
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld de, $0191
     call TestFlagBit
     jr c, .call_count_keys_or_full
@@ -5759,9 +5759,9 @@ Jump_073_620B:: ; address name
 .call_start_message_hl_b73b2:
     call StartMessageHL_B73b
     ld a, $00
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, $02
-    ld [wObject3 + $7], a
+    ld [wObject3 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -5778,7 +5778,7 @@ Jump_073_622D:: ; address name
     and a, $01
     add a, a
     inc a
-    ld [wObject3 + $7], a
+    ld [wObject3 + OBJ_STATE], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -5863,7 +5863,7 @@ Jump_073_628C:: ; address name
     dec hl
     ld [hl], $01
     ld a, $50
-    ld [wObject3 + $C], a
+    ld [wObject3 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6029,13 +6029,13 @@ Jump_073_6387:: ; address name
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     cp a, $50
     jr nz, .cp_70
     ld a, $03
     ld [wSpriteSlots + $7], a
     ld a, $01
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 .cp_70:
@@ -6044,24 +6044,24 @@ Jump_073_6387:: ; address name
     ld a, $01
     ld [wSpriteSlots + $7], a
     ld a, $03
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 .check_object1:
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     cp a, $20
     jr nz, .clear_sprite_slots
     ld a, $02
     ld [wSpriteSlots + $7], a
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 .clear_sprite_slots:
     xor a, a
     ld [wSpriteSlots + $7], a
     ld a, $02
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 ; entry 15 of the `rst $00` table in RewardItemOrKey
@@ -6076,7 +6076,7 @@ Jump_073_63DA:: ; address name
     and a, $01
     add a, a
     inc a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6128,7 +6128,7 @@ Jump_073_640A:: ; address name
     xor a, a
     ldh [hFieldDrawFlags], a
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, wSpriteSlotCount
     inc [hl]
     xor a, a
@@ -6153,7 +6153,7 @@ Jump_073_6441:: ; address name
     cp a, $50
     jr nz, .call_reward_item_or_key_shared03
     ld a, $50
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6179,7 +6179,7 @@ Jump_073_645D:: ; address name
     cp a, $20
     jr nz, .call_reward_item_or_key_shared02
     ld a, $20
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6204,7 +6204,7 @@ Jump_073_647A:: ; address name
     cp a, $30
     jr nz, .skip
     ld a, $30
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld a, $0D
     ld [wScriptStep], a
     ret
@@ -6234,7 +6234,7 @@ Jump_073_649E:: ; address name
     cp a, $70
     jr nz, .call_reward_item_or_key_shared04
     ld a, $70
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -6290,7 +6290,7 @@ Jump_073_64DC:: ; address name
     cp a, $60
     jr nz, .skip
     ld a, $60
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, $0D
     ld [wScriptStep], a
     ret
@@ -6321,7 +6321,7 @@ Jump_073_64FF:: ; address name
     cp a, $40
     jr nz, .call_reward_item_or_key_shared01
     ld a, $40
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -7519,7 +7519,7 @@ Jump_073_6B46:: ; address name
     call RunMessageBoxFar_Bank73
     ret nc
     ld a, $01
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ld hl, $0849 ; 'Bravo, bravo! You were fabulous! You'
@@ -7559,7 +7559,7 @@ SceneDancing_Talk0886_NsDancingLuredA::
 Jump_073_6B77:: ; address name
     call Talk0886_NsDancingLuredA
     ld a, $E0
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ret
 
 ; entry 6 of the `rst $00` table in SceneDancing
@@ -7612,7 +7612,7 @@ Jump_073_6BB6:: ; address name
     call RunMessageBoxFar_Bank73
     ret nc
     ld a, $E0
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -7624,11 +7624,11 @@ Jump_073_6BB6:: ; address name
 ; points at: wScriptStep
 SceneMermaidSong_ShowHeroReceivedATinyMedal::
 Jump_073_6BC6:: ; address name
-    ld a, [wObject5 + $4]
+    ld a, [wObject5 + SCRIPTOBJ_X]
     inc a
     inc a
-    ld [wObject5 + $4], a
-    ld de, wObject5 + $5
+    ld [wObject5 + SCRIPTOBJ_X], a
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -7659,9 +7659,9 @@ Jump_073_6BC6:: ; address name
 ; points at: wScriptStep
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73::
 Jump_073_6C0C:: ; address name
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $65
@@ -7701,7 +7701,7 @@ Jump_073_6C3E:: ; address name
     call RunMessageBoxFar_Bank73
     ret nc
     ld a, $01
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ld de, $006E
@@ -7768,7 +7768,7 @@ Func_073_6C77:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld a, $30
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld hl, $0886 ; 'N's dancing lured a mermaid to'
     call StartMessageHL_B73b
     ret
@@ -8165,18 +8165,18 @@ Func_073_6F14:: ; address name
     ldh a, [hPlayerX]
     cp a, $50
     jr nz, .cp_30
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
     jr .call_script_apply_step_delta_at_de_bank73
 
 .cp_30:
     cp a, $30
     jr nz, .check_player_y
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
     jr .call_script_apply_step_delta_at_de_bank73
 
@@ -8184,21 +8184,21 @@ Func_073_6F14:: ; address name
     ldh a, [hPlayerY]
     cp a, $20
     jr z, .call_script_apply_step_delta_at_de_bank73
-    ld a, [wObject5 + $5]
+    ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
     inc a
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
 
 .call_script_apply_step_delta_at_de_bank73:
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
     ld [wObject5], a
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -8220,9 +8220,9 @@ Func_073_6F5B:: ; address name
     ret
 
 .skip:
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $80
@@ -8432,9 +8432,9 @@ Jump_073_7062:: ; address name
 ; points at: wScriptStep
 SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73_Case1B::
 Jump_073_7095:: ; address name
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
@@ -8613,7 +8613,7 @@ Jump_073_71BC:: ; address name
     farcall DrawAnimatedMetaSprite1B
     ld de, wSpriteSlots + $7
     call RotateDirectionAtDEEvery32_Bank73
-    ld de, wObject1 + $C
+    ld de, wObject1 + OBJ_Y
     ld hl, $005A
     call ScriptStepAdjust32TimesThenMessage_Bank73
     ret
@@ -8668,10 +8668,10 @@ Jump_073_71F6:: ; address name
 SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73::
 Jump_073_7223:: ; address name
     ld a, $02
-    ld [wObject2 + $7], a
-    ld hl, wObject2 + $C
+    ld [wObject2 + OBJ_STATE], a
+    ld hl, wObject2 + OBJ_Y
     inc [hl]
-    ld de, wObject2 + $C
+    ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld de, $000B
@@ -8692,21 +8692,21 @@ Jump_073_7223:: ; address name
 ; points at: wScriptStep
 SceneWarubouFood2_AddStepDeltaToPointedByte::
 Jump_073_724F:: ; address name
-    ld hl, wObject2 + $B
+    ld hl, wObject2 + OBJ_X
     dec [hl]
-    ld de, wObject1 + $C
+    ld de, wObject1 + OBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    ld de, wObject2 + $C
+    ld de, wObject2 + OBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -8749,11 +8749,11 @@ Jump_073_72A9:: ; address name
 
 .set_object1_to_80:
     ld a, $80
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, $60
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, $70
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $63
     call QueueSoundEffect
     xor a, a
@@ -8815,7 +8815,7 @@ Jump_073_7300:: ; address name
 ; points at: wScriptStep
 SceneWarubouFood2_ShowWarubouWaheySomePrince::
 Jump_073_7317:: ; address name
-    ld de, wObject1 + $C
+    ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0055 ; 'Warubou Wa-hey! Some prince! Dirty mouth!'
@@ -8829,7 +8829,7 @@ Jump_073_7317:: ; address name
 ; points at: wScriptStep
 SceneWarubouFood2_ShowKamehaGimmeItYou::
 Jump_073_7329:: ; address name
-    ld de, wObject2 + $C
+    ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0054 ; 'Kameha Gimme it! You just ate!'
@@ -8843,7 +8843,7 @@ Jump_073_7329:: ; address name
 ; points at: wScriptStep
 SceneWarubouFood2_ShowWarubouWaheyImStarving::
 Jump_073_733B:: ; address name
-    ld de, wObject1 + $C
+    ld de, wObject1 + OBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld hl, $0053 ; 'Warubou Wa-hey! I'm starving!'
@@ -8859,9 +8859,9 @@ Jump_073_733B:: ; address name
 ; points at: wScriptStep
 ScriptStepSetObjectBit2AndWait::
 Func_073_734D:: ; address name
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B73
     ld a, $80
     ld [wObject5], a
@@ -8895,15 +8895,15 @@ Func_073_736B:: ; address name
     ld c, a
 
 .read_object1:
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     add a, c
-    ld [wObject1 + $B], a
-    ld a, [wObject2 + $B]
+    ld [wObject1 + OBJ_X], a
+    ld a, [wObject2 + OBJ_X]
     add a, c
-    ld [wObject2 + $B], a
-    ld a, [wObject5 + $4]
+    ld [wObject2 + OBJ_X], a
+    ld a, [wObject5 + SCRIPTOBJ_X]
     add a, c
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld hl, wScriptParam0
     inc [hl]
     ret
@@ -8955,7 +8955,7 @@ Jump_073_73BA:: ; address name
     or a, a
     ret z
     ld a, $E0
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld hl, wScriptParam0
     inc [hl]
     ret
@@ -8972,7 +8972,7 @@ Jump_073_73BA:: ; address name
     or a, a
     ret z
     ld a, $E0
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
@@ -8995,12 +8995,12 @@ Jump_073_741E:: ; address name
     ld hl, $749A
     add_a_to_hl
     ld a, [hl]
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, [wScriptParam0]
     push af
     srl a
     ld [wScriptParam0], a
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -9013,7 +9013,7 @@ Jump_073_741E:: ; address name
     jr nz, .set_player_x
     ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank73
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call ClearBit2AtHL_Bank73
     jr .check_script_param0
 
@@ -9021,10 +9021,10 @@ Jump_073_741E:: ; address name
     dec a
     dec a
     ldh [hPlayerX], a
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
 
 .check_script_param0:
     ld a, [wScriptParam0]
@@ -9035,9 +9035,9 @@ Jump_073_741E:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $68
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     xor a, a
@@ -9080,18 +9080,18 @@ Jump_073_74EC:: ; address name
 
 SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2::
 Jump_073_74F9:: ; address name
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     add a, c
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ldh a, [hPlayerX]
     add a, c
     ldh [hPlayerX], a
     ld a, [wFollowerRecords + $1]
     add a, c
     ld [wFollowerRecords + $1], a
-    ld a, [wObject5 + $4]
+    ld a, [wObject5 + SCRIPTOBJ_X]
     add a, c
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -9124,7 +9124,7 @@ Jump_073_7566:: ; address name
     ld [wFollowerRecords], a
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B73
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -9141,9 +9141,9 @@ Func_073_758C:: ; address name
     or a, a
     jr nz, .check_player_x
     ldh a, [hPlayerX]
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ldh a, [hPlayerY]
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $80
     ld [wObject5], a
     ld hl, wScriptStep
@@ -9154,14 +9154,14 @@ Func_073_758C:: ; address name
     ldh a, [hPlayerX]
     cp a, $30
     jr nz, .cp_50
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     jr .call_script_apply_step_delta_at_de_bank73
 
 .cp_50:
     cp a, $50
     jr nz, .check_player_y
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
     jr .call_script_apply_step_delta_at_de_bank73
 
@@ -9169,16 +9169,16 @@ Func_073_758C:: ; address name
     ldh a, [hPlayerY]
     cp a, $20
     jr nz, .skip
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
     jr .call_script_apply_step_delta_at_de_bank73
 
 .skip:
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
 
 .call_script_apply_step_delta_at_de_bank73:
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
@@ -9234,7 +9234,7 @@ Jump_073_75F5:: ; address name
 .set_object5_to_80:
     ld a, $80
     ld [wObject5], a
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -9246,7 +9246,7 @@ Jump_073_75F5:: ; address name
     cp a, $20
     ret nz
     ld a, $50
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -9260,10 +9260,10 @@ Jump_073_75F5:: ; address name
 ; points at: wScriptStep
 SceneWarubouSmells_QueueSoundEffect::
 Jump_073_7639:: ; address name
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
     dec a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $30
     ret nz
     ld a, $63
@@ -9279,9 +9279,9 @@ Jump_073_7639:: ; address name
 ; points at: wScriptStep
 SceneWarubouSmells_WriteObject2::
 Jump_073_764E:: ; address name
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $40
     ret nz
     ld hl, wScriptStep
@@ -9347,7 +9347,7 @@ Jump_073_7683:: ; address name
 ; points at: wScriptStep
 SceneSpinning_StepObjectTowardCoord_Case0F::
 Jump_073_76B8:: ; address name
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     cp a, $40
     jr z, .set_step_target_to_82
     ld a, $83
@@ -9373,9 +9373,9 @@ Jump_073_76B8:: ; address name
     ld a, $40
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
@@ -9400,7 +9400,7 @@ Jump_073_7709:: ; address name
 ; points at: wScriptStep
 SceneSpinning_WriteStepPtrLoAndStepPtrHiEtc::
 Jump_073_7713:: ; address name
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     jr SceneSpinning_AddStepDeltaToPointedByte_SetStepPtrLo
 
@@ -9411,12 +9411,12 @@ Jump_073_7713:: ; address name
 ; points at: wScriptStep
 SceneSpinning_AddStepDeltaToPointedByte::
 Jump_073_7719:: ; address name
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
 
 SceneSpinning_AddStepDeltaToPointedByte_SetStepPtrLo::
 Jump_073_771D:: ; address name
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -9439,15 +9439,15 @@ Jump_073_771D:: ; address name
 ; points at: wScriptStep
 SceneSpinning_ScriptApplyStepDeltaAtDE_Bank73::
 Jump_073_7741:: ; address name
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     ld a, $03
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -9471,7 +9471,7 @@ Jump_073_775A:: ; address name
 ; points at: wScriptStep
 SceneSpinning_StepObjectTowardCoord::
 Jump_073_7765:: ; address name
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     cp a, $30
     jr z, .set_step_ptr_hi_to_02
     ld a, $01
@@ -9494,7 +9494,7 @@ Jump_073_7765:: ; address name
     or a, a
     ret z
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -9512,14 +9512,14 @@ Jump_073_77A5:: ; address name
     cp a, $3C
     jr nz, .cp_78
     ld a, $50
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ret
 
 .cp_78:
     cp a, $78
     jr nz, .cp_B4
     ld a, $20
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ret
 
 .cp_B4:
@@ -9567,7 +9567,7 @@ Jump_073_77DC:: ; address name
 SceneLearnQuick_StepObjectTowardCoord_Case04::
 Jump_073_77EA:: ; address name
     call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     cp a, $30
     jr z, .set_step_target_to_83
     ld a, $82
@@ -9604,7 +9604,7 @@ Jump_073_77EA:: ; address name
     ret
 
 .check_object2:
-    ld a, [wObject2 + $C]
+    ld a, [wObject2 + OBJ_Y]
     cp a, $30
     jr z, .set_step_ptr_hi_to_02
     ld a, $02
@@ -9893,9 +9893,9 @@ Func_073_79F4:: ; address name
 ; writes: wObject5, wScriptStartRequest
 SceneFarmKids_ScriptApplyStepDeltaAtDE_Bank73::
 Jump_073_79FC:: ; address name
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
     xor a, a
@@ -9911,9 +9911,9 @@ Jump_073_79FC:: ; address name
 SceneFarmKids_StepScriptParam0Counter_Bank73::
 Jump_073_7A11:: ; address name
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $80
     ld [wObject5], a
     ld b, $3C

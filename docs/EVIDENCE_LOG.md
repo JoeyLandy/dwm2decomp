@@ -2431,6 +2431,31 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0300 — Field object slots and the script meta-sprite object (OBJ_*, SCRIPTOBJ_*)
+
+- Kind: STATIC (C1).
+- **wObject1-4, 16-byte slots after wSpriteSlots.**
+  - UpdateSpriteSlots jumps through six routines on each slot's byte 0, so byte 0 is the behaviour type. This answers the "byte 0" question.
+  - UpdateAndDrawSpriteSlots reads, per slot:
+    - +1: when 0, the sprite set comes from +2 (bits 0-6);
+    - +6: bits 0-2 go to hSpriteAttrXor;
+    - +8: tile offset;
+    - +$B and +$C: X and Y, plus 8 and 16 and the scroll;
+    - +$E: sub-index; bit 7 flips the sprite (attribute bit 5).
+  - UpdateSpriteSlots type 0 increments +9 every frame unless +$D bit 1 is set, so +9 is an animation counter (E-0134 had called it "flags"). +$D bit 2 picks the frame rule.
+  - Byte $F is never addressed directly; it stays unread.
+- **wObject5, an 8-byte script meta-sprite object.** It runs up to the story flags at $CBD7, and DrawFieldSprites reads it with a different layout:
+  - byte 0 bit 7: shown (the draw returns when it is clear);
+  - +1: tile offset;
+  - +2: sprite set (bit 7: a sub-index follows);
+  - +3: attributes;
+  - +4 and +5: X and Y.
+
+  This is the layout the scenes write: `ld [wObject5 + $4], $68`, `ld [wObject5], $80`.
+- **Generator.** config/record_fields.json gains "object" (10 OBJ_* fields) and "script_object" (5 SCRIPTOBJ_* fields). Operands inside wObject1-4 and wObject5 are named, for example `ld [wObject2 + OBJ_X], a` and `ld [wObject5 + SCRIPTOBJ_Y], a`: 642 + 238. wSpriteSlots is left alone, because the bank-$E0 intro uses 8-byte slots there. The wObject notes in config/symbols.json describe byte 0.
+- **Still numeric.** wObject1/2 + $3 (33 uses), and wObject5 + $6 and + $7.
+- Binary verification: build/run413 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0299 — Species record fields; record $73-$8D are the resistances
 
 - Kind: STATIC (C2 for the copies, C1 for the meanings).

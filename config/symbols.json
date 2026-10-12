@@ -2808,31 +2808,31 @@
   "CB8F": {
     "name": "wObject1",
     "size": "10",
-    "note": "field object 1: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "note": "field object 1: 16-byte slot after wSpriteSlots; byte 0 = behaviour type (UpdateSpriteSlots jumps through six routines on it); other bytes are the OBJ_* offsets of records.inc (E-0300)",
     "evidence": "E-0134"
   },
   "CB9F": {
     "name": "wObject2",
     "size": "10",
-    "note": "field object 2: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "note": "field object 2: 16-byte slot after wSpriteSlots; byte 0 = behaviour type (UpdateSpriteSlots jumps through six routines on it); other bytes are the OBJ_* offsets of records.inc (E-0300)",
     "evidence": "E-0134"
   },
   "CBAF": {
     "name": "wObject3",
     "size": "10",
-    "note": "field object 3: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "note": "field object 3: 16-byte slot after wSpriteSlots; byte 0 = behaviour type (UpdateSpriteSlots jumps through six routines on it); other bytes are the OBJ_* offsets of records.inc (E-0300)",
     "evidence": "E-0134"
   },
   "CBBF": {
     "name": "wObject4",
     "size": "10",
-    "note": "field object 4: 16-byte entry after wSpriteSlots (+$7 state, +$9 flags, +$B X, +$C Y, +$D flags)",
+    "note": "field object 4: 16-byte slot after wSpriteSlots; byte 0 = behaviour type (UpdateSpriteSlots jumps through six routines on it); other bytes are the OBJ_* offsets of records.inc (E-0300)",
     "evidence": "E-0134"
   },
   "CBCF": {
     "name": "wObject5",
     "size": "8",
-    "note": "field object 5 (its entry stops at the story flags at $CBD7)",
+    "note": "the script meta-sprite object (8 bytes, up to the story flags at $CBD7): byte 0 bit 7 = shown (DrawFieldSprites returns when it is clear); the SCRIPTOBJ_* offsets of records.inc (E-0300)",
     "evidence": "E-0134"
   },
   "CCE9": {

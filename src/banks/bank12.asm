@@ -1031,16 +1031,16 @@ Jump_012_45D6:: ; address name
     ld [wFieldEventKind], a
     ld a, $03
     ld [wSpriteSlots + $7], a
-    ld [wObject1 + $7], a
-    ld [wObject2 + $7], a
-    ld [wObject3 + $7], a
+    ld [wObject1 + OBJ_STATE], a
+    ld [wObject2 + OBJ_STATE], a
+    ld [wObject3 + OBJ_STATE], a
     ld hl, wSpriteSlots + $D
     call ClearBit2AtHL_Bank12
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call ClearBit2AtHL_Bank12
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call ClearBit2AtHL_Bank12
-    ld hl, wObject3 + $D
+    ld hl, wObject3 + OBJ_FLAGS
     call ClearBit2AtHL_Bank12
     ld a, $00
     call QueueSoundEffect
@@ -1166,11 +1166,11 @@ Jump_012_469E:: ; address name
     ld [wSpriteSlotCount], a
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B12
-    ld hl, wObject1 + $D
+    ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B12
-    ld hl, wObject2 + $D
+    ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B12
-    ld hl, wObject3 + $D
+    ld hl, wObject3 + OBJ_FLAGS
     call SetBit2AtHL_B12
     xor a, a
     ld [wFieldEventKind], a
@@ -1218,11 +1218,11 @@ Jump_012_4705:: ; address name
     inc [hl]
     ld hl, wFollowerRecords + $B
     inc [hl]
-    ld hl, wObject1 + $B
+    ld hl, wObject1 + OBJ_X
     dec [hl]
-    ld hl, wObject2 + $B
+    ld hl, wObject2 + OBJ_X
     dec [hl]
-    ld hl, wObject3 + $B
+    ld hl, wObject3 + OBJ_X
     dec [hl]
     ld b, $10
     call StepScriptParam0Counter_Bank12
@@ -1703,7 +1703,7 @@ Jump_012_4A5A:: ; address name
     ld hl, wChildRecord
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + $2], a
+    ld [wObject1 + OBJ_SPRITE_SET], a
     ldh [hTemp0], a
     ld a, [hl]
     ld [wObject1 + $3], a
@@ -1885,9 +1885,9 @@ Jump_012_4B77:: ; address name
     xor a, a
     ld [wObject5], a
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, $3C
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1933,7 +1933,7 @@ Jump_012_4BB4:: ; address name
     ld hl, wChildRecord
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + $2], a
+    ld [wObject1 + OBJ_SPRITE_SET], a
     ldh [hTemp0], a
     ld a, [hl]
     ld [wObject1 + $3], a
@@ -2109,9 +2109,9 @@ Jump_012_4CBC:: ; address name
     cp a, $C8
     ret nz
     ld a, $01
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, $03
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2124,19 +2124,19 @@ Jump_012_4CBC:: ; address name
 LinkMessageEvent_WriteObject2AndScriptParam0::
 Jump_012_4CDF:: ; address name
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
     and a, $03
     ret nz
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $58
     ret nz
     xor a, a
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -2153,7 +2153,7 @@ Jump_012_4D05:: ; address name
     call StepScriptParam0Counter_Bank12
     ret nc
     ld a, $40
-    ld [wObject2 + $C], a
+    ld [wObject2 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2166,19 +2166,19 @@ Jump_012_4D05:: ; address name
 LinkMessageEvent_WriteObject1AndScriptParam0::
 Jump_012_4D15:: ; address name
     ld a, $03
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
     and a, $03
     ret nz
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $48
     ret nz
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -2207,7 +2207,7 @@ Jump_012_4D46:: ; address name
     call StepScriptParam0Counter_Bank12
     ret nc
     ld a, $40
-    ld [wObject1 + $C], a
+    ld [wObject1 + OBJ_Y], a
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -2246,7 +2246,7 @@ Jump_012_4D6B:: ; address name
     ld hl, wRecordBufA
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + $2], a
+    ld [wObject1 + OBJ_SPRITE_SET], a
     ldh [hTemp0], a
     ld a, [hl]
     ld [wObject1 + $3], a
@@ -2265,7 +2265,7 @@ Jump_012_4D6B:: ; address name
     ld hl, wRecordBufB
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject2 + $2], a
+    ld [wObject2 + OBJ_SPRITE_SET], a
     ldh [hTemp0], a
     ld a, [hl]
     ld [wObject2 + $3], a
@@ -3319,7 +3319,7 @@ Jump_012_5548:: ; address name
 
 .clear_object1:
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 ; entry 1 of the `rst $00` table in ReturnWarp
@@ -3465,7 +3465,7 @@ Jump_012_5633:: ; address name
 
 .clear_object1:
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld de, $002B
     call TestFlagBit
     jr c, .call_start_message_a
@@ -7108,9 +7108,9 @@ Func_012_6A6A:: ; address name
     ldh [hTemp0], a
     call RunFieldCommandTemp0
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $10
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $40
     ld [wObject5], a
     ret
@@ -7129,9 +7129,9 @@ Func_012_6A6A:: ; address name
     ldh [hTemp0], a
     call RunFieldCommandTemp0
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $40
     ld [wObject5], a
     ret
@@ -7144,9 +7144,9 @@ Func_012_6A6A:: ; address name
     ldh [hTemp0], a
     call RunFieldCommandTemp0
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $40
     ld [wObject5], a
     ret
@@ -7305,7 +7305,7 @@ RunFieldCommandTemp0_WriteObject5_Case14::
 Jump_012_6BC7:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7332,7 +7332,7 @@ RunFieldCommandTemp0_WriteObject5_Case13::
 Jump_012_6BED:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM_Shared02
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
     inc hl
     pop af
@@ -7350,7 +7350,7 @@ RunFieldCommandTemp0_WriteObject5_Case12::
 Jump_012_6C01:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7373,7 +7373,7 @@ RunFieldCommandTemp0_WriteObject5_Case11::
 Jump_012_6C20:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7396,7 +7396,7 @@ RunFieldCommandTemp0_WriteObject5_Case10::
 Jump_012_6C3F:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7418,7 +7418,7 @@ RunFieldCommandTemp0_WriteObject5_Case0F::
 Jump_012_6C59:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7440,7 +7440,7 @@ RunFieldCommandTemp0_WriteObject5_Case0D::
 Jump_012_6C73:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM_Shared02
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $30
     inc hl
     pop af
@@ -7469,7 +7469,7 @@ RunFieldCommandTemp0_WriteObject5_Case0C::
 Jump_012_6C9B:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7499,7 +7499,7 @@ RunFieldCommandTemp0_WriteObject5_Case0B::
 Jump_012_6CC2:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7528,7 +7528,7 @@ RunFieldCommandTemp0_WriteObject5_Case0A::
 Jump_012_6CE9:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7550,7 +7550,7 @@ RunFieldCommandTemp0_WriteObject5_Case09::
 Jump_012_6D03:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7572,7 +7572,7 @@ RunFieldCommandTemp0_WriteObject5_Case08::
 Jump_012_6D1E:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7594,7 +7594,7 @@ RunFieldCommandTemp0_WriteObject5_Case07::
 Jump_012_6D38:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7616,7 +7616,7 @@ RunFieldCommandTemp0_WriteObject5_Case06::
 Jump_012_6D53:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7643,7 +7643,7 @@ RunFieldCommandTemp0_WriteObject5_Case05::
 Jump_012_6D79:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7665,7 +7665,7 @@ RunFieldCommandTemp0_WriteObject5_Case04::
 Jump_012_6D94:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7687,7 +7687,7 @@ RunFieldCommandTemp0_WriteObject5_Case03::
 Jump_012_6DAE:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7705,7 +7705,7 @@ RunFieldCommandTemp0_WriteObject5_Case02::
 Jump_012_6DC2:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7727,7 +7727,7 @@ RunFieldCommandTemp0_WriteObject5_Case01::
 Jump_012_6DDC:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af
@@ -7745,7 +7745,7 @@ RunFieldCommandTemp0_WriteObject5::
 Jump_012_6DF0:: ; address name
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
-    ld hl, wObject5 + $1
+    ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
     ld [hl], $40
     inc hl
     pop af

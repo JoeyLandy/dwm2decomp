@@ -261,9 +261,9 @@ Jump_003_4036:: ; address name
     ld [wSpriteSlots + $F], a
     ld a, $E0
     ld [wObject1 + $4], a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld [wObject2 + $4], a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ret
 
 ; only called from PauseMenu_State4 (E-0047)

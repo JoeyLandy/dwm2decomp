@@ -3164,9 +3164,9 @@ Jump_024_5454:: ; address name
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wSpriteSlots + $B]
     dec a
     ld [wSpriteSlots + $B], a
@@ -3201,13 +3201,13 @@ Jump_024_5474:: ; address name
 ; writes: wObject1, wScreenSubStep
 GameMode6_Update_Save_ObjectScene_WriteObject1AndScreenSubStep::
 Jump_024_548A:: ; address name
-    ld a, [wObject1 + $9]
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $38
     ret nz
     ld a, [wScreenSubStep]
@@ -3242,17 +3242,17 @@ Jump_024_54B6:: ; address name
     ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr nz, .check_screen_sub_step
-    ld a, [wObject2 + $9]
+    ld a, [wObject2 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $28
     ret nz
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -3283,14 +3283,14 @@ Jump_024_54EA:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $03
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $18
     ret nz
     ld a, [wScreenSubStep]
@@ -3305,17 +3305,17 @@ Jump_024_54EA:: ; address name
 GameMode6_Update_Save_ObjectScene_WriteObject2AndObject1Etc::
 Jump_024_550C:: ; address name
     ld a, $03
-    ld [wObject2 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject2 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
-    ld [wObject2 + $B], a
-    ld a, [wObject1 + $B]
+    ld [wObject2 + OBJ_X], a
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $D8
     ret nz
     ld a, [wScreenSubStep]
@@ -3397,16 +3397,16 @@ Jump_024_5573:: ; address name
 ; writes: wObject2, wObject1, wScreenSubStep
 GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndObject1Etc::
 Jump_024_5591:: ; address name
-    ld a, [wObject1 + $9]
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
-    ld a, [wObject1 + $B]
+    ld [wObject2 + OBJ_X], a
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $38
     ret nz
     ld a, [wScreenSubStep]
@@ -3459,19 +3459,19 @@ Jump_024_55DA:: ; address name
     ld a, [wRecordBufB + MON_EGG]
     and a, a
     jr nz, .check_screen_sub_step
-    ld a, [wObject2 + $9]
+    ld a, [wObject2 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $68
     ret c
     ld a, $68
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, $03
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -3500,14 +3500,14 @@ Jump_024_5603:: ; address name
 GameMode6_Update_SavePrompt_ObjectScene_WriteObject1AndScreenSubStep::
 Jump_024_5613:: ; address name
     ld a, $03
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $E0
     ret nz
     ld a, [wScreenSubStep]
@@ -3546,14 +3546,14 @@ Jump_024_5631:: ; address name
 GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndSpriteSlotsEtc::
 Jump_024_5653:: ; address name
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wSpriteSlots + $B]
     inc a
     ld [wSpriteSlots + $B], a
@@ -3671,14 +3671,14 @@ Func_024_568E:: ; address name
     and a, a
     jr nz, .read_record_buf_a2
     ld a, [wRecordBufB + MON_SPECIES]
-    ld [wObject2 + $2], a
+    ld [wObject2 + OBJ_SPRITE_SET], a
     ld a, [wRecordBufB + MON_SPECIES + 1]
     ld [wObject2 + $3], a
     jr .set_sprite_slot_count_to_03
 
 .read_record_buf_a2:
     ld a, [wRecordBufA + MON_SPECIES]
-    ld [wObject2 + $2], a
+    ld [wObject2 + OBJ_SPRITE_SET], a
     ld a, [wRecordBufA + MON_SPECIES + 1]
     ld [wObject2 + $3], a
 
@@ -3694,9 +3694,9 @@ Func_024_568E:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $02
     ld [wSpriteSlotCount], a
 

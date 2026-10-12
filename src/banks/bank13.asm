@@ -1779,7 +1779,7 @@ Jump_013_4970:: ; address name
 FhuntTalkEvents_StartScriptAtHL_B13_Case6A::
 Jump_013_4977:: ; address name
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ldh a, [hPlayerY]
     cp a, $70
     ret z
@@ -4473,10 +4473,10 @@ Jump_013_57B7:: ; address name
 ; reads: wObject1
 NordenTalkEvents_ShowHeroCheckedTheMarionette::
 Jump_013_5803:: ; address name
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     cp a, $80
     jr nz, .call_start_script_at_hl_b13
-    ld a, [wObject1 + $C]
+    ld a, [wObject1 + OBJ_Y]
     cp a, $10
     jr nz, .call_start_script_at_hl_b13
     ld hl, $0ACE ; '0 checked the marionette. It sagged'
@@ -4550,7 +4550,7 @@ Jump_013_585A:: ; address name
 NordenTalkEvents_SetObject2Plus7::
 Jump_013_586B:: ; address name
     xor a, a
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ret
 
 ; starts Script_5FD2 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case04_Case9F)
@@ -6304,9 +6304,9 @@ Jump_013_6407:: ; address name
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $20
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $50
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld de, $000A
     call SetFlagBit
     ret
@@ -8407,7 +8407,7 @@ Jump_013_7030:: ; address name
     ret
 
 .check_object1:
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     cp a, $10
     jr nz, .loop2
     ld a, $10

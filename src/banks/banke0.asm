@@ -4115,7 +4115,7 @@ Jump_0E0_60DF:: ; address name
     ld a, $02
     ld c, $03
     call SetSpriteSlotByte5
-    ld a, [wObject1 + $2]
+    ld a, [wObject1 + OBJ_SPRITE_SET]
     cp a, $F0
     jr nz, .set_object1
     ld a, $02
@@ -4137,10 +4137,10 @@ Jump_0E0_60DF:: ; address name
 
 .set_object1:
     sub a, $02
-    ld [wObject1 + $2], a
-    ld a, [wObject1 + $7]
+    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld a, [wObject1 + OBJ_STATE]
     inc a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ret
 
 ; entry 25 of the `rst $00` table in DebugStaffRoll_Scene01
@@ -4781,9 +4781,9 @@ Jump_0E0_6551:: ; address name
     ld a, [wObject2 + $3]
     add a, [hl]
     ld [wObject2 + $3], a
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     add a, [hl]
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wWorkBuf + $6]
     inc a
     ld [wWorkBuf + $6], a
@@ -5131,9 +5131,9 @@ Jump_0E0_67B1:: ; address name
     ld b, $00
     ld hl, $6038
     add hl, bc
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     add a, [hl]
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wWorkBuf + $6]
     inc a
     ld [wWorkBuf + $6], a
@@ -5570,14 +5570,14 @@ Jump_0E0_6ABE:: ; address name
     ld b, $00
     ld hl, $6038
     add hl, bc
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     add a, [hl]
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wWorkBuf + $6]
     srl a
     srl a
     ld hl, $6B06
-    ld [wObject2 + $D], a
+    ld [wObject2 + OBJ_FLAGS], a
     ld a, [wWorkBuf + $6]
     inc a
     ld [wWorkBuf + $6], a
@@ -5586,9 +5586,9 @@ Jump_0E0_6ABE:: ; address name
 .set_sprite_slot_count_to_05:
     ld a, $05
     ld [wSpriteSlotCount], a
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     add a, [hl]
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     call StepWD0A2Mod15
     ret nz
     xor a, a
@@ -6056,9 +6056,9 @@ Jump_0E0_6DEE:: ; address name
     ld b, $00
     ld hl, $6E83
     add hl, bc
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     add a, [hl]
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     ld e, a
     ld d, $10
     ld a, $03

@@ -2269,20 +2269,20 @@ Jump_0F0_5537:: ; address name
 ; writes: wObject1, wScreenSubStep
 RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep::
 Jump_0F0_5558:: ; address name
-    ld a, [wObject1 + $9]
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $59
     ret nc
     ld a, $58
-    ld [wObject1 + $B], a
-    ld a, [wObject1 + $D]
+    ld [wObject1 + OBJ_X], a
+    ld a, [wObject1 + OBJ_FLAGS]
     set 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2341,18 +2341,18 @@ Jump_0F0_55A6:: ; address name
 ; writes: wObject1, wScreenSubStep
 RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A::
 Jump_0F0_55B6:: ; address name
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, $01
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $E0
     ret nz
     ld a, [wScreenSubStep]
@@ -2480,9 +2480,9 @@ Jump_0F0_5684:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
     ld [wSpriteSlots + $D], a
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     call StepObjectCB9AUpToE0
     call StepObjectCB8ADownToE0
     cp a, $FF
@@ -2523,14 +2523,14 @@ Func_0F0_56A5:: ; address name
 StepObjectCB9AUpToE0::
 Func_0F0_56C2:: ; address name
     ld a, $01
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $E0
     ret nz
     ret
@@ -2724,9 +2724,9 @@ Jump_0F0_57F0:: ; address name
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScreenCounter], a
     ld a, [wSpriteSlots + $D]
@@ -2759,7 +2759,7 @@ Jump_0F0_583B:: ; address name
 RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F::
 Jump_0F0_5848:: ; address name
     ld a, $03
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2772,7 +2772,7 @@ Jump_0F0_5848:: ; address name
 RunLinkSession8Exchange_ObjectScene_SetObject2Plus7::
 Jump_0F0_5855:: ; address name
     ld a, $01
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2784,18 +2784,18 @@ Jump_0F0_5855:: ; address name
 ; writes: wObject2, wScreenSubStep
 RunLinkSession8Exchange_ObjectScene_WriteObject2AndScreenSubStep::
 Jump_0F0_5862:: ; address name
-    ld a, [wObject2 + $D]
+    ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
-    ld [wObject2 + $D], a
+    ld [wObject2 + OBJ_FLAGS], a
     ld a, $03
-    ld [wObject2 + $7], a
-    ld a, [wObject2 + $9]
+    ld [wObject2 + OBJ_STATE], a
+    ld a, [wObject2 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $30
     ret nz
     ld a, [wScreenSubStep]
@@ -2809,34 +2809,34 @@ Jump_0F0_5862:: ; address name
 ; writes: wObject1, hTemp0, wObject5, wScreenCounter, wScreenSubStep
 StepObjectCB9AAndTriggerAt60:: ; heuristic: follows a terminator; C0
 Func_0F0_5888:: ; address name
-    ld a, [wObject1 + $9]
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $60
     jr nz, .check_object1
     ld a, $0E
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScreenCounter], a
 
 .check_object1:
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     cp a, $59
     ret nc
     ld a, $58
-    ld [wObject1 + $B], a
-    ld a, [wObject1 + $D]
+    ld [wObject1 + OBJ_X], a
+    ld a, [wObject1 + OBJ_FLAGS]
     set 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2879,7 +2879,7 @@ Jump_0F0_58CD:: ; address name
 ; writes: wSpriteSlots
 RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames::
 Jump_0F0_58FE:: ; address name
-    ld de, wObject1 + $C
+    ld de, wObject1 + OBJ_Y
     call StepScreenStepOffsetTableEvery4Frames
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -2891,19 +2891,19 @@ Jump_0F0_58FE:: ; address name
 ; writes: wObject2, wSpriteSlots, wScreenSubStep
 RunLinkSession8Exchange_ObjectScene_WriteObject2AndSpriteSlotsEtc::
 Jump_0F0_590A:: ; address name
-    ld a, [wObject2 + $D]
+    ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
-    ld [wObject2 + $D], a
+    ld [wObject2 + OBJ_FLAGS], a
     ld a, $03
     ld [wSpriteSlots + $7], a
-    ld [wObject2 + $7], a
+    ld [wObject2 + OBJ_STATE], a
     ld a, [wSpriteSlots + $9]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     dec a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     ld a, [wSpriteSlots + $B]
     dec a
     ld [wSpriteSlots + $B], a
@@ -2986,34 +2986,34 @@ Jump_0F0_5967:: ; address name
 ; writes: wObject1, hTemp0, wObject5, wScreenCounter, wScreenSubStep
 RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0::
 Jump_0F0_59AB:: ; address name
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, $01
-    ld [wObject1 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $70
     ret nz
     ld a, $0E
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScreenCounter], a
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     set 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, $00
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -3026,7 +3026,7 @@ Jump_0F0_59AB:: ; address name
 RunLinkSession8Exchange_EggHatched_SetObject1Plus7::
 Jump_0F0_59F6:: ; address name
     ld a, $03
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -3038,18 +3038,18 @@ Jump_0F0_59F6:: ; address name
 ; writes: wObject2, wScreenSubStep
 RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep::
 Jump_0F0_5A03:: ; address name
-    ld a, [wObject2 + $D]
+    ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
-    ld [wObject2 + $D], a
+    ld [wObject2 + OBJ_FLAGS], a
     ld a, $01
-    ld [wObject2 + $7], a
-    ld a, [wObject2 + $9]
+    ld [wObject2 + OBJ_STATE], a
+    ld a, [wObject2 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
+    ld [wObject2 + OBJ_X], a
     cp a, $60
     ret nz
     ld a, [wScreenSubStep]
@@ -3076,9 +3076,9 @@ Func_0F0_5A29:: ; address name
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScreenCounter], a
 
@@ -3113,18 +3113,18 @@ Jump_0F0_5A73:: ; address name
     res 1, a
     ld [wSpriteSlots + $D], a
     ld a, $01
-    ld [wObject1 + $7], a
-    ld [wObject2 + $7], a
-    ld a, [wObject1 + $9]
+    ld [wObject1 + OBJ_STATE], a
+    ld [wObject2 + OBJ_STATE], a
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject2 + $B]
+    ld a, [wObject2 + OBJ_X]
     inc a
-    ld [wObject2 + $B], a
-    ld a, [wObject1 + $B]
+    ld [wObject2 + OBJ_X], a
+    ld a, [wObject1 + OBJ_X]
     inc a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $E0
     ret nz
     ld a, [wScreenSubStep]
@@ -5117,9 +5117,9 @@ Func_0F0_67EE:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $02
     ld [wSpriteSlotCount], a
     ld a, [wArg1]
@@ -5133,14 +5133,14 @@ Func_0F0_67EE:: ; address name
     cp a, $03
     jr nz, .read_bank_f0_byte_c8
     ld a, [wBankF0ByteA8]
-    ld [wObject2 + $2], a
+    ld [wObject2 + OBJ_SPRITE_SET], a
     ld a, [wBankF0ByteA9]
     ld [wObject2 + $3], a
     jr .skip5
 
 .read_bank_f0_byte_c8:
     ld a, [wBankF0ByteC8]
-    ld [wObject2 + $2], a
+    ld [wObject2 + OBJ_SPRITE_SET], a
     ld a, [wBankF0ByteC9]
     ld [wObject2 + $3], a
 

@@ -699,18 +699,18 @@ Func_004_4470:: ; address name
     ld a, [wSpriteSlots + $D]
     or a, $02
     ld [wSpriteSlots + $D], a
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     or a, $02
-    ld [wObject1 + $D], a
-    ld a, [wObject2 + $D]
+    ld [wObject1 + OBJ_FLAGS], a
+    ld a, [wObject2 + OBJ_FLAGS]
     or a, $02
-    ld [wObject2 + $D], a
-    ld a, [wObject3 + $D]
+    ld [wObject2 + OBJ_FLAGS], a
+    ld a, [wObject3 + OBJ_FLAGS]
     or a, $02
-    ld [wObject3 + $D], a
-    ld a, [wObject4 + $D]
+    ld [wObject3 + OBJ_FLAGS], a
+    ld a, [wObject4 + OBJ_FLAGS]
     or a, $02
-    ld [wObject4 + $D], a
+    ld [wObject4 + OBJ_FLAGS], a
     ret
 
 ; clears bit 1 of hFF8C and of the flag byte (wCB8C + 16 * n) of object entries 0-4 (E-0072)
@@ -725,18 +725,18 @@ Func_004_449F:: ; address name
     ld a, [wSpriteSlots + $D]
     and a, $FD
     ld [wSpriteSlots + $D], a
-    ld a, [wObject1 + $D]
+    ld a, [wObject1 + OBJ_FLAGS]
     and a, $FD
-    ld [wObject1 + $D], a
-    ld a, [wObject2 + $D]
+    ld [wObject1 + OBJ_FLAGS], a
+    ld a, [wObject2 + OBJ_FLAGS]
     and a, $FD
-    ld [wObject2 + $D], a
-    ld a, [wObject3 + $D]
+    ld [wObject2 + OBJ_FLAGS], a
+    ld a, [wObject3 + OBJ_FLAGS]
     and a, $FD
-    ld [wObject3 + $D], a
-    ld a, [wObject4 + $D]
+    ld [wObject3 + OBJ_FLAGS], a
+    ld a, [wObject4 + OBJ_FLAGS]
     and a, $FD
-    ld [wObject4 + $D], a
+    ld [wObject4 + OBJ_FLAGS], a
     ret
 
 ; unless bit 7 of wC468 is set: updates the sprite slots, then draws each slot's metasprite at its position relative to the scroll (E-0129)
@@ -4656,7 +4656,7 @@ Jump_004_5CBE:: ; address name
     call PartyHasSpeciesLo3CTo5BWithHiSet
     jr c, .call_start_script_at_hl_b04
     ld a, $01
-    ld [wObject3 + $7], a
+    ld [wObject3 + OBJ_STATE], a
     ld hl, $0837 ; 'Hnnnr Hic Gnn Zzz Gfffff'
     call StartMessageCommand09HL_B04
     ret
@@ -4675,7 +4675,7 @@ Jump_004_5CBE:: ; address name
     call PartyHasSpeciesLo3CTo5BWithHiSet
     jr c, .call_start_script_at_hl_b043
     ld a, $01
-    ld [wObject3 + $7], a
+    ld [wObject3 + OBJ_STATE], a
     ld hl, $0837 ; 'Hnnnr Hic Gnn Zzz Gfffff'
     call StartMessageCommand09HL_B04
     ret
@@ -5156,8 +5156,8 @@ Jump_004_5F5A:: ; address name
     ret nz
     ld a, $40
     ld [wSpriteSlots + $B], a
-    ld [wObject1 + $B], a
-    ld [wObject2 + $B], a
+    ld [wObject1 + OBJ_X], a
+    ld [wObject2 + OBJ_X], a
     ret
 
 ; starts Script_5CDD (StartScriptAtHL); its first message begins 'Kameha Urk! How you catch up?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case51)
@@ -8194,7 +8194,7 @@ Jump_004_706A:: ; address name
     call TestFlagBit
     jr c, .call_start_message_command09_hl_b04
     xor a, a
-    ld [wObject1 + $7], a
+    ld [wObject1 + OBJ_STATE], a
     ld hl, $075A ; 'Pii Ggzz Piiiiii'
     call StartMessageCommand09HL_B04
     ret

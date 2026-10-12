@@ -74,5 +74,32 @@
       "10": {"const": "SPECIES_GROWTH", "note": "stat growth row: passed to StatFromGrowthRow and ReadStatGrowthGain (level-up gains)", "evidence": "E-0299"},
       "12": {"size": 27, "const": "SPECIES_RESISTANCES", "note": "27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one", "evidence": "E-0299"}
     }
+  },
+  "object": {
+    "callees": [],
+    "buffers": ["wObject1", "wObject2", "wObject3", "wObject4"],
+    "fields": {
+      "01": {"const": "OBJ_SET_MODE", "note": "0: UpdateAndDrawSpriteSlots takes the sprite set from +2; otherwise another path", "evidence": "E-0300"},
+      "02": {"const": "OBJ_SPRITE_SET", "note": "sprite set index (bits 0-6)", "evidence": "E-0300"},
+      "06": {"const": "OBJ_ATTR", "note": "attribute bits (bits 0-2 to hSpriteAttrXor)", "evidence": "E-0300"},
+      "07": {"const": "OBJ_STATE", "note": "state", "evidence": "E-0134"},
+      "08": {"const": "OBJ_TILE_OFFSET", "note": "tile offset (hSpriteTileOffset)", "evidence": "E-0300"},
+      "09": {"const": "OBJ_ANIM_COUNTER", "note": "animation counter: UpdateSpriteSlots type 0 increments it each frame unless +$D bit 1 is set (C1; E-0134 called it flags)", "evidence": "E-0300"},
+      "0B": {"const": "OBJ_X", "note": "X position (hSpriteOriginX = this + 8 + scroll)", "evidence": "E-0134, E-0300"},
+      "0C": {"const": "OBJ_Y", "note": "Y position (hSpriteOriginY = this + 16 + scroll)", "evidence": "E-0134, E-0300"},
+      "0D": {"const": "OBJ_FLAGS", "note": "flags (bit 1 stops the animation counter, bit 2 selects the frame rule)", "evidence": "E-0134, E-0300"},
+      "0E": {"const": "OBJ_SUBINDEX", "note": "meta-sprite sub-index; bit 7 flips it horizontally (hSpriteAttrXor bit 5)", "evidence": "E-0300"}
+    }
+  },
+  "script_object": {
+    "callees": [],
+    "buffers": ["wObject5"],
+    "fields": {
+      "01": {"const": "SCRIPTOBJ_TILE_OFFSET", "note": "tile offset of the script meta-sprite (DrawFieldSprites)", "evidence": "E-0300"},
+      "02": {"const": "SCRIPTOBJ_SPRITE_SET", "note": "sprite set index (bits 0-6); bit 7: a sub-index follows", "evidence": "E-0300"},
+      "03": {"const": "SCRIPTOBJ_ATTR", "note": "attribute bits (hSpriteAttrXor)", "evidence": "E-0300"},
+      "04": {"const": "SCRIPTOBJ_X", "note": "X position (hSpriteOriginX = this + 8 + scroll)", "evidence": "E-0300"},
+      "05": {"const": "SCRIPTOBJ_Y", "note": "Y position (hSpriteOriginY = this + 16 + scroll)", "evidence": "E-0300"}
+    }
   }
 }

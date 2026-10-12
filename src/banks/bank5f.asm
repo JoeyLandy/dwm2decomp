@@ -1792,15 +1792,15 @@ Jump_05F_70E6:: ; address name
 ; points at: wScriptSubStep
 RunScriptSubStep_AddStepDeltaToPointedByte_Case06::
 Jump_05F_7138:: ; address name
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wObject5 + $5]
+    ld a, [wObject5 + SCRIPTOBJ_Y]
     inc a
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, [wScriptParam0]
     inc a
     inc a
@@ -2030,15 +2030,15 @@ RunScriptSubStep_AddStepDeltaToPointedByte::
 Jump_05F_72B3:: ; address name
     ld a, $80
     ld [wObject5], a
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    ld a, [wObject5 + $5]
+    ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, [wScriptParam0]
     inc a
     inc a
@@ -2353,7 +2353,7 @@ Jump_05F_746F:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     xor a, a
     ld [wScriptParam0], a
     ld [wScriptParam1], a
@@ -2372,7 +2372,7 @@ Jump_05F_74CD:: ; address name
     ld a, $01
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
@@ -2381,7 +2381,7 @@ Jump_05F_74CD:: ; address name
     ld a, [wScriptParam0]
     bit 0, a
     jr nz, .check_script_param0
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
 
 .check_script_param0:
@@ -2411,14 +2411,14 @@ Jump_05F_750C:: ; address name
     dec a
     dec a
     add a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
     cp a, $B4
     ret nz
     ld a, $40
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $72
     call QueueSoundEffect
     xor a, a
@@ -2458,15 +2458,15 @@ Jump_05F_7554:: ; address name
     ld a, $01
     ldh [hTemp0], a
     farcall DrawAnimatedMetaSprite1B
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     call AddStepDeltaToPointedByte
-    ld hl, wObject5 + $4
+    ld hl, wObject5 + SCRIPTOBJ_X
     dec [hl]
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     inc [hl]
     ld a, [wScriptParam0]
     inc a
@@ -2544,13 +2544,13 @@ Jump_05F_75D2:: ; address name
 ; points at: wScriptSubStep
 RunSceneScriptSubStep_AddStepDeltaToPointedByte::
 Jump_05F_75EC:: ; address name
-    ld de, wObject5 + $5
+    ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
     ld [wStepPtrLo], a
     ld a, d
     ld [wStepPtrHi], a
     call AddStepDeltaToPointedByte
-    ld hl, wObject5 + $5
+    ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
     ld a, [wScriptParam0]
     inc a
@@ -2763,9 +2763,9 @@ Jump_05F_7700:: ; address name
 .call_run_field_command_temp0:
     farcall RunFieldCommandTemp0
     ld a, $50
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $30
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld hl, wScriptSubStep
     inc [hl]
     ret

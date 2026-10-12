@@ -146,20 +146,20 @@ Jump_0F2_40E0:: ; address name
 ; writes: wObject1, wScreenSubStep
 GameMode8_Update_WriteObject1AndScreenSubStep::
 Jump_0F2_40F6:: ; address name
-    ld a, [wObject1 + $9]
+    ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and a, $03
     and a, a
     ret z
-    ld a, [wObject1 + $B]
+    ld a, [wObject1 + OBJ_X]
     dec a
-    ld [wObject1 + $B], a
+    ld [wObject1 + OBJ_X], a
     cp a, $59
     ret nc
     ld a, $58
-    ld [wObject1 + $B], a
-    ld a, [wObject1 + $D]
+    ld [wObject1 + OBJ_X], a
+    ld a, [wObject1 + OBJ_FLAGS]
     set 1, a
-    ld [wObject1 + $D], a
+    ld [wObject1 + OBJ_FLAGS], a
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -448,9 +448,9 @@ Func_0F2_4248:: ; address name
     xor a, a
     ld [wObject5], a
     ld a, $48
-    ld [wObject5 + $4], a
+    ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $40
-    ld [wObject5 + $5], a
+    ld [wObject5 + SCRIPTOBJ_Y], a
     ld a, $02
     ld [wSpriteSlotCount], a
     ld a, [wIsCGB]

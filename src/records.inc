@@ -57,3 +57,22 @@ DEF SPECIES_EXP_CURVE EQU $07 ; the ExpTable row (EXP curve) (E-0148)
 DEF SPECIES_SKILLS EQU $08 ; three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF (E-0299)
 DEF SPECIES_GROWTH EQU $10 ; stat growth row: passed to StatFromGrowthRow and ReadStatGrowthGain (level-up gains) (E-0299)
 DEF SPECIES_RESISTANCES EQU $12 ; 27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one (E-0299)
+
+; Offsets into a 16-byte field object slot (wObject1-4; config/record_fields.json "object", E-0300).
+DEF OBJ_SET_MODE EQU $01 ; 0: UpdateAndDrawSpriteSlots takes the sprite set from +2; otherwise another path (E-0300)
+DEF OBJ_SPRITE_SET EQU $02 ; sprite set index (bits 0-6) (E-0300)
+DEF OBJ_ATTR EQU $06 ; attribute bits (bits 0-2 to hSpriteAttrXor) (E-0300)
+DEF OBJ_STATE EQU $07 ; state (E-0134)
+DEF OBJ_TILE_OFFSET EQU $08 ; tile offset (hSpriteTileOffset) (E-0300)
+DEF OBJ_ANIM_COUNTER EQU $09 ; animation counter: UpdateSpriteSlots type 0 increments it each frame unless +$D bit 1 is set (C1; E-0134 called it flags) (E-0300)
+DEF OBJ_X EQU $0B ; X position (hSpriteOriginX = this + 8 + scroll) (E-0134, E-0300)
+DEF OBJ_Y EQU $0C ; Y position (hSpriteOriginY = this + 16 + scroll) (E-0134, E-0300)
+DEF OBJ_FLAGS EQU $0D ; flags (bit 1 stops the animation counter, bit 2 selects the frame rule) (E-0134, E-0300)
+DEF OBJ_SUBINDEX EQU $0E ; meta-sprite sub-index; bit 7 flips it horizontally (hSpriteAttrXor bit 5) (E-0300)
+
+; Offsets into the script meta-sprite object (wObject5; "script_object", E-0300).
+DEF SCRIPTOBJ_TILE_OFFSET EQU $01 ; tile offset of the script meta-sprite (DrawFieldSprites) (E-0300)
+DEF SCRIPTOBJ_SPRITE_SET EQU $02 ; sprite set index (bits 0-6); bit 7: a sub-index follows (E-0300)
+DEF SCRIPTOBJ_ATTR EQU $03 ; attribute bits (hSpriteAttrXor) (E-0300)
+DEF SCRIPTOBJ_X EQU $04 ; X position (hSpriteOriginX = this + 8 + scroll) (E-0300)
+DEF SCRIPTOBJ_Y EQU $05 ; Y position (hSpriteOriginY = this + 16 + scroll) (E-0300)
