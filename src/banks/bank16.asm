@@ -2,7 +2,7 @@ SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
 ; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
-; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1)
+; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wItemId
 ; points at: wItemRecord
 LoadItemRecord::
@@ -4284,7 +4284,7 @@ Func_016_5906:: ; address name
     ret
 
 ; toggles the sort order in wC836 and sorts the 24 inventory slots by the key table Data_016_599E or Data_016_5A0E (empty slots last) (E-0128)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, RunBattleSetup_Case02_MoveBattleCommandCursor, PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, RunBattleSetup_Case02_MoveBattleCommandCursor, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wGameFlags836, wWorkBuf
 ; writes: wWorkBuf, wGameFlags836
 ; points at: wInventory

@@ -3053,14 +3053,14 @@
     "evidence": "E-0135"
   },
   "CEC1": {
-    "name": "wRollState",
-    "note": "state byte of the bank-$F0 roll (RollCounterChanceAndRunEvent)",
-    "evidence": "E-0135"
+    "name": "wPendingGiftItem",
+    "note": "item id of the last gift, applied later by RecordGiftAndMaybeApplyPrevious (C1)",
+    "evidence": "E-0135, E-0295"
   },
   "CEC2": {
-    "name": "wRollCounter",
-    "note": "counter for the bank-$F0 roll (up to $0F)",
-    "evidence": "E-0135"
+    "name": "wGiftCount",
+    "note": "number of gifts, up to $0F; lowers the chance a pending gift takes effect (C1)",
+    "evidence": "E-0135, E-0295"
   },
   "CEC3": {
     "name": "wFamilyScores",

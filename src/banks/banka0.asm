@@ -2477,7 +2477,7 @@ Func_0A0_4F8E:: ; address name
     ld a, [wBattlePhase]
     rst $00
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
-    dw RunBattlePhaseWhenTextIdle_A0_Case01
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 
@@ -3011,53 +3011,53 @@ Func_0A0_5278:: ; address name
     jr nz, .loop
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0
+; by wBattleStep: clears a buffer, then RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case01::
+RunBattlePhaseWhenTextIdle_A0_RunTurn::
 Jump_0A0_5291:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case01_Case00_FillBytesAndStep
-    dw RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleSetup_BankA0
-    dw RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleCommandEntry_BankA1
-    dw RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleActions
-    dw RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleStep4
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytesAndStep
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleSetup_BankA0
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleCommandEntry_BankA1
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleActions
+    dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleStep4
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case01
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_RunTurn
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case01_Case00_FillBytesAndStep::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytesAndStep::
 Jump_0A0_529F:: ; address name
-    call RunBattlePhaseWhenTextIdle_A0_Case01_Case00_FillBytes
+    call RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytes
     ld hl, wBattleStep
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case01
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_RunTurn
 ; no direct call (reached through a table, a jump or a vector)
-RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleSetup_BankA0::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleSetup_BankA0::
 Jump_0A0_52A7:: ; address name
     call RunBattleSetup_BankA0
     ret
 
-; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case01
+; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_RunTurn
 ; no direct call (reached through a table, a jump or a vector)
-RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleCommandEntry_BankA1::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleCommandEntry_BankA1::
 Jump_0A0_52AB:: ; address name
     farcall RunBattleCommandEntry_BankA1
     ret
 
-; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case01
+; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_RunTurn
 ; no direct call (reached through a table, a jump or a vector)
-RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleActions::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleActions::
 Jump_0A0_52B2:: ; address name
     farcall RunBattleActions
     ret
 
-; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case01
+; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_RunTurn
 ; no direct call (reached through a table, a jump or a vector)
-RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleStep4::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleStep4::
 Jump_0A0_52B9:: ; address name
     farcall RunBattleStep4
     ret
@@ -4849,11 +4849,11 @@ BattleResultGoldByRank:: ; heuristic: pointer load in the same bank (bank assume
 Data_0A0_5D6A:: ; address name
     db $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case01_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_Case00_FillBytesAndStep)
+; only called from RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytesAndStep)
 ; writes: wBattleFlag92, wBattleFlag93, wMenuState
 ; points at: wSideControl, wSlotFlags854, wActionQueue, wBattleActionChoice, wSlotMarks, wBattleStep, wBattleStatus3
-RunBattlePhaseWhenTextIdle_A0_Case01_Case00_FillBytes::
+RunBattlePhaseWhenTextIdle_A0_RunTurn_Case00_FillBytes::
 Func_0A0_5D7A:: ; address name
     ld hl, wSideControl
     ld b, $08
@@ -4941,7 +4941,7 @@ Func_0A0_5D7A:: ; address name
     ret
 
 ; the same instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleSetup_BankA0)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleSetup_BankA0)
 ; reads: wBattleSubPhase
 RunBattleSetup_BankA0::
 Func_0A0_5E07:: ; address name

@@ -839,7 +839,7 @@ Func_033_5215:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc
     dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Case06
+    dw RunLinkSession6Exchange_ChooseTeamMonster
     dw RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case08
     dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndLinkScreenStateEtc_Case09
@@ -1059,22 +1059,22 @@ Jump_033_537D:: ; address name
     ld [wLinkScreenFlag], a
     ret
 
-; entry 6 of the `rst $00` table in Func_033_5215
+; by its step: 'Choose a monster for the Team ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenFlag
-RunLinkSession6Exchange_Case01_Sub01_Case06::
+RunLinkSession6Exchange_ChooseTeamMonster::
 Jump_033_538A:: ; address name
     ld a, [wLinkScreenFlag]
     rst $00
-    dw RunLinkSession6Exchange_Case01_Sub01_Case06_WaitTextFlags
-    dw RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor
-    dw RunLinkSession6Exchange_Case01_Sub01_Case06_SetLinkScreenSubState
+    dw RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags
+    dw RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor
+    dw RunLinkSession6Exchange_ChooseTeamMonster_SetLinkScreenSubState
 
-; entry 0 of the `rst $00` table in Func_033_5215_Case06
+; entry 0 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wScreenTileBuffer, wLinkScreenFlag
-RunLinkSession6Exchange_Case01_Sub01_Case06_WaitTextFlags::
+RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
 Jump_033_5394:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -1093,10 +1093,10 @@ Jump_033_5394:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_033_5215_Case06
+; entry 1 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenFlag
-RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor::
+RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
 Jump_033_53AC:: ; address name
     call BGMapAddressAtScroll_Bank33
     ld bc, $140D
@@ -1108,10 +1108,10 @@ Jump_033_53AC:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_033_5215_Case06
+; entry 2 of the `rst $00` table in RunLinkSession6Exchange_ChooseTeamMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkScreenSubState, wLinkScreenFlag, wLinkScreenState, wScreenState
-RunLinkSession6Exchange_Case01_Sub01_Case06_SetLinkScreenSubState::
+RunLinkSession6Exchange_ChooseTeamMonster_SetLinkScreenSubState::
 Jump_033_53C2:: ; address name
     xor a, a
     ld [wLinkScreenSubState], a
@@ -3247,7 +3247,7 @@ Func_033_60C3:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank33::
 Func_033_60D3:: ; address name
@@ -3282,7 +3282,7 @@ Func_033_60D3:: ; address name
     ret
 
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer

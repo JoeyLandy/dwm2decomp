@@ -275,7 +275,7 @@ Func_0A1_412E:: ; address name
     ret
 
 ; the same instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleCommandEntry_BankA1)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleCommandEntry_BankA1)
 ; reads: wTextFlags, wBattleSubPhase
 RunBattleCommandEntry_BankA1::
 Func_0A1_413F:: ; address name

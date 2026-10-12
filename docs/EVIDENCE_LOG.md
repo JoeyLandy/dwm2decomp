@@ -2431,6 +2431,27 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0295 — The largest dispatcher is the per-item gift effect; 16 link and gift states named
+
+- Kind: STATIC (C1).
+- **The gift path.** PauseMenu_State4_GiftMenu_GiveGift (the pause menu's 'Gift / Exit' window) works as follows:
+  - It refuses some items ($1F, $21, $2B-$2D, $2F-$3F) and shows string $22.
+  - For any other item it stores wItemId in wArg1 and far-calls the routine at F0:7284.
+  - It then removes the item from the inventory (CompactInventory) and returns to the field.
+- **F0:7284, renamed RecordGiftAndMaybeApplyPrevious** (was RollCounterChanceAndRunEvent).
+  - It counts gifts in wGiftCount (was wRollCounter), up to $0F.
+  - When a gift is pending in wPendingGiftItem (was wRollState), it applies that gift's effect if a random value is below 100 - 5 × wGiftCount.
+  - The new item then becomes the pending gift. Each gift therefore takes effect on a later gift, and less often as gifts accumulate.
+- **ApplyGiftEffectByItem** (was RollCounterChanceAndRunEvent_Sub01) jumps by the pending item id. Each of its cases adds to or subtracts from wTopStat1 and wFamilyScores entries. The 75 distinct cases are named GiftEffect_<item name>, with the names taken from the item-name table (bank 8, $4716): GiftEffect_Herb, GiftEffect_LoveWater, GiftEffect_WorldDew, and so on. A case reached by several ids ends in Etc. What wTopStat1 and the family scores change in the game is not established.
+- **Also named** from strings the E-0294 note now quotes:
+  - EggServiceMenu_Bank1B_StartLinkBattle ('Begin battle?', 'Your pal refused to battle.').
+  - RunLinkSession8Exchange_EggHatched, _EggsTraded and _ObtainedEgg ('G hatched from the egg that ...', 'Eggs were traded with 0.', 'Obtained an egg from 0.'), and _WaitForPartner.
+  - LinkKeyTrade_Start, _KeysSameName, _KeyCannotBeTraded and _WaitForPartner.
+  - EggServiceMenu_Bank1B_WaitForPartner, RunScreenStateWhenNotFading_F1_ChooseBreedingMonster, RunLinkSession6Exchange_ChooseTeamMonster.
+  - RunBattlePhaseWhenTextIdle_A0_RunTurn, PauseMenu_State4_GiftMenu_ShowChoices, _ChooseGift and _GiveGift.
+- **Counts.** Bare dispatchers: 88 → 71. Labels under them: 601 → 450.
+- Binary verification: build/run402 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0294 — Strings passed in A to index wrappers are quoted
 
 - Kind: TOOL.

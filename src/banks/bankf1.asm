@@ -8,26 +8,26 @@ PauseMenu_State4_GiftMenu::
 Func_0F1_4001:: ; address name
     ld a, [wTemp0]
     rst $00
-    dw PauseMenu_State4_GiftMenu_Case00
-    dw PauseMenu_State4_GiftMenu_Case01
-    dw PauseMenu_State4_GiftMenu_Case02
+    dw PauseMenu_State4_GiftMenu_ShowChoices
+    dw PauseMenu_State4_GiftMenu_ChooseGift
+    dw PauseMenu_State4_GiftMenu_GiveGift
 
-; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu
+; by its step: the 'Gift / Exit' window and its cursor
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-PauseMenu_State4_GiftMenu_Case00::
+PauseMenu_State4_GiftMenu_ShowChoices::
 Jump_0F1_400B:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State4_GiftMenu_Case00_ShowGiftExit
-    dw PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1
+    dw PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit
+    dw PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1
 
-; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case00
+; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_ShowChoices
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLevelUpGains
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wCounterPtr0Lo
 ; points at: wTemp1
-PauseMenu_State4_GiftMenu_Case00_ShowGiftExit::
+PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit::
 Jump_0F1_4013:: ; address name
     ld a, [wLevelUpGains]
     or a, a
@@ -58,12 +58,12 @@ Jump_0F1_4013:: ; address name
     ld [wCounterPtr0Lo], a
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case00
+; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_ShowChoices
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventory, wJoypadPressed, wJoypadPressedRepeat, wMenuRowCount, wMenuPage, wMenuCursor
 ; writes: wDataBankSave, wInventorySlot, wItemId, wTemp1, wSubMenuCursor
 ; points at: wMenuCursor, wInventory, wTextBuf2, wPlayerName, wTextBuf0, wTemp0
-PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1::
+PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1::
 Jump_0F1_4057:: ; address name
     ld a, [wInventory]
     or a, a
@@ -72,7 +72,7 @@ Jump_0F1_4057:: ; address name
     jr .check_bit1
 
 .call_update_menu_cursor_bank_f1:
-    ld de, PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1_Data
+    ld de, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1_Data
     ld hl, wMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressedRepeat]
@@ -144,21 +144,21 @@ Jump_0F1_4057:: ; address name
     call ShowInventoryPageItemNames_BankF1
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu
+; by its step: screen block $32 with a cursor
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-PauseMenu_State4_GiftMenu_Case01::
+PauseMenu_State4_GiftMenu_ChooseGift::
 Jump_0F1_40FC:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State4_GiftMenu_Case01_BuildScreenBlock32WithCursor_BankF1AndStep
-    dw PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1
+    dw PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep
+    dw PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1
 
-; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case01
+; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_ChooseGift
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuRowCount, wMenuPageCount
 ; points at: wTemp1
-PauseMenu_State4_GiftMenu_Case01_BuildScreenBlock32WithCursor_BankF1AndStep::
+PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep::
 Jump_0F1_4104:: ; address name
     call BuildScreenBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -170,14 +170,14 @@ Jump_0F1_4104:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case01
+; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_ChooseGift
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor
 ; writes: wTemp1, wTemp0
 ; points at: wSubMenuCursor, wTemp0
-PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1::
+PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1::
 Jump_0F1_4119:: ; address name
-    ld de, PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1_Data
+    ld de, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data
     ld hl, wSubMenuCursor
     call UpdateMenuCursor_BankF1
     ld a, [wJoypadPressed]
@@ -209,24 +209,24 @@ Jump_0F1_4119:: ; address name
     ld [wTemp1], a
     ret
 
-; entry 2 of the `rst $00` table in PauseMenu_State4_GiftMenu
+; by its step: sets the amount and counter pointer, rebuilds block $32 and shows the result string
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-PauseMenu_State4_GiftMenu_Case02::
+PauseMenu_State4_GiftMenu_GiveGift::
 Jump_0F1_414E:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State4_GiftMenu_Case02_WriteArg1AndCounterPtr0LoEtc
-    dw PauseMenu_State4_GiftMenu_Case02_ClearWindowAndBuildBlock32WithCursor_BankF1
-    dw PauseMenu_State4_GiftMenu_Case02_BeginStringDisplay_BankF0_48A0AndStep
-    dw PauseMenu_State4_GiftMenu_Case02_WaitTextFlags
+    dw PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc
+    dw PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1
+    dw PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_48A0AndStep
+    dw PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags
 
-; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case02
+; entry 0 of the `rst $00` table in PauseMenu_State4_GiftMenu_GiveGift
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemId, wInventorySlot
 ; writes: wArg1, wCounterPtr0Lo, wDataBankSave, wStringIndex
 ; points at: wInventory, wTemp1
-PauseMenu_State4_GiftMenu_Case02_WriteArg1AndCounterPtr0LoEtc::
+PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc::
 Jump_0F1_415A:: ; address name
     ld a, [wItemId]
     cp a, $1F
@@ -262,7 +262,7 @@ Jump_0F1_415A:: ; address name
 
 .set_arg1:
     ld [wArg1], a
-    farcall RollCounterChanceAndRunEvent
+    farcall RecordGiftAndMaybeApplyPrevious
     ld a, $FF
     ld [wCounterPtr0Lo], a
     ld a, $69
@@ -285,10 +285,10 @@ Jump_0F1_415A:: ; address name
     call QueueSoundEffect
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case02
+; entry 1 of the `rst $00` table in PauseMenu_State4_GiftMenu_GiveGift
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State4_GiftMenu_Case02_ClearWindowAndBuildBlock32WithCursor_BankF1::
+PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1::
 Jump_0F1_41C6:: ; address name
     call ClearWindowAndBuildBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -296,11 +296,11 @@ Jump_0F1_41C6:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case02
+; entry 2 of the `rst $00` table in PauseMenu_State4_GiftMenu_GiveGift
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory
 ; points at: wTemp1
-PauseMenu_State4_GiftMenu_Case02_BeginStringDisplay_BankF0_48A0AndStep::
+PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_48A0AndStep::
 Jump_0F1_41D1:: ; address name
     xor a, a
     ld [wStringCategory], a
@@ -309,11 +309,11 @@ Jump_0F1_41D1:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in PauseMenu_State4_GiftMenu_Case02
+; entry 3 of the `rst $00` table in PauseMenu_State4_GiftMenu_GiveGift
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wTemp0, wTemp1
-PauseMenu_State4_GiftMenu_Case02_WaitTextFlags::
+PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags::
 Jump_0F1_41E0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -325,7 +325,7 @@ Jump_0F1_41E0:: ; address name
     ret
 
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)
-; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_Case00_ShowGiftExit, BuildScreenBlock32WithCursor_BankF1)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit, BuildScreenBlock32WithCursor_BankF1)
 ; reads: wInventory, wMenuItemCount, wMenuPage
 BuildInventoryScreenBase_BankF1::
 Func_0F1_41EE:: ; address name
@@ -359,7 +359,7 @@ Func_0F1_41EE:: ; address name
     ret
 
 ; runs Func_0F1_41EE, copies block $32 and draws the cursor for wC46E & 7 (E-0122)
-; 4 call sites from 4 routines (e.g. PauseMenu_State4_GiftMenu_Case01_BuildScreenBlock32WithCursor_BankF1AndStep, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
+; 4 call sites from 4 routines (e.g. PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep, ClearWindowAndBuildBlock32WithCursor_BankF1, BuildItemScreenForWItemId_BankF1, BuildScreenBlocks32And0F_BankF1)
 ; reads: wMenuCursor
 BuildScreenBlock32WithCursor_BankF1::
 Func_0F1_422D:: ; address name
@@ -368,7 +368,7 @@ Func_0F1_422D:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuCursor]
     and a, $07
-    ld hl, PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1_Data
+    ld hl, PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
@@ -429,12 +429,12 @@ Func_0F1_429C:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1_Data
+    ld hl, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; clears the default window, fills tiles, builds block $32, copies block $10 and draws the cursor for wC46F & 3 (E-0122)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case02_ClearWindowAndBuildBlock32WithCursor_BankF1)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1)
 ; reads: wSubMenuCursor
 ClearWindowAndBuildBlock32WithCursor_BankF1::
 Func_0F1_42B6:: ; address name
@@ -447,12 +447,12 @@ Func_0F1_42B6:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wSubMenuCursor]
     and a, $03
-    ld hl, PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1_Data
+    ld hl, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data
     call WriteBCTileToScreenBufferAtTableEntry_BankF1
     ret
 
 ; the same instruction sequence as ShowSelectedItemDescription (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_Case00_ShowGiftExit)
+; 4 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 ; reads: wMenuPage, wMenuCursor
 ; writes: wStringIndex, wStringCategory
 ; points at: wInventory
@@ -485,7 +485,7 @@ Func_0F1_42D9:: ; address name
     ret
 
 ; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wC61E entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
-; 2 call sites from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1)
+; 2 call sites from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wInventory, wMenuPage
 ; writes: wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wInventory
@@ -580,7 +580,7 @@ Func_0F1_4307:: ; address name
     ret
 
 ; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067) (the same 20 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1)
 ; reads: wMenuPageCount, wMenuPage
 DrawMenuPageNumber_BankF1::
 Func_0F1_43A0:: ; address name
@@ -597,7 +597,7 @@ Func_0F1_43A0:: ; address name
     ret
 
 ; when wMenuPage & $0F = wC0A7 - 1 (the last page): wMenuRowCount = wMenuLastPageRows and the cursor row wC46E is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
-; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_Case00_ShowGiftExit)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 ; reads: wMenuItemCount, wMenuPage, wMenuLastPageRows, wMenuCursor
 ; writes: wMenuRowCount, wMenuCursor
 ; points at: wMenuPage
@@ -631,7 +631,7 @@ Func_0F1_43B4:: ; address name
     ret
 
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and the rest are rewritten as $00. Pages of 4: wMenuPageCount = wC0A7 = ceil(count / 4), at least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage equals the page count, else 4 (E-0067) (the same 79 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case00_ShowGiftExit)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 ; reads: wMenuPage, wMenuLastPageRows
 ; writes: wMenuPageCount, wMenuItemCount, wMenuLastPageRows, wMenuRowCount
 ; points at: wInventory
@@ -1109,7 +1109,7 @@ Data_0F1_47C8:: ; address name
     db $C9
 
 ; the same 57 bytes as CopyTileBufferToBGMap (03:42DA)
-; 3 call sites from 3 routines (e.g. PauseMenu_State4_GiftMenu_Case00_ShowGiftExit, PauseMenu_State4_GiftMenu_Case01_BuildScreenBlock32WithCursor_BankF1AndStep, PauseMenu_State4_GiftMenu_Case02_ClearWindowAndBuildBlock32WithCursor_BankF1)
+; 3 call sites from 3 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit, PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep, PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1)
 ; points at: wScreenTileBuffer
 CopyTileBufferToBGMap_BankF1::
 Func_0F1_4811:: ; address name
@@ -1187,7 +1187,7 @@ Func_0F1_484A:: ; address name
     ret
 
 ; far-calls Func_002_5E82 and reloads the record list name tiles (E-0122)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case00_ShowGiftExit)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit)
 RefreshRecordListAndNameTiles_BankF1::
 Func_0F1_4866:: ; address name
     farcall RunMoveIncapacitatedPartyMembersBackTwice
@@ -1195,7 +1195,7 @@ Func_0F1_4866:: ; address name
     ret
 
 ; the same instruction sequence as UpdateMenuCursor (bank $03) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1)
+; 2 call sites from 2 routines (e.g. PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1)
 ; reads: wJoypadPressedRepeat, wMenuRowCount, wMenuPageCount, wMenuPage, wMenuLastPageRows, wFrameCounterLo
 ; writes: wFrameCounterLo, wMenuPage
 UpdateMenuCursor_BankF1::
@@ -1549,13 +1549,13 @@ BuildItemScreenWithRecordCursor_BankF1_Data:: ; heuristic: pointer load in the s
 Data_0F1_4A5E:: ; address name
     db $61, $98, $A1, $98, $E1, $98, $21, $99, $61, $99, $A1, $99
 
-; address loaded by PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1, BuildScreenBlock32WithCursor_BankF1
-PauseMenu_State4_GiftMenu_Case00_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1, BuildScreenBlock32WithCursor_BankF1
+PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F1_4A6A:: ; address name
     db $29, $98, $69, $98, $A9, $98, $E9, $98
 
-; address loaded by PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
-PauseMenu_State4_GiftMenu_Case01_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1, BuildScreenBlocks32And0FWithCursor_BankF1, ClearWindowAndBuildBlock32WithCursor_BankF1
+PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F1_4A72:: ; address name
     db $A1, $98, $E1, $98, $21, $99, $61, $99, $47, $99, $87, $99, $C7, $99, $07, $9A
     db $61, $98, $A1, $98, $4A, $99, $8A, $99, $CA, $99, $0A, $9A, $64, $98, $A4, $98
@@ -1611,7 +1611,7 @@ Func_0F1_4AD0:: ; address name
     dw RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding
-    dw RunScreenStateWhenNotFading_F1_Case03
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
     dw RunScreenStateWhenNotFading_F1_LinkBreed
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
@@ -1687,23 +1687,23 @@ Jump_0F1_4B2E:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1
+; by its step: 'Please wait.', 'Choose the monster for breeding.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunScreenStateWhenNotFading_F1_Case03::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster::
 Jump_0F1_4B47:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor
-    dw RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags_Case03
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor
+    dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_Case03
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
+; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
 Jump_0F1_4B53:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1715,11 +1715,11 @@ Jump_0F1_4B53:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
+; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags::
 Jump_0F1_4B65:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -1731,11 +1731,11 @@ Jump_0F1_4B65:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
+; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor::
 Jump_0F1_4B77:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -1749,11 +1749,11 @@ Jump_0F1_4B77:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case03
+; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_F1_ChooseBreedingMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenState
 ; writes: wScreenStep, wScreenState
-RunScreenStateWhenNotFading_F1_Case03_WaitTextFlags_Case03::
+RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_Case03::
 Jump_0F1_4B8E:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -3795,7 +3795,7 @@ Func_0F1_5812:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E
-; 26 call sites from 19 routines (e.g. RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding, RunScreenStateWhenNotFading_F1_Case03_ShowChooseTheMonsterFor, RunScreenStateWhenNotFading_F1_Case03_ShowPleaseWait, RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach, ...)
+; 26 call sites from 19 routines (e.g. RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding, RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor, RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait, RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank0E_Cat0::
 Func_0F1_5834:: ; address name
@@ -3806,7 +3806,7 @@ Func_0F1_5834:: ; address name
     ret
 
 ; up/down moves wTwoChoiceCursor over three entries (wMenuInputResult = $FD), A and B select or cancel; otherwise blinks the cursor (E-0127)
-; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18, EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06)
+; 3 call sites from 3 routines (e.g. RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18, EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 HandleThreeChoiceCursorInput_F1::

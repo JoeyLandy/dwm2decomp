@@ -10479,13 +10479,13 @@ Jump_013_7D2F:: ; address name
 
 ; entry 229 of the `rst $00` table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode, wRollState
+; reads: wGM2Mode, wPendingGiftItem
 GreatLogTalkEvents_StartScriptAtHL_B13_CaseE5::
 Jump_013_7D45:: ; address name
     ld a, [wGM2Mode]
     cp a, $01
     ret nz
-    ld a, [wRollState]
+    ld a, [wPendingGiftItem]
     or a, a
     jr nz, .call_copy_item_name_to_de
     ld hl, Script_57E3

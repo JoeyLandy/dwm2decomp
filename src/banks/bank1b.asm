@@ -1296,7 +1296,7 @@ Func_01B_480C:: ; address name
     db $11, $21, $48, $CD, $FE, $25, $C9
 
 ; Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 12 call sites from 10 routines (e.g. LinkKeyTrade_BuildKeyListIndexListEntries, LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc, EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, ...)
+; 12 call sites from 10 routines (e.g. LinkKeyTrade_BuildKeyListIndexListEntries, LinkKeyTrade_Case12_WriteArg5AndTextWindowTileLoEtc, EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit, ...)
 ShowString_Bank1B_481A::
 Func_01B_481A:: ; address name
     call BeginStringDisplay_Bank1B_480C
@@ -2080,28 +2080,28 @@ Func_01B_53CE:: ; address name
     ret nz
     ld a, [wScreenState]
     rst $00
-    dw RunScreenStateWhenNotFading_1B_Case00
+    dw LinkKeyTrade_Start
     dw LinkKeyTrade
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_1B
+; by wScreenStep: 'Starting key trade', 'Please wait.', 'Please choose the key to trade.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunScreenStateWhenNotFading_1B_Case00::
+LinkKeyTrade_Start::
 Jump_01B_53DB:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_1B_Case00_CopyBytesDEToHL_Bank1B
-    dw RunScreenStateWhenNotFading_1B_Case00_ShowStartingKeyTrade
-    dw RunScreenStateWhenNotFading_1B_Case00_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_1B_Case00_WaitTextFlags
-    dw RunScreenStateWhenNotFading_1B_Case00_ShowPleaseChooseTheKey
+    dw LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B
+    dw LinkKeyTrade_Start_ShowStartingKeyTrade
+    dw LinkKeyTrade_Start_ShowPleaseWait
+    dw LinkKeyTrade_Start_WaitTextFlags
+    dw LinkKeyTrade_Start_ShowPleaseChooseTheKey
 
-; entry 0 of the `rst $00` table in RunScreenStateWhenNotFading_1B_Case00
+; entry 0 of the `rst $00` table in LinkKeyTrade_Start
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenStep
 ; writes: wScreenStep
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-RunScreenStateWhenNotFading_1B_Case00_CopyBytesDEToHL_Bank1B::
+LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B::
 Jump_01B_53E9:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -2131,12 +2131,12 @@ Jump_01B_53E9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunScreenStateWhenNotFading_1B_Case00
+; entry 1 of the `rst $00` table in LinkKeyTrade_Start
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
 ; points at: wLinkScreenState
-RunScreenStateWhenNotFading_1B_Case00_ShowStartingKeyTrade::
+LinkKeyTrade_Start_ShowStartingKeyTrade::
 Jump_01B_5429:: ; address name
     ld a, $01 ; 'Starting key trade'
     call BeginString_Bank1B_Cat0
@@ -2149,11 +2149,11 @@ Jump_01B_5429:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunScreenStateWhenNotFading_1B_Case00
+; entry 2 of the `rst $00` table in LinkKeyTrade_Start
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_1B_Case00_ShowPleaseWait::
+LinkKeyTrade_Start_ShowPleaseWait::
 Jump_01B_543E:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2165,11 +2165,11 @@ Jump_01B_543E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RunScreenStateWhenNotFading_1B_Case00
+; entry 3 of the `rst $00` table in LinkKeyTrade_Start
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-RunScreenStateWhenNotFading_1B_Case00_WaitTextFlags::
+LinkKeyTrade_Start_WaitTextFlags::
 Jump_01B_5450:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2181,11 +2181,11 @@ Jump_01B_5450:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 4 of the `rst $00` table in RunScreenStateWhenNotFading_1B_Case00
+; entry 4 of the `rst $00` table in LinkKeyTrade_Start
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenState
 ; writes: wLinkSendByte, wScreenStep, wScreenState
-RunScreenStateWhenNotFading_1B_Case00_ShowPleaseChooseTheKey::
+LinkKeyTrade_Start_ShowPleaseChooseTheKey::
 Jump_01B_5462:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2214,18 +2214,18 @@ Jump_01B_547D:: ; address name
     dw LinkKeyTrade_DrawKeyListPageNames
     dw LinkKeyTrade_BGMapAddressAtScroll_Bank1B
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc
-    dw LinkKeyTrade_Case06
+    dw LinkKeyTrade_WaitForPartner
     dw LinkKeyTrade_QueueSoundEffect
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_Case08
     dw LinkKeyTrade_ShowPleaseChooseTheKey
     dw LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B
-    dw LinkKeyTrade_Case0B
+    dw LinkKeyTrade_KeyCannotBeTraded
     dw LinkKeyTrade_WaitTextFlags
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByte
     dw LinkKeyTrade_KeyEntryAddressForListEntriesCell4
     dw LinkKeyTrade_WaitLinkMessage
     dw LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc
-    dw LinkKeyTrade_Case11
+    dw LinkKeyTrade_KeysSameName
     dw LinkKeyTrade_ShowIsItOKTo
     dw LinkKeyTrade_QueueSoundEffect_Case13
     dw LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc
@@ -2499,24 +2499,24 @@ Jump_01B_5630:: ; address name
     call BeginString_Bank1B_Cat0
     ret
 
-; entry 6 of the `rst $00` table in LinkKeyTrade
+; by its step: 'Please wait.' and the partner's link message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-LinkKeyTrade_Case06::
+LinkKeyTrade_WaitForPartner::
 Jump_01B_56B7:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw LinkKeyTrade_Case06_BeginString_Bank1B_Cat0
-    dw LinkKeyTrade_Case06_ShowPleaseWait
-    dw LinkKeyTrade_Case06_WaitTextFlags
-    dw LinkKeyTrade_Case06_WaitLinkMessage
-    dw LinkKeyTrade_Case06_WaitTextFlags_Case04
+    dw LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0
+    dw LinkKeyTrade_WaitForPartner_ShowPleaseWait
+    dw LinkKeyTrade_WaitForPartner_WaitTextFlags
+    dw LinkKeyTrade_WaitForPartner_WaitLinkMessage
+    dw LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_Case06
+; entry 0 of the `rst $00` table in LinkKeyTrade_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkSendByte, wLinkRole, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-LinkKeyTrade_Case06_BeginString_Bank1B_Cat0::
+LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0::
 Jump_01B_56C5:: ; address name
     ld a, [wLinkMessage]
     cp a, $FD
@@ -2548,11 +2548,11 @@ Jump_01B_56C5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_Case06
+; entry 1 of the `rst $00` table in LinkKeyTrade_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep
-LinkKeyTrade_Case06_ShowPleaseWait::
+LinkKeyTrade_WaitForPartner_ShowPleaseWait::
 Jump_01B_56F5:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2564,11 +2564,11 @@ Jump_01B_56F5:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade_Case06
+; entry 2 of the `rst $00` table in LinkKeyTrade_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-LinkKeyTrade_Case06_WaitTextFlags::
+LinkKeyTrade_WaitForPartner_WaitTextFlags::
 Jump_01B_5707:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2580,11 +2580,11 @@ Jump_01B_5707:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade_Case06
+; entry 3 of the `rst $00` table in LinkKeyTrade_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-LinkKeyTrade_Case06_WaitLinkMessage::
+LinkKeyTrade_WaitForPartner_WaitLinkMessage::
 Jump_01B_5719:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2596,12 +2596,12 @@ Jump_01B_5719:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade_Case06
+; entry 4 of the `rst $00` table in LinkKeyTrade_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
-LinkKeyTrade_Case06_WaitTextFlags_Case04::
+LinkKeyTrade_WaitForPartner_WaitTextFlags_Case04::
 Jump_01B_572B:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -2741,21 +2741,21 @@ Jump_01B_57F6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in LinkKeyTrade
+; by its step: 'That key cannot be traded.' and 'Please wait.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-LinkKeyTrade_Case0B::
+LinkKeyTrade_KeyCannotBeTraded::
 Jump_01B_5809:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw LinkKeyTrade_Case0B_KeyEntryAddressForListEntriesCell4
-    dw LinkKeyTrade_Case0B_WaitTextFlags
+    dw LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4
+    dw LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_Case0B
+; entry 1 of the `rst $00` table in LinkKeyTrade_KeyCannotBeTraded
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenSubStep, wScreenStep
-LinkKeyTrade_Case0B_WaitTextFlags::
+LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
 Jump_01B_5811:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -2767,11 +2767,11 @@ Jump_01B_5811:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_Case0B
+; entry 0 of the `rst $00` table in LinkKeyTrade_KeyCannotBeTraded
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, hMapId, wScreenStep, wMapType, wKeyWorldSlot
 ; writes: wScreenSubStep, wScreenStep
-LinkKeyTrade_Case0B_KeyEntryAddressForListEntriesCell4::
+LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4::
 Jump_01B_5823:: ; address name
     call KeyEntryAddressForListEntriesCell4
     push hl
@@ -3236,24 +3236,24 @@ Func_01B_5A41:: ; address name
     jr nz, .loop2
     ret
 
-; entry 17 of the `rst $00` table in LinkKeyTrade
+; by wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-LinkKeyTrade_Case11::
+LinkKeyTrade_KeysSameName::
 Jump_01B_5A83:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw LinkKeyTrade_Case11_WriteLinkSendByteAndScreenSubStep
-    dw LinkKeyTrade_Case11_WriteItemGridXAndLinkSendByteEtc
-    dw LinkKeyTrade_Case11_WriteScreenSubStepAndScreenStep
-    dw LinkKeyTrade_Case11_WaitTextFlags
-    dw LinkKeyTrade_Case11_ShowPleaseChooseTheKey
+    dw LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep
+    dw LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc
+    dw LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep
+    dw LinkKeyTrade_KeysSameName_WaitTextFlags
+    dw LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey
 
-; entry 0 of the `rst $00` table in LinkKeyTrade_Case11
+; entry 0 of the `rst $00` table in LinkKeyTrade_KeysSameName
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord, wScreenSubStep
 ; writes: wLinkSendByte, wScreenSubStep
-LinkKeyTrade_Case11_WriteLinkSendByteAndScreenSubStep::
+LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep::
 Jump_01B_5A91:: ; address name
     ld a, [wSelectedRecord]
     and a, a
@@ -3277,11 +3277,11 @@ Jump_01B_5A91:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in LinkKeyTrade_Case11
+; entry 1 of the `rst $00` table in LinkKeyTrade_KeysSameName
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenSubStep
 ; writes: wItemGridX, wLinkSendByte, wScreenSubStep
-LinkKeyTrade_Case11_WriteItemGridXAndLinkSendByteEtc::
+LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc::
 Jump_01B_5AB0:: ; address name
     ld a, [wLinkMessage]
     cp a, $02
@@ -3301,11 +3301,11 @@ Jump_01B_5AB0:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in LinkKeyTrade_Case11
+; entry 2 of the `rst $00` table in LinkKeyTrade_KeysSameName
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wItemGridX, wSelectedRecord, wScreenStep, wScreenSubStep
 ; writes: wScreenSubStep, wScreenStep
-LinkKeyTrade_Case11_WriteScreenSubStepAndScreenStep::
+LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep::
 Jump_01B_5ACF:: ; address name
     ld a, [wItemGridX]
     cp a, $03
@@ -3360,11 +3360,11 @@ Jump_01B_5ACF:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in LinkKeyTrade_Case11
+; entry 3 of the `rst $00` table in LinkKeyTrade_KeysSameName
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenSubStep
 ; writes: wScreenSubStep
-LinkKeyTrade_Case11_WaitTextFlags::
+LinkKeyTrade_KeysSameName_WaitTextFlags::
 Jump_01B_5B1F:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -3374,10 +3374,10 @@ Jump_01B_5B1F:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in LinkKeyTrade_Case11
+; entry 4 of the `rst $00` table in LinkKeyTrade_KeysSameName
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep, wScreenStep
-LinkKeyTrade_Case11_ShowPleaseChooseTheKey::
+LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
 Jump_01B_5B2C:: ; address name
     call LinkKeyTrade_CopyRectTo20ByteRows
     ld a, $06 ; 'Please choose the key to trade.'
@@ -4459,7 +4459,7 @@ Jump_01B_61D7:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C
-; 18 call sites from 17 routines (e.g. RunScreenStateWhenNotFading_1B_Case00_ShowPleaseChooseTheKey, RunScreenStateWhenNotFading_1B_Case00_ShowPleaseWait, RunScreenStateWhenNotFading_1B_Case00_ShowStartingKeyTrade, LinkKeyTrade_ShowPleaseWait, ...)
+; 18 call sites from 17 routines (e.g. LinkKeyTrade_Start_ShowPleaseChooseTheKey, LinkKeyTrade_Start_ShowPleaseWait, LinkKeyTrade_Start_ShowStartingKeyTrade, LinkKeyTrade_ShowPleaseWait, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank1B_Cat0::
 Func_01B_61F5:: ; address name
@@ -4470,7 +4470,7 @@ Func_01B_61F5:: ; address name
     ret
 
 ; only called from routines of LinkKeyTrade (E-0098)
-; 2 call sites from 2 routines (e.g. LinkKeyTrade_ShowPleaseChooseTheKey, LinkKeyTrade_Case11_ShowPleaseChooseTheKey)
+; 2 call sites from 2 routines (e.g. LinkKeyTrade_ShowPleaseChooseTheKey, LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey)
 ; writes: wArg1, wArg2
 LinkKeyTrade_CopyRectTo20ByteRows::
 Func_01B_6203:: ; address name
@@ -4646,7 +4646,7 @@ Func_01B_62CB:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_1B_Case00_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
+; 2 call sites from 2 routines (e.g. LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
 CopyBytesDEToHL_Bank1B::
 Func_01B_62EC:: ; address name
     ld a, [de]
@@ -4659,7 +4659,7 @@ Func_01B_62EC:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 19 bytes appear in 5 banks)
-; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_1B_Case00_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
+; 2 call sites from 2 routines (e.g. LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B, LinkKeyTrade_Shared01_CopyBytesDEToHL_Bank1B)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank1B::
 Func_01B_62F5:: ; address name
@@ -5139,10 +5139,10 @@ Func_01B_665E:: ; address name
     rst $00
     dw EggServiceMenu_Bank1B_ShowStringA10_Bank1B
     dw EggServiceMenu_Bank1B_WaitTextFlags
-    dw EggServiceMenu_Bank1B_Case02
+    dw EggServiceMenu_Bank1B_WaitForPartner
     dw EggServiceMenu_Bank1B_AdvanceScreenState
     dw EggServiceMenu_Bank1B_PickRecords
-    dw EggServiceMenu_Bank1B_Case05
+    dw EggServiceMenu_Bank1B_StartLinkBattle
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
@@ -5186,24 +5186,24 @@ Jump_01B_6698:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B
+; by its step: 'Please wait.' and the partner's link message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Bank1B_Case02::
+EggServiceMenu_Bank1B_WaitForPartner::
 Jump_01B_66A6:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case02_WaitLinkMessage
-    dw EggServiceMenu_Bank1B_Case02_ShowPleaseWait
-    dw EggServiceMenu_Bank1B_Case02_WaitTextFlags
-    dw EggServiceMenu_Bank1B_Case02_WaitLinkMessage_Case03
-    dw EggServiceMenu_Bank1B_Case02_WaitTextFlags_Case04
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage
+    dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03
+    dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-EggServiceMenu_Bank1B_Case02_WaitLinkMessage::
+EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
 Jump_01B_66B4:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -5215,11 +5215,11 @@ Jump_01B_66B4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case02_ShowPleaseWait::
+EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
 Jump_01B_66C6:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5231,11 +5231,11 @@ Jump_01B_66C6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-EggServiceMenu_Bank1B_Case02_WaitTextFlags::
+EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
 Jump_01B_66D8:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -5247,11 +5247,11 @@ Jump_01B_66D8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-EggServiceMenu_Bank1B_Case02_WaitLinkMessage_Case03::
+EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_Case03::
 Jump_01B_66EA:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -5263,12 +5263,12 @@ Jump_01B_66EA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case02
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
-EggServiceMenu_Bank1B_Case02_WaitTextFlags_Case04::
+EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_Case04::
 Jump_01B_66FC:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -6090,41 +6090,41 @@ Jump_01B_6C05:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B
+; by wScreenStep: the picked records, 'Begin battle?', 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Bank1B_Case05::
+EggServiceMenu_Bank1B_StartLinkBattle::
 Jump_01B_6C61:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case05_DrawPickedRecordsRecordNamesAndIcons
-    dw EggServiceMenu_Bank1B_Case05_FillBytes
-    dw EggServiceMenu_Bank1B_Case05_SetScreenStep
-    dw EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo
-    dw EggServiceMenu_Bank1B_Case05_WriteScreenStepAndLinkTimeoutLoEtc
-    dw EggServiceMenu_Bank1B_Case05_ShowBeginBattle
-    dw EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit
-    dw EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case07
-    dw EggServiceMenu_Bank1B_Case05_WaitTextFlags
-    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep
-    dw EggServiceMenu_Bank1B_Case05_WaitTextFlags_Case0A
-    dw EggServiceMenu_Bank1B_Case05_SetScreenStep
-    dw EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case0C
-    dw EggServiceMenu_Bank1B_Case05_WriteLinkSceneByte4BAndLinkTimeoutLoEtc
-    dw EggServiceMenu_Bank1B_Case05_SetScreenStep
-    dw EggServiceMenu_Bank1B_Case05_WaitLinkMessage
-    dw EggServiceMenu_Bank1B_Case05_WaitLinkMessage_Case10
-    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11
-    dw EggServiceMenu_Bank1B_Case05_WaitTextFlags_Case0A
-    dw EggServiceMenu_Bank1B_Case05_SetScreenStep
-    dw EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo
-    dw EggServiceMenu_Bank1B_Case05_WriteGameModeAndModeStateEtc
+    dw EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons
+    dw EggServiceMenu_Bank1B_StartLinkBattle_FillBytes
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case0C
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_Case10
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
+    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc
 
-; entry 17 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 17 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11::
+EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_Case11::
 Jump_01B_6C91:: ; address name
     ld a, $09 ; 'Starting battle'
     call ShowStringA10_Bank1B
@@ -6133,11 +6133,11 @@ Jump_01B_6C91:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 9 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep::
+EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
 Jump_01B_6C9E:: ; address name
     ld a, $0C ; 'Please wait.'
     call ShowStringA10_Bank1B
@@ -6146,11 +6146,11 @@ Jump_01B_6C9E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 10 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_WaitTextFlags_Case0A::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_Case0A::
 Jump_01B_6CAB:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6160,11 +6160,11 @@ Jump_01B_6CAB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_DrawPickedRecordsRecordNamesAndIcons::
+EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons::
 Jump_01B_6CB8:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6175,12 +6175,12 @@ Jump_01B_6CB8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPackWork, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
 ; points at: wRecordBufA, sRecords
-EggServiceMenu_Bank1B_Case05_FillBytes::
+EggServiceMenu_Bank1B_StartLinkBattle_FillBytes::
 Jump_01B_6CC8:: ; address name
     ld a, [wPackWork]
     cp a, $FF
@@ -6221,11 +6221,11 @@ Jump_01B_6CC8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-EggServiceMenu_Bank1B_Case05_SetScreenStep::
+EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep::
 Jump_01B_6D11:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -6234,11 +6234,11 @@ Jump_01B_6D11:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
 Jump_01B_6D1E:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6264,12 +6264,12 @@ Jump_01B_6D1E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
 ; points at: wRecordBufA, wRecordBufB
-EggServiceMenu_Bank1B_Case05_WriteScreenStepAndLinkTimeoutLoEtc::
+EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
 Jump_01B_6D4B:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -6295,11 +6295,11 @@ Jump_01B_6D4B:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 16 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 16 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkReady, wLinkSendByte, wScreenStep
-EggServiceMenu_Bank1B_Case05_WaitLinkMessage_Case10::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_Case10::
 Jump_01B_6D7E:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -6313,11 +6313,11 @@ Jump_01B_6D7E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkReady, wLinkSendByte, wScreenStep
-EggServiceMenu_Bank1B_Case05_ShowBeginBattle::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
 Jump_01B_6D96:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -6333,11 +6333,11 @@ Jump_01B_6D96:: ; address name
     call ShowStringA10_Bank1B
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
 Jump_01B_6DB3:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6375,11 +6375,11 @@ Jump_01B_6DB3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wMenuInputResult, wTwoChoiceCursor, wLinkRules, wScreenStep, wRecordBufB, wScreenState, wListCursor, ...
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte, wScreenByteB2, wScreenByteB3, wItemGridX, wItemGridY, ...
-EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case07::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case07::
 Jump_01B_6E09:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -6472,11 +6472,11 @@ Jump_01B_6E09:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 8 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_WaitTextFlags::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
 Jump_01B_6EB9:: ; address name
     ld a, [wTextFlags]
     and a, a
@@ -6486,11 +6486,11 @@ Jump_01B_6EB9:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 12 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkSendByte
-EggServiceMenu_Bank1B_Case05_ShowYourPalRefusedTo_Case0C::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_Case0C::
 Jump_01B_6EC6:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6516,19 +6516,19 @@ Jump_01B_6EC6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 13 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkRole, wScreenStep
 ; writes: wLinkSceneByte4B, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wScreenStep
 ; points at: wBattlerRecords, wBattlerRecordSlot4
-EggServiceMenu_Bank1B_Case05_WriteLinkSceneByte4BAndLinkTimeoutLoEtc::
+EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc::
 Jump_01B_6EF3:: ; address name
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .set_link_scene_byte4_b_to_01
     xor a, a
     ld [wLinkSceneByte4B], a
-    call EggServiceMenu_Bank1B_Case05_Case0D_WriteRAMG2AndRAMB
+    call EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB
     ld hl, wBattlerRecords
     ld a, l
     ld [wLinkTimeoutLo], a
@@ -6547,7 +6547,7 @@ Jump_01B_6EF3:: ; address name
 .set_link_scene_byte4_b_to_01:
     ld a, $01
     ld [wLinkSceneByte4B], a
-    call EggServiceMenu_Bank1B_Case05_Case0D_WriteRAMG2AndRAMB
+    call EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB
     ld hl, wBattlerRecordSlot4
     ld a, l
     ld [wLinkTimeoutLo], a
@@ -6563,11 +6563,11 @@ Jump_01B_6EF3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 15 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wScreenStep, wLinkBufferCountLo, wLinkBufferCountHi, wLinkSendByte, wLinkReady
-EggServiceMenu_Bank1B_Case05_WaitLinkMessage::
+EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
 Jump_01B_6F45:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -6586,10 +6586,10 @@ Jump_01B_6F45:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 21 of the `rst $00` table in EggServiceMenu_Bank1B_Case05
+; entry 21 of the `rst $00` table in EggServiceMenu_Bank1B_StartLinkBattle
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wModeChangeRequest, wLinkSession, wLinkExchangeState, wLinkSendByte, ...
-EggServiceMenu_Bank1B_Case05_WriteGameModeAndModeStateEtc::
+EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
 Jump_01B_6F68:: ; address name
     ld a, $04
     ld [wGameMode], a
@@ -6879,12 +6879,12 @@ Jump_01B_710B:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from EggServiceMenu_Bank1B_Case05_Case0D (E-0047)
-; 2 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_Case05_WriteLinkSceneByte4BAndLinkTimeoutLoEtc)
+; only called from EggServiceMenu_Bank1B_StartLinkBattle_Case0D (E-0047)
+; 2 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneByte4BAndLinkTimeoutLoEtc)
 ; reads: wLinkRole
 ; writes: rRAMG2, rRAMB
 ; points at: wBattlerRecords, wBattlerRecordSlot4, wPickedRecords
-EggServiceMenu_Bank1B_Case05_Case0D_WriteRAMG2AndRAMB::
+EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB::
 Func_01B_7152:: ; address name
     ld hl, wBattlerRecords
     ld a, [wLinkRole]
@@ -7005,7 +7005,7 @@ Func_01B_7152:: ; address name
     ret
 
 ; copies E bytes from BC to HL; BC and HL advance, E = 0 (E-0115)
-; 4 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_Case05_Case0D_WriteRAMG2AndRAMB)
+; 4 call sites from 1 routine (e.g. EggServiceMenu_Bank1B_StartLinkBattle_Case0D_WriteRAMG2AndRAMB)
 CopyEBytesBCToHL::
 Func_01B_71FE:: ; address name
     ld a, [bc]
@@ -7400,7 +7400,7 @@ Func_01B_7399:: ; address name
     ret
 
 ; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)
-; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, EggServiceMenu_Bank1B_Case02_ShowPleaseWait, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D, EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc, ...)
+; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait, EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_Case0D, EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc, ...)
 ; writes: wStringIndex, wStringCategory
 ShowStringA10_Bank1B::
 Func_01B_7439:: ; address name
@@ -7412,7 +7412,7 @@ Func_01B_7439:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit)
+; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit, EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank1B::
 Func_01B_7449:: ; address name
@@ -7564,7 +7564,7 @@ Func_01B_74DC:: ; address name
     ret
 
 ; for up to wD7DC records listed at wD7DD draws each name at Data_01B_75A8[n] and loads its family icon into tile Data_01B_75B0[n] (E-0128)
-; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_Case05_DrawPickedRecordsRecordNamesAndIcons)
+; 3 call sites from 3 routines (e.g. ClearRecordPanelTiles, EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons)
 ; reads: wPickCount
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1
 ; points at: wPickedRecords

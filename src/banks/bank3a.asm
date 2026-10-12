@@ -5117,7 +5117,7 @@ Data_03A_6107:: ; address name
     db $96, $FF ; id 39
 
 ; battle fight step 3: returns while a message is being drawn; in link mode calls Func_03A_4ADB; otherwise one of 6 sub-steps by wBattleSubPhase, which execute the chosen actions through RunBattleResolveStep
-; 2 call sites from 2 routines (e.g. BattleFight_Step3, RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleActions)
+; 2 call sites from 2 routines (e.g. BattleFight_Step3, RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleActions)
 ; reads: wTextFlags, wEffectId, wLinkMode, wBattleSubPhase
 RunBattleActions::
 Func_03A_6157:: ; address name
@@ -6401,7 +6401,7 @@ Jump_03A_68A9:: ; address name
     jr RunMultiHitCounter_SetBattleSubPhaseTo01
 
 ; battle fight step 4: the same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle)
-; 2 call sites from 2 routines (e.g. BattleFight_Step4, RunBattlePhaseWhenTextIdle_A0_Case01_ToRunBattleStep4)
+; 2 call sites from 2 routines (e.g. BattleFight_Step4, RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleStep4)
 ; reads: wTextFlags, wEffectId, wLinkMode, wBattleSubPhase
 RunBattleStep4::
 Func_03A_68C9:: ; address name

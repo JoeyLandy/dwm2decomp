@@ -501,7 +501,7 @@ Data_0F0_4887:: ; address name
     db $F9, "0G. OK?", $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0, PauseMenu_State4_GiftMenu_Case02_BeginStringDisplay_BankF0_48A0AndStep, ...)
+; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0, PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_48A0AndStep, ...)
 BeginStringDisplay_BankF0_48A0::
 Func_0F0_48A0:: ; address name
     ld de, StringCategories_F0_48B5
@@ -780,11 +780,11 @@ Func_0F0_4CA0:: ; address name
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06
     dw RunLinkSession8Exchange_ObjectSceneThenSave
-    dw RunLinkSession8Exchange_Case01_Sub01_Case08
-    dw RunLinkSession8Exchange_Case01_Sub01_Case09
+    dw RunLinkSession8Exchange_ObtainedEgg
+    dw RunLinkSession8Exchange_EggsTraded
     dw RunLinkSession8Exchange_ObjectScene
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0C
+    dw RunLinkSession8Exchange_EggHatched
+    dw RunLinkSession8Exchange_WaitForPartner
 
 ; entry 0 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
@@ -2380,10 +2380,10 @@ Jump_0F0_55DC:: ; address name
     ld [wSaveRecordIndex], a
     ret
 
-; entry 8 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenSubStep: an object animation, then 'Obtained an egg from 0.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case08::
+RunLinkSession8Exchange_ObtainedEgg::
 Jump_0F0_55FB:: ; address name
     ld a, [wScreenSubStep]
     rst $00
@@ -2397,15 +2397,15 @@ Jump_0F0_55FB:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom
+    dw RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 10 of the `rst $00` table in Func_0F0_4CA0_Case08
+; entry 10 of the `rst $00` table in RunLinkSession8Exchange_ObtainedEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSpriteSlotsAndScreenSubStep::
+RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep::
 Jump_0F0_5619:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -2426,11 +2426,11 @@ Jump_0F0_5619:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_4CA0_Case08
+; entry 11 of the `rst $00` table in RunLinkSession8Exchange_ObtainedEgg
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom::
+RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom::
 Jump_0F0_563F:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
@@ -2446,10 +2446,10 @@ Jump_0F0_563F:: ; address name
     ld [wSaveRecordIndex], a
     ret
 
-; entry 9 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenSubStep: an object animation, then 'Eggs were traded with 0.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case09::
+RunLinkSession8Exchange_EggsTraded::
 Jump_0F0_565E:: ; address name
     ld a, [wScreenSubStep]
     rst $00
@@ -2467,15 +2467,15 @@ Jump_0F0_565E:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
-    dw RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith
+    dw RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0
+    dw RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 14 of the `rst $00` table in Func_0F0_4CA0_Case09
+; entry 14 of the `rst $00` table in RunLinkSession8Exchange_EggsTraded
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject1, wScreenSubStep
 ; writes: wSpriteSlots, wObject1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0::
+RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0::
 Jump_0F0_5684:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -2493,7 +2493,7 @@ Jump_0F0_5684:: ; address name
     ret
 
 ; wCB86 = 3; while wCB88 & 3 is set, wCB8A -= 1 and A = $FF once it reaches $E0; otherwise A = 0 (E-0126)
-; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0)
+; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots
 StepObjectCB8ADownToE0::
@@ -2517,7 +2517,7 @@ Func_0F0_56A5:: ; address name
     ret
 
 ; wCB96 = 1; while wCB98 & 3 is set, wCB9A += 1 up to $E0 (E-0126)
-; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0)
+; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_EggsTraded_StepObjectCB9AUpToE0)
 ; reads: wObject1
 ; writes: wObject1
 StepObjectCB9AUpToE0::
@@ -2535,11 +2535,11 @@ Func_0F0_56C2:: ; address name
     ret nz
     ret
 
-; entry 15 of the `rst $00` table in Func_0F0_4CA0_Case09
+; entry 15 of the `rst $00` table in RunLinkSession8Exchange_EggsTraded
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith::
+RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith::
 Jump_0F0_56D9:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
@@ -2940,10 +2940,10 @@ Jump_0F0_593A:: ; address name
     ld [wLinkByteEB], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenSubStep: an object animation, then 'G hatched from the egg that ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B::
+RunLinkSession8Exchange_EggHatched::
 Jump_0F0_5967:: ; address name
     ld a, [wScreenSubStep]
     rst $00
@@ -2955,10 +2955,10 @@ Jump_0F0_5967:: ; address name
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_RunFieldCommandTemp0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_SetObject1Plus7
+    dw RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0
+    dw RunLinkSession8Exchange_EggHatched_SetObject1Plus7
     dw RunLinkSession8Exchange_ObjectScene_QueueSoundEffect
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B
+    dw RunLinkSession8Exchange_EggHatched_ToStepScreenStepOffsetTableEvery4Frames
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
@@ -2973,18 +2973,18 @@ Jump_0F0_5967:: ; address name
     dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteObject2AndScreenSubStep
+    dw RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc
+    dw RunLinkSession8Exchange_EggHatched_WriteSpriteSlotsAndObject1Etc
     dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe
+    dw RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 8 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 8 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, hTemp0, wObject5, wScreenCounter, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_RunFieldCommandTemp0::
+RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0::
 Jump_0F0_59AB:: ; address name
     ld a, [wObject1 + $D]
     res 1, a
@@ -3019,11 +3019,11 @@ Jump_0F0_59AB:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 9 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 9 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_SetObject1Plus7::
+RunLinkSession8Exchange_EggHatched_SetObject1Plus7::
 Jump_0F0_59F6:: ; address name
     ld a, $03
     ld [wObject1 + $7], a
@@ -3032,11 +3032,11 @@ Jump_0F0_59F6:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 26 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 26 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2, wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteObject2AndScreenSubStep::
+RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep::
 Jump_0F0_5A03:: ; address name
     ld a, [wObject2 + $D]
     res 1, a
@@ -3095,19 +3095,19 @@ Func_0F0_5A29:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 11 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B::
+RunLinkSession8Exchange_EggHatched_ToStepScreenStepOffsetTableEvery4Frames::
 Jump_0F0_5A6C:: ; address name
     ld de, wSpriteSlots + $C
     call StepScreenStepOffsetTableEvery4Frames
     ret
 
-; entry 28 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 28 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject1, wObject2, wScreenSubStep
 ; writes: wSpriteSlots, wObject1, wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc::
+RunLinkSession8Exchange_EggHatched_WriteSpriteSlotsAndObject1Etc::
 Jump_0F0_5A73:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -3132,11 +3132,11 @@ Jump_0F0_5A73:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 30 of the `rst $00` table in Func_0F0_4CA0_Case0B
+; entry 30 of the `rst $00` table in RunLinkSession8Exchange_EggHatched
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wBankF0ByteC8, wTextBuf1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe::
+RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe::
 Jump_0F0_5AA3:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
@@ -3157,23 +3157,23 @@ Jump_0F0_5AA3:: ; address name
     ld [wSaveRecordIndex], a
     ret
 
-; entry 12 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenStep: 'Please wait', then a link message wait
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case0C::
+RunLinkSession8Exchange_WaitForPartner::
 Jump_0F0_5ACE:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0C_ToBeginString_BankF0_Cat0AndStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0C_SetScreenStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0C_WaitLinkMessage
+    dw RunLinkSession8Exchange_WaitForPartner_ToBeginString_BankF0_Cat0AndStep
+    dw RunLinkSession8Exchange_WaitForPartner_SetScreenStep
+    dw RunLinkSession8Exchange_WaitForPartner_WaitLinkMessage
     dw RunLinkSession8Exchange_Case01_Sub01_Case04_WaitTextFlags
 
-; entry 0 of the `rst $00` table in Func_0F0_4CA0_Case0C
+; entry 0 of the `rst $00` table in RunLinkSession8Exchange_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case0C_ToBeginString_BankF0_Cat0AndStep::
+RunLinkSession8Exchange_WaitForPartner_ToBeginString_BankF0_Cat0AndStep::
 Jump_0F0_5ADA:: ; address name
     ld a, $08 ; 'Please wait'
     call BeginString_BankF0_Cat0
@@ -3182,11 +3182,11 @@ Jump_0F0_5ADA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in Func_0F0_4CA0_Case0C
+; entry 1 of the `rst $00` table in RunLinkSession8Exchange_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
-RunLinkSession8Exchange_Case01_Sub01_Case0C_SetScreenStep::
+RunLinkSession8Exchange_WaitForPartner_SetScreenStep::
 Jump_0F0_5AE7:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -3195,11 +3195,11 @@ Jump_0F0_5AE7:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in Func_0F0_4CA0_Case0C
+; entry 2 of the `rst $00` table in RunLinkSession8Exchange_WaitForPartner
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case0C_WaitLinkMessage::
+RunLinkSession8Exchange_WaitForPartner_WaitLinkMessage::
 Jump_0F0_5AF4:: ; address name
     ld a, [wLinkMessage]
     cp a, $BA
@@ -3212,7 +3212,7 @@ Jump_0F0_5AF4:: ; address name
     ret
 
 ; every fourth frame adds Data_0F0_5B39[wD781] to [DE] and advances wD781; the $80 end mark advances wD782 and resets (E-0124)
-; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B)
+; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames, RunLinkSession8Exchange_EggHatched_ToStepScreenStepOffsetTableEvery4Frames)
 ; reads: wScreenCounter, wScreenStep, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep, wScreenStep
 ; points at: wScreenStep
@@ -3253,7 +3253,7 @@ Data_0F0_5B39:: ; address name
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
 ; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
-; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom, RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith, RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe)
+; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom, RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith, RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe)
 CopyStringMaxBToDE::
 Func_0F0_5B42:: ; address name
     ld a, [hl+]
@@ -4237,7 +4237,7 @@ Func_0F0_6214:: ; address name
     ret
 
 ; clears the default window, wC8CB = 1, wC8CC = 0, hFFB9 = 2, then repeatedly far-calls Func_002_69D0 until wC8CB & 3 = 0 (E-0122)
-; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_Case01_Sub01_Case08_ShowObtainedAnEggFrom, RunLinkSession8Exchange_Case01_Sub01_Case09_ShowEggsWereTradedWith, RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_ShowHeroReceivedYourEgg, RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom, RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith, RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0, ...)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 RunTextUntilTextWindowStateDone_BankF0::
@@ -6549,7 +6549,7 @@ Data_0F0_7085:: ; address name
     dw $FEFE ; id 29
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
-; 14 call sites from 4 routines (e.g. KeyWorldDoorItem_Case04_RandomModulo29_BankF0, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRunEvent)
+; 14 call sites from 4 routines (e.g. KeyWorldDoorItem_Case04_RandomModulo29_BankF0, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RecordGiftAndMaybeApplyPrevious)
 ; reads: wRandomLo
 RandomModulo29_BankF0::
 Func_0F0_7097:: ; address name
@@ -6667,23 +6667,23 @@ Func_0F0_7245:: ; address name
     ld c, $FF
     ret
 
-; wCEC2 += 1 up to $0F; when wCEC1 is set, runs Func_0F0_72C8 if a random value is below 100 - 5 * wCEC2; then wCEC1 = wD7F1 (E-0124)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case02_WriteArg1AndCounterPtr0LoEtc)
-; reads: wRollCounter, wRollState, wArg1
-; writes: wRollCounter, wRollState
-RollCounterChanceAndRunEvent::
+; wGiftCount (wCEC2) += 1 up to $0F; when a gift is pending (wPendingGiftItem, wCEC1), applies its effect (ApplyGiftEffectByItem) if a random value is below 100 - 5 * wGiftCount; then the new gift item (wArg1, from PauseMenu_State4_GiftMenu_GiveGift) becomes pending (E-0124, E-0295)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc)
+; reads: wGiftCount, wPendingGiftItem, wArg1
+; writes: wGiftCount, wPendingGiftItem
+RecordGiftAndMaybeApplyPrevious::
 Func_0F0_7284:: ; address name
-    ld a, [wRollCounter]
+    ld a, [wGiftCount]
     cp a, $0F
-    jr nc, .check_roll_state
+    jr nc, .check_pending_gift_item
     inc a
-    ld [wRollCounter], a
+    ld [wGiftCount], a
 
-.check_roll_state:
-    ld a, [wRollState]
+.check_pending_gift_item:
+    ld a, [wPendingGiftItem]
     and a, a
     jr z, .read_arg1
-    ld a, [wRollCounter]
+    ld a, [wGiftCount]
     ld c, $05
     call Multiply8
     ld a, $64
@@ -6695,17 +6695,17 @@ Func_0F0_7284:: ; address name
     pop de
     ld a, l
     cp a, e
-    call c, RollCounterChanceAndRunEvent_Sub01
+    call c, ApplyGiftEffectByItem
 
 .read_arg1:
     ld a, [wArg1]
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, clears wCEC2 and falls through (E-0122)
 ; 1 call site from 1 routine (e.g. CallF072B4WhenGM2TimerMinutesIs59)
-; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames, wRollState
-; writes: wRollCounter
+; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames, wPendingGiftItem
+; writes: wGiftCount
 ClearRollCounterWhenGM2TimerMinutesIs59::
 Func_0F0_72B4:: ; address name
     ld a, [wGM2TimerMinutes]
@@ -6718,117 +6718,117 @@ Func_0F0_72B4:: ; address name
     and a, a
     ret nz
     xor a, a
-    ld [wRollCounter], a
+    ld [wGiftCount], a
 
-; only called from RollCounterChanceAndRunEvent (E-0047)
-; 1 call site from 1 routine (e.g. RollCounterChanceAndRunEvent)
-; reads: wRollState
-RollCounterChanceAndRunEvent_Sub01::
+; jumps by wRollState (the item id of the previous gift, stored by RollCounterChanceAndRunEvent) to that item's effect; each effect adds to or subtracts from wTopStat1 and entries of wFamilyScores, then clears wRollState
+; 1 call site from 1 routine (e.g. RecordGiftAndMaybeApplyPrevious)
+; reads: wPendingGiftItem
+ApplyGiftEffectByItem::
 Func_0F0_72C8:: ; address name
-    ld a, [wRollState]
+    ld a, [wPendingGiftItem]
     rst $00
-    dw RollCounterChanceAndRunEvent_Sub01_ToAddBClampedToC
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case01
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case02
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case03
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case04
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case05
-    dw RollCounterChanceAndRunEvent_Sub01_SubtractBClampedAtZero
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case07
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case08
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case09
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0A
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0C
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0E
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0F
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case10
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case11
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case12
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case13
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case14
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case15
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case16
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case17
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case18
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case19
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1A
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1C
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1D
-    dw RollCounterChanceAndRunEvent_Sub01_AddBClampedToC
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case20
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case21
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case22
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case23
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case24
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case25
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case26
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case27
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case28
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case29
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case2A
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2C
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2D
-    dw RollCounterChanceAndRunEvent_Sub01_SubtractBClampedAtZero_Case2E
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case40
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case41
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case42
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case43
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case44
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case45
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case46
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case47
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case48
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case49
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4A
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4C
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4D
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4E
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4F
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case50
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case51
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case52
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case53
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5A
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5B
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5C
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5D
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5E
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5F
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case60
-    dw RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case61
+    dw GiftEffect_Item00
+    dw GiftEffect_Herb
+    dw GiftEffect_LoveWater
+    dw GiftEffect_WorldDew
+    dw GiftEffect_Potion
+    dw GiftEffect_ElfWater
+    dw GiftEffect_Antidote
+    dw GiftEffect_MoonHerb
+    dw GiftEffect_Laurel
+    dw GiftEffect_AwakeSand
+    dw GiftEffect_SkyBell
+    dw GiftEffect_SageRock
+    dw GiftEffect_WorldLeaf
+    dw GiftEffect_ATKseed
+    dw GiftEffect_DEFseed
+    dw GiftEffect_AGLseed
+    dw GiftEffect_INTseed
+    dw GiftEffect_LifeAcorn
+    dw GiftEffect_MysticNut
+    dw GiftEffect_Quest
+    dw GiftEffect_Horror
+    dw GiftEffect_BeNice
+    dw GiftEffect_Cheater
+    dw GiftEffect_Smart
+    dw GiftEffect_Comedy
+    dw GiftEffect_BeefJerky
+    dw GiftEffect_PorkChop
+    dw GiftEffect_Rib
+    dw GiftEffect_Sirloin
+    dw GiftEffect_BadMeat
+    dw GiftEffect_MeteOrb
+    dw GiftEffect_BeastTail
+    dw GiftEffect_Repellent
+    dw GiftEffect_ShinyHarp
+    dw GiftEffect_Mist
+    dw GiftEffect_Friend
+    dw GiftEffect_Wind
+    dw GiftEffect_Bolt
+    dw GiftEffect_Snow
+    dw GiftEffect_Fire
+    dw GiftEffect_Warp
+    dw GiftEffect_WarpWing
+    dw GiftEffect_ExitBell
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_TinyMedal
+    dw GiftEffect_GoldPass
+    dw GiftEffect_LogTwig
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_VITbelt
+    dw GiftEffect_DracoBelt
+    dw GiftEffect_MagicBelt
+    dw GiftEffect_OddBelt
+    dw GiftEffect_StoneFang
+    dw GiftEffect_SteelFang
+    dw GiftEffect_MermScale
+    dw GiftEffect_DrakScale
+    dw GiftEffect_AGL
+    dw GiftEffect_Starry
+    dw GiftEffect_Smart_4A
+    dw GiftEffect_Wise
+    dw GiftEffect_MagicCape
+    dw GiftEffect_DracoCape
+    dw GiftEffect_SilvrCape
+    dw GiftEffect_GoldCape
+    dw GiftEffect_PltnmCape
+    dw GiftEffect_OrcaCape
+    dw GiftEffect_BraveCape
+    dw GiftEffect_DScale
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_BookmarkEtc
+    dw GiftEffect_Life
+    dw GiftEffect_Divine
+    dw GiftEffect_War
+    dw GiftEffect_Mage
+    dw GiftEffect_Fight
+    dw GiftEffect_Sailor
+    dw GiftEffect_Thief
+    dw GiftEffect_Cleric
 
-; entry 0 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $00 : case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-RollCounterChanceAndRunEvent_Sub01_ToAddBClampedToC::
+GiftEffect_Item00::
 Jump_0F0_7390:: ; address name
     ld hl, wFamilyScores + $7
     ld b, $01
@@ -6836,11 +6836,11 @@ Jump_0F0_7390:: ; address name
     call AddBClampedToC
     ret
 
-; entry 1 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $01 Herb: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case01::
+GiftEffect_Herb::
 Jump_0F0_739B:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -6854,14 +6854,14 @@ Jump_0F0_739B:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 2 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $02 LoveWater: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case02::
+GiftEffect_LoveWater::
 Jump_0F0_73BD:: ; address name
     ld hl, wTopStat1
     ld b, $02
@@ -6875,14 +6875,14 @@ Jump_0F0_73BD:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 3 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $03 WorldDew: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case03::
+GiftEffect_WorldDew::
 Jump_0F0_73DF:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -6896,14 +6896,14 @@ Jump_0F0_73DF:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 4 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $04 Potion: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case04::
+GiftEffect_Potion::
 Jump_0F0_7401:: ; address name
     ld hl, wTopStat3
     ld b, $01
@@ -6917,14 +6917,14 @@ Jump_0F0_7401:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 5 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $05 ElfWater: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case05::
+GiftEffect_ElfWater::
 Jump_0F0_7423:: ; address name
     ld hl, wTopStat3
     ld b, $03
@@ -6938,26 +6938,26 @@ Jump_0F0_7423:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 6 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $06 Antidote: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SubtractBClampedAtZero::
+; writes: wPendingGiftItem
+GiftEffect_Antidote::
 Jump_0F0_7445:: ; address name
     ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 7 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $07 MoonHerb: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case07::
+GiftEffect_MoonHerb::
 Jump_0F0_7452:: ; address name
     ld hl, wTopStat4
     ld b, $01
@@ -6971,14 +6971,14 @@ Jump_0F0_7452:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 8 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $08 Laurel: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case08::
+GiftEffect_Laurel::
 Jump_0F0_7474:: ; address name
     ld hl, wTopStat5
     ld b, $01
@@ -6992,14 +6992,14 @@ Jump_0F0_7474:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 9 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $09 AwakeSand: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case09::
+GiftEffect_AwakeSand::
 Jump_0F0_7496:: ; address name
     ld hl, wTopStat6
     ld b, $01
@@ -7013,14 +7013,14 @@ Jump_0F0_7496:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 10 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0A SkyBell: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0A::
+GiftEffect_SkyBell::
 Jump_0F0_74B8:: ; address name
     ld hl, wTopStat7
     ld b, $01
@@ -7034,14 +7034,14 @@ Jump_0F0_74B8:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0B SageRock: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0B::
+GiftEffect_SageRock::
 Jump_0F0_74DA:: ; address name
     ld hl, wTopStat3
     ld b, $03
@@ -7055,14 +7055,14 @@ Jump_0F0_74DA:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 12 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0C WorldLeaf: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0C::
+GiftEffect_WorldLeaf::
 Jump_0F0_74FC:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -7076,14 +7076,14 @@ Jump_0F0_74FC:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 13 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0D ATKseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped::
+GiftEffect_ATKseed::
 Jump_0F0_751E:: ; address name
     ld hl, wTopStat4
     ld b, $03
@@ -7093,14 +7093,14 @@ Jump_0F0_751E:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 14 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0E DEFseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0E::
+GiftEffect_DEFseed::
 Jump_0F0_7536:: ; address name
     ld hl, wTopStat5
     ld b, $03
@@ -7110,14 +7110,14 @@ Jump_0F0_7536:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 15 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $0F AGLseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case0F::
+GiftEffect_AGLseed::
 Jump_0F0_754E:: ; address name
     ld hl, wTopStat6
     ld b, $03
@@ -7127,14 +7127,14 @@ Jump_0F0_754E:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 16 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $10 INTseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case10::
+GiftEffect_INTseed::
 Jump_0F0_7566:: ; address name
     ld hl, wTopStat7
     ld b, $03
@@ -7144,14 +7144,14 @@ Jump_0F0_7566:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 17 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $11 LifeAcorn: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case11::
+GiftEffect_LifeAcorn::
 Jump_0F0_757E:: ; address name
     ld hl, wTopStat1
     ld b, $05
@@ -7161,14 +7161,14 @@ Jump_0F0_757E:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 18 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $12 MysticNut: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case12::
+GiftEffect_MysticNut::
 Jump_0F0_7596:: ; address name
     ld hl, wTopStat3
     ld b, $05
@@ -7178,14 +7178,14 @@ Jump_0F0_7596:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 19 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $13 Quest?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case13::
+GiftEffect_Quest::
 Jump_0F0_75AE:: ; address name
     ld hl, wTopStat4
     ld b, $05
@@ -7199,14 +7199,14 @@ Jump_0F0_75AE:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 20 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $14 Horror?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case14::
+GiftEffect_Horror::
 Jump_0F0_75D0:: ; address name
     ld hl, wTopStat5
     ld b, $05
@@ -7220,14 +7220,14 @@ Jump_0F0_75D0:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 21 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $15 BeNice?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case15::
+GiftEffect_BeNice::
 Jump_0F0_75F2:: ; address name
     ld hl, wTopStat1
     ld b, $05
@@ -7241,14 +7241,14 @@ Jump_0F0_75F2:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 22 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $16 Cheater?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case16::
+GiftEffect_Cheater::
 Jump_0F0_7614:: ; address name
     ld hl, wTopStat6
     ld b, $05
@@ -7262,14 +7262,14 @@ Jump_0F0_7614:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 23 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $17 Smart?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case17::
+GiftEffect_Smart::
 Jump_0F0_7636:: ; address name
     ld hl, wTopStat7
     ld b, $05
@@ -7283,14 +7283,14 @@ Jump_0F0_7636:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 24 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $18 Comedy?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case18::
+GiftEffect_Comedy::
 Jump_0F0_7658:: ; address name
     ld hl, wTopStat3
     ld b, $05
@@ -7304,14 +7304,14 @@ Jump_0F0_7658:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 25 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $19 BeefJerky: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case19::
+GiftEffect_BeefJerky::
 Jump_0F0_767A:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -7321,14 +7321,14 @@ Jump_0F0_767A:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 26 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1A PorkChop: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1A::
+GiftEffect_PorkChop::
 Jump_0F0_7692:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -7342,14 +7342,14 @@ Jump_0F0_7692:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 27 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1B Rib: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1B::
+GiftEffect_Rib::
 Jump_0F0_76B4:: ; address name
     ld hl, wTopStat1
     ld b, $02
@@ -7363,14 +7363,14 @@ Jump_0F0_76B4:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 28 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1C Sirloin: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1C::
+GiftEffect_Sirloin::
 Jump_0F0_76D6:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -7384,14 +7384,14 @@ Jump_0F0_76D6:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 29 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1D BadMeat: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case1D::
+GiftEffect_BadMeat::
 Jump_0F0_76F8:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -7402,13 +7402,13 @@ Jump_0F0_76F8:: ; address name
     ld c, $FA
     call AddBClampedToC
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 30 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1E MeteOrb: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_AddBClampedToC::
+; writes: wPendingGiftItem
+GiftEffect_MeteOrb::
 Jump_0F0_7712:: ; address name
     ld hl, wFamilyScores + $A
     ld b, $01
@@ -7418,23 +7418,23 @@ Jump_0F0_7712:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 31 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $1F BeastTail: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SetRollState::
+; writes: wPendingGiftItem
+GiftEffect_BeastTail::
 Jump_0F0_7729:: ; address name
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 32 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $20 Repellent: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case20::
+GiftEffect_Repellent::
 Jump_0F0_772E:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -7444,23 +7444,23 @@ Jump_0F0_772E:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 33 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $21 ShinyHarp: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SetRollState_Case21::
+; writes: wPendingGiftItem
+GiftEffect_ShinyHarp::
 Jump_0F0_7746:: ; address name
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 34 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $22 Mist?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case22::
+GiftEffect_Mist::
 Jump_0F0_774B:: ; address name
     ld hl, wTopStat3
     ld b, $01
@@ -7474,14 +7474,14 @@ Jump_0F0_774B:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 35 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $23 Friend?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case23::
+GiftEffect_Friend::
 Jump_0F0_776D:: ; address name
     ld hl, wTopStat4
     ld b, $02
@@ -7495,14 +7495,14 @@ Jump_0F0_776D:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 36 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $24 Wind?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case24::
+GiftEffect_Wind::
 Jump_0F0_778F:: ; address name
     ld hl, wTopStat5
     ld b, $02
@@ -7516,14 +7516,14 @@ Jump_0F0_778F:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 37 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $25 Bolt?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case25::
+GiftEffect_Bolt::
 Jump_0F0_77B1:: ; address name
     ld hl, wTopStat6
     ld b, $02
@@ -7537,14 +7537,14 @@ Jump_0F0_77B1:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 38 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $26 Snow?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case26::
+GiftEffect_Snow::
 Jump_0F0_77D3:: ; address name
     ld hl, wTopStat7
     ld b, $02
@@ -7558,14 +7558,14 @@ Jump_0F0_77D3:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 39 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $27 Fire?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case27::
+GiftEffect_Fire::
 Jump_0F0_77F5:: ; address name
     ld hl, wTopStat4
     ld b, $02
@@ -7579,14 +7579,14 @@ Jump_0F0_77F5:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 40 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $28 Warp?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case28::
+GiftEffect_Warp::
 Jump_0F0_7817:: ; address name
     ld hl, wTopStat5
     ld b, $02
@@ -7600,14 +7600,14 @@ Jump_0F0_7817:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 41 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $29 WarpWing: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case29::
+GiftEffect_WarpWing::
 Jump_0F0_7839:: ; address name
     ld hl, wTopStat6
     ld b, $02
@@ -7621,14 +7621,14 @@ Jump_0F0_7839:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 42 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $2A ExitBell: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case2A::
+GiftEffect_ExitBell::
 Jump_0F0_785B:: ; address name
     ld hl, wTopStat7
     ld b, $02
@@ -7642,53 +7642,53 @@ Jump_0F0_785B:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 43 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $2B Bookmark, $2F , $30 WaterCall, $31 MoonRock, $32 Crest, $33 YunaSoul ...: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2B::
+; writes: wPendingGiftItem
+GiftEffect_BookmarkEtc::
 Jump_0F0_787D:: ; address name
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 44 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $2C TinyMedal: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2C::
+; writes: wPendingGiftItem
+GiftEffect_TinyMedal::
 Jump_0F0_7882:: ; address name
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 45 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $2D GoldPass: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SetRollState_Case2D::
+; writes: wPendingGiftItem
+GiftEffect_GoldPass::
 Jump_0F0_7887:: ; address name
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 46 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $2E LogTwig: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
-RollCounterChanceAndRunEvent_Sub01_SubtractBClampedAtZero_Case2E::
+; writes: wPendingGiftItem
+GiftEffect_LogTwig::
 Jump_0F0_788C:: ; address name
     ld hl, wFamilyScores + $7
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 64 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $40 VITbelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case40::
+GiftEffect_VITbelt::
 Jump_0F0_7899:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -7702,14 +7702,14 @@ Jump_0F0_7899:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 65 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $41 DracoBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case41::
+GiftEffect_DracoBelt::
 Jump_0F0_78BB:: ; address name
     ld hl, wTopStat1
     ld b, $08
@@ -7723,14 +7723,14 @@ Jump_0F0_78BB:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 66 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $42 MagicBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case42::
+GiftEffect_MagicBelt::
 Jump_0F0_78DD:: ; address name
     ld hl, wTopStat3
     ld b, $03
@@ -7744,14 +7744,14 @@ Jump_0F0_78DD:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 67 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $43 OddBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case43::
+GiftEffect_OddBelt::
 Jump_0F0_78FF:: ; address name
     ld hl, wTopStat3
     ld b, $08
@@ -7765,14 +7765,14 @@ Jump_0F0_78FF:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 68 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $44 StoneFang: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case44::
+GiftEffect_StoneFang::
 Jump_0F0_7921:: ; address name
     ld hl, wTopStat4
     ld b, $01
@@ -7786,14 +7786,14 @@ Jump_0F0_7921:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 69 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $45 SteelFang: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case45::
+GiftEffect_SteelFang::
 Jump_0F0_7943:: ; address name
     ld hl, wTopStat4
     ld b, $05
@@ -7807,14 +7807,14 @@ Jump_0F0_7943:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 70 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $46 MermScale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case46::
+GiftEffect_MermScale::
 Jump_0F0_7965:: ; address name
     ld hl, wTopStat5
     ld b, $01
@@ -7828,14 +7828,14 @@ Jump_0F0_7965:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 71 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $47 DrakScale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case47::
+GiftEffect_DrakScale::
 Jump_0F0_7987:: ; address name
     ld hl, wTopStat5
     ld b, $05
@@ -7849,14 +7849,14 @@ Jump_0F0_7987:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 72 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $48 AGL?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case48::
+GiftEffect_AGL::
 Jump_0F0_79A9:: ; address name
     ld hl, wTopStat6
     ld b, $01
@@ -7870,14 +7870,14 @@ Jump_0F0_79A9:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 73 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $49 Starry?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case49::
+GiftEffect_Starry::
 Jump_0F0_79CB:: ; address name
     ld hl, wTopStat6
     ld b, $05
@@ -7891,14 +7891,14 @@ Jump_0F0_79CB:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 74 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4A Smart?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4A::
+GiftEffect_Smart_4A::
 Jump_0F0_79ED:: ; address name
     ld hl, wTopStat7
     ld b, $01
@@ -7912,14 +7912,14 @@ Jump_0F0_79ED:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 75 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4B Wise?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4B::
+GiftEffect_Wise::
 Jump_0F0_7A0F:: ; address name
     ld hl, wTopStat7
     ld b, $05
@@ -7933,14 +7933,14 @@ Jump_0F0_7A0F:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 76 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4C MagicCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4C::
+GiftEffect_MagicCape::
 Jump_0F0_7A31:: ; address name
     ld hl, wTopStat3
     ld b, $08
@@ -7954,14 +7954,14 @@ Jump_0F0_7A31:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 77 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4D DracoCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4D::
+GiftEffect_DracoCape::
 Jump_0F0_7A53:: ; address name
     ld hl, wTopStat4
     ld b, $03
@@ -7975,14 +7975,14 @@ Jump_0F0_7A53:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 78 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4E SilvrCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4E::
+GiftEffect_SilvrCape::
 Jump_0F0_7A75:: ; address name
     ld hl, wTopStat6
     ld b, $03
@@ -7996,14 +7996,14 @@ Jump_0F0_7A75:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 79 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $4F GoldCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case4F::
+GiftEffect_GoldCape::
 Jump_0F0_7A97:: ; address name
     ld hl, wTopStat7
     ld b, $03
@@ -8017,14 +8017,14 @@ Jump_0F0_7A97:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 80 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $50 PltnmCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case50::
+GiftEffect_PltnmCape::
 Jump_0F0_7AB9:: ; address name
     ld hl, wTopStat5
     ld b, $03
@@ -8038,14 +8038,14 @@ Jump_0F0_7AB9:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 81 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $51 OrcaCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case51::
+GiftEffect_OrcaCape::
 Jump_0F0_7ADB:: ; address name
     ld hl, wTopStat6
     ld b, $03
@@ -8059,14 +8059,14 @@ Jump_0F0_7ADB:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 82 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $52 BraveCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case52::
+GiftEffect_BraveCape::
 Jump_0F0_7AFD:: ; address name
     ld hl, wTopStat4
     ld b, $03
@@ -8080,14 +8080,14 @@ Jump_0F0_7AFD:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 83 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $53 D-Scale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case53::
+GiftEffect_DScale::
 Jump_0F0_7B1F:: ; address name
     ld hl, wTopStat1
     ld b, $01
@@ -8101,14 +8101,14 @@ Jump_0F0_7B1F:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 90 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5A Life?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5A::
+GiftEffect_Life::
 Jump_0F0_7B41:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -8122,14 +8122,14 @@ Jump_0F0_7B41:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 91 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5B Divine?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5B::
+GiftEffect_Divine::
 Jump_0F0_7B63:: ; address name
     ld hl, wTopStat3
     ld b, $03
@@ -8143,14 +8143,14 @@ Jump_0F0_7B63:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 92 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5C War?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat1
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5C::
+GiftEffect_War::
 Jump_0F0_7B85:: ; address name
     ld hl, wTopStat1
     ld b, $03
@@ -8164,14 +8164,14 @@ Jump_0F0_7B85:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 93 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5D Mage?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat3
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5D::
+GiftEffect_Mage::
 Jump_0F0_7BA7:: ; address name
     ld hl, wTopStat3
     ld b, $03
@@ -8185,14 +8185,14 @@ Jump_0F0_7BA7:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 94 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5E Fight?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat4
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5E::
+GiftEffect_Fight::
 Jump_0F0_7BC9:: ; address name
     ld hl, wTopStat4
     ld b, $03
@@ -8206,14 +8206,14 @@ Jump_0F0_7BC9:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 95 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $5F Sailor?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat5
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5F::
+GiftEffect_Sailor::
 Jump_0F0_7BEB:: ; address name
     ld hl, wTopStat5
     ld b, $03
@@ -8227,14 +8227,14 @@ Jump_0F0_7BEB:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 96 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $60 Thief?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat6
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case60::
+GiftEffect_Thief::
 Jump_0F0_7C0D:: ; address name
     ld hl, wTopStat6
     ld b, $03
@@ -8248,14 +8248,14 @@ Jump_0F0_7C0D:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
-; entry 97 of the `rst $00` table in Func_0F0_72C8
+; gift effect for item $61 Cleric?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
-; writes: wRollState
+; writes: wPendingGiftItem
 ; points at: wTopStat7, wFamilyScores
-RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case61::
+GiftEffect_Cleric::
 Jump_0F0_7C2F:: ; address name
     ld hl, wTopStat7
     ld b, $03
@@ -8269,11 +8269,11 @@ Jump_0F0_7C2F:: ; address name
     ld b, $02
     call SubtractBClampedAtZero
     xor a, a
-    ld [wRollState], a
+    ld [wPendingGiftItem], a
     ret
 
 ; [HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C
-; 60 call sites from 60 routines (e.g. RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case61, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case60, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5F, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5E, ...)
+; 60 call sites from 60 routines (e.g. GiftEffect_Cleric, GiftEffect_Thief, GiftEffect_Sailor, GiftEffect_Fight, ...)
 AddBClampedToC::
 Func_0F0_7C51:: ; address name
     inc c
@@ -8289,7 +8289,7 @@ Func_0F0_7C51:: ; address name
     ret
 
 ; [HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A
-; 68 call sites from 68 routines (e.g. RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case61, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case60, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5F, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5E, ...)
+; 68 call sites from 68 routines (e.g. GiftEffect_Cleric, GiftEffect_Thief, GiftEffect_Sailor, GiftEffect_Fight, ...)
 SubtractBClampedAtZero::
 Func_0F0_7C5B:: ; address name
     ld a, [hl]
@@ -8303,7 +8303,7 @@ Func_0F0_7C5B:: ; address name
     ret
 
 ; HL = address of a word: word = min(word + B, DE) (CompareHLWithDE); DE kept; clobbers A, BC, HL (E-0061)
-; 66 call sites from 66 routines (e.g. RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case61, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case60, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5F, RollCounterChanceAndRunEvent_Sub01_AddBToWordAtHLCapped_Case5E, ...)
+; 66 call sites from 66 routines (e.g. GiftEffect_Cleric, GiftEffect_Thief, GiftEffect_Sailor, GiftEffect_Fight, ...)
 AddBToWordAtHLCapped::
 Func_0F0_7C64:: ; address name
     push hl
@@ -8359,7 +8359,7 @@ Func_0F0_7C81:: ; address name
     ret
 
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1] (Data_0F0_4036 or Data_008_4038) from bank 8 to HL (E-0125)
-; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe, RunLinkSession8Exchange_Case01_Sub01_Case0B_ShowGHatchedFromThe)
+; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe, RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe)
 CopyNameStringFromBank08Database::
 Func_0F0_7C96:: ; address name
     push de
