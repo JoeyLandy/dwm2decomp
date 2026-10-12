@@ -2431,6 +2431,27 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0314 — Readings executed in tools/sm83.py; the battle result has four counters (correction to E-0289)
+
+- Kind: EMULATION (our own SM83 emulator against the reference ROM; it has not been checked against hardware) and a correction.
+- **New tests.** tests/test_readings_behaviour.py runs three routines and compares each with its written reading.
+- **ComputeBattleResultRank (200 random cases).** The emulator disproved part of E-0289.
+  - The "reward bytes" wBattleRewardByte97/98 ($C897-$C898) are not rewards. They are result counters 2 and 3 of four that start at wKeyNameBuf ($C895).
+  - wBattleResultStep (0-3) picks the counter that gets +1, up to 99.
+  - The band is (counter 0 + counter 1) × 10 / (sum of all four).
+  - With that model, all 200 cases match the counters, wWildBand, wWildByteE5 and wWorkBuf + 1.
+  - Renamed: wBattleResultCount2 and wBattleResultCount3. The routine's note is updated.
+- **RollChildSexFromSpecies.** Run on 43 species × 12 random seeds:
+  - sex-ratio class 0 always gives 0;
+  - the result is always 0 or 1;
+  - class 1 gives 1 less than 35% of the time;
+  - class 2 gives 1 less often than class 3.
+
+  This agrees with E-0307 and E-0311, together with the appraiser's strings: 0 = male, 1 = female.
+- **ApplyGiftEffectByItem with the Herb (item 1).** wGiftRecord + MON_MAX_HP goes up by 1, capped at 999 (tested at 0, 500 and 999), and wPendingGiftItem is cleared, as E-0295 and E-0312 state.
+- **Confidence.** These readings are now C2: executed, within the scope of our emulator.
+- Binary verification: build/run433 PASS, 0 differing bytes; tests OK (skipped=3), 179 run.
+
 ### E-0313 — Species byte $0B is the field ability
 
 - Kind: STATIC (C2).
@@ -2911,7 +2932,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   | Map object selector | ObjSelector_BB_AAAA |
   | Item name | ItemNameBB_AAAA |
   | Item description | ItemDescription_BB_AAAA |
-- **ComputeBattleResultRank (A0:5A6C, C1).**
+- **ComputeBattleResultRank (A0:5A6C, C1)** (corrected by E-0314: the two "reward" bytes are result counters 2 and 3).
   - Adds one to the result count wKeyNameBuf[wBattleResultStep], capped at 99.
   - Scores the counts and rewards into a band (wWildBand) using BattleResultBandThresholds.
   - Adds the signed entries of BattleResultTurnLimitAdjust (+20, +10, +5, 0, -5, -10, -20 by turn-limit bracket) and BattleResultBandAdjust (-20, -10, -5, 0, +5, +10) to wWildLevel, then clamps it to 0-99.

@@ -4304,9 +4304,9 @@ Data_0A0_5A4A:: ; address name
     db $19, $F0, $0A, $1D, $14, $F0, $0D, $0E, $0F, $F0, $0A, $10, $15, $F0, $12, $17
     db $1D, $F0
 
-; counts the result (wKeyNameBuf[wBattleResultStep] += 1, capped at 99); scores the counts and rewards into a band (wWorkBuf, wWildBand) by BattleResultBandThresholds; adds the signed BattleResultTurnLimitAdjust and BattleResultBandAdjust entries to wWildLevel and clamps it to 0-99; the rank (wWorkBuf+1, wWildByteE5) is the number of BattleResultRankThresholds at or below it, 0-7, which the results screen shows as one of 'GFEDCBAS'
+; adds 1 (up to 99) to battle result counter wBattleResultStep of the four at $C895-$C898 (wKeyNameBuf, wKeyNameBuf+1, wBattleResultCount2, wBattleResultCount3); band = (counter 0 + counter 1) * 10 / (sum of all four) to wWorkBuf and wWildBand; adds BattleResultBandAdjust[band bracket] and BattleResultTurnLimitAdjust[wLinkRuleTurnLimit bracket] to wWildLevel, clamped to 0-99; the rank 0-7 (count of BattleResultRankThresholds at or below it) goes to wWorkBuf+1 and wWildByteE5 and is shown as one of 'GFEDCBAS'
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetBattleKindFlagsTo01)
-; reads: wBattleResultStep, wLinkRuleTurnLimit, wBattleRewardByte97, wBattleRewardByte98, wWildLevel
+; reads: wBattleResultStep, wLinkRuleTurnLimit, wBattleResultCount2, wBattleResultCount3, wWildLevel
 ; writes: wWorkBuf, wWildBand, wWildByteE5
 ; points at: wKeyNameBuf
 ComputeBattleResultRank::
@@ -4337,13 +4337,13 @@ Func_0A0_5A6C:: ; address name
     ld a, $0A
     call Multiply8
     pop bc
-    ld a, [wBattleRewardByte97]
+    ld a, [wBattleResultCount2]
     add a, c
     ld c, a
     ld a, $00
     adc a, b
     ld b, a
-    ld a, [wBattleRewardByte98]
+    ld a, [wBattleResultCount3]
     add a, c
     ld c, a
     ld a, $00

@@ -2152,14 +2152,14 @@
     "evidence": "E-0133"
   },
   "C897": {
-    "name": "wBattleRewardByte97",
-    "note": "read by the battle results",
-    "evidence": "E-0133"
+    "name": "wBattleResultCount2",
+    "note": "battle result counter 2 of four ($C895-$C898, the first two inside wKeyNameBuf): ComputeBattleResultRank adds 1 (up to 99) to counter wBattleResultStep and bands (counter 0 + counter 1) * 10 / (all four) (C2: executed in tools/sm83.py; was wBattleRewardByte97)",
+    "evidence": "E-0314"
   },
   "C898": {
-    "name": "wBattleRewardByte98",
-    "note": "read by the battle results",
-    "evidence": "E-0133"
+    "name": "wBattleResultCount3",
+    "note": "battle result counter 3 of four ($C895-$C898, the first two inside wKeyNameBuf): ComputeBattleResultRank adds 1 (up to 99) to counter wBattleResultStep and bands (counter 0 + counter 1) * 10 / (all four) (C2: executed in tools/sm83.py; was wBattleRewardByte98)",
+    "evidence": "E-0314"
   },
   "C899": {
     "name": "wBattleResultStep",
