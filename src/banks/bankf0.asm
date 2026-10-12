@@ -944,7 +944,7 @@ Jump_0F0_4D86:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode
+; reads: wGiftRecord
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wFamilyRankTaken, wTextWindowTileLo, wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Table2_Case05::
@@ -980,7 +980,7 @@ Jump_0F0_4DA4:: ; address name
     ld a, $02
     ld [hl+], a
     ld [hl], $12
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     and a, a
     jr z, .call_begin_string_bank_f0_cat0
     ld a, $01
@@ -1763,19 +1763,19 @@ Jump_0F0_525D:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode, wScreenStep
+; reads: wGiftRecord, wScreenStep
 ; writes: wScreenStep, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferCountLo, wLinkBufferCountHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkSendByte, ...
-; points at: wRecordBufA, wGM2Mode
+; points at: wRecordBufA, wGiftRecord
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case09::
 Jump_0F0_527B:: ; address name
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     and a, a
     jr nz, .check_screen_step
     ld hl, RunLinkSession8Exchange_Case01_Sub01_Table5_Case09_Data
     jr .check_screen_step2
 
 .check_screen_step:
-    ld hl, wGM2Mode
+    ld hl, wGiftRecord
 
 .check_screen_step2:
     ld a, [wScreenStep]
@@ -1834,7 +1834,7 @@ Jump_0F0_52B9:: ; address name
 
 ; entry 17 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBankF0Byte99, wFamilyBitCount, wRankBand, wTopSpeciesLo, wTopSpeciesHi, wTopSpeciesByte, wScreenStep
+; reads: wBankF0Byte99, wFamilyBitCount, wRankBand, wGiftRecord, wScreenStep
 ; writes: wBankF0BlockA7, wFamilyBitCount, wBankF0ByteA8, wBankF0ByteA9, wBankF0ByteAA, wScreenStep, wLinkTimeoutLo, wLinkTimeoutHi, ...
 ; points at: wPlayerName, wBankF0BlockAB, wBankF0BlockA7, wBankF0BlockC7
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case11::
@@ -1852,7 +1852,7 @@ Jump_0F0_52EC:: ; address name
     ld [wBankF0BlockA7], a
     ld a, [wBankF0Byte99]
     and a, a
-    jp z, .read_top_species_lo
+    jp z, .read_gift_record
     call RankFamilyScoresIntoFamilyRanking
     call LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth
     ld a, [wFamilyBitCount]
@@ -1868,12 +1868,12 @@ Jump_0F0_52EC:: ; address name
     ld [wFamilyBitCount], a
     call RaiseRandomLowestResistance
 
-.read_top_species_lo:
-    ld a, [wTopSpeciesLo]
+.read_gift_record:
+    ld a, [wGiftRecord + MON_SPECIES]
     ld [wBankF0ByteA8], a
-    ld a, [wTopSpeciesHi]
+    ld a, [wGiftRecord + MON_SPECIES + 1]
     ld [wBankF0ByteA9], a
-    ld a, [wTopSpeciesByte]
+    ld a, [wGiftRecord + MON_FAMILY]
     ld [wBankF0ByteAA], a
     ld hl, wPlayerName
     ld de, wBankF0BlockAB
@@ -1942,13 +1942,13 @@ Jump_0F0_5386:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wF0ScreenKind, wGM2Mode, wBankF0ByteA3, wScreenStep
+; reads: wF0ScreenKind, wGiftRecord, wBankF0ByteA3, wScreenStep
 ; writes: wLinkRecvBuffer, wBattleSetupByte98, wBankF0Byte99, wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case00::
 Jump_0F0_5398:: ; address name
     ld a, [wF0ScreenKind]
     ld [wLinkRecvBuffer], a
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     ld [wBattleSetupByte98], a
     ld a, [wBankF0ByteA3]
     ld b, a
@@ -2011,12 +2011,12 @@ Jump_0F0_53EC:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode, wLinkPartnerByte1, wScreenStep
+; reads: wGiftRecord, wLinkPartnerByte1, wScreenStep
 ; writes: wScreenStep
 ; points at: wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case05::
 Jump_0F0_5402:: ; address name
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     and a, a
     jr nz, .check_link_partner_byte1
     ld a, [wLinkPartnerByte1]
@@ -2066,7 +2066,7 @@ Jump_0F0_5433:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wBankF0Byte99, wLinkPartnerByte2, wGM2Mode
+; reads: wBankF0Byte99, wLinkPartnerByte2, wGiftRecord
 ; writes: wF0ScreenKind
 ; points at: wScreenStep
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case13::
@@ -2077,7 +2077,7 @@ Jump_0F0_5447:: ; address name
     ld a, [wLinkPartnerByte2]
     and a, a
     jr nz, .skip2
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     and a, a
     jr nz, .clear_f0_screen_kind
     ld a, $01
@@ -2104,7 +2104,7 @@ Jump_0F0_5447:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wF0ScreenKind
 ; writes: wPickCount
-; points at: wScreenStep, wRecordBufA, wGM2Mode, wRecordBufB, wGM2TimerFrames
+; points at: wScreenStep, wRecordBufA, wGiftRecord, wRecordBufB, wGM2TimerFrames
 RunLinkSession8Exchange_Case01_Sub01_Table5_Case14::
 Jump_0F0_546E:: ; address name
     ld a, [wF0ScreenKind]
@@ -2133,7 +2133,7 @@ Jump_0F0_546E:: ; address name
     ld hl, wRecordBufA
     ld a, $01
     ld [hl], a
-    ld de, wGM2Mode
+    ld de, wGiftRecord
     ld b, $A5
 
 .loop2:
@@ -5268,13 +5268,13 @@ Data_0F0_6A58:: ; address name
 ; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Table5_Case11)
 ; reads: wFamilyBitCount, wCounterPtr0Lo, wLowestResistCount, wCounterPtr0Hi
 ; writes: wFamilyBitCount, wCounterPtr0Lo, wLowestResistCount
-; points at: wResistanceLevels, wCounterPtr0Hi
+; points at: wCounterPtr0Hi
 RaiseRandomLowestResistance::
 Func_0F0_6AFE:: ; address name
     ld a, [wFamilyBitCount]
     and a, a
     ret z
-    ld hl, wResistanceLevels
+    ld hl, wGiftRecord + MON_RESISTANCES
     ld b, $00
 
 .loop:
@@ -5312,7 +5312,7 @@ Func_0F0_6AFE:: ; address name
     ld a, b
     or a, c
     jr nz, .loop2
-    ld hl, wResistanceLevels
+    ld hl, wGiftRecord + MON_RESISTANCES
     ld de, wCounterPtr0Hi
     ld b, $00
 
@@ -5377,7 +5377,7 @@ Func_0F0_6AFE:: ; address name
     ld a, [wCounterPtr0Hi]
 
 .skip5:
-    ld hl, wResistanceLevels
+    ld hl, wGiftRecord + MON_RESISTANCES
     add_a_to_hl
     ld a, [hl]
     inc a
@@ -5386,24 +5386,23 @@ Func_0F0_6AFE:: ; address name
 
 ; loads species wCED9 and copies its bytes wD010-wD012 to wCF0A and the 27 bytes at wD01A to wCF41; wCF29 = wCF2B, wCF2D = wCF2F (E-0124)
 ; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Table5_Case11)
-; reads: wTopSpeciesLo, wTopSpeciesHi, wSpeciesRecord, wTopStat1, wTopStat3
-; writes: wSpeciesIdLo, wSpeciesIdHi, wTopSpeciesGrowth, wTopStat0, wTopStat2
-; points at: wResistanceLevels
+; reads: wGiftRecord, wSpeciesRecord
+; writes: wSpeciesIdLo, wSpeciesIdHi, wGiftRecord
 LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth::
 Func_0F0_6BA1:: ; address name
-    ld a, [wTopSpeciesLo]
+    ld a, [wGiftRecord + MON_SPECIES]
     ld [wSpeciesIdLo], a
-    ld a, [wTopSpeciesHi]
+    ld a, [wGiftRecord + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wSpeciesRecord + SPECIES_SKILLS]
-    ld [wTopSpeciesGrowth], a
+    ld [wGiftRecord + MON_SKILL_LIST], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 1]
-    ld [wTopSpeciesGrowth + $1], a
+    ld [wGiftRecord + MON_SKILL_LIST + 1], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS + 2]
-    ld [wTopSpeciesGrowth + $2], a
+    ld [wGiftRecord + MON_SKILL_LIST + 2], a
     ld hl, wSpeciesRecord + SPECIES_RESISTANCES
-    ld de, wResistanceLevels
+    ld de, wGiftRecord + MON_RESISTANCES
     ld c, $1B
 
 .loop:
@@ -5412,16 +5411,16 @@ Func_0F0_6BA1:: ; address name
     inc de
     dec c
     jr nz, .loop
-    ld a, [wTopStat1]
-    ld [wTopStat0], a
-    ld a, [wTopStat3]
-    ld [wTopStat2], a
+    ld a, [wGiftRecord + MON_MAX_HP]
+    ld [wGiftRecord + MON_HP], a
+    ld a, [wGiftRecord + MON_MAX_MP]
+    ld [wGiftRecord + MON_MP], a
     ret
 
 ; ranks the 11 scores at wCEC3 in descending order (ties at random) into wCF7E, then wCF8A = BandOfFamilyBitCount (E-0130)
 ; 1 call site from 1 routine (e.g. RunLinkSession8Exchange_Case01_Sub01_Table5_Case11)
 ; reads: wRankIndex, wRankBand
-; writes: wRankIndex, wRankBand, wTopSpeciesLo, wTopSpeciesHi, wTopSpeciesByte
+; writes: wRankIndex, wRankBand, wGiftRecord
 ; points at: wFamilyScores, wFamilyRankTaken, wFamilyRanking
 RankFamilyScoresIntoFamilyRanking::
 Func_0F0_6BE0:: ; address name
@@ -5532,7 +5531,7 @@ Func_0F0_6BE0:: ; address name
     call RandomModulo29_BankF0
     ld a, l
     bit 0, a
-    jr nz, .set_top_species_lo
+    jr nz, .set_gift_record
     pop de
     inc de
     inc de
@@ -5545,34 +5544,34 @@ Func_0F0_6BE0:: ; address name
     dec b
     jp nz, .loop3
     ld a, $0A
-    ld [wTopSpeciesByte], a
+    ld [wGiftRecord + MON_FAMILY], a
     ld a, $74
-    ld [wTopSpeciesLo], a
+    ld [wGiftRecord + MON_SPECIES], a
     ld a, $01
-    ld [wTopSpeciesHi], a
+    ld [wGiftRecord + MON_SPECIES + 1], a
     ret
 
 .next3:
     dec de
     dec de
-    jr .set_top_species_lo2
+    jr .set_gift_record2
 
-.set_top_species_lo:
+.set_gift_record:
     pop de
 
-.set_top_species_lo2:
+.set_gift_record2:
     ld a, [de]
-    ld [wTopSpeciesLo], a
+    ld [wGiftRecord + MON_SPECIES], a
     inc de
     ld a, [de]
-    ld [wTopSpeciesHi], a
+    ld [wGiftRecord + MON_SPECIES + 1], a
     pop bc
     pop hl
     ld a, [hl]
-    ld [wTopSpeciesByte], a
+    ld [wGiftRecord + MON_FAMILY], a
     ret
 
-; E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wTopSpecies; 11 families in StringTable_MonsterFamilies order).
+; E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wGiftRecord + MON_SPECIES (E-0312); 11 families in StringTable_MonsterFamilies order).
 ; record: band lists of this family
 FamilyBandSpeciesTable::
 Data_0F0_6CB5:: ; address name
@@ -6720,7 +6719,7 @@ Func_0F0_72B4:: ; address name
     xor a, a
     ld [wGiftCount], a
 
-; jumps by wRollState (the item id of the previous gift, stored by RollCounterChanceAndRunEvent) to that item's effect; each effect adds to or subtracts from wTopStat1 and entries of wFamilyScores, then clears wRollState
+; jumps by wPendingGiftItem (the item id of the previous gift, stored by RecordGiftAndMaybeApplyPrevious) to that item's effect; each effect adds to the gift record's MON_MAX_HP (wGiftRecord, capped at 999) and to or from entries of wFamilyScores, then clears wPendingGiftItem (E-0312)
 ; 1 call site from 1 routine (e.g. RecordGiftAndMaybeApplyPrevious)
 ; reads: wPendingGiftItem
 ApplyGiftEffectByItem::
@@ -6839,10 +6838,10 @@ Jump_0F0_7390:: ; address name
 ; gift effect for item $01 Herb: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_Herb::
 Jump_0F0_739B:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6860,10 +6859,9 @@ Jump_0F0_739B:: ; address name
 ; gift effect for item $02 LoveWater: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_LoveWater::
 Jump_0F0_73BD:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6881,10 +6879,9 @@ Jump_0F0_73BD:: ; address name
 ; gift effect for item $03 WorldDew: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_WorldDew::
 Jump_0F0_73DF:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6902,10 +6899,9 @@ Jump_0F0_73DF:: ; address name
 ; gift effect for item $04 Potion: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_Potion::
 Jump_0F0_7401:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6923,10 +6919,9 @@ Jump_0F0_7401:: ; address name
 ; gift effect for item $05 ElfWater: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_ElfWater::
 Jump_0F0_7423:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6956,10 +6951,9 @@ Jump_0F0_7445:: ; address name
 ; gift effect for item $07 MoonHerb: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_MoonHerb::
 Jump_0F0_7452:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6977,10 +6971,9 @@ Jump_0F0_7452:: ; address name
 ; gift effect for item $08 Laurel: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_Laurel::
 Jump_0F0_7474:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -6998,10 +6991,9 @@ Jump_0F0_7474:: ; address name
 ; gift effect for item $09 AwakeSand: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_AwakeSand::
 Jump_0F0_7496:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7019,10 +7011,9 @@ Jump_0F0_7496:: ; address name
 ; gift effect for item $0A SkyBell: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_SkyBell::
 Jump_0F0_74B8:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7040,10 +7031,9 @@ Jump_0F0_74B8:: ; address name
 ; gift effect for item $0B SageRock: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_SageRock::
 Jump_0F0_74DA:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7061,10 +7051,9 @@ Jump_0F0_74DA:: ; address name
 ; gift effect for item $0C WorldLeaf: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_WorldLeaf::
 Jump_0F0_74FC:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7082,10 +7071,9 @@ Jump_0F0_74FC:: ; address name
 ; gift effect for item $0D ATKseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_ATKseed::
 Jump_0F0_751E:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7099,10 +7087,9 @@ Jump_0F0_751E:: ; address name
 ; gift effect for item $0E DEFseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_DEFseed::
 Jump_0F0_7536:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7116,10 +7103,9 @@ Jump_0F0_7536:: ; address name
 ; gift effect for item $0F AGLseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_AGLseed::
 Jump_0F0_754E:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7133,10 +7119,9 @@ Jump_0F0_754E:: ; address name
 ; gift effect for item $10 INTseed: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_INTseed::
 Jump_0F0_7566:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7150,10 +7135,9 @@ Jump_0F0_7566:: ; address name
 ; gift effect for item $11 LifeAcorn: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_LifeAcorn::
 Jump_0F0_757E:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7167,10 +7151,9 @@ Jump_0F0_757E:: ; address name
 ; gift effect for item $12 MysticNut: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_MysticNut::
 Jump_0F0_7596:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7184,10 +7167,9 @@ Jump_0F0_7596:: ; address name
 ; gift effect for item $13 Quest?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_Quest::
 Jump_0F0_75AE:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7205,10 +7187,9 @@ Jump_0F0_75AE:: ; address name
 ; gift effect for item $14 Horror?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_Horror::
 Jump_0F0_75D0:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7226,10 +7207,9 @@ Jump_0F0_75D0:: ; address name
 ; gift effect for item $15 BeNice?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_BeNice::
 Jump_0F0_75F2:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7247,10 +7227,9 @@ Jump_0F0_75F2:: ; address name
 ; gift effect for item $16 Cheater?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_Cheater::
 Jump_0F0_7614:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7268,10 +7247,9 @@ Jump_0F0_7614:: ; address name
 ; gift effect for item $17 Smart?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_Smart::
 Jump_0F0_7636:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7289,10 +7267,10 @@ Jump_0F0_7636:: ; address name
 ; gift effect for item $18 Comedy?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_Comedy::
 Jump_0F0_7658:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7310,10 +7288,9 @@ Jump_0F0_7658:: ; address name
 ; gift effect for item $19 BeefJerky: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_BeefJerky::
 Jump_0F0_767A:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7327,10 +7304,9 @@ Jump_0F0_767A:: ; address name
 ; gift effect for item $1A PorkChop: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_PorkChop::
 Jump_0F0_7692:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7348,10 +7324,9 @@ Jump_0F0_7692:: ; address name
 ; gift effect for item $1B Rib: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_Rib::
 Jump_0F0_76B4:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7369,10 +7344,9 @@ Jump_0F0_76B4:: ; address name
 ; gift effect for item $1C Sirloin: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_Sirloin::
 Jump_0F0_76D6:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7390,10 +7364,9 @@ Jump_0F0_76D6:: ; address name
 ; gift effect for item $1D BadMeat: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_BadMeat::
 Jump_0F0_76F8:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7433,10 +7406,9 @@ Jump_0F0_7729:: ; address name
 ; gift effect for item $20 Repellent: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_Repellent::
 Jump_0F0_772E:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7459,10 +7431,9 @@ Jump_0F0_7746:: ; address name
 ; gift effect for item $22 Mist?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_Mist::
 Jump_0F0_774B:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7480,10 +7451,9 @@ Jump_0F0_774B:: ; address name
 ; gift effect for item $23 Friend?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_Friend::
 Jump_0F0_776D:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7501,10 +7471,10 @@ Jump_0F0_776D:: ; address name
 ; gift effect for item $24 Wind?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_Wind::
 Jump_0F0_778F:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7522,10 +7492,9 @@ Jump_0F0_778F:: ; address name
 ; gift effect for item $25 Bolt?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_Bolt::
 Jump_0F0_77B1:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7543,10 +7512,9 @@ Jump_0F0_77B1:: ; address name
 ; gift effect for item $26 Snow?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_Snow::
 Jump_0F0_77D3:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7564,10 +7532,9 @@ Jump_0F0_77D3:: ; address name
 ; gift effect for item $27 Fire?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_Fire::
 Jump_0F0_77F5:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7585,10 +7552,9 @@ Jump_0F0_77F5:: ; address name
 ; gift effect for item $28 Warp?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_Warp::
 Jump_0F0_7817:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7606,10 +7572,9 @@ Jump_0F0_7817:: ; address name
 ; gift effect for item $29 WarpWing: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_WarpWing::
 Jump_0F0_7839:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7627,10 +7592,9 @@ Jump_0F0_7839:: ; address name
 ; gift effect for item $2A ExitBell: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_ExitBell::
 Jump_0F0_785B:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $02
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7687,10 +7651,9 @@ Jump_0F0_788C:: ; address name
 ; gift effect for item $40 VITbelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_VITbelt::
 Jump_0F0_7899:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7708,10 +7671,9 @@ Jump_0F0_7899:: ; address name
 ; gift effect for item $41 DracoBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_DracoBelt::
 Jump_0F0_78BB:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7729,10 +7691,9 @@ Jump_0F0_78BB:: ; address name
 ; gift effect for item $42 MagicBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_MagicBelt::
 Jump_0F0_78DD:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7750,10 +7711,9 @@ Jump_0F0_78DD:: ; address name
 ; gift effect for item $43 OddBelt: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_OddBelt::
 Jump_0F0_78FF:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7771,10 +7731,9 @@ Jump_0F0_78FF:: ; address name
 ; gift effect for item $44 StoneFang: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_StoneFang::
 Jump_0F0_7921:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7792,10 +7751,9 @@ Jump_0F0_7921:: ; address name
 ; gift effect for item $45 SteelFang: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_SteelFang::
 Jump_0F0_7943:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7813,10 +7771,9 @@ Jump_0F0_7943:: ; address name
 ; gift effect for item $46 MermScale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_MermScale::
 Jump_0F0_7965:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7834,10 +7791,9 @@ Jump_0F0_7965:: ; address name
 ; gift effect for item $47 DrakScale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_DrakScale::
 Jump_0F0_7987:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7855,10 +7811,10 @@ Jump_0F0_7987:: ; address name
 ; gift effect for item $48 AGL?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_AGL::
 Jump_0F0_79A9:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7876,10 +7832,10 @@ Jump_0F0_79A9:: ; address name
 ; gift effect for item $49 Starry?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_Starry::
 Jump_0F0_79CB:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7897,10 +7853,9 @@ Jump_0F0_79CB:: ; address name
 ; gift effect for item $4A Smart?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_Smart_4A::
 Jump_0F0_79ED:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7918,10 +7873,9 @@ Jump_0F0_79ED:: ; address name
 ; gift effect for item $4B Wise?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_Wise::
 Jump_0F0_7A0F:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $05
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7939,10 +7893,9 @@ Jump_0F0_7A0F:: ; address name
 ; gift effect for item $4C MagicCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_MagicCape::
 Jump_0F0_7A31:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $08
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7960,10 +7913,9 @@ Jump_0F0_7A31:: ; address name
 ; gift effect for item $4D DracoCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_DracoCape::
 Jump_0F0_7A53:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -7981,10 +7933,9 @@ Jump_0F0_7A53:: ; address name
 ; gift effect for item $4E SilvrCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_SilvrCape::
 Jump_0F0_7A75:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8002,10 +7953,9 @@ Jump_0F0_7A75:: ; address name
 ; gift effect for item $4F GoldCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7
 GiftEffect_GoldCape::
 Jump_0F0_7A97:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8023,10 +7973,9 @@ Jump_0F0_7A97:: ; address name
 ; gift effect for item $50 PltnmCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_PltnmCape::
 Jump_0F0_7AB9:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8044,10 +7993,9 @@ Jump_0F0_7AB9:: ; address name
 ; gift effect for item $51 OrcaCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_OrcaCape::
 Jump_0F0_7ADB:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8065,10 +8013,9 @@ Jump_0F0_7ADB:: ; address name
 ; gift effect for item $52 BraveCape: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_BraveCape::
 Jump_0F0_7AFD:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8086,10 +8033,9 @@ Jump_0F0_7AFD:: ; address name
 ; gift effect for item $53 D-Scale: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_DScale::
 Jump_0F0_7B1F:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $01
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8107,10 +8053,9 @@ Jump_0F0_7B1F:: ; address name
 ; gift effect for item $5A Life?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_Life::
 Jump_0F0_7B41:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8128,10 +8073,9 @@ Jump_0F0_7B41:: ; address name
 ; gift effect for item $5B Divine?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_Divine::
 Jump_0F0_7B63:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8149,10 +8093,9 @@ Jump_0F0_7B63:: ; address name
 ; gift effect for item $5C War?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat1
 GiftEffect_War::
 Jump_0F0_7B85:: ; address name
-    ld hl, wTopStat1
+    ld hl, wGiftRecord + MON_MAX_HP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8170,10 +8113,9 @@ Jump_0F0_7B85:: ; address name
 ; gift effect for item $5D Mage?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat3
 GiftEffect_Mage::
 Jump_0F0_7BA7:: ; address name
-    ld hl, wTopStat3
+    ld hl, wGiftRecord + MON_MAX_MP
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8191,10 +8133,9 @@ Jump_0F0_7BA7:: ; address name
 ; gift effect for item $5E Fight?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat4
 GiftEffect_Fight::
 Jump_0F0_7BC9:: ; address name
-    ld hl, wTopStat4
+    ld hl, wGiftRecord + MON_ATK
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8212,10 +8153,9 @@ Jump_0F0_7BC9:: ; address name
 ; gift effect for item $5F Sailor?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat5
 GiftEffect_Sailor::
 Jump_0F0_7BEB:: ; address name
-    ld hl, wTopStat5
+    ld hl, wGiftRecord + MON_DEF
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8233,10 +8173,9 @@ Jump_0F0_7BEB:: ; address name
 ; gift effect for item $60 Thief?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat6
 GiftEffect_Thief::
 Jump_0F0_7C0D:: ; address name
-    ld hl, wTopStat6
+    ld hl, wGiftRecord + MON_AGL
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8254,10 +8193,10 @@ Jump_0F0_7C0D:: ; address name
 ; gift effect for item $61 Cleric?: case of ApplyGiftEffectByItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wPendingGiftItem
-; points at: wTopStat7, wFamilyScores
+; points at: wFamilyScores
 GiftEffect_Cleric::
 Jump_0F0_7C2F:: ; address name
-    ld hl, wTopStat7
+    ld hl, wGiftRecord + MON_INT
     ld b, $03
     ld de, $03E7
     call AddBToWordAtHLCapped
@@ -8460,7 +8399,7 @@ Func_0F0_7D03:: ; address name
 ; only called from KeyWorldDoorItem_Case04 (E-0047)
 ; 1 call site from 1 routine (e.g. KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor)
 ; reads: wPlayerId
-; points at: wGM2TimerFrames, wGM2Mode, wPlayerName, wGM2Byte
+; points at: wGM2TimerFrames, wGiftRecord, wPlayerName
 KeyWorldDoorItem_Case04_RandomModulo29_BankF0::
 Func_0F0_7D0A:: ; address name
     ld hl, wGM2TimerFrames
@@ -8473,7 +8412,7 @@ Func_0F0_7D0A:: ; address name
     ld a, b
     or a, c
     jr nz, .loop
-    ld hl, wGM2Mode
+    ld hl, wGiftRecord
     ld a, $01
     ld [hl+], a
     ld c, $0A
@@ -8513,7 +8452,7 @@ Func_0F0_7D0A:: ; address name
     ld [hl+], a
 
 .read_player_id:
-    ld hl, wGM2Byte
+    ld hl, wGiftRecord + MON_MASTER_ID
     ld a, [wPlayerId]
     ld [hl+], a
     ld a, $FF

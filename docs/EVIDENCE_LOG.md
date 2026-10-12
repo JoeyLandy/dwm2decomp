@@ -2431,6 +2431,34 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0312 — Gifts go to an Egg: $CECE is that egg's monster record (wGiftRecord)
+
+- Kind: STATIC (C2 for the layout and the recipient).
+- **The layout.** The scattered names in $CECE-$CF72 are the fields of one $A5-byte monster record. Each old symbol matches a record field at base $CECE:
+
+  | Address | Old name | Field |
+  | --- | --- | --- |
+  | $CECE | wGM2Mode | MON_STATE |
+  | $CECF | wTopSpeciesName | MON_NAME |
+  | $CED9-$CEDC | wTopSpeciesLo/Hi/Byte/ByteDC | MON_SPECIES, MON_FAMILY, MON_SEX |
+  | $CEE7 | wGM2Byte | MON_MASTER_ID |
+  | $CF0A | wTopSpeciesGrowth | MON_SKILL_LIST |
+  | $CF29-$CF37 | wTopStat0-7 | HP, max HP, MP, max MP, ATK, DEF, AGL, INT |
+  | $CF41 | wResistanceLevels | MON_RESISTANCES |
+
+  More evidence for the layout:
+  - LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth copies species bytes 8-10 to $CF0A (record $3C) and species $12-$2C to $CF41 (record $73), as CreateMonsterRecordOfKindTemp1 does for SRAM records.
+  - bank $F0 writes wPlayerId and then four $FF bytes at $CEE7, which are record $19 and $1A-$1D.
+- **Who receives the gifts.** GreatLogTalkEvents case $E5 runs only while MON_STATE is 1.
+  - With no gift pending it shows message $0D60, 'What will you give to the ...'.
+  - Otherwise it shows $0D61, 'Y has been given to the Egg. What will you give it next?'
+  - RunFieldReturnPhase_Case01_WaitMapType shows the field object wObject5 on one map screen while MON_STATE is 1.
+- **Names.**
+  - The record is now one sized symbol, wGiftRecord (size $A5, replacing 17 entries). Its operands use MON_* through the buffer pass, for example `ld hl, wGiftRecord + MON_MAX_HP` in every GiftEffect_*.
+  - wFamilyScores is the Egg's 11 family scores, and wPendingGiftItem and wGiftCount refer to gifts to the Egg.
+- **What the gift effects change.** A gift raises the Egg's maximum HP by 1-3 (capped at 999) and raises one family's score while lowering others. RankFamilyScoresIntoFamilyRanking ranks the families, and the top family picks the species when the egg hatches (RunLinkSession8Exchange_EggHatched: 'G hatched from the egg that ...'). That answers the open question from E-0295.
+- Binary verification: build/run431 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0311 — Sex 0 = male, 1 = female; egg states; the bytes no code reads
 
 - Kind: STATIC (C2).

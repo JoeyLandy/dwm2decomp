@@ -3054,96 +3054,25 @@
   },
   "CEC1": {
     "name": "wPendingGiftItem",
-    "note": "item id of the last gift, applied later by RecordGiftAndMaybeApplyPrevious (C1)",
+    "note": "item id of the last gift to the Egg, applied by RecordGiftAndMaybeApplyPrevious at the next gift (C1)",
     "evidence": "E-0135, E-0295"
   },
   "CEC2": {
     "name": "wGiftCount",
-    "note": "number of gifts, up to $0F; lowers the chance a pending gift takes effect (C1)",
+    "note": "number of gifts given to the Egg, up to $0F; lowers the chance a pending gift takes effect (C1)",
     "evidence": "E-0135, E-0295"
   },
   "CEC3": {
     "name": "wFamilyScores",
-    "note": "11 scores (one per family) ranked by RankFamilyScoresIntoFamilyRanking",
-    "evidence": "E-0135",
+    "note": "11 scores, one per family, of the gift Egg (wGiftRecord): each gift effect raises one family and lowers others; RankFamilyScoresIntoFamilyRanking ranks them and the top family picks the egg's species (C2)",
+    "evidence": "E-0135, E-0312",
     "size": "B"
   },
   "CECE": {
-    "name": "wGM2Mode",
-    "note": "mode byte of the $CE9B block (0 or 1 allow saving it)",
-    "evidence": "E-0135"
-  },
-  "CED9": {
-    "name": "wTopSpeciesLo",
-    "note": "species picked from the ranking, low byte",
-    "evidence": "E-0135"
-  },
-  "CEDA": {
-    "name": "wTopSpeciesHi",
-    "note": "species picked from the ranking, high byte",
-    "evidence": "E-0135"
-  },
-  "CEDB": {
-    "name": "wTopSpeciesByte",
-    "note": "byte stored with the picked species",
-    "evidence": "E-0135"
-  },
-  "CEE7": {
-    "name": "wGM2Byte",
-    "note": "byte of the $CE9B block",
-    "evidence": "E-0135"
-  },
-  "CF0A": {
-    "name": "wTopSpeciesGrowth",
-    "note": "species growth bytes copied by LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth ($CF0A-$CF0C)",
-    "evidence": "E-0135",
-    "size": "3"
-  },
-  "CF29": {
-    "name": "wTopStat0",
-    "note": "stat copied from wCF2B",
-    "evidence": "E-0135"
-  },
-  "CF2B": {
-    "name": "wTopStat1",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF2D": {
-    "name": "wTopStat2",
-    "note": "stat copied from wCF2F",
-    "evidence": "E-0135"
-  },
-  "CF2F": {
-    "name": "wTopStat3",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF31": {
-    "name": "wTopStat4",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF33": {
-    "name": "wTopStat5",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF35": {
-    "name": "wTopStat6",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF37": {
-    "name": "wTopStat7",
-    "note": "stat byte of the copied species data",
-    "evidence": "E-0135"
-  },
-  "CF41": {
-    "name": "wResistanceLevels",
-    "note": "27 resistance levels raised by RaiseRandomLowestResistance",
-    "evidence": "E-0135",
-    "size": "1B"
+    "name": "wGiftRecord",
+    "size": "A5",
+    "note": "the $A5-byte monster record (MON_* offsets) of the Egg on the Great Log that receives gifts (message $0D61: 'Y has been given to the Egg.'): each gift's effect raises its MON_MAX_HP (was wTopStat1, capped at 999) and shifts wFamilyScores; RankFamilyScoresIntoFamilyRanking picks its species (was wTopSpeciesLo) from the top family, and its name, skill list, stats and resistances (was wResistanceLevels) come from that species; MON_STATE (was wGM2Mode) is 1 while the egg is shown (wObject5 on its map screen); $19 is MON_MASTER_ID (was wGM2Byte)",
+    "evidence": "E-0135, E-0312"
   },
   "CF73": {
     "name": "wFamilyRankTaken",
@@ -5030,7 +4959,7 @@
   },
   "BEF3": {
     "name": "sSavedGM2Mode",
-    "note": "saved wGM2Mode (sSavedCE9BBlock + $33)",
+    "note": "saved MON_STATE of wGiftRecord (sSavedCE9BBlock + $33)",
     "evidence": "E-0137"
   },
   "BF98": {
@@ -5061,16 +4990,6 @@
   "CCCD": {
     "name": "wNameBufUnknown",
     "note": "name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte)",
-    "evidence": "E-0137"
-  },
-  "CECF": {
-    "name": "wTopSpeciesName",
-    "note": "name of the picked species, copied from wNameGlyphBuf (GameMode5_Update_Case07_Sub01_Sub04)",
-    "evidence": "E-0137"
-  },
-  "CEDC": {
-    "name": "wTopSpeciesByteDC",
-    "note": "byte passed as wArg2 with the picked species",
     "evidence": "E-0137"
   },
   "D00F": {

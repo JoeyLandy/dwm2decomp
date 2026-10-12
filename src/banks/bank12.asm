@@ -5593,7 +5593,7 @@ Jump_012_628B:: ; address name
 
 ; entry 0 of the `rst $00` table in KeyWorldDoorItem
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wScriptParam0, wScriptParam1, wInventory, wGM2Mode, hTemp0
+; reads: wScriptParam0, wScriptParam1, wInventory, wGiftRecord, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wScriptStep
 ; points at: wScriptStep
 KeyWorldDoorItem_StartMessageA::
@@ -5614,7 +5614,7 @@ Jump_012_6295:: ; address name
     cp a, $80
     jr z, .loop
     cp a, $81
-    jr z, .check_gm2_mode
+    jr z, .check_gift_record
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
     ld a, [wInventory + $17]
@@ -5657,8 +5657,8 @@ Jump_012_6295:: ; address name
     ld [wScriptParam1], a
     ret
 
-.check_gm2_mode:
-    ld a, [wGM2Mode]
+.check_gift_record:
+    ld a, [wGiftRecord]
     cp a, $01
     jr z, .loop
     ld a, $19

@@ -1684,7 +1684,7 @@ Func_002_4A53:: ; address name
 
 ; only called from RunFieldReturnPhase_Case01 (E-0047)
 ; 1 call site from 1 routine (e.g. RunFieldReturnPhase_OpenFieldMenuOnA)
-; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wGM2Mode, wCounterPtr0Lo
+; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wGiftRecord, wCounterPtr0Lo
 ; writes: wObject5, wCounterPtr0Lo, hTemp0
 RunFieldReturnPhase_Case01_WaitMapType::
 Func_002_4A7A:: ; address name
@@ -1700,7 +1700,7 @@ Func_002_4A7A:: ; address name
     ldh a, [hMapScreenY]
     cp a, $03
     ret nz
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     cp a, $01
     ret nz
     ld a, [wCounterPtr0Lo]
@@ -8167,7 +8167,7 @@ Func_002_72E9:: ; address name
 
 ; when wCECE is 0 or 1, copies the $D8 bytes at wCE9B to sBEC0 in SRAM bank 1 (E-0124)
 ; 1 call site from 1 routine (e.g. RunSaveGameSteps_7347)
-; reads: wGM2Mode
+; reads: wGiftRecord
 ; writes: rRAMB, rSVBK
 ; points at: wGM2TimerFrames, sSavedCE9BBlock
 SaveGM2TimerFramesBlockToSRAMBank1::
@@ -8179,7 +8179,7 @@ Func_002_730E:: ; address name
     ld [rRAMB], a
     xor a, a
     ldh [rSVBK], a
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     cp a, $01
     jr z, .loop
     and a, a

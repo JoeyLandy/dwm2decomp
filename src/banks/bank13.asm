@@ -10462,11 +10462,11 @@ Jump_013_7D28:: ; address name
 
 ; entry 228 of the `rst $00` table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode, wObject5
+; reads: wGiftRecord, wObject5
 ; writes: hTemp0
 GreatLogTalkEvents_RunFieldCommandTemp0::
 Jump_013_7D2F:: ; address name
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     cp a, $01
     ret nz
     ld a, [wObject5]
@@ -10479,10 +10479,10 @@ Jump_013_7D2F:: ; address name
 
 ; entry 229 of the `rst $00` table in GreatLogTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-; reads: wGM2Mode, wPendingGiftItem
+; reads: wGiftRecord, wPendingGiftItem
 GreatLogTalkEvents_StartScriptAtHL_B13_CaseE5::
 Jump_013_7D45:: ; address name
-    ld a, [wGM2Mode]
+    ld a, [wGiftRecord]
     cp a, $01
     ret nz
     ld a, [wPendingGiftItem]

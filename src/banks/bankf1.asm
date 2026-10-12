@@ -4378,27 +4378,27 @@ Func_0F1_5B8E:: ; address name
 
 ; only called from GameMode5_Update_Case07_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode5_Update_Case07_LinkExchangeJoypadPerFrame)
-; reads: wTopSpeciesByteDC, wTopSpeciesByte, wTopSpeciesLo, wTopSpeciesHi, wArg5
+; reads: wGiftRecord, wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wRecordBufB, wScreenByteEE
-; points at: wNameGlyphBuf, wTopSpeciesName, wGM2Mode, wRecordBufB, wGM2TimerFrames
+; points at: wNameGlyphBuf, wGiftRecord, wRecordBufB, wGM2TimerFrames
 GameMode5_Update_Case07_Sub01_RunNameEntryStateWhenNotFading::
 Func_0F1_5BA5:: ; address name
     ld a, $01
     ld [wArg1], a
-    ld a, [wTopSpeciesByteDC]
+    ld a, [wGiftRecord + MON_SEX]
     ld [wArg2], a
-    ld a, [wTopSpeciesByte]
+    ld a, [wGiftRecord + MON_FAMILY]
     ld [wArg3], a
-    ld a, [wTopSpeciesLo]
+    ld a, [wGiftRecord + MON_SPECIES]
     ld [wArg4], a
-    ld a, [wTopSpeciesHi]
+    ld a, [wGiftRecord + MON_SPECIES + 1]
     ld [wArg5], a
     farcall RunNameEntryStateWhenNotFading
     ld a, [wArg5]
     cp a, $FF
     ret nz
     ld hl, wNameGlyphBuf
-    ld de, wTopSpeciesName
+    ld de, wGiftRecord + MON_NAME
     ld b, $0A
 
 .loop:
@@ -4416,7 +4416,7 @@ Func_0F1_5BA5:: ; address name
     ld [de], a
 
 .skip2:
-    ld hl, wGM2Mode
+    ld hl, wGiftRecord
     ld de, wRecordBufB
     ld b, $A5
 

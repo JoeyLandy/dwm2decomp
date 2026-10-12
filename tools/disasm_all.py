@@ -504,7 +504,7 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
 
 
 def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[str], reg: str = "c",
-                        buffers: tuple[str, ...] = ("wRecordBufA", "wRecordBufB", "wChildRecord")) -> tuple[list[str], int]:
+                        buffers: tuple[str, ...] = ("wRecordBufA", "wRecordBufB", "wChildRecord", "wGiftRecord")) -> tuple[list[str], int]:
     """E-0290: `ld c, $NN` whose value reaches a record-access routine that takes the field offset in C
     (config/record_fields.json "callees") becomes `ld c, MON_<FIELD>` when the offset has an entry. Only
     instructions that leave C alone may sit between the load and the call (at most three). The constant

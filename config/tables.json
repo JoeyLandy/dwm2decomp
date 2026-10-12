@@ -20190,7 +20190,7 @@
           "reason": "family band lists"
         }
       ],
-      "note": "E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wTopSpecies; 11 families in StringTable_MonsterFamilies order)."
+      "note": "E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wGiftRecord + MON_SPECIES (E-0312); 11 families in StringTable_MonsterFamilies order)."
     },
     {
       "bank": "F0",
