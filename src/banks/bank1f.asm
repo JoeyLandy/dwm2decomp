@@ -1537,7 +1537,7 @@ Func_01F_5D2A:: ; address name
     ret
 
 ; fills a wArg3 x wArg4 rectangle of the BG map at wArg5/6 (wrapping inside the 32-entry row) with the one tile byte at wArg1/2: unlike DrawTileRectFromArg1Params it never advances DE; on CGB, unless wArg7 is set, clears the same entries' attributes; every caller passes BGFillTile (E-0186, correcting E-0129)
-; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Case00_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, ...)
+; 10 call sites from 10 routines (e.g. ClearBGMapAndLoadFrameTiles, LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, ...)
 ; reads: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, rSTAT, wIsCGB, ...
 ; writes: rVBK
 FillTileRectWithArg1Tile::
@@ -1636,7 +1636,7 @@ Func_01F_5D9A:: ; address name
     ret
 
 ; one byte, tile $C3: the tile FillTileRectWithArg1Tile repeats over the whole rectangle; all ten callers pass this address (E-0186)
-; address loaded by LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Case00_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, BreedMenu_Case0B_FillTileRectWithArg1Tile and 6 more
+; address loaded by LibraryMenu_FillTileRectWithArg1Tile, RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF, RunNameEntryStateWhenNotFading_Case06_FillTileRectWithArg1Tile, BreedMenu_Case0B_FillTileRectWithArg1Tile and 6 more
 BGFillTile:: ; heuristic: wArg1/wArg2 source of a far call to FillTileRectWithArg1Tile; C0
 Data_01F_5E12:: ; address name
     db $C3

@@ -934,7 +934,7 @@ Jump_030_4586:: ; address name
     ret
 
 ; when the actor has no forced action and bit 7 of its wDAD8 byte is set, initialises the AI weights and runs the routine for its AI mode; a forced action is stored directly; then wBattleResolveStep += 1 (E-0124)
-; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case01_WriteRandomLoAndRandomHiEtc)
 ; reads: wBattleActor
 ; writes: wAIFlag
 ; points at: wSideControl, wSlotAIMode, wBattleResolveStep
@@ -3446,7 +3446,7 @@ Func_030_5428:: ; address name
     ret
 
 ; wPersonalityIndex = PersonalityIndexOfSlot_Bank30(actor); resets the AI workspace (Func_030_5472); with wD2CC = 1 runs the routine for the actor's AI mode (Data_030_45D0 indexed by wDA53[actor], JumpToHL) and stores its result B as the actor's chosen action; runs Func_030_4CFC; wD2CC = 0 (E-0120)
-; 3 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, RunDebugState_E0_Case0D_Case05_AIChooseActionForActor)
+; 3 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3, RunDebugState_E0_ChooseActionTargets_Case05_AIChooseActionForActor)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wAIFlag
 ; points at: wSlotAIMode

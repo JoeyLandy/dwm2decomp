@@ -40,7 +40,7 @@ Func_003_4015:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 PauseMenu_State4::
 Jump_003_402F:: ; address name
-    farcall PauseMenu_State4_Sub02
+    farcall PauseMenu_State4_GiftMenu
     ret
 
 PauseMenu_State4_CheckGameMode2State::

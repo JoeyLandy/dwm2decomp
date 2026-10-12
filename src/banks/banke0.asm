@@ -425,7 +425,7 @@ Func_0E0_425A:: ; address name
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault, RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault, RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0::
 Func_0E0_4279:: ; address name
@@ -524,7 +524,7 @@ Func_0E0_443B:: ; address name
     dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A
     dw RunDebugState_E0_BlinkWC0A0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
-    dw RunDebugState_E0_Case0D
+    dw RunDebugState_E0_ChooseActionTargets
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
@@ -1764,24 +1764,24 @@ Jump_0E0_4C96:: ; address name
     call RunDebugSubState_E0
     ret
 
-; entry 13 of the `rst $00` table in RunDebugState_E0
+; debug battle state $0D: shows a string, reads the slot's personality and, for an actor without a target, far-calls ChooseActionTarget
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
-RunDebugState_E0_Case0D::
+RunDebugState_E0_ChooseActionTargets::
 Jump_0E0_4C9A:: ; address name
     ld a, [wDebugSubState]
     rst $00
-    dw RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0
-    dw RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0
-    dw RunDebugState_E0_Case0D_WriteDebugSubState
-    dw RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor
-    dw RunDebugState_E0_Case0D_WriteBattleActorAndDebugSubStateEtc
-    dw RunDebugState_E0_Case0D_WriteDebugSubState_Case05
+    dw RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0
+    dw RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0
+    dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState
+    dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubStateAndBattleActor
+    dw RunDebugState_E0_ChooseActionTargets_WriteBattleActorAndDebugSubStateEtc
+    dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_Case05
 
-; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 0 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex, wBattleActor, wDebugSubState
-RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0::
+RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0::
 Jump_0E0_4CAA:: ; address name
     ld hl, vTiles2 + $10
     ld de, $1001
@@ -1823,36 +1823,36 @@ Jump_0E0_4CAA:: ; address name
     ld [wDebugSubState], a
     ret
 
-; entry 1 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 1 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wDebugSubState
-RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0::
+RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0::
 Jump_0E0_4CF6:: ; address name
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
     ld [wPersonalityIndex], a
-    farcall RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc
+    farcall RunDebugState_E0_ChooseActionTargets_Case01_WriteRandomLoAndRandomHiEtc
     ld a, $02
     ld [wDebugSubState], a
     ret
 
-; entry 2 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 2 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_WriteDebugSubState::
+RunDebugState_E0_ChooseActionTargets_WriteDebugSubState::
 Jump_0E0_4D0B:: ; address name
-    farcall RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor
+    farcall RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor
     ld a, $03
     ld [wDebugSubState], a
     ret
 
-; entry 3 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 3 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wJoypadPressedRepeat, wBattleActor
 ; writes: wDebugSubState, wBattleActor
 ; points at: wBattleSubPhase
-RunDebugState_E0_Case0D_WriteDebugSubStateAndBattleActor::
+RunDebugState_E0_ChooseActionTargets_WriteDebugSubStateAndBattleActor::
 Jump_0E0_4D17:: ; address name
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1913,11 +1913,11 @@ Jump_0E0_4D17:: ; address name
 .return:
     ret
 
-; entry 4 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 4 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wDebugSubState, wDebugState
 ; points at: wBattleActionChoice
-RunDebugState_E0_Case0D_WriteBattleActorAndDebugSubStateEtc::
+RunDebugState_E0_ChooseActionTargets_WriteBattleActorAndDebugSubStateEtc::
 Jump_0E0_4D72:: ; address name
     xor a, a
     ld [wBattleActor], a
@@ -1929,12 +1929,12 @@ Jump_0E0_4D72:: ; address name
     ld bc, $0010
     jp FillBytes
 
-; entry 5 of the `rst $00` table in RunDebugState_E0_Case0D
+; entry 5 of the `rst $00` table in RunDebugState_E0_ChooseActionTargets
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_WriteDebugSubState_Case05::
+RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_Case05::
 Jump_0E0_4D89:: ; address name
-    farcall RunDebugState_E0_Case0D_Case05_AIChooseActionForActor
+    farcall RunDebugState_E0_ChooseActionTargets_Case05_AIChooseActionForActor
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -2540,12 +2540,12 @@ Data_0E0_55FB:: ; address name
     db $04, $04, $9B, $40 ; id 49
     db $04, $04, $A1, $40 ; id 50
 
-; only called from RunDebugState_E0_Case0D_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
+; only called from RunDebugState_E0_ChooseActionTargets_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0)
 ; reads: wBattleActor, wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 ; points at: wBattleActionChoice
-RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc::
+RunDebugState_E0_ChooseActionTargets_Case01_WriteRandomLoAndRandomHiEtc::
 Func_0E0_56C7:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -2587,7 +2587,7 @@ Func_0E0_56C7:: ; address name
     ret
 
 ; when the actor's wBattleTargetChoice entry is $FF (no target yet), far-calls ChooseActionTarget (E-0112)
-; 2 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case01_WriteRandomLoAndRandomHiEtc)
+; 2 call sites from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case01_WriteRandomLoAndRandomHiEtc)
 ; reads: wBattleActor
 ; points at: wBattleTargetChoice
 ChooseTargetIfUnset::
@@ -2604,12 +2604,12 @@ Func_0E0_5715:: ; address name
 .return:
     ret
 
-; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_WriteDebugSubState)
+; only called from RunDebugState_E0_ChooseActionTargets_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_WriteDebugSubState)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
 ; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
-RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor::
+RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
     ld hl, $5A05
@@ -2849,7 +2849,7 @@ Func_0E0_572D:: ; address name
     push bc
     push hl
     ld c, $00
-    call RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc_Sub02
+    call WriteHexDigitTilesOfTemp1Temp0
     pop hl
     pop bc
 
@@ -2903,7 +2903,7 @@ Func_0E0_572D:: ; address name
     di
     call WriteVRAMByteInc
     ei
-    call RunDebugState_E0_Case0D_Case02_Sub01_ReadBattleActorAndLinkMode
+    call DisplayedTargetChoiceOfActor
     ld hl, $5A05
     call ReadWordTableEntry_Bank00
     ld d, h
@@ -2950,7 +2950,7 @@ Func_0E0_572D:: ; address name
     push bc
     push hl
     ld c, $00
-    call RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc
+    call WriteLowHexDigitTilesOfTemp1Temp0
     pop hl
     pop bc
     jr .restore
@@ -2986,7 +2986,7 @@ Func_0E0_572D:: ; address name
     ret
 
 ; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRole
 DisplayedSlotOfActor::
@@ -3001,11 +3001,11 @@ Func_0E0_5992:: ; address name
     xor a, $04
     ret
 
-; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; A = wBattleTargetChoice[wBattleActor * 2]; in link mode 1 with wLinkRole bit 1 set, flips bit 2 (the side) so the choice is shown from this player's side
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; reads: wBattleActor, wLinkMode
 ; points at: wBattleTargetChoice, wLinkRole
-RunDebugState_E0_Case0D_Case02_Sub01_ReadBattleActorAndLinkMode::
+DisplayedTargetChoiceOfActor::
 Func_0E0_59A4:: ; address name
     ld a, [wBattleActor]
     add a, a
@@ -3026,10 +3026,10 @@ Func_0E0_59A4:: ; address name
     xor a, $04
     ret
 
-; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; writes hTemp1's high nibble as a tile (nibble + 1, or $C3 while every digit so far is zero; C tracks that), then falls into WriteLowHexDigitTilesOfTemp1Temp0 for the remaining nibbles
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; reads: hTemp1, hTemp0
-RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc_Sub02::
+WriteHexDigitTilesOfTemp1Temp0::
 Func_0E0_59C0:: ; address name
     ldh a, [hTemp1]
     and a, $F0
@@ -3047,10 +3047,10 @@ Func_0E0_59C0:: ; address name
     call WriteVRAMByteInc
     ei
 
-; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; the second half of WriteHexDigitTilesOfTemp1Temp0: hTemp1's low nibble and hTemp0's nibbles as digit tiles
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; reads: hTemp1, hTemp0
-RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc::
+WriteLowHexDigitTilesOfTemp1Temp0::
 Func_0E0_59D4:: ; address name
     ldh a, [hTemp1]
     and a, $0F
@@ -3129,11 +3129,11 @@ PointerRun_E0_5A05_Entry07:: ; heuristic: target of a monotone pointer table; C0
 Data_0E0_5A31:: ; address name
     db $83, $84, $04, $C3
 
-; only called from RunDebugState_E0_Case0D_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_WriteDebugSubState_Case05)
+; only called from RunDebugState_E0_ChooseActionTargets_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_Case05)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
-RunDebugState_E0_Case0D_Case05_AIChooseActionForActor::
+RunDebugState_E0_ChooseActionTargets_Case05_AIChooseActionForActor::
 Func_0E0_5A35:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -3168,7 +3168,7 @@ Func_0E0_5A35:: ; address name
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; 3 call sites from 1 routine (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0_5A79::
 Func_0E0_5A79:: ; address name
@@ -7805,7 +7805,7 @@ Func_0E0_7A73:: ; address name
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor, RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor, RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
 Func_0E0_7A80:: ; address name

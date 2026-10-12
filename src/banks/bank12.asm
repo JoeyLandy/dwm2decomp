@@ -10568,7 +10568,7 @@ Func_012_7E80:: ; address name
     ret
 
 ; wGold -= the word hFFC6/hFFC7; when gold is smaller than the amount it becomes 0 instead (E-0075)
-; 5 call sites from 5 routines (e.g. GoldItemOrLoss_Case0A_ShowIfSomeMonsterMasters, GoldItemOrLoss_Case08_ShowHeroCheckedTheBookshelf, GoldItemOrLoss_Case03_ShowIsThatSoToo, GoldItemOrLoss_Case02_ShowTheresASpiritIn, ...)
+; 5 call sites from 5 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters, GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf, GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo, GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn, ...)
 ; reads: hTemp0, hTemp1, wGoldHi, wGoldMid, wGoldLo
 ; writes: wGoldLo, wGoldMid, wGoldHi
 SubtractGoldFloorZero::

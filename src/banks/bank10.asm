@@ -1734,7 +1734,7 @@ Func_010_4994:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommand82:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_499B:: ; address name
-    farcall GoldItemOrLoss
+    farcall GreatLogFieldEvents
     ret
 
 ; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers)
@@ -3288,7 +3288,7 @@ Script_5129:: ; heuristic: event script entry or jump target; C0
     script_message $8008 ; 'Good. That's good to hear! You'
     script_end
 Script_512D:: ; heuristic: event script entry or jump target; C0
-    script_command SCRIPT_GOLD_ITEM_OR_LOSS
+    script_command SCRIPT_GREATLOG_FIELD_EVENT
     script_end
 Script_512F:: ; heuristic: event script entry or jump target; C0
     script_command SCRIPT_FIELD_SCENE_01

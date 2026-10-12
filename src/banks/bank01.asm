@@ -24,7 +24,7 @@ Func_001_4001:: ; address name
     xor a, a
     ld [wDebugByteF6], a
     ld [wDebugByteF7], a
-    call GameMode0_Init_Sub01
+    call DebugMode_InitByModeState
     ld a, $FC
     call StartPaletteFade
     ld a, $03
@@ -32,10 +32,10 @@ Func_001_4001:: ; address name
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; only called from GameMode0_Init (E-0047)
+; jumps by wModeState to the init routine of each debug screen (menu, map editor, automap, picture viewer, sound test, battle setup, results, staff roll, skill viewer, record viewer, message test)
 ; 1 call site from 1 routine (e.g. GameMode0_Init)
 ; reads: wModeState
-GameMode0_Init_Sub01::
+DebugMode_InitByModeState::
 Func_001_4045:: ; address name
     ld a, [wModeState]
     rst $00

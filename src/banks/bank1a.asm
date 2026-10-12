@@ -2387,7 +2387,7 @@ Func_01A_6306:: ; address name
     ret
 
 ; hFFC6 = 0 and A = 0 (E-0114)
-; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case09_ClearTemp0AndA)
+; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA)
 ; writes: hTemp0
 ClearTemp0AndA::
 Func_01A_631A:: ; address name
@@ -2649,7 +2649,7 @@ Data_01A_63F8:: ; address name
     db $10 ; id 31
 
 ; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
+; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
 ; points at: wLevelUpGains

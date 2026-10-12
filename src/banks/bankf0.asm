@@ -501,7 +501,7 @@ Data_0F0_4887:: ; address name
     db $F9, "0G. OK?", $F0
 
 ; ld de, this bank's string table / BeginStringDisplay
-; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0, PauseMenu_State4_Sub02_Case02_BeginStringDisplay_BankF0_48A0AndStep, ...)
+; 5 call sites from 5 routines (e.g. BeginString_BankF0_Cat0, ShowString_BankF0, DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0, PauseMenu_State4_GiftMenu_Case02_BeginStringDisplay_BankF0_48A0AndStep, ...)
 BeginStringDisplay_BankF0_48A0::
 Func_0F0_48A0:: ; address name
     ld de, StringCategories_F0_48B5
@@ -779,10 +779,10 @@ Func_0F0_4CA0:: ; address name
     dw RunLinkSession8Exchange_Case01_Sub01_Case04
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case05
     dw RunLinkSession8Exchange_Case01_Sub01_WriteScreenStepAndScreenSubStepEtc_Case06
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07
+    dw RunLinkSession8Exchange_ObjectSceneThenSave
     dw RunLinkSession8Exchange_Case01_Sub01_Case08
     dw RunLinkSession8Exchange_Case01_Sub01_Case09
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A
+    dw RunLinkSession8Exchange_ObjectScene
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B
     dw RunLinkSession8Exchange_Case01_Sub01_Case0C
 
@@ -2199,32 +2199,32 @@ Jump_0F0_54B9:: ; address name
 .return:
     ret
 
-; entry 7 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenSubStep: timed waits and moves of field objects 1 and 5, then RunSaveGameSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07::
+RunLinkSession8Exchange_ObjectSceneThenSave::
 Jump_0F0_54FA:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5_Case07
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep_Case0A
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSaveStepAndSaveRecordIndex
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 12 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 12 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSaveStep
 ; writes: wScreenStep, wScreenSubStep, wScreenState
-RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps::
+RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps::
 Jump_0F0_5518:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -2240,11 +2240,11 @@ Jump_0F0_5518:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 1 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 1 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep::
 Jump_0F0_5537:: ; address name
     ld a, [wSpriteSlots + $9]
     and a, $03
@@ -2263,11 +2263,11 @@ Jump_0F0_5537:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 4 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep::
 Jump_0F0_5558:: ; address name
     ld a, [wObject1 + $9]
     and a, $03
@@ -2288,11 +2288,11 @@ Jump_0F0_5558:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 0 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 0 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep::
 Jump_0F0_557E:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -2306,11 +2306,11 @@ Jump_0F0_557E:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 3 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 3 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5::
+RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5::
 Jump_0F0_5594:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -2321,11 +2321,11 @@ Jump_0F0_5594:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 7 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 7 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject5, wArg1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5_Case07::
+RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07::
 Jump_0F0_55A6:: ; address name
     ld a, $00
     ld [wObject5], a
@@ -2335,11 +2335,11 @@ Jump_0F0_55A6:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 10 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep_Case0A::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_Case0A::
 Jump_0F0_55B6:: ; address name
     ld a, [wObject1 + $D]
     res 1, a
@@ -2360,11 +2360,11 @@ Jump_0F0_55B6:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_4CA0_Case07
+; entry 11 of the `rst $00` table in RunLinkSession8Exchange_ObjectSceneThenSave
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSaveStep, wSaveRecordIndex
 ; points at: wBankF0BlockCB, wTextBuf0, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSaveStepAndSaveRecordIndex::
+RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex::
 Jump_0F0_55DC:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0BlockCB
@@ -2387,19 +2387,19 @@ RunLinkSession8Exchange_Case01_Sub01_Case08::
 Jump_0F0_55FB:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5_Case07
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSpriteSlotsAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 10 of the `rst $00` table in Func_0F0_4CA0_Case08
 ; no direct call (reached through a table, a jump or a vector)
@@ -2453,23 +2453,23 @@ RunLinkSession8Exchange_Case01_Sub01_Case09::
 Jump_0F0_565E:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5_Case07
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5_Case07
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_Case07
     dw RunLinkSession8Exchange_Case01_Sub01_Case09_StepObjectCB9AUpToE0
     dw RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 14 of the `rst $00` table in Func_0F0_4CA0_Case09
 ; no direct call (reached through a table, a jump or a vector)
@@ -2555,54 +2555,54 @@ Jump_0F0_56D9:: ; address name
     ld [wSaveRecordIndex], a
     ret
 
-; entry 10 of the `rst $00` table in Func_0F0_4CA0
+; by wScreenSubStep: the steps of RunLinkSession8Exchange_ObjectSceneThenSave in another order
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A::
+RunLinkSession8Exchange_ObjectScene::
 Jump_0F0_56F8:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_RunFieldCommandTemp0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetSpriteSlotsPlus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_QueueSoundEffect
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteSpriteSlots
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndSpriteSlotsEtc
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1E
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_CopyRectTo20ByteRows_BankF0
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_WaitScreenByteEE
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_GameMode6_Update
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0
+    dw RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7
+    dw RunLinkSession8Exchange_ObjectScene_QueueSoundEffect
+    dw RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_WriteObject2AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_WriteObject2AndSpriteSlotsEtc
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0
+    dw RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0
+    dw RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20
+    dw RunLinkSession8Exchange_ObjectScene_GameMode6_Update
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
-; entry 32 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 32 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteEE, wScreenSubStep
 ; writes: wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_WaitScreenByteEE::
+RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20::
 Jump_0F0_5742:: ; address name
     ld a, [wScreenByteEE]
     and a, a
@@ -2613,11 +2613,11 @@ Jump_0F0_5742:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 31 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 31 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep, wBattleScene, wSpriteSlotCount, wNameEntryState, wNameEntrySubState, wScreenByteEE
-RunLinkSession8Exchange_Case01_Sub01_Case0A_CopyRectTo20ByteRows_BankF0::
+RunLinkSession8Exchange_ObjectScene_CopyRectTo20ByteRows_BankF0::
 Jump_0F0_5752:: ; address name
     ld de, TileRect_F0_68E6
     ld hl, wWindowTileBuffer + $64
@@ -2636,12 +2636,12 @@ Jump_0F0_5752:: ; address name
     ld [wScreenByteEE], a
     ret
 
-; entry 33 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 33 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wScreenStep, wScreenSubStep, wLinkByteE8, wLinkByteE9, wLinkByteEA, wModeChangeRequest
 ; writes: wScreenState, wScreenStep, wScreenSubStep, wLinkByteE8, wLinkByteE9, wLinkByteEA, wModeChangeRequest, wGameMode, ...
 ; points at: wGM2TimerFrames
-RunLinkSession8Exchange_Case01_Sub01_Case0A_GameMode6_Update::
+RunLinkSession8Exchange_ObjectScene_GameMode6_Update::
 Jump_0F0_5779:: ; address name
     ld a, [wScreenState]
     ld l, a
@@ -2700,11 +2700,11 @@ Jump_0F0_5779:: ; address name
     ld [wSaveRecordIndex], a
     ret
 
-; entry 8 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 8 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, hTemp0, wObject5, wScreenCounter, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_RunFieldCommandTemp0::
+RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0::
 Jump_0F0_57F0:: ; address name
     ld a, [wSpriteSlots + $D]
     res 1, a
@@ -2739,11 +2739,11 @@ Jump_0F0_57F0:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 9 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 9 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_SetSpriteSlotsPlus7::
+RunLinkSession8Exchange_ObjectScene_SetSpriteSlotsPlus7::
 Jump_0F0_583B:: ; address name
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -2752,11 +2752,11 @@ Jump_0F0_583B:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 15 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 15 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F::
+RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F::
 Jump_0F0_5848:: ; address name
     ld a, $03
     ld [wObject2 + $7], a
@@ -2765,11 +2765,11 @@ Jump_0F0_5848:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 17 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 17 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7::
+RunLinkSession8Exchange_ObjectScene_SetObject2Plus7::
 Jump_0F0_5855:: ; address name
     ld a, $01
     ld [wObject2 + $7], a
@@ -2778,11 +2778,11 @@ Jump_0F0_5855:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 26 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 26 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2, wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndScreenSubStep::
+RunLinkSession8Exchange_ObjectScene_WriteObject2AndScreenSubStep::
 Jump_0F0_5862:: ; address name
     ld a, [wObject2 + $D]
     res 1, a
@@ -2842,11 +2842,11 @@ Func_0F0_5888:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 10 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wSpriteSlotCount, wScreenSubStep
 ; writes: wScreenCounter, wObject5, wSpriteSlotCount, wScreenSubStep, wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_QueueSoundEffect::
+RunLinkSession8Exchange_ObjectScene_QueueSoundEffect::
 Jump_0F0_58CD:: ; address name
     ld a, [wScreenCounter]
     cp a, $BA
@@ -2874,10 +2874,10 @@ Jump_0F0_58CD:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 11 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteSpriteSlots::
+RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames::
 Jump_0F0_58FE:: ; address name
     ld de, wObject1 + $C
     call StepScreenStepOffsetTableEvery4Frames
@@ -2885,11 +2885,11 @@ Jump_0F0_58FE:: ; address name
     ld [wSpriteSlots + $7], a
     ret
 
-; entry 28 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 28 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject2, wSpriteSlots, wScreenSubStep
 ; writes: wObject2, wSpriteSlots, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteObject2AndSpriteSlotsEtc::
+RunLinkSession8Exchange_ObjectScene_WriteObject2AndSpriteSlotsEtc::
 Jump_0F0_590A:: ; address name
     ld a, [wObject2 + $D]
     res 1, a
@@ -2914,11 +2914,11 @@ Jump_0F0_590A:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 30 of the `rst $00` table in Func_0F0_4CA0_Case0A
+; entry 30 of the `rst $00` table in RunLinkSession8Exchange_ObjectScene
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hSpriteWindowClipMode, wLinkByteE8, wLinkByteE9, wLinkByteEA, wLinkByteEB
 ; points at: wBankF0ByteA8, wTextBuf1, wScreenSubStep
-RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1E::
+RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0::
 Jump_0F0_593A:: ; address name
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wBankF0ByteA8
@@ -2947,38 +2947,38 @@ RunLinkSession8Exchange_Case01_Sub01_Case0B::
 Jump_0F0_5967:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_SetObject5
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_RunFieldCommandTemp0
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_SetObject1Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_QueueSoundEffect
+    dw RunLinkSession8Exchange_ObjectScene_QueueSoundEffect
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7_Case0F
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0A_SetObject2Plus7
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7_Case0F
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectScene_SetObject2Plus7
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteObject2AndScreenSubStep
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_WriteSpriteSlotsAndObject1Etc
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_WriteScreenCounterAndScreenSubStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E
-    dw RunLinkSession8Exchange_Case01_Sub01_Case07_RunSaveGameSteps
+    dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; entry 8 of the `rst $00` table in Func_0F0_4CA0_Case0B
 ; no direct call (reached through a table, a jump or a vector)
@@ -3212,7 +3212,7 @@ Jump_0F0_5AF4:: ; address name
     ret
 
 ; every fourth frame adds Data_0F0_5B39[wD781] to [DE] and advances wD781; the $80 end mark advances wD782 and resets (E-0124)
-; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Case0A_WriteSpriteSlots, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B)
+; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_StepScreenStepOffsetTableEvery4Frames, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case0B)
 ; reads: wScreenCounter, wScreenStep, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep, wScreenStep
 ; points at: wScreenStep
@@ -3253,7 +3253,7 @@ Data_0F0_5B39:: ; address name
     db $FD, $FD, $FE, $00, $01, $01, $03, $03, $80
 
 ; copies bytes from HL to DE until a $F0 or B bytes, then writes $F0; HL and DE advance (E-0078)
-; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
+; 4 call sites from 4 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
 CopyStringMaxBToDE::
 Func_0F0_5B42:: ; address name
     ld a, [hl+]
@@ -4237,7 +4237,7 @@ Func_0F0_6214:: ; address name
     ret
 
 ; clears the default window, wC8CB = 1, wC8CC = 0, hFFB9 = 2, then repeatedly far-calls Func_002_69D0 until wC8CB & 3 = 0 (E-0122)
-; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Case07_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case0A_WaitScreenByteEE, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession8Exchange_ObjectSceneThenSave_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case08_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_Case01_Sub01_Case09_WriteSaveStepAndSaveRecordIndex, RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0_Case20, ...)
 ; reads: wTextWindowState
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 RunTextUntilTextWindowStateDone_BankF0::
@@ -6668,7 +6668,7 @@ Func_0F0_7245:: ; address name
     ret
 
 ; wCEC2 += 1 up to $0F; when wCEC1 is set, runs Func_0F0_72C8 if a random value is below 100 - 5 * wCEC2; then wCEC1 = wD7F1 (E-0124)
-; 1 call site from 1 routine (e.g. PauseMenu_State4_Sub02_Case02_WriteArg1AndCounterPtr0LoEtc)
+; 1 call site from 1 routine (e.g. PauseMenu_State4_GiftMenu_Case02_WriteArg1AndCounterPtr0LoEtc)
 ; reads: wRollCounter, wRollState, wArg1
 ; writes: wRollCounter, wRollState
 RollCounterChanceAndRunEvent::
@@ -8359,7 +8359,7 @@ Func_0F0_7C81:: ; address name
     ret
 
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1] (Data_0F0_4036 or Data_008_4038) from bank 8 to HL (E-0125)
-; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_Case01_Sub01_Case0A_Case1E, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
+; 2 call sites from 2 routines (e.g. RunLinkSession8Exchange_ObjectScene_RunTextUntilTextWindowStateDone_BankF0, RunLinkSession8Exchange_Case01_Sub01_Case0B_Case1E)
 CopyNameStringFromBank08Database::
 Func_0F0_7C96:: ; address name
     push de

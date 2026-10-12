@@ -335,7 +335,7 @@ Func_00D_45D1:: ; address name
     ld a, [wScreenState]
     rst $00
     dw EggServiceMenu_CopyBytesDEToHL_Bank0D
-    dw EggServiceMenu_Case01
+    dw EggServiceMenu_DrawPrice
     dw EggServiceMenu_HandleThreeOptionMenuInput_15
     dw EggServiceMenu_ListRecordsInUseWithByte6ESet
     dw EggServiceMenu_Return
@@ -349,7 +349,7 @@ Func_00D_45D1:: ; address name
     dw EggServiceMenu_Return_Case06
     dw EggServiceMenu_SwapMonstersMenu
     dw EggServiceMenu_Return_Case06
-    dw EggServiceMenu_Case0F
+    dw EggServiceMenu_DrawListAndPrice
 
 ; entry 6 of the `rst $00` table in EggServiceMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -398,19 +398,19 @@ Jump_00D_45F6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu
+; by wScreenStep: two rectangles and a 24-bit number (Number24ToPackedBCD)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Case01::
+EggServiceMenu_DrawPrice::
 Jump_00D_4635:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw DrawPair4F81And4F9FAndStep
-    dw EggServiceMenu_Case01_Number24ToPackedBCD
-    dw EggServiceMenu_Case01_CopyRectTo20ByteRows_Bank0D
+    dw EggServiceMenu_DrawPrice_Number24ToPackedBCD
+    dw EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D
 
 ; runs Func_00D_4F3D for Data_00D_4F81 and Data_00D_4F9F, then wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Case0F_CopyGlyphTileListFromBank1F)
+; 1 call site from 1 routine (e.g. EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawPair4F81And4F9FAndStep::
@@ -423,12 +423,12 @@ Func_00D_463F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Case01
+; entry 1 of the `rst $00` table in EggServiceMenu_DrawPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wScreenStep
 ; writes: wDigits, wScreenStep
 ; points at: wArg3
-EggServiceMenu_Case01_Number24ToPackedBCD::
+EggServiceMenu_DrawPrice_Number24ToPackedBCD::
 Jump_00D_4650:: ; address name
     ld de, TileRect_0D_4FBD
     ld hl, wWindowTileBuffer + $70
@@ -460,11 +460,11 @@ Jump_00D_4650:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Case01
+; entry 2 of the `rst $00` table in EggServiceMenu_DrawPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-EggServiceMenu_Case01_CopyRectTo20ByteRows_Bank0D::
+EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_4692:: ; address name
     ld de, TileRect_0D_4FD5
     ld hl, wWindowTileBuffer + $64
@@ -858,7 +858,7 @@ Jump_00D_4869:: ; address name
     ret
 
 ; copies box Data_00D_5022 to wC3BB, runs Func_01E_71E1, draws the page-of-pages indicator when wD7B0 >= 2, and wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Case0F_DrawBox5022WithPageIndicator)
+; 1 call site from 1 routine (e.g. EggServiceMenu_DrawListAndPrice_DrawBox5022WithPageIndicator)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 DrawBox5022WithPageIndicator::
@@ -1275,29 +1275,29 @@ Jump_00D_4B41:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 15 of the `rst $00` table in EggServiceMenu
+; by wScreenStep: decompresses graphics, draws the record list page (species names, marks) and a 24-bit number (Number24ToPackedBCD)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Case0F::
+EggServiceMenu_DrawListAndPrice::
 Jump_00D_4B5D:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Case0F_DecompressToVRAM
-    dw EggServiceMenu_Case0F_CopyGlyphTileListFromBank1F
-    dw EggServiceMenu_Case0F_FillTilesBxC
-    dw EggServiceMenu_Case0F_DrawBox5022WithPageIndicator
-    dw EggServiceMenu_Case0F_DrawRecordListPageSpeciesNames
-    dw EggServiceMenu_Case0F_DrawRecordListPageMarks
-    dw EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D
-    dw EggServiceMenu_Case0F_Number24ToPackedBCD
-    dw EggServiceMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics
+    dw EggServiceMenu_DrawListAndPrice_DecompressToVRAM
+    dw EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F
+    dw EggServiceMenu_DrawListAndPrice_FillTilesBxC
+    dw EggServiceMenu_DrawListAndPrice_DrawBox5022WithPageIndicator
+    dw EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames
+    dw EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks
+    dw EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D
+    dw EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD
+    dw EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 0 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
 ; points at: wBGPaletteBuffer
-EggServiceMenu_Case0F_DecompressToVRAM::
+EggServiceMenu_DrawListAndPrice_DecompressToVRAM::
 Jump_00D_4B73:: ; address name
     ld hl, vTiles2
     ld de, Map0ATileset
@@ -1315,9 +1315,9 @@ Jump_00D_4B73:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 1 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Case0F_CopyGlyphTileListFromBank1F::
+EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F::
 Jump_00D_4B98:: ; address name
     ld hl, TileCopyDestList_0D_509F
     ld de, TileCopySrcList_0D_50AF
@@ -1325,12 +1325,12 @@ Jump_00D_4B98:: ; address name
     call DrawPair4F81And4F9FAndStep
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 2 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-EggServiceMenu_Case0F_FillTilesBxC::
+EggServiceMenu_DrawListAndPrice_FillTilesBxC::
 Jump_00D_4BA5:: ; address name
     ld hl, vTiles1 + $400
     ld bc, $0301
@@ -1357,19 +1357,19 @@ Jump_00D_4BA5:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 3 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-EggServiceMenu_Case0F_DrawBox5022WithPageIndicator::
+EggServiceMenu_DrawListAndPrice_DrawBox5022WithPageIndicator::
 Jump_00D_4BDE:: ; address name
     call DrawBox5022WithPageIndicator
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 4 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-EggServiceMenu_Case0F_DrawRecordListPageSpeciesNames::
+EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames::
 Jump_00D_4BE1:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -1379,11 +1379,11 @@ Jump_00D_4BE1:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 5 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-EggServiceMenu_Case0F_DrawRecordListPageMarks::
+EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks::
 Jump_00D_4BF4:: ; address name
     ld de, Tiles2Plus420Tiles_1F_4990
     ld hl, vTiles1 + $4E0
@@ -1399,11 +1399,11 @@ Jump_00D_4BF4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 6 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D::
+EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D::
 Jump_00D_4C17:: ; address name
     ld a, [wListCursor]
     ld b, $BC
@@ -1418,12 +1418,12 @@ Jump_00D_4C17:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 7 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteBD, wScreenStep
 ; writes: wDigits, wStringIndex, wStringCategory, wScreenStep
 ; points at: wArg4, wTextBuf0, wTextWindowTileLo
-EggServiceMenu_Case0F_Number24ToPackedBCD::
+EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD::
 Jump_00D_4C36:: ; address name
     ld a, [wScreenByteBD]
     and a, a
@@ -1490,12 +1490,12 @@ Jump_00D_4C36:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in EggServiceMenu_Case0F
+; entry 8 of the `rst $00` table in EggServiceMenu_DrawListAndPrice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wScriptCommandType, wScriptStartRequest
 ; points at: wTextWindowTileLo
-EggServiceMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics::
+EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics::
 Jump_00D_4C9C:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -1534,7 +1534,7 @@ Jump_00D_4C9C:: ; address name
     ret
 
 ; only called from routines of EggServiceMenu (E-0098)
-; 4 call sites from 3 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_Case0F_Number24ToPackedBCD)
+; 4 call sites from 3 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD)
 ; reads: wArg5, wArg6, hTemp0
 ; writes: rRAMG2, rRAMB
 EggServiceMenu_SetArg5ToListEntriesCell4::
@@ -1694,7 +1694,7 @@ Data_00D_4DC7:: ; address name
     db $2D, $01, $6D, $01
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 21 call sites from 21 routines (e.g. EggServiceMenu_Case01_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_Case01_Number24ToPackedBCD, DrawBox5022WithPageIndicator, EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D, ...)
+; 21 call sites from 21 routines (e.g. EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_DrawPrice_Number24ToPackedBCD, DrawBox5022WithPageIndicator, EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank0D::
@@ -1752,7 +1752,7 @@ Func_00D_4DCB:: ; address name
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
-; 30 call sites from 27 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, EggServiceMenu_Case01_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics, ...)
+; 30 call sites from 27 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics, ...)
 ; reads: wTextCursorLo, wTextCursorHi, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -1811,7 +1811,7 @@ Func_00D_4E05:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 35 call sites from 32 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D, EggServiceMenu_Case01_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, ...)
+; 35 call sites from 32 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, RenameMenu_Case04_Sub01_BGMapAddressAtScroll_Bank0D, EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D, EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank0D::
 Func_00D_4E5A:: ; address name
@@ -1867,7 +1867,7 @@ Func_00D_4E84:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 9 call sites from 9 routines (e.g. EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D, EraseCEntriesOfWordTable_Bank0D, KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, ...)
+; 9 call sites from 9 routines (e.g. EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D, EraseCEntriesOfWordTable_Bank0D, KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, ...)
 StoreBAtWordTableEntry_Bank0D::
 Func_00D_4E96:: ; address name
     push bc
@@ -1927,7 +1927,7 @@ Func_00D_4EC7:: ; address name
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
-; 4 call sites from 4 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, RenameMenu_Case03_CopyScreenBufferRectWithAttrs_0D, KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10, RunFunc4ED5At0278AndStep_0D)
+; 4 call sites from 4 routines (e.g. MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D, RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D, KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10, RunFunc4ED5At0278AndStep_0D)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_0D::
@@ -2013,7 +2013,7 @@ Func_00D_4F29:: ; address name
     ret
 
 ; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
-; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, EggServiceMenu_Case0F_CopyGlyphTileListFromBank1F, NpcBreedMenu_Case11_CopyGlyphTileListFromBank1F)
+; 3 call sites from 3 routines (e.g. DrawPair4F81And4F9FAndStep, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F, NpcBreedMenu_Case11_CopyGlyphTileListFromBank1F)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
 CopyGlyphTileListFromBank1F::
@@ -2114,7 +2114,7 @@ Data_00D_5022:: ; address name
     db $B6, $C3, $C0, $C1, $C2, $C7, $C8, $C9, $CA, $CB, $FC, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; address loaded by EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_Case0F_StoreBAtWordTableEntry_Bank0D
+; address loaded by EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D
 EggServiceMenu_ChooseAndPay_UpdatePagedListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00D_5097:: ; address name
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
@@ -2215,12 +2215,12 @@ Func_00D_5159:: ; address name
     ld a, [wScreenState]
     rst $00
     dw RenameMenu_ToEggServiceMenu
-    dw RenameMenu_Case01
+    dw RenameMenu_DrawFrame
     dw RenameMenu_UpdateTwoChoiceCursor_Bank1D
-    dw RenameMenu_Case03
+    dw RenameMenu_DrawNameList
     dw RenameMenu_ToRenameMenu_Case04_WriteTwoChoiceCursorAndScreenStateEtc
     dw RenameMenu_LoadSRAMRecordByte
-    dw RenameMenu_Case06
+    dw RenameMenu_PickMonster
 
 ; entry 0 of the `rst $00` table in RenameMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -2229,18 +2229,18 @@ Jump_00D_516B:: ; address name
     farcall EggServiceMenu
     ret
 
-; entry 1 of the `rst $00` table in RenameMenu
+; by wScreenStep: loads four frame tiles and copies a rectangle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RenameMenu_Case01::
+RenameMenu_DrawFrame::
 Jump_00D_5172:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw LoadFourFrameTilesAndStep
-    dw RenameMenu_Case01_CopyRectTo20ByteRows_Bank0D
+    dw RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D
 
 ; copies four tiles from bank $1F to vTiles1 + $700-$730, then wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. RenameMenu_Case06_LoadFourFrameTilesAndStep)
+; 1 call site from 1 routine (e.g. RenameMenu_PickMonster_LoadFourFrameTilesAndStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 LoadFourFrameTilesAndStep::
@@ -2270,11 +2270,11 @@ Func_00D_517A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RenameMenu_Case01
+; entry 1 of the `rst $00` table in RenameMenu_DrawFrame
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScreenState
-RenameMenu_Case01_CopyRectTo20ByteRows_Bank0D::
+RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_51B6:: ; address name
     ld de, TileRect_0D_550A
     ld hl, wWindowTileBuffer + $112
@@ -2334,22 +2334,22 @@ Jump_00D_51E2:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in RenameMenu
+; by wScreenStep: a rectangle, a cleared string window and the record list name tiles
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RenameMenu_Case03::
+RenameMenu_DrawNameList::
 Jump_00D_5221:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RenameMenu_Case03_CopyScreenBufferRectWithAttrs_0D
+    dw RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D
     dw ClearStringWindowAt1500AndIncScreenStep
-    dw RenameMenu_Case03_LoadRecordListNameTiles
+    dw RenameMenu_DrawNameList_LoadRecordListNameTiles
 
-; entry 0 of the `rst $00` table in RenameMenu_Case03
+; entry 0 of the `rst $00` table in RenameMenu_DrawNameList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-RenameMenu_Case03_CopyScreenBufferRectWithAttrs_0D::
+RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D::
 Jump_00D_522B:: ; address name
     ld de, TileRect_0D_552E
     ld hl, wWindowTileBuffer + $64
@@ -2373,7 +2373,7 @@ Jump_00D_522B:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles1 + $500 and size word $0F01, then FillTilesFromRequest (clears it); then wD781 += 1 (E-0117)
-; 1 call site from 1 routine (e.g. RenameMenu_Case06_LoadFourFrameTilesAndStep)
+; 1 call site from 1 routine (e.g. RenameMenu_PickMonster_LoadFourFrameTilesAndStep)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearStringWindowAt1500AndIncScreenStep::
@@ -2394,11 +2394,11 @@ Func_00D_525F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in RenameMenu_Case03
+; entry 2 of the `rst $00` table in RenameMenu_DrawNameList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-RenameMenu_Case03_LoadRecordListNameTiles::
+RenameMenu_DrawNameList_LoadRecordListNameTiles::
 Jump_00D_5280:: ; address name
     call LoadRecordListNameTiles
     ld de, TileRect_0D_5576
@@ -2476,25 +2476,25 @@ Jump_00D_52AB:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 6 of the `rst $00` table in RenameMenu
+; by wScreenStep: frame tiles, the record and 'Pick the monster to rename.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-RenameMenu_Case06::
+RenameMenu_PickMonster::
 Jump_00D_530F:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RenameMenu_Case06_DecompressToVRAM
-    dw RenameMenu_Case06_LoadFourFrameTilesAndStep
-    dw RenameMenu_Case06_SRAMRecordAddress
-    dw RenameMenu_Case06_ShowPickTheMonsterTo
-    dw RenameMenu_Case06_LoadPlayerAndFollowerSpriteGraphics
+    dw RenameMenu_PickMonster_DecompressToVRAM
+    dw RenameMenu_PickMonster_LoadFourFrameTilesAndStep
+    dw RenameMenu_PickMonster_SRAMRecordAddress
+    dw RenameMenu_PickMonster_ShowPickTheMonsterTo
+    dw RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics
 
-; entry 0 of the `rst $00` table in RenameMenu_Case06
+; entry 0 of the `rst $00` table in RenameMenu_PickMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
 ; points at: wBGPaletteBuffer
-RenameMenu_Case06_DecompressToVRAM::
+RenameMenu_PickMonster_DecompressToVRAM::
 Jump_00D_531D:: ; address name
     ld hl, vTiles2
     ld de, Map13Tileset
@@ -2512,10 +2512,10 @@ Jump_00D_531D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in RenameMenu_Case06
+; entry 1 of the `rst $00` table in RenameMenu_PickMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-RenameMenu_Case06_LoadFourFrameTilesAndStep::
+RenameMenu_PickMonster_LoadFourFrameTilesAndStep::
 Jump_00D_5342:: ; address name
     call LoadFourFrameTilesAndStep
     call ClearStringWindowAt1500AndIncScreenStep
@@ -2523,12 +2523,12 @@ Jump_00D_5342:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in RenameMenu_Case06
+; entry 2 of the `rst $00` table in RenameMenu_PickMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: rRAMG2, rRAMB, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ; points at: wPartyList, wNameGlyphBuf
-RenameMenu_Case06_SRAMRecordAddress::
+RenameMenu_PickMonster_SRAMRecordAddress::
 Jump_00D_534E:: ; address name
     ld a, [wGridCursorX]
     ld hl, wPartyList
@@ -2578,11 +2578,11 @@ Jump_00D_534E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in RenameMenu_Case06
+; entry 3 of the `rst $00` table in RenameMenu_PickMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wScreenStep
-RenameMenu_Case06_ShowPickTheMonsterTo::
+RenameMenu_PickMonster_ShowPickTheMonsterTo::
 Jump_00D_53A4:: ; address name
     xor a, a
     ld [wStringCategory], a
@@ -2594,10 +2594,10 @@ Jump_00D_53A4:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in RenameMenu_Case06
+; entry 4 of the `rst $00` table in RenameMenu_PickMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest, hSpriteHideTile, wScreenSubStep, wScreenStep, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, ...
-RenameMenu_Case06_LoadPlayerAndFollowerSpriteGraphics::
+RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics::
 Jump_00D_53BB:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -2850,7 +2850,7 @@ Func_00D_55BE:: ; address name
     ld a, [wScreenState]
     rst $00
     dw KeyAppraisalMenu_CopyBytesDEToHL_Bank0D
-    dw KeyAppraisalMenu_Case01
+    dw KeyAppraisalMenu_DrawGoldBox
     dw KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D
     dw KeyAppraisalMenu_ChooseKey
 
@@ -2911,15 +2911,15 @@ Jump_00D_55CA:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in KeyAppraisalMenu
+; by wScreenStep: the gold box and a rectangle
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-KeyAppraisalMenu_Case01::
+KeyAppraisalMenu_DrawGoldBox::
 Jump_00D_5633:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw DrawGoldBoxAndStep
-    dw KeyAppraisalMenu_Case01_CopyRectTo20ByteRows_Bank0D
+    dw KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D
 
 ; copies box Data_00D_4FBD to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0124)
 ; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_Case10)
@@ -2958,11 +2958,11 @@ Func_00D_563B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in KeyAppraisalMenu_Case01
+; entry 1 of the `rst $00` table in KeyAppraisalMenu_DrawGoldBox
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScreenState
-KeyAppraisalMenu_Case01_CopyRectTo20ByteRows_Bank0D::
+KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_567D:: ; address name
     ld de, TileRect_0D_6189
     ld hl, wWindowTileBuffer + $112
@@ -4799,7 +4799,7 @@ Func_00D_6310:: ; address name
     dw MedalPrizeMenu_CopyBytesDEToHL_Bank0D
     dw MedalPrizeMenu_WriteTwoChoiceCursorAndScreenStateEtc
     dw MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc
-    dw MedalPrizeMenu_Case03
+    dw MedalPrizeMenu_DrawCountBox
     dw MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D
     dw MedalPrizeMenu_ChoosePrize
 
@@ -5076,22 +5076,22 @@ Jump_00D_643A:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 3 of the `rst $00` table in MedalPrizeMenu
+; by wScreenStep: copies tiles and draws the count box (DrawArenaWinsLoCountBoxAndStep)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-MedalPrizeMenu_Case03::
+MedalPrizeMenu_DrawCountBox::
 Jump_00D_649C:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw MedalPrizeMenu_Case03_CopyFromBankWaitVRAM
+    dw MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM
     dw DrawArenaWinsLoCountBoxAndStep
-    dw MedalPrizeMenu_Case03_CopyRectTo20ByteRows_Bank0D
+    dw MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D
 
-; entry 0 of the `rst $00` table in MedalPrizeMenu_Case03
+; entry 0 of the `rst $00` table in MedalPrizeMenu_DrawCountBox
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-MedalPrizeMenu_Case03_CopyFromBankWaitVRAM::
+MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM::
 Jump_00D_64A6:: ; address name
     ld de, Tiles2Plus240Tiles_1F_4170
     ld hl, vTiles1 + $2D0
@@ -5168,11 +5168,11 @@ Func_00D_6509:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in MedalPrizeMenu_Case03
+; entry 2 of the `rst $00` table in MedalPrizeMenu_DrawCountBox
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScreenState
-MedalPrizeMenu_Case03_CopyRectTo20ByteRows_Bank0D::
+MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D::
 Jump_00D_6541:: ; address name
     ld de, TileRect_0D_6189
     ld hl, wWindowTileBuffer + $112

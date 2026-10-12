@@ -1682,15 +1682,15 @@ Func_03A_4C26:: ; address name
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId
     dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunEffectRoutineEffectEvery5Frames_Case03
-    dw RunEffectRoutineEffectEvery5Frames_Case04
-    dw RunEffectRoutineEffectEvery5Frames_Case05
-    dw RunEffectRoutineEffectEvery5Frames_Case06
-    dw RunEffectRoutineEffectEvery5Frames_Case07
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
+    dw RunEffectRoutineEffectEvery5Frames_FlashOnce
+    dw RunEffectRoutineEffectEvery5Frames_Delay
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice
     dw RunEffectRoutineEffectEvery5Frames_RunEffectStep
     dw RunEffectRoutineEffectEvery5Frames_ReadEffectCounter
-    dw RunEffectRoutineEffectEvery5Frames_Case0A
-    dw RunEffectRoutineEffectEvery5Frames_Case0B
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
     dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_Case0D
 
@@ -1847,7 +1847,7 @@ Func_03A_4CF9:: ; address name
     ret
 
 ; copies rows of wD805 bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
-; 4 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep)
+; 4 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01, LightenDMGPaletteOneStep_EffectPositionIndexForActor)
 ; reads: wEffectStep
 CopyVRAMRectToBuffer::
 Func_03A_4D2B:: ; address name
@@ -1877,7 +1877,7 @@ Func_03A_4D2B:: ; address name
     jr CopyVRAMRectToBuffer
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 8 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep)
+; 8 call sites from 4 routines (e.g. RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01, LightenDMGPaletteOneStep_EffectPositionIndexForActor)
 ReadWordTableEntry_Bank3A::
 Func_03A_4D47:: ; address name
     add a, a
@@ -1889,7 +1889,7 @@ Func_03A_4D47:: ; address name
     deref_hl
     ret
 
-; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01
+; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget, RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Case01, LightenDMGPaletteOneStep_EffectPositionIndexForActor, LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01
 RunEffectRoutineEffectEvery5Frames_Table2_EffectPositionIndexForTarget_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_03A_4D52:: ; address name
     db $E7, $00, $E4, $00, $EA, $00, $E1, $00, $ED, $00
@@ -1947,23 +1947,23 @@ Data_03A_4DD0:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
     db $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
 
-; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; steps that write hScrollY/hScrollX, then the next effect id
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case03::
+RunEffectRoutineEffectEvery5Frames_ScrollShake::
 Jump_03A_4DF4:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case03_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_Case03_WriteScrollYAndScrollX_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case03_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_Case03_WriteEffectIdAndScrollYEtc
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_Case01
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case03
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ScrollShake
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case03_WriteScrollYAndScrollX::
+RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX::
 Jump_03A_4E00:: ; address name
     ld a, $02
     ldh [hScrollY], a
@@ -1987,11 +1987,11 @@ Func_03A_4E0D:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case03
+; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ScrollShake
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollY, hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case03_WriteScrollYAndScrollX_Case01::
+RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_Case01::
 Jump_03A_4E1A:: ; address name
     xor a, a
     ldh [hScrollY], a
@@ -2001,10 +2001,10 @@ Jump_03A_4E1A:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case03
+; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ScrollShake
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, hScrollY, hScrollX, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case03_WriteEffectIdAndScrollYEtc::
+RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc::
 Jump_03A_4E25:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2016,25 +2016,25 @@ Jump_03A_4E25:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; entry 4 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; alternates rBGP writes with a palette pattern that moves the effect sprite right
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case04::
+RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite::
 Jump_03A_4E35:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_WriteEffectIdAndEffectSpriteX
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case04
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP::
+RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP::
 Jump_03A_4E47:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2047,7 +2047,7 @@ Jump_03A_4E47:: ; address name
     ret
 
 ; wC5E9-wC5EB = $D2, $D2, $E2; wD804 += 1 (E-0074)
-; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_Case04_WriteEffectIdAndEffectSpriteX)
+; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
 SetDMGPaletteBGPPatternAndIncEffectSpriteX::
 Func_03A_4E57:: ; address name
@@ -2061,10 +2061,10 @@ Func_03A_4E57:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case04
+; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case04_WriteEffectIdAndEffectSpriteX::
+RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06::
 Jump_03A_4E67:: ; address name
     call SetDMGPaletteBGPPatternAndIncEffectSpriteX
     ld a, $FF
@@ -2073,24 +2073,24 @@ Jump_03A_4E67:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; entry 5 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; sets the effect counter, writes rBGP once, then the next effect id
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05::
+RunEffectRoutineEffectEvery5Frames_FlashOnce::
 Jump_03A_4E74:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case05_WriteEffectByte06AndEffectCounter
-    dw RunEffectRoutineEffectEvery5Frames_Case05_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case05_SetDMGPaletteBGP
-    dw RunEffectRoutineEffectEvery5Frames_Case05_SetEffectId
+    dw RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter
+    dw RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetEffectId
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashOnce
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectCounter
 ; writes: wEffectByte06, wEffectCounter
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_WriteEffectByte06AndEffectCounter::
+RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter::
 Jump_03A_4E80:: ; address name
     call RunEffectRoutineEffectEvery5Frames_Shared01
     ld a, [wEffectCounter]
@@ -2104,12 +2104,12 @@ Jump_03A_4E80:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
+; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashOnce
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectStep
 ; writes: wEffectStep
 ; points at: wEffectStep, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_WriteEffectStep::
+RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectStep::
 Jump_03A_4E96:: ; address name
     ld hl, wEffectStep
     inc [hl]
@@ -2122,10 +2122,10 @@ Jump_03A_4E96:: ; address name
     ld [wEffectStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
+; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashOnce
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_SetDMGPaletteBGP::
+RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP::
 Jump_03A_4EA9:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2137,10 +2137,10 @@ Jump_03A_4EA9:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case05
+; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashOnce
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case05_SetEffectId::
+RunEffectRoutineEffectEvery5Frames_FlashOnce_SetEffectId::
 Jump_03A_4EB9:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2149,7 +2149,7 @@ Jump_03A_4EB9:: ; address name
     ret
 
 ; only called from routines of RunEffectRoutineEffectEvery5Frames (E-0098)
-; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_Case05_WriteEffectByte06AndEffectCounter, RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectByte06AndEffectCounter)
+; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter, RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter)
 ; points at: wEffectCounter, wDMGPaletteBGP
 RunEffectRoutineEffectEvery5Frames_Shared01::
 Func_03A_4EC3:: ; address name
@@ -2204,31 +2204,31 @@ Func_03A_4EC3:: ; address name
     jr nz, .loop
     ret
 
-; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; twelve identical waiting steps, then the next effect id
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case06::
+RunEffectRoutineEffectEvery5Frames_Delay::
 Jump_03A_4F06:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_Case00
-    dw RunEffectRoutineEffectEvery5Frames_Case06_SetEffectId
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_Case00
+    dw RunEffectRoutineEffectEvery5Frames_Delay_SetEffectId
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case06
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Delay
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case06_Case00::
+RunEffectRoutineEffectEvery5Frames_Delay_Case00::
 Jump_03A_4F24:: ; address name
     ld hl, wDMGPaletteBGP
     ld a, [hl]
@@ -2244,10 +2244,10 @@ Jump_03A_4F24:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case06
+; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Delay
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case06_SetEffectId::
+RunEffectRoutineEffectEvery5Frames_Delay_SetEffectId::
 Jump_03A_4F38:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2255,27 +2255,27 @@ Jump_03A_4F38:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; entry 7 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; the FlashOnce steps twice, then the next effect id
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07::
+RunEffectRoutineEffectEvery5Frames_FlashTwice::
 Jump_03A_4F42:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectByte06AndEffectCounter
-    dw RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP
-    dw RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectByte06AndEffectCounter
-    dw RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP
-    dw RunEffectRoutineEffectEvery5Frames_Case07_SetEffectId
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashTwice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectCounter
 ; writes: wEffectByte06, wEffectCounter
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectByte06AndEffectCounter::
+RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter::
 Jump_03A_4F54:: ; address name
     call RunEffectRoutineEffectEvery5Frames_Shared01
     ld a, [wEffectCounter]
@@ -2289,12 +2289,12 @@ Jump_03A_4F54:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
+; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashTwice
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectStep
 ; writes: wEffectStep
 ; points at: wEffectStep, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_WriteEffectStep::
+RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep::
 Jump_03A_4F6A:: ; address name
     ld hl, wEffectStep
     inc [hl]
@@ -2307,10 +2307,10 @@ Jump_03A_4F6A:: ; address name
     ld [wEffectStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
+; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashTwice
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_SetDMGPaletteBGP::
+RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP::
 Jump_03A_4F7D:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2322,10 +2322,10 @@ Jump_03A_4F7D:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case07
+; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashTwice
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case07_SetEffectId::
+RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId::
 Jump_03A_4F8D:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2528,26 +2528,26 @@ Jump_03A_507A:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; by wEffectStep: sets the effect counter, writes the DMG palette rBGP and picks the effect position
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A::
+RunEffectRoutineEffectEvery5Frames_FlashPalette::
 Jump_03A_508A:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_WriteEffectByte06AndEffectCounter
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_SetDMGPaletteBGP
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_SetEffectId
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetEffectId
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashPalette
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectCounter
 ; writes: wEffectByte06, wEffectCounter
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_WriteEffectByte06AndEffectCounter::
+RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep::
 Jump_03A_5096:: ; address name
-    call RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01
+    call LightenDMGPaletteOneStep
     ld a, [wEffectCounter]
     cp a, $04
     ret c
@@ -2559,12 +2559,12 @@ Jump_03A_5096:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
+; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashPalette
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectStep
 ; writes: wEffectStep
 ; points at: wEffectStep, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_WriteEffectStep::
+RunEffectRoutineEffectEvery5Frames_FlashPalette_WriteEffectStep::
 Jump_03A_50AC:: ; address name
     ld hl, wEffectStep
     inc [hl]
@@ -2577,10 +2577,10 @@ Jump_03A_50AC:: ; address name
     ld [wEffectStep], a
     ret
 
-; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
+; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashPalette
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wDMGPaletteBGP, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_SetDMGPaletteBGP::
+RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP::
 Jump_03A_50BF:: ; address name
     ld hl, wDMGPaletteBGP
     ld [hl], $D2
@@ -2592,10 +2592,10 @@ Jump_03A_50BF:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0A
+; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_FlashPalette
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_SetEffectId::
+RunEffectRoutineEffectEvery5Frames_FlashPalette_SetEffectId::
 Jump_03A_50CF:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2603,10 +2603,10 @@ Jump_03A_50CF:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; only called from RunEffectRoutineEffectEvery5Frames_Case0A_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_Case0A_WriteEffectByte06AndEffectCounter)
+; increments wEffectCounter and lowers each 2-bit shade of wDMGPaletteBGP by one (not below 0): one step of a fade toward white
+; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep)
 ; points at: wEffectCounter, wDMGPaletteBGP
-RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01::
+LightenDMGPaletteOneStep::
 Func_03A_50D9:: ; address name
     ld hl, wEffectCounter
     inc [hl]
@@ -2655,30 +2655,30 @@ Func_03A_50D9:: ; address name
     jr nz, .loop
     ret
 
-; entry 11 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; as RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0B::
+RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2::
 Jump_03A_5114:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_Case04_WriteEffectIdAndEffectSpriteX
+    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_Case06
 
 ; a sequence of steps that only write hScrollX/hScrollY: a screen shake
 ; no direct call (reached through a table, a jump or a vector)
@@ -2855,36 +2855,36 @@ Jump_03A_51DF:: ; address name
     ld c, a
     ld a, [wBattleActor]
     cp a, $07
-    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    jr nc, LightenDMGPaletteOneStep_SetEffectId
     cp a, $03
-    jr z, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    jr z, LightenDMGPaletteOneStep_SetEffectId
     dec c
     jr nz, .cp_04
     cp a, $04
-    jr nc, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    jr nc, LightenDMGPaletteOneStep_SetEffectId
     jr .read_battle_actor
 
 .cp_04:
     cp a, $04
-    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    jr c, LightenDMGPaletteOneStep_SetEffectId
 
 .read_battle_actor:
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    jr c, LightenDMGPaletteOneStep_SetEffectId
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01
-    dw RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
+    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01
+    dw LightenDMGPaletteOneStep_SetEffectId
 
-; entry 0 of the `rst $00` table in Func_03A_50D9
+; entry 0 of the `rst $00` table in LightenDMGPaletteOneStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectStep
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep::
+LightenDMGPaletteOneStep_EffectPositionIndexForActor::
 Jump_03A_5215:: ; address name
     ld a, $06
     ld [wEffectStep], a
@@ -2904,12 +2904,12 @@ Jump_03A_5215:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_03A_50D9
+; entry 1 of the `rst $00` table in LightenDMGPaletteOneStep
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wEffectStep
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01::
+LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01::
 Jump_03A_523B:: ; address name
     ld a, $06
     ld [wEffectStep], a
@@ -2930,10 +2930,10 @@ Jump_03A_523B:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_03A_50D9
+; entry 4 of the `rst $00` table in LightenDMGPaletteOneStep
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wEffectId, wEffectSpriteX, wEffectStep
-RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_SetEffectId::
+LightenDMGPaletteOneStep_SetEffectId::
 Jump_03A_5264:: ; address name
     ld a, $FF
     ld [wEffectId], a
@@ -2944,7 +2944,7 @@ Jump_03A_5264:: ; address name
     ret
 
 ; A = a 0-4 position index from wD890 (side count) and the actor's slot (E-0124)
-; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep_Case01, RunEffectRoutineEffectEvery5Frames_Case0A_Case00_Sub01_WriteEffectStep)
+; 2 call sites from 2 routines (e.g. LightenDMGPaletteOneStep_EffectPositionIndexForActor_Case01, LightenDMGPaletteOneStep_EffectPositionIndexForActor)
 ; reads: wBattleFoeCount, wBattleActor
 EffectPositionIndexForActor::
 Func_03A_5272:: ; address name
@@ -7580,7 +7580,7 @@ Data_03A_6EA5:: ; address name
     db $D6 ; id 63
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
-; 22 call sites from 14 routines (e.g. RunCommandEntryResolveStep_AddAx9ToHL, RunBattleActions_StatusChecks_Case00_ShowBattleTextCategory0, RunBattleActions_StatusChecks_Case00_PickRandomActionWhenUncontrolled, ShowActorStatusRecoveryMessage, ...)
+; 22 call sites from 14 routines (e.g. RunCommandEntryResolveStep_AddAx9ToHL, RunBattleActions_StatusChecks_StartAction_ShowBattleTextCategory0, RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled, ShowActorStatusRecoveryMessage, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
@@ -8055,7 +8055,7 @@ Func_03A_7183:: ; address name
     ret
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
-; 66 call sites from 56 routines (e.g. RunBattleActions_StatusChecks_Case01_ShowBattleText, RunBattleActions_StatusChecks_Case06_ShowGWasShattered, RunBattleActions_StatusChecks_Case06_ShowSealPrayWasBroken, RunBattleActions_StatusChecks_Case09_ShowHeroDroppedDead, ...)
+; 66 call sites from 56 routines (e.g. RunBattleActions_StatusChecks_CheckAction_ShowBattleText, RunBattleActions_StatusChecks_ShatterChecks_ShowGWasShattered, RunBattleActions_StatusChecks_ShatterChecks_ShowSealPrayWasBroken, RunBattleActions_StatusChecks_DroppedDead_ShowHeroDroppedDead, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleText::
 Func_03A_7193:: ; address name
@@ -8653,7 +8653,7 @@ Func_03A_74FE:: ; address name
     ret
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
-; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, RunBattleActions_StatusChecks_Case01_QueuedActionMatches, RunBattleStep4_ResolveSkill_CheckSkillMPCost)
+; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3, RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches, RunBattleStep4_ResolveSkill_CheckSkillMPCost)
 ; reads: wBattleActionId, wBattleActor, wSavedActorSlot
 ; writes: wSavedActorSlot, wNameSlot, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wTextBuf2

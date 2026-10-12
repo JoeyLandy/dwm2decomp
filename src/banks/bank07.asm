@@ -3243,11 +3243,11 @@ Jump_007_6090:: ; address name
     rst $00
     dw GameMode5_Update_Case01_RunGameMode5Case01SubStates
     dw GameMode5_Update_Case01_SerialSendByte
-    dw GameMode5_Update_Case01_Case02
+    dw GameMode5_Update_SaveDataLost
     dw GameMode5_Update_Case01_SerialSendByte_Case03
     dw GameMode5_Update_Case01_ShowGameLinkIsNot
     dw GameMode5_Update_Case01_SerialSendByte_Case05
-    dw GameMode5_Update_Case01_Case06
+    dw GameMode5_Update_NewPlayerSetup
     dw GameMode5_Update_Case01_ShowGameLinkCannotBe
     dw GameMode5_Update_Case01_SerialSendByte_Case08
 
@@ -4057,23 +4057,23 @@ Func_007_65F1:: ; address name
     ld [hl], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode5_Update_Case01
+; by wLinkScreenSubState: 'Saved data has been lost.', then clears memory
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenSubState
-GameMode5_Update_Case01_Case02::
+GameMode5_Update_SaveDataLost::
 Jump_007_65FC:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw GameMode5_Update_Case01_Case02_ShowSavedDataHasBeen
-    dw GameMode5_Update_Case01_Case02_ReadSoundChannelSlots
-    dw GameMode5_Update_Case01_Case02_FillBytes
+    dw GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen
+    dw GameMode5_Update_SaveDataLost_ReadSoundChannelSlots
+    dw GameMode5_Update_SaveDataLost_FillBytes
 
-; entry 0 of the `rst $00` table in GameMode5_Update_Case01_Case02
+; entry 0 of the `rst $00` table in GameMode5_Update_SaveDataLost
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; writes: wStringCategory, wStringIndex
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case02_ShowSavedDataHasBeen::
+GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen::
 Jump_007_6606:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -4089,11 +4089,11 @@ Jump_007_6606:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in GameMode5_Update_Case01_Case02
+; entry 1 of the `rst $00` table in GameMode5_Update_SaveDataLost
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; points at: wSoundChannel1, wLinkScreenSubState
-GameMode5_Update_Case01_Case02_ReadSoundChannelSlots::
+GameMode5_Update_SaveDataLost_ReadSoundChannelSlots::
 Jump_007_6624:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -4104,12 +4104,12 @@ Jump_007_6624:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in GameMode5_Update_Case01_Case02
+; entry 2 of the `rst $00` table in GameMode5_Update_SaveDataLost
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: rRAMG, rRAMB, wLinkScreenSubState
 ; points at: sRecords, wScreenTileBuffer, wLinkScreenState
-GameMode5_Update_Case01_Case02_FillBytes::
+GameMode5_Update_SaveDataLost_FillBytes::
 Jump_007_6633:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4363,25 +4363,25 @@ Jump_007_681C:: ; address name
     ld [wLinkScreenSubState], a
     ret
 
-; entry 6 of the `rst $00` table in GameMode5_Update_Case01
+; by wLinkScreenSubState: fades, sets a flag, runs name entry, then InitGoldAndClearInventory
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenSubState
-GameMode5_Update_Case01_Case06::
+GameMode5_Update_NewPlayerSetup::
 Jump_007_683A:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw GameMode5_Update_Case01_Case06_ToStartPaletteFadeAndStep
-    dw GameMode5_Update_Case01_Case06_DrawFullScreenBufferToBGMap
-    dw GameMode5_Update_Case01_Case06_WaitFadeState
-    dw GameMode5_Update_Case01_Case06_SetFlagBit
-    dw GameMode5_Update_Case01_Case06_AdvanceLinkScreenSubState
-    dw GameMode5_Update_Case01_Case06_RunNameEntryStateWhenNotFading
-    dw GameMode5_Update_Case01_Case06_InitGoldAndClearInventory
+    dw GameMode5_Update_NewPlayerSetup_ToStartPaletteFadeAndStep
+    dw GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap
+    dw GameMode5_Update_NewPlayerSetup_WaitFadeState
+    dw GameMode5_Update_NewPlayerSetup_SetFlagBit
+    dw GameMode5_Update_NewPlayerSetup_AdvanceLinkScreenSubState
+    dw GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading
+    dw GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory
 
-; entry 0 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 0 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_ToStartPaletteFadeAndStep::
+GameMode5_Update_NewPlayerSetup_ToStartPaletteFadeAndStep::
 Jump_007_684C:: ; address name
     ld a, $04
     call StartPaletteFade
@@ -4389,12 +4389,12 @@ Jump_007_684C:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 1 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wIsCGB, wSGBActive
 ; writes: rSVBK, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wOBJPaletteBuffer, wLinkScreenSubState
-GameMode5_Update_Case01_Case06_DrawFullScreenBufferToBGMap::
+GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap::
 Jump_007_6856:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -4449,11 +4449,11 @@ Jump_007_6856:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 2 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_WaitFadeState::
+GameMode5_Update_NewPlayerSetup_WaitFadeState::
 Jump_007_68B7:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -4462,11 +4462,11 @@ Jump_007_68B7:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 3 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_SetFlagBit::
+GameMode5_Update_NewPlayerSetup_SetFlagBit::
 Jump_007_68C1:: ; address name
     ld e, $01
     ld d, $00
@@ -4484,21 +4484,21 @@ Jump_007_68C1:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 4 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_AdvanceLinkScreenSubState::
+GameMode5_Update_NewPlayerSetup_AdvanceLinkScreenSubState::
 Jump_007_68DE:: ; address name
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 5 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wRandomLo, wArg5
 ; writes: wSaveByte16
 ; points at: wArg1, wNameGlyphBuf, wPlayerName, wLinkScreenSubState
-GameMode5_Update_Case01_Case06_RunNameEntryStateWhenNotFading::
+GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading::
 Jump_007_68E3:: ; address name
     ld hl, wArg1
     ld a, $00
@@ -4530,11 +4530,11 @@ Jump_007_68E3:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in GameMode5_Update_Case01_Case06
+; entry 6 of the `rst $00` table in GameMode5_Update_NewPlayerSetup
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, hPlayerX, wFollowerRecords, hPlayerY, hPlayerFacing, wPartyCount, ...
 ; points at: wKeyList
-GameMode5_Update_Case01_Case06_InitGoldAndClearInventory::
+GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory::
 Jump_007_6919:: ; address name
     ld a, $38
     ldh [hMapId], a
@@ -4555,7 +4555,7 @@ Jump_007_6919:: ; address name
     ld a, $00
     ld [wPartyList], a
     call InitGoldAndClearInventory
-    call GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord
+    call GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord
     ld hl, wKeyList
     ld bc, $0080
     ld a, $FF
@@ -4567,7 +4567,7 @@ Jump_007_6919:: ; address name
     ret
 
 ; wGold = 100 and the 24 wInventory slots = 0 (the new-game setup path, Func_007_65F1) (E-0074)
-; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_InitGoldAndClearInventory)
+; 1 call site from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory)
 ; writes: wGoldLo, wGoldMid, wGoldHi
 ; points at: wInventory
 InitGoldAndClearInventory::
@@ -4584,12 +4584,12 @@ Func_007_695A:: ; address name
     call FillBytes
     ret
 
-; only called from GameMode5_Update_Case01_Case06_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_InitGoldAndClearInventory)
+; only called from GameMode5_Update_NewPlayerSetup_Case06 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory)
 ; reads: wRecordBuffer, wRecordBufferData, wScreenAttrBuffer, wSpeciesRecord
 ; writes: rRAMG, rRAMB, wMonsterId, wSpeciesIdLo, wSpeciesIdHi
 ; points at: sRecords, wPlayerName
-GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord::
+GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord::
 Func_007_6975:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -4772,18 +4772,18 @@ Func_007_6975:: ; address name
     ld h, a
     ld [hl], $00
     ld hl, sRecords + $8E
-    call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
     ld hl, sRecords + $99
-    call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
     ld hl, sRecords + $1E
-    call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
     ld hl, sRecords + $29
-    call GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01
+    call GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01
     farcall SetSpeciesFlag
     ret
 
 ; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord)
+; 1 call site from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord)
 FillBBytesAtHL_Bank07::
 Func_007_6AD0:: ; address name
     ld [hl+], a
@@ -4792,7 +4792,7 @@ Func_007_6AD0:: ; address name
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
-; 2 call sites from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord)
+; 2 call sites from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord)
 CopyBBytesDEToHL_Bank07::
 Func_007_6AD5:: ; address name
     ld a, [de]
@@ -4802,9 +4802,9 @@ Func_007_6AD5:: ; address name
     jr nz, CopyBBytesDEToHL_Bank07
     ret
 
-; only called from GameMode5_Update_Case01_Case06_Case06_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord)
-GameMode5_Update_Case01_Case06_Case06_Sub01_Sub01::
+; only called from GameMode5_Update_NewPlayerSetup_Case06_Sub01 (E-0047)
+; 4 call sites from 1 routine (e.g. GameMode5_Update_NewPlayerSetup_Case06_LoadMonsterRecord)
+GameMode5_Update_NewPlayerSetup_Case06_Sub01_Sub01::
 Func_007_6ADC:: ; address name
     ld a, $98
     ld [hl+], a
@@ -5003,7 +5003,7 @@ RunLinkSession4ScreenState::
 Func_007_6C12:: ; address name
     ld a, [wLinkScreenState]
     rst $00
-    dw RunLinkSession4ScreenState_Case00
+    dw RunLinkSession4ScreenState_SaveAndSync
     dw RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc
     dw RunLinkSession4ScreenState_Case02
     dw RunLinkSession4ScreenState_Case03
@@ -5013,22 +5013,22 @@ Func_007_6C12:: ; address name
     dw RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B
     dw RunLinkSession4ScreenState_Case08
 
-; entry 0 of the `rst $00` table in RunLinkSession4ScreenState
+; by wLinkScreenSubState: RunSaveSteps, then a link message wait
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenSubState
-RunLinkSession4ScreenState_Case00::
+RunLinkSession4ScreenState_SaveAndSync::
 Jump_007_6C28:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw RunLinkSession4ScreenState_Case00_RunSaveSteps
-    dw RunLinkSession4ScreenState_Case00_SetLinkScreenSubState
-    dw RunLinkSession4ScreenState_Case00_WaitLinkMessage
+    dw RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps
+    dw RunLinkSession4ScreenState_SaveAndSync_SetLinkScreenSubState
+    dw RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage
 
-; entry 0 of the `rst $00` table in RunLinkSession4ScreenState_Case00
+; entry 0 of the `rst $00` table in RunLinkSession4ScreenState_SaveAndSync
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wLinkScreenSubState
 ; writes: wSubMenuCursor, wLinkSendByte, wLinkScreenSubState
-RunLinkSession4ScreenState_Case00_RunSaveSteps::
+RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps::
 Jump_007_6C32:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -5036,7 +5036,7 @@ Jump_007_6C32:: ; address name
     di
     farcall RunSaveSteps
     ei
-    call RunLinkSession4ScreenState_Case00_Case00_LoadSRAMRecordWord
+    call RunLinkSession4ScreenState_SaveAndSync_Case00_LoadSRAMRecordWord
     farcall FullyHealParty
     ld a, $04
     ld [wSubMenuCursor], a
@@ -5047,12 +5047,12 @@ Jump_007_6C32:: ; address name
     ld [wLinkScreenSubState], a
     ret
 
-; only called from RunLinkSession4ScreenState_Case00_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_Case00_RunSaveSteps)
+; only called from RunLinkSession4ScreenState_SaveAndSync_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
-RunLinkSession4ScreenState_Case00_Case00_LoadSRAMRecordWord::
+RunLinkSession4ScreenState_SaveAndSync_Case00_LoadSRAMRecordWord::
 Func_007_6C59:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5109,11 +5109,11 @@ Func_007_6C59:: ; address name
     inc de
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession4ScreenState_Case00
+; entry 1 of the `rst $00` table in RunLinkSession4ScreenState_SaveAndSync
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenSubState
 ; writes: wLinkScreenSubState, wLinkSendByte
-RunLinkSession4ScreenState_Case00_SetLinkScreenSubState::
+RunLinkSession4ScreenState_SaveAndSync_SetLinkScreenSubState::
 Jump_007_6CAB:: ; address name
     ld a, [wLinkScreenSubState]
     inc a
@@ -5122,11 +5122,11 @@ Jump_007_6CAB:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 2 of the `rst $00` table in RunLinkSession4ScreenState_Case00
+; entry 2 of the `rst $00` table in RunLinkSession4ScreenState_SaveAndSync
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkScreenState
 ; writes: wLinkSendByte, wLinkScreenSubState, wLinkScreenState
-RunLinkSession4ScreenState_Case00_WaitLinkMessage::
+RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage::
 Jump_007_6CB8:: ; address name
     ld a, [wLinkMessage]
     cp a, $D3

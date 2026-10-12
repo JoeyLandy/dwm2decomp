@@ -650,10 +650,10 @@
       "evidence": "E-0286"
     },
     "82": {
-      "const": "SCRIPT_GOLD_ITEM_OR_LOSS",
-      "routine": "GoldItemOrLoss",
-      "note": "a key-world/field talk event (category 8: random gold or item (NextRandomSeed, AddGoldCapped, AppendItemWC928ToInventory) or a gold loss (DeductGoldPenaltyAndFormatLoss)); named from its trigger and calls",
-      "evidence": "E-0286"
+      "const": "SCRIPT_GREATLOG_FIELD_EVENT",
+      "routine": "GreatLogFieldEvents",
+      "note": "talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted scenes on the Great Log island (Cobi, Tara, Warubou and Kameha dialogue); scene $0A gives gold or items, scene $0C takes a gold loss (DeductGoldPenaltyAndFormatLoss); corrects the E-0286 reading 'GreatLogFieldEvents'",
+      "evidence": "E-0293"
     },
     "83": {
       "const": "SCRIPT_FIELD_SCENE_01",

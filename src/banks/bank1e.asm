@@ -82,7 +82,7 @@ Func_01E_4069:: ; address name
     ld a, [wScreenState]
     rst $00
     dw SwapMonstersMenu_CopyBytesDEToHL_Bank1E
-    dw SwapMonstersMenu_Case01
+    dw SwapMonstersMenu_SetupPartyList
     dw SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
     dw SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries_Case03
     dw SwapMonstersMenu_MoveRecords
@@ -141,29 +141,29 @@ Jump_01E_408B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu
+; by wScreenStep: the tile map, ListPartyRecordsWithState2ToListEntries and CountRecordsInUse
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-SwapMonstersMenu_Case01::
+SwapMonstersMenu_SetupPartyList::
 Jump_01E_40D1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case01_ToSetupTileMap6D84AtBGMap1
-    dw SwapMonstersMenu_Case01_ToSwapMonstersMenu_Shared05AndStep
-    dw SwapMonstersMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep
-    dw SwapMonstersMenu_Case01_CountRecordsInUse
+    dw SwapMonstersMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1
+    dw SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_Shared05AndStep
+    dw SwapMonstersMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep
+    dw SwapMonstersMenu_SetupPartyList_CountRecordsInUse
 
-; entry 0 of the `rst $00` table in SwapMonstersMenu_Case01
+; entry 0 of the `rst $00` table in SwapMonstersMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case01_ToSetupTileMap6D84AtBGMap1::
+SwapMonstersMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1::
 Jump_01E_40DD:: ; address name
     farcall SetupTileMap6D84AtBGMap1
     ret
 
-; entry 1 of the `rst $00` table in SwapMonstersMenu_Case01
+; entry 1 of the `rst $00` table in SwapMonstersMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-SwapMonstersMenu_Case01_ToSwapMonstersMenu_Shared05AndStep::
+SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_Shared05AndStep::
 Jump_01E_40E4:: ; address name
     ld hl, GlyphCopyDestList0
     ld de, GlyphCopySrcList0
@@ -172,11 +172,11 @@ Jump_01E_40E4:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in SwapMonstersMenu_Case01
+; entry 2 of the `rst $00` table in SwapMonstersMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep::
+SwapMonstersMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
 Jump_01E_40F2:: ; address name
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -184,11 +184,11 @@ Jump_01E_40F2:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in SwapMonstersMenu_Case01
+; entry 3 of the `rst $00` table in SwapMonstersMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-SwapMonstersMenu_Case01_CountRecordsInUse::
+SwapMonstersMenu_SetupPartyList_CountRecordsInUse::
 Jump_01E_4100:: ; address name
     ld de, $79C8
     ld hl, wWindowTileBuffer + $64
@@ -7858,7 +7858,7 @@ Func_01E_7443:: ; address name
     ret
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 14 call sites from 14 routines (e.g. SwapMonstersMenu_Case01_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_Shared05AndStep_Case0A, SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_Shared05AndStep_Case20, ...)
+; 14 call sites from 14 routines (e.g. SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep, SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_Shared05AndStep_Case0A, SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_Shared05AndStep_Case20, ...)
 ; writes: wGlyphListPos
 SwapMonstersMenu_WriteGlyphListPos::
 Func_01E_7454:: ; address name
@@ -7908,7 +7908,7 @@ Func_01E_7454:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 33 call sites from 27 routines (e.g. SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc, SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E_Case3C, ...)
+; 33 call sites from 27 routines (e.g. SwapMonstersMenu_SetupPartyList_CountRecordsInUse, SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc, SwapMonstersMenu_Case05_CopyRectTo20ByteRows_Bank1E_Case3C, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank1E::
@@ -7966,7 +7966,7 @@ Func_01E_748E:: ; address name
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 only when HL = $9800 (E-0062)
-; 38 call sites from 33 routines (e.g. CloseMenuE9_CopyBytesDEToHL_Bank1E, SwapMonstersMenu_Case01_CountRecordsInUse, SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_Case27, SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22, ...)
+; 38 call sites from 33 routines (e.g. CloseMenuE9_CopyBytesDEToHL_Bank1E, SwapMonstersMenu_SetupPartyList_CountRecordsInUse, SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_Case27, SwapMonstersMenu_MoveRecords_CountRecordsInUse_Case22, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -8495,7 +8495,7 @@ Func_01E_7745:: ; address name
     ret
 
 ; hFFB9 = wD7BC, hFFBA = $80, hFF8D = wD7BA, wSpriteSlotCount = wD7BB: puts back the values SaveAndHideSpriteState stored (hFFBA is set to $80 rather than restored) (E-0078)
-; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case08_ListPartyRecordsWithState2ToListEntries, SwapMonstersMenu_Case0D_LoadPlayerAndFollowerSpriteGraphics, SwapMonstersMenu_ShowMonsterDetails_LoadPlayerAndFollowerSpriteGraphics, EggServiceMenu_Case0F_LoadPlayerAndFollowerSpriteGraphics, ...)
+; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case08_ListPartyRecordsWithState2ToListEntries, SwapMonstersMenu_Case0D_LoadPlayerAndFollowerSpriteGraphics, SwapMonstersMenu_ShowMonsterDetails_LoadPlayerAndFollowerSpriteGraphics, EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics, ...)
 ; reads: wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
 RestoreSpriteStateFromSavedFieldDrawFlags::

@@ -5791,7 +5791,7 @@ Func_015_6655:: ; address name
     ret
 
 ; wD7F1 = hFFC9, then the high and low digits of hFFC8, hFFC7 and hFFC6 go to wD7F2-wD7F7 (seven digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read (E-0106)
-; 9 call sites from 9 routines (e.g. TenTimesTemp0PlusTenToDigits, DrawGoldBoxAndStep_Bank15, EggServiceMenu_Case01_Number24ToPackedBCD, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, ...)
+; 9 call sites from 9 routines (e.g. TenTimesTemp0PlusTenToDigits, DrawGoldBoxAndStep_Bank15, EggServiceMenu_DrawPrice_Number24ToPackedBCD, EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, ...)
 ; points at: hTemp3, wArg1
 UnpackBCDToDigitsArg1::
 Func_015_6676:: ; address name

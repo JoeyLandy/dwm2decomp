@@ -43,7 +43,7 @@ Data_049_43B5:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1243B5, $63
 
 ; compressed tileset of map $0A (the first map record using it)
-; address loaded by EggServiceMenu_Case0F_DecompressToVRAM
+; address loaded by EggServiceMenu_DrawListAndPrice_DecompressToVRAM
 ; LZSS-compressed asset: 708 bytes expand to 1168 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map0ATileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4418:: ; address name
@@ -89,7 +89,7 @@ Data_049_47F3:: ; address name
     db $0F, $4D, $06, $D6, $0F, $1D, $06, $10, $04, $06, $3C, $1A, $06, $44, $1C
 
 ; compressed tileset of map $13 (the first map record using it)
-; address loaded by RenameMenu_Case06_DecompressToVRAM
+; address loaded by RenameMenu_PickMonster_DecompressToVRAM
 ; LZSS-compressed asset: 659 bytes expand to 960 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map13Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4832:: ; address name

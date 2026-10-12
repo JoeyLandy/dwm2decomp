@@ -1,54 +1,54 @@
 SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
-; implements script command type 82 (SCRIPT_GOLD_ITEM_OR_LOSS), the script of talk category 8: random gold or item (NextRandomSeed, AddGoldCapped, AppendItemWC928ToInventory) or a gold loss (DeductGoldPenaltyAndFormatLoss); reached through ScriptCommand82 in bank $10 (E-0038, E-0286)
+; implements script command type 82 (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted scenes on the Great Log island (Cobi, Tara, Warubou and Kameha dialogue); scene $0A gives gold or items, scene $0C takes a gold loss (DeductGoldPenaltyAndFormatLoss); corrects the E-0286 reading 'GreatLogFieldEvents'; reached through ScriptCommand82 in bank $10 (E-0038, E-0293)
 ; 1 call site from 1 routine (e.g. ScriptCommand82)
 ; reads: wPendingFieldEvent
-GoldItemOrLoss::
+GreatLogFieldEvents::
 Func_073_4001:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
     rst $00
-    dw GoldItemOrLoss_Case00
-    dw GoldItemOrLoss_Case01
-    dw GoldItemOrLoss_Case02
-    dw GoldItemOrLoss_Case03
-    dw GoldItemOrLoss_Case04
-    dw GoldItemOrLoss_Case05
-    dw GoldItemOrLoss_Case06
-    dw GoldItemOrLoss_Case07
-    dw GoldItemOrLoss_Case08
-    dw GoldItemOrLoss_Case09
-    dw GoldItemOrLoss_Case0A
-    dw GoldItemOrLoss_Case0B
-    dw GoldItemOrLoss_Case0C
-    dw GoldItemOrLoss_Case0C
-    dw GoldItemOrLoss_Case0C
-    dw GoldItemOrLoss_Case0C
+    dw GreatLogFieldEvents_PapaCalling
+    dw GreatLogFieldEvents_TaraThereYouAre
+    dw GreatLogFieldEvents_YouFolksRunA
+    dw GreatLogFieldEvents_GoodToHear
+    dw GreatLogFieldEvents_KingAskedUs
+    dw GreatLogFieldEvents_WarubouGiveMe
+    dw GreatLogFieldEvents_ThisIsATale
+    dw GreatLogFieldEvents_WarubouItsADead
+    dw GreatLogFieldEvents_TaraWellBeOK
+    dw GreatLogFieldEvents_WarubouWhatIsThis
+    dw GreatLogFieldEvents_GoHelpYourMotherScene
+    dw GreatLogFieldEvents_KamehaNoGoing
+    dw GreatLogFieldEvents_MajorFacilities
+    dw GreatLogFieldEvents_MajorFacilities
+    dw GreatLogFieldEvents_MajorFacilities
+    dw GreatLogFieldEvents_MajorFacilities
 
-; entry 12 of the `rst $00` table in GoldItemOrLoss
+; scenes $0C-$0F: "GreatLog's major facilities are situated above ...", a barrel message and the gold loss
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case0C::
+GreatLogFieldEvents_MajorFacilities::
 Jump_073_4027:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case0C_StartMessageHL_B73AndStep
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case0C_ShowGreatLogsMajorFacilitiesAre
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_StartMessageHL_B73AndStep
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case0C
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent
 ; points at: wScriptStep
-GoldItemOrLoss_Case0C_StartMessageHL_B73AndStep::
+GreatLogFieldEvents_MajorFacilities_StartMessageHL_B73AndStep::
 Jump_073_403F:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -61,12 +61,12 @@ Jump_073_403F:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in GoldItemOrLoss_Case0C
+; entry 3 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wPendingFieldEvent
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case0C_ShowGreatLogsMajorFacilitiesAre::
+GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre::
 Jump_073_4053:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -101,33 +101,33 @@ Jump_073_4053:: ; address name
     ret
     db $93, $01, $96, $01, $99, $01, $9C, $01
 
-; entry 11 of the `rst $00` table in GoldItemOrLoss
+; scene $0B: a chest message, 'Kameha Wahahah! No going ...', a vase message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case0B::
+GreatLogFieldEvents_KamehaNoGoing::
 Jump_073_4098:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case0B_Msg4037_HeroTriedToOpen
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0B_ShowKamehaWahahahNoGoing
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case0B_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0B_ToScriptStepFlashScreenNegative
-    dw GoldItemOrLoss_Case0B_ShowCobiHeroPapasCalling
-    dw GoldItemOrLoss_Case0B_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_KamehaNoGoing_Msg4037_HeroTriedToOpen
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KamehaNoGoing_ShowKamehaWahahahNoGoing
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_KamehaNoGoing_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
+    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
     dw ScriptStepBlinkSpritesThenEnd
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case0B_Msg4037_HeroTriedToOpen::
+GreatLogFieldEvents_KamehaNoGoing_Msg4037_HeroTriedToOpen::
 Jump_073_40BA:: ; address name
     ld hl, $4037 ; '0 tried to open the chest.'
     call StartMessageHL_B73
@@ -135,12 +135,12 @@ Jump_073_40BA:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case0B_ShowKamehaWahahahNoGoing::
+GreatLogFieldEvents_KamehaNoGoing_ShowKamehaWahahahNoGoing::
 Jump_073_40C5:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -158,12 +158,12 @@ Jump_073_40C5:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wIsCGB
 ; writes: wScriptStep
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-GoldItemOrLoss_Case0B_ShowHeroPeeredIntoThe::
+GreatLogFieldEvents_KamehaNoGoing_ShowHeroPeeredIntoThe::
 Jump_073_40E2:: ; address name
     ld a, [wBattleScene]
     or a, a
@@ -190,10 +190,10 @@ Jump_073_40E2:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case0C
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case0C_ShowHeroPeeredIntoThe::
+GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe::
 Jump_073_4111:: ; address name
     ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
@@ -202,31 +202,31 @@ Jump_073_4111:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in GoldItemOrLoss
+; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a joypad wait and sprite blinking
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case0A::
+GreatLogFieldEvents_GoHelpYourMotherScene::
 Jump_073_411F:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case0A_ShowGoHelpYourMother
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0A_ShowIfSomeMonsterMasters
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0A_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case0A_WriteScriptParam0
-    dw GoldItemOrLoss_Case0A_ReadJoypadPressed
-    dw GoldItemOrLoss_Case0A_ReadFrameCounterLoAndMenuCursor
-    dw GoldItemOrLoss_Case0A_RestoreScreenBufferFromBGMap1
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_ShowGoHelpYourMother
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor
+    dw GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 8 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 8 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wScriptParam0, wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-GoldItemOrLoss_Case0A_RestoreScreenBufferFromBGMap1::
+GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
 Jump_073_4139:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -391,53 +391,53 @@ Jump_073_4139:: ; address name
     farcall AddGoldCapped
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFrameCounterLo, wMenuCursor
 ; points at: wMenuState, wScriptStep, wMenuSubState, wMenuSelectedMember
-GoldItemOrLoss_Case0A_ReadFrameCounterLoAndMenuCursor::
+GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor::
 Jump_073_4269:: ; address name
-    call GoldItemOrLoss_WaitFrameCounterLo
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
     and a, $01
-    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
+    jr z, .call_great_log_field_events_go_help_your2
     ld a, [wMenuCursor]
     dec a
     jr nz, .skip
     ld hl, wMenuState
-    call GoldItemOrLoss_Case0A_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
     or a, a
-    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
+    jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
     dec [hl]
-    jr .call_gold_item_or_loss_write_temp0_and_temp1
+    jr .call_great_log_field_events_go_help_your2
 
 .skip:
     dec a
-    jr nz, .call_gold_item_or_loss_case0_a_case07_sub01
+    jr nz, .call_great_log_field_events_go_help_your
     ld hl, wMenuSubState
-    call GoldItemOrLoss_Case0A_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
     or a, a
-    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
+    jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
     dec [hl]
-    jr .call_gold_item_or_loss_write_temp0_and_temp1
+    jr .call_great_log_field_events_go_help_your2
 
-.call_gold_item_or_loss_case0_a_case07_sub01:
+.call_great_log_field_events_go_help_your:
     ld hl, wMenuSelectedMember
-    call GoldItemOrLoss_Case0A_Case07_Sub01
+    call GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01
     or a, a
-    jr z, .call_gold_item_or_loss_write_temp0_and_temp1
+    jr z, .call_great_log_field_events_go_help_your2
     ld hl, wScriptStep
     inc [hl]
 
-.call_gold_item_or_loss_write_temp0_and_temp1:
-    call GoldItemOrLoss_WriteTemp0AndTemp1
+.call_great_log_field_events_go_help_your2:
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
     ret
 
-; only called from GoldItemOrLoss_Case0A_Case07 (E-0047)
-; 3 call sites from 1 routine (e.g. GoldItemOrLoss_Case0A_ReadFrameCounterLoAndMenuCursor)
-GoldItemOrLoss_Case0A_Case07_Sub01::
+; only called from GreatLogFieldEvents_GoHelpYourMotherScene_Case07 (E-0047)
+; 3 call sites from 1 routine (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor)
+GreatLogFieldEvents_GoHelpYourMotherScene_Case07_Sub01::
 Func_073_42AB:: ; address name
     ld a, [hl]
     and a, $0F
@@ -460,34 +460,34 @@ Func_073_42AB:: ; address name
     ld a, $01
     ret
 
-; entry 6 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 6 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wMenuCursor, wScriptStep
-GoldItemOrLoss_Case0A_ReadJoypadPressed::
+GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed::
 Jump_073_42C2:: ; address name
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, .call_gold_item_or_loss_wait_frame_counter_lo
+    jr z, .call_great_log_field_events_go_help_your
     ld hl, wMenuCursor
     inc [hl]
     ld hl, wScriptStep
     inc [hl]
 
-.call_gold_item_or_loss_wait_frame_counter_lo:
-    call GoldItemOrLoss_WaitFrameCounterLo
-    call GoldItemOrLoss_WriteTemp0AndTemp1
+.call_great_log_field_events_go_help_your:
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptStep
-GoldItemOrLoss_Case0A_WriteScriptParam0::
+GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0::
 Jump_073_42D8:: ; address name
-    call GoldItemOrLoss_WaitFrameCounterLo
-    call GoldItemOrLoss_WriteTemp0AndTemp1
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -499,12 +499,12 @@ Jump_073_42D8:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 4 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomHi, wIsCGB
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember, wMenuCursor, rSVBK
 ; points at: wScreenTileBuffer, wScriptStep
-GoldItemOrLoss_Case0A_SaveScreenBufferToBGMap1::
+GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
 Jump_073_42F1:: ; address name
     farcall SaveScreenBufferToBGMap1
     call NextRandomSeed
@@ -524,7 +524,7 @@ Jump_073_42F1:: ; address name
     ld [wMenuSelectedMember], a
     xor a, a
     ld [wMenuCursor], a
-    call GoldItemOrLoss_WriteTemp0AndTemp1
+    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
     ld de, $4378
     ld hl, wScreenTileBuffer
     ld b, $03
@@ -586,12 +586,12 @@ Jump_073_42F1:: ; address name
     ret
     db $B0, $B1, $B1, $B1, $B2, $B6, $A4, $A5, $A6, $B7, $B3, $B4, $B4, $B4, $B5
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: hTemp0, hTemp1, wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case0A_ShowIfSomeMonsterMasters::
+GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters::
 Jump_073_4387:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -615,10 +615,10 @@ Jump_073_4387:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case0A
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_GoHelpYourMotherScene
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case0A_ShowGoHelpYourMother::
+GreatLogFieldEvents_GoHelpYourMotherScene_ShowGoHelpYourMother::
 Jump_073_43B3:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -626,11 +626,11 @@ Jump_073_43B3:: ; address name
     call StartMessageHL_B73
     ret
 
-; only called from routines of GoldItemOrLoss (E-0098)
-; 3 call sites from 3 routines (e.g. GoldItemOrLoss_Case0A_ReadFrameCounterLoAndMenuCursor, GoldItemOrLoss_Case0A_ReadJoypadPressed, GoldItemOrLoss_Case0A_WriteScriptParam0)
+; only called from routines of GreatLogFieldEvents_GoHelpYourMotherScene (E-0098)
+; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0)
 ; reads: wFrameCounterLo, wMenuCursor, wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: wMenuState, wMenuSubState, wMenuSelectedMember
-GoldItemOrLoss_WaitFrameCounterLo::
+GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo::
 Func_073_43BE:: ; address name
     ld a, [wFrameCounterLo]
     and a, $01
@@ -681,11 +681,11 @@ Func_073_43BE:: ; address name
 .return:
     ret
 
-; only called from routines of GoldItemOrLoss (E-0098)
-; 4 call sites from 4 routines (e.g. GoldItemOrLoss_Case0A_ReadFrameCounterLoAndMenuCursor, GoldItemOrLoss_Case0A_ReadJoypadPressed, GoldItemOrLoss_Case0A_WriteScriptParam0, GoldItemOrLoss_Case0A_SaveScreenBufferToBGMap1)
+; only called from routines of GreatLogFieldEvents_GoHelpYourMotherScene (E-0098)
+; 4 call sites from 4 routines (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_ReadFrameCounterLoAndMenuCursor, GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed, GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0, GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1)
 ; reads: wMenuState, wMenuSubState, wMenuSelectedMember
 ; writes: hTemp0, hTemp1
-GoldItemOrLoss_WriteTemp0AndTemp1::
+GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
 Func_073_441D:: ; address name
     ld hl, vTiles1 + $240
     ld a, [wMenuState]
@@ -718,7 +718,7 @@ Func_073_441D:: ; address name
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuState]
-    call GoldItemOrLoss_Shared02_WriteVRAMByteInc
+    call DrawSymbolTilesForTemp1
     ld a, [wMenuSubState]
     and a, $F0
     swap a
@@ -749,7 +749,7 @@ Func_073_441D:: ; address name
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSubState]
-    call GoldItemOrLoss_Shared02_WriteVRAMByteInc
+    call DrawSymbolTilesForTemp1
     ld a, [wMenuSelectedMember]
     and a, $F0
     swap a
@@ -780,14 +780,14 @@ Func_073_441D:: ; address name
     ld a, [de]
     ldh [hTemp1], a
     ld a, [wMenuSelectedMember]
-    call GoldItemOrLoss_Shared02_WriteVRAMByteInc
+    call DrawSymbolTilesForTemp1
     ret
 
-; only called from GoldItemOrLoss_Shared02 (E-0047)
-; 3 call sites from 1 routine (e.g. GoldItemOrLoss_WriteTemp0AndTemp1)
+; A & $0E -> hTemp2; when it is not zero, points DE into SymbolTiles_73_44EA at hTemp1 * 16 + (16 - hTemp2) and copies the tiles
+; 3 call sites from 1 routine (e.g. GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1)
 ; reads: hTemp1, hTemp2, hTemp0
 ; writes: hTemp2
-GoldItemOrLoss_Shared02_WriteVRAMByteInc::
+DrawSymbolTilesForTemp1::
 Func_073_44A5:: ; address name
     and a, $0E
     ldh [hTemp2], a
@@ -844,7 +844,7 @@ Func_073_44A5:: ; address name
     jr nz, .loop2
     ret
 
-; E-0214 (C1: the routine at GoldItemOrLoss_Shared02_WriteVRAMByteInc.loop / GoldItemOrLoss_Shared02_WriteVRAMByteInc.loop2 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables).
+; E-0214 (C1: the routine at DrawSymbolTilesForTemp1.loop / DrawSymbolTilesForTemp1.loop2 copies 16 bytes, or a part of them, from $44EA + 16 * hTemp1 (or hTemp0) to VRAM with WriteVRAMByteInc; 5 tiles end at the first of three 10-byte tables).
 ; record: one 2bpp tile (16 bytes)
 SymbolTiles_73_44EA::
 Data_073_44EA:: ; address name
@@ -981,26 +981,26 @@ Data_073_45CA:: ; address name
     db $67 ; id 4
     db $69 ; id 5
 
-; entry 8 of the `rst $00` table in GoldItemOrLoss
+; scene 8: "Tara We'll be OK", a bookshelf message, a negative flash, 'Oh my! The well ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case08::
+GreatLogFieldEvents_TaraWellBeOK::
 Jump_073_45D0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case08_ShowTaraWellBeOK
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case08_ShowHeroCheckedTheBookshelf
-    dw GoldItemOrLoss_Case08_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case08_ToScriptStepFlashScreenNegative
-    dw GoldItemOrLoss_Case08_Msg0052_OhMyTheWell
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_TaraWellBeOK_ShowTaraWellBeOK
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf
+    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_TaraWellBeOK_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_TaraWellBeOK_Msg0052_OhMyTheWell
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case08
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case08_ShowTaraWellBeOK::
+GreatLogFieldEvents_TaraWellBeOK_ShowTaraWellBeOK::
 Jump_073_45E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1008,12 +1008,12 @@ Jump_073_45E4:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case08
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wVisitedScreens, hTemp0, hTemp1, wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case08_ShowHeroCheckedTheBookshelf::
+GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
 Jump_073_45EF:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1046,17 +1046,17 @@ Jump_073_45EF:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 4 of the `rst $00` table in GoldItemOrLoss_Case08
+; entry 4 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
 ; no direct call (reached through a table, a jump or a vector)
-GoldItemOrLoss_Case08_ToScriptStepFlashScreenNegative::
+GreatLogFieldEvents_TaraWellBeOK_ToScriptStepFlashScreenNegative::
 Jump_073_4635:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case08
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case08_Msg0052_OhMyTheWell::
+GreatLogFieldEvents_TaraWellBeOK_Msg0052_OhMyTheWell::
 Jump_073_463C:: ; address name
     ld hl, $0052 ; 'Oh my, the well isn't safe!'
     call StartMessageHL_B73
@@ -1064,38 +1064,38 @@ Jump_073_463C:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in GoldItemOrLoss
+; scene 6: an item name, 'This is a tale ...', 'Slash If you're in ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case06::
+GreatLogFieldEvents_ThisIsATale::
 Jump_073_4647:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case06_CopyItemNameToDE
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case06_ShowThisIsATale
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case06_ShowSlashIfYoureIn
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_ThisIsATale_CopyItemNameToDE
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_ThisIsATale_ShowThisIsATale
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
     dw $0000 ; unused index (E-0207)
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case06_ShowThereArentManyFriends
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case06_ShowThisHayIsPretty
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 13 of the `rst $00` table in GoldItemOrLoss_Case06
+; entry 13 of the `rst $00` table in GreatLogFieldEvents_ThisIsATale
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 ; writes: wStepPtrLo
 ; points at: wScriptStep
-GoldItemOrLoss_Case06_ShowThisHayIsPretty::
+GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty::
 Jump_073_466F:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1109,11 +1109,11 @@ Jump_073_466F:: ; address name
     farcall AppendItemWC928ToInventory
     ret
 
-; entry 9 of the `rst $00` table in GoldItemOrLoss_Case06
+; entry 9 of the `rst $00` table in GreatLogFieldEvents_ThisIsATale
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wMenuSubState
 ; writes: wMenuState, wScriptStep
-GoldItemOrLoss_Case06_ShowThereArentManyFriends::
+GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends::
 Jump_073_468F:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1133,18 +1133,18 @@ Jump_073_468F:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 4 of the `rst $00` table in GoldItemOrLoss_Case06
+; entry 4 of the `rst $00` table in GreatLogFieldEvents_ThisIsATale
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, wMenuState, wMenuSubState, wScriptParam1, wDigits, wGoldLo, wGoldMid, wGoldHi, ...
 ; writes: wMenuSubState, wDigits, wGoldLo, wGoldMid, wGoldHi, wScriptParam1, wMenuSelectedMember, wStepPtrLo, ...
 ; points at: wTextNumber, wScriptStep
-GoldItemOrLoss_Case06_ShowSlashIfYoureIn::
+GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
 Jump_073_46B3:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and a, $0F
     cp a, $0D
-    jr nc, GoldItemOrLoss_Case06_ShowSlashIfYoureIn
+    jr nc, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn
     ld [wMenuSubState], a
     inc a
     ld [wDigits], a
@@ -1272,12 +1272,12 @@ Jump_073_46B3:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case06
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_ThisIsATale
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wMenuState, wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case06_ShowThisIsATale::
+GreatLogFieldEvents_ThisIsATale_ShowThisIsATale::
 Jump_073_47DB:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1297,12 +1297,12 @@ Jump_073_47DB:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case06
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_ThisIsATale
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo
 ; writes: wScriptParam0
 ; points at: wScriptStep
-GoldItemOrLoss_Case06_CopyItemNameToDE::
+GreatLogFieldEvents_ThisIsATale_CopyItemNameToDE::
 Jump_073_47FD:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -1321,32 +1321,32 @@ Jump_073_47FD:: ; address name
     db $03, $22, $28, $2A, $0B, $25, $05, $2B, $0C, $23, $27, $2C, $11, $12, $26, $1E
     db $0D, $0E, $0F, $10, $64, $00, $2C, $01, $58, $02, $E8, $03, $DC, $05
 
-; entry 9 of the `rst $00` table in GoldItemOrLoss
+; scene 9: a dresser message, 'Warubou What is this ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case09::
+GreatLogFieldEvents_WarubouWhatIsThis::
 Jump_073_4840:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case09_ShowHeroCheckedTheDresser
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case09_ShowWarubouWhatIsThis
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case09_ShowHeroCheckedTheDresser_Case05
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString_Case09
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case09_ShowHeroCheckedTheOven
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser_Case05
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_Case09
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ShowHeroCheckedTheDresser::
+GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser::
 Jump_073_4860:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1354,12 +1354,12 @@ Jump_073_4860:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ShowWarubouWhatIsThis::
+GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis::
 Jump_073_486B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1377,11 +1377,11 @@ Jump_073_486B:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ShowHeroCheckedTheDresser_Case05::
+GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser_Case05::
 Jump_073_4888:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1397,12 +1397,12 @@ Jump_073_4888:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wPartyCount, wPartyList, hTemp0
 ; writes: wScriptStep, rRAMG
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString::
+GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
 Jump_073_48A0:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1412,9 +1412,9 @@ Jump_073_48A0:: ; address name
     ld a, $00
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $00
-    call GoldItemOrLoss_CopyRecordNameToNameGlyphBuf
+    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
     ld a, $00
-    call GoldItemOrLoss_LoadSRAMRecordWord
+    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
     ld a, [wPartyCount]
     dec a
     jr nz, .read_party_list
@@ -1449,21 +1449,21 @@ Jump_073_48A0:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 9 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 9 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: wScriptStep, rRAMG
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString_Case09::
+GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_Case09::
 Jump_073_48F8:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld a, $01
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $01
-    call GoldItemOrLoss_CopyRecordNameToNameGlyphBuf
+    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
     ld a, $01
-    call GoldItemOrLoss_LoadSRAMRecordWord
+    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
     ld a, [wPartyCount]
     dec a
     dec a
@@ -1491,10 +1491,10 @@ Jump_073_48F8:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 11 of the `rst $00` table in GoldItemOrLoss_Case09
+; entry 11 of the `rst $00` table in GreatLogFieldEvents_WarubouWhatIsThis
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case09_ShowHeroCheckedTheOven::
+GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven::
 Jump_073_493C:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1503,13 +1503,13 @@ Jump_073_493C:: ; address name
     ld a, $02
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $02
-    call GoldItemOrLoss_CopyRecordNameToNameGlyphBuf
+    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
     ld a, $02
-    call GoldItemOrLoss_LoadSRAMRecordWord
+    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
     ret
 
 ; for record wC6FE[A]: passes word field $5D and word fields $61, $63, $65, $67, $69 (B = 1-5) to Func_073_49B1, then copies the item string to wC152 (E-0121)
-; 3 call sites from 3 routines (e.g. GoldItemOrLoss_Case09_ShowHeroCheckedTheOven, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString_Case09, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString)
+; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_Case09, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG, hTemp2
 ; points at: wPartyList
@@ -1601,11 +1601,11 @@ Func_073_49C5:: ; address name
     farcall CopyStringToBuffer_Bank09
     ret
 
-; only called from routines of GoldItemOrLoss (E-0098)
-; 3 call sites from 3 routines (e.g. GoldItemOrLoss_Case09_ShowHeroCheckedTheOven, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString_Case09, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString)
+; only called from routines of GreatLogFieldEvents_WarubouWhatIsThis (E-0098)
+; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_Case09, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString)
 ; writes: rRAMG
 ; points at: wPartyList, wNameGlyphBuf
-GoldItemOrLoss_CopyRecordNameToNameGlyphBuf::
+GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf::
 Func_073_49E6:: ; address name
     ld hl, wPartyList
     add_a_to_hl
@@ -1630,12 +1630,12 @@ Func_073_49E6:: ; address name
     ld [de], a
     ret
 
-; only called from routines of GoldItemOrLoss (E-0098)
-; 3 call sites from 3 routines (e.g. GoldItemOrLoss_Case09_ShowHeroCheckedTheOven, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString_Case09, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString)
+; only called from routines of GreatLogFieldEvents_WarubouWhatIsThis (E-0098)
+; 3 call sites from 3 routines (e.g. GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_Case09, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString)
 ; reads: wScriptParam0, hTemp0, hTemp1, hTemp3, hTemp2
 ; writes: rRAMG, hTemp2, hTemp3, wDigits
 ; points at: wPartyList, wTextNumber
-GoldItemOrLoss_LoadSRAMRecordWord::
+GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
 Func_073_4A0F:: ; address name
     ld hl, wPartyList
     add_a_to_hl
@@ -1698,30 +1698,30 @@ Func_073_4A0F:: ; address name
     ret
     db $5D, $61, $63, $65, $67, $69
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss
+; scene 7: a vase message, "Warubou It's a dead ...", 'This hay is pretty ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case07::
+GreatLogFieldEvents_WarubouItsADead::
 Jump_073_4A82:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case07_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case07_ShowWarubouItsADead
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case07_ShowYouEComeAt
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case07_ShowThisHayIsPretty
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouItsADead_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_WarubouItsADead_ShowYouEComeAt
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case07_ShowThisHayIsPretty_Case0B
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty_Case0B
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case07
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_WarubouItsADead
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case07_ShowHeroPeeredIntoThe::
+GreatLogFieldEvents_WarubouItsADead_ShowHeroPeeredIntoThe::
 Jump_073_4A9E:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1729,12 +1729,12 @@ Jump_073_4A9E:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case07
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_WarubouItsADead
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case07_ShowWarubouItsADead::
+GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead::
 Jump_073_4AA9:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1752,11 +1752,11 @@ Jump_073_4AA9:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case07
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_WarubouItsADead
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-GoldItemOrLoss_Case07_ShowYouEComeAt::
+GreatLogFieldEvents_WarubouItsADead_ShowYouEComeAt::
 Jump_073_4AC6:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1772,12 +1772,12 @@ Jump_073_4AC6:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case07
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_WarubouItsADead
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case07_ShowThisHayIsPretty::
+GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty::
 Jump_073_4ADE:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1815,12 +1815,12 @@ Jump_073_4ADE:: ; address name
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; entry 11 of the `rst $00` table in GoldItemOrLoss_Case07
+; entry 11 of the `rst $00` table in GreatLogFieldEvents_WarubouItsADead
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, wStepPtrLo, wInventory
 ; writes: wStepPtrLo, wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case07_ShowThisHayIsPretty_Case0B::
+GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty_Case0B::
 Jump_073_4B2B:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -1849,28 +1849,28 @@ Jump_073_4B2B:: ; address name
     dec [hl]
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss
+; scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi Hero, they said ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case05::
+GreatLogFieldEvents_WarubouGiveMe::
 Jump_073_4B68:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case05_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case05_ShowWarubouWaheyGiveMe
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case05_ShowCobiHeroTheySaid
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case05_StartMessageHL_B73
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouGiveMe_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouGiveMe_ShowWarubouWaheyGiveMe
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_WarubouGiveMe_ShowCobiHeroTheySaid
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case05
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case05_ShowHeroPeeredIntoThe::
+GreatLogFieldEvents_WarubouGiveMe_ShowHeroPeeredIntoThe::
 Jump_073_4B80:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1878,12 +1878,12 @@ Jump_073_4B80:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case05
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case05_ShowWarubouWaheyGiveMe::
+GreatLogFieldEvents_WarubouGiveMe_ShowWarubouWaheyGiveMe::
 Jump_073_4B8B:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1901,11 +1901,11 @@ Jump_073_4B8B:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case05
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-GoldItemOrLoss_Case05_ShowCobiHeroTheySaid::
+GreatLogFieldEvents_WarubouGiveMe_ShowCobiHeroTheySaid::
 Jump_073_4BA8:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1922,28 +1922,28 @@ Jump_073_4BA8:: ; address name
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; entry 4 of the `rst $00` table in GoldItemOrLoss
+; scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case04::
+GreatLogFieldEvents_KingAskedUs::
 Jump_073_4BC3:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case04_ShowGreatLogsKingAskedUs
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case04_ShowWowYouKidsSure
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1
-    dw GoldItemOrLoss_Case04_ShowGreatLogsKingAskedUs_Case05
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case05_StartMessageHL_B73
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
+    dw GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs_Case05
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case04
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_KingAskedUs
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case04_ShowGreatLogsKingAskedUs::
+GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs::
 Jump_073_4BDB:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1951,12 +1951,12 @@ Jump_073_4BDB:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case04
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_KingAskedUs
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; writes: wScriptStep
 ; points at: wScriptStep
-GoldItemOrLoss_Case04_ShowWowYouKidsSure::
+GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure::
 Jump_073_4BE6:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
@@ -1974,11 +1974,11 @@ Jump_073_4BE6:: ; address name
     ld [wScriptStep], a
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case04
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_KingAskedUs
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene
 ; points at: wScriptStep
-GoldItemOrLoss_Case04_ShowGreatLogsKingAskedUs_Case05::
+GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs_Case05::
 Jump_073_4C03:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -1994,12 +1994,12 @@ Jump_073_4C03:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case05
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_WarubouGiveMe
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wRandomLo, hTemp0
 ; writes: wStepPtrLo
 ; points at: wScriptStep
-GoldItemOrLoss_Case05_StartMessageHL_B73::
+GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73::
 Jump_073_4C1B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2035,7 +2035,7 @@ Jump_073_4C1B:: ; address name
     ret
 
 ; saves the gold, far-calls DeductGoldPenalty, stores the amount lost in wC8C0-wC8C2 and writes it as packed BCD to wC17E (Func_000_23CA) (E-0121)
-; 5 call sites from 5 routines (e.g. GoldItemOrLoss_Case05_StartMessageHL_B73, GoldItemOrLoss_Case05_ShowCobiHeroTheySaid, GoldItemOrLoss_Case07_ShowThisHayIsPretty, GoldItemOrLoss_Case09_ProcessRecordFields5DTo69ThenItemString, ...)
+; 5 call sites from 5 routines (e.g. GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73, GreatLogFieldEvents_WarubouGiveMe_ShowCobiHeroTheySaid, GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty, GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wDigits
 ; writes: wDigits
 ; points at: wTextNumber
@@ -2068,31 +2068,31 @@ Func_073_4C5D:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 3 of the `rst $00` table in GoldItemOrLoss
+; scene 3: 'Good. That's good to hear! You ...', 'Is that so? ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case03::
+GreatLogFieldEvents_GoodToHear::
 Jump_073_4CA0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case03_ShowGoodThatsGoodTo
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case03_ShowIsThatSoToo
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case03
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_GoodToHear
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wDigits
 ; points at: wScriptStep, wTextNumber
-GoldItemOrLoss_Case03_ShowGoodThatsGoodTo::
+GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo::
 Jump_073_4CAE:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4008 ; 'Good. That's good to hear! You'
     call StartMessageHL_B73
-    call GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7
+    call GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2114,12 +2114,12 @@ Jump_073_4CAE:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case03
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_GoodToHear
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wScriptParam0
 ; writes: wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-GoldItemOrLoss_Case03_ShowIsThatSoToo::
+GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo::
 Jump_073_4CE5:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2150,27 +2150,27 @@ Jump_073_4CE5:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss
+; scene 2: 'You folks run a ...', a vase message, 'There's a spirit in ...'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case02::
+GreatLogFieldEvents_YouFolksRunA::
 Jump_073_4D20:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case02_ShowYouFolksRunA
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case02_ShowHeroPeeredIntoThe
-    dw GoldItemOrLoss_Case08_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0B_ToScriptStepFlashScreenNegative
-    dw GoldItemOrLoss_Case02_ShowTheresASpiritIn
-    dw GoldItemOrLoss_Case0B_WriteScriptParam0AndFieldDrawFlagsEtc
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe
+    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn
+    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case02
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_YouFolksRunA
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case02_ShowYouFolksRunA::
+GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA::
 Jump_073_4D36:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2178,11 +2178,11 @@ Jump_073_4D36:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case02
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_YouFolksRunA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult
 ; points at: wScriptStep
-GoldItemOrLoss_Case02_ShowHeroPeeredIntoThe::
+GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe::
 Jump_073_4D41:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2200,12 +2200,12 @@ Jump_073_4D41:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in GoldItemOrLoss_Case02
+; entry 5 of the `rst $00` table in GreatLogFieldEvents_YouFolksRunA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageIndex
 ; writes: hTemp0, hTemp1
 ; points at: wScriptStep
-GoldItemOrLoss_Case02_ShowTheresASpiritIn::
+GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn::
 Jump_073_4D5B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2230,31 +2230,31 @@ Jump_073_4D5B:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in GoldItemOrLoss
+; scene 1: 'Tara There you are, big brother!', 'Cobi What's wrong, Hero?'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case01::
+GreatLogFieldEvents_TaraThereYouAre::
 Jump_073_4D8D:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case01_ShowTaraThereYouAre
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case01_ShowCobiWhatsWrongHero
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case01
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_TaraThereYouAre
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wDigits
 ; points at: wScriptStep, wTextNumber
-GoldItemOrLoss_Case01_ShowTaraThereYouAre::
+GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre::
 Jump_073_4D9B:: ; address name
     ld hl, wScriptStep
     inc [hl]
     ld hl, $4002 ; 'Tara There you are, big brother!'
     call StartMessageHL_B73
-    call GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7
+    call GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2271,12 +2271,12 @@ Jump_073_4D9B:: ; address name
     call WritePackedBCDNoLeadingZeros
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case01
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_TaraThereYouAre
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextYesNoResult, wScriptParam0
 ; writes: wStepPtrLo, hTemp0, hTemp1
 ; points at: wScriptStep
-GoldItemOrLoss_Case01_ShowCobiWhatsWrongHero::
+GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero::
 Jump_073_4DCD:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -2302,25 +2302,25 @@ Jump_073_4DCD:: ; address name
     call StartMessageHL_B73
     ret
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss
+; scene 0: 'In the middle of ...', a negative flash, 'Cobi Hero, Papa's calling'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStep
-GoldItemOrLoss_Case00::
+GreatLogFieldEvents_PapaCalling::
 Jump_073_4E03:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GoldItemOrLoss_Case00_Msg0000_InTheMiddleOf
-    dw GoldItemOrLoss_Case08_RunMessageBoxCarryWhenIdle_Bank73
-    dw GoldItemOrLoss_Case0B_ToScriptStepFlashScreenNegative
-    dw GoldItemOrLoss_Case0B_ShowCobiHeroPapasCalling
-    dw GoldItemOrLoss_Case0B_WriteScriptParam0AndFieldDrawFlagsEtc
-    dw GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_PapaCalling_Msg0000_InTheMiddleOf
+    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
+    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
+    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; entry 0 of the `rst $00` table in GoldItemOrLoss_Case00
+; entry 0 of the `rst $00` table in GreatLogFieldEvents_PapaCalling
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case00_Msg0000_InTheMiddleOf::
+GreatLogFieldEvents_PapaCalling_Msg0000_InTheMiddleOf::
 Jump_073_4E15:: ; address name
     ld hl, $0000 ; 'In the middle of the sea'
     call StartMessageHL_B73
@@ -2328,11 +2328,11 @@ Jump_073_4E15:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in GoldItemOrLoss_Case08
+; entry 3 of the `rst $00` table in GreatLogFieldEvents_TaraWellBeOK
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptStep
-GoldItemOrLoss_Case08_RunMessageBoxCarryWhenIdle_Bank73::
+GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73::
 Jump_073_4E20:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank73
@@ -2352,18 +2352,18 @@ Jump_073_4E20:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 7 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
-GoldItemOrLoss_Case0B_ToScriptStepFlashScreenNegative::
+GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative::
 Jump_073_4E41:: ; address name
     farcall ScriptStepFlashScreenNegative
     ret
 
-; entry 8 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 8 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-GoldItemOrLoss_Case0B_ShowCobiHeroPapasCalling::
+GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling::
 Jump_073_4E48:: ; address name
     farcall FullyHealParty
     ld hl, $0001 ; 'Cobi 0! Papa's calling. He's at'
@@ -2374,10 +2374,10 @@ Jump_073_4E48:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in GoldItemOrLoss_Case0C
+; entry 1 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73::
+GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73::
 Jump_073_4E5D:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank73
@@ -2386,12 +2386,12 @@ Jump_073_4E5D:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in GoldItemOrLoss_Case0B
+; entry 9 of the `rst $00` table in GreatLogFieldEvents_KamehaNoGoing
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wScriptStep
-GoldItemOrLoss_Case0B_WriteScriptParam0AndFieldDrawFlagsEtc::
+GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc::
 Jump_073_4E67:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2464,7 +2464,7 @@ Func_073_4E9C:: ; address name
     ret
 
 ; HL is stored in wC924 (low) and wC925 (high); then wC926 = 0
-; 80 call sites from 44 routines (e.g. GoldItemOrLoss_Case00_Msg0000_InTheMiddleOf, GoldItemOrLoss_Case01_ShowCobiWhatsWrongHero, GoldItemOrLoss_Case01_ShowTaraThereYouAre, GoldItemOrLoss_Case02_ShowTheresASpiritIn, ...)
+; 80 call sites from 44 routines (e.g. GreatLogFieldEvents_PapaCalling_Msg0000_InTheMiddleOf, GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero, GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre, GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn, ...)
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageHL_B73::
 Func_073_4ED8:: ; address name
@@ -2618,7 +2618,7 @@ Jump_073_4F90:: ; address name
     ret
 
 ; RunMessageBox_Bank73, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0116)
-; 2 call sites from 2 routines (e.g. GoldItemOrLoss_Case08_RunMessageBoxCarryWhenIdle_Bank73, GoldItemOrLoss_Case0C_RunMessageBoxCarryWhenIdle_Bank73)
+; 2 call sites from 2 routines (e.g. GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73, GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73)
 ; reads: wMessageState
 RunMessageBoxCarryWhenIdle_Bank73::
 Func_073_4FA9:: ; address name
@@ -2634,7 +2634,7 @@ Func_073_4FA9:: ; address name
     ret
 
 ; HL = the word at $4CC3 + 13 * A in bank $16 (ReadByteInBank twice) (E-0121)
-; 5 call sites from 5 routines (e.g. GoldItemOrLoss_Case01_ShowCobiWhatsWrongHero, GoldItemOrLoss_Case01_ShowTaraThereYouAre, GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word, GoldItemOrLoss_Case03_ShowIsThatSoToo, ...)
+; 5 call sites from 5 routines (e.g. GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero, GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre, GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word, GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo, ...)
 ReadBank16Table4CC3Word::
 Func_073_4FB7:: ; address name
     ld c, $0D
@@ -2655,55 +2655,55 @@ Func_073_4FB7:: ; address name
     ld h, c
     ret
 
-; only called from routines of GoldItemOrLoss (E-0098)
-; 2 call sites from 2 routines (e.g. GoldItemOrLoss_Case01_ShowTaraThereYouAre, GoldItemOrLoss_Case03_ShowGoodThatsGoodTo)
+; only called from routines of GreatLogFieldEvents (E-0098)
+; 2 call sites from 2 routines (e.g. GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre, GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo)
 ; reads: wStepArrived, wPartyCount, wRecordsInUse, hTemp3, hTemp2
 ; writes: wScriptParam0
-GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7::
+GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
 Func_073_4FD2:: ; address name
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a, a
-    jr z, .call_gold_item_or_loss_shared05_load_sram
+    jr z, .call_great_log_field_events_shared01_load
     ld a, $0C
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-.call_gold_item_or_loss_shared05_load_sram:
-    farcall GoldItemOrLoss_Shared05_LoadSRAMRecordByte
+.call_great_log_field_events_shared01_load:
+    farcall GreatLogFieldEvents_Shared01_LoadSRAMRecordByte
     ld a, [wStepArrived]
     or a, a
-    jr z, .call_gold_item_or_loss_shared05_load_sram2
+    jr z, .call_great_log_field_events_shared01_load2
     ld a, $08
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-.call_gold_item_or_loss_shared05_load_sram2:
-    farcall GoldItemOrLoss_Shared05_LoadSRAMRecordByte_Sub01
+.call_great_log_field_events_shared01_load2:
+    farcall GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01
     ld a, [wStepArrived]
     or a, a
     jr z, .check_party_count
     ld a, $06
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
 .check_party_count:
     ld a, [wPartyCount]
     cp a, $03
-    jr z, .call_gold_item_or_loss_shared05_load_sram3
+    jr z, .call_great_log_field_events_shared01_load3
     farcall CountRecordsInUse
     ld a, [wRecordsInUse]
     cp a, $03
     jr nc, .check_records_in_use
     ld a, $19
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
@@ -2715,24 +2715,24 @@ Func_073_4FD2:: ; address name
     jr nc, .check_records_in_use2
     ld a, $1A
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
 .check_records_in_use2:
     ld a, [wRecordsInUse]
     cp a, $06
-    jr c, .call_gold_item_or_loss_shared05_load_sram3
+    jr c, .call_great_log_field_events_shared01_load3
     cp a, $0B
-    jr nc, .call_gold_item_or_loss_shared05_load_sram3
+    jr nc, .call_great_log_field_events_shared01_load3
     ld a, $1B
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-.call_gold_item_or_loss_shared05_load_sram3:
-    call GoldItemOrLoss_Shared05_LoadSRAMRecordWord
+.call_great_log_field_events_shared01_load3:
+    call GreatLogFieldEvents_Shared01_LoadSRAMRecordWord
     ldh a, [hTemp3]
     or a, a
     jr nz, .set_script_param0_to_05
@@ -2743,27 +2743,27 @@ Func_073_4FD2:: ; address name
 .set_script_param0_to_05:
     ld a, $05
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
 .check_temp3:
     ldh a, [hTemp3]
     or a, a
-    jr nz, .call_gold_item_or_loss_shared05_load_sram4
+    jr nz, .call_great_log_field_events_shared01_load4
     ldh a, [hTemp2]
     cp a, $65
-    jr nc, .call_gold_item_or_loss_shared05_load_sram4
+    jr nc, .call_great_log_field_events_shared01_load4
     or a, a
-    jr z, .call_gold_item_or_loss_shared05_load_sram4
+    jr z, .call_great_log_field_events_shared01_load4
     ld a, $04
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
-.call_gold_item_or_loss_shared05_load_sram4:
-    call GoldItemOrLoss_Shared05_LoadSRAMRecordWord_Sub03
+.call_great_log_field_events_shared01_load4:
+    call GreatLogFieldEvents_Shared01_LoadSRAMRecordWord_Sub03
     ldh a, [hTemp3]
     or a, a
     jr nz, .set_script_param0_to_03
@@ -2774,7 +2774,7 @@ Func_073_4FD2:: ; address name
 .set_script_param0_to_03:
     ld a, $03
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
@@ -2789,7 +2789,7 @@ Func_073_4FD2:: ; address name
     jr nc, .set_script_param0_to_01
     ld a, $02
     ld [wScriptParam0], a
-    call GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word
+    call GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word
     or a, a
     ret nz
 
@@ -2798,12 +2798,12 @@ Func_073_4FD2:: ; address name
     ld [wScriptParam0], a
     ret
 
-; only called from GoldItemOrLoss_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GreatLogFieldEvents_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG
 ; points at: wPartyList
-GoldItemOrLoss_Shared05_LoadSRAMRecordWord_Sub03::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordWord_Sub03::
 Func_073_50C3:: ; address name
     ld hl, $0000
     ld a, l
@@ -2861,12 +2861,12 @@ Func_073_50C3:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from GoldItemOrLoss_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GreatLogFieldEvents_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3
 ; writes: hTemp2, hTemp3, rRAMG
 ; points at: wPartyList
-GoldItemOrLoss_Shared05_LoadSRAMRecordWord::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordWord::
 Func_073_5117:: ; address name
     ld hl, $0000
     ld a, l
@@ -2924,10 +2924,10 @@ Func_073_5117:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from GoldItemOrLoss_Shared05 (E-0047)
-; 10 call sites from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GreatLogFieldEvents_Shared01 (E-0047)
+; 10 call sites from 1 routine (e.g. GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPendingFieldEvent, wGoldHi, wGoldMid, wGoldLo
-GoldItemOrLoss_Shared05_ReadBank16Table4CC3Word::
+GreatLogFieldEvents_Shared01_ReadBank16Table4CC3Word::
 Func_073_516B:: ; address name
     call ReadBank16Table4CC3Word
     ld a, [wPendingFieldEvent]
@@ -2962,11 +2962,11 @@ Func_073_516B:: ; address name
     xor a, a
     ret
 
-; entry 2 of the `rst $00` table in GoldItemOrLoss_Case0C
+; entry 2 of the `rst $00` table in GreatLogFieldEvents_MajorFacilities
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleIntroKind, wBattleTransitionSubStep, wModeState, wBattleTransitionStep, wFieldReturnPhase
 ; points at: wScriptStep
-GoldItemOrLoss_Case0C_SaveScreenBufferToBGMap1::
+GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1::
 Jump_073_5194:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -7471,7 +7471,7 @@ Func_073_6AFF:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_SetBit2AtHL_B73
-    dw SceneMermaidSong2_Case05
+    dw SceneMermaidSong2_ToSceneMermaidSong2_MoveSteps
     dw Talk0886_NsDancingLuredA
     dw SceneMermaidSong2_ShowBravoBravoYouWere
     dw SceneChestBattle_RunMessageBoxFar_Bank73
@@ -7539,7 +7539,7 @@ Func_073_6B5B:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_SetBit2AtHL_B73
     dw SceneDancing_SetBit2AtHL_B73AndStep
-    dw SceneDancing_Case06
+    dw SceneDancing_ToSceneDancing_DanceSteps
     dw SceneDancing_Talk0886_NsDancingLuredA
     dw SceneDancing_SetScriptStartRequestTo80
 
@@ -7564,9 +7564,9 @@ Jump_073_6B77:: ; address name
 
 ; entry 6 of the `rst $00` table in SceneDancing
 ; no direct call (reached through a table, a jump or a vector)
-SceneDancing_Case06::
+SceneDancing_ToSceneDancing_DanceSteps::
 Jump_073_6B80:: ; address name
-    farcall SceneDancing_Case06_Sub01
+    farcall SceneDancing_DanceSteps
     ret
 
 ; entry 5 of the `rst $00` table in SceneDancing
@@ -7594,7 +7594,7 @@ Func_073_6B98:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_SetBit2AtHL_B73
-    dw SceneMermaidSong2_Case05
+    dw SceneMermaidSong2_ToSceneMermaidSong2_MoveSteps
     dw Talk0886_NsDancingLuredA
     dw SceneMermaidSong_ShowBravoBravoYouWere
     dw SceneMermaidSong_RunMessageBoxFar_Bank73
@@ -7775,9 +7775,9 @@ Func_073_6C77:: ; address name
 
 ; entry 5 of the `rst $00` table in SceneMermaidSong2
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidSong2_Case05::
+SceneMermaidSong2_ToSceneMermaidSong2_MoveSteps::
 Jump_073_6CCA:: ; address name
-    farcall SceneMermaidSong2_Case05_Sub01
+    farcall SceneMermaidSong2_MoveSteps
     ret
 
 ; entry 4 of the `rst $00` table in SceneMermaidSong2
@@ -7980,7 +7980,7 @@ Func_073_6E17:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SceneMonstersInTow_CopyBytes
-    dw GoldItemOrLoss_Case0B_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
     dw SceneMonstersInTow_ScriptStartFadeAndAdvanceStep
     dw SceneMonstersInTow_SetScriptStartRequestTo80
 

@@ -4747,7 +4747,7 @@ Func_01B_632C:: ; address name
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. LinkKeyTrade_ClampKeyListPageCursor, DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_Case0E_ListAvailableRecordsForSelection)
+; 3 call sites from 3 routines (e.g. LinkKeyTrade_ClampKeyListPageCursor, DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection)
 StoreC5BEC6AtHLStride2_Bank1B::
 Func_01B_634F:: ; address name
     ld a, $C5
@@ -5151,7 +5151,7 @@ Func_01B_665E:: ; address name
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
     dw EggServiceMenu_Bank1B_SwapMonstersMenu
     dw EggServiceMenu_Bank1B_RunScreenStateWhenNotFading_F1
-    dw EggServiceMenu_Bank1B_Case0E
+    dw EggServiceMenu_Bank1B_ListAvailableRecords
     dw EggServiceMenu_Bank1B_Case0F
 
 ; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B
@@ -5381,7 +5381,7 @@ Func_01B_675F:: ; address name
     ret
 
 ; for the record at WD789 cell 5: draws its graphics (Func_01B_7460 with wD7F1 = $C7), copies two rectangles to wC434 and wC440, draws its details at wC443 (Func_01B_7487) and wD781 += 1 (E-0121)
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel, CallDrawListEntriesCell5RecordPanel)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel, CallDrawListEntriesCell5RecordPanel)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wScreenStep
 DrawListEntriesCell5RecordPanel::
@@ -5419,7 +5419,7 @@ Func_01B_67A5:: ; address name
     ret
 
 ; clears 5 tiles at vTiles1 + $780, draws the name of the record at WD789 cell 5 there and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_Case04, CallClearAndDrawListEntriesCell5Name, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 ClearAndDrawListEntriesCell5NameAtTiles1780::
@@ -5442,7 +5442,7 @@ Func_01B_67F0:: ; address name
     ret
 
 ; copies box Data_01B_7757 (10 x 7) or Data_01B_779D (10 x 9, when bit 7 of wD04C is set) to wC36E, then wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7)
+; 1 call site from 1 routine (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7)
 ; reads: wLinkRules, wScreenStep
 ; writes: wScreenStep
 DrawRuleBoxByWD04CBit7::
@@ -6643,27 +6643,27 @@ Jump_01B_6FAB:: ; address name
     ld [wListPageIndex], a
     ret
 
-; entry 14 of the `rst $00` table in EggServiceMenu_Bank1B
+; by wScreenStep: ListAvailableRecordsForSelection, the list page, the record panel and the 'Battle / Prize / Exit' window
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-EggServiceMenu_Bank1B_Case0E::
+EggServiceMenu_Bank1B_ListAvailableRecords::
 Jump_01B_6FC4:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles
-    dw EggServiceMenu_Bank1B_Case0E_ListAvailableRecordsForSelection
-    dw EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames
-    dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
-    dw EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit
-    dw EggServiceMenu_Bank1B_Case0E_BGMapAddressAtScroll_Bank1B
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_Case04
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 6 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTwoChoiceCursor, wScreenStep
-EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit::
+EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
 Jump_01B_6FD8:: ; address name
     ld hl, vTiles2 + $300
     ld a, l
@@ -6699,20 +6699,20 @@ EggServiceMenu_Bank1B_Case0F::
 Jump_01B_7019:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles
-    dw EggServiceMenu_Bank1B_Case0E_ListAvailableRecordsForSelection
-    dw EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames
-    dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_Case04
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7
     dw EggServiceMenu_Bank1B_Case0F_ShowInfoOKYesN
-    dw EggServiceMenu_Bank1B_Case0E_BGMapAddressAtScroll_Bank1B
+    dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 0 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles::
+EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
 Jump_01B_702D:: ; address name
     call ClearRecordPanelTiles
     ld de, TileRect_1B_7928
@@ -6728,11 +6728,11 @@ Jump_01B_702D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 1 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-EggServiceMenu_Bank1B_Case0E_ListAvailableRecordsForSelection::
+EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection::
 Jump_01B_704F:: ; address name
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
@@ -6754,10 +6754,10 @@ Jump_01B_704F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames::
+EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
 Jump_01B_707E:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -6765,23 +6765,23 @@ Jump_01B_707E:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 3 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel::
+EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
 Jump_01B_708F:: ; address name
     call DrawListEntriesCell5RecordPanel
     ret
 
-; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 4 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780::
+EggServiceMenu_Bank1B_ListAvailableRecords_Case04::
 Jump_01B_7093:: ; address name
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 5 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7::
+EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByWD04CBit7::
 Jump_01B_7097:: ; address name
     call DrawRuleBoxByWD04CBit7
     ret
@@ -6843,11 +6843,11 @@ Jump_01B_709B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
+; entry 7 of the `rst $00` table in EggServiceMenu_Bank1B_ListAvailableRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenByteB2, wScreenByteB3
 ; writes: hSpriteHideTile, wScreenSubStep, wScreenState, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-EggServiceMenu_Bank1B_Case0E_BGMapAddressAtScroll_Bank1B::
+EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
 Jump_01B_710B:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
@@ -7016,7 +7016,7 @@ Func_01B_71FE:: ; address name
     ret
 
 ; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
 ; reads: wPickCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wPickCount
 ClearRecordPanelTiles::
@@ -7277,7 +7277,7 @@ Func_01B_7377:: ; address name
     ret
 
 ; lists in wD789 the stored records (state 1, or 2 unless wD7DC is 3) whose field $6E is clear and that are not already chosen in wD7DD; count in wD7A9 (E-0130)
-; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_Case0E_ListAvailableRecordsForSelection, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ListAvailableRecordsForSelection)
+; 3 call sites from 3 routines (e.g. DrawRecordListPageIndicators_1B, EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection, EggServiceMenu_Bank1B_PickRecords_Case0A_Sub01_ListAvailableRecordsForSelection)
 ; reads: wPickCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPickedRecords
@@ -7412,7 +7412,7 @@ Func_01B_7439:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, EggServiceMenu_Bank1B_Case0E_ShowBattlePrizeExit)
+; 4 call sites from 4 routines (e.g. ClearTileRowsFromPickCount, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B, EggServiceMenu_Bank1B_Case05_ShowBattlePrizeExit, EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank1B::
 Func_01B_7449:: ; address name

@@ -6890,14 +6890,14 @@ Func_031_67AA:: ; address name
     rst $00
     dw BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc
     dw BattleEnd_GainExperience_AddExpToRecordCCapped
-    dw BattleEnd_GainExperience_Case02
+    dw BattleEnd_GainExperience_CheckLevelUp
     dw BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle
     dw BattleEnd_GainExperience_StoreWorkBufToRecordSkills
     dw BattleEnd_GainExperience_AddExpToRecordHLCapped
     dw BattleEnd_GainExperience_RecordReachedNextLevelExp
     dw BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1
     dw BattleEnd_GainExperience_SetBattleStep
-    dw BattleEnd_GainExperience_Case09
+    dw BattleEnd_GainExperience_LearnSkill
 
 ; entry 0 of the `rst $00` table in BattleEnd_GainExperience
 ; no direct call (reached through a table, a jump or a vector)
@@ -7049,22 +7049,22 @@ Func_031_6885:: ; address name
     pop bc
     ret
 
-; entry 2 of the `rst $00` table in BattleEnd_GainExperience
+; by its step: RecordReachedNextLevelExp and the record name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-BattleEnd_GainExperience_Case02::
+BattleEnd_GainExperience_CheckLevelUp::
 Jump_031_68B8:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_GainExperience_Case02_RecordReachedNextLevelExp
-    dw BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0
+    dw BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp
+    dw BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0
 
-; entry 0 of the `rst $00` table in BattleEnd_GainExperience_Case02
+; entry 0 of the `rst $00` table in BattleEnd_GainExperience_CheckLevelUp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleArg0, wPartyCount
 ; writes: wBattleArg0, wBattleEndTimer
 ; points at: wBattleSlotOut, wPartyList, wBattleSubPhase, wBattleLevel, wBattleResolveStep
-BattleEnd_GainExperience_Case02_RecordReachedNextLevelExp::
+BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp::
 Jump_031_68C0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7116,12 +7116,12 @@ Jump_031_68C0:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in BattleEnd_GainExperience_Case02
+; entry 1 of the `rst $00` table in BattleEnd_GainExperience_CheckLevelUp
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleResolveStep
 ; points at: wPartyList, wBattleSubPhase
-BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0::
+BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0::
 Jump_031_6925:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7732,33 +7732,33 @@ Jump_031_6C5E:: ; address name
     ld [wBattleSubPhase], a
     ret
 
-; entry 9 of the `rst $00` table in BattleEnd_GainExperience
+; by its step: '0 learned G!'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-BattleEnd_GainExperience_Case09::
+BattleEnd_GainExperience_LearnSkill::
 Jump_031_6C67:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc
-    dw BattleEnd_GainExperience_Case09_ClearTemp0AndA
-    dw BattleEnd_GainExperience_Case09_WaitTextFlags
+    dw BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc
+    dw BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA
+    dw BattleEnd_GainExperience_LearnSkill_WaitTextFlags
 
-; entry 0 of the `rst $00` table in BattleEnd_GainExperience_Case09
+; entry 0 of the `rst $00` table in BattleEnd_GainExperience_LearnSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wBattlePartyCount, wBattleByte93
 ; writes: wBattleByte93, wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleStep
-BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc::
+BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc::
 Jump_031_6C71:: ; address name
     ld a, [wArenaRank]
     cp a, $05
-    jr c, BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip
+    jr c, BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip
     ld a, [wBattlePartyCount]
     cp a, $01
-    jr nz, BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip
+    jr nz, BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip
     ld a, [wBattleByte93]
     or a, a
-    jr z, BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip
+    jr z, BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip
     cp a, $AA
     jr nz, .done
     ld a, $8F
@@ -7769,7 +7769,7 @@ Jump_031_6C71:: ; address name
     inc [hl]
     ret
 
-BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip::
+BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip::
 Jump_031_6C93:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -7779,12 +7779,12 @@ Jump_031_6C93:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 1 of the `rst $00` table in BattleEnd_GainExperience_Case09
+; entry 1 of the `rst $00` table in BattleEnd_GainExperience_LearnSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleByte93, wPartyList, hTemp0
 ; writes: hTemp0, rRAMG, rRAMB, wBattleSubPhase, wBattleResolveStep, wStringCategory, wStringIndex
 ; points at: wWorkBuf, wBattleStep, wTextBuf1, wTextBuf0, wBattleResolveStep
-BattleEnd_GainExperience_Case09_ClearTemp0AndA::
+BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA::
 Jump_031_6CA0:: ; address name
     ld a, [wBattleByte93]
     ldh [hTemp0], a
@@ -7810,7 +7810,7 @@ Jump_031_6CA0:: ; address name
     jr nz, .skip
     xor a, a
     ld [rRAMG], a
-    jr BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip
+    jr BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip
 
 .skip:
     ld l, a
@@ -7847,17 +7847,17 @@ Jump_031_6CA0:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in BattleEnd_GainExperience_Case09
+; entry 2 of the `rst $00` table in BattleEnd_GainExperience_LearnSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleStep
-BattleEnd_GainExperience_Case09_WaitTextFlags::
+BattleEnd_GainExperience_LearnSkill_WaitTextFlags::
 Jump_031_6D17:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    jp BattleEnd_GainExperience_Case09_WriteBattleByte93AndBattleSubPhaseEtc_Skip
+    jp BattleEnd_GainExperience_LearnSkill_WriteBattleByte93AndBattleSubPhaseEtc_Skip
 
 ; HL += A * $4E (the battler-record size, Multiply8); clobbers BC (E-0115)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7871,7 +7871,7 @@ Func_031_6D1F:: ; address name
     ret
 
 ; record A below its level cap: C = 1 when its EXP (field $58) has reached the next level's total from the species growth table, else 0 (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_RecordReachedNextLevelExp, BattleEnd_GainExperience_Case02_RecordReachedNextLevelExp)
+; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_RecordReachedNextLevelExp, BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp)
 ; reads: wSpeciesExpCurve, hTemp2, hTemp3, hTemp4
 ; writes: rRAMG, rRAMB, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0
 RecordReachedNextLevelExp::
@@ -7938,7 +7938,7 @@ Func_031_6D28:: ; address name
     ret
 
 ; copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)
-; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0)
+; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0)
 ; points at: wTextBuf0
 CopyTenByteNameToTextBuf0::
 Func_031_6D87:: ; address name
@@ -7956,7 +7956,7 @@ Func_031_6D87:: ; address name
     ret
 
 ; writes [HL + $4B] + 1 to wC140 and wD095-wD09A to wC150-wC164 as decimal strings (E-0121)
-; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0)
+; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0)
 ; reads: wLevelUpGains
 ; points at: wTextBuf1, wTextBuf2, wTextBuf3
 WriteRecordField4BAndStatsDecimal::
@@ -7992,7 +7992,7 @@ Func_031_6D96:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
-; 6 call sites from 6 routines (e.g. BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc, BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_Case03_FindNewlyLearnableSkills, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc, BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_Case03_FindNewlyLearnableSkills, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink, ...)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank31::
 Func_031_6DDD:: ; address name
@@ -9409,7 +9409,7 @@ Data_031_761E:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
-; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_GainExperience_Case02_RecordReachedNextLevelExp, ...)
+; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleStatus
 DrawSlotStatusMarks::
@@ -9618,7 +9618,7 @@ Data_031_77B3:: ; address name
     db $3D, $C2, $43, $C2, $49, $C2
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
-; 7 call sites from 6 routines (e.g. BattleEnd_GainExperience_Case02_RecordReachedNextLevelExp, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
+; 7 call sites from 6 routines (e.g. BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wScreenTileBuffer
 CopySlotPanelRowToVRAM::

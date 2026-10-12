@@ -620,7 +620,7 @@ Func_0F2_43D0:: ; address name
     db $11, $E5, $43, $CD, $FE, $25, $C9
 
 ; Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 2 call sites from 2 routines (e.g. EggServiceMenu_Case0F_Number24ToPackedBCD, RenameMenu_Case06_ShowPickTheMonsterTo)
+; 2 call sites from 2 routines (e.g. EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD, RenameMenu_PickMonster_ShowPickTheMonsterTo)
 ShowString_BankF2::
 Func_0F2_43DE:: ; address name
     call BeginStringDisplay_BankF2

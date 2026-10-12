@@ -4971,7 +4971,7 @@ Func_002_5EEE:: ; address name
     ret
 
 ; copies $168 bytes from vBGMap1 back to wScreenTileBuffer (WaitForVRAMAccess, interrupts off per byte); on CGB copies wD2D0 back to wD000 (rSVBK = 2); restores wSpriteSlotCount from wCB7E (E-0066)
-; 7 call sites from 7 routines (e.g. InitFieldScreen, GoldItemOrLoss_Case0A_RestoreScreenBufferFromBGMap1, SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, SceneWatchOut_RestoreScreenBufferFromBGMap1, ...)
+; 7 call sites from 7 routines (e.g. InitFieldScreen, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1, SceneWatchOut_RunMessageBoxFar_Bank85_Case0F, SceneWatchOut_RestoreScreenBufferFromBGMap1, ...)
 ; reads: wIsCGB, wScreenSavedFlag
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wSavedScreenAttrs, wScreenAttrBuffer

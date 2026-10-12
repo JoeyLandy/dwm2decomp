@@ -920,7 +920,7 @@ Func_0A3_4917:: ; address name
     ret
 
 ; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
-; 1 call site from 1 routine (e.g. RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3)
+; 1 call site from 1 routine (e.g. RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3)
 ; reads: wBattleActor
 ; writes: hTemp0
 ; points at: wBattleActionChoice

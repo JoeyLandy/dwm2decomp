@@ -136,7 +136,7 @@ Func_014_40CC:: ; address name
     ld a, [wScreenState]
     rst $00
     dw HibernateMenu_CopyBytesDEToHL_Bank14
-    dw HibernateMenu_Case01
+    dw HibernateMenu_SetupPartyList
     dw HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
     dw HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc
     dw HibernateMenu_Case04
@@ -191,29 +191,29 @@ Jump_014_40E8:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in HibernateMenu
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-HibernateMenu_Case01::
+HibernateMenu_SetupPartyList::
 Jump_014_412B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1
-    dw HibernateMenu_Case01_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep
-    dw HibernateMenu_Case01_RunFunc5925At0280
+    dw HibernateMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1
+    dw HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep
+    dw HibernateMenu_SetupPartyList_RunFunc5925At0280
 
-; entry 0 of the `rst $00` table in HibernateMenu_Case01
+; entry 0 of the `rst $00` table in HibernateMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
-HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1::
+HibernateMenu_SetupPartyList_ToSetupTileMap6D84AtBGMap1::
 Jump_014_4137:: ; address name
     farcall SetupTileMap6D84AtBGMap1
     ret
 
-; entry 1 of the `rst $00` table in HibernateMenu_Case01
+; entry 1 of the `rst $00` table in HibernateMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-HibernateMenu_Case01_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
+HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
 Jump_014_413E:: ; address name
     ld hl, NamingScreenTileDestListA
     ld de, TileCopySrcList_14_5A84
@@ -224,11 +224,11 @@ Jump_014_413E:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in HibernateMenu_Case01
+; entry 2 of the `rst $00` table in HibernateMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep::
+HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
 Jump_014_414F:: ; address name
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -236,11 +236,11 @@ Jump_014_414F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in HibernateMenu_Case01
+; entry 3 of the `rst $00` table in HibernateMenu_SetupPartyList
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-HibernateMenu_Case01_RunFunc5925At0280::
+HibernateMenu_SetupPartyList_RunFunc5925At0280::
 Jump_014_415D:: ; address name
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
@@ -3461,7 +3461,7 @@ Func_014_57EE:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 21 call sites from 21 routines (e.g. CloseHibernateMenu_CopyBytesDEToHL_Bank14, HibernateMenu_Case02_BGMapAddressAtScroll_Bank14, HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_BGMapAddressAtScroll_Bank14_Case41, ...)
+; 21 call sites from 21 routines (e.g. CloseHibernateMenu_CopyBytesDEToHL_Bank14, HibernateMenu_Case02_BGMapAddressAtScroll_Bank14, HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_Case04_BGMapAddressAtScroll_Bank14_Case41, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank14::
 Func_014_5800:: ; address name
@@ -3483,7 +3483,7 @@ Func_014_5800:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 15 call sites from 14 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E, ...)
+; 15 call sites from 14 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank14::
@@ -3541,7 +3541,7 @@ Func_014_5821:: ; address name
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 (E-0062)
-; 17 call sites from 17 routines (e.g. CloseHibernateMenu_CopyBytesDEToHL_Bank14, HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_BGMapAddressAtScroll_Bank14_Case41, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case32, ...)
+; 17 call sites from 17 routines (e.g. CloseHibernateMenu_CopyBytesDEToHL_Bank14, HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_Case04_BGMapAddressAtScroll_Bank14_Case41, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case32, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -3588,7 +3588,7 @@ Func_014_585B:: ; address name
     ret
 
 ; only called from routines of HibernateMenu (E-0098)
-; 5 call sites from 5 routines (e.g. HibernateMenu_Case01_HibernateMenu_WriteGlyphListPosAndGlyphListStart, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D, HibernateMenu_Case06_SaveAndHideSpriteState_Bank1E, HibernateMenu_ChooseRecords_WriteScreenStep, ...)
+; 5 call sites from 5 routines (e.g. HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D, HibernateMenu_Case06_SaveAndHideSpriteState_Bank1E, HibernateMenu_ChooseRecords_WriteScreenStep, ...)
 ; reads: wGlyphListStart, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart
 HibernateMenu_WriteGlyphListPosAndGlyphListStart::
@@ -3688,7 +3688,7 @@ Func_014_5902:: ; address name
     ret
 
 ; runs Func_014_5925 with C = 2, HL = $0280, DE = $00B4, wD7F1/2 = 0/8 (E-0122)
-; 4 call sites from 4 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280)
+; 4 call sites from 4 routines (e.g. HibernateMenu_SetupPartyList_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280)
 ; writes: wArg1, wArg2
 RunFunc5925At0280::
 Func_014_5910:: ; address name
@@ -4014,7 +4014,7 @@ Data_014_5C9A:: ; address name
     dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
 ; unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122)
-; 5 call sites from 5 routines (e.g. GameMode5_Update_Case01_Case06_RunNameEntryStateWhenNotFading, RenameMenu_LoadSRAMRecordByte, BreedMenu_NameEntry, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, ...)
+; 5 call sites from 5 routines (e.g. GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading, RenameMenu_LoadSRAMRecordByte, BreedMenu_NameEntry, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, ...)
 ; reads: wFadeState, wNameEntryState
 RunNameEntryStateWhenNotFading::
 Func_014_5CA8:: ; address name
@@ -4023,7 +4023,7 @@ Func_014_5CA8:: ; address name
     ret nz
     ld a, [wNameEntryState]
     rst $00
-    dw RunNameEntryStateWhenNotFading_Case00
+    dw RunNameEntryStateWhenNotFading_Setup
     dw RunNameEntryStateWhenNotFading_ReadNameEntrySubState
     dw RunNameEntryStateWhenNotFading_ReadNameEntryStep
     dw RunNameEntryStateWhenNotFading_ReadNameEntryStep_Case03
@@ -4032,25 +4032,25 @@ Func_014_5CA8:: ; address name
     dw RunNameEntryStateWhenNotFading_ReadNameEntryStep_Case06
     dw RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_Case07
 
-; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading
+; name-entry state 0: draws the entry rectangle, sets wNameEntrySubState and reads the record
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
-RunNameEntryStateWhenNotFading_Case00::
+RunNameEntryStateWhenNotFading_Setup::
 Jump_014_5CC1:: ; address name
     ld a, [wNameEntrySubState]
     rst $00
-    dw RunNameEntryStateWhenNotFading_Case00_BGMapAddressAtScroll_Bank14_6BCF
-    dw RunNameEntryStateWhenNotFading_Case00_WriteNameEntrySubStateAndArg5
-    dw RunNameEntryStateWhenNotFading_Case00_DrawTileRectFromArg1Params
-    dw RunNameEntryStateWhenNotFading_Case00_Case03
-    dw RunNameEntryStateWhenNotFading_Case00_SRAMRecordAddress
+    dw RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF
+    dw RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5
+    dw RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params
+    dw RunNameEntryStateWhenNotFading_Setup_Case03
+    dw RunNameEntryStateWhenNotFading_Setup_SRAMRecordAddress
 
-; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
+; entry 0 of the `rst $00` table in RunNameEntryStateWhenNotFading_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hSpriteWindowClipMode, wNameEntrySubState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollY, ...
 ; points at: wNameEntryState
-RunNameEntryStateWhenNotFading_Case00_BGMapAddressAtScroll_Bank14_6BCF::
+RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_6BCF::
 Jump_014_5CCF:: ; address name
     ld hl, wNameEntryState
     ld bc, $001D
@@ -4125,11 +4125,11 @@ Jump_014_5CCF:: ; address name
     ld [wArg5], a
     ret
 
-; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
+; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wNameEntrySubState
 ; writes: wNameEntrySubState, wArg5
-RunNameEntryStateWhenNotFading_Case00_WriteNameEntrySubStateAndArg5::
+RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
 Jump_014_5D72:: ; address name
     ld hl, NameEntryTileDestList
     ld de, NameEntryTileSrcListA
@@ -4145,11 +4145,11 @@ Jump_014_5D72:: ; address name
     ld [wArg5], a
     ret
 
-; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
+; entry 2 of the `rst $00` table in RunNameEntryStateWhenNotFading_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg2, wNameEntrySubState
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wNameEntrySubState
-RunNameEntryStateWhenNotFading_Case00_DrawTileRectFromArg1Params::
+RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params::
 Jump_014_5D8B:: ; address name
     ld a, [wArg2]
     push af
@@ -4190,12 +4190,12 @@ Jump_014_5D8B:: ; address name
     ld [wArg5], a
     ret
 
-; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
+; entry 3 of the `rst $00` table in RunNameEntryStateWhenNotFading_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1, wArg2, wIsCGB, wNameEntrySubState, wArg4, wArg5
 ; writes: wSpriteSlotCount, wOBJPaletteUploadRequest, wNameEntrySubState, wArg5, wArg1, wArg2, wArg3, wArg4
 ; points at: wArg1, wCounterPtr0Lo, wSpriteSlots, hTemp0
-RunNameEntryStateWhenNotFading_Case00_Case03::
+RunNameEntryStateWhenNotFading_Setup_Case03::
 Jump_014_5DE0:: ; address name
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -4226,7 +4226,7 @@ Jump_014_5DE0:: ; address name
     ld a, [wArg1]
     or a, a
     jr nz, .read_arg4
-    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E9F
+    ld hl, RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E9F
     ld a, [wArg2]
     or a, a
     jr z, .call_copy_bytes_de_from_hl_bank14
@@ -4236,11 +4236,11 @@ Jump_014_5DE0:: ; address name
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_Bank14
-    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E93
+    ld hl, RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E93
     ld a, [wArg2]
     or a, a
     jr z, .call_copy_bytes_de_from_hl_bank142
-    ld hl, RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E99
+    ld hl, RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E99
 
 .call_copy_bytes_de_from_hl_bank142:
     ld de, hTemp0
@@ -4303,7 +4303,7 @@ Jump_014_5DE0:: ; address name
     ret
 
 ; the same 7 bytes as CopyBytesDEFromHL (34:406E)
-; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case00_Case03)
+; 2 call sites from 1 routine (e.g. RunNameEntryStateWhenNotFading_Setup_Case03)
 CopyBytesDEFromHL_Bank14::
 Func_014_5E8C:: ; address name
     ld a, [hl+]
@@ -4313,18 +4313,18 @@ Func_014_5E8C:: ; address name
     jr nz, CopyBytesDEFromHL_Bank14
     ret
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunNameEntryStateWhenNotFading_Setup_Case03
+RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E93:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5E93:: ; address name
     db $00, $00, $01, $04, $00, $80
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunNameEntryStateWhenNotFading_Setup_Case03
+RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5E99:: ; address name
     db $01, $00, $01, $01, $00, $80
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-RunNameEntryStateWhenNotFading_Case00_Case03_Data_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunNameEntryStateWhenNotFading_Setup_Case03
+RunNameEntryStateWhenNotFading_Setup_Case03_Data_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5E9F:: ; address name
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
@@ -4334,12 +4334,12 @@ SpriteSlotsInit_14_5EAF::
 Data_014_5EAF:: ; address name
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00 ; entry 0
 
-; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
+; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg1, wGridCursorX, wNameEntryState
 ; writes: rRAMG2, rRAMB, wNameEntryCursorX, wNameEntryCursorY, wNameEntrySubState, wNameEntryState, wArg5, wNameEntryLength
 ; points at: wPartyList, wNameEntryText
-RunNameEntryStateWhenNotFading_Case00_SRAMRecordAddress::
+RunNameEntryStateWhenNotFading_Setup_SRAMRecordAddress::
 Jump_014_5EBF:: ; address name
     call RunNameEntryStateWhenNotFading_Shared03
     ld a, [wArg1]
@@ -4368,7 +4368,7 @@ Jump_014_5EBF:: ; address name
     ld a, [hl]
     cp a, $F0
     jr z, .restore
-    call RunNameEntryStateWhenNotFading_Case00_Case04_Sub01
+    call RunNameEntryStateWhenNotFading_Setup_Case04_Sub01
     pop bc
     pop hl
     inc hl
@@ -4793,7 +4793,7 @@ Func_014_6172:: ; address name
     jr RunNameEntryStateWhenNotFading_Case01_Case00_BGMapAddressAtScroll_Bank14_6BCF_ReadNameEntryCursorY
 
 ; B = $C3 (blank tile) and joins the tile draw at RunNameEntryStateWhenNotFading_Case01_Case00_BGMapAddressAtScroll_Bank14_6BCF_ReadNameEntryCursorY (E-0122)
-; 7 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_Case00)
+; 7 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Setup_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryCursorY, wNameEntryCursorX
 DrawBlankTileC3_6189::
 Func_014_6189:: ; address name
@@ -4988,15 +4988,15 @@ Jump_014_6302:: ; address name
     ld a, [wNameEntryCursorX]
     add a, l
     ld l, a
-    jr nc, RunNameEntryStateWhenNotFading_Case00_Case04_Sub01
+    jr nc, RunNameEntryStateWhenNotFading_Setup_Case04_Sub01
     inc h
 
-; only called from RunNameEntryStateWhenNotFading_Case00_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Case00_SRAMRecordAddress)
+; only called from RunNameEntryStateWhenNotFading_Setup_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunNameEntryStateWhenNotFading_Setup_SRAMRecordAddress)
 ; reads: wNameEntryLength, wNameEntrySubState, wNameEntryByteC3, wNameEntryState
 ; writes: wNameEntryByteC3, wNameEntryLength, wNameEntrySubState, wArg5, wNameEntryCursorX, wNameEntryCursorY, wNameEntryState
 ; points at: wNameEntryText
-RunNameEntryStateWhenNotFading_Case00_Case04_Sub01::
+RunNameEntryStateWhenNotFading_Setup_Case04_Sub01::
 Func_014_631C:: ; address name
     ld a, [hl]
     cp a, $FD
@@ -5905,7 +5905,7 @@ Func_014_6804:: ; address name
     ret
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_688A, else $FF (E-0124)
-; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
+; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Setup_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList688A::
 Func_014_6875:: ; address name
     ld de, IsHLByteInList688A_Data
@@ -5937,7 +5937,7 @@ Data_014_688A:: ; address name
     db $67, $68, $69, $6A, $6B, $6C, $6E, $6F, $26, $5A, $FF
 
 ; A = 0 when [HL] is in the $FF-terminated list Data_014_68CA, else $FF (E-0124)
-; 3 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
+; 3 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Setup_Case04_Sub01, ToggleVoicingMarkOnNameEntry)
 IsHLByteInList68CA::
 Func_014_68B5:: ; address name
     ld de, IsHLByteInList68CA_Data
@@ -6098,7 +6098,7 @@ Data_014_697D:: ; address name
     db $2F, $01, $6F, $01
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 2 call sites from 2 routines (e.g. CopyTileForNameEntryLength, RunNameEntryStateWhenNotFading_Case00_DrawTileRectFromArg1Params)
+; 2 call sites from 2 routines (e.g. CopyTileForNameEntryLength, RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank14::
 Func_014_6981:: ; address name
@@ -6172,7 +6172,7 @@ Func_014_6992:: ; address name
     db $EA, $38, $C5, $3E, $01, $EA, $2B, $C5, $AF, $EA, $2C, $C5, $EA, $4F, $C5, $C9
 
 ; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) + wCFC2, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
-; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, CopyF0StringAndRedrawNameEntry, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, RunNameEntryStateWhenNotFading_Case01_Case00)
+; 6 call sites from 4 routines (e.g. RunNameEntryStateWhenNotFading_Setup_Case04_Sub01, CopyF0StringAndRedrawNameEntry, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, RunNameEntryStateWhenNotFading_Case01_Case00)
 ; reads: wNameEntryLength, rSTAT
 WriteTileBAtScrollOffset47PlusNameEntryLength::
 Func_014_6A0D:: ; address name
@@ -6194,7 +6194,7 @@ Func_014_6A0D:: ; address name
     ret
 
 ; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
-; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Case00_SRAMRecordAddress, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc)
+; 2 call sites from 2 routines (e.g. RunNameEntryStateWhenNotFading_Setup_SRAMRecordAddress, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc)
 ; points at: wNameEntryText
 RunNameEntryStateWhenNotFading_Shared03::
 Func_014_6A28:: ; address name
@@ -6583,7 +6583,7 @@ Func_014_6BCF:: ; address name
     ret
 
 ; only called from routines of RunNameEntryStateWhenNotFading (E-0098)
-; 3 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Case00_WriteNameEntrySubStateAndArg5, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM)
+; 3 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM)
 ; reads: wNameEntryTimer
 ; writes: wNameEntryTimer, wNameEntryByteAC
 RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryByteAC::
@@ -6639,7 +6639,7 @@ Func_014_6BF8:: ; address name
     ret
 
 ; copies the 16-byte tile at Data_014_6C60 to the VRAM address from the word table Data_014_6C56 + 2 * wCFC2 (CopyTileBytesToVRAM_Bank14) (E-0119)
-; 4 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Case00_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, ToggleVoicingMarkOnNameEntry)
+; 4 call sites from 3 routines (e.g. RunNameEntryStateWhenNotFading_Setup_Case04_Sub01, RunNameEntryStateWhenNotFading_Case01_WriteNameEntrySubStateAndArg5Etc, ToggleVoicingMarkOnNameEntry)
 ; reads: wNameEntryLength
 CopyTileForNameEntryLength::
 Func_014_6C3F:: ; address name

@@ -1773,7 +1773,7 @@ Func_000_0A8D:: ; address name
     ret
 
 ; HL = table of words, A = index: HL = the word at HL + 2 * A (A is doubled in 8 bits, so it wraps above $7F); A = its low byte (E-0065) (the same 11 bytes appear in 2 banks)
-; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_Case07, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_Case00, RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
+; 5 call sites from 4 routines (e.g. RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_Case07, RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00, DebugStaffRoll_Update_Sub01_Table2_Case00, RunDebugState_E0_ChooseActionTargets_Case02_DisplayedSlotOfActor)
 ReadWordTableEntry_Bank00::
 Func_000_0B0D:: ; address name
     add a, a
@@ -4393,7 +4393,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 44 routines (e.g. EggServiceMenu_Case0F_FillTilesBxC, CloseHibernateMenu_FillTilesBxC, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_ChooseRecords_FillTilesBxC, ...)
+; 103 call sites from 44 routines (e.g. EggServiceMenu_DrawListAndPrice_FillTilesBxC, CloseHibernateMenu_FillTilesBxC, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_ChooseRecords_FillTilesBxC, ...)
 ; reads: rSTAT, wTextWindowTileLo
 ; writes: wTextWindowTileLo
 FillTilesBxC::
@@ -5366,7 +5366,7 @@ Func_000_1D90:: ; address name
     ret
 
 ; HL = BG map address: draws the 20 x 18 entries of wScreenTileBuffer, wrapping columns inside each 32-entry row and rows inside $9800-$9BFF; on CGB then draws the attribute bytes at wD000 (rSVBK = 2), masked to the palette bits (& $07), into VRAM bank 1; HL kept (E-0071)
-; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case02_Sub01_WritePartyWindowFlagsAndPartyWindowTimer, GameMode5_Update_Case01_Case06_DrawFullScreenBufferToBGMap, ...)
+; 16 call sites from 16 routines (e.g. InitFieldScreen, RedrawScreenBufferIfPartyWindowFlagsBit7, FieldModeStateDispatch_Case02_Sub01_WritePartyWindowFlagsAndPartyWindowTimer, GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -6505,7 +6505,7 @@ Func_000_23BD:: ; address name
     ret
 
 ; writes the packed BCD number in hFFC6-hFFC9 (most significant byte last) as digits at DE without leading zeros, then $F0; zero writes a single 0 (E-0127)
-; 10 call sites from 8 routines (e.g. RandomGoldOrItem_Number24ToPackedBCD, StepTriggerReward_CopyItemNameToDE, AddRewardToCounterCappedAt999, GoldItemOrLoss_Case01_ShowTaraThereYouAre, ...)
+; 10 call sites from 8 routines (e.g. RandomGoldOrItem_Number24ToPackedBCD, StepTriggerReward_CopyItemNameToDE, AddRewardToCounterCappedAt999, GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre, ...)
 ; reads: hTemp0, hTemp1, hTemp2, hTemp3
 ; points at: hTemp2
 WritePackedBCDNoLeadingZeros::
@@ -11165,7 +11165,7 @@ Func_000_3F32:: ; address name
     ret
 
 ; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
-; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_QueuedActionMatches)
+; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches)
 ; reads: wQueuedActionId
 QueuedActionMatches::
 Func_000_3F47:: ; address name

@@ -997,7 +997,7 @@ Func_05F_6C8C:: ; address name
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. YoldTalkEvents_TestFlagBit_Case13, KalkaTalkEvents_TestFlagBit_Case18, NordenTalkEvents_ShowYoureHereToCheer, GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; 5 call sites from 4 routines (e.g. YoldTalkEvents_TestFlagBit_Case13, KalkaTalkEvents_TestFlagBit_Case18, NordenTalkEvents_ShowYoureHereToCheer, GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1036,12 +1036,12 @@ Func_05F_6CA9:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from GoldItemOrLoss_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GreatLogFieldEvents_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-GoldItemOrLoss_Shared05_LoadSRAMRecordByte_Sub01::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01::
 Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1076,12 +1076,12 @@ Func_05F_6CDB:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from GoldItemOrLoss_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; only called from GreatLogFieldEvents_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-GoldItemOrLoss_Shared05_LoadSRAMRecordByte::
+GreatLogFieldEvents_Shared01_LoadSRAMRecordByte::
 Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1323,36 +1323,36 @@ Func_05F_6E35:: ; address name
     jr nz, .loop
     ret
 
-; only called from SceneDancing_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. SceneDancing_Case06)
+; by its step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; 1 call site from 1 routine (e.g. SceneDancing_ToSceneDancing_DanceSteps)
 ; reads: wScriptSubStep
-SceneDancing_Case06_Sub01::
+SceneDancing_DanceSteps::
 Func_05F_6E58:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Case05
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Case08
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecords
-    dw SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerStateFlags
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case05
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case08
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords
+    dw SceneDancing_DanceSteps_AddStepDeltaToPointedByte
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
-; entry 11 of the `rst $00` table in Func_05F_6E58
+; entry 11 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: wScriptSubStep
-SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecords::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
 Jump_05F_6E7E:: ; address name
     xor a, a
     ldh [hPlayerFacing], a
@@ -1363,36 +1363,36 @@ Jump_05F_6E7E:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in Func_05F_6E58
+; entry 8 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Case08::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case08::
 Jump_05F_6E8F:: ; address name
     ld a, $02
-    jr SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
+    jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
-; entry 5 of the `rst $00` table in Func_05F_6E58
+; entry 5 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Case05::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case05::
 Jump_05F_6E93:: ; address name
     ld a, $01
-    jr SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
+    jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
-; entry 2 of the `rst $00` table in Func_05F_6E58
+; entry 2 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags, wScriptParam0
 ; writes: hPlayerFacing, wFollowerRecords, hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc::
 Jump_05F_6E97:: ; address name
     ld a, $03
 
-SceneDancing_Case06_Sub01_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing::
 Jump_05F_6E99:: ; address name
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -1415,34 +1415,34 @@ Jump_05F_6E99:: ; address name
     inc [hl]
     ret
 
-; only called from SceneMermaidSong2_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05)
+; by its step: waits, moves two objects by table and changes the player's facing and followers
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_ToSceneMermaidSong2_MoveSteps)
 ; reads: wScriptSubStep
-SceneMermaidSong2_Case05_Sub01::
+SceneMermaidSong2_MoveSteps::
 Func_05F_6EC3:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable
-    dw SceneMermaidSong2_Case05_Sub01_AddStepDeltaToPointedByte
-    dw SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneMermaidSong2_Case05_Sub01_WriteScriptParam0AndPlayerFacingEtc
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte
-    dw SceneMermaidSong2_Case05_Sub01_WriteScriptParam0AndPlayerFacingEtc
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WriteScriptParam0
-    dw SceneDancing_Case06_Sub01_WritePlayerStateFlags
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable
+    dw SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte
+    dw SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_AddStepDeltaToPointedByte
+    dw SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WriteScriptParam0
+    dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
-; entry 16 of the `rst $00` table in Func_05F_6E58
+; entry 16 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerStateFlags
 ; writes: hPlayerStateFlags
 ; points at: wScriptStep
-SceneDancing_Case06_Sub01_WritePlayerStateFlags::
+SceneDancing_DanceSteps_WritePlayerStateFlags::
 Jump_05F_6EE3:: ; address name
     ldh a, [hPlayerStateFlags]
     and a, $FD
@@ -1451,12 +1451,12 @@ Jump_05F_6EE3:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_05F_6E58
+; entry 12 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptSubStep
-SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte::
+SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
 Jump_05F_6EEE:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -1494,12 +1494,12 @@ Jump_05F_6EEE:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_05F_6EC3
+; entry 7 of the `rst $00` table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: wScriptParam0, hPlayerFacing, wFollowerRecords
 ; points at: wScriptSubStep
-SceneMermaidSong2_Case05_Sub01_WriteScriptParam0AndPlayerFacingEtc::
+SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
 Jump_05F_6F46:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -1521,12 +1521,12 @@ Jump_05F_6F46:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_05F_6EC3
+; entry 4 of the `rst $00` table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing, wFollowerRecords, hPlayerStateFlags
 ; writes: hPlayerFacing, wFollowerRecords, wScriptParam0, hPlayerStateFlags
 ; points at: hPlayerX, wScriptSubStep, wScriptParam0
-SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc::
+SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
 Jump_05F_6F6B:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -1559,7 +1559,7 @@ Jump_05F_6F6B:: ; address name
     ld a, $1F
     sub a, c
     sla a
-    ld hl, SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data
+    ld hl, SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data
     add_a_to_hl
     ld a, [hl+]
     ld c, a
@@ -1596,12 +1596,12 @@ Jump_05F_6F6B:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_05F_6EC3
+; entry 3 of the `rst $00` table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-SceneMermaidSong2_Case05_Sub01_AddStepDeltaToPointedByte::
+SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte::
 Jump_05F_6FE7:: ; address name
     ld de, wFollowerRecords + $7
     ld a, e
@@ -1616,12 +1616,12 @@ Jump_05F_6FE7:: ; address name
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
 
-; entry 0 of the `rst $00` table in Func_05F_6E58
+; entry 0 of the `rst $00` table in SceneDancing_DanceSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0
 ; writes: wScriptParam0
 ; points at: wScriptSubStep
-SceneDancing_Case06_Sub01_WriteScriptParam0::
+SceneDancing_DanceSteps_WriteScriptParam0::
 Jump_05F_7009:: ; address name
     ld a, [wScriptParam0]
     inc a
@@ -1634,12 +1634,12 @@ Jump_05F_7009:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_05F_6EC3
+; entry 2 of the `rst $00` table in SceneMermaidSong2_MoveSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: hPlayerX
-SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable::
+SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable::
 Jump_05F_701C:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -1662,12 +1662,12 @@ Jump_05F_701C:: ; address name
     dec [hl]
 
 .call_script_step_move_two_objects_by_table:
-    ld hl, SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data
+    ld hl, SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data
     call ScriptStepMoveTwoObjectsByTable
     ret
 
 ; every fourth step moves wC8F5/wC8F6 and wC8FA/wC8FB in opposite directions by the table at HL; after 32 steps advances wC92D (E-0125)
-; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable)
 ; reads: wScriptParam0, wFollowerRecords
 ; writes: wFollowerRecords, wScriptParam0
 ; points at: wScriptSubStep, wScriptParam0
@@ -1713,8 +1713,8 @@ Func_05F_7044:: ; address name
     inc [hl]
     ret
 
-; address loaded by SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc, SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable
-SceneMermaidSong2_Case05_Sub01_WritePlayerFacingAndFollowerRecordsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc, SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable
+SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_05F_7092:: ; address name
     db $FE, $00, $FF, $00, $FE, $FF, $FF, $FF, $FF, $FF, $FF, $FE, $00, $FF, $00, $FE
     db $00, $FE, $00, $FF, $01, $FE, $01, $FF, $01, $FF, $02, $FF, $01, $00, $02, $00

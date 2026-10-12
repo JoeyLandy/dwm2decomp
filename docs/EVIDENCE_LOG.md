@@ -2431,6 +2431,32 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0293 — Command $82 is GreatLogFieldEvents (correction); 54 more dispatchers and five helpers named
+
+- Kind: STATIC (C1 names) and a correction.
+- **Correction to E-0286.** Script command $82 (talk category 8) was named GoldItemOrLoss from the calls in its subtree. That reading was wrong. It jumps by wPendingFieldEvent & $0F to 13 scripted scenes on the Great Log island: the dialogue of Cobi, Tara, Warubou and Kameha. Only scene $0A gives gold or items, and only scene $0C takes the gold loss.
+  - It is now SCRIPT_GREATLOG_FIELD_EVENT, routine GreatLogFieldEvents.
+  - Its scenes are named by their opening messages: PapaCalling, TaraThereYouAre, YouFolksRunA, GoodToHear, KingAskedUs, WarubouGiveMe, ThisIsATale, WarubouItsADead, TaraWellBeOK, WarubouWhatIsThis, GoHelpYourMotherScene, KamehaNoGoing, MajorFacilities.
+- **Dispatchers named from their strings:**
+  - GameMode6_Update_SwitchEgg ('Switch which egg?'), GameMode6_Update_ObtainedEgg ('obtained an egg of 0.').
+  - RenameMenu_PickMonster ('Pick the monster to rename.'), GameMode5_Update_SaveDataLost ('Saved data has been lost.').
+  - PriestMenu_ShowServices ('Revive / Detox / Uncurse'), PauseMenu_State4_GiftMenu ('Gift / Exit').
+  - The two ShatterChecks dispatchers ('G was shattered!', 'SealPray was broken!'), RunBattleActions_StatusChecks_DroppedDead, BattleEnd_GainExperience_LearnSkill ('0 learned G!').
+- **Dispatchers named from their steps:**
+  - Object animations: GameMode6_Update_Save_ObjectScene, GameMode6_Update_SavePrompt_ObjectScene, RunLinkSession8Exchange_ObjectScene and _ObjectSceneThenSave, SceneDancing_DanceSteps, SceneMermaidSong2_MoveSteps.
+  - Setup, link and lists: GameMode5_Update_NewPlayerSetup, RunNameEntryStateWhenNotFading_Setup, RunLinkSession4ScreenState_SaveAndSync, SwapMonstersMenu_SetupPartyList, HibernateMenu_SetupPartyList.
+  - Menu drawing: EggServiceMenu_DrawListAndPrice, EggServiceMenu_DrawPrice, EggServiceMenu_Bank1B_ListAvailableRecords, MedalPrizeMenu_DrawCountBox, KeyAppraisalMenu_DrawGoldBox, RenameMenu_DrawFrame, RenameMenu_DrawNameList.
+  - Effect sequences: FlashPalette, FlashOnce, FlashTwice, FlashAndMoveSprite (two), ScrollShake, Delay.
+  - Battle: ResolveStep0EEffect_Brutalize, RunBattleActions_StatusChecks_StartAction and _CheckAction, BattleEnd_GainExperience_CheckLevelUp.
+  - Debug: RunDebugState_E0_ChooseActionTargets, DebugMode_InitByModeState.
+- **Helpers.** Five helpers that lost derived names:
+  - DrawSymbolTilesForTemp1;
+  - WriteHexDigitTilesOfTemp1Temp0 and WriteLowHexDigitTilesOfTemp1Temp0;
+  - DisplayedTargetChoiceOfActor: flips the side bit for the link partner;
+  - LightenDMGPaletteOneStep: lowers each 2-bit shade of wDMGPaletteBGP by one.
+- **Counts.** Bare dispatchers: 128 → 88. Labels under them: 746 → 601. Routines with only an address name: 0.
+- Binary verification: build/run397 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0292 — Strings shown through category-setting wrappers are quoted; joining after battle
 
 - Kind: TOOL + STATIC (C1 names).
@@ -2596,7 +2622,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - $87 PartyDefeatedReturn: group $04. It calls MoveIncapacitatedPartyMembersBack, then StartReturnWarpByFlag25.
   - $9B HealPartyEvent: group $1A. It calls FullyHealParty.
   - $8B/$8C/$8D BreedFade/BreedChildSprite/BreedChildScene: groups $15–$17, from BreedMenu states.
-  - $82 GoldItemOrLoss: category 8. It gives random gold or an item, or takes a gold loss (DeductGoldPenaltyAndFormatLoss).
+  - $82 GoldItemOrLoss: category 8. It gives random gold or an item, or takes a gold loss (DeductGoldPenaltyAndFormatLoss). (Superseded by E-0293: the command is GreatLogFieldEvents, 13 scripted scenes; only two of them handle gold.)
   - $8A MapExitWarp and $8E MapLinkWarp: groups $07 and $08. Each fades, then sets the warp destination from the map exit records (E-0182) or the map link records (E-0238).
   - $93 WarpWithFollowers and $8F NpcBreedWarp: also set a warp destination.
   - $9A RandomBattleEvent: starts a battle (SetModeState3AndSaveScreen).
