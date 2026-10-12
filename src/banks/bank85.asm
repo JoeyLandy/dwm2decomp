@@ -4469,7 +4469,7 @@ Jump_085_5AEE::
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
-; 14 call sites from 9 routines (e.g. DispatchTalkEvent_Case0A_Sub01_Case0A, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
+; 14 call sites from 9 routines (e.g. DispatchTalkEvent_Case0A_Sub01_Case0A, TalkMsg0016_ItSeemsToMeThatThe, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
 ; writes: hTemp0, hTemp1
 ; points at: wWorkBuf
 TotalSpeciesFlaggedOrListed::

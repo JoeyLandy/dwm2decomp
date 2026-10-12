@@ -200,106 +200,106 @@ DispatchTalkEvent_Case05::
 Jump_013_4134:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case05_Case00
-    dw DispatchTalkEvent_Case05_Case01
-    dw DispatchTalkEvent_Case05_Case02
-    dw DispatchTalkEvent_Case05_Case03
-    dw DispatchTalkEvent_Case05_Case04
-    dw DispatchTalkEvent_Case05_Case05
-    dw DispatchTalkEvent_Case05_Case06
-    dw DispatchTalkEvent_Case05_Case07
-    dw DispatchTalkEvent_Case05_Case08
-    dw DispatchTalkEvent_Case05_Case09
-    dw DispatchTalkEvent_Case05_Case0A
+    dw TalkMsg0400_ThisIsTheVillageOfFhunt
+    dw TalkMsg0401_TheGreatSageUgorSavedThe
+    dw TalkMsg0402_YouEComeAllThisWay
+    dw TalkMsg0403_TheGreatSageAfterSavingThe
+    dw TalkMsg0404_YoureNotAboutToGoAfter
+    dw TalkMsg0405_SomeTimeAgoLightningStruck
+    dw TalkMsg0407_ASuspensionBridgeIsInThe
+    dw TalkMsg0406_NobodyCanDefyTheOrbsBearer
+    dw TalkMsg0408_AHugeBirdPerchesAtopThe
+    dw TalkMsg0409_TheTowersGateIsTightlySealed
+    dw TalkMsg040A_TheTopOfTheTowerCollapsed
     dw DispatchTalkEvent_Case05_Case0B
-    dw DispatchTalkEvent_Case05_Case0C
+    dw TalkMsg040E_HeroCheckedTheGraveTheTombstone
     dw DispatchTalkEvent_Case05_Case0D
     dw DispatchTalkEvent_Case05_Case0E
     dw DispatchTalkEvent_Case05_Case0F
     dw DispatchTalkEvent_Case05_Case10
-    dw DispatchTalkEvent_Case05_Case11
+    dw TalkMsg0413_HeroCheckedTheTreasureChest
     dw DispatchTalkEvent_Case05_Case12
     dw DispatchTalkEvent_Case05_Case13
     dw DispatchTalkEvent_Case05_Case14
     dw DispatchTalkEvent_Case05_Case15
     dw DispatchTalkEvent_Case05_Case16
-    dw DispatchTalkEvent_Case05_Case17
-    dw DispatchTalkEvent_Case05_Case18
-    dw DispatchTalkEvent_Case05_Case19
-    dw DispatchTalkEvent_Case05_Case1A
-    dw DispatchTalkEvent_Case05_Case1B
-    dw DispatchTalkEvent_Case05_Case1C
-    dw DispatchTalkEvent_Case05_Case1D
-    dw DispatchTalkEvent_Case05_Case1E
+    dw TalkMsg041E_ThisIsTheTownOfPei
+    dw TalkMsg041F_NyaTravelersThatsRare
+    dw TalkMsg0420_ToTheWestIsAMountain
+    dw TalkMsg0421_YouShouldStayWellClearOf
+    dw TalkMsg0422_ICameCloseToBeingAbducted
+    dw TalkMsg0423_SomeTimeAgoAHumanChild
+    dw TalkMsg0424_ThereWasntAMonsterKingFor
+    dw TalkMsg0425_TheNewMonsterKingMakesOthers
     dw DispatchTalkEvent_Case05_Case1F
-    dw DispatchTalkEvent_Case05_Case20
-    dw DispatchTalkEvent_Case05_Case21
-    dw DispatchTalkEvent_Case05_Case22
+    dw TalkMsg042A_ThisIsJustARumorBut
+    dw TalkMsg042B_TheTunnelInTheWestWill
+    dw TalkMsg042C_AreYouLookingForSomething
     dw DispatchTalkEvent_Case05_Case23
     dw DispatchTalkEvent_Case05_Case24
-    dw DispatchTalkEvent_Case05_Case25
-    dw DispatchTalkEvent_Case05_Case26
-    dw DispatchTalkEvent_Case05_Case27
+    dw TalkMsg0430_HeroPeeredIntoTheVaseIt
+    dw TalkMsg04AA_HeroReadTheSignDetermine
+    dw TalkMsg0DD3_InnDownstairsRoomsAvailable
     dw DispatchTalkEvent_Case05_Case28
     dw DispatchTalkEvent_Case05_Case29
     dw DispatchTalkEvent_Case05_Case2A
-    dw DispatchTalkEvent_Case05_Case2B
+    dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw DispatchTalkEvent_Case05_Case2C
-    dw DispatchTalkEvent_Case05_Case2D
-    dw DispatchTalkEvent_Case05_Case2E
+    dw TalkMsg0437_ThisIsTheCastleOfHitano
+    dw TalkMsg0438_AMonsterKingHasAppearedTo
     dw DispatchTalkEvent_Case05_Case2F
-    dw DispatchTalkEvent_Case05_Case30
-    dw DispatchTalkEvent_Case05_Case31
-    dw DispatchTalkEvent_Case05_Case32
-    dw DispatchTalkEvent_Case05_Case33
+    dw TalkMsg043C_TheCastleIsUnderTheMonster
+    dw TalkMsg043E_TheCaveToTheSouthThat
+    dw TalkMsg043F_TheNewMonsterKingIsSaid
+    dw TalkMsg0440_HardlyNoOneHasSeenThe
     dw DispatchTalkEvent_Case05_Case34
     dw DispatchTalkEvent_Case05_Case35
-    dw DispatchTalkEvent_Case05_Case36
-    dw DispatchTalkEvent_Case05_Case37
+    dw TalkMsg0445_IfYouHaveTheLightOrbYou
+    dw TalkMsg0446_IfIHadTheLightOrbEven
     dw DispatchTalkEvent_Case05_Case38
-    dw DispatchTalkEvent_Case05_Case39
+    dw TalkMsg044A_HearMeOutIfYouWish
     dw DispatchTalkEvent_Case05_Case3A
     dw DispatchTalkEvent_Case05_Case3B
-    dw DispatchTalkEvent_Case05_Case3C
-    dw DispatchTalkEvent_Case05_Case3D
-    dw DispatchTalkEvent_Case05_Case3E
+    dw TalkMsg044D_HeroReadTheSignTheFinder
+    dw TalkMsg0450_HeroPeeredIntoTheVaseA
+    dw TalkMsg0314_HeroTriedToOpenTheChest
     dw DispatchTalkEvent_Case05_Case3F
-    dw DispatchTalkEvent_Case05_Case40
-    dw DispatchTalkEvent_Case05_Case41
-    dw DispatchTalkEvent_Case05_Case42
-    dw DispatchTalkEvent_Case05_Case43
-    dw DispatchTalkEvent_Case05_Case44
-    dw DispatchTalkEvent_Case05_Case45
-    dw DispatchTalkEvent_Case05_Case46
+    dw TalkMsg0452_TheChangeStaffWillOpenPaths
+    dw TalkMsg0453_HeyKiddoYoureNewHereDont
+    dw TalkMsg0454_HeyKiddoYoureNewHereDont
+    dw TalkMsg0455_HeyKiddoYoureNewHereDont
+    dw TalkMsg0457_OnTheIslandToTheWest
+    dw TalkMsg0458_ToTheEastIsASuspension
+    dw TalkMsg0459_ThoseInsideTheHauntedCastle
     dw DispatchTalkEvent_Case05_Case47
     dw DispatchTalkEvent_Case05_Case48
     dw DispatchTalkEvent_Case05_Case49
     dw DispatchTalkEvent_Case05_Case4A
     dw DispatchTalkEvent_Case05_Case4B
     dw DispatchTalkEvent_Case05_Case4C
-    dw DispatchTalkEvent_Case05_Case4D
+    dw TalkMsg0462_HeroCheckedTheNoticeLayThe
     dw DispatchTalkEvent_Case05_Case4E
-    dw DispatchTalkEvent_Case05_Case4F
-    dw DispatchTalkEvent_Case05_Case50
+    dw TalkMsg04A8_WhereIsMyCasketWhereRing
+    dw TalkMsg04A9_HeroCheckedTheNoticeGuide
     dw DispatchTalkEvent_Case05_Case51
-    dw DispatchTalkEvent_Case05_Case52
-    dw DispatchTalkEvent_Case05_Case53
+    dw TalkMsg0463_HeroCheckedTheNoticeFollow
+    dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E
     dw DispatchTalkEvent_Case05_Case54
     dw DispatchTalkEvent_Case05_Case55
     dw DispatchTalkEvent_Case05_Case56
-    dw DispatchTalkEvent_Case05_Case57
-    dw DispatchTalkEvent_Case05_Case58
-    dw DispatchTalkEvent_Case05_Case59
+    dw TalkMsg046D_TheMonsterArmysGeneralIs
+    dw TalkMsg046E_OurKingsCastleIsAnInvincible
+    dw TalkMsg046F_WhatYouEGotTheThree
     dw DispatchTalkEvent_Case05_Case5A
     dw DispatchTalkEvent_Case05_Case5B
     dw DispatchTalkEvent_Case05_Case5C
     dw DispatchTalkEvent_Case05_Case5D
-    dw DispatchTalkEvent_Case05_Case5E
-    dw DispatchTalkEvent_Case05_Case5F
-    dw DispatchTalkEvent_Case05_Case60
-    dw DispatchTalkEvent_Case05_Case61
+    dw TalkMsg0DE2_HeroCheckedTheTombstoneThere
+    dw TalkMsg0476_AwaarghImLateImLateThey
+    dw TalkMsg0477_TheyKeepPilingOnTheseLudicrous
+    dw TalkMsg0478_GaahYouFoundMeWhileI
     dw DispatchTalkEvent_Case05_Case62
-    dw DispatchTalkEvent_Case05_Case63
+    dw TalkMsg0450_HeroPeeredIntoTheVaseA_1348B0
     dw DispatchTalkEvent_Case05_Case64
     dw DispatchTalkEvent_Case05_Case65
     dw DispatchTalkEvent_Case05_Case66
@@ -307,58 +307,58 @@ Jump_013_4134:: ; address name
     dw DispatchTalkEvent_Case05_Case68
     dw DispatchTalkEvent_Case05_Case69
     dw DispatchTalkEvent_Case05_Case6A
-    dw DispatchTalkEvent_Case05_Case6B
-    dw DispatchTalkEvent_Case05_Case6C
-    dw DispatchTalkEvent_Case05_Case6D
+    dw TalkMsg04A6_IWasTakingAWalkOutside
+    dw TalkMsg04A4_SouthBeyondTheMountainsIs
+    dw TalkMsg04A5_SeveralAncientRuinsRemain
     dw DispatchTalkEvent_Case05_Case6E
     dw DispatchTalkEvent_Case05_Case6F
-    dw DispatchTalkEvent_Case05_Case70
+    dw TalkMsg0413_HeroCheckedTheTreasureChest_1349CE
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
 
-; entry 0 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0400 through StartMessageCommand09HL (script command $09); that string begins 'This is the village of Fhunt. We' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case00)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case00::
+TalkMsg0400_ThisIsTheVillageOfFhunt::
 Jump_013_421E:: ; address name
     ld hl, $0400 ; 'This is the village of Fhunt.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 1 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0401 through StartMessageCommand09HL (script command $09); that string begins 'The Great Sage Ugor saved the world' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case01)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case01::
+TalkMsg0401_TheGreatSageUgorSavedThe::
 Jump_013_4225:: ; address name
     ld hl, $0401 ; 'The Great Sage Ugor saved the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 2 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0402 through StartMessageCommand09HL (script command $09); that string begins 'You e come all this way, take' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case02)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case02::
+TalkMsg0402_YouEComeAllThisWay::
 Jump_013_422C:: ; address name
     ld hl, $0402 ; 'You e come all this way,'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 3 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0403 through StartMessageCommand09HL (script command $09); that string begins 'The Great Sage, after saving the world,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case03)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case03::
+TalkMsg0403_TheGreatSageAfterSavingThe::
 Jump_013_4233:: ; address name
     ld hl, $0403 ; 'The Great Sage, after saving the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 4 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0404 through StartMessageCommand09HL (script command $09); that string begins 'You're not about to go after the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case04)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case04::
+TalkMsg0404_YoureNotAboutToGoAfter::
 Jump_013_423A:: ; address name
     ld hl, $0404 ; 'You're not about to go after'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 5 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_4250); starts message $0405 through StartMessageCommand09HL (script command $09); that string begins 'Some time ago, lightning struck the tower,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case05)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case05::
+TalkMsg0405_SomeTimeAgoLightningStruck::
 Jump_013_4241:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -372,25 +372,25 @@ Jump_013_4250::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 6 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0407 through StartMessageCommand09HL (script command $09); that string begins 'A suspension bridge is in the south,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case06)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case06::
+TalkMsg0407_ASuspensionBridgeIsInThe::
 Jump_013_4257:: ; address name
     ld hl, $0407 ; 'A suspension bridge is in the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 7 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0406 through StartMessageCommand09HL (script command $09); that string begins 'Nobody can defy the Orb's bearer. It' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case07)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case07::
+TalkMsg0406_NobodyCanDefyTheOrbsBearer::
 Jump_013_425E:: ; address name
     ld hl, $0406 ; 'Nobody can defy the Orb's bearer.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 8 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 0024 then jr c, Jump_013_4274); starts message $0408 through StartMessageCommand09HL (script command $09); that string begins 'A huge bird perches atop the tower' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case08)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case08::
+TalkMsg0408_AHugeBirdPerchesAtopThe::
 Jump_013_4265:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -404,17 +404,17 @@ Jump_013_4274::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 9 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0409 through StartMessageCommand09HL (script command $09); that string begins 'The tower's gate is tightly sealed. Anyone' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case09)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case09::
+TalkMsg0409_TheTowersGateIsTightlySealed::
 Jump_013_427B:: ; address name
     ld hl, $0409 ; 'The tower's gate is tightly sealed.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 10 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 0024 then jr c, Jump_013_42A0; flag 00A4 then jr c, Jump_013_4299); starts message $040A through StartMessageCommand09HL (script command $09); that string begins 'The top of the tower collapsed when' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case0A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case0A::
+TalkMsg040A_TheTopOfTheTowerCollapsed::
 Jump_013_4282:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -448,9 +448,9 @@ Jump_013_42A7:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 12 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $040E through StartMessageCommand09HL (script command $09); that string begins '0 checked the grave. The tombstone was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case0C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case0C::
+TalkMsg040E_HeroCheckedTheGraveTheTombstone::
 Jump_013_42B3:: ; address name
     ld hl, $040E ; '0 checked the grave. The tombstone'
     call StartMessageCommand09HL_B13
@@ -519,9 +519,9 @@ Jump_013_42FB:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 17 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0413 through StartMessageCommand09HL (script command $09); that string begins '0 checked the treasure chest. The chest' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case11)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case11::
+TalkMsg0413_HeroCheckedTheTreasureChest::
 Jump_013_430C:: ; address name
     ld hl, $0413 ; '0 checked the treasure chest. The'
     call StartMessageCommand09HL_B13
@@ -635,41 +635,41 @@ Jump_013_43A9::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 23 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $041E through StartMessageCommand09HL (script command $09); that string begins 'This is the town of Pei. You'll' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case17)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case17::
+TalkMsg041E_ThisIsTheTownOfPei::
 Jump_013_43B0:: ; address name
     ld hl, $041E ; 'This is the town of Pei.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 24 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $041F through StartMessageCommand09HL (script command $09); that string begins 'Nya? Travelers? That's rare!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case18)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case18::
+TalkMsg041F_NyaTravelersThatsRare::
 Jump_013_43B7:: ; address name
     ld hl, $041F ; 'Nya? Travelers? That's rare!'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 25 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0420 through StartMessageCommand09HL (script command $09); that string begins 'To the west is a mountain. A' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case19)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case19::
+TalkMsg0420_ToTheWestIsAMountain::
 Jump_013_43BE:: ; address name
     ld hl, $0420 ; 'To the west is a mountain.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 26 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0421 through StartMessageCommand09HL (script command $09); that string begins 'You should stay well clear of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case1A::
+TalkMsg0421_YouShouldStayWellClearOf::
 Jump_013_43C5:: ; address name
     ld hl, $0421 ; 'You should stay well clear of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 27 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 0024 then jr c, Jump_013_43DB); starts message $0422 through StartMessageCommand09HL (script command $09); that string begins 'I came close to being abducted by' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case1B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case1B::
+TalkMsg0422_ICameCloseToBeingAbducted::
 Jump_013_43CC:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -683,9 +683,9 @@ Jump_013_43DB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 28 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 0024 then jr c, Jump_013_43F1); starts message $0423 through StartMessageCommand09HL (script command $09); that string begins 'Some time ago, a human child was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case1C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case1C::
+TalkMsg0423_SomeTimeAgoAHumanChild::
 Jump_013_43E2:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -699,9 +699,9 @@ Jump_013_43F1::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 29 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_4407); starts message $0424 through StartMessageCommand09HL (script command $09); that string begins 'There wasn't a monster king for a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case1D::
+TalkMsg0424_ThereWasntAMonsterKingFor::
 Jump_013_43F8:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -715,9 +715,9 @@ Jump_013_4407::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 30 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_441D); starts message $0425 through StartMessageCommand09HL (script command $09); that string begins 'The new monster king makes others obey' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case1E::
+TalkMsg0425_TheNewMonsterKingMakesOthers::
 Jump_013_440E:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -752,25 +752,25 @@ Jump_013_4435::
     call StartScriptAtHL_B13
     ret
 
-; entry 32 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $042A through StartMessageCommand09HL (script command $09); that string begins 'This is just a rumor, but the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case20)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case20::
+TalkMsg042A_ThisIsJustARumorBut::
 Jump_013_443C:: ; address name
     ld hl, $042A ; 'This is just a rumor, but'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 33 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $042B through StartMessageCommand09HL (script command $09); that string begins 'The tunnel in the west will take' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case21)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case21::
+TalkMsg042B_TheTunnelInTheWestWill::
 Jump_013_4443:: ; address name
     ld hl, $042B ; 'The tunnel in the west will'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 34 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $042C through StartMessageCommand09HL (script command $09); that string begins 'Are you looking for something? Huh? The' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case22)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case22::
+TalkMsg042C_AreYouLookingForSomething::
 Jump_013_444A:: ; address name
     ld hl, $042C ; 'Are you looking for something? Huh?'
     call StartMessageCommand09HL_B13
@@ -801,25 +801,25 @@ Jump_013_445D:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 37 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0430 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It appeared' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case25)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case25::
+TalkMsg0430_HeroPeeredIntoTheVaseIt::
 Jump_013_446E:: ; address name
     ld hl, $0430 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 38 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04AA through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. Determine where you' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case26)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case26::
+TalkMsg04AA_HeroReadTheSignDetermine::
 Jump_013_4475:: ; address name
     ld hl, $04AA ; '0 read the sign. Determine where'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 39 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0DD3 through StartMessageCommand09HL (script command $09); that string begins 'Inn downstairs. Rooms available.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case27)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case27::
+TalkMsg0DD3_InnDownstairsRoomsAvailable::
 Jump_013_447C:: ; address name
     ld hl, $0DD3 ; 'Inn downstairs. Rooms available.'
     call StartMessageCommand09HL_B13
@@ -871,9 +871,9 @@ Jump_013_44BC::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 43 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0436 through StartMessageCommand09HL (script command $09); that string begins '0 opened the treasure chest. But it' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case2B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case2B::
+TalkMsg0436_HeroOpenedTheTreasureChest::
 Jump_013_44C3:: ; address name
     ld hl, $0436 ; '0 opened the treasure chest. But'
     call StartMessageCommand09HL_B13
@@ -892,17 +892,17 @@ Jump_013_44CA:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 45 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0437 through StartMessageCommand09HL (script command $09); that string begins 'This is the Castle of Hitano. It' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case2D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case2D::
+TalkMsg0437_ThisIsTheCastleOfHitano::
 Jump_013_44DB:: ; address name
     ld hl, $0437 ; 'This is the Castle of Hitano.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 46 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_44F1); starts message $0438 through StartMessageCommand09HL (script command $09); that string begins 'A monster king has appeared to take' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case2E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case2E::
+TalkMsg0438_AMonsterKingHasAppearedTo::
 Jump_013_44E2:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -925,9 +925,9 @@ Jump_013_44F8:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 48 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_451D; flag 00A8 then jr c, Jump_013_4516); starts message $043C through StartMessageCommand09HL (script command $09); that string begins 'The Castle is under the monster King's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case30)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case30::
+TalkMsg043C_TheCastleIsUnderTheMonster::
 Jump_013_44FF:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -949,25 +949,25 @@ Jump_013_451D::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 49 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $043E through StartMessageCommand09HL (script command $09); that string begins 'The cave to the south That has' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case31)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case31::
+TalkMsg043E_TheCaveToTheSouthThat::
 Jump_013_4524:: ; address name
     ld hl, $043E ; 'The cave to the south That'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 50 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $043F through StartMessageCommand09HL (script command $09); that string begins 'The new monster King is said to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case32)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case32::
+TalkMsg043F_TheNewMonsterKingIsSaid::
 Jump_013_452B:: ; address name
     ld hl, $043F ; 'The new monster King is said'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 51 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_4541); starts message $0440 through StartMessageCommand09HL (script command $09); that string begins 'Hardly no one has seen the new' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case33)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case33::
+TalkMsg0440_HardlyNoOneHasSeenThe::
 Jump_013_4532:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1095,9 +1095,9 @@ Jump_013_4612::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 54 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_4628); starts message $0445 through StartMessageCommand09HL (script command $09); that string begins 'If you have the LightOrb, you can' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case36)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case36::
+TalkMsg0445_IfYouHaveTheLightOrbYou::
 Jump_013_4619:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1111,9 +1111,9 @@ Jump_013_4628::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 55 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_463E); starts message $0446 through StartMessageCommand09HL (script command $09); that string begins 'If I had the LightOrb, even I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case37)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case37::
+TalkMsg0446_IfIHadTheLightOrbEven::
 Jump_013_462F:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1136,9 +1136,9 @@ Jump_013_4645:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 57 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $044A through StartMessageCommand09HL (script command $09); that string begins 'Hear me out if you wish to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case39)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case39::
+TalkMsg044A_HearMeOutIfYouWish::
 Jump_013_464C:: ; address name
     ld hl, $044A ; 'Hear me out if you wish'
     call StartMessageCommand09HL_B13
@@ -1169,9 +1169,9 @@ Jump_013_4664:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 60 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_468E; flag 00A8 then jr c, Jump_013_4687); starts message $044D through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. The finder of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case3C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case3C::
+TalkMsg044D_HeroReadTheSignTheFinder::
 Jump_013_4670:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1193,17 +1193,17 @@ Jump_013_468E::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 61 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0450 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. A face' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case3D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case3D::
+TalkMsg0450_HeroPeeredIntoTheVaseA::
 Jump_013_4695:: ; address name
     ld hl, $0450 ; '0 peered into the vase. A'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 62 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0314 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case3E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case3E::
+TalkMsg0314_HeroTriedToOpenTheChest::
 Jump_013_469C:: ; address name
     ld hl, $0314 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B13
@@ -1221,33 +1221,33 @@ Jump_013_46A3:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 64 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0452 through StartMessageCommand09HL (script command $09); that string begins 'The Change Staff will open paths. I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case40)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case40::
+TalkMsg0452_TheChangeStaffWillOpenPaths::
 Jump_013_46AF:: ; address name
     ld hl, $0452 ; 'The Change Staff will open paths.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 65 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0453 through StartMessageCommand09HL (script command $09); that string begins 'Hey, kiddo! You're new here. Don't cause' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case41)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case41::
+TalkMsg0453_HeyKiddoYoureNewHereDont::
 Jump_013_46B6:: ; address name
     ld hl, $0453 ; 'Hey, kiddo! You're new here. Don't'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 66 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0454 through StartMessageCommand09HL (script command $09); that string begins 'Hey, kiddo! You're new here. Don't cause' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case42)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case42::
+TalkMsg0454_HeyKiddoYoureNewHereDont::
 Jump_013_46BD:: ; address name
     ld hl, $0454 ; 'Hey, kiddo! You're new here. Don't'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 67 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00A8 then jr c, Jump_013_46D3); starts message $0455 through StartMessageCommand09HL (script command $09); that string begins 'Hey, kiddo! You're new here. Don't cause' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case43)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case43::
+TalkMsg0455_HeyKiddoYoureNewHereDont::
 Jump_013_46C4:: ; address name
     ld de, $00A8
     call TestFlagBit
@@ -1261,25 +1261,25 @@ Jump_013_46D3::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 68 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0457 through StartMessageCommand09HL (script command $09); that string begins 'On the island to the west, there' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case44)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case44::
+TalkMsg0457_OnTheIslandToTheWest::
 Jump_013_46DA:: ; address name
     ld hl, $0457 ; 'On the island to the west,'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 69 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0458 through StartMessageCommand09HL (script command $09); that string begins 'To the east is a suspension bridge.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case45)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case45::
+TalkMsg0458_ToTheEastIsASuspension::
 Jump_013_46E1:: ; address name
     ld hl, $0458 ; 'To the east is a suspension'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 70 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0459 through StartMessageCommand09HL (script command $09); that string begins 'Those inside the haunted castle speak only' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case46)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case46::
+TalkMsg0459_ThoseInsideTheHauntedCastle::
 Jump_013_46E8:: ; address name
     ld hl, $0459 ; 'Those inside the haunted castle speak'
     call StartMessageCommand09HL_B13
@@ -1384,10 +1384,10 @@ Jump_013_476D::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 77 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0462 through StartMessageCommand09HL (script command $09); that string begins '0 checked the notice. Lay the souls' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case4D)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60CE
-DispatchTalkEvent_Case05_Case4D::
+TalkMsg0462_HeroCheckedTheNoticeLayThe::
 Jump_013_4774:: ; address name
     ld hl, $0462 ; '0 checked the notice. Lay the'
     call StartMessageCommand09HL_B13
@@ -1402,18 +1402,18 @@ Jump_013_477B:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 79 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04A8 through StartMessageCommand09HL (script command $09); that string begins 'Where is my casket Where Ring the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case4F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case4F::
+TalkMsg04A8_WhereIsMyCasketWhereRing::
 Jump_013_4782:: ; address name
     ld hl, $04A8 ; 'Where is my casket Where Ring'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 80 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04A9 through StartMessageCommand09HL (script command $09); that string begins '0 checked the notice. Guide the lost' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case50)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60D0
-DispatchTalkEvent_Case05_Case50::
+TalkMsg04A9_HeroCheckedTheNoticeGuide::
 Jump_013_4789:: ; address name
     ld hl, $04A9 ; '0 checked the notice. Guide the'
     call StartMessageCommand09HL_B13
@@ -1428,17 +1428,17 @@ Jump_013_4790:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 82 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0463 through StartMessageCommand09HL (script command $09); that string begins '0 checked the notice. Follow the eyes' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case52)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case52::
+TalkMsg0463_HeroCheckedTheNoticeFollow::
 Jump_013_4797:: ; address name
     ld hl, $0463 ; '0 checked the notice. Follow the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 83 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $040E through StartMessageCommand09HL (script command $09); that string begins '0 checked the grave. The tombstone was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case53)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case53::
+TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E::
 Jump_013_479E:: ; address name
     ld hl, $040E ; '0 checked the grave. The tombstone'
     call StartMessageCommand09HL_B13
@@ -1491,9 +1491,9 @@ Jump_013_47D1:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 87 of the `rst $00` table in DispatchTalkEvent_Case05
+; tests story flags (flag 00C2 then jr c, Jump_013_47F1); starts message $046D through StartMessageCommand09HL (script command $09); that string begins 'The monster army's general is beyond here.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case57)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case57::
+TalkMsg046D_TheMonsterArmysGeneralIs::
 Jump_013_47E2:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1507,17 +1507,17 @@ Jump_013_47F1::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 88 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $046E through StartMessageCommand09HL (script command $09); that string begins 'Our King's castle is an invincible fortress' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case58)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case58::
+TalkMsg046E_OurKingsCastleIsAnInvincible::
 Jump_013_47F8:: ; address name
     ld hl, $046E ; 'Our King's castle is an invincible'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 89 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $046F through StartMessageCommand09HL (script command $09); that string begins 'What? You e got the three items?' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case59)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case59::
+TalkMsg046F_WhatYouEGotTheThree::
 Jump_013_47FF:: ; address name
     ld hl, $046F ; 'What? You e got the three'
     call StartMessageCommand09HL_B13
@@ -1606,33 +1606,33 @@ Jump_013_487C:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 94 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0DE2 through StartMessageCommand09HL (script command $09); that string begins '0 checked the tombstone. There appeared to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case5E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case5E::
+TalkMsg0DE2_HeroCheckedTheTombstoneThere::
 Jump_013_4883:: ; address name
     ld hl, $0DE2 ; '0 checked the tombstone. There appeared'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 95 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0476 through StartMessageCommand09HL (script command $09); that string begins 'Awaargh, I'm late, I'm late! They overwork' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case5F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case5F::
+TalkMsg0476_AwaarghImLateImLateThey::
 Jump_013_488A:: ; address name
     ld hl, $0476 ; 'Awaargh, I'm late, I'm late! They'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 96 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0477 through StartMessageCommand09HL (script command $09); that string begins 'They keep piling on these ludicrous orders.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case60)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case60::
+TalkMsg0477_TheyKeepPilingOnTheseLudicrous::
 Jump_013_4891:: ; address name
     ld hl, $0477 ; 'They keep piling on these ludicrous'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 97 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0478 through StartMessageCommand09HL (script command $09); that string begins 'Gaah! You found me while I was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case61)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case61::
+TalkMsg0478_GaahYouFoundMeWhileI::
 Jump_013_4898:: ; address name
     ld hl, $0478 ; 'Gaah! You found me while I'
     call StartMessageCommand09HL_B13
@@ -1651,9 +1651,9 @@ Jump_013_489F:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 99 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0450 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. A face' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case63)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case63::
+TalkMsg0450_HeroPeeredIntoTheVaseA_1348B0::
 Jump_013_48B0:: ; address name
     ld hl, $0450 ; '0 peered into the vase. A'
     call StartMessageCommand09HL_B13
@@ -1787,25 +1787,25 @@ Jump_013_4977:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 107 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04A6 through StartMessageCommand09HL (script command $09); that string begins 'I was taking a walk outside with' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case6B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case6B::
+TalkMsg04A6_IWasTakingAWalkOutside::
 Jump_013_4987:: ; address name
     ld hl, $04A6 ; 'I was taking a walk outside'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 108 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04A4 through StartMessageCommand09HL (script command $09); that string begins 'South beyond the mountains is the King's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case6C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case6C::
+TalkMsg04A4_SouthBeyondTheMountainsIs::
 Jump_013_498E:: ; address name
     ld hl, $04A4 ; 'South beyond the mountains is the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 109 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $04A5 through StartMessageCommand09HL (script command $09); that string begins 'Several ancient ruins remain in the southern' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case6D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case6D::
+TalkMsg04A5_SeveralAncientRuinsRemain::
 Jump_013_4995:: ; address name
     ld hl, $04A5 ; 'Several ancient ruins remain in the'
     call StartMessageCommand09HL_B13
@@ -1847,9 +1847,9 @@ Jump_013_49C7::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 112 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts message $0413 through StartMessageCommand09HL (script command $09); that string begins '0 checked the treasure chest. The chest' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case05_Case70)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case05_Case70::
+TalkMsg0413_HeroCheckedTheTreasureChest_1349CE::
 Jump_013_49CE:: ; address name
     ld hl, $0413 ; '0 checked the treasure chest. The'
     call StartMessageCommand09HL_B13
@@ -1909,75 +1909,75 @@ DispatchTalkEvent_Case04::
 Jump_013_4A23:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case04_Case00
-    dw DispatchTalkEvent_Case04_Case01
-    dw DispatchTalkEvent_Case04_Case02
-    dw DispatchTalkEvent_Case04_Case03
-    dw DispatchTalkEvent_Case04_Case04
-    dw DispatchTalkEvent_Case04_Case05
-    dw DispatchTalkEvent_Case04_Case06
-    dw DispatchTalkEvent_Case04_Case07
+    dw TalkMsg0300_ThisIsNordenTheKingdomOf
+    dw TalkMsg0301_ThereAreThreeKingdomsSituated
+    dw TalkMsg0302_TravelNorthAlongTheMountain
+    dw TalkMsg0303_TheWinterHereIsHarshStay
+    dw TalkMsg0304_ListenDidYouHearTheyFound
+    dw TalkMsg0305_UrrrrrghTheWesternWretches
+    dw TalkMsg0306_EveryonesBeenActingStrangely
+    dw TalkMsg0307_TheSpringInTheNorthWhere
     dw DispatchTalkEvent_Case04_Case08
-    dw DispatchTalkEvent_Case04_Case09
-    dw DispatchTalkEvent_Case04_Case0A
+    dw TalkMsg030B_AroundThesePartsWeGetA
+    dw TalkMsg030C_ItsBecomeMuchColderWeMay
     dw DispatchTalkEvent_Case04_Case0B
-    dw DispatchTalkEvent_Case04_Case0C
+    dw TalkMsg030F_TheMineOnTheWesternBorder
     dw DispatchTalkEvent_Case04_Case0D
-    dw DispatchTalkEvent_Case04_Case0E
+    dw TalkMsg0311_HeroPeeredIntoTheVaseIt
     dw DispatchTalkEvent_Case04_Case0F
-    dw DispatchTalkEvent_Case04_Case10
-    dw DispatchTalkEvent_Case04_Case11
+    dw TalkMsg0313_HeroPeeredIntoTheOvenIt
+    dw TalkMsg0314_HeroTriedToOpenTheChest_134C97
     dw DispatchTalkEvent_Case04_Case12
-    dw DispatchTalkEvent_Case04_Case13
+    dw TalkMsg0315_TheBorderIsClosedSoI
     dw DispatchTalkEvent_Case04_Case14
-    dw DispatchTalkEvent_Case04_Case15
-    dw DispatchTalkEvent_Case04_Case16
-    dw DispatchTalkEvent_Case04_Case17
+    dw TalkMsg031E_HisMajestyHasBeenCrankyIs
+    dw TalkMsg031F_AfterTheGoldDiscoveryOur
+    dw TalkMsg0320_IRememberTheKingToBe
     dw DispatchTalkEvent_Case04_Case18
-    dw DispatchTalkEvent_Case04_Case19
-    dw DispatchTalkEvent_Case04_Case1A
-    dw DispatchTalkEvent_Case04_Case1B
-    dw DispatchTalkEvent_Case04_Case1C
-    dw DispatchTalkEvent_Case04_Case1D
-    dw DispatchTalkEvent_Case04_Case1E
-    dw DispatchTalkEvent_Case04_Case1F
-    dw DispatchTalkEvent_Case04_Case20
-    dw DispatchTalkEvent_Case04_Case21
-    dw DispatchTalkEvent_Case04_Case22
-    dw DispatchTalkEvent_Case04_Case23
-    dw DispatchTalkEvent_Case04_Case24
-    dw DispatchTalkEvent_Case04_Case25
-    dw DispatchTalkEvent_Case04_Case26
-    dw DispatchTalkEvent_Case04_Case27
-    dw DispatchTalkEvent_Case04_Case28
+    dw TalkMsg0ABD_HeroCheckedTheBookshelfHistory
+    dw TalkMsg0ABE_HeroCheckedTheBookshelfHistory
+    dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt
+    dw TalkMsg0324_ThisTunnelGoesToAPort
+    dw TalkMsg0325_ThisIsThePortOfNofor
+    dw TalkMsg0326_ItsUselessBeyondUselessThe
+    dw TalkMsg0327_InAllMyYearsIE
+    dw TalkMsg0328_ThreeKingdomsRingThisLake
+    dw TalkMsg0329_TheBorderItsNotHereThe
+    dw TalkMsg032A_MamaSaidToStayOffThe
+    dw TalkMsg032B_WeWerePassingThroughFrom
+    dw TalkMsg032C_TheyDiscoveredGoldAtTheMine
+    dw TalkMsg032D_IHearTheWestAndThe
+    dw TalkMsg032E_DoYouKnowLadyYunaOf
+    dw TalkMsg032F_TheScholarInTheTavernSaid
+    dw TalkMsg0330_DontYouThinkItsTooExpensive
     dw DispatchTalkEvent_Case04_Case29
     dw DispatchTalkEvent_Case04_Case2A
     dw DispatchTalkEvent_Case04_Case2B
     dw DispatchTalkEvent_Case04_Case2C
-    dw DispatchTalkEvent_Case04_Case2D
-    dw DispatchTalkEvent_Case04_Case2E
-    dw DispatchTalkEvent_Case04_Case2F
-    dw DispatchTalkEvent_Case04_Case30
-    dw DispatchTalkEvent_Case04_Case31
-    dw DispatchTalkEvent_Case04_Case32
-    dw DispatchTalkEvent_Case04_Case33
-    dw DispatchTalkEvent_Case04_Case34
-    dw DispatchTalkEvent_Case04_Case35
+    dw TalkMsg0312_HeroPeeredIntoTheBarrelIt
+    dw TalkMsg0D3B_Whinny
+    dw TalkMsg0314_HeroTriedToOpenTheChest_134ECF
+    dw TalkMsg0313_HeroPeeredIntoTheOvenIt_134ED6
+    dw TalkMsg0334_WeEBeenFullUpWith
+    dw TalkMsg0335_UrrrpHooListenToThisMy
+    dw TalkMsg0336_SighIsntThatScholarAppealing
+    dw TalkMsg0337_ICameFromTheEasternKingdom
+    dw TalkMsg0ABF_HeroPeeredIntoTheBarrelIt
     dw DispatchTalkEvent_Case04_Case36
-    dw DispatchTalkEvent_Case04_Case37
-    dw DispatchTalkEvent_Case04_Case38
-    dw DispatchTalkEvent_Case04_Case39
-    dw DispatchTalkEvent_Case04_Case3A
-    dw DispatchTalkEvent_Case04_Case3B
-    dw DispatchTalkEvent_Case04_Case3C
-    dw DispatchTalkEvent_Case04_Case3D
-    dw DispatchTalkEvent_Case04_Case3E
-    dw DispatchTalkEvent_Case04_Case3F
-    dw DispatchTalkEvent_Case04_Case40
-    dw DispatchTalkEvent_Case04_Case41
-    dw DispatchTalkEvent_Case04_Case42
-    dw DispatchTalkEvent_Case04_Case43
-    dw DispatchTalkEvent_Case04_Case44
+    dw TalkMsg0338_TheKingOfTheWestIs
+    dw TalkMsg0339_ThisIsTheBorderWeShare
+    dw TalkMsg033A_TheBorderHasBeenSealedBy
+    dw TalkMsg033B_ATravelerAreYouSorryBut
+    dw TalkMsg033C_OurTunnelingFoundGoldBut
+    dw TalkMsg033D_ThisSideIsTheWesternKingdom
+    dw TalkMsg033E_TheNorthernersWantOurGold
+    dw TalkMsg033F_TheNorthernersMuscledInOn
+    dw TalkMsg0340_HehYouEComeWayDown
+    dw TalkMsg0345_KidYouHaveGutsToBe
+    dw TalkMsg0341_ThereIsABoulderBlockingThe
+    dw TalkMsg0342_HurryWeHaveToBeatThe
+    dw TalkMsg0344_TheGoldIsOursTheWest
+    dw TalkMsg0343_TheVeinOfGoldIsJust
     dw DispatchTalkEvent_Case04_Case45
     dw DispatchTalkEvent_Case04_Case46
     dw DispatchTalkEvent_Case04_Case47
@@ -1987,84 +1987,84 @@ Jump_013_4A23:: ; address name
     dw DispatchTalkEvent_Case04_Case4B
     dw DispatchTalkEvent_Case04_Case4C
     dw DispatchTalkEvent_Case04_Case4D
-    dw DispatchTalkEvent_Case04_Case4E
-    dw DispatchTalkEvent_Case04_Case4F
-    dw DispatchTalkEvent_Case04_Case50
-    dw DispatchTalkEvent_Case04_Case51
-    dw DispatchTalkEvent_Case04_Case52
-    dw DispatchTalkEvent_Case04_Case53
-    dw DispatchTalkEvent_Case04_Case54
-    dw DispatchTalkEvent_Case04_Case55
-    dw DispatchTalkEvent_Case04_Case56
-    dw DispatchTalkEvent_Case04_Case57
-    dw DispatchTalkEvent_Case04_Case58
-    dw DispatchTalkEvent_Case04_Case59
-    dw DispatchTalkEvent_Case04_Case5A
-    dw DispatchTalkEvent_Case04_Case5B
+    dw TalkMsg037E_ThisIsTheTownOfWeston
+    dw TalkMsg037F_TheWestsCastleHasSeenA
+    dw TalkMsg0380_AcrossFromUsOnTheLake
+    dw TalkMsg0381_ISawLadyYunaRidingTowards
+    dw TalkMsg0382_LadyYunaHasBeenALively
+    dw TalkMsg0383_IHaventBeenSeeingTooMany
+    dw TalkMsg0384_LadyYunaIsSaidToBe
+    dw TalkMsg0385_IEHeardRumorsThatSomething
+    dw TalkMsg0386_TheKingDotesOverLadyYuna
+    dw TalkMsg0387_TheRoadToTheEasternKingdom
+    dw TalkMsg0388_LadyYunaLocksHerselfInHer
+    dw TalkMsg0389_IfYouCanCheerUpThe
+    dw TalkMsg038A_AWoodsmanCameByAWhile
+    dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1352A0
     dw DispatchTalkEvent_Case04_Case5C
-    dw DispatchTalkEvent_Case04_Case5D
+    dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1352B8
     dw DispatchTalkEvent_Case04_Case5E
     dw DispatchTalkEvent_Case04_Case5F
-    dw DispatchTalkEvent_Case04_Case60
-    dw DispatchTalkEvent_Case04_Case61
-    dw DispatchTalkEvent_Case04_Case62
-    dw DispatchTalkEvent_Case04_Case63
-    dw DispatchTalkEvent_Case04_Case64
-    dw DispatchTalkEvent_Case04_Case65
-    dw DispatchTalkEvent_Case04_Case66
-    dw DispatchTalkEvent_Case04_Case67
+    dw TalkMsg038C_TheLakeIsFrozenSoI
+    dw TalkMsg038D_ThisIsWestaniaCastleWestania
+    dw TalkMsg038E_NobodyFailsToBeImpressed
+    dw TalkMsg038F_IEBroughtWithMeA
+    dw TalkMsg0390_WhenIBalanceOnMyBall
+    dw TalkMsg0391_IHurlKnivesWithIncredible
+    dw TalkMsg0392_PleaseLineUpAndQuitPushing
+    dw TalkMsg0393_OhLadyYunaToThinkThat
     dw DispatchTalkEvent_Case04_Case68
-    dw DispatchTalkEvent_Case04_Case69
-    dw DispatchTalkEvent_Case04_Case6A
-    dw DispatchTalkEvent_Case04_Case6B
-    dw DispatchTalkEvent_Case04_Case6C
-    dw DispatchTalkEvent_Case04_Case6D
+    dw TalkMsg0397_TheCastleIsInAnUproar
+    dw TalkMsg0398_LadyYunaUsedToBeVery
+    dw TalkMsg0399_InTheEastLivesAnOld
+    dw TalkMsg039A_WhatHappenedToLadyYunaIts
+    dw TalkMsg039B_BeforeLadyYunaWouldBeUp
     dw DispatchTalkEvent_Case04_Case6E
     dw DispatchTalkEvent_Case04_Case6F
     dw DispatchTalkEvent_Case04_Case70
-    dw DispatchTalkEvent_Case04_Case71
+    dw TalkMsg03A4_KingSighNotEvenThisYou
     dw DispatchTalkEvent_Case04_Case72
-    dw DispatchTalkEvent_Case04_Case73
-    dw DispatchTalkEvent_Case04_Case74
-    dw DispatchTalkEvent_Case04_Case75
-    dw DispatchTalkEvent_Case04_Case76
-    dw DispatchTalkEvent_Case04_Case77
-    dw DispatchTalkEvent_Case04_Case78
-    dw DispatchTalkEvent_Case04_Case79
-    dw DispatchTalkEvent_Case04_Case7A
-    dw DispatchTalkEvent_Case04_Case7B
+    dw TalkMsg03A6_ThisIsTheCastleOfEstria
+    dw TalkMsg03A7_QueenHelenCameByAWhile
+    dw TalkMsg03A8_TheSpiritsSpringHasFrozen
+    dw TalkMsg03A9_QueenHelensDreamsComeTrue
+    dw TalkMsg03AA_OurQueenIsAKindPerson
+    dw TalkMsg03AB_ATeacherFromTheWestLives
+    dw TalkMsg03AE_TheQueenLooksHaggardRecently
+    dw TalkMsg03AD_IHeardThisOnTheSly
+    dw TalkMsg03AF_AroundThesePartsThereAre
     dw DispatchTalkEvent_Case04_Case7C
     dw DispatchTalkEvent_Case04_Case7D
-    dw DispatchTalkEvent_Case04_Case7E
+    dw TalkMsg03B4_ABotanistDoesLiveHereBut
     dw DispatchTalkEvent_Case04_Case7F
     dw DispatchTalkEvent_Case04_Case80
     dw DispatchTalkEvent_Case04_Case81
     dw DispatchTalkEvent_Case04_Case82
     dw DispatchTalkEvent_Case04_Case83
-    dw DispatchTalkEvent_Case04_Case84
-    dw DispatchTalkEvent_Case04_Case85
+    dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1355F6
+    dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD
     dw DispatchTalkEvent_Case04_Case86
-    dw DispatchTalkEvent_Case04_Case87
-    dw DispatchTalkEvent_Case04_Case88
-    dw DispatchTalkEvent_Case04_Case89
-    dw DispatchTalkEvent_Case04_Case8A
-    dw DispatchTalkEvent_Case04_Case8B
+    dw TalkMsg03B8_IWantToReturnToThe
+    dw TalkMsg03AC_ThereIsASpringInThe
+    dw TalkMsg0396_ItsAMeanOldWorldOut
+    dw TalkMsg03B9_QueenHelenHasBeenSuffering
+    dw TalkMsg0DD6_NightmaresSoHorribleThat
     dw TalkMsg0DD7_OurHeartsAreLike
     dw Talk0DD8_QueenHelenIsWracked
     dw Talk0DD9_TheReceptionHallIs
     dw TalkMsg0DDA_OurQueenHelensPremonition
     dw TalkMsg0DDB_WhatIsItLeave
-    dw DispatchTalkEvent_Case04_Case91
-    dw DispatchTalkEvent_Case04_Case92
-    dw DispatchTalkEvent_Case04_Case93
-    dw DispatchTalkEvent_Case04_Case94
-    dw DispatchTalkEvent_Case04_Case94
-    dw DispatchTalkEvent_Case04_Case96
-    dw DispatchTalkEvent_Case04_Case97
+    dw TalkMsg00FF_Composing_135777
+    dw TalkMsg0DDC_ThisHappenedWhenIWasDeep
+    dw TalkMsg0DDD_MyFatherIsSoCowardlyGetting
+    dw TalkMsg0AC0_HeroCheckedTheBookshelfHistory
+    dw TalkMsg0AC0_HeroCheckedTheBookshelfHistory
+    dw TalkMsg0AC1_HeroCheckedTheBookshelfHistory
+    dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt_1357A9
     dw DispatchTalkEvent_Case04_Case98
     dw DispatchTalkEvent_Case04_Case99
     dw DispatchTalkEvent_Case04_Case9A
-    dw DispatchTalkEvent_Case04_Case9B
+    dw TalkMsg0A16_MyMaidIsAngryThatI
     dw DispatchTalkEvent_Case04_Case9C
     dw DispatchTalkEvent_Case04_Case9D
     dw DispatchTalkEvent_Case04_Case9E
@@ -2081,41 +2081,41 @@ Jump_013_4A23:: ; address name
     dw Msg01F0
     dw DispatchTalkEvent_Case04_CaseAA
 
-; entry 0 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0300 through StartMessageCommand09HL (script command $09); that string begins 'This is Norden, the kingdom of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case00)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case00::
+TalkMsg0300_ThisIsNordenTheKingdomOf::
 Jump_013_4B7D:: ; address name
     ld hl, $0300 ; 'This is Norden, the kingdom of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 1 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0301 through StartMessageCommand09HL (script command $09); that string begins 'There are three kingdoms situated around a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case01)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case01::
+TalkMsg0301_ThereAreThreeKingdomsSituated::
 Jump_013_4B84:: ; address name
     ld hl, $0301 ; 'There are three kingdoms situated around'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 2 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0302 through StartMessageCommand09HL (script command $09); that string begins 'Travel north along the mountain range, and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case02)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case02::
+TalkMsg0302_TravelNorthAlongTheMountain::
 Jump_013_4B8B:: ; address name
     ld hl, $0302 ; 'Travel north along the mountain range,'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 3 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0303 through StartMessageCommand09HL (script command $09); that string begins 'The winter here is harsh. Stay outside' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case03)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case03::
+TalkMsg0303_TheWinterHereIsHarshStay::
 Jump_013_4B92:: ; address name
     ld hl, $0303 ; 'The winter here is harsh. Stay'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 4 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_4BA8); starts message $0304 through StartMessageCommand09HL (script command $09); that string begins 'Listen, did you hear? They found gold' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case04)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case04::
+TalkMsg0304_ListenDidYouHearTheyFound::
 Jump_013_4B99:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -2129,9 +2129,9 @@ Jump_013_4BA8::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 5 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_4BBE); starts message $0305 through StartMessageCommand09HL (script command $09); that string begins 'Urrrrrgh! The western wretches! The mine on' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case05)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case05::
+TalkMsg0305_UrrrrrghTheWesternWretches::
 Jump_013_4BAF:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -2145,9 +2145,9 @@ Jump_013_4BBE::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 6 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_4BD4); starts message $0306 through StartMessageCommand09HL (script command $09); that string begins 'Everyone's been acting strangely since they found' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case06)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case06::
+TalkMsg0306_EveryonesBeenActingStrangely::
 Jump_013_4BC5:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -2161,9 +2161,9 @@ Jump_013_4BD4::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 7 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4BEA); starts message $0307 through StartMessageCommand09HL (script command $09); that string begins 'The spring in the north, where the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case07)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case07::
+TalkMsg0307_TheSpringInTheNorthWhere::
 Jump_013_4BDB:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2186,9 +2186,9 @@ Jump_013_4BF1:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 9 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4C07); starts message $030B through StartMessageCommand09HL (script command $09); that string begins 'Around these parts, we get a lot' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case09)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case09::
+TalkMsg030B_AroundThesePartsWeGetA::
 Jump_013_4BF8:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2202,9 +2202,9 @@ Jump_013_4C07::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 10 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4C1D); starts message $030C through StartMessageCommand09HL (script command $09); that string begins 'It's become much colder. We may need' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case0A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case0A::
+TalkMsg030C_ItsBecomeMuchColderWeMay::
 Jump_013_4C0E:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2247,9 +2247,9 @@ Jump_013_4C4A::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 12 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4C60); starts message $030F through StartMessageCommand09HL (script command $09); that string begins 'The mine on the western border is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case0C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case0C::
+TalkMsg030F_TheMineOnTheWesternBorder::
 Jump_013_4C51:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2276,9 +2276,9 @@ Jump_013_4C67:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 14 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0311 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case0E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case0E::
+TalkMsg0311_HeroPeeredIntoTheVaseIt::
 Jump_013_4C78:: ; address name
     ld hl, $0311 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -2297,18 +2297,18 @@ Jump_013_4C7F:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 16 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0313 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case10)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case10::
+TalkMsg0313_HeroPeeredIntoTheOvenIt::
 Jump_013_4C90:: ; address name
     ld hl, $0313 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 17 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0314 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case11)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D6F: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_Case11::
+TalkMsg0314_HeroTriedToOpenTheChest_134C97::
 Jump_013_4C97:: ; address name
     ld hl, $0314 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B13
@@ -2326,9 +2326,9 @@ Jump_013_4C9E:: ; address name
     ld [wDataBank], a
     ret
 
-; entry 19 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0315 through StartMessageCommand09HL (script command $09); that string begins 'The border is closed, so I can't' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case13)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case13::
+TalkMsg0315_TheBorderIsClosedSoI::
 Jump_013_4CAA:: ; address name
     ld hl, $0315 ; 'The border is closed, so I'
     call StartMessageCommand09HL_B13
@@ -2377,9 +2377,9 @@ Jump_013_4CED::
     ld [wJoypadPressed], a
     ret
 
-; entry 21 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4D24; flag 0087 then jr c, Jump_013_4D1D; flag 0086 then jr c, Jump_013_4D16); starts message $031E through StartMessageCommand09HL (script command $09); that string begins 'His Majesty has been cranky Is the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case15)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case15::
+TalkMsg031E_HisMajestyHasBeenCrankyIs::
 Jump_013_4CF7:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2409,9 +2409,9 @@ Jump_013_4D24::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 22 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4D3A); starts message $031F through StartMessageCommand09HL (script command $09); that string begins 'After the gold discovery, our relationship with' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case16)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case16::
+TalkMsg031F_AfterTheGoldDiscoveryOur::
 Jump_013_4D2B:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2425,9 +2425,9 @@ Jump_013_4D3A::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 23 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4D50); starts message $0320 through StartMessageCommand09HL (script command $09); that string begins 'I remember the King to be placid,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case17)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case17::
+TalkMsg0320_IRememberTheKingToBe::
 Jump_013_4D41:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2481,33 +2481,33 @@ Jump_013_4D93::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 25 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0ABD through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case19)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case19::
+TalkMsg0ABD_HeroCheckedTheBookshelfHistory::
 Jump_013_4D9A:: ; address name
     ld hl, $0ABD ; '0 checked the bookshelf. History of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 26 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0ABE through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1A::
+TalkMsg0ABE_HeroCheckedTheBookshelfHistory::
 Jump_013_4DA1:: ; address name
     ld hl, $0ABE ; '0 checked the bookshelf. History of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 27 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0ABC through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1B::
+TalkMsg0ABC_HeroPeeredIntoTheOvenIt::
 Jump_013_4DA8:: ; address name
     ld hl, $0ABC ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 28 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4DBE); starts message $0324 through StartMessageCommand09HL (script command $09); that string begins 'This tunnel goes to a port. The' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1C::
+TalkMsg0324_ThisTunnelGoesToAPort::
 Jump_013_4DAF:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2521,17 +2521,17 @@ Jump_013_4DBE::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 29 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0325 through StartMessageCommand09HL (script command $09); that string begins 'This is the port of Nofor.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1D::
+TalkMsg0325_ThisIsThePortOfNofor::
 Jump_013_4DC5:: ; address name
     ld hl, $0325 ; 'This is the port of Nofor.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 30 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4DDB); starts message $0326 through StartMessageCommand09HL (script command $09); that string begins 'It's useless! Beyond useless! The ice has' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1E::
+TalkMsg0326_ItsUselessBeyondUselessThe::
 Jump_013_4DCC:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2545,9 +2545,9 @@ Jump_013_4DDB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 31 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4DF1); starts message $0327 through StartMessageCommand09HL (script command $09); that string begins 'In all my years, I e never' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case1F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case1F::
+TalkMsg0327_InAllMyYearsIE::
 Jump_013_4DE2:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2561,17 +2561,17 @@ Jump_013_4DF1::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 32 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0328 through StartMessageCommand09HL (script command $09); that string begins 'Three kingdoms ring this lake. They are' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case20)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case20::
+TalkMsg0328_ThreeKingdomsRingThisLake::
 Jump_013_4DF8:: ; address name
     ld hl, $0328 ; 'Three kingdoms ring this lake. They'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 33 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4E0E); starts message $0329 through StartMessageCommand09HL (script command $09); that string begins 'The border? It's not here. The border' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case21)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case21::
+TalkMsg0329_TheBorderItsNotHereThe::
 Jump_013_4DFF:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2585,17 +2585,17 @@ Jump_013_4E0E::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 34 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $032A through StartMessageCommand09HL (script command $09); that string begins 'Mama said to stay off the ice.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case22)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case22::
+TalkMsg032A_MamaSaidToStayOffThe::
 Jump_013_4E15:: ; address name
     ld hl, $032A ; 'Mama said to stay off the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 35 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4E2B); starts message $032B through StartMessageCommand09HL (script command $09); that string begins 'We were passing through from the east,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case23)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case23::
+TalkMsg032B_WeWerePassingThroughFrom::
 Jump_013_4E1C:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2609,9 +2609,9 @@ Jump_013_4E2B::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 36 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4E41); starts message $032C through StartMessageCommand09HL (script command $09); that string begins 'They discovered gold at the mine on' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case24)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case24::
+TalkMsg032C_TheyDiscoveredGoldAtTheMine::
 Jump_013_4E32:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2625,9 +2625,9 @@ Jump_013_4E41::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 37 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4E57); starts message $032D through StartMessageCommand09HL (script command $09); that string begins 'I hear the west and the north' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case25)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case25::
+TalkMsg032D_IHearTheWestAndThe::
 Jump_013_4E48:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2641,17 +2641,17 @@ Jump_013_4E57::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 38 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $032E through StartMessageCommand09HL (script command $09); that string begins 'Do you know Lady Yuna of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case26)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case26::
+TalkMsg032E_DoYouKnowLadyYunaOf::
 Jump_013_4E5E:: ; address name
     ld hl, $032E ; 'Do you know Lady Yuna of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 39 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4E74); starts message $032F through StartMessageCommand09HL (script command $09); that string begins 'The scholar in the tavern said he' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case27)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case27::
+TalkMsg032F_TheScholarInTheTavernSaid::
 Jump_013_4E65:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2665,9 +2665,9 @@ Jump_013_4E74::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 40 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0330 through StartMessageCommand09HL (script command $09); that string begins 'Don't you think it's too expensive? If' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case28)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case28::
+TalkMsg0330_DontYouThinkItsTooExpensive::
 Jump_013_4E7B:: ; address name
     ld hl, $0330 ; 'Don't you think it's too expensive?'
     call StartMessageCommand09HL_B13
@@ -2724,41 +2724,41 @@ Jump_013_4EB5:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 45 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0312 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case2D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case2D::
+TalkMsg0312_HeroPeeredIntoTheBarrelIt::
 Jump_013_4EC1:: ; address name
     ld hl, $0312 ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 46 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0D3B through StartMessageCommand09HL (script command $09); that string begins 'Whinny!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case2E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case2E::
+TalkMsg0D3B_Whinny::
 Jump_013_4EC8:: ; address name
     ld hl, $0D3B ; 'Whinny!'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 47 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0314 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case2F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case2F::
+TalkMsg0314_HeroTriedToOpenTheChest_134ECF::
 Jump_013_4ECF:: ; address name
     ld hl, $0314 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 48 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0313 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case30)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case30::
+TalkMsg0313_HeroPeeredIntoTheOvenIt_134ED6::
 Jump_013_4ED6:: ; address name
     ld hl, $0313 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 49 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4EEC); starts message $0334 through StartMessageCommand09HL (script command $09); that string begins 'We e been full up with sailors' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case31)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case31::
+TalkMsg0334_WeEBeenFullUpWith::
 Jump_013_4EDD:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2772,17 +2772,17 @@ Jump_013_4EEC::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 50 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0335 through StartMessageCommand09HL (script command $09); that string begins 'Urrrp! Hoo, listen to this! My ship,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case32)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case32::
+TalkMsg0335_UrrrpHooListenToThisMy::
 Jump_013_4EF3:: ; address name
     ld hl, $0335 ; 'Urrrp! Hoo, listen to this! My'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 51 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_4F09); starts message $0336 through StartMessageCommand09HL (script command $09); that string begins 'Sigh Isn't that scholar appealing? The intellect' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case33)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case33::
+TalkMsg0336_SighIsntThatScholarAppealing::
 Jump_013_4EFA:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -2796,11 +2796,11 @@ Jump_013_4F09::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 52 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_4F1F); starts message $0337 through StartMessageCommand09HL (script command $09); that string begins 'I came from the eastern kingdom. I'm' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case34)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case04_Case34::
+TalkMsg0337_ICameFromTheEasternKingdom::
 Jump_013_4F10:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -2827,10 +2827,10 @@ Jump_013_4F3C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 53 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0ABF through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case35)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5DC5: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_Case35::
+TalkMsg0ABF_HeroPeeredIntoTheBarrelIt::
 Jump_013_4F43:: ; address name
     ld hl, $0ABF ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
@@ -2848,17 +2848,17 @@ Jump_013_4F4A:: ; address name
     ld [wDataBank], a
     ret
 
-; entry 55 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0338 through StartMessageCommand09HL (script command $09); that string begins 'The King of the west is said' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case37)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case37::
+TalkMsg0338_TheKingOfTheWestIs::
 Jump_013_4F56:: ; address name
     ld hl, $0338 ; 'The King of the west is'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 56 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_4F6C); starts message $0339 through StartMessageCommand09HL (script command $09); that string begins 'This is the border we share with' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case38)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case38::
+TalkMsg0339_ThisIsTheBorderWeShare::
 Jump_013_4F5D:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -2872,9 +2872,9 @@ Jump_013_4F6C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 57 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4F91; flag 0086 then jr c, Jump_013_4F8A); starts message $033A through StartMessageCommand09HL (script command $09); that string begins 'The border has been sealed by the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case39)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case39::
+TalkMsg033A_TheBorderHasBeenSealedBy::
 Jump_013_4F73:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2896,9 +2896,9 @@ Jump_013_4F91::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 58 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4FB6; flag 0086 then jr c, Jump_013_4FAF); starts message $033B through StartMessageCommand09HL (script command $09); that string begins 'A traveler, are you? Sorry, but I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3A::
+TalkMsg033B_ATravelerAreYouSorryBut::
 Jump_013_4F98:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2920,9 +2920,9 @@ Jump_013_4FB6::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 59 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_4FCC); starts message $033C through StartMessageCommand09HL (script command $09); that string begins 'Our tunneling found gold, but we also' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3B::
+TalkMsg033C_OurTunnelingFoundGoldBut::
 Jump_013_4FBD:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -2936,9 +2936,9 @@ Jump_013_4FCC::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 60 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_4FF1; flag 0086 then jr c, Jump_013_4FEA); starts message $033D through StartMessageCommand09HL (script command $09); that string begins 'This side is the western kingdom! You' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3C::
+TalkMsg033D_ThisSideIsTheWesternKingdom::
 Jump_013_4FD3:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2960,9 +2960,9 @@ Jump_013_4FF1::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 61 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0094 then jr c, Jump_013_5016; flag 0086 then jr c, Jump_013_500F); starts message $033E through StartMessageCommand09HL (script command $09); that string begins 'The northerners want our gold! There's no' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3D::
+TalkMsg033E_TheNorthernersWantOurGold::
 Jump_013_4FF8:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2984,9 +2984,9 @@ Jump_013_5016::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 62 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0086 then jr c, Jump_013_502C); starts message $033F through StartMessageCommand09HL (script command $09); that string begins 'The northerners muscled in on the gold' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3E::
+TalkMsg033F_TheNorthernersMuscledInOn::
 Jump_013_501D:: ; address name
     ld de, $0086
     call TestFlagBit
@@ -3000,50 +3000,50 @@ Jump_013_502C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 63 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0340 through StartMessageCommand09HL (script command $09); that string begins 'Heh, you e come way down deep.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case3F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case3F::
+TalkMsg0340_HehYouEComeWayDown::
 Jump_013_5033:: ; address name
     ld hl, $0340 ; 'Heh, you e come way down'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 64 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0345 through StartMessageCommand09HL (script command $09); that string begins 'Kid, you have guts to be here.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case40)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case40::
+TalkMsg0345_KidYouHaveGutsToBe::
 Jump_013_503A:: ; address name
     ld hl, $0345 ; 'Kid, you have guts to be'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 65 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0341 through StartMessageCommand09HL (script command $09); that string begins 'There is a boulder blocking the way' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case41)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case41::
+TalkMsg0341_ThereIsABoulderBlockingThe::
 Jump_013_5041:: ; address name
     ld hl, $0341 ; 'There is a boulder blocking the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 66 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0342 through StartMessageCommand09HL (script command $09); that string begins 'Hurry! We have to beat the swine' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case42)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case42::
+TalkMsg0342_HurryWeHaveToBeatThe::
 Jump_013_5048:: ; address name
     ld hl, $0342 ; 'Hurry! We have to beat the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 67 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0344 through StartMessageCommand09HL (script command $09); that string begins 'The gold is ours! The west must' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case43)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case43::
+TalkMsg0344_TheGoldIsOursTheWest::
 Jump_013_504F:: ; address name
     ld hl, $0344 ; 'The gold is ours! The west'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 68 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0343 through StartMessageCommand09HL (script command $09); that string begins 'The vein of gold is just ahead!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case44)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5DD3: 'What? What was that explosion?'
-DispatchTalkEvent_Case04_Case44::
+TalkMsg0343_TheVeinOfGoldIsJust::
 Jump_013_5056:: ; address name
     ld hl, $0343 ; 'The vein of gold is just'
     call StartMessageCommand09HL_B13
@@ -3261,17 +3261,17 @@ Jump_013_51A8::
     call StartScriptAtHL_B13
     ret
 
-; entry 78 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $037E through StartMessageCommand09HL (script command $09); that string begins 'This is the town of Weston. It's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case4E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case4E::
+TalkMsg037E_ThisIsTheTownOfWeston::
 Jump_013_51AF:: ; address name
     ld hl, $037E ; 'This is the town of Weston.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 79 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_51C5); starts message $037F through StartMessageCommand09HL (script command $09); that string begins 'The west's castle has seen a steady' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case4F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case4F::
+TalkMsg037F_TheWestsCastleHasSeenA::
 Jump_013_51B6:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3285,9 +3285,9 @@ Jump_013_51C5::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 80 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_51DB); starts message $0380 through StartMessageCommand09HL (script command $09); that string begins 'Across from us on the lake is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case50)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case50::
+TalkMsg0380_AcrossFromUsOnTheLake::
 Jump_013_51CC:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3301,17 +3301,17 @@ Jump_013_51DB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 81 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0381 through StartMessageCommand09HL (script command $09); that string begins 'I saw Lady Yuna riding towards the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case51)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case51::
+TalkMsg0381_ISawLadyYunaRidingTowards::
 Jump_013_51E2:: ; address name
     ld hl, $0381 ; 'I saw Lady Yuna riding towards'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 82 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_51F8); starts message $0382 through StartMessageCommand09HL (script command $09); that string begins 'Lady Yuna has been a lively girl' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case52)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case52::
+TalkMsg0382_LadyYunaHasBeenALively::
 Jump_013_51E9:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3325,9 +3325,9 @@ Jump_013_51F8::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 83 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_520E); starts message $0383 through StartMessageCommand09HL (script command $09); that string begins 'I haven't been seeing too many ships' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case53)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case53::
+TalkMsg0383_IHaventBeenSeeingTooMany::
 Jump_013_51FF:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3341,9 +3341,9 @@ Jump_013_520E::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 84 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_5233; flag 009D then jr c, Jump_013_522C); starts message $0384 through StartMessageCommand09HL (script command $09); that string begins 'Lady Yuna is said to be quiet' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case54)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case54::
+TalkMsg0384_LadyYunaIsSaidToBe::
 Jump_013_5215:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3365,9 +3365,9 @@ Jump_013_5233::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 85 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_5249); starts message $0385 through StartMessageCommand09HL (script command $09); that string begins 'I e heard rumors that something is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case55)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case55::
+TalkMsg0385_IEHeardRumorsThatSomething::
 Jump_013_523A:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3381,25 +3381,25 @@ Jump_013_5249::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 86 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0386 through StartMessageCommand09HL (script command $09); that string begins 'The King dotes over Lady Yuna. He' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case56)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case56::
+TalkMsg0386_TheKingDotesOverLadyYuna::
 Jump_013_5250:: ; address name
     ld hl, $0386 ; 'The King dotes over Lady Yuna.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 87 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0387 through StartMessageCommand09HL (script command $09); that string begins 'The road to the eastern kingdom is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case57)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case57::
+TalkMsg0387_TheRoadToTheEasternKingdom::
 Jump_013_5257:: ; address name
     ld hl, $0387 ; 'The road to the eastern kingdom'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 88 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_526D); starts message $0388 through StartMessageCommand09HL (script command $09); that string begins 'Lady Yuna locks herself in her room' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case58)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case58::
+TalkMsg0388_LadyYunaLocksHerselfInHer::
 Jump_013_525E:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3413,9 +3413,9 @@ Jump_013_526D::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 89 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_5283); starts message $0389 through StartMessageCommand09HL (script command $09); that string begins 'If you can cheer up the princess,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case59)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case59::
+TalkMsg0389_IfYouCanCheerUpThe::
 Jump_013_5274:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3429,9 +3429,9 @@ Jump_013_5283::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 90 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_5299); starts message $038A through StartMessageCommand09HL (script command $09); that string begins 'A woodsman came by a while back.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case5A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case5A::
+TalkMsg038A_AWoodsmanCameByAWhile::
 Jump_013_528A:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3445,9 +3445,9 @@ Jump_013_5299::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 91 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0312 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case5B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case5B::
+TalkMsg0312_HeroPeeredIntoTheBarrelIt_1352A0::
 Jump_013_52A0:: ; address name
     ld hl, $0312 ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
@@ -3466,10 +3466,10 @@ Jump_013_52A7:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 93 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0313 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case5D)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5E87: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_Case5D::
+TalkMsg0313_HeroPeeredIntoTheOvenIt_1352B8::
 Jump_013_52B8:: ; address name
     ld hl, $0313 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
@@ -3500,9 +3500,9 @@ Jump_013_52CB:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 96 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_52EB); starts message $038C through StartMessageCommand09HL (script command $09); that string begins 'The lake is frozen, so I can't' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case60)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case60::
+TalkMsg038C_TheLakeIsFrozenSoI::
 Jump_013_52DC:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3516,49 +3516,49 @@ Jump_013_52EB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 97 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $038D through StartMessageCommand09HL (script command $09); that string begins 'This is Westania Castle. Westania is the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case61)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case61::
+TalkMsg038D_ThisIsWestaniaCastleWestania::
 Jump_013_52F2:: ; address name
     ld hl, $038D ; 'This is Westania Castle. Westania is'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 98 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $038E through StartMessageCommand09HL (script command $09); that string begins 'Nobody fails to be impressed when I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case62)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case62::
+TalkMsg038E_NobodyFailsToBeImpressed::
 Jump_013_52F9:: ; address name
     ld hl, $038E ; 'Nobody fails to be impressed when'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 99 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $038F through StartMessageCommand09HL (script command $09); that string begins 'I e brought with me a necklace' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case63)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case63::
+TalkMsg038F_IEBroughtWithMeA::
 Jump_013_5300:: ; address name
     ld hl, $038F ; 'I e brought with me a'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 100 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0390 through StartMessageCommand09HL (script command $09); that string begins 'When I balance on my ball, people' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case64)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case64::
+TalkMsg0390_WhenIBalanceOnMyBall::
 Jump_013_5307:: ; address name
     ld hl, $0390 ; 'When I balance on my ball,'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 101 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0391 through StartMessageCommand09HL (script command $09); that string begins 'I hurl knives with incredible accuracy. I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case65)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case65::
+TalkMsg0391_IHurlKnivesWithIncredible::
 Jump_013_530E:: ; address name
     ld hl, $0391 ; 'I hurl knives with incredible accuracy.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 102 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 0096 then jr c, Jump_013_5333; flag 0095 then jr c, Jump_013_532C); starts message $0392 through StartMessageCommand09HL (script command $09); that string begins 'Please, line up! And quit pushing! Everyone' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case66)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case66::
+TalkMsg0392_PleaseLineUpAndQuitPushing::
 Jump_013_5315:: ; address name
     ld de, $0096
     call TestFlagBit
@@ -3580,9 +3580,9 @@ Jump_013_5333::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 103 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_5358; flag 009B then jr c, Jump_013_5351); starts message $0393 through StartMessageCommand09HL (script command $09); that string begins 'Oh Lady Yuna To think that I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case67)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case67::
+TalkMsg0393_OhLadyYunaToThinkThat::
 Jump_013_533A:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3628,17 +3628,17 @@ Jump_013_537D::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 105 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0397 through StartMessageCommand09HL (script command $09); that string begins 'The Castle is in an uproar.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case69)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case69::
+TalkMsg0397_TheCastleIsInAnUproar::
 Jump_013_5384:: ; address name
     ld hl, $0397 ; 'The Castle is in an uproar.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 106 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_539A); starts message $0398 through StartMessageCommand09HL (script command $09); that string begins 'Lady Yuna used to be very lively.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case6A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case6A::
+TalkMsg0398_LadyYunaUsedToBeVery::
 Jump_013_538B:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3652,17 +3652,17 @@ Jump_013_539A::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 107 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0399 through StartMessageCommand09HL (script command $09); that string begins 'In the east lives an old man' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case6B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case6B::
+TalkMsg0399_InTheEastLivesAnOld::
 Jump_013_53A1:: ; address name
     ld hl, $0399 ; 'In the east lives an old'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 108 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_53B7); starts message $039A through StartMessageCommand09HL (script command $09); that string begins 'What happened to Lady Yuna? It's as' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case6C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case6C::
+TalkMsg039A_WhatHappenedToLadyYunaIts::
 Jump_013_53A8:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3676,9 +3676,9 @@ Jump_013_53B7::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 109 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_53CD); starts message $039B through StartMessageCommand09HL (script command $09); that string begins 'Before, Lady Yuna would be up and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case6D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case6D::
+TalkMsg039B_BeforeLadyYunaWouldBeUp::
 Jump_013_53BE:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3776,9 +3776,9 @@ Jump_013_544B:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 113 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 009D then jr c, Jump_013_5470; flag 009B then jr c, Jump_013_5469); starts message $03A4 through StartMessageCommand09HL (script command $09); that string begins 'King Sigh Not even this You were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case71)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case71::
+TalkMsg03A4_KingSighNotEvenThisYou::
 Jump_013_5452:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3850,17 +3850,17 @@ Jump_013_54C3::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 115 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $03A6 through StartMessageCommand09HL (script command $09); that string begins 'This is the Castle of Estria, the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case73)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case73::
+TalkMsg03A6_ThisIsTheCastleOfEstria::
 Jump_013_54CA:: ; address name
     ld hl, $03A6 ; 'This is the Castle of Estria,'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 116 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_54E0); starts message $03A7 through StartMessageCommand09HL (script command $09); that string begins 'Queen Helen came by a while ago,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case74)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case74::
+TalkMsg03A7_QueenHelenCameByAWhile::
 Jump_013_54D1:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3874,9 +3874,9 @@ Jump_013_54E0::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 117 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_54F6); starts message $03A8 through StartMessageCommand09HL (script command $09); that string begins 'The spirit's spring has frozen. The lake' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case75)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case75::
+TalkMsg03A8_TheSpiritsSpringHasFrozen::
 Jump_013_54E7:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3890,9 +3890,9 @@ Jump_013_54F6::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 118 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_550C); starts message $03A9 through StartMessageCommand09HL (script command $09); that string begins 'Queen Helen's dreams come true. If she' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case76)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case76::
+TalkMsg03A9_QueenHelensDreamsComeTrue::
 Jump_013_54FD:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3906,9 +3906,9 @@ Jump_013_550C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 119 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_5522); starts message $03AA through StartMessageCommand09HL (script command $09); that string begins 'Our Queen is a kind person who' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case77)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case77::
+TalkMsg03AA_OurQueenIsAKindPerson::
 Jump_013_5513:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -3922,17 +3922,17 @@ Jump_013_5522::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 120 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $03AB through StartMessageCommand09HL (script command $09); that string begins 'A teacher from the west lives over' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case78)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case78::
+TalkMsg03AB_ATeacherFromTheWestLives::
 Jump_013_5529:: ; address name
     ld hl, $03AB ; 'A teacher from the west lives'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 121 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E2 then jr c, Jump_013_553F); starts message $03AE through StartMessageCommand09HL (script command $09); that string begins 'The Queen looks haggard recently. Lack of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case79)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case79::
+TalkMsg03AE_TheQueenLooksHaggardRecently::
 Jump_013_5530:: ; address name
     ld de, $01E2
     call TestFlagBit
@@ -3946,9 +3946,9 @@ Jump_013_553F::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 122 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E2 then jr c, Jump_013_5555); starts message $03AD through StartMessageCommand09HL (script command $09); that string begins 'I heard this on the sly from' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case7A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case7A::
+TalkMsg03AD_IHeardThisOnTheSly::
 Jump_013_5546:: ; address name
     ld de, $01E2
     call TestFlagBit
@@ -3962,9 +3962,9 @@ Jump_013_5555::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 123 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $03AF through StartMessageCommand09HL (script command $09); that string begins 'Around these parts, there are times of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case7B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case7B::
+TalkMsg03AF_AroundThesePartsThereAre::
 Jump_013_555C:: ; address name
     ld hl, $03AF ; 'Around these parts, there are times'
     call StartMessageCommand09HL_B13
@@ -4020,9 +4020,9 @@ Jump_013_559D:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 126 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_55BD); starts message $03B4 through StartMessageCommand09HL (script command $09); that string begins 'A botanist does live here But he's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case7E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case7E::
+TalkMsg03B4_ABotanistDoesLiveHereBut::
 Jump_013_55AE:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -4090,18 +4090,18 @@ Jump_013_55EA:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 132 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0313 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case84)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case84::
+TalkMsg0313_HeroPeeredIntoTheOvenIt_1355F6::
 Jump_013_55F6:: ; address name
     ld hl, $0313 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 133 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0312 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case85)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5F1F: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_Case85::
+TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD::
 Jump_013_55FD:: ; address name
     ld hl, $0312 ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
@@ -4119,33 +4119,33 @@ Jump_013_5604:: ; address name
     ld [wDataBank], a
     ret
 
-; entry 135 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $03B8 through StartMessageCommand09HL (script command $09); that string begins 'I want to return to the north,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case87)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case87::
+TalkMsg03B8_IWantToReturnToThe::
 Jump_013_5610:: ; address name
     ld hl, $03B8 ; 'I want to return to the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 136 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $03AC through StartMessageCommand09HL (script command $09); that string begins 'There is a spring in the far' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case88)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case88::
+TalkMsg03AC_ThereIsASpringInThe::
 Jump_013_5617:: ; address name
     ld hl, $03AC ; 'There is a spring in the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 137 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0396 through StartMessageCommand09HL (script command $09); that string begins 'It's a mean old world out there.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case89)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case89::
+TalkMsg0396_ItsAMeanOldWorldOut::
 Jump_013_561E:: ; address name
     ld hl, $0396 ; 'It's a mean old world out'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 138 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E2 then jr c, Jump_013_5643; flag 009D then jr c, Jump_013_563C); starts message $03B9 through StartMessageCommand09HL (script command $09); that string begins 'Queen Helen has been suffering from nightmares' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case8A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case8A::
+TalkMsg03B9_QueenHelenHasBeenSuffering::
 Jump_013_5625:: ; address name
     ld de, $01E2
     call TestFlagBit
@@ -4167,9 +4167,9 @@ Jump_013_5643::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 139 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E2 then jr c, Jump_013_5659); starts message $0DD6 through StartMessageCommand09HL (script command $09); that string begins 'Nightmares so horrible that they keep Queen' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case8B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case8B::
+TalkMsg0DD6_NightmaresSoHorribleThat::
 Jump_013_564A:: ; address name
     ld de, $01E2
     call TestFlagBit
@@ -4356,17 +4356,17 @@ Jump_013_5770::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 145 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $00FF through StartMessageCommand09HL (script command $09); that string begins 'Composing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case91)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case91::
+TalkMsg00FF_Composing_135777::
 Jump_013_5777:: ; address name
     ld hl, $00FF ; 'Composing'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 146 of the `rst $00` table in DispatchTalkEvent_Case04
+; tests story flags (flag 01E5 then jr c, Jump_013_578D); starts message $0DDC through StartMessageCommand09HL (script command $09); that string begins 'This happened when I was deep in' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case92)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case92::
+TalkMsg0DDC_ThisHappenedWhenIWasDeep::
 Jump_013_577E:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -4380,34 +4380,34 @@ Jump_013_578D::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 147 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0DDD through StartMessageCommand09HL (script command $09); that string begins 'My father is so cowardly, getting all' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case93)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case93::
+TalkMsg0DDD_MyFatherIsSoCowardlyGetting::
 Jump_013_5794:: ; address name
     ld hl, $0DDD ; 'My father is so cowardly, getting'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 148 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0AC0 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case94)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case94::
+TalkMsg0AC0_HeroCheckedTheBookshelfHistory::
 Jump_013_579B:: ; address name
     ld hl, $0AC0 ; '0 checked the bookshelf. History of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 150 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0AC1 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. History of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case96)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case96::
+TalkMsg0AC1_HeroCheckedTheBookshelfHistory::
 Jump_013_57A2:: ; address name
     ld hl, $0AC1 ; '0 checked the bookshelf. History of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 151 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0ABC through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It felt' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case97)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5F4A
-DispatchTalkEvent_Case04_Case97::
+TalkMsg0ABC_HeroPeeredIntoTheOvenIt_1357A9::
 Jump_013_57A9:: ; address name
     ld hl, $0ABC ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
@@ -4488,9 +4488,9 @@ Jump_013_5818::
     call StartScriptAtHL_B13
     ret
 
-; entry 155 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts message $0A16 through StartMessageCommand09HL (script command $09); that string begins 'My maid is angry that I left' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case9B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case9B::
+TalkMsg0A16_MyMaidIsAngryThatI::
 Jump_013_581F:: ; address name
     ld hl, $0A16 ; 'My maid is angry that I'
     call StartMessageCommand09HL_B13
@@ -4728,140 +4728,140 @@ Jump_013_5941:: ; address name
     dw DispatchTalkEvent_Case01_Case00
     dw DispatchTalkEvent_Case01_Case01
     dw DispatchTalkEvent_Case01_Case02
-    dw DispatchTalkEvent_Case01_Case03
-    dw DispatchTalkEvent_Case01_Case04
-    dw DispatchTalkEvent_Case01_Case05
-    dw DispatchTalkEvent_Case01_Case06
-    dw DispatchTalkEvent_Case01_Case07
+    dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
+    dw TalkMsg001B_ThisHayIsPrettyGoodMaybe
+    dw TalkMsg0026_HeroCheckedTheOvenItSmelled
+    dw TalkMsg0027_HeroPeeredIntoTheVaseIt
+    dw TalkMsg0016_ItSeemsToMeThatThe
     dw DispatchTalkEvent_Case01_Case08
-    dw DispatchTalkEvent_Case01_Case09
-    dw DispatchTalkEvent_Case01_Case0A
-    dw DispatchTalkEvent_Case01_Case0B
-    dw DispatchTalkEvent_Case01_Case0C
+    dw TalkMsg0019_ThereArentManyFriendsHere
+    dw TalkMsg0032_HelloThereYouMustBeThe
+    dw TalkMsg003C_YoureTheKidsFromTheNew
+    dw TalkMsg0040_OnThisIslandEveryDayGoes
     dw DispatchTalkEvent_Case01_Case0D
-    dw DispatchTalkEvent_Case01_Case0E
-    dw DispatchTalkEvent_Case01_Case0F
-    dw DispatchTalkEvent_Case01_Case10
-    dw DispatchTalkEvent_Case01_Case11
-    dw DispatchTalkEvent_Case01_Case12
-    dw DispatchTalkEvent_Case01_Case13
-    dw DispatchTalkEvent_Case01_Case14
-    dw DispatchTalkEvent_Case01_Case15
-    dw DispatchTalkEvent_Case01_Case16
+    dw TalkMsg0034_TheHorridPrinceAndThatElemental
+    dw TalkMsg020F_ThereAreSomeItemsThatCan
+    dw TalkMsg003A_ThatWeirdApeThingIsWarubou
+    dw TalkMsg0035_TheKingIsTooLenientOn
+    dw TalkMsg003B_ThisPalmTreeIsGreatLogWe
+    dw TalkMsg0038_HeroPeeredIntoTheVaseA
+    dw TalkMsg0041_WarubouIsTheIslandsSpirit
+    dw TalkMsg003D_WeLiveInsideHereImKeeping
+    dw TalkMsg003F_InsideTheWellIsTheLogs
     dw DispatchTalkEvent_Case01_Case17
     dw DispatchTalkEvent_Case01_Case18
     dw DispatchTalkEvent_Case01_Case19
-    dw DispatchTalkEvent_Case01_Case1A
+    dw TalkMsg001A_IAccidentallyWentOutside
     dw DispatchTalkEvent_Case01_Case1B
     dw DispatchTalkEvent_Case01_Case1C
-    dw DispatchTalkEvent_Case01_Case1D
-    dw DispatchTalkEvent_Case01_Case1E
-    dw DispatchTalkEvent_Case01_Case1F
+    dw TalkMsg011E_IfYourPartyIsWipedOut
+    dw TalkMsg021F_DoYouKnowAboutLogTwigIts
+    dw TalkMsg04D0_HeroReadTheSignMonsterArena
     dw DispatchTalkEvent_Case01_Case20
     dw DispatchTalkEvent_Case01_Case21
-    dw DispatchTalkEvent_Case01_Case22
-    dw DispatchTalkEvent_Case01_Case23
-    dw DispatchTalkEvent_Case01_Case24
+    dw TalkMsg021C_MonstersHateBeingAwayFrom
+    dw TalkMsg0221_HelloThereYoungsterTakeThese
+    dw TalkMsg0222_HeyALittleBittyMasterHi
     dw DispatchTalkEvent_Case01_Case25
-    dw DispatchTalkEvent_Case01_Case26
+    dw TalkMsg0224_TakeCareToFindTinyMedals
     dw DispatchTalkEvent_Case01_Case27
-    dw DispatchTalkEvent_Case01_Case28
-    dw DispatchTalkEvent_Case01_Case29
-    dw DispatchTalkEvent_Case01_Case2A
+    dw TalkMsg0D8C_WataWataTerryBattledInThe
+    dw TalkMsg0D8D_FwahahahahaHowAmusingEven
+    dw TalkMsg022D_WarpWingReturnsYouInstantly
     dw DispatchTalkEvent_Case01_Case2B
-    dw DispatchTalkEvent_Case01_Case2C
-    dw DispatchTalkEvent_Case01_Case2D
-    dw DispatchTalkEvent_Case01_Case2E
+    dw TalkMsg022C_ThereAreBooksThatChangeYour
+    dw TalkMsg0005_YouFolksRunAMonsterFarm
+    dw TalkMsg0006_TheresASpiritInGreatLogThats
     dw DispatchTalkEvent_Case01_Case2F
     dw DispatchTalkEvent_Case01_Case30
-    dw DispatchTalkEvent_Case01_Case31
+    dw TalkMsg000A_WellSoonBeReachingGreatLog
     dw DispatchTalkEvent_Case01_Case32
     dw DispatchTalkEvent_Case01_Case33
     dw DispatchTalkEvent_Case01_Case33
     dw DispatchTalkEvent_Case01_Case33
-    dw DispatchTalkEvent_Case01_Case36
-    dw DispatchTalkEvent_Case01_Case37
-    dw DispatchTalkEvent_Case01_Case38
-    dw DispatchTalkEvent_Case01_Case39
-    dw DispatchTalkEvent_Case01_Case3A
-    dw DispatchTalkEvent_Case01_Case3B
-    dw DispatchTalkEvent_Case01_Case3C
-    dw DispatchTalkEvent_Case01_Case3D
+    dw TalkMsg0BAC_YouNeedToStrikeTheRight
+    dw TalkMsg0D84_SomeMonstersMayBeToughBut
+    dw TalkMsg023F_IWasOnMyWayTo
+    dw TalkMsg0240_PackProperlyIfYoureGoing
+    dw TalkMsg0241_TryTheSlideItsAShortcut
+    dw TalkMsg0243_HeroCheckedTheBookshelfBookmark
+    dw TalkMsg0244_HeroCheckedTheBookshelfJournal
+    dw TalkMsg0245_HeroPeeredIntoTheVaseIt
     dw DispatchTalkEvent_Case01_Case3E
-    dw DispatchTalkEvent_Case01_Case3F
-    dw DispatchTalkEvent_Case01_Case40
-    dw DispatchTalkEvent_Case01_Case41
+    dw TalkMsg0249_HeroCheckedTheBookshelfDiary
+    dw TalkMsg0256_HeroCheckedTheDresserItWas
+    dw TalkMsg02B0_HeroPeeredIntoTheBarrelIt
     dw DispatchTalkEvent_Case01_Case42
-    dw DispatchTalkEvent_Case01_Case43
-    dw DispatchTalkEvent_Case01_Case44
-    dw DispatchTalkEvent_Case01_Case45
+    dw TalkMsg025A_HeroCheckedTheDresserItWas
+    dw TalkMsg025B_HeroCheckedTheBookshelfThis
+    dw IfFlag134Msg0314_HeroTriedToOpenTheChest
     dw DispatchTalkEvent_Case01_Case46
-    dw DispatchTalkEvent_Case01_Case47
-    dw DispatchTalkEvent_Case01_Case48
-    dw DispatchTalkEvent_Case01_Case49
-    dw DispatchTalkEvent_Case01_Case4A
+    dw TalkMsg04C5_HeroCheckedTheBookshelfHandbook
+    dw TalkMsg04C6_HeroCheckedTheBookshelfHandbook
+    dw TalkMsg04C7_HeroCheckedTheBookshelfHandbook
+    dw TalkMsg08C0_WeGetMoreAndMoreStubborn
     dw DispatchTalkEvent_Case01_Case4B
     dw DispatchTalkEvent_Case01_Case4C
-    dw DispatchTalkEvent_Case01_Case4D
-    dw DispatchTalkEvent_Case01_Case4E
-    dw DispatchTalkEvent_Case01_Case4F
-    dw DispatchTalkEvent_Case01_Case50
+    dw TalkMsg0A50_ZzzzYawnHuhIsItMorning
+    dw TalkMsg0A52_OurKindAlwaysStaysNearWater
+    dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
+    dw TalkMsg0A59_HeroReadTheSignSshMonsters
     dw DispatchTalkEvent_Case01_Case51
     dw DispatchTalkEvent_Case01_Case52
-    dw DispatchTalkEvent_Case01_Case53
+    dw TalkMsg0A5D_HeroReadTheSignWatchYour
     dw DispatchTalkEvent_Case01_Case54
-    dw DispatchTalkEvent_Case01_Case55
-    dw DispatchTalkEvent_Case01_Case56
-    dw DispatchTalkEvent_Case01_Case57
-    dw DispatchTalkEvent_Case01_Case58
-    dw DispatchTalkEvent_Case01_Case59
-    dw DispatchTalkEvent_Case01_Case5A
-    dw DispatchTalkEvent_Case01_Case5B
-    dw DispatchTalkEvent_Case01_Case5C
-    dw DispatchTalkEvent_Case01_Case5D
-    dw DispatchTalkEvent_Case01_Case5E
-    dw DispatchTalkEvent_Case01_Case5F
-    dw DispatchTalkEvent_Case01_Case60
+    dw TalkMsg0292_TheyTakeEntryFeesFromMasters
+    dw TalkMsg027D_WhatDoYouSupposeMonsters
+    dw TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS
+    dw TalkMsg028C_ListenToWinYouNeedBalance
+    dw TalkMsg028D_ItsNotAllAboutWinningWe
+    dw TalkMsg028E_ArrrrrooohMyBloodBurnsICan
+    dw TalkMsg0287_MonstersCanGrowOnlySoMuch
+    dw TalkMsg0286_TheArenaIsWhereMastersCan
+    dw TalkMsg028F_IfYouComeAcrossAMonster
+    dw TalkMsg0294_IfYouWinAnArenaTourney
+    dw TalkMsg0290_SirloinIsTheTopsHarrumph
+    dw TalkMsg0291_IIDidntFallForAny
     dw DispatchTalkEvent_Case01_Case61
-    dw DispatchTalkEvent_Case01_Case62
+    dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw DispatchTalkEvent_Case01_Case63
-    dw DispatchTalkEvent_Case01_Case64
+    dw TalkMsg027A_ListenThisIsASecretTheres
     dw DispatchTalkEvent_Case01_Case65
     dw DispatchTalkEvent_Case01_Case66
-    dw DispatchTalkEvent_Case01_Case67
-    dw DispatchTalkEvent_Case01_Case68
+    dw TalkMsg04B5_DoYouKnowAllTheKinds
+    dw TalkMsg04B6_IfYouEatAnyBadMeatLike
     dw DispatchTalkEvent_Case01_Case69
     dw DispatchTalkEvent_Case01_Case6A
     dw DispatchTalkEvent_Case01_Case6B
-    dw DispatchTalkEvent_Case01_Case6C
-    dw DispatchTalkEvent_Case01_Case6D
-    dw DispatchTalkEvent_Case01_Case6E
-    dw DispatchTalkEvent_Case01_Case6F
-    dw DispatchTalkEvent_Case01_Case70
-    dw DispatchTalkEvent_Case01_Case71
+    dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
+    dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
+    dw TalkMsg08CD_HeroCheckedTheDoorTheDoor
+    dw TalkMsg02DC_GreatLogsStarryShrineWasnt
+    dw TalkMsg0DD4_IfYouBreedTheParentsGo
+    dw TalkMsg02DD_ParentsPassOnAbilitiesTo
     dw DispatchTalkEvent_Case01_Case72
-    dw DispatchTalkEvent_Case01_Case73
-    dw DispatchTalkEvent_Case01_Case74
-    dw DispatchTalkEvent_Case01_Case75
-    dw DispatchTalkEvent_Case01_Case76
-    dw DispatchTalkEvent_Case01_Case77
-    dw DispatchTalkEvent_Case01_Case78
+    dw TalkMsg0A6F_MyHusbandLovesToCollectThings
+    dw TalkMsg0A75_HeroCheckedTheDresserItOverflowed
+    dw TalkMsg0A76_HeroCheckedTheDresserItOverflowed
+    dw TalkMsg0A77_HeroCheckedTheOvenThereWas
+    dw TalkMsg025E_MyGranddaughterIsPainfully
+    dw TalkMsg0269_HeroCheckedTheDresserGirls
     dw DispatchTalkEvent_Case01_Case79
-    dw DispatchTalkEvent_Case01_Case7A
-    dw DispatchTalkEvent_Case01_Case7B
-    dw DispatchTalkEvent_Case01_Case7C
-    dw DispatchTalkEvent_Case01_Case7D
-    dw DispatchTalkEvent_Case01_Case7E
+    dw TalkMsg026A_HeroCheckedThePlushDollIt
+    dw TalkMsg0A32_ThereArePowersThatLetYou
+    dw TalkMsg0A33_HaveYouBeenToTheStarry
+    dw TalkMsg020A_ImChoppingSomeTreesDownTo
+    dw TalkMsg08BF_MasterOnlyMakesMeChargeIt
     dw DispatchTalkEvent_Case01_Case7F
-    dw DispatchTalkEvent_Case01_Case80
+    dw TalkMsg0A39_TheManHereHasRareKeys
     dw TalkMsg0A3C_KingIfYouSee
     dw TalkMsg0A3E_YoureFreeToGo
     dw TalkMsg0A3F_TheKingAndPrinces
     dw Talk0A41_ThisIsGreatLogCastle
-    dw DispatchTalkEvent_Case01_Case85
-    dw DispatchTalkEvent_Case01_Case86
-    dw DispatchTalkEvent_Case01_Case87
-    dw DispatchTalkEvent_Case01_Case88
+    dw TalkMsg0A42_TheTavernJustOutsideTheCastle
+    dw TalkMsg0A43_HeyWelcomeAllMastersAreWelcome
+    dw TalkMsg0A44_WhenYouBreedNoticeANumber
+    dw TalkMsg0A45_IfYouWantToMakeA
     dw Talk0A49_BreedingCouldResultIn
     dw TalkMsg0A4A_FromUpHerePeople
     dw Msg0126_WarubouThereYourPartys
@@ -4870,10 +4870,10 @@ Jump_013_5941:: ; address name
     dw Talk04BA_IfYouGetAn
     dw Talk04CB_ThatKeyIUsed
     dw Talk04CE_HeroCheckedTheShelf
-    dw DispatchTalkEvent_Case01_Case91
+    dw TalkMsg04CF_HeroPeeredIntoTheVaseIt
     dw DispatchTalkEvent_Case01_Case92
-    dw DispatchTalkEvent_Case01_Case93
-    dw DispatchTalkEvent_Case01_Case94
+    dw TalkMsg0299_ImApprenticingUnderTheBoss
+    dw TalkMsg029A_DayAfterDayIExamineKeys
     dw DispatchTalkEvent_Case01_Case95
     dw DispatchTalkEvent_Case01_Case95
     dw DispatchTalkEvent_Case01_Case95
@@ -4885,28 +4885,28 @@ Jump_013_5941:: ; address name
     dw Talk0276_IfYouWantTo
     dw StartScript5709Or56F5IfFlagD1
     dw DispatchTalkEvent_Case01_Case9F
-    dw DispatchTalkEvent_Case01_CaseA0
-    dw DispatchTalkEvent_Case01_CaseA1
-    dw DispatchTalkEvent_Case01_CaseA2
-    dw DispatchTalkEvent_Case01_CaseA3
+    dw TalkMsg0024_HeroCheckedTheDresserChildrens
+    dw TalkMsg0025_HeroCheckedTheDresserItSmelled
+    dw TalkMsg001D_HeroPeeredIntoTheBarrelIt
+    dw TalkMsg001C_HeroCheckedThePumpItsRusted
     dw DispatchTalkEvent_Case01_CaseA4
-    dw DispatchTalkEvent_Case01_CaseA5
+    dw TalkMsg0037_HeroTriedToOpenTheChest_137788
     dw DispatchTalkEvent_Case01_CaseA6
     dw DispatchTalkEvent_Case01_CaseA7
-    dw DispatchTalkEvent_Case01_CaseA8
+    dw TalkMsg0D4E_ImDiggingHereBecauseIThink
     dw Talk0043_HeroCheckedTheOdd
     dw Talk0036_ThereWereManyWild
     dw Talk0037_HeroTriedToOpen
     dw StartScript5660WithBank0E
     dw TalkMsg0268_YepShesTakingGood
-    dw DispatchTalkEvent_Case01_CaseAE
-    dw DispatchTalkEvent_Case01_CaseAF
-    dw DispatchTalkEvent_Case01_CaseB0
-    dw DispatchTalkEvent_Case01_CaseB1
+    dw TalkMsg022E_SnivelThisBookIsSoSad
+    dw TalkMsg022F_EvenICanCastSpellsIf
+    dw TalkMsg0242_MyDadsAFamousMonsterMaster
+    dw TalkMsg02B1_HeroPeeredIntoTheOvenIt
     dw DispatchTalkEvent_Case01_CaseB2
-    dw DispatchTalkEvent_Case01_CaseB3
-    dw DispatchTalkEvent_Case01_CaseB4
-    dw DispatchTalkEvent_Case01_CaseB5
+    dw TalkMsg02A6_PuttingUpABridgeIsEasy
+    dw TalkMsg0209_DidYouKnowYouCanRecord
+    dw TalkMsg0A51_WhenAAppearsByAMonsters
     dw DispatchTalkEvent_Case01_CaseB6
     dw Talk08D1_TheEvaluatorSaidI
     dw Talk04D2_UpAheadIsThe
@@ -4914,45 +4914,45 @@ Jump_013_5941:: ; address name
     dw TalkMsg0220_InOtherWorldsYoull
     dw TalkMsg027F_ItsNotEasyTo
     dw TalkMsg0280_MamaIsABig
-    dw DispatchTalkEvent_Case01_CaseBD
-    dw DispatchTalkEvent_Case01_CaseBE
-    dw DispatchTalkEvent_Case01_CaseBF
+    dw TalkMsg0284_IComeToWatchEveryDay
+    dw TalkMsg0285_MonstersMirrorTheirMasters
+    dw TalkMsg0288_MyHusbandIsAMasterStill
     dw DispatchTalkEvent_Case01_CaseC0
-    dw DispatchTalkEvent_Case01_CaseC1
-    dw DispatchTalkEvent_Case01_CaseC2
-    dw DispatchTalkEvent_Case01_CaseC3
-    dw DispatchTalkEvent_Case01_CaseC4
-    dw DispatchTalkEvent_Case01_CaseC5
-    dw DispatchTalkEvent_Case01_CaseC6
+    dw TalkMsg0293_IfYouWinInTheS
+    dw TalkMsg0295_InAnArenaBattleYouCant
+    dw TalkMsg027B_WhichToTakeMonstersYouE
+    dw TalkMsg027C_YouNeedLuckOnYourSide
+    dw TalkMsg029C_HeroPeeredIntoTheOvenIt
+    dw TalkMsg029D_HeroPeeredIntoTheVaseIt
     dw DispatchTalkEvent_Case01_CaseC7
-    dw DispatchTalkEvent_Case01_CaseC8
-    dw DispatchTalkEvent_Case01_CaseC9
+    dw TalkMsg02B1_HeroPeeredIntoTheOvenIt_137A0F
+    dw TalkMsg0225_HeroPeeredIntoTheVaseThere
     dw DispatchTalkEvent_Case01_CaseCA
-    dw DispatchTalkEvent_Case01_CaseCB
+    dw TalkMsg024A_HeroCheckedThePlushDollIt
     dw DispatchTalkEvent_Case01_CaseCC
     dw DispatchTalkEvent_Case01_CaseCD
-    dw DispatchTalkEvent_Case01_CaseCE
+    dw TalkMsg0245_HeroPeeredIntoTheVaseIt_137A93
     dw Talk00FC_YouHaveToEat
     dw TalkMsg0A74_TheMedalMasterWas
     dw IfFlag0023StartScript57A2
     dw Msg013C_ISawALake
     dw Msg013D_StrongMonstersAreIn
     dw TalkMsg0A35_ImABugSo
-    dw DispatchTalkEvent_Case01_CaseD5
+    dw TalkMsg0A34_UhehehehDidYouKnowThisZombies
     dw TalkMsg0A68_MyEmyuIsVery
     dw TalkMsg0A6B_MonstersLookSoFrightening
     dw Talk0A40_PleaseEnterTheKing
     dw TalkMsg0A4B_OnTheHorizonYou
-    dw DispatchTalkEvent_Case01_CaseDA
+    dw TalkMsg04D1_ThereAreTimesWhenYouHave
     dw DispatchTalkEvent_Case01_CaseDB
-    dw DispatchTalkEvent_Case01_CaseDC
-    dw DispatchTalkEvent_Case01_CaseDD
-    dw DispatchTalkEvent_Case01_CaseDE
-    dw DispatchTalkEvent_Case01_CaseDF
-    dw DispatchTalkEvent_Case01_CaseE0
-    dw DispatchTalkEvent_Case01_CaseE1
-    dw DispatchTalkEvent_Case01_CaseE2
-    dw DispatchTalkEvent_Case01_CaseE3
+    dw TalkMsg0519_ThisIsATimeWeNeed
+    dw TalkMsg051A_IDidntWantToBelieveGreatLog
+    dw TalkMsg051B_IWontBelieveThatGreatLog
+    dw TalkMsg051C_TheKingSaidThatGreatLogWill
+    dw TalkMsg051D_EveryonePleaseRemainCalm
+    dw TalkMsg051E_TheGreatLogTreeAppearedTo
+    dw TalkMsg055E_HeroCheckedTheBookshelfMagic
+    dw TalkMsg0DD5_MonsterSkillsArePassedOn
     dw DispatchTalkEvent_Case01_CaseE4
     dw DispatchTalkEvent_Case01_CaseE5
     dw DispatchTalkEvent_Case01_CaseE6
@@ -5253,17 +5253,17 @@ Jump_013_5D3C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 3 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0023 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Behavior of Wild' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case03)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case03::
+TalkMsg0023_HeroCheckedTheBookshelfBehavior::
 Jump_013_5D43:: ; address name
     ld hl, $0023 ; '0 checked the bookshelf. Behavior of'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 4 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0022 then jr c, Jump_013_5D59); starts message $001B through StartMessageCommand09HL (script command $09); that string begins 'This hay is pretty good. Maybe I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case04)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case04::
+TalkMsg001B_ThisHayIsPrettyGoodMaybe::
 Jump_013_5D4A:: ; address name
     ld de, $0022
     call TestFlagBit
@@ -5285,26 +5285,26 @@ Jump_013_5D68::
     call StartScriptAtHL_B13
     ret
 
-; entry 5 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0026 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. It smelled of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case05)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case05::
+TalkMsg0026_HeroCheckedTheOvenItSmelled::
 Jump_013_5D6F:: ; address name
     ld hl, $0026 ; '0 checked the oven. It smelled'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 6 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0027 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case06)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case06::
+TalkMsg0027_HeroPeeredIntoTheVaseIt::
 Jump_013_5D76:: ; address name
     ld hl, $0027 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 7 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_5E7A; flag 0024 then jp c, Jump_013_5E73; flag 0023 then jp c, Jump_013_5E6C; flag 0022 then jp c, Jump_013_5E68; flag 0021 then jp c, Jump_013_5E61; flag 0002 then jp c, Jump_013_5E14; flag 000E then jr c, Jump_013_5E0D; flag 000C then jr c, Jump_013_5DF7; flag 0014 then jr c, Jump_013_5DF0; flag 0003 then jr c, Jump_013_5DDA); starts message $0016 through StartMessageCommand09HL (script command $09); that string begins 'It seems to me that the people' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case07)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, hTemp1, hTemp0
-DispatchTalkEvent_Case01_Case07::
+TalkMsg0016_ItSeemsToMeThatThe::
 Jump_013_5D7D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5423,7 +5423,7 @@ Jump_013_5E61::
     ret
 
 Jump_013_5E68::
-    call DispatchTalkEvent_Case01_Case07_Sub01
+    call TalkMsg0016_ItSeemsToMeThatThe_Sub01
     ret
 
 Jump_013_5E6C::
@@ -5510,11 +5510,11 @@ Jump_013_5EE7::
     call StartMessageCommand09HL_B13
     ret
 
-; only called from DispatchTalkEvent_Case01_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case07)
+; only called from TalkMsg0016_ItSeemsToMeThatThe (E-0047)
+; 1 call site from 1 routine (e.g. TalkMsg0016_ItSeemsToMeThatThe)
 ; reads: hTemp0, wPartyCount, wInventory
 ; writes: hTemp0, hTemp1
-DispatchTalkEvent_Case01_Case07_Sub01::
+TalkMsg0016_ItSeemsToMeThatThe_Sub01::
 Func_013_5EF4:: ; address name
     ld de, $0191
     call TestFlagBit
@@ -5602,9 +5602,9 @@ Jump_013_5F87::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 9 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_5FCB; flag 0002 then jr c, Jump_013_5FC4; flag 000C then jr c, Jump_013_5FBD; flag 0003 then jr c, Jump_013_5FB6); starts message $0019 through StartMessageCommand09HL (script command $09); that string begins 'There aren't many friends here. It's lonely' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case09)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case09::
+TalkMsg0019_ThereArentManyFriendsHere::
 Jump_013_5F8E:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5642,9 +5642,9 @@ Jump_013_5FCB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 10 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6041; flag 00D1 then jr c, Jump_013_603A; flag 0024 then jr c, Jump_013_6033; flag 0021 then jr c, Jump_013_602C; flag 0002 then jr c, Jump_013_6025; flag 000C then jr c, Jump_013_6009); starts message $0032 through StartMessageCommand09HL (script command $09); that string begins 'Hello, there! You must be the farm' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case0A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case0A::
+TalkMsg0032_HelloThereYouMustBeThe::
 Jump_013_5FD2:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5708,9 +5708,9 @@ Jump_013_6041::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 11 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_60A8; flag 0024 then jr c, Jump_013_60A1; flag 0021 then jr c, Jump_013_609A; flag 0002 then jr c, Jump_013_6093; flag 000C then jr c, Jump_013_6086; flag 0007 then jr c, Jump_013_607F); starts message $003C through StartMessageCommand09HL (script command $09); that string begins 'You're the kids from the new farm.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case0B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case0B::
+TalkMsg003C_YoureTheKidsFromTheNew::
 Jump_013_6048:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5766,9 +5766,9 @@ Jump_013_60A8::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 12 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6109; flag 00D1 then jr c, Jump_013_6102; flag 0024 then jr c, Jump_013_60FB; flag 0022 then jr c, Jump_013_60F4; flag 0002 then jr c, Jump_013_60ED; flag 000C then jr c, Jump_013_60E6); starts message $0040 through StartMessageCommand09HL (script command $09); that string begins 'On this island, every day goes by' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case0C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case0C::
+TalkMsg0040_OnThisIslandEveryDayGoes::
 Jump_013_60AF:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5841,9 +5841,9 @@ Jump_013_6116::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 14 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6163; flag 0021 then jr c, Jump_013_615C; flag 0002 then jr c, Jump_013_6155; flag 000C then jr c, Jump_013_614E); starts message $0034 through StartMessageCommand09HL (script command $09); that string begins 'The horrid Prince and that elemental sidekick' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case0E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case0E::
+TalkMsg0034_TheHorridPrinceAndThatElemental::
 Jump_013_6127:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5881,9 +5881,9 @@ Jump_013_6163::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 15 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6188; flag 0024 then jr c, Jump_013_6181); starts message $020F through StartMessageCommand09HL (script command $09); that string begins 'There are some items that can be' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case0F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case0F::
+TalkMsg020F_ThereAreSomeItemsThatCan::
 Jump_013_616A:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5905,11 +5905,11 @@ Jump_013_6188::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 16 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_61FD; flag 0024 then jr c, Jump_013_61F6; flag 0022 then jr c, Jump_013_61DA; flag 000C then jr c, Jump_013_61B6); starts message $003A through StartMessageCommand09HL (script command $09); that string begins 'That weird ape thing is Warubou, GreatLog's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case10)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags, wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case01_Case10::
+TalkMsg003A_ThatWeirdApeThingIsWarubou::
 Jump_013_618F:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5982,10 +5982,10 @@ Jump_013_6216::
     call StartScriptAtHL_B13
     ret
 
-; entry 17 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_628A; flag 0021 then jr c, Jump_013_6252; flag 0002 then jr c, Jump_013_624B; flag 000C then jr c, Jump_013_6244); starts message $0035 through StartMessageCommand09HL (script command $09); that string begins 'The King is too lenient on Prince' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case11)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case01_Case11::
+TalkMsg0035_TheKingIsTooLenientOn::
 Jump_013_621D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6053,9 +6053,9 @@ Jump_013_628A::
     call SetFlagBit
     ret
 
-; entry 18 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_62F4; flag 00D1 then jr c, Jump_013_62ED; flag 0021 then jr c, Jump_013_62E6; flag 0002 then jr c, Jump_013_62DF; flag 000C then jr c, Jump_013_62D8); starts message $003B through StartMessageCommand09HL (script command $09); that string begins 'This palm tree is GreatLog. We e' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case12)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case12::
+TalkMsg003B_ThisPalmTreeIsGreatLogWe::
 Jump_013_62A9:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6101,17 +6101,17 @@ Jump_013_62F4::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 19 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0038 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. A large,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case13)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case13::
+TalkMsg0038_HeroPeeredIntoTheVaseA::
 Jump_013_62FB:: ; address name
     ld hl, $0038 ; '0 peered into the vase. A'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 20 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0002 then jr c, Jump_013_6320; flag 000C then jr c, Jump_013_6319); starts message $0041 through StartMessageCommand09HL (script command $09); that string begins 'Warubou is the island's spirit. So we' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case14)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case14::
+TalkMsg0041_WarubouIsTheIslandsSpirit::
 Jump_013_6302:: ; address name
     ld de, $0002
     call TestFlagBit
@@ -6133,9 +6133,9 @@ Jump_013_6320::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 21 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6390; flag 00D1 then jr c, Jump_013_6389; flag 0024 then jr c, Jump_013_6382; flag 0022 then jr c, Jump_013_637B; flag 0021 then jr c, Jump_013_6374; flag 0002 then jr c, Jump_013_636D; flag 000C then jr c, Jump_013_6366); starts message $003D through StartMessageCommand09HL (script command $09); that string begins 'We live inside here. I'm keeping my' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case15)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case15::
+TalkMsg003D_WeLiveInsideHereImKeeping::
 Jump_013_6327:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6197,9 +6197,9 @@ Jump_013_6390::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 22 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6400; flag 0024 then jr c, Jump_013_63F9; flag 0022 then jr c, Jump_013_63F2; flag 0021 then jr c, Jump_013_63EB; flag 0002 then jr c, Jump_013_63E4; flag 000C then jr c, Jump_013_63DD; flag 000A then jr c, Jump_013_63D6); starts message $003F through StartMessageCommand09HL (script command $09); that string begins 'Inside the well is the Log's Navel.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case16)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case16::
+TalkMsg003F_InsideTheWellIsTheLogs::
 Jump_013_6397:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6522,9 +6522,9 @@ Jump_013_65E5::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 26 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6646; flag 0021 then jr c, Jump_013_6621; flag 0002 then jr c, Jump_013_661A; flag 000C then jr c, Jump_013_6613); starts message $001A through StartMessageCommand09HL (script command $09); that string begins 'I accidentally went outside. People gave me' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case1A::
+TalkMsg001A_IAccidentallyWentOutside::
 Jump_013_65EC:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6742,9 +6742,9 @@ Jump_013_677E::
     call StartScriptAtHL_B13
     ret
 
-; entry 29 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_679C); starts message $011E through StartMessageCommand09HL (script command $09); that string begins 'If your party is wiped out, half' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case1D::
+TalkMsg011E_IfYourPartyIsWipedOut::
 Jump_013_678D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6758,9 +6758,9 @@ Jump_013_679C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 30 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_67C2; flag 0023 then jp c, Jump_013_67BB); starts message $021F through StartMessageCommand09HL (script command $09); that string begins 'Do you know about LogTwig? It's an' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case1E::
+TalkMsg021F_DoYouKnowAboutLogTwigIts::
 Jump_013_67A3:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6782,9 +6782,9 @@ Jump_013_67C2::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 31 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04D0 through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. Monster Arena, where' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case1F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case1F::
+TalkMsg04D0_HeroReadTheSignMonsterArena::
 Jump_013_67C9:: ; address name
     ld hl, $04D0 ; '0 read the sign. Monster Arena,'
     call StartMessageCommand09HL_B13
@@ -6872,9 +6872,9 @@ Jump_013_6856::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 34 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_686C); starts message $021C through StartMessageCommand09HL (script command $09); that string begins 'Monsters hate being away from their master.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case22)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case22::
+TalkMsg021C_MonstersHateBeingAwayFrom::
 Jump_013_685D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6888,9 +6888,9 @@ Jump_013_686C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 35 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6891; flag 0024 then jr c, Jump_013_688A); starts message $0221 through StartMessageCommand09HL (script command $09); that string begins 'Hello there, youngster! Take these stairs to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case23)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case23::
+TalkMsg0221_HelloThereYoungsterTakeThese::
 Jump_013_6873:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6912,9 +6912,9 @@ Jump_013_6891::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 36 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_68B6; flag 0024 then jr c, Jump_013_68AF); starts message $0222 through StartMessageCommand09HL (script command $09); that string begins 'Hey, a little bitty master! Hi! You'll' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case24)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case24::
+TalkMsg0222_HeyALittleBittyMasterHi::
 Jump_013_6898:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6957,9 +6957,9 @@ Jump_013_68D4::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 38 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0224 through StartMessageCommand09HL (script command $09); that string begins 'Take care to find Tiny Medals. Look' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case26)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case26::
+TalkMsg0224_TakeCareToFindTinyMedals::
 Jump_013_68DB:: ; address name
     ld hl, $0224 ; 'Take care to find Tiny Medals.'
     call StartMessageCommand09HL_B13
@@ -7026,26 +7026,26 @@ Jump_013_6940::
     call StartScriptAtHL_B13
     ret
 
-; entry 40 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0D8C through StartMessageCommand09HL (script command $09); that string begins 'Wata, wata. Terry battled in the Starry' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case28)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case28::
+TalkMsg0D8C_WataWataTerryBattledInThe::
 Jump_013_6947:: ; address name
     ld hl, $0D8C ; 'Wata, wata. Terry battled in the'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 41 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0D8D through StartMessageCommand09HL (script command $09); that string begins 'Fwahahahaha! How amusing! Even I fell before' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case29)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case29::
+TalkMsg0D8D_FwahahahahaHowAmusingEven::
 Jump_013_694E:: ; address name
     ld hl, $0D8D ; 'Fwahahahaha! How amusing! Even I fell'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 42 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $022D through StartMessageCommand09HL (script command $09); that string begins 'WarpWing returns you instantly to GreatLog, so' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case2A)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5476: 'Do you have any idea about'
-DispatchTalkEvent_Case01_Case2A::
+TalkMsg022D_WarpWingReturnsYouInstantly::
 Jump_013_6955:: ; address name
     ld hl, $022D ; 'WarpWing returns you instantly to GreatLog,'
     call StartMessageCommand09HL_B13
@@ -7060,25 +7060,25 @@ Jump_013_695C:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 44 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $022C through StartMessageCommand09HL (script command $09); that string begins 'There are books that change your personality' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case2C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case2C::
+TalkMsg022C_ThereAreBooksThatChangeYour::
 Jump_013_6963:: ; address name
     ld hl, $022C ; 'There are books that change your'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 45 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0005 through StartMessageCommand09HL (script command $09); that string begins 'You folks run a monster farm? We' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case2D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case2D::
+TalkMsg0005_YouFolksRunAMonsterFarm::
 Jump_013_696A:: ; address name
     ld hl, $0005 ; 'You folks run a monster farm?'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 46 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0006 through StartMessageCommand09HL (script command $09); that string begins 'There's a spirit in GreatLog that's famous' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case2E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case2E::
+TalkMsg0006_TheresASpiritInGreatLogThats::
 Jump_013_6971:: ; address name
     ld hl, $0006 ; 'There's a spirit in GreatLog that's'
     call StartMessageCommand09HL_B13
@@ -7118,9 +7118,9 @@ Jump_013_699B:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 49 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0013 then jr c, Jump_013_69B1); starts message $000A through StartMessageCommand09HL (script command $09); that string begins 'We'll soon be reaching GreatLog. I wonder,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case31)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case31::
+TalkMsg000A_WellSoonBeReachingGreatLog::
 Jump_013_69A2:: ; address name
     ld de, $0013
     call TestFlagBit
@@ -7188,25 +7188,25 @@ Jump_013_69EE::
     farcall CreateMonsterRecordOfKindTemp1
     ret
 
-; entry 54 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0BAC through StartMessageCommand09HL (script command $09); that string begins 'You need to strike the right balance' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case36)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case36::
+TalkMsg0BAC_YouNeedToStrikeTheRight::
 Jump_013_6A14:: ; address name
     ld hl, $0BAC ; 'You need to strike the right'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 55 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0D84 through StartMessageCommand09HL (script command $09); that string begins 'Some monsters may be tough, but they' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case37)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case37::
+TalkMsg0D84_SomeMonstersMayBeToughBut::
 Jump_013_6A1B:: ; address name
     ld hl, $0D84 ; 'Some monsters may be tough, but'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 56 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6A40; flag 0024 then jr c, Jump_013_6A39); starts message $023F through StartMessageCommand09HL (script command $09); that string begins 'I was on my way to the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case38)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case38::
+TalkMsg023F_IWasOnMyWayTo::
 Jump_013_6A22:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7228,9 +7228,9 @@ Jump_013_6A40::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 57 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6A65; flag 0024 then jr c, Jump_013_6A5E); starts message $0240 through StartMessageCommand09HL (script command $09); that string begins 'Pack properly if you're going off to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case39)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case39::
+TalkMsg0240_PackProperlyIfYoureGoing::
 Jump_013_6A47:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7252,9 +7252,9 @@ Jump_013_6A65::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 58 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6A7B); starts message $0241 through StartMessageCommand09HL (script command $09); that string begins 'Try the slide! It's a shortcut!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case3A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3A::
+TalkMsg0241_TryTheSlideItsAShortcut::
 Jump_013_6A6C:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7268,25 +7268,25 @@ Jump_013_6A7B::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 59 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0243 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Bookmark Place inside' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case3B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3B::
+TalkMsg0243_HeroCheckedTheBookshelfBookmark::
 Jump_013_6A82:: ; address name
     ld hl, $0243 ; '0 checked the bookshelf. Bookmark Place'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 60 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0244 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Journal A book' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case3C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3C::
+TalkMsg0244_HeroCheckedTheBookshelfJournal::
 Jump_013_6A89:: ; address name
     ld hl, $0244 ; '0 checked the bookshelf. Journal A'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 61 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0245 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case3D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3D::
+TalkMsg0245_HeroPeeredIntoTheVaseIt::
 Jump_013_6A90:: ; address name
     ld hl, $0245 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -7316,25 +7316,25 @@ Jump_013_6AB5::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 63 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0249 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Diary A girl' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case3F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3F::
+TalkMsg0249_HeroCheckedTheBookshelfDiary::
 Jump_013_6ABC:: ; address name
     ld hl, $0249 ; '0 checked the bookshelf. Diary A'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 64 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0256 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. It was jammed' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case40)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case40::
+TalkMsg0256_HeroCheckedTheDresserItWas::
 Jump_013_6AC3:: ; address name
     ld hl, $0256 ; '0 checked the dresser. It was'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 65 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $02B0 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case41)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case41::
+TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
 Jump_013_6ACA:: ; address name
     ld hl, $02B0 ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
@@ -7392,25 +7392,25 @@ Jump_013_6B2B::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 67 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $025A through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. It was tidily' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case43)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case43::
+TalkMsg025A_HeroCheckedTheDresserItWas::
 Jump_013_6B32:: ; address name
     ld hl, $025A ; '0 checked the dresser. It was'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 68 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $025B through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. This is the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case44)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case44::
+TalkMsg025B_HeroCheckedTheBookshelfThis::
 Jump_013_6B39:: ; address name
     ld hl, $025B ; '0 checked the bookshelf. This is'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 69 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0134 then ret nc); starts message $0314 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case45)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case45::
+IfFlag134Msg0314_HeroTriedToOpenTheChest::
 Jump_013_6B40:: ; address name
     ld de, $0134
     call TestFlagBit
@@ -7440,33 +7440,33 @@ Jump_013_6B68::
     call StartScriptAtHL_B13
     ret
 
-; entry 71 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04C5 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case47)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case47::
+TalkMsg04C5_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B6F:: ; address name
     ld hl, $04C5 ; '0 checked the bookshelf. Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 72 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04C6 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case48)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case48::
+TalkMsg04C6_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B76:: ; address name
     ld hl, $04C6 ; '0 checked the bookshelf. Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 73 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04C7 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Handbook on Naming' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case49)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case49::
+TalkMsg04C7_HeroCheckedTheBookshelfHandbook::
 Jump_013_6B7D:: ; address name
     ld hl, $04C7 ; '0 checked the bookshelf. Handbook on'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 74 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $08C0 through StartMessageCommand09HL (script command $09); that string begins 'We get more and more stubborn as' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case4A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case4A::
+TalkMsg08C0_WeGetMoreAndMoreStubborn::
 Jump_013_6B84:: ; address name
     ld hl, $08C0 ; 'We get more and more stubborn'
     call StartMessageCommand09HL_B13
@@ -7538,34 +7538,34 @@ Jump_013_6BEE::
     ld [wDataBank], a
     ret
 
-; entry 77 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A50 through StartMessageCommand09HL (script command $09); that string begins 'Zzzz Yawn Huh? Is it morning already?' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case4D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case4D::
+TalkMsg0A50_ZzzzYawnHuhIsItMorning::
 Jump_013_6BFA:: ; address name
     ld hl, $0A50 ; 'Zzzz Yawn Huh? Is it morning'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 78 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A52 through StartMessageCommand09HL (script command $09); that string begins 'Our kind always stays near water. Go' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case4E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case4E::
+TalkMsg0A52_OurKindAlwaysStaysNearWater::
 Jump_013_6C01:: ; address name
     ld hl, $0A52 ; 'Our kind always stays near water.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 79 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A53 through StartMessageCommand09HL (script command $09); that string begins 'Zzz Zzz Zzz Whoops! Was I breathing' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case4F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case4F::
+TalkMsg0A53_ZzzZzzZzzWhoopsWasI::
 Jump_013_6C08:: ; address name
     ld hl, $0A53 ; 'Zzz Zzz Zzz Whoops! Was I'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 80 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A59 through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. Ssh Monsters are' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case50)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_54B9: '0 checked the casket.'
-DispatchTalkEvent_Case01_Case50::
+TalkMsg0A59_HeroReadTheSignSshMonsters::
 Jump_013_6C0F:: ; address name
     ld hl, $0A59 ; '0 read the sign. Ssh Monsters'
     call StartMessageCommand09HL_B13
@@ -7589,10 +7589,10 @@ Jump_013_6C1D:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 83 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A5D through StartMessageCommand09HL (script command $09); that string begins '0 read the sign. Watch your step!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case53)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_54C7: '0 peered into the hole.'
-DispatchTalkEvent_Case01_Case53::
+TalkMsg0A5D_HeroReadTheSignWatchYour::
 Jump_013_6C24:: ; address name
     ld hl, $0A5D ; '0 read the sign. Watch your'
     call StartMessageCommand09HL_B13
@@ -7607,9 +7607,9 @@ Jump_013_6C2B:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 85 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6C41); starts message $0292 through StartMessageCommand09HL (script command $09); that string begins 'They take entry fees from masters for' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case55)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case55::
+TalkMsg0292_TheyTakeEntryFeesFromMasters::
 Jump_013_6C32:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7623,9 +7623,9 @@ Jump_013_6C41::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 86 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6C57); starts message $027D through StartMessageCommand09HL (script command $09); that string begins 'What do you suppose monsters are thinking?' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case56)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case56::
+TalkMsg027D_WhatDoYouSupposeMonsters::
 Jump_013_6C48:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7639,65 +7639,65 @@ Jump_013_6C57::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 87 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $027E through StartMessageCommand09HL (script command $09); that string begins 'GRAH, HUNGRY. LOOK DELICIOUS' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case57)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case57::
+TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS::
 Jump_013_6C5E:: ; address name
     ld hl, $027E ; 'GRAH, HUNGRY. LOOK DELICIOUS'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 88 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $028C through StartMessageCommand09HL (script command $09); that string begins 'Listen, to win you need balance. Attack,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case58)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case58::
+TalkMsg028C_ListenToWinYouNeedBalance::
 Jump_013_6C65:: ; address name
     ld hl, $028C ; 'Listen, to win you need balance.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 89 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $028D through StartMessageCommand09HL (script command $09); that string begins 'It's not all about winning. We should,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case59)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case59::
+TalkMsg028D_ItsNotAllAboutWinningWe::
 Jump_013_6C6C:: ; address name
     ld hl, $028D ; 'It's not all about winning. We'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 90 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $028E through StartMessageCommand09HL (script command $09); that string begins 'Arrrrroooh! My blood burns! I can taste' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5A::
+TalkMsg028E_ArrrrrooohMyBloodBurnsICan::
 Jump_013_6C73:: ; address name
     ld hl, $028E ; 'Arrrrroooh! My blood burns! I can'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 91 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0287 through StartMessageCommand09HL (script command $09); that string begins 'Monsters can grow only so much. They' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5B::
+TalkMsg0287_MonstersCanGrowOnlySoMuch::
 Jump_013_6C7A:: ; address name
     ld hl, $0287 ; 'Monsters can grow only so much.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 92 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0286 through StartMessageCommand09HL (script command $09); that string begins 'The Arena is where masters can test' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5C::
+TalkMsg0286_TheArenaIsWhereMastersCan::
 Jump_013_6C81:: ; address name
     ld hl, $0286 ; 'The Arena is where masters can'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 93 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $028F through StartMessageCommand09HL (script command $09); that string begins 'If you come across a monster that' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5D::
+TalkMsg028F_IfYouComeAcrossAMonster::
 Jump_013_6C88:: ; address name
     ld hl, $028F ; 'If you come across a monster'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 94 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6C9E); starts message $0294 through StartMessageCommand09HL (script command $09); that string begins 'If you win an Arena tourney, your' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5E::
+TalkMsg0294_IfYouWinAnArenaTourney::
 Jump_013_6C8F:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7711,17 +7711,17 @@ Jump_013_6C9E::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 95 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0290 through StartMessageCommand09HL (script command $09); that string begins 'Sirloin is the tops, harrumph! It just' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case5F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case5F::
+TalkMsg0290_SirloinIsTheTopsHarrumph::
 Jump_013_6CA5:: ; address name
     ld hl, $0290 ; 'Sirloin is the tops, harrumph! It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 96 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0291 through StartMessageCommand09HL (script command $09); that string begins 'I I didn't fall for any meat.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case60)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case60::
+TalkMsg0291_IIDidntFallForAny::
 Jump_013_6CAC:: ; address name
     ld hl, $0291 ; 'I I didn't fall for any'
     call StartMessageCommand09HL_B13
@@ -7812,9 +7812,9 @@ Jump_013_6D33::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 98 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0296 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case62)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case62::
+TalkMsg0296_HeroPeeredIntoTheVaseIt::
 Jump_013_6D3A:: ; address name
     ld hl, $0296 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -7833,9 +7833,9 @@ Jump_013_6D41:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 100 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6D61); starts message $027A through StartMessageCommand09HL (script command $09); that string begins 'Listen, this is a secret. There's a' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case64)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case64::
+TalkMsg027A_ListenThisIsASecretTheres::
 Jump_013_6D52:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7943,9 +7943,9 @@ Jump_013_6E02::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 103 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6E36; flag 0023 then jr c, Jump_013_6E2F; flag 0022 then jr c, Jump_013_6E28); starts message $04B5 through StartMessageCommand09HL (script command $09); that string begins 'Do you know all the kinds of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case67)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case67::
+TalkMsg04B5_DoYouKnowAllTheKinds::
 Jump_013_6E09:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7975,9 +7975,9 @@ Jump_013_6E36::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 104 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6E6A; flag 0023 then jr c, Jump_013_6E63; flag 0022 then jr c, Jump_013_6E5C); starts message $04B6 through StartMessageCommand09HL (script command $09); that string begins 'If you eat any BadMeat like me,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case68)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case68::
+TalkMsg04B6_IfYouEatAnyBadMeatLike::
 Jump_013_6E3D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8078,49 +8078,49 @@ Jump_013_6EDE:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 108 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $08D8 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case6C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case6C::
+TalkMsg08D8_HeroCheckedTheBookshelfBreeding::
 Jump_013_6EE5:: ; address name
     ld hl, $08D8 ; '0 checked the bookshelf. Breeding Guide'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 109 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $08D9 through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Breeding Guide In' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case6D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case6D::
+TalkMsg08D9_HeroCheckedTheBookshelfBreeding::
 Jump_013_6EEC:: ; address name
     ld hl, $08D9 ; '0 checked the bookshelf. Breeding Guide'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 110 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $08CD through StartMessageCommand09HL (script command $09); that string begins '0 checked the door. The door won't' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case6E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case6E::
+TalkMsg08CD_HeroCheckedTheDoorTheDoor::
 Jump_013_6EF3:: ; address name
     ld hl, $08CD ; '0 checked the door. The door'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 111 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $02DC through StartMessageCommand09HL (script command $09); that string begins 'GreatLog's Starry Shrine wasn't in use for' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case6F)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case6F::
+TalkMsg02DC_GreatLogsStarryShrineWasnt::
 Jump_013_6EFA:: ; address name
     ld hl, $02DC ; 'GreatLog's Starry Shrine wasn't in use'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 112 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0DD4 through StartMessageCommand09HL (script command $09); that string begins 'If you breed, the parents go away' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case70)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case70::
+TalkMsg0DD4_IfYouBreedTheParentsGo::
 Jump_013_6F01:: ; address name
     ld hl, $0DD4 ; 'If you breed, the parents go'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 113 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $02DD through StartMessageCommand09HL (script command $09); that string begins 'Parents pass on abilities to their children,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case71)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case71::
+TalkMsg02DD_ParentsPassOnAbilitiesTo::
 Jump_013_6F08:: ; address name
     ld hl, $02DD ; 'Parents pass on abilities to their'
     call StartMessageCommand09HL_B13
@@ -8156,43 +8156,43 @@ Jump_013_6F32::
     call StartScriptAtHL_B13
     ret
 
-; entry 115 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A6F through StartMessageCommand09HL (script command $09); that string begins 'My husband loves to collect things that' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case73)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case73::
+TalkMsg0A6F_MyHusbandLovesToCollectThings::
 Jump_013_6F41:: ; address name
     ld hl, $0A6F ; 'My husband loves to collect things'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 116 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A75 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. It overflowed with' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case74)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case74::
+TalkMsg0A75_HeroCheckedTheDresserItOverflowed::
 Jump_013_6F48:: ; address name
     ld hl, $0A75 ; '0 checked the dresser. It overflowed'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 117 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A76 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. It overflowed with' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case75)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case75::
+TalkMsg0A76_HeroCheckedTheDresserItOverflowed::
 Jump_013_6F4F:: ; address name
     ld hl, $0A76 ; '0 checked the dresser. It overflowed'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 118 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A77 through StartMessageCommand09HL (script command $09); that string begins '0 checked the oven. There was an' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case76)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case76::
+TalkMsg0A77_HeroCheckedTheOvenThereWas::
 Jump_013_6F56:: ; address name
     ld hl, $0A77 ; '0 checked the oven. There was'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 119 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_6FBE; flag 0024 then jr c, Jump_013_6FA8; flag 012E then jr c, Jump_013_6FA1; flag 012D then jr c, Jump_013_6F84); starts message $025E through StartMessageCommand09HL (script command $09); that string begins 'My granddaughter is painfully shy. She seems' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case77)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case01_Case77::
+TalkMsg025E_MyGranddaughterIsPainfully::
 Jump_013_6F5D:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8249,9 +8249,9 @@ Jump_013_6FBE::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 120 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0269 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. Girls clothes were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case78)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case78::
+TalkMsg0269_HeroCheckedTheDresserGirls::
 Jump_013_6FC5:: ; address name
     ld hl, $0269 ; '0 checked the dresser. Girls clothes'
     call StartMessageCommand09HL_B13
@@ -8270,25 +8270,25 @@ Jump_013_6FCC:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 122 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $026A through StartMessageCommand09HL (script command $09); that string begins '0 checked the plush doll. It had' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case7A)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case7A::
+TalkMsg026A_HeroCheckedThePlushDollIt::
 Jump_013_6FDD:: ; address name
     ld hl, $026A ; '0 checked the plush doll. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 123 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A32 through StartMessageCommand09HL (script command $09); that string begins 'There are powers that let you cross' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case7B)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case7B::
+TalkMsg0A32_ThereArePowersThatLetYou::
 Jump_013_6FE4:: ; address name
     ld hl, $0A32 ; 'There are powers that let you'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 124 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_6FFB); starts message $0A33 through StartMessageCommand09HL (script command $09); that string begins 'Have you been to the Starry Shrine?' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case7C)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case7C::
+TalkMsg0A33_HaveYouBeenToTheStarry::
 Jump_013_6FEB:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8302,9 +8302,9 @@ Jump_013_6FFB::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 125 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_7012); starts message $020A through StartMessageCommand09HL (script command $09); that string begins 'I'm chopping some trees down to make' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case7D)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case7D::
+TalkMsg020A_ImChoppingSomeTreesDownTo::
 Jump_013_7002:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8318,9 +8318,9 @@ Jump_013_7012::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 126 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_7029); starts message $08BF through StartMessageCommand09HL (script command $09); that string begins 'Master only makes me charge. It made' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case7E)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case7E::
+TalkMsg08BF_MasterOnlyMakesMeChargeIt::
 Jump_013_7019:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8426,9 +8426,9 @@ Jump_013_70CB::
     call StartScriptAtHL_B13
     ret
 
-; entry 128 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A39 through StartMessageCommand09HL (script command $09); that string begins 'The man here has rare keys. Doesn't' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case80)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case80::
+TalkMsg0A39_TheManHereHasRareKeys::
 Jump_013_70D2:: ; address name
     ld hl, $0A39 ; 'The man here has rare keys.'
     call StartMessageCommand09HL_B13
@@ -8756,17 +8756,17 @@ Jump_013_7332::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 133 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A42 through StartMessageCommand09HL (script command $09); that string begins 'The tavern just outside the Castle is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case85)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case85::
+TalkMsg0A42_TheTavernJustOutsideTheCastle::
 Jump_013_7339:: ; address name
     ld hl, $0A42 ; 'The tavern just outside the Castle'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 134 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_734F); starts message $0A43 through StartMessageCommand09HL (script command $09); that string begins 'Hey, welcome! All masters are welcome here,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case86)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case86::
+TalkMsg0A43_HeyWelcomeAllMastersAreWelcome::
 Jump_013_7340:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -8780,17 +8780,17 @@ Jump_013_734F::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 135 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A44 through StartMessageCommand09HL (script command $09); that string begins 'When you breed, notice a number after' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case87)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case87::
+TalkMsg0A44_WhenYouBreedNoticeANumber::
 Jump_013_7356:: ; address name
     ld hl, $0A44 ; 'When you breed, notice a number'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 136 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A45 through StartMessageCommand09HL (script command $09); that string begins 'If you want to make a certain' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case88)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case88::
+TalkMsg0A45_IfYouWantToMakeA::
 Jump_013_735D:: ; address name
     ld hl, $0A45 ; 'If you want to make a'
     call StartMessageCommand09HL_B13
@@ -9052,9 +9052,9 @@ Jump_013_7518::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 145 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04CF through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case91)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case91::
+TalkMsg04CF_HeroPeeredIntoTheVaseIt::
 Jump_013_751F:: ; address name
     ld hl, $04CF ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -9102,17 +9102,17 @@ Jump_013_7563::
     call StartScriptAtHL_B13
     ret
 
-; entry 147 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0299 through StartMessageCommand09HL (script command $09); that string begins 'I'm apprenticing under the boss. He told' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case93)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case93::
+TalkMsg0299_ImApprenticingUnderTheBoss::
 Jump_013_7572:: ; address name
     ld hl, $0299 ; 'I'm apprenticing under the boss. He'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 148 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $029A through StartMessageCommand09HL (script command $09); that string begins 'Day after day, I examine keys. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_Case94)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case94::
+TalkMsg029A_DayAfterDayIExamineKeys::
 Jump_013_7579:: ; address name
     ld hl, $029A ; 'Day after day, I examine keys.'
     call StartMessageCommand09HL_B13
@@ -9395,33 +9395,33 @@ Jump_013_7744::
     call StartScriptAtHL_B13
     ret
 
-; entry 160 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0024 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. Children's clothes were' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA0)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA0::
+TalkMsg0024_HeroCheckedTheDresserChildrens::
 Jump_013_774B:: ; address name
     ld hl, $0024 ; '0 checked the dresser. Children's clothes'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 161 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0025 through StartMessageCommand09HL (script command $09); that string begins '0 checked the dresser. It smelled of' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA1)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA1::
+TalkMsg0025_HeroCheckedTheDresserItSmelled::
 Jump_013_7752:: ; address name
     ld hl, $0025 ; '0 checked the dresser. It smelled'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 162 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $001D through StartMessageCommand09HL (script command $09); that string begins '0 peered into the barrel. It is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA2)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA2::
+TalkMsg001D_HeroPeeredIntoTheBarrelIt::
 Jump_013_7759:: ; address name
     ld hl, $001D ; '0 peered into the barrel. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 163 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $001C through StartMessageCommand09HL (script command $09); that string begins '0 checked the pump. It's rusted and' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA3)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA3::
+TalkMsg001C_HeroCheckedThePumpItsRusted::
 Jump_013_7760:: ; address name
     ld hl, $001C ; '0 checked the pump. It's rusted'
     call StartMessageCommand09HL_B13
@@ -9441,9 +9441,9 @@ Jump_013_7767:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; entry 165 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0037 through StartMessageCommand09HL (script command $09); that string begins '0 tried to open the chest. But' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA5)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA5::
+TalkMsg0037_HeroTriedToOpenTheChest_137788::
 Jump_013_7788:: ; address name
     ld hl, $0037 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B13
@@ -9477,9 +9477,9 @@ Jump_013_77A0:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 168 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0D4E through StartMessageCommand09HL (script command $09); that string begins 'I'm digging here because I think this' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseA8)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseA8::
+TalkMsg0D4E_ImDiggingHereBecauseIThink::
 Jump_013_77B6:: ; address name
     ld hl, $0D4E ; 'I'm digging here because I think'
     call StartMessageCommand09HL_B13
@@ -9588,25 +9588,25 @@ Jump_013_784B::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 174 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $022E through StartMessageCommand09HL (script command $09); that string begins 'Snivel This book is so sad' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseAE)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseAE::
+TalkMsg022E_SnivelThisBookIsSoSad::
 Jump_013_7852:: ; address name
     ld hl, $022E ; 'Snivel This book is so sad'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 175 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $022F through StartMessageCommand09HL (script command $09); that string begins 'Even I can cast spells if I' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseAF)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseAF::
+TalkMsg022F_EvenICanCastSpellsIf::
 Jump_013_7859:: ; address name
     ld hl, $022F ; 'Even I can cast spells if'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 176 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_786F); starts message $0242 through StartMessageCommand09HL (script command $09); that string begins 'My dad's a famous monster master. I'm' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseB0)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseB0::
+TalkMsg0242_MyDadsAFamousMonsterMaster::
 Jump_013_7860:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -9620,9 +9620,9 @@ Jump_013_786F::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 177 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $02B1 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseB1)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseB1::
+TalkMsg02B1_HeroPeeredIntoTheOvenIt::
 Jump_013_7876:: ; address name
     ld hl, $02B1 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
@@ -9652,9 +9652,9 @@ Jump_013_789B::
     call StartScriptAtHL_B13
     ret
 
-; entry 179 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_78B2); starts message $02A6 through StartMessageCommand09HL (script command $09); that string begins 'Putting up a bridge is easy!' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseB3)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseB3::
+TalkMsg02A6_PuttingUpABridgeIsEasy::
 Jump_013_78A2:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -9668,9 +9668,9 @@ Jump_013_78B2::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 180 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jp c, Jump_013_78C9); starts message $0209 through StartMessageCommand09HL (script command $09); that string begins 'Did you know? You can record in' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseB4)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseB4::
+TalkMsg0209_DidYouKnowYouCanRecord::
 Jump_013_78B9:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -9684,10 +9684,10 @@ Jump_013_78C9::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 181 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A51 through StartMessageCommand09HL (script command $09); that string begins 'When a appears by a monster's level' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseB5)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5744: 'Do you want to know how'
-DispatchTalkEvent_Case01_CaseB5::
+TalkMsg0A51_WhenAAppearsByAMonsters::
 Jump_013_78D0:: ; address name
     ld hl, $0A51 ; 'When a appears by a monster's'
     call StartMessageCommand09HL_B13
@@ -9830,26 +9830,26 @@ Jump_013_7993::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 189 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0284 through StartMessageCommand09HL (script command $09); that string begins 'I come to watch every day. The' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseBD)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseBD::
+TalkMsg0284_IComeToWatchEveryDay::
 Jump_013_799A:: ; address name
     ld hl, $0284 ; 'I come to watch every day.'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 190 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0285 through StartMessageCommand09HL (script command $09); that string begins 'Monsters mirror their masters. The plans you' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseBE)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseBE::
+TalkMsg0285_MonstersMirrorTheirMasters::
 Jump_013_79A1:: ; address name
     ld hl, $0285 ; 'Monsters mirror their masters. The plans'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 191 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0288 through StartMessageCommand09HL (script command $09); that string begins 'My husband is a master still. He' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseBF)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5752: 'Hello there. Do you know about'
-DispatchTalkEvent_Case01_CaseBF::
+TalkMsg0288_MyHusbandIsAMasterStill::
 Jump_013_79A8:: ; address name
     ld hl, $0288 ; 'My husband is a master still.'
     call StartMessageCommand09HL_B13
@@ -9864,25 +9864,25 @@ Jump_013_79AF:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 193 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0293 through StartMessageCommand09HL (script command $09); that string begins 'If you win in the S Class,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC1)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC1::
+TalkMsg0293_IfYouWinInTheS::
 Jump_013_79B6:: ; address name
     ld hl, $0293 ; 'If you win in the S'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 194 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0295 through StartMessageCommand09HL (script command $09); that string begins 'In an Arena battle, you can't command' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC2)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC2::
+TalkMsg0295_InAnArenaBattleYouCant::
 Jump_013_79BD:: ; address name
     ld hl, $0295 ; 'In an Arena battle, you can't'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 195 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_79D3); starts message $027B through StartMessageCommand09HL (script command $09); that string begins 'Which to take? Monsters you e raised,' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC3)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC3::
+TalkMsg027B_WhichToTakeMonstersYouE::
 Jump_013_79C4:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -9896,9 +9896,9 @@ Jump_013_79D3::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 196 of the `rst $00` table in DispatchTalkEvent_Case01
+; tests story flags (flag 0025 then jr c, Jump_013_79E9); starts message $027C through StartMessageCommand09HL (script command $09); that string begins 'You need luck on your side to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC4)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC4::
+TalkMsg027C_YouNeedLuckOnYourSide::
 Jump_013_79DA:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -9912,17 +9912,17 @@ Jump_013_79E9::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 197 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $029C through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It greedily' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC5)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC5::
+TalkMsg029C_HeroPeeredIntoTheOvenIt::
 Jump_013_79F0:: ; address name
     ld hl, $029C ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 198 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $029D through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC6)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC6::
+TalkMsg029D_HeroPeeredIntoTheVaseIt::
 Jump_013_79F7:: ; address name
     ld hl, $029D ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -9941,17 +9941,17 @@ Jump_013_79FE:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 200 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $02B1 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the oven. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC8)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC8::
+TalkMsg02B1_HeroPeeredIntoTheOvenIt_137A0F::
 Jump_013_7A0F:: ; address name
     ld hl, $02B1 ; '0 peered into the oven. It'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 201 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0225 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. There was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseC9)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseC9::
+TalkMsg0225_HeroPeeredIntoTheVaseThere::
 Jump_013_7A16:: ; address name
     ld hl, $0225 ; '0 peered into the vase. There'
     call StartMessageCommand09HL_B13
@@ -9970,9 +9970,9 @@ Jump_013_7A1D:: ; address name
     call StartMessageScriptDE_B13
     ret
 
-; entry 203 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $024A through StartMessageCommand09HL (script command $09); that string begins '0 checked the plush doll. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseCB)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseCB::
+TalkMsg024A_HeroCheckedThePlushDollIt::
 Jump_013_7A2E:: ; address name
     ld hl, $024A ; '0 checked the plush doll. It'
     call StartMessageCommand09HL_B13
@@ -10035,9 +10035,9 @@ Jump_013_7A8C::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 206 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0245 through StartMessageCommand09HL (script command $09); that string begins '0 peered into the vase. It was' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseCE)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseCE::
+TalkMsg0245_HeroPeeredIntoTheVaseIt_137A93::
 Jump_013_7A93:: ; address name
     ld hl, $0245 ; '0 peered into the vase. It'
     call StartMessageCommand09HL_B13
@@ -10122,9 +10122,9 @@ Jump_013_7AFD::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 213 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0A34 through StartMessageCommand09HL (script command $09); that string begins 'Uheheheh, did you know this? Zombies like' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseD5)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseD5::
+TalkMsg0A34_UhehehehDidYouKnowThisZombies::
 Jump_013_7B04:: ; address name
     ld hl, $0A34 ; 'Uheheheh, did you know this? Zombies'
     call StartMessageCommand09HL_B13
@@ -10215,9 +10215,9 @@ Jump_013_7B83::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 218 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $04D1 through StartMessageCommand09HL (script command $09); that string begins 'There are times when you have to' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseDA)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseDA::
+TalkMsg04D1_ThereAreTimesWhenYouHave::
 Jump_013_7B8A:: ; address name
     ld hl, $04D1 ; 'There are times when you have'
     call StartMessageCommand09HL_B13
@@ -10396,65 +10396,65 @@ Jump_013_7CF0::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 220 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0519 through StartMessageCommand09HL (script command $09); that string begins 'This is a time we need Warubou's' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseDC)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseDC::
+TalkMsg0519_ThisIsATimeWeNeed::
 Jump_013_7CF7:: ; address name
     ld hl, $0519 ; 'This is a time we need'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 221 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $051A through StartMessageCommand09HL (script command $09); that string begins 'I didn't want to believe GreatLog is' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseDD)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseDD::
+TalkMsg051A_IDidntWantToBelieveGreatLog::
 Jump_013_7CFE:: ; address name
     ld hl, $051A ; 'I didn't want to believe GreatLog'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 222 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $051B through StartMessageCommand09HL (script command $09); that string begins 'I won't believe that GreatLog is sinking.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseDE)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseDE::
+TalkMsg051B_IWontBelieveThatGreatLog::
 Jump_013_7D05:: ; address name
     ld hl, $051B ; 'I won't believe that GreatLog is'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 223 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $051C through StartMessageCommand09HL (script command $09); that string begins 'The King said that GreatLog will not' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseDF)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseDF::
+TalkMsg051C_TheKingSaidThatGreatLogWill::
 Jump_013_7D0C:: ; address name
     ld hl, $051C ; 'The King said that GreatLog will'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 224 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $051D through StartMessageCommand09HL (script command $09); that string begins 'Everyone, please remain calm. Even if GreatLog' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseE0)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseE0::
+TalkMsg051D_EveryonePleaseRemainCalm::
 Jump_013_7D13:: ; address name
     ld hl, $051D ; 'Everyone, please remain calm. Even if'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 225 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $051E through StartMessageCommand09HL (script command $09); that string begins 'The GreatLog tree appeared to be healthy' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseE1)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseE1::
+TalkMsg051E_TheGreatLogTreeAppearedTo::
 Jump_013_7D1A:: ; address name
     ld hl, $051E ; 'The GreatLog tree appeared to be'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 226 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $055E through StartMessageCommand09HL (script command $09); that string begins '0 checked the bookshelf. Magic Keys The' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseE2)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseE2::
+TalkMsg055E_HeroCheckedTheBookshelfMagic::
 Jump_013_7D21:: ; address name
     ld hl, $055E ; '0 checked the bookshelf. Magic Keys'
     call StartMessageCommand09HL_B13
     ret
 
-; entry 227 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts message $0DD5 through StartMessageCommand09HL (script command $09); that string begins 'Monster skills are passed on from parents' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case01_CaseE3)
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseE3::
+TalkMsg0DD5_MonsterSkillsArePassedOn::
 Jump_013_7D28:: ; address name
     ld hl, $0DD5 ; 'Monster skills are passed on from'
     call StartMessageCommand09HL_B13
@@ -10861,7 +10861,7 @@ Jump_013_7F86:: ; address name
     ret
 
 ; the same 28 bytes as InventoryHasFreeSlotCheck (04:7C37)
-; 9 call sites from 8 routines (e.g. DispatchTalkEvent_Case01_Case77, DispatchTalkEvent_Case01_Case0D, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case02, ...)
+; 9 call sites from 8 routines (e.g. TalkMsg025E_MyGranddaughterIsPainfully, DispatchTalkEvent_Case01_Case0D, TalkMsg0016_ItSeemsToMeThatThe, DispatchTalkEvent_Case01_Case02, ...)
 ; reads: wInventory
 ; points at: wInventory
 InventoryHasFreeSlotCheck_Bank13::

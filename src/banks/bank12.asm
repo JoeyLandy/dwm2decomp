@@ -10340,7 +10340,7 @@ Jump_012_7D93::
     ret
 
 ; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
-; 7 call sites from 7 routines (e.g. DispatchTalkEvent_Case01_Case07_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForTemp0, ...)
+; 7 call sites from 7 routines (e.g. TalkMsg0016_ItSeemsToMeThatThe_Sub01, DispatchTalkEvent_Case01_Case27, DispatchTalkEvent_Case01_Case7F, LoadListedRecordNameTilesForTemp0, ...)
 ; reads: hTemp0, hTemp1, wPartyCount
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList

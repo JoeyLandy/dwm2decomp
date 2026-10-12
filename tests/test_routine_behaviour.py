@@ -230,7 +230,7 @@ class DispatchCases(unittest.TestCase):
         import re
         text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "src/banks").glob("bank*.asm"))
         cases = re.findall(r"^(\w+)_Case([0-9A-F]{2})::", text, re.M)
-        self.assertGreater(len(cases), 4000)
+        self.assertGreater(len(cases), 1000)  # fewer as cases get descriptive names (E-0268)
         self.assertIn("RunGameModeInit", {p for p, _ in cases})
         self.assertEqual(len(re.findall(r"^\w+_Case[0-9A-F]{2}::", text, re.M)),
                          len(set(re.findall(r"^(\w+_Case[0-9A-F]{2})::", text, re.M))))

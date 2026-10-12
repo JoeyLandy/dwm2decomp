@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0268 — Talk-event cases named from their message (the E-0082 shape)
+
+- Kind: OBSERVATION (pattern match plus ROM text; C1).
+- **Check of E-0082.** The 38 TalkMsg/IfFlag names E-0082 derived from message text were compared with the corrected two-level lookup (E-0243). All match except for the player-name token: E-0082 used the separate E-0081 decoder, which read the tables correctly. Only the generator's quoting had been one string off.
+- **Rule.** A routine with a structural name (`_CaseNN`/`_SubNN`/`_SharedNN`) whose whole body has E-0082's shape is named the same way:
+  - the shape is zero or more `ld de, FLAG / call TestFlagBit / jr|jp|ret c|nc` tests, then `ld hl, $WWWW` and a `call` (then `ret`) or `jp` to StartMessageCommand09HL_*;
+  - the name is TalkMsgWWWW_<first words>, or IfFlagFFFFMsgWWWW_<words> when a single `ret nc` gates it;
+  - the words run until the tag reaches about 24 characters, with "0" written as Hero, and duplicates get the address appended.
+  - The notes list the flag tests and quote the message. build/name_talkcases.py writes the entries.
+- 450 DispatchTalkEvent cases were renamed. A test's floor on structural case names drops from 4,000 to 1,000.
+- Binary verification: build/run349 PASS, 0 differing bytes; tests OK.
+
 ### E-0267 — Streams and bank-copy sources named after their destination
 
 - Kind: TOOL (derived from call sites; C1).
