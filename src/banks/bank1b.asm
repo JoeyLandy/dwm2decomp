@@ -2086,7 +2086,7 @@ Jump_01B_53DB:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw RunScreenStateWhenNotFading_1B_Case00_Case00
-    dw RunScreenStateWhenNotFading_1B_Case00_Case01
+    dw RunScreenStateWhenNotFading_1B_Case00_BeginString_Bank1B_Cat0AndStep
     dw RunScreenStateWhenNotFading_1B_Case00_Case02
     dw RunScreenStateWhenNotFading_1B_Case00_Case03
     dw RunScreenStateWhenNotFading_1B_Case00_Case04
@@ -2131,7 +2131,7 @@ Jump_01B_5407::
 ; reads: wScreenStep
 ; writes: wScreenStep, wLinkSendByte
 ; points at: wLinkScreenState
-RunScreenStateWhenNotFading_1B_Case00_Case01::
+RunScreenStateWhenNotFading_1B_Case00_BeginString_Bank1B_Cat0AndStep::
 Jump_01B_5429:: ; address name
     ld a, $01
     call BeginString_Bank1B_Cat0
@@ -2207,12 +2207,12 @@ Jump_01B_547D:: ; address name
     dw RunScreenStateWhenNotFading_1B_Case01_Case01
     dw RunScreenStateWhenNotFading_1B_Case01_Case02
     dw RunScreenStateWhenNotFading_1B_Case01_Case03
-    dw RunScreenStateWhenNotFading_1B_Case01_Case04
+    dw RunScreenStateWhenNotFading_1B_Case01_DrawScreenBufferRectToBGMap_1B
     dw RunScreenStateWhenNotFading_1B_Case01_Case05
     dw RunScreenStateWhenNotFading_1B_Case01_Case06
     dw RunScreenStateWhenNotFading_1B_Case01_Case07
     dw RunScreenStateWhenNotFading_1B_Case01_Case08
-    dw RunScreenStateWhenNotFading_1B_Case01_Case09
+    dw RunScreenStateWhenNotFading_1B_Case01_RunScreenStateWhenNotFading_1B_Shared01
     dw RunScreenStateWhenNotFading_1B_Case01_Case0A
     dw RunScreenStateWhenNotFading_1B_Case01_Case0B
     dw RunScreenStateWhenNotFading_1B_Case01_Case0C
@@ -2403,7 +2403,7 @@ Jump_01B_55F3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_1B_Case01_Case04::
+RunScreenStateWhenNotFading_1B_Case01_DrawScreenBufferRectToBGMap_1B::
 Jump_01B_5611:: ; address name
     call BGMapAddressAtScroll_Bank1B
     ld bc, $140D
@@ -2710,7 +2710,7 @@ Jump_01B_57C0::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_1B_Case01_Case09::
+RunScreenStateWhenNotFading_1B_Case01_RunScreenStateWhenNotFading_1B_Shared01::
 Jump_01B_57E6:: ; address name
     call RunScreenStateWhenNotFading_1B_Shared01
     ld a, $06
@@ -4451,7 +4451,7 @@ Jump_01B_61D7:: ; address name
     ret
 
 ; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C
-; 18 call sites from 17 routines (e.g. RunScreenStateWhenNotFading_1B_Case00_Case04, RunScreenStateWhenNotFading_1B_Case00_Case02, RunScreenStateWhenNotFading_1B_Case00_Case01, RunScreenStateWhenNotFading_1B_Case01_Case22, ...)
+; 18 call sites from 17 routines (e.g. RunScreenStateWhenNotFading_1B_Case00_Case04, RunScreenStateWhenNotFading_1B_Case00_Case02, RunScreenStateWhenNotFading_1B_Case00_BeginString_Bank1B_Cat0AndStep, RunScreenStateWhenNotFading_1B_Case01_Case22, ...)
 ; writes: wStringIndex, wStringCategory
 BeginString_Bank1B_Cat0::
 Func_01B_61F5:: ; address name
@@ -4462,7 +4462,7 @@ Func_01B_61F5:: ; address name
     ret
 
 ; only called from routines of RunScreenStateWhenNotFading_1B (E-0098)
-; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case09, RunScreenStateWhenNotFading_1B_Case01_Case11_Case04)
+; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_RunScreenStateWhenNotFading_1B_Shared01, RunScreenStateWhenNotFading_1B_Case01_Case11_Case04)
 ; writes: wArg1, wArg2
 RunScreenStateWhenNotFading_1B_Shared01::
 Func_01B_6203:: ; address name
@@ -4672,7 +4672,7 @@ Jump_01B_62F9::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 10 call sites from 9 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case14, EraseCEntriesOfWordTable_Bank1B, RunScreenStateWhenNotFading_1B_Case01_Case05, RunScreenStateWhenNotFading_1B_Case01_Case04, ...)
+; 10 call sites from 9 routines (e.g. RunScreenStateWhenNotFading_1B_Case01_Case14, EraseCEntriesOfWordTable_Bank1B, RunScreenStateWhenNotFading_1B_Case01_Case05, RunScreenStateWhenNotFading_1B_Case01_DrawScreenBufferRectToBGMap_1B, ...)
 StoreBAtWordTableEntry_Bank1B::
 Func_01B_6308:: ; address name
     push bc
@@ -5044,7 +5044,7 @@ TileRect_1B_65CE::
 Data_01B_65CE:: ; address name
     db $B6, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6A, $6B, $C3, $B7 ; id 0
 
-; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case02, RunScreenStateWhenNotFading_1B_Case01_Case04, RunScreenStateWhenNotFading_1B_Case01_Case05, RunScreenStateWhenNotFading_1B_Case01_Case0A
+; address loaded by RunScreenStateWhenNotFading_1B_Case01_Case02, RunScreenStateWhenNotFading_1B_Case01_DrawScreenBufferRectToBGMap_1B, RunScreenStateWhenNotFading_1B_Case01_Case05, RunScreenStateWhenNotFading_1B_Case01_Case0A
 Data_01B_65DD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 
@@ -5071,7 +5071,7 @@ Data_01B_660A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A0, $A1, $A2
 
 ; only called from RunLinkSession4ScreenState_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_Case06)
+; 1 call site from 1 routine (e.g. RunLinkSession4ScreenState_Case06_Sub01AndStep)
 ; reads: wTextWindowState
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScreenState
@@ -5122,7 +5122,7 @@ EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw EggServiceMenu_Bank1B_Case00
+    dw EggServiceMenu_Bank1B_ShowStringA10_Bank1B
     dw EggServiceMenu_Bank1B_Case01
     dw EggServiceMenu_Bank1B_Case02
     dw EggServiceMenu_Bank1B_AdvanceScreenState
@@ -5143,7 +5143,7 @@ Func_01B_665E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: hSpriteHideTile, wStringCategory, wScreenState
-EggServiceMenu_Bank1B_Case00::
+EggServiceMenu_Bank1B_ShowStringA10_Bank1B::
 Jump_01B_6682:: ; address name
     ld a, $C0
     ldh [hSpriteHideTile], a
@@ -6098,7 +6098,7 @@ Jump_01B_6C61:: ; address name
     dw EggServiceMenu_Bank1B_Case05_Case02
     dw EggServiceMenu_Bank1B_Case05_Case0F
     dw EggServiceMenu_Bank1B_Case05_Case10
-    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11
+    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_ShowStringA10_Bank1B
     dw EggServiceMenu_Bank1B_Case05_Case0A
     dw EggServiceMenu_Bank1B_Case05_Case02
     dw EggServiceMenu_Bank1B_Case05_Case03
@@ -6108,7 +6108,7 @@ Jump_01B_6C61:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11::
+EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_ShowStringA10_Bank1B::
 Jump_01B_6C91:: ; address name
     ld a, $09
     call ShowStringA10_Bank1B
@@ -6634,9 +6634,9 @@ EggServiceMenu_Bank1B_Case0E::
 Jump_01B_6FC4:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case0E_Case00
+    dw EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_Case0E_Case01
-    dw EggServiceMenu_Bank1B_Case0E_Case02
+    dw EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames
     dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
     dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
@@ -6683,9 +6683,9 @@ EggServiceMenu_Bank1B_Case0F::
 Jump_01B_7019:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw EggServiceMenu_Bank1B_Case0E_Case00
+    dw EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_Case0E_Case01
-    dw EggServiceMenu_Bank1B_Case0E_Case02
+    dw EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames
     dw EggServiceMenu_Bank1B_Case0E_ToDrawListEntriesCell5RecordPanel
     dw EggServiceMenu_Bank1B_Case0E_ToClearAndDrawListEntriesCell5NameAtTiles1780
     dw EggServiceMenu_Bank1B_Case0E_ToDrawRuleBoxByWD04CBit7
@@ -6696,7 +6696,7 @@ Jump_01B_7019:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case0E_Case00::
+EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles::
 Jump_01B_702D:: ; address name
     call ClearRecordPanelTiles
     ld de, TileRect_1B_7928
@@ -6741,7 +6741,7 @@ Jump_01B_7076::
 ; entry 2 of the `rst $00` table in EggServiceMenu_Bank1B_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-EggServiceMenu_Bank1B_Case0E_Case02::
+EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames::
 Jump_01B_707E:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -7000,7 +7000,7 @@ Func_01B_71FE:: ; address name
     ret
 
 ; clears the tile rows at vTiles1 + $500, $700, $780, $240 and $4E0, then the rows from wD7DC = 0 and from the saved wD7DC (E-0127)
-; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. EggServiceMenu_Bank1B_Case0E_ClearRecordPanelTiles, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
 ; reads: wPickCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wPickCount
 ClearRecordPanelTiles::
@@ -7384,7 +7384,7 @@ Jump_01B_7424::
     ret
 
 ; wStringIndex = A + $10, wStringCategory = 0, then far-calls BeginStringDisplay_Bank1B_480C (E-0063)
-; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_Case00, EggServiceMenu_Bank1B_Case02_Case01, EggServiceMenu_Bank1B_Case04_Case0D, EggServiceMenu_Bank1B_Shared02, ...)
+; 32 call sites from 17 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, EggServiceMenu_Bank1B_Case02_Case01, EggServiceMenu_Bank1B_Case04_Case0D, EggServiceMenu_Bank1B_Shared02, ...)
 ; writes: wStringIndex, wStringCategory
 ShowStringA10_Bank1B::
 Func_01B_7439:: ; address name
@@ -7490,7 +7490,7 @@ Func_01B_7487:: ; address name
     ret
 
 ; clears the 6-tile rows of vTiles2 + $100-$220 from row wD7DC onward, then restores the default window (E-0127)
-; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_Case00, ClearRecordPanelTiles, EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case04_Case08)
+; 4 call sites from 4 routines (e.g. EggServiceMenu_Bank1B_ShowStringA10_Bank1B, ClearRecordPanelTiles, EggServiceMenu_Bank1B_Case04_Case0C, EggServiceMenu_Bank1B_Case04_Case08)
 ; reads: wPickCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
 ClearTileRowsFromPickCount::

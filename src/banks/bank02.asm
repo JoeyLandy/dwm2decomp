@@ -1775,13 +1775,13 @@ Func_002_4AE0:: ; address name
     rst $00
     dw FieldModeStateDispatch_Case00
     dw FieldModeStateDispatch_Case01
-    dw FieldModeStateDispatch_Case02
+    dw FieldModeStateDispatch_Case02_Sub01_Case02
     dw FieldModeStateDispatch_Case03
     dw FieldModeStateDispatch_Case04
     dw FieldModeStateDispatch_Case05
     dw FieldModeStateDispatch_Case06
     dw FieldModeStateDispatch_Case07
-    dw FieldModeStateDispatch_Case08
+    dw FieldModeStateDispatch_RunGameMode2State
 
 ; entry 0 of the `rst $00` table in FieldModeStateDispatch
 ; no direct call (reached through a table, a jump or a vector)
@@ -1852,7 +1852,7 @@ Jump_002_4B7C::
 
 ; entry 2 of the `rst $00` table in FieldModeStateDispatch
 ; no direct call (reached through a table, a jump or a vector)
-FieldModeStateDispatch_Case02::
+FieldModeStateDispatch_Case02_Sub01_Case02::
 Jump_002_4B95:: ; address name
     call FieldModeStateDispatch_Case02_Sub01
     farcall DrawFieldSprites
@@ -2128,14 +2128,14 @@ Jump_002_4D99:: ; address name
 
 ; entry 8 of the `rst $00` table in FieldModeStateDispatch
 ; no direct call (reached through a table, a jump or a vector)
-FieldModeStateDispatch_Case08::
+FieldModeStateDispatch_RunGameMode2State::
 Jump_002_4DCC:: ; address name
     farcall RunGameMode2State
     call CallF072B4WhenGM2TimerMinutesIs59
     ret
 
 ; when wCE9D = $3B and wCE9C = wCE9B = 0, far-calls Func_0F0_72B4 (E-0122)
-; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_Case08, FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case02, FieldModeStateDispatch_Case01, ...)
+; 5 call sites from 5 routines (e.g. FieldModeStateDispatch_RunGameMode2State, FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case02_Sub01_Case02, FieldModeStateDispatch_Case01, ...)
 ; reads: wGM2TimerMinutes, wGM2TimerSeconds, wGM2TimerFrames
 CallF072B4WhenGM2TimerMinutesIs59::
 Func_002_4DD6:: ; address name
@@ -2608,7 +2608,7 @@ Jump_002_504E::
     ret
 
 ; unless a fade runs or bit 7 of wC468 is set, runs the field event for wC90D & $0F (jump table of sixteen) (E-0124)
-; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case04, FieldModeStateDispatch_Case03, FieldModeStateDispatch_Case02, ...)
+; 7 call sites from 7 routines (e.g. FieldModeStateDispatch_Case05, FieldModeStateDispatch_Case04, FieldModeStateDispatch_Case03, FieldModeStateDispatch_Case02_Sub01_Case02, ...)
 ; reads: wFadeState, wFieldActionRequest, wFieldEventKind
 RunFieldEventFieldEventKind::
 Func_002_5074:: ; address name
@@ -2629,25 +2629,25 @@ Func_002_5074:: ; address name
     dw RunFieldEventFieldEventKind_Case05
     dw RunFieldEventFieldEventKind_Case06
     dw RunFieldEventFieldEventKind_Case07
-    dw RunFieldEventFieldEventKind_Case08
+    dw RunFieldEventFieldEventKind_Case08_Sub01_Case08
     dw RunFieldEventFieldEventKind_Case09
     dw RunFieldEventFieldEventKind_Case0A
     dw RunFieldEventFieldEventKind_Case0B
-    dw RunFieldEventFieldEventKind_Case0C
+    dw RunFieldEventFieldEventKind_Case0C_Sub01_Case0C
     dw RunFieldEventFieldEventKind_Case0D
     dw RunFieldEventFieldEventKind_Case0E
     dw RunFieldEventFieldEventKind_Case0F
 
 ; entry 12 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventFieldEventKind_Case0C::
+RunFieldEventFieldEventKind_Case0C_Sub01_Case0C::
 Jump_002_50A5:: ; address name
     call RunFieldEventFieldEventKind_Case0C_Sub01
     ret
 
 ; entry 8 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventFieldEventKind_Case08::
+RunFieldEventFieldEventKind_Case08_Sub01_Case08::
 Jump_002_50A9:: ; address name
     call RunFieldEventFieldEventKind_Case08_Sub01
     ret
@@ -3024,7 +3024,7 @@ Jump_002_52BA::
     ret
 
 ; only called from RunFieldEventFieldEventKind_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case08)
+; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case08_Sub01_Case08)
 ; reads: wScriptCommandType, wSavedPositionValid, wMenuSubState, wMenuState
 ; writes: wMenuSubState, wMenuState, hTemp0, wBGPaletteUploadRequest
 ; points at: wBGPaletteBuffer, wBGPaletteCopy
@@ -3177,7 +3177,7 @@ Data_002_53C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $FC, $F8, $F4, $F0, $EC, $E8, $E4, $E4, $E8, $EC, $F0, $F4, $F8, $FC, $00
 
 ; only called from RunFieldEventFieldEventKind_Case0C (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case0C)
+; 1 call site from 1 routine (e.g. RunFieldEventFieldEventKind_Case0C_Sub01_Case0C)
 ; reads: wFieldEventTimer, wKeyRandomLo, wFieldEventArg, wFrameCounterLo, hScrollX, wKeyRandomHi
 ; writes: wFieldEventTimer, hScrollX
 RunFieldEventFieldEventKind_Case0C_Sub01::
@@ -4445,7 +4445,7 @@ Func_002_5BD7:: ; address name
     ret z
     and a, $03
     rst $00
-    dw RunFieldActionRequestActionIfBit7_Case00
+    dw RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep
     dw RunFieldActionRequestActionIfBit7_Case01
     dw RunFieldActionRequestActionIfBit7_Case02
     dw RunFieldActionRequestActionIfBit7_Case03
@@ -4454,7 +4454,7 @@ Func_002_5BD7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldActionStep
 ; points at: wFieldActionRequest
-RunFieldActionRequestActionIfBit7_Case00::
+RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
 Jump_002_5BE8:: ; address name
     call LoadMapScreen
     xor a, a
@@ -5694,7 +5694,7 @@ Jump_002_6377:: ; address name
     jp Jump_002_6089
 
 ; only called from FieldModeStateDispatch_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case02)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case02_Sub01_Case02)
 ; reads: wJoypadPressed, wMapType, wMenuState
 ; writes: wFieldReturnPhase, hSpriteWindowClipMode, wModeState, wGameMode, wGameMode2State, wMenuState
 FieldModeStateDispatch_Case02_Sub01::

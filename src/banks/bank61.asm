@@ -380,12 +380,12 @@ Func_061_420D:: ; address name
     dw LoadMapHeaderByMapType_Case03
     dw LoadMapType5TilesetAndHeader
     dw LoadMapHeaderByMapType_Case06
-    dw LoadMapHeaderByMapType_Case07
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader
 
 ; entry 7 of the `rst $00` table in LoadMapHeaderByMapType
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-LoadMapHeaderByMapType_Case07::
+LoadMapHeaderByMapType_LoadSpecialMapHeader::
 Jump_061_4223:: ; address name
     ld a, $66
     ldh [hTemp0], a
@@ -760,12 +760,12 @@ Func_061_4472:: ; address name
     dw LoadMapScreen_Sub03_Case03
     dw LoadMapScreen_Sub03_Case05
     dw LoadMapScreen_Sub03_Case06
-    dw LoadMapScreen_Sub03_Case07
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
 
 ; entry 7 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-LoadMapScreen_Sub03_Case07::
+LoadMapScreen_Sub03_LoadMapScreenFromChunk::
 Jump_061_4488:: ; address name
     ld a, $66
     ldh [hTemp0], a
@@ -2624,11 +2624,11 @@ Func_061_596F:: ; address name
     rst $00
     dw CheckWarpsByMapType_Case00
     dw CheckWarpsByMapType_ToReturnStub_5CCF
-    dw CheckWarpsByMapType_Case02
-    dw CheckWarpsByMapType_Case03
+    dw CheckWarpsByMapType_Case02_Sub01_Case02
+    dw CheckWarpsByMapType_Case03_Sub01_Case03
     dw CheckWarpsByMapType_Return
-    dw CheckWarpsByMapType_Case05
-    dw CheckWarpsByMapType_Case06
+    dw CheckWarpsByMapType_Case05_Sub01_Case05
+    dw CheckWarpsByMapType_Case06_Sub01_Case06
     dw CheckWarpsByMapType_Return
 
 ; entry 4 of the `rst $00` table in CheckWarpsByMapType
@@ -2661,34 +2661,34 @@ Jump_061_5996:: ; address name
 
 ; entry 2 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case02::
+CheckWarpsByMapType_Case02_Sub01_Case02::
 Jump_061_599A:: ; address name
     call CheckWarpsByMapType_Case02_Sub01
     ret
 
 ; entry 3 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case03::
+CheckWarpsByMapType_Case03_Sub01_Case03::
 Jump_061_599E:: ; address name
     call CheckWarpsByMapType_Case03_Sub01
     ret
 
 ; entry 5 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case05::
+CheckWarpsByMapType_Case05_Sub01_Case05::
 Jump_061_59A2:: ; address name
     call CheckWarpsByMapType_Case05_Sub01
     ret
 
 ; entry 6 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case06::
+CheckWarpsByMapType_Case06_Sub01_Case06::
 Jump_061_59A6:: ; address name
     call CheckWarpsByMapType_Case06_Sub01
     ret
 
 ; only called from CheckWarpsByMapType_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case06)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case06_Sub01_Case06)
 ; reads: hPlayerX, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hPlayerStateFlags
 ; writes: wKeyWorldArea, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wWarpPending, ...
 CheckWarpsByMapType_Case06_Sub01::
@@ -2770,7 +2770,7 @@ Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case05)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case05_Sub01_Case05)
 ; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp1, ...
 ; writes: hPlayerStateFlags, hTemp0, hTemp1, wKeyWorldArea, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
@@ -2992,7 +2992,7 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case02)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case02_Sub01_Case02)
 ; reads: hPlayerX, hPlayerY, wMapToggleRequest, wKeyWorldFloor, hPlayerStateFlags
 ; writes: wMapToggleRequest, wKeyWorldFloor, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapToggleFlag, wModeState, wMenuState, ...
 CheckWarpsByMapType_Case02_Sub01::
@@ -3038,7 +3038,7 @@ Jump_061_5BC4::
     ret
 
 ; only called from CheckWarpsByMapType_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case03)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case03_Sub01_Case03)
 ; reads: wKeyWorldFloor, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; writes: hPlayerStateFlags, wWarpDestFacing, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wMapType, wModeState, ...
 ; points at: wKeyWorldFloorState

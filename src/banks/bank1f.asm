@@ -1247,7 +1247,7 @@ Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_ToDrawRecordListPageNames, BreedMenu_Case04_Case03, BreedMenu_Case07_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
+; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_ToDrawRecordListPageNames, BreedMenu_Case04_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries
@@ -2423,7 +2423,7 @@ Func_01F_753A:: ; address name
     ret
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ClearTilesAndDrawRects6C5FAnd6D37, RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
 ClearTilesAndDrawRects6C5FAnd6D37::
 Func_01F_7591:: ; address name

@@ -3164,7 +3164,7 @@ Jump_000_1222::
     ret
 
 ; wMusicRequest = A
-; 37 call sites from 35 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub02_Case09, StepStringDisplayUntilDone_Sub01_Sub02_Case05, DebugSoundTest_Update, DebugStaffRoll_Init, ...)
+; 37 call sites from 35 routines (e.g. StepStringDisplayUntilDone_Sub01_Sub02_Case09, StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05, DebugSoundTest_Update, DebugStaffRoll_Init, ...)
 ; writes: wMusicRequest
 QueueMusic::
 Func_000_122D:: ; address name
@@ -4496,7 +4496,7 @@ Func_000_18D6:: ; address name
     db $C6, $05, $6F, $7C, $CE, $67, $67, $3E, $02, $18, $19
 
 ; for the current map screen decompresses its tile block (chunk table in bank $61, indexed by hFFC6 and the screen position) into wScreenTileBuffer, and on CGB its attributes (E-0130)
-; 4 call sites from 4 routines (e.g. LoadMapScreen_Sub03_Case07, LoadMapScreen_Sub03_Case06, LoadMapScreen_Sub03_Case03, LoadMapScreen_Sub03_Case02)
+; 4 call sites from 4 routines (e.g. LoadMapScreen_Sub03_LoadMapScreenFromChunk, LoadMapScreen_Sub03_Case06, LoadMapScreen_Sub03_Case03, LoadMapScreen_Sub03_Case02)
 ; reads: hTemp0, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp1, hTemp2, hTemp3
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4614,7 +4614,7 @@ Jump_000_19A4::
     ret
 
 ; loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the highest set bit of the flag byte whose RAM address is stored in the record, decompresses that variant's tile-map stream (an array of far pointers, indexed by row * width + column) into wScreenTileBuffer and, on CGB, the attribute stream into wD000 (WRAM bank 2); then runs the map's tile-replacement table (Func_084_43B8) and two map-specific fix-ups (Func_000_1B6F, Func_000_1A73); hands over to Func_061_4472 when wCC44 bit 7 is set
-; 4 call sites from 4 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_Case00, SceneLandHo_Case01, BreedMenu_Case07_Case02)
+; 4 call sites from 4 routines (e.g. InitFieldScreen, RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep, SceneLandHo_Case01, BreedMenu_ReturnToMap_Case02)
 ; reads: wMapType, wMapWidthScreens, hMapScreenY, hMapScreenX, wIsCGB, hTemp0, hTemp1, hTemp2, ...
 ; writes: rROMB0, hTemp0, hTemp1, hTemp2, hTemp3, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -4950,7 +4950,7 @@ Jump_000_1B95::
     ret
 
 ; hFFC6 = index into a table at bank $61 $60D8 of special map records: decompresses the first far-pointer stream to vTiles2, handles the second with Func_000_24E5, then stores the next five bytes in wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wC193 and wC90D and clears wC901, wC194-wC196
-; 4 call sites from 4 routines (e.g. LoadMapHeaderByMapType_Case07, LoadMapHeaderByMapType_Case06, LoadMapHeaderByMapType_Case03, LoadMapHeaderByMapType_Case02)
+; 4 call sites from 4 routines (e.g. LoadMapHeaderByMapType_LoadSpecialMapHeader, LoadMapHeaderByMapType_Case06, LoadMapHeaderByMapType_Case03, LoadMapHeaderByMapType_Case02)
 ; reads: hTemp0
 ; writes: rROMB0, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, wEncounterRate, wMapMoveType, ...
 LoadSpecialMapHeader::
@@ -5015,7 +5015,7 @@ Func_000_1BAD:: ; address name
     ret
 
 ; loads the current map's graphics, palette, size (wMapWidthScreens/HeightScreens), wMaxBlockingTile and other header bytes from the bank-$11 map record (special maps use LoadMapHeaderByMapType) (E-0128)
-; 3 call sites from 3 routines (e.g. InitFieldScreen, LibraryMenu_Case06, BreedMenu_Case07_Case02)
+; 3 call sites from 3 routines (e.g. InitFieldScreen, LibraryMenu_Case06, BreedMenu_ReturnToMap_Case02)
 ; reads: wMapType, hMapId
 ; writes: rROMB0, wMenuState, wMenuSubState, wMapWidthScreens, wMapHeightScreens, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, ...
 LoadMapHeader::
@@ -5592,7 +5592,7 @@ Jump_000_1F40::
     ret
 
 ; A is first passed through MapIndexViaPartyList; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress
-; 138 call sites from 100 routines (e.g. StoreTemp0ToSRAMRecordBytes, LoadSRAMRecordBytesToTemp0, DebugBattleSetup_Update_Sub01_Sub01, ShowRecordSkillPageNames_Bank03, ...)
+; 138 call sites from 100 routines (e.g. StoreTemp0ToSRAMRecordBytes, LoadSRAMRecordBytesToTemp0, DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped, ShowRecordSkillPageNames_Bank03, ...)
 ; points at: sRecords
 SRAMRecordAddressMapped::
 Func_000_1F49:: ; address name
@@ -7522,14 +7522,14 @@ Func_000_2950:: ; address name
     ld [wTextLastChar], a
     sub a, $E0
     rst $00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case00
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case05
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05
     dw StepStringDisplayUntilDone_Sub01_Sub02_ToAcknowledgeTextPrompt
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case07
+    dw StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case08
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case09
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case0A
@@ -7546,11 +7546,11 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case15
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case16
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case17
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case18
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case19
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case1A
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case1B
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case1C
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B
+    dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case1D
     dw StepStringDisplayUntilDone_Sub01_Sub02_Case1E
     dw AcknowledgeTextPrompt
@@ -7558,7 +7558,7 @@ Func_000_2950:: ; address name
 ; entry 0 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case00::
+StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord::
 Jump_000_2996:: ; address name
     ld hl, wTextControl
     res 7, [hl]
@@ -7572,7 +7572,7 @@ Jump_000_2996:: ; address name
 ; entry 5 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case05::
+StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case05::
 Jump_000_29A8:: ; address name
     ld hl, wTextControl
     res 7, [hl]
@@ -7594,7 +7594,7 @@ Jump_000_29BA:: ; address name
 ; entry 7 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextYesNoResult, wTextLastChar
-StepStringDisplayUntilDone_Sub01_Sub02_Case07::
+StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt::
 Jump_000_29BD:: ; address name
     call AcknowledgeTextPrompt
     ld a, $01
@@ -8127,7 +8127,7 @@ Jump_000_2CAD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextControlArg
 ; points at: wTextFlags
-StepStringDisplayUntilDone_Sub01_Sub02_Case18::
+StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18::
 Jump_000_2CB8:: ; address name
     ld hl, wTextFlags
     set 3, [hl]
@@ -8185,7 +8185,7 @@ Jump_000_2CFD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextRepeatCount
 ; points at: wTextFlags, wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case1B::
+StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B::
 Jump_000_2D03:: ; address name
     ld hl, wTextFlags
     set 6, [hl]
@@ -8200,7 +8200,7 @@ Jump_000_2D03:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextDelayCounter
 ; points at: wTextFlags, wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case1C::
+StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C::
 Jump_000_2D15:: ; address name
     ld hl, wTextFlags
     set 7, [hl]
@@ -8230,7 +8230,7 @@ Jump_000_2D2D:: ; address name
     ret
 
 ; clears bit 7 of wC52C, plays sound $6C, runs Func_000_2D4A, sets bit 2 of wC52B and clears wC552 (E-0122)
-; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01_Sub02_Case07)
+; 1 call site from 1 routine (e.g. StepStringDisplayUntilDone_Sub01_Sub02_AcknowledgeTextPrompt)
 ; writes: wTextYesNoResult
 ; points at: wTextControl, wTextFlags
 AcknowledgeTextPrompt::
@@ -8423,7 +8423,7 @@ Func_000_2E40:: ; address name
     ret
 
 ; HL = the word at wC533/wC534, then that word += 1 (E-0090)
-; 10 call sites from 9 routines (e.g. StepStringDisplayUntilDone_Sub01, StepStringDisplayUntilDone_Sub01_Sub02_Case1C, StepStringDisplayUntilDone_Sub01_Sub02_Case1B, StepStringDisplayUntilDone_Sub01_Sub02_Case18, ...)
+; 10 call sites from 9 routines (e.g. StepStringDisplayUntilDone_Sub01, StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C, StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B, StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18, ...)
 ; reads: wTextPosLo, wTextPosHi
 ; writes: wTextPosLo, wTextPosHi
 IncrementTextPosLoWord::
@@ -9700,7 +9700,7 @@ Jump_000_3613::
     ld [wSoundInitByte19], a
 
 Jump_000_362A::
-    call SoundNextEvent_Sub03
+    call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ret
 
 Jump_000_362E::
@@ -10628,7 +10628,7 @@ Func_000_3B39:: ; address name
 ; 1 call site from 1 routine (e.g. SoundNextEvent)
 ; reads: wSoundSkipMaskB, wSoundEngineMode
 ; writes: wSoundEngineMode
-SoundNextEvent_Sub03::
+SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
 Func_000_3B41:: ; address name
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundSkipMaskB]
@@ -10640,7 +10640,7 @@ Func_000_3B41:: ; address name
     ret
 
 ; when wDD08 & wDD0B is non-zero, drops the caller's return address (pop af) so it returns to the caller's caller; otherwise returns normally with Z set (E-0119)
-; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_Sub02, SoundNextEvent_Sub03, SoundTick_Sub05, ...)
+; 6 call sites from 5 routines (e.g. SoundNextEvent, SoundNextEvent_Sub02, SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB, SoundTick_Sub05, ...)
 ; reads: wSoundSkipMaskB, wSoundSkipMaskA
 ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
 Func_000_3B51:: ; address name

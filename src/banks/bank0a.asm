@@ -1157,7 +1157,7 @@ Data_00A_478F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $41, $46, $50, $50
 
 ; loads encounter entry $481C + 8 * hFFC6 into wCFDC-wCFE2, sets the battle intro (wC903 = 2, or 7 for entries $14, $15, $2F-$31), mode state 3 and the battle transition (E-0128)
-; 14 call sites from 14 routines (e.g. SceneShield_Case05, SceneShieldGuardian_Case05, ScenePrincessMedicine_Case06, SceneExplosion_Case03, ...)
+; 14 call sites from 14 routines (e.g. SceneShield_Case05, SceneShieldGuardian_Case05, ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep, SceneExplosion_Case03, ...)
 ; reads: hTemp0
 ; writes: wEncounterKind, wEncounterMonsters, wBattleIntroKind, wModeState, wBattleTransitionStep, wBattleTransitionSubStep, wFieldReturnPhase
 StartScriptedEncounterTemp0::

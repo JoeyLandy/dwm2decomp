@@ -455,7 +455,7 @@ Jump_03B_42B6::
     ret
 
 ; slot C (not 3/7): C = (species byte wD00A << 4) | wD00B for its species (field $0A); 0 for slot 3/7 (E-0124)
-; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_Sub05)
+; 2 call sites from 2 routines (e.g. RecomputeTargetMaxHPAndMP, ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 SlotSpeciesNibblesD00AD00B::
@@ -512,10 +512,10 @@ Func_03B_42F4:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw RunBattleActions_Case08_Sub01_Case00
-    dw RunBattleActions_Case08_Sub01_Case01
+    dw RunBattleActions_Case08_Sub01_ShowActionBattleText
     dw RunBattleActions_Case08_Sub01_Case02
     dw RunBattleActions_Case08_Sub01_ShowHeroIsAHunk
-    dw RunBattleActions_Case08_Sub01_Case04
+    dw RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep
     dw RunBattleActions_Case08_Sub01_Case05
     dw RunBattleActions_Case08_Sub01_Case06
     dw RunBattleActions_Case08_Sub01_Return
@@ -603,7 +603,7 @@ Jump_03B_4375::
 ; entry 1 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_Case01::
+RunBattleActions_Case08_Sub01_ShowActionBattleText::
 Jump_03B_437F:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -746,7 +746,7 @@ Jump_03B_4456:: ; address name
 ; entry 4 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_Case04::
+RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep::
 Jump_03B_4473:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1763,7 +1763,7 @@ Data_03B_4A24:: ; heuristic: pointer load in the same bank (bank assumed); C0
 
 ; only called from InflictTargetStatus0Bit0 (E-0047)
 ; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0)
-InflictTargetStatus0Bit0_Sub01::
+InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
 Func_03B_4A34:: ; address name
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
     call TargetWDA74Byte
@@ -1784,7 +1784,7 @@ Func_03B_4A40:: ; address name
     ret
 
 ; HL = wD814 + 9 * [wD8A5] (AddAx9ToHL); A = [wD8A5] (the same 10 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
+; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
 ; reads: wBattleTarget
 ; points at: wBattleStatus8
 HLToBattleStatus8EntryOfBattleTarget_Bank3B::
@@ -1812,7 +1812,7 @@ Func_03B_4A5B:: ; address name
     jr Jump_03B_4A77
 
 ; A = byte 2 of the target's 7-byte wDA72 record (wDA74 + 7 * target) (E-0124)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
+; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
 ; reads: wBattleTarget
 TargetWDA74Byte::
 Func_03B_4A60:: ; address name
@@ -1844,7 +1844,7 @@ Jump_03B_4A84::
     ret
 
 ; bit 6 of [HL]: Func_03B_4ABF; else bit 7: RollChanceByLevel_100_100_75_0_Bank3B; else RollChanceForLevelA_Bank3B (E-0122)
-; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_Sub01)
+; 1 call site from 1 routine (e.g. InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B)
 RollChanceByHLBits6And7_Bank3B::
 Func_03B_4A86:: ; address name
     bit 6, [hl]
@@ -1967,7 +1967,7 @@ Func_03B_4AF9:: ; address name
     ret
 
 ; jumps to the routine whose address is at $4B11 + 2 * wBattleActionId (JumpToWordAtHL), the bank-$3B counterpart of DispatchActionEffectTable (E-0116)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_Case04)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep)
 ; reads: wBattleActionId
 DispatchActionEffectTable_Bank3B::
 Func_03B_4B02:: ; address name
@@ -2460,7 +2460,7 @@ Func_03B_4E1B:: ; address name
     call AddAx9ToHL
     bit 0, [hl]
     jr nz, Jump_03B_4E40
-    call InflictTargetStatus0Bit0_Sub01
+    call InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B
     jr nc, Jump_03B_4E43
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1

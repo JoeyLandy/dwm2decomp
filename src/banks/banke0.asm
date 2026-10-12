@@ -642,22 +642,22 @@ Jump_0E0_452D::
     xor a, a
     ldh [hTemp0], a
     ldh [hTemp1], a
-    call DrawSlotHPMPStats_BankE0_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
     inc hl
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
     dec hl
-    call DrawSlotHPMPStats_BankE0_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
     ret
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
@@ -673,7 +673,7 @@ Func_0E0_455F:: ; address name
 
 Jump_0E0_4566::
     call WordAtDEToPackedBCD
-    jr DrawSlotHPMPStats_BankE0_Sub03
+    jr DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
@@ -700,7 +700,7 @@ Jump_0E0_4571::
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 9 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub03::
+DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03::
 Func_0E0_4583:: ; address name
     ld b, $00
     push hl
@@ -733,7 +733,7 @@ Func_0E0_459A:: ; address name
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub05::
+DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05::
 Func_0E0_459D:: ; address name
     push hl
     call DrawSlotHPMPStats_BankE0_Sub05_Sub01
@@ -747,7 +747,7 @@ Func_0E0_459D:: ; address name
     ret
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub05 (E-0047)
-; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05)
 ; reads: hTemp1, hTemp0
 DrawSlotHPMPStats_BankE0_Sub05_Sub01::
 Func_0E0_45AB:: ; address name
@@ -765,7 +765,7 @@ Jump_0E0_45BD::
     inc hl
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03)
 ; reads: hTemp1, hTemp0
 DrawSlotHPMPStats_BankE0_Sub03_Sub01::
 Func_0E0_45BE:: ; address name
@@ -1769,11 +1769,11 @@ Jump_0E0_4C9A:: ; address name
     ld a, [wDebugSubState]
     rst $00
     dw RunDebugState_E0_Case0D_Case00
-    dw RunDebugState_E0_Case0D_Case01
-    dw RunDebugState_E0_Case0D_Case02
+    dw RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0
+    dw RunDebugState_E0_Case0D_Case02_Sub01_Case02
     dw RunDebugState_E0_Case0D_Case03
     dw RunDebugState_E0_Case0D_Case04
-    dw RunDebugState_E0_Case0D_Case05
+    dw RunDebugState_E0_Case0D_Case05_Sub01_Case05
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
@@ -1824,7 +1824,7 @@ Jump_0E0_4CDB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wPersonalityIndex, wDebugSubState
-RunDebugState_E0_Case0D_Case01::
+RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0::
 Jump_0E0_4CF6:: ; address name
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
@@ -1837,7 +1837,7 @@ Jump_0E0_4CF6:: ; address name
 ; entry 2 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case02::
+RunDebugState_E0_Case0D_Case02_Sub01_Case02::
 Jump_0E0_4D0B:: ; address name
     farcall RunDebugState_E0_Case0D_Case02_Sub01
     ld a, $03
@@ -1929,7 +1929,7 @@ Jump_0E0_4D72:: ; address name
 ; entry 5 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case05::
+RunDebugState_E0_Case0D_Case05_Sub01_Case05::
 Jump_0E0_4D89:: ; address name
     farcall RunDebugState_E0_Case0D_Case05_Sub01
     ld a, $02
@@ -2530,7 +2530,7 @@ Data_0E0_55FB:: ; address name
     db $04, $04, $A1, $40 ; id 50
 
 ; only called from RunDebugState_E0_Case0D_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
 ; reads: wBattleActor, wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 ; points at: wBattleActionChoice
@@ -2594,7 +2594,7 @@ Jump_0E0_572C::
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01_Case02)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
 ; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
@@ -3111,7 +3111,7 @@ Data_0E0_5A31:: ; heuristic: target of a monotone pointer table; C0
     db $83, $84, $04, $C3
 
 ; only called from RunDebugState_E0_Case0D_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05_Sub01_Case05)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
 RunDebugState_E0_Case0D_Case05_Sub01::
@@ -7397,7 +7397,7 @@ Func_0E0_76E0:: ; address name
     ld a, [wStringCategory]
     cp a, $01
     jr c, Jump_0E0_76EE
-    farcall BeginStringDisplay_BankE0_Sub01
+    farcall BeginStringDisplay_BankE0_BeginStringDisplay
     ret
 
 Jump_0E0_76EE::
@@ -7784,7 +7784,7 @@ Func_0E0_7A73:: ; address name
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_Case01)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
 Func_0E0_7A80:: ; address name

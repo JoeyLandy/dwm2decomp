@@ -87,7 +87,7 @@ Func_0F2_40A2:: ; address name
     ld a, [wScreenSubStep]
     and a, a
     jr z, Jump_0F2_40B0
-    call GameMode8_Update_Sub01
+    call GameMode8_Update_UpdateAndDrawSpriteSlots
 
 Jump_0F2_40B0::
     ld a, [wTextFlags]
@@ -95,7 +95,7 @@ Jump_0F2_40B0::
     ret nz
     ld a, [wScreenSubStep]
     rst $00
-    dw GameMode8_Update_Case00
+    dw GameMode8_Update_Case00_Sub01_Case00
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case02
     dw GameMode8_Update_Case01
@@ -108,13 +108,13 @@ Jump_0F2_40B0::
     dw GameMode8_Update_Case01
     dw GameMode8_Update_Case0B
     dw GameMode8_Update_ShowHeroReceivedGS
-    dw GameMode8_Update_Case0D
+    dw GameMode8_Update_Case0D_Sub01_Case0D
 
 ; entry 0 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-GameMode8_Update_Case00::
+GameMode8_Update_Case00_Sub01_Case00::
 Jump_0F2_40D5:: ; address name
     call GameMode8_Update_Case00_Sub01
     ld a, [wScreenSubStep]
@@ -291,7 +291,7 @@ Jump_0F2_41C4::
 
 ; entry 13 of the `rst $00` table in GameMode8_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode8_Update_Case0D::
+GameMode8_Update_Case0D_Sub01_Case0D::
 Jump_0F2_41C8:: ; address name
     call GameMode8_Update_Case0D_Sub01
     ret
@@ -356,7 +356,7 @@ Jump_0F2_4219::
     ret
 
 ; only called from GameMode8_Update_Case0D (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update_Case0D)
+; 1 call site from 1 routine (e.g. GameMode8_Update_Case0D_Sub01_Case0D)
 ; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
 GameMode8_Update_Case0D_Sub01::
@@ -382,7 +382,7 @@ Jump_0F2_422D::
     ret
 
 ; only called from GameMode8_Update_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode8_Update_Case00)
+; 1 call site from 1 routine (e.g. GameMode8_Update_Case00_Sub01_Case00)
 ; reads: wBankF0BlockC7, wIsCGB
 ; writes: hTemp0, wObject5, wSpriteSlotCount, wOBJPaletteUploadRequest
 ; points at: wSpriteSlots, wObject1, hTemp0
@@ -598,7 +598,7 @@ Func_0F2_436F:: ; address name
 
 ; only called from GameMode8_Update (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode8_Update)
-GameMode8_Update_Sub01::
+GameMode8_Update_UpdateAndDrawSpriteSlots::
 Func_0F2_43C3:: ; address name
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
@@ -1213,7 +1213,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_Case1A)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A, RunScreenStateWhenNotFading_F1_Case0D_ShowSpeciesCategory13StringAtTiles2680)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
@@ -1241,7 +1241,7 @@ Func_0F2_4BFC:: ; address name
     ret
 
 ; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1F, RunScreenStateWhenNotFading_F1_Case0D_Case1F)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_RunF24C3DAnd4D72, RunScreenStateWhenNotFading_F1_Case0D_RunF24C3DAnd4D72)
 RunF24C3DAnd4D72::
 Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_Sub01
@@ -1792,7 +1792,7 @@ Data_0F2_4F44:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0B, $1C, $1A
 
 ; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
-; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case16, ...)
+; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_DrawLevelAndStatusRowForWCA81, ...)
 ; reads: hTemp1, hTemp0, wDigits, wRecordBufB
 ; writes: hTemp0, hTemp1
 DrawLevelAndStatusRowForWCA81::

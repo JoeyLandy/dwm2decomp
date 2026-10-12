@@ -54,7 +54,7 @@ Func_060_4035:: ; address name
     farcall DebugAutomap_Update_Sub01_Sub01_Sub0C
     call DebugAutomap_Update_Sub01_Sub01_Sub08
     call DebugAutomap_Update_Sub01_Sub01_Sub0A
-    call DebugAutomap_Update_Sub01_Sub01_Sub01
+    call DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength
     call DebugAutomap_Update_Sub01_Sub01_Sub0B
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -75,7 +75,7 @@ Func_060_4035:: ; address name
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-DebugAutomap_Update_Sub01_Sub01_Sub01::
+DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength::
 Func_060_4076:: ; address name
     call LoadKeyWorldLevelBaseTripleForPartyStrength
     call LoadKeyWorldParamsForCurrentKeyIndex
@@ -88,7 +88,7 @@ Func_060_4076:: ; address name
     ret
 
 ; fills 32 two-byte entries from wCD10 with random monster ids from the wCCF7 band lists (rows from Data_060_4123 by wCD02) (E-0130)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldBandAdjust, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldMonsters, wKeyWorldMonsterBands
@@ -246,7 +246,7 @@ Data_060_4123:: ; address name
     db $07, $06, $05, $04, $03, $02, $01, $00 ; id 33
 
 ; for 32 entries from wCD11 ORs 2 * min(wC969 + (32 - n) * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0125)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD11LevelsForPartyStrength::
 Func_060_4233:: ; address name
@@ -297,7 +297,7 @@ Jump_060_4267::
     ret
 
 ; fills 8 two-byte entries from wCD50 with random monster ids from the band lists (Data_060_4123 row wCD02) (E-0129)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyRandomHi, wKeyWorldBandAdjust, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldMonsters
@@ -402,7 +402,7 @@ Jump_060_42D4::
     ret
 
 ; for 8 entries from wCD51 ORs 2 * min(wC969 + 15 * (wCD05 + 10) / 150 / 2, 99) into every other byte (E-0127)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wKeyWorldLevelBase, wPartyStrength
 FillWCD51LevelsSlope::
 Func_060_42F2:: ; address name
@@ -502,7 +502,7 @@ Jump_060_435E::
     ret
 
 ; from the wC708 entry wC833: wCD02 = Data_060_43C7[byte 0] plus a row adjustment, and copies the $FF-terminated list of Data_060_43D7 row byte 1 to wCCF7 (E-0127)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wCurrentKeyIndex, wKeyWorldBandAdjust
 ; writes: wKeyWorldBandAdjust
 ; points at: wKeyWorldMonsterBands
@@ -650,7 +650,7 @@ Data_060_43D7:: ; address name
     db $08, $09, $FF, $FF, $FF, $FF, $00, $00 ; id 55
 
 ; clears wCE7B ($10 bytes) and fills a 4-byte entry per map area (from wCD7B) with a random monster id and level from the band lists (E-0128)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength, wKeyWorldLevelArea, hTemp2
 ; writes: hTemp0, hTemp2
 ; points at: wKeyWorldEncounterTable, wKeyWorldObjects, wKeyWorldAreaInfo
@@ -845,7 +845,7 @@ Jump_060_4678::
     jp Jump_060_4626
 
 ; picks random monster ids for the key world from the wCCF7 lists by band (Func_060_4724) into wCE72-wCE79, and wCE74/wCE77/wCE7A from wC96B (E-0127)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength, wKeyRandomLo, wKeyWorldLevelMonster, hTemp0
 ; writes: hTemp0, wKeyWorldEncounter
 RollKeyWorldMonsterIds::
@@ -1064,7 +1064,7 @@ Jump_060_47A4::
     ret
 
 ; copies three bytes of entry wCD05 of the 8-byte table at $47C5 to wC969-wC96B (E-0121)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength)
 ; reads: wPartyStrength
 ; writes: wKeyWorldLevelBase, wKeyWorldLevelArea, wKeyWorldLevelMonster
 LoadKeyWorldLevelBaseTripleForPartyStrength::

@@ -173,7 +173,7 @@ Func_00F_40E9:: ; address name
     dw SceneHomecoming_ShowWarubouNoOneKnows
     dw SceneHomecoming_Case03
     dw SceneHomecoming_Case06
-    dw SceneHomecoming_Case07
+    dw SceneHomecoming_StartPaletteFadeAndStep
     dw SceneHomecoming_Case08
     dw SceneHomecoming_ToScriptStepSetObjectBit2AndWait
     dw SceneHomecoming_ShowWarubouWaheyIWas
@@ -767,7 +767,7 @@ Jump_00F_4493:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode, wModeState
 ; points at: wModeChangeRequest, wScriptStep
-SceneHomecoming_Case07::
+SceneHomecoming_StartPaletteFadeAndStep::
 Jump_00F_44B1:: ; address name
     ld a, $10
     call StartPaletteFade
@@ -930,7 +930,7 @@ Func_00F_4595:: ; address name
     dw SceneHomecoming_Case03
     dw SceneDarckDefeated_ShowWarubouWaheyYouDid
     dw SceneDarckDefeated_ToRunSceneScriptSubStep
-    dw SceneDarckDefeated_Case0D
+    dw SceneDarckDefeated_RedrawColumnsBesideScreenAndStep
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_ToScriptStepShakeScreen
     dw SceneDarckDefeated_ShowWarubouWaheyFeelThat
@@ -941,7 +941,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_ShowWarubouWawaheyWeWere
     dw SceneHomecoming_Case03
-    dw SceneDarckDefeated_Case18
+    dw SceneDarckDefeated_ScriptStepDeltaThenNextStep
     dw SceneDarckDefeated_Case19
     dw SceneDarckDefeated_Case1A
     dw SceneDarckDefeated_Case1B
@@ -969,7 +969,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case34
+    dw SceneDarckDefeated_Shared01_Case34
     dw SceneDarckDefeated_Case35
     dw SceneDarckDefeated_Case36
     dw SceneDarckDefeated_Case37
@@ -982,7 +982,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case41
+    dw SceneDarckDefeated_Shared01_Case41
     dw SceneDarckDefeated_Case42
     dw SceneDarckDefeated_Case43
     dw SceneDarckDefeated_Case01
@@ -997,7 +997,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case50
+    dw SceneDarckDefeated_Shared01_Case50
     dw SceneDarckDefeated_Case51
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case53
@@ -1008,7 +1008,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case5B
+    dw SceneDarckDefeated_Shared01_Case5B
     dw SceneDarckDefeated_Case5C
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
@@ -1026,7 +1026,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case6D
+    dw SceneDarckDefeated_Shared01_Case6D
     dw SceneDarckDefeated_Case6E
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case70
@@ -1043,7 +1043,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case7E
+    dw SceneDarckDefeated_Shared01_Case7E
     dw SceneDarckDefeated_Case7F
     dw SceneDarckDefeated_Case01
     dw ScriptStepMoveObjects2And3To0340
@@ -1053,7 +1053,7 @@ Func_00F_4595:: ; address name
     dw SceneDarckDefeated_Case31
     dw SceneDarckDefeated_Case01
     dw SceneDarckDefeated_Case01
-    dw SceneDarckDefeated_Case88
+    dw SceneDarckDefeated_Shared01_Case88
     dw SceneDarckDefeated_Case89
     dw SceneDarckDefeated_Case8A
     dw SceneDarckDefeated_Case8A
@@ -1181,7 +1181,7 @@ Jump_00F_4740:: ; address name
 ; entry 136 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wObject5
-SceneDarckDefeated_Case88::
+SceneDarckDefeated_Shared01_Case88::
 Jump_00F_475D:: ; address name
     ld a, $03
     ldh [hMapId], a
@@ -1192,7 +1192,7 @@ Jump_00F_475D:: ; address name
     ld [wObject5 + $4], a
     ld a, $30
     ld [wObject5 + $5], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances wScriptStep once they arrive (E-0124)
@@ -1336,7 +1336,7 @@ Jump_00F_4829:: ; address name
 ; entry 126 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wObject5
-SceneDarckDefeated_Case7E::
+SceneDarckDefeated_Shared01_Case7E::
 Jump_00F_4846:: ; address name
     ld a, $71
     ldh [hMapId], a
@@ -1347,7 +1347,7 @@ Jump_00F_4846:: ; address name
     ld [wObject5 + $4], a
     ld a, $30
     ld [wObject5 + $5], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 121 of the `rst $00` table in SceneDarckDefeated
@@ -1538,7 +1538,7 @@ Jump_00F_4968:: ; address name
 ; entry 109 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wObject5
-SceneDarckDefeated_Case6D::
+SceneDarckDefeated_Shared01_Case6D::
 Jump_00F_4985:: ; address name
     ld a, $60
     ldh [hMapId], a
@@ -1549,7 +1549,7 @@ Jump_00F_4985:: ; address name
     ld [wObject5 + $4], a
     ld a, $30
     ld [wObject5 + $5], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 104 of the `rst $00` table in SceneDarckDefeated
@@ -1807,14 +1807,14 @@ Jump_00F_4B1B:: ; address name
 ; entry 91 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY
-SceneDarckDefeated_Case5B::
+SceneDarckDefeated_Shared01_Case5B::
 Jump_00F_4B38:: ; address name
     ld a, $49
     ldh [hMapId], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 86 of the `rst $00` table in SceneDarckDefeated
@@ -1973,14 +1973,14 @@ Jump_00F_4C20:: ; address name
 ; entry 80 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY
-SceneDarckDefeated_Case50::
+SceneDarckDefeated_Shared01_Case50::
 Jump_00F_4C3D:: ; address name
     ld a, $41
     ldh [hMapId], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 75 of the `rst $00` table in SceneDarckDefeated
@@ -2234,14 +2234,14 @@ Jump_00F_4DE7:: ; address name
 ; entry 65 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY
-SceneDarckDefeated_Case41::
+SceneDarckDefeated_Shared01_Case41::
 Jump_00F_4E08:: ; address name
     ld a, $33
     ldh [hMapId], a
     xor a, a
     ldh [hMapScreenX], a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 60 of the `rst $00` table in SceneDarckDefeated
@@ -2405,7 +2405,7 @@ Jump_00F_4EDA:: ; address name
 ; entry 52 of the `rst $00` table in SceneDarckDefeated
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY
-SceneDarckDefeated_Case34::
+SceneDarckDefeated_Shared01_Case34::
 Jump_00F_4EF7:: ; address name
     ld a, $2F
     ldh [hMapId], a
@@ -2413,7 +2413,7 @@ Jump_00F_4EF7:: ; address name
     ldh [hMapScreenX], a
     xor a, a
     ldh [hMapScreenY], a
-    call SceneDarckDefeated_Shared01
+    call SceneDarckDefeated_ScriptStartFadeAndAdvanceStep
     ret
 
 ; entry 49 of the `rst $00` table in SceneDarckDefeated
@@ -2532,10 +2532,10 @@ Jump_00F_4F93:: ; address name
     ldh [hMapScreenY], a
 
 ; only called from routines of SceneDarckDefeated (E-0098)
-; 7 call sites from 7 routines (e.g. SceneDarckDefeated_Case88, SceneDarckDefeated_Case7E, SceneDarckDefeated_Case6D, SceneDarckDefeated_Case5B, ...)
+; 7 call sites from 7 routines (e.g. SceneDarckDefeated_Shared01_Case88, SceneDarckDefeated_Shared01_Case7E, SceneDarckDefeated_Shared01_Case6D, SceneDarckDefeated_Shared01_Case5B, ...)
 ; reads: hPlayerY
 ; writes: wWarpDestX, wWarpDestY, wFieldTransitionKind, wObject5
-SceneDarckDefeated_Shared01::
+SceneDarckDefeated_ScriptStartFadeAndAdvanceStep::
 Func_00F_4FA1:: ; address name
     ld a, $E0
     ld [wWarpDestX], a
@@ -2682,7 +2682,7 @@ Jump_00F_505D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventArg
 ; points at: hPlayerY
-SceneDarckDefeated_Case18::
+SceneDarckDefeated_ScriptStepDeltaThenNextStep::
 Jump_00F_507C:: ; address name
     xor a, a
     ld [wFieldEventArg], a
@@ -2753,7 +2753,7 @@ Jump_00F_50B8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1, wObject5
 ; points at: wScriptStep
-SceneDarckDefeated_Case0D::
+SceneDarckDefeated_RedrawColumnsBesideScreenAndStep::
 Jump_00F_50BE:: ; address name
     ld a, $30
     ld [wObject1 + $C], a
@@ -3139,7 +3139,7 @@ Func_00F_5404:: ; address name
     dw SceneThreeItems_Case15
     dw SceneThreeItems_Case16
     dw SceneThreeItems_Case17
-    dw SceneThreeItems_ToScriptStepDeltaThenMessage_Case18
+    dw SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage
     dw SceneHomecoming_Case03
     dw SceneThreeItems_Msg0490_AVoiceEchoedFrom
     dw SceneHomecoming_Case03
@@ -3157,7 +3157,7 @@ Func_00F_5404:: ; address name
     dw SceneHomecoming_Case03
     dw SceneThreeItems_ShowWarubouWaheyThereIs
     dw SceneHomecoming_Case03
-    dw SceneThreeItems_ToScriptStepDeltaThenMessage_Case2A
+    dw SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage_Case2A
     dw SceneThreeItems_Case2B
 
 ; entry 43 of the `rst $00` table in SceneThreeItems
@@ -3189,7 +3189,7 @@ Jump_00F_5460:: ; address name
 ; entry 42 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: hPlayerY
-SceneThreeItems_ToScriptStepDeltaThenMessage_Case2A::
+SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage_Case2A::
 Jump_00F_5495:: ; address name
     ld de, hPlayerY
     ld hl, $0A7E
@@ -3302,7 +3302,7 @@ Jump_00F_5543:: ; address name
 
 ; entry 24 of the `rst $00` table in SceneThreeItems
 ; no direct call (reached through a table, a jump or a vector)
-SceneThreeItems_ToScriptStepDeltaThenMessage_Case18::
+SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage::
 Jump_00F_554E:: ; address name
     ld de, wObject2 + $C
     ld hl, $048F
@@ -3797,9 +3797,9 @@ Func_00F_57EA:: ; address name
     dw SceneShield2_Case02
     dw SceneShield2_Case06
     dw SceneShield2_Case02
-    dw SceneShield2_Case08
+    dw SceneShield2_ScriptStartFadeAndAdvanceStep
     dw SceneShield2_Case02
-    dw SceneShield2_Case0A
+    dw SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A
     dw SceneShield2_Case0B
     dw SceneHomecoming_Case03
     dw SceneShield2_ShowHeroReceivedTheSky
@@ -3811,13 +3811,13 @@ Func_00F_57EA:: ; address name
     dw SceneShield2_Case13
     dw SceneShield2_ShowWarubouWaheyYouCan
     dw SceneHomecoming_Case03
-    dw SceneShield2_Case16
+    dw SceneShield2_SetFlagBit
 
 ; entry 22 of the `rst $00` table in SceneShield2
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: hTemp0, wStoryFlags, wScriptStartRequest
-SceneShield2_Case16::
+SceneShield2_SetFlagBit::
 Jump_00F_581C:: ; address name
     ld de, $0023
     call SetFlagBit
@@ -4020,7 +4020,7 @@ Jump_00F_5934::
 ; entry 10 of the `rst $00` table in SceneShield2
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapId, hMapScreenX, hMapScreenY, wWarpDestY
-SceneShield2_Case0A::
+SceneShield2_ScriptStartFadeAndAdvanceStep_Case0A::
 Jump_00F_594A:: ; address name
     ld a, $49
     ldh [hMapId], a
@@ -4037,7 +4037,7 @@ Jump_00F_594A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags
-SceneShield2_Case08::
+SceneShield2_ScriptStartFadeAndAdvanceStep::
 Jump_00F_5962:: ; address name
     ld a, [wStoryFlags + $63]
     set 1, a
@@ -4348,7 +4348,7 @@ Func_00F_5AF3:: ; address name
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_ShowThatWasALovely
     dw SceneHomecoming_Case03
-    dw SceneShieldGuardian_Case0C
+    dw SceneShieldGuardian_ScriptStepDeltaThenMessage
     dw SceneHomecoming_Case03
     dw SceneShieldGuardian_ShowHelenIPutYou
     dw PersonalityMessage_Case01
@@ -4372,7 +4372,7 @@ Jump_00F_5B17:: ; address name
 ; entry 12 of the `rst $00` table in SceneShieldGuardian
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
-SceneShieldGuardian_Case0C::
+SceneShieldGuardian_ScriptStepDeltaThenMessage::
 Jump_00F_5B2C:: ; address name
     ld a, $02
     ld [wObject1 + $7], a
@@ -4757,7 +4757,7 @@ Func_00F_5D9D:: ; address name
     dw SceneHomecoming_Case03
     dw ScenePrincessMedicine_Case04
     dw SceneHomecoming_Case03
-    dw ScenePrincessMedicine_Case06
+    dw ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep
     dw ScenePrincessMedicine_Msg0AD4_HHOWBUTITHIS
     dw SceneHomecoming_Case03
     dw ScenePrincessMedicine_ShowYunasSoulFilledHer
@@ -4816,7 +4816,7 @@ Jump_00F_5DED:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScenePrincessMedicine_Case06::
+ScenePrincessMedicine_StartScriptedEncounterTemp0AndStep::
 Jump_00F_5DF8:: ; address name
     ld a, $18
     ldh [hTemp0], a
@@ -5322,7 +5322,7 @@ Func_00F_60E6:: ; address name
     dw SceneExplosion_Msg0348_DarnTakeThisSACRIFICE
     dw SceneHomecoming_Case03
     dw SceneExplosion_Case06
-    dw SceneExplosion_Case07
+    dw SceneExplosion_ScriptStepFlashScreenNegative
     dw SceneExplosion_ToScriptStepShakeScreen
     dw SceneExplosion_Case09
 
@@ -5372,7 +5372,7 @@ Jump_00F_613A:: ; address name
 ; entry 7 of the `rst $00` table in SceneExplosion
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-SceneExplosion_Case07::
+SceneExplosion_ScriptStepFlashScreenNegative::
 Jump_00F_6140:: ; address name
     ld a, $E0
     ld [wSpriteSlots + $B], a
@@ -5559,7 +5559,7 @@ Func_00F_6277:: ; address name
     rst $00
     dw ScenePlanRuined_Case00
     dw ScenePlanRuined_Case01
-    dw ScenePlanRuined_Case02
+    dw ScenePlanRuined_StartScriptedEncounterTemp0AndStep
     dw ScenePlanRuined_Case03
 
 ; entry 3 of the `rst $00` table in ScenePlanRuined
@@ -5586,7 +5586,7 @@ Jump_00F_6283:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-ScenePlanRuined_Case02::
+ScenePlanRuined_StartScriptedEncounterTemp0AndStep::
 Jump_00F_62A0:: ; address name
     ld a, $0C
     ldh [hTemp0], a
@@ -5972,7 +5972,7 @@ Func_00F_64F3:: ; address name
     dw SceneReportToKing_Case02
     dw SceneReportToKing_Msg035A_WhatIsItYou
     dw SceneHomecoming_Case03
-    dw SceneReportToKing_Case05
+    dw SceneReportToKing_ScriptStepDeltaThenNextStep
     dw SceneReportToKing_Case06
     dw SceneHomecoming_Case03
     dw SceneReportToKing_Case08
@@ -5983,7 +5983,7 @@ Func_00F_64F3:: ; address name
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_Case0E
     dw SceneReportToKing_Case0F
-    dw SceneReportToKing_Case10
+    dw SceneReportToKing_SetBit1AtHL_Bank0FAndStep
     dw SceneReportToKing_Case11
 
 ; entry 17 of the `rst $00` table in SceneReportToKing
@@ -6059,7 +6059,7 @@ Jump_00F_656F::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFollowerRecords
 ; points at: hPlayerStateFlags, wScriptStep
-SceneReportToKing_Case10::
+SceneReportToKing_SetBit1AtHL_Bank0FAndStep::
 Jump_00F_6586:: ; address name
     ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank0F
@@ -6210,7 +6210,7 @@ Jump_00F_6645::
 ; entry 5 of the `rst $00` table in SceneReportToKing
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
-SceneReportToKing_Case05::
+SceneReportToKing_ScriptStepDeltaThenNextStep::
 Jump_00F_666A:: ; address name
     ld a, $02
     ld [wObject1 + $7], a
@@ -6433,10 +6433,10 @@ Func_00F_67BA:: ; address name
     dw SceneMermaidKingdom_ShowKahahaha
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case0E
-    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case0F
+    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case11
-    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case12
+    dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage_Case12
     dw SceneHomecoming_Case03
     dw SceneMermaidKingdom_Case14
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
@@ -6903,7 +6903,7 @@ Jump_00F_6AA1:: ; address name
 
 ; entry 18 of the `rst $00` table in SceneMermaidKingdom
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case12::
+SceneMermaidKingdom_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage_Case12::
 Jump_00F_6AB2:: ; address name
     ld de, wObject2 + $C
     ld hl, $0870
@@ -6931,7 +6931,7 @@ Jump_00F_6ABC:: ; address name
 
 ; entry 15 of the `rst $00` table in SceneMermaidKingdom
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidKingdom_ToScriptStepDeltaThenMessage_Case0F::
+SceneMermaidKingdom_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage::
 Jump_00F_6AD3:: ; address name
     ld de, wSpriteSlots + $C
     ld hl, $086F
@@ -7301,9 +7301,9 @@ SceneKamehaFlees::
 Func_00F_6D2B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneKamehaFlees_Case00
-    dw SceneKamehaFlees_Case00
-    dw SceneKamehaFlees_Case00
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
     dw SceneKamehaFlees_Case03
     dw SceneKamehaFlees_Case04
     dw SceneKamehaFlees_Case05
@@ -7313,17 +7313,17 @@ Func_00F_6D2B:: ; address name
     dw SceneKamehaFlees_Case09
     dw SceneKamehaFlees_Case0A
     dw SceneKamehaFlees_Case0B
-    dw SceneKamehaFlees_Case0C
+    dw SceneKamehaFlees_Shared01_Case0C
 
 ; entry 12 of the `rst $00` table in SceneKamehaFlees
 ; no direct call (reached through a table, a jump or a vector)
-SceneKamehaFlees_Case0C::
+SceneKamehaFlees_Shared01_Case0C::
 Jump_00F_6D49:: ; address name
     call SceneKamehaFlees_Shared01
     ret
 
 ; only called from routines of SceneKamehaFlees (E-0098)
-; 2 call sites from 2 routines (e.g. SceneKamehaFlees_Case0C, SceneKamehaFlees_Case0B)
+; 2 call sites from 2 routines (e.g. SceneKamehaFlees_Shared01_Case0C, SceneKamehaFlees_Case0B)
 ; reads: wScriptParam0, wObject5
 ; writes: wScriptParam0, wObject5, wScriptStartRequest
 SceneKamehaFlees_Shared01::
@@ -7626,7 +7626,7 @@ Jump_00F_6F0C:: ; address name
 
 ; entry 0 of the `rst $00` table in SceneKamehaFlees
 ; no direct call (reached through a table, a jump or a vector)
-SceneKamehaFlees_Case00::
+SceneKamehaFlees_ScriptStepMoveFollowersToLeader::
 Jump_00F_6F4C:: ; address name
     farcall ScriptStepMoveFollowersToLeader
     ld hl, wSpriteSlots + $D
@@ -7646,7 +7646,7 @@ Func_00F_6F65:: ; address name
     rst $00
     dw SceneCrewFollows_Case00
     dw SceneCrewFollows_Case01
-    dw SceneCrewFollows_Case02
+    dw SceneCrewFollows_SetBit2AtHL_B0FAndStep
     dw SceneCrewFollows_Case03
 
 ; entry 3 of the `rst $00` table in SceneCrewFollows
@@ -7685,7 +7685,7 @@ Jump_00F_6F83::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-SceneCrewFollows_Case02::
+SceneCrewFollows_SetBit2AtHL_B0FAndStep::
 Jump_00F_6F9A:: ; address name
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B0F
@@ -7788,14 +7788,14 @@ SceneKamehaCaught::
 Func_00F_7049:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneKamehaCaught_Case00
+    dw SceneKamehaCaught_SetBit2AtHL_B0FAndStep
     dw SceneKamehaCaught_Case01
 
 ; entry 0 of the `rst $00` table in SceneKamehaCaught
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptStep
-SceneKamehaCaught_Case00::
+SceneKamehaCaught_SetBit2AtHL_B0FAndStep::
 Jump_00F_7051:: ; address name
     ld hl, wSpriteSlots + $D
     call SetBit2AtHL_B0F
@@ -8145,14 +8145,14 @@ ShakeScreen::
 Func_00F_7271:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ShakeScreen_Case00
+    dw ShakeScreen_RedrawColumnsBesideScreenAndStep
     dw ShakeScreen_ToScriptStepShakeScreen
-    dw ShakeScreen_Case02
+    dw ShakeScreen_QueueSoundEffect
 
 ; entry 0 of the `rst $00` table in ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ShakeScreen_Case00::
+ShakeScreen_RedrawColumnsBesideScreenAndStep::
 Jump_00F_727B:: ; address name
     farcall RedrawColumnsBesideScreen
     ld a, $7D
@@ -8172,7 +8172,7 @@ Jump_00F_728B:: ; address name
 ; entry 2 of the `rst $00` table in ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-ShakeScreen_Case02::
+ShakeScreen_QueueSoundEffect::
 Jump_00F_7291:: ; address name
     ld a, $00
     call QueueSoundEffect
@@ -8181,7 +8181,7 @@ Jump_00F_7291:: ; address name
     ret
 
 ; only called from SceneKamehaEscape_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. SceneKamehaEscape_Case02)
+; 1 call site from 1 routine (e.g. SceneKamehaEscape_Case02_Sub01_Case02)
 ; reads: wStepPtrLo, wFrameCounterLo, hScrollX, hScrollXHi
 ; writes: hScrollX, hScrollXHi
 ; points at: wScriptStep
@@ -8246,9 +8246,9 @@ Func_00F_72D9:: ; address name
     dw SceneRivalDefeated_ShowKingYouThievesTheres
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case03
-    dw SceneKamehaFlees_Case00
-    dw SceneKamehaFlees_Case00
-    dw SceneKamehaFlees_Case00
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
+    dw SceneKamehaFlees_ScriptStepMoveFollowersToLeader
     dw SceneRivalDefeated_ShowKingSurrenderAndLive
     dw SceneHomecoming_Case03
     dw SceneRivalDefeated_Case09
@@ -8926,7 +8926,7 @@ Func_00F_772E:: ; address name
     dw SceneMonsterInspection_Case06
     dw SceneMonsterInspection_ToRunScriptSubStep
     dw SceneMonsterInspection_Case08
-    dw SceneMonsterInspection_Case09
+    dw SceneMonsterInspection_PlayMapMusic
 
 ; entry 0 of the `rst $00` table in SceneMonsterInspection
 ; no direct call (reached through a table, a jump or a vector)
@@ -9103,7 +9103,7 @@ Jump_00F_781C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags, wScriptStartRequest
-SceneMonsterInspection_Case09::
+SceneMonsterInspection_PlayMapMusic::
 Jump_00F_785B:: ; address name
     farcall PlayMapMusic
     ld a, [wStoryFlags + $61]
@@ -9536,12 +9536,12 @@ Func_00F_7AC6:: ; address name
     dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_Case03
     dw SceneLandHo_Case0D
-    dw SceneLandHo_Case0E
+    dw SceneLandHo_DispatchTalkEvent
 
 ; entry 14 of the `rst $00` table in SceneLandHo
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTalkEventIndex, wTalkEventGroup
-SceneLandHo_Case0E::
+SceneLandHo_DispatchTalkEvent::
 Jump_00F_7AE8:: ; address name
     ld a, $0A
     ld [wTalkEventIndex], a
@@ -10226,7 +10226,7 @@ Jump_00F_7EBE::
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 5 call sites from 5 routines (e.g. SceneHomecoming_Case26, SceneCheerYuna_Case03, SceneCheerYuna_Case01, SceneReportToKing_Case10, ...)
+; 5 call sites from 5 routines (e.g. SceneHomecoming_Case26, SceneCheerYuna_Case03, SceneCheerYuna_Case01, SceneReportToKing_SetBit1AtHL_Bank0FAndStep, ...)
 SetBit1AtHL_Bank0F::
 Func_00F_7EC4:: ; address name
     ld a, [hl]
@@ -10300,7 +10300,7 @@ Jump_00F_7F05::
     ret
 
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, wScriptStep += 1 (E-0117)
-; 4 call sites from 4 routines (e.g. SceneDarckDefeated_Case18, SceneCheerYuna_ToScriptStepDeltaThenNextStep, SceneReportToKing_Case05, SceneWhoAreYou_ToScriptStepDeltaThenNextStep)
+; 4 call sites from 4 routines (e.g. SceneDarckDefeated_ScriptStepDeltaThenNextStep, SceneCheerYuna_ToScriptStepDeltaThenNextStep, SceneReportToKing_ScriptStepDeltaThenNextStep, SceneWhoAreYou_ToScriptStepDeltaThenNextStep)
 ; writes: wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
 ScriptStepDeltaThenNextStep::
@@ -10318,7 +10318,7 @@ Func_00F_7F0B:: ; address name
     ret
 
 ; DE = address of a byte: adds the step delta (AddStepDeltaToPointedByte via wC928/wC929) and counts wC921 up (StepWC921Counter_Bank0F with B = $20); when the counter wraps, StartMessageHL_B0F with the caller's HL and wScriptStep += 1 (E-0117)
-; 7 call sites from 7 routines (e.g. SceneShieldGuardian_Case0C, SceneThreeItems_ToScriptStepDeltaThenMessage_Case2A, SceneThreeItems_ToScriptStepDeltaThenMessage_Case18, SceneThreeItems_ToScriptStepDeltaThenMessage, ...)
+; 7 call sites from 7 routines (e.g. SceneShieldGuardian_ScriptStepDeltaThenMessage, SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage_Case2A, SceneThreeItems_ToScriptStepDeltaThenMessage_ScriptStepDeltaThenMessage, SceneThreeItems_ToScriptStepDeltaThenMessage, ...)
 ; writes: wStepPtrLo, wStepPtrHi
 ; points at: wScriptStep
 ScriptStepDeltaThenMessage::

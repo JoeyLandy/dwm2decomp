@@ -7133,5 +7133,12 @@
   "1C:41DC": {"name": "InnMenu_WaitFade", "note": "waits until wFadeState is 0, then advances wScreenState (E-0276)", "evidence": "reading (E-0276)"},
   "1C:41EB": {"name": "InnMenu_RestoreParty", "note": "for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max MP ($61) to MP ($5F) (E-0276)", "evidence": "reading (E-0276)"},
   "1C:4258": {"name": "InnMenu_Morning", "note": "after $90 frames sends the SGB palette set, fades back in and refreshes the town/key-world objects (E-0276)", "evidence": "reading (E-0276)"},
-  "1C:4295": {"name": "InnMenu_RestartMusic", "note": "restarts the map music (RestartMapMusic) (E-0276)", "evidence": "reading (E-0276)"}
+  "1C:4295": {"name": "InnMenu_RestartMusic", "note": "restarts the map music (RestartMapMusic) (E-0276)", "evidence": "reading (E-0276)"},
+  "15:4124": {"name": "BreedMenu_Init", "note": "state 0 of BreedMenu: clears $6F bytes from wScreenState (E-0277)", "evidence": "reading (E-0277)"},
+  "15:4167": {"name": "BreedMenu_Setup", "note": "draws the two boxes and the gold box (E-0277)", "evidence": "reading (E-0277)"},
+  "15:55D2": {"name": "BreedMenu_NameEntry", "note": "runs the name entry screen (RunNameEntryStateWhenNotFading) on the record selected in list cell 4, and removes a record with DeleteSRAMRecordAndCompact (E-0277)", "evidence": "reading (E-0277)"},
+  "15:56B0": {"name": "BreedMenu_ReturnToMap", "note": "reloads the map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics (E-0277)", "evidence": "reading (E-0277)"},
+  "15:5E30": {"name": "BreedMenu_TalkEvent17ThenNameEntry", "note": "saves the script return position, dispatches talk event group $17 index 0, then sets wScreenState = 6 (BreedMenu_NameEntry) (E-0277)", "evidence": "reading (E-0277)"},
+  "15:5E62": {"name": "BreedMenu_CopyToChildThenTalkEvent16", "note": "copies word $0B and byte $6D of the record in list cell 4 to wChildRecord, saves the script return, dispatches talk event group $16, then sets wScreenState = 6 (E-0277)", "evidence": "reading (E-0277)"},
+  "15:5ECC": {"name": "BreedMenu_TalkEvent15", "note": "saves the script return position and dispatches talk event group $15 index 0 (E-0277)", "evidence": "reading (E-0277)"}
 }

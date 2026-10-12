@@ -957,7 +957,7 @@ Jump_001_4AF0:: ; address name
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0D
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank24
-    dw DebugMessageTest_Update_Case1C
+    dw DebugMessageTest_Update_Case1C_Sub01_Case1C
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0E
     dw DebugMessageTest_Update_ToBeginStringDisplay_BankF2
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037
@@ -1162,7 +1162,7 @@ Jump_001_4C25:: ; address name
 
 ; entry 28 of the `rst $00` table in DebugMessageTest_Update
 ; no direct call (reached through a table, a jump or a vector)
-DebugMessageTest_Update_Case1C::
+DebugMessageTest_Update_Case1C_Sub01_Case1C::
 Jump_001_4C2C:: ; address name
     farcall DebugMessageTest_Update_Case1C_Sub01
     ret
@@ -1680,7 +1680,7 @@ Func_001_4F80:: ; address name
     call WriteHexByteTilesAtHL
     ld a, [wMonsterId + $1]
     ld hl, vBGMap0 + $24
-    call DebugShowMonsterRecord_Sub02
+    call DebugShowMonsterRecord_WriteTileDPlusBAtHL
     ld a, [wMonsterId + $1]
     ld [wStringCategory], a
     ld a, [wMonsterId]
@@ -1722,7 +1722,7 @@ Func_001_4F80:: ; address name
     call WriteHexByteTilesAtHL
     ld a, [wRecordBuffer + $1]
     ld hl, vBGMap0 + $4F
-    call DebugShowMonsterRecord_Sub02
+    call DebugShowMonsterRecord_WriteTileDPlusBAtHL
     ld a, [wRecordBufferData]
     ld hl, vBGMap0 + $66
     ld bc, $0100
@@ -2294,7 +2294,7 @@ Jump_001_5407::
     ret
 
 ; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
-; 5 call sites from 3 routines (e.g. WriteDecimalByteTiles_Bank01, DebugShowMonsterRecord_Sub02, WriteHexByteTilesAtHL)
+; 5 call sites from 3 routines (e.g. WriteDecimalByteTiles_Bank01, DebugShowMonsterRecord_WriteTileDPlusBAtHL, WriteHexByteTilesAtHL)
 WriteTileDPlusBAtHL::
 Func_001_540D:: ; address name
     push af
@@ -2333,7 +2333,7 @@ Func_001_5420:: ; address name
 
 ; only called from DebugShowMonsterRecord (E-0047)
 ; 2 call sites from 1 routine (e.g. DebugShowMonsterRecord)
-DebugShowMonsterRecord_Sub02::
+DebugShowMonsterRecord_WriteTileDPlusBAtHL::
 Func_001_542C:: ; address name
     and a, $0F
     ld d, a
@@ -5526,7 +5526,7 @@ Jump_001_68A3::
     jr nc, Jump_001_68B4
     push bc
     push hl
-    call DebugBattleSetup_Update_Sub01_Sub01
+    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped
     pop hl
     pop bc
     jr nz, Jump_001_68B4
@@ -5548,7 +5548,7 @@ Jump_001_68C6::
 
 ; only called from DebugBattleSetup_Update_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Sub01)
-DebugBattleSetup_Update_Sub01_Sub01::
+DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped::
 Func_001_68CA:: ; address name
     ld c, $00
     call SRAMRecordAddressMapped

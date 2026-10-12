@@ -74,8 +74,8 @@ Func_085_4047:: ; address name
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_Case07
-    dw SceneWatchOut_Case08
+    dw SceneWatchOut_CopyGlyphTilesToVRAMAndStep
+    dw SceneWatchOut_Case08_Sub01_Case08
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
@@ -214,7 +214,7 @@ Jump_085_4145::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptSubStep, wScriptMsgSelect
 ; points at: wScriptStep
-SceneWatchOut_Case07::
+SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
 Jump_085_4159:: ; address name
     ld de, vTiles1 + $6E0
     call CopyGlyphTilesToVRAM
@@ -321,8 +321,8 @@ Func_085_4207:: ; address name
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Msg4D50_PickTheMonsterTo
     dw SceneWatchOut_Case01
-    dw SceneWaterReward_Case07
-    dw SceneWatchOut_Case08
+    dw SceneWaterReward_CopyGlyphTilesToVRAMAndStep
+    dw SceneWatchOut_Case08_Sub01_Case08
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_Case0A
     dw SceneWatchOut_Case0A
@@ -569,7 +569,7 @@ Jump_085_4390:: ; address name
 
 ; entry 8 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
-SceneWatchOut_Case08::
+SceneWatchOut_Case08_Sub01_Case08::
 Jump_085_43AB:: ; address name
     call SceneWatchOut_Case08_Sub01
     ret
@@ -578,7 +578,7 @@ Jump_085_43AB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptSubStep, wScriptMsgSelect
 ; points at: wScriptStep
-SceneWaterReward_Case07::
+SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
 Jump_085_43AF:: ; address name
     ld de, vTiles1 + $6E0
     call CopyGlyphTilesToVRAM
@@ -685,7 +685,7 @@ Jump_085_442D:: ; address name
     ret
 
 ; only called from SceneWatchOut_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. SceneWatchOut_Case08)
+; 1 call site from 1 routine (e.g. SceneWatchOut_Case08_Sub01_Case08)
 ; reads: wJoypadPressed, wFrameCounterLo
 ; points at: wScriptStep, wScriptMsgSelect
 SceneWatchOut_Case08_Sub01::
@@ -784,7 +784,7 @@ Func_085_44D2:: ; address name
     ret
 
 ; saves the screen buffer to vBGMap1, copies the 8 x 9 box $4583 to wScreenTileBuffer (clearing CGB attributes), draws it and plays sound $6C (E-0125)
-; 2 call sites from 2 routines (e.g. SceneWaterReward_Case07, SceneWatchOut_Case07)
+; 2 call sites from 2 routines (e.g. SceneWaterReward_CopyGlyphTilesToVRAMAndStep, SceneWatchOut_CopyGlyphTilesToVRAMAndStep)
 ; reads: wIsCGB
 ; writes: rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -1183,7 +1183,7 @@ SceneChestServant::
 Func_085_479B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneChestServant_Case00
+    dw SceneChestServant_QueueSoundEffectAndStep
     dw SceneChestServant_Case01
     dw SceneChestServant_Case01
     dw SceneChestServant_Case01
@@ -1257,7 +1257,7 @@ Jump_085_47E3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hFieldDrawFlags, wScriptParam0
 ; points at: wScriptStep
-SceneChestServant_Case00::
+SceneChestServant_QueueSoundEffectAndStep::
 Jump_085_480A:: ; address name
     ld a, $65
     call QueueSoundEffect
@@ -1377,7 +1377,7 @@ SceneKamehaKeyBattle2::
 Func_085_48A0:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneKamehaKeyBattle2_Case00
+    dw SceneKamehaKeyBattle2_StartScriptedEncounterTemp0AndStep
     dw SceneKamehaKeyBattle2_Case01
     dw SceneWatchOut_Case01
     dw SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic
@@ -1474,7 +1474,7 @@ Jump_085_4932::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneKamehaKeyBattle2_Case00::
+SceneKamehaKeyBattle2_StartScriptedEncounterTemp0AndStep::
 Jump_085_493E:: ; address name
     ld a, $30
     ldh [hTemp0], a
@@ -1490,7 +1490,7 @@ SceneKamehaKeyBattle::
 Func_085_494D:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneKamehaKeyBattle_Case00
+    dw SceneKamehaKeyBattle_StartScriptedEncounterTemp0AndStep
     dw SceneKamehaKeyBattle_Case01
     dw SceneWatchOut_Case01
     dw SceneKamehaKeyBattle_ShowHeroReceivedTheMagic
@@ -1587,7 +1587,7 @@ Jump_085_49DF::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneKamehaKeyBattle_Case00::
+SceneKamehaKeyBattle_StartScriptedEncounterTemp0AndStep::
 Jump_085_49EB:: ; address name
     ld a, $2F
     ldh [hTemp0], a
@@ -1603,7 +1603,7 @@ SceneArenaChallenge::
 Func_085_49FA:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneArenaChallenge_Case00
+    dw SceneArenaChallenge_StartScriptedEncounterTemp0AndStep
     dw SceneArenaChallenge_ShowAwwILoseYou
     dw SceneWatchOut_Case03
 
@@ -1631,7 +1631,7 @@ Jump_085_4A15::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneArenaChallenge_Case00::
+SceneArenaChallenge_StartScriptedEncounterTemp0AndStep::
 Jump_085_4A1C:: ; address name
     ld a, $15
     ldh [hTemp0], a
@@ -1647,7 +1647,7 @@ SceneTerryBattle::
 Func_085_4A2B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneTerryBattle_Case00
+    dw SceneTerryBattle_SetFlagBitAndStep
     dw SceneTerryBattle_ShowTerryWellThisProves
     dw SceneWatchOut_Case03
 
@@ -1680,7 +1680,7 @@ Jump_085_4A51::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneTerryBattle_Case00::
+SceneTerryBattle_SetFlagBitAndStep::
 Jump_085_4A58:: ; address name
     ld de, $0037
     call SetFlagBit
@@ -2416,7 +2416,7 @@ Func_085_4F14:: ; address name
     dw SceneWatchOut_Case01
     dw SceneGiveBackCyal_Case07
     dw SceneGiveBackCyal_Case08
-    dw SceneGiveBackCyal_Case09
+    dw SceneGiveBackCyal_Case09_Sub01_Case09
     dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
 ; entry 10 of the `rst $00` table in SceneGiveBackCyal
@@ -2430,7 +2430,7 @@ Jump_085_4F2E:: ; address name
 
 ; entry 9 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
-SceneGiveBackCyal_Case09::
+SceneGiveBackCyal_Case09_Sub01_Case09::
 Jump_085_4F34:: ; address name
     ld b, $1E
     call SceneGiveBackCyal_Case09_Sub01
@@ -2545,7 +2545,7 @@ Jump_085_4FBE::
     ret
 
 ; only called from SceneGiveBackCyal_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. SceneGiveBackCyal_Case09)
+; 1 call site from 1 routine (e.g. SceneGiveBackCyal_Case09_Sub01_Case09)
 ; reads: wFrameCounterLo, hScrollX, hScrollXHi, wScriptParam0
 ; writes: hScrollX, hScrollXHi, wScriptParam0
 ; points at: wScriptStep
@@ -4690,7 +4690,7 @@ Jump_085_5C08::
     db $33, $38, $39, $3D
 
 ; only called from Talk00Event02_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. Talk00Event02_Case04)
+; 1 call site from 1 routine (e.g. Talk00Event02_Case04_Sub01_Case04)
 ; reads: wTriggerKind, wPendingFieldEvent, wInventory, wRandomLo, wMapSpriteKind, wMessageIndex, wMessageGroup, wKeyRandomHi, ...
 ; writes: wTriggerMarkerFlags, wScriptStartRequest, wScriptParam1, wTriggerKind, wTriggerCell, wTriggerIndex, wScriptParam0
 ; points at: wScriptStep

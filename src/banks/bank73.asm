@@ -33,7 +33,7 @@ Talk08Event_Case0C::
 Jump_073_4027:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk08Event_Case0C_Case00
+    dw Talk08Event_Case0C_StartMessageHL_B73AndStep
     dw Talk08Event_Case0C_Case01
     dw Talk08Event_Case0C_Case02
     dw Talk08Event_Case0C_ShowGreatLogsMajorFacilitiesAre
@@ -48,7 +48,7 @@ Jump_073_4027:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPendingFieldEvent
 ; points at: wScriptStep
-Talk08Event_Case0C_Case00::
+Talk08Event_Case0C_StartMessageHL_B73AndStep::
 Jump_073_403F:: ; address name
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -2991,10 +2991,10 @@ SceneChestBattle::
 Func_073_51BD:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneChestBattle_Case00
+    dw SceneChestBattle_Shared01_Case00
     dw SceneChestBattle_Case01
     dw SceneChestBattle_Case02
-    dw SceneChestBattle_Case03
+    dw SceneChestBattle_Shared01_Case03
     dw SceneChestBattle_Case01
     dw SceneChestBattle_Case05
     dw SceneChestBattle_Case06
@@ -3121,7 +3121,7 @@ Jump_073_52AC::
 
 ; entry 3 of the `rst $00` table in SceneChestBattle
 ; no direct call (reached through a table, a jump or a vector)
-SceneChestBattle_Case03::
+SceneChestBattle_Shared01_Case03::
 Jump_073_52B2:: ; address name
     ld de, $5342
     call SceneChestBattle_Shared01
@@ -3154,14 +3154,14 @@ Jump_073_52C5::
 
 ; entry 0 of the `rst $00` table in SceneChestBattle
 ; no direct call (reached through a table, a jump or a vector)
-SceneChestBattle_Case00::
+SceneChestBattle_Shared01_Case00::
 Jump_073_52EE:: ; address name
     ld de, MapMessageTable_530C
     call SceneChestBattle_Shared01
     ret
 
 ; only called from routines of SceneChestBattle (E-0098)
-; 2 call sites from 2 routines (e.g. SceneChestBattle_Case03, SceneChestBattle_Case00)
+; 2 call sites from 2 routines (e.g. SceneChestBattle_Shared01_Case03, SceneChestBattle_Shared01_Case00)
 ; reads: hMapId
 ; points at: wScriptStep
 SceneChestBattle_Shared01::
@@ -3580,7 +3580,7 @@ SceneCyalShine::
 Func_073_5546:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneCyalShine_Case00
+    dw SceneCyalShine_RunFieldCommandTemp0AndStep
     dw SceneCyalShine_Case01
 
 ; entry 1 of the `rst $00` table in SceneCyalShine
@@ -3601,7 +3601,7 @@ Jump_073_554E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0, wObject5
 ; points at: wScriptStep
-SceneCyalShine_Case00::
+SceneCyalShine_RunFieldCommandTemp0AndStep::
 Jump_073_555E:: ; address name
     ld a, $05
     ldh [hTemp0], a
@@ -3896,9 +3896,9 @@ GatherFollowers::
 Func_073_571D:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw GatherFollowers_Case00
-    dw GatherFollowers_Case00
-    dw GatherFollowers_Case00
+    dw GatherFollowers_ScriptStepMoveFollowersToLeader
+    dw GatherFollowers_ScriptStepMoveFollowersToLeader
+    dw GatherFollowers_ScriptStepMoveFollowersToLeader
     dw GatherFollowers_SetScriptStartRequestTo80
 
 ; entry 3 of the `rst $00` table in GatherFollowers
@@ -4383,7 +4383,7 @@ SceneThreeItemsBattle::
 Func_073_5A16:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneThreeItemsBattle_Case00
+    dw SceneThreeItemsBattle_StartScriptedEncounterTemp0AndStep
     dw SceneThreeItemsBattle_Msg0480_GwaahYouEBeaten
     dw SceneChestBattle_Case01
     dw SceneThreeItemsBattle_Case03
@@ -4423,7 +4423,7 @@ Jump_073_5A3D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; points at: wScriptStep
-SceneThreeItemsBattle_Case00::
+SceneThreeItemsBattle_StartScriptedEncounterTemp0AndStep::
 Jump_073_5A48:: ; address name
     ld a, $1C
     ldh [hTemp0], a
@@ -5024,7 +5024,7 @@ Func_073_5DDD:: ; address name
     dw SceneMadcondorCry_Case00
     dw SceneMadcondorCry_Case01
     dw SceneMadcondorCry_Case02
-    dw SceneMadcondorCry_Case03
+    dw SceneMadcondorCry_ScriptStartFadeAndAdvanceStep
     dw SceneMadcondorCry_Msg0433_Kweeeeeh
     dw SceneWizstone_Case09
 
@@ -5042,7 +5042,7 @@ Jump_073_5DED:: ; address name
 ; entry 3 of the `rst $00` table in SceneMadcondorCry
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hMapScreenY, wWarpDestX, wWarpDestY, wFieldTransitionKind
-SceneMadcondorCry_Case03::
+SceneMadcondorCry_ScriptStartFadeAndAdvanceStep::
 Jump_073_5DF8:: ; address name
     xor a, a
     ldh [hMapScreenY], a
@@ -5594,7 +5594,7 @@ SceneStrongestMaster::
 Func_073_6126:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw SceneStrongestMaster_Case00
+    dw SceneStrongestMaster_SetupScriptSpriteFromMapSpriteKind
     dw SceneStrongestMaster_ToPlaySound83AndAdvanceScriptStep
     dw SceneStrongestMaster_ToScriptStepAnimateSpriteBySteps
     dw SceneStrongestMaster_Case03
@@ -5665,7 +5665,7 @@ Jump_073_6188:: ; address name
 ; entry 0 of the `rst $00` table in SceneStrongestMaster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMapSpriteKind
-SceneStrongestMaster_Case00::
+SceneStrongestMaster_SetupScriptSpriteFromMapSpriteKind::
 Jump_073_618F:: ; address name
     ld a, $10
     ld [wMapSpriteKind], a
@@ -5675,7 +5675,7 @@ Jump_073_618F:: ; address name
 ; entry 0 of the `rst $00` table in GatherFollowers
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMapSpriteKind
-GatherFollowers_Case00::
+GatherFollowers_ScriptStepMoveFollowersToLeader::
 Jump_073_619B:: ; address name
     ld a, $10
     ld [wMapSpriteKind], a
@@ -6868,21 +6868,21 @@ Func_073_679F:: ; address name
     rst $00
     dw SceneKamehaEscape_Case00
     dw SceneKamehaEscape_Case01
-    dw SceneKamehaEscape_Case02
+    dw SceneKamehaEscape_Case02_Sub01_Case02
     dw SceneKamehaEscape_Case03
     dw SceneKamehaEscape_Case01
     dw SceneKamehaEscape_Case01
     dw SceneKamehaEscape_Case06
     dw SceneKamehaEscape_Case01
-    dw SceneKamehaEscape_Case08
-    dw SceneKamehaEscape_Case02
+    dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
+    dw SceneKamehaEscape_Case02_Sub01_Case02
     dw SceneKamehaEscape_Case0A
     dw SceneKamehaEscape_Case01
     dw SceneKamehaEscape_Case01
     dw SceneKamehaEscape_Case0D
     dw SceneKamehaEscape_Case01
-    dw SceneKamehaEscape_Case08
-    dw SceneKamehaEscape_Case02
+    dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
+    dw SceneKamehaEscape_Case02_Sub01_Case02
     dw SceneKamehaEscape_Case11
     dw SceneKamehaEscape_Case01
     dw SceneKamehaEscape_Case01
@@ -6947,7 +6947,7 @@ Jump_073_680F::
     call SceneKamehaEscape_Shared01
     ld de, $5ADB
     ld b, $56
-    jp SceneKamehaEscape_Case03_Sub01
+    jp SceneKamehaEscape_Case03_DecompressToVRAM
 
 Jump_073_6826::
     ld de, $7827
@@ -6955,7 +6955,7 @@ Jump_073_6826::
     call SceneKamehaEscape_Shared01
     ld de, $5B8F
     ld b, $56
-    jr SceneKamehaEscape_Case03_Sub01
+    jr SceneKamehaEscape_Case03_DecompressToVRAM
 
 ; entry 13 of the `rst $00` table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
@@ -6995,7 +6995,7 @@ Jump_073_6852::
     call SceneKamehaEscape_Shared01
     ld de, $61F0
     ld b, $56
-    jr SceneKamehaEscape_Case03_Sub01
+    jr SceneKamehaEscape_Case03_DecompressToVRAM
 
 Jump_073_6868::
     ld de, $6D99
@@ -7007,7 +7007,7 @@ Jump_073_6868::
 ; only called from SceneKamehaEscape_Case03 (E-0047)
 ; 1 call site from 1 routine (e.g. SceneKamehaEscape_Case03)
 ; points at: wScreenTileBuffer
-SceneKamehaEscape_Case03_Sub01::
+SceneKamehaEscape_Case03_DecompressToVRAM::
 Func_073_6875:: ; address name
     ld hl, wScreenTileBuffer
     call DecompressToVRAM
@@ -7076,7 +7076,7 @@ Jump_073_68B8:: ; address name
     ld d, a
     ld b, $58
     push hl
-    call SceneKamehaEscape_Case03_Sub01
+    call SceneKamehaEscape_Case03_DecompressToVRAM
     pop hl
     ld a, [hl+]
     ld e, a
@@ -7101,7 +7101,7 @@ Jump_073_68B8:: ; address name
 ; entry 2 of the `rst $00` table in SceneKamehaEscape
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStepPtrLo
-SceneKamehaEscape_Case02::
+SceneKamehaEscape_Case02_Sub01_Case02::
 Jump_073_6910:: ; address name
     ld a, $B4
     ld [wStepPtrLo], a
@@ -7135,7 +7135,7 @@ Jump_073_6927:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptStep
-SceneKamehaEscape_Case08::
+SceneKamehaEscape_RedrawColumnsBesideScreenAndStep::
 Jump_073_6931:: ; address name
     ld a, $48
     ld [wSpriteSlots + $B], a
@@ -7470,7 +7470,7 @@ Func_073_6AFF:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
-    dw SceneMermaidSong2_Case05
+    dw SceneMermaidSong2_Case05_Sub01_Case05
     dw Talk0886_NsDancingLuredA
     dw SceneMermaidSong2_ShowBravoBravoYouWere
     dw SceneChestBattle_Case01
@@ -7537,9 +7537,9 @@ Func_073_6B5B:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
-    dw SceneDancing_Case05
-    dw SceneDancing_Case06
-    dw SceneDancing_Case07
+    dw SceneDancing_SetBit2AtHL_B73AndStep
+    dw SceneDancing_Case06_Sub01_Case06
+    dw SceneDancing_Talk0886_NsDancingLuredA
     dw SceneDancing_SetScriptStartRequestTo80
 
 ; entry 8 of the `rst $00` table in SceneDancing
@@ -7554,7 +7554,7 @@ Jump_073_6B71:: ; address name
 ; entry 7 of the `rst $00` table in SceneDancing
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject1
-SceneDancing_Case07::
+SceneDancing_Talk0886_NsDancingLuredA::
 Jump_073_6B77:: ; address name
     call Talk0886_NsDancingLuredA
     ld a, $E0
@@ -7563,7 +7563,7 @@ Jump_073_6B77:: ; address name
 
 ; entry 6 of the `rst $00` table in SceneDancing
 ; no direct call (reached through a table, a jump or a vector)
-SceneDancing_Case06::
+SceneDancing_Case06_Sub01_Case06::
 Jump_073_6B80:: ; address name
     farcall SceneDancing_Case06_Sub01
     ret
@@ -7571,7 +7571,7 @@ Jump_073_6B80:: ; address name
 ; entry 5 of the `rst $00` table in SceneDancing
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: hPlayerStateFlags, wScriptStep
-SceneDancing_Case05::
+SceneDancing_SetBit2AtHL_B73AndStep::
 Jump_073_6B87:: ; address name
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B73
@@ -7593,7 +7593,7 @@ Func_073_6B98:: ; address name
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_Case04
-    dw SceneMermaidSong2_Case05
+    dw SceneMermaidSong2_Case05_Sub01_Case05
     dw Talk0886_NsDancingLuredA
     dw SceneMermaidSong_ShowBravoBravoYouWere
     dw SceneMermaidSong_Case08
@@ -7728,7 +7728,7 @@ Jump_073_6C6C::
     ret
 
 ; starts 1 constant message(s); the first in the code is $0886, whose string begins 'N's dancing lured a mermaid to' (the leading N is a name substitution); the surrounding logic is not interpreted (E-0097)
-; 1 call site from 1 routine (e.g. SceneDancing_Case07)
+; 1 call site from 1 routine (e.g. SceneDancing_Talk0886_NsDancingLuredA)
 ; reads: hPlayerX
 ; writes: wFollowerRecords, hPlayerFacing, hPlayerX, wScriptParam0, wObject1
 ; points at: hPlayerStateFlags, wScriptStep
@@ -7774,7 +7774,7 @@ Func_073_6C77:: ; address name
 
 ; entry 5 of the `rst $00` table in SceneMermaidSong2
 ; no direct call (reached through a table, a jump or a vector)
-SceneMermaidSong2_Case05::
+SceneMermaidSong2_Case05_Sub01_Case05::
 Jump_073_6CCA:: ; address name
     farcall SceneMermaidSong2_Case05_Sub01
     ret
@@ -7980,7 +7980,7 @@ Func_073_6E17:: ; address name
     rst $00
     dw SceneMonstersInTow_Case00
     dw Talk08Event_Case0B_ToScriptStepFlashScreenNegative
-    dw SceneMonstersInTow_Case02
+    dw SceneMonstersInTow_ScriptStartFadeAndAdvanceStep
     dw SceneMonstersInTow_SetScriptStartRequestTo80
 
 ; entry 3 of the `rst $00` table in SceneMonstersInTow
@@ -7996,7 +7996,7 @@ Jump_073_6E23:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hPlayerY, hPlayerFacing
 ; writes: wWarpDestX, wWarpDestY, wFieldTransitionKind
-SceneMonstersInTow_Case02::
+SceneMonstersInTow_ScriptStartFadeAndAdvanceStep::
 Jump_073_6E29:: ; address name
     ldh a, [hPlayerX]
     ld [wWarpDestX], a
@@ -9941,7 +9941,7 @@ Jump_073_7A37::
     ret
 
 ; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
-; 2 call sites from 2 routines (e.g. SceneSpiritEnvoy2_Case00, SceneDancing_Case05)
+; 2 call sites from 2 routines (e.g. SceneSpiritEnvoy2_Case00, SceneDancing_SetBit2AtHL_B73AndStep)
 SetBit1AtHL_Bank73::
 Func_073_7A3D:: ; address name
     ld a, [hl]

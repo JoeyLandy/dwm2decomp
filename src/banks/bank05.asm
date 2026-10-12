@@ -960,7 +960,7 @@ Jump_005_4484::
 ; 1 call site from 1 routine (e.g. AIScore_FireAir_Sub02)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_FireAir_Sub02_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_FireAir_Sub02_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_4487:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -990,7 +990,7 @@ Func_005_4499:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_PoisonAir_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_PoisonAir_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_44AB:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1252,7 +1252,7 @@ Func_005_45E1:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_DanceShut_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
-AIScore_DanceShut_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Sub01_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_45F3:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1624,7 +1624,7 @@ Jump_005_47A2::
 ; 1 call site from 1 routine (e.g. AIScore_Antidote_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_Antidote_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Antidote_Sub01_AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_47A5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1638,7 +1638,7 @@ Func_005_47A5:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_NumbOff_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_NumbOff_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_NumbOff_Sub01_AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_47B5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1652,7 +1652,7 @@ Func_005_47B5:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_DeChaos_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_DeChaos_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_DeChaos_Sub01_AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_47C5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1666,7 +1666,7 @@ Func_005_47C5:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_CurseOff_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_CurseOff_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_CurseOff_Sub01_AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_47D5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2821,7 +2821,7 @@ Jump_005_4D43::
 ; 1 call site from 1 routine (e.g. AIScore_MagicWall_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus8
-AIScore_MagicWall_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MagicWall_Sub01_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_4D46:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -6859,7 +6859,7 @@ Jump_005_6226::
 ; 1 call site from 1 routine (e.g. AIScore_Curse_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_Curse_Sub01_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_Curse_Sub01_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_6229:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -9433,7 +9433,7 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $02, $06, $01, $00, $03
 
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E clear; C = 0 when every slot is absent or has a masked bit set (E-0071)
-; 21 call sites from 20 routines (e.g. AIScore_Curse_Sub01_Sub02, AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Mask22, ...)
+; 21 call sites from 20 routines (e.g. AIScore_Curse_Sub01_AnySlotLacksStatusMask, AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Mask22, ...)
 AnySlotLacksStatusMask::
 Func_005_6FA1:: ; address name
     ld c, a
@@ -9463,7 +9463,7 @@ Jump_005_6FBA::
     ret
 
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E non-zero, else C = 0 (the opposite test to AnySlotLacksStatusMask) (E-0100)
-; 4 call sites from 4 routines (e.g. AIScore_Antidote_Sub01_Sub01, AIScore_NumbOff_Sub01_Sub01, AIScore_DeChaos_Sub01_Sub01, AIScore_CurseOff_Sub01_Sub01)
+; 4 call sites from 4 routines (e.g. AIScore_Antidote_Sub01_AnySlotHasStatusMask, AIScore_NumbOff_Sub01_AnySlotHasStatusMask, AIScore_DeChaos_Sub01_AnySlotHasStatusMask, AIScore_CurseOff_Sub01_AnySlotHasStatusMask)
 AnySlotHasStatusMask:: ; heuristic: follows a terminator; C0
 Func_005_6FBD:: ; address name
     ld c, a
@@ -9910,7 +9910,7 @@ Func_005_71DE:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_Antidote_Sub01_Sub01
+    call AIScore_Antidote_Sub01_AnySlotHasStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_71EE
@@ -9930,7 +9930,7 @@ Func_005_71F4:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_DeChaos_Sub01_Sub01
+    call AIScore_DeChaos_Sub01_AnySlotHasStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_7204
@@ -9950,7 +9950,7 @@ Func_005_720A:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_NumbOff_Sub01_Sub01
+    call AIScore_NumbOff_Sub01_AnySlotHasStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_721A
@@ -9970,7 +9970,7 @@ Func_005_7220:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_CurseOff_Sub01_Sub01
+    call AIScore_CurseOff_Sub01_AnySlotHasStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_7230
@@ -10440,7 +10440,7 @@ Jump_005_7461::
     ld a, c
     and a, a
     jr z, Jump_005_747E
-    call AIScore_MagicWall_Sub01_Sub01
+    call AIScore_MagicWall_Sub01_AnySlotLacksStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_747E
@@ -10558,7 +10558,7 @@ Func_005_74F9:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_750E
-    call AIScore_FireAir_Sub02_Sub01
+    call AIScore_FireAir_Sub02_AnySlotLacksStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_750E
@@ -11303,7 +11303,7 @@ Func_005_7860:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_PoisonAir_Sub01_Sub01
+    call AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_7875
@@ -11341,7 +11341,7 @@ Func_005_7879:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call AIScore_Curse_Sub01_Sub02
+    call AIScore_Curse_Sub01_AnySlotLacksStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_78A4
@@ -11955,7 +11955,7 @@ Func_005_7B84:: ; address name
     jr z, Jump_005_7BBA
 
 Jump_005_7BAB::
-    call AIScore_DanceShut_Sub01_Sub02
+    call AIScore_DanceShut_Sub01_AnySlotLacksStatusMask
     ld a, c
     and a, a
     jr z, Jump_005_7BBA

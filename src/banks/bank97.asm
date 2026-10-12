@@ -5,7 +5,7 @@ SECTION "Bank 97", ROMX[$4000], BANK[$97]
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_Bank28)
 ; reads: wStringIndex
 ; writes: wStringIndex
-BeginStringDisplay_Bank28_Sub01::
+BeginStringDisplay_Bank28_BeginStringDisplay::
 Func_097_4001:: ; address name
     ld de, MessageStrings_Bank28_Overflow
     ld a, [wStringIndex]

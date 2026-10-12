@@ -146,7 +146,7 @@ Jump_016_40F5:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case00)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Herb::
@@ -175,7 +175,7 @@ Func_016_40F6:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case03)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew)
 ; reads: wPartyCount
 ; writes: wItemId, wItemRecordByte0A
 ItemUsable_WorldDew::
@@ -361,7 +361,7 @@ Func_016_41FD:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case0A)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Antidote::
@@ -412,7 +412,7 @@ Jump_016_4249:: ; address name
     ret
 
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wC160 and wD08E = $32 + their count; otherwise wItemId = $FF (E-0127)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case0B)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0)
 ; reads: wPartyCount
 ; writes: wItemId, wItemRecordByte0A
 ListPartyMembersWithField55Bit0::
@@ -549,7 +549,7 @@ Jump_016_4316:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case08)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_WorldLeaf::
@@ -866,7 +866,7 @@ Jump_016_449D::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case13, ItemUsable_Warp)
+; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing, ItemUsable_Warp)
 ; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_WarpWing::
@@ -891,7 +891,7 @@ Jump_016_44BD::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case0F)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell)
 ; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_ExitBell::
@@ -1559,7 +1559,7 @@ Jump_016_4852:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_ATKseed_Sub01
+    call ItemApply_ATKseed_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1572,7 +1572,7 @@ Jump_016_4862:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_DEFseed_Sub01
+    call ItemApply_DEFseed_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1585,7 +1585,7 @@ Jump_016_4872:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_AGLseed_Sub01
+    call ItemApply_AGLseed_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1598,7 +1598,7 @@ Jump_016_4882:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_INTseed_Sub01
+    call ItemApply_INTseed_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1611,7 +1611,7 @@ Jump_016_4892:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_LifeAcorn_Sub01
+    call ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1624,7 +1624,7 @@ Jump_016_48A2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_MysticNut_Sub01
+    call ItemApply_MysticNut_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1637,7 +1637,7 @@ Jump_016_48B2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Quest_Sub01
+    call ItemApply_Quest_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1650,7 +1650,7 @@ Jump_016_48C2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Horror_Sub01
+    call ItemApply_Horror_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1663,7 +1663,7 @@ Jump_016_48D2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_BeNice_Sub01
+    call ItemApply_BeNice_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1676,7 +1676,7 @@ Jump_016_48E2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Cheater_Sub01
+    call ItemApply_Cheater_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1689,7 +1689,7 @@ Jump_016_48F2:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Smart_Sub01
+    call ItemApply_Smart_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -1702,7 +1702,7 @@ Jump_016_4902:: ; address name
     ld l, a
     ld h, $00
     ld a, [wTargetRecord]
-    call ItemApply_Comedy_Sub01
+    call ItemApply_Comedy_MapIndexViaPartyListKeepHL
     call ConsumeSelectedItemByChance
     ret
 
@@ -3015,30 +3015,30 @@ Func_016_52C9:: ; address name
 
 Jump_016_52D6::
     rst $00
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case00
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case00
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case00
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case03
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case03
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case05
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case05
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case05
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case08
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case08
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case0A
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case0B
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case0C
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case0C
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case0C
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case0F
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case0C
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case11
     dw PauseMenu_Skills_Case03_Case02_Sub01_Case12
-    dw PauseMenu_Skills_Case03_Case02_Sub01_Case13
+    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing
 
 ; entry 0 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case00::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb::
 Jump_016_52FF:: ; address name
     call ItemUsable_Herb
     call SetWD08D12IfItemRefused
@@ -3046,7 +3046,7 @@ Jump_016_52FF:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case03::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew::
 Jump_016_5306:: ; address name
     call ItemUsable_WorldDew
     call SetWD08D12IfItemRefused
@@ -3076,7 +3076,7 @@ Jump_016_5321::
 
 ; entry 8 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case08::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf::
 Jump_016_5325:: ; address name
     call ItemUsable_WorldLeaf
     call SetWD08D12IfItemRefused
@@ -3084,7 +3084,7 @@ Jump_016_5325:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case0A::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote::
 Jump_016_532C:: ; address name
     call ItemUsable_Antidote
     call SetWD08D12IfItemRefused
@@ -3092,7 +3092,7 @@ Jump_016_532C:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case0B::
+PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0::
 Jump_016_5333:: ; address name
     call ListPartyMembersWithField55Bit0
     call SetWD08D12IfItemRefused
@@ -3125,7 +3125,7 @@ Jump_016_5355::
 
 ; entry 15 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case0F::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell::
 Jump_016_5359:: ; address name
     call ItemUsable_ExitBell
     call SetWD08D14IfItemRefused
@@ -3208,14 +3208,14 @@ Jump_016_53C6::
 
 ; entry 19 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_Case13::
+PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing::
 Jump_016_53C7:: ; address name
     call ItemUsable_WarpWing
     call SetWD08D14IfItemRefused
     ret
 
 ; when wItemId is $FF (refused): wD08D = $12 (E-0119)
-; 6 call sites from 6 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case0B, PauseMenu_Skills_Case03_Case02_Sub01_Case0A, PauseMenu_Skills_Case03_Case02_Sub01_Case08, PauseMenu_Skills_Case03_Case02_Sub01_Case05, ...)
+; 6 call sites from 6 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf, PauseMenu_Skills_Case03_Case02_Sub01_Case05, ...)
 ; reads: wItemId
 ; writes: wItemMessage
 SetWD08D12IfItemRefused::
@@ -3228,7 +3228,7 @@ Func_016_53CE:: ; address name
     ret
 
 ; when wItemId is $FF (refused): wD08D = $14 (E-0119)
-; 5 call sites from 5 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_Case13, PauseMenu_Skills_Case03_Case02_Sub01_Case12, PauseMenu_Skills_Case03_Case02_Sub01_Case11, PauseMenu_Skills_Case03_Case02_Sub01_Case0F, ...)
+; 5 call sites from 5 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing, PauseMenu_Skills_Case03_Case02_Sub01_Case12, PauseMenu_Skills_Case03_Case02_Sub01_Case11, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell, ...)
 ; reads: wItemId
 ; writes: wItemMessage
 SetWD08D14IfItemRefused::
@@ -3250,17 +3250,17 @@ Func_016_53E6:: ; address name
     ret z
     ld a, [wInventorySlot]
     rst $00
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case00
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case01
+    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount
+    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01
     dw FullHealRecordTargetRecord
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case03
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case04
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case05
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case06
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case07
+    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount
+    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06
+    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case08
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case09
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case0A
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case0A
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0B
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0C
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0D
@@ -3269,12 +3269,12 @@ Func_016_53E6:: ; address name
     dw PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case11
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case12
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case13
+    dw PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer
 
 ; entry 0 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case00::
+PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount::
 Jump_016_5418:: ; address name
     ld a, $0A
     ld [wItemEffectAmount], a
@@ -3288,7 +3288,7 @@ Jump_016_5418:: ; address name
 ; entry 1 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case01::
+PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01::
 Jump_016_542B:: ; address name
     ld a, $0F
     ld [wItemEffectAmount], a
@@ -3300,7 +3300,7 @@ Jump_016_542B:: ; address name
     ret
 
 ; record wD083: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wD08D = 6 (E-0117)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_Case09)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped)
 ; reads: wTargetRecord
 ; writes: wItemMessage
 FullHealRecordTargetRecord::
@@ -3408,7 +3408,7 @@ Func_016_54AD:: ; address name
 ; entry 5 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case05::
+PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount::
 Jump_016_54CD:: ; address name
     ld a, $0F
     ld [wItemEffectAmount], a
@@ -3420,7 +3420,7 @@ Jump_016_54CD:: ; address name
 ; entry 6 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case06::
+PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06::
 Jump_016_54DB:: ; address name
     ld a, $1E
     ld [wItemEffectAmount], a
@@ -3432,7 +3432,7 @@ Jump_016_54DB:: ; address name
 ; entry 7 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case07::
+PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07::
 Jump_016_54E9:: ; address name
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3476,7 +3476,7 @@ Jump_016_54F7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTargetRecord
 ; writes: wItemMessage, wLevelUpGains
-PauseMenu_Skills_Case03_Case07_Sub01_Case09::
+PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped::
 Jump_016_5522:: ; address name
     ld a, [wTargetRecord]
     ld c, $55
@@ -3493,7 +3493,7 @@ Jump_016_5522:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTargetRecord
 ; writes: wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case0A::
+PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case0A::
 Jump_016_553A:: ; address name
     ld a, [wTargetRecord]
     ld c, $55
@@ -3731,7 +3731,7 @@ Jump_016_568E:: ; address name
 ; entry 19 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_Case13::
+PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer::
 Jump_016_569E:: ; address name
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1C
@@ -3741,7 +3741,7 @@ Jump_016_569E:: ; address name
     ret
 
 ; reads the next table byte, then heals record wD083's HP by wC5E7 / (wD08F + 1) + wD090 (capped at max HP) (E-0122)
-; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, PauseMenu_Skills_Case03_Case07_Sub01_Case01, PauseMenu_Skills_Case03_Case07_Sub01_Case00)
+; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount)
 ; reads: wRandomLo, wItemEffectAmount, wItemEffectRange, wTargetRecord
 HealRecordHPByRandomAmount::
 Func_016_56AF:: ; address name
@@ -3761,7 +3761,7 @@ Func_016_56AF:: ; address name
     ret
 
 ; heals record wD083's MP by wD08F (capped at max MP) (E-0122)
-; 3 call sites from 3 routines (e.g. PauseMenu_Skills_Case03_Case07_Sub01_Case07, PauseMenu_Skills_Case03_Case07_Sub01_Case06, PauseMenu_Skills_Case03_Case07_Sub01_Case05)
+; 3 call sites from 3 routines (e.g. PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount)
 ; reads: wItemEffectAmount, wTargetRecord
 HealRecordMPByItemEffectAmount::
 Func_016_56CC:: ; address name
@@ -4003,7 +4003,7 @@ Func_016_57E8:: ; address name
 
 ; only called from ItemApply_ATKseed (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_ATKseed)
-ItemApply_ATKseed_Sub01::
+ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
 Func_016_57FF:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $63
@@ -4013,7 +4013,7 @@ Func_016_57FF:: ; address name
 
 ; only called from ItemApply_DEFseed (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_DEFseed)
-ItemApply_DEFseed_Sub01::
+ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
 Func_016_580B:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $65
@@ -4023,7 +4023,7 @@ Func_016_580B:: ; address name
 
 ; only called from ItemApply_AGLseed (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_AGLseed)
-ItemApply_AGLseed_Sub01::
+ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
 Func_016_5817:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $67
@@ -4033,7 +4033,7 @@ Func_016_5817:: ; address name
 
 ; only called from ItemApply_INTseed (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_INTseed)
-ItemApply_INTseed_Sub01::
+ItemApply_INTseed_MapIndexViaPartyListKeepHL::
 Func_016_5823:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $69
@@ -4043,7 +4043,7 @@ Func_016_5823:: ; address name
 
 ; only called from ItemApply_LifeAcorn (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_LifeAcorn)
-ItemApply_LifeAcorn_Sub01::
+ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
 Func_016_582F:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $5D
@@ -4053,7 +4053,7 @@ Func_016_582F:: ; address name
 
 ; only called from ItemApply_MysticNut (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_MysticNut)
-ItemApply_MysticNut_Sub01::
+ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
 Func_016_583B:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $61
@@ -4063,7 +4063,7 @@ Func_016_583B:: ; address name
 
 ; only called from ItemApply_Quest (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_Quest)
-ItemApply_Quest_Sub01::
+ItemApply_Quest_MapIndexViaPartyListKeepHL::
 Func_016_5847:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $6F
@@ -4073,7 +4073,7 @@ Func_016_5847:: ; address name
 
 ; only called from ItemApply_Horror (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_Horror)
-ItemApply_Horror_Sub01::
+ItemApply_Horror_MapIndexViaPartyListKeepHL::
 Func_016_5852:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $6F
@@ -4083,7 +4083,7 @@ Func_016_5852:: ; address name
 
 ; only called from ItemApply_BeNice (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_BeNice)
-ItemApply_BeNice_Sub01::
+ItemApply_BeNice_MapIndexViaPartyListKeepHL::
 Func_016_585D:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $70
@@ -4093,7 +4093,7 @@ Func_016_585D:: ; address name
 
 ; only called from ItemApply_Cheater (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_Cheater)
-ItemApply_Cheater_Sub01::
+ItemApply_Cheater_MapIndexViaPartyListKeepHL::
 Func_016_5868:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $70
@@ -4103,7 +4103,7 @@ Func_016_5868:: ; address name
 
 ; only called from ItemApply_Smart (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_Smart)
-ItemApply_Smart_Sub01::
+ItemApply_Smart_MapIndexViaPartyListKeepHL::
 Func_016_5873:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $72
@@ -4113,7 +4113,7 @@ Func_016_5873:: ; address name
 
 ; only called from ItemApply_Comedy (E-0047)
 ; 1 call site from 1 routine (e.g. ItemApply_Comedy)
-ItemApply_Comedy_Sub01::
+ItemApply_Comedy_MapIndexViaPartyListKeepHL::
 Func_016_587E:: ; address name
     call MapIndexViaPartyListKeepHL
     ld c, $72
@@ -4134,7 +4134,7 @@ Func_016_5889:: ; address name
     ret
 
 ; field C of record A: adds E, capped at the limit passed in DE's partner (Func_016_58B8) (E-0122)
-; 3 call sites from 3 routines (e.g. ItemApply_Smart_Sub01, ItemApply_BeNice_Sub01, ItemApply_Quest_Sub01)
+; 3 call sites from 3 routines (e.g. ItemApply_Smart_MapIndexViaPartyListKeepHL, ItemApply_BeNice_MapIndexViaPartyListKeepHL, ItemApply_Quest_MapIndexViaPartyListKeepHL)
 AddToRecordFieldByteCapped::
 Func_016_5897:: ; address name
     push hl
@@ -4146,7 +4146,7 @@ Func_016_5897:: ; address name
     ret
 
 ; field C of record A: subtracts E, floored at the limit (Func_016_58C2) (E-0122)
-; 3 call sites from 3 routines (e.g. ItemApply_Comedy_Sub01, ItemApply_Cheater_Sub01, ItemApply_Horror_Sub01)
+; 3 call sites from 3 routines (e.g. ItemApply_Comedy_MapIndexViaPartyListKeepHL, ItemApply_Cheater_MapIndexViaPartyListKeepHL, ItemApply_Horror_MapIndexViaPartyListKeepHL)
 SubtractFromRecordFieldByteFloored::
 Func_016_58A2:: ; address name
     push hl
@@ -4158,7 +4158,7 @@ Func_016_58A2:: ; address name
     ret
 
 ; field C of record A: adds the amount, capped at the limit (Func_016_58CC) (E-0122)
-; 6 call sites from 6 routines (e.g. ItemApply_MysticNut_Sub01, ItemApply_LifeAcorn_Sub01, ItemApply_INTseed_Sub01, ItemApply_AGLseed_Sub01, ...)
+; 6 call sites from 6 routines (e.g. ItemApply_MysticNut_MapIndexViaPartyListKeepHL, ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL, ItemApply_INTseed_MapIndexViaPartyListKeepHL, ItemApply_AGLseed_MapIndexViaPartyListKeepHL, ...)
 AddToRecordFieldWordCapped::
 Func_016_58AD:: ; address name
     push hl
@@ -4275,7 +4275,7 @@ Func_016_58FD:: ; address name
     ret
 
 ; MapIndexViaPartyList with HL preserved (E-0072)
-; 13 call sites from 13 routines (e.g. ApplyMeatToRecordField6B, ItemApply_Comedy_Sub01, ItemApply_Smart_Sub01, ItemApply_Cheater_Sub01, ...)
+; 13 call sites from 13 routines (e.g. ApplyMeatToRecordField6B, ItemApply_Comedy_MapIndexViaPartyListKeepHL, ItemApply_Smart_MapIndexViaPartyListKeepHL, ItemApply_Cheater_MapIndexViaPartyListKeepHL, ...)
 MapIndexViaPartyListKeepHL::
 Func_016_5906:: ; address name
     push hl
@@ -5042,7 +5042,7 @@ Func_016_5D13:: ; address name
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case03
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case04
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case05
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case06
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case03
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case04
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case09
@@ -5056,7 +5056,7 @@ Func_016_5D13:: ; address name
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case11
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case12
     dw BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case14
+    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case15
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case16
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case17
@@ -5227,7 +5227,7 @@ Jump_016_5E2E::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_Case06::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep::
 Jump_016_5E3B:: ; address name
     ld a, $0D
     ld [wStringIndex], a
@@ -5663,7 +5663,7 @@ Jump_016_614C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_Case14::
+BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16::
 Jump_016_6151:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -6913,7 +6913,7 @@ Func_016_6955:: ; address name
     ret
 
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls ShowString_Bank2F (E-0074)
-; 9 call sites from 9 routines (e.g. BattleEnd_Step5_Case04_Sub01_Case13, BattleEnd_Step5_Case04_Sub01_Case11, BattleEnd_Step5_Case04_Sub01_Case10, BattleEnd_Step5_Case04_Sub01_Case08, ...)
+; 9 call sites from 9 routines (e.g. BattleEnd_Step5_Case04_Sub01_Case13, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values, BattleEnd_Step5_Case04_Sub01_Case10, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep, ...)
 ; writes: wStringCategory
 ShowStringCategory5Immediate_Bank16::
 Func_016_6961:: ; address name
@@ -7029,7 +7029,7 @@ Jump_016_6A01::
     ret
 
 ; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
-; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_Case00, BattleEnd_Step5_Case01_Case01_Sub01_Case04, BattleEnd_Step5_Case01_Case01_Sub01_Case00)
+; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep, BattleEnd_Step5_Case01_Case01_Sub01_Case04, BattleEnd_Step5_Case01_Case01_Sub01_Case00)
 ; reads: wDisplaySlot
 ; points at: wSlotNameSuffix
 CopyBattleMonsterNameWithLetterSuffix::
@@ -7086,7 +7086,7 @@ RunBattleEndStep5SubSteps::
 Func_016_6A4E:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleEndStep5SubSteps_Case00
+    dw RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep
     dw RunBattleEndStep5SubSteps_Case01
     dw RunBattleEndStep5SubSteps_Case02
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
@@ -7096,7 +7096,7 @@ Func_016_6A4E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wTextBuf0, wBattleSubStep
-RunBattleEndStep5SubSteps_Case00::
+RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep::
 Jump_016_6A5C:: ; address name
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
@@ -7383,8 +7383,8 @@ Func_016_6C16:: ; address name
     dw BattleEnd_Step5_Case04_Sub01_Case04
     dw BattleEnd_Step5_Case04_Sub01_Case05
     dw BattleEnd_Step5_Case04_Sub01_Case06
-    dw BattleEnd_Step5_Case04_Sub01_Case07
-    dw BattleEnd_Step5_Case04_Sub01_Case08
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep
     dw BattleEnd_Step5_Case04_Sub01_Case09
     dw BattleEnd_Step5_Case04_Sub01_Case0A
     dw BattleEnd_Step5_Case04_Sub01_Case0B
@@ -7393,7 +7393,7 @@ Func_016_6C16:: ; address name
     dw BattleEnd_Step5_Case04_Sub01_Case0E
     dw BattleEnd_Step5_Case04_Sub01_Case0F
     dw BattleEnd_Step5_Case04_Sub01_Case10
-    dw BattleEnd_Step5_Case04_Sub01_Case11
+    dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values
     dw BattleEnd_Step5_Case04_Sub01_Case12
     dw BattleEnd_Step5_Case04_Sub01_Case13
 
@@ -7612,7 +7612,7 @@ Jump_016_6D47:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case04_Sub01_Case07::
+BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16::
 Jump_016_6D7B:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7626,7 +7626,7 @@ Jump_016_6D7B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wMenuSubState
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_Case08::
+BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep::
 Jump_016_6D8D:: ; address name
     call CopyRect7923AndDrawBattleArg0Values
     ld a, $1C
@@ -7952,7 +7952,7 @@ Jump_016_6FA4:: ; address name
 ; entry 17 of the `rst $00` table in Func_016_6C16
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuSelectedMember, wStringIndex, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_Case11::
+BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values::
 Jump_016_6FEE:: ; address name
     call CopyRect7923AndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12F
@@ -8032,7 +8032,7 @@ Jump_016_7051:: ; address name
     ret
 
 ; copies rectangle record $7923 to the screen buffer and draws the wD868 values at vTiles2 + $3B0 (E-0122)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_Case11, BattleEnd_Step5_Case04_Sub01_Case0F, BattleEnd_Step5_Case04_Sub01_Case08)
+; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values, BattleEnd_Step5_Case04_Sub01_Case0F, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep)
 CopyRect7923AndDrawBattleArg0Values::
 Func_016_7078:: ; address name
     farcall CopyRectRecord7923ToScreenBuffer
@@ -9819,7 +9819,7 @@ Func_016_7A5B:: ; address name
     ret
 
 ; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H = $C7, $C8 and $C9, stopping after wC6FD entries; then disables SRAM (E-0103)
-; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_Case00, PauseMenu_State3_Case00_Case00, LibraryMenu_Case08, ...)
+; 6 call sites from 6 routines (e.g. ShowIdlePartyStatusWindow, PauseMenu_State4_Sub01_LoadBlankedBlocks00To03WithCursor, PauseMenu_State3_Case00_Case00, LibraryMenu_Case08, ...)
 ; reads: wPartyCount
 ; writes: rRAMG, rRAMB
 LoadTilesForPartyRecords::

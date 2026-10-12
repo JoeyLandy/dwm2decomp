@@ -5130,7 +5130,7 @@ Jump_03A_6172::
     rst $00
     dw RunBattleActions_Case00
     dw RunBattleActions_ToRunBattleResolveStep
-    dw RunBattleActions_Case02
+    dw RunBattleActions_LoadSkillRecord
     dw RunBattleActions_Case03
     dw RunActionSpecificPostStep
     dw RunBattleActions_ShowHeroBlewBackG
@@ -5158,7 +5158,7 @@ Jump_03A_6193:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId
 ; writes: wRecordBuffer
-RunBattleActions_Case02::
+RunBattleActions_LoadSkillRecord::
 Jump_03A_619A:: ; address name
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -6557,7 +6557,7 @@ Jump_03A_6984::
     ret
 
 ; runs the routine for wBattleResolveStep (jump table of ten) (E-0122)
-; 2 call sites from 2 routines (e.g. RunBattleStep4_ToRunActionResolveStep, RunBattleActions_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleStep4_ToRunActionResolveStep, RunBattleActions_LoadSkillRecord)
 ; reads: wBattleResolveStep
 RunActionResolveStep::
 Func_03A_69AA:: ; address name
@@ -6572,7 +6572,7 @@ Func_03A_69AA:: ; address name
     dw RunActionResolveStep_Case06
     dw RunActionResolveStep_Case07
     dw RunActionResolveStep_Case08
-    dw RunActionResolveStep_Case09
+    dw RunActionResolveStep_Case09_Sub01_Case09
 
 ; entry 0 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
@@ -7000,7 +7000,7 @@ Jump_03A_6C68::
 
 ; entry 9 of the `rst $00` table in RunActionResolveStep
 ; no direct call (reached through a table, a jump or a vector)
-RunActionResolveStep_Case09::
+RunActionResolveStep_Case09_Sub01_Case09::
 Jump_03A_6C76:: ; address name
     call RunActionResolveStep_Case09_Sub01
     ret
@@ -7096,7 +7096,7 @@ Jump_03A_6CC9::
     ret
 
 ; only called from RunActionResolveStep_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. RunActionResolveStep_Case09)
+; 1 call site from 1 routine (e.g. RunActionResolveStep_Case09_Sub01_Case09)
 ; reads: wBattleStep, wFollowUpAction, wBattleTarget, wRecordBufferData, wBattleActionId, wBattleActor, wResolveByte81, wResolveMsgFlags
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep, wResolveByte81, wFollowUpAction
 ; points at: wBattleStatus6, wBattleStep, wBattleSubPhase
@@ -7480,7 +7480,7 @@ Data_03A_6DAA:: ; address name
     db $FF ; id 231
 
 ; D = Data_03A_6EA5[wBattleActionId]; returns at once when it is $FF, otherwise ShowBattleText (E-0116)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case08_Sub01_Case00, RunBattleActions_Case08_Sub01_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleActions_Case08_Sub01_Case00, RunBattleActions_Case08_Sub01_ShowActionBattleText)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleText::
@@ -9743,7 +9743,7 @@ Func_03A_7B82:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_Case0C, RunBattleSetup_Case01_Case1C, RunBattleSetup_Case02_Case0C)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case01_Case1C, RunBattleSetup_Case02_Case0C)
 ; reads: wLinkMode, wBattleArg1, wSlotChoices, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wLinkRole
 ; writes: wNameSlot, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wSlotChoices, wTextBuf0

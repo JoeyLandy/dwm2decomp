@@ -91,7 +91,7 @@ Data_095_461E:: ; address name
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_Bank08)
 ; reads: wStringCategory
 ; writes: wStringCategory
-BeginStringDisplay_Bank08_Sub01::
+BeginStringDisplay_Bank08_BeginStringDisplay::
 Func_095_4650:: ; address name
     ld de, StringCategories_95_4675
     ld a, [wStringCategory]
@@ -104,7 +104,7 @@ Func_095_4650:: ; address name
 ; 1 call site from 1 routine (e.g. CopyStringToBuffer_Bank08)
 ; reads: wStringCategory
 ; writes: wStringCategory
-CopyStringToBuffer_Bank08_Sub01::
+CopyStringToBuffer_Bank08_CopyStringToBuffer::
 Func_095_465F:: ; address name
     ld de, StringCategories_95_4675
     ld a, [wStringCategory]

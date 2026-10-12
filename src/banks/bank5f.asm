@@ -934,7 +934,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_Shared01, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
+; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_ScriptStartFadeAndAdvanceStep, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -1174,7 +1174,7 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
-; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_Case2B, SceneShield2_Case16, ...)
+; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_Case2B, SceneShield2_SetFlagBit, ...)
 ; reads: hTemp0
 ; points at: wKeyList
 MarkKeyEntryKindTemp0Bit6::
@@ -1260,7 +1260,7 @@ Jump_05F_6E03::
     ret
 
 ; DE = the BG map row at hScrollY (& $F8); calls Func_05F_6E35 for the columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
-; 9 call sites from 9 routines (e.g. SceneDarckDefeated_Case0D, SceneThreeItems_ToRedrawColumnsBesideScreenAndStep, SceneExplosion_Case00, SceneWallExit_Case00, ...)
+; 9 call sites from 9 routines (e.g. SceneDarckDefeated_RedrawColumnsBesideScreenAndStep, SceneThreeItems_ToRedrawColumnsBesideScreenAndStep, SceneExplosion_Case00, SceneWallExit_Case00, ...)
 ; reads: hScrollY, hScrollX
 RedrawColumnsBesideScreen::
 Func_05F_6E09:: ; address name
@@ -1321,7 +1321,7 @@ Jump_05F_6E44::
     ret
 
 ; only called from SceneDancing_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. SceneDancing_Case06)
+; 1 call site from 1 routine (e.g. SceneDancing_Case06_Sub01_Case06)
 ; reads: wScriptSubStep
 SceneDancing_Case06_Sub01::
 Func_05F_6E58:: ; address name
@@ -1412,7 +1412,7 @@ Jump_05F_6E99::
     ret
 
 ; only called from SceneMermaidSong2_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_Case05)
 ; reads: wScriptSubStep
 SceneMermaidSong2_Case05_Sub01::
 Func_05F_6EC3:: ; address name

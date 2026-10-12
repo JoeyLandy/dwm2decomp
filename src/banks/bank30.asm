@@ -643,7 +643,7 @@ Func_030_43C4:: ; address name
     dw RunCommandEntryResolveStep_Case00
     dw RunCommandEntryResolveStep_Case01
     dw AIChooseActionResolveStep
-    dw RunCommandEntryResolveStep_Case03
+    dw RunCommandEntryResolveStep_RunActorActionHandlersForAISlots
 
 ; entry 0 of the `rst $00` table in RunCommandEntryResolveStep
 ; no direct call (reached through a table, a jump or a vector)
@@ -2227,7 +2227,7 @@ Func_030_4CDB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
 ; points at: wBattleSubPhase
-RunCommandEntryResolveStep_Case03::
+RunCommandEntryResolveStep_RunActorActionHandlersForAISlots::
 Jump_030_4CF0:: ; address name
     call RunActorActionHandlersForAISlots
     ld hl, wBattleSubPhase
@@ -2237,7 +2237,7 @@ Jump_030_4CF0:: ; address name
     ret
 
 ; for AI-controlled slots (foes, or both sides outside normal battles, never slot 3/7) runs the handlers for the set bits of the actor's action data word (E-0124)
-; 2 call sites from 2 routines (e.g. RunCommandEntryResolveStep_Case03, AIChooseActionForActor)
+; 2 call sites from 2 routines (e.g. RunCommandEntryResolveStep_RunActorActionHandlersForAISlots, AIChooseActionForActor)
 ; reads: wLinkMode, wBattleActor
 RunActorActionHandlersForAISlots::
 Func_030_4CFC:: ; address name

@@ -2,7 +2,7 @@ SECTION "Bank 15", ROMX[$4000], BANK[$15]
     db $15
 
 ; implements script command type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode; reached through ScriptCommandEE in bank $10 (E-0038, E-0244)
-; 4 call sites from 4 routines (e.g. CloseRenameMenu_ToCloseBreedMenu, ScriptCommandEE, CloseMenuE9_ToCloseBreedMenu, CloseMenuE9_ToCloseBreedMenu_Case03)
+; 4 call sites from 4 routines (e.g. CloseRenameMenu_ToCloseBreedMenu, ScriptCommandEE, CloseMenuE9_ToCloseBreedMenu, CloseMenuE9_ToCloseBreedMenu_CloseBreedMenu)
 ; reads: wScreenList
 CloseBreedMenu::
 Func_015_4001:: ; address name
@@ -157,17 +157,17 @@ BreedMenu::
 Func_015_40FA:: ; address name
     ld a, [wScreenState]
     rst $00
-    dw BreedMenu_Case00
-    dw BreedMenu_Case01
+    dw BreedMenu_Init
+    dw BreedMenu_Setup
     dw BreedMenu_ToHandleThreeOptionMenuInput_15
     dw BreedMenu_Case03
     dw BreedMenu_Case04
     dw BreedMenu_Case05
-    dw BreedMenu_Case06
-    dw BreedMenu_Case07
-    dw BreedMenu_Case08
-    dw BreedMenu_Case09
-    dw BreedMenu_Case0A
+    dw BreedMenu_NameEntry
+    dw BreedMenu_ReturnToMap
+    dw BreedMenu_TalkEvent17ThenNameEntry
+    dw BreedMenu_CopyToChildThenTalkEvent16
+    dw BreedMenu_TalkEvent15
     dw BreedMenu_Case0B
     dw BreedMenu_Case0C
     dw BreedMenu_Case0D
@@ -177,12 +177,12 @@ Func_015_40FA:: ; address name
     dw BreedMenu_Case11
     dw BreedMenu_Case12
 
-; entry 0 of the `rst $00` table in BreedMenu
+; state 0 of BreedMenu: clears $6F bytes from wScreenState (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: wMessageMode, hSpriteHideTile, wScriptCommandType, wScriptStartRequest
 ; points at: wScreenState, wScreenTileBuffer, wScreenAttrBuffer
-BreedMenu_Case00::
+BreedMenu_Init::
 Jump_015_4124:: ; address name
     ld hl, wScreenState
     ld bc, $006F
@@ -220,19 +220,19 @@ Jump_015_414F::
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in BreedMenu
+; draws the two boxes and the gold box (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case01::
+BreedMenu_Setup::
 Jump_015_4167:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw DrawPair72A9And72C5AndStep
     dw DrawGoldBoxAndStep_Bank15
-    dw BreedMenu_Case01_Case02
+    dw BreedMenu_Setup_Case02
 
 ; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
-; 4 call sites from 4 routines (e.g. BreedMenu_Case04_Case3A, BreedMenu_Case04_Case33, BreedMenu_Case04_Case0A, BreedMenu_Case0F_Case01)
+; 4 call sites from 4 routines (e.g. BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_Case04_DrawPair72A9And72C5AndStep, BreedMenu_Case04_Case0A, BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawPair72A9And72C5AndStep::
@@ -246,7 +246,7 @@ Func_015_4171:: ; address name
     ret
 
 ; copies box Data_015_7291 to wC370 and writes the gold as five digit tiles at wC386, then wD781 += 1 (E-0125)
-; 6 call sites from 6 routines (e.g. BreedMenu_Case04_Case3A, BreedMenu_Case04_Case33, BreedMenu_Case04_Case1F, BreedMenu_Case05_Case08, ...)
+; 6 call sites from 6 routines (e.g. BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case3A, BreedMenu_Case04_DrawPair72A9And72C5AndStep, BreedMenu_Case04_Case1F, BreedMenu_Case05_Case08, ...)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wGoldLo, wDigits, wArg3
@@ -286,11 +286,11 @@ Jump_015_41AA::
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in BreedMenu_Case01
+; entry 2 of the `rst $00` table in BreedMenu_Setup
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenStep, wScreenState
-BreedMenu_Case01_Case02::
+BreedMenu_Setup_Case02::
 Jump_015_41BD:: ; address name
     ld de, TileRect_15_6F6B
     ld hl, wWindowTileBuffer + $64
@@ -367,39 +367,39 @@ Jump_015_422B:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw BreedMenu_Case04_Case00
-    dw BreedMenu_Case04_Case01
+    dw BreedMenu_Case04_ClearTileAreas1240_1700_14E0
     dw BreedMenu_Case04_Case02
-    dw BreedMenu_Case04_Case03
+    dw BreedMenu_Case04_DrawRecordListPageNames
     dw BreedMenu_Case04_Case04
     dw BreedMenu_Case04_Case05
     dw BreedMenu_Case04_Case06
-    dw BreedMenu_Case04_Case07
+    dw BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep
     dw BreedMenu_Case04_Case08
     dw BreedMenu_Case04_Case09
     dw BreedMenu_Case04_Case0A
-    dw BreedMenu_Case04_Case0B
-    dw BreedMenu_Case04_Case0C
+    dw BreedMenu_Case04_BlankWordTableTargets
+    dw BreedMenu_Case04_DrawScreenBufferRect_Bank15
     dw BreedMenu_Case04_Case0D
     dw BreedMenu_Case04_Case0E
     dw BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep
     dw BreedMenu_Case04_Case10
     dw BreedMenu_Case04_Case11
     dw BreedMenu_Case04_Case12
-    dw BreedMenu_Case04_Case13
-    dw BreedMenu_Case04_Case14
+    dw BreedMenu_Case04_Case13_Sub01_Case13
+    dw BreedMenu_Case04_ClearThreeTileRows
     dw BreedMenu_Case04_Case15
     dw BreedMenu_Case04_Case16
-    dw BreedMenu_Case04_Case03
+    dw BreedMenu_Case04_DrawRecordListPageNames
     dw DrawListEntriesCell5IconAndLevelAndStep
     dw BreedMenu_Case04_ToClearThreeTileRowsAndStep
     dw DrawListEntriesCell5RecordNamesAndStep
-    dw BreedMenu_Case04_Case1B
+    dw BreedMenu_Case04_BreedMenu_Shared04
     dw BreedMenu_Case04_Case1C
     dw DrawScreenBufferAtScrollAndIncScreenStep
     dw BreedMenu_Case04_Case1E
     dw BreedMenu_Case04_Case1F
     dw BreedMenu_Case04_Case20
-    dw BreedMenu_Case04_Case0C
+    dw BreedMenu_Case04_DrawScreenBufferRect_Bank15
     dw BreedMenu_Case04_Case0D
     dw BreedMenu_Case04_Case0E
     dw BreedMenu_Case04_Case24
@@ -414,17 +414,17 @@ Jump_015_422B:: ; address name
     dw BreedMenu_Case04_Case2D
     dw BreedMenu_Case04_Case2E
     dw BreedMenu_Case04_Case2F
-    dw BreedMenu_Case04_Case30
+    dw BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep
     dw BreedMenu_Case04_Case31
     dw BreedMenu_Case04_Case32
-    dw BreedMenu_Case04_Case33
+    dw BreedMenu_Case04_DrawPair72A9And72C5AndStep
     dw BreedMenu_Case04_Case34
-    dw BreedMenu_Case04_Case0B
+    dw BreedMenu_Case04_BlankWordTableTargets
     dw BreedMenu_Case04_Case36
-    dw BreedMenu_Case04_Case30
+    dw BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep
     dw BreedMenu_Case04_Case31
     dw BreedMenu_Case04_Case32
-    dw BreedMenu_Case04_Case3A
+    dw BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case3A
     dw BreedMenu_Case04_Case3B
     dw BreedMenu_Case04_Case3C
     dw BreedMenu_Case04_Case3D
@@ -446,7 +446,7 @@ Jump_015_42B3:: ; address name
     ld [wArg1], a
     ld a, $08
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld de, TileRect_15_42F4
     ld hl, wWindowTileBuffer + $64
     ld bc, $080B
@@ -485,7 +485,7 @@ Data_015_42F4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case01::
+BreedMenu_Case04_ClearTileAreas1240_1700_14E0::
 Jump_015_434C:: ; address name
     call ClearTileAreas1240_1700_14E0
     ld de, TileRect_15_747D
@@ -536,7 +536,7 @@ Jump_015_43A4::
 ; entry 3 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-BreedMenu_Case04_Case03::
+BreedMenu_Case04_DrawRecordListPageNames::
 Jump_015_43AC:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -618,7 +618,7 @@ Jump_015_4418:: ; address name
     ret
 
 ; DrawScreenBufferRect_Bank15 (20 x 13 from buffer offset $01CC at the scroll origin), then wD781 += 1 (E-0119)
-; 1 call site from 1 routine (e.g. BreedMenu_Case04_Case07)
+; 1 call site from 1 routine (e.g. BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawScreenBufferAtScrollAndIncScreenStep::
@@ -635,7 +635,7 @@ Func_015_4439:: ; address name
 ; entry 7 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor
-BreedMenu_Case04_Case07::
+BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep::
 Jump_015_444D:: ; address name
     ld a, [wListCursor]
     ld b, $BB
@@ -728,7 +728,7 @@ Jump_015_44D3:: ; address name
     ld [wArg1], a
     ld a, $09
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld c, $09
     ld hl, $0224
     ld de, $0058
@@ -736,7 +736,7 @@ Jump_015_44D3:: ; address name
     ld [wArg1], a
     ld a, $0C
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld de, TileRect_15_6FA3
     ld hl, wWindowTileBuffer + $64
     ld bc, $0807
@@ -781,7 +781,7 @@ Jump_015_451B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case0C::
+BreedMenu_Case04_DrawScreenBufferRect_Bank15::
 Jump_015_4550:: ; address name
     ld de, TileRect_15_7379
     ld hl, wWindowTileBuffer + $110
@@ -1027,7 +1027,7 @@ Jump_015_46D3:: ; address name
 
 ; entry 19 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case04_Case13::
+BreedMenu_Case04_Case13_Sub01_Case13::
 Jump_015_4712:: ; address name
     call BreedMenu_Case04_Case13_Sub01
     ret
@@ -1036,7 +1036,7 @@ Jump_015_4712:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case14::
+BreedMenu_Case04_ClearThreeTileRows::
 Jump_015_4716:: ; address name
     call ClearThreeTileRows
     ld de, TileRect_15_7565
@@ -1083,7 +1083,7 @@ Jump_015_4739:: ; address name
 BreedMenu_Case04_Case16::
 Jump_015_4768:: ; address name
     call LoadRecordSelectedRecordByte0EBit0
-    call BreedMenu_Shared05
+    call BreedMenu_Shared03
     jp Jump_015_4369
 
 ; for the record at WD789 cell 5 loads its family icon tile and draws its mark and level at wC426, then wD781 += 1 (E-0124)
@@ -1125,7 +1125,7 @@ Jump_015_479C:: ; address name
     ret
 
 ; draws the name and species name of the record at WD789 cell 5, clears wCFA8 and wCFA9 and wD781 += 1 (E-0122)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case29, BreedMenu_Case04_Case24, BreedMenu_Case12_Case04)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case29, BreedMenu_Case04_Case24, BreedMenu_Case12_ClearThreeTileRows)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wNameEntryState, wNameEntrySubState, wScreenStep
 DrawListEntriesCell5RecordNamesAndStep::
@@ -1151,9 +1151,9 @@ Func_015_47A7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wNameEntryState, wNameEntrySubState, wScreenStep
-BreedMenu_Case04_Case1B::
+BreedMenu_Case04_BreedMenu_Shared04::
 Jump_015_47CF:: ; address name
-    call BreedMenu_Shared06
+    call BreedMenu_Shared04
     xor a, a
     ld [wNameEntryState], a
     ld [wNameEntrySubState], a
@@ -1343,7 +1343,7 @@ Jump_015_491A:: ; address name
     ld [wArg1], a
     ld a, $0C
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld a, $B7
     ld [wWindowTileBuffer + $93], a
     ld [wWindowTileBuffer + $A7], a
@@ -1748,7 +1748,7 @@ Jump_015_4BFB::
     ret
 
 ; if wC58A is set, copies and draws rectangle $70C5 at wC364; wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. BreedMenu_Case04_Case30)
+; 1 call site from 1 routine (e.g. BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep)
 ; reads: wLinkMode, wScreenStep
 ; writes: wScreenStep
 DrawRect70C5IfLinkModeAndStep::
@@ -1788,7 +1788,7 @@ Jump_015_4C26::
 ; points at: wTextWindowTileLo
 BreedMenu_Case04_Case2C::
 Jump_015_4C2E:: ; address name
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld a, [wScreenSubStep]
     cp a, $02
     jr z, Jump_015_4C4D
@@ -1898,7 +1898,7 @@ Jump_015_4CE3:: ; address name
     jr z, Jump_015_4CFE
     cp a, $FF
     jr z, Jump_015_4D14
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ret
 
 Jump_015_4CFE::
@@ -1917,7 +1917,7 @@ Jump_015_4D14::
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, Jump_015_4CFE
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
 
 Jump_015_4D1E::
     ld a, [wScreenStep]
@@ -1930,7 +1930,7 @@ Jump_015_4D1E::
 ; entry 48 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest
-BreedMenu_Case04_Case30::
+BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep::
 Jump_015_4D2B:: ; address name
     ld de, TileRect_15_761D
     ld hl, wWindowTileBuffer + $112
@@ -1979,7 +1979,7 @@ Jump_015_4D6E:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
     ld de, $01CC
@@ -1993,7 +1993,7 @@ Jump_015_4D6E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case33::
+BreedMenu_Case04_DrawPair72A9And72C5AndStep::
 Jump_015_4D96:: ; address name
     call DrawPair72A9And72C5AndStep
     call DrawGoldBoxAndStep_Bank15
@@ -2042,7 +2042,7 @@ Jump_015_4DB0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case3A::
+BreedMenu_Case04_DrawPair72A9And72C5AndStep_Case3A::
 Jump_015_4DE5:: ; address name
     call DrawPair72A9And72C5AndStep
     call DrawGoldBoxAndStep_Bank15
@@ -2090,7 +2090,7 @@ Jump_015_4E1D:: ; address name
     ld a, [hl]
     ldh [hTemp0], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared04
+    call BreedMenu_Shared02
     ld hl, wTextWindowTileLo
     xor a, a
     ld [hl+], a
@@ -2125,7 +2125,7 @@ Jump_015_4E47:: ; address name
     ld a, [wTextFlags]
     and a, a
     jr z, Jump_015_4E5F
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ret
 
 Jump_015_4E5F::
@@ -2137,7 +2137,7 @@ Jump_015_4E5F::
     ret
 
 Jump_015_4E6B::
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld a, [wLinkMode]
     and a, a
     jr z, Jump_015_4E7F
@@ -2152,7 +2152,7 @@ Jump_015_4E7F::
     ret
 
 Jump_015_4E87::
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld a, [wLinkMode]
     and a, a
     jr z, Jump_015_4E9C
@@ -2174,7 +2174,7 @@ Jump_015_4E9C::
     ret
 
 Jump_015_4EB1::
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld a, [wSelectedRecord]
     ld b, a
     farcall SetArg5ToListEntriesCell5
@@ -2508,27 +2508,27 @@ BreedMenu_Case05::
 Jump_015_50D1:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case05_Case00
+    dw BreedMenu_Case05_Case00_Sub01_Case00
     dw BreedMenu_Case05_Case01
     dw ClearTileRowsAndResetWindowAndStep
     dw BreedMenu_Case05_Case03
-    dw BreedMenu_Case05_Case04
+    dw BreedMenu_Case05_DrawRecordListPageSpeciesNames
     dw BreedMenu_Case05_Case05
     dw BreedMenu_Case05_Case06
     dw BreedMenu_Case05_Case07
     dw BreedMenu_Case05_Case08
-    dw BreedMenu_Case04_Case0B
+    dw BreedMenu_Case04_BlankWordTableTargets
     dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case05_Case0B
     dw BreedMenu_Case04_Case0E
     dw BreedMenu_Case05_Case0D
-    dw BreedMenu_Case05_Case0E
+    dw BreedMenu_Case05_LoadTile4990AndRun6320
     dw BreedMenu_Case05_Case0F
     dw BreedMenu_Case05_Case10
 
 ; entry 0 of the `rst $00` table in BreedMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case05_Case00::
+BreedMenu_Case05_Case00_Sub01_Case00::
 Jump_015_50F7:: ; address name
     call BreedMenu_Case05_Case00_Sub01
     ret
@@ -2642,7 +2642,7 @@ Jump_015_51AC::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-BreedMenu_Case05_Case04::
+BreedMenu_Case05_DrawRecordListPageSpeciesNames::
 Jump_015_51D6:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -2749,7 +2749,7 @@ Jump_015_525F::
     xor a, a
     ld [rRAMG2], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared04
+    call BreedMenu_Shared02
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2779,7 +2779,7 @@ Jump_015_52BD:: ; address name
     ld [wArg1], a
     ld a, $0D
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld a, [wThreeOptionResult]
     or a, a
     jr z, Jump_015_52EB
@@ -2852,7 +2852,7 @@ Jump_015_5323::
 ; entry 11 of the `rst $00` table in BreedMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case04_Case0B::
+BreedMenu_Case04_BlankWordTableTargets::
 Jump_015_5358:: ; address name
     ld c, $03
     ld hl, Data_015_732D
@@ -3106,7 +3106,7 @@ Data_015_54E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; entry 14 of the `rst $00` table in BreedMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case05_Case0E::
+BreedMenu_Case05_LoadTile4990AndRun6320::
 Jump_015_54E6:: ; address name
     call LoadTile4990AndRun6320
     call BGMapAddressAtScroll_Bank15
@@ -3234,12 +3234,12 @@ Jump_015_55B7::
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu
+; runs the name entry screen (RunNameEntryStateWhenNotFading) on the record selected in list cell 4, and removes a record with DeleteSRAMRecordAndCompact (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, hTemp0, hTemp1, wSelectedRecord, wArg7, wScreenState
 ; writes: rRAMG2, rRAMB, wArg2, wArg3, wArg4, wArg5, wSelectedRecord, wArg1, ...
 ; points at: wNameGlyphBuf, sRecords, wRecordBufA
-BreedMenu_Case06::
+BreedMenu_NameEntry::
 Jump_015_55D2:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -3357,52 +3357,52 @@ Jump_015_569E::
     ld [wScreenState], a
     ret
 
-; entry 7 of the `rst $00` table in BreedMenu
+; reloads the map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-BreedMenu_Case07::
+BreedMenu_ReturnToMap::
 Jump_015_56B0:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw BreedMenu_Case07_Case00
+    dw BreedMenu_ReturnToMap_DecompressToVRAM
     dw DrawPair72A9And72C5AndStep_570C
-    dw BreedMenu_Case07_Case02
-    dw BreedMenu_Case07_Case03
-    dw BreedMenu_Case07_Case04
+    dw BreedMenu_ReturnToMap_Case02
+    dw BreedMenu_ReturnToMap_Case03
+    dw BreedMenu_ReturnToMap_Case04
     dw BreedMenu_Case04_Case3E
-    dw BreedMenu_Case07_Case06
+    dw BreedMenu_ReturnToMap_Case06
     dw DrawGoldBoxAndStep_Bank15
-    dw BreedMenu_Case07_Case08
-    dw BreedMenu_Case07_Case09
-    dw BreedMenu_Case07_Case0A
-    dw BreedMenu_Case07_Case0B
-    dw BreedMenu_Case07_Case0C
-    dw BreedMenu_Case07_Case0D
-    dw BreedMenu_Case07_ToDrawRecordListPageNames
-    dw BreedMenu_Case07_Case0F
-    dw BreedMenu_Case07_Case10
-    dw BreedMenu_Case07_Case11
-    dw BreedMenu_Case07_Case12
-    dw BreedMenu_Case07_Case13
-    dw BreedMenu_Case07_Case14
-    dw BreedMenu_Case07_Case15
+    dw BreedMenu_ReturnToMap_Case08
+    dw BreedMenu_ReturnToMap_BlankWordTableTargets
+    dw BreedMenu_ReturnToMap_Case0A
+    dw BreedMenu_ReturnToMap_Case0B
+    dw BreedMenu_ReturnToMap_Case0C
+    dw BreedMenu_ReturnToMap_Case0D
+    dw BreedMenu_ReturnToMap_ToDrawRecordListPageNames
+    dw BreedMenu_ReturnToMap_Case0F
+    dw BreedMenu_ReturnToMap_Case10
+    dw BreedMenu_ReturnToMap_Case11
+    dw BreedMenu_ReturnToMap_DrawScreenBufferRect_Bank15
+    dw BreedMenu_ReturnToMap_Case13
+    dw BreedMenu_ReturnToMap_Case14
+    dw BreedMenu_ReturnToMap_Case15
     dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case05_Case0B
     dw BreedMenu_Case04_Case0E
-    dw BreedMenu_Case07_Case19
-    dw BreedMenu_Case07_Case1A
-    dw BreedMenu_Case07_Case1B
-    dw BreedMenu_Case07_Case1C
-    dw BreedMenu_Case07_Case1D
-    dw BreedMenu_Case07_Case1E
-    dw BreedMenu_Case07_Case1F
-    dw BreedMenu_Case04_Case0B
+    dw BreedMenu_ReturnToMap_Case19
+    dw BreedMenu_ReturnToMap_DrawScreenBufferRect_Bank15_Case1A
+    dw BreedMenu_ReturnToMap_Case1B
+    dw BreedMenu_ReturnToMap_Case1C
+    dw BreedMenu_ReturnToMap_LoadPlayerAndFollowerSpriteGraphics
+    dw BreedMenu_ReturnToMap_Case1E
+    dw BreedMenu_ReturnToMap_Case1F
+    dw BreedMenu_Case04_BlankWordTableTargets
 
-; entry 0 of the `rst $00` table in BreedMenu_Case07
+; entry 0 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case07_Case00::
+BreedMenu_ReturnToMap_DecompressToVRAM::
 Jump_015_56F6:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -3415,7 +3415,7 @@ Jump_015_56F6:: ; address name
     ret
 
 ; runs Func_015_6374 for Data_015_72A9 and Data_015_72C5, then wD781 += 1 (E-0122)
-; 2 call sites from 2 routines (e.g. BreedMenu_Case07_Case1F, BreedMenu_Case07_Case15)
+; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_Case1F, BreedMenu_ReturnToMap_Case15)
 ; reads: wScreenStep
 ; writes: wScreenStep
 DrawPair72A9And72C5AndStep_570C::
@@ -3428,11 +3428,11 @@ Func_015_570C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in BreedMenu_Case07
+; entry 2 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hMapId, hFieldDrawFlags, wOBJPaletteUploadRequest, wScreenStep
-BreedMenu_Case07_Case02::
+BreedMenu_ReturnToMap_Case02::
 Jump_015_571D:: ; address name
     ld a, $0D
     ldh [hMapId], a
@@ -3450,12 +3450,12 @@ Jump_015_571D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in BreedMenu_Case07
+; entry 3 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
 ; points at: wScreenTileBuffer, wWindowTileBuffer, wScreenAttrBuffer, wWindowAttrBuffer
-BreedMenu_Case07_Case03::
+BreedMenu_ReturnToMap_Case03::
 Jump_015_5746:: ; address name
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -3495,12 +3495,12 @@ Jump_015_577C::
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in BreedMenu_Case07
+; entry 4 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
 ; points at: wNameGlyphBuf, wTextBuf0
-BreedMenu_Case07_Case04::
+BreedMenu_ReturnToMap_Case04::
 Jump_015_57A4:: ; address name
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
@@ -3544,7 +3544,7 @@ Jump_015_57CB:: ; address name
     ld b, $1F
     ld c, $10
     call CopyFromBankWaitVRAM
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld a, $6C
     call QueueSoundEffect
     ld de, TileRect_15_73AB
@@ -3578,11 +3578,11 @@ Jump_015_5811:: ; address name
     ld [wTwoChoiceCursor], a
     ret
 
-; entry 6 of the `rst $00` table in BreedMenu_Case07
+; entry 6 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor
-BreedMenu_Case07_Case06::
+BreedMenu_ReturnToMap_Case06::
 Jump_015_5823:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3595,7 +3595,7 @@ Jump_015_5823:: ; address name
     ret
 
 Jump_015_5837::
-    call BreedMenu_Shared01
+    call BreedMenu_ReturnToMap_Shared01
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3622,22 +3622,22 @@ Jump_015_5850::
     ld [wScriptStartRequest], a
     ret
 
-; only called from routines of BreedMenu (E-0098)
-; 2 call sites from 2 routines (e.g. BreedMenu_Case07_Case0A, BreedMenu_Case07_Case06)
+; only called from routines of BreedMenu_ReturnToMap (E-0098)
+; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_Case0A, BreedMenu_ReturnToMap_Case06)
 ; reads: wIsCGB
-BreedMenu_Shared01::
+BreedMenu_ReturnToMap_Shared01::
 Func_015_586D:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $AE
     ld c, $05
-    call BreedMenu_Shared01_Sub01
+    call BreedMenu_ReturnToMap_Shared01_Sub01
     ld a, [wIsCGB]
     and a, a
     jr z, Jump_015_5889
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $05
-    call BreedMenu_Shared01_Sub02
+    call BreedMenu_ReturnToMap_Shared01_Sub02
 
 Jump_015_5889::
     call BGMapAddressAtScroll_Bank15
@@ -3646,9 +3646,9 @@ Jump_015_5889::
     call DrawScreenBufferRect_Bank15
     ret
 
-; only called from BreedMenu_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Shared01)
-BreedMenu_Shared01_Sub01::
+; only called from BreedMenu_ReturnToMap_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_Shared01)
+BreedMenu_ReturnToMap_Shared01_Sub01::
 Func_015_5896:: ; address name
     push hl
     push de
@@ -3668,12 +3668,12 @@ Func_015_5896:: ; address name
 
 Jump_015_58B0::
     dec c
-    jr nz, BreedMenu_Shared01_Sub01
+    jr nz, BreedMenu_ReturnToMap_Shared01_Sub01
     ret
 
-; only called from BreedMenu_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Shared01)
-BreedMenu_Shared01_Sub02::
+; only called from BreedMenu_ReturnToMap_Shared01 (E-0047)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_Shared01)
+BreedMenu_ReturnToMap_Shared01_Sub02::
 Func_015_58B4:: ; address name
     push hl
     push de
@@ -3693,14 +3693,14 @@ Func_015_58B4:: ; address name
 
 Jump_015_58CE::
     dec c
-    jr nz, BreedMenu_Shared01_Sub02
+    jr nz, BreedMenu_ReturnToMap_Shared01_Sub02
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu_Case07
+; entry 8 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case07_Case08::
+BreedMenu_ReturnToMap_Case08::
 Jump_015_58D2:: ; address name
     ld de, Tiles1Plus2D0Tiles_1F_43C0
     ld hl, vTiles1 + $2D0
@@ -3733,10 +3733,10 @@ Jump_015_58D2:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 9 of the `rst $00` table in BreedMenu_Case07
+; entry 9 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep, wScreenState, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case07_Case09::
+BreedMenu_ReturnToMap_BlankWordTableTargets::
 Jump_015_5920:: ; address name
     ld c, $03
     ld hl, Data_015_732D
@@ -3752,12 +3752,12 @@ Jump_015_5920:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 10 of the `rst $00` table in BreedMenu_Case07
+; entry 10 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wSelectedRecord, wScreenStep, wTwoChoiceCursor
 ; writes: wPartyCount, rRAMG2, rRAMB, wOBJPaletteUploadRequest, wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 ; points at: wPartyList
-BreedMenu_Case07_Case0A::
+BreedMenu_ReturnToMap_Case0A::
 Jump_015_593E:: ; address name
     ld a, [wPartyCount]
     cp a, $03
@@ -3789,7 +3789,7 @@ Jump_015_593E:: ; address name
     ld a, [wScreenStep]
     sub a, $03
     ld [wScreenStep], a
-    call BreedMenu_Shared01
+    call BreedMenu_ReturnToMap_Shared01
     xor a, a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3812,11 +3812,11 @@ Jump_015_5998::
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in BreedMenu_Case07
+; entry 11 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wListPageIndex, wListCursor, wCursorBlinkAE, wScreenStep
-BreedMenu_Case07_Case0B::
+BreedMenu_ReturnToMap_Case0B::
 Jump_015_59B8:: ; address name
     ld de, TileRect_15_59E5
     ld hl, wWindowTileBuffer + $64
@@ -3826,7 +3826,7 @@ Jump_015_59B8:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRect_Bank15
-    call BreedMenu_Case07_Case0B_Sub01
+    call BreedMenu_ReturnToMap_Case0B_Sub01
     xor a, a
     ld [wListPageIndex], a
     ld [wListCursor], a
@@ -3850,9 +3850,9 @@ Data_015_59E5:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; only called from BreedMenu_Case07_Case0B (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Case07_Case0B)
-BreedMenu_Case07_Case0B_Sub01::
+; only called from BreedMenu_ReturnToMap_Case0B (E-0047)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_Case0B)
+BreedMenu_ReturnToMap_Case0B_Sub01::
 Func_015_5A2D:: ; address name
     ld c, $10
 
@@ -3902,21 +3902,21 @@ Jump_015_5A55::
     jr nz, Jump_015_5A2F
     ret
 
-; address loaded by BreedMenu_Case07_Case0B_Sub01
+; address loaded by BreedMenu_ReturnToMap_Case0B_Sub01
 Data_015_5A67:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A3, $50, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14, $25
 
-; address loaded by BreedMenu_Case07_Case0B_Sub01
+; address loaded by BreedMenu_ReturnToMap_Case0B_Sub01
 Data_015_5A77:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $8E, $E0, $8E, $F0, $8E, $50, $8F, $60, $8F, $70, $8F, $D0, $8F, $E0, $8F
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; entry 12 of the `rst $00` table in BreedMenu_Case07
+; entry 12 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-BreedMenu_Case07_Case0C::
+BreedMenu_ReturnToMap_Case0C::
 Jump_015_5A97:: ; address name
     ld hl, vTiles1 + $500
     ld bc, $0F01
@@ -3941,11 +3941,11 @@ Jump_015_5A97:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in BreedMenu_Case07
+; entry 13 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyList, wSelectedRecord, wScreenStep
 ; writes: wListEntries, wGrid2CursorX, wGrid2CursorY, wScreenArea, wListCount, wScreenStep
-BreedMenu_Case07_Case0D::
+BreedMenu_ReturnToMap_Case0D::
 Jump_015_5ACA:: ; address name
     ld a, [wPartyList]
     ld [wListEntries], a
@@ -3963,18 +3963,18 @@ Jump_015_5ACA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in BreedMenu_Case07
+; entry 14 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case07_ToDrawRecordListPageNames::
+BreedMenu_ReturnToMap_ToDrawRecordListPageNames::
 Jump_015_5AF5:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; entry 15 of the `rst $00` table in BreedMenu_Case07
+; entry 15 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-BreedMenu_Case07_Case0F::
+BreedMenu_ReturnToMap_Case0F::
 Jump_015_5AFC:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3999,12 +3999,12 @@ Jump_015_5AFC:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 16 of the `rst $00` table in BreedMenu_Case07
+; entry 16 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ; points at: wTextWindowTileLo
-BreedMenu_Case07_Case10::
+BreedMenu_ReturnToMap_Case10::
 Jump_015_5B33:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -4022,17 +4022,17 @@ Jump_015_5B33:: ; address name
     ld [hl], $12
     ld hl, wWindowTileBuffer + $78
     ld c, $28
-    call BreedMenu_Case07_Case10_Sub01
+    call BreedMenu_ReturnToMap_Case10_Sub01
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 17 of the `rst $00` table in BreedMenu_Case07
+; entry 17 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-BreedMenu_Case07_Case11::
+BreedMenu_ReturnToMap_Case11::
 Jump_015_5B62:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -4047,11 +4047,11 @@ Jump_015_5B62:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 18 of the `rst $00` table in BreedMenu_Case07
+; entry 18 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case07_Case12::
+BreedMenu_ReturnToMap_DrawScreenBufferRect_Bank15::
 Jump_015_5B82:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140B
@@ -4062,11 +4062,11 @@ Jump_015_5B82:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 19 of the `rst $00` table in BreedMenu_Case07
+; entry 19 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, ...
-BreedMenu_Case07_Case13::
+BreedMenu_ReturnToMap_Case13::
 Jump_015_5B96:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -4136,11 +4136,11 @@ Jump_015_5C10::
     ld [wScreenStep], a
     ret
 
-; entry 20 of the `rst $00` table in BreedMenu_Case07
+; entry 20 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case07_Case14::
+BreedMenu_ReturnToMap_Case14::
 Jump_015_5C19:: ; address name
     ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles2 + $770
@@ -4159,7 +4159,7 @@ Jump_015_5C19:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0601
@@ -4169,10 +4169,10 @@ Jump_015_5C19:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 21 of the `rst $00` table in BreedMenu_Case07
+; entry 21 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case07_Case15::
+BreedMenu_ReturnToMap_Case15::
 Jump_015_5C5B:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -4189,11 +4189,11 @@ Jump_015_5C5B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 25 of the `rst $00` table in BreedMenu_Case07
+; entry 25 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-BreedMenu_Case07_Case19::
+BreedMenu_ReturnToMap_Case19::
 Jump_015_5C7D:: ; address name
     ld de, Tiles1Plus6E0Tiles_1F_4180
     ld hl, vTiles2 + $770
@@ -4212,7 +4212,7 @@ Jump_015_5C7D:: ; address name
     ld [wArg1], a
     ld a, $08
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld de, TileRect_15_73AB
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
@@ -4233,10 +4233,10 @@ Jump_015_5C7D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 26 of the `rst $00` table in BreedMenu_Case07
+; entry 26 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-BreedMenu_Case07_Case1A::
+BreedMenu_ReturnToMap_DrawScreenBufferRect_Bank15_Case1A::
 Jump_015_5CDC:: ; address name
     call BGMapAddressAtScroll_Bank15
     ld bc, $140D
@@ -4250,12 +4250,12 @@ Jump_015_5CDC:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 27 of the `rst $00` table in BreedMenu_Case07
+; entry 27 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep, wScriptCommandType, wScriptStartRequest
 ; points at: wListEntries, wNameGlyphBuf, wTextBuf0
-BreedMenu_Case07_Case1B::
+BreedMenu_ReturnToMap_Case1B::
 Jump_015_5CF7:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -4295,12 +4295,12 @@ Jump_015_5D2A::
     ld [wScriptStartRequest], a
     ret
 
-; entry 28 of the `rst $00` table in BreedMenu_Case07
+; entry 28 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
 ; points at: wListEntries, wPartyList
-BreedMenu_Case07_Case1C::
+BreedMenu_ReturnToMap_Case1C::
 Jump_015_5D3E:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -4376,11 +4376,11 @@ Jump_015_5DB3::
     ld [wScreenStep], a
     ret
 
-; entry 29 of the `rst $00` table in BreedMenu_Case07
+; entry 29 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wOBJPaletteUploadRequest, wScreenStep
-BreedMenu_Case07_Case1D::
+BreedMenu_ReturnToMap_LoadPlayerAndFollowerSpriteGraphics::
 Jump_015_5DBB:: ; address name
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7F
@@ -4390,10 +4390,10 @@ Jump_015_5DBB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 30 of the `rst $00` table in BreedMenu_Case07
+; entry 30 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1, wArg2
-BreedMenu_Case07_Case1E::
+BreedMenu_ReturnToMap_Case1E::
 Jump_015_5DCE:: ; address name
     ld c, $0D
     ld hl, $01CC
@@ -4402,7 +4402,7 @@ Jump_015_5DCE:: ; address name
     ld [wArg1], a
     ld a, $14
     ld [wArg2], a
-    call BreedMenu_Shared03
+    call Func_015_6791
     ld de, Tiles1Plus2D0Tiles_1F_43C0
     ld hl, vTiles1 + $2D0
     ld b, $1F
@@ -4420,11 +4420,11 @@ Jump_015_5DCE:: ; address name
     call DrawGoldBoxAndStep_Bank15
     ret
 
-; entry 31 of the `rst $00` table in BreedMenu_Case07
+; entry 31 of the `rst $00` table in BreedMenu_ReturnToMap
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX
 ; writes: wScriptCommandType, wScriptStartRequest
-BreedMenu_Case07_Case1F::
+BreedMenu_ReturnToMap_Case1F::
 Jump_015_5E0C:: ; address name
     call DrawPair72A9And72C5AndStep_570C
     ld a, [wGridCursorX]
@@ -4441,11 +4441,11 @@ Jump_015_5E0C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 8 of the `rst $00` table in BreedMenu
+; saves the script return position, dispatches talk event group $17 index 0, then sets wScreenState = 6 (BreedMenu_NameEntry) (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, wScreenState, wNameEntryState, ...
-BreedMenu_Case08::
+BreedMenu_TalkEvent17ThenNameEntry::
 Jump_015_5E30:: ; address name
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -4467,11 +4467,11 @@ Jump_015_5E30:: ; address name
     ld [wNameEntrySubState], a
     ret
 
-; entry 9 of the `rst $00` table in BreedMenu
+; copies word $0B and byte $6D of the record in list cell 4 to wChildRecord, saves the script return, dispatches talk event group $16, then sets wScreenState = 6 (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, hTemp0, hTemp1, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi
 ; writes: rRAMG2, rRAMB, wChildRecord, wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, ...
-BreedMenu_Case09::
+BreedMenu_CopyToChildThenTalkEvent16::
 Jump_015_5E62:: ; address name
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -4518,12 +4518,12 @@ Jump_015_5E62:: ; address name
     ld [wNameEntrySubState], a
     ret
 
-; entry 10 of the `rst $00` table in BreedMenu
+; saves the script return position and dispatches talk event group $15 index 0 (E-0277)
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank
 ; points at: wScreenState
-BreedMenu_Case0A::
+BreedMenu_TalkEvent15::
 Jump_015_5ECC:: ; address name
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -4550,10 +4550,10 @@ Jump_015_5EF6:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw BreedMenu_Case0B_Case00
-    dw BreedMenu_Case07_Case00
+    dw BreedMenu_ReturnToMap_DecompressToVRAM
     dw DrawPair72A9And72C5AndStep_570C
-    dw BreedMenu_Case07_Case02
-    dw BreedMenu_Case07_Case03
+    dw BreedMenu_ReturnToMap_Case02
+    dw BreedMenu_ReturnToMap_Case03
     dw BreedMenu_Case0B_Case05
     dw BreedMenu_Case0B_Case06
     dw BreedMenu_Case0B_Case07
@@ -4744,12 +4744,12 @@ Jump_015_6028:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw BreedMenu_Case0F_Case00
-    dw BreedMenu_Case0F_Case01
+    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
     dw BreedMenu_Case0F_ToClearTileRowsAndResetWindowAndStep
     dw BreedMenu_Case05_Case0D
-    dw BreedMenu_Case0F_Case04
+    dw BreedMenu_Case0F_DrawRecordListPageSpeciesNames
     dw LoadTile4990AndRun6320
-    dw BreedMenu_Case0F_Case06
+    dw BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15
     dw BreedMenu_Case0F_Case07
     dw BreedMenu_Case0F_Case08
 
@@ -4778,7 +4778,7 @@ Jump_015_603E:: ; address name
 
 ; entry 1 of the `rst $00` table in BreedMenu_Case0F
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case0F_Case01::
+BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15::
 Jump_015_6063:: ; address name
     ld hl, TileCopyDestList_15_72E1
     ld de, TileCopySrcList_15_72F1
@@ -4826,7 +4826,7 @@ Jump_015_60A4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-BreedMenu_Case0F_Case04::
+BreedMenu_Case0F_DrawRecordListPageSpeciesNames::
 Jump_015_60AC:: ; address name
     ld a, $01
     ld [wArg5], a
@@ -4837,7 +4837,7 @@ Jump_015_60AC:: ; address name
     ret
 
 ; copies a tile from bank $1F to vTiles1 + $4E0, runs Func_01D_6320 with wD7F1 = wD7F2 = 1, then wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. BreedMenu_Case05_Case0E)
+; 1 call site from 1 routine (e.g. BreedMenu_Case05_LoadTile4990AndRun6320)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 LoadTile4990AndRun6320::
@@ -4860,7 +4860,7 @@ Func_015_60BF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case0F_Case06::
+BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15::
 Jump_015_60E2:: ; address name
     ld a, [wListCursor]
     ld b, $BC
@@ -4896,7 +4896,7 @@ Jump_015_6101:: ; address name
     xor a, a
     ld [rRAMG2], a
     call TenTimesTemp0PlusTenToDigits
-    call BreedMenu_Shared04
+    call BreedMenu_Shared02
     xor a, a
     ld [wStringCategory], a
     ld a, $1B
@@ -4969,12 +4969,12 @@ Jump_015_61B6:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw BreedMenu_Case0F_Case00
-    dw BreedMenu_Case0F_Case01
+    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
     dw BreedMenu_Case10_Case02
-    dw BreedMenu_Case07_ToDrawRecordListPageNames
-    dw BreedMenu_Case07_Case0F
-    dw BreedMenu_Case07_Case10
-    dw BreedMenu_Case07_Case11
+    dw BreedMenu_ReturnToMap_ToDrawRecordListPageNames
+    dw BreedMenu_ReturnToMap_Case0F
+    dw BreedMenu_ReturnToMap_Case10
+    dw BreedMenu_ReturnToMap_Case11
     dw BreedMenu_Case04_Case3D
     dw BreedMenu_Case10_Case08
     dw BreedMenu_Case0F_Case08
@@ -5025,7 +5025,7 @@ Jump_015_61F5:: ; address name
 ; writes: wScreenStep
 BreedMenu_Case04_Case3D::
 Jump_015_6203:: ; address name
-    call BreedMenu_Shared02
+    call BreedMenu_Shared01
     ld de, Tiles2Plus700Tiles_1F_4230
     ld hl, vTiles1 + $4E0
     ld b, $1F
@@ -5078,8 +5078,8 @@ Jump_015_625C:: ; address name
     dw BreedMenu_Case0F_Case00
     dw BreedMenu_Case12_Case01
     dw DrawPair72A9And72C5AndStep
-    dw BreedMenu_Case12_Case03
-    dw BreedMenu_Case12_Case04
+    dw BreedMenu_Case12_FillTilesBxC
+    dw BreedMenu_Case12_ClearThreeTileRows
     dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case12_ToDrawRecordListPageNames
     dw BreedMenu_Case12_Case07
@@ -5102,7 +5102,7 @@ Jump_015_6276:: ; address name
     ld a, [wSelectedRecord]
     ld [wArg1], a
     farcall DrawRecordNameAndSpeciesNameTiles
-    call BreedMenu_Shared06
+    call BreedMenu_Shared04
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5141,12 +5141,12 @@ Jump_015_629F:: ; address name
 BreedMenu_Case12_Case01::
 Jump_015_62C9:: ; address name
     call LoadRecordSelectedRecordByte0EBit0
-    call BreedMenu_Shared05
+    call BreedMenu_Shared03
     jp Jump_015_62F7
 
 ; entry 4 of the `rst $00` table in BreedMenu_Case12
 ; no direct call (reached through a table, a jump or a vector)
-BreedMenu_Case12_Case04::
+BreedMenu_Case12_ClearThreeTileRows::
 Jump_015_62D2:: ; address name
     call ClearThreeTileRows
     call DrawListEntriesCell5RecordNamesAndStep
@@ -5160,9 +5160,9 @@ Jump_015_62D9:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw BreedMenu_Case0F_Case00
-    dw BreedMenu_Case0F_Case01
+    dw BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15
     dw BreedMenu_Case11_Case02
-    dw BreedMenu_Case12_Case03
+    dw BreedMenu_Case12_FillTilesBxC
     dw BreedMenu_Case12_ToDrawRecordListPageNames
     dw BreedMenu_Case04_Case04
     dw BreedMenu_Case04_Case05
@@ -5209,7 +5209,7 @@ Jump_015_631B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case12_Case03::
+BreedMenu_Case12_FillTilesBxC::
 Jump_015_6336:: ; address name
     ld hl, vTiles1 + $240
     ld bc, $0C01
@@ -5248,7 +5248,7 @@ Func_015_6360:: ; address name
     ret
 
 ; for each entry from wD785 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then clears wD784/5 (E-0125)
-; 6 call sites from 6 routines (e.g. CloseBreedMenu_Case01, BreedMenu_Case04_Case0D, DrawPair72A9And72C5AndStep_570C, BreedMenu_Case0F_Case01, ...)
+; 6 call sites from 6 routines (e.g. CloseBreedMenu_Case01, BreedMenu_Case04_Case0D, DrawPair72A9And72C5AndStep_570C, BreedMenu_Case0F_CopyGlyphTileListFromBank1F_Bank15, ...)
 ; reads: wGlyphListStart
 ; writes: wGlyphListStart, wGlyphListPos
 CopyGlyphTileListFromBank1F_Bank15::
@@ -5322,7 +5322,7 @@ Func_015_63B8:: ; address name
 ; reads: wLinkMode, wScreenState, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wArg5, wArg6
 ; points at: sSavedPlayerName
-BreedMenu_Shared02::
+BreedMenu_Shared01::
 Func_015_63D3:: ; address name
     ld a, [wLinkMode]
     and a, a
@@ -5424,7 +5424,7 @@ Func_015_645F:: ; address name
     ret
 
 ; up/down moves wD786 over three options with sound $69; A chooses (option 2 cancels), sets wTwoChoiceCursor and requests script $80; B cancels (E-0129)
-; 2 call sites from 2 routines (e.g. BreedMenu_ToHandleThreeOptionMenuInput_15, EggServiceMenu_Case02)
+; 2 call sites from 2 routines (e.g. BreedMenu_ToHandleThreeOptionMenuInput_15, EggServiceMenu_HandleThreeOptionMenuInput_15)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wGridCursorX, wScreenState
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wThreeOptionResult, wScreenState, wListCursor, wChoiceCursor, wListPageIndex, ...
 HandleThreeOptionMenuInput_15::
@@ -5581,12 +5581,12 @@ Jump_015_6548::
 Data_015_6566:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00
 
-; only called from BreedMenu_Case07_Case10 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Case07_Case10)
+; only called from BreedMenu_ReturnToMap_Case10 (E-0047)
+; 1 call site from 1 routine (e.g. BreedMenu_ReturnToMap_Case10)
 ; reads: hTemp0, rSTAT, wPartyCount
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
-BreedMenu_Case07_Case10_Sub01::
+BreedMenu_ReturnToMap_Case10_Sub01::
 Func_015_656C:: ; address name
     ld b, $00
 
@@ -5637,7 +5637,7 @@ Jump_015_65AD::
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 45 call sites from 37 routines (e.g. BreedMenu_Case01_Case02, BreedMenu_Case04_Case33, BreedMenu_Case04_Case30, DrawBottomBoxForLinkAndSetScreenSubStep, ...)
+; 45 call sites from 37 routines (e.g. BreedMenu_Setup_Case02, BreedMenu_Case04_DrawPair72A9And72C5AndStep, BreedMenu_Case04_DrawRect70C5IfLinkModeAndStep, DrawBottomBoxForLinkAndSetScreenSubStep, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank15::
@@ -5695,7 +5695,7 @@ Jump_015_65DF::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 unchanged when wStringIndex is $10-$12; otherwise HL + $1C1, replaced by $99C1 when that is $9B61 (E-0062)
-; 41 call sites from 35 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Case01_Case02, BreedMenu_Case04_Case3B, BreedMenu_Case04_Case34, ...)
+; 41 call sites from 35 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Setup_Case02, BreedMenu_Case04_Case3B, BreedMenu_Case04_Case34, ...)
 ; reads: wStringIndex, wTextCursorHi, wTextCursorLo, wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -5761,7 +5761,7 @@ Jump_015_6634::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 45 call sites from 39 routines (e.g. CloseBreedMenu_Case00, DrawArrowTileBCAtGridCursorXEntry_Bank15, BreedMenu_Case01_Case02, BreedMenu_Case04_Case3B, ...)
+; 45 call sites from 39 routines (e.g. CloseBreedMenu_Case00, DrawArrowTileBCAtGridCursorXEntry_Bank15, BreedMenu_Setup_Case02, BreedMenu_Case04_Case3B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank15::
 Func_015_6655:: ; address name
@@ -5831,7 +5831,7 @@ Jump_015_66AE::
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 6 call sites from 5 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Case00, BreedMenu_Shared03, BreedMenu_Shared01_Sub01, ...)
+; 6 call sites from 5 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Init, Func_015_6791, BreedMenu_ReturnToMap_Shared01_Sub01, ...)
 CopyBytesDEToHL_Bank15::
 Func_015_66AF:: ; address name
     ld a, [de]
@@ -5844,7 +5844,7 @@ Func_015_66AF:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 6 call sites from 5 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Case00, BreedMenu_Shared03, BreedMenu_Shared01_Sub02, ...)
+; 6 call sites from 5 routines (e.g. CloseBreedMenu_Case00, BreedMenu_Init, Func_015_6791, BreedMenu_ReturnToMap_Shared01_Sub02, ...)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank15::
 Func_015_66B8:: ; address name
@@ -5880,7 +5880,7 @@ Func_015_66CA:: ; address name
     ret
 
 ; only called from BreedMenu_Case04_Case13 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Case04_Case13)
+; 1 call site from 1 routine (e.g. BreedMenu_Case04_Case13_Sub01_Case13)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
@@ -5891,7 +5891,7 @@ Func_015_66D8:: ; address name
     jr Jump_015_66E4
 
 ; only called from BreedMenu_Case05_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. BreedMenu_Case05_Case00)
+; 1 call site from 1 routine (e.g. BreedMenu_Case05_Case00_Sub01_Case00)
 ; reads: wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wArg1, wArg2, wGlyphListPos, wGlyphListStart
 ; points at: wScreenStep
@@ -6032,12 +6032,10 @@ Jump_015_6783::
     jr nz, Jump_015_6782
     ret
 
-; only called from routines of BreedMenu (E-0098)
 ; 9 call sites from 8 routines (e.g. BreedMenu_Case04_Case31, BreedMenu_Case04_Case1F, BreedMenu_Case04_Case09, BreedMenu_Case04_Case00, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-BreedMenu_Shared03::
-Func_015_6791:: ; address name
+Func_015_6791::
     push bc
     push hl
     push de
@@ -6093,7 +6091,7 @@ Jump_015_67D2::
 
 Jump_015_67E1::
     dec c
-    jr nz, BreedMenu_Shared03
+    jr nz, Func_015_6791
     ret
 
 ; HL = table of addresses, C = count: stores tile $C3 at the address in each of the first C entries (StoreBAtWordTableEntry_Bank15) (E-0074)
@@ -6154,7 +6152,7 @@ Func_015_680F:: ; address name
 ; only called from routines of BreedMenu (E-0098)
 ; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case3C, BreedMenu_Case05_Case06, BreedMenu_Case0F_Case07)
 ; points at: wArg4, wTextBuf0
-BreedMenu_Shared04::
+BreedMenu_Shared02::
 Func_015_6822:: ; address name
     ld hl, wArg4
     ld de, wTextBuf0
@@ -6209,7 +6207,7 @@ Func_015_683C:: ; address name
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = wD7F1, then LoadFamilyIconTileForWorkBuf (E-0122)
-; 5 call sites from 4 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_Case07_Case0F, BreedMenu_Case04_Case04, BreedMenu_Case12_Case09)
+; 5 call sites from 4 routines (e.g. DrawListEntriesCell5IconAndLevelAndStep, BreedMenu_ReturnToMap_Case0F, BreedMenu_Case04_Case04, BreedMenu_Case12_Case09)
 ; reads: hTemp0, wArg1
 ; writes: rRAMG2, rRAMB, wWorkBuf
 LoadFamilyIconTileForRecordB_Bank15::
@@ -6365,7 +6363,7 @@ Data_015_6937:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wArg1
-BreedMenu_Shared05::
+BreedMenu_Shared03::
 Func_015_693F:: ; address name
     ld hl, wListEntries
     ld b, $1E
@@ -6488,7 +6486,7 @@ Func_015_69C6:: ; address name
     ret
 
 ; clears 4 tiles at vTiles2 + $7C0, 3 at vTiles1 + $400 and 2 at vTiles1 + $4A0 (FillTilesBxC); falls through (E-0122)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_ToClearThreeTileRowsAndStep, BreedMenu_Case04_Case14, BreedMenu_Case12_Case04)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_ToClearThreeTileRowsAndStep, BreedMenu_Case04_ClearThreeTileRows, BreedMenu_Case12_ClearThreeTileRows)
 ClearThreeTileRows::
 Func_015_69E3:: ; address name
     ld hl, vTiles2 + $7C0
@@ -6517,7 +6515,7 @@ Func_015_69FE:: ; address name
     ret
 
 ; clears tile areas: 12 x 1 at vTiles1 + $240, 13 x 1 at vTiles1 + $700, 17 x 1 at vTiles1 + $4E0 (E-0117)
-; 1 call site from 1 routine (e.g. BreedMenu_Case04_Case01)
+; 1 call site from 1 routine (e.g. BreedMenu_Case04_ClearTileAreas1240_1700_14E0)
 ClearTileAreas1240_1700_14E0::
 Func_015_6A1A:: ; address name
     ld hl, vTiles1 + $240
@@ -6576,11 +6574,11 @@ Func_015_6A36:: ; address name
     ret
 
 ; only called from routines of BreedMenu (E-0098)
-; 2 call sites from 2 routines (e.g. BreedMenu_Case04_Case1B, BreedMenu_Case12_Case07)
+; 2 call sites from 2 routines (e.g. BreedMenu_Case04_BreedMenu_Shared04, BreedMenu_Case12_Case07)
 ; reads: wSelectedRecord, wArg5, wArg6
 ; writes: rRAMG2, rRAMB
 ; points at: sRecords, wRecordBufA, wRecordBufB
-BreedMenu_Shared06::
+BreedMenu_Shared04::
 Func_015_6A82:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -6660,7 +6658,7 @@ Func_015_6ACA:: ; address name
     ret
 
 ; clears the text tiles and, when the save is valid, shows the save details (player name, play time, party) from SRAM in the window (E-0131)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2B, KeyAppraisalMenu_Case03_Case0A, RunLinkSession8Exchange_Case01_Sub01_Table4_Case02)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case2B, KeyAppraisalMenu_Case03_ShowSaveFileInfoWindow, RunLinkSession8Exchange_Case01_Sub01_Table4_ShowSaveFileInfoWindow)
 ; reads: hTemp0, wDigits
 ; writes: wStringCategory, wStringIndex, wScreenSubStep, rRAMG2, rRAMB, wNameGlyphBuf, wArg3, wArg4, ...
 ; points at: wTextWindowTileLo, sSavedPlayerName, wNameGlyphBuf, wDigits, sSaveData, sSavedMapType, sSavedKeyIndex, sSavedKeyList, ...
@@ -7101,7 +7099,7 @@ Data_015_6E0E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; restores the player position, facing, wFollowerRecords, wC8F0-wC8FB and wCB86 from wC937-wC943 and clears wC936 (E-0121)
-; 2 call sites from 2 routines (e.g. BreedMenu_Case07_Case02, BreedMenu_Case07_Case00)
+; 2 call sites from 2 routines (e.g. BreedMenu_ReturnToMap_Case02, BreedMenu_ReturnToMap_DecompressToVRAM)
 ; reads: wSavedPlayerState
 ; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wSpriteSlots, wSavedPositionValid
 RestorePlayerPositionState::
@@ -7468,15 +7466,15 @@ Data_015_731B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8C, $10, $8C, $20, $8C, $70, $8C, $80, $8C, $90, $8C, $A0, $8C, $B0, $8C
     db $FF, $FF
 
-; address loaded by BreedMenu_Case04_Case0A, BreedMenu_Case04_Case34, BreedMenu_Case05_Case01, BreedMenu_Case04_Case0B and 4 more
+; address loaded by BreedMenu_Case04_Case0A, BreedMenu_Case04_Case34, BreedMenu_Case05_Case01, BreedMenu_Case04_BlankWordTableTargets and 4 more
 Data_015_732D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3
 
-; address loaded by BreedMenu_Case05_Case03, BreedMenu_Case05_Case06, BreedMenu_Case0F_Case06
+; address loaded by BreedMenu_Case05_Case03, BreedMenu_Case05_Case06, BreedMenu_Case0F_StoreBAtWordTableEntry_Bank15
 Data_015_7333:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $C3, $F8, $C3, $20, $C4, $48, $C4
 
-; address loaded by BreedMenu_Case07_Case0A, BreedMenu_Case07_Case19
+; address loaded by BreedMenu_ReturnToMap_Case0A, BreedMenu_ReturnToMap_Case19
 Data_015_733B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $27, $C4, $4F, $C4
 
@@ -7516,7 +7514,7 @@ Data_015_7379:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by BreedMenu_Case04_Case07, BreedMenu_Case04_Case08, BreedMenu_Case04_Case10, BreedMenu_Case04_Case12 and 6 more
+; address loaded by BreedMenu_Case04_DrawScreenBufferAtScrollAndIncScreenStep, BreedMenu_Case04_Case08, BreedMenu_Case04_Case10, BreedMenu_Case04_Case12 and 6 more
 Data_015_73A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4
 
@@ -7932,7 +7930,7 @@ Jump_015_77F2::
     ret
 
 ; only called from HibernateMenu_Case05_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_Case03)
+; 1 call site from 1 routine (e.g. HibernateMenu_Case05_Case03_Sub01_Case03)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries, sCompactRecords, sRecords

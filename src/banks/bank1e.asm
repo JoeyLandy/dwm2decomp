@@ -10,8 +10,8 @@ Func_01E_4001:: ; address name
     rst $00
     dw CloseMenuE9_Case00
     dw CloseMenuE9_ToCloseBreedMenu
-    dw CloseMenuE9_Case02
-    dw CloseMenuE9_ToCloseBreedMenu_Case03
+    dw CloseMenuE9_DecompressToVRAM
+    dw CloseMenuE9_ToCloseBreedMenu_CloseBreedMenu
 
 ; entry 0 of the `rst $00` table in CloseMenuE9
 ; no direct call (reached through a table, a jump or a vector)
@@ -53,7 +53,7 @@ Jump_01E_403F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenList
 ; writes: wScreenList
-CloseMenuE9_Case02::
+CloseMenuE9_DecompressToVRAM::
 Jump_01E_4046:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -69,13 +69,13 @@ Jump_01E_4046:: ; address name
 
 ; entry 3 of the `rst $00` table in CloseMenuE9
 ; no direct call (reached through a table, a jump or a vector)
-CloseMenuE9_ToCloseBreedMenu_Case03::
+CloseMenuE9_ToCloseBreedMenu_CloseBreedMenu::
 Jump_01E_4062:: ; address name
     farcall CloseBreedMenu
     ret
 
 ; implements script command type E8 (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I switched 0.' (mode 3, bank $1F strings); reached through ScriptCommandE8 in bank $10 (E-0038, E-0244)
-; 18 call sites from 18 routines (e.g. EggServiceMenu_Case0D, NpcBreedMenu_Case00, NpcBreedMenu_Case0C, ScriptCommandE8, ...)
+; 18 call sites from 18 routines (e.g. EggServiceMenu_Case0D, NpcBreedMenu_SwapMonstersMenu, NpcBreedMenu_Case0C, ScriptCommandE8, ...)
 ; reads: wScreenState
 SwapMonstersMenu::
 Func_01E_4069:: ; address name
@@ -84,7 +84,7 @@ Func_01E_4069:: ; address name
     dw SwapMonstersMenu_Case00
     dw SwapMonstersMenu_Case01
     dw SwapMonstersMenu_Case02
-    dw SwapMonstersMenu_Case03
+    dw SwapMonstersMenu_Case03_Sub01_Case03
     dw SwapMonstersMenu_Case04
     dw SwapMonstersMenu_Case05
     dw SwapMonstersMenu_Case06
@@ -377,7 +377,7 @@ Jump_01E_4203::
 
 ; entry 3 of the `rst $00` table in SwapMonstersMenu
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case03::
+SwapMonstersMenu_Case03_Sub01_Case03::
 Jump_01E_422D:: ; address name
     farcall SwapMonstersMenu_Case03_Sub01
     ret
@@ -395,15 +395,15 @@ Jump_01E_4234:: ; address name
     dw SwapMonstersMenu_Case04_Case03
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case04_Case05
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case09
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_Case0B
     dw SwapMonstersMenu_Case04_Case0C
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case04_Case0E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E_Case0E
     dw SwapMonstersMenu_Case04_Case0F
     dw SwapMonstersMenu_Case04_Case10
     dw SwapMonstersMenu_Case04_Case11
@@ -414,29 +414,29 @@ Jump_01E_4234:: ; address name
     dw CallFunc5C15InBank1F
     dw SwapMonstersMenu_Case04_Case17
     dw SwapMonstersMenu_Case04_Case02
-    dw SwapMonstersMenu_Case04_Case19
+    dw SwapMonstersMenu_Case04_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case04_Case1B
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case22
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_Case0B
     dw SwapMonstersMenu_Case04_Case0C
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case04_Case27
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E_Case27
     dw SwapMonstersMenu_Case04_Case28
     dw SwapMonstersMenu_Case04_Case29
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case30
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case04
@@ -467,7 +467,7 @@ Jump_01E_42A9::
     ret
 
 ; only called from SwapMonstersMenu_Case0E_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_Case07)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07)
 ; reads: wPartyCount, wScreenSubStep
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenSubStep
 ; points at: wPartyList
@@ -690,7 +690,7 @@ Jump_01E_4442::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-SwapMonstersMenu_Case04_Case06::
+SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E::
 Jump_01E_4463:: ; address name
     ld c, $0D
     ld hl, $01D4
@@ -709,7 +709,7 @@ Jump_01E_4463:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case04_Case07::
+SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E::
 Jump_01E_447F:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1072,7 +1072,7 @@ Jump_01E_46C1::
     db $2D, $01, $6D, $01
 
 ; copies box $4718 to wC410, runs Func_01E_75F2, blanks the cursor entry wD7AB of table $7880 and wD781 += 1 (E-0124)
-; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case04_Case29, SwapMonstersMenu_Case04_Case0F, SwapMonstersMenu_Case05_Case48, SwapMonstersMenu_Case05_Case2F, ...)
+; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case04_Case29, SwapMonstersMenu_Case04_Case0F, SwapMonstersMenu_Case05_Case48, SwapMonstersMenu_Case05_DrawBox4718AndMenuAndStep_1E, ...)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 DrawBox4718AndMenuAndStep_1E::
@@ -1107,7 +1107,7 @@ Data_01E_4718:: ; address name
 ; entry 14 of the `rst $00` table in SwapMonstersMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case04_Case0E::
+SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E_Case0E::
 Jump_01E_4720:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1475,7 +1475,7 @@ Jump_01E_49B2:: ; address name
     ret
 
 ; far-calls ListRecordsState1WithByte6EClear and continues with Func_01E_49F8 (E-0122)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case06_Case03, SwapMonstersMenu_Case09_Case15_Case03, SwapMonstersMenu_Case09_Case1B_Case03, SwapMonstersMenu_Case09_Case20_Case03)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case06_ListRecordsState1ThenContinue, SwapMonstersMenu_Case09_Case15_ListRecordsState1ThenContinue, SwapMonstersMenu_Case09_Case1B_ListRecordsState1ThenContinue, SwapMonstersMenu_Case09_Case20_Case03)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 ListRecordsState1ThenContinue::
@@ -1492,7 +1492,7 @@ Jump_01E_49F2:: ; address name
     farcall ListRecordsInUseWithByte6EClear
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case0E_Case01, SwapMonstersMenu_Case0E_Case06_Case03, SwapMonstersMenu_Case0E_Case15_Case03, SwapMonstersMenu_Case0E_Case1B_Case03, ...)
+; 5 call sites from 5 routines (e.g. SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05, SwapMonstersMenu_Case0E_Case06_SwapMonstersMenu_Shared02, SwapMonstersMenu_Case0E_Case15_Case03, SwapMonstersMenu_Case0E_Case1B_Case03, ...)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 SwapMonstersMenu_Shared02::
@@ -1559,7 +1559,7 @@ Jump_01E_4A39:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
-SwapMonstersMenu_Case04_Case19::
+SwapMonstersMenu_Case04_GetListEntriesCell5Address::
 Jump_01E_4A5E:: ; address name
     call GetListEntriesCell5Address
     ld a, [hl]
@@ -1656,7 +1656,7 @@ Jump_01E_4AE0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case04_Case21::
+SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D::
 Jump_01E_4AF1:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
     farcall ListPartyRecordsWithState2ToListEntries
@@ -1697,7 +1697,7 @@ Jump_01E_4B05:: ; address name
 ; entry 39 of the `rst $00` table in SwapMonstersMenu_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case04_Case27::
+SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E_Case27::
 Jump_01E_4B42:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -1890,29 +1890,29 @@ Jump_01E_4C78:: ; address name
     dw CallFunc5C15InBank1F
     dw SwapMonstersMenu_Case04_Case17
     dw SwapMonstersMenu_Case04_Case02
-    dw SwapMonstersMenu_Case04_Case19
+    dw SwapMonstersMenu_Case04_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case04_Case1B
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case30
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_Case0B
     dw SwapMonstersMenu_Case04_Case0C
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case05_Case14
+    dw SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case05_Case15
     dw SwapMonstersMenu_Case05_Case16
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case30
     dw SwapMonstersMenu_Case04_Case11
     dw SwapMonstersMenu_Case04_Case12
@@ -1922,16 +1922,16 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case04_Case03
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case05_Case25
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case05_Case29
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_Case0B
     dw SwapMonstersMenu_Case04_Case0C
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case05_Case2E
-    dw SwapMonstersMenu_Case05_Case2F
+    dw SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case2E
+    dw SwapMonstersMenu_Case05_DrawBox4718AndMenuAndStep_1E
     dw SwapMonstersMenu_Case05_Case30
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_Case14
@@ -1939,10 +1939,10 @@ Jump_01E_4C78:: ; address name
     dw CallFunc5C15InBank1F
     dw SwapMonstersMenu_Case04_Case17
     dw SwapMonstersMenu_Case04_Case02
-    dw SwapMonstersMenu_Case04_Case19
+    dw SwapMonstersMenu_Case04_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case05_Case39
-    dw SwapMonstersMenu_Case05_Case3A
+    dw SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case3A
     dw SwapMonstersMenu_Case05_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case05_Case3C
     dw SwapMonstersMenu_Case05_Case3D
@@ -1954,21 +1954,21 @@ Jump_01E_4C78:: ; address name
     dw SwapMonstersMenu_Case04_Case0B
     dw SwapMonstersMenu_Case04_Case0C
     dw DrawBox4718AndMenuAndStep_1E
-    dw SwapMonstersMenu_Case05_Case46
+    dw SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case46
     dw SwapMonstersMenu_Case05_Case47
     dw SwapMonstersMenu_Case05_Case48
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case30
 
 ; entry 20 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case05_Case14::
+SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E::
 Jump_01E_4D1C:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2136,7 +2136,7 @@ Jump_01E_4E0E:: ; address name
 ; entry 46 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case05_Case2E::
+SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case2E::
 Jump_01E_4E4B:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2185,7 +2185,7 @@ Jump_01E_4E66:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case05_Case3A::
+SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case3A::
 Jump_01E_4EA3:: ; address name
     ld de, $7A99
     ld hl, wWindowTileBuffer + $64
@@ -2336,7 +2336,7 @@ Jump_01E_4F94::
 ; entry 47 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor
-SwapMonstersMenu_Case05_Case2F::
+SwapMonstersMenu_Case05_DrawBox4718AndMenuAndStep_1E::
 Jump_01E_4F9D:: ; address name
     call DrawBox4718AndMenuAndStep_1E
     ld a, [wListCursor]
@@ -2362,7 +2362,7 @@ Jump_01E_4FAC:: ; address name
 ; entry 70 of the `rst $00` table in SwapMonstersMenu_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-SwapMonstersMenu_Case05_Case46::
+SwapMonstersMenu_Case05_DrawScreenBufferRect_Bank1E_Case46::
 Jump_01E_4FBB:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld bc, $140D
@@ -2470,22 +2470,22 @@ Jump_01E_506C:: ; address name
     dw CallFunc5C15InBank1F
     dw SwapMonstersMenu_Case06_Case08
     dw SwapMonstersMenu_Case04_Case02
-    dw SwapMonstersMenu_Case04_Case19
+    dw SwapMonstersMenu_Case04_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case06_Case0C
     dw SwapMonstersMenu_Case06_Case0D
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case06_Case13
-    dw SwapMonstersMenu_Case06_Case14
+    dw SwapMonstersMenu_Case06_SaveAndHideSpriteState_Bank1E
     dw SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame
     dw SwapMonstersMenu_Case06_Case16
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case06_Case18
-    dw SwapMonstersMenu_Case06_Case19
+    dw SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames
     dw SwapMonstersMenu_Case06_Case1A
     dw SwapMonstersMenu_Case06_Case1B
     dw SwapMonstersMenu_Case06_Case0D
@@ -2923,7 +2923,7 @@ Jump_01E_536A:: ; address name
 ; entry 20 of the `rst $00` table in SwapMonstersMenu_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenByteB2, wScreenByteB3, wScreenStep, wScreenSubStep, wScreenState
-SwapMonstersMenu_Case06_Case14::
+SwapMonstersMenu_Case06_SaveAndHideSpriteState_Bank1E::
 Jump_01E_540F:: ; address name
     ld a, $06
     ld [wScreenByteB2], a
@@ -3062,7 +3062,7 @@ Jump_01E_5556::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg5, wScreenStep
-SwapMonstersMenu_Case06_Case19::
+SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames::
 Jump_01E_556A:: ; address name
     xor a, a
     ld [wArg5], a
@@ -3238,15 +3238,15 @@ Jump_01E_568E:: ; address name
     dw CallFunc5C15InBank1F
     dw SwapMonstersMenu_Case06_Case08
     dw SwapMonstersMenu_Case04_Case02
-    dw SwapMonstersMenu_Case04_Case19
+    dw SwapMonstersMenu_Case04_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case04_Case04
     dw SwapMonstersMenu_Case06_Case0C
     dw SwapMonstersMenu_Case06_Case0D
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case06_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case0A
     dw SwapMonstersMenu_Case04_Case0B
@@ -3255,18 +3255,18 @@ Jump_01E_568E:: ; address name
     dw SwapMonstersMenu_Case07_Case18
     dw SwapMonstersMenu_Case07_Case19
     dw SwapMonstersMenu_Case07_Case1A
-    dw SwapMonstersMenu_Case04_Case06
-    dw SwapMonstersMenu_Case04_Case07
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
+    dw SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case04_Case13
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep_Case20
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case04_Case30
     dw SwapMonstersMenu_Case06_ToLoadTileList6DC4SixPerFrame
     dw SwapMonstersMenu_Case06_Case16
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case06_Case18
-    dw SwapMonstersMenu_Case06_Case19
+    dw SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames
     dw SwapMonstersMenu_Case06_Case1A
     dw SwapMonstersMenu_Case07_Case28
     dw SwapMonstersMenu_Case06_Case0D
@@ -3280,12 +3280,12 @@ Jump_01E_568E:: ; address name
     dw SwapMonstersMenu_Case07_Case31
     dw SwapMonstersMenu_Case07_Case32
     dw SwapMonstersMenu_Case07_Case33
-    dw SwapMonstersMenu_Case04_Case06
+    dw SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E
     dw SwapMonstersMenu_Case07_Case35
     dw SwapMonstersMenu_Case07_Case36
     dw SwapMonstersMenu_Case07_Case37
     dw SwapMonstersMenu_Case04_ToSwapMonstersMenu_Shared05AndStep
-    dw SwapMonstersMenu_Case04_Case21
+    dw SwapMonstersMenu_Case04_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_Case07_Case3A
 
 ; entry 2 of the `rst $00` table in SwapMonstersMenu_Case07
@@ -3900,30 +3900,30 @@ Jump_01E_5B50:: ; address name
     dw SwapMonstersMenu_Case09_Case05
     dw SwapMonstersMenu_Case09_Case06
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_Case09_Case08
+    dw SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_Case09_Case09
     dw ListRecordsAndDrawListEntriesCell5Panel
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case0D
     dw SwapMonstersMenu_Case09_ToFillTilesBxCAndStep
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case11
     dw SwapMonstersMenu_Case09_Case12
     dw SwapMonstersMenu_Case09_Case13
     dw SwapMonstersMenu_Case09_Case14
     dw SwapMonstersMenu_Case09_Case15
-    dw SwapMonstersMenu_Case09_Case16
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16
     dw SwapMonstersMenu_Case09_Case17
     dw SwapMonstersMenu_Case09_Case18
     dw SwapMonstersMenu_Case09_Case19
-    dw SwapMonstersMenu_Case09_Case1A
+    dw SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record
     dw SwapMonstersMenu_Case09_Case1B
     dw SwapMonstersMenu_Case09_Case1C
     dw SwapMonstersMenu_Case09_Case1D
     dw SwapMonstersMenu_Case09_Case1E
-    dw SwapMonstersMenu_Case09_Case1F
+    dw SwapMonstersMenu_Case09_DrawRecordParentNames
     dw SwapMonstersMenu_Case09_Case20
 
 ; entry 3 of the `rst $00` table in SwapMonstersMenu_Case09
@@ -3969,7 +3969,7 @@ Jump_01E_5BD0:: ; address name
     dw SwapMonstersMenu_Case09_Case06_Case00
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_Case09_Case06_Case03
+    dw SwapMonstersMenu_Case09_Case06_ListRecordsState1ThenContinue
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case09_Case06
 ; no direct call (reached through a table, a jump or a vector)
@@ -4029,7 +4029,7 @@ Jump_01E_5C16::
     ret
 
 ; clears tile areas with FillTilesBxC (12 x 1 at vTiles1 + $240, 15 x 1 at + $500, 5 x 1 at + $700, 2 x 1 at + $4E0), then wD782 += 1 (E-0118)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_Case01)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
 ClearTileAreasAndIncScreenSubStep::
@@ -4052,7 +4052,7 @@ Func_01E_5C37:: ; address name
     ret
 
 ; runs Func_01E_7163 and Func_01F_5C15, wD781 -= 1 and wD782 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_Case01)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05)
 ; reads: wScreenStep, wScreenSubStep
 ; writes: wScreenStep, wScreenSubStep
 RedrawRecordListAndNextStep::
@@ -4070,7 +4070,7 @@ Func_01E_5C63:: ; address name
 ; entry 3 of the `rst $00` table in SwapMonstersMenu_Case09_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep
-SwapMonstersMenu_Case09_Case06_Case03::
+SwapMonstersMenu_Case09_Case06_ListRecordsState1ThenContinue::
 Jump_01E_5C78:: ; address name
     call ListRecordsState1ThenContinue
     ld a, $04
@@ -4167,7 +4167,7 @@ Jump_01E_5D1F:: ; address name
     dw SwapMonstersMenu_Case09_Case15_Case00
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_Case09_Case15_Case03
+    dw SwapMonstersMenu_Case09_Case15_ListRecordsState1ThenContinue
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case09_Case15
 ; no direct call (reached through a table, a jump or a vector)
@@ -4256,7 +4256,7 @@ Jump_01E_5D7E::
 ; entry 3 of the `rst $00` table in SwapMonstersMenu_Case09_Case15
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep
-SwapMonstersMenu_Case09_Case15_Case03::
+SwapMonstersMenu_Case09_Case15_ListRecordsState1ThenContinue::
 Jump_01E_5DBD:: ; address name
     call ListRecordsState1ThenContinue
     xor a, a
@@ -4273,7 +4273,7 @@ Jump_01E_5DC5:: ; address name
     dw SwapMonstersMenu_Case09_Case1B_Case00
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_Case09_Case1B_Case03
+    dw SwapMonstersMenu_Case09_Case1B_ListRecordsState1ThenContinue
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case09_Case1B
 ; no direct call (reached through a table, a jump or a vector)
@@ -4373,7 +4373,7 @@ Jump_01E_5E17::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wScreenSubStep
-SwapMonstersMenu_Case09_Case1B_Case03::
+SwapMonstersMenu_Case09_Case1B_ListRecordsState1ThenContinue::
 Jump_01E_5E88:: ; address name
     call ListRecordsState1ThenContinue
     ld a, [wScreenStep]
@@ -4559,45 +4559,45 @@ SwapMonstersMenu_Case0E::
 Jump_01E_5FAA:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case0E_Case00
-    dw SwapMonstersMenu_Case0E_Case01
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
+    dw SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
-    dw SwapMonstersMenu_Case0E_Case03
-    dw SwapMonstersMenu_Case0E_Case04
+    dw SwapMonstersMenu_Case0E_DrawTileRectAtHLFromDE_Bank1E
+    dw SwapMonstersMenu_Case0E_DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_Case09_Case05
     dw SwapMonstersMenu_Case0E_Case06
-    dw SwapMonstersMenu_Case0E_Case07
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07
     dw SwapMonstersMenu_Case0E_AdvanceScreenStep
     dw SwapMonstersMenu_Case0E_AdvanceScreenStep
-    dw SwapMonstersMenu_Case0E_Case0A
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05_Case0A
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case0D
     dw SwapMonstersMenu_Case09_ToFillTilesBxCAndStep
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case11
     dw SwapMonstersMenu_Case09_Case12
     dw SwapMonstersMenu_Case09_Case13
     dw SwapMonstersMenu_Case09_Case14
     dw SwapMonstersMenu_Case0E_Case15
-    dw SwapMonstersMenu_Case09_Case16
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16
     dw SwapMonstersMenu_Case09_Case17
     dw SwapMonstersMenu_Case09_Case18
     dw SwapMonstersMenu_Case09_Case19
-    dw SwapMonstersMenu_Case09_Case1A
+    dw SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record
     dw SwapMonstersMenu_Case0E_Case1B
     dw SwapMonstersMenu_Case09_Case1C
     dw SwapMonstersMenu_Case09_Case1D
     dw SwapMonstersMenu_Case09_Case1E
-    dw SwapMonstersMenu_Case09_Case1F
+    dw SwapMonstersMenu_Case09_DrawRecordParentNames
     dw SwapMonstersMenu_Case0E_Case20
 
 ; entry 3 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
-SwapMonstersMenu_Case0E_Case03::
+SwapMonstersMenu_Case0E_DrawTileRectAtHLFromDE_Bank1E::
 Jump_01E_5FF0:: ; address name
     call BGMapAddressAtScroll_Bank1E
     ld de, TileRect_1F_69E7
@@ -4620,44 +4620,44 @@ SwapMonstersMenu_Case0C::
 Jump_01E_600F:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case0E_Case00
-    dw SwapMonstersMenu_Case0E_Case01
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
+    dw SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
     dw SwapMonstersMenu_Case09_Case03
-    dw SwapMonstersMenu_Case0E_Case04
+    dw SwapMonstersMenu_Case0E_DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_Case09_Case05
     dw SwapMonstersMenu_Case0E_Case06
-    dw SwapMonstersMenu_Case0E_Case07
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07
     dw SwapMonstersMenu_Case0E_AdvanceScreenStep
     dw SwapMonstersMenu_Case0E_AdvanceScreenStep
-    dw SwapMonstersMenu_Case0E_Case0A
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05_Case0A
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case0D
     dw SwapMonstersMenu_Case09_ToFillTilesBxCAndStep
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case11
     dw SwapMonstersMenu_Case09_Case12
     dw SwapMonstersMenu_Case09_Case13
     dw SwapMonstersMenu_Case09_Case14
     dw SwapMonstersMenu_Case0E_Case15
-    dw SwapMonstersMenu_Case09_Case16
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16
     dw SwapMonstersMenu_Case09_Case17
     dw SwapMonstersMenu_Case09_Case18
     dw SwapMonstersMenu_Case09_Case19
-    dw SwapMonstersMenu_Case09_Case1A
+    dw SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record
     dw SwapMonstersMenu_Case0E_Case1B
     dw SwapMonstersMenu_Case09_Case1C
     dw SwapMonstersMenu_Case09_Case1D
     dw SwapMonstersMenu_Case09_Case1E
-    dw SwapMonstersMenu_Case09_Case1F
+    dw SwapMonstersMenu_Case09_DrawRecordParentNames
     dw SwapMonstersMenu_Case0E_Case20
 
 ; entry 1 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep, wScreenStep
-SwapMonstersMenu_Case0E_Case01::
+SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05::
 Jump_01E_6055:: ; address name
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
@@ -4673,7 +4673,7 @@ Jump_01E_6055:: ; address name
     ret
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_Case01, SwapMonstersMenu_Case0E_Case01)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_SwapMonstersMenu_Shared05, SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05)
 SwapMonstersMenu_Shared04::
 Func_01E_6074:: ; address name
     ld c, $00
@@ -4732,7 +4732,7 @@ Jump_01E_609E::
 ; entry 7 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep
-SwapMonstersMenu_Case0E_Case07::
+SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07::
 Jump_01E_60E1:: ; address name
     call ClearBGMapAtScrollAndResetScroll
     call SwapMonstersMenu_Case0E_Case07_Sub01
@@ -4758,38 +4758,38 @@ SwapMonstersMenu_Case0A::
 Jump_01E_60F4:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case0E_Case00
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
     dw SwapMonstersMenu_Case09_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
     dw SwapMonstersMenu_Case09_Case03
-    dw SwapMonstersMenu_Case0E_Case04
+    dw SwapMonstersMenu_Case0E_DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_Case09_Case05
     dw SwapMonstersMenu_Case0E_Case06
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_Case09_Case08
+    dw SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_Case09_Case09
     dw SwapMonstersMenu_Case0A_Case0A
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case0D
     dw SwapMonstersMenu_Case09_ToFillTilesBxCAndStep
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case11
     dw SwapMonstersMenu_Case09_Case12
     dw SwapMonstersMenu_Case09_Case13
     dw SwapMonstersMenu_Case09_Case14
     dw SwapMonstersMenu_Case0E_Case15
-    dw SwapMonstersMenu_Case09_Case16
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16
     dw SwapMonstersMenu_Case09_Case17
     dw SwapMonstersMenu_Case09_Case18
     dw SwapMonstersMenu_Case09_Case19
-    dw SwapMonstersMenu_Case09_Case1A
+    dw SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record
     dw SwapMonstersMenu_Case0E_Case1B
     dw SwapMonstersMenu_Case09_Case1C
     dw SwapMonstersMenu_Case09_Case1D
     dw SwapMonstersMenu_Case09_Case1E
-    dw SwapMonstersMenu_Case09_Case1F
+    dw SwapMonstersMenu_Case09_DrawRecordParentNames
     dw SwapMonstersMenu_Case0E_Case20
 
 ; entry 10 of the `rst $00` table in SwapMonstersMenu_Case0A
@@ -4825,7 +4825,7 @@ Jump_01E_613A:: ; address name
 ; entry 4 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-SwapMonstersMenu_Case0E_Case04::
+SwapMonstersMenu_Case0E_DrawListEntriesCell5RecordDetails::
 Jump_01E_616A:: ; address name
     call DrawListEntriesCell5RecordDetails
     ld a, $01
@@ -4846,12 +4846,12 @@ Jump_01E_6183:: ; address name
     dw SwapMonstersMenu_Case09_Case06_Case00
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_Case0E_Case06_Case03
+    dw SwapMonstersMenu_Case0E_Case06_SwapMonstersMenu_Shared02
 
 ; entry 3 of the `rst $00` table in SwapMonstersMenu_Case0E_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep
-SwapMonstersMenu_Case0E_Case06_Case03::
+SwapMonstersMenu_Case0E_Case06_SwapMonstersMenu_Shared02::
 Jump_01E_618F:: ; address name
     call SwapMonstersMenu_Shared02
     call SwapMonstersMenu_Shared06
@@ -4863,7 +4863,7 @@ Jump_01E_618F:: ; address name
 
 ; entry 10 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case0E_Case0A::
+SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05_Case0A::
 Jump_01E_619F:: ; address name
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
@@ -4877,7 +4877,7 @@ Jump_01E_619F:: ; address name
 
 ; entry 0 of the `rst $00` table in SwapMonstersMenu_Case0E
 ; no direct call (reached through a table, a jump or a vector)
-SwapMonstersMenu_Case0E_Case00::
+SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll::
 Jump_01E_61B4:: ; address name
     call ClearBGMapAtScrollAndResetScroll
     ld de, Tiles1Plus7F0Tiles_1F_4A70
@@ -4990,29 +4990,29 @@ SwapMonstersMenu_Case0D::
 Jump_01E_625A:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case0E_Case00
-    dw SwapMonstersMenu_Case0D_Case01
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
+    dw SwapMonstersMenu_Case0D_SwapMonstersMenu_Shared05
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
     dw SwapMonstersMenu_Case0D_Case03
     dw SwapMonstersMenu_Case0D_Case04
     dw SwapMonstersMenu_Case0D_Case05
     dw SwapMonstersMenu_Case0D_Case06
     dw SwapMonstersMenu_Case0D_Case07
-    dw SwapMonstersMenu_Case0D_Case08
-    dw SwapMonstersMenu_Case0E_Case07
-    dw SwapMonstersMenu_Case09_Case08
+    dw SwapMonstersMenu_Case0D_FillTilesBxC
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07
+    dw SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_Case09_Case09
     dw SwapMonstersMenu_Case0D_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case0D_Case0E
-    dw SwapMonstersMenu_Case06_Case19
+    dw SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames
     dw SwapMonstersMenu_Case0D_Case10
     dw SwapMonstersMenu_Case0D_Case11
 
 ; entry 1 of the `rst $00` table in SwapMonstersMenu_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenSubStep, wScreenStep
-SwapMonstersMenu_Case0D_Case01::
+SwapMonstersMenu_Case0D_SwapMonstersMenu_Shared05::
 Jump_01E_6282:: ; address name
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
@@ -5031,7 +5031,7 @@ SwapMonstersMenu_Case0B::
 Jump_01E_6298:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw SwapMonstersMenu_Case0E_Case00
+    dw SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll
     dw SwapMonstersMenu_Case09_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case09_AdvanceScreenStep
     dw SwapMonstersMenu_Case0D_Case03
@@ -5039,14 +5039,14 @@ Jump_01E_6298:: ; address name
     dw SwapMonstersMenu_Case0D_Case05
     dw SwapMonstersMenu_Case0D_Case06
     dw SwapMonstersMenu_Case0D_Case07
-    dw SwapMonstersMenu_Case0D_Case08
+    dw SwapMonstersMenu_Case0D_FillTilesBxC
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_Case09_Case08
+    dw SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_Case09_Case09
     dw SwapMonstersMenu_Case0D_ToSwapMonstersMenu_Shared05AndStep
     dw SwapMonstersMenu_Case06_Case17
     dw SwapMonstersMenu_Case0D_Case0E
-    dw SwapMonstersMenu_Case06_Case19
+    dw SwapMonstersMenu_Case06_DrawRecordListPageSpeciesNames
     dw SwapMonstersMenu_Case0D_Case10
     dw SwapMonstersMenu_Case0D_Case11
 
@@ -5317,7 +5317,7 @@ Jump_01E_6483::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case0D_Case08::
+SwapMonstersMenu_Case0D_FillTilesBxC::
 Jump_01E_6492:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0805
@@ -5493,34 +5493,34 @@ Jump_01E_65B8:: ; address name
     dw SwapMonstersMenu_Case09_Case05
     dw SwapMonstersMenu_Case08_Case06
     dw ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_Case09_Case08
+    dw SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_Case09_Case09
     dw ListRecordsAndDrawListEntriesCell5Panel
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case08_Case0D
     dw SwapMonstersMenu_Case09_ToFillTilesBxCAndStep
-    dw SwapMonstersMenu_Case09_Case0B
-    dw SwapMonstersMenu_Case09_Case0C
+    dw SwapMonstersMenu_Case09_FillTilesBxC
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address
     dw SwapMonstersMenu_Case09_Case11
     dw SwapMonstersMenu_Case09_Case12
     dw SwapMonstersMenu_Case09_Case13
     dw SwapMonstersMenu_Case09_Case14
     dw SwapMonstersMenu_Case08_Case15
-    dw SwapMonstersMenu_Case09_Case16
+    dw SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16
     dw SwapMonstersMenu_Case09_Case17
     dw SwapMonstersMenu_Case09_Case18
     dw SwapMonstersMenu_Case09_Case19
-    dw SwapMonstersMenu_Case09_Case1A
+    dw SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record
     dw SwapMonstersMenu_Case08_Case1B
     dw SwapMonstersMenu_Case09_Case1C
     dw SwapMonstersMenu_Case09_Case1D
     dw SwapMonstersMenu_Case09_Case1E
-    dw SwapMonstersMenu_Case09_Case1F
+    dw SwapMonstersMenu_Case09_DrawRecordParentNames
     dw SwapMonstersMenu_Case08_Case20
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wD781 += 1 (E-0120; fill, not a tile map: E-0186)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0E_Case07, SwapMonstersMenu_Case0E_Case00)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll_Case07, SwapMonstersMenu_Case0E_ClearBGMapAtScrollAndResetScroll)
 ; reads: wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, hScrollX, ...
 ClearBGMapAtScrollAndResetScroll::
@@ -5602,7 +5602,7 @@ Jump_01E_664E:: ; address name
     ret
 
 ; for the record at WD789 cell 5, with SRAM enabled, runs Func_01E_725D, 7332 and 7399; wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_Case04)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_DrawListEntriesCell5RecordDetails)
 ; reads: wScreenStep
 ; writes: rRAMG2, rRAMB, wScreenStep
 DrawListEntriesCell5RecordDetails::
@@ -5770,7 +5770,7 @@ Jump_01E_677D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wBGPaletteUploadRequest, wScreenStep
-SwapMonstersMenu_Case09_Case08::
+SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex::
 Jump_01E_679E:: ; address name
     farcall LoadAreaGraphicsForAreaGraphicsIndex
     ld a, $7F
@@ -5831,7 +5831,7 @@ Jump_01E_6808::
     ret
 
 ; lists the records (Func_01D_5E79 in state 8, else ListRecordsState1WithByte6EClear), loads the family icon of the record at WD789 cell 5 and draws it, then wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_Case0A)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case0E_SwapMonstersMenu_Shared05_Case0A)
 ; reads: wScreenState, wScreenStep
 ; writes: wArg1, wScreenStep
 ListRecordsAndDrawListEntriesCell5Panel::
@@ -5864,7 +5864,7 @@ Jump_01E_6825::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case09_Case0B::
+SwapMonstersMenu_Case09_FillTilesBxC::
 Jump_01E_6840:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -5881,7 +5881,7 @@ Jump_01E_6840:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep
-SwapMonstersMenu_Case09_Case0C::
+SwapMonstersMenu_Case09_GetListEntriesCell5Address::
 Jump_01E_685A:: ; address name
     call GetListEntriesCell5Address
     ld a, [hl]
@@ -6161,7 +6161,7 @@ Jump_01E_6A18::
 ; entry 22 of the `rst $00` table in SwapMonstersMenu_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wScreenStep
-SwapMonstersMenu_Case09_Case16::
+SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16::
 Jump_01E_6A57:: ; address name
     call GetListEntriesCell5Address
     ld a, $0A
@@ -6277,7 +6277,7 @@ Jump_01E_6AFF::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-SwapMonstersMenu_Case09_Case1A::
+SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record::
 Jump_01E_6B10:: ; address name
     farcall ShowSpeciesCategory13StringOfListEntriesCell5Record
     ld a, [wScreenStep]
@@ -6487,7 +6487,7 @@ Jump_01E_6C69:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
-SwapMonstersMenu_Case09_Case1F::
+SwapMonstersMenu_Case09_DrawRecordParentNames::
 Jump_01E_6C97:: ; address name
     ld b, [hl]
     call DrawRecordParentNames
@@ -6629,7 +6629,7 @@ Func_01E_6D42:: ; address name
     ret
 
 ; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or '???' when unknown (E-0131)
-; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunLinkSession8Case03Steps_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_DrawRecordParentNames, RunLinkSession8Case03Steps_Case05_DrawRecordParentNames)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wArg1, wArg2, wArg3
 DrawRecordParentNames::
@@ -7003,7 +7003,7 @@ Jump_01E_6FC9::
 
 ; only called from RunLinkSession8Case03Steps_Case05 (E-0047)
 ; 1 call site from 1 routine (e.g. RunLinkSession8Case03Steps_Case05)
-RunLinkSession8Case03Steps_Case05_Sub01::
+RunLinkSession8Case03Steps_Case05_DrawRecordParentNames::
 Func_01E_6FE3:: ; address name
     ld b, e
     call DrawRecordParentNames
@@ -7011,7 +7011,7 @@ Func_01E_6FE3:: ; address name
     ret
 
 ; for record B draws the species names and marks named by the field lists $70D7 or $70DD (by bit 4 of field $0D), or a blank tile for missing entries (E-0130)
-; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_Case1F, RunLinkSession8Case03Steps_Case05_Sub01)
+; 3 call sites from 3 routines (e.g. SwapMonstersMenu_Case0D_Case05, SwapMonstersMenu_Case09_DrawRecordParentNames, RunLinkSession8Case03Steps_Case05_DrawRecordParentNames)
 ; reads: hTemp0, hTemp1, rSTAT
 ; writes: rRAMG2, rRAMB, wArg1, wArg5, wArg2, wArg3, wArg4
 DrawRecordFamilyEntries_6FEB::
@@ -7448,7 +7448,7 @@ Func_01E_7233:: ; address name
     db $28, $00, $68, $00, $A8, $00, $E8, $00
 
 ; writes the record's level (field $56, marked $6F at the cap in field $57) and its status marks into the BG map at scroll + $29 (E-0130)
-; 3 call sites from 3 routines (e.g. DrawListEntriesCell5RecordDetails, SwapMonstersMenu_Case09_Case1D, SwapMonstersMenu_Case09_Case16)
+; 3 call sites from 3 routines (e.g. DrawListEntriesCell5RecordDetails, SwapMonstersMenu_Case09_Case1D, SwapMonstersMenu_Case09_GetListEntriesCell5Address_Case16)
 ; reads: hTemp1, hTemp0, wDigits
 DrawRecordLevelAndStatusRow_1E::
 Func_01E_725D:: ; address name
@@ -7954,7 +7954,7 @@ Jump_01E_74B6::
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 = HL + $1C1 only when HL = $9800 (E-0062)
-; 38 call sites from 33 routines (e.g. CloseMenuE9_Case00, SwapMonstersMenu_Case01_Case03, SwapMonstersMenu_Case04_Case27, SwapMonstersMenu_Case04_Case22, ...)
+; 38 call sites from 33 routines (e.g. CloseMenuE9_Case00, SwapMonstersMenu_Case01_Case03, SwapMonstersMenu_Case04_DrawScreenBufferRect_Bank1E_Case27, SwapMonstersMenu_Case04_Case22, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -8188,7 +8188,7 @@ Func_01E_75EB:: ; address name
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
-; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, SwapMonstersMenu_Shared03, SwapMonstersMenu_Case04_Case06, SwapMonstersMenu_Case06_Case0D, ...)
+; 5 call sites from 5 routines (e.g. DrawBox4718AndMenuAndStep_1E, SwapMonstersMenu_Shared03, SwapMonstersMenu_Case04_CopyScreenBufferRectWithAttrs_1E, SwapMonstersMenu_Case06_Case0D, ...)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_1E::
@@ -8416,7 +8416,7 @@ Jump_01E_76F9::
     ret
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case0E_Case06_Case03, SwapMonstersMenu_Case0E_Case15_Case03, SwapMonstersMenu_Case0E_Case1B_Case03, SwapMonstersMenu_Case0E_Case20_Case03)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case0E_Case06_SwapMonstersMenu_Shared02, SwapMonstersMenu_Case0E_Case15_Case03, SwapMonstersMenu_Case0E_Case1B_Case03, SwapMonstersMenu_Case0E_Case20_Case03)
 ; writes: wWindowTileBuffer
 SwapMonstersMenu_Shared06::
 Func_01E_7702:: ; address name
@@ -8461,7 +8461,7 @@ Func_01E_7732:: ; address name
     ret
 
 ; wD7BC = hFFB9, then hFFB9 = hFFBA = 0; wD7BA = hFF8D, wD7BB = wSpriteSlotCount; then hFF8D = $FF and wSpriteSlotCount = 0 (E-0078) (the same 30 bytes appear in 2 banks)
-; 10 call sites from 10 routines (e.g. SwapMonstersMenu_Case06_Case1B, SwapMonstersMenu_Case06_Case14, SwapMonstersMenu_Case04_Case0C, EggServiceMenu_Case05_Case0C, ...)
+; 10 call sites from 10 routines (e.g. SwapMonstersMenu_Case06_Case1B, SwapMonstersMenu_Case06_SaveAndHideSpriteState_Bank1E, SwapMonstersMenu_Case04_Case0C, EggServiceMenu_Case05_Case0C, ...)
 ; reads: hSpriteWindowClipMode, hFieldDrawFlags, wSpriteSlotCount
 ; writes: wSavedSpriteClipMode, hSpriteWindowClipMode, hSpriteHideTile, wSavedFieldDrawFlags, wSavedSpriteSlotCount, hFieldDrawFlags, wSpriteSlotCount
 SaveAndHideSpriteState_Bank1E::

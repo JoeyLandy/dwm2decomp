@@ -2,14 +2,14 @@ SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
 ; if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650
-; 12 call sites from 11 routines (e.g. ShowString_Bank08, ShowStringHL_Bank08, DebugMessageTest_Update_ToBeginStringDisplay_Bank08, PauseMenu_Items_Case02_Case02, ...)
+; 12 call sites from 11 routines (e.g. ShowString_Bank08, ShowStringHL_Bank08, DebugMessageTest_Update_ToBeginStringDisplay_Bank08, PauseMenu_Items_Case02_BeginStringDisplay_Bank08AndStep, ...)
 ; reads: wStringCategory
 BeginStringDisplay_Bank08::
 Func_008_4001:: ; address name
     ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_400F
-    farcall BeginStringDisplay_Bank08_Sub01
+    farcall BeginStringDisplay_Bank08_BeginStringDisplay
     ret
 
 Jump_008_400F::
@@ -25,7 +25,7 @@ Func_008_4016:: ; address name
     ld a, [wStringCategory]
     cp a, $09
     jr c, Jump_008_4024
-    farcall CopyStringToBuffer_Bank08_Sub01
+    farcall CopyStringToBuffer_Bank08_CopyStringToBuffer
     ret
 
 Jump_008_4024::

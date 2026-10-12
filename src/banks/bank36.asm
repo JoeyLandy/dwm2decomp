@@ -1009,7 +1009,7 @@ Jump_036_46A0::
     ld l, a
     ld a, [wBattleDamageHi]
     ld h, a
-    call ResolveStepComputeDamage_Sub01
+    call ResolveStepComputeDamage_RandomInRange
     ld a, e
     ld [wBattleDamageLo], a
     ld a, d
@@ -1321,7 +1321,7 @@ Jump_036_48B5::
     farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
-    call ResolveStepDamageMessage_Sub02
+    call ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB
     pop af
     ld [wBattleActor], a
 
@@ -1329,7 +1329,7 @@ Jump_036_48B5::
 ; 1 call site from 1 routine (e.g. ResolveStepDamageMessage)
 ; reads: wBattleActor
 ; points at: wTemp0
-ResolveStepDamageMessage_Sub02::
+ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB::
 Func_036_48CB:: ; address name
     ld de, wTemp0
     ld a, $61
@@ -1446,7 +1446,7 @@ Func_036_4930:: ; address name
 
 ; only called from ResolveStepComputeDamage (E-0047)
 ; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
-ResolveStepComputeDamage_Sub01::
+ResolveStepComputeDamage_RandomInRange::
 Func_036_494E:: ; address name
     ld c, l
     ld b, h
@@ -2142,7 +2142,7 @@ Jump_036_4DF3:: ; address name
     ret
 
 ; loads the picture of battle slot B (species at DE) into its picture area at vTiles2 + $140 + $240 * position and, on CGB, its attributes (E-0128)
-; 5 call sites from 4 routines (e.g. ActionEffect_Vivify, ResolveStepDamageMessage_Sub02, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_Case02)
+; 5 call sites from 4 routines (e.g. ActionEffect_Vivify, ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB, ResolveStepDamageMessage, ResolveStepDamageMessage_Sub04_Case02)
 ; reads: wLinkMode, wLinkRole, wIsCGB, wBattleFoeCount, wSide1Flag, wSide0Flag
 ; writes: wBGPaletteUploadRequest, hTemp0
 LoadBattleMonsterPictureForSlotB::
@@ -2584,7 +2584,7 @@ Jump_036_508B::
 
 ; only called from ActionEffect_ActionD1 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_ActionD1)
-ActionEffect_ActionD1_Sub01::
+ActionEffect_ActionD1_RollSkillDamageFromRecord::
 Func_036_5094:: ; address name
     call RollSkillDamageFromRecord
     ld a, $00
@@ -2783,7 +2783,7 @@ Func_036_5152:: ; address name
 
 ; only called from ActionEffect_Blaze (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Blaze)
-ActionEffect_Blaze_Sub01::
+ActionEffect_Blaze_RollSkillDamageFromRecord::
 Func_036_51D1:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte0
@@ -2794,7 +2794,7 @@ Func_036_51D1:: ; address name
 
 ; only called from ActionEffect_Firebal (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Firebal)
-ActionEffect_Firebal_Sub01::
+ActionEffect_Firebal_RollSkillDamageFromRecord::
 Func_036_51DF:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte0
@@ -2806,7 +2806,7 @@ Func_036_51DF:: ; address name
 
 ; only called from ActionEffect_Bang (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Bang)
-ActionEffect_Bang_Sub01::
+ActionEffect_Bang_RollSkillDamageFromRecord::
 Func_036_51ED:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte0
@@ -2839,7 +2839,7 @@ Func_036_5207:: ; address name
 
 ; only called from ActionEffect_Lightning_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Lightning_Sub01)
-ActionEffect_Lightning_Sub01_Sub01::
+ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1::
 Func_036_520A:: ; address name
     call GetTargetSlotResistancesByte1
     swap a
@@ -2849,7 +2849,7 @@ Func_036_520A:: ; address name
 
 ; only called from ActionEffect_IceBolt (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_IceBolt)
-ActionEffect_IceBolt_Sub01::
+ActionEffect_IceBolt_RollSkillDamageFromRecord::
 Func_036_5215:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte1
@@ -3028,7 +3028,7 @@ Jump_036_531F::
 
 ; only called from ActionEffect_BigBang (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_BigBang)
-ActionEffect_BigBang_Sub01::
+ActionEffect_BigBang_RollSkillDamageFromRecord::
 Func_036_5328:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte0
@@ -3039,7 +3039,7 @@ Func_036_5328:: ; address name
 
 ; only called from ActionEffect_FireAir (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_FireAir)
-ActionEffect_FireAir_Sub01::
+ActionEffect_FireAir_RollSkillDamageFromRecord::
 Func_036_5336:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte4
@@ -3050,7 +3050,7 @@ Func_036_5336:: ; address name
 
 ; only called from ActionEffect_FrigidAir (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_FrigidAir)
-ActionEffect_FrigidAir_Sub01::
+ActionEffect_FrigidAir_RollSkillDamageFromRecord::
 Func_036_5344:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte4
@@ -3062,7 +3062,7 @@ Func_036_5344:: ; address name
 
 ; only called from ActionEffect_RockThrow (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_RockThrow)
-ActionEffect_RockThrow_Sub01:: ; code pointer of the table EffectHandlerTable; C0
+ActionEffect_RockThrow_RollSkillDamageFromRecord:: ; code pointer of the table EffectHandlerTable; C0
 Func_036_5352:: ; address name
     call RollSkillDamageFromRecord
     call GetTargetSlotResistancesByte6
@@ -3687,7 +3687,7 @@ Func_036_5640:: ; address name
     ld [hl+], a
     ld [hl], b
     ld a, [wBattleActor]
-    call ActionEffect_RobMagic_Sub01_Sub01
+    call ActionEffect_RobMagic_Sub01_GetBattleMP
     jr nc, Jump_036_5670
     ld a, [wBattleActor]
     ld bc, wBattleMaxMP + $1
@@ -3829,7 +3829,7 @@ Jump_036_56FF::
 ActionEffect_Transform_Sub01::
 Func_036_5703:: ; address name
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_Sub05
+    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
     ld hl, wSlotDamageFlags
     add_a_to_hl
@@ -4297,7 +4297,7 @@ Jump_036_59D3::
     ld a, h
     ld [wBattleDamageHi], a
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
-    call ActionEffect_Lightning_Sub01_Sub01
+    call ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1
     ret
 
 ; only called from ActionEffect_MultiCut (E-0047)
@@ -5430,7 +5430,7 @@ Func_036_610D:: ; address name
 
 ; only called from ActionEffect_Geyser (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Geyser)
-ActionEffect_Geyser_Sub01::
+ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36::
 Func_036_6116:: ; address name
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte0
@@ -5488,7 +5488,7 @@ Jump_036_6155::
     ret
 
 ; picks a base and spread from the loaded skill record: wCFFB/wCFFC and wCFFD for actors in slots 4-7 when wC58A is not 1, otherwise wCFF7/wCFF8 and wCFF9; the spread goes to wD86A and RollDamageBaseToBasePlusBattleArg2 sets the damage word; then falls into HLToWD814EntryOfWD8A5_Bank36 (E-0095)
-; 15 call sites from 15 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_Sub01, HealTargetHP, ...)
+; 15 call sites from 15 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_RollSkillDamageFromRecord, HealTargetHP, ...)
 ; reads: wLinkMode, wBattleActor, wRecordBufferData, wBattleTarget
 ; writes: wBattleArg2
 ; points at: wBattleStatus8
@@ -5551,7 +5551,7 @@ Func_036_618F:: ; address name
     ret
 
 ; A = byte 0 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA72 + 7 * target); DE points at it (E-0095)
-; 7 call sites from 7 routines (e.g. AttackDamageScaledBySlotResistancesByte0Bits54, ActionEffect_Watershot_Sub01, ActionEffect_Geyser_Sub01, ActionEffect_BigBang_Sub01, ...)
+; 7 call sites from 7 routines (e.g. AttackDamageScaledBySlotResistancesByte0Bits54, ActionEffect_Watershot_Sub01, ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36, ActionEffect_BigBang_RollSkillDamageFromRecord, ...)
 ; reads: wBattleTarget
 ; points at: wSlotResistances
 GetTargetSlotResistancesByte0::
@@ -5560,7 +5560,7 @@ Func_036_61A6:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 1 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA73 + 7 * target); DE points at it (E-0095)
-; 8 call sites from 8 routines (e.g. AttackDamageScaledBySlotResistancesByte1Bits32, AttackDamageScaledBySlotResistancesByte1Bits54, AttackDamageScaledBySlotResistancesByte1Bits76, ActionEffect_Lightning_Sub01_Sub01, ...)
+; 8 call sites from 8 routines (e.g. AttackDamageScaledBySlotResistancesByte1Bits32, AttackDamageScaledBySlotResistancesByte1Bits54, AttackDamageScaledBySlotResistancesByte1Bits76, ActionEffect_Lightning_Sub01_GetTargetSlotResistancesByte1, ...)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte1::
 Func_036_61AB:: ; address name
@@ -5584,7 +5584,7 @@ Func_036_61B5:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 4 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA76 + 7 * target); DE points at it (E-0095)
-; 4 call sites from 4 routines (e.g. ActionEffect_MegaMagic_Sub01, RollTargetSlotResistancesByte4Bits01ChanceToE, ActionEffect_FrigidAir_Sub01, ActionEffect_FireAir_Sub01)
+; 4 call sites from 4 routines (e.g. ActionEffect_MegaMagic_Sub01, RollTargetSlotResistancesByte4Bits01ChanceToE, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ActionEffect_FireAir_RollSkillDamageFromRecord)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte4::
 Func_036_61BA:: ; address name
@@ -5600,7 +5600,7 @@ Func_036_61BF:: ; address name
     jr Jump_036_61C7
 
 ; A = byte 6 of wBattleTarget's 7-byte record at wDA72 + 7 * target (that is, wDA78 + 7 * target); DE points at it (E-0095)
-; 4 call sites from 4 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_RockThrow_Sub01, ActionEffect_MouthShut_Sub01)
+; 4 call sites from 4 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_RockThrow_RollSkillDamageFromRecord, ActionEffect_MouthShut_Sub01)
 ; reads: wBattleTarget
 GetTargetSlotResistancesByte6::
 Func_036_61C4:: ; address name
@@ -5623,7 +5623,7 @@ Jump_036_61D4::
     ret
 
 ; picks the chance table by the flags at [HL]: bit 6 set uses RollChanceByLevel_100_75_40_0, else bit 7 set uses RollChanceByLevel_100_100_75_0, else RollChanceByLevel_100_84_50_0 (A = level) (E-0095)
-; 12 call sites from 12 routines (e.g. ActionEffect_MouthShut_Sub01, ActionEffect_DanceShut_Sub01, ActionEffect_Geyser_Sub01, RollChanceVsTargetSlotResistancesByte5Bits23, ...)
+; 12 call sites from 12 routines (e.g. ActionEffect_MouthShut_Sub01, ActionEffect_DanceShut_Sub01, ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36, RollChanceVsTargetSlotResistancesByte5Bits23, ...)
 RollChanceByFlagsAtHL::
 Func_036_61D6:: ; address name
     bit 6, [hl]
@@ -5695,7 +5695,7 @@ Jump_036_621B::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_1_075_04_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_085_05_0 (A = level) (E-0095)
-; 12 call sites from 12 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_Sub01, ...)
+; 12 call sites from 12 routines (e.g. SkillDamageScaledBySlotResistancesByte6Bits32, ActionEffect_CallHelp_Sub01, ActionEffect_Watershot_Sub01, ActionEffect_RockThrow_RollSkillDamageFromRecord, ...)
 ScaleDamageByFlagsAtHL::
 Func_036_621C:: ; address name
     bit 6, [hl]
@@ -5716,7 +5716,7 @@ Jump_036_6231::
     ret
 
 ; bit 6 of [HL] set uses ScaleDamageByLevel_075_05_025_0, else bit 7 set uses ScaleDamageByLevel_131_116_075_03, else ScaleDamageByLevel_1_075_04_0 (A = level) (E-0096)
-; 6 call sites from 6 routines (e.g. ActionEffect_Watershot_Sub01, ActionEffect_MegaMagic_Sub01, ActionEffect_MultiCut_Sub01, ActionEffect_FrigidAir_Sub01, ...)
+; 6 call sites from 6 routines (e.g. ActionEffect_Watershot_Sub01, ActionEffect_MegaMagic_Sub01, ActionEffect_MultiCut_Sub01, ActionEffect_FrigidAir_RollSkillDamageFromRecord, ...)
 ScaleDamageByFlagsAtHLAlt::
 Func_036_6232:: ; address name
     bit 6, [hl]
@@ -6266,7 +6266,7 @@ Func_036_6494:: ; address name
     ret
 
 ; HL = HL * 8 / 10 (24-bit intermediate; Multiply8By16 then Divide24ByA), A = the remainder; DE kept (E-0067) (the same 15 bytes appear in 2 banks)
-; 5 call sites from 5 routines (e.g. ScaleHLTo40Percent, ActionEffect_Geyser_Sub03, DamageEightyPercentOfTargetHPScaled, ActionEffect_RainSlash, ...)
+; 5 call sites from 5 routines (e.g. ScaleHLTo40Percent, ActionEffect_Geyser_ScaleHLTo80Percent_Bank36, DamageEightyPercentOfTargetHPScaled, ActionEffect_RainSlash, ...)
 ScaleHLTo80Percent_Bank36::
 Func_036_64A3:: ; address name
     push de
@@ -6293,7 +6293,7 @@ Func_036_64B2:: ; address name
     ret
 
 ; HL = HL * 6 / 10 (24-bit intermediate); DE kept (E-0095)
-; 3 call sites from 3 routines (e.g. ScaleHLTo30Percent, ActionEffect_Geyser_Sub02, ActionEffect_RainSlash)
+; 3 call sites from 3 routines (e.g. ScaleHLTo30Percent, ActionEffect_Geyser_ScaleHLTo60Percent, ActionEffect_RainSlash)
 ScaleHLTo60Percent::
 Func_036_64BE:: ; address name
     push de
@@ -6332,7 +6332,7 @@ Func_036_64DB:: ; address name
 
 ; only called from ActionEffect_Geyser (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Geyser)
-ActionEffect_Geyser_Sub02::
+ActionEffect_Geyser_ScaleHLTo60Percent::
 Func_036_64E2:: ; address name
     call ScaleHLTo60Percent
     call ShiftHLRight1
@@ -6341,7 +6341,7 @@ Func_036_64E2:: ; address name
 
 ; only called from ActionEffect_Geyser (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Geyser)
-ActionEffect_Geyser_Sub03::
+ActionEffect_Geyser_ScaleHLTo80Percent_Bank36::
 Func_036_64EC:: ; address name
     call ScaleHLTo80Percent_Bank36
     call ShiftHLRight1
@@ -6545,7 +6545,7 @@ Jump_036_65D1::
 
 ; only called from ActionEffect_RobMagic_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_RobMagic_Sub01)
-ActionEffect_RobMagic_Sub01_Sub01::
+ActionEffect_RobMagic_Sub01_GetBattleMP::
 Func_036_65D6:: ; address name
     push hl
     push bc
@@ -6725,7 +6725,7 @@ Jump_036_66D5::
 
 ; only called from ActionEffect_Transform_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Transform_Sub01)
-ActionEffect_Transform_Sub01_Sub05::
+ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B::
 Func_036_66D6:: ; address name
     push hl
     ld c, a
@@ -7054,7 +7054,7 @@ Func_036_6906:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_ActionD1:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6912:: ; address name
-    call ActionEffect_ActionD1_Sub01
+    call ActionEffect_ActionD1_RollSkillDamageFromRecord
     farcall RunA3414FAndMarkWDA5B3
     jp Jump_036_7C7D
 
@@ -7459,7 +7459,7 @@ Func_036_6B75:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_Blaze:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B7B:: ; address name
-    call ActionEffect_Blaze_Sub01
+    call ActionEffect_Blaze_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 4 Firebal, 5 Firebane, 6 Firebolt; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -7467,7 +7467,7 @@ Func_036_6B7B:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_Firebal:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B81:: ; address name
-    call ActionEffect_Firebal_Sub01
+    call ActionEffect_Firebal_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 7 Bang, 8 Boom, 9 Explodet; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -7475,7 +7475,7 @@ Func_036_6B81:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_Bang:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B87:: ; address name
-    call ActionEffect_Bang_Sub01
+    call ActionEffect_Bang_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 10 Infernos, 11 Infermore, 12 Infermost; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -7499,7 +7499,7 @@ Func_036_6B93:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_IceBolt:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B99:: ; address name
-    call ActionEffect_IceBolt_Sub01
+    call ActionEffect_IceBolt_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 19 Beat, 20 Defeat, 121 K.O.Dance; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -8537,7 +8537,7 @@ Func_036_7196:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_BigBang:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71A9:: ; address name
-    call ActionEffect_BigBang_Sub01
+    call ActionEffect_BigBang_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -8545,7 +8545,7 @@ Func_036_71A9:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_FireAir:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71AF:: ; address name
-    call ActionEffect_FireAir_Sub01
+    call ActionEffect_FireAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
     jp Jump_036_7C7D
 
@@ -8554,7 +8554,7 @@ Func_036_71AF:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_FrigidAir:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71B8:: ; address name
-    call ActionEffect_FrigidAir_Sub01
+    call ActionEffect_FrigidAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
     jp Jump_036_7C7D
 
@@ -8587,7 +8587,7 @@ Func_036_71CD:: ; address name
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
 ActionEffect_RockThrow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_71D3:: ; address name
-    call ActionEffect_RockThrow_Sub01
+    call ActionEffect_RockThrow_RollSkillDamageFromRecord
     jp Jump_036_7C7D
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 76 Watershot, 77 Tidalwave; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
@@ -9597,7 +9597,7 @@ Func_036_771B:: ; address name
     and a, $C0
     cp a, $40
     jr z, Jump_036_775E
-    call ActionEffect_Geyser_Sub01
+    call ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jr nc, Jump_036_7756
     ld a, [wBattleTarget]
     ld hl, wBattleStatus3
@@ -9640,12 +9640,12 @@ Jump_036_7780::
     ld a, [wBattleActor]
     call GetBattleMaxHP
     push hl
-    call ActionEffect_Geyser_Sub02
+    call ActionEffect_Geyser_ScaleHLTo60Percent
     ld c, l
     ld b, h
     pop hl
     push bc
-    call ActionEffect_Geyser_Sub03
+    call ActionEffect_Geyser_ScaleHLTo80Percent_Bank36
     pop bc
     call RandomInRange
     ld a, d
@@ -10828,7 +10828,7 @@ Data_036_7DDE:: ; address name
     dw ActionEffect_WindBeast_Sub01 ; entry 1
     dw ActionEffect_Vacuum_Sub01 ; entry 2
     dw ActionEffect_Lightning_Sub01 ; entry 3
-    dw ActionEffect_RockThrow_Sub01 ; entry 4
+    dw ActionEffect_RockThrow_RollSkillDamageFromRecord ; entry 4
     dw ActionEffect_Watershot_Sub01 ; entry 5
     dw ActionEffect_Watershot_Sub01 ; entry 6
     dw ActionEffect_CallHelp_Sub01 ; entry 7
@@ -10890,7 +10890,7 @@ Func_036_7E38:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleMaxMP (Func_036_7E5B)
-; 2 call sites from 2 routines (e.g. ActionEffect_RobMagic_Sub01_Sub01, ActionEffect_MPass_Sub01)
+; 2 call sites from 2 routines (e.g. ActionEffect_RobMagic_Sub01_GetBattleMP, ActionEffect_MPass_Sub01)
 ; points at: wBattleMaxMP
 GetBattleMaxMP::
 Func_036_7E3D:: ; address name
@@ -10906,7 +10906,7 @@ Func_036_7E42:: ; address name
     jr ReadBattleWordFromArray
 
 ; A = battle slot: HL = the word for that slot in the array at wBattleMP (Func_036_7E5B)
-; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_Sub01, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
+; 3 call sites from 3 routines (e.g. ActionEffect_RobMagic, ActionEffect_RobMagic_Sub01_GetBattleMP, ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo)
 ; points at: wBattleMP
 GetBattleMP::
 Func_036_7E47:: ; address name

@@ -179,7 +179,7 @@ Data_0A2_4070:: ; address name
 ; 1 call site from 1 routine (e.g. BeginStringDisplay_BankE0)
 ; reads: wStringCategory
 ; writes: wStringCategory
-BeginStringDisplay_BankE0_Sub01::
+BeginStringDisplay_BankE0_BeginStringDisplay::
 Func_0A2_49E2:: ; address name
     ld de, StringCategories_A2_49F8
     ld a, [wStringCategory]

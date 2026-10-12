@@ -770,7 +770,7 @@ Data_033_505A:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; only called from GameMode5_Update_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode5_Update_Case05)
+; 1 call site from 1 routine (e.g. GameMode5_Update_Case05_Sub01_Case05)
 ; reads: wLinkScreenState, wScreenState, wScreenStep, wScreenSubStep
 GameMode5_Update_Case05_Sub01::
 Func_033_51C6:: ; address name
@@ -833,8 +833,8 @@ Func_033_5215:: ; address name
     jr nz, Jump_033_523B
     ld a, [wLinkScreenSubState]
     rst $00
-    dw RunLinkSession6Exchange_Case01_Sub01_Case00
-    dw RunLinkSession6Exchange_Case01_Sub01_Case01
+    dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
+    dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep
     dw RunLinkSession6Exchange_Case01_Sub01_Case02
     dw RunLinkSession6Exchange_Case01_Sub01_Case03
     dw RunLinkSession6Exchange_Case01_Sub01_Case04
@@ -874,7 +874,7 @@ Jump_033_523B::
 ; entry 0 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenTileBuffer, wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_Case00::
+RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
 Jump_033_5264:: ; address name
     ld de, TileRect_33_62AB
     ld hl, wScreenTileBuffer + $C
@@ -894,7 +894,7 @@ Jump_033_5264:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wKeyNameBuf, wLinkScreenSubState
-RunLinkSession6Exchange_Case01_Sub01_Case01::
+RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep::
 Jump_033_5287:: ; address name
     xor a, a
     ld [wLinkSendByte], a
@@ -1547,7 +1547,7 @@ Jump_033_55E5:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_ShowInfoOKYesN
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0D
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F
@@ -1835,7 +1835,7 @@ Jump_033_57B2:: ; address name
 ; entry 12 of the `rst $00` table in Func_033_5215_Table2_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wPickCount
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C::
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows::
 Jump_033_57DC:: ; address name
     call DrawBox639FAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -1960,7 +1960,7 @@ Jump_033_5883:: ; address name
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case07
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_BeginString_Bank07_Cat5
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C
@@ -2284,7 +2284,7 @@ Jump_033_5AAA::
 ; entry 9 of the `rst $00` table in Func_033_5215_Table2_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09::
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_BeginString_Bank07_Cat5::
 Jump_033_5AAF:: ; address name
     ld hl, wScreenStep
     inc [hl]
@@ -2822,7 +2822,7 @@ Jump_033_5E57:: ; address name
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case01
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_DrawRecordListPageNames
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case03
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case04
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case05
@@ -2886,7 +2886,7 @@ Jump_033_5EBE::
 ; entry 2 of the `rst $00` table in Func_033_5215_Table2_Case0F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case02::
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_DrawRecordListPageNames::
 Jump_033_5EC6:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -2996,7 +2996,7 @@ Func_033_5F6B:: ; address name
     ret
 
 ; copies box Data_033_639F to wC410 and runs RunFunc6204FourTimes for wC895 at wC3B1 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B)
+; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B)
 ; points at: wKeyNameBuf
 DrawBox639FAndKeyRows::
 Func_033_5F83:: ; address name
@@ -3133,7 +3133,7 @@ Jump_033_6024::
     ret
 
 ; the same 16 bytes as ShowStringA10_Bank1B (1B:7439)
-; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08)
+; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case08)
 ; writes: wStringIndex, wStringCategory
 ShowStringA10_Bank33::
 Func_033_6039:: ; address name
@@ -3145,7 +3145,7 @@ Func_033_6039:: ; address name
     ret
 
 ; sets the string window: wC52D/wC52E = vTiles1 ($8800), wC52F/wC530 = $02, $12 (E-0067) (the same 23 bytes appear in 2 banks)
-; 9 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_ShowInfoOKYesN, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
+; 9 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_ShowInfoOKYesN, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 SetDefaultStringWindow_Bank33::
 Func_033_6049:: ; address name
@@ -3212,7 +3212,7 @@ Jump_033_6099::
     ret
 
 ; wD7B4 = wD7DC, wD7E0 = $FF, wD7DC = 4, wD782 = 0 and wD781 += 1 (E-0126)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C)
+; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows)
 ; reads: wPickCount, wScreenStep
 ; writes: wSelectedRecord, wPackWork, wPickCount, wScreenSubStep, wScreenStep
 FinishPickedRecordsEntryAndStep_33::
@@ -3247,7 +3247,7 @@ Func_033_60C3:: ; address name
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 41 bytes appear in 3 banks)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case01, RunLinkSession6Exchange_Case01_Sub01_Case06_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank33::
 Func_033_60D3:: ; address name
@@ -3282,7 +3282,7 @@ Jump_033_60F7::
     ret
 
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case01, RunLinkSession6Exchange_Case01_Sub01_Case06_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
+; 11 call sites from 9 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, RunLinkSession6Exchange_Case01_Sub01_Case06_Case01, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0B, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -3348,7 +3348,7 @@ Func_033_60FC:: ; address name
     ret
 
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2 (E-0072)
-; 14 call sites from 11 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case00, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_ShowInfoOKYesN, CopyRect62C3ToWC36EAndIncScreenStep, ...)
+; 14 call sites from 11 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_ShowInfoOKYesN, CopyRect62C3ToWC36EAndIncScreenStep, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank33::
@@ -3414,7 +3414,7 @@ Jump_033_617F::
     ret
 
 ; writes the gold as up to five decimal digit tiles without leading zeros at wC1BA (E-0127)
-; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep)
 ; reads: wGoldLo, wGoldMid, wGoldHi, hTemp2, hTemp1, hTemp0
 ; writes: wDigits
 WriteGoldDigitsToWC1BA::
@@ -3488,7 +3488,7 @@ Jump_033_61F2::
     ret
 
 ; calls Func_033_6204 three times and falls into it once more (E-0122)
-; 7 call sites from 6 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case01, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
+; 7 call sites from 6 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToWC1BAAndStep, DrawBox639FAndKeyRows, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07, RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case04, ...)
 ; reads: wDigits
 RunFunc6204FourTimes::
 Func_033_61FB:: ; address name
@@ -3559,7 +3559,7 @@ Jump_033_622B::
     ret
 
 ; clears vTiles2 (size $0105), draws the 10-byte player name wC60C there, then shows string 0 of category 1 (ShowString_Bank07) at vTiles2 + $100 with size $0110 (E-0121)
-; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
+; 3 call sites from 3 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00, RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wNameGlyphBuf, wStringCategory, wStringIndex
 ; points at: wNameGlyphBuf, wPlayerName
 DrawPlayerNameAndString0Category1::

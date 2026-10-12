@@ -2,14 +2,14 @@ SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0E
 
 ; only called from DebugMessageTest_Update_Case1C (E-0047)
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C_Sub01_Case1C)
 ; reads: wStringIndex
 DebugMessageTest_Update_Case1C_Sub01::
 Func_00E_4001:: ; address name
     ld a, [wStringIndex]
     cp a, $88
     jr c, Jump_00E_400F
-    farcall DebugMessageTest_Update_Case1C_Sub01_Sub01
+    farcall DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay
     ret
 
 Jump_00E_400F::

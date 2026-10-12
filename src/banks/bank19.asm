@@ -234,7 +234,7 @@ Func_019_41CB:: ; address name
 Jump_019_41D8::
     ld hl, vTiles2 + $140
     ld c, $01
-    call GameMode4_Init_Sub01_Sub03_Sub01
+    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
     cp a, $01
     jr z, Jump_019_4218
@@ -247,7 +247,7 @@ Jump_019_41D8::
 Jump_019_41F4::
     ld hl, vTiles2 + $380
     ld c, $03
-    call GameMode4_Init_Sub01_Sub03_Sub01
+    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
     ld a, [wBattleFoeCount]
     cp a, $02
     jr z, Jump_019_4218
@@ -260,14 +260,14 @@ Jump_019_41F4::
 Jump_019_4210::
     ld hl, vTiles2 + $5C0
     ld c, $05
-    call GameMode4_Init_Sub01_Sub03_Sub01
+    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
 
 Jump_019_4218::
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub03 (E-0047)
 ; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub03)
-GameMode4_Init_Sub01_Sub03_Sub01::
+GameMode4_Init_Sub01_Sub03_LoadMonsterPicture::
 Func_019_4219:: ; address name
     ld a, [de]
     push af
@@ -1195,7 +1195,7 @@ Data_019_4641:: ; address name
     db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; only called from BattleEnd_Step3_Sub06_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01)
 ; reads: wDisplaySlot
 ; points at: wBattlerRecordSlot5, wBattlerRecordSlot4
 BattleEnd_Step3_Sub06_Sub01_Sub01::

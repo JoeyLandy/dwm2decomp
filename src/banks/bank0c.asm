@@ -19,11 +19,11 @@ Func_00C_4001:: ; address name
     dw LibraryMenu_Case08
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_Case0A
-    dw LibraryMenu_Case0B
+    dw LibraryMenu_Shared03_Case0B
     dw LibraryMenu_Case0C
     dw LibraryMenu_Case0D
     dw LibraryMenu_Case0E
-    dw LibraryMenu_Case0F
+    dw LibraryMenu_Shared06_Case0F
     dw LibraryMenu_Case10
 
 ; entry 0 of the `rst $00` table in LibraryMenu
@@ -630,9 +630,9 @@ Jump_00C_43CE:: ; address name
     ld hl, $2940
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_Case08_Sub01
-    call LibraryMenu_Case08_Sub01
-    call LibraryMenu_Case08_Sub01
+    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -668,7 +668,7 @@ Jump_00C_440E::
 
 ; only called from LibraryMenu_Case08 (E-0047)
 ; 3 call sites from 1 routine (e.g. LibraryMenu_Case08)
-LibraryMenu_Case08_Sub01::
+LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C::
 Func_00C_4424:: ; address name
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
@@ -735,7 +735,7 @@ Jump_00C_445F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case0B::
+LibraryMenu_Shared03_Case0B::
 Jump_00C_4492:: ; address name
     call LibraryMenu_Shared03
     ld a, [wScreenState]
@@ -1051,7 +1051,7 @@ Jump_00C_4650:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case0F::
+LibraryMenu_Shared06_Case0F::
 Jump_00C_4676:: ; address name
     call LibraryMenu_Shared06
     call LibraryMenu_Shared05
@@ -1076,9 +1076,9 @@ Jump_00C_4684:: ; address name
     dw LibraryMenu_Case10_Case06
     dw LibraryMenu_Case10_Case07
     dw LibraryMenu_Case10_Case08
-    dw LibraryMenu_Case10_Case09
+    dw LibraryMenu_Case10_LibraryMenu_Shared06
     dw LibraryMenu_Case10_Case0A
-    dw LibraryMenu_Case10_Case0B
+    dw LibraryMenu_Case10_WriteBGPalette0From555C
     dw LibraryMenu_Case10_Case0C
     dw LibraryMenu_Case10_Case0D
 
@@ -1870,7 +1870,7 @@ Jump_00C_4CDA::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-LibraryMenu_Case10_Case09::
+LibraryMenu_Case10_LibraryMenu_Shared06::
 Jump_00C_4CE2:: ; address name
     call LibraryMenu_Shared06
     ld b, $46
@@ -1940,7 +1940,7 @@ Jump_00C_4D12::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-LibraryMenu_Case10_Case0B::
+LibraryMenu_Case10_WriteBGPalette0From555C::
 Jump_00C_4D6B:: ; address name
     call WriteBGPalette0From555C
     call LibraryMenu_Shared02
@@ -2138,7 +2138,7 @@ Jump_00C_4EA4::
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case0A, LibraryMenu_Case10_Case0B)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case0A, LibraryMenu_Case10_WriteBGPalette0From555C)
 ; reads: wGrid2CursorY
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 LibraryMenu_Shared01::
@@ -2257,7 +2257,7 @@ Data_00C_4F68:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $92, $90, $92, $20, $93, $B0, $93, $40, $94, $D0, $94
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case03, LibraryMenu_Case10_Case0B)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Case03, LibraryMenu_Case10_WriteBGPalette0From555C)
 ; reads: wGridCursorY
 ; writes: wWorkBuf
 LibraryMenu_Shared02::
@@ -2353,7 +2353,7 @@ Func_00C_4FC2:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case0B, LibraryMenu_Case10_Case0C)
+; 2 call sites from 2 routines (e.g. LibraryMenu_Shared03_Case0B, LibraryMenu_Case10_Case0C)
 ; reads: wGrid2CursorY
 LibraryMenu_Shared03::
 Func_00C_501F:: ; address name
@@ -2540,7 +2540,7 @@ Data_00C_510F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
 ; only called from routines of LibraryMenu (E-0098)
-; 3 call sites from 3 routines (e.g. LibraryMenu_Case0F, LibraryMenu_Case01, LibraryMenu_Case10_Case09)
+; 3 call sites from 3 routines (e.g. LibraryMenu_Shared06_Case0F, LibraryMenu_Case01, LibraryMenu_Case10_LibraryMenu_Shared06)
 ; reads: wIsCGB
 ; writes: rSVBK
 LibraryMenu_Shared05::
@@ -2577,7 +2577,7 @@ Jump_00C_5144::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 14 call sites from 4 routines (e.g. LibraryMenu_Shared06, LibraryMenu_Case08, LibraryMenu_Case08_Sub01, LibraryMenu_Case10_Case00)
+; 14 call sites from 4 routines (e.g. LibraryMenu_Shared06, LibraryMenu_Case08, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C, LibraryMenu_Case10_Case00)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank0C::
 Func_00C_5145:: ; address name
@@ -2621,7 +2621,7 @@ Func_00C_5156:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 4 call sites from 4 routines (e.g. LibraryMenu_Case0F, LibraryMenu_Case06, LibraryMenu_Case01, LibraryMenu_Case10_Case09)
+; 4 call sites from 4 routines (e.g. LibraryMenu_Shared06_Case0F, LibraryMenu_Case06, LibraryMenu_Case01, LibraryMenu_Case10_LibraryMenu_Shared06)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 LibraryMenu_Shared06::
 Func_00C_5177:: ; address name
@@ -2770,7 +2770,7 @@ Jump_00C_5226::
     ret
 
 ; only called from ArenaMenu_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. ArenaMenu_Case05)
+; 1 call site from 1 routine (e.g. ArenaMenu_Shared01_Case05)
 ArenaMenu_Case05_Sub01::
 Func_00C_5247:: ; address name
     ld a, c
@@ -3455,7 +3455,7 @@ Data_00C_553F:: ; heuristic: target of a monotone pointer table; C0
     db $82, $82, $82, $82
 
 ; writes six bytes from Data_00C_555C to the CGB background palette data (rBCPS = $80, auto-increment), waiting for VRAM access (E-0122)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_Case0B)
+; 1 call site from 1 routine (e.g. LibraryMenu_Case10_WriteBGPalette0From555C)
 ; reads: rSTAT
 WriteBGPalette0From555C::
 Func_00C_5543:: ; address name
@@ -5566,13 +5566,13 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_Case02
     dw ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_Case04
-    dw ArenaMenu_Case05
+    dw ArenaMenu_Shared01_Case05
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_Case07
     dw ArenaMenu_Case08
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_Case0A
-    dw ArenaMenu_Case0B
+    dw ArenaMenu_Shared04_Case0A
+    dw ArenaMenu_Shared02_Case0B
     dw ArenaMenu_Case0C
     dw ArenaMenu_AdvanceScreenState_Case0D
     dw ArenaMenu_Case0E
@@ -5587,14 +5587,14 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_Case17
     dw ArenaMenu_Case18
     dw ArenaMenu_Case19
-    dw ArenaMenu_Case1A
+    dw ArenaMenu_Case1A_Sub01_Case1A
     dw ArenaMenu_Case1B
-    dw ArenaMenu_Case1C
+    dw ArenaMenu_Case1C_Sub01_Case1C
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_Case1E
+    dw ArenaMenu_Shared03_Case1E
     dw ArenaMenu_Case08
     dw ArenaMenu_AdvanceScreenState
-    dw ArenaMenu_Case21
+    dw ArenaMenu_Shared03_Case21
     dw ArenaMenu_Case22
     dw ArenaMenu_Case23
     dw ArenaMenu_Case24
@@ -5664,7 +5664,7 @@ Jump_00C_663F::
     jr Jump_00C_6663
 
 Jump_00C_664E::
-    call ArenaMenu_Shared06
+    call ArenaMenu_AddArg1ToGoldCapped99999
     ld a, $03
     jr Jump_00C_6663
 
@@ -5674,7 +5674,7 @@ Jump_00C_6655::
     jp Jump_00C_6663
 
 Jump_00C_665E::
-    call ArenaMenu_Shared06
+    call ArenaMenu_AddArg1ToGoldCapped99999
     ld a, $03
 
 Jump_00C_6663::
@@ -6079,7 +6079,7 @@ Data_00C_691A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A2, $00, $E2, $00, $22, $01, $62, $01
 
 ; plays sound $6C, copies the 6 x 5 box Data_00C_7831 to wC412, draws it at the scroll position + $1CC, wD780 += 1 and wTwoChoiceCursor = 0 (E-0122)
-; 1 call site from 1 routine (e.g. ArenaMenu_Case0B)
+; 1 call site from 1 routine (e.g. ArenaMenu_Shared02_Case0B)
 ; reads: wScreenState
 ; writes: wScreenState, wTwoChoiceCursor
 ShowTwoChoiceBoxAtWC412::
@@ -6183,7 +6183,7 @@ Jump_00C_69BF::
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 3 call sites from 3 routines (e.g. ArenaMenu_Case0C, ArenaMenu_Case05, ArenaMenu_Case04)
+; 3 call sites from 3 routines (e.g. ArenaMenu_Case0C, ArenaMenu_Shared01_Case05, ArenaMenu_Case04)
 ; writes: wArg1, wArg2
 ArenaMenu_Shared01::
 Func_00C_69D5:: ; address name
@@ -6209,7 +6209,7 @@ Func_00C_69D5:: ; address name
 ; entry 5 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState
-ArenaMenu_Case05::
+ArenaMenu_Shared01_Case05::
 Jump_00C_6A04:: ; address name
     call ArenaMenu_Shared01
     ld c, $04
@@ -6329,14 +6329,14 @@ Jump_00C_6AAF::
 
 ; entry 10 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ArenaMenu_Case0A::
+ArenaMenu_Shared04_Case0A::
 Jump_00C_6AC4:: ; address name
     call ArenaMenu_Shared04
     ret
 
 ; entry 11 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ArenaMenu_Case0B::
+ArenaMenu_Shared02_Case0B::
 Jump_00C_6AC8:: ; address name
     call ArenaMenu_Shared02
     call ShowTwoChoiceBoxAtWC412
@@ -6862,7 +6862,7 @@ Jump_00C_6E0C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenArea, wScreenState
 ; writes: wAreaGraphicsIndex, wScreenState, wScreenTableIndex
-ArenaMenu_Case1A::
+ArenaMenu_Case1A_Sub01_Case1A::
 Jump_00C_6E42:: ; address name
     ld a, [wScreenArea]
     ld [wAreaGraphicsIndex], a
@@ -6927,7 +6927,7 @@ Jump_00C_6EA2::
 
 ; entry 28 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ArenaMenu_Case1C::
+ArenaMenu_Case1C_Sub01_Case1C::
 Jump_00C_6EB0:: ; address name
     call ArenaMenu_Case1C_Sub01
     ret
@@ -6936,7 +6936,7 @@ Jump_00C_6EB0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState, wScreenCountPlusOne, wGridCursorX
 ; writes: wScreenState, wScreenTableIndex, wRecordCapacity, wAreaGraphicsIndex
-ArenaMenu_Case1E::
+ArenaMenu_Shared03_Case1E::
 Jump_00C_6EB4:: ; address name
     call ArenaMenu_Shared03
     ld a, [wScreenState]
@@ -6954,7 +6954,7 @@ Jump_00C_6EB4:: ; address name
 
 ; entry 33 of the `rst $00` table in ArenaMenu
 ; no direct call (reached through a table, a jump or a vector)
-ArenaMenu_Case21::
+ArenaMenu_Shared03_Case21::
 Jump_00C_6ED3:: ; address name
     call ArenaMenu_Shared03
     ret
@@ -7113,7 +7113,7 @@ Jump_00C_6FBC::
     ret
 
 ; runs Func_00C_72CC for the bottom box, copies $64 bytes of tiles (and CGB attributes) and draws the two screen-buffer rectangles at scroll + $1CC and + $1A0 (E-0125)
-; 4 call sites from 4 routines (e.g. ArenaMenu_Case1E, ArenaMenu_Case1A, ArenaMenu_Case07, NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep)
+; 4 call sites from 4 routines (e.g. ArenaMenu_Shared03_Case1E, ArenaMenu_Case1A_Sub01_Case1A, ArenaMenu_Case07, NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep)
 ; reads: wIsCGB
 ; writes: wArg1, wArg2
 ; points at: wWindowTileBuffer, wWindowAttrBuffer
@@ -7241,7 +7241,7 @@ Jump_00C_708B::
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 5 call sites from 5 routines (e.g. ArenaMenu_Case19, ArenaMenu_Case11, ArenaMenu_Case10, ArenaMenu_Case0B, ...)
+; 5 call sites from 5 routines (e.g. ArenaMenu_Case19, ArenaMenu_Case11, ArenaMenu_Case10, ArenaMenu_Shared02_Case0B, ...)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
 ; points at: wArg3
@@ -7845,7 +7845,7 @@ Func_00C_73C6:: ; address name
     ret
 
 ; only called from ArenaMenu_Case1A (E-0047)
-; 1 call site from 1 routine (e.g. ArenaMenu_Case1A)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case1A_Sub01_Case1A)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wArenaRound
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wArenaList2, wEncounterMonsters
@@ -7882,7 +7882,7 @@ Func_00C_73F5:: ; address name
     call ArenaRounds_Shared01_Sub01
 
 ; only called from ArenaMenu_Case1C (E-0047)
-; 1 call site from 1 routine (e.g. ArenaMenu_Case1C)
+; 1 call site from 1 routine (e.g. ArenaMenu_Case1C_Sub01_Case1C)
 ; reads: wArenaRound
 ; points at: wArenaList2, wEncounterMonsters
 ArenaMenu_Case1C_Sub01::
@@ -7906,7 +7906,7 @@ Jump_00C_7418::
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaMenu_Case21, ArenaMenu_Case1E)
+; 2 call sites from 2 routines (e.g. ArenaMenu_Shared03_Case21, ArenaMenu_Shared03_Case1E)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScreenCountPlusOne
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wEncounterMonsters
@@ -7969,7 +7969,7 @@ Jump_00C_7471::
     ret
 
 ; only called from routines of ArenaMenu (E-0098)
-; 2 call sites from 2 routines (e.g. ArenaMenu_Case0A, ArenaMenu_Case07)
+; 2 call sites from 2 routines (e.g. ArenaMenu_Shared04_Case0A, ArenaMenu_Case07)
 ; reads: wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wGridCursorX, wScreenCountPlusOne
 ; writes: wScriptReturnBank, wScriptReturnLo, wScriptReturnHi, wTalkEventIndex, wTalkEventGroup, wScriptInDataBank, hSpriteWindowClipMode, wBattleIntroKind, ...
 ; points at: wEncounterMonsters
@@ -8140,7 +8140,7 @@ Jump_00C_7561::
     jr nz, Jump_00C_7561
     ld a, [wArg1]
     push af
-    call ArenaMenu_Shared06
+    call ArenaMenu_AddArg1ToGoldCapped99999
     pop af
     ld [wArg1], a
     call ArenaMenu_Case27_Sub02_Sub01
@@ -8199,7 +8199,7 @@ Jump_00C_75B8::
 ; only called from routines of ArenaMenu (E-0098)
 ; 3 call sites from 2 routines (e.g. ArenaMenu_Case27_Sub02, ArenaMenu_Case27)
 ; writes: wArg1, wArg2, wArg3
-ArenaMenu_Shared06::
+ArenaMenu_AddArg1ToGoldCapped99999::
 Func_00C_75BC:: ; address name
     ld hl, $1770
     ld a, l
@@ -8319,7 +8319,7 @@ Data_00C_7831:: ; address name
     db $B6, $C3, $AE, $AF, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ArenaMenu_Case02, ArenaMenu_Case05
+; address loaded by ArenaMenu_Case02, ArenaMenu_Shared01_Case05
 Data_00C_784F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $CA, $C3, $F2, $C3, $1A, $C4, $42, $C4
 

@@ -879,7 +879,7 @@ Jump_0A1_44C5::
     ret
 
 ; marks the 5 x 5 map screens around the current one (within wCD0D x wCD0E) as visited (E-0127)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_Case13)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer)
 ; reads: hMapScreenX, hMapScreenY, wKeyWorldHeight, wKeyWorldWidth, hTemp0, hTemp1
 ; writes: hTemp0, hMapScreenX, hTemp1, hMapScreenY
 ; points at: hMapScreenX, hMapScreenY
@@ -940,7 +940,7 @@ Jump_0A1_4503::
     ret
 
 ; runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case08)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunGameMode2State)
 ; reads: wGameMode2State
 RunGameMode2State::
 Func_0A1_4519:: ; address name
@@ -3545,27 +3545,27 @@ Func_0A1_5479:: ; address name
     cp a, $E2
     jr z, Jump_0A1_553D
     cp a, $20
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $30
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $48
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $70
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $A0
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $A8
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $B0
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $B8
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $C8
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $D1
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp a, $DA
-    jr z, SetSpriteYFromCursorCellY_Case00
+    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     ld c, a
     ld hl, WorldMapCursorCellTable
 
@@ -3600,7 +3600,7 @@ Jump_0A1_5516::
 ; entry 0 of the `rst $00` table in SetSpriteYFromCursorCellY
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hMapScreenX, hMapScreenY
-SetSpriteYFromCursorCellY_Case00::
+SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
 Jump_0A1_5523:: ; address name
     ldh a, [hMapScreenX]
     sla a
@@ -3656,7 +3656,7 @@ Jump_0A1_5565::
     ret
 
 ; hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellX
 ; writes: hSpriteOriginX
 SetSpriteXFromCursorCellX::
@@ -3672,7 +3672,7 @@ Func_0A1_5581:: ; address name
     ret
 
 ; hSpriteOriginY = 8 * wC946 + A + 6; the next entry dispatches on wCC44 & 7 (E-0124)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; reads: wCursorCellY
 ; writes: hSpriteOriginY
 SetSpriteYFromCursorCellY::
@@ -3691,7 +3691,7 @@ Jump_0A1_55A1::
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw SetSpriteYFromCursorCellY_Case00
+    dw SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     dw SetSpriteYFromCursorCellY_Case01
     dw SetSpriteYFromCursorCellY_Case01
     dw SetSpriteYFromCursorCellY_Case03
@@ -3795,7 +3795,7 @@ Func_0A1_560D:: ; address name
     ldh [hSpriteOriginY], a
 
 ; DrawMetaSprite with set $08, sub-index 0, no tile offset or attribute change (origin high bytes 0) (E-0118)
-; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_Case00)
+; 4 call sites from 2 routines (e.g. RunGameMode2State_Case02_Sub03, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX)
 ; writes: hSpriteTileOffset, hSpriteAttrXor, hSpriteSetIndex, hSpriteSubIndex, hSpriteOriginXHi, hSpriteOriginYHi
 DrawMetaSpriteSet08::
 Func_0A1_5639:: ; address name

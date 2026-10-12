@@ -1453,6 +1453,69 @@ class Rom:
                 self.labels[b][a] = new
                 shown += 1
         log(f"structural steps named after the string they show: {shown}")
+        # E-0278: a short branch-free step (at most 12 instructions, no conditional or relative jump, ending
+        # in ret) that calls at least one named routine is named after its main call: the first call that is
+        # not a generic drawing/copy helper (else the first call), plus AndStep when it ends by advancing a
+        # step counter
+        generic = re.compile(r"^(BGMapAddressAtScroll|StoreBAtWordTableEntry|CopyRectTo20ByteRows|CopyFromBankWaitVRAM|"
+                             r"QueueSoundEffect|FillTilesBxC|CopyBytesDEToHL|CopyLow3BitsToWRAMBank2|WaitForVRAMAccess|"
+                             r"FillTilesFromRequest|CopyTileBytesToVRAM|CopyBytes|Multiply|Divide|CopyBBytes|FillBytes)")
+        leaves = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                seq, pc, ok = [], a, False
+                for _ in range(13):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b]):
+                        break
+                    if v[2] in ("jr", "jrc", "jpc", "callc", "retc", "jp", "jphl", "bad") or "," in v[1] and \
+                            v[1].startswith(("jr ", "jp ", "ret ", "call ")):
+                        break
+                    seq.append(v)
+                    if v[2] == "ret":
+                        ok = True
+                        break
+                    pc += v[0]
+                if not ok:
+                    continue
+                targets = []
+                hl = bb = None
+                for v in seq:
+                    if (mh := re.match(r"ld hl, \$([0-9A-F]{4})$", v[1])):
+                        hl = int(mh.group(1), 16)
+                    if (mb := re.match(r"ld b, \$([0-9A-F]{2})$", v[1])):
+                        bb = int(mb.group(1), 16)
+                    if v[2] == "call" and v[3] is not None:
+                        r = self.resolve(b, v[3])
+                        if r:
+                            targets.append(self.labels[r[0]].get(r[1]))
+                    elif v[1] == "rst $10" and hl is not None and bb is not None and bb < self.nbanks:
+                        targets.append(self.labels[bb].get(hl))
+                targets = [t for t in targets if t and not t.startswith(("Func_", "Jump_"))]
+                if not targets:
+                    continue
+                main = next((t for t in targets if not generic.match(t)), targets[0])
+                texts = [v[1] for v in seq]
+                step = any(t == "inc [hl]" for t in texts[-3:]) or (len(texts) >= 3 and texts[-3].startswith("ld a, [")
+                                                                      and texts[-2] == "inc a")
+                parent = m.group(1)
+                if main.startswith(parent):
+                    main = main[len(parent):].lstrip("_")
+                new = f"{parent}_{main}" + ("AndStep" if step else "")
+                if len(new) > 80:
+                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(parent) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+                leaves += 1
+        log(f"branch-free steps named after their main call: {leaves}")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0

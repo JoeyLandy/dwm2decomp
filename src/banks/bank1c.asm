@@ -966,7 +966,7 @@ Data_01C_4598:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; adds the 24-bit wD7F1-wD7F3 to the gold, capped at 99,999 ($01869F) (E-0127)
-; 2 call sites from 2 routines (e.g. ShopMenu_Sell_Case0D, ArenaMenu_Shared06)
+; 2 call sites from 2 routines (e.g. ShopMenu_Sell_Case0D, ArenaMenu_AddArg1ToGoldCapped99999)
 ; reads: wGoldLo, wGoldMid, wGoldHi, wArg1, wArg2, wArg3
 ; writes: wGoldHi, wGoldMid, wGoldLo
 AddArg1ToGoldCapped99999::
@@ -1028,21 +1028,21 @@ CloseShopMenu::
 Func_01C_4605:: ; address name
     ld a, [wGridCursorY]
     rst $00
-    dw CloseShopMenu_Case00
-    dw CloseShopMenu_Case01
+    dw CloseShopMenu_Case00_Sub01_Case00
+    dw CloseShopMenu_Case01_Sub01_Case01
     dw CloseShopMenu_Case02
     dw CloseShopMenu_Case03
 
 ; entry 0 of the `rst $00` table in CloseShopMenu
 ; no direct call (reached through a table, a jump or a vector)
-CloseShopMenu_Case00::
+CloseShopMenu_Case00_Sub01_Case00::
 Jump_01C_4611:: ; address name
     call CloseShopMenu_Case00_Sub01
     ret
 
 ; entry 1 of the `rst $00` table in CloseShopMenu
 ; no direct call (reached through a table, a jump or a vector)
-CloseShopMenu_Case01::
+CloseShopMenu_Case01_Sub01_Case01::
 Jump_01C_4615:: ; address name
     call CloseShopMenu_Case01_Sub01
     ret
@@ -1459,7 +1459,7 @@ Jump_01C_488E:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw ShopMenu_Buy_Case00
-    dw ShopMenu_Buy_Case01
+    dw ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw ShopMenu_Buy_Case02
     dw ShopMenu_Buy_Case03
     dw ShopMenu_Buy_AdvanceScreenStep
@@ -1473,7 +1473,7 @@ Jump_01C_488E:: ; address name
     dw ShopMenu_Buy_Case0C
     dw DrawTwoBoxesAndRequestScript80
     dw ShopMenu_Buy_Case0E
-    dw ShopMenu_Buy_Case0F
+    dw ShopMenu_Buy_DrawTwoBoxesAndRequestScript80
     dw ShopMenu_Buy_Case10
 
 ; entry 0 of the `rst $00` table in ShopMenu_Buy
@@ -1536,7 +1536,7 @@ Jump_01C_48ED::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ShopMenu_Buy_Case01::
+ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
 Jump_01C_48F5:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld de, $0081
@@ -3160,7 +3160,7 @@ Data_01C_52E4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
 ; clears two rectangles at scroll + $10E and + $140, wD781 = 6, clears wScriptCommandType and requests script $80 (E-0124)
-; 1 call site from 1 routine (e.g. ShopMenu_Buy_Case0F)
+; 1 call site from 1 routine (e.g. ShopMenu_Buy_DrawTwoBoxesAndRequestScript80)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
 DrawTwoBoxesAndRequestScript80::
 Func_01C_52E8:: ; address name
@@ -3187,7 +3187,7 @@ Func_01C_52E8:: ; address name
 ; entry 15 of the `rst $00` table in ShopMenu_Buy
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-ShopMenu_Buy_Case0F::
+ShopMenu_Buy_DrawTwoBoxesAndRequestScript80::
 Jump_01C_5317:: ; address name
     call DrawTwoBoxesAndRequestScript80
     ld a, $10
@@ -3415,7 +3415,7 @@ Jump_01C_5476:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw ShopMenu_Buy_Case00
-    dw ShopMenu_Buy_Case01
+    dw ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw ShopMenu_Sell_Case02
     dw ShopMenu_Sell_Case03
     dw ShopMenu_Sell_Case04
@@ -6040,7 +6040,7 @@ Data_01C_679D:: ; address name
     db $F0
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 6 call sites from 4 routines (e.g. VaultMenu_Setup_Case00, ClearRect147AndAskTwoChoice, VaultMenu_Store_Case12, Func_01C_6AF7_Case00)
+; 6 call sites from 4 routines (e.g. VaultMenu_Setup_Case00, ClearRect147AndAskTwoChoice, VaultMenu_Store_CopyTileBytesToVRAM_Bank1C, Func_01C_6AF7_Case00)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank1C::
 Func_01C_679E:: ; address name
@@ -6634,7 +6634,7 @@ Func_01C_6A71:: ; address name
     ret
 
 ; only called from CloseShopMenu_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. CloseShopMenu_Case01)
+; 1 call site from 1 routine (e.g. CloseShopMenu_Case01_Sub01_Case01)
 ; writes: wGlyphListPos, wScreenCounter, wScreenState, wScreenStep, wMenuState, wScriptCommandType, wScriptStartRequest
 ; points at: wGridCursorY
 CloseShopMenu_Case01_Sub01::
@@ -6654,7 +6654,7 @@ Func_01C_6A8E:: ; address name
     ret
 
 ; only called from CloseShopMenu_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. CloseShopMenu_Case00)
+; 1 call site from 1 routine (e.g. CloseShopMenu_Case00_Sub01_Case00)
 ; reads: wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wGridCursorY
 CloseShopMenu_Case00_Sub01::
@@ -7284,35 +7284,35 @@ VaultMenu_Store::
 Jump_01C_6F27:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw VaultMenu_Store_Case00
-    dw VaultMenu_Store_Case01
-    dw VaultMenu_Store_Case02
-    dw VaultMenu_Store_Case03
+    dw VaultMenu_Store_Case00_Sub01_Case00
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
+    dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
+    dw VaultMenu_Store_Case03_Sub01_Case03
     dw VaultMenu_Store_Case04
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_Case06
-    dw VaultMenu_Store_Case07
-    dw VaultMenu_Store_Case08
+    dw VaultMenu_Store_Case07_Sub01_Case07
+    dw VaultMenu_Store_Case08_Sub01_Case08
     dw VaultMenu_Store_Case09
-    dw VaultMenu_Store_Case0A
-    dw VaultMenu_Store_Case0B
+    dw VaultMenu_Store_Case0A_Sub01_Case0A
+    dw VaultMenu_Store_Case0B_Sub01_Case0B
     dw VaultMenu_Store_Case0C
-    dw VaultMenu_Store_Case0D
+    dw VaultMenu_Store_Case0D_Sub01_Case0D
     dw VaultMenu_Store_Case0E
-    dw VaultMenu_Store_Case0F
+    dw VaultMenu_Store_InitItemListScreenListAndDraw
     dw VaultMenu_Store_Case10
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
-    dw VaultMenu_Store_Case12
-    dw VaultMenu_Store_Case13
-    dw VaultMenu_Store_Case14
-    dw VaultMenu_Store_Case15
+    dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
+    dw VaultMenu_Store_Shared02_Case13
+    dw VaultMenu_Store_Case14_Sub01_Case14
+    dw VaultMenu_Store_Case15_Sub01_Case15
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_Case17
-    dw VaultMenu_Store_Case18
+    dw VaultMenu_Store_ClearRect147AndAskTwoChoice
 
 ; entry 0 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case00::
+VaultMenu_Store_Case00_Sub01_Case00::
 Jump_01C_6F5D:: ; address name
     farcall VaultMenu_Store_Case00_Sub01
     ret
@@ -7321,7 +7321,7 @@ Jump_01C_6F5D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-VaultMenu_Store_Case01::
+VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1::
 Jump_01C_6F64:: ; address name
     call BGMapAddressAtScroll_Bank1C_67AF
     ld bc, $0B09
@@ -7336,7 +7336,7 @@ Jump_01C_6F64:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenByteED, wScreenStep, wScriptCommandType, wScriptStartRequest
-VaultMenu_Store_Case02::
+VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B::
 Jump_01C_6F78:: ; address name
     farcall LoadThreeTilesAndDrawRows4603To460B
     xor a, a
@@ -7352,7 +7352,7 @@ Jump_01C_6F78:: ; address name
 
 ; entry 3 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case03::
+VaultMenu_Store_Case03_Sub01_Case03::
 Jump_01C_6F93:: ; address name
     farcall VaultMenu_Store_Case03_Sub01
     ret
@@ -7548,28 +7548,28 @@ Jump_01C_70B7::
 
 ; entry 7 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case07::
+VaultMenu_Store_Case07_Sub01_Case07::
 Jump_01C_70B8:: ; address name
     farcall VaultMenu_Store_Case07_Sub01
     ret
 
 ; entry 8 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case08::
+VaultMenu_Store_Case08_Sub01_Case08::
 Jump_01C_70BF:: ; address name
     farcall VaultMenu_Store_Case08_Sub01
     ret
 
 ; entry 10 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0A::
+VaultMenu_Store_Case0A_Sub01_Case0A::
 Jump_01C_70C6:: ; address name
     farcall VaultMenu_Store_Case0A_Sub01
     ret
 
 ; entry 11 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0B::
+VaultMenu_Store_Case0B_Sub01_Case0B::
 Jump_01C_70CD:: ; address name
     farcall VaultMenu_Store_Case0B_Sub01
     ret
@@ -7601,7 +7601,7 @@ Jump_01C_70D4:: ; address name
 
 ; entry 13 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0D::
+VaultMenu_Store_Case0D_Sub01_Case0D::
 Jump_01C_7103:: ; address name
     farcall VaultMenu_Store_Case0D_Sub01
     ret
@@ -7625,7 +7625,7 @@ Jump_01C_7118::
 
 ; entry 15 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case0F::
+VaultMenu_Store_InitItemListScreenListAndDraw::
 Jump_01C_7128:: ; address name
     call InitItemListScreenListAndDraw
     farcall VaultMenu_Store_Case0F_Sub01
@@ -7663,7 +7663,7 @@ Jump_01C_715C:: ; address name
 
 ; entry 19 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case13::
+VaultMenu_Store_Shared02_Case13::
 Jump_01C_7163:: ; address name
     farcall VaultMenu_Store_Shared02
     ret
@@ -7672,7 +7672,7 @@ Jump_01C_7163:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-VaultMenu_Store_Case12::
+VaultMenu_Store_CopyTileBytesToVRAM_Bank1C::
 Jump_01C_716A:: ; address name
     ld hl, vTiles1 + $4C0
     ld de, vTiles2 + $700
@@ -7689,20 +7689,20 @@ Jump_01C_716A:: ; address name
 
 ; entry 20 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case14::
+VaultMenu_Store_Case14_Sub01_Case14::
 Jump_01C_7188:: ; address name
     farcall VaultMenu_Store_Case14_Sub01
     ret
 
 ; entry 21 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Store_Case15::
+VaultMenu_Store_Case15_Sub01_Case15::
 Jump_01C_718F:: ; address name
     farcall VaultMenu_Store_Case15_Sub01
     ret
 
 ; clears the rectangle at scroll + $147, copies a tile, runs Func_01C_7252, wD781 = 3, wTwoChoiceCursor = 2 and requests script $80 (E-0124)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case18)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_ClearRect147AndAskTwoChoice)
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ClearRect147AndAskTwoChoice::
 Func_01C_7196:: ; address name
@@ -7762,7 +7762,7 @@ Jump_01C_71CF::
 ; entry 24 of the `rst $00` table in VaultMenu_Store
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenState, wScreenStep
-VaultMenu_Store_Case18::
+VaultMenu_Store_ClearRect147AndAskTwoChoice::
 Jump_01C_7200:: ; address name
     call ClearRect147AndAskTwoChoice
     ld a, $01
@@ -7778,48 +7778,48 @@ VaultMenu_TakeOut::
 Jump_01C_720E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw VaultMenu_Store_Case00
-    dw VaultMenu_Store_Case01
-    dw VaultMenu_Store_Case02
-    dw VaultMenu_TakeOut_Case03
+    dw VaultMenu_Store_Case00_Sub01_Case00
+    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
+    dw VaultMenu_Store_LoadThreeTilesAndDrawRows4603To460B
+    dw VaultMenu_TakeOut_Case03_Sub01_Case03
     dw VaultMenu_Store_Case04
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_Case06
-    dw VaultMenu_Store_Case07
-    dw VaultMenu_Store_Case08
+    dw VaultMenu_Store_Case07_Sub01_Case07
+    dw VaultMenu_Store_Case08_Sub01_Case08
     dw VaultMenu_Store_Case09
-    dw VaultMenu_Store_Case0A
-    dw VaultMenu_Store_Case0B
+    dw VaultMenu_Store_Case0A_Sub01_Case0A
+    dw VaultMenu_Store_Case0B_Sub01_Case0B
     dw VaultMenu_Store_Case0C
-    dw VaultMenu_Store_Case0D
+    dw VaultMenu_Store_Case0D_Sub01_Case0D
     dw VaultMenu_Store_Case0E
-    dw VaultMenu_Store_Case0F
+    dw VaultMenu_Store_InitItemListScreenListAndDraw
     dw VaultMenu_Store_Case10
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
-    dw VaultMenu_Store_Case12
-    dw VaultMenu_Store_Case13
-    dw VaultMenu_Store_Case14
-    dw VaultMenu_TakeOut_Case15
+    dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
+    dw VaultMenu_Store_Shared02_Case13
+    dw VaultMenu_Store_Case14_Sub01_Case14
+    dw VaultMenu_TakeOut_Case15_Sub01_Case15
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_Case17
-    dw VaultMenu_Store_Case18
+    dw VaultMenu_Store_ClearRect147AndAskTwoChoice
 
 ; entry 3 of the `rst $00` table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_TakeOut_Case03::
+VaultMenu_TakeOut_Case03_Sub01_Case03::
 Jump_01C_7244:: ; address name
     farcall VaultMenu_TakeOut_Case03_Sub01
     ret
 
 ; entry 21 of the `rst $00` table in VaultMenu_TakeOut
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_TakeOut_Case15::
+VaultMenu_TakeOut_Case15_Sub01_Case15::
 Jump_01C_724B:: ; address name
     farcall VaultMenu_TakeOut_Case15_Sub01
     ret
 
 ; copies $20 bytes from Data_01C_5F5E to wD788, counts the inventory items into wD7B0 and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
-; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, VaultMenu_Store_Case0F)
+; 2 call sites from 2 routines (e.g. ClearRect147AndAskTwoChoice, VaultMenu_Store_InitItemListScreenListAndDraw)
 ; reads: wDigits
 ; writes: wListPages, wItemCountTens, wItemCountOnes
 ; points at: wScreenList, wScreenBlock92, wInventory

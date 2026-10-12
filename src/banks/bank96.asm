@@ -1372,7 +1372,7 @@ Script_96_700D:: ; heuristic: event script entry or jump target; C0
 ; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C_Sub01)
 ; reads: wStringIndex
 ; writes: wStringIndex
-DebugMessageTest_Update_Case1C_Sub01_Sub01::
+DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay::
 Func_096_7011:: ; address name
     ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]

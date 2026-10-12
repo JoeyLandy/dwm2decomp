@@ -2431,6 +2431,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0278 — Branch-free steps named after their main call
+
+- Kind: TOOL (structural naming from the instructions; C2 for what is called).
+- A structural step that is short and branch-free (at most 12 instructions, no conditional or relative jump, ending in `ret`) and calls at least one named routine is named Parent_<main call>, plus AndStep when it ends by advancing a counter.
+  - The main call is the first call that is not a generic helper (BG-map address, rect copy, tile copy, sound, byte copy, multiply, divide); otherwise it is the first call.
+  - Examples: BreedMenu_Case04_DrawRecordListPageNames, BreedMenu_Case04_ClearTileAreas1240_1700_14E0.
+- 477 steps are renamed. Structural labels go from 4,262 to 3,946.
+- Binary verification: build/run359 PASS, 0 differing bytes; tests OK.
+
+### E-0277 — BreedMenu states that the code identifies
+
+- Kind: OBSERVATION (reading; C1).
+- BreedMenu states named where the code makes the role plain:
+  - Init (clears $6F bytes); Setup (boxes, gold box);
+  - NameEntry: RunNameEntryStateWhenNotFading on the record in list cell 4, plus DeleteSRAMRecordAndCompact;
+  - ReturnToMap: LoadMapHeader, RestorePlayerPositionState;
+  - TalkEvent17ThenNameEntry: talk event group $17, then state 6;
+  - CopyToChildThenTalkEvent16: copies record word $0B and byte $6D to wChildRecord, talk event $16, then state 6;
+  - TalkEvent15.
+- The list and paging states (3-5, $0B-$12) share steps and stay structural until they are read.
+- Binary verification: build/run358 PASS, 0 differing bytes.
+
 ### E-0276 — Menu states named: shop, Vault, inn
 
 - Kind: OBSERVATION (reading; C1).

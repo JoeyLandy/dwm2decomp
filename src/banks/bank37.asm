@@ -855,7 +855,7 @@ Jump_037_4B8B:: ; address name
     rst $00
     dw RunLinkSession5Exchange_Case01_Sub01_Case03_Case00
     dw RunLinkSession5Exchange_Case01_Sub01_Case03_Case01
-    dw RunLinkSession5Exchange_Case01_Sub01_Case03_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Case03_Case03
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case03
@@ -904,7 +904,7 @@ Jump_037_4BC1::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wLinkSendByte, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case03_Case02::
+RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37::
 Jump_037_4BC9:: ; address name
     xor a, a
     ld [wLinkSendByte], a
@@ -2193,7 +2193,7 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_AdvanceScreenStep
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case03
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawTileRectAtHLFromDE_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case06
@@ -2206,22 +2206,22 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case0E
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case0F
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case10
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawWCA2CNameAndWCA36String_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case11
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case12
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case13
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case14
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case15
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case16
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ClearTilesAndDrawRects6C5FAnd6D37
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case19
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1B
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1C
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1E
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1F
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_RunF24C3DAnd4D72
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case20
 
 ; entry 8 of the `rst $00` table in Func_037_4AFD_Case0D
@@ -2289,7 +2289,7 @@ Func_037_542C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg3, wArg4, wArg7, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case03::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawTileRectAtHLFromDE_Bank37::
 Jump_037_5452:: ; address name
     call BGMapAddressAtScroll_Bank37
     ld de, TileRect_1F_687F
@@ -2458,7 +2458,7 @@ Jump_037_552B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case10::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawWCA2CNameAndWCA36String_Bank37::
 Jump_037_5565:: ; address name
     call DrawWCA2CNameAndWCA36String_Bank37
     ld a, [wScreenStep]
@@ -2596,7 +2596,7 @@ Jump_037_563F::
 ; entry 22 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case16::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81::
 Jump_037_564E:: ; address name
     farcall DrawLevelAndStatusRowForWCA81
     ld a, $0F
@@ -2619,7 +2619,7 @@ Jump_037_565A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_ClearTilesAndDrawRects6C5FAnd6D37::
 Jump_037_5668:: ; address name
     farcall ClearTilesAndDrawRects6C5FAnd6D37
     ld a, [wScreenStep]
@@ -2788,7 +2788,7 @@ Jump_037_5760:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteHideTile, wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1F::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_RunF24C3DAnd4D72::
 Jump_037_5789:: ; address name
     farcall RunF24C3DAnd4D72
     ld a, $F0
@@ -2845,14 +2845,14 @@ Jump_037_57D0:: ; address name
     rst $00
     dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case00
     dw ShowString0EAndStep_Bank37
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case02
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu
     dw RunLinkSession5Exchange_Case01_Sub01_Case04_Case04
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case06
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case07
     dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_Case09
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09
 
 ; entry 0 of the `rst $00` table in Func_037_4AFD_Case0E
 ; no direct call (reached through a table, a jump or a vector)
@@ -2873,7 +2873,7 @@ Jump_037_57E8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case0E_Case09::
+RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu_Case09::
 Jump_037_57FC:: ; address name
     ld a, [wScreenState]
     push af
@@ -2887,7 +2887,7 @@ Jump_037_57FC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case0E_Case02::
+RunLinkSession5Exchange_Case01_Sub01_Case0E_BreedMenu::
 Jump_037_580D:: ; address name
     ld a, [wScreenState]
     push af
@@ -3034,7 +3034,7 @@ Jump_037_5925::
     ret
 
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at vTiles1 + $270 with size $0109 (E-0124)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D, RunLinkSession5Exchange_Case01_Sub01_Case0D_Case10)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1D, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawWCA2CNameAndWCA36String_Bank37)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 DrawWCA2CNameAndWCA36String_Bank37::
 Func_037_5929:: ; address name
@@ -3098,7 +3098,7 @@ Func_037_5976:: ; address name
     ret
 
 ; wStringIndex = A (wStringCategory unchanged), then far-calls BeginStringDisplay_Bank0E (E-0066)
-; 22 call sites from 16 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case03_Case02, RunLinkSession5Exchange_Case01_Sub01_Case03_Case01, RunLinkSession5Exchange_Case01_Sub01_Case04_Case1C, RunLinkSession5Exchange_Case01_Sub01_Case04_Case1A, ...)
+; 22 call sites from 16 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case03_ShowStringIndexA_Bank37, RunLinkSession5Exchange_Case01_Sub01_Case03_Case01, RunLinkSession5Exchange_Case01_Sub01_Case04_Case1C, RunLinkSession5Exchange_Case01_Sub01_Case04_Case1A, ...)
 ; writes: wStringIndex
 ShowStringIndexA_Bank37::
 Func_037_5999:: ; address name
