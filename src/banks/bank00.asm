@@ -8533,7 +8533,7 @@ Func_000_2EC5:: ; address name
     ret
 
 ; writes the 24-bit number in hFFC6-hFFC8 as decimal digits from the millions down (dividing by 1,000,000, 100,000 and 10,000), then the 16-bit remainder through the shared writer (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG)
+; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp6
 WriteNumber24AsDecimalString::

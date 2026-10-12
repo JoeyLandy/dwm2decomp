@@ -181,7 +181,7 @@ Data_048_4D9A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $120D9A, $42
 
 ; compressed tileset of map $18 (the first map record using it)
-; address loaded by DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene02_DecompressToVRAM
 ; LZSS-compressed asset: 860 bytes expand to 1536 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map18Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_4DDC:: ; address name
@@ -228,7 +228,7 @@ Map18Screens0_Y0X0:: ; heuristic: map screen stream; C0
 Data_048_519C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $12119C, $A0
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene02_DecompressToVRAM
 ; LZSS-compressed asset: 151 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map18Screens0_Y0X1:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_048_523C:: ; address name
@@ -259,7 +259,7 @@ Map18Attrs0_Y0X0:: ; heuristic: map screen stream; C0
 Data_048_547C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $12147C, $43
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene02_DecompressToVRAM
 ; LZSS-compressed asset: 74 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map18Attrs0_Y0X1:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_048_54BF:: ; address name
@@ -297,7 +297,7 @@ Data_048_55A4:: ; address name
     db $EE, $0F, $4D, $00, $D6, $02
 
 ; compressed tileset of map $19 (the first map record using it)
-; address loaded by DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene03_DecompressToVRAM
 ; LZSS-compressed asset: 1627 bytes expand to 1920 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map19Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_55DA:: ; address name
@@ -347,7 +347,7 @@ Data_048_5C6B:: ; address name
     dfar Map19Attrs0_Y2X0 ; entry 4
     dfar Map19Attrs0_Y0X0 ; entry 5
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene03_DecompressToVRAM
 ; LZSS-compressed asset: 229 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map19Screens0_Y0X0:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_5C7D:: ; address name
@@ -378,7 +378,7 @@ Map19Screens0_Y2X0:: ; heuristic: stream in a run of back-to-back compressed str
 Data_048_60DF:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1220DF, $113
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene03_DecompressToVRAM
 ; LZSS-compressed asset: 130 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map19Attrs0_Y0X0:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_048_61F2:: ; address name

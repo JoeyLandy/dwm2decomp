@@ -1561,7 +1561,7 @@ Func_00D_4CF4:: ; address name
     ret
 
 ; up/down moves wD7AD between two entries; A sets wD7F5 = $FF (with sound $69 and the arrow tile), B sets $FE; otherwise blinks the cursor and wD7F5 = 0 (E-0127)
-; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, EggServiceMenu_Bank1B_PickRecords_ShowStringA10_Bank1B_Case0A, GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D, GameMode6_Update_Case05_HandleTwoChoiceCursorInput_0D, ...)
+; 5 call sites from 5 routines (e.g. EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D, EggServiceMenu_Bank1B_PickRecords_ShowStringA10_Bank1B_Case0A, GameMode6_Update_Case04_HandleTwoChoiceCursorInput_0D, GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wChoiceCursor
 ; writes: wArg5, wChoiceCursor
 HandleTwoChoiceCursorInput_0D::

@@ -2464,7 +2464,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - Bare dispatchers: 200 → 166.
   - Labels under a bare dispatcher: 2,201 → 1,245.
   - Structural labels the generator leaves unnamed: 308 → 266.
-- Binary verification: build/run385 PASS, 0 differing bytes; tests OK (skipped=3) after updating one pinned name.
+- **Second batch** (same method):
+  - Battle: BattleEnd_GainExperience, RunBattleActions_UseItem, RunBattleStep4_ResolveSkill, RunBattleSetup_BankA0_CommandMenu.
+  - Indexed and debug: ApplyEquipmentEffectKeepA_ByItem (indexed by item id - $40), DebugStaffRoll_Scene00-04.
+  - Save screens: GameMode6_Update_Save, GameMode6_Update_ChooseRecordAndSave.
+  - Link and effects: RunLinkSession4ScreenState_StartWithPresetRules, RunEffectRoutineEffectEvery5Frames_ShakeScreen, RunBattlePhaseWhenTextIdle_A0_SyncLink.
+  - After both batches: bare dispatchers 151; labels under them 1,012; structural labels unnamed 250.
+- Binary verification: build/run386 PASS, 0 differing bytes; tests OK (skipped=3).
 
 ### E-0287 — Branch targets become local labels named by shape; two sound routines named
 

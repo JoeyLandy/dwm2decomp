@@ -2926,7 +2926,7 @@ Func_032_514C:: ; address name
     ret
 
 ; for a skill action (wBattleActionId outside $D0-$E3) the cost is byte 0 of the record in wRecordBufferData, copied to hFFC8. The actor's MP minus the cost is computed in HL; a negative result returns with D = 1 (not enough MP) and carry clear. Equal MP and cost succeeds (D = 0, carry set). The MP is not written here (E-0048)
-; 6 call sites from 4 routines (e.g. RunBattleStep4_Case00_Sub01_CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, CheckFormationPartnersCanAct)
+; 6 call sites from 4 routines (e.g. RunBattleStep4_ResolveSkill_CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, CheckFormationPartnersCanAct)
 ; reads: wBattleActionId, wBattleActor, hTemp2, wRecordBufferData
 ; writes: hTemp2
 ; points at: wBattleStatus2
@@ -3218,7 +3218,7 @@ Func_032_535F:: ; address name
     ret
 
 ; actions $D0-$E3 continue at PayActorMPCost_CpD6; otherwise returns unless ActionIsSpecialBFOrC9ToCF (E-0126)
-; 8 call sites from 8 routines (e.g. RunBattleStep4_Case00_Sub01_CheckActionD0ToE3OrSpecial, RunBattleStep4_Case00_Sub01_CheckSkillMPCost, RunBattleActions_StatusChecks_CheckActionD0ToE3OrSpecial, RunBattleActions_StatusChecks_Case01_CheckSkillMPCost, ...)
+; 8 call sites from 8 routines (e.g. RunBattleStep4_ResolveSkill_CheckActionD0ToE3OrSpecial, RunBattleStep4_ResolveSkill_CheckSkillMPCost, RunBattleActions_StatusChecks_CheckActionD0ToE3OrSpecial, RunBattleActions_StatusChecks_Case01_CheckSkillMPCost, ...)
 ; reads: wBattleActionId, wBattleActor, hTemp0, wRecordBufferData
 ; writes: wRecordBuffer, wBattleActor, wRecordBufferData, wAllMPSpentLo, wAllMPSpentHi
 ; points at: wSavedActionChoices, wBattleMP
@@ -3633,7 +3633,7 @@ Jump_032_55E7:: ; address name
     ret
 
 ; in link battles with rules on: an action forbidden by the wD044/wD045 rules (Data_032_5688) ends the battle with music 2 and a message for the side that broke it (E-0128)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation)
+; 1 call site from 1 routine (e.g. RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation)
 ; reads: wLinkMode, wLinkRules, wDefeatFlagsBA, wBattleActionId, wBattleActor, wLinkRole, wDataBankSave
 ; writes: wBattleScene, wStringIndex, wStringCategory, wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wDataBank, ...
 ; points at: wBattleResolveStep, wLinkRuleWork57, wBattleInitByte58
@@ -3884,28 +3884,28 @@ Func_032_5804:: ; address name
     farcall LoadSkillRecord
     ret
 
-; only called from RunBattleStep4_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleStep4_Case00)
+; by wBattleResolveStep: checks the skill's MP cost (CheckSkillMPCost), shows its battle text, selects the effect by its flags and checks the link rules
+; 1 call site from 1 routine (e.g. RunBattleStep4_ToRunBattleStep4_ResolveSkill)
 ; reads: wBattleResolveStep
-RunBattleStep4_Case00_Sub01::
+RunBattleStep4_ResolveSkill::
 Func_032_5820:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc
-    dw RunBattleStep4_Case00_Sub01_CheckSkillMPCost
-    dw RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable
-    dw RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags
-    dw RunBattleStep4_Case00_Sub01_Case04
-    dw RunBattleStep4_Case00_Sub01_SetBattleSubPhase
-    dw RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation
-    dw RunBattleStep4_Case00_Sub01_CheckActionD0ToE3OrSpecial
+    dw RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc
+    dw RunBattleStep4_ResolveSkill_CheckSkillMPCost
+    dw RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable
+    dw RunBattleStep4_ResolveSkill_SelectEffectByEffectFlags
+    dw RunBattleStep4_ResolveSkill_Case04
+    dw RunBattleStep4_ResolveSkill_SetBattleSubPhase
+    dw RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation
+    dw RunBattleStep4_ResolveSkill_CheckActionD0ToE3OrSpecial
 
-; entry 0 of the `rst $00` table in Func_032_5820
+; entry 0 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleTarget, wDefeatFlagsBA, wBattleActionId
 ; writes: wFollowUpAction, wDefeatFlagsBA, wBattleActor, wBattleTarget
 ; points at: wBattleResolveStep, wSavedActorTarget, wBattleActionChoice, wSlotMarks, wBattleTargetChoice
-RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc::
+RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc::
 Jump_032_5834:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -3976,11 +3976,11 @@ Jump_032_5834:: ; address name
     ld [wBattleTarget], a
     ret
 
-; entry 1 of the `rst $00` table in Func_032_5820
+; entry 1 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
 ; points at: wBattleResolveStep
-RunBattleStep4_Case00_Sub01_CheckSkillMPCost::
+RunBattleStep4_ResolveSkill_CheckSkillMPCost::
 Jump_032_58B3:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4005,12 +4005,12 @@ Jump_032_58B3:: ; address name
 .return:
     ret
 
-; entry 2 of the `rst $00` table in Func_032_5820
+; entry 2 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wResolveFlagB2
 ; writes: wEffectFlags2
 ; points at: wBattleResolveStep
-RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable::
+RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable::
 Jump_032_58DA:: ; address name
     ld a, [wResolveFlagB2]
     bit 0, a
@@ -4025,12 +4025,12 @@ Jump_032_58DA:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_032_5820
+; entry 3 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSoundChannelSlots
 ; writes: wEffectFlags, wBattleSubStep
 ; points at: wSoundChannel1, wBattleResolveStep
-RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags::
+RunBattleStep4_ResolveSkill_SelectEffectByEffectFlags::
 Jump_032_58F7:: ; address name
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -4046,24 +4046,24 @@ Jump_032_58F7:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 4 of the `rst $00` table in Func_032_5820
+; entry 4 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04::
+RunBattleStep4_ResolveSkill_Case04::
 Jump_032_5915:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleStep4_Case00_Sub01_Case04_ReadByteAtHLPlusA
-    dw RunBattleStep4_Case00_Sub01_Case04_ShowGWasShattered
-    dw RunBattleStep4_Case00_Sub01_Case04_ShowSealPrayWasBroken
-    dw RunBattleStep4_Case00_Sub01_Case04_SetBattleResolveStep
+    dw RunBattleStep4_ResolveSkill_Case04_ReadByteAtHLPlusA
+    dw RunBattleStep4_ResolveSkill_Case04_ShowGWasShattered
+    dw RunBattleStep4_ResolveSkill_Case04_ShowSealPrayWasBroken
+    dw RunBattleStep4_ResolveSkill_Case04_SetBattleResolveStep
 
-; entry 0 of the `rst $00` table in Func_032_5820_Case04
+; entry 0 of the `rst $00` table in RunBattleStep4_ResolveSkill_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wRecordBufferData, wBattleTarget, wBattleActionId
 ; writes: wBattleActionId, wBattleTarget, wBattleSubStep
 ; points at: wBattleActionChoice, wBattleStatus8, wBattleResolveStep, wQueuedActionId, wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04_ReadByteAtHLPlusA::
+RunBattleStep4_ResolveSkill_Case04_ReadByteAtHLPlusA::
 Jump_032_5921:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -4133,10 +4133,10 @@ Jump_032_5921:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_032_5820_Case04
+; entry 1 of the `rst $00` table in RunBattleStep4_ResolveSkill_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04_ShowGWasShattered::
+RunBattleStep4_ResolveSkill_Case04_ShowGWasShattered::
 Jump_032_5993:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -4144,12 +4144,12 @@ Jump_032_5993:: ; address name
     farcall ShowBattleText
     ret
 
-; entry 2 of the `rst $00` table in Func_032_5820_Case04
+; entry 2 of the `rst $00` table in RunBattleStep4_ResolveSkill_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleByteAD
 ; writes: wBattleByteAD
 ; points at: wBattleSubStep
-RunBattleStep4_Case00_Sub01_Case04_ShowSealPrayWasBroken::
+RunBattleStep4_ResolveSkill_Case04_ShowSealPrayWasBroken::
 Jump_032_59A0:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -4162,11 +4162,11 @@ Jump_032_59A0:: ; address name
     ld [wBattleByteAD], a
     ret
 
-; entry 3 of the `rst $00` table in Func_032_5820_Case04
+; entry 3 of the `rst $00` table in RunBattleStep4_ResolveSkill_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wBattleResolveStep
-RunBattleStep4_Case00_Sub01_Case04_SetBattleResolveStep::
+RunBattleStep4_ResolveSkill_Case04_SetBattleResolveStep::
 Jump_032_59B8:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4174,10 +4174,10 @@ Jump_032_59B8:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in Func_032_5820
+; entry 5 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
-RunBattleStep4_Case00_Sub01_SetBattleSubPhase::
+RunBattleStep4_ResolveSkill_SetBattleSubPhase::
 Jump_032_59C1:: ; address name
     ld a, $05
     ld [wBattleSubPhase], a
@@ -4185,18 +4185,18 @@ Jump_032_59C1:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 6 of the `rst $00` table in Func_032_5820
+; entry 6 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case00_Sub01_ToCheckLinkRuleViolation::
+RunBattleStep4_ResolveSkill_ToCheckLinkRuleViolation::
 Jump_032_59CB:: ; address name
     call CheckLinkRuleViolation
     ret
 
-; entry 7 of the `rst $00` table in Func_032_5820
+; entry 7 of the `rst $00` table in RunBattleStep4_ResolveSkill
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep, wBattleSubStep
 ; points at: wBattleSubPhase
-RunBattleStep4_Case00_Sub01_CheckActionD0ToE3OrSpecial::
+RunBattleStep4_ResolveSkill_CheckActionD0ToE3OrSpecial::
 Jump_032_59CF:: ; address name
     call CheckActionD0ToE3OrSpecial
     ld hl, wBattleSubPhase
@@ -4581,7 +4581,7 @@ Func_032_5B94:: ; address name
     ret
 
 ; sets the target's battle AGL and DEF to their base values (GetBaseAGL, GetBaseDEF), preserving wBattleStatResult and all registers (E-0121)
-; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case02_Case04_CarryUnlessBattleSlotOutSlotEmpty, DefeatTarget)
+; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty, DefeatTarget)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wBattleTarget
 ; writes: wBattleStatResultLo, wBattleStatResultHi
 ; points at: wBattleAGL, wBattleDEF
@@ -4630,7 +4630,7 @@ Func_032_5BE8:: ; address name
     ret
 
 ; when bits 4-5 of the target's status byte (wD80D + 9 * slot) are set: stores GetBaseHP and GetBaseMP of the target in wBattleMaxHP and wBattleMaxMP and lowers the current values to the new maximum
-; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case02_Case04_CarryUnlessBattleSlotOutSlotEmpty, DefeatTarget)
+; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty, DefeatTarget)
 ; reads: wBattleTarget, wBattleStatResultLo, wBattleStatResultHi
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleStatus1, wBattleMaxHP, wBattleHP, wBattleMaxMP, wBattleMP, wBattleATK, wBattleINT, wBattleLevel, ...
@@ -4871,12 +4871,12 @@ Func_032_5E1E:: ; address name
     ld [hl], $FF
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case02_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case02_Case04_CarryUnlessBattleSlotOutSlotEmpty_Case04)
+; only called from RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty_Case04)
 ; reads: wBattleTarget
 ; writes: wSideFlags0, wSideFlags1, wBattleTarget
 ; points at: wBattleStatus6, wBattleStatus, wBattleSlotOut, wSlotMarks
-RunBattlePhaseWhenTextIdle_A0_Case02_Case04_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty::
 Func_032_5E3B:: ; address name
     xor a, a
     ld [wSideFlags0], a
@@ -6434,7 +6434,7 @@ Func_032_6755:: ; address name
     ret
 
 ; runs the routine for wBattleSubStep2 (jump table of three) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_ToRunBattleSubStep2_6764)
 ; reads: wBattleSubStep2
 RunBattleSubStep2_6764::
 Func_032_6764:: ; address name
@@ -6590,7 +6590,7 @@ Jump_032_681C:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 19 call sites from 10 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleStep4_Case00_Sub01_WriteFollowUpActionAndDefeatFlagsBAEtc, RunBattleActions_StatusChecks_CheckActionD0ToE3OrSpecial, RunBattleSubStep_6662_AddDoubleAToHL_Bank32, ...)
+; 19 call sites from 10 routines (e.g. RecomputeTargetMaxHPAndMP, RunBattleStep4_ResolveSkill_WriteFollowUpActionAndDefeatFlagsBAEtc, RunBattleActions_StatusChecks_CheckActionD0ToE3OrSpecial, RunBattleSubStep_6662_AddDoubleAToHL_Bank32, ...)
 AddDoubleAToHL_Bank32::
 Func_032_6826:: ; address name
     add a, a

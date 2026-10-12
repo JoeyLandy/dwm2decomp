@@ -2,7 +2,7 @@ SECTION "Bank 16", ROMX[$4000], BANK[$16]
     db $16, $F0, $C6, $CD, $92, $4A, $C9
 
 ; wItemId (wD081) = item id: copies the 13-byte ItemTable record to wItemRecord (wD084)
-; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_Case08_Sub01_LoadItemRecord, PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1)
+; 4 call sites from 4 routines (e.g. PauseMenu_Items_Case00_UpdateMenuCursor, LoadSelectedInventoryItemRecord, RunBattleActions_UseItem_LoadItemRecord, PauseMenu_State4_Sub02_Case00_UpdateMenuCursor_BankF1)
 ; reads: wItemId
 ; points at: wItemRecord
 LoadItemRecord::
@@ -2123,190 +2123,190 @@ Func_016_4A48:: ; address name
 ApplyEquipmentEffectKeepA::
 Func_016_4A92:: ; address name
     push af
-    call ApplyEquipmentEffectKeepA_Sub01
+    call ApplyEquipmentEffectKeepA_ByItem
     pop af
     ret
 
-; only called from ApplyEquipmentEffectKeepA (E-0047)
+; jumps by (item id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
 ; 1 call site from 1 routine (e.g. ApplyEquipmentEffectKeepA)
-ApplyEquipmentEffectKeepA_Sub01::
+ApplyEquipmentEffectKeepA_ByItem::
 Func_016_4A98:: ; address name
     sub a, $40
     rst $00
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case05
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case06
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case07
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case08
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_Return
-    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case22
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case05
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case06
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case07
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case08
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_Return
+    dw ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case14
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_ByItem_Return_Case22
 
-; entry 0 of the `rst $00` table in Func_016_4A98
+; entry 0 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1::
 Jump_016_4AE1:: ; address name
     ld a, $1E
     ld c, $5D
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; entry 1 of the `rst $00` table in Func_016_4A98
+; entry 1 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01::
 Jump_016_4AE9:: ; address name
     ld a, $50
     ld c, $5D
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; entry 2 of the `rst $00` table in Func_016_4A98
+; entry 2 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02::
 Jump_016_4AF1:: ; address name
     ld a, $1E
     ld c, $61
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; entry 3 of the `rst $00` table in Func_016_4A98
+; entry 3 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03::
 Jump_016_4AF9:: ; address name
     ld a, $50
     ld c, $61
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; entry 4 of the `rst $00` table in Func_016_4A98
+; entry 4 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1::
 Jump_016_4B01:: ; address name
     ld a, $0A
     ld c, $63
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 5 of the `rst $00` table in Func_016_4A98
+; entry 5 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case05::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case05::
 Jump_016_4B09:: ; address name
     ld a, $32
     ld c, $63
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 6 of the `rst $00` table in Func_016_4A98
+; entry 6 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case06::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case06::
 Jump_016_4B11:: ; address name
     ld a, $0A
     ld c, $65
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 7 of the `rst $00` table in Func_016_4A98
+; entry 7 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case07::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case07::
 Jump_016_4B19:: ; address name
     ld a, $32
     ld c, $65
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 8 of the `rst $00` table in Func_016_4A98
+; entry 8 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case08::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case08::
 Jump_016_4B21:: ; address name
     ld a, $0A
     ld c, $67
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 9 of the `rst $00` table in Func_016_4A98
+; entry 9 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09::
 Jump_016_4B29:: ; address name
     ld a, $32
     ld c, $67
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 10 of the `rst $00` table in Func_016_4A98
+; entry 10 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A::
 Jump_016_4B31:: ; address name
     ld a, $32
     ld c, $69
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 11 of the `rst $00` table in Func_016_4A98
+; entry 11 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B::
 Jump_016_4B39:: ; address name
     ld a, $64
     ld c, $69
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 12 of the `rst $00` table in Func_016_4A98
+; entry 12 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Return::
+ApplyEquipmentEffectKeepA_ByItem_Return::
 Jump_016_4B41:: ; address name
     ret
 
-; entry 19 of the `rst $00` table in Func_016_4A98
+; entry 19 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13::
+ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13::
 Jump_016_4B42:: ; address name
     ld a, $05
     ld c, $65
     call SubtractAFromRecordWordFloor1
     ret
 
-; entry 20 of the `rst $00` table in Func_016_4A98
+; entry 20 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Return_Case14::
+ApplyEquipmentEffectKeepA_ByItem_Return_Case14::
 Jump_016_4B4A:: ; address name
     ret
 
-; entry 26 of the `rst $00` table in Func_016_4A98
+; entry 26 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Return_Case1A::
+ApplyEquipmentEffectKeepA_ByItem_Return_Case1A::
 Jump_016_4B4B:: ; address name
     ret
 
-; entry 34 of the `rst $00` table in Func_016_4A98
+; entry 34 of the `rst $00` table in ApplyEquipmentEffectKeepA_ByItem
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Return_Case22::
+ApplyEquipmentEffectKeepA_ByItem_Return_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
@@ -2383,7 +2383,7 @@ Func_016_4B68:: ; address name
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
-; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09, ...)
+; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09, ...)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordFloor1::
@@ -2425,7 +2425,7 @@ Func_016_4B97:: ; address name
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
-; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1)
+; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01, ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordPairFloor1::

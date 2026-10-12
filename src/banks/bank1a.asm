@@ -1926,7 +1926,7 @@ Func_01A_60E6:: ; address name
     ret
 
 ; for record wD868 finds the skills of Data_01A_4FF8 not yet known whose level and stat requirements its stats now meet (E-0131)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills)
+; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case03_FindNewlyLearnableSkills)
 ; reads: wBattleArg0, hTemp6
 ; writes: hTemp6, hTemp3, hTemp4, hTemp5
 FindNewlyLearnableSkills::
@@ -2387,7 +2387,7 @@ Func_01A_6306:: ; address name
     ret
 
 ; hFFC6 = 0 and A = 0 (E-0114)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case09_ClearTemp0AndA)
+; 1 call site from 1 routine (e.g. BattleEnd_GainExperience_Case09_ClearTemp0AndA)
 ; writes: hTemp0
 ClearTemp0AndA::
 Func_01A_631A:: ; address name
@@ -2649,7 +2649,7 @@ Data_01A_63F8:: ; address name
     db $10 ; id 31
 
 ; for record wD869 below its level cap: computes the stat gains from its species growth rows (table $6616) into wD095-wD09A (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0, BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1)
+; 2 call sites from 2 routines (e.g. BattleEnd_GainExperience_Case02_CopyTenByteNameToTextBuf0, BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wLevelUpGains
 ; points at: wLevelUpGains
@@ -3317,7 +3317,7 @@ Func_01A_7284:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_747F (E-0114)
-; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_ShowStringBank09AtTilesHL_BankA0)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0)
 CopyRectRecord747FToScreenBuffer::
 Func_01A_728B:: ; address name
     ld hl, TileRect_1A_747F
@@ -3333,7 +3333,7 @@ Func_01A_7292:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_75AB (E-0114)
-; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_Case01_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case04)
+; 1 call site from 1 routine (e.g. RunBattleSetup_BankA0_CommandMenu_DrawWC278Rect20x11ToBGMapRow7_BankA0_Case04)
 CopyRectRecord75ABToScreenBuffer::
 Func_01A_7299:: ; address name
     ld hl, TileRect_1A_75AB
@@ -3365,7 +3365,7 @@ Func_01A_72AE:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with Data_01A_7600, then with Data_01A_7734 (E-0114)
-; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, RunBattleSetup_BankA0_Case01_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Case0C)
+; 2 call sites from 2 routines (e.g. CopyRectRecords7600And7734ToScreenBufferFar, RunBattleSetup_BankA0_CommandMenu_DrawWC2B8Rect11x9ToBGMapRow9_BankA0_Case0C)
 CopyRectRecords7600And7734ToScreenBuffer::
 Func_01A_72B5:: ; address name
     ld hl, TileRect_1A_7600

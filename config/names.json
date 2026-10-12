@@ -7256,5 +7256,20 @@
   "37:4BEB": {"name": "RunLinkSession5Exchange_LinkBreed", "note": "by wScreenStep: BreedMenu list steps, unpacks the partner's record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and StoreReceivedRecordIntoSRAM", "evidence": "E-0288 (C1: from its steps' calls)"},
   "0D:7159": {"name": "NpcBreedMenu_ChooseAndBreed", "note": "by wScreenStep: BreedMenu list steps, a two-choice confirmation, ComputeBreedingChild, then a talk event", "evidence": "E-0288 (C1: from its steps' calls)"},
   "0D:4710": {"name": "EggServiceMenu_ChooseAndPay", "note": "by wScreenStep: BreedMenu list steps, a two-choice confirmation and IsAmountInArg1AboveGold", "evidence": "E-0288 (C1: from its steps' calls)"},
-  "1B:6727": {"name": "EggServiceMenu_Bank1B_PickRecords", "note": "by wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window", "evidence": "E-0288 (C1: from its steps' calls and strings)"}
+  "1B:6727": {"name": "EggServiceMenu_Bank1B_PickRecords", "note": "by wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window", "evidence": "E-0288 (C1: from its steps' calls and strings)"},
+  "31:67AA": {"name": "BattleEnd_GainExperience", "note": "by wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks RecordReachedNextLevelExp, computes level-up stat gains and learned skills ('0 learned G!')", "evidence": "E-0288 (C1: from its steps' calls and strings)"},
+  "3B:42F4": {"name": "RunBattleActions_UseItem", "note": "by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But nothing happened!', LoadItemRecord, DispatchActionEffectTable_Bank3B)", "evidence": "E-0288 (C1: from the quoted battle texts and calls)"},
+  "A0:5F76": {"name": "RunBattleSetup_BankA0_CommandMenu", "note": "by wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_CommandMenu (command windows, 'It has no usable ...')", "evidence": "E-0288 (C1: from its steps' calls and strings)"},
+  "16:4A98": {"name": "ApplyEquipmentEffectKeepA_ByItem", "note": "jumps by (item id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns", "evidence": "E-0288 (C2 for the index; C1 for the meaning)"},
+  "E0:5AF2": {"name": "DebugStaffRoll_Scene00", "note": "by wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step", "evidence": "E-0288 (C1)"},
+  "E0:5E4B": {"name": "DebugStaffRoll_Scene01", "note": "as DebugStaffRoll_Scene00", "evidence": "E-0288 (C1)"},
+  "E0:6266": {"name": "DebugStaffRoll_Scene02", "note": "as DebugStaffRoll_Scene00", "evidence": "E-0288 (C1)"},
+  "E0:6841": {"name": "DebugStaffRoll_Scene03", "note": "as DebugStaffRoll_Scene00", "evidence": "E-0288 (C1)"},
+  "E0:6C0A": {"name": "DebugStaffRoll_Scene04", "note": "as DebugStaffRoll_Scene00", "evidence": "E-0288 (C1)"},
+  "24:452A": {"name": "GameMode6_Update_Save", "note": "by wScreenStep: draws the sprites, then RunSaveGameSteps", "evidence": "E-0288 (C1: from its steps' calls)"},
+  "24:47CF": {"name": "GameMode6_Update_ChooseRecordAndSave", "note": "by wScreenStep: a paged record list, the 'Info / OK / Yes / No' window, the monster-egg message and RunSaveGameSteps", "evidence": "E-0288 (C1: from its steps' calls and strings)"},
+  "32:5820": {"name": "RunBattleStep4_ResolveSkill", "note": "by wBattleResolveStep: checks the skill's MP cost (CheckSkillMPCost), shows its battle text, selects the effect by its flags and checks the link rules", "evidence": "E-0288 (C1: from its steps' calls)"},
+  "07:7864": {"name": "RunLinkSession4ScreenState_StartWithPresetRules", "note": "by wLinkScreenSubState: InitLinkRulesPresetA, a message, then link message exchange", "evidence": "E-0288 (C1: from its steps' calls)"},
+  "3A:513A": {"name": "RunEffectRoutineEffectEvery5Frames_ShakeScreen", "note": "a sequence of steps that only write hScrollX/hScrollY: a screen shake", "evidence": "E-0288 (C1: from its steps' writes)"},
+  "A0:52C0": {"name": "RunBattlePhaseWhenTextIdle_A0_SyncLink", "note": "by wBattleStep: exchanges bytes and messages over the link ('Please wait.')", "evidence": "E-0288 (C1: from its steps' calls and strings)"}
 }

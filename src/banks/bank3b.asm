@@ -504,34 +504,34 @@ Func_03B_42F0:: ; address name
     ld c, a
     ret
 
-; only called from RunBattleActions_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08)
+; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But nothing happened!', LoadItemRecord, DispatchActionEffectTable_Bank3B)
+; 1 call site from 1 routine (e.g. RunBattleActions_ToRunBattleActions_UseItem)
 ; reads: wBattleResolveStep
-RunBattleActions_Case08_Sub01::
+RunBattleActions_UseItem::
 Func_03B_42F4:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleActions_Case08_Sub01_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleActions_Case08_Sub01_ShowActionBattleText
-    dw RunBattleActions_Case08_Sub01_TargetOnLocalSide_Bank3B
-    dw RunBattleActions_Case08_Sub01_ShowHeroIsAHunk
-    dw RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep
-    dw RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
-    dw RunBattleActions_Case08_Sub01_ShowBattleText
-    dw RunBattleActions_Case08_Sub01_Return
-    dw RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B
-    dw RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764
-    dw RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc
-    dw RunBattleActions_Case08_Sub01_LoadItemRecord
-    dw RunBattleActions_Case08_Sub01_SetDefeatFlagsBA
-    dw RunBattleActions_Case08_Sub01_ShowButNothingHappened
+    dw RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunBattleActions_UseItem_ShowActionBattleText
+    dw RunBattleActions_UseItem_TargetOnLocalSide_Bank3B
+    dw RunBattleActions_UseItem_ShowHeroIsAHunk
+    dw RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep
+    dw RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
+    dw RunBattleActions_UseItem_ShowBattleText
+    dw RunBattleActions_UseItem_Return
+    dw RunBattleActions_UseItem_AddDoubleAToHL_Bank3B
+    dw RunBattleActions_UseItem_ToRunBattleSubStep2_6764
+    dw RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc
+    dw RunBattleActions_UseItem_LoadItemRecord
+    dw RunBattleActions_UseItem_SetDefeatFlagsBA
+    dw RunBattleActions_UseItem_ShowButNothingHappened
 
-; entry 0 of the `rst $00` table in Func_03B_42F4
+; entry 0 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleFlag92, wBattleFlag93, wLinkRole
 ; writes: wDefeatFlagsBA, wSlotsOccupiedFlag, wBattleTarget, wBattleActionId, wBattleResolveStep
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
 Jump_03B_4314:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -586,7 +586,7 @@ Jump_03B_4314:: ; address name
     ret
 
 ; returns carry only when slots C, C + 1 and C + 2 are all occupied (CarryUnlessBattleSlotOutSlotEmpty) (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_CarryUnlessBattleSlotOutSlotEmpty)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty)
 AllThreeSlotsFromCOccupied::
 Func_03B_4373:: ; address name
     ld b, $03
@@ -600,22 +600,22 @@ Func_03B_4373:: ; address name
     jr nz, .loop
     ret
 
-; entry 1 of the `rst $00` table in Func_03B_42F4
+; entry 1 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_ShowActionBattleText::
+RunBattleActions_UseItem_ShowActionBattleText::
 Jump_03B_437F:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
     ret
 
-; entry 2 of the `rst $00` table in Func_03B_42F4
+; entry 2 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActionId, wBattleKind, wBattleTarget
 ; writes: wEffectFlags, wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleInitA1, wBattleStatus
-RunBattleActions_Case08_Sub01_TargetOnLocalSide_Bank3B::
+RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
 Jump_03B_438A:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -714,7 +714,7 @@ Jump_03B_438A:: ; address name
     ret
 
 ; hFFC6 = wD890, then far-calls Func_03A_774C (E-0122)
-; 5 call sites from 1 routine (e.g. RunBattleActions_Case08_Sub01_TargetOnLocalSide_Bank3B)
+; 5 call sites from 1 routine (e.g. RunBattleActions_UseItem_TargetOnLocalSide_Bank3B)
 ; reads: wBattleFoeCount
 ; writes: hTemp0
 Call774CWithBattleFoeCount::
@@ -724,11 +724,11 @@ Func_03B_444A:: ; address name
     farcall Call774CWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
-; entry 3 of the `rst $00` table in Func_03B_42F4
+; entry 3 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleTarget
 ; points at: wBattleResolveStep, wBattleStatus5
-RunBattleActions_Case08_Sub01_ShowHeroIsAHunk::
+RunBattleActions_UseItem_ShowHeroIsAHunk::
 Jump_03B_4456:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -743,22 +743,22 @@ Jump_03B_4456:: ; address name
     call SetResolveStep0A
     ret
 
-; entry 4 of the `rst $00` table in Func_03B_42F4
+; entry 4 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep::
+RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
 Jump_03B_4473:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
     ret
 
-; entry 5 of the `rst $00` table in Func_03B_42F4
+; entry 5 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wResolveMsgFlags, wBattleDamageLo, wBattleDamageHi, wBattleActionId, wBattleTarget
 ; writes: wResolveMsgFlags, wSlotsOccupiedFlag, wEffectFlags, wEffectFlags2
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
+RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
 Jump_03B_447B:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -847,12 +847,12 @@ Jump_03B_447B:: ; address name
     call AddHLToBattleMeterCappedAt1800
     ret
 
-; entry 6 of the `rst $00` table in Func_03B_42F4
+; entry 6 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wResolveMsgFlags, wResolveMsgActor, wTemp0, wResolveMsgTarget
 ; writes: wTemp0
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_ShowBattleText::
+RunBattleActions_UseItem_ShowBattleText::
 Jump_03B_4512:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -877,7 +877,7 @@ Jump_03B_4512:: ; address name
     ret
 
 ; returns when wDAC0 bit 4 is set, otherwise SetResolveStep0A (E-0116)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_ShowBattleText)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_ShowBattleText)
 ; reads: wResolveMsgFlags
 SetResolveStep0AUnlessResolveMsgFlagsBit4::
 Func_03B_453D:: ; address name
@@ -887,18 +887,18 @@ Func_03B_453D:: ; address name
     call SetResolveStep0A
     ret
 
-; entry 7 of the `rst $00` table in Func_03B_42F4
+; entry 7 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case08_Sub01_Return::
+RunBattleActions_UseItem_Return::
 Jump_03B_4547:: ; address name
     ret
 
-; entry 8 of the `rst $00` table in Func_03B_42F4
+; entry 8 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wResolveMsgArg, wBattleTarget, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleSubStep2
 ; points at: wBattleResolveStep, wBattleHP
-RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B::
+RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
 Jump_03B_4548:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -955,19 +955,19 @@ Jump_03B_4548:: ; address name
 .return:
     ret
 
-; entry 9 of the `rst $00` table in Func_03B_42F4
+; entry 9 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764::
+RunBattleActions_UseItem_ToRunBattleSubStep2_6764::
 Jump_03B_459F:: ; address name
     farcall RunBattleSubStep2_6764
     ret
 
-; entry 10 of the `rst $00` table in Func_03B_42F4
+; entry 10 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleFlag93, wBattleFlag92, wBattleTarget, wDefeatFlagsBA
 ; writes: wBattleTarget, wBattleResolveStep, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wBattleResolveStep, wBattleMonsterId, wDefeatFlagsBA, wSpeciesGroups
-RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc::
+RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
 Jump_03B_45A6:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1044,7 +1044,7 @@ Jump_03B_45A6:: ; address name
     ret
 
 ; runs Func_03B_4650 once (marked by bit 7 of wDABA), then Func_03B_4673 each time; returns wDABA & $7F (E-0122)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc)
 ; reads: wDefeatFlagsBA
 ; writes: wDefeatFlagsBA
 RunOnce4650Then4673::
@@ -1133,12 +1133,12 @@ Func_03B_4673:: ; address name
     inc c
     jr .check_record_buffer_data
 
-; entry 11 of the `rst $00` table in Func_03B_42F4
+; entry 11 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wResolveMsgArg, wSlotsOccupiedFlag, wBattleFlag93, wCommandCursor, wMenuOption, wItemId, wItemRecord
 ; writes: wItemId, wInventorySlot
 ; points at: wBattleResolveStep
-RunBattleActions_Case08_Sub01_LoadItemRecord::
+RunBattleActions_UseItem_LoadItemRecord::
 Jump_03B_469E:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1179,10 +1179,10 @@ Jump_03B_469E:: ; address name
     farcall ShowBattleText
     ret
 
-; entry 12 of the `rst $00` table in Func_03B_42F4
+; entry 12 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDefeatFlagsBA, wBattleSubPhase, wBattleResolveStep
-RunBattleActions_Case08_Sub01_SetDefeatFlagsBA::
+RunBattleActions_UseItem_SetDefeatFlagsBA::
 Jump_03B_46EF:: ; address name
     xor a, a
     ld [wDefeatFlagsBA], a
@@ -1192,10 +1192,10 @@ Jump_03B_46EF:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 13 of the `rst $00` table in Func_03B_42F4
+; entry 13 of the `rst $00` table in RunBattleActions_UseItem
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleActions_Case08_Sub01_ShowButNothingHappened::
+RunBattleActions_UseItem_ShowButNothingHappened::
 Jump_03B_46FD:: ; address name
     ld d, $CC ; battle text 'But nothing happened!'
     farcall ShowBattleText
@@ -1204,7 +1204,7 @@ Jump_03B_46FD:: ; address name
     ret
 
 ; wBattleResolveStep = $0A (the damage-message step, ResolveStepDamageMessage) (E-0116)
-; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessResolveMsgFlagsBit4, RunBattleActions_Case08_Sub01_ShowHeroIsAHunk)
+; 2 call sites from 2 routines (e.g. SetResolveStep0AUnlessResolveMsgFlagsBit4, RunBattleActions_UseItem_ShowHeroIsAHunk)
 ; writes: wBattleResolveStep
 SetResolveStep0A::
 Func_03B_470B:: ; address name
@@ -1213,7 +1213,7 @@ Func_03B_470B:: ; address name
     ret
 
 ; lists the target side's species and groups the targets that share the target's species into wD88B-wD88D (bit 7 marks a group) (E-0131)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteBattleTargetAndBattleResolveStepEtc)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc)
 ; reads: wBattleTarget
 ; writes: wSpeciesGroups, wDefeatFlagsBA
 ; points at: wSpeciesGroups, wTemp0
@@ -1604,7 +1604,7 @@ Data_03B_4949:: ; address name
     db $0A, $00, $1E, $00, $64, $00, $E7, $03, $05, $00
 
 ; wD89F += HL, capped at $0708 (1800) (E-0122)
-; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
+; 2 call sites from 2 routines (e.g. AddActionAmountToBattleMeter, RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
 ; reads: wBattleMeter
 ; writes: wBattleMeter
 AddHLToBattleMeterCappedAt1800::
@@ -1627,7 +1627,7 @@ Func_03B_4953:: ; address name
     ret
 
 ; wD89F -= HL, floored at 0 (E-0124)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc)
 ; reads: wBattleMeter
 ; writes: wBattleMeter
 SubtractHLFromBattleMeterFloored::
@@ -1975,7 +1975,7 @@ Func_03B_4AF9:: ; address name
     ret
 
 ; jumps to the routine whose address is at $4B11 + 2 * wBattleActionId (JumpToWordAtHL), the bank-$3B counterpart of DispatchActionEffectTable (E-0116)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_DispatchActionEffectTable_Bank3BAndStep)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep)
 ; reads: wBattleActionId
 DispatchActionEffectTable_Bank3B::
 Func_03B_4B02:: ; address name
@@ -2728,7 +2728,7 @@ Func_03B_4F59:: ; address name
     ret
 
 ; carry set when wBattleTarget < 4 (slots 0-3); when wC58A = 1 and wC57F bit 1 is set the test is reversed (carry set when wBattleTarget >= 4) (E-0064) (the same 27 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction, RunBattleActions_Case08_Sub01_TargetOnLocalSide_Bank3B)
+; 3 call sites from 3 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction, RunBattleActions_UseItem_TargetOnLocalSide_Bank3B)
 ; reads: wLinkMode, wLinkRole, wBattleTarget
 TargetOnLocalSide_Bank3B::
 Func_03B_4F74:: ; address name
@@ -2770,7 +2770,7 @@ Data_03B_4FA4:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3B::
 Func_03B_4FAB:: ; address name
@@ -2782,7 +2782,7 @@ Func_03B_4FAB:: ; address name
     ret
 
 ; Sets bit 1 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B)
+; 1 call site from 1 routine (e.g. RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
 ; points at: wLevelUpGains
 SetBit1OfLevelUpGainsIndexed_Bank3B::
 Func_03B_4FB8:: ; address name
@@ -2794,7 +2794,7 @@ Func_03B_4FB8:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, RunBattleActions_Case08_Sub01_AddDoubleAToHL_Bank3B)
+; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, RunBattleActions_UseItem_AddDoubleAToHL_Bank3B)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3B::
 Func_03B_4FC5:: ; address name

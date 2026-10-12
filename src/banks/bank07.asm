@@ -833,7 +833,7 @@ Jump_007_4952:: ; address name
     jp ClearSGBPacketBuffer_CheckLinkMode
 
 ; fills the 20 x 18 visible part of wScreenTileBuffer (32-byte rows) with D (E-0124)
-; 5 call sites from 4 routines (e.g. GameMode5_Init_InitSoundHardware, RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
+; 5 call sites from 4 routines (e.g. GameMode5_Init_InitSoundHardware, RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
 ; points at: wScreenTileBuffer
 FillScreenTileBufferWithD::
 Func_007_4AE4:: ; address name
@@ -1275,7 +1275,7 @@ Func_007_4DEC:: ; address name
     db $01, $00, $00, $63, $29, $01, $00, $00, $63, $80
 
 ; copies the 10 bytes at wD043 to wD04D (E-0122)
-; 2 call sites from 2 routines (e.g. RunLinkSession4ScreenState_Case03_WriteWorkBufAndLinkScreenSubStateEtc, RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD)
+; 2 call sites from 2 routines (e.g. RunLinkSession4ScreenState_Case03_WriteWorkBufAndLinkScreenSubStateEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD)
 ; points at: wLinkRules, wLinkRulesCopy
 CopyLinkRulesToLinkRulesCopy::
 Func_007_4E11:: ; address name
@@ -1770,7 +1770,7 @@ Func_007_510D:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank07 (E-0114)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case02_ShowStringHL_Bank07, RunLinkSession4ScreenState_Case03_ToShowStringHL_Bank07AndStep, RunLinkSession4ScreenState_Case04_WriteLinkScreenStateAndLinkScreenSubStateEtc, RunLinkSession4ScreenState_Case04_ShowStringHL_Bank07AndStep)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case02_ShowStringHL_Bank07, RunLinkSession4ScreenState_Case03_ToShowStringHL_Bank07AndStep, RunLinkSession4ScreenState_StartWithPresetRules_Case03, RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank07::
 Func_007_512B:: ; address name
@@ -5007,7 +5007,7 @@ Func_007_6C12:: ; address name
     dw RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc
     dw RunLinkSession4ScreenState_Case02
     dw RunLinkSession4ScreenState_Case03
-    dw RunLinkSession4ScreenState_Case04
+    dw RunLinkSession4ScreenState_StartWithPresetRules
     dw RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc
     dw RunLinkSession4ScreenState_Case06_DecompressToVRAMAndStep
     dw RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B
@@ -5315,7 +5315,7 @@ Func_007_6DC2:: ; address name
     ret
 
 ; wD09D = 0, then wD09E-wD0A2 = the inverted bit 7 of wD044, wD048, wD049, wD04B and wD04C (E-0121)
-; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
+; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_WriteLinkScreenSubStateAndLinkScreenFlagEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
 ; reads: wLinkRules, wLinkRuleTurnLimit
 ; points at: wWorkBuf
 LoadInvertedBit7FlagsToWorkBuf::
@@ -7068,32 +7068,32 @@ Jump_007_7845:: ; address name
     ld [wLinkScreenSubState], a
     ret
 
-; entry 4 of the `rst $00` table in RunLinkSession4ScreenState
+; by wLinkScreenSubState: InitLinkRulesPresetA, a message, then link message exchange
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04::
+RunLinkSession4ScreenState_StartWithPresetRules::
 Jump_007_7864:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw RunLinkSession4ScreenState_Case04_InitLinkRulesPresetA
-    dw RunLinkSession4ScreenState_Case04_ShowStringHL_Bank07AndStep
-    dw RunLinkSession4ScreenState_Case04_WaitTextFlags
-    dw RunLinkSession4ScreenState_Case04_WriteLinkScreenStateAndLinkScreenSubStateEtc
-    dw RunLinkSession4ScreenState_Case04_WaitTextFlags_Case04
-    dw RunLinkSession4ScreenState_Case04_WaitLinkMessage
-    dw RunLinkSession4ScreenState_Case04_WaitLinkMessage_Case06
-    dw RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD
-    dw RunLinkSession4ScreenState_Case04_QueueSoundEffect
-    dw RunLinkSession4ScreenState_Case04_WaitLinkMessage_Case09
-    dw RunLinkSession4ScreenState_Case04_AdvanceLinkScreenSubState
-    dw RunLinkSession4ScreenState_Case04_SetLinkSendByte
+    dw RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA
+    dw RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep
+    dw RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags
+    dw RunLinkSession4ScreenState_StartWithPresetRules_Case03
+    dw RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_Case04
+    dw RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage
+    dw RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_Case06
+    dw RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD
+    dw RunLinkSession4ScreenState_StartWithPresetRules_QueueSoundEffect
+    dw RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_Case09
+    dw RunLinkSession4ScreenState_StartWithPresetRules_AdvanceLinkScreenSubState
+    dw RunLinkSession4ScreenState_StartWithPresetRules_SetLinkSendByte
 
-; entry 0 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 0 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wBattleKind, wLinkScreenState, wLinkSetupMode
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_InitLinkRulesPresetA::
+RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA::
 Jump_007_7880:: ; address name
     ld a, [wLinkMessage]
     cp a, $FB
@@ -7142,11 +7142,11 @@ Jump_007_7880:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 1 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_ShowStringHL_Bank07AndStep::
+RunLinkSession4ScreenState_StartWithPresetRules_ShowStringHL_Bank07AndStep::
 Jump_007_78D9:: ; address name
     ld hl, $0304
     call ShowStringHL_Bank07
@@ -7156,11 +7156,11 @@ Jump_007_78D9:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 2 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_WaitTextFlags::
+RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags::
 Jump_007_78E8:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7169,12 +7169,12 @@ Jump_007_78E8:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 3 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkScreenState, wLinkScreenSubState, wLinkScreenFlag, wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_WriteLinkScreenStateAndLinkScreenSubStateEtc::
+RunLinkSession4ScreenState_StartWithPresetRules_Case03::
 Jump_007_78F2:: ; address name
     ld a, [wLinkMessage]
     cp a, $FE
@@ -7198,12 +7198,12 @@ Jump_007_78F2:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 4 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_WaitTextFlags_Case04::
+RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_Case04::
 Jump_007_791C:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7214,12 +7214,12 @@ Jump_007_791C:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 5 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkBufferCountLo, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkReady, wLinkSendByte
 ; points at: wLinkRecvBuffer, wLinkRules, wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_WaitLinkMessage::
+RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage::
 Jump_007_792B:: ; address name
     ld a, [wLinkMessage]
     cp a, $02
@@ -7244,12 +7244,12 @@ Jump_007_792B:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 6 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_WaitLinkMessage_Case06::
+RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_Case06::
 Jump_007_795B:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -7260,11 +7260,11 @@ Jump_007_795B:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 7 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSubMenuCursor2, wMenuSelectedMember
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD::
+RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD::
 Jump_007_796A:: ; address name
     ld d, $C3
     call FillScreenTileBufferWithD
@@ -7282,12 +7282,12 @@ Jump_007_796A:: ; address name
     call CopyLinkRulesToLinkRulesCopy
     ret
 
-; entry 8 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 8 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSelectedMember
 ; writes: wLinkSetupMode, wLinkSendByte
 ; points at: wMenuSelectedMember, wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_QueueSoundEffect::
+RunLinkSession4ScreenState_StartWithPresetRules_QueueSoundEffect::
 Jump_007_7990:: ; address name
     ld hl, wMenuSelectedMember
     ld de, $50AA
@@ -7322,11 +7322,11 @@ Jump_007_7990:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 9 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkScreenState, wLinkScreenSubState, wLinkScreenFlag
-RunLinkSession4ScreenState_Case04_WaitLinkMessage_Case09::
+RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_Case09::
 Jump_007_79CF:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -7339,19 +7339,19 @@ Jump_007_79CF:: ; address name
     ld [wLinkScreenFlag], a
     ret
 
-; entry 10 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 10 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_AdvanceLinkScreenSubState::
+RunLinkSession4ScreenState_StartWithPresetRules_AdvanceLinkScreenSubState::
 Jump_007_79E4:: ; address name
     ld hl, wLinkScreenSubState
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in RunLinkSession4ScreenState_Case04
+; entry 11 of the `rst $00` table in RunLinkSession4ScreenState_StartWithPresetRules
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte, wLinkScreenState, wLinkScreenFlag, wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_SetLinkSendByte::
+RunLinkSession4ScreenState_StartWithPresetRules_SetLinkSendByte::
 Jump_007_79E9:: ; address name
     ld a, $01
     ld [wLinkSendByte], a
@@ -7491,7 +7491,7 @@ Jump_007_7ACD:: ; address name
     ret
 
 ; draws a tile at wC200, wC266, wC2A6, wC2E6, wC326 or wC366 (or 6/3 past it) depending on wD09D-wD0A2, then runs the four panel routines Func_007_7B30, 7B9D, 7C07 and 7C5F (E-0121)
-; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_Case04_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
+; 3 call sites from 3 routines (e.g. RunLinkSession4ScreenState_Case03_WriteSubMenuCursorAndLinkSendByteEtc, RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD, RunLinkSession4ScreenState_Case08_FillScreenTileBufferWithD)
 ; reads: wWorkBuf
 DrawWorkBufSelectionTilesAndPanels::
 Func_007_7AD4:: ; address name

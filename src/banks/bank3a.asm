@@ -2,7 +2,7 @@ SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
 ; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to ActionEffectTable_Flag3_ClearEffectFlags52 or the effect code, which is not read (E-0057)
-; 15 call sites from 13 routines (e.g. RunBattleActions_StatusChecks_CompareActionIdWithCD, RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ...)
+; 15 call sites from 13 routines (e.g. RunBattleActions_StatusChecks_CompareActionIdWithCD, RunBattleStep4_ResolveSkill_SelectEffectByEffectFlags, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ...)
 ; reads: wBattleTarget, wBattleActionId, wEffectFlags, wDefeatByteBF, wRecordBufferData, wBattleActor, wBattleArg0, wEffectTileOffset
 ; writes: wBattleActor, wEffectRoutine, wEffectId, wEffectFrameCounter, wEffectFlags52, wBattleArg0, wEffectTileOffset, wEffectByteB5, ...
 ; points at: wEffectSpriteX, wEffectStep, wEffectByteB3, wEffectFlags
@@ -1691,7 +1691,7 @@ Func_03A_4C26:: ; address name
     dw RunEffectRoutineEffectEvery5Frames_ReadEffectCounter
     dw RunEffectRoutineEffectEvery5Frames_Case0A
     dw RunEffectRoutineEffectEvery5Frames_Case0B
-    dw RunEffectRoutineEffectEvery5Frames_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
     dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_Case0D
 
 ; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
@@ -2680,47 +2680,47 @@ Jump_03A_5114:: ; address name
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_Case04_WriteEffectIdAndEffectSpriteX
 
-; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
+; a sequence of steps that only write hScrollX/hScrollY: a screen shake
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen::
 Jump_03A_513A:: ; address name
     ld a, [wEffectSpriteX]
     rst $00
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case02
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case04
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case06
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case08
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case0A
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0C
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0E
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0C
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0E
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0C
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0E
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0C
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0E
-    dw RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollYEtc
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case02
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case04
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case06
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case08
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case0A
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc
 
-; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 1 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY::
 Jump_03A_5176:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -2729,11 +2729,11 @@ Jump_03A_5176:: ; address name
     inc [hl]
     ret
 
-; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 0 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX::
 Jump_03A_5180:: ; address name
     ld a, $FE
     ldh [hScrollX], a
@@ -2741,11 +2741,11 @@ Jump_03A_5180:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 2 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case02::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case02::
 Jump_03A_5189:: ; address name
     ld a, $02
     ldh [hScrollX], a
@@ -2753,11 +2753,11 @@ Jump_03A_5189:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 4 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case04::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case04::
 Jump_03A_5192:: ; address name
     ld a, $FC
     ldh [hScrollX], a
@@ -2765,11 +2765,11 @@ Jump_03A_5192:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 6 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case06::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case06::
 Jump_03A_519B:: ; address name
     ld a, $04
     ldh [hScrollX], a
@@ -2777,11 +2777,11 @@ Jump_03A_519B:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 8 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case08::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case08::
 Jump_03A_51A4:: ; address name
     ld a, $F8
     ldh [hScrollX], a
@@ -2789,11 +2789,11 @@ Jump_03A_51A4:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 10 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollX_Case0A::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_Case0A::
 Jump_03A_51AD:: ; address name
     ld a, $08
     ldh [hScrollX], a
@@ -2801,11 +2801,11 @@ Jump_03A_51AD:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 12 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0C::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0C::
 Jump_03A_51B6:: ; address name
     ld a, $F8
     ldh [hScrollX], a
@@ -2815,11 +2815,11 @@ Jump_03A_51B6:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 14 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY
 ; points at: wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollY_Case0E::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_Case0E::
 Jump_03A_51C3:: ; address name
     ld a, $08
     ldh [hScrollX], a
@@ -2829,10 +2829,10 @@ Jump_03A_51C3:: ; address name
     inc [hl]
     ret
 
-; entry 27 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_Case0C
+; entry 27 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames_ShakeScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hScrollX, hScrollY, wEffectId, wEffectSpriteX
-RunEffectRoutineEffectEvery5Frames_Case0C_WriteScrollXAndScrollYEtc::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc::
 Jump_03A_51D0:: ; address name
     xor a, a
     ldh [hScrollX], a
@@ -3774,7 +3774,7 @@ Data_03A_575E:: ; address name
     db $02, $04, $00, $06
 
 ; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
-; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ...)
+; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ...)
 ; reads: wEffectFlags2, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
 SelectEffectByEffectFlags2Flags::
@@ -5145,7 +5145,7 @@ Func_03A_6157:: ; address name
     dw RunBattleActions_ShowHeroBlewBackG
     dw RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleActions_CheckActionBDOrRun63B2And63D2
-    dw RunBattleActions_Case08
+    dw RunBattleActions_ToRunBattleActions_UseItem
     dw RunBattleActions_Case09
     dw RunBattleActions_SetBattlePhase
 
@@ -5558,9 +5558,9 @@ Func_03A_63F7:: ; address name
 
 ; entry 8 of the `rst $00` table in RunBattleActions
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case08::
+RunBattleActions_ToRunBattleActions_UseItem::
 Jump_03A_6408:: ; address name
-    farcall RunBattleActions_Case08_Sub01
+    farcall RunBattleActions_UseItem
     ret
 
 ; entry 9 of the `rst $00` table in RunBattleActions
@@ -6421,7 +6421,7 @@ Func_03A_68C9:: ; address name
 .read_battle_sub_phase:
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattleStep4_Case00
+    dw RunBattleStep4_ToRunBattleStep4_ResolveSkill
     dw RunBattleStep4_ToRunBattleResolveStep
     dw RunBattleStep4_ToRunActionResolveStep
     dw RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc
@@ -6430,9 +6430,9 @@ Func_03A_68C9:: ; address name
 
 ; entry 0 of the `rst $00` table in RunBattleStep4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleStep4_Case00::
+RunBattleStep4_ToRunBattleStep4_ResolveSkill::
 Jump_03A_68F4:: ; address name
-    farcall RunBattleStep4_Case00_Sub01
+    farcall RunBattleStep4_ResolveSkill
     ret
 
 ; entry 1 of the `rst $00` table in RunBattleStep4
@@ -7220,7 +7220,7 @@ Func_03A_6D53:: ; address name
     ret
 
 ; D = Data_03A_6DAA[wBattleActionId]; returns at once when it is $FF; for action $CF first runs Func_03A_6D91; then ShowBattleText (E-0118)
-; 2 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable)
+; 2 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleTextFromActionBattleTextTable::
@@ -7496,7 +7496,7 @@ Data_03A_6DAA:: ; address name
     db $FF ; id 231
 
 ; D = Data_03A_6EA5[wBattleActionId]; returns at once when it is $FF, otherwise ShowBattleText (E-0116)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case08_Sub01_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_Case08_Sub01_ShowActionBattleText)
+; 2 call sites from 2 routines (e.g. RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_UseItem_ShowActionBattleText)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleText::
@@ -8653,7 +8653,7 @@ Func_03A_74FE:: ; address name
     ret
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
-; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, RunBattleActions_StatusChecks_Case01_QueuedActionMatches, RunBattleStep4_Case00_Sub01_CheckSkillMPCost)
+; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, RunBattleActions_StatusChecks_Case01_QueuedActionMatches, RunBattleStep4_ResolveSkill_CheckSkillMPCost)
 ; reads: wBattleActionId, wBattleActor, wSavedActorSlot
 ; writes: wSavedActorSlot, wNameSlot, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wTextBuf2

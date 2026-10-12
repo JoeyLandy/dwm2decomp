@@ -252,7 +252,7 @@ Map00Screens5_Y2X0:: ; heuristic: map screen stream; C0
 Data_046_488C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $11888C, $DF
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene00_DecompressToVRAM
 ; LZSS-compressed asset: 139 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map00Screens0_Y2X1:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_046_496B:: ; address name
@@ -345,7 +345,7 @@ Map00Attrs5_Y2X0:: ; heuristic: map screen stream; C0
 Data_046_528E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $11928E, $73
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene00_DecompressToVRAM
 ; LZSS-compressed asset: 98 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map00Attrs0_Y2X1:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_046_5301:: ; address name
@@ -745,7 +745,7 @@ Data_046_6FC8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $11AFC8, $5D
 
 ; compressed tileset of map $02 (the first map record using it)
-; address loaded by DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene01_DecompressToVRAM
 ; LZSS-compressed asset: 827 bytes expand to 1136 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map02Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_046_7025:: ; address name
@@ -872,7 +872,7 @@ Map02Screens5_Y0X1:: ; heuristic: stream in a run of back-to-back compressed str
 Data_046_76E4:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $11B6E4, $96
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene01_DecompressToVRAM
 ; LZSS-compressed asset: 133 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map02Screens0_Y0X2:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_046_777A:: ; address name
@@ -919,7 +919,7 @@ Data_046_7A5E:: ; address name
     db $50, $0F, $47, $06, $06, $02, $02, $01, $50, $0C, $00, $00, $02, $02, $01, $26
     db $02, $01, $04, $0A, $01, $C8, $0E, $01, $ED, $0F, $4D, $01, $4D, $1F, $07
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene01_DecompressToVRAM
 ; LZSS-compressed asset: 54 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map02Attrs0_Y0X2:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_046_7A9D:: ; address name

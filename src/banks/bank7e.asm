@@ -105,7 +105,7 @@ Data_07E_485F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F885F, $77
 
 ; compressed sprite graphics number $5F of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4 with hFFC8 non-zero)
-; address loaded by DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene02_DecompressToVRAM
 ; LZSS-compressed asset: 231 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 FieldSpriteGfx5F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_48D6:: ; address name
@@ -289,7 +289,7 @@ Data_07E_4EF1:: ; address name
     db $03, $07, $01, $FF, $F3, $D8, $30, $D8, $30, $B8, $60, $F0, $C0, $E0, $01, $A0
     db $F3
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene00_DecompressToVRAM
 ; LZSS-compressed asset: 65 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Plus300Gfx_7E_4F22:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_4F22:: ; address name
@@ -357,7 +357,7 @@ Data_07E_5285:: ; address name
     db $06, $00, $3F, $20, $1F, $13, $1C, $14, $18, $18, $01, $FE, $F0, $01, $16, $00
     db $F8, $08, $F0, $F0, $01, $A0, $F4
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM
+; address loaded by DebugStaffRoll_Scene03_DecompressToVRAM
 ; LZSS-compressed asset: 61 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Plus600Gfx_7E_52BC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_07E_52BC:: ; address name
