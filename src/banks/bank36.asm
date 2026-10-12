@@ -131,7 +131,7 @@ Jump_036_407F:: ; address name
     ld [hl], c
     ld a, c
     ld [wBattleTarget], a
-    ld d, $CB
+    ld d, $CB ; battle text '0 inhaled the attack!'
     farcall ShowBattleText
     ld hl, wBattleSubStep
     inc [hl]
@@ -292,7 +292,7 @@ Jump_036_41D1::
 Jump_036_41EB::
     pop af
     push af
-    ld d, $C8
+    ld d, $C8 ; battle text '0 shunted the attack!'
     farcall ShowBattleText
     ld a, [wBattleTarget]
     ld [wDefeatByteD1], a
@@ -309,7 +309,7 @@ Jump_036_41EB::
     ret
 
 Jump_036_4211::
-    ld d, $C9
+    ld d, $C9 ; battle text '0 failed to avert attack!'
     farcall ShowBattleText
     scf
     ret
@@ -335,7 +335,7 @@ Func_036_421D:: ; address name
     res 6, [hl]
     ld a, $02
     ld [wDefeatStep], a
-    ld d, $C7
+    ld d, $C7 ; battle text 'The wind around 0 bounced the'
     farcall ShowBattleText
     ld a, $01
     ld [wResolveByte81], a
@@ -384,7 +384,7 @@ Jump_036_4280::
     call TargetOnLocalSide_Bank36
     ld d, $C5
     jr c, Jump_036_4289
-    ld d, $C6
+    ld d, $C6 ; battle text 'The wall of light bounced the'
 
 Jump_036_4289::
     farcall ShowBattleText
@@ -420,7 +420,7 @@ Func_036_42AA:: ; address name
     jr z, Jump_036_42CB
     ld a, $84
     call QueueSoundEffect
-    ld d, $68
+    ld d, $68 ; battle text 'But it failed to reach 0!'
     farcall ShowBattleText
     call SetSubPhase2AndRestartResolve
     scf
@@ -589,7 +589,7 @@ Jump_036_43BF::
     ld a, [hl]
     and a, $C0
     jr z, Jump_036_43D8
-    ld d, $66
+    ld d, $66 ; battle text '0 is a hunk of iron!'
     farcall ShowBattleText
     jp Jump_036_4543
 
@@ -618,7 +618,7 @@ Jump_036_43D8::
 Jump_036_4406::
     ld a, $84
     call QueueSoundEffect
-    ld d, $68
+    ld d, $68 ; battle text 'But it failed to reach 0!'
     farcall ShowBattleText
     jp Jump_036_4543
 
@@ -776,7 +776,7 @@ Jump_036_452D::
     jr nc, Jump_036_4542
 
 Jump_036_4533::
-    ld d, $D2
+    ld d, $D2 ; battle text '0 leapt out of the way!'
     farcall ShowBattleText
     ld a, $84
     call QueueSoundEffect
@@ -889,7 +889,7 @@ Jump_036_45D3::
     call ActorOnLocalSide_Bank36
     ld d, $9C
     jr c, Jump_036_45E7
-    ld d, $9D
+    ld d, $9D ; battle text 'A brutal hit!'
 
 Jump_036_45E7::
     farcall ShowBattleText
@@ -1766,7 +1766,7 @@ Jump_036_4B26:: ; address name
     bit 6, [hl]
     ret z
     res 6, [hl]
-    ld d, $80
+    ld d, $80 ; battle text 'The wind around 0 died!'
     farcall ShowBattleText
     ret
 
@@ -1792,7 +1792,7 @@ Jump_036_4B41:: ; address name
     ld [hl], a
     ld hl, wBattleSubStep
     dec [hl]
-    ld d, $5F
+    ld d, $5F ; battle text '0 turned back to normal!'
     farcall ShowBattleText
     push hl
     farcall CancelTargetActionUnlessSpecial
@@ -2058,7 +2058,7 @@ Jump_036_4D7F:: ; address name
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
     ret c
-    ld d, $7F
+    ld d, $7F ; battle text '0 went away!'
     farcall ShowBattleText
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
@@ -2433,7 +2433,7 @@ Func_036_4FBC:: ; address name
     call ActorOnLocalSide_Bank36
     ld d, $D0
     jr c, Jump_036_4FCA
-    ld d, $D1
+    ld d, $D1 ; battle text 'Miss! 0 avoided damage!'
 
 Jump_036_4FCA::
     farcall ShowBattleText
@@ -8617,7 +8617,7 @@ Func_036_71DF:: ; address name
     cp a, $80
     jr c, Jump_036_720C
     set 0, [hl]
-    ld d, $53
+    ld d, $53 ; battle text 'Help arrived from seemingly nowhere!'
     farcall ShowBattleText
     ld a, $03
     ld [wBattleSubPhase], a
@@ -9180,7 +9180,7 @@ Func_036_74A0:: ; address name
     ld a, [wRandomLo]
     and a, $01
     jr nz, Jump_036_74CD
-    ld d, $CC
+    ld d, $CC ; battle text 'But nothing happened!'
     farcall ShowBattleText
     ld a, $01
     ld [wBattleSubPhase], a
@@ -9610,7 +9610,7 @@ Func_036_771B:: ; address name
     ld hl, wSlotFlags854
     add_a_to_hl
     ld [hl], $00
-    ld d, $DD
+    ld d, $DD ; battle text '0 was blown sky-high!'
     farcall ShowBattleText
     jp SetSubPhase2AndResetResolveStep
 
@@ -9984,7 +9984,7 @@ Jump_036_7966::
     ld a, [wRandomLo]
     cp a, $80
     jr c, Jump_036_7981
-    ld d, $72
+    ld d, $72 ; battle text 'But the prayer went unanswered!'
     farcall ShowBattleText
     jp SetSubPhase7AndResetResolveStep
 
@@ -10126,7 +10126,7 @@ Func_036_7A18:: ; address name
     cp a, $B2
     ld d, $8F
     jr z, Jump_036_7A85
-    ld d, $D8
+    ld d, $D8 ; battle text '0 fled!'
     farcall ShowBattleText
     ld a, $82
     call QueueSoundEffect
@@ -10137,7 +10137,7 @@ Jump_036_7A7A::
     cp a, $B2
     ld d, $8F
     jr z, Jump_036_7A85
-    ld d, $5C
+    ld d, $5C ; battle text '0 was shocked!'
 
 Jump_036_7A85::
     farcall ShowBattleText

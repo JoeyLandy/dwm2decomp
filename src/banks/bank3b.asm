@@ -683,7 +683,7 @@ Jump_03B_43F5::
 
 Jump_03B_4406::
     call Call774CWithBattleFoeCount
-    ld d, $E6
+    ld d, $E6 ; battle text '0 can't eat while paralyzed!'
     farcall ShowBattleText
     ld a, $0B
     ld [wBattleResolveStep], a
@@ -738,7 +738,7 @@ Jump_03B_4456:: ; address name
     ld a, [hl]
     and a, $C0
     ret z
-    ld d, $66
+    ld d, $66 ; battle text '0 is a hunk of iron!'
     farcall ShowBattleText
     call SetResolveStep0A
     ret
@@ -1175,7 +1175,7 @@ Jump_03B_46AE::
     ret
 
 Jump_03B_46E6::
-    ld d, $87
+    ld d, $87 ; battle text 'The W shattered!'
     farcall ShowBattleText
     ret
 
@@ -1197,7 +1197,7 @@ Jump_03B_46EF:: ; address name
 ; writes: wBattleResolveStep
 RunBattleActions_Case08_Sub01_Case0D::
 Jump_03B_46FD:: ; address name
-    ld d, $CC
+    ld d, $CC ; battle text 'But nothing happened!'
     farcall ShowBattleText
     ld a, $0C
     ld [wBattleResolveStep], a
@@ -2376,12 +2376,12 @@ Jump_03B_4D59::
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DA3
-    ld d, $FE
+    ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
 Jump_03B_4DA3::
-    ld d, $96
+    ld d, $96 ; battle text '0 ate the meat fearfully! 0'
     farcall ShowBattleText
     ret
 
@@ -2397,12 +2397,12 @@ Jump_03B_4DAC::
     ld a, b
     cp a, $01
     jr z, Jump_03B_4DCF
-    ld d, $FE
+    ld d, $FE ; battle text 'Monsters ate the meat fearfully! Monsters'
     farcall ShowBattleText
     ret
 
 Jump_03B_4DCF::
-    ld d, $96
+    ld d, $96 ; battle text '0 ate the meat fearfully! 0'
     farcall ShowBattleText
     ret
 

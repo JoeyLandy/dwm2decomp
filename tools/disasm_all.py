@@ -4256,9 +4256,37 @@ class Rom:
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
                 out.append(f"    {text}" + self.message_word_note(bank, pc + n, text)
-                           + self.string_index_note(bank, pc, text))
+                           + self.string_index_note(bank, pc, text) + self.battle_text_note(bank, pc + n, text))
             pc += n
         return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
+
+    def battle_text_note(self, bank: int, nxt: int, text: str) -> str:
+        """E-0258: `ld d, n` before a call or far call to ShowBattleText quotes battle text n (bank $2F,
+        table $4016, category 1: ShowBattleText stores D as wStringIndex with category 1, E-0045)."""
+        m = re.match(r"ld d, \$([0-9A-F]{2})$", text)
+        if not m:
+            return ""
+        ins, q, hl = self.insn[bank], nxt, None
+        for _ in range(4):
+            v = ins.get(q)
+            if not v or v[0] == "dw":
+                return ""
+            target = None
+            if v[2] in ("call", "jp") and v[3] is not None:
+                target = self.resolve(bank, v[3])
+            elif (mh := re.match(r"ld hl, \$([0-9A-F]{4})$", v[1])):
+                hl = int(mh.group(1), 16)
+            elif v[1] == "rst $10" and hl is not None:
+                target = (0x3A, hl)
+            if target:
+                if self.labels[target[0]].get(target[1]) != "ShowBattleText":
+                    return ""
+                quote = self.category_string(0x2F, 0x4016, 1, int(m.group(1), 16))
+                return f" ; battle text '{quote}'" if quote else ""
+            if re.match(r"ld d,", v[1]):
+                return ""
+            q += v[0]
+        return ""
 
     STRING_CALLEE = re.compile(r"^(BeginStringDisplay|ShowString|CopyStringToBuffer)")
 

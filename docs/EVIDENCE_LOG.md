@@ -2430,6 +2430,12 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0258 — Battle text quoted in code
+
+- Kind: TOOL (C1 quotes).
+- ShowBattleText runs the BattleTextPrepTable routine for D, then shows string D of category 1 in bank $2F (E-0045). An `ld d, n` followed within four instructions by a call or far call to ShowBattleText now ends with the quoted text, for example `ld d, $82 ; battle text '0 woke up!'`. There are 50 such sites; the others pass D in a register.
+- Binary verification: build/run332 PASS, 0 differing bytes; tests OK.
+
 ### E-0257 — String displays quoted in code
 
 - Kind: TOOL (C1 quotes).

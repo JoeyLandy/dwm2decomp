@@ -5249,7 +5249,7 @@ Jump_03A_6211::
     bit 0, [hl]
     jr z, Jump_03A_6264
     res 0, [hl]
-    ld d, $81
+    ld d, $81 ; battle text 'The help went away!'
     farcall ShowBattleText
     jr Jump_03A_6264
 
@@ -5258,7 +5258,7 @@ Jump_03A_6230::
     ld hl, wBattleStatus6
     call AddAx9ToHL
     res 0, [hl]
-    ld d, $86
+    ld d, $86 ; battle text 'The giant went away laughing!'
     farcall ShowBattleText
     jr Jump_03A_6264
 
@@ -5311,7 +5311,7 @@ Jump_03A_6269:: ; address name
     ld [wBattleSubPhase], a
     xor a, a
     ld [wBattleResolveStep], a
-    ld d, $7E
+    ld d, $7E ; battle text '0 blew back G!'
     farcall ShowBattleText
     ret
 
@@ -5667,7 +5667,7 @@ Jump_03A_6480:: ; address name
     push de
     sub a, $40
     jr nz, Jump_03A_64A5
-    ld d, $84
+    ld d, $84 ; battle text '0's Ironize wore off!'
     farcall ShowBattleText
     xor a, a
 
@@ -5842,7 +5842,7 @@ Jump_03A_6584:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
     farcall BlankTargetMonsterPicture
-    ld d, $90
+    ld d, $90 ; battle text '0 dropped dead!'
     farcall ShowBattleText
     call CheckActionBDOrRun63B2And63D2
     ret nc
@@ -6656,7 +6656,7 @@ Jump_03A_6A3A::
     ld [hl], b
     ld a, [wBattleTarget]
     call SetBit1OfLevelUpGainsIndexed_Bank3A
-    ld d, $40
+    ld d, $40 ; battle text '0 stole GMP!'
     farcall ShowBattleText
     pop de
     ld a, e
@@ -6705,7 +6705,7 @@ Jump_03A_6A60:: ; address name
     ld [hl], $03
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank3A
-    ld d, $82
+    ld d, $82 ; battle text '0 woke up!'
     farcall ShowBattleText
     ret
 
@@ -6736,7 +6736,7 @@ Jump_03A_6ABC:: ; address name
     ld [hl], $03
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank3A
-    ld d, $83
+    ld d, $83 ; battle text '0 snapped out of confusion!'
     farcall ShowBattleText
     ret
 
@@ -6860,7 +6860,7 @@ Jump_03A_6BAB::
     jr Jump_03A_6BBB
 
 Jump_03A_6BB9::
-    ld d, $7D
+    ld d, $7D ; battle text '0 couldn't retaliate!'
 
 Jump_03A_6BBB::
     farcall ShowBattleText
@@ -7087,7 +7087,7 @@ Jump_03A_6CC6:: ; address name
 ; writes: wDefeatStep
 RunDefeatStepMinus1Step_Case08::
 Jump_03A_6CC7:: ; address name
-    ld d, $7F
+    ld d, $7F ; battle text '0 went away!'
 
 Jump_03A_6CC9::
     farcall ShowBattleText
@@ -7137,7 +7137,7 @@ Jump_03A_6D11::
     ld a, [wResolveMsgFlags]
     bit 4, a
     jr z, Jump_03A_6D45
-    ld d, $7A
+    ld d, $7A ; battle text '0 struck back!'
     farcall ShowBattleText
     ld hl, wBattleStep
     inc [hl]
@@ -7155,7 +7155,7 @@ Jump_03A_6D39::
     ld [wFollowUpAction], a
 
 Jump_03A_6D3D::
-    ld d, $7B
+    ld d, $7B ; battle text '0 couldn't strike back!'
     farcall ShowBattleText
 
 Jump_03A_6D45::

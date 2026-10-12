@@ -2466,7 +2466,7 @@ Jump_032_4ECA:: ; address name
     jr Jump_032_4EDB
 
 Jump_032_4ED3::
-    ld d, $82
+    ld d, $82 ; battle text '0 woke up!'
     farcall ShowBattleText
 
 Jump_032_4EDB::
@@ -3593,7 +3593,7 @@ RunBattleActions_Case00_Sub01_Case06_Case01::
 Jump_032_55C2:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
-    ld d, $B0
+    ld d, $B0 ; battle text 'G was shattered!'
     farcall ShowBattleText
     ret
 
@@ -3609,7 +3609,7 @@ Jump_032_55CF:: ; address name
     ld a, [wBattleByteAD]
     cp a, $FF
     ret z
-    ld d, $92
+    ld d, $92 ; battle text 'SealPray was broken!'
     farcall ShowBattleText
     ld a, $FF
     ld [wBattleByteAD], a
@@ -3777,7 +3777,7 @@ Jump_032_5793:: ; address name
     ld d, $8A
     cp a, $04
     jr c, Jump_032_57AF
-    ld d, $8D
+    ld d, $8D ; battle text '0 dropped dead!'
 
 Jump_032_57AF::
     farcall ShowBattleText
@@ -4130,7 +4130,7 @@ RunBattleStep4_Case00_Sub01_Case04_Case01::
 Jump_032_5993:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
-    ld d, $B0
+    ld d, $B0 ; battle text 'G was shattered!'
     farcall ShowBattleText
     ret
 
@@ -4146,7 +4146,7 @@ Jump_032_59A0:: ; address name
     ld a, [wBattleByteAD]
     cp a, $FF
     ret z
-    ld d, $92
+    ld d, $92 ; battle text 'SealPray was broken!'
     farcall ShowBattleText
     ld a, $FF
     ld [wBattleByteAD], a
@@ -5511,7 +5511,7 @@ Jump_032_6245::
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    ld d, $38
+    ld d, $38 ; battle text '0 was brutalized!'
     farcall ShowBattleText
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
@@ -5695,7 +5695,7 @@ Jump_032_6342::
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    ld d, $38
+    ld d, $38 ; battle text '0 was brutalized!'
     farcall ShowBattleText
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
@@ -5817,7 +5817,7 @@ Jump_032_63E9:: ; address name
     ld d, $90
     call ActorOnLocalSide_Bank32
     jr c, Jump_032_6401
-    ld d, $8D
+    ld d, $8D ; battle text '0 dropped dead!'
 
 Jump_032_6401::
     farcall ShowBattleText
@@ -6301,7 +6301,7 @@ Jump_032_66B5::
     call ActorOnLocalSide_Bank32
     ld d, $35
     jr c, Jump_032_66C4
-    ld d, $36
+    ld d, $36 ; battle text '0 took G damage!'
 
 Jump_032_66C4::
     farcall ShowBattleText
