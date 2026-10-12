@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0225 — Tile copy lists derived from their copiers
+
+- Kind: TOOL (C1).
+- **Copiers.** A routine whose first 64 bytes load B = $1F and C = $10, call CopyFromBankWaitVRAM and compare with $FF copies one 16-byte bank-$1F tile per destination word until a low byte of $FF. 30 such routines are found, including CopyTileListFromBank1F_1C and the bank-$14/$1E routines of E-0200 and E-0224.
+- **Lists.** For each call with `ld hl, A` / `ld de, B` in the four instructions before it, A is laid out as a destination list (up to and including the $FFxx word) and B as a source list of as many words (plus $FFFF when present). Lists that overlap another layout or code are skipped.
+- **Result.** 29 lists derived (TileCopyDestList_* / TileCopySrcList_*), for example 1C:$5F86 / $5FE8. Unidentified INCBIN is 9,987 bytes.
+- Binary verification: build/run275 PASS, 0 differing bytes.
+
 ### E-0224 — Name entry and naming screen tile lists (bank $14)
 
 - Kind: OBSERVATION (reading; C1).

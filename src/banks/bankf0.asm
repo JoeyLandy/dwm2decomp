@@ -3630,8 +3630,8 @@ Func_0F0_5E2C:: ; address name
 ; writes: wScreenStep
 RunScreenStep_F0_5DE8_Case01::
 Jump_0F0_5E63:: ; address name
-    ld hl, Data_0F0_6442
-    ld de, Data_0F0_6482
+    ld hl, TileCopyDestList_F0_6442
+    ld de, TileCopySrcList_F0_6482
     call RunScreenStep_F0_5DE8_Shared01
     ld a, [wScreenStep]
     inc a
@@ -3948,8 +3948,8 @@ Jump_0F0_607B:: ; address name
 ; writes: wScreenStep
 RunScreenStep_F0_5DE8_Case0A::
 Jump_0F0_6096:: ; address name
-    ld hl, Data_0F0_64C2
-    ld de, Data_0F0_64D2
+    ld hl, TileCopyDestList_F0_64C2
+    ld de, TileCopySrcList_F0_64D2
     call RunScreenStep_F0_5DE8_Shared01
     ld a, [wScreenStep]
     inc a
@@ -3962,8 +3962,8 @@ Jump_0F0_6096:: ; address name
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
 RunScreenStep_F0_5DE8_Case0B::
 Jump_0F0_60A7:: ; address name
-    ld hl, Data_0F0_6500
-    ld de, Data_0F0_64E0
+    ld hl, TileCopyDestList_F0_6500
+    ld de, TileCopySrcList_F0_64E0
     call RunScreenStep_F0_5DE8_Shared01
     xor a, a
     ld [wStringCategory], a
@@ -4626,38 +4626,50 @@ Jump_0F0_643E::
     jr nz, CopyScreenBufferRectWithAttrs_F0
     ret
 
-; address loaded by RunScreenStep_F0_5DE8_Case01
-Data_0F0_6442:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $20, $90, $30, $90, $40, $90, $50, $90, $60, $90, $70, $90, $80, $90, $90, $90
-    db $A0, $90, $B0, $90, $C0, $90, $D0, $90, $E0, $90, $F0, $90, $00, $91, $10, $91
-    db $20, $91, $30, $91, $40, $91, $50, $91, $60, $91, $70, $91, $80, $91, $90, $91
-    db $A0, $91, $B0, $91, $C0, $91, $D0, $91, $E0, $91, $F0, $91, $F0, $96, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_F0_6442::
+Data_0F0_6442:: ; address name
+    dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
+    dw vTiles2 + $A0, vTiles2 + $B0, vTiles2 + $C0, vTiles2 + $D0, vTiles2 + $E0, vTiles2 + $F0, vTiles2 + $100, vTiles2 + $110
+    dw vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150, vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190
+    dw vTiles2 + $1A0, vTiles2 + $1B0, vTiles2 + $1C0, vTiles2 + $1D0, vTiles2 + $1E0, vTiles2 + $1F0, vTiles2 + $6F0, rIE
 
-; address loaded by RunScreenStep_F0_5DE8_Case01
-Data_0F0_6482:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $D0, $42, $B0, $42, $00, $43, $C0, $44, $00, $44, $B0, $4A, $10, $43, $F0, $43
-    db $E0, $42, $F0, $42, $A0, $42, $20, $43, $60, $42, $90, $43, $B0, $47, $80, $46
-    db $B0, $46, $D0, $49, $B0, $42, $E0, $43, $90, $48, $90, $47, $80, $48, $40, $44
-    db $80, $43, $00, $45, $E0, $44, $C0, $42, $30, $4A, $70, $42, $D0, $4A, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_F0_6482::
+Data_0F0_6482:: ; address name
+    dw $42D0, $42B0, $4300, $44C0, $4400, $4AB0, $4310, $43F0 ; entry 0
+    dw $42E0, $42F0, $42A0, $4320, $4260, $4390, $47B0, $4680
+    dw $46B0, $49D0, $42B0, $43E0, $4890, $4790, $4880, $4440
+    dw $4380, $4500, $44E0, $42C0, $4A30, $4270, $4AD0, $FFFF
 
-; address loaded by RunScreenStep_F0_5DE8_Case0A
-Data_0F0_64C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_F0_64C2::
+Data_0F0_64C2:: ; address name
+    dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
-; address loaded by RunScreenStep_F0_5DE8_Case0A
-Data_0F0_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_F0_64D2::
+Data_0F0_64D2:: ; address name
+    dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
-; address loaded by RunScreenStep_F0_5DE8_Case0B
-Data_0F0_64E0:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $40, $44, $80, $44, $E0, $43, $E0, $42, $B0, $46, $B0, $47, $50, $46, $00, $44
-    db $B0, $42, $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_F0_64E0::
+Data_0F0_64E0:: ; address name
+    dw $4440, $4480, $43E0, $42E0, $46B0, $47B0, $4650, $4400 ; entry 0
+    dw $42B0, $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF
 
-; address loaded by RunScreenStep_F0_5DE8_Case0B
-Data_0F0_6500:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C0, $97, $D0, $97, $E0, $97, $F0, $97, $F0, $8D, $E0, $8F, $F0, $8F, $70, $97
-    db $80, $97, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
-    db $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_F0_6500::
+Data_0F0_6500:: ; address name
+    dw vTiles2 + $7C0, vTiles2 + $7D0, vTiles2 + $7E0, vTiles2 + $7F0, vTiles1 + $5F0, vTiles1 + $7E0, vTiles1 + $7F0, vTiles2 + $770 ; entry 0
+    dw vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
+    dw rIE
 
 ; address loaded by Func_0F0_4CA0_Table3_Case05, RunScreenStep_F0_5B50_Case01, RunScreenStep_F0_5B50_Case09
 Data_0F0_6522:: ; heuristic: pointer load in the same bank (bank assumed); C0

@@ -1204,8 +1204,8 @@ Jump_01C_4702:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE2_Run_Case01_Case01::
 Jump_01C_4706:: ; address name
-    ld hl, Data_01C_5F86
-    ld de, Data_01C_5FE8
+    ld hl, TileCopyDestList_1C_5F86
+    ld de, TileCopySrcList_1C_5FE8
     call CopyTileListFromBank1F_1C
     ret
 
@@ -5172,17 +5172,41 @@ Data_01C_5F5E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B8, $B9, $B9, $B9, $B9, $B9, $B9, $BA, $B6, $AE, $AD, $EC, $AF, $C3, $C3, $B7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
-; address loaded by ScriptCommandE2_Run_Case01_Case01, ScriptCommandE5_Run_Case01_Case01
-Data_01C_5F86:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $071F86, $62
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_1C_5F86::
+Data_01C_5F86:: ; address name
+    dw vTiles1 + $6A0, vTiles1 + $6B0, vTiles1 + $6C0, vTiles1 + $6D0, vTiles1 + $6E0, vTiles1 + $6F0, vTiles1 + $700, vTiles1 + $710 ; entry 0
+    dw vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750, vTiles1 + $760, vTiles1 + $770, vTiles1 + $780, vTiles1 + $790
+    dw vTiles1 + $7A0, vTiles1 + $7B0, vTiles1 + $7C0, vTiles1 + $7D0, vTiles1 + $7E0, vTiles1 + $7F0, vTiles1 + $500, vTiles1 + $510
+    dw vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550, vTiles1 + $560, vTiles1 + $570, vTiles1 + $580, vTiles1 + $590
+    dw vTiles1 + $5A0, vTiles1 + $5B0, vTiles1 + $5C0, vTiles1 + $5D0, vTiles1 + $5E0, vTiles1 + $2A0, vTiles1 + $2B0, vTiles1 + $2C0
+    dw vTiles1 + $2D0, vTiles1 + $2E0, vTiles1 + $2F0, vTiles1 + $470, vTiles1 + $480, vTiles1 + $490, vTiles1 + $4A0, vTiles1 + $4B0
+    dw rIE
 
-; address loaded by ScriptCommandE2_Run_Case01_Case01
-Data_01C_5FE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $071FE8, $62
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_1C_5FE8::
+Data_01C_5FE8:: ; address name
+    dw $40C0, $4390, $43D0, $41D0, $4330, $4300, $4910, $4910 ; entry 0
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $43C0, $42D0
+    dw $4380, $41B0, $4A40, $4910, $4910, $4910, $4910, $4A00
+    dw $FFFF
 
-; address loaded by ScriptCommandE5_Run_Case01_Case01
-Data_01C_604A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $07204A, $62
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_1C_604A::
+Data_01C_604A:: ; address name
+    dw $4210, $42D0, $43D0, $42C0, $4280, $4360, $4910, $4910 ; entry 0
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4910, $4910
+    dw $4910, $4910, $4910, $4910, $4910, $4910, $4250, $43B0
+    dw $4380, $41B0, $4A40, $4910, $4910, $4910, $4910, $4A00
+    dw $FFFF
 
 ; address loaded by ScriptCommandE2_Run_Case03_Case00
 Data_01C_60AC:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -6684,8 +6708,8 @@ Jump_01C_6D5D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandE5_Run_Case01_Case01::
 Jump_01C_6D73:: ; address name
-    ld hl, Data_01C_5F86
-    ld de, Data_01C_604A
+    ld hl, TileCopyDestList_1C_5F86
+    ld de, TileCopySrcList_1C_604A
     call CopyTileListFromBank1F_1C
     ret
 

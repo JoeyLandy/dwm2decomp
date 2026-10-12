@@ -8539,8 +8539,8 @@ Func_003_7707:: ; address name
 PauseMenu_State3_Case02_Case00_Sub01::
 Func_003_7726:: ; address name
     call LoadScreenBlock21WithCursor
-    ld hl, Data_003_7B9F
-    ld de, Data_003_7BAF
+    ld hl, TileCopyDestList_03_7B9F
+    ld de, TileCopySrcList_03_7BAF
     call PauseMenu_State3_Case02_Case00_Sub01_Sub01
     ld e, $26
     farcall CopyBlockToTileBuffer
@@ -9281,13 +9281,17 @@ Func_003_7B61:: ; address name
     ld [wTextWindowTileHi], a
     ret
 
-; address loaded by PauseMenu_State3_Case02_Case00_Sub01
-Data_003_7B9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $50, $90, $60, $90, $70, $90, $80, $90, $90, $90, $A0, $90, $B0, $90, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_03_7B9F::
+Data_003_7B9F:: ; address name
+    dw vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90, vTiles2 + $A0, vTiles2 + $B0, rIE ; entry 0
 
-; address loaded by PauseMenu_State3_Case02_Case00_Sub01
-Data_003_7BAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $E0, $40, $70, $43, $B0, $42, $D0, $42, $10, $43, $C0, $42, $B0, $43, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_03_7BAF::
+Data_003_7BAF:: ; address name
+    dw $40E0, $4370, $42B0, $42D0, $4310, $42C0, $43B0, $FFFF ; entry 0
 
 ; only called from PauseMenu_State3_Case02_Case00_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_Case02_Case00_Sub01)

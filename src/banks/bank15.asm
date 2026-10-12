@@ -49,8 +49,8 @@ Jump_015_402B::
 ; points at: wTextWindowTileLo
 ScriptCommandEE_Run_Case01::
 Jump_015_403F:: ; address name
-    ld hl, Data_015_72A9
-    ld de, Data_015_72FF
+    ld hl, TileCopyDestList_15_72A9
+    ld de, TileCopySrcList_15_72FF
     call CopyGlyphTileListFromBank1F_Bank15
     xor a, a
     ld [wGlyphListPos], a
@@ -237,8 +237,8 @@ Jump_015_4167:: ; address name
 ; writes: wScreenStep
 DrawPair72A9And72C5AndStep::
 Func_015_4171:: ; address name
-    ld hl, Data_015_72A9
-    ld de, Data_015_72C5
+    ld hl, TileCopyDestList_15_72A9
+    ld de, TileCopySrcList_15_72C5
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
@@ -804,8 +804,8 @@ ScriptCommandED_Run_Case04_Case0D::
 Jump_015_4570:: ; address name
     ld a, $6C
     call QueueSoundEffect
-    ld hl, Data_015_72E1
-    ld de, Data_015_72F1
+    ld hl, TileCopyDestList_15_72E1
+    ld de, TileCopySrcList_15_72F1
     call CopyGlyphTileListFromBank1F_Bank15
     ld de, TileRect_15_7351
     ld hl, wWindowTileBuffer + $110
@@ -2874,8 +2874,8 @@ Jump_015_5358:: ; address name
 ; writes: wScreenStep
 ScriptCommandED_Run_Case05_Case0A::
 Jump_015_5376:: ; address name
-    ld hl, Data_015_72E1
-    ld de, Data_015_72F1
+    ld hl, TileCopyDestList_15_72E1
+    ld de, TileCopySrcList_15_72F1
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
@@ -3420,8 +3420,8 @@ Jump_015_56F6:: ; address name
 ; writes: wScreenStep
 DrawPair72A9And72C5AndStep_570C::
 Func_015_570C:: ; address name
-    ld hl, Data_015_72A9
-    ld de, Data_015_72C5
+    ld hl, TileCopyDestList_15_72A9
+    ld de, TileCopySrcList_15_72C5
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
@@ -4780,8 +4780,8 @@ Jump_015_603E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ScriptCommandED_Run_Case0F_Case01::
 Jump_015_6063:: ; address name
-    ld hl, Data_015_72E1
-    ld de, Data_015_72F1
+    ld hl, TileCopyDestList_15_72E1
+    ld de, TileCopySrcList_15_72F1
     call CopyGlyphTileListFromBank1F_Bank15
     call DrawPair72A9And72C5AndStep
     ret
@@ -7430,28 +7430,38 @@ Data_015_7291:: ; address name
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
-; address loaded by ScriptCommandEE_Run_Case01, DrawPair72A9And72C5AndStep, DrawPair72A9And72C5AndStep_570C
-Data_015_72A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $40, $8A, $50, $8A, $60, $8A, $70, $8A, $80, $8A, $90, $8A, $A0, $8A, $B0, $8A
-    db $C0, $8A, $D0, $8A, $E0, $8A, $E0, $8E, $F0, $8E, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_15_72A9::
+Data_015_72A9:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2A0, vTiles1 + $2B0 ; entry 0
+    dw vTiles1 + $2C0, vTiles1 + $2D0, vTiles1 + $2E0, vTiles1 + $6E0, vTiles1 + $6F0, rIE
 
-; address loaded by DrawPair72A9And72C5AndStep, DrawPair72A9And72C5AndStep_570C
-Data_015_72C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $C0, $40, $60, $43, $80, $42, $20, $41, $50, $42, $80, $43, $70, $42, $C0, $42
-    db $F0, $40, $C0, $43, $D0, $42, $90, $42, $10, $49, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_15_72C5::
+Data_015_72C5:: ; address name
+    dw $40C0, $4360, $4280, $4120, $4250, $4380, $4270, $42C0 ; entry 0
+    dw $40F0, $43C0, $42D0, $4290, $4910, $FFFF
 
-; address loaded by ScriptCommandED_Run_Case04_Case0D, ScriptCommandED_Run_Case05_Case0A, ScriptCommandED_Run_Case0F_Case01
-Data_015_72E1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: VRAM destinations, then $FFxx
+TileCopyDestList_15_72E1::
+Data_015_72E1:: ; address name
+    dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
-; address loaded by ScriptCommandED_Run_Case04_Case0D, ScriptCommandED_Run_Case05_Case0A, ScriptCommandED_Run_Case0F_Case01
-Data_015_72F1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $30, $41, $20, $43, $A0, $42, $30, $43, $90, $41, $50, $41, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_15_72F1::
+Data_015_72F1:: ; address name
+    dw $4130, $4320, $42A0, $4330, $4190, $4150, $FFFF ; entry 0
 
-; address loaded by ScriptCommandEE_Run_Case01
-Data_015_72FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $30, $41, $80, $41, $00, $41, $90, $41, $E0, $41, $F0, $40, $D0, $41, $50, $41
-    db $60, $41, $A0, $41, $B0, $40, $10, $49, $10, $49, $FF, $FF
+; E-0225 (derived: a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a low byte of $FF)
+; record: bank-$1F tile sources
+TileCopySrcList_15_72FF::
+Data_015_72FF:: ; address name
+    dw $4130, $4180, $4100, $4190, $41E0, $40F0, $41D0, $4150 ; entry 0
+    dw $4160, $41A0, $40B0, $4910, $4910, $FFFF
 
 ; address loaded by ScriptCommandED_Run_Case04_Case13_Sub01, ScriptCommandED_Run_Case05_Case00_Sub01
 Data_015_731B:: ; heuristic: pointer load in the same bank (bank assumed); C0

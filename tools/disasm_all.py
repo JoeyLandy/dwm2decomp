@@ -2154,6 +2154,79 @@ class Rom:
                 added += 1
         log(f"key-world screen gaps tiled: {gaps} ({added} streams)")
 
+    def add_tile_copy_lists(self) -> None:
+        """E-0225: VRAM destination lists (HL, words up to one whose low byte is $FF) and their
+        source lists (DE, as many words) passed to tile-list copiers: routines whose first 64
+        bytes load B = $1F, C = $10, call CopyFromBankWaitVRAM and compare with $FF."""
+        cfb = {k for k, info in self.names.items() if info["name"] == "CopyFromBankWaitVRAM"}
+        if not cfb:
+            return
+        copiers = set()
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in self.labels[b].items():
+                if a not in ins or ins[a][0] == "dw":
+                    continue
+                texts, calls, pc = [], set(), a
+                while pc in ins and ins[pc][0] != "dw" and pc - a < 64:
+                    v = ins[pc]
+                    texts.append(v[1])
+                    if v[2] == "call" and v[3] is not None:
+                        calls.add(self.resolve(b, v[3]))
+                    pc += v[0]
+                if "ld b, $1F" in texts and "ld c, $10" in texts and "cp a, $FF" in texts and calls & cfb:
+                    copiers.add((b, a))
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        ld_hl = re.compile(r"ld hl, \$([0-9A-F]{4})$")
+        ld_de = re.compile(r"ld de, \$([0-9A-F]{4})$")
+        pairs = set()
+        for cb in range(1, self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] not in ("call", "jp") or v[3] is None or self.resolve(cb, v[3]) not in copiers:
+                    continue
+                hl = de = None
+                for x in reversed(order[max(0, k - 4):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if hl is None and (m := ld_hl.match(ins[x][1])):
+                        hl = int(m.group(1), 16)
+                    if de is None and (m := ld_de.match(ins[x][1])):
+                        de = int(m.group(1), 16)
+                if hl and de and 0x4000 <= hl < 0x8000 and 0x4000 <= de < 0x8000:
+                    pairs.add((cb, hl, de))
+        made = 0
+        done: set[tuple[int, int]] = set()
+        for cb, hl, de in sorted(pairs):
+            n = 0
+            o = cb * BANK - self.base(cb)
+            while hl + 2 * n < 0x8000 and self.data[o + hl + 2 * n] != 0xFF and n < 128:
+                n += 1
+            if n == 128 or hl + 2 * n + 2 > 0x8000:
+                continue
+            src_n = n + (1 if self._u16(cb, de + 2 * n) == 0xFFFF else 0)
+            for addr, size, kind in ((hl, 2 * n + 2, "Dest"), (de, 2 * src_n, "Src")):
+                if (cb, addr) in done or size == 0:
+                    continue
+                end = addr + size
+                if any(b == cb and lo < end and addr < hi for b, lo, hi in taken) or \
+                        any(q in self.covered[cb] for q in range(addr, end)):
+                    continue
+                taken.append((cb, addr, end))
+                done.add((cb, addr))
+                self.schemas.append({"bank": cb, "addr": addr, "label": f"TileCopy{kind}List_{cb:02X}_{addr:04X}",
+                                     "count": 1, "fields": [{"type": "words", "size": size, "per_line": 8,
+                                                             "ram": kind == "Dest",
+                                                             "name": "VRAM destinations, then $FFxx" if kind == "Dest"
+                                                             else "bank-$1F tile sources"}],
+                                     "note": "E-0225 (derived: a list passed to a tile-list copier, which copies 16 "
+                                             "bytes from bank $1F per destination until a low byte of $FF)"})
+                made += 1
+        log(f"tile copy lists derived: {made} ({len(copiers)} copiers)")
+
     def add_string_table_schemas(self) -> None:
         """E-0217: string tables passed in DE to BeginStringDisplay / CopyStringToBuffer.
 
@@ -3151,6 +3224,7 @@ class Rom:
         self.tile_keyworld_screen_gaps()
         self.label_data_refs()
         self.add_string_table_schemas()
+        self.add_tile_copy_lists()
         self.add_rect_record_schemas()
         self.prepare_object_selectors()
         self.prepare_tables()
