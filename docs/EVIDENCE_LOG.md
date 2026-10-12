@@ -2445,7 +2445,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **New constants.** MON_MAX_LEVEL, MON_WLD, MON_PLUS and MON_EGG are added to config/record_fields.json, and the table layouts name these bytes.
 - **Offsets inside fields.** Fields now carry a "size". An offset inside a field is written `MON_FIELD + n`: MON_PERSONALITY + 1/+3 (12 loads), MON_MAX_HP + 1, MON_MAX_MP + 1. Record loads through the record-access routines: 416 → 445. None is left numeric. A new test covers the case.
 - **Record bytes still unread:** $19-$33 and $73-$A3.
-- Binary verification: build/run405 PASS, 0 differing bytes; tests OK (skipped=3).
+- Binary verification: build/run405 PASS, 0 differing bytes. Commit 53a7f4d contained a test with broken string escapes (one error). It was fixed in the next commit, and the suite is then OK (skipped=3).
 
 ### E-0295 — The largest dispatcher is the per-item gift effect; 16 link and gift states named
 
