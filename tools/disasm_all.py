@@ -2435,6 +2435,41 @@ class Rom:
                     continue
                 found += add_record(cb, src)
 
+        # E-0232: tables read inline: ld hl, T / index / deref (ld a, [hl+]; ld h, [hl]; ld l, a), then
+        # the record header ld e, [hl]; inc hl; ld d, [hl]; inc hl; ld b, [hl]; inc hl; ld c, [hl]
+        head = ["ld a, [hl+]", "ld h, [hl]", "ld l, a", "ld e, [hl]", "inc hl", "ld d, [hl]", "inc hl",
+                "ld b, [hl]", "inc hl", "ld c, [hl]"]
+        for cb in range(1, self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            texts = [ins[a][1] for a in order]
+            for k in range(len(order) - len(head)):
+                if texts[k:k + len(head)] != head:
+                    continue
+                for x in reversed(order[max(0, k - 6):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    if (m := ld_hl.match(ins[x][1])):
+                        tab = int(m.group(1), 16)
+                        recs = []
+                        while 0x4000 <= tab + 2 * len(recs) < 0x8000 and len(recs) < 128:
+                            r = self._u16(cb, tab + 2 * len(recs))
+                            if not (tab < r < 0x8000) or (recs and tab + 2 * len(recs) >= min(recs)):
+                                break
+                            recs.append(r)
+                        tend = tab + 2 * len(recs)
+                        if recs and tend <= min(recs) and                                 not any(b == cb and lo < tend and tab < hi for b, lo, hi in taken) and                                 not any(q in self.covered[cb] for q in range(tab, tend)):
+                            good = [r for r in sorted(set(recs)) if add_record(cb, r)]
+                            if good:
+                                taken.append((cb, tab, tend))
+                                self.schemas.append({
+                                    "bank": cb, "addr": tab, "label": f"TileRectTable_{cb:02X}_{tab:04X}",
+                                    "count": len(recs), "id_base": 0,
+                                    "fields": [{"type": "ptr", "name": "rectangle record", "reason": "rectangle record"}],
+                                    "note": "E-0232 (derived: a word table of tile-rectangle records whose header "
+                                            "the code reads inline after indexing the table)"})
+                                found += len(good)
+                        break
         log(f"tile-rectangle records: {found}")
         # Raw rectangles (E-0161): DE = packed source, B = width, C = rows, for the copiers whose
         # source rows are contiguous. Copies of a canonical routine (same first 16 bytes) count too.

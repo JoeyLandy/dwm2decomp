@@ -14487,6 +14487,2919 @@
         }
       ],
       "note": "E-0229 (C1: the key table of the other sort order of SortInventory; 112 bytes)."
+    },
+    {
+      "bank": "33",
+      "addr": "405F",
+      "label": "ScreenBlockTable",
+      "count": 51,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "screen block record",
+          "reason": "screen block"
+        }
+      ],
+      "note": "E-0232 (C1: CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText read the word at $405F + 2 * E and copy that record (word offset into wScreenTileBuffer, width, rows, tiles) into the screen buffer; 51 words, and the records tile $40C5-$51C6)."
+    },
+    {
+      "bank": "33",
+      "addr": "40C5",
+      "label": "TileRect_33_40C5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 8 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4111",
+      "label": "TileRect_33_4111",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 12"
+        }
+      ],
+      "record": "offset $0008 (row 0, column 8); 12 x 13 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "41B1",
+      "label": "TileRect_33_41B1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 5"
+        }
+      ],
+      "record": "offset $0161 (row 11, column 1); 6 x 6 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "41D9",
+      "label": "TileRect_33_41D9",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $01A8 (row 13, column 8); 12 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4219",
+      "label": "TileRect_33_4219",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 10"
+        }
+      ],
+      "record": "offset $0008 (row 0, column 8); 12 x 11 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "42A1",
+      "label": "TileRect_33_42A1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0160 (row 11, column 0); 8 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "42DD",
+      "label": "TileRect_33_42DD",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0168 (row 11, column 8); 12 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4335",
+      "label": "TileRect_33_4335",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "offset $0008 (row 0, column 8); 12 x 18 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4411",
+      "label": "TileRect_33_4411",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0160 (row 11, column 0); 8 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "444D",
+      "label": "TileRect_33_444D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "offset $0008 (row 0, column 8); 12 x 18 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4529",
+      "label": "TileRect_33_4529",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "row 3"
+        }
+      ],
+      "record": "offset $0183 (row 12, column 3); 2 x 4 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4535",
+      "label": "TileRect_33_4535",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 12"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 7 x 13 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4594",
+      "label": "TileRect_33_4594",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 12"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 13 x 13 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4641",
+      "label": "TileRect_33_4641",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 20 x 13 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4749",
+      "label": "TileRect_33_4749",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $01A4 (row 13, column 4); 12 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4789",
+      "label": "TileRect_33_4789",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 2"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 6 x 3 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "479F",
+      "label": "TileRect_33_479F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0008 (row 0, column 8); 12 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "480F",
+      "label": "TileRect_33_480F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0140 (row 10, column 0); 20 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "489F",
+      "label": "TileRect_33_489F",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0040 (row 2, column 0); 7 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "48D4",
+      "label": "TileRect_33_48D4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0040 (row 2, column 0); 7 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4909",
+      "label": "TileRect_33_4909",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $0100 (row 8, column 0); 6 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "492B",
+      "label": "TileRect_33_492B",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $01A0 (row 13, column 0); 20 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4993",
+      "label": "TileRect_33_4993",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 8 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "49DF",
+      "label": "TileRect_33_49DF",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $0120 (row 9, column 0); 14 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4A29",
+      "label": "TileRect_33_4A29",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 8 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4A75",
+      "label": "TileRect_33_4A75",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0120 (row 9, column 0); 20 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4B2D",
+      "label": "TileRect_33_4B2D",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 8 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4B79",
+      "label": "TileRect_33_4B79",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row 14"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 13 x 15 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4C40",
+      "label": "TileRect_33_4C40",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 14,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0006 (row 0, column 6); 14 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4CA6",
+      "label": "TileRect_33_4CA6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 15,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0125 (row 9, column 5); 15 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4D31",
+      "label": "TileRect_33_4D31",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 7 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4D66",
+      "label": "TileRect_33_4D66",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $00E0 (row 7, column 0); 6 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4D88",
+      "label": "TileRect_33_4D88",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row 2"
+        }
+      ],
+      "record": "offset $00CD (row 6, column 13); 7 x 3 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4DA1",
+      "label": "TileRect_33_4DA1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 11,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0129 (row 9, column 9); 11 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4E08",
+      "label": "TileRect_33_4E08",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 6"
+        }
+      ],
+      "record": "offset $0042 (row 2, column 2); 18 x 7 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4E8A",
+      "label": "TileRect_33_4E8A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "row 8"
+        }
+      ],
+      "record": "offset $0128 (row 9, column 8); 12 x 9 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4EFA",
+      "label": "TileRect_33_4EFA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        }
+      ],
+      "record": "offset $0020 (row 1, column 0); 20 x 11 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4FDA",
+      "label": "TileRect_33_4FDA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $010E (row 8, column 14); 6 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "4FFC",
+      "label": "TileRect_33_4FFC",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 18,
+          "line": true,
+          "name": "row 4"
+        }
+      ],
+      "record": "offset $0121 (row 9, column 1); 18 x 5 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
+    },
+    {
+      "bank": "33",
+      "addr": "505A",
+      "label": "TileRect_33_505A",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "offset into wScreenTileBuffer"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "line": true,
+          "name": "width, rows"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 0"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 1"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 2"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 3"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 4"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 5"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 6"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 7"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 8"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 9"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 10"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 11"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 12"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 13"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 14"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 15"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 16"
+        },
+        {
+          "type": "db",
+          "size": 20,
+          "line": true,
+          "name": "row 17"
+        }
+      ],
+      "record": "offset $0000 (row 0, column 0); 20 x 18 tiles",
+      "note": "E-0232 (C1: a record of ScreenBlockTable)."
     }
   ]
 }

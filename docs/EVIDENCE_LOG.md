@@ -2430,6 +2430,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0232 — Screen block records (bank $33); 27 false streams removed
+
+- Kind: OBSERVATION (reading; C1) and TOOL.
+- **ScreenBlockTable ($405F, 51 words).** CopyBlockToTileBuffer and CopyBlockToTileBufferBlankingText index it by E, deref the word, and read the record header inline (word offset into wScreenTileBuffer, width, rows) before copying the tiles. The 40 distinct records tile $40C5-$51C6 and are laid out as TileRect_33_*.
+- **Correction.** The pointer-run stream source (E-0016) had registered 27 of these records as LZSS streams (for example 33:$4529, "390 bytes expand to 387"). Declared as tables, they are no longer tried (E-0203's rule). The stream count is now 4,674.
+- **Generator.** The rectangle derivation also recognises the inline form: `ld hl, T`, index, deref, then `ld e, [hl] / inc hl / ld d, [hl] / inc hl / ld b, [hl] / inc hl / ld c, [hl]`. No table beyond this one uses it.
+- Unidentified INCBIN is 6,731 bytes.
+- Binary verification: build/run285 PASS, 0 differing bytes.
+
 ### E-0231 — Map warp lists laid out
 
 - Kind: OBSERVATION (reading CheckWarpAtPlayer; C1).
