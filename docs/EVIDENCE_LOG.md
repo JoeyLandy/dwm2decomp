@@ -2430,6 +2430,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0247 — Map object records: byte 8 is the facing
+
+- Kind: OBSERVATION (reading; C1).
+- Record byte 8 goes to object slot byte 7 (E-0176). ScriptSetDirection writes a direction there for targets $80 + n, and ScriptStepObject stores the walking direction there. So the MapObjects_ record descriptions now call it "facing".
+- Slot bytes 0 and $F (record bytes 4 and 10) stay unnamed. Their only direct writers set fixed values ($02, $FF), and no reader was found.
+- Binary verification: build/run314 PASS, 0 differing bytes; tests OK.
+
 ### E-0246 — The last numbered script commands: key-world talk events and the arena
 
 - Kind: OBSERVATION (C1 for the arena and $29; the talk-event names are structural).

@@ -2123,7 +2123,7 @@ class Rom:
                                  + [{"type": "db", "size": 11, "line": True, "name": f"object {k}"} for k in range(n)],
                                  "record": f"count, then {n} object(s): VRAM page, graphics table (0 = monster "
                                            "sprites), graphics number (2 bytes), slot byte 0, X, Y, palette slot, "
-                                           "slot byte 7, talk event group, slot byte 15",
+                                           "facing (slot byte 7, E-0247), talk event group, slot byte 15",
                                  "note": "E-0163 (derived: an object list of LoadMapObjectsForScreen)"})
             nl += 1
         for p, n in sorted(arrays.items()):
