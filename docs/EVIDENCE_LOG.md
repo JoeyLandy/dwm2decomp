@@ -2433,7 +2433,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 ### E-0266 — SGB packets named by command; special map records by index
 
 - Kind: HARDWARE (SGB command codes) and TOOL.
-- An SGB packet's first byte is command * 8 + packet count. The packets found earlier (E-0021/E-0022) are now labelled Sgb<Command>_BB_AAAA after that command (Pal01 ... DataSnd, MltReq, ChrTrn, PctTrn, ...). The SGB start-up sequence's DATA_SND packets in bank $1F are an example.
+- An SGB packet's first byte is command * 8 + packet count. The packets of the SGB packet sets (E-0179) are now labelled Sgb<Command>_BB_AAAA after that command (Pal01 ... DataSnd, MltReq, ChrTrn, PctTrn, ...). The SGB start-up sequence's DATA_SND packets in bank $1F are an example.
 - The records of SpecialMapRecords are labelled SpecialMapRecordNN.
 - Binary verification: build/run346 PASS, 0 differing bytes; tests OK.
 
