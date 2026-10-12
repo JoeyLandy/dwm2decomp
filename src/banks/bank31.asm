@@ -1614,7 +1614,7 @@ BattleEnd_Step7_StartPaletteFade::
 Jump_031_4931:: ; address name
     ld a, $04
     call StartPaletteFade
-    farcall BattleEnd_Step7_Case02_SRAMRecordAddress
+    farcall StoreBattleStateToPartyRecords_BankA3
     ld a, $06
     ld [wGameMode], a
     xor a, a

@@ -6356,8 +6356,8 @@ Data_024_7158:: ; address name
     dw ItemDescription_HarMirror ; id 55
     dw ItemDescription_Sky ; id 56
     dw ItemDescription_Heaven ; id 57
-    dw Data_024_78A7 ; id 58
-    dw Data_024_78CB ; id 59
+    dw ItemDescription_Heaven_78A7 ; id 58
+    dw ItemDescription_Heaven_78CB ; id 59
     dw ItemDescription_WizStone ; id 60
     dw ItemDescription_Pretty ; id 61
     dw ItemDescription_Accessory ; id 62
@@ -6372,7 +6372,7 @@ Data_024_7158:: ; address name
     dw ItemDescription_DrakScale ; id 71
     dw ItemDescription_AGL ; id 72
     dw ItemDescription_Starry ; id 73
-    dw Data_024_79F7 ; id 74
+    dw ItemDescription_Smart_79F7 ; id 74
     dw ItemDescription_Wise ; id 75
     dw ItemDescription_MagicCape ; id 76
     dw ItemDescription_DracoCape ; id 77
@@ -6733,12 +6733,14 @@ Data_024_7883:: ; address name
     db "A legendary helmet", $F1
     db "found in a cave.", $F0
 
-Data_024_78A7:: ; heuristic: item description; C0
+ItemDescription_Heaven_78A7:: ; heuristic: item description; C0
+Data_024_78A7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A legendary armor", $F1
     db "found in a tower.", $F0
 
-Data_024_78CB:: ; heuristic: item description; C0
+ItemDescription_Heaven_78CB:: ; heuristic: item description; C0
+Data_024_78CB:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "A legendary sword", $F1
     db "found in a castle.", $F0
@@ -6814,7 +6816,8 @@ Data_024_79E5:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises AGL by 50.", $F0
 
-Data_024_79F7:: ; heuristic: item description; C0
+ItemDescription_Smart_79F7:: ; heuristic: item description; C0
+Data_024_79F7:: ; address name
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Raises INT by 50.", $F0
 

@@ -415,7 +415,8 @@ Data_07E_5706:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9706, $50
 
 ; LZSS-compressed asset: 282 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5756:: ; heuristic: stream decompressed while the game ran on the emulator; C0
+Gfx_7E_5756:: ; heuristic: stream decompressed while the game ran on the emulator; C0
+Data_07E_5756:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9756, $11A
 
 ; LZSS-compressed asset: 143 bytes expand to 512 (tools/lzss_gfx.py, E-0016/E-0017; C1)
@@ -436,11 +437,13 @@ Data_07E_594A:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F994A, $4A
 
 ; LZSS-compressed asset: 129 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5994:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Gfx_7E_5994:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5994:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9994, $81
 
 ; LZSS-compressed asset: 133 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_07E_5A15:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Gfx_7E_5A15:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_07E_5A15:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1F9A15, $85
 
 ; address loaded by SpawnScriptSpriteInFrontOfPlayer

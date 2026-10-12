@@ -364,7 +364,7 @@ Data_069_4174:: ; address name
     dw MapObjectScreens_5436 ; id 79
     dw MapObjectScreens_5528 ; id 80
     dw MapObjectScreens_5576 ; id 81
-    dw Data_069_5593 ; id 82
+    dw MapObjectScreens_69_5593 ; id 82
     dw MapObjectScreens_5616 ; id 83
     dw MapObjectScreens_567C ; id 84
     dw MapObjectScreens_568E ; id 85
@@ -2929,7 +2929,8 @@ Data_069_557C:: ; address name
     db $85, $01, $2E, $00, $00, $10, $10, $05, $01, $50, $36 ; object 0
     db $86, $01, $29, $00, $00, $20, $70, $06, $02, $60, $37 ; object 1
 
-Data_069_5593:: ; heuristic: map object screen array; C0
+MapObjectScreens_69_5593:: ; heuristic: map object screen array; C0
+Data_069_5593:: ; address name
     db $99, $55, $00, $00, $B4, $55
 
 ; map object selector (E-0163): the first entry that applies picks the object list
@@ -6589,7 +6590,7 @@ Data_069_76C2:: ; address name
 MapObjectScreens_76E4::
 Data_069_76E4:: ; address name
     dw ObjSelector_76E8 ; id 0
-    dw Data_069_76F8 ; id 1
+    dw ObjSelector_69_76F8 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_76E8:: ; heuristic: map object selector; C0
@@ -6602,7 +6603,8 @@ MapObjects_76EC::
 Data_069_76EC:: ; address name
     db $02 ; entry 0: object count
     db $85, $01, $57, $00, $00, $45, $80, $05, $02, $50, $00 ; object 0
-Data_069_76F8:: ; heuristic: map object selector; C0
+ObjSelector_69_76F8:: ; heuristic: map object selector; C0
+Data_069_76F8:: ; address name
     db $FE, $FF, $FC, $76, $01, $85, $01, $57, $00, $00, $45 ; object 1
     db $A0, $05, $02, $50, $00
 

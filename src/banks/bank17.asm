@@ -99,7 +99,7 @@ Data_017_4055:: ; address name
 
 PointerRun_17_4059_Entry00:: ; heuristic: target of a monotone pointer table; C0
 Data_017_407F:: ; address name
-    dw PointerRun_17_4059_Entry13
+    dw SGBPacketSet18
     db $08, $00, $0B, $8C, $D0, $F4, $60, $00, $00, $00, $00, $00, $00, $00
 
 PointerRun_17_4059_Entry01:: ; heuristic: target of a monotone pointer table; C0
@@ -352,7 +352,8 @@ Data_017_426C:: ; address name
     db $DE, $6F, $1F, $33, $3C, $12, $00, $00, $DE, $6F, $1F, $33, $3C, $12, $00, $00
 
 ; LZSS-compressed asset: 7 bytes expand to 90 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_017_448C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Gfx_17_448C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
+Data_017_448C:: ; address name
     db $5A, $00, $01, $01, $A0, $FF, $47
 
 ; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
@@ -373,7 +374,8 @@ SGBBorder0MapAndPalettes:: ; heuristic: stream decompressed by a call to Decompr
 Data_017_5B03:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05DB03, $276
 
-PointerRun_17_4059_Entry13:: ; heuristic: target of a monotone pointer table; C0
+; target of entry $18 of the SGB packet-set table that SendSGBPaletteSetPacket_WaitSGBActive indexes by wSGBPacketIndex; its first byte $14 gives 4 packets (64 bytes) to the sender. What the remaining 295 bytes of this 359-byte slice are is not identified (not a valid LZSS stream)
+SGBPacketSet18:: ; heuristic: target of a monotone pointer table; C0
 Data_017_5D79:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05DD79, $167
 

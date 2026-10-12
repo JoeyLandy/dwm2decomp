@@ -2330,25 +2330,25 @@ Data_085_4E7A:: ; address name
     dw Map2FScreens0_Y1X0 ; id 0: frame 0 tile map (bank $93)
     dw Map2FAttrs0_Y1X0 ; frame 0 attribute map
     dw ScreenMap_93_5B36 ; frame 1 tile map
-    dw Data_093_6153 ; frame 1 attribute map
+    dw ScriptScreenAttrMap_93_6153 ; frame 1 attribute map
     dw ScreenMap_93_5B36 ; id 1: frame 0 tile map (bank $93)
-    dw Data_093_6153 ; frame 0 attribute map
+    dw ScriptScreenAttrMap_93_6153 ; frame 0 attribute map
     dw ScreenMap_93_5BE9 ; frame 1 tile map
-    dw Data_093_6194 ; frame 1 attribute map
+    dw ScriptScreenAttrMap_93_6194 ; frame 1 attribute map
     dw ScreenMap_93_5BE9 ; id 2: frame 0 tile map (bank $93)
-    dw Data_093_6194 ; frame 0 attribute map
+    dw ScriptScreenAttrMap_93_6194 ; frame 0 attribute map
     dw ScreenMap_93_5C99 ; frame 1 tile map
-    dw Data_093_61CF ; frame 1 attribute map
+    dw ScriptScreenAttrMap_93_61CF ; frame 1 attribute map
     dw ScreenMap_93_5C99 ; id 3: frame 0 tile map (bank $93)
-    dw Data_093_61CF ; frame 0 attribute map
+    dw ScriptScreenAttrMap_93_61CF ; frame 0 attribute map
     dw ScreenMap_93_5D4B ; frame 1 tile map
-    dw Data_093_6208 ; frame 1 attribute map
+    dw ScriptScreenAttrMap_93_6208 ; frame 1 attribute map
     dw ScreenMap_93_5D4B ; id 4: frame 0 tile map (bank $93)
-    dw Data_093_6208 ; frame 0 attribute map
+    dw ScriptScreenAttrMap_93_6208 ; frame 0 attribute map
     dw ScreenMap_93_5DF5 ; frame 1 tile map
-    dw Data_093_623C ; frame 1 attribute map
+    dw ScriptScreenAttrMap_93_623C ; frame 1 attribute map
     dw ScreenMap_93_5DF5 ; id 5: frame 0 tile map (bank $93)
-    dw Data_093_623C ; frame 0 attribute map
+    dw ScriptScreenAttrMap_93_623C ; frame 0 attribute map
     dw Map2FScreens4_Y1X0 ; frame 1 tile map
     dw Map2FAttrs4_Y1X0 ; frame 1 attribute map
 

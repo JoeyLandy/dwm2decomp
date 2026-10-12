@@ -1628,8 +1628,19 @@ class Rom:
                 st = self.streams.get((b, a))
                 if why.startswith("key-world screen map found by tiling"):
                     new = f"KeyWorldScreen_{b:02X}_{a:04X}"
-                elif why.startswith("stream in a run of back-to-back") and st:
+                elif why.startswith(("stream in a run of back-to-back", "stream found by tiling",
+                                     "stream decompressed")) and st:
                     new = f"{'ScreenMap' if st[0] == 360 else 'Gfx'}_{b:02X}_{a:04X}"
+                elif why.startswith("script screen animation attribute map"):
+                    new = f"ScriptScreenAttrMap_{b:02X}_{a:04X}"  # E-0289
+                elif why.startswith("map object screen array"):
+                    new = f"MapObjectScreens_{b:02X}_{a:04X}"
+                elif why.startswith("map object selector"):
+                    new = f"ObjSelector_{b:02X}_{a:04X}"
+                elif why.startswith("item name"):
+                    new = f"ItemName{b:02X}_{a:04X}"
+                elif why.startswith("item description"):
+                    new = f"ItemDescription_{b:02X}_{a:04X}"
                 else:
                     continue
                 if new in used:
@@ -3888,10 +3899,14 @@ class Rom:
             nonlocal named
             dl = self.dlabels[b]
             cur = dl.get(tgt)
-            if not 0x4000 <= tgt < 0x8000 or (cur and not cur.startswith("Data_")) or name in self._string_names \
+            if not 0x4000 <= tgt < 0x8000 or (cur and not cur.startswith("Data_")) \
                     or tgt in self.insn[b] or tgt in self.covered[b] \
                     or (b, tgt) in self.names:  # code, or a name config/names.json gives
                 return
+            if name in self._string_names:
+                name = f"{name}_{tgt:04X}"  # E-0289: a second string with the same words keeps its address
+                if name in self._string_names:
+                    return
             if cur:
                 self.dalias.setdefault((b, tgt), cur)
             dl[tgt] = name

@@ -274,9 +274,9 @@ Jump_000_015A:: ; address name
     call SGBTransferRaw
     call SpinDelay
     ld a, $0D
-    ld e, LOW(Data_017_448C)
-    ld d, HIGH(Data_017_448C)
-    ld b, BANK(Data_017_448C)
+    ld e, LOW(Gfx_17_448C)
+    ld d, HIGH(Gfx_17_448C)
+    ld b, BANK(Gfx_17_448C)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $12

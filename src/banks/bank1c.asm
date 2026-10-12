@@ -5658,8 +5658,8 @@ Data_01C_63FE:: ; address name
     dw ItemName1C_HarMirror ; id 55
     dw ItemName1C_Sky ; id 56
     dw ItemName1C_Heaven ; id 57
-    dw Data_01C_6693 ; id 58
-    dw Data_01C_669B ; id 59
+    dw ItemName1C_Heaven_6693 ; id 58
+    dw ItemName1C_Heaven_669B ; id 59
     dw ItemName1C_WizStone ; id 60
     dw ItemName1C_Pretty ; id 61
     dw ItemName1C_Accessory ; id 62
@@ -5674,7 +5674,7 @@ Data_01C_63FE:: ; address name
     dw ItemName1C_DrakScale ; id 71
     dw ItemName1C_AGL ; id 72
     dw ItemName1C_Starry ; id 73
-    dw Data_01C_670D ; id 74
+    dw ItemName1C_Smart_670D ; id 74
     dw ItemName1C_Wise ; id 75
     dw ItemName1C_MagicCape ; id 76
     dw ItemName1C_DracoCape ; id 77
@@ -5932,10 +5932,12 @@ ItemName1C_Heaven:: ; heuristic: item name; C0
 Data_01C_668B:: ; address name
     db $11, $28, $24, $39, $28, $31, $52, $F0
 
-Data_01C_6693:: ; heuristic: item name; C0
+ItemName1C_Heaven_6693:: ; heuristic: item name; C0
+Data_01C_6693:: ; address name
     db $11, $28, $24, $39, $28, $31, $54, $F0
 
-Data_01C_669B:: ; heuristic: item name; C0
+ItemName1C_Heaven_669B:: ; heuristic: item name; C0
+Data_01C_669B:: ; address name
     db $11, $28, $24, $39, $28, $31, $53, $F0
 
 ItemName1C_WizStone:: ; heuristic: item name; C0
@@ -5986,7 +5988,8 @@ ItemName1C_Starry:: ; heuristic: item name; C0
 Data_01C_6705:: ; address name
     db $1C, $37, $24, $35, $35, $3C, $55, $F0
 
-Data_01C_670D:: ; heuristic: item name; C0
+ItemName1C_Smart_670D:: ; heuristic: item name; C0
+Data_01C_670D:: ; address name
     db $1C, $30, $24, $35, $37, $56, $F0
 
 ItemName1C_Wise:: ; heuristic: item name; C0

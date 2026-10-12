@@ -8255,7 +8255,7 @@ Jump_002_7377:: ; address name
     ret
 
 ; sums $29A * 10 bytes from sA06F in SRAM bank 1 and stores the complement plus $4321 at sBA73 (E-0129)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum
 ComputeSRAMBank1RecordChecksum::
@@ -8361,7 +8361,7 @@ Func_002_737F:: ; address name
     ret
 
 ; copies SRAM bank-1 record wC8C4 ($6F bytes at sA06F + $6F * n) through Func_01D_6E39, then wC8C4 += 1; after 30 records wC8C3 += 1 (the next save step) (E-0120)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; reads: wSaveRecordIndex
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
@@ -8394,7 +8394,7 @@ Func_002_73E6:: ; address name
     ret
 
 ; copies the SRAM bank-0 records from sB356 (and the bank-1 record at sA000) to the backup area at sAD71 in SRAM bank 1 (E-0127)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBackupAndSaveSteps)
 ; writes: rRAMB
 ; points at: sCompactRecords, sRecordBackup, sRecords
 BackupRecordsToSRAMBank1::
@@ -8843,7 +8843,7 @@ Func_002_7674:: ; address name
     ret
 
 ; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum)
+; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
@@ -8938,10 +8938,12 @@ Func_002_76F2:: ; address name
     ld [rRAMG], a
     ret
 
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum)
+; enables SRAM; on the first step backs up the records to SRAM bank 1 (BackupRecordsToSRAMBank1), then runs SaveStepCopyBank1RecordSaveRecordIndex until wSaveStep reaches 2
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep
-Func_002_7718::
+RunBackupAndSaveSteps::
+Func_002_7718:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wSaveStep]

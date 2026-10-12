@@ -8169,9 +8169,9 @@ Data_012_704C:: ; address name
     db $9A, $00
     dw Gfx_7E_5370 ; id 12
     db $97, $00
-    dw Data_07E_5756 ; id 13
+    dw Gfx_7E_5756 ; id 13
     db $1F, $00
-    dw Data_07E_5756 ; id 14
+    dw Gfx_7E_5756 ; id 14
     db $9F, $00
     dw Gfx_7E_4F63 ; id 15
     db $0B, $00

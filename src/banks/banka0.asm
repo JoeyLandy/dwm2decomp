@@ -36,11 +36,13 @@ Func_0A0_4001:: ; address name
     call GameMode7_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
+; clears the slot-out bytes of slots 4-7, marking the last one absent ($FF) unless wScreenCountPlusOne is 2, then checks the slots (CarryUnlessBattleSlotOutSlotEmpty)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; reads: wScreenCountPlusOne
 ; writes: wBattleTurn
 ; points at: wSlotMarks, wBattleArg0
-Func_0A0_4047::
+InitBattleSlotsForFoeCount::
+Func_0A0_4047:: ; address name
     xor a, a
     ld hl, wBattleSlotOut + $4
     ld [hl+], a
@@ -234,29 +236,33 @@ Func_0A0_4181:: ; address name
     jr nz, .loop
     ret
 
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
+; runs the slot setup (RunA04410Or456FBySlotC) for slots 4-5, then falls into the shared loop's tail: AdjustSkillsForBattleStart_A0 and the slot damage flags
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
-Func_0A0_418E::
+PrepareTwoFoeSlots::
+Func_0A0_418E:: ; address name
     ld bc, $0204
-    jr Func_0A0_4193_Loop
+    jr PrepareThreeFoeSlots_Loop
 
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
+; runs the slot setup (RunA04410Or456FBySlotC) for slots 4-6, then AdjustSkillsForBattleStart_A0 and the slot damage flags
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
-Func_0A0_4193::
+PrepareThreeFoeSlots::
+Func_0A0_4193:: ; address name
     ld bc, $0304
 
-Func_0A0_4193_Loop::
+PrepareThreeFoeSlots_Loop::
 Jump_0A0_4196:: ; address name
     push bc
     call RunA04410Or456FBySlotC
     pop bc
     inc c
     dec b
-    jr nz, Func_0A0_4193_Loop
+    jr nz, PrepareThreeFoeSlots_Loop
     call AdjustSkillsForBattleStart_A0
     ld de, wSlotDamageFlags
     ld bc, $0800
@@ -311,7 +317,7 @@ Func_0A0_41E3:: ; address name
     ret
 
 ; replaces skill $8F by $AA for slots without wD8AF set and marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
-; 1 call site from 1 routine (e.g. Func_0A0_4193)
+; 1 call site from 1 routine (e.g. PrepareThreeFoeSlots)
 ; points at: wSlotNameSuffix, wBattleSkills
 AdjustSkillsForBattleStart_A0::
 Func_0A0_41F2:: ; address name
@@ -702,7 +708,7 @@ Data_0A0_4387:: ; address name
     db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; runs Func_0A0_4410 for slots 0-3 or Func_0A0_456F for slots 4-7, clears the species record buffer and restores wD868 (E-0122)
-; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_RunA04410Or456FBySlotC, Func_0A0_4193)
+; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_RunA04410Or456FBySlotC, PrepareThreeFoeSlots)
 ; reads: wBattleArg0
 ; writes: wBattleArg0
 RunA04410Or456FBySlotC::
@@ -1180,8 +1186,10 @@ Func_0A0_46A1:: ; address name
     jr nz, .loop
     ret
 
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
-Func_0A0_46C3::
+; ComputeWildEncounterLevel, then ApplyLevelScaledStatsToSlots
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
+ComputeWildLevelAndScaleStats::
+Func_0A0_46C3:: ; address name
     push bc
     call ComputeWildEncounterLevel
     pop bc
@@ -1189,7 +1197,7 @@ Func_0A0_46C3::
     ret
 
 ; computes the wild monster level wCFE3 and band wCFE4 from the party's stat totals (wD0F2-wD0FE) and size (E-0131)
-; 1 call site from 1 routine (e.g. Func_0A0_46C3)
+; 1 call site from 1 routine (e.g. ComputeWildLevelAndScaleStats)
 ; reads: wBattlerRecords, wBattlerRecordSlot1
 ; writes: wWildLevel, wWildBand
 ComputeWildEncounterLevel::
@@ -1575,7 +1583,7 @@ Data_0A0_48F5:: ; address name
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
 ; copies battler records 0 and 1 ($4E bytes each, wBattlerRecords and wD123) to wD1BF and wD20D (E-0118)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount)
 ; points at: wBattlerRecords, wBattlerRecordSlot4, wBattlerRecordSlot1, wBattlerRecordSlot5
 BackupBattlerRecords0And1::
 Func_0A0_4900:: ; address name
@@ -1590,7 +1598,7 @@ Func_0A0_4900:: ; address name
     ret
 
 ; hFFC7 = min(4 * wCFE3 / 5 + 5, 99); runs Func_0A0_494F for B slots from C with wD86A = Data_0A0_4B0A[slot] (E-0125)
-; 1 call site from 1 routine (e.g. Func_0A0_46C3)
+; 1 call site from 1 routine (e.g. ComputeWildLevelAndScaleStats)
 ; reads: wWildLevel
 ; writes: hTemp1, wBattleArg2, wBattleArg3
 ApplyLevelScaledStatsToSlots::
@@ -2486,7 +2494,7 @@ Jump_0A0_4F9F:: ; address name
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case05
-    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheFirstMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes
@@ -2638,17 +2646,17 @@ Jump_0A0_503A:: ; address name
 ; reads: wScreenCountPlusOne
 ; writes: wEncounterKind, wBattleFoeCount, wSide1Flag
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount::
 Jump_0A0_5076:: ; address name
-    call Func_0A0_4047
+    call InitBattleSlotsForFoeCount
     ld a, [wScreenCountPlusOne]
     cp a, $02
     jr z, .set_encounter_kind_to_01
     ld a, $02
     ld [wEncounterKind], a
     ld bc, $0300
-    call Func_0A0_46C3
-    call Func_0A0_4193
+    call ComputeWildLevelAndScaleStats
+    call PrepareThreeFoeSlots
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -2661,7 +2669,7 @@ Jump_0A0_5076:: ; address name
     ld a, $02
     ld [wSide1Flag], a
     call BackupBattlerRecords0And1
-    call Func_0A0_418E
+    call PrepareTwoFoeSlots
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -3353,11 +3361,13 @@ Jump_0A0_547E:: ; address name
     ld [wBattleStep], a
     ret
 
+; for each party member with a battle entry in wBattleBuffer72, writes two words to SRAM record offsets $5B and $5F and one byte to $55, then ClampPartyHpAndMpToMax
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wPartyCount
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
-Func_0A0_5491::
+StoreBattleStateToPartyRecords::
+Func_0A0_5491:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -3419,7 +3429,7 @@ Jump_0A0_54DD:: ; address name
     ld a, [wBattleStep]
     rst $00
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00
-    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles
@@ -3514,14 +3524,14 @@ Jump_0A0_54F7:: ; address name
     ld [wBattleResultStep], a
     ld a, [wBattleResultDelay]
     ld [wBattleResultCounter], a
-    call Func_0A0_5A6C
-    call Func_0A0_5B47
+    call ComputeBattleResultRank
+    call ApplyBattleResultStatChanges
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ld hl, wBattleStep
     inc [hl]
-    call Func_0A0_5491
+    call StoreBattleStateToPartyRecords
     ret
 
 ; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
@@ -3529,9 +3539,9 @@ Jump_0A0_54F7:: ; address name
 ; reads: wSaveStep, wBattleResultStep
 ; writes: wStringIndex, wStringCategory
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
 Jump_0A0_558C:: ; address name
-    farcall Func_002_7718
+    farcall RunBackupAndSaveSteps
     ld a, [wSaveStep]
     bit 7, a
     ret z
@@ -3650,7 +3660,7 @@ Jump_0A0_5622:: ; address name
     ld [wWindowTileBuffer], a
     ld de, wKeyNameBuf
     ld hl, wScreenTileBuffer + $71
-    call Func_0A0_569E
+    call WriteThreeTwoDigitRows
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -3695,15 +3705,17 @@ Func_0A0_5693:: ; address name
     ld a, c
     ret
 
+; three WriteTwoDigitsFromDEStepRow calls: three numbers from DE, one per row
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles)
 ; reads: wDigits
-Func_0A0_569E::
+WriteThreeTwoDigitRows::
+Func_0A0_569E:: ; address name
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
 
 ; writes [DE] (DE += 1) as two digit tiles at HL (no leading zero digit), then HL moves to the next row ($40 on) (E-0124)
-; 3 call sites from 1 routine (e.g. Func_0A0_569E)
+; 3 call sites from 1 routine (e.g. WriteThreeTwoDigitRows)
 ; reads: wDigits
 WriteTwoDigitsFromDEStepRow::
 Func_0A0_56A7:: ; address name
@@ -4292,11 +4304,13 @@ Data_0A0_5A4A:: ; address name
     db $19, $F0, $0A, $1D, $14, $F0, $0D, $0E, $0F, $F0, $0A, $10, $15, $F0, $12, $17
     db $1D, $F0
 
+; counts the result (wKeyNameBuf[wBattleResultStep] += 1, capped at 99); scores the counts and rewards into a band (wWorkBuf, wWildBand) by BattleResultBandThresholds; adds the signed BattleResultTurnLimitAdjust and BattleResultBandAdjust entries to wWildLevel and clamps it to 0-99; the rank (wWorkBuf+1, wWildByteE5) is the number of BattleResultRankThresholds at or below it, 0-7, which the results screen shows as one of 'GFEDCBAS'
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wBattleResultStep, wLinkRuleTurnLimit, wBattleRewardByte97, wBattleRewardByte98, wWildLevel
 ; writes: wWorkBuf, wWildBand, wWildByteE5
 ; points at: wKeyNameBuf
-Func_0A0_5A6C::
+ComputeBattleResultRank::
+Func_0A0_5A6C:: ; address name
     ld a, [wBattleResultStep]
     ld hl, wKeyNameBuf
     add_a_to_hl
@@ -4309,9 +4323,9 @@ Func_0A0_5A6C::
 .read_link_rule_turn_limit:
     ld [hl], a
     ld a, [wLinkRuleTurnLimit]
-    ld hl, Data_0A0_5B25
+    ld hl, BattleResultTurnLimitThresholds
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, Data_0A0_5B2C
+    ld hl, BattleResultTurnLimitAdjust
     add_a_to_hl
     push hl
     ld hl, wKeyNameBuf
@@ -4339,9 +4353,9 @@ Func_0A0_5A6C::
     ld a, l
     ld [wWorkBuf], a
     ld [wWildBand], a
-    ld hl, Data_0A0_5B33
+    ld hl, BattleResultBandThresholds
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, Data_0A0_5B39
+    ld hl, BattleResultBandAdjust
     add_a_to_hl
     ld a, [wWildLevel]
     ld e, a
@@ -4395,14 +4409,14 @@ Func_0A0_5A6C::
 
 .call_count_table_bytes_at_or_below_a_bank_a0:
     ld a, e
-    ld hl, Data_0A0_5B3F
+    ld hl, BattleResultRankThresholds
     call CountTableBytesAtOrBelowA_BankA0
     ld [wWorkBuf + $1], a
     ld [wWildByteE5], a
     ret
 
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065) (the same 11 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. Func_0A0_5A6C)
+; 3 call sites from 1 routine (e.g. ComputeBattleResultRank)
 CountTableBytesAtOrBelowA_BankA0::
 Func_0A0_5B1A:: ; address name
     ld c, $00
@@ -4418,30 +4432,42 @@ Func_0A0_5B1A:: ; address name
     ld a, c
     ret
 
-; address loaded by Func_0A0_5A6C
-Data_0A0_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; ascending turn-limit thresholds for ComputeBattleResultRank, $FF-terminated
+; address loaded by ComputeBattleResultRank
+BattleResultTurnLimitThresholds:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B25:: ; address name
     db $06, $0B, $15, $29, $33, $3D, $FF
 
-; address loaded by Func_0A0_5A6C
-Data_0A0_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; signed level adjustment per turn-limit bracket: +20, +10, +5, 0, -5, -10, -20
+; address loaded by ComputeBattleResultRank
+BattleResultTurnLimitAdjust:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B2C:: ; address name
     db $14, $0A, $05, $00, $FB, $F6, $EC
 
-; address loaded by Func_0A0_5A6C
-Data_0A0_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; ascending band thresholds for ComputeBattleResultRank, $FF-terminated
+; address loaded by ComputeBattleResultRank
+BattleResultBandThresholds:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B33:: ; address name
     db $01, $03, $05, $07, $09, $FF
 
-; address loaded by Func_0A0_5A6C
-Data_0A0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; signed level adjustment per band: -20, -10, -5, 0, +5, +10
+; address loaded by ComputeBattleResultRank
+BattleResultBandAdjust:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B39:: ; address name
     db $EC, $F6, $FB, $00, $05, $0A
 
-; address loaded by Func_0A0_5A6C
-Data_0A0_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; ascending rank thresholds 20-90, $FF-terminated: the count at or below the adjusted level is the rank 0-7
+; address loaded by ComputeBattleResultRank
+BattleResultRankThresholds:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5B3F:: ; address name
     db $14, $28, $32, $3C, $46, $50, $5A, $FF
 
+; by wBattleResultStep: results 0 and 1 raise the lowest of five record words by BattleResultStatBonusByRank[rank] (capped at 999) and take a word from BattleResultGoldByRank; result 2 lowers the highest by BattleResultStatPenaltyByRank[rank]; others lower all five; the word (or 1000) goes to wWorkBuf+$10
 ; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wLinkReceivedByte, wBattleResultStep, wWorkBuf, wGoldLo, wGoldMid, wGoldHi
 ; writes: wWorkBuf, rRAMG, rRAMB, wGoldLo, wGoldMid, wGoldHi
-Func_0A0_5B47::
+ApplyBattleResultStatChanges::
+Func_0A0_5B47:: ; address name
     ld a, $FF
     ld [wWorkBuf + $9], a
     ld [wWorkBuf + $A], a
@@ -4472,7 +4498,7 @@ Func_0A0_5B47::
     call OffsetByIndexOfMinOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D5A
+    ld hl, BattleResultStatBonusByRank
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4481,7 +4507,7 @@ Func_0A0_5B47::
     ld [wWorkBuf + $A], a
     ld a, [wWorkBuf + $1]
     add a, a
-    ld hl, Data_0A0_5D6A
+    ld hl, BattleResultGoldByRank
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
@@ -4492,7 +4518,7 @@ Func_0A0_5B47::
     call OffsetByIndexOfMaxOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D62
+    ld hl, BattleResultStatPenaltyByRank
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4505,7 +4531,7 @@ Func_0A0_5B47::
 .read_work_buf:
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, Data_0A0_5D62
+    ld hl, BattleResultStatPenaltyByRank
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4629,7 +4655,7 @@ Func_0A0_5B47::
     ret
 
 ; the word at HL += C, capped at 999; C becomes the amount actually added (E-0124)
-; 1 call site from 1 routine (e.g. Func_0A0_5B47)
+; 1 call site from 1 routine (e.g. ApplyBattleResultStatChanges)
 AddCToWordCappedAt999::
 Func_0A0_5C8F:: ; address name
     ld a, [hl+]
@@ -4665,7 +4691,7 @@ Func_0A0_5C8F:: ; address name
     ret
 
 ; the word at HL -= C; results at or below 0 become 1 (B = the amount actually taken) (E-0124)
-; 7 call sites from 1 routine (e.g. Func_0A0_5B47)
+; 7 call sites from 1 routine (e.g. ApplyBattleResultStatChanges)
 SubtractCFromWordMin1::
 Func_0A0_5CB2:: ; address name
     ld b, c
@@ -4697,7 +4723,7 @@ Func_0A0_5CB2:: ; address name
     ret
 
 ; finds the entry with the smallest of five words after HL (ties broken randomly), stores its index in wD0A6 and returns HL + Data_0A0_5D54[index] (E-0122)
-; 1 call site from 1 routine (e.g. Func_0A0_5B47)
+; 1 call site from 1 routine (e.g. ApplyBattleResultStatChanges)
 ; writes: wWorkBuf
 OffsetByIndexOfMinOfFiveWords::
 Func_0A0_5CCD:: ; address name
@@ -4744,7 +4770,7 @@ Func_0A0_5CF9:: ; address name
     ret
 
 ; finds the entry with the largest of five words after HL (ties broken randomly), stores its index in wD0A6 and returns HL + Data_0A0_5D54[index] (E-0122)
-; 1 call site from 1 routine (e.g. Func_0A0_5B47)
+; 1 call site from 1 routine (e.g. ApplyBattleResultStatChanges)
 ; writes: wWorkBuf
 OffsetByIndexOfMaxOfFiveWords::
 Func_0A0_5D0C:: ; address name
@@ -4805,16 +4831,22 @@ OffsetByIndexOfMinOfFiveWords_Data:: ; heuristic: pointer load in the same bank 
 Data_0A0_5D54:: ; address name
     db $00, $04, $06, $08, $0A, $0C
 
-; address loaded by Func_0A0_5B47
-Data_0A0_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; one byte per rank 0-7: the amount added to the lowest record word
+; address loaded by ApplyBattleResultStatChanges
+BattleResultStatBonusByRank:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D5A:: ; address name
     db $01, $02, $03, $04, $05, $06, $08, $0A
 
-; address loaded by Func_0A0_5B47
-Data_0A0_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; one byte per rank 0-7: the amount subtracted (floor 1)
+; address loaded by ApplyBattleResultStatChanges
+BattleResultStatPenaltyByRank:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D62:: ; address name
     db $01, $01, $01, $01, $01, $01, $01, $01
 
-; address loaded by Func_0A0_5B47
-Data_0A0_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; one word per rank 0-7, stored to wWorkBuf+$10 (C1: a gold amount, from the gold reads that follow)
+; address loaded by ApplyBattleResultStatChanges
+BattleResultGoldByRank:: ; heuristic: pointer load in the same bank (bank assumed); C0
+Data_0A0_5D6A:: ; address name
     db $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03
 
 ; only called from RunBattlePhaseWhenTextIdle_A0_Case01_Case00 (E-0047)

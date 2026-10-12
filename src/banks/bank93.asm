@@ -322,32 +322,37 @@ Data_093_6124:: ; address name
     db $06, $03, $7A, $0F, $05, $03, $A5, $0F, $4D, $03, $05, $1F, $4D, $01, $01
 
 ; LZSS-compressed asset: 65 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_093_6153:: ; heuristic: script screen animation attribute map; C0
+ScriptScreenAttrMap_93_6153:: ; heuristic: script screen animation attribute map; C0
+Data_093_6153:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $24E153, $41
 
 ; LZSS-compressed asset: 59 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_093_6194:: ; heuristic: script screen animation attribute map; C0
+ScriptScreenAttrMap_93_6194:: ; heuristic: script screen animation attribute map; C0
+Data_093_6194:: ; address name
     db $68, $01, $03, $01, $03, $00, $01, $03, $F2, $FF, $0E, $03, $00, $02, $03, $04
     db $02, $03, $05, $02, $03, $27, $04, $03, $27, $06, $03, $39, $09, $02, $02, $02
     db $02, $03, $39, $0C, $03, $58, $0E, $03, $5A, $00, $03, $37, $0C, $03, $7E, $0F
     db $01, $03, $A5, $0F, $4D, $03, $05, $1F, $4D, $01, $01
 
 ; LZSS-compressed asset: 57 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_093_61CF:: ; heuristic: script screen animation attribute map; C0
+ScriptScreenAttrMap_93_61CF:: ; heuristic: script screen animation attribute map; C0
+Data_093_61CF:: ; address name
     db $68, $01, $03, $01, $03, $00, $01, $03, $F3, $FF, $00, $03, $04, $01, $03, $04
     db $03, $03, $13, $04, $03, $13, $06, $03, $25, $0C, $03, $37, $0D, $02, $02, $02
     db $02, $03, $48, $0F, $0F, $03, $5A, $00, $03, $23, $0C, $03, $7E, $0F, $01, $03
     db $A5, $0F, $4D, $03, $05, $1F, $4D, $01, $01
 
 ; LZSS-compressed asset: 52 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_093_6208:: ; heuristic: script screen animation attribute map; C0
+ScriptScreenAttrMap_93_6208:: ; heuristic: script screen animation attribute map; C0
+Data_093_6208:: ; address name
     db $68, $01, $03, $01, $03, $00, $02, $03, $FC, $F2, $03, $FB, $F8, $03, $12, $05
     db $03, $0F, $0F, $00, $03, $25, $0F, $10, $02, $02, $02, $02, $03, $48, $0F, $0F
     db $03, $5A, $00, $03, $10, $0C, $03, $7E, $0F, $01, $03, $A5, $0F, $4D, $03, $05
     db $1F, $4D, $01, $01
 
 ; LZSS-compressed asset: 42 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_093_623C:: ; heuristic: script screen animation attribute map; C0
+ScriptScreenAttrMap_93_623C:: ; heuristic: script screen animation attribute map; C0
+Data_093_623C:: ; address name
     db $68, $01, $03, $01, $03, $00, $08, $03, $FD, $FC, $03, $10, $0F, $28, $02, $02
     db $02, $02, $03, $48, $0F, $0F, $03, $5A, $00, $03, $0E, $0C, $03, $7E, $0F, $01
     db $03, $A5, $0F, $4D, $03, $05, $1F, $4D, $01, $01

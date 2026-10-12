@@ -1219,12 +1219,12 @@ ActionEffect_Chance_AdvanceRandom_Data:: ; heuristic: pointer load in the same b
 Data_0A3_4AFD:: ; address name
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
-; only called from BattleEnd_Step7_Case02 (E-0047)
+; the same 76 bytes as StoreBattleStateToPartyRecords (A0:5491)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step7_StartPaletteFade)
 ; reads: wPartyCount
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
-BattleEnd_Step7_Case02_SRAMRecordAddress::
+StoreBattleStateToPartyRecords_BankA3::
 Func_0A3_4B0B:: ; address name
     ld a, $0A
     ld [rRAMG], a

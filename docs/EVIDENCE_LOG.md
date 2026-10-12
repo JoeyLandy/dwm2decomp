@@ -2431,6 +2431,34 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0289 — The last address-only data labels; battle result rank; eight helpers named
+
+- Kind: TOOL + STATIC.
+- **Name collisions.** A string whose words match an earlier string's name now gets `<Name>_<AAAA>` instead of keeping its address name. This change is in name_string_targets' give().
+- **Naming by kind.** Labels named from their dreason, by kind:
+
+  | Kind | Name |
+  | --- | --- |
+  | Stream found by tiling, or decompressed by a call or in the emulator | Gfx_BB_AAAA (ScreenMap_BB_AAAA for 360 bytes) |
+  | Script screen animation attribute map | ScriptScreenAttrMap_BB_AAAA |
+  | Map object screen array | MapObjectScreens_BB_AAAA |
+  | Map object selector | ObjSelector_BB_AAAA |
+  | Item name | ItemNameBB_AAAA |
+  | Item description | ItemDescription_BB_AAAA |
+- **ComputeBattleResultRank (A0:5A6C, C1).**
+  - Adds one to the result count wKeyNameBuf[wBattleResultStep], capped at 99.
+  - Scores the counts and rewards into a band (wWildBand) using BattleResultBandThresholds.
+  - Adds the signed entries of BattleResultTurnLimitAdjust (+20, +10, +5, 0, -5, -10, -20 by turn-limit bracket) and BattleResultBandAdjust (-20, -10, -5, 0, +5, +10) to wWildLevel, then clamps it to 0-99.
+  - Counts how many BattleResultRankThresholds (20, 40, 50, 60, 70, 80, 90) are at or below that value. The count, 0-7, is the rank in wWildByteE5. The results screen's rank string is 'GFEDCBAS', eight letters, one per rank.
+- **ApplyBattleResultStatChanges (A0:5B47, C1).**
+  - Results 0 and 1 raise the lowest of five record words by BattleResultStatBonusByRank[rank].
+  - Result 2 lowers the highest word by BattleResultStatPenaltyByRank[rank]. Any other result lowers all five.
+  - A word from BattleResultGoldByRank, or 1000, goes to wWorkBuf+$10.
+- **Helpers.** Eight routines had lost the helper names derived from their old parents when E-0288 renamed those parents: RunBackupAndSaveSteps, InitBattleSlotsForFoeCount, PrepareTwoFoeSlots, PrepareThreeFoeSlots, ComputeWildLevelAndScaleStats, StoreBattleStateToPartyRecords, WriteThreeTwoDigitRows, ApplyBattleResultStatChanges.
+- **SGBPacketSet18 (17:5D79).** The target of entry $18 of the SGB packet-set table. Its first byte, $14, gives 4 packets (64 bytes). The other 295 bytes of the 359-byte slice are not identified and are not a valid LZSS stream. build/measure2.py still counts this slice as unidentified (359 bytes).
+- **Counts.** Data labels with only an address name: 18 → 0. Code labels with only an address name (primary `Func_`/`Jump_`): 0. tools/rank_unnamed.py reports 0.
+- Binary verification: build/run389 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0288 — Cases of named dispatchers count as bare; bit steps; 34 dispatchers named by reading
 
 - Kind: TOOL + STATIC (C1 names, read from each dispatcher's steps and quoted strings).

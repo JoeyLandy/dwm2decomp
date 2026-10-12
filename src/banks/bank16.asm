@@ -9941,6 +9941,7 @@ Data_016_7B7D:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05BB7D, $195
 
 ; LZSS-compressed asset: 67 bytes expand to 64 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_016_7D12:: ; heuristic: stream found by tiling the gap after another stream; C0
+Gfx_16_7D12:: ; heuristic: stream found by tiling the gap after another stream; C0
+Data_016_7D12:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $05BD12, $42
     ds $2AC, $00

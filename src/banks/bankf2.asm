@@ -4333,7 +4333,7 @@ Data_0F2_6586:: ; address name
     db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
 
 ; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
-; 2 call sites from 2 routines (e.g. Func_0A0_5491, BattleEnd_Step7_Case02_SRAMRecordAddress)
+; 2 call sites from 2 routines (e.g. StoreBattleStateToPartyRecords, StoreBattleStateToPartyRecords_BankA3)
 ; reads: wPartyCount, wCounterPtr0Lo, wCounterPtr0Hi
 ; writes: wCounterPtr0Lo, wCounterPtr0Hi
 ; points at: wPartyList
