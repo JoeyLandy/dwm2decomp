@@ -4462,7 +4462,7 @@
   "0E:5BB3": {"name": "CompactWCB0CRemovingFF", "note": "moves the non-$FF bytes of the $19-byte list at wCB0C to its front (E-0124)", "evidence": "reading (E-0124)"},
   "0E:5D4E": {"name": "RollWCB3DChanceOrIncArg5", "note": "chance = A * wCB3D; if below 100 and a random value is below it, A = $FF; otherwise wD7F5 += 1 and A = 0 (E-0124)", "evidence": "reading (E-0124)"},
   "0E:5DAF": {"name": "SumFunc5DCDOfWC9F9AndWCA9E", "note": "B = Func_00E_5DCD(wC9F9) + Func_00E_5DCD(wCA9E) when both are valid and the sum is at least B; otherwise B = $FF (E-0124)", "evidence": "reading (E-0124)"},
-  "0E:61C1": {"name": "RollWCADEFromSpeciesFlag", "note": "loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)", "evidence": "reading (E-0124)"},
+  "0E:61C1": {"name": "RollChildSexFromSpecies", "note": "loads the child's species record; when species byte 1 (SPECIES_SEX_RATIO) is non-zero, sets the child's MON_SEX to 1 when a random value is not above SexChanceByClass[byte & 3] (0, 10, 50, 90), else 0; byte 1 = 0 gives 0", "evidence": "E-0307 (C1); was RollWCADEFromSpeciesFlag"},
   "0F:4774": {"name": "ScriptStepMoveObjects2And3To81B0", "note": "steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances wScriptStep once they arrive (E-0124)", "evidence": "reading (E-0124)"},
   "0F:47F5": {"name": "ScriptStepMoveObjects2And3To0340", "note": "steps objects 2 and 3 toward ($03, $40) and ($03, $50); advances wScriptStep once they arrive (E-0124)", "evidence": "reading (E-0124)"},
   "11:438F": {"name": "StartWarpTransition", "note": "wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)", "evidence": "reading (E-0124)"},
@@ -7590,5 +7590,6 @@
   "F2:41BA": {"name": "GameMode8_Update_CopyStringMaxC", "note": "copies a string from HL to DE, at most C bytes, ending it with $F0", "evidence": "E-0305 (C2)"},
   "F2:648E": {"name": "VaultMenu_Store_MapItemsToInventory", "note": "for each item in the list at DE finds its inventory slot and records it in wWorkBuf", "evidence": "E-0305 (C1)"},
   "F2:6692": {"name": "GreatLogTalkEvents_ClearArenaData", "note": "clears $20F bytes from wArenaEntry", "evidence": "E-0305 (C2)"},
-  "16:5CFB": {"name": "JoinChanceByClass", "note": "join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS", "evidence": "E-0306 (C1)", "data": true}
+  "16:5CFB": {"name": "JoinChanceByClass", "note": "join chance out of 200 per join-chance class 0-7: 100, 50, 24, 10, 6, 2, 1, 0; the defeated monster may join when (random mod 200) is below the entry for SPECIES_JOIN_CLASS", "evidence": "E-0306 (C1)", "data": true},
+  "0E:61FC": {"name": "SexChanceByClass", "note": "chance (of about 100) that RollChildSexFromSpecies sets MON_SEX to 1, per sex-ratio class 0-3: 0, 10, 50, 90", "evidence": "E-0307 (C1)", "data": true}
 }

@@ -1360,7 +1360,7 @@ Func_019_4752:: ; address name
     ld [hl+], a
     ld a, [wSpeciesRecord]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $1]
+    ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
     ld [hl+], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a
@@ -2030,7 +2030,7 @@ Func_019_4B37:: ; address name
     ld a, [wSpeciesRecord]
     ld [de], a
     inc de
-    ld a, [wSpeciesRecord + $1]
+    ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
     or a, a
     jr z, .check_new_record_byte0_d2
     cp a, $01

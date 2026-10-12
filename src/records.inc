@@ -54,6 +54,7 @@ DEF BATTLER_JOIN_CLASS EQU $4D ; MonsterTable byte 8 for a wild monster; copied 
 
 ; Offsets into the 47-byte species record (wSpeciesRecord; config/record_fields.json "species", E-0299).
 DEF SPECIES_FAMILY EQU $00 ; family (StringTable_MonsterFamilies index) (E-0069)
+DEF SPECIES_SEX_RATIO EQU $01 ; sex-ratio class: 0 = always sex 0, otherwise (byte & 3) indexes SexChanceByClass (10, 50, 90) in RollChildSexFromSpecies (E-0307)
 DEF SPECIES_JOIN_CLASS EQU $04 ; join-chance class 0-7: after a battle BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc compares (random mod 200) with the chance table entry for it; 7 = never joins (E-0306)
 DEF SPECIES_MAX_LEVEL EQU $06 ; base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it (E-0299)
 DEF SPECIES_EXP_CURVE EQU $07 ; the ExpTable row (EXP curve) (E-0148)

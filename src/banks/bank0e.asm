@@ -1552,18 +1552,18 @@ Func_00E_5688:: ; address name
     and a, a
     jr z, .skip22
     ld a, $63
-    jr .call_roll_wcade_from_species_flag
+    jr .call_roll_child_sex_from_species
 
 .skip22:
     ld a, l
     cp a, $64
-    jr c, .call_roll_wcade_from_species_flag
+    jr c, .call_roll_child_sex_from_species
     ld a, $63
 
-.call_roll_wcade_from_species_flag:
+.call_roll_child_sex_from_species:
     ld hl, wChildRecord + MON_MAX_LEVEL
     ld [hl], a
-    call RollWCADEFromSpeciesFlag
+    call RollChildSexFromSpecies
     call ApplyBreedingBonusToChildStats
     call RollChildResistancesToWCB43
     call BuildWCB0CCandidateList
@@ -2753,7 +2753,7 @@ Data_00E_6117:: ; address name
     db $C0, $30, $0C, $03
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0117)
-; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncArg5, RollWCB3DForCaseB_5D77, RollWCADEFromSpeciesFlag)
+; 3 call sites from 3 routines (e.g. RollWCB3DChanceOrIncArg5, RollWCB3DForCaseB_5D77, RollChildSexFromSpecies)
 ; reads: wRandomLo
 RandomModulo29::
 Func_00E_611B:: ; address name
@@ -2887,22 +2887,22 @@ Func_00E_615A:: ; address name
     ld [wArg5], a
     ret
 
-; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
+; loads the child's species record; when species byte 1 (SPECIES_SEX_RATIO) is non-zero, sets the child's MON_SEX to 1 when a random value is not above SexChanceByClass[byte & 3] (0, 10, 50, 90), else 0; byte 1 = 0 gives 0
 ; 2 call sites from 2 routines (e.g. ComputeBreedingChild, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4)
 ; reads: wChildRecord, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
-RollWCADEFromSpeciesFlag::
+RollChildSexFromSpecies::
 Func_00E_61C1:: ; address name
     ld a, [wChildRecord + MON_SPECIES]
     ld [wSpeciesIdLo], a
     ld a, [wChildRecord + MON_SPECIES + 1]
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecordWord0
-    ld a, [wSpeciesRecord + $1]
+    ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
     and a, a
     jr z, .skip
     and a, $03
-    ld hl, RollWCADEFromSpeciesFlag_Data
+    ld hl, SexChanceByClass
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2925,8 +2925,9 @@ Func_00E_61C1:: ; address name
     ld [hl], a
     ret
 
-; address loaded by RollWCADEFromSpeciesFlag
-RollWCADEFromSpeciesFlag_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; chance (of about 100) that RollChildSexFromSpecies sets MON_SEX to 1, per sex-ratio class 0-3: 0, 10, 50, 90
+; address loaded by RollChildSexFromSpecies
+SexChanceByClass:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00E_61FC:: ; address name
     db $00, $0A, $32, $5A
 

@@ -1669,7 +1669,7 @@ Func_0A0_494F:: ; address name
     ld [hl+], a
     ld a, [wSpeciesRecord]
     ld [hl+], a
-    ld a, [wSpeciesRecord + $1]
+    ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
     ld [hl+], a
     ld a, [wSpeciesRecord + SPECIES_SKILLS]
     ld [hl+], a

@@ -2431,6 +2431,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0307 — Species byte 1 is the sex-ratio class
+
+- Kind: STATIC (C1).
+- **The roll.** RollChildSexFromSpecies (0E:$61C1, was RollWCADEFromSpeciesFlag) loads the child's species record and sets the child's MON_SEX ($0E):
+  - When species byte 1 is 0, the sex is 0.
+  - Otherwise it rolls RandomModulo29 and gives 1 when the result is not above SexChanceByClass[byte & 3]. That table, at 0E:$61FC, holds 0, 10, 50, 90, so classes 1-3 give sex 1 about 10%, 50% and 90% of the time.
+  - ComputeBreedingChild and MedalPrizeMenu_ChoosePrize call it.
+- **Names given.** Species byte 1 is SPECIES_SEX_RATIO; the SpeciesRecords layout names it.
+- **Still unread.**
+  - Species bytes 2-3: GameMode4_Init_Sub01 packs them as nibbles into one byte. A non-zero byte 3 raises a stat cap from 700 to 999 in battle kind 3 (ScaleStatAndCapByBattleKind).
+  - Species bytes 5, $0B-$0F, $11, $2D-$2E.
+  - Record bytes $28 and $33.
+- Binary verification: build/run425 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0306 — Player id, master id, and the join-chance classes
 
 - Kind: STATIC (C1).

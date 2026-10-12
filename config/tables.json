@@ -19723,8 +19723,13 @@
         },
         {
           "type": "db",
-          "size": 3,
-          "name": "bytes 1-3"
+          "size": 1,
+          "name": "sex-ratio class (C1, E-0307)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "bytes 2-3"
         },
         {
           "type": "db",

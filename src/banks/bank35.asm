@@ -22,7 +22,7 @@ Func_035_400A:: ; address name
     ret
 
 ; copies bytes 0-1 of the species record of monster id wSpeciesIdLo/Hi (the family and byte 1) to wSpeciesRecord (E-0069)
-; 1 call site from 1 routine (e.g. RollWCADEFromSpeciesFlag)
+; 1 call site from 1 routine (e.g. RollChildSexFromSpecies)
 ; points at: wSpeciesRecord
 LoadSpeciesRecordWord0::
 Func_035_4013:: ; address name
@@ -456,7 +456,8 @@ SpeciesRecords::
 SpeciesRecord_000:: ; heuristic: species record; C0
 Data_035_433B:: ; address name
     db $FF ; id 0: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $00 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -470,7 +471,8 @@ Data_035_433B:: ; address name
 SpeciesRecord_DrakSlime:: ; heuristic: species record; C0
 Data_035_436A:: ; address name
     db $00 ; id 1: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -484,7 +486,8 @@ Data_035_436A:: ; address name
 SpeciesRecord_SpotSlime:: ; heuristic: species record; C0
 Data_035_4399:: ; address name
     db $00 ; id 2: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -498,7 +501,8 @@ Data_035_4399:: ; address name
 SpeciesRecord_WingSlime:: ; heuristic: species record; C0
 Data_035_43C8:: ; address name
     db $00 ; id 3: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -512,7 +516,8 @@ Data_035_43C8:: ; address name
 SpeciesRecord_TreeSlime:: ; heuristic: species record; C0
 Data_035_43F7:: ; address name
     db $00 ; id 4: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -526,7 +531,8 @@ Data_035_43F7:: ; address name
 SpeciesRecord_Snaily:: ; heuristic: species record; C0
 Data_035_4426:: ; address name
     db $00 ; id 5: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -540,7 +546,8 @@ Data_035_4426:: ; address name
 SpeciesRecord_SlimeNite:: ; heuristic: species record; C0
 Data_035_4455:: ; address name
     db $00 ; id 6: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -554,7 +561,8 @@ Data_035_4455:: ; address name
 SpeciesRecord_Babble:: ; heuristic: species record; C0
 Data_035_4484:: ; address name
     db $00 ; id 7: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -568,7 +576,8 @@ Data_035_4484:: ; address name
 SpeciesRecord_BoxSlime:: ; heuristic: species record; C0
 Data_035_44B3:: ; address name
     db $00 ; id 8: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -582,7 +591,8 @@ Data_035_44B3:: ; address name
 SpeciesRecord_PearlGel:: ; heuristic: species record; C0
 Data_035_44E2:: ; address name
     db $00 ; id 9: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -596,7 +606,8 @@ Data_035_44E2:: ; address name
 SpeciesRecord_Slime:: ; heuristic: species record; C0
 Data_035_4511:: ; address name
     db $00 ; id 10: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -610,7 +621,8 @@ Data_035_4511:: ; address name
 SpeciesRecord_Healer:: ; heuristic: species record; C0
 Data_035_4540:: ; address name
     db $00 ; id 11: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -624,7 +636,8 @@ Data_035_4540:: ; address name
 SpeciesRecord_FangSlime:: ; heuristic: species record; C0
 Data_035_456F:: ; address name
     db $00 ; id 12: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -638,7 +651,8 @@ Data_035_456F:: ; address name
 SpeciesRecord_RockSlime:: ; heuristic: species record; C0
 Data_035_459E:: ; address name
     db $00 ; id 13: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -652,7 +666,8 @@ Data_035_459E:: ; address name
 SpeciesRecord_SlimeBorg:: ; heuristic: species record; C0
 Data_035_45CD:: ; address name
     db $00 ; id 14: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -666,7 +681,8 @@ Data_035_45CD:: ; address name
 SpeciesRecord_Slabbit:: ; heuristic: species record; C0
 Data_035_45FC:: ; address name
     db $00 ; id 15: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -680,7 +696,8 @@ Data_035_45FC:: ; address name
 SpeciesRecord_KingSlime:: ; heuristic: species record; C0
 Data_035_462B:: ; address name
     db $00 ; id 16: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -694,7 +711,8 @@ Data_035_462B:: ; address name
 SpeciesRecord_Metaly:: ; heuristic: species record; C0
 Data_035_465A:: ; address name
     db $00 ; id 17: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $01 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $01 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $14 ; base level cap (C1, E-0299)
@@ -708,7 +726,8 @@ Data_035_465A:: ; address name
 SpeciesRecord_Metabble:: ; heuristic: species record; C0
 Data_035_4689:: ; address name
     db $00 ; id 18: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $01 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $01 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -722,7 +741,8 @@ Data_035_4689:: ; address name
 SpeciesRecord_SpotKing:: ; heuristic: species record; C0
 Data_035_46B8:: ; address name
     db $00 ; id 19: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -736,7 +756,8 @@ Data_035_46B8:: ; address name
 SpeciesRecord_TropicGel:: ; heuristic: species record; C0
 Data_035_46E7:: ; address name
     db $00 ; id 20: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -750,7 +771,8 @@ Data_035_46E7:: ; address name
 SpeciesRecord_MimeSlime:: ; heuristic: species record; C0
 Data_035_4716:: ; address name
     db $00 ; id 21: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -764,7 +786,8 @@ Data_035_4716:: ; address name
 SpeciesRecord_HaloSlime:: ; heuristic: species record; C0
 Data_035_4745:: ; address name
     db $00 ; id 22: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -778,7 +801,8 @@ Data_035_4745:: ; address name
 SpeciesRecord_MetalKing:: ; heuristic: species record; C0
 Data_035_4774:: ; address name
     db $00 ; id 23: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $01 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $01 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -792,7 +816,8 @@ Data_035_4774:: ; address name
 SpeciesRecord_GoldSlime:: ; heuristic: species record; C0
 Data_035_47A3:: ; address name
     db $00 ; id 24: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -806,7 +831,8 @@ Data_035_47A3:: ; address name
 SpeciesRecord_GranSlime:: ; heuristic: species record; C0
 Data_035_47D2:: ; address name
     db $00 ; id 25: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -820,7 +846,8 @@ Data_035_47D2:: ; address name
 SpeciesRecord_WonderEgg:: ; heuristic: species record; C0
 Data_035_4801:: ; address name
     db $00 ; id 26: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -834,7 +861,8 @@ Data_035_4801:: ; address name
 SpeciesRecord_Butch:: ; heuristic: species record; C0
 Data_035_4830:: ; address name
     db $00 ; id 27: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -848,7 +876,8 @@ Data_035_4830:: ; address name
 SpeciesRecord_DragonKid:: ; heuristic: species record; C0
 Data_035_485F:: ; address name
     db $01 ; id 28: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -862,7 +891,8 @@ Data_035_485F:: ; address name
 SpeciesRecord_Tortragon:: ; heuristic: species record; C0
 Data_035_488E:: ; address name
     db $01 ; id 29: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -876,7 +906,8 @@ Data_035_488E:: ; address name
 SpeciesRecord_Pteranod:: ; heuristic: species record; C0
 Data_035_48BD:: ; address name
     db $01 ; id 30: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -890,7 +921,8 @@ Data_035_48BD:: ; address name
 SpeciesRecord_Gasgon:: ; heuristic: species record; C0
 Data_035_48EC:: ; address name
     db $01 ; id 31: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -904,7 +936,8 @@ Data_035_48EC:: ; address name
 SpeciesRecord_FairyDrak:: ; heuristic: species record; C0
 Data_035_491B:: ; address name
     db $01 ; id 32: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $01, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -918,7 +951,8 @@ Data_035_491B:: ; address name
 SpeciesRecord_LizardMan:: ; heuristic: species record; C0
 Data_035_494A:: ; address name
     db $01 ; id 33: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -932,7 +966,8 @@ Data_035_494A:: ; address name
 SpeciesRecord_Poisongon:: ; heuristic: species record; C0
 Data_035_4979:: ; address name
     db $01 ; id 34: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -946,7 +981,8 @@ Data_035_4979:: ; address name
 SpeciesRecord_Swordgon:: ; heuristic: species record; C0
 Data_035_49A8:: ; address name
     db $01 ; id 35: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -960,7 +996,8 @@ Data_035_49A8:: ; address name
 SpeciesRecord_Drygon:: ; heuristic: species record; C0
 Data_035_49D7:: ; address name
     db $01 ; id 36: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -974,7 +1011,8 @@ Data_035_49D7:: ; address name
 SpeciesRecord_Dragon:: ; heuristic: species record; C0
 Data_035_4A06:: ; address name
     db $01 ; id 37: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -988,7 +1026,8 @@ Data_035_4A06:: ; address name
 SpeciesRecord_MiniDrak:: ; heuristic: species record; C0
 Data_035_4A35:: ; address name
     db $01 ; id 38: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1002,7 +1041,8 @@ Data_035_4A35:: ; address name
 SpeciesRecord_MadDragon:: ; heuristic: species record; C0
 Data_035_4A64:: ; address name
     db $01 ; id 39: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1016,7 +1056,8 @@ Data_035_4A64:: ; address name
 SpeciesRecord_Rayburn:: ; heuristic: species record; C0
 Data_035_4A93:: ; address name
     db $01 ; id 40: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1030,7 +1071,8 @@ Data_035_4A93:: ; address name
 SpeciesRecord_Chamelgon:: ; heuristic: species record; C0
 Data_035_4AC2:: ; address name
     db $01 ; id 41: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1044,7 +1086,8 @@ Data_035_4AC2:: ; address name
 SpeciesRecord_LizardFly:: ; heuristic: species record; C0
 Data_035_4AF1:: ; address name
     db $01 ; id 42: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -1058,7 +1101,8 @@ Data_035_4AF1:: ; address name
 SpeciesRecord_Andreal:: ; heuristic: species record; C0
 Data_035_4B20:: ; address name
     db $01 ; id 43: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1072,7 +1116,8 @@ Data_035_4B20:: ; address name
 SpeciesRecord_KingCobra:: ; heuristic: species record; C0
 Data_035_4B4F:: ; address name
     db $01 ; id 44: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1086,7 +1131,8 @@ Data_035_4B4F:: ; address name
 SpeciesRecord_Vampirus:: ; heuristic: species record; C0
 Data_035_4B7E:: ; address name
     db $01 ; id 45: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1100,7 +1146,8 @@ Data_035_4B7E:: ; address name
 SpeciesRecord_SnakeBat:: ; heuristic: species record; C0
 Data_035_4BAD:: ; address name
     db $01 ; id 46: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1114,7 +1161,8 @@ Data_035_4BAD:: ; address name
 SpeciesRecord_Spikerous:: ; heuristic: species record; C0
 Data_035_4BDC:: ; address name
     db $01 ; id 47: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1128,7 +1176,8 @@ Data_035_4BDC:: ; address name
 SpeciesRecord_GreatDrak:: ; heuristic: species record; C0
 Data_035_4C0B:: ; address name
     db $01 ; id 48: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -1142,7 +1191,8 @@ Data_035_4C0B:: ; address name
 SpeciesRecord_Crestpent:: ; heuristic: species record; C0
 Data_035_4C3A:: ; address name
     db $01 ; id 49: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1156,7 +1206,8 @@ Data_035_4C3A:: ; address name
 SpeciesRecord_WingSnake:: ; heuristic: species record; C0
 Data_035_4C69:: ; address name
     db $01 ; id 50: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1170,7 +1221,8 @@ Data_035_4C69:: ; address name
 SpeciesRecord_Coatol:: ; heuristic: species record; C0
 Data_035_4C98:: ; address name
     db $01 ; id 51: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -1184,7 +1236,8 @@ Data_035_4C98:: ; address name
 SpeciesRecord_Orochi:: ; heuristic: species record; C0
 Data_035_4CC7:: ; address name
     db $01 ; id 52: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -1198,7 +1251,8 @@ Data_035_4CC7:: ; address name
 SpeciesRecord_BattleRex:: ; heuristic: species record; C0
 Data_035_4CF6:: ; address name
     db $01 ; id 53: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -1212,7 +1266,8 @@ Data_035_4CF6:: ; address name
 SpeciesRecord_SkyDragon:: ; heuristic: species record; C0
 Data_035_4D25:: ; address name
     db $01 ; id 54: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $01, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1226,7 +1281,8 @@ Data_035_4D25:: ; address name
 SpeciesRecord_Serpentia:: ; heuristic: species record; C0
 Data_035_4D54:: ; address name
     db $01 ; id 55: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -1240,7 +1296,8 @@ Data_035_4D54:: ; address name
 SpeciesRecord_Divinegon:: ; heuristic: species record; C0
 Data_035_4D83:: ; address name
     db $01 ; id 56: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -1254,7 +1311,8 @@ Data_035_4D83:: ; address name
 SpeciesRecord_Orligon:: ; heuristic: species record; C0
 Data_035_4DB2:: ; address name
     db $01 ; id 57: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $4B ; base level cap (C1, E-0299)
@@ -1268,7 +1326,8 @@ Data_035_4DB2:: ; address name
 SpeciesRecord_GigaDraco:: ; heuristic: species record; C0
 Data_035_4DE1:: ; address name
     db $01 ; id 58: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -1282,7 +1341,8 @@ Data_035_4DE1:: ; address name
 SpeciesRecord_Tonguella:: ; heuristic: species record; C0
 Data_035_4E10:: ; address name
     db $02 ; id 59: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1296,7 +1356,8 @@ Data_035_4E10:: ; address name
 SpeciesRecord_Almiraj:: ; heuristic: species record; C0
 Data_035_4E3F:: ; address name
     db $02 ; id 60: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1310,7 +1371,8 @@ Data_035_4E3F:: ; address name
 SpeciesRecord_CatFly:: ; heuristic: species record; C0
 Data_035_4E6E:: ; address name
     db $02 ; id 61: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1324,7 +1386,8 @@ Data_035_4E6E:: ; address name
 SpeciesRecord_PillowRat:: ; heuristic: species record; C0
 Data_035_4E9D:: ; address name
     db $02 ; id 62: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1338,7 +1401,8 @@ Data_035_4E9D:: ; address name
 SpeciesRecord_Saccer:: ; heuristic: species record; C0
 Data_035_4ECC:: ; address name
     db $02 ; id 63: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1352,7 +1416,8 @@ Data_035_4ECC:: ; address name
 SpeciesRecord_GulpBeast:: ; heuristic: species record; C0
 Data_035_4EFB:: ; address name
     db $02 ; id 64: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1366,7 +1431,8 @@ Data_035_4EFB:: ; address name
 SpeciesRecord_Skullroo:: ; heuristic: species record; C0
 Data_035_4F2A:: ; address name
     db $02 ; id 65: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1380,7 +1446,8 @@ Data_035_4F2A:: ; address name
 SpeciesRecord_WindBeast:: ; heuristic: species record; C0
 Data_035_4F59:: ; address name
     db $02 ; id 66: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1394,7 +1461,8 @@ Data_035_4F59:: ; address name
 SpeciesRecord_Beavern:: ; heuristic: species record; C0
 Data_035_4F88:: ; address name
     db $02 ; id 67: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1408,7 +1476,8 @@ Data_035_4F88:: ; address name
 SpeciesRecord_Antbear:: ; heuristic: species record; C0
 Data_035_4FB7:: ; address name
     db $02 ; id 68: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1422,7 +1491,8 @@ Data_035_4FB7:: ; address name
 SpeciesRecord_SuperTen:: ; heuristic: species record; C0
 Data_035_4FE6:: ; address name
     db $02 ; id 69: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1436,7 +1506,8 @@ Data_035_4FE6:: ; address name
 SpeciesRecord_IronTurt:: ; heuristic: species record; C0
 Data_035_5015:: ; address name
     db $02 ; id 70: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1450,7 +1521,8 @@ Data_035_5015:: ; address name
 SpeciesRecord_Mommonja:: ; heuristic: species record; C0
 Data_035_5044:: ; address name
     db $02 ; id 71: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1464,7 +1536,8 @@ Data_035_5044:: ; address name
 SpeciesRecord_HammerMan:: ; heuristic: species record; C0
 Data_035_5073:: ; address name
     db $02 ; id 72: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1478,7 +1551,8 @@ Data_035_5073:: ; address name
 SpeciesRecord_Grizzly:: ; heuristic: species record; C0
 Data_035_50A2:: ; address name
     db $02 ; id 73: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1492,7 +1566,8 @@ Data_035_50A2:: ; address name
 SpeciesRecord_Yeti:: ; heuristic: species record; C0
 Data_035_50D1:: ; address name
     db $02 ; id 74: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1506,7 +1581,8 @@ Data_035_50D1:: ; address name
 SpeciesRecord_ArrowDog:: ; heuristic: species record; C0
 Data_035_5100:: ; address name
     db $02 ; id 75: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1520,7 +1596,8 @@ Data_035_5100:: ; address name
 SpeciesRecord_NoctoKing:: ; heuristic: species record; C0
 Data_035_512F:: ; address name
     db $02 ; id 76: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1534,7 +1611,8 @@ Data_035_512F:: ; address name
 SpeciesRecord_BeastNite:: ; heuristic: species record; C0
 Data_035_515E:: ; address name
     db $02 ; id 77: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1548,7 +1626,8 @@ Data_035_515E:: ; address name
 SpeciesRecord_MadGopher:: ; heuristic: species record; C0
 Data_035_518D:: ; address name
     db $02 ; id 78: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1562,7 +1641,8 @@ Data_035_518D:: ; address name
 SpeciesRecord_FairyRat:: ; heuristic: species record; C0
 Data_035_51BC:: ; address name
     db $02 ; id 79: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $01, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1576,7 +1656,8 @@ Data_035_51BC:: ; address name
 SpeciesRecord_Unicorn:: ; heuristic: species record; C0
 Data_035_51EB:: ; address name
     db $02 ; id 80: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1590,7 +1671,8 @@ Data_035_51EB:: ; address name
 SpeciesRecord_Goategon:: ; heuristic: species record; C0
 Data_035_521A:: ; address name
     db $02 ; id 81: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1604,7 +1686,8 @@ Data_035_521A:: ; address name
 SpeciesRecord_WildApe:: ; heuristic: species record; C0
 Data_035_5249:: ; address name
     db $02 ; id 82: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1618,7 +1701,8 @@ Data_035_5249:: ; address name
 SpeciesRecord_Trumpeter:: ; heuristic: species record; C0
 Data_035_5278:: ; address name
     db $02 ; id 83: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1632,7 +1716,8 @@ Data_035_5278:: ; address name
 SpeciesRecord_KingLeo:: ; heuristic: species record; C0
 Data_035_52A7:: ; address name
     db $02 ; id 84: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -1646,7 +1731,8 @@ Data_035_52A7:: ; address name
 SpeciesRecord_DarkHorn:: ; heuristic: species record; C0
 Data_035_52D6:: ; address name
     db $02 ; id 85: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1660,7 +1746,8 @@ Data_035_52D6:: ; address name
 SpeciesRecord_MadCat:: ; heuristic: species record; C0
 Data_035_5305:: ; address name
     db $02 ; id 86: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1674,7 +1761,8 @@ Data_035_5305:: ; address name
 SpeciesRecord_BigEye:: ; heuristic: species record; C0
 Data_035_5334:: ; address name
     db $02 ; id 87: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1688,7 +1776,8 @@ Data_035_5334:: ; address name
 SpeciesRecord_Gorago:: ; heuristic: species record; C0
 Data_035_5363:: ; address name
     db $02 ; id 88: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $41 ; base level cap (C1, E-0299)
@@ -1702,7 +1791,8 @@ Data_035_5363:: ; address name
 SpeciesRecord_CatMage:: ; heuristic: species record; C0
 Data_035_5392:: ; address name
     db $02 ; id 89: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1716,7 +1806,8 @@ Data_035_5392:: ; address name
 SpeciesRecord_Dumbira:: ; heuristic: species record; C0
 Data_035_53C1:: ; address name
     db $02 ; id 90: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1730,7 +1821,8 @@ Data_035_53C1:: ; address name
 SpeciesRecord_Picky:: ; heuristic: species record; C0
 Data_035_53F0:: ; address name
     db $03 ; id 91: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1744,7 +1836,8 @@ Data_035_53F0:: ; address name
 SpeciesRecord_Wyvern:: ; heuristic: species record; C0
 Data_035_541F:: ; address name
     db $03 ; id 92: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1758,7 +1851,8 @@ Data_035_541F:: ; address name
 SpeciesRecord_BullBird:: ; heuristic: species record; C0
 Data_035_544E:: ; address name
     db $03 ; id 93: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1772,7 +1866,8 @@ Data_035_544E:: ; address name
 SpeciesRecord_Florajay:: ; heuristic: species record; C0
 Data_035_547D:: ; address name
     db $03 ; id 94: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1786,7 +1881,8 @@ Data_035_547D:: ; address name
 SpeciesRecord_DuckKite:: ; heuristic: species record; C0
 Data_035_54AC:: ; address name
     db $03 ; id 95: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -1800,7 +1896,8 @@ Data_035_54AC:: ; address name
 SpeciesRecord_MadPecker:: ; heuristic: species record; C0
 Data_035_54DB:: ; address name
     db $03 ; id 96: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1814,7 +1911,8 @@ Data_035_54DB:: ; address name
 SpeciesRecord_MadRaven:: ; heuristic: species record; C0
 Data_035_550A:: ; address name
     db $03 ; id 97: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1828,7 +1926,8 @@ Data_035_550A:: ; address name
 SpeciesRecord_MistyWing:: ; heuristic: species record; C0
 Data_035_5539:: ; address name
     db $03 ; id 98: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1842,7 +1941,8 @@ Data_035_5539:: ; address name
 SpeciesRecord_AquaHawk:: ; heuristic: species record; C0
 Data_035_5568:: ; address name
     db $03 ; id 99: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1856,7 +1956,8 @@ Data_035_5568:: ; address name
 SpeciesRecord_Dracky:: ; heuristic: species record; C0
 Data_035_5597:: ; address name
     db $03 ; id 100: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1870,7 +1971,8 @@ Data_035_5597:: ; address name
 SpeciesRecord_KiteHawk:: ; heuristic: species record; C0
 Data_035_55C6:: ; address name
     db $03 ; id 101: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1884,7 +1986,8 @@ Data_035_55C6:: ; address name
 SpeciesRecord_BigRoost:: ; heuristic: species record; C0
 Data_035_55F5:: ; address name
     db $03 ; id 102: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1898,7 +2001,8 @@ Data_035_55F5:: ; address name
 SpeciesRecord_StubBird:: ; heuristic: species record; C0
 Data_035_5624:: ; address name
     db $03 ; id 103: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1912,7 +2016,8 @@ Data_035_5624:: ; address name
 SpeciesRecord_LandOwl:: ; heuristic: species record; C0
 Data_035_5653:: ; address name
     db $03 ; id 104: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -1926,7 +2031,8 @@ Data_035_5653:: ; address name
 SpeciesRecord_MadGoose:: ; heuristic: species record; C0
 Data_035_5682:: ; address name
     db $03 ; id 105: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -1940,7 +2046,8 @@ Data_035_5682:: ; address name
 SpeciesRecord_MadCondor:: ; heuristic: species record; C0
 Data_035_56B1:: ; address name
     db $03 ; id 106: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -1954,7 +2061,8 @@ Data_035_56B1:: ; address name
 SpeciesRecord_Emyu:: ; heuristic: species record; C0
 Data_035_56E0:: ; address name
     db $03 ; id 107: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -1968,7 +2076,8 @@ Data_035_56E0:: ; address name
 SpeciesRecord_Blizzardy:: ; heuristic: species record; C0
 Data_035_570F:: ; address name
     db $03 ; id 108: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $01, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1982,7 +2091,8 @@ Data_035_570F:: ; address name
 SpeciesRecord_Phoenix:: ; heuristic: species record; C0
 Data_035_573E:: ; address name
     db $03 ; id 109: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $01, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -1996,7 +2106,8 @@ Data_035_573E:: ; address name
 SpeciesRecord_ZapBird:: ; heuristic: species record; C0
 Data_035_576D:: ; address name
     db $03 ; id 110: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2010,7 +2121,8 @@ Data_035_576D:: ; address name
 SpeciesRecord_Garudian:: ; heuristic: species record; C0
 Data_035_579C:: ; address name
     db $03 ; id 111: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2024,7 +2136,8 @@ Data_035_579C:: ; address name
 SpeciesRecord_WhipBird:: ; heuristic: species record; C0
 Data_035_57CB:: ; address name
     db $03 ; id 112: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -2038,7 +2151,8 @@ Data_035_57CB:: ; address name
 SpeciesRecord_FunkyBird:: ; heuristic: species record; C0
 Data_035_57FA:: ; address name
     db $03 ; id 113: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2052,7 +2166,8 @@ Data_035_57FA:: ; address name
 SpeciesRecord_RainHawk:: ; heuristic: species record; C0
 Data_035_5829:: ; address name
     db $03 ; id 114: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -2066,7 +2181,8 @@ Data_035_5829:: ; address name
 SpeciesRecord_Azurile:: ; heuristic: species record; C0
 Data_035_5858:: ; address name
     db $03 ; id 115: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $4B ; base level cap (C1, E-0299)
@@ -2080,7 +2196,8 @@ Data_035_5858:: ; address name
 SpeciesRecord_Shantak:: ; heuristic: species record; C0
 Data_035_5887:: ; address name
     db $03 ; id 116: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -2094,7 +2211,8 @@ Data_035_5887:: ; address name
 SpeciesRecord_CragDevil:: ; heuristic: species record; C0
 Data_035_58B6:: ; address name
     db $03 ; id 117: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2108,7 +2226,8 @@ Data_035_58B6:: ; address name
 SpeciesRecord_MadPlant:: ; heuristic: species record; C0
 Data_035_58E5:: ; address name
     db $04 ; id 118: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2122,7 +2241,8 @@ Data_035_58E5:: ; address name
 SpeciesRecord_FireWeed:: ; heuristic: species record; C0
 Data_035_5914:: ; address name
     db $04 ; id 119: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2136,7 +2256,8 @@ Data_035_5914:: ; address name
 SpeciesRecord_FloraMan:: ; heuristic: species record; C0
 Data_035_5943:: ; address name
     db $04 ; id 120: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2150,7 +2271,8 @@ Data_035_5943:: ; address name
 SpeciesRecord_WingTree:: ; heuristic: species record; C0
 Data_035_5972:: ; address name
     db $04 ; id 121: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2164,7 +2286,8 @@ Data_035_5972:: ; address name
 SpeciesRecord_CactiBall:: ; heuristic: species record; C0
 Data_035_59A1:: ; address name
     db $04 ; id 122: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2178,7 +2301,8 @@ Data_035_59A1:: ; address name
 SpeciesRecord_Gulpple:: ; heuristic: species record; C0
 Data_035_59D0:: ; address name
     db $04 ; id 123: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2192,7 +2316,8 @@ Data_035_59D0:: ; address name
 SpeciesRecord_Toadstool:: ; heuristic: species record; C0
 Data_035_59FF:: ; address name
     db $04 ; id 124: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2206,7 +2331,8 @@ Data_035_59FF:: ; address name
 SpeciesRecord_AmberWeed:: ; heuristic: species record; C0
 Data_035_5A2E:: ; address name
     db $04 ; id 125: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2220,7 +2346,8 @@ Data_035_5A2E:: ; address name
 SpeciesRecord_Slurperon:: ; heuristic: species record; C0
 Data_035_5A5D:: ; address name
     db $04 ; id 126: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2234,7 +2361,8 @@ Data_035_5A5D:: ; address name
 SpeciesRecord_Stubsuck:: ; heuristic: species record; C0
 Data_035_5A8C:: ; address name
     db $04 ; id 127: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2248,7 +2376,8 @@ Data_035_5A8C:: ; address name
 SpeciesRecord_Oniono:: ; heuristic: species record; C0
 Data_035_5ABB:: ; address name
     db $04 ; id 128: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2262,7 +2391,8 @@ Data_035_5ABB:: ; address name
 SpeciesRecord_DanceVegi:: ; heuristic: species record; C0
 Data_035_5AEA:: ; address name
     db $04 ; id 129: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2276,7 +2406,8 @@ Data_035_5AEA:: ; address name
 SpeciesRecord_TreeBoy:: ; heuristic: species record; C0
 Data_035_5B19:: ; address name
     db $04 ; id 130: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2290,7 +2421,8 @@ Data_035_5B19:: ; address name
 SpeciesRecord_Devipine:: ; heuristic: species record; C0
 Data_035_5B48:: ; address name
     db $04 ; id 131: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2304,7 +2436,8 @@ Data_035_5B48:: ; address name
 SpeciesRecord_FaceTree:: ; heuristic: species record; C0
 Data_035_5B77:: ; address name
     db $04 ; id 132: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2318,7 +2451,8 @@ Data_035_5B77:: ; address name
 SpeciesRecord_HerbMan:: ; heuristic: species record; C0
 Data_035_5BA6:: ; address name
     db $04 ; id 133: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2332,7 +2466,8 @@ Data_035_5BA6:: ; address name
 SpeciesRecord_BeanMan:: ; heuristic: species record; C0
 Data_035_5BD5:: ; address name
     db $04 ; id 134: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2346,7 +2481,8 @@ Data_035_5BD5:: ; address name
 SpeciesRecord_EvilSeed:: ; heuristic: species record; C0
 Data_035_5C04:: ; address name
     db $04 ; id 135: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2360,7 +2496,8 @@ Data_035_5C04:: ; address name
 SpeciesRecord_ManEater:: ; heuristic: species record; C0
 Data_035_5C33:: ; address name
     db $04 ; id 136: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2374,7 +2511,8 @@ Data_035_5C33:: ; address name
 SpeciesRecord_Snapper:: ; heuristic: species record; C0
 Data_035_5C62:: ; address name
     db $04 ; id 137: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2388,7 +2526,8 @@ Data_035_5C62:: ; address name
 SpeciesRecord_GhosTree:: ; heuristic: species record; C0
 Data_035_5C91:: ; address name
     db $04 ; id 138: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2402,7 +2541,8 @@ Data_035_5C91:: ; address name
 SpeciesRecord_Rosevine:: ; heuristic: species record; C0
 Data_035_5CC0:: ; address name
     db $04 ; id 139: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -2416,7 +2556,8 @@ Data_035_5CC0:: ; address name
 SpeciesRecord_Egdracil:: ; heuristic: species record; C0
 Data_035_5CEF:: ; address name
     db $04 ; id 140: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -2430,7 +2571,8 @@ Data_035_5CEF:: ; address name
 SpeciesRecord_Warubou:: ; heuristic: species record; C0
 Data_035_5D1E:: ; address name
     db $04 ; id 141: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -2444,7 +2586,8 @@ Data_035_5D1E:: ; address name
 SpeciesRecord_Watabou:: ; heuristic: species record; C0
 Data_035_5D4D:: ; address name
     db $04 ; id 142: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -2458,7 +2601,8 @@ Data_035_5D4D:: ; address name
 SpeciesRecord_Eggplaton:: ; heuristic: species record; C0
 Data_035_5D7C:: ; address name
     db $04 ; id 143: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2472,7 +2616,8 @@ Data_035_5D7C:: ; address name
 SpeciesRecord_FooHero:: ; heuristic: species record; C0
 Data_035_5DAB:: ; address name
     db $04 ; id 144: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $01 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2486,7 +2631,8 @@ Data_035_5DAB:: ; address name
 SpeciesRecord_GiantSlug:: ; heuristic: species record; C0
 Data_035_5DDA:: ; address name
     db $05 ; id 145: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2500,7 +2646,8 @@ Data_035_5DDA:: ; address name
 SpeciesRecord_Catapila:: ; heuristic: species record; C0
 Data_035_5E09:: ; address name
     db $05 ; id 146: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2514,7 +2661,8 @@ Data_035_5E09:: ; address name
 SpeciesRecord_Gophecada:: ; heuristic: species record; C0
 Data_035_5E38:: ; address name
     db $05 ; id 147: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2528,7 +2676,8 @@ Data_035_5E38:: ; address name
 SpeciesRecord_Butterfly:: ; heuristic: species record; C0
 Data_035_5E67:: ; address name
     db $05 ; id 148: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2542,7 +2691,8 @@ Data_035_5E67:: ; address name
 SpeciesRecord_WeedBug:: ; heuristic: species record; C0
 Data_035_5E96:: ; address name
     db $05 ; id 149: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2556,7 +2706,8 @@ Data_035_5E96:: ; address name
 SpeciesRecord_GiantWorm:: ; heuristic: species record; C0
 Data_035_5EC5:: ; address name
     db $05 ; id 150: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2570,7 +2721,8 @@ Data_035_5EC5:: ; address name
 SpeciesRecord_Lipsy:: ; heuristic: species record; C0
 Data_035_5EF4:: ; address name
     db $05 ; id 151: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2584,7 +2736,8 @@ Data_035_5EF4:: ; address name
 SpeciesRecord_StagBug:: ; heuristic: species record; C0
 Data_035_5F23:: ; address name
     db $05 ; id 152: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2598,7 +2751,8 @@ Data_035_5F23:: ; address name
 SpeciesRecord_Pyuro:: ; heuristic: species record; C0
 Data_035_5F52:: ; address name
     db $05 ; id 153: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2612,7 +2766,8 @@ Data_035_5F52:: ; address name
 SpeciesRecord_ArmyAnt:: ; heuristic: species record; C0
 Data_035_5F81:: ; address name
     db $05 ; id 154: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2626,7 +2781,8 @@ Data_035_5F81:: ; address name
 SpeciesRecord_GoHopper:: ; heuristic: species record; C0
 Data_035_5FB0:: ; address name
     db $05 ; id 155: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2640,7 +2796,8 @@ Data_035_5FB0:: ; address name
 SpeciesRecord_TailEater:: ; heuristic: species record; C0
 Data_035_5FDF:: ; address name
     db $05 ; id 156: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2654,7 +2811,8 @@ Data_035_5FDF:: ; address name
 SpeciesRecord_ArmorPede:: ; heuristic: species record; C0
 Data_035_600E:: ; address name
     db $05 ; id 157: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2668,7 +2826,8 @@ Data_035_600E:: ; address name
 SpeciesRecord_Eyeder:: ; heuristic: species record; C0
 Data_035_603D:: ; address name
     db $05 ; id 158: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2682,7 +2841,8 @@ Data_035_603D:: ; address name
 SpeciesRecord_GiantMoth:: ; heuristic: species record; C0
 Data_035_606C:: ; address name
     db $05 ; id 159: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $01, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2696,7 +2856,8 @@ Data_035_606C:: ; address name
 SpeciesRecord_Droll:: ; heuristic: species record; C0
 Data_035_609B:: ; address name
     db $05 ; id 160: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2710,7 +2871,8 @@ Data_035_609B:: ; address name
 SpeciesRecord_ArmyCrab:: ; heuristic: species record; C0
 Data_035_60CA:: ; address name
     db $05 ; id 161: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2724,7 +2886,8 @@ Data_035_60CA:: ; address name
 SpeciesRecord_MadHornet:: ; heuristic: species record; C0
 Data_035_60F9:: ; address name
     db $05 ; id 162: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2738,7 +2901,8 @@ Data_035_60F9:: ; address name
 SpeciesRecord_Belzebub:: ; heuristic: species record; C0
 Data_035_6128:: ; address name
     db $05 ; id 163: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2752,7 +2916,8 @@ Data_035_6128:: ; address name
 SpeciesRecord_WarMantis:: ; heuristic: species record; C0
 Data_035_6157:: ; address name
     db $05 ; id 164: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2766,7 +2931,8 @@ Data_035_6157:: ; address name
 SpeciesRecord_HornBeet:: ; heuristic: species record; C0
 Data_035_6186:: ; address name
     db $05 ; id 165: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2780,7 +2946,8 @@ Data_035_6186:: ; address name
 SpeciesRecord_Sickler:: ; heuristic: species record; C0
 Data_035_61B5:: ; address name
     db $05 ; id 166: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2794,7 +2961,8 @@ Data_035_61B5:: ; address name
 SpeciesRecord_Armorpion:: ; heuristic: species record; C0
 Data_035_61E4:: ; address name
     db $05 ; id 167: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -2808,7 +2976,8 @@ Data_035_61E4:: ; address name
 SpeciesRecord_Digster:: ; heuristic: species record; C0
 Data_035_6213:: ; address name
     db $05 ; id 168: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2822,7 +2991,8 @@ Data_035_6213:: ; address name
 SpeciesRecord_Skularach:: ; heuristic: species record; C0
 Data_035_6242:: ; address name
     db $05 ; id 169: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $41 ; base level cap (C1, E-0299)
@@ -2836,7 +3006,8 @@ Data_035_6242:: ; address name
 SpeciesRecord_MultiEyes:: ; heuristic: species record; C0
 Data_035_6271:: ; address name
     db $05 ; id 170: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2850,7 +3021,8 @@ Data_035_6271:: ; address name
 SpeciesRecord_Pixy:: ; heuristic: species record; C0
 Data_035_62A0:: ; address name
     db $06 ; id 171: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2864,7 +3036,8 @@ Data_035_62A0:: ; address name
 SpeciesRecord_MedusaEye:: ; heuristic: species record; C0
 Data_035_62CF:: ; address name
     db $06 ; id 172: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2878,7 +3051,8 @@ Data_035_62CF:: ; address name
 SpeciesRecord_AgDevil:: ; heuristic: species record; C0
 Data_035_62FE:: ; address name
     db $06 ; id 173: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2892,7 +3066,8 @@ Data_035_62FE:: ; address name
 SpeciesRecord_Demonite:: ; heuristic: species record; C0
 Data_035_632D:: ; address name
     db $06 ; id 174: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -2906,7 +3081,8 @@ Data_035_632D:: ; address name
 SpeciesRecord_DarkEye:: ; heuristic: species record; C0
 Data_035_635C:: ; address name
     db $06 ; id 175: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -2920,7 +3096,8 @@ Data_035_635C:: ; address name
 SpeciesRecord_EyeBall:: ; heuristic: species record; C0
 Data_035_638B:: ; address name
     db $06 ; id 176: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -2934,7 +3111,8 @@ Data_035_638B:: ; address name
 SpeciesRecord_SkulRider:: ; heuristic: species record; C0
 Data_035_63BA:: ; address name
     db $06 ; id 177: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2948,7 +3126,8 @@ Data_035_63BA:: ; address name
 SpeciesRecord_EvilBeast:: ; heuristic: species record; C0
 Data_035_63E9:: ; address name
     db $06 ; id 178: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -2962,7 +3141,8 @@ Data_035_63E9:: ; address name
 SpeciesRecord_Bubblemon:: ; heuristic: species record; C0
 Data_035_6418:: ; address name
     db $06 ; id 179: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -2976,7 +3156,8 @@ Data_035_6418:: ; address name
 SpeciesRecord_1EyeClown:: ; heuristic: species record; C0
 Data_035_6447:: ; address name
     db $06 ; id 180: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $19 ; base level cap (C1, E-0299)
@@ -2990,7 +3171,8 @@ Data_035_6447:: ; address name
 SpeciesRecord_Gremlin:: ; heuristic: species record; C0
 Data_035_6476:: ; address name
     db $06 ; id 181: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $01, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $19 ; base level cap (C1, E-0299)
@@ -3004,7 +3186,8 @@ Data_035_6476:: ; address name
 SpeciesRecord_ArcDemon:: ; heuristic: species record; C0
 Data_035_64A5:: ; address name
     db $06 ; id 182: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3018,7 +3201,8 @@ Data_035_64A5:: ; address name
 SpeciesRecord_Lionex:: ; heuristic: species record; C0
 Data_035_64D4:: ; address name
     db $06 ; id 183: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3032,7 +3216,8 @@ Data_035_64D4:: ; address name
 SpeciesRecord_GoatHorn:: ; heuristic: species record; C0
 Data_035_6503:: ; address name
     db $06 ; id 184: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3046,7 +3231,8 @@ Data_035_6503:: ; address name
 SpeciesRecord_Orc:: ; heuristic: species record; C0
 Data_035_6532:: ; address name
     db $06 ; id 185: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3060,7 +3246,8 @@ Data_035_6532:: ; address name
 SpeciesRecord_Ogre:: ; heuristic: species record; C0
 Data_035_6561:: ; address name
     db $06 ; id 186: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3074,7 +3261,8 @@ Data_035_6561:: ; address name
 SpeciesRecord_GateGuard:: ; heuristic: species record; C0
 Data_035_6590:: ; address name
     db $06 ; id 187: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3088,7 +3276,8 @@ Data_035_6590:: ; address name
 SpeciesRecord_ChopClown:: ; heuristic: species record; C0
 Data_035_65BF:: ; address name
     db $06 ; id 188: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3102,7 +3291,8 @@ Data_035_65BF:: ; address name
 SpeciesRecord_BossTroll:: ; heuristic: species record; C0
 Data_035_65EE:: ; address name
     db $06 ; id 189: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3116,7 +3306,8 @@ Data_035_65EE:: ; address name
 SpeciesRecord_Grendal:: ; heuristic: species record; C0
 Data_035_661D:: ; address name
     db $06 ; id 190: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -3130,7 +3321,8 @@ Data_035_661D:: ; address name
 SpeciesRecord_Akubar:: ; heuristic: species record; C0
 Data_035_664C:: ; address name
     db $06 ; id 191: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -3144,7 +3336,8 @@ Data_035_664C:: ; address name
 SpeciesRecord_MadKnight:: ; heuristic: species record; C0
 Data_035_667B:: ; address name
     db $06 ; id 192: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -3158,7 +3351,8 @@ Data_035_667B:: ; address name
 SpeciesRecord_EvilWell:: ; heuristic: species record; C0
 Data_035_66AA:: ; address name
     db $06 ; id 193: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3172,7 +3366,8 @@ Data_035_66AA:: ; address name
 SpeciesRecord_Gigantes:: ; heuristic: species record; C0
 Data_035_66D9:: ; address name
     db $06 ; id 194: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3186,7 +3381,8 @@ Data_035_66D9:: ; address name
 SpeciesRecord_Centasaur:: ; heuristic: species record; C0
 Data_035_6708:: ; address name
     db $06 ; id 195: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3200,7 +3396,8 @@ Data_035_6708:: ; address name
 SpeciesRecord_EvilArmor:: ; heuristic: species record; C0
 Data_035_6737:: ; address name
     db $06 ; id 196: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3214,7 +3411,8 @@ Data_035_6737:: ; address name
 SpeciesRecord_Jamirus:: ; heuristic: species record; C0
 Data_035_6766:: ; address name
     db $06 ; id 197: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -3228,7 +3426,8 @@ Data_035_6766:: ; address name
 SpeciesRecord_Durran:: ; heuristic: species record; C0
 Data_035_6795:: ; address name
     db $06 ; id 198: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -3242,7 +3441,8 @@ Data_035_6795:: ; address name
 SpeciesRecord_Titanis:: ; heuristic: species record; C0
 Data_035_67C4:: ; address name
     db $06 ; id 199: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $4B ; base level cap (C1, E-0299)
@@ -3256,7 +3456,8 @@ Data_035_67C4:: ; address name
 SpeciesRecord_LampGenie:: ; heuristic: species record; C0
 Data_035_67F3:: ; address name
     db $06 ; id 200: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -3270,7 +3471,8 @@ Data_035_67F3:: ; address name
 SpeciesRecord_Spooky:: ; heuristic: species record; C0
 Data_035_6822:: ; address name
     db $07 ; id 201: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3284,7 +3486,8 @@ Data_035_6822:: ; address name
 SpeciesRecord_Skullgon:: ; heuristic: species record; C0
 Data_035_6851:: ; address name
     db $07 ; id 202: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3298,7 +3501,8 @@ Data_035_6851:: ; address name
 SpeciesRecord_PutrePup:: ; heuristic: species record; C0
 Data_035_6880:: ; address name
     db $07 ; id 203: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3312,7 +3516,8 @@ Data_035_6880:: ; address name
 SpeciesRecord_RotRaven:: ; heuristic: species record; C0
 Data_035_68AF:: ; address name
     db $07 ; id 204: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3326,7 +3531,8 @@ Data_035_68AF:: ; address name
 SpeciesRecord_Mummy:: ; heuristic: species record; C0
 Data_035_68DE:: ; address name
     db $07 ; id 205: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3340,7 +3546,8 @@ Data_035_68DE:: ; address name
 SpeciesRecord_DarkCrab:: ; heuristic: species record; C0
 Data_035_690D:: ; address name
     db $07 ; id 206: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -3354,7 +3561,8 @@ Data_035_690D:: ; address name
 SpeciesRecord_DeadNite:: ; heuristic: species record; C0
 Data_035_693C:: ; address name
     db $07 ; id 207: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3368,7 +3576,8 @@ Data_035_693C:: ; address name
 SpeciesRecord_Shadow:: ; heuristic: species record; C0
 Data_035_696B:: ; address name
     db $07 ; id 208: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3382,7 +3591,8 @@ Data_035_696B:: ; address name
 SpeciesRecord_Skulpent:: ; heuristic: species record; C0
 Data_035_699A:: ; address name
     db $07 ; id 209: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3396,7 +3606,8 @@ Data_035_699A:: ; address name
 SpeciesRecord_Hork:: ; heuristic: species record; C0
 Data_035_69C9:: ; address name
     db $07 ; id 210: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3410,7 +3621,8 @@ Data_035_69C9:: ; address name
 SpeciesRecord_Mudron:: ; heuristic: species record; C0
 Data_035_69F8:: ; address name
     db $07 ; id 211: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -3424,7 +3636,8 @@ Data_035_69F8:: ; address name
 SpeciesRecord_NiteWhip:: ; heuristic: species record; C0
 Data_035_6A27:: ; address name
     db $07 ; id 212: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3438,7 +3651,8 @@ Data_035_6A27:: ; address name
 SpeciesRecord_WindMerge:: ; heuristic: species record; C0
 Data_035_6A56:: ; address name
     db $07 ; id 213: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3452,7 +3666,8 @@ Data_035_6A56:: ; address name
 SpeciesRecord_Reaper:: ; heuristic: species record; C0
 Data_035_6A85:: ; address name
     db $07 ; id 214: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3466,7 +3681,8 @@ Data_035_6A85:: ; address name
 SpeciesRecord_Inverzon:: ; heuristic: species record; C0
 Data_035_6AB4:: ; address name
     db $07 ; id 215: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3480,7 +3696,8 @@ Data_035_6AB4:: ; address name
 SpeciesRecord_FoxFire:: ; heuristic: species record; C0
 Data_035_6AE3:: ; address name
     db $07 ; id 216: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3494,7 +3711,8 @@ Data_035_6AE3:: ; address name
 SpeciesRecord_CaptDead:: ; heuristic: species record; C0
 Data_035_6B12:: ; address name
     db $07 ; id 217: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3508,7 +3726,8 @@ Data_035_6B12:: ; address name
 SpeciesRecord_DeadNoble:: ; heuristic: species record; C0
 Data_035_6B41:: ; address name
     db $07 ; id 218: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3522,7 +3741,8 @@ Data_035_6B41:: ; address name
 SpeciesRecord_WhiteKing:: ; heuristic: species record; C0
 Data_035_6B70:: ; address name
     db $07 ; id 219: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -3536,7 +3756,8 @@ Data_035_6B70:: ; address name
 SpeciesRecord_BoneSlave:: ; heuristic: species record; C0
 Data_035_6B9F:: ; address name
     db $07 ; id 220: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3550,7 +3771,8 @@ Data_035_6B9F:: ; address name
 SpeciesRecord_Skeletor:: ; heuristic: species record; C0
 Data_035_6BCE:: ; address name
     db $07 ; id 221: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -3564,7 +3786,8 @@ Data_035_6BCE:: ; address name
 SpeciesRecord_Servant:: ; heuristic: species record; C0
 Data_035_6BFD:: ; address name
     db $07 ; id 222: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -3578,7 +3801,8 @@ Data_035_6BFD:: ; address name
 SpeciesRecord_Lazamanus:: ; heuristic: species record; C0
 Data_035_6C2C:: ; address name
     db $07 ; id 223: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $4B ; base level cap (C1, E-0299)
@@ -3592,7 +3816,8 @@ Data_035_6C2C:: ; address name
 SpeciesRecord_Copycat:: ; heuristic: species record; C0
 Data_035_6C5B:: ; address name
     db $07 ; id 224: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3606,7 +3831,8 @@ Data_035_6C5B:: ; address name
 SpeciesRecord_MadSpirit:: ; heuristic: species record; C0
 Data_035_6C8A:: ; address name
     db $07 ; id 225: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3620,7 +3846,8 @@ Data_035_6C8A:: ; address name
 SpeciesRecord_PomPomBom:: ; heuristic: species record; C0
 Data_035_6CB9:: ; address name
     db $07 ; id 226: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3634,7 +3861,8 @@ Data_035_6CB9:: ; address name
 SpeciesRecord_Niterich:: ; heuristic: species record; C0
 Data_035_6CE8:: ; address name
     db $07 ; id 227: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $41 ; base level cap (C1, E-0299)
@@ -3648,7 +3876,8 @@ Data_035_6CE8:: ; address name
 SpeciesRecord_JewelBag:: ; heuristic: species record; C0
 Data_035_6D17:: ; address name
     db $08 ; id 228: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3662,7 +3891,8 @@ Data_035_6D17:: ; address name
 SpeciesRecord_EvilWand:: ; heuristic: species record; C0
 Data_035_6D46:: ; address name
     db $08 ; id 229: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -3676,7 +3906,8 @@ Data_035_6D46:: ; address name
 SpeciesRecord_MadCandle:: ; heuristic: species record; C0
 Data_035_6D75:: ; address name
     db $08 ; id 230: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3690,7 +3921,8 @@ Data_035_6D75:: ; address name
 SpeciesRecord_CoilBird:: ; heuristic: species record; C0
 Data_035_6DA4:: ; address name
     db $08 ; id 231: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3704,7 +3936,8 @@ Data_035_6DA4:: ; address name
 SpeciesRecord_Facer:: ; heuristic: species record; C0
 Data_035_6DD3:: ; address name
     db $08 ; id 232: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3718,7 +3951,8 @@ Data_035_6DD3:: ; address name
 SpeciesRecord_SpikyBoy:: ; heuristic: species record; C0
 Data_035_6E02:: ; address name
     db $08 ; id 233: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -3732,7 +3966,8 @@ Data_035_6E02:: ; address name
 SpeciesRecord_MadMirror:: ; heuristic: species record; C0
 Data_035_6E31:: ; address name
     db $08 ; id 234: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3746,7 +3981,8 @@ Data_035_6E31:: ; address name
 SpeciesRecord_RogueNite:: ; heuristic: species record; C0
 Data_035_6E60:: ; address name
     db $08 ; id 235: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3760,7 +3996,8 @@ Data_035_6E60:: ; address name
 SpeciesRecord_Puppetor:: ; heuristic: species record; C0
 Data_035_6E8F:: ; address name
     db $08 ; id 236: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3774,7 +4011,8 @@ Data_035_6E8F:: ; address name
 SpeciesRecord_Goopi:: ; heuristic: species record; C0
 Data_035_6EBE:: ; address name
     db $08 ; id 237: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3788,7 +4026,8 @@ Data_035_6EBE:: ; address name
 SpeciesRecord_Voodoll:: ; heuristic: species record; C0
 Data_035_6EED:: ; address name
     db $08 ; id 238: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3802,7 +4041,8 @@ Data_035_6EED:: ; address name
 SpeciesRecord_MetalDrak:: ; heuristic: species record; C0
 Data_035_6F1C:: ; address name
     db $08 ; id 239: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3816,7 +4056,8 @@ Data_035_6F1C:: ; address name
 SpeciesRecord_Balzak:: ; heuristic: species record; C0
 Data_035_6F4B:: ; address name
     db $08 ; id 240: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -3830,7 +4071,8 @@ Data_035_6F4B:: ; address name
 SpeciesRecord_SabreMan:: ; heuristic: species record; C0
 Data_035_6F7A:: ; address name
     db $08 ; id 241: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -3844,7 +4086,8 @@ Data_035_6F7A:: ; address name
 SpeciesRecord_CurseLamp:: ; heuristic: species record; C0
 Data_035_6FA9:: ; address name
     db $08 ; id 242: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3858,7 +4101,8 @@ Data_035_6FA9:: ; address name
 SpeciesRecord_Brushead:: ; heuristic: species record; C0
 Data_035_6FD8:: ; address name
     db $08 ; id 243: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -3872,7 +4116,8 @@ Data_035_6FD8:: ; address name
 SpeciesRecord_Roboster:: ; heuristic: species record; C0
 Data_035_7007:: ; address name
     db $08 ; id 244: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3886,7 +4131,8 @@ Data_035_7007:: ; address name
 SpeciesRecord_Roboster2:: ; heuristic: species record; C0
 Data_035_7036:: ; address name
     db $08 ; id 245: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3900,7 +4146,8 @@ Data_035_7036:: ; address name
 SpeciesRecord_EvilPot:: ; heuristic: species record; C0
 Data_035_7065:: ; address name
     db $08 ; id 246: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3914,7 +4161,8 @@ Data_035_7065:: ; address name
 SpeciesRecord_Gismo:: ; heuristic: species record; C0
 Data_035_7094:: ; address name
     db $08 ; id 247: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3928,7 +4176,8 @@ Data_035_7094:: ; address name
 SpeciesRecord_LavaMan:: ; heuristic: species record; C0
 Data_035_70C3:: ; address name
     db $08 ; id 248: family (StringTable_MonsterFamilies index; $FF unused)
-    db $03, $00, $00 ; bytes 1-3
+    db $03 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3942,7 +4191,8 @@ Data_035_70C3:: ; address name
 SpeciesRecord_IceMan:: ; heuristic: species record; C0
 Data_035_70F2:: ; address name
     db $08 ; id 249: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3956,7 +4206,8 @@ Data_035_70F2:: ; address name
 SpeciesRecord_Mimic:: ; heuristic: species record; C0
 Data_035_7121:: ; address name
     db $08 ; id 250: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3970,7 +4221,8 @@ Data_035_7121:: ; address name
 SpeciesRecord_Exaucers:: ; heuristic: species record; C0
 Data_035_7150:: ; address name
     db $08 ; id 251: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -3984,7 +4236,8 @@ Data_035_7150:: ; address name
 SpeciesRecord_MudDoll:: ; heuristic: species record; C0
 Data_035_717F:: ; address name
     db $08 ; id 252: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -3998,7 +4251,8 @@ Data_035_717F:: ; address name
 SpeciesRecord_Golem:: ; heuristic: species record; C0
 Data_035_71AE:: ; address name
     db $08 ; id 253: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4012,7 +4266,8 @@ Data_035_71AE:: ; address name
 SpeciesRecord_StoneMan:: ; heuristic: species record; C0
 Data_035_71DD:: ; address name
     db $08 ; id 254: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4026,7 +4281,8 @@ Data_035_71DD:: ; address name
 SpeciesRecord_BombCrag:: ; heuristic: species record; C0
 Data_035_720C:: ; address name
     db $08 ; id 255: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4040,7 +4296,8 @@ Data_035_720C:: ; address name
 SpeciesRecord_GoldGolem:: ; heuristic: species record; C0
 Data_035_723B:: ; address name
     db $08 ; id 256: family (StringTable_MonsterFamilies index; $FF unused)
-    db $01, $00, $00 ; bytes 1-3
+    db $01 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $4B ; base level cap (C1, E-0299)
@@ -4054,7 +4311,8 @@ Data_035_723B:: ; address name
 SpeciesRecord_DarkMate:: ; heuristic: species record; C0
 Data_035_726A:: ; address name
     db $08 ; id 257: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4068,7 +4326,8 @@ Data_035_726A:: ; address name
 SpeciesRecord_ProtoMech:: ; heuristic: species record; C0
 Data_035_7299:: ; address name
     db $08 ; id 258: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $02 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4082,7 +4341,8 @@ Data_035_7299:: ; address name
 SpeciesRecord_CloudKing:: ; heuristic: species record; C0
 Data_035_72C8:: ; address name
     db $08 ; id 259: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4096,7 +4356,8 @@ Data_035_72C8:: ; address name
 SpeciesRecord_Petiteel:: ; heuristic: species record; C0
 Data_035_72F7:: ; address name
     db $09 ; id 260: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4110,7 +4371,8 @@ Data_035_72F7:: ; address name
 SpeciesRecord_Moray:: ; heuristic: species record; C0
 Data_035_7326:: ; address name
     db $09 ; id 261: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4124,7 +4386,8 @@ Data_035_7326:: ; address name
 SpeciesRecord_WalrusMan:: ; heuristic: species record; C0
 Data_035_7355:: ; address name
     db $09 ; id 262: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4138,7 +4401,8 @@ Data_035_7355:: ; address name
 SpeciesRecord_RayGigas:: ; heuristic: species record; C0
 Data_035_7384:: ; address name
     db $09 ; id 263: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4152,7 +4416,8 @@ Data_035_7384:: ; address name
 SpeciesRecord_Anemon:: ; heuristic: species record; C0
 Data_035_73B3:: ; address name
     db $09 ; id 264: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4166,7 +4431,8 @@ Data_035_73B3:: ; address name
 SpeciesRecord_Aquarella:: ; heuristic: species record; C0
 Data_035_73E2:: ; address name
     db $09 ; id 265: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4180,7 +4446,8 @@ Data_035_73E2:: ; address name
 SpeciesRecord_Merman:: ; heuristic: species record; C0
 Data_035_7411:: ; address name
     db $09 ; id 266: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4194,7 +4461,8 @@ Data_035_7411:: ; address name
 SpeciesRecord_Octokid:: ; heuristic: species record; C0
 Data_035_7440:: ; address name
     db $09 ; id 267: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4208,7 +4476,8 @@ Data_035_7440:: ; address name
 SpeciesRecord_PutreFish:: ; heuristic: species record; C0
 Data_035_746F:: ; address name
     db $09 ; id 268: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4222,7 +4491,8 @@ Data_035_746F:: ; address name
 SpeciesRecord_Octoreach:: ; heuristic: species record; C0
 Data_035_749E:: ; address name
     db $09 ; id 269: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4236,7 +4506,8 @@ Data_035_749E:: ; address name
 SpeciesRecord_Angleron:: ; heuristic: species record; C0
 Data_035_74CD:: ; address name
     db $09 ; id 270: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4250,7 +4521,8 @@ Data_035_74CD:: ; address name
 SpeciesRecord_FishRider:: ; heuristic: species record; C0
 Data_035_74FC:: ; address name
     db $09 ; id 271: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4264,7 +4536,8 @@ Data_035_74FC:: ; address name
 SpeciesRecord_RushFish:: ; heuristic: species record; C0
 Data_035_752B:: ; address name
     db $09 ; id 272: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4278,7 +4551,8 @@ Data_035_752B:: ; address name
 SpeciesRecord_Gamanian:: ; heuristic: species record; C0
 Data_035_755A:: ; address name
     db $09 ; id 273: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4292,7 +4566,8 @@ Data_035_755A:: ; address name
 SpeciesRecord_Clawster:: ; heuristic: species record; C0
 Data_035_7589:: ; address name
     db $09 ; id 274: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4306,7 +4581,8 @@ Data_035_7589:: ; address name
 SpeciesRecord_CancerMan:: ; heuristic: species record; C0
 Data_035_75B8:: ; address name
     db $09 ; id 275: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4320,7 +4596,8 @@ Data_035_75B8:: ; address name
 SpeciesRecord_RogueWave:: ; heuristic: species record; C0
 Data_035_75E7:: ; address name
     db $09 ; id 276: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $03 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4334,7 +4611,8 @@ Data_035_75E7:: ; address name
 SpeciesRecord_Scallopa:: ; heuristic: species record; C0
 Data_035_7616:: ; address name
     db $09 ; id 277: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4348,7 +4626,8 @@ Data_035_7616:: ; address name
 SpeciesRecord_SeaHorse:: ; heuristic: species record; C0
 Data_035_7645:: ; address name
     db $09 ; id 278: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $28 ; base level cap (C1, E-0299)
@@ -4362,7 +4641,8 @@ Data_035_7645:: ; address name
 SpeciesRecord_HoodSquid:: ; heuristic: species record; C0
 Data_035_7674:: ; address name
     db $09 ; id 279: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4376,7 +4656,8 @@ Data_035_7674:: ; address name
 SpeciesRecord_MerTiger:: ; heuristic: species record; C0
 Data_035_76A3:: ; address name
     db $09 ; id 280: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4390,7 +4671,8 @@ Data_035_76A3:: ; address name
 SpeciesRecord_AxeShark:: ; heuristic: species record; C0
 Data_035_76D2:: ; address name
     db $09 ; id 281: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4404,7 +4686,8 @@ Data_035_76D2:: ; address name
 SpeciesRecord_Octogon:: ; heuristic: species record; C0
 Data_035_7701:: ; address name
     db $09 ; id 282: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4418,7 +4701,8 @@ Data_035_7701:: ; address name
 SpeciesRecord_KingSquid:: ; heuristic: species record; C0
 Data_035_7730:: ; address name
     db $09 ; id 283: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -4432,7 +4716,8 @@ Data_035_7730:: ; address name
 SpeciesRecord_Digong:: ; heuristic: species record; C0
 Data_035_775F:: ; address name
     db $09 ; id 284: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -4446,7 +4731,8 @@ Data_035_775F:: ; address name
 SpeciesRecord_WhaleMage:: ; heuristic: species record; C0
 Data_035_778E:: ; address name
     db $09 ; id 285: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $2D ; base level cap (C1, E-0299)
@@ -4460,7 +4746,8 @@ Data_035_778E:: ; address name
 SpeciesRecord_Aquadon:: ; heuristic: species record; C0
 Data_035_77BD:: ; address name
     db $09 ; id 286: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4474,7 +4761,8 @@ Data_035_77BD:: ; address name
 SpeciesRecord_Octoraid:: ; heuristic: species record; C0
 Data_035_77EC:: ; address name
     db $09 ; id 287: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4488,7 +4776,8 @@ Data_035_77EC:: ; address name
 SpeciesRecord_Grakos:: ; heuristic: species record; C0
 Data_035_781B:: ; address name
     db $09 ; id 288: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $05 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $37 ; base level cap (C1, E-0299)
@@ -4502,7 +4791,8 @@ Data_035_781B:: ; address name
 SpeciesRecord_Poseidon:: ; heuristic: species record; C0
 Data_035_784A:: ; address name
     db $09 ; id 289: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $41 ; base level cap (C1, E-0299)
@@ -4516,7 +4806,8 @@ Data_035_784A:: ; address name
 SpeciesRecord_Pumpoise:: ; heuristic: species record; C0
 Data_035_7879:: ; address name
     db $09 ; id 290: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $04 ; join-chance class (7 = never; C1, E-0306)
     db $02 ; byte 5
     db $23 ; base level cap (C1, E-0299)
@@ -4530,7 +4821,8 @@ Data_035_7879:: ; address name
 SpeciesRecord_Starfish:: ; heuristic: species record; C0
 Data_035_78A8:: ; address name
     db $09 ; id 291: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $00, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $03 ; byte 5
     db $1E ; base level cap (C1, E-0299)
@@ -4544,7 +4836,8 @@ Data_035_78A8:: ; address name
 SpeciesRecord_DracoLord:: ; heuristic: species record; C0
 Data_035_78D7:: ; address name
     db $0A ; id 292: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $32 ; base level cap (C1, E-0299)
@@ -4558,7 +4851,8 @@ Data_035_78D7:: ; address name
 SpeciesRecord_DracoLord_7906:: ; heuristic: species record; C0
 Data_035_7906:: ; address name
     db $0A ; id 293: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4572,7 +4866,8 @@ Data_035_7906:: ; address name
 SpeciesRecord_LordDraco:: ; heuristic: species record; C0
 Data_035_7935:: ; address name
     db $0A ; id 294: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4586,7 +4881,8 @@ Data_035_7935:: ; address name
 SpeciesRecord_Hargon:: ; heuristic: species record; C0
 Data_035_7964:: ; address name
     db $0A ; id 295: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -4600,7 +4896,8 @@ Data_035_7964:: ; address name
 SpeciesRecord_Sidoh:: ; heuristic: species record; C0
 Data_035_7993:: ; address name
     db $0A ; id 296: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4614,7 +4911,8 @@ Data_035_7993:: ; address name
 SpeciesRecord_Genosidoh:: ; heuristic: species record; C0
 Data_035_79C2:: ; address name
     db $0A ; id 297: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4628,7 +4926,8 @@ Data_035_79C2:: ; address name
 SpeciesRecord_Baramos:: ; heuristic: species record; C0
 Data_035_79F1:: ; address name
     db $0A ; id 298: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -4642,7 +4941,8 @@ Data_035_79F1:: ; address name
 SpeciesRecord_Zoma:: ; heuristic: species record; C0
 Data_035_7A20:: ; address name
     db $0A ; id 299: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4656,7 +4956,8 @@ Data_035_7A20:: ; address name
 SpeciesRecord_AsuraZoma:: ; heuristic: species record; C0
 Data_035_7A4F:: ; address name
     db $0A ; id 300: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4670,7 +4971,8 @@ Data_035_7A4F:: ; address name
 SpeciesRecord_Pizzaro:: ; heuristic: species record; C0
 Data_035_7A7E:: ; address name
     db $0A ; id 301: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4684,7 +4986,8 @@ Data_035_7A7E:: ; address name
 SpeciesRecord_PsychoPiz:: ; heuristic: species record; C0
 Data_035_7AAD:: ; address name
     db $0A ; id 302: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4698,7 +5001,8 @@ Data_035_7AAD:: ; address name
 SpeciesRecord_Esterk:: ; heuristic: species record; C0
 Data_035_7ADC:: ; address name
     db $0A ; id 303: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4712,7 +5016,8 @@ Data_035_7ADC:: ; address name
 SpeciesRecord_Mirudraas:: ; heuristic: species record; C0
 Data_035_7B0B:: ; address name
     db $0A ; id 304: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4726,7 +5031,8 @@ Data_035_7B0B:: ; address name
 SpeciesRecord_Mirudraas_7B3A:: ; heuristic: species record; C0
 Data_035_7B3A:: ; address name
     db $0A ; id 305: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4740,7 +5046,8 @@ Data_035_7B3A:: ; address name
 SpeciesRecord_Mudou:: ; heuristic: species record; C0
 Data_035_7B69:: ; address name
     db $0A ; id 306: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -4754,7 +5061,8 @@ Data_035_7B69:: ; address name
 SpeciesRecord_DeathMore:: ; heuristic: species record; C0
 Data_035_7B98:: ; address name
     db $0A ; id 307: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -4768,7 +5076,8 @@ Data_035_7B98:: ; address name
 SpeciesRecord_DeathMore_7BC7:: ; heuristic: species record; C0
 Data_035_7BC7:: ; address name
     db $0A ; id 308: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4782,7 +5091,8 @@ Data_035_7BC7:: ; address name
 SpeciesRecord_DeathMore_7BF6:: ; heuristic: species record; C0
 Data_035_7BF6:: ; address name
     db $0A ; id 309: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4796,7 +5106,8 @@ Data_035_7BF6:: ; address name
 SpeciesRecord_Darkdrium:: ; heuristic: species record; C0
 Data_035_7C25:: ; address name
     db $0A ; id 310: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $50 ; base level cap (C1, E-0299)
@@ -4810,7 +5121,8 @@ Data_035_7C25:: ; address name
 SpeciesRecord_Orgodemir:: ; heuristic: species record; C0
 Data_035_7C54:: ; address name
     db $0A ; id 311: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $41 ; base level cap (C1, E-0299)
@@ -4824,7 +5136,8 @@ Data_035_7C54:: ; address name
 SpeciesRecord_Orgodemir_7C83:: ; heuristic: species record; C0
 Data_035_7C83:: ; address name
     db $0A ; id 312: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $46 ; base level cap (C1, E-0299)
@@ -4838,7 +5151,8 @@ Data_035_7C83:: ; address name
 SpeciesRecord_Darck:: ; heuristic: species record; C0
 Data_035_7CB2:: ; address name
     db $0A ; id 313: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $06 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $3C ; base level cap (C1, E-0299)
@@ -4852,7 +5166,8 @@ Data_035_7CB2:: ; address name
 SpeciesRecord_Tatsu:: ; heuristic: species record; C0
 Data_035_7CE1:: ; address name
     db $00 ; id 314: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4866,7 +5181,8 @@ Data_035_7CE1:: ; address name
 SpeciesRecord_Diago:: ; heuristic: species record; C0
 Data_035_7D10:: ; address name
     db $00 ; id 315: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4880,7 +5196,8 @@ Data_035_7D10:: ; address name
 SpeciesRecord_Samsi:: ; heuristic: species record; C0
 Data_035_7D3F:: ; address name
     db $00 ; id 316: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4894,7 +5211,8 @@ Data_035_7D3F:: ; address name
 SpeciesRecord_Bazoo:: ; heuristic: species record; C0
 Data_035_7D6E:: ; address name
     db $00 ; id 317: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4908,7 +5226,8 @@ Data_035_7D6E:: ; address name
 SpeciesRecord_179:: ; heuristic: species record; C0
 Data_035_7D9D:: ; address name
     db $00 ; id 318: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4922,7 +5241,8 @@ Data_035_7D9D:: ; address name
 SpeciesRecord_17A:: ; heuristic: species record; C0
 Data_035_7DCC:: ; address name
     db $00 ; id 319: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $00 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4936,7 +5256,8 @@ Data_035_7DCC:: ; address name
 SpeciesRecord_17B:: ; heuristic: species record; C0
 Data_035_7DFB:: ; address name
     db $0A ; id 320: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $00, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $00, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $00 ; base level cap (C1, E-0299)
@@ -4950,7 +5271,8 @@ Data_035_7DFB:: ; address name
 SpeciesRecord_Lamia:: ; heuristic: species record; C0
 Data_035_7E2A:: ; address name
     db $0A ; id 321: family (StringTable_MonsterFamilies index; $FF unused)
-    db $02, $01, $00 ; bytes 1-3
+    db $02 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $63 ; base level cap (C1, E-0299)
@@ -4964,7 +5286,8 @@ Data_035_7E2A:: ; address name
 SpeciesRecord_Dimensaur:: ; heuristic: species record; C0
 Data_035_7E59:: ; address name
     db $0A ; id 322: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $09 ; base level cap (C1, E-0299)
@@ -4978,7 +5301,8 @@ Data_035_7E59:: ; address name
 SpeciesRecord_Kagebou:: ; heuristic: species record; C0
 Data_035_7E88:: ; address name
     db $0A ; id 323: family (StringTable_MonsterFamilies index; $FF unused)
-    db $00, $01, $00 ; bytes 1-3
+    db $00 ; sex-ratio class (C1, E-0307)
+    db $01, $00 ; bytes 2-3
     db $07 ; join-chance class (7 = never; C1, E-0306)
     db $01 ; byte 5
     db $63 ; base level cap (C1, E-0299)

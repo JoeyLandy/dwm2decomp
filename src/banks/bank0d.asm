@@ -6155,7 +6155,7 @@ Func_00D_6B55:: ; address name
     ld a, [wSpeciesRecord]
     ld [hl+], a
     push hl
-    farcall RollWCADEFromSpeciesFlag
+    farcall RollChildSexFromSpecies
     pop hl
     ld a, [wChildRecord + MON_SEX]
     ld [hl+], a
