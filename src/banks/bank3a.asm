@@ -2148,7 +2148,7 @@ Jump_03A_4EB9:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; increments wEffectCounter and raises each 2-bit shade of wDMGPaletteBGP by one, up to 3
+; increments wEffectCounter and steps the three DMG palette bytes one shade darker: shades 0-2 cap at 3, but the top shade wraps from 3 to 0 ($C0 + $40 overflows past the cap check), and C is never cleared, so the second and third bytes also get the earlier bytes' low shades ORed in (likely game bugs; C2: executed in tests/test_helpers_behaviour.py)
 ; 2 call sites from 2 routines (e.g. RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectByte06AndEffectCounter, RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectByte06AndEffectCounter)
 ; points at: wEffectCounter, wDMGPaletteBGP
 RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep::
@@ -2603,7 +2603,7 @@ Jump_03A_50CF:: ; address name
     ld [wEffectSpriteX], a
     ret
 
-; increments wEffectCounter and lowers each 2-bit shade of wDMGPaletteBGP by one (not below 0): one step of a fade toward white
+; increments wEffectCounter and steps the three DMG palette bytes one shade lighter (each 2-bit shade minus 1, not below 0); C is never cleared, so the second and third bytes also get the earlier bytes' low shades ORed in (C2: executed in tests/test_helpers_behaviour.py)
 ; 1 call site from 1 routine (e.g. RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep)
 ; points at: wEffectCounter, wDMGPaletteBGP
 LightenDMGPaletteOneStep::

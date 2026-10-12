@@ -2444,7 +2444,7 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - **C is never cleared.** C collects the three low shades of each byte and carries into the next one, so the second and third bytes also get the earlier bytes' low shades ORed in. This affects both LightenDMGPaletteOneStep and RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep.
   - **Darkening wraps the top shade.** The top shade goes from 3 to 0, because $C0 + $40 overflows to $00 and passes the `cp $C1` cap check. Palette $E4 becomes $39.
   - An exact model of both routines matches 60 random palettes each. The routine notes are rewritten, and the two quirks are recorded as likely game bugs (C2).
-- Binary verification: build/run434 PASS, 0 differing bytes; tests OK (skipped=3).
+- Binary verification: build/run435 PASS, 0 differing bytes; tests OK (skipped=3), 186 run. The first E-0315 commit (07516ed) said the notes were rewritten, but a script error had left them unchanged. The follow-up commit applies them.
 
 ### E-0314 — Readings executed in tools/sm83.py; the battle result has four counters (correction to E-0289)
 
