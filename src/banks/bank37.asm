@@ -1285,7 +1285,7 @@ Jump_037_4DE9:: ; address name
     ld l, a
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $0A
@@ -3361,7 +3361,7 @@ Func_037_5AD3:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F

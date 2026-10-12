@@ -18214,10 +18214,15 @@
           "name": "$5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)"
         },
         {
+          "type": "words",
+          "size": 8,
+          "name": "$63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)"
+        },
+        {
           "type": "db",
-          "size": 12,
+          "size": 4,
           "line": true,
-          "name": "$63-$6E"
+          "name": "$6B-$6E"
         },
         {
           "type": "db",
@@ -18952,10 +18957,15 @@
           "name": "$5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)"
         },
         {
+          "type": "words",
+          "size": 8,
+          "name": "$63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)"
+        },
+        {
           "type": "db",
-          "size": 12,
+          "size": 4,
           "line": true,
-          "name": "$63-$6E"
+          "name": "$6B-$6E"
         },
         {
           "type": "db",

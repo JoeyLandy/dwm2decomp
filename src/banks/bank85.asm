@@ -905,11 +905,11 @@ Func_085_45CB:: ; address name
     ld [rRAMG], a
     ld a, [hl]
     push af
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     pop af
     push af
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ldh a, [hTemp0]
     ld [hl+], a
@@ -917,11 +917,11 @@ Func_085_45CB:: ; address name
     ld [hl], a
     pop af
     push af
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     pop af
     push af
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ldh a, [hTemp0]
     ld [hl+], a
@@ -929,12 +929,12 @@ Func_085_45CB:: ; address name
     ld [hl], a
     pop af
     push af
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     xor a, a
     ld [hl], a
     pop af
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $01
     ld [hl], a
@@ -2696,7 +2696,7 @@ Jump_085_5086:: ; address name
     add_a_to_hl
     ld a, [hl]
     push af
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf1 + $7
@@ -2712,7 +2712,7 @@ Jump_085_5086:: ; address name
     ld [de], a
     pop af
     push af
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld e, a
@@ -4050,7 +4050,7 @@ Func_085_57FE:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call LoadSRAMRecordByte
     pop bc
     ldh a, [hTemp0]
@@ -4058,7 +4058,7 @@ Func_085_57FE:: ; address name
     jr c, .next
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop bc
     ldh a, [hTemp0]
@@ -4107,7 +4107,7 @@ Func_085_5840:: ; address name
 .loop2:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop bc
     ldh a, [hTemp0]
@@ -4199,7 +4199,7 @@ Func_085_5882:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop bc
     ldh a, [hTemp0]
@@ -4207,7 +4207,7 @@ Func_085_5882:: ; address name
     jr nz, .next
     push bc
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     pop bc
     ld de, TalkEvent29WordList
@@ -4407,7 +4407,7 @@ Func_085_5A9D:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop bc
     ldh a, [hTemp0]
@@ -4415,7 +4415,7 @@ Func_085_5A9D:: ; address name
     jr nz, .next
     push bc
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     pop bc
     ld de, $5AF8
@@ -4856,7 +4856,7 @@ Func_085_5DB9:: ; address name
 .loop:
     push hl
     ld a, [hl]
-    ld c, $69
+    ld c, MON_INT
     call SRAMRecordAddress
     push hl
     ld a, [hl+]

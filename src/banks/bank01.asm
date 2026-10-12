@@ -5582,7 +5582,7 @@ Func_001_6880:: ; address name
 ; 1 call site from 1 routine (e.g. DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01)
 DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped::
 Func_001_68CA:: ; address name
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $02
@@ -6063,7 +6063,7 @@ Func_001_6C48:: ; address name
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
     ld a, [wBattleArg0]
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     pop af
     ld [hl], a
@@ -6216,7 +6216,7 @@ Func_001_6C48:: ; address name
     ld [wSpeciesIdHi], a
     farcall LoadSpeciesRecord
     ld a, [wBattleArg0]
-    ld c, $0D
+    ld c, MON_FAMILY
     call SRAMRecordAddress
     ld a, [wSpeciesRecord]
     ld [hl], a
@@ -6267,7 +6267,7 @@ Func_001_6C48:: ; address name
     call DivideBByA
     ld [wWorkBuf + $1], a
     ld a, [wBattleArg0]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld a, l
     ld [wWorkBuf + $2], a
@@ -6305,7 +6305,7 @@ Func_001_6C48:: ; address name
     ld [wRecordBufA + $C], a
     farcall LoadTable4E60EntryForWC991ToWC9DE
     ld a, [wBattleArg0]
-    ld c, $58
+    ld c, MON_EXP
     call SRAMRecordAddress
     ld a, [wRecordBufA + $58]
     ld [hl+], a

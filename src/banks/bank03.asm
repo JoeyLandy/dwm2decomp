@@ -2757,7 +2757,7 @@ Jump_003_5042:: ; address name
     push bc
     push bc
     ld a, c
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddressMapped
     ld e, [hl]
     inc hl
@@ -2837,7 +2837,7 @@ Func_003_50DD:: ; address name
     ld d, [hl]
     ld e, a
     ld a, c
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     push hl
@@ -2910,7 +2910,7 @@ Func_003_5137:: ; address name
     ld a, d
     ld [wTextWindowWidth], a
     ld a, c
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld h, [hl]
@@ -3457,7 +3457,7 @@ Jump_003_5449:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
     ld [wTargetRecord], a
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
@@ -4638,7 +4638,7 @@ Func_003_5AA7:: ; address name
 
 .call_sram_record_address_mapped5:
     ld a, c
-    ld c, $A4
+    ld c, MON_ITEM
     call SRAMRecordAddressMapped
     ld a, [hl]
     push af
@@ -4728,7 +4728,7 @@ Func_003_5AA7:: ; address name
 
 .read_menu_selected_member:
     ld a, [wMenuSelectedMember]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     call nz, SetWC2DFTileC2_Bank03_5C16
@@ -5028,7 +5028,7 @@ Jump_003_5EF0:: ; address name
     ld [rRAMB], a
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
@@ -5036,7 +5036,7 @@ Jump_003_5EF0:: ; address name
     cp a, $FF
     jr z, .done
     ld a, [wMenuSelectedMember]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, .set_temp1_to_02
@@ -5144,7 +5144,7 @@ Jump_003_5FBD:: ; address name
     ld [rRAMB], a
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld bc, $0800
 
@@ -5406,7 +5406,7 @@ Jump_003_6149:: ; address name
     call PauseMenu_Skills_HLToDecimalDigits
     call CopyTileBufferToBGMap
     ld a, [wTargetRecord]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
@@ -5466,7 +5466,7 @@ Jump_003_61EA:: ; address name
     ld a, $00
     ld [rRAMB], a
     ld a, [wMenuSelectedMember]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
@@ -5588,7 +5588,7 @@ Jump_003_62B2:: ; address name
     cp a, $FF
     jr nz, .skip
     ld a, [wMenuSelectedMember]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, l
@@ -5604,7 +5604,7 @@ Jump_003_62B2:: ; address name
 .read_menu_selected_member:
     push hl
     ld a, [wMenuSelectedMember]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     pop bc
     ld a, [hl]
@@ -5827,7 +5827,7 @@ PauseMenu_Skills_CopyRectToBGMap::
 Func_003_6432:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld d, h
     ld e, l
@@ -5870,7 +5870,7 @@ Func_003_646F:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
@@ -5896,7 +5896,7 @@ Func_003_649C:: ; address name
     farcall CopyBlockToTileBuffer
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
@@ -6055,7 +6055,7 @@ PauseMenu_Skills_SRAMRecordAddressMapped_Shared02::
 Func_003_65E3:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld a, [wMenuCursor]
     and a, $07
@@ -6088,7 +6088,7 @@ Func_003_65E3:: ; address name
 .check_menu_selected_member:
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
 
@@ -6147,7 +6147,7 @@ Func_003_664A:: ; address name
     call WriteDecimalDigitTiles
     ld a, [wSubMenuCursor]
     and a, $03
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld a, $C3
     ld [wScreenTileBuffer + $146], a
@@ -6199,7 +6199,7 @@ Func_003_66BB:: ; address name
     ld [rRAMB], a
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld d, [hl]
@@ -6272,7 +6272,7 @@ Func_003_67B0:: ; address name
     ld [wTextWindowWidth], a
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld d, h
     ld e, l
@@ -6410,7 +6410,7 @@ PauseMenu_Skills_SRAMRecordAddressMapped::
 Func_003_69C3:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld c, $00
 
@@ -6539,7 +6539,7 @@ PauseMenu_Skills_CopyRectToBGMap_Shared05::
 Func_003_6A60:: ; address name
     ld a, [wMenuSelectedMember]
     and a, $03
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld d, h
     ld e, l
@@ -7934,7 +7934,7 @@ Func_003_7281:: ; address name
     add_a_to_hl
     ld a, [hl]
     push af
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld [wStringIndex], a

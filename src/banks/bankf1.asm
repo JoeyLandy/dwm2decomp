@@ -849,7 +849,7 @@ Func_0F1_442F:: ; address name
 
 .call_sram_record_address_mapped5:
     ld a, c
-    ld c, $A4
+    ld c, MON_ITEM
     call SRAMRecordAddressMapped
     ld a, [hl]
     push af
@@ -939,7 +939,7 @@ Func_0F1_442F:: ; address name
 
 .read_menu_selected_member:
     ld a, [wMenuSelectedMember]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     call nz, SetWC2DFTileC2_BankF1
@@ -2090,7 +2090,7 @@ Jump_0F1_4D6F:: ; address name
     ld l, a
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $0A
@@ -4053,7 +4053,7 @@ Func_0F1_5969:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F

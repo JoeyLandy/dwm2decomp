@@ -1932,7 +1932,7 @@ Func_01A_60E6:: ; address name
 FindNewlyLearnableSkills::
 Func_01A_60F1:: ; address name
     ld a, [wBattleArg0]
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddressMapped
     ld d, h
     ld e, l
@@ -2660,7 +2660,7 @@ Func_01A_6418:: ; address name
     xor a, a
     call FillBytes
     ld a, [wBattleArg1]
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddress
     push hl
     ld a, [hl+]
@@ -2724,7 +2724,7 @@ ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
 Func_01A_64A2:: ; address name
     push de
     ld a, [wBattleArg1]
-    ld c, $A4
+    ld c, MON_ITEM
     call SRAMRecordAddress
     ld bc, $0000
     ld a, [hl]
@@ -2907,7 +2907,7 @@ Func_01A_6579:: ; address name
 ClampLevelUpGainsTo999::
 Func_01A_6587:: ; address name
     ld a, [wBattleArg1]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld a, [wLevelUpGains]
     ld c, a

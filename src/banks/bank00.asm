@@ -6259,7 +6259,7 @@ Func_000_222B:: ; address name
     push bc
     push de
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6313,7 +6313,7 @@ Func_000_228A:: ; address name
     ld [rRAMG], a
     push de
     ld a, [de]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop de
     ldh a, [hTemp0]
@@ -6366,7 +6366,7 @@ Func_000_228A:: ; address name
 
 .call_load_sram_record_word:
     ld a, [de]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG], a
@@ -6466,7 +6466,7 @@ Func_000_228A:: ; address name
 PersonalityIndexOfRecord::
 Func_000_2391:: ; address name
     ldh [hTemp6], a
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call LoadSRAMRecordByte
     call GradeTemp0
     ld a, $09

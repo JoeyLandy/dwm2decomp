@@ -3933,7 +3933,7 @@ Func_01D_5B4D:: ; address name
     pop bc
     push bc
     ld a, b
-    ld c, $56
+    ld c, MON_LEVEL
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -4089,7 +4089,7 @@ Func_01D_5C35:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
@@ -4154,7 +4154,7 @@ Func_01D_5CA3:: ; address name
 
 HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf::
 Jump_01D_5CAF:: ; address name
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -4196,7 +4196,7 @@ Func_01D_5CD7:: ; address name
     ld [rRAMB], a
     push bc
     ld a, b
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -4205,7 +4205,7 @@ Func_01D_5CD7:: ; address name
     pop bc
     push bc
     ld a, b
-    ld c, $0B
+    ld c, MON_SPECIES
     ld b, $02
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
@@ -4354,7 +4354,7 @@ Func_01D_5DBC:: ; address name
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld c, $A4
+    ld c, MON_ITEM
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld [wStringIndex], a
@@ -4386,7 +4386,7 @@ Func_01D_5DF9:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
@@ -4905,7 +4905,7 @@ Func_01D_6088:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     ld b, $02
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
@@ -5219,7 +5219,7 @@ Func_01D_62AD:: ; address name
     ld a, c
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6203,7 +6203,7 @@ Func_01D_682A:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $10
@@ -6291,7 +6291,7 @@ Func_01D_6899:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $10

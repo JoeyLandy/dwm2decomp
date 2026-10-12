@@ -3862,7 +3862,7 @@ Jump_0F0_5FA3:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -3892,7 +3892,7 @@ Jump_0F0_5FA3:: ; address name
     and a, a
     jr z, .restore
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a

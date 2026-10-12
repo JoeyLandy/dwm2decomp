@@ -1430,7 +1430,7 @@ Jump_073_48A0:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyList + $1]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG], a
@@ -1480,7 +1480,7 @@ Jump_073_48F8:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyList + $2]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG], a
@@ -1522,7 +1522,7 @@ Func_073_4956:: ; address name
     xor a, a
     ldh [hTemp2], a
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -1530,27 +1530,27 @@ Func_073_4956:: ; address name
     ld d, a
     ld b, $01
     ld a, [hl]
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $02
     ld a, [hl]
-    ld c, $63
+    ld c, MON_ATK
     call LoadSRAMRecordWord
     call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $03
     ld a, [hl]
-    ld c, $65
+    ld c, MON_DEF
     call LoadSRAMRecordWord
     call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $04
     ld a, [hl]
-    ld c, $67
+    ld c, MON_AGL
     call LoadSRAMRecordWord
     call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     ld b, $05
     ld a, [hl]
-    ld c, $69
+    ld c, MON_INT
     call LoadSRAMRecordWord
     call ProcessRecordFields5DTo69ThenItemString_WriteTemp2
     xor a, a
@@ -1612,7 +1612,7 @@ Func_073_49E6:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG], a
@@ -2820,7 +2820,7 @@ Func_073_50C3:: ; address name
 
 .loop:
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -2838,7 +2838,7 @@ Func_073_50C3:: ; address name
     ldh [hTemp3], a
     pop hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -2883,7 +2883,7 @@ Func_073_5117:: ; address name
 
 .loop:
     ld a, [hl]
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -2901,7 +2901,7 @@ Func_073_5117:: ; address name
     ldh [hTemp3], a
     pop hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]

@@ -3226,7 +3226,7 @@ Func_014_56B0:: ; address name
     ld [rRAMB], a
     ld a, b
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -3341,7 +3341,7 @@ Func_014_574E:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -3777,7 +3777,7 @@ Func_014_5979:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
@@ -4357,7 +4357,7 @@ Jump_014_5EBF:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld de, wNameEntryText
     ld c, $00

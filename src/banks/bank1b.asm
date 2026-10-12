@@ -6915,7 +6915,7 @@ Func_01B_7152:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [de]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld c, l
     ld b, h
@@ -6929,7 +6929,7 @@ Func_01B_7152:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddress
     ld c, l
     ld b, h
@@ -6940,7 +6940,7 @@ Func_01B_7152:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld c, l
     ld b, h
@@ -6958,7 +6958,7 @@ Func_01B_7152:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call SRAMRecordAddress
     ld c, l
     ld b, h
@@ -6969,7 +6969,7 @@ Func_01B_7152:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $A4
+    ld c, MON_ITEM
     call SRAMRecordAddress
     ld c, l
     ld b, h
@@ -7199,7 +7199,7 @@ Func_01B_72E7:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -7439,7 +7439,7 @@ Func_01B_7460:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
@@ -7470,7 +7470,7 @@ Func_01B_7487:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld l, a
@@ -7607,7 +7607,7 @@ Func_01B_7537:: ; address name
     ld a, [hl]
     cp a, $FF
     jr z, .restore
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -7672,7 +7672,7 @@ Func_01B_75B4:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -7771,7 +7771,7 @@ Func_01B_7600:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -7868,7 +7868,7 @@ Func_01B_76E3:: ; address name
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0

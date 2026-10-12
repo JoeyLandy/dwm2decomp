@@ -1241,7 +1241,7 @@ Func_0A3_4B0B:: ; address name
     dec de
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, [de]
     inc de
@@ -1252,7 +1252,7 @@ Func_0A3_4B0B:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ld a, [de]
     inc de
@@ -1263,7 +1263,7 @@ Func_0A3_4B0B:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [de]
     inc de

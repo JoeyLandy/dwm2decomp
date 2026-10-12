@@ -1013,7 +1013,7 @@ Func_05F_6CA9:: ; address name
 
 .loop:
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 7, a
@@ -1053,7 +1053,7 @@ Func_05F_6CDB:: ; address name
 
 .loop:
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 2, a
@@ -1093,7 +1093,7 @@ Func_05F_6D0D:: ; address name
 
 .loop:
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 0, a

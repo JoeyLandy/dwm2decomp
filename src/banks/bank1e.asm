@@ -488,7 +488,7 @@ Func_01E_42C6:: ; address name
     add_a_to_hl
     ld a, [hl]
     ld b, a
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -1142,13 +1142,13 @@ Jump_01E_473B:: ; address name
     ld a, $01
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     xor a, a
@@ -1727,7 +1727,7 @@ Jump_01E_4B5D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wPartyList]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -1770,7 +1770,7 @@ Jump_01E_4B7B:: ; address name
     push de
     call GetListEntriesCell5Address
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     pop de
     ld a, $F0
@@ -1821,13 +1821,13 @@ Jump_01E_4BE1:: ; address name
     ld a, $01
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     call GetListEntriesCell5Address
@@ -1835,7 +1835,7 @@ Jump_01E_4BE1:: ; address name
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     xor a, a
@@ -2027,7 +2027,7 @@ Jump_01E_4D5B:: ; address name
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     ld a, [wPartyCount]
@@ -2393,7 +2393,7 @@ Jump_01E_4FD6:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -2417,19 +2417,19 @@ Jump_01E_4FF7:: ; address name
     ld a, $02
     ldh [hTemp0], a
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     ld a, $01
     ldh [hTemp0], a
     ld a, [wSelectedRecord]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     xor a, a
     ldh [hTemp0], a
     ld a, [wSelectedRecord]
-    ld c, $55
+    ld c, MON_STATUS
     ld b, $01
     call StoreTemp0BytesToSRAMRecord
     ld a, [wItemGridX]
@@ -3456,7 +3456,7 @@ Jump_01E_581C:: ; address name
     ld [rRAMB], a
     call GetListEntriesCell5Address
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -5198,7 +5198,7 @@ Jump_01E_6399:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -5228,7 +5228,7 @@ Jump_01E_6399:: ; address name
     and a, a
     jr z, .restore
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -5660,7 +5660,7 @@ Jump_01E_669D:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -5690,7 +5690,7 @@ Jump_01E_669D:: ; address name
     and a, a
     jr z, .restore
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -6047,7 +6047,7 @@ Jump_01E_694D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
@@ -6092,7 +6092,7 @@ Jump_01E_69AD:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     xor a, a
     ld [rRAMG2], a
@@ -6200,7 +6200,7 @@ Jump_01E_6A70:: ; address name
     call GetListEntriesCell5Address
     ld a, [hl]
     ldh [hTemp5], a
-    ld c, $34
+    ld c, MON_SKILLS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $FF
@@ -6651,7 +6651,7 @@ Func_01E_6D70:: ; address name
     ld [rRAMB], a
     push bc
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $10
@@ -6887,7 +6887,7 @@ Func_01E_6EE2:: ; address name
     call CopyTileBytesToVRAM_Bank1E
     pop hl
     ld a, [hl]
-    ld c, $0F
+    ld c, MON_SECOND_NAME
     call CopyRecordNameToNameGlyphBuf
     ld de, vTiles2 + $290
     ld a, $F0
@@ -6905,7 +6905,7 @@ Func_01E_6F17:: ; address name
     call GetListEntriesCell5Address
     push hl
     ld a, [hl]
-    ld c, $58
+    ld c, MON_EXP
     call LoadRecordThreeBytesToTemp0
     ldh a, [hTemp0]
     ld [wDigits], a
@@ -6923,7 +6923,7 @@ Func_01E_6F17:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordWord
     ldh a, [hTemp1]
     ld b, a
@@ -6936,7 +6936,7 @@ Func_01E_6F17:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [wSpeciesIdLo], a
@@ -6963,7 +6963,7 @@ Func_01E_6F17:: ; address name
     push bc
     push de
     ld a, [hl]
-    ld c, $58
+    ld c, MON_EXP
     call LoadRecordThreeBytesToTemp0
     pop de
     pop bc
@@ -7033,7 +7033,7 @@ Func_01E_6FEB:: ; address name
     ld [rRAMB], a
     push bc
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $10
@@ -7209,7 +7209,7 @@ Func_01E_70E3:: ; address name
 SwapMonstersMenu_ShowMonsterDetails_Case13_LoadFamilyIconTileForWorkBuf::
 Func_01E_70EF:: ; address name
     push bc
-    ld c, $0D
+    ld c, MON_FAMILY
     ld a, b
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -7466,7 +7466,7 @@ DrawRecordLevelAndStatusRow_1E::
 Func_01E_725D:: ; address name
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     ld b, $02
     call LoadSRAMRecordWord
     call BGMapAddressAtScroll_Bank1E
@@ -7530,7 +7530,7 @@ Func_01E_725D:: ; address name
     push hl
     push de
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop de
     ld l, e
@@ -8180,7 +8180,7 @@ Func_01E_75C5:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
@@ -8283,7 +8283,7 @@ Func_01E_7646:: ; address name
     ld a, b
     add_a_to_hl
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call LoadSRAMRecordByte
     xor a, a

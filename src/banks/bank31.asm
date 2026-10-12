@@ -6581,7 +6581,7 @@ Func_031_663D:: ; address name
     call BattleEnd_Step3_Sub07_WriteBattleResultByte
     ld a, c
     push bc
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     pop bc
     call BattleEnd_Step3_Sub07_AddAx9ToHL
@@ -7013,7 +7013,7 @@ AddExpToRecordCCapped::
 Func_031_6885:: ; address name
     push bc
     ld a, c
-    ld c, $58
+    ld c, MON_EXP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld c, a
@@ -7128,7 +7128,7 @@ Jump_031_6925:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wBattleArg0]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     call CopyTenByteNameToTextBuf0
     push hl
@@ -7181,7 +7181,7 @@ Jump_031_6973:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wBattleArg0]
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld de, wWorkBuf
     ld b, $08
@@ -7299,7 +7299,7 @@ Jump_031_6A0A:: ; address name
 ApplyLevelUpToRecordBattleArg0::
 Func_031_6A2D:: ; address name
     ld a, [wBattleArg0]
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddressMapped
     inc [hl]
     ld a, l
@@ -7370,7 +7370,7 @@ Func_031_6A8B:: ; address name
 ShowString0ACat5IfField56AtLeast57::
 Func_031_6A92:: ; address name
     ld a, [wBattleArg0]
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddressMapped
     ld a, [hl+]
     cp a, [hl]
@@ -7389,7 +7389,7 @@ Func_031_6A92:: ; address name
 StoreWorkBufToRecordSkills::
 Func_031_6AAE:: ; address name
     ld a, [wBattleArg0]
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddressMapped
     ld de, wWorkBuf
     ld b, $08
@@ -7613,7 +7613,7 @@ Jump_031_6BAC:: ; address name
 ApplyLevelUpToRecordBattleArg1::
 Func_031_6BCA:: ; address name
     ld a, [wBattleArg1]
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddress
     inc [hl]
     ld a, l
@@ -7683,7 +7683,7 @@ Func_031_6C28:: ; address name
 CopyRecordFields5DTo5BAnd61To5F::
 Func_031_6C2F:: ; address name
     ld a, [wBattleArg1]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld a, [hl+]
     ld c, a
@@ -7793,7 +7793,7 @@ Jump_031_6CA0:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wPartyList]
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddress
     ld de, wWorkBuf
     ld b, $08
@@ -7818,14 +7818,14 @@ Jump_031_6CA0:: ; address name
     ld de, wTextBuf1
     call CopyStringHLToDE
     ld a, [wPartyList]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld d, h
     ld e, l
     ld hl, wTextBuf0
     call CopyFiveGlyphsPlusMarks
     ld a, [wPartyList]
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddress
     ld de, wWorkBuf
     ld b, $08
@@ -7882,7 +7882,7 @@ Func_031_6D28:: ; address name
     xor a, a
     ld [rRAMB], a
     pop af
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddress
     ld a, [hl+]
     cp a, [hl]
@@ -8047,7 +8047,7 @@ ForEachSkillOfRecordBRun6E30::
 Func_031_6E18:: ; address name
     push bc
     ld a, b
-    ld c, $34
+    ld c, MON_SKILLS
     call SRAMRecordAddress
     pop bc
     ld c, $08
@@ -8071,7 +8071,7 @@ Func_031_6E30:: ; address name
     ld d, a
     push de
     ld a, b
-    ld c, $3C
+    ld c, MON_SKILL_LIST
     call SRAMRecordAddress
     pop de
     push hl
@@ -8224,7 +8224,7 @@ Jump_031_6EF7:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wBattleArg0]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
     call HLToDecimalDigits
@@ -8569,7 +8569,7 @@ Func_031_7105:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wBattleArg0]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     deref_hl
     xor a, a

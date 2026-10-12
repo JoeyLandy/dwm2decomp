@@ -135,7 +135,7 @@ Jump_00F_40A2:: ; address name
     add_a_to_hl
     push hl
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F

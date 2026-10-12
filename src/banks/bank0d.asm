@@ -1026,7 +1026,7 @@ EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case02::
 Jump_00D_4A03:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
-    ld c, $3C
+    ld c, MON_SKILL_LIST
     call SRAMRecordAddress
     ld c, $00
     ld b, $00
@@ -1109,7 +1109,7 @@ Jump_00D_4A69:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld e, a
@@ -2447,7 +2447,7 @@ Jump_00D_52AB:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $1F
@@ -2455,7 +2455,7 @@ Jump_00D_52AB:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [wArg4], a
@@ -2538,7 +2538,7 @@ Jump_00D_534E:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld de, wNameGlyphBuf
     ld c, $00
@@ -7024,7 +7024,7 @@ Jump_00D_722A:: ; address name
     ld l, a
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $0A
@@ -7830,7 +7830,7 @@ Func_00D_7812:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
@@ -7943,7 +7943,8 @@ Data_00D_78F6:: ; address name
     db $23 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0058, $0058, $005C, $005C ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $7F, $00, $5D, $00, $45, $00, $7F, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $007F, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -7966,7 +7967,8 @@ Data_00D_799B:: ; address name
     db $2A ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $00E6, $00E6, $00E0, $00E0 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $E2, $00, $10, $01, $32, $01, $F1, $02, $00, $00, $00, $00 ; $63-$6E
+    dw $00E2, $0110, $0132, $02F1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $0A, $C8, $B4, $DC ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00 ; $73-$82
     db $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -7989,7 +7991,8 @@ Data_00D_7A40:: ; address name
     db $23 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $007B, $007B, $00AD, $00AD ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $77, $00, $A6, $00, $B4, $00, $65, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $0077, $00A6, $00B4, $0165 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $46, $64, $AA, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00 ; $73-$82
     db $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8012,7 +8015,8 @@ Data_00D_7AE5:: ; address name
     db $25 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $00A6, $00A6, $009F, $009F ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $D6, $00, $D4, $00, $9B, $00, $EB, $02, $00, $00, $00, $00 ; $63-$6E
+    dw $00D6, $00D4, $009B, $02EB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $D2, $28, $96, $D2 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8035,7 +8039,8 @@ Data_00D_7B8A:: ; address name
     db $23 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0090, $0090, $0040, $0040 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $C6, $00, $4F, $00, $98, $00, $C5, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $00C6, $004F, $0098, $01C5 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $C8, $96, $96, $1E ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00 ; $73-$82
     db $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8058,7 +8063,8 @@ Data_00D_7C2F:: ; address name
     db $32 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0174, $0174, $015F, $015F ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $69, $01, $47, $01, $CB, $01, $B1, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $0169, $0147, $01CB, $01B1 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $64, $96, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00 ; $73-$82
     db $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8081,7 +8087,8 @@ Data_00D_7CD4:: ; address name
     db $35 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0173, $0173, $0246, $0246 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $F8, $00, $A1, $01, $CA, $01, $F4, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $00F8, $01A1, $01CA, $01F4 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $14, $C8, $64, $B4 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00 ; $73-$82
     db $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8104,7 +8111,8 @@ Data_00D_7D79:: ; address name
     db $3B ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $01F6, $01F6, $0147, $0147 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $AD, $01, $BF, $01, $E9, $01, $AB, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $01AD, $01BF, $01E9, $01AB ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $B4, $8C, $64, $8C ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00 ; $73-$82
     db $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8127,7 +8135,8 @@ Data_00D_7E1E:: ; address name
     db $37 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0155, $0155, $0135, $0135 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $5D, $01, $3D, $01, $0B, $01, $91, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $015D, $013D, $010B, $0191 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $78, $82, $64, $5A ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00 ; $73-$82
     db $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -8150,7 +8159,8 @@ Data_00D_7EC3:: ; address name
     db $36 ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $01D3, $01D3, $01BA, $01BA ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $AC, $01, $78, $01, $4B, $01, $E0, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $01AC, $0178, $014B, $01E0 ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $78, $64, $64, $82 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00 ; $73-$82
     db $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02, $98, $98, $98, $F0, $F0 ; $83-$92

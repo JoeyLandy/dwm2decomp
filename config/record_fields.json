@@ -1,0 +1,32 @@
+{
+  "_comment": "Offsets into the $A5-byte SRAM monster record (E-0262) that have evidence. tools/disasm_all.py writes them to src/records.inc as MON_* constants and uses them for the offset a record-access routine takes in C (E-0290). Offsets without an entry stay numeric.",
+  "fields": {
+    "00": {"const": "MON_STATE", "note": "state: 0 empty, 1 or 2 in use", "evidence": "E-0104"},
+    "01": {"const": "MON_NAME", "note": "name, 10 bytes ending in $F0", "evidence": "E-0034"},
+    "0B": {"const": "MON_SPECIES", "note": "word compared with monster ids by talk events $29/$47 (C1: the species id)", "evidence": "E-0236"},
+    "0D": {"const": "MON_FAMILY", "note": "low nibble = family", "evidence": "E-0122"},
+    "0F": {"const": "MON_SECOND_NAME", "note": "second name, 10 bytes (the name typed at name entry)", "evidence": "E-0034"},
+    "34": {"const": "MON_SKILLS", "note": "skills, 8 bytes", "evidence": "E-0122"},
+    "3C": {"const": "MON_SKILL_LIST", "note": "the list AppendMappedSkillsToWCA67 appends to, up to $FF", "evidence": "E-0237"},
+    "55": {"const": "MON_STATUS", "note": "status bits (bit 2 read as poison)", "evidence": "E-0085"},
+    "56": {"const": "MON_LEVEL", "note": "level", "evidence": "E-0122"},
+    "58": {"const": "MON_EXP", "note": "experience, 24 bits", "evidence": "E-0125"},
+    "5B": {"const": "MON_HP", "note": "HP word", "evidence": "E-0122"},
+    "5D": {"const": "MON_MAX_HP", "note": "maximum HP word", "evidence": "E-0122"},
+    "5F": {"const": "MON_MP", "note": "MP word", "evidence": "E-0122"},
+    "61": {"const": "MON_MAX_MP", "note": "maximum MP word", "evidence": "E-0122"},
+    "63": {"const": "MON_ATK", "note": "ATK word (C1: first of the stats column, raised by AddAToRecordWordCapped like $65-$69)", "evidence": "E-0290"},
+    "65": {"const": "MON_DEF", "note": "DEF word (C1)", "evidence": "E-0290"},
+    "67": {"const": "MON_AGL", "note": "AGL word (C1)", "evidence": "E-0290"},
+    "69": {"const": "MON_INT", "note": "INT word (C1)", "evidence": "E-0290"},
+    "6F": {"const": "MON_PERSONALITY", "note": "four personality axes, $6F-$72, from MonsterTable bytes 22-25", "evidence": "E-0034"},
+    "A4": {"const": "MON_ITEM", "note": "equipped item", "evidence": "E-0125"}
+  },
+  "callees": [
+    "SRAMRecordAddressMapped", "LoadSRAMRecordByte", "LoadSRAMRecordWord", "SRAMRecordAddress",
+    "CopyRecordNameToNameGlyphBuf", "AddAToRecordWordCapped", "SubtractAFromRecordWordFloor1",
+    "StoreTemp0BytesToSRAMRecord", "AddToRecordFieldWordCapped", "StoreHLToRecordField",
+    "AddAToRecordWordPairCapped", "SubtractAFromRecordWordPairFloor1", "LoadRecordThreeBytesToTemp0",
+    "AddToRecordFieldByteCapped", "SubtractFromRecordFieldByteFloored"
+  ]
+}

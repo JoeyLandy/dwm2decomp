@@ -1455,7 +1455,7 @@ Func_007_4F29:: ; address name
 .loop:
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [de], a
@@ -1464,7 +1464,7 @@ Func_007_4F29:: ; address name
     ld [de], a
     inc de
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [de], a
@@ -1473,7 +1473,7 @@ Func_007_4F29:: ; address name
     ld [de], a
     inc de
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld [de], a
@@ -5064,7 +5064,7 @@ Func_007_6C59:: ; address name
 .loop:
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [de], a
@@ -5073,7 +5073,7 @@ Func_007_6C59:: ; address name
     ld [de], a
     inc de
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [de], a
@@ -5082,7 +5082,7 @@ Func_007_6C59:: ; address name
     ld [de], a
     inc de
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld [de], a

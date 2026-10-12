@@ -925,7 +925,7 @@ Jump_015_45DC:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     cp a, $0A
@@ -1503,7 +1503,7 @@ Jump_015_4A4D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG2], a
@@ -3263,7 +3263,7 @@ Jump_015_55D2:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $1F
@@ -3271,7 +3271,7 @@ Jump_015_55D2:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [wArg4], a
@@ -3289,7 +3289,7 @@ Jump_015_55D2:: ; address name
     cp a, $FF
     ret nz
     ld a, [wSelectedRecord]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld a, $0A
     ld [rRAMG2], a
@@ -3778,7 +3778,7 @@ Jump_015_593E:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $02
     ld [hl], a
@@ -4270,7 +4270,7 @@ Jump_015_5CF7:: ; address name
     ld a, [wListCursor]
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG2], a
@@ -4315,7 +4315,7 @@ Jump_015_5D3E:: ; address name
     ld a, [wListCursor]
     add_a_to_hl
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $01
     ld [hl], a
@@ -4361,7 +4361,7 @@ Jump_015_5D3E:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $02
     ld [hl], a
@@ -4489,7 +4489,7 @@ Jump_015_5E62:: ; address name
     ld [rRAMB], a
     ld a, [hl]
     push hl
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld [wChildRecord + $B], a
@@ -5609,7 +5609,7 @@ Func_015_656C:: ; address name
     ld a, b
     add_a_to_hl
     ld a, [hl]
-    ld c, $00
+    ld c, MON_STATE
     ld b, $01
     call LoadSRAMRecordByte
     xor a, a
@@ -6228,7 +6228,7 @@ Func_015_6866:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0D
+    ld c, MON_FAMILY
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $0F
@@ -6274,7 +6274,7 @@ Func_015_688D:: ; address name
     inc hl
     push hl
     ld a, b
-    ld c, $56
+    ld c, MON_LEVEL
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -6555,7 +6555,7 @@ Func_015_6A36:: ; address name
     ld [rRAMB], a
     push bc
     ld a, b
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -6567,7 +6567,7 @@ Func_015_6A36:: ; address name
     pop bc
     push bc
     ld a, b
-    ld c, $0B
+    ld c, MON_SPECIES
     ld b, $02
     call LoadSRAMRecordWord
     ldh a, [hTemp0]

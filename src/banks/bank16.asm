@@ -154,7 +154,7 @@ Func_016_40F6:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -184,12 +184,12 @@ Func_016_4118:: ; address name
     or a, a
     jr z, .set_item_id_to_FF
     ld a, $00
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, .check_party_count
     ld a, $00
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -211,12 +211,12 @@ Func_016_4118:: ; address name
     cp a, $01
     jr z, .set_item_id_to_FF
     ld a, $01
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, .check_party_count2
     ld a, $01
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -238,12 +238,12 @@ Func_016_4118:: ; address name
     cp a, $02
     jr z, .set_item_id_to_FF
     ld a, $02
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     jr nz, .set_item_id_to_FF
     ld a, $02
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -290,14 +290,14 @@ Func_016_41B3:: ; address name
     cp a, [hl]
     ret nc
     push de
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     pop de
     ret nz
     push de
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -321,7 +321,7 @@ Func_016_41B3:: ; address name
     add_a_to_hl
     push hl
     ld a, [wTargetRecord]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
@@ -340,7 +340,7 @@ Func_016_41FD:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -369,7 +369,7 @@ Func_016_421F:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 2, [hl]
     ret nz
@@ -386,7 +386,7 @@ Jump_016_4234:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 3, [hl]
     ret nz
@@ -403,7 +403,7 @@ Jump_016_4249:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 0, [hl]
     ret nz
@@ -424,7 +424,7 @@ Func_016_425E:: ; address name
     call CheckRecordFlag55Bit7
     jr nz, .check_party_count
     xor a, a
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, .call_copy_eligible_record_name_to_text_buf3
@@ -437,7 +437,7 @@ Func_016_425E:: ; address name
     call CheckRecordFlag55Bit7
     jr nz, .check_party_count2
     ld a, $01
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, .call_copy_eligible_record_name_to_text_buf3
@@ -450,7 +450,7 @@ Func_016_425E:: ; address name
     call CheckRecordFlag55Bit7
     jr nz, .set_item_id_to_FF
     ld a, $02
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 0, [hl]
     jr nz, .call_copy_eligible_record_name_to_text_buf3
@@ -485,14 +485,14 @@ Func_016_42C4:: ; address name
     cp a, [hl]
     ret nc
     push de
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     pop de
     ret nz
     push de
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 0, [hl]
     pop de
@@ -504,7 +504,7 @@ Func_016_42C4:: ; address name
     add_a_to_hl
     push hl
     ld a, [wTargetRecord]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld e, l
     ld d, h
@@ -523,7 +523,7 @@ Jump_016_4301:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 1, [hl]
     ret nz
@@ -540,7 +540,7 @@ Jump_016_4316:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 4, [hl]
     ret nz
@@ -555,7 +555,7 @@ Jump_016_4316:: ; address name
 ItemUsable_WorldLeaf::
 Func_016_432B:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret nz
@@ -571,7 +571,7 @@ Jump_016_433C:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $63
+    ld c, MON_ATK
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -588,7 +588,7 @@ Jump_016_4352:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $65
+    ld c, MON_DEF
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -605,7 +605,7 @@ Jump_016_4368:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $67
+    ld c, MON_AGL
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -622,7 +622,7 @@ Jump_016_437E:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $69
+    ld c, MON_INT
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -639,7 +639,7 @@ Jump_016_4394:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -656,7 +656,7 @@ Jump_016_43AA:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $61
+    ld c, MON_MAX_MP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -674,7 +674,7 @@ Jump_016_43C0:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call SRAMRecordAddressMapped
     ld a, [hl]
     cp a, $FF
@@ -692,7 +692,7 @@ Jump_016_43D6:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $6F
+    ld c, MON_PERSONALITY
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
@@ -1182,7 +1182,7 @@ Func_016_4633:: ; address name
 ; writes: wItemId
 CheckRecordFlag55Bit7::
 Func_016_4636:: ; address name
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret z
@@ -1419,11 +1419,11 @@ Func_016_4790:: ; address name
     call CheckTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call StoreHLToRecordField
     ret
 
@@ -1453,11 +1453,11 @@ Jump_016_47B0:: ; address name
 ItemApply_ElfWater::
 Jump_016_47CE:: ; address name
     ld a, [wTargetRecord]
-    ld c, $61
+    ld c, MON_MAX_MP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, [wTargetRecord]
-    ld c, $5F
+    ld c, MON_MP
     call StoreHLToRecordField
     call ConsumeSelectedItemByChance
     ret
@@ -1468,7 +1468,7 @@ Jump_016_47CE:: ; address name
 ItemApply_Antidote::
 Jump_016_47E5:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 2, [hl]
     call ConsumeSelectedItemByChance
@@ -1480,7 +1480,7 @@ Jump_016_47E5:: ; address name
 ItemApply_MoonHerb::
 Jump_016_47F3:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 3, [hl]
     call ConsumeSelectedItemByChance
@@ -1492,7 +1492,7 @@ Jump_016_47F3:: ; address name
 ItemApply_Laurel::
 Jump_016_4801:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 0, [hl]
     call ConsumeSelectedItemByChance
@@ -1504,7 +1504,7 @@ Jump_016_4801:: ; address name
 ItemApply_AwakeSand::
 Jump_016_480F:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 1, [hl]
     call ConsumeSelectedItemByChance
@@ -1516,7 +1516,7 @@ Jump_016_480F:: ; address name
 ItemApply_SkyBell::
 Jump_016_481D:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 4, [hl]
     call ConsumeSelectedItemByChance
@@ -1535,15 +1535,15 @@ Jump_016_482B:: ; address name
 ItemApply_WorldLeaf::
 Jump_016_482C:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld [hl], $00
     ld a, [wTargetRecord]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call StoreHLToRecordField
     ld a, $01
     ld [wLevelUpGains], a
@@ -1730,7 +1730,7 @@ Jump_016_4922:: ; address name
     ld a, [wTargetRecord]
     call ApplyMeatToRecordField6B
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     set 2, [hl]
     call ConsumeSelectedItemByChance
@@ -1921,7 +1921,7 @@ Jump_016_49AE:: ; address name
 ItemApply_VITbelt::
 Jump_016_49AF:: ; address name
     ld a, $1E
-    ld c, $5D
+    ld c, MON_MAX_HP
     call AddAToRecordWordPairCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1931,7 +1931,7 @@ Jump_016_49AF:: ; address name
 ItemApply_DracoBelt::
 Jump_016_49BA:: ; address name
     ld a, $50
-    ld c, $5D
+    ld c, MON_MAX_HP
     call AddAToRecordWordPairCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1941,7 +1941,7 @@ Jump_016_49BA:: ; address name
 ItemApply_MagicBelt::
 Jump_016_49C5:: ; address name
     ld a, $1E
-    ld c, $61
+    ld c, MON_MAX_MP
     call AddAToRecordWordPairCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1951,7 +1951,7 @@ Jump_016_49C5:: ; address name
 ItemApply_OddBelt::
 Jump_016_49D0:: ; address name
     ld a, $50
-    ld c, $61
+    ld c, MON_MAX_MP
     call AddAToRecordWordPairCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1961,7 +1961,7 @@ Jump_016_49D0:: ; address name
 ItemApply_StoneFang::
 Jump_016_49DB:: ; address name
     ld a, $0A
-    ld c, $63
+    ld c, MON_ATK
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1971,7 +1971,7 @@ Jump_016_49DB:: ; address name
 ItemApply_SteelFang::
 Jump_016_49E6:: ; address name
     ld a, $32
-    ld c, $63
+    ld c, MON_ATK
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1981,7 +1981,7 @@ Jump_016_49E6:: ; address name
 ItemApply_MermScale::
 Jump_016_49F1:: ; address name
     ld a, $0A
-    ld c, $65
+    ld c, MON_DEF
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -1991,7 +1991,7 @@ Jump_016_49F1:: ; address name
 ItemApply_DrakScale::
 Jump_016_49FC:: ; address name
     ld a, $32
-    ld c, $65
+    ld c, MON_DEF
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2001,7 +2001,7 @@ Jump_016_49FC:: ; address name
 ItemApply_AGL::
 Jump_016_4A07:: ; address name
     ld a, $0A
-    ld c, $67
+    ld c, MON_AGL
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2011,7 +2011,7 @@ Jump_016_4A07:: ; address name
 ItemApply_Starry::
 Jump_016_4A12:: ; address name
     ld a, $32
-    ld c, $67
+    ld c, MON_AGL
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2021,7 +2021,7 @@ Jump_016_4A12:: ; address name
 ItemApply_Smart_4A1D::
 Jump_016_4A1D:: ; address name
     ld a, $32
-    ld c, $69
+    ld c, MON_INT
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2031,7 +2031,7 @@ Jump_016_4A1D:: ; address name
 ItemApply_Wise::
 Jump_016_4A28:: ; address name
     ld a, $64
-    ld c, $69
+    ld c, MON_INT
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2048,7 +2048,7 @@ Jump_016_4A33:: ; address name
 ItemApply_DScale::
 Jump_016_4A37:: ; address name
     ld a, $05
-    ld c, $65
+    ld c, MON_DEF
     call AddAToRecordWordCapped
     call EquipItemOnRecordTargetRecord
     ret
@@ -2080,7 +2080,7 @@ Jump_016_4A47:: ; address name
 EquipItemOnRecordTargetRecord::
 Func_016_4A48:: ; address name
     ld a, [wTargetRecord]
-    ld c, $A4
+    ld c, MON_ITEM
     call SRAMRecordAddressMapped
     ld a, [hl]
     or a, a
@@ -2174,7 +2174,7 @@ Func_016_4A98:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1::
 Jump_016_4AE1:: ; address name
     ld a, $1E
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
@@ -2183,7 +2183,7 @@ Jump_016_4AE1:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case01::
 Jump_016_4AE9:: ; address name
     ld a, $50
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
@@ -2192,7 +2192,7 @@ Jump_016_4AE9:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case02::
 Jump_016_4AF1:: ; address name
     ld a, $1E
-    ld c, $61
+    ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
@@ -2201,7 +2201,7 @@ Jump_016_4AF1:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordPairFloor1_Case03::
 Jump_016_4AF9:: ; address name
     ld a, $50
-    ld c, $61
+    ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
@@ -2210,7 +2210,7 @@ Jump_016_4AF9:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1::
 Jump_016_4B01:: ; address name
     ld a, $0A
-    ld c, $63
+    ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2219,7 +2219,7 @@ Jump_016_4B01:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case05::
 Jump_016_4B09:: ; address name
     ld a, $32
-    ld c, $63
+    ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2228,7 +2228,7 @@ Jump_016_4B09:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case06::
 Jump_016_4B11:: ; address name
     ld a, $0A
-    ld c, $65
+    ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2237,7 +2237,7 @@ Jump_016_4B11:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case07::
 Jump_016_4B19:: ; address name
     ld a, $32
-    ld c, $65
+    ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2246,7 +2246,7 @@ Jump_016_4B19:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case08::
 Jump_016_4B21:: ; address name
     ld a, $0A
-    ld c, $67
+    ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2255,7 +2255,7 @@ Jump_016_4B21:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case09::
 Jump_016_4B29:: ; address name
     ld a, $32
-    ld c, $67
+    ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2264,7 +2264,7 @@ Jump_016_4B29:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0A::
 Jump_016_4B31:: ; address name
     ld a, $32
-    ld c, $69
+    ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2273,7 +2273,7 @@ Jump_016_4B31:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case0B::
 Jump_016_4B39:: ; address name
     ld a, $64
-    ld c, $69
+    ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -2288,7 +2288,7 @@ Jump_016_4B41:: ; address name
 ApplyEquipmentEffectKeepA_ByItem_ToSubtractAFromRecordWordFloor1_Case13::
 Jump_016_4B42:: ; address name
     ld a, $05
-    ld c, $65
+    ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
@@ -3306,11 +3306,11 @@ Jump_016_542B:: ; address name
 FullHealRecordTargetRecord::
 Func_016_543E:: ; address name
     ld a, [wTargetRecord]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call StoreHLToRecordField
     ld a, $06
     ld [wItemMessage], a
@@ -3349,7 +3349,7 @@ Func_016_5473:: ; address name
     call TestTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     ld a, [hl+]
     ld b, [hl]
@@ -3397,11 +3397,11 @@ Func_016_54AD:: ; address name
     call TestTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     deref_hl
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call StoreHLToRecordField
     ret
 
@@ -3448,11 +3448,11 @@ Jump_016_54E9:: ; address name
 PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08::
 Jump_016_54F7:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld [hl], $00
     ld a, [wTargetRecord]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     push hl
     inc hl
@@ -3479,7 +3479,7 @@ Jump_016_54F7:: ; address name
 PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord::
 Jump_016_5522:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld [hl], $00
     call FullHealRecordTargetRecord
@@ -3496,7 +3496,7 @@ Jump_016_5522:: ; address name
 PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped::
 Jump_016_553A:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 2, [hl]
     ld a, $09
@@ -3532,7 +3532,7 @@ Func_016_555C:: ; address name
     call TestTargetRecordFlag55Bit7
     ret nz
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     res 0, [hl]
     ret
@@ -3778,7 +3778,7 @@ Func_016_56CC:: ; address name
 TestTargetRecordFlag55Bit7::
 Func_016_56D9:: ; address name
     ld a, [wTargetRecord]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     bit 7, [hl]
     ret
@@ -3967,7 +3967,7 @@ AddHLToRecordHPCapped::
 Func_016_57D1:: ; address name
     push af
     push hl
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddressMapped
     pop de
     ld a, [hl+]
@@ -3975,7 +3975,7 @@ Func_016_57D1:: ; address name
     ld c, a
     pop af
     push bc
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddressMapped
     pop bc
     call AddDEToWordAtHLCappedAtBC
@@ -3987,7 +3987,7 @@ AddHLToRecordMPCapped::
 Func_016_57E8:: ; address name
     push af
     push hl
-    ld c, $61
+    ld c, MON_MAX_MP
     call SRAMRecordAddressMapped
     pop de
     ld a, [hl+]
@@ -3995,7 +3995,7 @@ Func_016_57E8:: ; address name
     ld c, a
     pop af
     push bc
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddressMapped
     pop bc
     call AddDEToWordAtHLCappedAtBC
@@ -4006,7 +4006,7 @@ Func_016_57E8:: ; address name
 ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
 Func_016_57FF:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $63
+    ld c, MON_ATK
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4016,7 +4016,7 @@ Func_016_57FF:: ; address name
 ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
 Func_016_580B:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $65
+    ld c, MON_DEF
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4026,7 +4026,7 @@ Func_016_580B:: ; address name
 ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
 Func_016_5817:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $67
+    ld c, MON_AGL
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4036,7 +4036,7 @@ Func_016_5817:: ; address name
 ItemApply_INTseed_MapIndexViaPartyListKeepHL::
 Func_016_5823:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $69
+    ld c, MON_INT
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4046,7 +4046,7 @@ Func_016_5823:: ; address name
 ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
 Func_016_582F:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $5D
+    ld c, MON_MAX_HP
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4056,7 +4056,7 @@ Func_016_582F:: ; address name
 ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
 Func_016_583B:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $61
+    ld c, MON_MAX_MP
     ld de, $03E7
     call AddToRecordFieldWordCapped
     ret
@@ -4066,7 +4066,7 @@ Func_016_583B:: ; address name
 ItemApply_Quest_MapIndexViaPartyListKeepHL::
 Func_016_5847:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $6F
+    ld c, MON_PERSONALITY
     ld e, $FF
     call AddToRecordFieldByteCapped
     ret
@@ -4076,7 +4076,7 @@ Func_016_5847:: ; address name
 ItemApply_Horror_MapIndexViaPartyListKeepHL::
 Func_016_5852:: ; address name
     call MapIndexViaPartyListKeepHL
-    ld c, $6F
+    ld c, MON_PERSONALITY
     ld e, $00
     call SubtractFromRecordFieldByteFloored
     ret
@@ -5937,7 +5937,7 @@ Jump_016_631B:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddress
     deref_hl
     ld a, h
@@ -6825,7 +6825,7 @@ Func_016_6891:: ; address name
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi
 DrawFourListEntriesForPageListPage_Sub01_SRAMRecordAddress::
 Func_016_68E5:: ; address name
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddress
     ld c, [hl]
     inc hl
@@ -6951,7 +6951,7 @@ Func_016_696D:: ; address name
     ld hl, wListEntries
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld a, $0A
     ld [rRAMG], a
@@ -6995,7 +6995,7 @@ Func_016_69AB:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call SRAMRecordAddress
     deref_hl
     ld a, h
@@ -7023,7 +7023,7 @@ Func_016_69E2:: ; address name
     ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld de, wTextBuf0
     ld b, $0A
@@ -7296,7 +7296,7 @@ Jump_016_6B57:: ; address name
     ld b, $9A
     call CopyBBytesDEToHL_Bank16
     ld a, $00
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld c, $00
     call InitSlotFromRecordFlags
@@ -7304,7 +7304,7 @@ Jump_016_6B57:: ; address name
     cp a, $01
     jr z, .skip
     ld a, $01
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld c, $01
     call InitSlotFromRecordFlags
@@ -7312,7 +7312,7 @@ Jump_016_6B57:: ; address name
     cp a, $02
     jr z, .skip
     ld a, $02
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddressMapped
     ld c, $02
     call InitSlotFromRecordFlags
@@ -7436,7 +7436,7 @@ Jump_016_6C42:: ; address name
     jr nz, .loop
     pop af
     ld [hl], a
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld a, $0A
     ld [rRAMG], a
@@ -7706,7 +7706,7 @@ Jump_016_6DE4:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld b, $0A
     ld de, wTextBuf0
@@ -7801,7 +7801,7 @@ Jump_016_6E80:: ; address name
     ld hl, wBattleArg0
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddress
     ld de, wTextBuf0
     ld b, $0A
@@ -8057,7 +8057,7 @@ Func_016_7078:: ; address name
 RestoreRecordAFully::
 Func_016_7082:: ; address name
     push hl
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $0A
     ld [rRAMG], a
@@ -8118,7 +8118,7 @@ Func_016_70C5:: ; address name
 ; writes: rRAMG, rRAMB
 SetRecordState2::
 Func_016_70C6:: ; address name
-    ld c, $00
+    ld c, MON_STATE
     call SRAMRecordAddress
     ld a, $0A
     ld [rRAMG], a
@@ -8166,7 +8166,7 @@ Func_016_70DB:: ; address name
 RunFunc710FForPartyMembers_SRAMRecordAddress::
 Func_016_710F:: ; address name
     push bc
-    ld c, $56
+    ld c, MON_LEVEL
     call SRAMRecordAddress
     pop bc
     ld a, c
@@ -9873,7 +9873,7 @@ Func_016_7A64:: ; address name
 LoadTileForRecordByte0D::
 Func_016_7A97:: ; address name
     push hl
-    ld c, $0D
+    ld c, MON_FAMILY
     call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $0F

@@ -2431,6 +2431,33 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0290 — Monster record field constants (MON_*); ATK/DEF/AGL/INT words
+
+- Kind: TOOL + STATIC (C1 for the stat fields; the other fields keep their earlier evidence).
+- **Stat words.** The four stat words $63, $65, $67 and $69 are ATK, DEF, AGL and INT (C1). Three readings support this:
+  - DrawFiveRecordBufBStatsColumn draws the record words at offsets $63, $65, $67, $69 and $6B as one column. The table it uses is at F2:509F.
+  - The screen's label strings run "HP", "MP", "ATK", "DEF", "AGL" (09:533A-5348), and the stat-column string is "ATKDEFGLIN...".
+  - AddAToRecordWordCapped and SubtractAFromRecordWordFloor1 (the seed and equipment changes, E-0103) are called with exactly these four offsets.
+- **Not established.** The fifth word in the column, $6B, is not identified.
+- **config/record_fields.json (new).** It lists the record offsets that have evidence, 20 in all:
+  - state, name, species word (C1, E-0236), family, second name, skills, skill list;
+  - status, level, EXP, HP, max HP, MP, max MP;
+  - ATK, DEF, AGL, INT, personality, equipped item.
+  It also lists the 15 record-access routines that take the field offset in C. The comment above each routine (E-0074/E-0103/E-0108/E-0122) states this, and each was checked to pass C to SRAMRecordAddress or SRAMRecordAddressMapped.
+- **Generator.**
+  - It writes src/records.inc (`DEF MON_HP EQU $5B ; ...`) and includes it from src/main.asm.
+  - name_record_offsets rewrites `ld c, $NN` as `ld c, MON_<FIELD>` when the value reaches one of those routines. Up to three instructions may sit between the load and the call, and none of them may change C.
+  - 398 loads are named. The commonest are MON_STATUS (78), MON_NAME (41), MON_HP (35) and MON_SPECIES (30).
+  - Offsets without evidence ($0E, $57, $6B, $6D, $6E, ...) stay numeric.
+- **Table layouts.** PresetMonsterRecords and DefaultMonsterRecord now show the four stat words as one `dw` line, followed by `$6B-$6E`.
+- **Tests.** tests/test_record_fields.py (5 cases) covers:
+  - a named load;
+  - loads with instructions between that keep C;
+  - an `inc c` that blocks the rewrite;
+  - other callees and unknown offsets left numeric;
+  - unique constants with evidence, and callees that exist.
+- Binary verification: build/run391 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0289 — The last address-only data labels; battle result rank; eight helpers named
 
 - Kind: TOOL + STATIC.

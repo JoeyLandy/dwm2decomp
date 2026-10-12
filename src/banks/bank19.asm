@@ -995,7 +995,7 @@ Func_019_4557:: ; address name
 GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped::
 Func_019_456A:: ; address name
     ld a, c
-    ld c, $01
+    ld c, MON_NAME
     call SRAMRecordAddressMapped
     ld b, $0A
 

@@ -7381,7 +7381,7 @@ Func_00C_70FE:: ; address name
     ld hl, $0000
     push hl
     ld a, [de]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7390,7 +7390,7 @@ Func_00C_70FE:: ; address name
     ld hl, $0000
     push hl
     ld a, [de]
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7398,7 +7398,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $63
+    ld c, MON_ATK
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7406,7 +7406,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $65
+    ld c, MON_DEF
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7414,7 +7414,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $67
+    ld c, MON_AGL
     call LoadSRAMRecordWord
     ld hl, $0000
     call AddTemp0WordToHL
@@ -7426,7 +7426,7 @@ Func_00C_70FE:: ; address name
     push hl
     push bc
     ld a, [de]
-    ld c, $69
+    ld c, MON_INT
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7472,7 +7472,7 @@ Func_00C_70FE:: ; address name
     ld hl, $0000
     push hl
     ld a, [de]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7481,7 +7481,7 @@ Func_00C_70FE:: ; address name
     ld hl, $0000
     push hl
     ld a, [de]
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7489,7 +7489,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $63
+    ld c, MON_ATK
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7497,7 +7497,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $65
+    ld c, MON_DEF
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7505,7 +7505,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $67
+    ld c, MON_AGL
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7513,7 +7513,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $69
+    ld c, MON_INT
     call LoadSRAMRecordWord
     pop hl
     call AddTemp0WordToHL
@@ -7521,7 +7521,7 @@ Func_00C_70FE:: ; address name
     push de
     push hl
     ld a, [de]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld c, $18
@@ -7613,7 +7613,7 @@ Func_00C_724F:: ; address name
     push hl
     push de
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     pop de
     ldh a, [hTemp0]

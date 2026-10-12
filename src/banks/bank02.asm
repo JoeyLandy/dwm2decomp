@@ -1668,11 +1668,11 @@ Func_002_4A53:: ; address name
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyList]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld [hl], $00
     ld a, [wPartyList]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld [hl], $01
     inc hl
@@ -4890,12 +4890,12 @@ Func_002_5E85:: ; address name
 .skip:
     ld a, $0A
     ld [rRAMG], a
-    ld c, $55
+    ld c, MON_STATUS
     ld a, [wPartyList + $1]
     call LoadSRAMRecordByte
     bit 7, a
     jr z, .skip2
-    ld c, $55
+    ld c, MON_STATUS
     ld a, [wPartyList + $2]
     call LoadSRAMRecordByte
     bit 7, a
@@ -4910,13 +4910,13 @@ Func_002_5E85:: ; address name
 .skip2:
     ld a, $0A
     ld [rRAMG], a
-    ld c, $55
+    ld c, MON_STATUS
     ld a, [wPartyList]
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 7, a
     jr z, .done
-    ld c, $55
+    ld c, MON_STATUS
     ld a, [wPartyList + $1]
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -6382,7 +6382,7 @@ Func_002_6788:: ; address name
     push de
     ld a, [de]
     ldh [hTemp5], a
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     push hl
     ldh a, [hTemp0]
@@ -6400,7 +6400,7 @@ Func_002_6788:: ; address name
 .call_write_two_digit_tiles_from_wc8_c1:
     call WriteTwoDigitTilesFromWC8C1
     ldh a, [hTemp5]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -6419,7 +6419,7 @@ Func_002_6788:: ; address name
 .call_write_decimal_digit_tiles:
     call WriteDecimalDigitTiles
     ldh a, [hTemp5]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -6446,7 +6446,7 @@ Func_002_6788:: ; address name
 
 .read_temp5:
     ldh a, [hTemp5]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 7, a

@@ -2483,7 +2483,7 @@ Func_024_4FA3:: ; address name
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a
@@ -2937,7 +2937,7 @@ Func_024_527E:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -3030,7 +3030,8 @@ Data_024_52ED:: ; address name
     db $2D ; $57
     db $00, $00, $00 ; $58: EXP, 24 bits (E-0125)
     dw $0083, $0083, $0028, $0028 ; $5B HP, $5D max HP, $5F MP, $61 max MP (E-0122)
-    db $8A, $00, $5D, $00, $45, $00, $7F, $01, $00, $00, $00, $00 ; $63-$6E
+    dw $008A, $005D, $0045, $017F ; $63 ATK, $65 DEF, $67 AGL, $69 INT (C1, E-0290)
+    db $00, $00, $00, $00 ; $6B-$6E
     db $C8, $C8, $96, $50 ; $6F-$72: personality axes from MonsterTable bytes 22-25 (E-0034)
     db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00 ; $73-$82
     db $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0 ; $83-$92
@@ -4662,7 +4663,7 @@ Jump_024_631E:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     push bc
     call LoadSRAMRecordByte
     pop bc
@@ -4748,7 +4749,7 @@ Jump_024_637B:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     xor a, a
     ld [rRAMG], a
@@ -5253,7 +5254,7 @@ Jump_024_673C:: ; address name
     add_a_to_hl
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [wListCursor]
     ld de, PriestMenu_PayForService_SRAMRecordAddress_Data
@@ -5273,7 +5274,7 @@ Jump_024_673C:: ; address name
     and a, a
     jr nz, .skip2
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld a, [hl+]
     ld e, a
@@ -5588,7 +5589,7 @@ Func_024_6903:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     pop bc
@@ -5640,7 +5641,7 @@ Func_024_6944:: ; address name
     push bc
     push de
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     pop de
     push de
@@ -6012,7 +6013,7 @@ Func_024_6B3A:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a

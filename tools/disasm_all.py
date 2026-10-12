@@ -503,6 +503,36 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
     return ["\n".join(ls) for ls in files], len(names)
 
 
+def name_record_offsets(texts: list[str], fields: dict[int, dict], callees: set[str]) -> tuple[list[str], int]:
+    """E-0290: `ld c, $NN` whose value reaches a record-access routine that takes the field offset in C
+    (config/record_fields.json "callees") becomes `ld c, MON_<FIELD>` when the offset has an entry. Only
+    instructions that leave C alone may sit between the load and the call (at most three). The constant
+    has the same value, so the bytes do not change."""
+    load = re.compile(r"^(\s+ld c, )\$([0-9A-F]{2})(\s*(?:;.*)?)$")
+    call = re.compile(r"^\s+(?:call|farcall|jp) (\w+)\s*(?:;.*)?$")
+    keeps_c = re.compile(r"^\s+(?:ldh? a, .*|ld (?:hl|de|b|d|e|h|l), .*|push \w+|xor a, a|ld a, \w+|add_a_to_hl|"
+                         r"inc (?:a|hl|de)|dec (?:a|hl|de))\s*(?:;.*)?$")
+    n = 0
+    out = []
+    for text in texts:
+        ls = text.split("\n")
+        for i, ln in enumerate(ls):
+            m = load.match(ln)
+            if not m or int(m.group(2), 16) not in fields:
+                continue
+            for j in range(i + 1, min(i + 5, len(ls))):
+                mc = call.match(ls[j])
+                if mc:
+                    if mc.group(1) in callees:
+                        ls[i] = m.group(1) + fields[int(m.group(2), 16)]["const"] + m.group(3)
+                        n += 1
+                    break
+                if not keeps_c.match(ls[j]):
+                    break
+        out.append("\n".join(ls))
+    return out, n
+
+
 class Rom:
     def __init__(self, data: bytes):
         self.data = data
@@ -5425,6 +5455,11 @@ def main() -> int:
     log(f"folded idioms: {folded}")
     texts, nlocal = localize_jump_labels(texts)
     log(f"branch targets made local labels: {nlocal}")
+    rec_path = ROOT / "config/record_fields.json"
+    rec_cfg = json.loads(rec_path.read_text(encoding="utf-8")) if rec_path.exists() else {"fields": {}, "callees": []}
+    rec_fields = {int(k, 16): v for k, v in rec_cfg["fields"].items()}
+    texts, nrec = name_record_offsets(texts, rec_fields, set(rec_cfg["callees"]))
+    log(f"record field offsets named: {nrec}")
     out = ROOT / "src/banks"
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files and src/main.asm")
@@ -5442,13 +5477,17 @@ def main() -> int:
         MACROS_INC + ("\n; Script command types named from what they do (config/script_commands.json); "
                       "`script_command` takes one of these.\n" + consts if consts else ""),
         encoding="utf-8", newline="\n")
+    (ROOT / "src/records.inc").write_text(
+        "; Offsets into the $A5-byte SRAM monster record that have evidence (config/record_fields.json, E-0290).\n"
+        + "".join(f"DEF {v['const']} EQU ${k:02X} ; {v['note']} ({v['evidence']})\n" for k, v in sorted(rec_fields.items())),
+        encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
     (ROOT / "src/main.asm").write_text(
-        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\n'
+        'INCLUDE "hardware.inc"\nINCLUDE "ram.asm"\nINCLUDE "macros.inc"\nINCLUDE "charmap.inc"\nINCLUDE "records.inc"\n'
         + "".join(f'INCLUDE "banks/bank{b:02x}.asm"\n' for b in range(rom.nbanks)),
         encoding="utf-8", newline="\n")
     log("done writing; rebuild and verify with tools/build.py")

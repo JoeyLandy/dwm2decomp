@@ -3517,7 +3517,7 @@ Jump_012_5689:: ; address name
 
 .loop:
     ld a, [hl+]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .set_script_param0_to_01
@@ -3675,7 +3675,7 @@ Jump_012_5766:: ; address name
 
 .loop:
     ld a, [hl+]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr z, .skip
@@ -6030,11 +6030,11 @@ Func_012_64F8:: ; address name
     push hl
     ld a, [hl]
     push af
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     pop af
     push af
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ldh a, [hTemp0]
     ld [hl+], a
@@ -6042,18 +6042,18 @@ Func_012_64F8:: ; address name
     ld [hl], a
     pop af
     push af
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     pop af
     push af
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ldh a, [hTemp0]
     ld [hl+], a
     ldh a, [hTemp1]
     ld [hl], a
     pop af
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     xor a, a
     ld [hl], a
@@ -9175,7 +9175,7 @@ Func_012_7693:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -9240,7 +9240,7 @@ Func_012_76F1:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -9305,7 +9305,7 @@ Func_012_774F:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     ld l, a
@@ -9373,7 +9373,7 @@ Func_012_77AC:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $58
+    ld c, MON_EXP
     call LoadRecordThreeBytesToTemp0
     ldh a, [hTemp0]
     ld l, a
@@ -9454,7 +9454,7 @@ Func_012_781E:: ; address name
 .loop:
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 7, a
@@ -9473,7 +9473,7 @@ Func_012_781E:: ; address name
 
 .call_load_sram_record_word:
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -9486,7 +9486,7 @@ Func_012_781E:: ; address name
     ld a, d
     ldh [hTemp3], a
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp3]
     ld c, a
@@ -9553,7 +9553,7 @@ Func_012_789E:: ; address name
 
 .loop:
     ld a, [hl+]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -9586,7 +9586,7 @@ Func_012_789E:: ; address name
 
 .loop2:
     ld a, [hl+]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp0]
@@ -9862,7 +9862,7 @@ Func_012_7A4D:: ; address name
     dec a
     jr z, .skip
     ld a, [wPartyList]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -9872,7 +9872,7 @@ Func_012_7A4D:: ; address name
     ld a, [wDigits + $2]
     ld b, a
     ld a, [wPartyList + $1]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -9889,7 +9889,7 @@ Func_012_7A4D:: ; address name
     dec a
     jr z, .skip
     ld a, [wPartyList + $2]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -10013,7 +10013,7 @@ Func_012_7B45:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -10385,7 +10385,7 @@ Func_012_7D95:: ; address name
 
 .loop:
     ld a, [hl+]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     cp a, e

@@ -4248,7 +4248,7 @@ Jump_004_5AA5:: ; address name
     ld hl, wPartyList
     add_a_to_hl
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [rRAMG], a
@@ -4705,7 +4705,7 @@ Func_004_5D14:: ; address name
 
 .loop:
     ld a, [hl+]
-    ld c, $0B
+    ld c, MON_SPECIES
     call LoadSRAMRecordWord
     ldh a, [hTemp1]
     or a, a

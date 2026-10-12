@@ -3383,7 +3383,7 @@ Func_0A0_5491:: ; address name
     dec de
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, [de]
     inc de
@@ -3394,7 +3394,7 @@ Func_0A0_5491:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ld a, [de]
     inc de
@@ -3405,7 +3405,7 @@ Func_0A0_5491:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [de]
     inc de
@@ -4483,7 +4483,7 @@ Func_0A0_5B47:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wLinkReceivedByte]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld a, [wBattleResultStep]
     or a, a

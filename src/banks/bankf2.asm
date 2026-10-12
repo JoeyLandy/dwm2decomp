@@ -4349,7 +4349,7 @@ Func_0F2_65E6:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, [hl+]
     ld [wCounterPtr0Lo], a
@@ -4358,7 +4358,7 @@ Func_0F2_65E6:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld e, [hl]
     inc hl
@@ -4379,7 +4379,7 @@ Func_0F2_65E6:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, [wCounterPtr0Lo]
     ld [hl+], a
@@ -4390,7 +4390,7 @@ Func_0F2_65E6:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ld a, [hl+]
     ld [wCounterPtr0Lo], a
@@ -4399,7 +4399,7 @@ Func_0F2_65E6:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $61
+    ld c, MON_MAX_MP
     call SRAMRecordAddress
     ld e, [hl]
     inc hl
@@ -4420,7 +4420,7 @@ Func_0F2_65E6:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ld a, [wCounterPtr0Lo]
     ld [hl+], a

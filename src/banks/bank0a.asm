@@ -68,14 +68,14 @@ Func_00A_4055:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .next
     bit 0, a
     jr z, .next
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -92,7 +92,7 @@ Func_00A_4055:: ; address name
     ld d, a
     push hl
     ld a, [hl]
-    ld c, $5F
+    ld c, MON_MP
     call SRAMRecordAddress
     ld a, e
     ld [hl+], a
@@ -132,14 +132,14 @@ Func_00A_40A4:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .next
     bit 2, a
     jr z, .next
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -175,7 +175,7 @@ Func_00A_40A4:: ; address name
     ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [hl]
     and a, $F3
@@ -187,7 +187,7 @@ Func_00A_40A4:: ; address name
 .skip:
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, e
     ld [hl+], a
@@ -216,12 +216,12 @@ Func_00A_4110:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .next
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -276,7 +276,7 @@ Func_00A_4110:: ; address name
     ld [wStatusFieldStep], a
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call SRAMRecordAddress
     ld a, [hl]
     or a, $80
@@ -287,7 +287,7 @@ Func_00A_4110:: ; address name
 .skip2:
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, e
     ld [hl+], a
@@ -591,7 +591,7 @@ Func_00A_42BC:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .restore
@@ -3755,12 +3755,12 @@ Func_00A_56D0:: ; address name
 .loop:
     push bc
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     bit 7, a
     jr nz, .restore
     ld a, [hl]
-    ld c, $A4
+    ld c, MON_ITEM
     call LoadSRAMRecordByte
     cp a, $1B
     jr nz, .cp_1C

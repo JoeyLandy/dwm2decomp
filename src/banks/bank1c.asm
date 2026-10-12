@@ -310,7 +310,7 @@ Jump_01C_41EB:: ; address name
     push bc
     push hl
     ld a, [hl]
-    ld c, $55
+    ld c, MON_STATUS
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     bit 7, a
@@ -318,7 +318,7 @@ Jump_01C_41EB:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5D
+    ld c, MON_MAX_HP
     call SRAMRecordAddress
     ld a, [hl+]
     ld [wArg5], a
@@ -333,7 +333,7 @@ Jump_01C_41EB:: ; address name
     pop hl
     push hl
     ld a, [hl]
-    ld c, $5B
+    ld c, MON_HP
     call SRAMRecordAddress
     ld a, [wArg5]
     ld [hl+], a

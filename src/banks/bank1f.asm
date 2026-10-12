@@ -1301,7 +1301,7 @@ Func_01F_5C15:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $01
+    ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $F0
     ld [wNameGlyphBuf + $A], a

@@ -31,7 +31,7 @@ Func_061_4001:: ; address name
     push hl
     ld a, [hl]
     push af
-    ld c, $67
+    ld c, MON_AGL
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -39,7 +39,7 @@ Func_061_4001:: ; address name
     ld h, a
     pop af
     push af
-    ld c, $69
+    ld c, MON_INT
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -50,7 +50,7 @@ Func_061_4001:: ; address name
     rr l
     pop af
     push af
-    ld c, $63
+    ld c, MON_ATK
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -59,7 +59,7 @@ Func_061_4001:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $65
+    ld c, MON_DEF
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -68,7 +68,7 @@ Func_061_4001:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -77,7 +77,7 @@ Func_061_4001:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -159,7 +159,7 @@ Func_061_40B4:: ; address name
     push hl
     ld a, [hl]
     push af
-    ld c, $67
+    ld c, MON_AGL
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld l, a
@@ -167,7 +167,7 @@ Func_061_40B4:: ; address name
     ld h, a
     pop af
     push af
-    ld c, $69
+    ld c, MON_INT
     call LoadSRAMRecordWord
     ldh a, [hTemp0]
     ld e, a
@@ -182,7 +182,7 @@ Func_061_40B4:: ; address name
     rr l
     pop af
     push af
-    ld c, $63
+    ld c, MON_ATK
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp2]
@@ -206,7 +206,7 @@ Func_061_40B4:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $65
+    ld c, MON_DEF
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp2]
@@ -230,7 +230,7 @@ Func_061_40B4:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $5D
+    ld c, MON_MAX_HP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp2]
@@ -254,7 +254,7 @@ Func_061_40B4:: ; address name
     add hl, de
     pop af
     push af
-    ld c, $61
+    ld c, MON_MAX_MP
     call LoadSRAMRecordWord
     push hl
     ldh a, [hTemp2]
@@ -289,7 +289,7 @@ Func_061_40B4:: ; address name
     ldh [hTemp5], a
     pop af
     push af
-    ld c, $56
+    ld c, MON_LEVEL
     call LoadSRAMRecordByte
     push bc
     ldh a, [hTemp0]
