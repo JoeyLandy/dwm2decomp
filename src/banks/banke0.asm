@@ -8,7 +8,7 @@ RunDebugSubState_E0::
 Func_0E0_4001:: ; address name
     ld a, [wDebugSubState]
     rst $00
-    dw RunDebugSubState_E0_Case00
+    dw RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault
     dw RunDebugSubState_E0_Case01
     dw RunDebugSubState_E0_Case02
     dw RunDebugSubState_E0_Case03
@@ -19,7 +19,7 @@ Func_0E0_4001:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wDebugSubState
-RunDebugSubState_E0_Case00::
+RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault::
 Jump_0E0_4011:: ; address name
     ld hl, vTiles1 + $6D0
     ld de, $2101
@@ -56,10 +56,10 @@ Jump_0E0_4045::
     pop bc
     dec c
     jr nz, Jump_0E0_4043
-    call RunDebugSubState_E0_Shared01
+    call RunDebugSubState_E0_WriteVRAMByte_Shared01
     call ShowSkillNumberAndName_BankE0
-    call RunDebugSubState_E0_Shared02
-    call RunDebugSubState_E0_Shared03
+    call RunDebugSubState_E0_HLToDecimalDigits
+    call RunDebugSubState_E0_WriteVRAMByte
     ld hl, wDebugSubState
     inc [hl]
     ld a, $BB
@@ -102,7 +102,7 @@ Jump_0E0_4095::
     and a, $01
     xor a, $01
     ld [wDebugCursor], a
-    call RunDebugSubState_E0_Shared01
+    call RunDebugSubState_E0_WriteVRAMByte_Shared01
     ret
 
 Jump_0E0_40A6::
@@ -233,7 +233,7 @@ Jump_0E0_4156::
     ld [wDebugValue1], a
 
 Jump_0E0_4160::
-    call RunDebugSubState_E0_Shared02
+    call RunDebugSubState_E0_HLToDecimalDigits
     ret
 
 Jump_0E0_4164::
@@ -280,7 +280,7 @@ Jump_0E0_419B::
     and a, $01
     xor a, $01
     ld [wBattleEndFlag], a
-    call RunDebugSubState_E0_Shared03
+    call RunDebugSubState_E0_WriteVRAMByte
     ret
 
 Jump_0E0_41AC::
@@ -304,9 +304,9 @@ Jump_0E0_41BD:: ; address name
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case01, RunDebugSubState_E0_Case00)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case01, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugCursor
-RunDebugSubState_E0_Shared01::
+RunDebugSubState_E0_WriteVRAMByte_Shared01::
 Func_0E0_41C7:: ; address name
     ld a, [wDebugCursor]
     and a, $01
@@ -329,7 +329,7 @@ Jump_0E0_41D6::
     db $BB, $C3, $BB
 
 ; writes the two nibbles of wC5F9, each plus 1, as tiles at vBGMap0 + $CA; copies string wC5F9 of category 4 (skill names) to wC130 (CopyStringHLToDE) and shows string 5 of category 8 (ShowString_Bank08) (E-0112)
-; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case02, RunDebugSubState_E0_Case00)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case02, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugValue0
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
@@ -358,9 +358,9 @@ Func_0E0_41E9:: ; address name
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case03, RunDebugSubState_E0_Case00)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case03, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wDebugValue1, wDigits
-RunDebugSubState_E0_Shared02::
+RunDebugSubState_E0_HLToDecimalDigits::
 Func_0E0_421F:: ; address name
     ld a, [wDebugValue1]
     ld l, a
@@ -401,9 +401,9 @@ Jump_0E0_424E::
     ret
 
 ; only called from routines of RunDebugSubState_E0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case04, RunDebugSubState_E0_Case00)
+; 2 call sites from 2 routines (e.g. RunDebugSubState_E0_Case04, RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; reads: wBattleEndFlag
-RunDebugSubState_E0_Shared03::
+RunDebugSubState_E0_WriteVRAMByte::
 Func_0E0_425A:: ; address name
     ld a, [wBattleEndFlag]
     and a, $01
@@ -425,7 +425,7 @@ Jump_0E0_4269::
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_Case00, RunDebugState_E0_Case0D_Case00)
+; 3 call sites from 2 routines (e.g. RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault, RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0::
 Func_0E0_4279:: ; address name
@@ -451,7 +451,7 @@ Func_0E0_4279:: ; address name
     ret
 
 ; shows the selected string (ShowString_Bank09) in a window at HL with size DE, then restores the default window (vTiles1, $1202) (E-0121)
-; 1 call site from 1 routine (e.g. RunDebugSubState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank09AtHLSizeDEThenDefault::
 Func_0E0_42A6:: ; address name
@@ -511,18 +511,18 @@ RunDebugState_E0::
 Func_0E0_443B:: ; address name
     ld a, [wDebugState]
     rst $00
-    dw RunDebugState_E0_Case00
-    dw RunDebugState_E0_Case01
-    dw RunDebugState_E0_Case02
-    dw RunDebugState_E0_Case03
+    dw RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0
+    dw RunDebugState_E0_DrawSlotHPMPStats_BankE0
+    dw RunDebugState_E0_DrawFullScreenFromBankE0_5283
+    dw RunDebugState_E0_WriteVRAMByteInc
     dw RunDebugState_E0_ToDrawTileMap4946AndStep
-    dw RunDebugState_E0_Case05
+    dw RunDebugState_E0_DrawPacked2BitFieldsInRows
     dw RunDebugState_E0_Case06
     dw DrawTileMap4946AndStep
-    dw RunDebugState_E0_Case08
+    dw RunDebugState_E0_DrawEightBytesAsHexColumns
     dw RunDebugState_E0_Case09
-    dw RunDebugState_E0_Case0A
-    dw RunDebugState_E0_Case0B
+    dw RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A
+    dw RunDebugState_E0_BlinkWC0A0Tile
     dw RunDebugState_E0_ToRunDebugSubState_E0
     dw RunDebugState_E0_Case0D
 
@@ -531,7 +531,7 @@ Func_0E0_443B:: ; address name
 ; reads: wDebugSubState
 ; writes: wStringCategory, wStringIndex
 ; points at: wDebugState
-RunDebugState_E0_Case00::
+RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0::
 Jump_0E0_445B:: ; address name
     ld hl, vTiles1 + $6D0
     ld de, $2301
@@ -557,7 +557,7 @@ Jump_0E0_445B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wDebugSubState
 ; points at: wBattleMeter, wDebugState
-RunDebugState_E0_Case01::
+RunDebugState_E0_DrawSlotHPMPStats_BankE0::
 Jump_0E0_448E:: ; address name
     ld a, [wDebugSubState]
     or a, a
@@ -576,13 +576,13 @@ Jump_0E0_449A::
     call DrawSlotHPMPStats_BankE0
     ld hl, vBGMap0 + $20B
     ld de, wBattleMeter
-    call RunDebugState_E0_Case01_Sub01
+    call RunDebugState_E0_Case01_WordAtDEToPackedBCD
     ld hl, wDebugState
     inc [hl]
     ret
 
 ; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words (Func_0E0_4593 for each) at the position from the table at $4652 (C & 3); the rest is not read (E-0112)
-; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case01)
+; 3 call sites from 1 routine (e.g. RunDebugState_E0_DrawSlotHPMPStats_BankE0)
 ; writes: hTemp0, hTemp1
 ; points at: wBattleSlotOut, wBattleHP, wBattleMaxHP, wBattleMP, wBattleMaxMP, wBattleLevel, wBattleATK, wBattleDEF, ...
 DrawSlotHPMPStats_BankE0::
@@ -614,55 +614,55 @@ Jump_0E0_44CB::
     call DrawSlotHPMPStats_BankE0_Sub04
     inc hl
     ld de, wBattleLevel
-    call DrawSlotHPMPStats_BankE0_Sub02
+    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
     ld de, wBattleATK
-    call DrawSlotHPMPStats_BankE0_Sub01
+    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
     ld de, wBattleDEF
-    call DrawSlotHPMPStats_BankE0_Sub01
+    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
     ld de, wBattleAGL
-    call DrawSlotHPMPStats_BankE0_Sub01
+    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
     ld de, wBattleINT
-    call DrawSlotHPMPStats_BankE0_Sub01
+    call DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD
     ld de, wSlotPersonalityHi
-    call DrawSlotHPMPStats_BankE0_Sub02
+    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
     ld de, wSlotPersonalityMid
-    call DrawSlotHPMPStats_BankE0_Sub02
+    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
     ld de, wSlotPersonalityLo
-    call DrawSlotHPMPStats_BankE0_Sub02
+    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
     ld de, wSlotTrait
-    call DrawSlotHPMPStats_BankE0_Sub02
+    call DrawSlotHPMPStats_BankE0_Number24ToPackedBCD
     dec hl
     ld de, wBattleWordArray3F
     call DrawSlotHPMPStats_BankE0_Sub04
     call DrawSlotHPMPStats_BankE0_Sub06
-    call DrawSlotHPMPStats_BankE0_Sub07
+    call DrawSlotHPMPStats_BankE0_WriteVRAMByte
     ret
 
 Jump_0E0_452D::
     xor a, a
     ldh [hTemp0], a
     ldh [hTemp1], a
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
     inc hl
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
+    call DrawSlotHPMPStats_BankE0_Sub03
     dec hl
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05
     ret
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 4 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub01::
+DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD::
 Func_0E0_455F:: ; address name
     ld a, c
     add a, a
@@ -673,12 +673,12 @@ Func_0E0_455F:: ; address name
 
 Jump_0E0_4566::
     call WordAtDEToPackedBCD
-    jr DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03
+    jr DrawSlotHPMPStats_BankE0_Sub03
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
 ; writes: wDigits
-DrawSlotHPMPStats_BankE0_Sub02::
+DrawSlotHPMPStats_BankE0_Number24ToPackedBCD::
 Func_0E0_456B:: ; address name
     ld a, c
     add a, e
@@ -700,11 +700,11 @@ Jump_0E0_4571::
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 9 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03::
+DrawSlotHPMPStats_BankE0_Sub03::
 Func_0E0_4583:: ; address name
     ld b, $00
     push hl
-    call DrawSlotHPMPStats_BankE0_Sub03_Sub01
+    call DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte
     pop hl
     ld a, l
     add a, $20
@@ -722,21 +722,21 @@ Func_0E0_4593:: ; address name
     add a, a
     add a, e
     ld e, a
-    jr nc, RunDebugState_E0_Case01_Sub01
+    jr nc, RunDebugState_E0_Case01_WordAtDEToPackedBCD
     inc d
 
 ; only called from RunDebugState_E0_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case01)
-RunDebugState_E0_Case01_Sub01::
+; 1 call site from 1 routine (e.g. RunDebugState_E0_DrawSlotHPMPStats_BankE0)
+RunDebugState_E0_Case01_WordAtDEToPackedBCD::
 Func_0E0_459A:: ; address name
     call WordAtDEToPackedBCD
 
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 5 call sites from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
-DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05::
+DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05::
 Func_0E0_459D:: ; address name
     push hl
-    call DrawSlotHPMPStats_BankE0_Sub05_Sub01
+    call DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte
     pop hl
     ld a, l
     add a, $20
@@ -747,9 +747,9 @@ Func_0E0_459D:: ; address name
     ret
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub05 (E-0047)
-; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05_Sub01_Sub05)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte_Sub05)
 ; reads: hTemp1, hTemp0
-DrawSlotHPMPStats_BankE0_Sub05_Sub01::
+DrawSlotHPMPStats_BankE0_Sub05_WriteVRAMByte::
 Func_0E0_45AB:: ; address name
     ld b, $00
     ldh a, [hTemp1]
@@ -765,9 +765,9 @@ Jump_0E0_45BD::
     inc hl
 
 ; only called from DrawSlotHPMPStats_BankE0_Sub03 (E-0047)
-; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03_Sub01_Sub03)
+; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0_Sub03)
 ; reads: hTemp1, hTemp0
-DrawSlotHPMPStats_BankE0_Sub03_Sub01::
+DrawSlotHPMPStats_BankE0_Sub03_WriteVRAMByte::
 Func_0E0_45BE:: ; address name
     ldh a, [hTemp1]
     and a, $0F
@@ -804,7 +804,7 @@ Jump_0E0_45E3::
     ret
 
 ; wC8C0/wC8C1 = the word at DE, wC8C2 = 0, then Number24ToPackedBCD; BC, HL kept (E-0118)
-; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case01_Sub01, DrawSlotHPMPStats_BankE0_Sub01)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case01_WordAtDEToPackedBCD, DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD)
 ; writes: wDigits
 WordAtDEToPackedBCD::
 Func_0E0_45EE:: ; address name
@@ -848,7 +848,7 @@ Func_0E0_4603:: ; address name
 ; only called from DrawSlotHPMPStats_BankE0 (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotHPMPStats_BankE0)
 ; points at: wSlotNameSuffix
-DrawSlotHPMPStats_BankE0_Sub07::
+DrawSlotHPMPStats_BankE0_WriteVRAMByte::
 Func_0E0_462B:: ; address name
     ld a, c
     ld de, wSlotNameSuffix
@@ -877,7 +877,7 @@ Jump_0E0_4634::
 ; reads: wJoypadPressed, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugSubState
 ; writes: wBattlePartyCount, wBattleFoeCount, wDebugState, wDebugSubState, wEffectId
 ; points at: wWorkBuf, wDebugState
-RunDebugState_E0_Case02::
+RunDebugState_E0_DrawFullScreenFromBankE0_5283::
 Jump_0E0_4663:: ; address name
     ld a, [wJoypadPressed]
     and a, $04
@@ -949,7 +949,7 @@ Jump_0E0_46D1::
 ; reads: wBattlePartyCount, wLinkRole
 ; writes: wDebugValue3
 ; points at: wScreenTileBuffer, wLevelUpGains
-RunDebugState_E0_Case03::
+RunDebugState_E0_WriteVRAMByteInc::
 Jump_0E0_46DD:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -1009,7 +1009,7 @@ Jump_0E0_4724:: ; address name
 ; entry 5 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wSlotResistances, wDebugState
-RunDebugState_E0_Case05::
+RunDebugState_E0_DrawPacked2BitFieldsInRows::
 Jump_0E0_4728:: ; address name
     ld hl, vBGMap0 + $61
     ld de, wSlotResistances
@@ -1034,7 +1034,7 @@ Jump_0E0_4728:: ; address name
     ret
 
 ; writes a run of 2-bit fields from [DE] onward as digit tiles with the four DrawBitsNN routines, five per row, moving HL to the next BG map row (+$1B) after each five; the end is not read (E-0112)
-; 6 call sites from 1 routine (e.g. RunDebugState_E0_Case05)
+; 6 call sites from 1 routine (e.g. RunDebugState_E0_DrawPacked2BitFieldsInRows)
 DrawPacked2BitFieldsInRows::
 Func_0E0_4763:: ; address name
     ld a, [de]
@@ -1184,7 +1184,7 @@ Jump_0E0_480F::
 ; entry 8 of the `rst $00` table in RunDebugState_E0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSkills, wDebugState
-RunDebugState_E0_Case08::
+RunDebugState_E0_DrawEightBytesAsHexColumns::
 Jump_0E0_4825:: ; address name
     ld de, wBattleSkills
     ld hl, vBGMap0 + $62
@@ -1210,7 +1210,7 @@ Jump_0E0_4825:: ; address name
     ret
 
 ; DrawFourBytesAsHexRows at HL, then the next four bytes in a second column three entries to the right (E-0112)
-; 6 call sites from 1 routine (e.g. RunDebugState_E0_Case08)
+; 6 call sites from 1 routine (e.g. RunDebugState_E0_DrawEightBytesAsHexColumns)
 DrawEightBytesAsHexColumns::
 Func_0E0_4863:: ; address name
     push hl
@@ -1266,7 +1266,7 @@ Jump_0E0_4898::
     ret
 
 ; runs Func_0E0_48B7 for B = 0, 1, 2 on the 78-byte records from wD0ED + 3 * $4E (E-0122)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case08)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_DrawEightBytesAsHexColumns)
 Run48B7ForThreeBattlerRecords::
 Func_0E0_489C:: ; address name
     ld de, $004E
@@ -1275,20 +1275,20 @@ Func_0E0_489C:: ; address name
     add hl, de
     add hl, de
     ld b, $00
-    call Run48B7ForThreeBattlerRecords_Sub01
+    call Run48B7ForThreeBattlerRecords_Number24ToPackedBCD
     add hl, de
     ld b, $01
-    call Run48B7ForThreeBattlerRecords_Sub01
+    call Run48B7ForThreeBattlerRecords_Number24ToPackedBCD
     add hl, de
     ld b, $02
-    call Run48B7ForThreeBattlerRecords_Sub01
+    call Run48B7ForThreeBattlerRecords_Number24ToPackedBCD
     ret
 
 ; only called from Run48B7ForThreeBattlerRecords (E-0047)
 ; 3 call sites from 1 routine (e.g. Run48B7ForThreeBattlerRecords)
 ; reads: hTemp2, hTemp1, hTemp0
 ; writes: wDigits
-Run48B7ForThreeBattlerRecords_Sub01::
+Run48B7ForThreeBattlerRecords_Number24ToPackedBCD::
 Func_0E0_48B7:: ; address name
     push af
     push bc
@@ -1423,12 +1423,12 @@ Jump_0E0_493B:: ; address name
 ; reads: wEffectId, wJoypadPressed
 ; writes: wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, wDebugSubState, wDebugCounter, ...
 ; points at: wDebugSubState, wWorkBuf
-RunDebugState_E0_Case0A::
+RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0_Case0A::
 Jump_0E0_4A86:: ; address name
     ld a, [wEffectId]
     cp a, $FF
     jr z, Jump_0E0_4A94
-    farcall RunDebugState_E0_Case0A_Sub01
+    farcall RunDebugState_E0_Case0A_DecompressGraphicsAToTiles0
     ret
 
 Jump_0E0_4A94::
@@ -1457,7 +1457,7 @@ Jump_0E0_4AA8::
     ld [hl], a
 
 ; writes A as two hex-digit tiles (0-9 as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write is not read to its end) (E-0112)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_DrawFullScreenFromBankE0_5283)
 DrawHexByteAtBGMap8A::
 Func_0E0_4ABB:: ; address name
     push af
@@ -1494,8 +1494,8 @@ Jump_0E0_4AE7::
     ld a, [wJoypadPressed]
     and a, $01
     jr z, Jump_0E0_4AF8
-    farcall DrawHexByteAtBGMap8A_Sub01
-    call DrawHexByteAtBGMap8A_Sub03
+    farcall DrawHexByteAtBGMap8A_FillBytes
+    call DrawHexByteAtBGMap8A_QueueSoundEffect
     ret
 
 Jump_0E0_4AF8::
@@ -1550,7 +1550,7 @@ Jump_0E0_4B2D::
 ; reads: wJoypadPressed, wMenuRowCount, wTemp0, wTemp1, wDebugSubState, wDebugCounter
 ; writes: wDebugCounter, wMenuRowCount, wBattlePartyCount, wBattleFoeCount, wBattleActor, wBattleTarget, wBattleActionId, wDebugState, ...
 ; points at: wDebugSubState, wDebugCounter, wBattleStatus, wWorkBuf
-RunDebugState_E0_Case0B::
+RunDebugState_E0_BlinkWC0A0Tile::
 Jump_0E0_4B54:: ; address name
     call BlinkWC0A0Tile
     ld a, [wJoypadPressed]
@@ -1736,7 +1736,7 @@ Jump_0E0_4C6B::
     db $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F, $01, $02, $04, $08, $10, $20, $40, $80
 
 ; writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wC0A0/1 (E-0122)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0B)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_BlinkWC0A0Tile)
 ; reads: wTemp0, wTemp1, wFrameCounterLo, wMenuRowCount
 BlinkWC0A0Tile::
 Func_0E0_4C7E:: ; address name
@@ -1768,17 +1768,17 @@ RunDebugState_E0_Case0D::
 Jump_0E0_4C9A:: ; address name
     ld a, [wDebugSubState]
     rst $00
-    dw RunDebugState_E0_Case0D_Case00
+    dw RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0
     dw RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0
-    dw RunDebugState_E0_Case0D_Case02_Sub01_Case02
+    dw RunDebugState_E0_Case0D_Case02
     dw RunDebugState_E0_Case0D_Case03
     dw RunDebugState_E0_Case0D_Case04
-    dw RunDebugState_E0_Case0D_Case05_Sub01_Case05
+    dw RunDebugState_E0_Case0D_Case05
 
 ; entry 0 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex, wBattleActor, wDebugSubState
-RunDebugState_E0_Case0D_Case00::
+RunDebugState_E0_Case0D_ShowStringBank08AtTilesHLThenDefault_BankE0::
 Jump_0E0_4CAA:: ; address name
     ld hl, vTiles2 + $10
     ld de, $1001
@@ -1837,9 +1837,9 @@ Jump_0E0_4CF6:: ; address name
 ; entry 2 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case02_Sub01_Case02::
+RunDebugState_E0_Case0D_Case02::
 Jump_0E0_4D0B:: ; address name
-    farcall RunDebugState_E0_Case0D_Case02_Sub01
+    farcall RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor
     ld a, $03
     ld [wDebugSubState], a
     ret
@@ -1929,9 +1929,9 @@ Jump_0E0_4D72:: ; address name
 ; entry 5 of the `rst $00` table in RunDebugState_E0_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDebugSubState
-RunDebugState_E0_Case0D_Case05_Sub01_Case05::
+RunDebugState_E0_Case0D_Case05::
 Jump_0E0_4D89:: ; address name
-    farcall RunDebugState_E0_Case0D_Case05_Sub01
+    farcall RunDebugState_E0_Case0D_Case05_AIChooseActionForActor
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -1960,7 +1960,7 @@ Data_0E0_4D95:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 17
 
 ; wC5FF = row (high nibble) and column (low nibble): stores vBGMap0 + $89 + 32 * row + column in wC0A0/1 and reads the tile there into wMenuRowCount (E-0121)
-; 3 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)
+; 3 call sites from 2 routines (e.g. RunDebugState_E0_BlinkWC0A0Tile, DrawHexByteAtBGMap8A)
 ; reads: wDebugCounter
 ; writes: wTemp0, wTemp1, wMenuRowCount
 ReadBGTileAtDebugCounterCell::
@@ -1993,7 +1993,7 @@ Func_0E0_4EFD:: ; address name
     ret
 
 ; debug: draws the four-tile strip for wC5FE, then the 9 status bytes of slot wC5FE as rows of 0/1 digit tiles from vBGMap0 + $89 (E-0127)
-; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0B, DrawHexByteAtBGMap8A)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_BlinkWC0A0Tile, DrawHexByteAtBGMap8A)
 ; reads: wDebugSubState, wBattleArg0, wBattleArg1
 ; writes: wBattleArg0, wBattleArg1
 ; points at: wBattleStatus
@@ -2105,11 +2105,11 @@ Data_0E0_4FCA:: ; heuristic: target of a monotone pointer table; C0
     db $F8, $F9, $E3, $C3
 
 ; DrawSkillRecordByte0DigitsForDebugValue0, Func_0E0_502B, then far-calls Func_03A_53B9 (E-0122)
-; 2 call sites from 2 routines (e.g. DrawHexByteAtBGMap8A, RunDebugState_E0_Case02)
+; 2 call sites from 2 routines (e.g. DrawHexByteAtBGMap8A, RunDebugState_E0_DrawFullScreenFromBankE0_5283)
 DrawSkillByte0AndRun502BAnd53B9::
 Func_0E0_4FCE:: ; address name
     call DrawSkillRecordByte0DigitsForDebugValue0
-    call DrawSkillByte0AndRun502BAnd53B9_Sub02
+    call DrawSkillByte0AndRun502BAnd53B9_LoadSkillRecord
     farcall DrawSkillByte0AndRun502BAnd53B9_Sub01
     ret
 
@@ -2156,7 +2156,7 @@ Func_0E0_4FDB:: ; address name
 ; 1 call site from 1 routine (e.g. DrawSkillByte0AndRun502BAnd53B9)
 ; reads: wDebugValue0, wRecordBufferData, wDigits
 ; writes: wRecordBuffer
-DrawSkillByte0AndRun502BAnd53B9_Sub02::
+DrawSkillByte0AndRun502BAnd53B9_LoadSkillRecord::
 Func_0E0_502B:: ; address name
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
@@ -2238,7 +2238,7 @@ Func_0E0_502B:: ; address name
     ret
 
 ; copies a 20 x 18 tile map from E0:$511B to vBGMap0 (CopyRectFromBankToVRAM) (E-0116)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0)
 DrawFullScreenFromBankE0_511B::
 Func_0E0_50EE:: ; address name
     ld hl, vBGMap0
@@ -2249,7 +2249,7 @@ Func_0E0_50EE:: ; address name
     ret
 
 ; copies a 20 x 18 tile map from E0:$5283 to vBGMap0 (E-0116)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_DrawFullScreenFromBankE0_5283)
 DrawFullScreenFromBankE0_5283::
 Func_0E0_50FD:: ; address name
     ld hl, vBGMap0
@@ -2340,7 +2340,7 @@ Data_0E0_53EB:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 17
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case00)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank09AtTilesHL_BankE0::
@@ -2379,7 +2379,7 @@ Func_0E0_5553:: ; address name
 ; only called from DrawHexByteAtBGMap8A (E-0047)
 ; 1 call site from 1 routine (e.g. DrawHexByteAtBGMap8A)
 ; reads: wDebugSubState
-DrawHexByteAtBGMap8A_Sub03::
+DrawHexByteAtBGMap8A_QueueSoundEffect::
 Func_0E0_558E:: ; address name
     ld a, [wDebugSubState]
     ld hl, DebugSoundEffectList
@@ -2594,11 +2594,11 @@ Jump_0E0_572C::
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01_Case02)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02)
 ; reads: wBattleActor, wLinkMode, hTemp3, hTemp2
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wDigits, hTemp1, ...
 ; points at: wSlotTactic, wSlotAIMode, wBattleSkillsPrefix, wAIWeights, wBattleActionChoice, wAIChoiceOrder
-RunDebugState_E0_Case0D_Case02_Sub01::
+RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor::
 Func_0E0_572D:: ; address name
     call DisplayedSlotOfActor
     ld hl, $5A05
@@ -2838,7 +2838,7 @@ Jump_0E0_58BB::
     push bc
     push hl
     ld c, $00
-    call RunDebugState_E0_Case0D_Case02_Sub01_Sub02
+    call RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc_Sub02
     pop hl
     pop bc
 
@@ -2939,7 +2939,7 @@ Jump_0E0_5941::
     push bc
     push hl
     ld c, $00
-    call RunDebugState_E0_Case0D_Case02_Sub01_Sub03
+    call RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc
     pop hl
     pop bc
     jr Jump_0E0_5970
@@ -2975,7 +2975,7 @@ Jump_0E0_597E::
     ret
 
 ; A = wBattleActor, with bit 2 flipped when wC58A = 1 and wC57F bit 1 is set (the side swap of the battle panels) (E-0118)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRole
 DisplayedSlotOfActor::
@@ -2991,7 +2991,7 @@ Func_0E0_5992:: ; address name
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; reads: wBattleActor, wLinkMode
 ; points at: wBattleTargetChoice, wLinkRole
 RunDebugState_E0_Case0D_Case02_Sub01_Sub01::
@@ -3016,9 +3016,9 @@ Jump_0E0_59B0::
     ret
 
 ; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; reads: hTemp1, hTemp0
-RunDebugState_E0_Case0D_Case02_Sub01_Sub02::
+RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc_Sub02::
 Func_0E0_59C0:: ; address name
     ldh a, [hTemp1]
     and a, $F0
@@ -3037,9 +3037,9 @@ Jump_0E0_59CE::
     ei
 
 ; only called from RunDebugState_E0_Case0D_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; reads: hTemp1, hTemp0
-RunDebugState_E0_Case0D_Case02_Sub01_Sub03::
+RunDebugState_E0_Case0D_Case02_Sub01_WriteVRAMByteInc::
 Func_0E0_59D4:: ; address name
     ldh a, [hTemp1]
     and a, $0F
@@ -3111,10 +3111,10 @@ Data_0E0_5A31:: ; heuristic: target of a monotone pointer table; C0
     db $83, $84, $04, $C3
 
 ; only called from RunDebugState_E0_Case0D_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05_Sub01_Case05)
+; 1 call site from 1 routine (e.g. RunDebugState_E0_Case0D_Case05)
 ; reads: wLinkMode, wRandomSeed2Lo, wRandomSeed2Hi, wRandomLo, wRandomHi
 ; writes: wRandomLo, wRandomHi, wRandomSeed2Lo, wRandomSeed2Hi
-RunDebugState_E0_Case0D_Case05_Sub01::
+RunDebugState_E0_Case0D_Case05_AIChooseActionForActor::
 Func_0E0_5A35:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -3149,7 +3149,7 @@ Jump_0E0_5A6C::
     ret
 
 ; sets the string window to HL (tile destination) and DE (size), far-calls ShowString_Bank08, then sets the window to vTiles1 with size word $1202 (E-0067) (the same 45 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_Sub01)
+; 3 call sites from 1 routine (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHLThenDefault_BankE0_5A79::
 Func_0E0_5A79:: ; address name
@@ -3203,7 +3203,7 @@ Func_0E0_5AA6:: ; address name
 ; only called from DebugStaffRoll_Update (E-0047)
 ; 1 call site from 1 routine (e.g. DebugStaffRoll_Update)
 ; reads: wWorkBuf
-DebugStaffRoll_Update_Sub01::
+DebugStaffRoll_Update_RunFieldEventFieldEventKind::
 Func_0E0_5AD3:: ; address name
     ld a, [wWorkBuf]
     or a, a
@@ -3226,29 +3226,29 @@ DebugStaffRoll_Update_Sub01_Case00::
 Jump_0E0_5AF2:: ; address name
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Case00_Case00
-    dw DebugStaffRoll_Update_Sub01_Case00_Case01
-    dw DebugStaffRoll_Update_Sub01_Case00_Case02
-    dw DebugStaffRoll_Update_Sub01_Case00_Case03
-    dw DebugStaffRoll_Update_Sub01_Case00_Case04
-    dw DebugStaffRoll_Update_Sub01_Case00_Case05
-    dw DebugStaffRoll_Update_Sub01_Case00_Case06
-    dw DebugStaffRoll_Update_Sub01_Case00_Case07
-    dw DebugStaffRoll_Update_Sub01_Case00_Case08
-    dw DebugStaffRoll_Update_Sub01_Case00_Case09
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0A
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0B
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0C
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0D
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0E
-    dw DebugStaffRoll_Update_Sub01_Case00_Case0F
+    dw DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case02
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case03
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case04
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case05
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0A
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0B
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0C
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0E
+    dw DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0F
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount, wFieldEventKind
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots
-DebugStaffRoll_Update_Sub01_Case00_Case00::
+DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM::
 Jump_0E0_5B16:: ; address name
     ld b, $7D
     ld de, FieldSpriteGfx00
@@ -3394,7 +3394,7 @@ Jump_0E0_5BB2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case00_Case01::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots::
 Jump_0E0_5C32:: ; address name
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3419,7 +3419,7 @@ Jump_0E0_5C32:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case00_Case02::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case02::
 Jump_0E0_5C58:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $A]
@@ -3441,7 +3441,7 @@ Jump_0E0_5C58:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case03::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case03::
 Jump_0E0_5C7B:: ; address name
     call DrawSpriteSlots
     ld a, $03
@@ -3456,7 +3456,7 @@ Jump_0E0_5C7B:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case04::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case04::
 Jump_0E0_5C91:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -3477,7 +3477,7 @@ Jump_0E0_5C91:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case05::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case05::
 Jump_0E0_5CB5:: ; address name
     call DrawSpriteSlots
     ld a, $03
@@ -3496,7 +3496,7 @@ Jump_0E0_5CB5:: ; address name
 ; entry 6 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case00_Case06::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case06::
 Jump_0E0_5CD1:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -3513,7 +3513,7 @@ Jump_0E0_5CD1:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case09::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case09::
 Jump_0E0_5CEA:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -3536,7 +3536,7 @@ Jump_0E0_5CEA:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case0A::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0A::
 Jump_0E0_5D14:: ; address name
     call DrawSpriteSlots
     ld a, $01
@@ -3563,7 +3563,7 @@ Jump_0E0_5D14:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case0B::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0B::
 Jump_0E0_5D46:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -3593,7 +3593,7 @@ Jump_0E0_5D46:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case0C::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0C::
 Jump_0E0_5D7F:: ; address name
     call DrawSpriteSlots
     ld a, $01
@@ -3612,7 +3612,7 @@ Jump_0E0_5D7F:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case0D::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D::
 Jump_0E0_5D9F:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -3636,7 +3636,7 @@ Jump_0E0_5D9F:: ; address name
 
 ; entry 14 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case0E::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0E::
 Jump_0E0_5DCA:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod15
@@ -3651,7 +3651,7 @@ Jump_0E0_5DCA:: ; address name
 ; entry 15 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFieldEventKind, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case00_Case0F::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0F::
 Jump_0E0_5DDD:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -3675,7 +3675,7 @@ Jump_0E0_5DDD:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_0E0_5AD3_Case00
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case00_Case07::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case07::
 Jump_0E0_5E07:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -3695,7 +3695,7 @@ Jump_0E0_5E07:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case00_Case08::
+DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case08::
 Jump_0E0_5E24:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $A]
@@ -3723,39 +3723,39 @@ DebugStaffRoll_Update_Sub01_Case01::
 Jump_0E0_5E4B:: ; address name
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Case01_Case00
-    dw DebugStaffRoll_Update_Sub01_Case01_Case01
-    dw DebugStaffRoll_Update_Sub01_Case01_Case02
-    dw DebugStaffRoll_Update_Sub01_Case01_Case03
-    dw DebugStaffRoll_Update_Sub01_Case01_Case04
-    dw DebugStaffRoll_Update_Sub01_Case01_Case05
-    dw DebugStaffRoll_Update_Sub01_Case01_Case06
-    dw DebugStaffRoll_Update_Sub01_Case01_Case07
-    dw DebugStaffRoll_Update_Sub01_Case01_Case08
-    dw DebugStaffRoll_Update_Sub01_Case01_Case09
-    dw DebugStaffRoll_Update_Sub01_Case01_Case06
-    dw DebugStaffRoll_Update_Sub01_Case01_Case07
-    dw DebugStaffRoll_Update_Sub01_Case01_Case08
-    dw DebugStaffRoll_Update_Sub01_Case01_Case09
-    dw DebugStaffRoll_Update_Sub01_Case01_Case06
-    dw DebugStaffRoll_Update_Sub01_Case01_Case07
-    dw DebugStaffRoll_Update_Sub01_Case01_Case08
-    dw DebugStaffRoll_Update_Sub01_Case01_Case09
-    dw DebugStaffRoll_Update_Sub01_Case01_Case06
-    dw DebugStaffRoll_Update_Sub01_Case01_Case07
-    dw DebugStaffRoll_Update_Sub01_Case01_Case14
-    dw DebugStaffRoll_Update_Sub01_Case01_Case15
-    dw DebugStaffRoll_Update_Sub01_Case01_Case16
-    dw DebugStaffRoll_Update_Sub01_Case01_Case17
-    dw DebugStaffRoll_Update_Sub01_Case01_Case18
-    dw DebugStaffRoll_Update_Sub01_Case01_Case19
+    dw DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case02
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case03
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case04
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case05
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case14
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case15
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case16
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case17
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case18
+    dw DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case19
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount, wFieldEventKind
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots
-DebugStaffRoll_Update_Sub01_Case01_Case00::
+DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM::
 Jump_0E0_5E83:: ; address name
     ld b, $7D
     ld de, FieldSpriteGfx00
@@ -3875,7 +3875,7 @@ Jump_0E0_5F07::
 ; entry 1 of the `rst $00` table in Func_0E0_5AD3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
-DebugStaffRoll_Update_Sub01_Case01_Case01::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots::
 Jump_0E0_5F6F:: ; address name
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3898,7 +3898,7 @@ Jump_0E0_5F6F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case01_Case02::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case02::
 Jump_0E0_5F91:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -3940,7 +3940,7 @@ Jump_0E0_5F91:: ; address name
 ; entry 3 of the `rst $00` table in Func_0E0_5AD3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case01_Case03::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case03::
 Jump_0E0_5FED:: ; address name
     call DrawSpriteSlots
     ld a, $03
@@ -3955,7 +3955,7 @@ Jump_0E0_5FED:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case04::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case04::
 Jump_0E0_5FFE:: ; address name
     call DrawSpriteSlots
     ld d, $60
@@ -3991,7 +3991,7 @@ Jump_0E0_6022::
 
 ; entry 5 of the `rst $00` table in Func_0E0_5AD3_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case01_Case05::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case05::
 Jump_0E0_6048:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4008,7 +4008,7 @@ Jump_0E0_6048:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject1
 ; writes: wObject1, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case01_Case16::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case16::
 Jump_0E0_605D:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4041,7 +4041,7 @@ Jump_0E0_6086::
 
 ; entry 20 of the `rst $00` table in Func_0E0_5AD3_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case01_Case14::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case14::
 Jump_0E0_6093:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4068,7 +4068,7 @@ Jump_0E0_6093:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case01_Case15::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case15::
 Jump_0E0_60C0:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4090,7 +4090,7 @@ Jump_0E0_60C0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1
 ; writes: wSpriteSlotCount, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case18::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case18::
 Jump_0E0_60DF:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4128,7 +4128,7 @@ Jump_0E0_6113::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots
 ; writes: wSpriteSlots, wSpriteSlotCount, wFieldEventKind, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case01_Case19::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case19::
 Jump_0E0_6120:: ; address name
     call DrawSpriteSlots
     ld a, [wSpriteSlots + $2]
@@ -4170,7 +4170,7 @@ Jump_0E0_6158::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case06::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case06::
 Jump_0E0_6165:: ; address name
     call DrawSpriteSlots
     ld d, $50
@@ -4202,7 +4202,7 @@ Jump_0E0_617E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case09::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case09::
 Jump_0E0_6194:: ; address name
     call DrawSpriteSlots
     ld d, $60
@@ -4234,7 +4234,7 @@ Jump_0E0_61AD::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case07::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case07::
 Jump_0E0_61C3:: ; address name
     call DrawSpriteSlots
     ld d, $40
@@ -4266,7 +4266,7 @@ Jump_0E0_61DC::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wWorkBuf
 ; writes: wWorkBuf, wObject1
-DebugStaffRoll_Update_Sub01_Case01_Case08::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case08::
 Jump_0E0_61F2:: ; address name
     call DrawSpriteSlots
     ld d, $50
@@ -4298,7 +4298,7 @@ Jump_0E0_620B::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wSpriteSlots
 ; writes: wSpriteSlots, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case01_Case17::
+DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case17::
 Jump_0E0_6221:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4340,40 +4340,40 @@ DebugStaffRoll_Update_Sub01_Case02::
 Jump_0E0_6266:: ; address name
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Case02_Case00
-    dw DebugStaffRoll_Update_Sub01_Case02_Case01
-    dw DebugStaffRoll_Update_Sub01_Case02_Case02
-    dw DebugStaffRoll_Update_Sub01_Case02_Case03
-    dw DebugStaffRoll_Update_Sub01_Case02_Case04
-    dw DebugStaffRoll_Update_Sub01_Case02_Case05
-    dw DebugStaffRoll_Update_Sub01_Case02_Case06
-    dw DebugStaffRoll_Update_Sub01_Case02_Case07
-    dw DebugStaffRoll_Update_Sub01_Case02_Case08
-    dw DebugStaffRoll_Update_Sub01_Case02_Case09
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0A
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0B
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0C
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0D
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0E
-    dw DebugStaffRoll_Update_Sub01_Case02_Case0F
-    dw DebugStaffRoll_Update_Sub01_Case02_Case10
-    dw DebugStaffRoll_Update_Sub01_Case02_Case11
-    dw DebugStaffRoll_Update_Sub01_Case02_Case12
-    dw DebugStaffRoll_Update_Sub01_Case02_Case13
-    dw DebugStaffRoll_Update_Sub01_Case02_Case14
-    dw DebugStaffRoll_Update_Sub01_Case02_Case15
-    dw DebugStaffRoll_Update_Sub01_Case02_Case16
-    dw DebugStaffRoll_Update_Sub01_Case02_Case17
-    dw DebugStaffRoll_Update_Sub01_Case02_Case18
-    dw DebugStaffRoll_Update_Sub01_Case02_Case19
-    dw DebugStaffRoll_Update_Sub01_Case02_Case1A
+    dw DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case02
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case03
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case04
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case05
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0A
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0B
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0C
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0D
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0E
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0F
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case10
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case11
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case12
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case13
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case14
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case15
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case16
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case17
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case18
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case19
+    dw DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case1A
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots
-DebugStaffRoll_Update_Sub01_Case02_Case00::
+DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM::
 Jump_0E0_62A0:: ; address name
     ld b, $7D
     ld de, FieldSpriteGfx00
@@ -4566,7 +4566,7 @@ Jump_0E0_636C::
 ; entry 1 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
-DebugStaffRoll_Update_Sub01_Case02_Case01::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots::
 Jump_0E0_6417:: ; address name
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -4589,7 +4589,7 @@ Jump_0E0_6417:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf, wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case02::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case02::
 Jump_0E0_6439:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4633,7 +4633,7 @@ Jump_0E0_6439:: ; address name
 ; entry 3 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case03::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case03::
 Jump_0E0_649A:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4648,7 +4648,7 @@ Jump_0E0_649A:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case04::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case04::
 Jump_0E0_64B0:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4674,7 +4674,7 @@ Jump_0E0_64B0:: ; address name
 ; entry 10 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case0A::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0A::
 Jump_0E0_64DE:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -4689,7 +4689,7 @@ Jump_0E0_64DE:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case0B::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0B::
 Jump_0E0_64F4:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -4710,7 +4710,7 @@ Jump_0E0_64F4:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wSpriteSlots
 ; writes: wSpriteSlots, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case02_Case11::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case11::
 Jump_0E0_6514:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4748,7 +4748,7 @@ Jump_0E0_653D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject2
 ; writes: wObject2, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case02_Case16::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case16::
 Jump_0E0_6551:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4788,7 +4788,7 @@ Jump_0E0_657A::
 ; entry 23 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case17::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case17::
 Jump_0E0_6595:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -4811,7 +4811,7 @@ Jump_0E0_6595:: ; address name
 ; entry 24 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case18::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case18::
 Jump_0E0_65BD:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -4842,7 +4842,7 @@ Jump_0E0_65BD:: ; address name
 
 ; entry 25 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case19::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case19::
 Jump_0E0_65F8:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -4867,7 +4867,7 @@ Jump_0E0_65F8:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case05::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case05::
 Jump_0E0_6626:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4889,7 +4889,7 @@ Jump_0E0_6626:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case06::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case06::
 Jump_0E0_664D:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4908,7 +4908,7 @@ Jump_0E0_664D:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case07::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case07::
 Jump_0E0_666D:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4927,7 +4927,7 @@ Jump_0E0_666D:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case08::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case08::
 Jump_0E0_668D:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4944,7 +4944,7 @@ Jump_0E0_668D:: ; address name
 ; entry 9 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case02_Case09::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case09::
 Jump_0E0_66A5:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -4973,7 +4973,7 @@ Jump_0E0_66A5:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case0C::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0C::
 Jump_0E0_66DB:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -4995,7 +4995,7 @@ Jump_0E0_66DB:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case0D::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0D::
 Jump_0E0_6702:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -5014,7 +5014,7 @@ Jump_0E0_6702:: ; address name
 
 ; entry 14 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case0E::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0E::
 Jump_0E0_6722:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -5033,7 +5033,7 @@ Jump_0E0_6722:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case0F::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case0F::
 Jump_0E0_6742:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -5049,7 +5049,7 @@ Jump_0E0_6742:: ; address name
 
 ; entry 16 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case10::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case10::
 Jump_0E0_675A:: ; address name
     call DrawSpriteSlots
     ld a, $04
@@ -5071,7 +5071,7 @@ Jump_0E0_675A:: ; address name
 ; entry 26 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case02_Case1A::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case1A::
 Jump_0E0_677D:: ; address name
     call DrawSpriteSlots
     ld a, $01
@@ -5101,7 +5101,7 @@ Jump_0E0_677D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject2
 ; writes: wObject2, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case02_Case12::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case12::
 Jump_0E0_67B1:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5134,7 +5134,7 @@ Jump_0E0_67D3::
 
 ; entry 19 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case13::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case13::
 Jump_0E0_67E7:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod60
@@ -5151,7 +5151,7 @@ Jump_0E0_67E7:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_0E0_5AD3_Case02
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case02_Case14::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case14::
 Jump_0E0_6801:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod30
@@ -5164,7 +5164,7 @@ Jump_0E0_6801:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case02_Case15::
+DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case15::
 Jump_0E0_680D:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5198,24 +5198,24 @@ DebugStaffRoll_Update_Sub01_Case03::
 Jump_0E0_6841:: ; address name
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Case03_Case00
-    dw DebugStaffRoll_Update_Sub01_Case03_Case01
-    dw DebugStaffRoll_Update_Sub01_Case03_Case02
-    dw DebugStaffRoll_Update_Sub01_Case03_Case03
-    dw DebugStaffRoll_Update_Sub01_Case03_Case04
-    dw DebugStaffRoll_Update_Sub01_Case03_Case05
-    dw DebugStaffRoll_Update_Sub01_Case03_Case06
-    dw DebugStaffRoll_Update_Sub01_Case03_Case07
-    dw DebugStaffRoll_Update_Sub01_Case03_Case08
-    dw DebugStaffRoll_Update_Sub01_Case03_Case09
-    dw DebugStaffRoll_Update_Sub01_Case03_Case0A
+    dw DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case02
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case03
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case04
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case05
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case0A
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots
-DebugStaffRoll_Update_Sub01_Case03_Case00::
+DebugStaffRoll_Update_Sub01_Case03_DecompressToVRAM::
 Jump_0E0_685B:: ; address name
     ld b, $7D
     ld de, FieldSpriteGfx00
@@ -5438,7 +5438,7 @@ Jump_0E0_694D::
 ; entry 1 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
-DebugStaffRoll_Update_Sub01_Case03_Case01::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots::
 Jump_0E0_6A10:: ; address name
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5461,7 +5461,7 @@ Jump_0E0_6A10:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf, wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case03_Case02::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case02::
 Jump_0E0_6A32:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5504,7 +5504,7 @@ Jump_0E0_6A32:: ; address name
 ; entry 3 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlotCount
-DebugStaffRoll_Update_Sub01_Case03_Case03::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case03::
 Jump_0E0_6A89:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod45
@@ -5520,7 +5520,7 @@ Jump_0E0_6A89:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case03_Case04::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case04::
 Jump_0E0_6AA1:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -5540,7 +5540,7 @@ Jump_0E0_6AA1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject2
 ; writes: wObject2, wWorkBuf, wSpriteSlotCount, wObject1
-DebugStaffRoll_Update_Sub01_Case03_Case05::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case05::
 Jump_0E0_6ABE:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5583,7 +5583,7 @@ Jump_0E0_6AED::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject2
 ; writes: wObject2, wWorkBuf, wSpriteSlotCount, wObject1
-DebugStaffRoll_Update_Sub01_Case03_Case06::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case06::
 Jump_0E0_6B0A:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5624,7 +5624,7 @@ Jump_0E0_6B39::
 
 ; entry 7 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case03_Case07::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case07::
 Jump_0E0_6B56:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -5658,7 +5658,7 @@ Jump_0E0_6B56:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case03_Case08::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case08::
 Jump_0E0_6B99:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -5682,7 +5682,7 @@ Jump_0E0_6B99:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case03_Case09::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case09::
 Jump_0E0_6BC4:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -5702,7 +5702,7 @@ Jump_0E0_6BC4:: ; address name
 ; entry 10 of the `rst $00` table in Func_0E0_5AD3_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case03_Case0A::
+DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case0A::
 Jump_0E0_6BE4:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -5729,28 +5729,28 @@ DebugStaffRoll_Update_Sub01_Case04::
 Jump_0E0_6C0A:: ; address name
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Case04_Case00
-    dw DebugStaffRoll_Update_Sub01_Case04_Case01
-    dw DebugStaffRoll_Update_Sub01_Case04_Case02
-    dw DebugStaffRoll_Update_Sub01_Case04_Case03
-    dw DebugStaffRoll_Update_Sub01_Case04_Case04
-    dw DebugStaffRoll_Update_Sub01_Case04_Case05
-    dw DebugStaffRoll_Update_Sub01_Case04_Case06
-    dw DebugStaffRoll_Update_Sub01_Case04_Case07
-    dw DebugStaffRoll_Update_Sub01_Case04_Case08
-    dw DebugStaffRoll_Update_Sub01_Case04_Case09
-    dw DebugStaffRoll_Update_Sub01_Case04_Case0A
-    dw DebugStaffRoll_Update_Sub01_Case04_Case0B
-    dw DebugStaffRoll_Update_Sub01_Case04_Case0C
-    dw DebugStaffRoll_Update_Sub01_Case04_Case0D
-    dw DebugStaffRoll_Update_Sub01_Case04_Case0E
+    dw DebugStaffRoll_Update_Sub01_Case04_DecompressToVRAM
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case02
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case03
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case04
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case05
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case06
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case07
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case08
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case09
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0A
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0B
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0C
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0D
+    dw DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0E
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB
 ; writes: rSVBK, wSpriteSlotCount
 ; points at: wScreenTileBuffer, wScreenAttrBuffer, wBGPaletteBuffer, wOBJPaletteBuffer, wSpriteSlots
-DebugStaffRoll_Update_Sub01_Case04_Case00::
+DebugStaffRoll_Update_Sub01_Case04_DecompressToVRAM::
 Jump_0E0_6C2C:: ; address name
     ld b, $7D
     ld de, FieldSpriteGfx00
@@ -5893,7 +5893,7 @@ Jump_0E0_6CC8::
 ; entry 1 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
-DebugStaffRoll_Update_Sub01_Case04_Case01::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots::
 Jump_0E0_6D43:: ; address name
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5922,7 +5922,7 @@ Jump_0E0_6D43:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case02::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case02::
 Jump_0E0_6D73:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5953,7 +5953,7 @@ Jump_0E0_6D73:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case03::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case03::
 Jump_0E0_6DA7:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5995,7 +5995,7 @@ Jump_0E0_6DDF::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wObject1
 ; writes: wObject1, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case09::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case09::
 Jump_0E0_6DEE:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6082,7 +6082,7 @@ Jump_0E0_6E5E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wSpriteSlots
 ; writes: wSpriteSlots, wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case0A::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0A::
 Jump_0E0_6EA3:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6126,7 +6126,7 @@ Jump_0E0_6ECC::
 
 ; entry 11 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case0B::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0B::
 Jump_0E0_6EEF:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod60
@@ -6137,7 +6137,7 @@ Jump_0E0_6EEF:: ; address name
 
 ; entry 13 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case0D::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0D::
 Jump_0E0_6EFB:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -6157,7 +6157,7 @@ Jump_0E0_6EFB:: ; address name
 ; entry 14 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case0E::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0E::
 Jump_0E0_6F1B:: ; address name
     call DrawSpriteSlots
     ld a, $00
@@ -6179,7 +6179,7 @@ Jump_0E0_6F1B:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case05::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case05::
 Jump_0E0_6F41:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod60
@@ -6198,7 +6198,7 @@ Jump_0E0_6F41:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case0C::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0C::
 Jump_0E0_6F5B:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6226,7 +6226,7 @@ Jump_0E0_6F5B:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case04::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case04::
 Jump_0E0_6F8D:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod60
@@ -6243,7 +6243,7 @@ Jump_0E0_6F8D:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case06::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case06::
 Jump_0E0_6FA7:: ; address name
     call DrawSpriteSlots
     call StepWD0A2Mod60
@@ -6256,7 +6256,7 @@ Jump_0E0_6FA7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Case04_Case07::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case07::
 Jump_0E0_6FB3:: ; address name
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6281,7 +6281,7 @@ Jump_0E0_6FB3:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_0E0_5AD3_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DebugStaffRoll_Update_Sub01_Case04_Case08::
+DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case08::
 Jump_0E0_6FDE:: ; address name
     call DrawSpriteSlots
     ld a, $02
@@ -6301,22 +6301,22 @@ Jump_0E0_6FF7::
     jr z, Jump_0E0_7007
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Table2_Case00
+    dw DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest
     dw DebugStaffRoll_Update_Sub01_Table2_Case01
     dw DebugStaffRoll_Update_Sub01_Table2_Case02
 
 Jump_0E0_7007::
     ld a, [wWorkBuf + $1]
     rst $00
-    dw DebugStaffRoll_Update_Sub01_Table3_Case00
-    dw DebugStaffRoll_Update_Sub01_Table3_Case01
+    dw DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest
+    dw DebugStaffRoll_Update_Sub01_Table3_StartPaletteFade
     dw DebugStaffRoll_Update_Sub01_Table3_Case02
 
 ; entry 0 of the `rst $00` table in Func_0E0_5AD3
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wIsCGB, wSGBActive
 ; writes: wWorkBuf, wStringCategory, wStringIndex, rVBK
-DebugStaffRoll_Update_Sub01_Table2_Case00::
+DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest::
 Jump_0E0_7011:: ; address name
     ld a, [wWorkBuf + $4]
     or a, a
@@ -6810,7 +6810,7 @@ Jump_0E0_7351::
 ; reads: wIsCGB, wSGBActive
 ; writes: wStringCategory, wStringIndex, rVBK, wWorkBuf
 ; points at: wBGPaletteBuffer
-DebugStaffRoll_Update_Sub01_Table3_Case00::
+DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest::
 Jump_0E0_735E:: ; address name
     ld hl, vTiles2 + $7F0
     ld de, $0101
@@ -6872,7 +6872,7 @@ Jump_0E0_73C7::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
-DebugStaffRoll_Update_Sub01_Table3_Case01::
+DebugStaffRoll_Update_Sub01_Table3_StartPaletteFade::
 Jump_0E0_73DC:: ; address name
     ld a, [wWorkBuf + $5]
     sub a, $01
@@ -6909,7 +6909,7 @@ Jump_0E0_73FC:: ; address name
     ret
 
 ; A = first tile, B = width, C = rows, HL = VRAM address, DE = row stride: writes consecutive tile numbers with WriteVRAMByteInc (interrupts off per byte), adding DE to the row start after each row; A ends past the last tile (E-0077)
-; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
+; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
 FillVRAMRectWithTileSequence::
 Func_0E0_740E:: ; address name
     push bc
@@ -6930,7 +6930,7 @@ Jump_0E0_7410::
     ret
 
 ; for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex, hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at $7477
-; 80 call sites from 80 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_Case0F, DebugStaffRoll_Update_Sub01_Case00_Case0E, DebugStaffRoll_Update_Sub01_Case00_Case0D, DebugStaffRoll_Update_Sub01_Case00_Case0C, ...)
+; 80 call sites from 80 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0F, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0E, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0C, ...)
 ; reads: wSpriteSlotCount, hSpriteAttrXor
 ; writes: hSpriteSetIndex, hSpriteOriginX, hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset, hSpriteSubIndex
 ; points at: wSpriteSlots
@@ -7006,7 +7006,7 @@ Jump_0E0_745E::
     db $01, $40, $25, $01, $40, $7F, $0A, $70, $7F
 
 ; adds 1 to byte 7 of each of the 8 slots at wSpriteSlots
-; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01)
+; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_RunFieldEventFieldEventKind)
 ; points at: wSpriteSlots
 IncrementSpriteSlotCounters::
 Func_0E0_7480:: ; address name
@@ -7028,7 +7028,7 @@ Jump_0E0_7485::
     ret
 
 ; A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved
-; 116 call sites from 58 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_Case0F, DebugStaffRoll_Update_Sub01_Case00_Case0D, DebugStaffRoll_Update_Sub01_Case00_Case0C, DebugStaffRoll_Update_Sub01_Case00_Case0B, ...)
+; 116 call sites from 58 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0F, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0C, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0B, ...)
 ; points at: wSpriteSlots
 StepSpriteSlotToward::
 Func_0E0_7492:: ; address name
@@ -7080,7 +7080,7 @@ Jump_0E0_74BD::
     ret
 
 ; A = slot number: byte 5 of the slot = C
-; 91 call sites from 45 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_Case0E, DebugStaffRoll_Update_Sub01_Case00_Case0D, DebugStaffRoll_Update_Sub01_Case00_Case0C, DebugStaffRoll_Update_Sub01_Case00_Case0B, ...)
+; 91 call sites from 45 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0E, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0C, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0B, ...)
 ; points at: wSpriteSlots
 SetSpriteSlotByte5::
 Func_0E0_74C5:: ; address name
@@ -7097,7 +7097,7 @@ Func_0E0_74C5:: ; address name
     ret
 
 ; moves sprite slot A's position bytes toward D and E by the steps $7535/$7542 indexed by wD0A7; NZ while still moving (E-0127)
-; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01_Case00_Case06)
+; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case06)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
 ; points at: wSpriteSlots
@@ -7165,7 +7165,7 @@ Jump_0E0_7532::
     db $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
 
 ; wD0A2 += 1, reset to 0 when it reaches 15
-; 31 call sites from 31 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_Case0F, DebugStaffRoll_Update_Sub01_Case00_Case0E, DebugStaffRoll_Update_Sub01_Case00_Case0D, DebugStaffRoll_Update_Sub01_Case00_Case0B, ...)
+; 31 call sites from 31 routines (e.g. DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0F, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0E, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0D, DebugStaffRoll_Update_Sub01_Case00_DrawSpriteSlots_Case0B, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
 StepWD0A2Mod15::
@@ -7180,7 +7180,7 @@ Func_0E0_754F:: ; address name
     ret
 
 ; wD0A2 += 1, reset to 0 when it reaches 30
-; 8 call sites from 8 routines (e.g. DebugStaffRoll_Update_Sub01_Case01_Case05, DebugStaffRoll_Update_Sub01_Case02_Case16, DebugStaffRoll_Update_Sub01_Case02_Case14, DebugStaffRoll_Update_Sub01_Case03_Case08, ...)
+; 8 call sites from 8 routines (e.g. DebugStaffRoll_Update_Sub01_Case01_DrawSpriteSlots_Case05, DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case16, DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case14, DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case08, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
 StepWD0A2Mod30::
@@ -7195,7 +7195,7 @@ Func_0E0_755E:: ; address name
     ret
 
 ; wD0A2 += 1, reset to 0 when it reaches 45
-; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01_Case03_Case03)
+; 1 call site from 1 routine (e.g. DebugStaffRoll_Update_Sub01_Case03_DrawSpriteSlots_Case03)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
 StepWD0A2Mod45::
@@ -7210,7 +7210,7 @@ Func_0E0_756D:: ; address name
     ret
 
 ; wD0A2 += 1, reset to 0 when it reaches 60
-; 6 call sites from 6 routines (e.g. DebugStaffRoll_Update_Sub01_Case02_Case13, DebugStaffRoll_Update_Sub01_Case02_Case12, DebugStaffRoll_Update_Sub01_Case04_Case0B, DebugStaffRoll_Update_Sub01_Case04_Case06, ...)
+; 6 call sites from 6 routines (e.g. DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case13, DebugStaffRoll_Update_Sub01_Case02_DrawSpriteSlots_Case12, DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case0B, DebugStaffRoll_Update_Sub01_Case04_DrawSpriteSlots_Case06, ...)
 ; reads: wWorkBuf
 ; writes: wWorkBuf
 StepWD0A2Mod60::
@@ -7225,7 +7225,7 @@ Func_0E0_757C:: ; address name
     ret
 
 ; writes A over a B x C rectangle of the BG map at HL, wrapping columns and rows (E-0125)
-; 6 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
+; 6 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
 FillBGMapRectWithAWrapped::
 Func_0E0_758B:: ; address name
     push bc
@@ -7274,7 +7274,7 @@ Jump_0E0_758D::
     ret
 
 ; sets the DMG palettes $D2/$D2/$E2 (also in wD040) and resets the fade; on the Super Game Boy blanks rBGP/rOBP, sends PAL_SET for wC51F and copies 8 bytes from $7641 to wC4FF (E-0128)
-; 7 call sites from 7 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00, DebugStaffRoll_Update_Sub01_Case00_Case00, DebugStaffRoll_Update_Sub01_Case01_Case00, ...)
+; 7 call sites from 7 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest, DebugStaffRoll_Update_Sub01_Case00_DecompressToVRAM, DebugStaffRoll_Update_Sub01_Case01_DecompressToVRAM, ...)
 ; reads: wDMGPaletteBGP, wDMGPaletteOBP0, wDMGPaletteOBP1, wSGBActive, wSGBPaletteSet, wSGBAttrFile
 ; writes: rBGP, rOBP0, rOBP1, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, ...
 ; points at: wDMGPaletteBGP, wDMGPaletteBytes
@@ -7406,7 +7406,7 @@ Jump_0E0_76EE::
     ret
 
 ; Func_0E0_76E0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_Case00, DebugStaffRoll_Update_Sub01_Table2_Case00)
+; 5 call sites from 2 routines (e.g. DebugStaffRoll_Update_Sub01_Table3_FillTilesRequest, DebugStaffRoll_Update_Sub01_Table2_FillTilesRequest)
 ShowString_BankE0::
 Func_0E0_76F5:: ; address name
     call BeginStringDisplay_BankE0
@@ -7784,7 +7784,7 @@ Func_0E0_7A73:: ; address name
     ret
 
 ; A = slot 0-7: returns A = 9 * g(wD968[A]) + 3 * g(wD970[A]) + g(wD978[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes appear in 13 banks)
-; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_Sub01, RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
+; 2 call sites from 2 routines (e.g. RunDebugState_E0_Case0D_Case02_DisplayedSlotOfActor, RunDebugState_E0_Case0D_PersonalityIndexOfSlot_BankE0)
 ; points at: wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
 PersonalityIndexOfSlot_BankE0::
 Func_0E0_7A80:: ; address name

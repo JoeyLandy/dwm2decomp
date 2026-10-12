@@ -2,7 +2,7 @@ SECTION "Bank 10", ROMX[$4000], BANK[$10]
     db $10
 
 ; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case01)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_RunEventScriptFrame)
 RunEventScriptFrame::
 Func_010_4001:: ; address name
     call FetchScriptCommand
@@ -10,7 +10,7 @@ Func_010_4001:: ; address name
     ret
 
 ; does nothing during a fade or unless wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning); reads the opcode at wScriptPointer (through ReadWordFromDataBank when wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when wCC44 bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance wScriptPointer
-; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunFieldReturnPhase_Case02, RunMenuStateMenuState_Case05, GameMode5_Update_Case02, ...)
+; 5 call sites from 5 routines (e.g. RunEventScriptFrame, RunFieldReturnPhase_ResetLeadRecordFields55And5B, RunMenuStateMenuState_InitSoundHardware, GameMode5_Update_LinkExchangeJoypadPerFrame, ...)
 ; reads: wFadeState, wScriptStartRequest, wScriptPointerLo, wScriptPointerHi, wScriptInDataBank, wMapType
 ; writes: wScriptStartRequest, wScriptRunning, wScriptCommandType, wScriptInDataBank, wModeState
 FetchScriptCommand::
@@ -1825,16 +1825,16 @@ ScriptCommand09:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_49F5:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand09_Case00
+    dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
     dw ScriptCommand09_Case01
-    dw ScriptCommand09_Case02
-    dw ScriptCommand09_Case03
+    dw ScriptCommand09_QueueSoundEffect
+    dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
 
 ; entry 3 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wScriptCommandType, wScriptRunning, wModeState
-ScriptCommand09_Case03::
+ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
 Jump_010_4A01:: ; address name
     ld a, [wTextWindowState]
     and a, $03
@@ -1855,17 +1855,17 @@ ScriptCommand01:: ; code pointer of the table ScriptCommandHandlers; C0
 Func_010_4A1B:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw ScriptCommand09_Case00
+    dw ScriptCommand09_SetBit1OfPlayerAndObjectFlags
     dw ScriptCommand09_Case01
-    dw ScriptCommand09_Case02
-    dw ScriptCommand01_Case03
+    dw ScriptCommand09_QueueSoundEffect
+    dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
 
 ; entry 0 of the `rst $00` table in ScriptCommand09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScriptStep
-ScriptCommand09_Case00::
+ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
 Jump_010_4A27:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -1924,7 +1924,7 @@ Jump_010_4A74::
 ; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wTextWindowState, wTextWindowStep
 ; points at: wScriptStep
-ScriptCommand09_Case02::
+ScriptCommand09_QueueSoundEffect::
 Jump_010_4A84:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -1955,7 +1955,7 @@ Jump_010_4AAE::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wTextWindowState
 ; writes: wScriptCommandType, wScriptStartRequest
-ScriptCommand01_Case03::
+ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
 Jump_010_4AB3:: ; address name
     ld a, [wScriptParam1]
     bit 6, a

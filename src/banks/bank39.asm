@@ -2,7 +2,7 @@ SECTION "Bank 39", ROMX[$4000], BANK[$39]
     db $39
 
 ; wBattleActionId = wBattleActionChoice[2 * actor]; with mode = wDA53[actor], the entry at Data_039_41AC + 4 * mode holds two per-action routine tables, the second used for actors in slots 4-7 when wC58A is 0 or 2, the first otherwise; calls the routine for the action (JumpToWordAtHL), which writes a slot number to wBattleTargetChoice[2 * actor] (E-0061)
-; 8 call sites from 7 routines (e.g. ChooseTargetForActor, PickRandomActionWhenUncontrolled, RunBattleActions_Case00_Sub01_Case01_Case02, RunBattleStep4_Case00_Sub01_Case00, ...)
+; 8 call sites from 7 routines (e.g. ChooseTargetForActor, PickRandomActionWhenUncontrolled, RunBattleActions_Case00_Sub01_Case01_ReadByteAtHLPlusA_Case02, RunBattleStep4_Case00_Sub01_Case00, ...)
 ; reads: wBattleActor, wLinkMode
 ; writes: wBattleActionId
 ; points at: wBattleActionChoice, wSlotAIMode
@@ -4747,7 +4747,7 @@ Jump_039_5F6B::
     jr z, Jump_039_5FF2
     ldh [hTemp6], a
     push bc
-    call ChooseTarget_Blaze_Sub01
+    call ChooseTarget_Blaze_Multiply8By16
     pop bc
     push hl
     ld a, c
@@ -5811,7 +5811,7 @@ Jump_039_65F4::
     jr z, Jump_039_666F
     ldh [hTemp6], a
     push bc
-    call ChooseTarget_MegaMagic_Sub01
+    call ChooseTarget_MegaMagic_GetBattleMP_Bank39
     pop bc
     push hl
     ld a, c
@@ -7502,7 +7502,7 @@ Jump_039_6E3F::
     jr Jump_039_6E5F
 
 Jump_039_6E47::
-    farcall ComputeDamageEstimateForAction_Sub01
+    farcall ComputeDamageEstimateForAction_Multiply8By16
     jr Jump_039_6E5F
 
 Jump_039_6E4F::
@@ -8040,7 +8040,7 @@ Jump_039_714C::
 ; only called from ChooseTarget_Blaze (E-0047)
 ; 1 call site from 1 routine (e.g. ChooseTarget_Blaze)
 ; reads: hTemp8, hTemp9
-ChooseTarget_Blaze_Sub01::
+ChooseTarget_Blaze_Multiply8By16::
 Func_039_7155:: ; address name
     push af
     ldh a, [hTemp8]
@@ -8078,7 +8078,7 @@ Jump_039_717F::
 ; 1 call site from 1 routine (e.g. ChooseTarget_MegaMagic)
 ; reads: wBattleActor
 ; points at: wBattleLevel
-ChooseTarget_MegaMagic_Sub01::
+ChooseTarget_MegaMagic_GetBattleMP_Bank39::
 Func_039_7180:: ; address name
     push af
     ld a, [wBattleActor]
@@ -8192,7 +8192,7 @@ Func_039_71F9:: ; address name
     jr Jump_039_7212
 
 ; A = battle slot: HL = the word for that slot at wBattleMP; A = its low byte (E-0060)
-; 4 call sites from 4 routines (e.g. ChooseTarget_OddDance, ChooseTarget_MegaMagic_Sub01, ChooseTarget_RobMagic, ChooseTarget_MPass)
+; 4 call sites from 4 routines (e.g. ChooseTarget_OddDance, ChooseTarget_MegaMagic_GetBattleMP_Bank39, ChooseTarget_RobMagic, ChooseTarget_MPass)
 ; points at: wBattleMP
 GetBattleMP_Bank39::
 Func_039_71FE:: ; address name

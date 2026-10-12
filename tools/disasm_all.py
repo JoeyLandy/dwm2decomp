@@ -1459,7 +1459,9 @@ class Rom:
         # step counter
         generic = re.compile(r"^(BGMapAddressAtScroll|StoreBAtWordTableEntry|CopyRectTo20ByteRows|CopyFromBankWaitVRAM|"
                              r"QueueSoundEffect|FillTilesBxC|CopyBytesDEToHL|CopyLow3BitsToWRAMBank2|WaitForVRAMAccess|"
-                             r"FillTilesFromRequest|CopyTileBytesToVRAM|CopyBytes|Multiply|Divide|CopyBBytes|FillBytes)")
+                             r"FillTilesFromRequest|CopyTileBytesToVRAM|CopyBytes|Multiply|Divide|CopyBBytes|FillBytes|"
+                             r"DrawScreenBufferRect|LoadSRAMRecord|SRAMRecordAddress|GetListEntriesCell|AddDoubleAToHL|"
+                             r"ReadWordTableEntry|ReadBattleWordFromArray|AddAx9ToHL|CompareHLToBC|NextRandomSeed|NextTableByte)")
         leaves = 0
         for b in range(self.nbanks):
             ins = self.insn[b]
@@ -1495,7 +1497,7 @@ class Rom:
                             targets.append(self.labels[r[0]].get(r[1]))
                     elif v[1] == "rst $10" and hl is not None and bb is not None and bb < self.nbanks:
                         targets.append(self.labels[bb].get(hl))
-                targets = [t for t in targets if t and not t.startswith(("Func_", "Jump_"))]
+                targets = [t for t in targets if t and not t.startswith(("Func_", "Jump_")) and not pat.match(t)]
                 if not targets:
                     continue
                 main = next((t for t in targets if not generic.match(t)), targets[0])
@@ -1516,6 +1518,55 @@ class Rom:
                 self.labels[b][a] = new
                 leaves += 1
         log(f"branch-free steps named after their main call: {leaves}")
+        # E-0280: the same for steps up to 24 instructions that branch (conditional jr/jp/ret inside, ending at an
+        # unconditional ret or jp or the next label): Parent_<main call>
+        branched = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab)
+                if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                seq, pc = [], a
+                for _ in range(24):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b] and
+                                                 not self.labels[b][pc].startswith("Jump_")):
+                        break
+                    seq.append(v)
+                    if v[2] in ("ret", "jp", "jphl", "bad") and "," not in v[1]:
+                        break
+                    pc += v[0]
+                targets, hl, bb = [], None, None
+                for v in seq:
+                    if (mh := re.match(r"ld hl, \$([0-9A-F]{4})$", v[1])):
+                        hl = int(mh.group(1), 16)
+                    if (mb := re.match(r"ld b, \$([0-9A-F]{2})$", v[1])):
+                        bb = int(mb.group(1), 16)
+                    if v[2] in ("call", "callc") and v[3] is not None:
+                        r = self.resolve(b, v[3])
+                        if r:
+                            targets.append(self.labels[r[0]].get(r[1]))
+                    elif v[1] == "rst $10" and hl is not None and bb is not None and bb < self.nbanks:
+                        targets.append(self.labels[bb].get(hl))
+                targets = [t for t in targets if t and not t.startswith(("Func_", "Jump_")) and not pat.match(t)]
+                if not targets:
+                    continue
+                main = next((t for t in targets if not generic.match(t)), targets[0])
+                parent = m.group(1)
+                if main.startswith(parent):
+                    main = main[len(parent):].lstrip("_")
+                new = f"{parent}_{main}"
+                if len(new) > 80:
+                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(parent) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+                branched += 1
+        log(f"branching steps named after their main call: {branched}")
         # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
         # other code is that code with the register preset: <Target>With<R><n>
         entries = 0

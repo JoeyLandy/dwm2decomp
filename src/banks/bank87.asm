@@ -2,7 +2,7 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
 ; only called from FieldModeStateDispatch_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case00)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_UpdatePlayerMovement)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wStepTriggerFlag, hMapId, hMapScreenX, hMapScreenY, wModeState, ...
 ; writes: wStepTriggerFlag, wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Case00_Sub02::
@@ -382,7 +382,7 @@ Data_087_40A0:: ; address name
     dw $0000 ; id 255
 
 ; only called from routines of FieldModeStateDispatch (E-0098)
-; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case00, FieldModeStateDispatch_Case05)
+; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_UpdatePlayerMovement, FieldModeStateDispatch_UpdatePlayerMovement_Case05)
 ; reads: wTextWindowState, wFieldActionRequest, hPlayerStateFlags, wJoypadPressed, wSpriteSlotCount, hPlayerX, hPlayerY, hPlayerFacing, ...
 ; writes: wTalkEventGroup, wTalkEventIndex, wJoypadHeld, wJoypadPressed
 FieldModeStateDispatch_Shared03::

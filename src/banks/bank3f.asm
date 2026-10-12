@@ -6,7 +6,7 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
 ; reads: wEffectTileOffset, wEffectFlags, wBattlePartyCount, wBattleTarget, wEffectSpriteX, wEffectSpriteAttrXor
 ; writes: wLoadSlot, wBattleArg0
 ; points at: wLoadSlot, wBattleArg0, hSpriteOriginX
-DrawEffectSpriteForEffectTileOffsetRange_Sub02::
+DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02::
 Func_03F_4001:: ; address name
     ld a, [wEffectTileOffset]
     cp a, $15
@@ -52,7 +52,7 @@ Jump_03F_4045::
     farcall SetEffectSpriteXForTargets
 
 ; sets the sprite origin X = wD804, Y = $68, tile offset = wD801, attribute XOR = wDAB7, then builds OAM from the local sprite table (E-0121)
-; 2 call sites from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange_Sub02)
+; 2 call sites from 1 routine (e.g. DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_Sub02)
 ; reads: wEffectSpriteX, wEffectTileOffset, wEffectSpriteAttrXor
 ; points at: hSpriteOriginX
 DrawEffectSpriteAtEffectSpriteX_Bank3F::

@@ -43,7 +43,7 @@ Data_049_43B5:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $1243B5, $63
 
 ; compressed tileset of map $0A (the first map record using it)
-; address loaded by EggServiceMenu_Case0F_Case00
+; address loaded by EggServiceMenu_Case0F_DecompressToVRAM
 ; LZSS-compressed asset: 708 bytes expand to 1168 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map0ATileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4418:: ; address name
@@ -89,7 +89,7 @@ Data_049_47F3:: ; address name
     db $0F, $4D, $06, $D6, $0F, $1D, $06, $10, $04, $06, $3C, $1A, $06, $44, $1C
 
 ; compressed tileset of map $13 (the first map record using it)
-; address loaded by RenameMenu_Case06_Case00
+; address loaded by RenameMenu_Case06_DecompressToVRAM
 ; LZSS-compressed asset: 659 bytes expand to 960 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map13Tileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4832:: ; address name
@@ -132,7 +132,7 @@ Data_049_4BCA:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $124BCA, $51
 
 ; compressed tileset of map $1A (the first map record using it)
-; address loaded by DebugStaffRoll_Update_Sub01_Case04_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 1696 bytes expand to 1984 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map1ATileset:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_4C1B:: ; address name
@@ -184,7 +184,7 @@ Data_049_5316:: ; address name
     dfar Map1AAttrs0_Y0X1 ; entry 1
     dfar Map1AAttrs5_Y0X2 ; entry 2
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case04_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 250 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map1AScreens0_Y0X0:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_531F:: ; address name
@@ -205,7 +205,7 @@ Map1AScreens5_Y0X2:: ; heuristic: map screen stream; C0
 Data_049_5626:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $125626, $107
 
-; address loaded by DebugStaffRoll_Update_Sub01_Case04_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 163 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Map1AAttrs0_Y0X0:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_049_572D:: ; address name

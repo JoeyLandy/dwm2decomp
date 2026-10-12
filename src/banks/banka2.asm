@@ -39,7 +39,7 @@ Func_0A2_4001:: ; address name
 ; only called from LoadMonsterRecordTo (E-0047)
 ; 1 call site from 1 routine (e.g. LoadMonsterRecordTo)
 ; reads: wMonsterId
-LoadMonsterRecordTo_Sub01::
+LoadMonsterRecordTo_Multiply8By16::
 Func_0A2_402D:: ; address name
     push de
     ld a, [wMonsterId]

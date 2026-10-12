@@ -2,7 +2,7 @@ SECTION "Bank 27", ROMX[$4000], BANK[$27]
     db $27
 
 ; ORs the attribute bits from Data_027_411C[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the sprite from Data_027_401E (E-0124)
-; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_Shared01, DrawPartyFollowerSprites, ...)
+; 6 call sites from 6 routines (e.g. DebugMonsterPictureViewer_Update, UpdateAndDrawSpriteSlots, AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80, DrawPartyFollowerSprites, ...)
 ; reads: hSpriteSetIndex, hSpriteAttrXor
 ; writes: hSpriteAttrXor
 DrawMetaSpriteSet_Bank27::

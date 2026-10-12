@@ -18,7 +18,7 @@ Jump_008_400F::
     ret
 
 ; if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F
-; 3 call sites from 3 routines (e.g. CopyStringHLToDE, Talk00Event17_Case19, RunGameMode2State_Case01_Sub02)
+; 3 call sites from 3 routines (e.g. CopyStringHLToDE, Talk00Event17_CopyStringToBuffer_Bank08, RunGameMode2State_Case01_CenteredBGMapOriginForSizeBC)
 ; reads: wStringCategory
 CopyStringToBuffer_Bank08::
 Func_008_4016:: ; address name

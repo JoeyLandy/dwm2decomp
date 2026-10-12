@@ -6,7 +6,7 @@ SECTION "Bank 19", ROMX[$4000], BANK[$19]
 ; reads: wBattleKind, wDataBank, wLinkMode, wBattlerRecordSlot4, wBattlerRecordSlot5, wBattlerRecordSlot6
 ; writes: wDataBankSave, wBattleKind, rRAMG, rRAMB, wBattleInitA1, wBattleInitA2, wBattleInitA3
 ; points at: wEffectAnimState, wBattlePhase, wListPageSize, wWorkBuf
-GameMode4_Init_Sub01::
+GameMode4_Init_FillBytes::
 Func_019_4001:: ; address name
     ld a, [wBattleKind]
     push af
@@ -26,7 +26,7 @@ Func_019_4001:: ; address name
     call FillBytes
     pop af
     ld [wBattleKind], a
-    call GameMode4_Init_Sub01_Sub01
+    call GameMode4_Init_Sub01_FillBytes
     ld a, [wLinkMode]
     or a, a
     jr nz, Jump_019_4069
@@ -39,7 +39,7 @@ Func_019_4001:: ; address name
     ld a, $00
     ld [rRAMB], a
     call GameMode4_Init_Sub01_Sub06
-    call GameMode4_Init_Sub01_Sub07
+    call GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC
     ld a, [wBattlerRecordSlot4 + $4D]
     ld [wBattleInitA1], a
     ld a, [wBattlerRecordSlot5 + $4D]
@@ -52,18 +52,18 @@ Func_019_4001:: ; address name
 
 Jump_019_4069::
     call GameMode4_Init_Sub01_Sub04
-    call GameMode4_Init_Sub01_Sub02
-    call GameMode4_Init_Sub01_Sub03
-    call GameMode4_Init_Sub01_Sub05
-    call GameMode4_Init_Sub01_Sub08
+    call GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31
+    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03
+    call GameMode4_Init_Sub01_QueueMusic
+    call GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattleKind, wLinkMode, wPartyCount, wEncounterKind, wBattleResultByte, wMenuSaveByte34, wLinkRole
 ; writes: wBattleSetupD7, wEffectId, wQueuedActionId, wBattleByteAD, wBattleFlag92, wDebugValue3, wDebugState, wDebugSubState, ...
 ; points at: wMenuState, wSlotMarks, wSideControl, wBattleSlotOut, wBattleMonsterId, wSlotNameBytes, wActionQueue
-GameMode4_Init_Sub01_Sub01::
+GameMode4_Init_Sub01_FillBytes::
 Func_019_4079:: ; address name
     ld a, [wBattleKind]
     cp a, $04
@@ -183,7 +183,7 @@ Jump_019_417E::
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub01 (E-0047)
-; 4 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub01)
+; 4 call sites from 1 routine (e.g. GameMode4_Init_Sub01_FillBytes)
 GameMode4_Init_Sub01_Sub01_Sub01::
 Func_019_4186:: ; address name
     ld de, $004E
@@ -204,11 +204,11 @@ Jump_019_4199::
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; writes: wBGPaletteUploadRequest
-GameMode4_Init_Sub01_Sub02::
+GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31::
 Func_019_419B:: ; address name
-    farcall GameMode4_Init_Sub01_Sub02_Sub01
+    farcall GameMode4_Init_Sub01_Sub02_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
     farcall LayoutTileBlocksForBattleFoeCount
@@ -221,9 +221,9 @@ Func_019_419B:: ; address name
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wLinkRole, wBattleFoeCount
-GameMode4_Init_Sub01_Sub03::
+GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03::
 Func_019_41CB:: ; address name
     ld de, wBattlerRecordSlot4 + $A
     ld a, [wLinkRole]
@@ -266,7 +266,7 @@ Jump_019_4218::
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub03 (E-0047)
-; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub03)
+; 3 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03)
 GameMode4_Init_Sub01_Sub03_LoadMonsterPicture::
 Func_019_4219:: ; address name
     ld a, [de]
@@ -280,7 +280,7 @@ Func_019_4219:: ; address name
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattlePartyCount, wLinkRole, wBattleFoeCount, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
@@ -296,7 +296,7 @@ Func_019_4224:: ; address name
     ld b, a
 
 Jump_019_4235::
-    call GameMode4_Init_Sub01_Sub04_Sub01
+    call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
     inc c
     dec b
     jr nz, Jump_019_4235
@@ -310,7 +310,7 @@ Jump_019_4235::
     ld b, a
 
 Jump_019_424D::
-    call GameMode4_Init_Sub01_Sub04_Sub01
+    call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
     inc c
     dec b
     jr nz, Jump_019_424D
@@ -420,7 +420,7 @@ Jump_019_42EA::
     ret
 
 ; zero-fills the 47 bytes of wSpeciesRecord, where LoadSpeciesRecord writes; BC, HL kept (E-0067) (the same 15 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
 ; points at: wSpeciesRecord
 ClearSpeciesRecordBuffer_Bank19::
 Func_019_42EE:: ; address name
@@ -502,7 +502,7 @@ Jump_019_433F::
     ret
 
 ; C = wD868, then falls into Func_019_434D (E-0126)
-; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_Sub01, RunA04410Or456FBySlotC_Sub02)
+; 4 call sites from 4 routines (e.g. LoadBattleSlotFromBattlerRecord_4CF8, LoadBattleSlotFromBattlerRecord_4BA8, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0, RunA04410Or456FBySlotC_BattlerRecordAddress_BankA0_Sub02)
 ; reads: wBattleArg0, wBattleArg2, wBattleArg3
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, wBattleSkills
@@ -829,7 +829,7 @@ Jump_019_44B3::
     ret
 
 ; HL = the word wD868, DE = the word wD86A, then falls into Func_019_44C9 (E-0126)
-; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01, ActionEffect_TatsuCall_Sub01, ...)
+; 7 call sites from 7 routines (e.g. RecomputeTargetMaxHPAndMP, RecomputeTargetStatsFromRecord, ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01, ActionEffect_TatsuCall_AddAx9ToHL, ...)
 ; reads: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 LoadBattleArg0PointersThenRunPackResistanceFieldsToDE::
 Func_019_44B9:: ; address name
@@ -901,7 +901,7 @@ Jump_019_44EC::
     ret
 
 ; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (A0:42B2)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub02)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
 ; points at: wScreenTileBuffer
 CopyScreenTileBufferToVRAM_A0_Bank19::
 Func_019_4516:: ; address name
@@ -949,9 +949,9 @@ Func_019_4537:: ; address name
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattleKind
-GameMode4_Init_Sub01_Sub05::
+GameMode4_Init_Sub01_QueueMusic::
 Func_019_4544:: ; address name
     ld a, [wBattleKind]
     or a, a
@@ -971,7 +971,7 @@ Jump_019_4553::
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattlePartyCount
 ; points at: wBattlerRecords
 GameMode4_Init_Sub01_Sub06::
@@ -983,7 +983,7 @@ Func_019_4557:: ; address name
 
 Jump_019_4560::
     push bc
-    call GameMode4_Init_Sub01_Sub06_Sub01
+    call GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped
     pop bc
     inc c
     dec b
@@ -992,7 +992,7 @@ Jump_019_4560::
 
 ; only called from GameMode4_Init_Sub01_Sub06 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06)
-GameMode4_Init_Sub01_Sub06_Sub01::
+GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped::
 Func_019_456A:: ; address name
     ld a, c
     ld c, $01
@@ -1125,7 +1125,7 @@ Jump_019_45EC::
     ret
 
 ; for A in $0D-$13 increments (capped at 3) each byte listed in Data_019_4641 row A - $0D, relative to DE (E-0125)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped)
 ; writes: hTemp0, hTemp1
 ApplyIncrementOffsetRows19ForA0DTo13::
 Func_019_4605:: ; address name
@@ -1195,10 +1195,10 @@ Data_019_4641:: ; address name
     db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; only called from BattleEnd_Step3_Sub06_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01)
 ; reads: wDisplaySlot
 ; points at: wBattlerRecordSlot5, wBattlerRecordSlot4
-BattleEnd_Step3_Sub06_Sub01_Sub01::
+BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC::
 Func_019_46B1:: ; address name
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1233,10 +1233,10 @@ Jump_019_46C1::
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wBattleFoeCount, wBattleKind
 ; points at: wBattlerRecordSlot4
-GameMode4_Init_Sub01_Sub07::
+GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC::
 Func_019_46DD:: ; address name
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1274,7 +1274,7 @@ Jump_019_46FD::
     ret
 
 ; loads monster wCFDD[C] (LoadMonsterRecord), runs Func_019_4A9A, loads the species named in wRecordBuffer, then runs Func_019_4B37 (E-0121)
-; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_Sub07, BattleEnd_Step3_Sub06_Sub01_Sub01)
+; 2 call sites from 2 routines (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC, BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC)
 ; reads: wRecordBuffer
 ; writes: wMonsterId, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wEncounterMonsters
@@ -1315,7 +1315,7 @@ Func_019_470F:: ; address name
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub07)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC)
 ; reads: wBattleArg2, wBattleArg3, wSpeciesIdLo, wSpeciesIdHi, wSpeciesRecord, hTemp1
 ; writes: wBattleArg2, wBattleArg3, wBattleArg1, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0, wBattleArg0
 ; points at: wWildLevel, wEncounterMonsters
@@ -2097,7 +2097,7 @@ Jump_019_4B87::
 ; 2 call sites from 1 routine (e.g. GameMode4_Init_Sub01_Sub04)
 ; reads: wLinkMode, wBattleArg0, wLoadSlot
 ; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wSlotLastTactic, wBattleSetupD8, wBattleLevel, wBattleMaxHP, wBattleMaxMP, ...
-GameMode4_Init_Sub01_Sub04_Sub01::
+GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8::
 Func_019_4B91:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -2116,7 +2116,7 @@ Jump_019_4BA4::
     ret
 
 ; slot C: copies species, family, AI settings (wDA43/wDA4B outside link battles) and stats from its battler record into the battle arrays (E-0131)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wLinkMode, wBattleArg0, wLoadSlot
 ; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wSlotLastTactic, wBattleSetupD8, wBattleLevel, wBattleMaxHP, wBattleMaxMP, ...
 LoadBattleSlotFromBattlerRecord_4BA8::
@@ -2352,7 +2352,7 @@ Jump_019_4CEF::
     ret
 
 ; slot C: copies species, family, wDA43 and stats from its battler record into the battle arrays and loads its skills (E-0131)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8)
 ; reads: wBattleArg0, wLoadSlot
 ; points at: wBattleMonsterId, wSlotNameSuffix, wSlotTactic, wBattleLevel, wBattleMaxHP, wBattleMaxMP, wBattleATK, wBattleDEF, ...
 LoadBattleSlotFromBattlerRecord_4CF8::
@@ -2549,10 +2549,10 @@ Jump_019_4E0E::
     ret
 
 ; only called from GameMode4_Init_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01)
+; 1 call site from 1 routine (e.g. GameMode4_Init_FillBytes)
 ; reads: wLinkMode
 ; points at: wSlotMarks
-GameMode4_Init_Sub01_Sub08::
+GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
 Func_019_4E1C:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -2902,7 +2902,7 @@ Data_019_4E60:: ; address name
     d24 6200812, 6300237, 6399740, 6499322, 6598984, 6698727, 6798552, 6898460, 6998452, 7098529, 7198692
 
 ; copies the 3 bytes at $4E60 + $129 * hFFC6 + 3 * hFFC7 into hFFC8-hFFCA (E-0120)
-; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_Sub01, SwapMonstersMenu_Case09_Case13_Sub01, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
+; 4 call sites from 4 routines (e.g. WithSRAMDraw4ACEAnd4BE8_ShowStringBank08AtTilesHL_Bank03, SwapMonstersMenu_Case09_Case13_LoadRecordThreeBytesToTemp0, RecordReachedNextLevelExp, DrawWCA83ExpAndToNextLevel)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
 LoadExpTableEntryToTemp2::
@@ -2931,7 +2931,7 @@ Func_019_7380:: ; address name
     ret
 
 ; loads species record [wC991] and copies three bytes of table $4E60 entry (wD00F * $129 + 3 * ([wC9DC] - 1)) to wC9DE (E-0121)
-; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_Sub01, BattleEnd_Step3)
+; 2 call sites from 2 routines (e.g. CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, BattleEnd_Step3)
 ; reads: wRecordBufA, wSpeciesExpCurve
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 LoadTable4E60EntryForWC991ToWC9DE::

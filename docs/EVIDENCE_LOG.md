@@ -2431,6 +2431,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0280 — Branching steps named after their main call
+
+- Kind: TOOL (structural naming from the instructions; C2 that the step makes the call, not that the call is all it does).
+- The E-0278 rule is extended to steps of up to 24 instructions with conditional branches inside. A step ends at an unconditional `ret`/`jp` or at the next named label.
+- A step is named Parent_<main call>. The main call is the first call that is not a generic helper; the generic list grows to cover screen-buffer rect draws, SRAM record access, list-cell addresses, table reads, compares and random-number steps.
+  - Calls to structural or address-named routines are not used.
+  - When a name repeats in a family, the case number is kept as a suffix.
+- 2,354 steps are renamed, for example SwapMonstersMenu_Case04_LoadRecordCapacityFromFarmLevelTable, SwapMonstersMenu_Case05_WritePlayerNameWithFlag0SuffixToTextBuf0, SwapMonstersMenu_Case09_Case06_UpdatePagedListCursor.
+- **Limit.** The name records one call the step makes; a step that branches may do other things on other paths.
+- Labels ending in a bare case number go from 3,866 to 2,204. That count includes descriptive names that keep a case number for uniqueness.
+- Binary verification: build/run362 PASS, 0 differing bytes; tests OK.
+
 ### E-0279 — AI skill score conditions
 
 - Kind: OBSERVATION (reading; C1).

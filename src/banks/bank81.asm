@@ -81,7 +81,7 @@ Func_081_4001:: ; address name
     ldh [hTemp4], a
     ld a, [wAIWeights + $8]
     ldh [hTemp5], a
-    call CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    call CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
     pop hl
     ld a, c
     or a, a
@@ -106,7 +106,7 @@ Func_081_4001:: ; address name
     ldh [hTemp4], a
     ld a, [wAIWeights + $7]
     ldh [hTemp5], a
-    call CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    call CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
     ld a, c
     or a, a
     jr nz, Jump_081_40D8
@@ -126,7 +126,7 @@ Jump_081_40D8::
 ; 2 call sites from 1 routine (e.g. CallFunc4001InBank81KeepRegs_Sub01)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, wAIWeights
 ; points at: hTemp5
-CallFunc4001InBank81KeepRegs_Sub01_Sub01::
+CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
 Func_081_40E2:: ; address name
     ld a, [hl+]
     ld d, [hl]
@@ -137,7 +137,7 @@ Func_081_40E2:: ; address name
     jr z, Jump_081_4116
     cp a, $01
     jp z, Jump_081_414C
-    jr CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
 Jump_081_40F4::
     ldh a, [hTemp0]
@@ -176,7 +176,7 @@ Jump_081_411F::
     inc hl
     dec d
     jr nz, Jump_081_411F
-    jr CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
 Jump_081_4126::
     ld c, [hl]
@@ -204,7 +204,7 @@ Jump_081_4136::
 Jump_081_4146::
     dec d
     jr nz, Jump_081_4126
-    jp CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
 Jump_081_414C::
     ld c, [hl]
@@ -225,7 +225,7 @@ Jump_081_415D::
     inc hl
     dec d
     jr nz, Jump_081_415D
-    jp CallFunc4001InBank81KeepRegs_Sub01_Sub01
+    jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
 
 Jump_081_4165::
     jr Jump_081_4126

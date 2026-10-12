@@ -2,7 +2,7 @@ SECTION "Bank 61", ROMX[$4000], BANK[$61]
     db $61
 
 ; wCD05 = a strength value from the party's stats (AGL and INT halved, ATK, DEF, max HP), 0 without a party (E-0130)
-; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case05, Talk00Event02_Case04_Sub01)
+; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength, Talk00Event02_Case04_NextRandomSeed)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp4, hTemp5
 ; writes: wPartyStrength, hTemp4, hTemp5, rRAMG
 ; points at: wPartyList
@@ -126,7 +126,7 @@ Jump_061_40B0::
     ret
 
 ; computes the party strength from AGL + INT, ATK, DEF and max HP of each member into hFFCA-hFFCD and wCD05 for key generation (E-0131)
-; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_Case06, WriteKeyEntryTemp0)
+; 2 call sites from 2 routines (e.g. RunBattleIntroKindCase_ComputePartyStrengthForKey, WriteKeyEntryTemp0)
 ; reads: wPartyCount, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: wPartyStrength, hTemp4, hTemp5, hTemp6, hTemp7, rRAMG, hTemp2, hTemp3
 ; points at: wPartyList
@@ -374,10 +374,10 @@ Func_061_420D:: ; address name
     and a, $07
     rst $00
     dw LoadKeyWorldTilesetAndHeader
-    dw LoadMapHeaderByMapType_Case01
-    dw LoadMapHeaderByMapType_Case02
-    dw LoadMapHeaderByMapType_Case03
-    dw LoadMapHeaderByMapType_Case03
+    dw LoadMapHeaderByMapType_DecompressToVRAM
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03
     dw LoadMapType5TilesetAndHeader
     dw LoadMapHeaderByMapType_Case06
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
@@ -534,7 +534,7 @@ Data_061_42DD:: ; address name
 ; reads: wIsCGB, wKeyWorldFloor
 ; writes: wBGPaletteUploadRequest, wMaxBlockingTile, wFieldEventKind, wMapSpriteKind, wMapTallTileMin, wMapWidthScreens, wMapHeightScreens, wEncounterRate, ...
 ; points at: wBGPaletteBuffer, wKeyWorldObjects
-LoadMapHeaderByMapType_Case01::
+LoadMapHeaderByMapType_DecompressToVRAM::
 Jump_061_4325:: ; address name
     ld de, MapType5Tiles5
     ld b, $6E
@@ -608,7 +608,7 @@ Jump_061_4380::
 ; reads: wKeyWorldFloor, hTemp0
 ; writes: hTemp0, wKeyWorldByte06
 ; points at: hTemp0
-LoadMapHeaderByMapType_Case02::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_Case02::
 Jump_061_439F:: ; address name
     ld a, $61
     ldh [hTemp0], a
@@ -630,7 +630,7 @@ Jump_061_43AE::
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wKeyWorldFloorState
-LoadMapHeaderByMapType_Case03::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03::
 Jump_061_43B9:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -755,9 +755,9 @@ Func_061_4472:: ; address name
     rst $00
     dw LoadMapScreen_Sub03_Case00
     dw LoadMapScreen_Sub03_Return
-    dw LoadMapScreen_Sub03_Case02
-    dw LoadMapScreen_Sub03_Case03
-    dw LoadMapScreen_Sub03_Case03
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
+    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03
     dw LoadMapScreen_Sub03_Case05
     dw LoadMapScreen_Sub03_Case06
     dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
@@ -823,7 +823,7 @@ Jump_061_44D7::
     ret
 
 ; writes a 2 x 2 tile block ($1A or $1C by the wCDAF entry, then $1E) at wC244, with CGB attribute 5 (E-0127)
-; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, Talk00Event0B_Case04, Talk00Event0B_Case02)
+; 3 call sites from 3 routines (e.g. LoadMapScreen_Sub03_Case06, Talk00Event0B_DrawDoorTilesForKeyWorldFloor, Talk00Event0B_Case02)
 ; reads: wKeyWorldFloor, wIsCGB
 ; writes: rSVBK
 DrawDoorTilesForKeyWorldFloor::
@@ -1632,7 +1632,7 @@ Jump_061_5418:: ; address name
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: hTemp0
-LoadMapScreen_Sub03_Case02::
+LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case02::
 Jump_061_541A:: ; address name
     ld a, $61
     ldh [hTemp0], a
@@ -1651,7 +1651,7 @@ Jump_061_5429::
 ; reads: wKeyWorldFloor
 ; writes: hTemp0
 ; points at: wKeyWorldFloorState
-LoadMapScreen_Sub03_Case03::
+LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03::
 Jump_061_542D:: ; address name
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -2624,11 +2624,11 @@ Func_061_596F:: ; address name
     rst $00
     dw CheckWarpsByMapType_Case00
     dw CheckWarpsByMapType_ToReturnStub_5CCF
-    dw CheckWarpsByMapType_Case02_Sub01_Case02
-    dw CheckWarpsByMapType_Case03_Sub01_Case03
+    dw CheckWarpsByMapType_Case02
+    dw CheckWarpsByMapType_Case03
     dw CheckWarpsByMapType_Return
-    dw CheckWarpsByMapType_Case05_Sub01_Case05
-    dw CheckWarpsByMapType_Case06_Sub01_Case06
+    dw CheckWarpsByMapType_Case05
+    dw CheckWarpsByMapType_Case06
     dw CheckWarpsByMapType_Return
 
 ; entry 4 of the `rst $00` table in CheckWarpsByMapType
@@ -2661,34 +2661,34 @@ Jump_061_5996:: ; address name
 
 ; entry 2 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case02_Sub01_Case02::
+CheckWarpsByMapType_Case02::
 Jump_061_599A:: ; address name
     call CheckWarpsByMapType_Case02_Sub01
     ret
 
 ; entry 3 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case03_Sub01_Case03::
+CheckWarpsByMapType_Case03::
 Jump_061_599E:: ; address name
     call CheckWarpsByMapType_Case03_Sub01
     ret
 
 ; entry 5 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case05_Sub01_Case05::
+CheckWarpsByMapType_Case05::
 Jump_061_59A2:: ; address name
     call CheckWarpsByMapType_Case05_Sub01
     ret
 
 ; entry 6 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case06_Sub01_Case06::
+CheckWarpsByMapType_Case06::
 Jump_061_59A6:: ; address name
     call CheckWarpsByMapType_Case06_Sub01
     ret
 
 ; only called from CheckWarpsByMapType_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case06_Sub01_Case06)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case06)
 ; reads: hPlayerX, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hPlayerStateFlags
 ; writes: wKeyWorldArea, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapType, wWarpPending, ...
 CheckWarpsByMapType_Case06_Sub01::
@@ -2770,7 +2770,7 @@ Data_061_5A2D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case05_Sub01_Case05)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case05)
 ; reads: hPlayerX, hPlayerStateFlags, hPlayerY, wKeyWorldFloor, wKeyWorldArea, hMapScreenX, hMapScreenY, hTemp1, ...
 ; writes: hPlayerStateFlags, hTemp0, hTemp1, wKeyWorldArea, wMapType, hMapScreenX, hMapScreenY, wWarpDestX, ...
 ; points at: wKeyWorldFloorState, wKeyWorldFloorInfo
@@ -2992,7 +2992,7 @@ Data_061_5BB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $30, $11, $22, $03, $33
 
 ; only called from CheckWarpsByMapType_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case02_Sub01_Case02)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case02)
 ; reads: hPlayerX, hPlayerY, wMapToggleRequest, wKeyWorldFloor, hPlayerStateFlags
 ; writes: wMapToggleRequest, wKeyWorldFloor, wWarpDestX, wWarpDestY, wWarpDestFacing, wMapToggleFlag, wModeState, wMenuState, ...
 CheckWarpsByMapType_Case02_Sub01::
@@ -3038,7 +3038,7 @@ Jump_061_5BC4::
     ret
 
 ; only called from CheckWarpsByMapType_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case03_Sub01_Case03)
+; 1 call site from 1 routine (e.g. CheckWarpsByMapType_Case03)
 ; reads: wKeyWorldFloor, hPlayerStateFlags, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY
 ; writes: hPlayerStateFlags, wWarpDestFacing, hMapScreenX, hMapScreenY, wWarpDestX, wWarpDestY, wMapType, wModeState, ...
 ; points at: wKeyWorldFloorState
@@ -3728,7 +3728,7 @@ Jump_061_6065::
     jp Jump_061_5F4C
 
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01_Sub01_Case00)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wKeyWorldFlags, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
 ; writes: hTemp0
 ; points at: wKeyWorldFloorInfo, wKeyWorldAreaInfo

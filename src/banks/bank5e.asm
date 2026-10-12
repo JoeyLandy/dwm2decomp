@@ -1,7 +1,7 @@
 SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
     db $5E
 
-; address loaded by RunGameMode2State_Case01
+; address loaded by RunGameMode2State_CopyScrollToHardware
 ; LZSS-compressed asset: 558 bytes expand to 768 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Plus500Gfx_5E_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_05E_4001:: ; address name

@@ -157,7 +157,7 @@ Data_017_41BF:: ; heuristic: target of a monotone pointer table; C0
     db $B9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from Data_017_426C[wC51F] (also kept in wC577), attribute file wC520 | $80, loads the object palettes and sends it (E-0125)
-; 9 call sites from 9 routines (e.g. BootAndMainLoop, GameMode1_Init, GameMode5_Init_Case01, GameMode5_Init_Case02, ...)
+; 9 call sites from 9 routines (e.g. BootAndMainLoop, GameMode1_Init, GameMode5_Init_InitSoundHardware, GameMode5_Init_SendSGBPaletteSetPacket, ...)
 ; reads: wSGBActive, wSGBPaletteSet, wTemp0, wSGBAttrFile
 ; writes: wSGBPacketBuffer, wTemp0, wSGBPacketIndex
 ; points at: wSGBPaletteNum0Lo
@@ -203,7 +203,7 @@ Jump_017_41F4::
     ret
 
 ; when the Super Game Boy is active, converts the four palettes pointed to by wC577-wC57E into wOBJPaletteBuffer, wC4E7, wC4EF and wC4F7 (Func_017_4258) (E-0121)
-; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, SendSGBFieldPaletteSet, GameMode5_Init_Case00, ResetLinkScreenPalettes, ...)
+; 7 call sites from 7 routines (e.g. SendSGBPaletteSetPacket, SendSGBFieldPaletteSet, GameMode5_Init_LoadSGBObjectPalettesFromPointers, ResetLinkScreenPalettes, ...)
 ; reads: wSGBActive, wSGBPaletteNum0Lo, wSGBPaletteNum0Hi, wSGBPaletteNum1Lo, wSGBPaletteNum1Hi, wSGBPaletteNum2Lo, wSGBPaletteNum2Hi, wSGBPaletteNum3Lo, ...
 ; points at: wOBJPaletteBuffer
 LoadSGBObjectPalettesFromPointers::

@@ -2,7 +2,7 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; 13 call sites from 12 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, AIScore_Transform_Sub01, ...)
+; 13 call sites from 12 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty, AIScore_BeDragon_GetBattleMaxHP_Bank05, AIScore_Transform_ReadSlotAIModeIndexed_Bank05, ...)
 ; points at: wBattleATK
 GetBattleATK_Bank05::
 Func_005_4001:: ; address name
@@ -10,7 +10,7 @@ Func_005_4001:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 19 call sites from 16 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_Upper_Conditions_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, ...)
+; 19 call sites from 16 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -18,7 +18,7 @@ Func_005_4006:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 19 call sites from 14 routines (e.g. AIScore_Meditate_Conditions_Sub01, AIScore_BeDragon_Sub01, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, ...)
+; 19 call sites from 14 routines (e.g. AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05, AIScore_BeDragon_GetBattleMaxHP_Bank05, HPBandOfSlotTemp0, CompareHPWithThreeQuartersMax, ...)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank05::
 Func_005_400B:: ; address name
@@ -26,7 +26,7 @@ Func_005_400B:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 12 call sites from 7 routines (e.g. AIScore_BeDragon_Sub01, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_Sub01, ...)
+; 12 call sites from 7 routines (e.g. AIScore_BeDragon_GetBattleMaxHP_Bank05, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_CarryUnlessBattleSlotOutSlotEmpty, ...)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 26 call sites from 22 routines (e.g. UnreferencedEstimateStrongestFoeHit, FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_Meditate_Conditions_Sub01, ...)
+; 26 call sites from 22 routines (e.g. UnreferencedEstimateStrongestFoeHit, FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -50,7 +50,7 @@ Func_005_401A:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleAGL; A = its low byte (E-0064)
-; 10 call sites from 8 routines (e.g. AIScore_Speed_Conditions_Sub01_Sub01, AIScore_BeDragon_Sub01, AIScore_SquallHit_Conditions_Sub01, AverageAGLOfSideA, ...)
+; 10 call sites from 8 routines (e.g. AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05, AIScore_BeDragon_GetBattleMaxHP_Bank05, AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty, AverageAGLOfSideA, ...)
 ; points at: wBattleAGL
 GetBattleAGL_Bank05::
 Func_005_401F:: ; address name
@@ -58,7 +58,7 @@ Func_005_401F:: ; address name
     jr Jump_005_402E
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
-; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_Sub01, AIScore_Ramming_Sub01, ...)
+; 6 call sites from 5 routines (e.g. FailIfTwoAlliesBelowHalfHP, AIGateCompareAllyStatAverages, AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024, AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_4024:: ; address name
@@ -296,7 +296,7 @@ Jump_005_413D::
     ret
 
 ; cost = wRecordBufferData (byte 0 of the skill record): C = $FF (can pay) when the cost is 0, when the cost is $FF and the actor's MP (wBattleMP word) is non-zero, or when MP >= cost; C = 0 otherwise. Agrees with CheckSkillMPCost that equal MP and cost is enough (E-0063)
-; 35 call sites from 35 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
+; 35 call sites from 35 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wBattleActor, wRecordBufferData
 ; points at: wBattleMP
 ActorCanPayMPCost_Bank05:: ; heuristic: follows a terminator; C0
@@ -332,7 +332,7 @@ Jump_005_4166::
     ret
 
 ; C = 0 when bit 6 of wCFF3 (skill record buffer) is set and the actor's status byte 1 (wD80D) bit 0 is set, else $FF (compare refusal code 3 of CheckSkillMPCost) (E-0071)
-; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
+; 5 call sites from 5 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
 SkillPassesStatus1Bit0Check:: ; heuristic: follows a terminator; C0
@@ -353,7 +353,7 @@ Jump_005_4180::
     ret
 
 ; C = $00 when bit 4 of wCFF3 and bit 7 of the actor's status byte 0 are both set, else $FF (E-0122)
-; 4 call sites from 4 routines (e.g. AIScore_FireAir_Sub02, AIFunc770AAndPassUnlessWCFF3Bit4, AIScore_Curse_Conditions, AIScore_SuckAir_Conditions)
+; 4 call sites from 4 routines (e.g. AIScore_FireAir_AIAttackSkillUsable_74D1, AIFunc770AAndPassUnlessWCFF3Bit4, AIScore_Curse_Conditions, AIScore_SuckAir_Conditions)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wBattleStatus1
 PassUnlessWCFF3Bit4AndActorStatusBit7:: ; heuristic: follows a terminator; C0
@@ -395,7 +395,7 @@ Jump_005_41B6::
     ret
 
 ; when bit 3 is set in wD80A or wD80B (either side), C = 0 if the skill wRecordBuffer is $84 or wCFF3 bit 6 is set; otherwise C = $FF (compare refusal code 4 of CheckSkillMPCost, which tests only the actor's side) (E-0071)
-; 6 call sites from 6 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
+; 6 call sites from 6 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBuffer, wRecordBufferData
 ; points at: wSideFlags0
 SkillPassesSideFlagBit3Check::
@@ -421,7 +421,7 @@ Jump_005_41D3::
     ret
 
 ; when bit 7 of wCFF6 (in the skill record buffer) is set and the skill wRecordBuffer is the queued action (QueuedActionMatches), C = 0; otherwise C = $FF (E-0071)
-; 20 call sites from 20 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIHealUsable, ...)
+; 20 call sites from 20 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIHealUsable, ...)
 ; reads: wRecordBufferData, wRecordBuffer
 SkillPassesRepeatCheck::
 Func_005_41D6:: ; address name
@@ -439,7 +439,7 @@ Jump_005_41E8::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 2 (wD80E) & $22 clear (AnySlotLacksStatusMask), else 0 (E-0114)
-; 4 call sites from 4 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIUsableAndFoeLacksStatus2And5)
+; 4 call sites from 4 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIUsableAndFoeLacksStatus2And5)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
 AnyFoeLacksStatus2Mask22::
@@ -454,7 +454,7 @@ Func_005_41EB:: ; address name
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 5 (wD811) & $C0 clear (AnySlotLacksStatusMask), else 0 (E-0071)
-; 23 call sites from 23 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIAttackSkillUsable_74D1, ...)
+; 23 call sites from 23 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIAttackSkillUsable_74D1, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus5
 AnyFoeLacksStatus5Bits67::
@@ -574,7 +574,7 @@ Jump_005_4283::
 ; reads: wBattleActor, wRecordBuffer, hTemp0
 ; writes: wRecordBuffer, wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3
 ; points at: wBattleSkillsPrefix, hTemp0
-AIScore_TakeMagic_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_4286:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -670,7 +670,7 @@ Jump_005_4319::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 (wBattleStatus) bit 6 clear (AnySlotLacksStatusMask), else 0 (E-0071)
-; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Farewell_Conditions, AIScore_TakeMagic_Conditions, AIScore_StopSpell_Conditions, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Farewell_Conditions, AIScore_TakeMagic_Conditions, AIScore_StopSpell_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 AnyFoeLacksStatus0Bit6:: ; heuristic: follows a terminator; C0
@@ -785,7 +785,7 @@ Jump_005_43AA::
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wBattleStatus1
-AIScore_DanceShut_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_43AD:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -832,7 +832,7 @@ Jump_005_43EF::
     ret
 
 ; C = $FF when wCFEF is 0 or an occupied foe's resistance field for skill wCFEF is below 3, else $00 (E-0127)
-; 11 call sites from 11 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, AIAttackSkillUsable_74D1, ...)
+; 11 call sites from 11 routines (e.g. AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIAttackSkillUsable_74D1, ...)
 ; reads: wRecordBufferData, wBattleActor
 ; points at: wSlotResistances
 AnyFoeNotFullyResistant::
@@ -925,7 +925,7 @@ Jump_005_445E::
 ; only called from AIScore_SquallHit_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SquallHit_Conditions)
 ; reads: wBattleActor
-AIScore_SquallHit_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4461:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -957,7 +957,7 @@ Jump_005_4484::
     ret
 
 ; only called from AIScore_FireAir_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_FireAir_Sub02)
+; 1 call site from 1 routine (e.g. AIScore_FireAir_AIAttackSkillUsable_74D1)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
 AIScore_FireAir_Sub02_AnySlotLacksStatusMask:: ; heuristic: follows a terminator; C0
@@ -1036,7 +1036,7 @@ Func_005_44CF:: ; address name
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wBattleStatus1
-AIScore_AquaWall_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_44E1:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1292,7 +1292,7 @@ Jump_005_461C::
 ; 1 call site from 1 routine (e.g. AIScore_LegSweep_Conditions)
 ; reads: wBattleActor
 ; points at: wSlotDamageFlags, wBattleStatus3
-AIScore_LegSweep_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_461F:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1343,7 +1343,7 @@ Jump_005_4661::
     ret
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 3 (wD80F) entirely clear (AnySlotLacksStatusMask with mask $FF), else 0 (E-0078)
-; 6 call sites from 6 routines (e.g. AILickSkillUsable_7AD8, AIStatusLickUsable, AIScore_Geyser_Conditions, AIScore_HealUs_Sub01, ...)
+; 6 call sites from 6 routines (e.g. AILickSkillUsable_7AD8, AIStatusLickUsable, AIScore_Geyser_Conditions, AIScore_HealUs_AnyFoeLacksStatus0MaskCC, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus3
 AnyFoeHasClearStatus3::
@@ -1358,7 +1358,7 @@ Func_005_4664:: ; address name
     ret
 
 ; C = 1 when the AI mode is below 2; in mode 3 with wCFEF set, $00 when a foe has status 1 mask $22; otherwise $FF (E-0125)
-; 7 call sites from 7 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Firebal, AIScore_Beat, AIScore_Slow, ...)
+; 7 call sites from 7 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Firebal, AIScore_Beat, AIScore_Slow, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
 AIGateFoeStatus1Mask22::
@@ -1410,7 +1410,7 @@ Jump_005_46B1::
 ; 1 call site from 1 routine (e.g. AIScore_FireAir)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_FireAir_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_FireAir_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_46B4:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1476,7 +1476,7 @@ Jump_005_4704::
     ret
 
 ; C = 0 when the actor's status byte 4 (wD810 + 9 * actor) & $C0 is set, else C = $FF (E-0071)
-; 17 call sites from 17 routines (e.g. AIScore_MPass_Sub01, AIScore_MegaMagic_Sub04, AIScore_ChargeUp_Conditions, AIScore_PsycheUp_Conditions, ...)
+; 17 call sites from 17 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_ChargeUp_Conditions, AIScore_PsycheUp_Conditions, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus4
 ActorLacksStatus4Bits67::
@@ -1534,7 +1534,7 @@ Jump_005_473E::
 ; 1 call site from 1 routine (e.g. AIScore_TakeMagic_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_TakeMagic_Conditions_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_TakeMagic_Conditions_AddAx9ToHL:: ; heuristic: follows a terminator; C0
 Func_005_4741:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1552,7 +1552,7 @@ Jump_005_4751::
 ; 1 call site from 1 routine (e.g. AIScore_TailWind_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_TailWind_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_TailWind_Conditions_AddAx9ToHL:: ; heuristic: follows a terminator; C0
 Func_005_4754:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1581,7 +1581,7 @@ Func_005_4767:: ; address name
     ret
 
 ; looks at the actor's own three slots other than the actor: C = $FF when one of them is present with status byte 0 (wBattleStatus) bit 6 clear, or when none of them is present; otherwise (every present ally has bit 6) C = 0 (E-0092)
-; 11 call sites from 11 routines (e.g. AIScore_MPass_Sub01, AIScore_TwinSlash_Conditions, AIScore_Kamikaze_Sub02, AIScore_Sacrifice, ...)
+; 11 call sites from 11 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AIScore_TwinSlash_Conditions, AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Sacrifice, ...)
 ; reads: wBattleActor
 ; points at: wBattleStatus
 AllOtherAlliesHaveStatus0Bit6::
@@ -1810,7 +1810,7 @@ Func_005_4852:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_MetalCut_Conditions)
 ; reads: wBattleActor
 ; points at: wSlotDamageFlags
-AIScore_MetalCut_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4858:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1845,7 +1845,7 @@ Jump_005_487D::
 ; 1 call site from 1 routine (e.g. AIScore_UltraDown_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
-AIScore_UltraDown_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4880:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -1944,7 +1944,7 @@ Jump_005_4901::
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wBattleStatus1
-AIScore_StopSpell_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4904:: ; address name
     ld a, [wRecordBuffer]
     push af
@@ -2028,7 +2028,7 @@ Jump_005_4974::
 ; only called from AIScore_Sap_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sap_Conditions)
 ; reads: wBattleActor
-AIScore_Sap_Conditions_Sub01::
+AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 Func_005_4977:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2070,7 +2070,7 @@ Jump_005_49A7::
 ; only called from AIScore_Slow_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Slow_Conditions)
 ; reads: wBattleActor
-AIScore_Slow_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_49AA:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2193,7 +2193,7 @@ Jump_005_4A40::
 ; 1 call site from 1 routine (e.g. AIScore_Curse_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_Curse_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4A43:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2234,7 +2234,7 @@ Jump_005_4A73::
 ; reads: wRecordBuffer, wBattleActor
 ; writes: wRecordBuffer
 ; points at: wBattleStatus1
-AIScore_DanceShut_Conditions_Sub03:: ; heuristic: follows a terminator; C0
+AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4A76:: ; address name
     ld a, [wRecordBuffer]
     push af
@@ -2517,7 +2517,7 @@ Jump_005_4BDE::
     ret
 
 ; C = $FF when an occupied ally slot has HP at most three quarters of its max, else $00 (E-0124)
-; 5 call sites from 5 routines (e.g. AIScore_Sacrifice, AIScore_HealUs_Sub01, AIScore_Hustle, AIScore_SuckAll, ...)
+; 5 call sites from 5 routines (e.g. AIScore_Sacrifice, AIScore_HealUs_AnyFoeLacksStatus0MaskCC, AIScore_Hustle, AIScore_SuckAll, ...)
 ; reads: wBattleActor
 AnyAllyHPAtMostThreeQuarters:: ; heuristic: follows a terminator; C0
 Func_005_4BE1:: ; address name
@@ -2579,7 +2579,7 @@ Jump_005_4C20::
 ; only called from AIScore_Upper_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Upper_Conditions)
 ; reads: wBattleActor
-AIScore_Upper_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4C23:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2590,7 +2590,7 @@ Jump_005_4C2B::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_005_4C36
-    call AIScore_Upper_Conditions_Sub01_Sub01
+    call AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05
     jr c, Jump_005_4C3D
 
 Jump_005_4C36::
@@ -2607,7 +2607,7 @@ Jump_005_4C3D::
 ; only called from AIScore_Speed_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Speed_Conditions)
 ; reads: wBattleActor
-AIScore_Speed_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4C40:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2618,7 +2618,7 @@ Jump_005_4C48::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, Jump_005_4C53
-    call AIScore_Speed_Conditions_Sub01_Sub01
+    call AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05
     jr c, Jump_005_4C5A
 
 Jump_005_4C53::
@@ -2779,7 +2779,7 @@ Jump_005_4D17::
     ret
 
 ; C = $FF when one of the actor's own three slots is present (the actor included) with status byte 1 (wD80D) & $0C clear and status byte 4 & $03 clear, else 0 (E-0099)
-; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub03, AIScore_MegaMagic)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore, AIScore_MegaMagic)
 ; reads: wBattleActor
 ; points at: wBattleStatus1
 AnyAllyLacksStatus1Bits23And4Bits01:: ; heuristic: follows a terminator; C0
@@ -2835,7 +2835,7 @@ Func_005_4D46:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_SideStep_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus5
-AIScore_SideStep_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_SideStep_Conditions_AddAx9ToHL:: ; heuristic: follows a terminator; C0
 Func_005_4D56:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
@@ -2854,7 +2854,7 @@ Jump_005_4D67::
 ; 1 call site from 1 routine (e.g. AIScore_Surge_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_Surge_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4D6A:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2903,7 +2903,7 @@ Jump_005_4DA2::
 ; 1 call site from 1 routine (e.g. AIScore_DeMagic_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus1, wBattleSlotOut
-AIScore_DeMagic_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_4DA5:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -2957,7 +2957,7 @@ Jump_005_4DF2::
     ret
 
 ; C = 0 when the actor's side byte (wC984 for slots 0-3, wC985 for 4-7) is 1, else C = $FF (E-0099)
-; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Farewell_Conditions, AIScore_LifeDance_Conditions, AIScore_LifeSong_Conditions)
+; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Farewell_Conditions, AIScore_LifeDance_Conditions, AIScore_LifeSong_Conditions)
 ; reads: wBattleActor
 ; points at: wSide0Flag
 CheckSide0FlagNot1::
@@ -3677,13 +3677,13 @@ Jump_005_51E7::
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hTemp0, hTemp1
-AIScore_TwinHits_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_51EA:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
     jr c, Jump_005_5225
-    call AIScore_TwinHits_Shared01
+    call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     ldh a, [hTemp0]
@@ -3721,13 +3721,13 @@ Jump_005_5225::
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
 ; reads: wBattleActor, hTemp0, hTemp1
-AIScore_TwinHits_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02:: ; heuristic: follows a terminator; C0
 Func_005_5228:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp a, $02
     jr c, Jump_005_5272
-    call AIScore_TwinHits_Shared01
+    call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wBattleActor]
     and a, $04
     ld e, a
@@ -3885,7 +3885,7 @@ Jump_005_5314::
     ret
 
 ; hFFC6 = battle slot: C = 0 when its HP >= 2/3 of its max HP, 1 when >= 1/2, 2 when >= 1/3, 3 when >= 1/4, 4 when >= 1/10, else 5 (GetBattleHP_Bank05, GetBattleMaxHP_Bank05, divisions rounded down) (E-0092)
-; 8 call sites from 8 routines (e.g. AIScore_StrongD_Sub01, AIScore_AquaWall_Sub01, AIScore_SuckAll_Sub01_Sub01, AIScore_Meditate_Sub01, ...)
+; 8 call sites from 8 routines (e.g. AIScore_StrongD_HPBandOfSlotTemp0, AIScore_AquaWall_HPBandOfSlotTemp0, AIScore_SuckAll_Sub01_HPBandOfSlotTemp0, AIScore_Meditate_HPBandOfSlotTemp0, ...)
 ; reads: hTemp0
 HPBandOfSlotTemp0::
 Func_005_5317:: ; address name
@@ -3976,7 +3976,7 @@ Jump_005_5393::
     ret
 
 ; C = $00 when the actor's HP is exactly 1 (CompareSlotHPWith1), else $FF (E-0122)
-; 11 call sites from 11 routines (e.g. AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Cover_Conditions, AIScore_SuckAll_Conditions, AIScore_HealUs_Sub01, ...)
+; 11 call sites from 11 routines (e.g. AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Cover_Conditions, AIScore_SuckAll_Conditions, AIScore_HealUs_AnyFoeLacksStatus0MaskCC, ...)
 ; reads: wBattleActor
 ActorHPIsNotOne:: ; heuristic: follows a terminator; C0
 Func_005_5397:: ; address name
@@ -4136,7 +4136,7 @@ Jump_005_544C::
 ; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7, ...
 ; points at: hTemp8
-AIScore_Transform_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Transform_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_544F:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -4248,7 +4248,7 @@ Jump_005_54FA::
     ret
 
 ; C = 0
-; 73 call sites from 73 routines (e.g. AIScore_MPass_Sub01, AINeverUsableResetAISkillScore, AIScore_Skill00, AIScore_Blaze, ...)
+; 73 call sites from 73 routines (e.g. AIScore_MPass_ActorLacksStatus4Bits67, AINeverUsableResetAISkillScore, AIScore_Skill00, AIScore_Blaze, ...)
 SetCToZero::
 Func_005_54FD:: ; address name
     ld c, $00
@@ -4389,7 +4389,7 @@ Jump_005_55A7::
 ; 1 call site from 1 routine (e.g. AIScore_MagicBack_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_MagicBack_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MagicBack_Conditions_AddAx9ToHL:: ; heuristic: follows a terminator; C0
 Func_005_55AA:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -4405,7 +4405,7 @@ Jump_005_55BB::
     ret
 
 ; link battles only: C = $00 when rule bits 7 and 6 of wD044 are set and the side's wD057 flag (or wD045 bit 6) allows it; otherwise $FF (E-0124)
-; 2 call sites from 2 routines (e.g. AIAddScoresFor55BEAnd5731, AIScore_Sacrifice_Sub03)
+; 2 call sites from 2 routines (e.g. AIAddScoresFor55BEAnd5731, AIScore_Sacrifice_LinkRuleCheckWD044Bit6)
 ; reads: wLinkMode, wBattleActor
 ; points at: wLinkRuleWork57
 LinkRuleCheckWD044Bit6::
@@ -4844,7 +4844,7 @@ Jump_005_5800::
 ; only called from AIScore_Sacrifice (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
 ; reads: wBattleActor
-AIScore_Sacrifice_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Sacrifice_GetBattleMaxHP_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_5803:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -4909,7 +4909,7 @@ Jump_005_585A::
     ret
 
 ; compares twice the occupied foes' average ATK with the allies' average DEF; returns $00 or $FF in C (E-0130)
-; 4 call sites from 4 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm, AIScore_Upper_Sub01)
+; 4 call sites from 4 routines (e.g. AIScore_Surround, AIScore_SideStep, AIScore_SandStorm, AIScore_Upper_CompareFoeAverageATKWithAllyDEF)
 ; reads: wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 CompareFoeAverageATKWithAllyDEF:: ; heuristic: follows a terminator; C0
@@ -5556,7 +5556,7 @@ Jump_005_5BB9::
 ; 1 call site from 1 routine (e.g. AIScore_BeDragon)
 ; reads: wBattleActor, hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, ...
 ; writes: hTemp0, hTemp1, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTemp7, ...
-AIScore_BeDragon_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_BeDragon_GetBattleMaxHP_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_5BBC:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5752,7 +5752,7 @@ Jump_005_5CCB::
     ret
 
 ; C = 0 when wCFC5 is 2 or 3, else C = $FF (E-0100)
-; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_Sub02, AIScore_Beat_Conditions, AIScore_PalsyAir_Conditions, AIScore_BigBang)
+; 4 call sites from 4 routines (e.g. AIScore_Sacrifice_ActorCanPayMPCost_Bank05, AIScore_Beat_Conditions, AIScore_PalsyAir_Conditions, AIScore_BigBang)
 ; reads: wBattleKind
 CheckBattleKindNot2Or3::
 Func_005_5CCE:: ; address name
@@ -5861,7 +5861,7 @@ Func_005_5D31:: ; address name
     ret
 
 ; C = 1 when the AI mode is below 3; otherwise $00 when an occupied foe has HP at least 1.5 times the actor's, else $FF (E-0125)
-; 2 call sites from 2 routines (e.g. AIScore_Vacuum_Sub01, AIScore_CallHelp)
+; 2 call sites from 2 routines (e.g. AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_CallHelp)
 ; reads: wBattleActor
 FailIfFoeHPAtLeast150PercentOfActor:: ; heuristic: follows a terminator; C0
 Func_005_5D44:: ; address name
@@ -6017,7 +6017,7 @@ Jump_005_5DFC::
 ; 1 call site from 1 routine (e.g. AIScore_EerieLite_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus8
-AIScore_EerieLite_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_5DFF:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -6148,7 +6148,7 @@ Jump_005_5E9E::
 ; 1 call site from 1 routine (e.g. AIScore_EvilSlash)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_EvilSlash_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_5EA1:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -6187,7 +6187,7 @@ Jump_005_5ECB::
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
 ; reads: wBattleActor, wAIFlag
 ; points at: wSlotMarks
-AIAddScoresFor5ECEAnd5FC7_Sub01::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05::
 Func_005_5ECE:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6240,7 +6240,7 @@ Jump_005_5F10::
     ret
 
 ; C = slot: Z set when the slot's chosen action (wBattleActionChoice) is $9C, $33, $92 or $93 (E-0117)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_Sub01)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05)
 ; points at: wBattleActionChoice
 SlotActionIs9C33Or92Or93::
 Func_005_5F13:: ; address name
@@ -6259,7 +6259,7 @@ Func_005_5F13:: ; address name
     ret
 
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_Sub01)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05)
 WDA77EntryHasBits2And3_Bank05_5F2A::
 Func_005_5F2A:: ; address name
     ld a, c
@@ -6387,7 +6387,7 @@ Jump_005_5FB3::
 ; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7)
 ; reads: wBattleActor, wAIFlag
 ; points at: wSlotMarks
-AIAddScoresFor5ECEAnd5FC7_Sub02::
+AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02::
 Func_005_5FC7:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6437,7 +6437,7 @@ Jump_005_600B::
     ret
 
 ; carry when slot C has under 3 MP; otherwise Z when skill $6B is among its eight skills (E-0124)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_Sub02)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
 ; points at: wBattleMP, wBattleSkills
 SlotCHasMP3AndSkill6B::
 Func_005_600E:: ; address name
@@ -6471,7 +6471,7 @@ Jump_005_6037::
     ret
 
 ; C = index: Z set when bits 2 and 3 are both set in the byte at wDA77 + 7 * C (7-byte entries); A = that byte & $0C; HL points at it (E-0065) (the same 19 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_Sub02)
+; 1 call site from 1 routine (e.g. AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02)
 WDA77EntryHasBits2And3_Bank05::
 Func_005_6039:: ; address name
     ld a, c
@@ -6762,7 +6762,7 @@ Jump_005_61AE::
 ; 1 call site from 1 routine (e.g. AIScore_AquaWall_Conditions)
 ; reads: wBattleActor
 ; points at: wBattleStatus2
-AIScore_AquaWall_Conditions_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_Conditions_AddAx9ToHL:: ; heuristic: follows a terminator; C0
 Func_005_61B1:: ; address name
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -6875,7 +6875,7 @@ Func_005_6229:: ; address name
 ; reads: wBattleActor, wRecordBuffer
 ; writes: wRecordBuffer
 ; points at: wBattleSkillsPrefix
-AIScore_SuckAir_Conditions_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD:: ; heuristic: follows a terminator; C0
 Func_005_623B:: ; address name
     ld a, [wBattleActor]
     swap a
@@ -6929,7 +6929,7 @@ Jump_005_6279::
 Jump_005_627F::
     push bc
     ld a, c
-    call AnyAllyHPBelow6298_Sub01
+    call AnyAllyHPBelow6298_GetBattleMaxHP_Bank05
     push hl
     ld a, c
     call GetBattleHP_Bank05
@@ -6950,7 +6950,7 @@ Jump_005_6295::
 ; only called from AnyAllyHPBelow6298 (E-0047)
 ; 1 call site from 1 routine (e.g. AnyAllyHPBelow6298)
 ; reads: wRecordBuffer
-AnyAllyHPBelow6298_Sub01::
+AnyAllyHPBelow6298_GetBattleMaxHP_Bank05::
 Func_005_6298:: ; address name
     push bc
     call GetBattleMaxHP_Bank05
@@ -7005,9 +7005,9 @@ Jump_005_62D9::
     ret
 
 ; only called from AIScore_MPass_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_MPass_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_MPass_ActorLacksStatus4Bits67)
 ; reads: wBattleActor
-AIScore_MPass_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MPass_Sub01_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_62E1:: ; address name
     ld a, [wBattleActor]
     ld e, a
@@ -7143,7 +7143,7 @@ Jump_005_638E::
 ; only called from AIScore_MegaMagic (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
 ; reads: wBattleActor
-AIScore_MegaMagic_Sub03:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_6392:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -7332,7 +7332,7 @@ Jump_005_647E::
     ret
 
 ; C = 0 when wC58A is 0 and wCFC5 is below 2, else C = $FF (E-0100)
-; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
+; 5 call sites from 5 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_Skill00, AIScore_FireSlash, AIScore_SlimeBlow, ...)
 ; reads: wLinkMode, wBattleKind
 CheckBattleKindAtLeast2OrLinkModeSet::
 Func_005_6481:: ; address name
@@ -7415,7 +7415,7 @@ Jump_005_64DC::
 ; only called from AIScore_Meditate_Conditions (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Meditate_Conditions)
 ; reads: wBattleActor
-AIScore_Meditate_Conditions_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_64DF:: ; address name
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -7580,10 +7580,10 @@ Func_005_65AC:: ; address name
     ret
 
 ; only called from AIScore_Sap_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Sap_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01)
 ; reads: wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-AIScore_Sap_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_65C1:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -7891,7 +7891,7 @@ Func_005_6741:: ; address name
 ; 1 call site from 1 routine (e.g. AIScore_BiAttack)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
-AIScore_BiAttack_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_676E:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -7944,7 +7944,7 @@ Jump_005_67AF::
 ; 1 call site from 1 routine (e.g. AIScore_Berserker)
 ; reads: wBattleActor
 ; points at: wAIDamageEstimates
-AIScore_Berserker_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_67B2:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
@@ -8019,7 +8019,7 @@ Jump_005_681D::
 ; 1 call site from 1 routine (e.g. AIScore_Ramming)
 ; reads: wBattleActor, wRecordBufferData
 ; points at: wSlotResistances
-AIScore_Ramming_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_6820:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
@@ -8101,7 +8101,7 @@ Jump_005_6899::
 ; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
 ; reads: wBattleActor, wLinkMode, wBattleKind, wAIFlag, wRecordBufferData
 ; points at: wSlotMarks, wSlotResistances
-AIScore_Kamikaze_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_4024:: ; heuristic: follows a terminator; C0
 Func_005_689C:: ; address name
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_4024
@@ -8253,11 +8253,11 @@ Jump_005_6982::
     ret
 
 ; only called from AIScore_BiAttack_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_BiAttack_Sub02)
+; 1 call site from 1 routine (e.g. AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore)
 ; reads: wBattleActor, hTemp4, hTemp5, hTemp3
 ; writes: hTemp3, hTemp4, hTemp5
 ; points at: hTemp3
-AIScore_BiAttack_Sub02_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_6985:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -8513,7 +8513,7 @@ Jump_005_6AE5::
     ret
 
 ; wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF
-; 108 call sites from 108 routines (e.g. AIScore_Skill00_Conditions, AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_Sub02, ...)
+; 108 call sites from 108 routines (e.g. AIScore_Skill00_Conditions, AIFireSkillUsable, AIScore_Beat_Conditions, AIScore_Sacrifice_ActorCanPayMPCost_Bank05, ...)
 ; writes: wAISkillScore, wAISkillScore2
 ResetAISkillScore::
 Func_005_6AE8:: ; address name
@@ -8564,9 +8564,9 @@ Func_005_6B16:: ; address name
     ret
 
 ; only called from AIScore_Upper_Conditions_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Upper_Conditions_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wLinkMode
-AIScore_Upper_Conditions_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Upper_Conditions_Sub01_GetBattleDEF_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_6B20:: ; address name
     call GetBattleDEF_Bank05
     ld a, l
@@ -8617,9 +8617,9 @@ Jump_005_6B5D::
     ret
 
 ; only called from AIScore_Speed_Conditions_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Speed_Conditions_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattleStatResultLo, wBattleStatResultHi, wLinkMode
-AIScore_Speed_Conditions_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Speed_Conditions_Sub01_GetBattleAGL_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_6B5F:: ; address name
     call GetBattleAGL_Bank05
     ld a, l
@@ -8764,7 +8764,7 @@ Func_005_6BF8:: ; address name
     ret
 
 ; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wD989 + 16 * C), loading part of each skill record into hFFC6 (LoadSkillRecordPart with wD868 = 5, wD869 = 1); returns A = hFFC6 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
-; 8 call sites from 8 routines (e.g. AIScore_SuckAir_Conditions_Sub02, AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Conditions_Sub01, ...)
+; 8 call sites from 8 routines (e.g. AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD, AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05, ...)
 ; reads: hTemp0
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBuffer
 ; points at: hTemp0, wBattleSkills
@@ -8911,10 +8911,10 @@ Func_005_6CA5:: ; address name
     ret
 
 ; only called from routines of AIScore_TwinHits (E-0098)
-; 2 call sites from 2 routines (e.g. AIScore_TwinHits_Sub01, AIScore_TwinHits_Sub02)
+; 2 call sites from 2 routines (e.g. AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05, AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02)
 ; reads: wBattleActor, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-AIScore_TwinHits_Shared01:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_005_6CC2:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -9414,7 +9414,7 @@ Jump_005_6F58::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in 2 banks)
-; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_Sub01, AnyFoeOpenToWDA74Field3, AnyAllyWDA76Bits2To5NotAllSet, AnyFoeVulnerableByWDA77Bits23, ...)
+; 16 call sites from 16 routines (e.g. AIScore_Sacrifice_GetBattleMaxHP_Bank05, AnyFoeOpenToWDA74Field3, AnyAllyWDA76Bits2To5NotAllSet, AnyFoeVulnerableByWDA77Bits23, ...)
 ReadByteAtHLPlus4APlus3C_Bank05::
 Func_005_6F60:: ; address name
     add a, a
@@ -9425,7 +9425,7 @@ Func_005_6F60:: ; address name
     ld a, [hl]
     ret
 
-; address loaded by AnyFoeNotFullyResistant, PassIfFoesAverageResistanceAtLeast2, FailIfAnyFoeFullyResistant, AIScore_Ramming_Sub01 and 4 more
+; address loaded by AnyFoeNotFullyResistant, PassIfFoesAverageResistanceAtLeast2, FailIfAnyFoeFullyResistant, AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024 and 4 more
 Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03
@@ -9569,7 +9569,7 @@ Func_005_701B:: ; address name
     ret
 
 ; A = wCFEF, Z set when it is zero (E-0114)
-; 2 call sites from 2 routines (e.g. AIGateFoeStatus1Mask22, AIScore_FireAir_Sub01)
+; 2 call sites from 2 routines (e.g. AIGateFoeStatus1Mask22, AIScore_FireAir_ReadSlotAIModeIndexed_Bank05)
 ; reads: wRecordBufferData
 TestWCFEF::
 Func_005_702D:: ; address name
@@ -9606,7 +9606,7 @@ Func_005_7032:: ; address name
     ret
 
 ; only called from AIScore_Kamikaze_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Kamikaze_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_4024)
 ; points at: wBattleSkills
 AIScore_Kamikaze_Sub01_Sub01:: ; heuristic: follows a terminator; C0
 Func_005_7058:: ; address name
@@ -9743,7 +9743,7 @@ Jump_005_7105::
 
 ; only called from AIScore_Sacrifice (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
-AIScore_Sacrifice_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_Sacrifice_ActorCanPayMPCost_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_7109:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9831,7 +9831,7 @@ Jump_005_7183::
 
 ; only called from AIScore_MPass (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MPass)
-AIScore_MPass_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_MPass_ActorLacksStatus4Bits67:: ; heuristic: follows a terminator; C0
 Func_005_7187:: ; address name
     ld a, c
     and a, a
@@ -9848,7 +9848,7 @@ Func_005_7187:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_71A8
-    call AIScore_MPass_Sub01_Sub01
+    call AIScore_MPass_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_71A8
@@ -9994,7 +9994,7 @@ Func_005_7236:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_724B
-    call AIScore_Upper_Conditions_Sub01
+    call AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_724B
@@ -10012,7 +10012,7 @@ Func_005_724F:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_Sap_Conditions_Sub01
+    call AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_725D
@@ -10056,7 +10056,7 @@ Func_005_727A:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_728F
-    call AIScore_Speed_Conditions_Sub01
+    call AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_728F
@@ -10078,7 +10078,7 @@ Func_005_7293:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_72A8
-    call AIScore_Slow_Conditions_Sub01
+    call AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_72A8
@@ -10090,7 +10090,7 @@ Jump_005_72A8::
 
 ; only called from AIScore_TwinHits (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TwinHits)
-AIScore_TwinHits_Sub03:: ; heuristic: follows a terminator; C0
+AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore:: ; heuristic: follows a terminator; C0
 Func_005_72AC:: ; address name
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
@@ -10162,7 +10162,7 @@ Func_005_72F7:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_TakeMagic_Conditions_Sub01
+    call AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_005_7308
@@ -10178,7 +10178,7 @@ Jump_005_7308::
     ld a, c
     and a, a
     jr z, Jump_005_731E
-    call AIScore_TakeMagic_Conditions_Sub02
+    call AIScore_TakeMagic_Conditions_AddAx9ToHL
     ld a, c
     and a, a
     jr z, Jump_005_731E
@@ -10238,7 +10238,7 @@ Jump_005_735D::
     ld a, c
     and a, a
     jr z, Jump_005_736C
-    call AIScore_StopSpell_Conditions_Sub01
+    call AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_736C
@@ -10352,7 +10352,7 @@ Jump_005_73EF::
     ld a, c
     and a, a
     jr z, Jump_005_740C
-    call AIScore_MagicBack_Conditions_Sub01
+    call AIScore_MagicBack_Conditions_AddAx9ToHL
     ld a, c
     and a, a
     jr z, Jump_005_740C
@@ -10496,7 +10496,7 @@ Jump_005_74B1::
 
 ; only called from AIScore_MegaMagic (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_MegaMagic)
-AIScore_MegaMagic_Sub04:: ; heuristic: follows a terminator; C0
+AIScore_MegaMagic_AIAttackSkillUsable_74D1:: ; heuristic: follows a terminator; C0
 Func_005_74B5:: ; address name
     call AIAttackSkillUsable_74D1
     ld a, c
@@ -10517,7 +10517,7 @@ Jump_005_74CD::
     ret
 
 ; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7 and status 2 bit 3, and Func_005_43F2 passes; otherwise resets wDA6E (E-0124)
-; 6 call sites from 6 routines (e.g. AIScore_MegaMagic_Sub04, AIScore_FireAir_Sub02, AIFunc74D1AndFoeLacksStatus3And4, AIScore_BigBang, ...)
+; 6 call sites from 6 routines (e.g. AIScore_MegaMagic_AIAttackSkillUsable_74D1, AIScore_FireAir_AIAttackSkillUsable_74D1, AIFunc74D1AndFoeLacksStatus3And4, AIScore_BigBang, ...)
 AIAttackSkillUsable_74D1::
 Func_005_74D1:: ; address name
     call ActorCanPayMPCost_Bank05
@@ -10548,7 +10548,7 @@ Jump_005_74F5::
 
 ; only called from AIScore_FireAir (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_FireAir)
-AIScore_FireAir_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_FireAir_AIAttackSkillUsable_74D1:: ; heuristic: follows a terminator; C0
 Func_005_74F9:: ; address name
     call AIAttackSkillUsable_74D1
     ld a, c
@@ -10794,7 +10794,7 @@ Func_005_7600:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_MetalCut_Conditions_Sub01
+    call AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_005_7610
@@ -10931,7 +10931,7 @@ Func_005_76A3:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_SquallHit_Conditions_Sub01
+    call AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_76CA
@@ -10959,13 +10959,13 @@ Jump_005_76CA::
 
 ; only called from AIScore_BiAttack (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BiAttack)
-AIScore_BiAttack_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore:: ; heuristic: follows a terminator; C0
 Func_005_76CE:: ; address name
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a, a
     ret z
-    call AIScore_BiAttack_Sub02_Sub01
+    call AIScore_BiAttack_Sub02_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_76DC
@@ -11164,7 +11164,7 @@ Jump_005_77C3::
     ret
 
 ; usable only when Func_005_779F and Func_005_43F2 pass and the actor's HP is not 1; otherwise resets wDA6E (E-0122)
-; 2 call sites from 2 routines (e.g. AIScore_Kamikaze_Sub02, AIScore_Ramming)
+; 2 call sites from 2 routines (e.g. AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne, AIScore_Ramming)
 AIFunc779FAnd43F2AndActorHPNotOne:: ; heuristic: follows a terminator; C0
 Func_005_77C7:: ; address name
     call AIAttackSkillUsable_779F
@@ -11187,7 +11187,7 @@ Jump_005_77DC::
 
 ; only called from AIScore_Kamikaze (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Kamikaze)
-AIScore_Kamikaze_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne:: ; heuristic: follows a terminator; C0
 Func_005_77E0:: ; address name
     call AIFunc779FAnd43F2AndActorHPNotOne
     ld a, c
@@ -11337,7 +11337,7 @@ Func_005_7879:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_78A4
-    call AIScore_Curse_Conditions_Sub01
+    call AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_78A4
@@ -11563,7 +11563,7 @@ Func_005_7996:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_79C1
-    call AIScore_SideStep_Conditions_Sub01
+    call AIScore_SideStep_Conditions_AddAx9ToHL
     ld a, c
     and a, a
     jr z, Jump_005_79C1
@@ -11641,7 +11641,7 @@ Func_005_7A0D:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A23
-    call AIScore_EerieLite_Conditions_Sub01
+    call AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7A23
@@ -11659,7 +11659,7 @@ Func_005_7A27:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A38
-    call AIScore_Surge_Conditions_Sub01
+    call AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7A38
@@ -11679,7 +11679,7 @@ Func_005_7A3E:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A4F
-    call AIScore_UltraDown_Conditions_Sub01
+    call AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7A4F
@@ -11699,7 +11699,7 @@ Func_005_7A55:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7A66
-    call AIScore_DeMagic_Conditions_Sub01
+    call AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7A66
@@ -11779,7 +11779,7 @@ Func_005_7AA4:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
-    call AIScore_SuckAir_Conditions_Sub02
+    call AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD
     ld a, c
     and a, a
     jr z, Jump_005_7AC8
@@ -11883,7 +11883,7 @@ Func_005_7B40:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_LegSweep_Conditions_Sub01
+    call AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7B58
@@ -11947,7 +11947,7 @@ Func_005_7B84:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call AIScore_DanceShut_Conditions_Sub01
+    call AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_005_7BAB
@@ -11959,7 +11959,7 @@ Jump_005_7BAB::
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
-    call AIScore_DanceShut_Conditions_Sub03
+    call AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr z, Jump_005_7BBA
@@ -12147,7 +12147,7 @@ Func_005_7C82:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7C9E
-    call AIScore_TailWind_Conditions_Sub01
+    call AIScore_TailWind_Conditions_AddAx9ToHL
     ld a, c
     and a, a
     jr z, Jump_005_7C9E
@@ -12199,7 +12199,7 @@ Func_005_7CC2:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
-    call AIScore_AquaWall_Conditions_Sub01
+    call AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_005_7CDB
@@ -12207,7 +12207,7 @@ Func_005_7CC2:: ; address name
     jr z, Jump_005_7CE3
 
 Jump_005_7CDB::
-    call AIScore_AquaWall_Conditions_Sub02
+    call AIScore_AquaWall_Conditions_AddAx9ToHL
     ld a, c
     and a, a
     jr z, Jump_005_7CE3
@@ -12219,7 +12219,7 @@ Jump_005_7CE3::
 
 ; only called from AIScore_SealPray (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SealPray)
-AIScore_SealPray_Sub02:: ; heuristic: follows a terminator; C0
+AIScore_SealPray_ActorCanPayMPCost_Bank05:: ; heuristic: follows a terminator; C0
 Func_005_7CE7:: ; address name
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -12351,7 +12351,7 @@ Func_005_7D95:: ; address name
     ld a, c
     and a, a
     jr z, Jump_005_7DA4
-    call AIScore_Meditate_Conditions_Sub01
+    call AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
     jr z, Jump_005_7DA4

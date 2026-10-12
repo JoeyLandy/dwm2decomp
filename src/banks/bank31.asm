@@ -48,7 +48,7 @@ Jump_031_404B::
     ld [wTextCursorLo], a
     ld a, h
     ld [wTextCursorHi], a
-    farcall GameMode4_Init_Sub01
+    farcall GameMode4_Init_FillBytes
     ld b, $31
     ld de, Tiles1Plus240Gfx_31_7C1E
     ld hl, vTiles1 + $240
@@ -105,7 +105,7 @@ Jump_031_40C9::
     call IncrementPlayTime_Bank31
 
 ; runs BattlePhase0, BattlePhaseFight or BattlePhaseEnd for wBattlePhase (E-0122)
-; 1 call site from 1 routine (e.g. RunLinkSession1Exchange_Case01)
+; 1 call site from 1 routine (e.g. RunLinkSession1Exchange_LinkReceiveStepWithBuffer)
 ; reads: wBattlePhase
 RunBattlePhase::
 Func_031_40CC:: ; address name
@@ -176,7 +176,7 @@ Jump_031_4106:: ; address name
     dw BattlePhase0_Step2_Case00
     dw BattlePhase0_Step2_Case01
     dw BattlePhase0_Step2_Case02
-    dw BattlePhase0_Step2_Case03
+    dw BattlePhase0_Step2_CopyFiveGlyphsPlusMarks
 
 ; entry 0 of the `rst $00` table in BattlePhase0_Step2
 ; no direct call (reached through a table, a jump or a vector)
@@ -243,7 +243,7 @@ Jump_031_4138:: ; address name
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkReady, wArg1, wBattleByte62, wStringIndex, wStringCategory
 ; points at: wBattleByte58, wTextBuf0, wBattleStep
-BattlePhase0_Step2_Case03::
+BattlePhase0_Step2_CopyFiveGlyphsPlusMarks::
 Jump_031_416B:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -358,7 +358,7 @@ Jump_031_4228::
     ret
 
 ; HL = monster id: H += 2 (string categories 2 and 3 hold the monster names), then CopyStringHLToDE (E-0115)
-; 3 call sites from 1 routine (e.g. BattlePhase0_Step2_Case03)
+; 3 call sites from 1 routine (e.g. BattlePhase0_Step2_CopyFiveGlyphsPlusMarks)
 CopyMonsterNameToDE_Bank31::
 Func_031_423B:: ; address name
     ld a, h
@@ -483,7 +483,7 @@ Func_031_42D5:: ; address name
     jr Jump_031_430A
 
 Jump_031_4305::
-    call BattlePhase0_Step3_Sub01_Sub01
+    call BattlePhase0_Step3_Sub01_CopyStringHLToDE
     jr Jump_031_4364
 
 Jump_031_430A::
@@ -553,7 +553,7 @@ Jump_031_4364::
 ; reads: wStringCategory, wStringIndex
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0
-BattlePhase0_Step3_Sub01_Sub01::
+BattlePhase0_Step3_Sub01_CopyStringHLToDE::
 Func_031_4365:: ; address name
     ld a, [wStringCategory]
     ld l, a
@@ -631,7 +631,7 @@ Jump_031_43C0:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
-    call BattleFight_Step0_Sub01
+    call BattleFight_Step0_FillBytes
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -803,7 +803,7 @@ Func_031_4493:: ; address name
 ; points at: wBattleStep, wRecordBufA, wPlayerName
 BattleEnd_Step3::
 Jump_031_449C:: ; address name
-    call BattleEnd_Step3_Sub07
+    call BattleEnd_Step3_SRAMRecordAddressMapped
     ld hl, wBattleStep
     inc [hl]
     xor a, a
@@ -913,8 +913,8 @@ Jump_031_452D::
     ld [hl+], a
     ld a, [de]
     ld [hl+], a
-    farcall BattleEnd_Step3_Sub02
-    farcall BattleEnd_Step3_Sub01
+    farcall BattleEnd_Step3_LoadSpeciesRecord
+    farcall BattleEnd_Step3_NextTableByte
     farcall LoadTable4E60EntryForWC991ToWC9DE
     ret
 
@@ -1090,12 +1090,12 @@ Jump_031_4631::
 
 Jump_031_4640::
     ld hl, $0008
-    call BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01
+    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr Jump_031_4680
 
 Jump_031_4648::
     ld hl, $001B
-    call BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01
+    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr Jump_031_4680
 
 Jump_031_4650::
@@ -1112,19 +1112,19 @@ Jump_031_4650::
 
 Jump_031_4663::
     ld hl, $0183
-    call BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01
+    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr Jump_031_4680
 
 Jump_031_466B::
     ld a, $02
     ld [wScreenSavedFlag], a
     ld hl, $01AC
-    call BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01
+    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr Jump_031_4680
 
 Jump_031_4678::
     ld hl, $01AF
-    call BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01
+    call BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01
     jr Jump_031_4680
 
 Jump_031_4680::
@@ -1133,7 +1133,7 @@ Jump_031_4680::
 ; only called from BattleEnd_Step3_Sub06 (E-0047)
 ; 5 call sites from 1 routine (e.g. BattleEnd_Step3_Sub06)
 ; reads: hTemp0, hTemp1
-BattleEnd_Step3_Sub06_Sub01_Sub01_Sub01::
+BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC_Sub01::
 Func_031_4681:: ; address name
     ldh a, [hTemp0]
     ld e, a
@@ -1144,7 +1144,7 @@ Func_031_4681:: ; address name
     inc de
     ld a, h
     ld [de], a
-    farcall BattleEnd_Step3_Sub06_Sub01_Sub01
+    farcall BattleEnd_Step3_Sub06_Sub01_LoadMonsterAndSpeciesForListEntryC
     ret
 
 ; wBattlePhase 2, wBattleStep 4 (E-0044)
@@ -1202,9 +1202,9 @@ Jump_031_46CA:: ; address name
     rst $00
     dw BattleEnd_Step5_Case00
     dw BattleEnd_Step5_Case01
-    dw BattleEnd_Step5_Case02
-    dw BattleEnd_Step5_Case03
-    dw BattleEnd_Step5_Case04
+    dw BattleEnd_Step5_SwapMonstersMenu
+    dw BattleEnd_Step5_BuildAndDrawBattleScreen
+    dw BattleEnd_Step5_LoadBattleMonsterPictureAndTitle
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step5
 ; no direct call (reached through a table, a jump or a vector)
@@ -1253,13 +1253,13 @@ BattleEnd_Step5_Case01::
 Jump_031_471C:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_Step5_Case01_Case00
+    dw BattleEnd_Step5_Case01_CopyRect32StrideToVRAM
     dw BattleEnd_Step5_Case01_Case01
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step5_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenTileBuffer, wBattleResolveStep
-BattleEnd_Step5_Case01_Case00::
+BattleEnd_Step5_Case01_CopyRect32StrideToVRAM::
 Jump_031_4724:: ; address name
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -1288,7 +1288,7 @@ Jump_031_474A:: ; address name
 ; reads: wScreenStep, wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
 ; points at: wBattleSubPhase, wBattleSubStep
-BattleEnd_Step5_Case02::
+BattleEnd_Step5_SwapMonstersMenu::
 Jump_031_4751:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1320,7 +1320,7 @@ Jump_031_4751:: ; address name
 ; entry 3 of the `rst $00` table in BattleEnd_Step5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubStep, wBattleScreenFlags
-BattleEnd_Step5_Case03::
+BattleEnd_Step5_BuildAndDrawBattleScreen::
 Jump_031_4793:: ; address name
     ld a, [wBattleSubStep]
     cp a, $03
@@ -1332,7 +1332,7 @@ Jump_031_4793:: ; address name
     ret
 
 ; BuildBattleScreenBuffer, then copies the 20 x 18 wScreenTileBuffer to vBGMap0 (CopyRect32StrideToVRAM) (E-0115)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_BuildAndDrawBattleScreen)
 ; points at: wScreenTileBuffer
 BuildAndDrawBattleScreen::
 Func_031_47A9:: ; address name
@@ -1346,7 +1346,7 @@ Func_031_47A9:: ; address name
 ; entry 4 of the `rst $00` table in BattleEnd_Step5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScreenFlags
-BattleEnd_Step5_Case04::
+BattleEnd_Step5_LoadBattleMonsterPictureAndTitle::
 Jump_031_47B9:: ; address name
     farcall BattleEnd_Step5_Case04_Sub01
     ld a, [wBattleScreenFlags]
@@ -1355,7 +1355,7 @@ Jump_031_47B9:: ; address name
     ret
 
 ; runs Func_031_47DD, ClearAttributesAndScreenBuffer_Bank31, CopyRectRecordForBattlePartyCount_Bank31, Func_031_7389, LayoutTileBlocksForBattleFoeCount, Func_031_7321 and Func_031_746F in turn (E-0115)
-; 2 call sites from 2 routines (e.g. BuildAndDrawBattleScreen, BattleEnd_Step5_Case02)
+; 2 call sites from 2 routines (e.g. BuildAndDrawBattleScreen, BattleEnd_Step5_SwapMonstersMenu)
 BuildBattleScreenBuffer::
 Func_031_47C7:: ; address name
     call LoadBattleMonsterPictureAndTitle
@@ -1368,7 +1368,7 @@ Func_031_47C7:: ; address name
     ret
 
 ; loads the picture of battle monster wDAAB at vTiles2 + $140, uploads palettes, loads name tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. BattleEnd_Step5_Case04, BattleEnd_Step5_Case03, BuildBattleScreenBuffer, BattleEnd_Step5_Case01_Case00)
+; 4 call sites from 4 routines (e.g. BattleEnd_Step5_LoadBattleMonsterPictureAndTitle, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM)
 ; reads: wDisplaySlot
 ; writes: wBattleScreenFlags, wBGPaletteUploadRequest, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wBattleMonsterId
@@ -1424,16 +1424,16 @@ BattleEnd_Step6::
 Jump_031_4840:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw BattleEnd_Step6_Case00
+    dw BattleEnd_Step6_QueueMusic
     dw BattleEnd_Step6_Case01
-    dw BattleEnd_Step6_Case02
+    dw BattleEnd_Step6_QueueMusic_Case02
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step6
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wCurrentMusic
 ; writes: hSpriteWindowClipMode, hSpriteHideTile
 ; points at: wTransitionByteCD, wBattleSubPhase
-BattleEnd_Step6_Case00::
+BattleEnd_Step6_QueueMusic::
 Jump_031_484A:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -1474,7 +1474,7 @@ Jump_031_486E:: ; address name
 ; reads: wCurrentMusic, wBattleKind
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wNewRecordByte0D, wScreenState, wFieldInitStage
 ; points at: wTransitionByteCD, wBGFillFlag
-BattleEnd_Step6_Case02::
+BattleEnd_Step6_QueueMusic_Case02::
 Jump_031_4878:: ; address name
     ld a, [wCurrentMusic]
     ld hl, wTransitionByteCD
@@ -1512,7 +1512,7 @@ Jump_031_4893::
     ret
 
 ; copies hPlayerFacing to the three follower directions and hPlayerX/hPlayerY to the three follower positions (the facing-preserving form of ResetFollowersToPlayer) (E-0118)
-; 1 call site from 1 routine (e.g. BattleEnd_Step6_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step6_QueueMusic_Case02)
 ; reads: hPlayerFacing, hPlayerX, hPlayerY
 ; writes: wFollowerRecords
 SetFollowersToPlayer::
@@ -1540,7 +1540,7 @@ Jump_031_48E5:: ; address name
     rst $00
     dw BattleEnd_Step7_Case00
     dw BattleEnd_Step7_Case01
-    dw BattleEnd_Step7_Case02
+    dw BattleEnd_Step7_StartPaletteFade
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step7
 ; no direct call (reached through a table, a jump or a vector)
@@ -1600,11 +1600,11 @@ Jump_031_4926:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wScreenState, wLinkSession, wLinkExchangeState, wLinkRole, ...
 ; points at: wModeChangeRequest, wBGFillFlag
-BattleEnd_Step7_Case02::
+BattleEnd_Step7_StartPaletteFade::
 Jump_031_4931:: ; address name
     ld a, $04
     call StartPaletteFade
-    farcall BattleEnd_Step7_Case02_Sub01
+    farcall BattleEnd_Step7_Case02_SRAMRecordAddress
     ld a, $06
     ld [wGameMode], a
     xor a, a
@@ -1673,7 +1673,7 @@ Func_031_498E:: ; address name
     inc hl
     ld a, [wBattleFoeCount]
     cp a, $01
-    jr z, BattleEnd_Step1_Sub01_Sub01
+    jr z, BattleEnd_Step1_Sub01_CopyStringHLToDE
     ld a, $01
     ld [wBattleArg0], a
     ld a, [hl+]
@@ -1693,7 +1693,7 @@ Func_031_498E:: ; address name
     jr nz, Jump_031_4A00
 
 Jump_031_49C2::
-    call BattleEnd_Step1_Sub01_Sub01
+    call BattleEnd_Step1_Sub01_CopyStringHLToDE
     ld hl, wTextBuf0
 
 Jump_031_49C8::
@@ -1711,7 +1711,7 @@ Jump_031_49C8::
 ; only called from BattleEnd_Step1_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step1_Sub01)
 ; points at: wTextBuf0
-BattleEnd_Step1_Sub01_Sub01::
+BattleEnd_Step1_Sub01_CopyStringHLToDE::
 Func_031_49D8:: ; address name
     ld l, e
     ld a, d
@@ -1828,7 +1828,7 @@ Jump_031_4A3F::
 ; reads: wSide0Flag, wLinkMode, wLinkRole, wSide1Flag
 ; writes: wBattleFlag92, wBattleFlag93, wMenuState
 ; points at: wSideControl, wSlotFlags854, wActionQueue, wBattleActionChoice, wSlotMarks, wBattleStep, wBattleStatus3
-BattleFight_Step0_Sub01::
+BattleFight_Step0_FillBytes::
 Func_031_4A65:: ; address name
     ld hl, wSideControl
     ld b, $08
@@ -1941,7 +1941,7 @@ Func_031_4B10:: ; address name
     dw RunBattleSetup_Case00
     dw RunBattleSetup_Case01
     dw RunBattleSetup_Case02
-    dw RunBattleSetup_Case03
+    dw RunBattleSetup_FillWC278WithC3_Bank31
     dw RunBattleSetup_ShowSelectingHeroSMove
     dw RunBattleSetup_Case05
     dw RunBattleSetup_Case06
@@ -1960,19 +1960,19 @@ Jump_031_4B2E:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw RunBattleSetup_Case00_Case00
-    dw RunBattleSetup_Case00_Case01
-    dw RunBattleSetup_Case00_Case02
-    dw RunBattleSetup_Case00_Case03
+    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31
+    dw RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM
+    dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink
     dw RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep
     dw RunBattleSetup_Case00_Case05
     dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345FarAndStep
-    dw RunBattleSetup_Case00_Case07
-    dw RunBattleSetup_Case00_Case08
-    dw RunBattleSetup_Case00_Case09
-    dw RunBattleSetup_Case00_Case0A
+    dw RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07
+    dw RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far
+    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A
     dw RunBattleSetup_Case00_ShowRetireNow
-    dw RunBattleSetup_Case00_Case0C
-    dw RunBattleSetup_Case00_Case0D
+    dw RunBattleSetup_Case00_LoadCursorTileAndRect7826
+    dw RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D
     dw RunBattleSetup_Case00_Case0E
     dw RunBattleSetup_Case00_ShowNoFleeingFromThis
     dw RunBattleSetup_Case00_Case10
@@ -2028,7 +2028,7 @@ Jump_031_4B6B::
 ; reads: wLinkRole
 ; writes: wStringCategory, wStringIndex
 ; points at: wSideControl, wBattleResolveStep
-RunBattleSetup_Case00_Case01::
+RunBattleSetup_Case00_FillWC278WithC3_Bank31::
 Jump_031_4B8F:: ; address name
     ld a, [wLinkRole]
     rlca
@@ -2052,7 +2052,7 @@ Jump_031_4B8F:: ; address name
     ld a, $00
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call RunBattleSetup_Shared04
+    call RunBattleSetup_CopyRectRecord73ADToScreenBuffer
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -2061,7 +2061,7 @@ Jump_031_4B8F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState
 ; points at: wBattleResolveStep
-RunBattleSetup_Case00_Case02::
+RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM::
 Jump_031_4BCC:: ; address name
     call RunBattleSetup_ToCopyRect32StrideToVRAM
     ld hl, Data_031_639F
@@ -2084,7 +2084,7 @@ Jump_031_4BCC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed
 ; points at: wMenuState, wMenuSubState, wBattleResolveStep
-RunBattleSetup_Case00_Case03::
+RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_4BEE:: ; address name
     ld de, Data_031_639F
     ld hl, wMenuState
@@ -2323,7 +2323,7 @@ Jump_031_4D3D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleResolveStep
-RunBattleSetup_Case00_Case07::
+RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07::
 Jump_031_4D4E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2331,7 +2331,7 @@ Jump_031_4D4E:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     call DrawWC338RowsToBGMapRow13
-    call RunBattleSetup_Shared04
+    call RunBattleSetup_CopyRectRecord73ADToScreenBuffer
     ld a, $02
     ld [wBattleResolveStep], a
     ret
@@ -2340,7 +2340,7 @@ Jump_031_4D4E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTextBuf0, wPlayerName, wBattleResolveStep
-RunBattleSetup_Case00_Case08::
+RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far::
 Jump_031_4D65:: ; address name
     call ClearWindowAndCopyRect7345Far
     call DrawWC338RowsToBGMapRow13
@@ -2371,7 +2371,7 @@ Jump_031_4D73::
 ; reads: wTextFlags, wSoundChannelSlots, wBattleTurn, wBattlePartyCount, wBattleFoeCount, wRandomLo, wLinkMode, wDataBankSave
 ; writes: wStringCategory, wStringIndex, wBattleScene, wBattlePhase, wBattleStep, wBattleKindFlags, wDataBank, wDataBankSave
 ; points at: wSoundChannel1, wBattleLevel, wBattleResolveStep
-RunBattleSetup_Case00_Case09::
+RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty::
 Jump_031_4D95:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2441,7 +2441,7 @@ Jump_031_4DDB::
 Jump_031_4DF9::
     cp a, b
     jr nc, Jump_031_4E16
-    call RunBattleSetup_Case00_Case09_Sub01
+    call RunBattleSetup_Case00_Case09_CheckSlotStatusBlockWide_Bank31
     jr z, Jump_031_4E16
     ld a, $00
     ld [wStringCategory], a
@@ -2456,7 +2456,7 @@ Jump_031_4E16::
     ld a, [wLinkMode]
     or a, a
     jr nz, Jump_031_4E1F
-    call RunBattleSetup_Case00_Case09_Sub02
+    call RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty
 
 Jump_031_4E1F::
     ld a, $02
@@ -2474,9 +2474,9 @@ Jump_031_4E1F::
     ret
 
 ; only called from RunBattleSetup_Case00_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattleFoeCount
-RunBattleSetup_Case00_Case09_Sub01::
+RunBattleSetup_Case00_Case09_CheckSlotStatusBlockWide_Bank31::
 Func_031_4E3E:: ; address name
     ld a, [wBattleFoeCount]
     ld b, a
@@ -2498,10 +2498,10 @@ Jump_031_4E4D::
     ret
 
 ; only called from RunBattleSetup_Case00_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattlePartyCount
 ; points at: wBattleLevel, wSlotTrait, wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo
-RunBattleSetup_Case00_Case09_Sub02::
+RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty::
 Func_031_4E54:: ; address name
     ld a, [wBattlePartyCount]
     ld b, a
@@ -2559,7 +2559,7 @@ Jump_031_4EB4::
     ret
 
 ; only called from RunBattleSetup_Case00_Case09_Sub02 (E-0047)
-; 4 call sites from 1 routine (e.g. RunBattleSetup_Case00_Case09_Sub02)
+; 4 call sites from 1 routine (e.g. RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty)
 RunBattleSetup_Case00_Case09_Sub02_Sub01::
 Func_031_4EB9:: ; address name
     ld a, c
@@ -2577,11 +2577,11 @@ Jump_031_4EBF::
     ld [de], a
     ret
 
-; address loaded by RunBattleSetup_Case00_Case09_Sub02
+; address loaded by RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty
 Data_031_4EC6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $04, $00, $00, $0A, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
-; address loaded by RunBattleSetup_Case00_Case09_Sub02
+; address loaded by RunBattleSetup_Case00_Case09_CarryUnlessBattleSlotOutSlotEmpty
 Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $08, $00, $00, $0F, $06, $00, $00, $0A, $04, $00, $00, $05, $02, $00, $00, $03
 
@@ -2590,7 +2590,7 @@ Data_031_4ED6:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; reads: wTextFlags, wBattlePartyCount
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wSlotMarks
-RunBattleSetup_Case00_Case0A::
+RunBattleSetup_Case00_CarryUnlessBattleSlotOutSlotEmpty_Case0A::
 Jump_031_4EE6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2643,7 +2643,7 @@ Jump_031_4F0F:: ; address name
 ; reads: wTextFlags
 ; writes: wWindowTileBuffer, wMenuSubState
 ; points at: wBattleResolveStep
-RunBattleSetup_Case00_Case0C::
+RunBattleSetup_Case00_LoadCursorTileAndRect7826::
 Jump_031_4F2A:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2666,7 +2666,7 @@ Jump_031_4F2A:: ; address name
 ; reads: wJoypadPressed, wMenuSubState
 ; writes: wBattleResolveStep, wBattleSubPhase, wStringCategory, wStringIndex
 ; points at: wMenuSubState, wBattleResolveStep
-RunBattleSetup_Case00_Case0D::
+RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D::
 Jump_031_4F50:: ; address name
     ld de, Data_031_63C5
     ld hl, wMenuSubState
@@ -2704,7 +2704,7 @@ Jump_031_4F8F::
     inc [hl]
     ret
 
-; address loaded by RunBattleSetup_Case00_Case0D
+; address loaded by RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D
 Data_031_4FA4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $99, $6F, $99
 
@@ -2769,49 +2769,49 @@ RunBattleSetup_Case01::
 Jump_031_4FF4:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleSetup_Case01_Case00
-    dw RunBattleSetup_Case01_Case01
-    dw RunBattleSetup_Case01_Case02
+    dw RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31
+    dw RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01
+    dw RunBattleSetup_Case01_MoveBattleCommandCursor
     dw RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7
-    dw RunBattleSetup_Case01_Case04
-    dw RunBattleSetup_Case01_Case05
-    dw RunBattleSetup_Case01_Case06
-    dw RunBattleSetup_Case01_Case07
+    dw RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04
+    dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31
+    dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case07
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep
     dw RunBattleSetup_Case01_ShowItHasNoUsable
-    dw RunBattleSetup_Case01_Case0A
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C
-    dw RunBattleSetup_Case01_Case0D
-    dw RunBattleSetup_Case01_Case0E
-    dw RunBattleSetup_Case01_Case0F
-    dw RunBattleSetup_Case01_Case10
-    dw RunBattleSetup_Case01_Case11
-    dw RunBattleSetup_Case01_Case12
+    dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0E
+    dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0F
+    dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10
+    dw RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11
+    dw RunBattleSetup_Case01_MoveBattleCommandCursor_Case12
     dw RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects
     dw RunBattleSetup_Case01_FillWC278WithC3_Bank31AndStep
     dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep
-    dw RunBattleSetup_Case01_Case16
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case17
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13
     dw RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep
-    dw RunBattleSetup_Case01_Case19
-    dw RunBattleSetup_Case01_Case1A
+    dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1A
     dw RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9
-    dw RunBattleSetup_Case01_Case1C
-    dw RunBattleSetup_Case01_Case1D
-    dw RunBattleSetup_Case01_Case1E
+    dw RunBattleSetup_Case01_CopyRectRecord7750ToScreenBufferFar
+    dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case1D
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1E
     dw RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11
     dw RunBattleSetup_Case01_Case20
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_Case21
-    dw RunBattleSetup_Case01_Case16
-    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case23
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_DrawWC338RowsToBGMapRow13
+    dw RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16
+    dw RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13_Case23
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSetupD7, wCommandMonster
 ; writes: wStringCategory, wStringIndex, wCommandPageCount, wCommandCursorMax, wCommandCursor
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case00::
+RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31::
 Jump_031_5040:: ; address name
     ld hl, vTiles1 + $6D0
     ld de, $2001
@@ -2850,7 +2850,7 @@ Jump_031_5067::
 ; reads: wCommandMonster, wMenuSubState
 ; writes: wMenuSubState, wListLastPageSize
 ; points at: wBattleSetupD8, wBattleResolveStep
-RunBattleSetup_Case01_Case01::
+RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01::
 Jump_031_5087:: ; address name
     ld a, [wCommandMonster]
     and a, $03
@@ -2882,7 +2882,7 @@ Jump_031_5087:: ; address name
 ; reads: wJoypadPressed, wCommandMonster, wMenuSubState, wBattleSetupD7
 ; writes: wBattleResolveStep, wBattleArg1, wCommandMonster
 ; points at: wMenuSubState, wBattleSetupD8, wBattleActionChoice, wSideControl, wBattleResolveStep, wSlotMarks
-RunBattleSetup_Case01_Case02::
+RunBattleSetup_Case01_MoveBattleCommandCursor::
 Jump_031_50BF:: ; address name
     ld de, Data_031_63A7
     ld hl, wMenuSubState
@@ -2996,7 +2996,7 @@ Jump_031_517D:: ; address name
 ; reads: wBattleArg1, wCommandMonster
 ; writes: wBattleArg1, wStringCategory, wStringIndex, wMenuSelectedMember
 ; points at: wSideControl, wBattleResolveStep
-RunBattleSetup_Case01_Case04::
+RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04::
 Jump_031_518A:: ; address name
     ld a, [wBattleArg1]
     or a, a
@@ -3030,7 +3030,7 @@ Jump_031_518A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case05::
+RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4::
 Jump_031_51CE:: ; address name
     call DrawWC2B8LeftToBGMapRow9_74B4
     ld hl, Data_031_63AF
@@ -3054,11 +3054,11 @@ Jump_031_51CE:: ; address name
 ; reads: wJoypadPressed, wCommandMonster, wMenuSelectedMember
 ; writes: wBattleArg1, wBattleResolveStep, wSubMenuCursor2
 ; points at: wMenuSelectedMember, wBattleResolveStep, wSideControl, wBattleActionChoice
-RunBattleSetup_Case01_Case06::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31::
 Jump_031_51F0:: ; address name
     ld de, Data_031_63AF
     ld hl, wMenuSelectedMember
-    call RunBattleSetup_Case01_Case06_Sub01
+    call RunBattleSetup_Case01_Case06_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_5212
@@ -3162,7 +3162,7 @@ Jump_031_52B4::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg1
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_Case07::
+RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case07::
 Jump_031_52B5:: ; address name
     call DrawWC2B8LeftToBGMapRow9_74B4
     ld a, [wBattleArg1]
@@ -3205,7 +3205,7 @@ Jump_031_52CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case0A::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0A::
 Jump_031_52E7:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3236,7 +3236,7 @@ Jump_031_5300:: ; address name
     call CopyRectRecord7750ToScreenBufferFar
     xor a, a
     ld [wBattleArg1], a
-    farcall RunBattleSetup_Shared06
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared06
     xor a, a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -3248,7 +3248,7 @@ Jump_031_5300:: ; address name
 ; reads: wLinkRole
 ; writes: wNameSlot
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case01_Case0D::
+RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D::
 Jump_031_5319:: ; address name
     call DrawWC2F8RectToBGMapRow11
     xor a, a
@@ -3261,7 +3261,7 @@ Jump_031_5319:: ; address name
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     ld hl, Data_031_63AF
     and a, $03
     add a, a
@@ -3282,7 +3282,7 @@ Jump_031_5319:: ; address name
 ; reads: wLinkRole, wJoypadPressed, wCommandMonster, wSubMenuCursor2
 ; writes: wBattleArg0
 ; points at: wSubMenuCursor2, wBattleResolveStep, wBattleActionChoice
-RunBattleSetup_Case01_Case0E::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0E::
 Jump_031_5350:: ; address name
     ld a, [wLinkRole]
     sla a
@@ -3291,7 +3291,7 @@ Jump_031_5350:: ; address name
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, Data_031_63AF
-    call RunBattleSetup_Shared03
+    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_537B
@@ -3339,7 +3339,7 @@ Jump_031_53B9::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg0
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_Case0F::
+RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0F::
 Jump_031_53BA:: ; address name
     call DrawWC2F8RectToBGMapRow11
     ld a, [wBattleArg0]
@@ -3360,7 +3360,7 @@ Jump_031_53C9::
 ; reads: wBattleArg1, wCommandMonster, wBattleArg2, wBattleArg3, wCommandCursor, wMenuCursor
 ; writes: wBattleArg1, wMenuCursor, wCommandCursor, wStringCategory
 ; points at: wSideControl, wCommandCursor, wBattleResolveStep
-RunBattleSetup_Case01_Case10::
+RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10::
 Jump_031_53CD:: ; address name
     ld a, [wBattleArg1]
     or a, a
@@ -3382,7 +3382,7 @@ Jump_031_53CD:: ; address name
     res 7, [hl]
     ld de, Data_031_63A7
     call ShowSkillPageNames
-    call RunBattleSetup_Shared01
+    call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31
     call CopyRectRecords7600And7734ToScreenBufferFar
     ld a, $09
     ld [wStringCategory], a
@@ -3400,7 +3400,7 @@ Jump_031_53CD:: ; address name
     add a, a
     add_a_to_hl
     ld a, [hl]
-    call RunBattleSetup_Shared07
+    call RunBattleSetup_ShowStringBank08AtTilesHL_Bank31
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -3410,7 +3410,7 @@ Jump_031_53CD:: ; address name
 ; reads: wMenuCursor
 ; writes: wListLastPageSize
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case11::
+RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11::
 Jump_031_542A:: ; address name
     call DrawWC2A4AndWC2B8Rects
     ld hl, Data_031_63A7
@@ -3437,7 +3437,7 @@ Jump_031_542A:: ; address name
 ; reads: wJoypadPressed, wRecordBufferData, wCommandMonster, wCommandCursor, wMenuCursor, wRecordBuffer
 ; writes: wBattleArg1, wStringIndex
 ; points at: wMenuCursor, wBattleMP, wSideControl, wBattleActionChoice, wBattleResolveStep
-RunBattleSetup_Case01_Case12::
+RunBattleSetup_Case01_MoveBattleCommandCursor_Case12::
 Jump_031_5454:: ; address name
     ld de, Data_031_63A7
     ld hl, wMenuCursor
@@ -3611,7 +3611,7 @@ Jump_031_557A::
     jr Jump_031_5598
 
 Jump_031_5592::
-    call RunBattleSetup_Shared01
+    call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31
     call DrawInventoryPageIndicator
 
 Jump_031_5598::
@@ -3683,7 +3683,7 @@ Jump_031_55E0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case16::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case16::
 Jump_031_55F2:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3697,7 +3697,7 @@ Jump_031_55F2:: ; address name
 ; entry 23 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case17::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13::
 Jump_031_5602:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld a, $10
@@ -3729,7 +3729,7 @@ Jump_031_560B:: ; address name
 ; reads: wRecordBuffer, wLinkRole
 ; writes: wNameSlot
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case01_Case19::
+RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19::
 Jump_031_562A:: ; address name
     call DrawWC2B8LeftToBGMapRow9
     ld a, [wRecordBuffer]
@@ -3748,7 +3748,7 @@ Jump_031_5639::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     ld hl, Data_031_63AF
     and a, $03
     add a, a
@@ -3769,7 +3769,7 @@ Jump_031_5639::
 ; reads: wLinkRole, wJoypadPressed, wRecordBuffer, wCommandMonster, wSubMenuCursor2
 ; writes: wBattleArg0, wStringIndex, wBattleResolveStep
 ; points at: wSubMenuCursor2, wBattleResolveStep, wBattleTargetChoice
-RunBattleSetup_Case01_Case1A::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1A::
 Jump_031_566A:: ; address name
     ld a, [wLinkRole]
     sla a
@@ -3777,7 +3777,7 @@ Jump_031_566A:: ; address name
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, Data_031_63AF
-    call RunBattleSetup_Shared03
+    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_5693
@@ -3860,7 +3860,7 @@ Jump_031_56FE:: ; address name
 ; reads: wRecordBuffer
 ; writes: wBattleArg1, wSubMenuCursor2
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_Case1C::
+RunBattleSetup_Case01_CopyRectRecord7750ToScreenBufferFar::
 Jump_031_5708:: ; address name
     call CopyRectRecord7750ToScreenBufferFar
     ld a, [wRecordBuffer]
@@ -3872,7 +3872,7 @@ Jump_031_5708:: ; address name
 
 Jump_031_5717::
     ld [wBattleArg1], a
-    farcall RunBattleSetup_Shared06
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared06
     xor a, a
     ld [wBattleArg1], a
     xor a, a
@@ -3886,7 +3886,7 @@ Jump_031_5717::
 ; reads: wRecordBuffer, wLinkRole
 ; writes: wNameSlot
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case01_Case1D::
+RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case1D::
 Jump_031_572D:: ; address name
     call DrawWC2F8RectToBGMapRow11
     ld a, [wRecordBuffer]
@@ -3906,7 +3906,7 @@ Jump_031_573C::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     ld hl, Data_031_63AF
     and a, $03
     add a, a
@@ -3927,7 +3927,7 @@ Jump_031_573C::
 ; reads: wLinkRole, wJoypadPressed, wCommandMonster, wSubMenuCursor2
 ; writes: wBattleArg0
 ; points at: wSubMenuCursor2, wBattleResolveStep, wBattleTargetChoice
-RunBattleSetup_Case01_Case1E::
+RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1E::
 Jump_031_576F:: ; address name
     ld a, [wLinkRole]
     sla a
@@ -3936,7 +3936,7 @@ Jump_031_576F:: ; address name
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, Data_031_63AF
-    call RunBattleSetup_Shared03
+    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_579A
@@ -4029,7 +4029,7 @@ Jump_031_580D::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory
 ; points at: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_Case21::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13AndStep_DrawWC338RowsToBGMapRow13::
 Jump_031_580E:: ; address name
     call DrawWC338RowsToBGMapRow13
     xor a, a
@@ -4042,7 +4042,7 @@ Jump_031_580E:: ; address name
 ; entry 35 of the `rst $00` table in RunBattleSetup_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep
-RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_Case23::
+RunBattleSetup_Case01_DrawWC338RowsToBGMapRow13_DrawWC338RowsToBGMapRow13_Case23::
 Jump_031_5820:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld a, $18
@@ -4056,33 +4056,33 @@ RunBattleSetup_Case02::
 Jump_031_5829:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleSetup_Case02_Case00
-    dw RunBattleSetup_Case02_Case01
-    dw RunBattleSetup_Case02_Case02
+    dw RunBattleSetup_Case02_FillWC278WithC3_Bank31
+    dw RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case01
+    dw RunBattleSetup_Case02_MoveBattleCommandCursor
     dw RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9
-    dw RunBattleSetup_Case02_Case04
-    dw RunBattleSetup_Case02_Case05
-    dw RunBattleSetup_Case02_Case06
-    dw RunBattleSetup_Case02_Case07
+    dw RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case04
+    dw RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11
+    dw RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink
+    dw RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11_Case07
     dw RunBattleSetup_Case02_ShowStringBank09AtTilesHL_Bank31AndStep
-    dw RunBattleSetup_Case02_Case09
-    dw RunBattleSetup_Case02_Case0A
-    dw RunBattleSetup_Case02_Case0B
-    dw RunBattleSetup_Case02_Case0C
-    dw RunBattleSetup_Case02_Case0D
-    dw RunBattleSetup_Case02_Case0E
-    dw RunBattleSetup_Case02_Case0F
+    dw RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9
+    dw RunBattleSetup_Case02_FillWC278WithC3_Bank31_Case0A
+    dw RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0B
+    dw RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar
+    dw RunBattleSetup_Case02_DrawWC2F8RectToBGMapRow11
+    dw RunBattleSetup_Case02_FillWC278WithC3_Bank31_Case0E
+    dw RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0F
     dw RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9AndStep
     dw RunBattleSetup_Case02_ToDrawWC338RowsToBGMapRow13AndStep
     dw RunBattleSetup_Case02_BeginStringDisplay_Bank2F
-    dw RunBattleSetup_Case02_Case13
+    dw RunBattleSetup_Case02_DrawWC338RowsToBGMapRow13
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wCommandCursor, wMenuOption
 ; writes: wStringCategory, wStringIndex
 ; points at: wCommandCursor, wInventory, wBattleResolveStep
-RunBattleSetup_Case02_Case00::
+RunBattleSetup_Case02_FillWC278WithC3_Bank31::
 Jump_031_5855:: ; address name
     call FillWC278WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
@@ -4091,7 +4091,7 @@ Jump_031_5855:: ; address name
     res 7, [hl]
     ld de, Data_031_63A7
     call ShowInventoryPageItemNames
-    call RunBattleSetup_Shared02
+    call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31_Shared02
     call CopyRectRecord7600ToScreenBufferFar
     ld a, $06
     ld [wStringCategory], a
@@ -4119,7 +4119,7 @@ Jump_031_5855:: ; address name
 ; reads: wBattleArg0, wMenuOption
 ; writes: wBattleArg0, wListLastPageSize
 ; points at: wBattleResolveStep
-RunBattleSetup_Case02_Case01::
+RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case01::
 Jump_031_589C:: ; address name
     call DrawWC2B8RowsToBGMapRow9
     ld a, [wBattleArg0]
@@ -4151,7 +4151,7 @@ Jump_031_589C:: ; address name
 ; reads: wJoypadPressed, wItemId, wItemRecord
 ; writes: wBattleArg1, wBattleFlag93, wBattleFlag92, wBattleSubPhase, wBattleResolveStep, wStringIndex
 ; points at: wMenuOption, wBattleResolveStep, wCommandCursor
-RunBattleSetup_Case02_Case02::
+RunBattleSetup_Case02_MoveBattleCommandCursor::
 Jump_031_58CF:: ; address name
     ld de, Data_031_63A7
     ld hl, wMenuOption
@@ -4261,7 +4261,7 @@ Jump_031_5995::
     set 7, [hl]
 
 Jump_031_59A7::
-    call RunBattleSetup_Shared02
+    call RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31_Shared02
     call DrawInventoryPageIndicator
     jr Jump_031_59AF
 
@@ -4285,7 +4285,7 @@ Jump_031_59B0:: ; address name
 ; reads: wSubMenuCursor, wBattleArg1
 ; writes: wSubMenuCursor, wBattleArg1, wStringCategory, wStringIndex
 ; points at: wBattleResolveStep
-RunBattleSetup_Case02_Case04::
+RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case04::
 Jump_031_59BC:: ; address name
     ld a, [wSubMenuCursor]
     and a, $01
@@ -4311,7 +4311,7 @@ Jump_031_59BC:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSubMenuCursor
 ; points at: wBattleResolveStep
-RunBattleSetup_Case02_Case05::
+RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11::
 Jump_031_59EA:: ; address name
     call DrawWC2F8Rect8x7ToBGMapRow11
     ld hl, Data_031_639F
@@ -4335,7 +4335,7 @@ Jump_031_59EA:: ; address name
 ; reads: wJoypadPressed, wItemRecord, wItemId, wSubMenuCursor, wBattleSlotOut
 ; writes: wBattleFlag92, wBattleSubPhase, wBattleResolveStep, wBattleArg0, wSubMenuCursor
 ; points at: wSubMenuCursor, wBattleResolveStep
-RunBattleSetup_Case02_Case06::
+RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_5A0C:: ; address name
     ld de, Data_031_63B5
     ld hl, wSubMenuCursor
@@ -4415,7 +4415,7 @@ Jump_031_5A8F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg0, wSubMenuCursor
 ; writes: wBattleResolveStep
-RunBattleSetup_Case02_Case07::
+RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11_Case07::
 Jump_031_5A90:: ; address name
     call DrawWC2F8Rect8x7ToBGMapRow11
     ld a, [wBattleArg0]
@@ -4454,7 +4454,7 @@ Jump_031_5AA6:: ; address name
 ; reads: wItemId, wLinkRole
 ; writes: wNameSlot
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case02_Case09::
+RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9::
 Jump_031_5AC1:: ; address name
     call DrawWC2B8LeftToBGMapRow9
     ld a, [wItemId]
@@ -4471,7 +4471,7 @@ Jump_031_5ACC::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     ld hl, Data_031_63AF
     and a, $03
     add a, a
@@ -4492,7 +4492,7 @@ Jump_031_5ACC::
 ; reads: wLinkRole, wJoypadPressed, wSubMenuCursor2
 ; writes: wBattleArg0, wBattleFlag92
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case02_Case0A::
+RunBattleSetup_Case02_FillWC278WithC3_Bank31_Case0A::
 Jump_031_5AFD:: ; address name
     ld a, [wLinkRole]
     sla a
@@ -4500,7 +4500,7 @@ Jump_031_5AFD:: ; address name
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, Data_031_63AF
-    call RunBattleSetup_Shared03
+    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_5B26
@@ -4535,7 +4535,7 @@ Jump_031_5B48::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg0, wItemRecord
 ; writes: wBattleResolveStep, wBattleArg0, wBattleSubPhase
-RunBattleSetup_Case02_Case0B::
+RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0B::
 Jump_031_5B49:: ; address name
     call DrawWC2B8LeftToBGMapRow9
     ld a, [wBattleArg0]
@@ -4572,7 +4572,7 @@ Jump_031_5B76::
 ; reads: wItemId
 ; writes: wBattleArg1
 ; points at: wBattleResolveStep
-RunBattleSetup_Case02_Case0C::
+RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar::
 Jump_031_5B7B:: ; address name
     call CopyRectRecord7750ToScreenBufferFar
     ld a, [wItemId]
@@ -4582,7 +4582,7 @@ Jump_031_5B7B:: ; address name
 
 Jump_031_5B86::
     ld [wBattleArg1], a
-    farcall RunBattleSetup_Shared06
+    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared06
     xor a, a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -4594,7 +4594,7 @@ Jump_031_5B86::
 ; reads: wItemId, wLinkRole
 ; writes: wNameSlot
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case02_Case0D::
+RunBattleSetup_Case02_DrawWC2F8RectToBGMapRow11::
 Jump_031_5B98:: ; address name
     call DrawWC2F8RectToBGMapRow11
     ld a, [wItemId]
@@ -4612,7 +4612,7 @@ Jump_031_5BA3::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     ld hl, Data_031_63AF
     and a, $03
     add a, a
@@ -4633,7 +4633,7 @@ Jump_031_5BA3::
 ; reads: wLinkRole, wJoypadPressed, wSubMenuCursor2
 ; writes: wBattleArg0, wBattleFlag92
 ; points at: wSubMenuCursor2, wBattleResolveStep
-RunBattleSetup_Case02_Case0E::
+RunBattleSetup_Case02_FillWC278WithC3_Bank31_Case0E::
 Jump_031_5BD6:: ; address name
     ld a, [wLinkRole]
     sla a
@@ -4642,7 +4642,7 @@ Jump_031_5BD6:: ; address name
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, Data_031_63AF
-    call RunBattleSetup_Shared03
+    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, Jump_031_5C01
@@ -4678,7 +4678,7 @@ Jump_031_5C25::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleArg0, wItemRecord
 ; writes: wBattleResolveStep, wBattleArg0, wBattleSubPhase
-RunBattleSetup_Case02_Case0F::
+RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0F::
 Jump_031_5C26:: ; address name
     call DrawWC2B8LeftToBGMapRow9
     ld a, [wBattleArg0]
@@ -4750,7 +4750,7 @@ Jump_031_5C6B:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleResolveStep
-RunBattleSetup_Case02_Case13::
+RunBattleSetup_Case02_DrawWC338RowsToBGMapRow13::
 Jump_031_5C80:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4764,7 +4764,7 @@ Jump_031_5C80:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wLinkSendByte
 ; points at: wSlotMarks, wBattleSubPhase
-RunBattleSetup_Case03::
+RunBattleSetup_FillWC278WithC3_Bank31::
 Jump_031_5C8D:: ; address name
     ld b, $08
     ld hl, wSlotMarks
@@ -5220,7 +5220,7 @@ Jump_031_5EF6:: ; address name
     ret
 
 ; up/down toggles bit 0 and left/right bit 1 of [HL] (sound $69); otherwise blinks the entry every 16 frames through bit 6 (E-0125)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case06, RunBattleEndStep4SubSteps_Case05)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
 ToggleEntryBitsByJoypadAndBlink::
@@ -5271,10 +5271,10 @@ Jump_031_5F4D::
     ret
 
 ; only called from RunBattleSetup_Case01_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case06)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_FillWC278WithC3_Bank31)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
-RunBattleSetup_Case01_Case06_Sub01::
+RunBattleSetup_Case01_Case06_SetBit6AndBlankEntryTile_Bank31::
 Func_031_5F4E:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
@@ -5328,7 +5328,7 @@ Jump_031_5F9D::
     ret
 
 ; up/down/left/right move the battle command cursor entry wCFD5 within wCFD3, wCFD6, wCFD7, blinking it, with sound $69 (E-0131)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case02, RunBattleSetup_Case02_Case02, RunBattleEndStep4SubSteps_Case02)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12, RunBattleSetup_Case01_MoveBattleCommandCursor, RunBattleSetup_Case02_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_MoveBattleCommandCursor)
 ; reads: wJoypadPressedRepeat, wCommandCursor, wCommandPageCount, wCommandCursorMax, wFrameCounterLo, wListLastPageSize
 ; writes: wFrameCounterLo, wCommandCursor
 MoveBattleCommandCursor::
@@ -5509,7 +5509,7 @@ Jump_031_60AC::
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: sets bit 6 of [HL] and writes tile $C3 at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 15 call sites from 4 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, MoveBattleCommandCursor, RunBattleSetup_Case01_Case06_Sub01)
+; 15 call sites from 4 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_SetBit6AndBlankEntryTile_Bank31, MoveBattleCommandCursor, RunBattleSetup_Case01_Case06_SetBit6AndBlankEntryTile_Bank31)
 SetBit6AndBlankEntryTile_Bank31::
 Func_031_60AD:: ; address name
     set 6, [hl]
@@ -5535,7 +5535,7 @@ Func_031_60AD:: ; address name
     ret
 
 ; HL = entry byte, DE = table of BG map offsets: clears bit 6 of [HL] and writes tile $BB at $9800 + table[[HL] & $3F] (WriteVRAMByte); HL kept (E-0074) (the same 31 bytes appear in 2 banks)
-; 13 call sites from 6 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Shared03, RunBattleSetup_Shared01, MoveBattleCommandCursor, ...)
+; 13 call sites from 6 routines (e.g. ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_SetBit6AndBlankEntryTile_Bank31, RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31, MoveBattleCommandCursor, ...)
 ClearBit6AndCursorEntryTile_Bank31::
 Func_031_60CC:: ; address name
     res 6, [hl]
@@ -5561,7 +5561,7 @@ Func_031_60CC:: ; address name
     ret
 
 ; clears wC46C and writes five consecutive tile numbers starting at Data_031_6102[A] to HL (E-0122)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_Case04, RunBattleSetup_Case01_Case02, RunBattleSetup_Case01_Case00)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_Case01_MoveBattleCommandCursor, RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31)
 ; writes: wMenuSubState
 WriteFiveTilesFromTable6102::
 Func_031_60EB:: ; address name
@@ -5586,7 +5586,7 @@ Data_031_6102:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D0, $D5, $DA
 
 ; only called from RunBattleSetup_Case01_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case06)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_FillWC278WithC3_Bank31)
 ; reads: wCommandMonster
 ; writes: wBattleArg2, wBattleArg3, wCommandPageCount, wCommandCursorMax, wCommandCursor
 ; points at: wBattleSkills
@@ -5647,7 +5647,7 @@ Jump_031_614B::
     ret
 
 ; shows the four skill names (category 4) of page wCFD5 of monster wCFD4's skills (wD989 + 16 * wCFD4) in the four tile rows; $FF shows string 0 (E-0121)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Shared01, RunBattleSetup_Case01_Case10)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10)
 ; reads: wCommandMonster, wCommandCursor
 ; writes: wStringCategory, wBattleArg2, wBattleArg3
 ; points at: wBattleSkills
@@ -5698,11 +5698,11 @@ Func_031_61A2:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case10)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10)
 ; reads: wCommandCursor, wMenuCursor, wBattleArg2, wBattleArg3
 ; writes: wCommandCursor, wMenuCursor, wStringCategory
 ; points at: wMenuCursor
-RunBattleSetup_Shared01::
+RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31::
 Func_031_61A4:: ; address name
     ld a, [wCommandCursor]
     bit 7, a
@@ -5738,7 +5738,7 @@ Jump_031_61BE::
     add a, a
     add_a_to_hl
     ld a, [hl]
-    call RunBattleSetup_Shared07
+    call RunBattleSetup_ShowStringBank08AtTilesHL_Bank31
     ld de, wWindowTileBuffer + $88
     ld hl, vBGMap0 + $1F0
     ld a, [de]
@@ -5820,7 +5820,7 @@ Func_031_6245:: ; address name
     ret
 
 ; shows the four item names of inventory page wCFD5 (category 5) in the four tile rows of ShowStringAAtTiles16D0 ... 2080; an empty slot ($FF) shows string 0 (E-0120)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Shared02, RunBattleSetup_Case02_Case00)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31_Shared02, RunBattleSetup_Case02_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor
 ; writes: wStringCategory
 ; points at: wInventory
@@ -5859,11 +5859,11 @@ Func_031_6286:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case02_Case02, RunBattleSetup_Case02_Case00)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case02_MoveBattleCommandCursor, RunBattleSetup_Case02_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor, wMenuOption
 ; writes: wCommandCursor, wMenuOption, wStringCategory, wStringIndex
 ; points at: wMenuOption, wInventory
-RunBattleSetup_Shared02::
+RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31_Shared02::
 Func_031_6288:: ; address name
     ld a, [wCommandCursor]
     bit 7, a
@@ -5902,7 +5902,7 @@ Jump_031_62A2::
     ret
 
 ; wItemId = wInventory[(wCFD5 & $0F) * 4 + (wC471 & 3)], then far-calls LoadItemRecord (E-0118)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case02_Case0F, RunBattleSetup_Case02_Case0B, RunBattleSetup_Case02_Case06, RunBattleSetup_Case02_Case02)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0F, RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0B, RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Case02_MoveBattleCommandCursor)
 ; reads: wCommandCursor, wMenuOption
 ; writes: wItemId
 ; points at: wInventory
@@ -5973,11 +5973,11 @@ Func_031_6324:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Shared01, RunBattleSetup_Case01_Case10)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_ClearBit6AndCursorEntryTile_Bank31, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10)
 ; reads: wRecordBufferData, wCommandMonster
 ; writes: wStringIndex, wRecordBuffer
 ; points at: wBattleMP
-RunBattleSetup_Shared07::
+RunBattleSetup_ShowStringBank08AtTilesHL_Bank31::
 Func_031_6331:: ; address name
     push af
     ld [wStringIndex], a
@@ -6011,7 +6011,7 @@ Jump_031_6369::
     ret
 
 ; when wCFD7 is non-zero writes tiles $C5, $E0 + (wCFD5 & 7) + 1, $BE, $E0 + wCFD7 + 1, $C6 at vBGMap0 + $226 (page X of Y) (E-0120)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case11, RunBattleSetup_Case02_Case02, RunBattleSetup_Case02_Case01)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11, RunBattleSetup_Case02_MoveBattleCommandCursor, RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case01)
 ; reads: wCommandPageCount, wCommandCursor
 DrawInventoryPageIndicator::
 Func_031_6373:: ; address name
@@ -6036,32 +6036,32 @@ Func_031_6373:: ; address name
     call WriteVRAMByte
     ret
 
-; address loaded by RunBattleSetup_Case00_Case02, RunBattleSetup_Case00_Case03, RunBattleSetup_Case02_Case05
+; address loaded by RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11
 Data_031_639F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C8, $01, $08, $02
 
-; address loaded by RunBattleSetup_Case01_Case01, RunBattleSetup_Case01_Case02, RunBattleSetup_Case01_Case10, RunBattleSetup_Case01_Case11 and 4 more
+; address loaded by RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01, RunBattleSetup_Case01_MoveBattleCommandCursor, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11 and 4 more
 Data_031_63A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $41, $01, $81, $01, $C1, $01, $01, $02
 
-; address loaded by RunBattleSetup_Case01_Case05, RunBattleSetup_Case01_Case06, RunBattleSetup_Case01_Case0D, RunBattleSetup_Case01_Case0E and 8 more
+; address loaded by RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4, RunBattleSetup_Case01_FillWC278WithC3_Bank31, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D, RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0E and 8 more
 Data_031_63AF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $81, $01, $C1, $01, $01, $02
 
-; address loaded by RunBattleSetup_Case02_Case06
+; address loaded by RunBattleSetup_Case02_ToggleEntryBitsByJoypadAndBlink
 Data_031_63B5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C1, $01, $01, $02, $C1, $01, $01, $02
 
-; address loaded by RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case03
+; address loaded by RunBattleEndStep4SubSteps_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer
 Data_031_63BD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $29, $00, $69, $00, $A9, $00, $E9, $00
 
-; address loaded by RunBattleSetup_Case00_Case0D, RunBattleEndStep4SubSteps_Case05
+; address loaded by RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink
 Data_031_63C5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01, $2F, $01, $6F, $01
 
 ; A = value: stores A in wDA43[wCFD4], and also in wDA4B[wCFD4] unless A is 3 (E-0118)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case02)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor)
 ; reads: wCommandMonster
 ; points at: wSlotTactic, wSlotLastTactic
 SetSlotTacticAndSlotLastTacticForCommandMonster::
@@ -6083,7 +6083,7 @@ Func_031_63CD:: ; address name
     ret
 
 ; wRecordBuffer = the skill at wD989 + 16 * wCFD4 + 2 * (4 * (wCFD5 & 1) + (wC46E & 3)), wCFED = 0, then far-calls LoadSkillRecord (E-0120) (the same 48 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case12)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12)
 ; reads: wMenuCursor, wCommandCursor, wCommandMonster
 ; writes: wRecordBuffer
 ; points at: wBattleSkills
@@ -6111,7 +6111,7 @@ Func_031_63ED:: ; address name
     ret
 
 ; side base = ((wC57F << 1) & 4) ^ 4, the side opposite CountPresentSlotsOfLinkRoleSide; D = how many of its three slots are present, E = the last present one (0 when none); clobbers A, BC (E-0067) (the same 28 bytes appear in 2 banks)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case01_Case12, RunBattleSetup_Case01_Case06)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12, RunBattleSetup_Case01_FillWC278WithC3_Bank31)
 ; reads: wLinkRole
 CountPresentFoesOfLinkRoleSide_Bank31::
 Func_031_641D:: ; address name
@@ -6137,7 +6137,7 @@ Jump_031_6434::
     ret
 
 ; side base = (wC57F << 1) & 4: D = how many of its three slots are present; clobbers A, BC (E-0067) (the same 24 bytes appear in 2 banks)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case12)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_MoveBattleCommandCursor_Case12)
 ; reads: wLinkRole
 CountPresentSlotsOfLinkRoleSide_Bank31::
 Func_031_6439:: ; address name
@@ -6273,9 +6273,9 @@ Func_031_64CE:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 7 call sites from 6 routines (e.g. RunBattleSetup_Shared03, RunBattleSetup_Case01_Case1D, RunBattleSetup_Case01_Case19, RunBattleSetup_Case01_Case0D, ...)
+; 7 call sites from 6 routines (e.g. RunBattleSetup_SetBit6AndBlankEntryTile_Bank31, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case1D, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D, ...)
 ; reads: wNameSlot
-RunBattleSetup_Shared08::
+RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty::
 Func_031_64D8:: ; address name
     or a, a
     jr nz, Jump_031_64EB
@@ -6331,10 +6331,10 @@ Jump_031_6513::
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_Case1E, RunBattleSetup_Case01_Case1A, RunBattleSetup_Case01_Case0E, RunBattleSetup_Case02_Case0E, ...)
+; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1E, RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1A, RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case0E, RunBattleSetup_Case02_FillWC278WithC3_Bank31_Case0E, ...)
 ; reads: wJoypadPressedRepeat, wFrameCounterLo
 ; writes: wFrameCounterLo
-RunBattleSetup_Shared03::
+RunBattleSetup_SetBit6AndBlankEntryTile_Bank31::
 Func_031_6518:: ; address name
     ld a, [wJoypadPressedRepeat]
     and a, $40
@@ -6343,7 +6343,7 @@ Func_031_6518:: ; address name
     push de
     ld e, $FF
     ld a, $01
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     pop de
     call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_655B
@@ -6356,7 +6356,7 @@ Jump_031_6530::
     push de
     ld e, $01
     ld a, $01
-    call RunBattleSetup_Shared08
+    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
     pop de
     call ClearBit6AndCursorEntryTile_Bank31
     jr Jump_031_655B
@@ -6403,7 +6403,7 @@ Func_031_656B:: ; address name
     jr nc, Jump_031_65A0
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr c, Jump_031_659C
     ld bc, $0304
     ld de, $0000
@@ -6432,36 +6432,36 @@ Jump_031_65A0::
     jr nz, Jump_031_65CF
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr nc, Jump_031_65C3
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr c, Jump_031_65F9
     jr Jump_031_65F5
 
 Jump_031_65C3::
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr c, Jump_031_65F1
     jr Jump_031_65F9
 
 Jump_031_65CF::
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr nc, Jump_031_65E5
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr c, Jump_031_65F9
     jr Jump_031_65F5
 
 Jump_031_65E5::
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_Sub02_Sub01
+    call BattleEnd_Step1_Sub02_AddAx9ToHL
     jr c, Jump_031_65F1
     jr Jump_031_65F9
 
@@ -6483,7 +6483,7 @@ Jump_031_65FB::
 ; only called from BattleEnd_Step1_Sub02 (E-0047)
 ; 7 call sites from 1 routine (e.g. BattleEnd_Step1_Sub02)
 ; points at: wBattleSlotOut, wBattleStatus
-BattleEnd_Step1_Sub02_Sub01::
+BattleEnd_Step1_Sub02_AddAx9ToHL::
 Func_031_65FF:: ; address name
     ld a, c
     ld hl, wBattleSlotOut
@@ -6501,7 +6501,7 @@ Func_031_65FF:: ; address name
 Jump_031_6618::
     inc c
     dec b
-    jr nz, BattleEnd_Step1_Sub02_Sub01
+    jr nz, BattleEnd_Step1_Sub02_AddAx9ToHL
     ld a, e
     cp a, $01
     ret
@@ -6537,7 +6537,7 @@ Jump_031_6635::
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3)
 ; reads: wLinkMode, wBattlePartyCount
 ; writes: rRAMG, rRAMB
-BattleEnd_Step3_Sub07::
+BattleEnd_Step3_SRAMRecordAddressMapped::
 Func_031_663D:: ; address name
     ld a, [wLinkMode]
     or a, a
@@ -6558,7 +6558,7 @@ Jump_031_6653::
     ld c, $55
     call SRAMRecordAddressMapped
     pop bc
-    call BattleEnd_Step3_Sub07_Sub02
+    call BattleEnd_Step3_Sub07_AddAx9ToHL
     call BattleEnd_Step3_Sub07_Sub03
     call BattleEnd_Step3_Sub07_Sub04
     call BattleEnd_Step3_Sub07_Sub05
@@ -6574,7 +6574,7 @@ Jump_031_6677::
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wMenuState
 ; writes: wBattleResultByte
 ; points at: wSlotTactic, wSlotLastTactic
@@ -6612,10 +6612,10 @@ Func_031_6678:: ; address name
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wBattleKind
 ; points at: wBattleSlotOut, wBattleStatus
-BattleEnd_Step3_Sub07_Sub02::
+BattleEnd_Step3_Sub07_AddAx9ToHL::
 Func_031_66AE:: ; address name
     ld [hl], $00
     ld a, c
@@ -6649,21 +6649,21 @@ Jump_031_66D9::
     ret
 
 ; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_AddAx9ToHL)
 BattleEnd_Step3_Sub07_Sub02_Sub01::
 Func_031_66DC:: ; address name
     set 0, [hl]
     ret
 
 ; only called from BattleEnd_Step3_Sub07_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_Sub02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07_AddAx9ToHL)
 BattleEnd_Step3_Sub07_Sub02_Sub02::
 Func_031_66DF:: ; address name
     set 2, [hl]
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; writes: wBattleArg0
 ; points at: wBattleHP
 BattleEnd_Step3_Sub07_Sub03::
@@ -6722,7 +6722,7 @@ Jump_031_671C::
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; points at: wBattleMP
 BattleEnd_Step3_Sub07_Sub04::
 Func_031_6723:: ; address name
@@ -6770,7 +6770,7 @@ Jump_031_6749::
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wBattleArg0
 ; points at: wBattleWordArray3F
 BattleEnd_Step3_Sub07_Sub05::
@@ -6803,7 +6803,7 @@ Jump_031_676D::
     ret
 
 ; only called from BattleEnd_Step3_Sub07 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step3_SRAMRecordAddressMapped)
 ; reads: wBattleArg0
 ; points at: wSlotPersonalityHi, wSlotPersonalityLo, wSlotTrait, wSlotPersonalityMid
 BattleEnd_Step3_Sub07_Sub06::
@@ -6863,13 +6863,13 @@ Func_031_67AA:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
     dw BattleEnd_Step4_Sub02_Case00
-    dw BattleEnd_Step4_Sub02_Case01
+    dw BattleEnd_Step4_Sub02_AddExpToRecordCCapped
     dw BattleEnd_Step4_Sub02_Case02
-    dw BattleEnd_Step4_Sub02_Case03
-    dw BattleEnd_Step4_Sub02_Case04
-    dw BattleEnd_Step4_Sub02_Case05
-    dw BattleEnd_Step4_Sub02_Case06
-    dw BattleEnd_Step4_Sub02_Case07
+    dw BattleEnd_Step4_Sub02_CountDownBattleEndTimerWhenSoundIdle
+    dw BattleEnd_Step4_Sub02_StoreWorkBufToRecordSkills
+    dw BattleEnd_Step4_Sub02_AddExpToRecordHLCapped
+    dw BattleEnd_Step4_Sub02_RecordReachedNextLevelExp
+    dw BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1
     dw BattleEnd_Step4_Sub02_Case08
     dw BattleEnd_Step4_Sub02_Case09
 
@@ -6949,7 +6949,7 @@ Jump_031_67F7::
 ; reads: wTextFlags
 ; writes: rRAMG, rRAMB, wBattleResolveStep, wBattleArg0
 ; points at: wBattleSlotOut, wBattleSubPhase
-BattleEnd_Step4_Sub02_Case01::
+BattleEnd_Step4_Sub02_AddExpToRecordCCapped::
 Jump_031_6851:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6981,7 +6981,7 @@ Jump_031_6862::
     ret
 
 ; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of record C, capped at 9,999,999 ($98967F) (E-0125)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_AddExpToRecordCCapped)
 ; reads: wBattleExpAward
 AddExpToRecordCCapped::
 Func_031_6885:: ; address name
@@ -7030,15 +7030,15 @@ BattleEnd_Step4_Sub02_Case02::
 Jump_031_68B8:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_Step4_Sub02_Case02_Case00
-    dw BattleEnd_Step4_Sub02_Case02_Case01
+    dw BattleEnd_Step4_Sub02_Case02_RecordReachedNextLevelExp
+    dw BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleArg0, wPartyCount
 ; writes: wBattleArg0, wBattleEndTimer
 ; points at: wBattleSlotOut, wPartyList, wBattleSubPhase, wBattleLevel, wBattleResolveStep
-BattleEnd_Step4_Sub02_Case02_Case00::
+BattleEnd_Step4_Sub02_Case02_RecordReachedNextLevelExp::
 Jump_031_68C0:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7095,7 +7095,7 @@ Jump_031_6901::
 ; reads: wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleResolveStep
 ; points at: wPartyList, wBattleSubPhase
-BattleEnd_Step4_Sub02_Case02_Case01::
+BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0::
 Jump_031_6925:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7127,13 +7127,13 @@ Jump_031_6925:: ; address name
 ; entry 3 of the `rst $00` table in Func_031_67AA
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-BattleEnd_Step4_Sub02_Case03::
+BattleEnd_Step4_Sub02_CountDownBattleEndTimerWhenSoundIdle::
 Jump_031_6966:: ; address name
     call CountDownBattleEndTimerWhenSoundIdle
     ld a, [wBattleResolveStep]
     rst $00
-    dw BattleEnd_Step4_Sub02_Case03_Case00
-    dw BattleEnd_Step4_Sub02_Case03_Case01
+    dw BattleEnd_Step4_Sub02_Case03_FillBytes
+    dw BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills
     dw BattleEnd_Step4_Sub02_Case03_ToRunBattleEndStep4SubSteps
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case03
@@ -7141,7 +7141,7 @@ Jump_031_6966:: ; address name
 ; reads: wTextFlags, wBattleArg0
 ; writes: rRAMG, rRAMB
 ; points at: wWorkBuf, wBattleResolveStep
-BattleEnd_Step4_Sub02_Case03_Case00::
+BattleEnd_Step4_Sub02_Case03_FillBytes::
 Jump_031_6973:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7175,7 +7175,7 @@ Jump_031_6999::
 ; reads: wTextFlags, hTemp3, hTemp4, hTemp5
 ; writes: wBattleSubStep
 ; points at: wTextBuf2, wTextBuf3, wWorkBuf, wBattleResolveStep
-BattleEnd_Step4_Sub02_Case03_Case01::
+BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills::
 Jump_031_69A4:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7248,7 +7248,7 @@ Jump_031_6A06:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB, wBattleResolveStep
 ; points at: wBattleSubPhase
-BattleEnd_Step4_Sub02_Case04::
+BattleEnd_Step4_Sub02_StoreWorkBufToRecordSkills::
 Jump_031_6A0A:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7268,7 +7268,7 @@ Jump_031_6A0A:: ; address name
     ret
 
 ; record wD868: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0, wLevelUpGains
 ApplyLevelUpToRecordBattleArg0::
 Func_031_6A2D:: ; address name
@@ -7338,7 +7338,7 @@ Func_031_6A8B:: ; address name
     ret
 
 ; for record wD868: if field $56 (level) >= field $57, begins showing string $0A of category 5 (BeginStringDisplay_Bank2F) (E-0122)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0
 ; writes: wStringIndex, wStringCategory
 ShowString0ACat5IfField56AtLeast57::
@@ -7357,7 +7357,7 @@ Func_031_6A92:: ; address name
     ret
 
 ; copies the 8 bytes at wD09D to the skill list (field $34) of record wD868 (E-0122)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case04)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_StoreWorkBufToRecordSkills)
 ; reads: wBattleArg0
 ; points at: wWorkBuf
 StoreWorkBufToRecordSkills::
@@ -7380,7 +7380,7 @@ Jump_031_6ABB::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB
 ; points at: sRecords, wBattleSubPhase
-BattleEnd_Step4_Sub02_Case05::
+BattleEnd_Step4_Sub02_AddExpToRecordHLCapped::
 Jump_031_6AC2:: ; address name
     call DivideBattleExpAwardByModeFactor
     ld a, $0A
@@ -7424,7 +7424,7 @@ Jump_031_6AE9::
     ret
 
 ; divides the 24-bit wDA6B-wDA6D by 20, 15 or 10 for wC7C7 = 0, 1 or other (E-0124)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case05)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_AddExpToRecordHLCapped)
 ; reads: wBattleExpAward, wFarmLevel
 ; writes: wBattleExpAward
 DivideBattleExpAwardByModeFactor::
@@ -7461,7 +7461,7 @@ Jump_031_6B1E::
     ret
 
 ; adds the 24-bit wDA6B-wDA6D to the 3-byte field $58 of the record at HL, capped at 9,999,999 ($98967F) (E-0125)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case05)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_AddExpToRecordHLCapped)
 ; reads: wBattleExpAward
 AddExpToRecordHLCapped::
 Func_031_6B2E:: ; address name
@@ -7512,7 +7512,7 @@ Jump_031_6B5D::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB, wBattleArg1
 ; points at: sRecords, wBattleSubPhase
-BattleEnd_Step4_Sub02_Case06::
+BattleEnd_Step4_Sub02_RecordReachedNextLevelExp::
 Jump_031_6B65:: ; address name
     ld hl, sRecords
     ld b, $1E
@@ -7566,7 +7566,7 @@ Jump_031_6B9F::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG, rRAMB
 ; points at: wBattleSubPhase
-BattleEnd_Step4_Sub02_Case07::
+BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1::
 Jump_031_6BAC:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -7582,7 +7582,7 @@ Jump_031_6BAC:: ; address name
     ret
 
 ; record wD869: level (field $56) += 1 and the gains wD095-wD09A are added to its six stat words (E-0127)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1, wLevelUpGains
 ApplyLevelUpToRecordBattleArg1::
 Func_031_6BCA:: ; address name
@@ -7652,7 +7652,7 @@ Func_031_6C28:: ; address name
     ret
 
 ; for SRAM record wD869: field $5B = word field $5D, field $5F = word field $61, field $55 = 0 (E-0121)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case07)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_ComputeLevelUpStatGainsForBattleArg1)
 ; reads: wBattleArg1
 CopyRecordFields5DTo5BAnd61To5F::
 Func_031_6C2F:: ; address name
@@ -7714,7 +7714,7 @@ Jump_031_6C67:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw BattleEnd_Step4_Sub02_Case09_Case00
-    dw BattleEnd_Step4_Sub02_Case09_Case01
+    dw BattleEnd_Step4_Sub02_Case09_ClearTemp0AndA
     dw BattleEnd_Step4_Sub02_Case09_Case02
 
 ; entry 0 of the `rst $00` table in Func_031_67AA_Case09
@@ -7757,7 +7757,7 @@ Jump_031_6C93::
 ; reads: wBattleByte93, wPartyList, hTemp0
 ; writes: hTemp0, rRAMG, rRAMB, wBattleSubPhase, wBattleResolveStep, wStringCategory, wStringIndex
 ; points at: wWorkBuf, wBattleStep, wTextBuf1, wTextBuf0, wBattleResolveStep
-BattleEnd_Step4_Sub02_Case09_Case01::
+BattleEnd_Step4_Sub02_Case09_ClearTemp0AndA::
 Jump_031_6CA0:: ; address name
     ld a, [wBattleByte93]
     ldh [hTemp0], a
@@ -7844,7 +7844,7 @@ Func_031_6D1F:: ; address name
     ret
 
 ; record A below its level cap: C = 1 when its EXP (field $58) has reached the next level's total from the species growth table, else 0 (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_Case06, BattleEnd_Step4_Sub02_Case02_Case00)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_RecordReachedNextLevelExp, BattleEnd_Step4_Sub02_Case02_RecordReachedNextLevelExp)
 ; reads: wSpeciesExpCurve, hTemp2, hTemp3, hTemp4
 ; writes: rRAMG, rRAMB, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp0
 RecordReachedNextLevelExp::
@@ -7911,7 +7911,7 @@ Jump_031_6D82::
     ret
 
 ; copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0)
 ; points at: wTextBuf0
 CopyTenByteNameToTextBuf0::
 Func_031_6D87:: ; address name
@@ -7929,7 +7929,7 @@ Jump_031_6D8C::
     ret
 
 ; writes [HL + $4B] + 1 to wC140 and wD095-wD09A to wC150-wC164 as decimal strings (E-0121)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0)
 ; reads: wLevelUpGains
 ; points at: wTextBuf1, wTextBuf2, wTextBuf3
 WriteRecordField4BAndStatsDecimal::
@@ -7965,7 +7965,7 @@ Func_031_6D96:: ; address name
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank2F (E-0110)
-; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_Case01, BattleEnd_Step4_Sub02_Case03_Case01, RunBattleEndStep4SubSteps_Case05, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case00, BattleEnd_Step4_Sub02_Case02_CopyTenByteNameToTextBuf0, BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills, RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink, ...)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank31::
 Func_031_6DDD:: ; address name
@@ -7977,7 +7977,7 @@ Func_031_6DDD:: ; address name
     ret
 
 ; with SRAM enabled runs Func_031_6E18 for each of the 30 records ($A5 bytes from sA000) whose first byte is non-zero (E-0124)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_Case01)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03_FindNewlyLearnableSkills)
 ; writes: rRAMG, rRAMB
 ; points at: sRecords
 ForEachSRAMRecordRun6E18::
@@ -8030,7 +8030,7 @@ Jump_031_6E22::
     cp a, $FF
     push hl
     push bc
-    call nz, ForEachSkillOfRecordBRun6E30_Sub01
+    call nz, ForEachSkillOfRecordBRun6E30_SRAMRecordAddress
     pop bc
     pop hl
     dec c
@@ -8039,7 +8039,7 @@ Jump_031_6E22::
 
 ; only called from ForEachSkillOfRecordBRun6E30 (E-0047)
 ; 1 call site from 1 routine (e.g. ForEachSkillOfRecordBRun6E30)
-ForEachSkillOfRecordBRun6E30_Sub01::
+ForEachSkillOfRecordBRun6E30_SRAMRecordAddress::
 Func_031_6E30:: ; address name
     ld d, a
     push de
@@ -8096,21 +8096,21 @@ RunBattleEndStep4SubSteps::
 Func_031_6E67:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleEndStep4SubSteps_Case00
-    dw RunBattleEndStep4SubSteps_Case01
-    dw RunBattleEndStep4SubSteps_Case02
-    dw RunBattleEndStep4SubSteps_Case03
-    dw RunBattleEndStep4SubSteps_Case04
-    dw RunBattleEndStep4SubSteps_Case05
+    dw RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31
+    dw RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31
+    dw RunBattleEndStep4SubSteps_MoveBattleCommandCursor
+    dw RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer
+    dw RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826
+    dw RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink
     dw RunBattleEndStep4SubSteps_Case06
 
 ; entry 0 of the `rst $00` table in RunBattleEndStep4SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleResolveStep, wCommandCursorMax, wCommandPageCount, wCommandCursor, wListLastPageSize, wMenuState
 ; points at: wBattleSubPhase, wScreenTileBuffer, wBattleSubStep
-RunBattleEndStep4SubSteps_Case00::
+RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31::
 Jump_031_6E79:: ; address name
-    call RunBattleEndStep4SubSteps_Case00_Sub01
+    call RunBattleEndStep4SubSteps_Case00_FillBytes
     cp a, $09
     jr nc, Jump_031_6ECA
     ld hl, wBattleSubPhase
@@ -8183,7 +8183,7 @@ Jump_031_6EDB::
 ; reads: wTextFlags, wBattleArg0, wCommandPageCount
 ; writes: rRAMG, rRAMB, wScreenTileBuffer
 ; points at: wBattleSubStep
-RunBattleEndStep4SubSteps_Case01::
+RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31::
 Jump_031_6EF7:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8226,7 +8226,7 @@ Jump_031_6EF7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wCommandCursor, wMenuState, wJoypadPressedRepeat
 ; points at: wMenuState, wWorkBuf, wTextBuf2, wBattleSubStep, wCommandCursor
-RunBattleEndStep4SubSteps_Case02::
+RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
 Jump_031_6F57:: ; address name
     ld de, Data_031_63BD
     ld hl, wMenuState
@@ -8277,7 +8277,7 @@ Jump_031_6F9C::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState
 ; points at: wBattleSubStep
-RunBattleEndStep4SubSteps_Case03::
+RunBattleEndStep4SubSteps_CopyRectRecord7345ToScreenBuffer::
 Jump_031_6FB1:: ; address name
     ld a, [wMenuState]
     and a, $0F
@@ -8308,7 +8308,7 @@ Jump_031_6FB1:: ; address name
 ; reads: wTextFlags
 ; writes: wWindowTileBuffer, wMenuSubState
 ; points at: wBattleSubStep
-RunBattleEndStep4SubSteps_Case04::
+RunBattleEndStep4SubSteps_LoadCursorTileAndRect7826::
 Jump_031_6FE9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -8331,7 +8331,7 @@ Jump_031_6FE9:: ; address name
 ; reads: wJoypadPressed, wMenuSubState, wCommandCursor, wMenuState
 ; writes: wBattleSubStep
 ; points at: wMenuSubState, wWorkBuf, wBattleSubStep
-RunBattleEndStep4SubSteps_Case05::
+RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink::
 Jump_031_700F:: ; address name
     ld de, Data_031_63C5
     ld hl, wMenuSubState
@@ -8385,9 +8385,9 @@ Jump_031_705A:: ; address name
     ret
 
 ; only called from RunBattleEndStep4SubSteps_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleEndStep4SubSteps_Case00)
+; 1 call site from 1 routine (e.g. RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31)
 ; points at: wWorkBuf
-RunBattleEndStep4SubSteps_Case00_Sub01::
+RunBattleEndStep4SubSteps_Case00_FillBytes::
 Func_031_7064:: ; address name
     ld hl, wBattlerRecords + $4
     ld bc, $0038
@@ -8425,7 +8425,7 @@ Jump_031_708E::
     ret
 
 ; only called from routines of RunBattleEndStep4SubSteps (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi, wStringIndex, wStringCategory
 ; points at: wWorkBuf
@@ -8490,7 +8490,7 @@ Data_031_70FD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $C0, $95, $50, $96, $E0, $96, $70, $97
 
 ; shows the name (category 9) of skill wD09D[4 * page + row] at vTiles2 + $260, loads its record and writes its MP cost (or the record's MP for skills $3D, $20, $7B) as digits at wC39E (E-0128)
-; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleEndStep4SubSteps_Case01)
+; 2 call sites from 2 routines (e.g. DrawWC39EThreeTilesAtBGMap206, RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor, wMenuState, wRecordBuffer, wBattleArg0, wRecordBufferData
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory, wRecordBuffer, rRAMG, ...
 ; points at: wWorkBuf
@@ -8570,7 +8570,7 @@ Jump_031_717E::
     ret
 
 ; runs Func_031_7105, then writes the three bytes at wC39E to vBGMap0 + $206 (E-0122)
-; 2 call sites from 1 routine (e.g. RunBattleEndStep4SubSteps_Case02)
+; 2 call sites from 1 routine (e.g. RunBattleEndStep4SubSteps_MoveBattleCommandCursor)
 DrawWC39EThreeTilesAtBGMap206::
 Func_031_719E:: ; address name
     call ShowSelectedSkillNameAndCost
@@ -8587,7 +8587,7 @@ Func_031_719E:: ; address name
     ret
 
 ; writes tile $E1 + (wCFD5 & $0F) at vBGMap0 + $10F (E-0115)
-; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_Case02, RunBattleEndStep4SubSteps_Case01)
+; 2 call sites from 2 routines (e.g. RunBattleEndStep4SubSteps_MoveBattleCommandCursor, RunBattleEndStep4SubSteps_FillWC278WithC3_Bank31)
 ; reads: wCommandCursor
 DrawCommandCursorPageNumber::
 Func_031_71B6:: ; address name
@@ -8599,7 +8599,7 @@ Func_031_71B6:: ; address name
     ret
 
 ; when every sound channel slot flag is $FF (all idle), decrements wD2CE (E-0121)
-; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_Case03)
+; 1 call site from 1 routine (e.g. BattleEnd_Step4_Sub02_CountDownBattleEndTimerWhenSoundIdle)
 ; reads: wSoundChannelSlots, wBattleEndTimer
 ; writes: wBattleEndTimer
 ; points at: wSoundChannel1, wSoundChannel2, wSoundChannel3, wSoundChannel4, wSoundChannel5
@@ -8637,7 +8637,7 @@ Func_031_71C4:: ; address name
     ret
 
 ; on CGB writes 0 to the 20 x 18 visible attributes of vBGMap0 in VRAM bank 1 (rows 32 apart, WriteVRAMByteInc); then fills the $240 bytes of wScreenTileBuffer with $C3; what follows is not read (E-0110)
-; 6 call sites from 6 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 6 call sites from 6 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wIsCGB
 ; writes: rVBK
 ; points at: wScreenTileBuffer
@@ -8683,7 +8683,7 @@ Jump_031_7221::
     ret
 
 ; Fills the $160 bytes at wC278 with $C3; clobbers A, BC, HL (the same 15 bytes appear in 2 banks)
-; 39 call sites from 22 routines (e.g. RunBattleSetup_Case03, RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case07, RunBattleSetup_Case00_Case03, ...)
+; 39 call sites from 22 routines (e.g. RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink, ...)
 FillWC278WithC3_Bank31::
 Func_031_722A:: ; address name
     ld hl, wScreenTileBuffer + $E0
@@ -8699,11 +8699,11 @@ Jump_031_7230::
     ret
 
 ; only called from GameMode4_Init_Sub01_Sub02 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_Sub02)
+; 1 call site from 1 routine (e.g. GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
 ; reads: wBattlePartyCount, wLinkRole
 ; writes: wNameGlyphBuf
 ; points at: wNameGlyphBuf
-GameMode4_Init_Sub01_Sub02_Sub01::
+GameMode4_Init_Sub01_Sub02_CopyGlyphTilesToVRAM::
 Func_031_7239:: ; address name
     ld a, $90
     ld [wNameGlyphBuf], a
@@ -8765,7 +8765,7 @@ Jump_031_7285::
     db $00, $8D, $50, $8D, $A0, $8D, $00, $8D, $50, $8D, $A0, $8D
 
 ; picks record wD88F - 1 from Data_031_72C3 and copies it into wScreenTileBuffer (ReadScreenBufferRectHeader_Bank31, CopyRectToStride32_Bank31) (E-0078)
-; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 CopyRectRecordForBattlePartyCount_Bank31::
 Func_031_72AC:: ; address name
@@ -8788,14 +8788,14 @@ Data_031_72C3:: ; address name
     dw TileRect_31_761E ; id 3
 
 ; FillWC278WithC3_Bank31, then falls into LayoutTileBlocksForBattleFoeCount (E-0071)
-; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_Case00, RunBattleSetup_BankA0_Case00_Case02, RunBattleSetup_BankA0_Case00_Case07, RunBattleSetup_BankA0_Case01_Case02, ...)
+; 16 call sites from 10 routines (e.g. RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case02, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07, RunBattleSetup_BankA0_Case01_Case02, ...)
 ; reads: wBattleFoeCount
 ClearAndLayoutTileBlocksForBattleFoeCount::
 Func_031_72C9:: ; address name
     call FillWC278WithC3_Bank31
 
 ; wD890 = count 1-3: writes that many 6 x 6 blocks of consecutive tile numbers, starting at $14 ($24 per block), into the 32-byte-wide buffer at wC278 (row 0); left columns are 7 for one block, 4 and 10 for two, 1, 7 and 13 for three (centred in a 20-column view). Clobbers A, BC, D, HL (E-0060)
-; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_Case03, RunBattleSetup_Case00_Case0D, RunBattleSetup_Case00_Case07, ...)
+; 41 call sites from 24 routines (e.g. BuildBattleScreenBuffer, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
 ; reads: wBattleFoeCount
 LayoutTileBlocksForBattleFoeCount::
 Func_031_72CC:: ; address name
@@ -8859,7 +8859,7 @@ Data_031_731D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $C2, $7F, $C2
 
 ; on CGB loads the picture attribute blocks for one, two or three battle monsters (wD960, or wBattleMonsterId when bit 1 of wC57F is set) at vBGMap0 + $E1-$ED (E-0125)
-; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case01_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02)
+; 4 call sites from 4 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31)
 ; reads: wIsCGB, wLinkRole, wBattleFoeCount
 ; points at: wBattlePictureIds, wBattleMonsterId
 LoadBattleMonsterPictureAttributes::
@@ -8934,7 +8934,7 @@ Func_031_7379:: ; address name
     ret
 
 ; draws the HP, MP and status of the first one, two or three slots (by wD88F) (E-0122)
-; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_Sub02, ...)
+; 5 call sites from 5 routines (e.g. BuildBattleScreenBuffer, BattleEnd_Step5_Case00, BuildBattleMenuScreen_733F, GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, ...)
 ; reads: wBattlePartyCount
 DrawPartySlotStatusPanels::
 Func_031_7389:: ; address name
@@ -9106,7 +9106,7 @@ Func_031_746F:: ; address name
     ret
 
 ; copies a 20 x 5 rectangle from wC338 (rows 32 bytes apart) to vBGMap0 + $1A0 (row 13) with CopyRect32StrideToVRAM (E-0073)
-; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_Case08, RunBattleSetup_Case00_Case07, ...)
+; 13 call sites from 13 routines (e.g. RunBattleSetup_Case00_ShowNoFleeingFromThis, RunBattleSetup_Case00_ShowRetireNow, RunBattleSetup_Case00_ClearWindowAndCopyRect7345Far, RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, ...)
 DrawWC338RowsToBGMapRow13::
 Func_031_7479:: ; address name
     ld de, wWindowTileBuffer + $38
@@ -9116,13 +9116,13 @@ Func_031_7479:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_Case07, RunBattleSetup_Case00_Case01)
-RunBattleSetup_Shared04::
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31_Case07, RunBattleSetup_Case00_FillWC278WithC3_Bank31)
+RunBattleSetup_CopyRectRecord73ADToScreenBuffer::
 Func_031_7486:: ; address name
     farcall CopyRectRecord73ADToScreenBuffer
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep, RunBattleSetup_Case00_Case02)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep, RunBattleSetup_Case00_RunBattleSetup_ToCopyRect32StrideToVRAM)
 RunBattleSetup_ToCopyRect32StrideToVRAM::
 Func_031_748C:: ; address name
     ld de, wWindowTileBuffer + $38
@@ -9132,14 +9132,14 @@ Func_031_748C:: ; address name
     ret
 
 ; far-calls CopyRectRecord73F7ToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case00)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31)
 CopyRectRecord73F7ToScreenBufferFar::
 Func_031_7499:: ; address name
     farcall CopyRectRecord73F7ToScreenBuffer
     ret
 
 ; copies a 12 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7) with CopyRect32StrideToVRAM (E-0110)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_Case0D, RunBattleSetup_Case01_Case04, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Case01_Case01)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case00_ToggleEntryBitsByJoypadAndBlink_Case0D, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case01)
 DrawWC278Rect12x11ToBGMapRow7::
 Func_031_74A0:: ; address name
     ld de, wScreenTileBuffer + $E0
@@ -9149,14 +9149,14 @@ Func_031_74A0:: ; address name
     ret
 
 ; far-calls CopyRectRecord755FToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case04)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04)
 CopyRectRecord755FToScreenBufferFar::
 Func_031_74AD:: ; address name
     farcall CopyRectRecord755FToScreenBuffer
     ret
 
 ; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (identical to DrawWC2B8LeftToBGMapRow9 at $74E1) (E-0078)
-; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_Case10, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep, RunBattleSetup_Case01_Case07, ...)
+; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case07, ...)
 DrawWC2B8LeftToBGMapRow9_74B4::
 Func_031_74B4:: ; address name
     ld de, wScreenTileBuffer + $120
@@ -9166,14 +9166,14 @@ Func_031_74B4:: ; address name
     ret
 
 ; far-calls CopyRectRecord7600ToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_Case00)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_FillWC278WithC3_Bank31)
 CopyRectRecord7600ToScreenBufferFar::
 Func_031_74C1:: ; address name
     farcall CopyRectRecord7600ToScreenBuffer
     ret
 
 ; copies a 20 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9) with CopyRect32StrideToVRAM, then wD868 = 1 (E-0077)
-; 6 call sites from 5 routines (e.g. RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9AndStep, RunBattleSetup_Case02_Case04, RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9, RunBattleSetup_Case02_Case02, ...)
+; 6 call sites from 5 routines (e.g. RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9AndStep, RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case04, RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9, RunBattleSetup_Case02_MoveBattleCommandCursor, ...)
 ; writes: wBattleArg0
 DrawWC2B8RowsToBGMapRow9::
 Func_031_74C8:: ; address name
@@ -9193,7 +9193,7 @@ Func_031_74DA:: ; address name
     ret
 
 ; copies an 8 x 9 rectangle from wC2B8 (rows 32 bytes apart) to vBGMap0 + $120 (row 9, column 0) with CopyRect32StrideToVRAM (E-0078)
-; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9, RunBattleSetup_Case01_Case19, RunBattleSetup_Case02_Case0F, RunBattleSetup_Case02_Case0B, ...)
+; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_Case19, RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0F, RunBattleSetup_Case02_DrawWC2B8LeftToBGMapRow9_Case0B, ...)
 DrawWC2B8LeftToBGMapRow9::
 Func_031_74E1:: ; address name
     ld de, wScreenTileBuffer + $120
@@ -9203,14 +9203,14 @@ Func_031_74E1:: ; address name
     ret
 
 ; far-calls CopyRectRecord76F8ToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_Case04)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case02_DrawWC2B8RowsToBGMapRow9_Case04)
 CopyRectRecord76F8ToScreenBufferFar::
 Func_031_74EE:: ; address name
     farcall CopyRectRecord76F8ToScreenBuffer
     ret
 
 ; copies an 8 x 7 rectangle from wC2F8 to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0115)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case02_Case07, RunBattleSetup_Case02_Case05)
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11_Case07, RunBattleSetup_Case02_DrawWC2F8Rect8x7ToBGMapRow11)
 DrawWC2F8Rect8x7ToBGMapRow11::
 Func_031_74F5:: ; address name
     ld de, wScreenTileBuffer + $160
@@ -9220,14 +9220,14 @@ Func_031_74F5:: ; address name
     ret
 
 ; far-calls CopyRectRecords7600And7734ToScreenBuffer in bank $1A (E-0115)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_Case10)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4_Case10)
 CopyRectRecords7600And7734ToScreenBufferFar::
 Func_031_7502:: ; address name
     farcall CopyRectRecords7600And7734ToScreenBuffer
     ret
 
 ; copies a 7 x 1 rectangle from wC2A4 to vBGMap0 + $10C (row 8, column 12) and a 20 x 9 rectangle from wC2B8 to vBGMap0 + $120 (row 9), both with CopyRect32StrideToVRAM (E-0110)
-; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_Case1A, RunBattleSetup_Case01_FillWC278WithC3_Bank31AndStep, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects, RunBattleSetup_Case01_Case11)
+; 4 call sites from 4 routines (e.g. RunBattleSetup_Case01_FillWC278WithC3_Bank31_Case1A, RunBattleSetup_Case01_FillWC278WithC3_Bank31AndStep, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects, RunBattleSetup_Case01_DrawWC2A4AndWC2B8Rects_Case11)
 DrawWC2A4AndWC2B8Rects::
 Func_031_7509:: ; address name
     ld de, wScreenTileBuffer + $10C
@@ -9241,14 +9241,14 @@ Func_031_7509:: ; address name
     ret
 
 ; far-calls CopyRectRecord7750ToScreenBuffer in bank $1A (E-0115)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_Case1C, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case02_Case0C)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_CopyRectRecord7750ToScreenBufferFar, RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar)
 CopyRectRecord7750ToScreenBufferFar::
 Func_031_7522:: ; address name
     farcall CopyRectRecord7750ToScreenBuffer
     ret
 
 ; copies a 14 x 7 rectangle from wC2F8 (rows 32 bytes apart) to vBGMap0 + $160 (row 11) with CopyRect32StrideToVRAM (E-0078)
-; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11, RunBattleSetup_Case01_Case1D, RunBattleSetup_Case01_Case0F, RunBattleSetup_Case01_Case0D, ...)
+; 5 call sites from 5 routines (e.g. RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case1D, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0F, RunBattleSetup_Case01_DrawWC2F8RectToBGMapRow11_Case0D, ...)
 DrawWC2F8RectToBGMapRow11::
 Func_031_7529:: ; address name
     ld de, wScreenTileBuffer + $160
@@ -9258,7 +9258,7 @@ Func_031_7529:: ; address name
     ret
 
 ; copies a 20 x 11 rectangle from wC278 (rows 32 bytes apart) to vBGMap0 + $E0 (row 7), falling into CopyRect32StrideToVRAM (E-0075)
-; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, RunBattleSetup_Case03, RunBattleSetup_Case00_Case01, ...)
+; 8 call sites from 8 routines (e.g. BattlePhase0_Step1, BattleEnd_Step0, RunBattleSetup_FillWC278WithC3_Bank31, RunBattleSetup_Case00_FillWC278WithC3_Bank31, ...)
 DrawWC278RowsToBGMapRow7::
 Func_031_7536:: ; address name
     ld de, wScreenTileBuffer + $E0
@@ -9266,7 +9266,7 @@ Func_031_7536:: ; address name
     ld bc, $140B
 
 ; B = width, C = rows, DE = source with 32-byte rows, HL = VRAM address with 32-byte rows: copies a B x C rectangle with WriteVRAMByteInc. DE ends 32 * C past its start and HL at the start of the row below; B kept, C = 0 (E-0060)
-; 18 call sites from 15 routines (e.g. BuildAndDrawBattleScreen, DrawWC338RowsToBGMapRow13, DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Case00_Case0C, ...)
+; 18 call sites from 15 routines (e.g. BuildAndDrawBattleScreen, DrawWC338RowsToBGMapRow13, DrawWC278Rect12x11ToBGMapRow7, RunBattleSetup_Case00_LoadCursorTileAndRect7826, ...)
 CopyRect32StrideToVRAM::
 Func_031_753F:: ; address name
     push bc
@@ -9377,7 +9377,7 @@ Data_031_761E:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 6
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: draws the slot's status markers from its status bytes (the per-status part is not read to its end) (E-0111)
-; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_Step4_Sub02_Case02_Case00, ...)
+; 7 call sites from 6 routines (e.g. DrawSlotPanelStats2, DrawSlotPanelStats1, DrawSlotPanelStats0, BattleEnd_Step4_Sub02_Case02_RecordReachedNextLevelExp, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wBattleStatus
 DrawSlotStatusMarks::
@@ -9421,21 +9421,21 @@ Jump_031_76D6::
     jr z, Jump_031_7710
     call DrawSlotStatusMarks_ReadWordTableEntryForSlotC
     bit 0, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC
     bit 1, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04
     bit 4, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06
     bit 5, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02
     bit 6, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07
     bit 7, [hl]
-    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05
+    call nz, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05
     jr Jump_031_773A
 
 Jump_031_7710::
-    call DrawSlotStatusMarks_Sub08
+    call DrawSlotStatusMarks_DrawSlotLevel_BankA0
     ld a, c
     and a, $03
     ld hl, Data_031_77B3
@@ -9446,7 +9446,7 @@ Jump_031_7710::
     jr Jump_031_773A
 
 Jump_031_7726::
-    call DrawSlotStatusMarks_Sub08
+    call DrawSlotStatusMarks_DrawSlotLevel_BankA0
     ld a, c
     and a, $03
     ld hl, Data_031_77B3
@@ -9477,7 +9477,7 @@ Func_031_773C:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02::
 Func_031_774C:: ; address name
     push hl
     ld hl, Data_031_779B
@@ -9488,7 +9488,7 @@ Func_031_774C:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC::
 Func_031_7757:: ; address name
     push hl
     ld hl, Data_031_77A7
@@ -9499,7 +9499,7 @@ Func_031_7757:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04::
 Func_031_7762:: ; address name
     push hl
     ld hl, Data_031_77A7
@@ -9510,7 +9510,7 @@ Func_031_7762:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05::
 Func_031_776D:: ; address name
     push hl
     ld hl, Data_031_77AD
@@ -9521,7 +9521,7 @@ Func_031_776D:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06::
 Func_031_7778:: ; address name
     push hl
     ld hl, Data_031_77A1
@@ -9532,7 +9532,7 @@ Func_031_7778:: ; address name
 
 ; only called from DrawSlotStatusMarks (E-0047)
 ; 1 call site from 1 routine (e.g. DrawSlotStatusMarks)
-DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07::
+DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07::
 Func_031_7783:: ; address name
     push hl
     ld hl, Data_031_77B3
@@ -9542,7 +9542,7 @@ Func_031_7783:: ; address name
     ret
 
 ; HL = table: HL = the word at HL + 2 * (C & 3) (falls into DerefHL_Bank31) (E-0110)
-; 7 call sites from 7 routines (e.g. DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06, ...)
+; 7 call sites from 7 routines (e.g. DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06, ...)
 ReadWordTableEntryForSlotC::
 Func_031_778E:: ; address name
     ld a, c
@@ -9560,28 +9560,28 @@ Func_031_7797:: ; address name
     deref_hl
     ret
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub02
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub02
 Data_031_779B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $39, $C2, $3F, $C2, $45, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub06
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub06
 Data_031_77A1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3A, $C2, $40, $C2, $46, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub03, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub04
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub04
 Data_031_77A7:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3B, $C2, $41, $C2, $47, $C2
 
-; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub05
+; address loaded by DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub05
 Data_031_77AD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3C, $C2, $42, $C2, $48, $C2
 
-; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Sub07
+; address loaded by DrawSlotStatusMarks, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_ReadWordTableEntryForSlotC_Sub07
 Data_031_77B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $3D, $C2, $43, $C2, $49, $C2
 
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wC58A = 1 and wC57F bit 1 is set; slots 3 and 7 never); with wC58A = 2 the bank-$A0 version is far-called instead: copies the slot's 5-tile panel row from wScreenTileBuffer to the same position of vBGMap0 (offset from Data_031_7ADA, WriteVRAMByteInc) (E-0111)
-; 7 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case02_Case00, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
+; 7 call sites from 6 routines (e.g. BattleEnd_Step4_Sub02_Case02_RecordReachedNextLevelExp, CopySlotPanel2ToVRAM, CopySlotPanel1ToVRAM, CopySlotPanel0ToVRAM, ...)
 ; reads: wLinkMode, wLinkRole
 ; points at: wScreenTileBuffer
 CopySlotPanelRowToVRAM::
@@ -9758,7 +9758,7 @@ Jump_031_78B6::
 ; 2 call sites from 1 routine (e.g. DrawSlotStatusMarks)
 ; reads: wLinkMode, wLinkRole
 ; points at: wScreenTileBuffer, wBattleLevel
-DrawSlotStatusMarks_Sub08::
+DrawSlotStatusMarks_DrawSlotLevel_BankA0::
 Func_031_78B8:: ; address name
     ld a, [wLinkMode]
     cp a, $02
@@ -9981,7 +9981,7 @@ Jump_031_7A01::
     ret
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank09, then restores the window (E-0067) (the same 59 bytes appear in 3 banks)
-; 7 call sites from 6 routines (e.g. RunBattleSetup_Case00_Case01, RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep, RunBattleSetup_Case01_Case04, RunBattleSetup_Case01_Case00, ...)
+; 7 call sites from 6 routines (e.g. RunBattleSetup_Case00_FillWC278WithC3_Bank31, RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31AndStep, RunBattleSetup_Case01_DrawWC278Rect12x11ToBGMapRow7_Case04, RunBattleSetup_Case01_ShowStringBank09AtTilesHL_Bank31, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank09AtTilesHL_Bank31::
@@ -10018,7 +10018,7 @@ Func_031_7A02:: ; address name
     ret
 
 ; saves the string window wC52D-wC530, sets the tile destination to HL and the size to DE, far-calls ShowString_Bank08, then restores the window (E-0067) (the same 59 bytes appear in 2 banks)
-; 7 call sites from 7 routines (e.g. RunBattleSetup_Shared07, ShowStringAAtTiles2080, ShowStringAAtTiles17F0, ShowStringAAtTiles1760, ...)
+; 7 call sites from 7 routines (e.g. RunBattleSetup_ShowStringBank08AtTilesHL_Bank31, ShowStringAAtTiles2080, ShowStringAAtTiles17F0, ShowStringAAtTiles1760, ...)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringBank08AtTilesHL_Bank31::
@@ -10109,7 +10109,7 @@ Data_031_7AC8:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_031_7ACE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $82, $00, $88, $00, $8E, $00
 
-; address loaded by DrawSlotStatusMarks_Sub08, CopySlotPanelPart7AD4ToVRAM
+; address loaded by DrawSlotStatusMarks_DrawSlotLevel_BankA0, CopySlotPanelPart7AD4ToVRAM
 Data_031_7AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $A7, $00, $AD, $00
 
@@ -10368,7 +10368,7 @@ Jump_031_7BE9::
     ret
 
 ; A = slot: carry set when CheckSlotStatusBlock sets it, or when status byte 3 & $C0 or byte 4 & $0C is set (wD80F + 9 * A); otherwise carry clear; A, BC, HL kept (E-0067) (the same 31 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09_Sub01)
+; 1 call site from 1 routine (e.g. RunBattleSetup_Case00_Case09_CheckSlotStatusBlockWide_Bank31)
 ; points at: wBattleStatus3
 CheckSlotStatusBlockWide_Bank31::
 Func_031_7BEE:: ; address name
@@ -10415,13 +10415,13 @@ Jump_031_7C1C::
     pop hl
     ret
 
-; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus240Gfx_31_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7C1E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_Case0E, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_Case02, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus5F0Gfx_31_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7DFB:: ; address name

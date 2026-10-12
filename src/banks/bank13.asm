@@ -61,7 +61,7 @@ Func_013_4049:: ; address name
     ret
 
 ; unless wCC44 says otherwise (several special values), starts an event: when wC916 is not $FD it runs script command $09 with a parameter from wCDAE; otherwise (and for the other paths) it jumps through an 11-entry table by wC917 (the handler group: cases far-call bank-$04 dispatchers or, for group 4, dispatch on wC916 through a 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond talk handlers is not read (E-0097)
-; 39 call sites from 26 routines (e.g. RunFieldReturnPhase_Case02, RunFieldReturnPhase_Case01, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
+; 39 call sites from 26 routines (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B, RunFieldReturnPhase_OpenFieldMenuOnA, FieldModeStateDispatch_Shared01_Sub02, FieldModeStateDispatch_Shared01_Sub03, ...)
 ; reads: wMapType, wTalkEventIndex, wKeyWorldFloor, wTalkEventGroup
 ; writes: wScriptStartRequest, wModeState, wTalkEventIndex, wTalkEventGroup, wScriptParam0, wScriptParam1, wScriptCommandType, wScriptRunning, ...
 DispatchTalkEvent::
@@ -134,14 +134,14 @@ Jump_013_40E9::
     rst $00
     dw DispatchTalkEvent_Case00
     dw DispatchTalkEvent_Case01
-    dw DispatchTalkEvent_Case02_Sub01_Case02
-    dw DispatchTalkEvent_Case03_Sub01_Case03
+    dw DispatchTalkEvent_Case02
+    dw DispatchTalkEvent_Case03
     dw DispatchTalkEvent_Case04
     dw DispatchTalkEvent_Case05
-    dw DispatchTalkEvent_Case06_Sub01_Case06
-    dw DispatchTalkEvent_Case07_Sub01_Case07
+    dw DispatchTalkEvent_Case06
+    dw DispatchTalkEvent_Case07
     dw TalkScript512D
-    dw DispatchTalkEvent_Case09_Sub01_Case09
+    dw DispatchTalkEvent_Case09
     dw DispatchTalkEvent_Case0A
 
 ; entry 0 of the `rst $00` table in DispatchTalkEvent
@@ -160,35 +160,35 @@ Jump_013_410A:: ; address name
 
 ; entry 7 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_Case07::
+DispatchTalkEvent_Case07::
 Jump_013_4111:: ; address name
     farcall DispatchTalkEvent_Case07_Sub01
     ret
 
 ; entry 9 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case09_Sub01_Case09::
+DispatchTalkEvent_Case09::
 Jump_013_4118:: ; address name
     farcall DispatchTalkEvent_Case09_Sub01
     ret
 
 ; entry 6 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case06_Sub01_Case06::
+DispatchTalkEvent_Case06::
 Jump_013_411F:: ; address name
     farcall DispatchTalkEvent_Case06_Sub01
     ret
 
 ; entry 2 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case02_Sub01_Case02::
+DispatchTalkEvent_Case02::
 Jump_013_4126:: ; address name
     farcall DispatchTalkEvent_Case02_Sub01
     ret
 
 ; entry 3 of the `rst $00` table in DispatchTalkEvent
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case03_Sub01_Case03::
+DispatchTalkEvent_Case03::
 Jump_013_412D:: ; address name
     farcall DispatchTalkEvent_Case03_Sub01
     ret
@@ -213,7 +213,7 @@ Jump_013_4134:: ; address name
     dw TalkMsg040A_TheTopOfTheTowerCollapsed
     dw TalkScript5FE8_HowMayWeServeYourMortal
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone
-    dw DispatchTalkEvent_Case05_Case0D
+    dw DispatchTalkEvent_Case05_TestFlagBit
     dw TalkScript6003_WelcomeToOurInn
     dw DispatchTalkEvent_Case05_ShowBeGoneIfYour
     dw ChestItem_ExitBell_Flag00A1
@@ -222,7 +222,7 @@ Jump_013_4134:: ; address name
     dw ChestMagicKey
     dw TalkScript600A_Kweeeeh
     dw DispatchTalkEvent_Case05_ShowHeroCheckedBehindThe
-    dw DispatchTalkEvent_Case05_Case16
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case16
     dw TalkMsg041E_ThisIsTheTownOfPei
     dw TalkMsg041F_NyaTravelersThatsRare
     dw TalkMsg0420_ToTheWestIsAMountain
@@ -231,7 +231,7 @@ Jump_013_4134:: ; address name
     dw TalkMsg0423_SomeTimeAgoAHumanChild
     dw TalkMsg0424_ThereWasntAMonsterKingFor
     dw TalkMsg0425_TheNewMonsterKingMakesOthers
-    dw DispatchTalkEvent_Case05_Case1F
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case1F
     dw TalkMsg042A_ThisIsJustARumorBut
     dw TalkMsg042B_TheTunnelInTheWestWill
     dw TalkMsg042C_AreYouLookingForSomething
@@ -241,7 +241,7 @@ Jump_013_4134:: ; address name
     dw TalkMsg04AA_HeroReadTheSignDetermine
     dw TalkMsg0DD3_InnDownstairsRoomsAvailable
     dw TalkScript6048_WelcomeToTheTravelersInn
-    dw DispatchTalkEvent_Case05_Case29
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case29
     dw DispatchTalkEvent_Case05_ShowWhenIPassedToo
     dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw ChestItem_WorldDew_Flag00AA
@@ -252,13 +252,13 @@ Jump_013_4134:: ; address name
     dw TalkMsg043E_TheCaveToTheSouthThat
     dw TalkMsg043F_TheNewMonsterKingIsSaid
     dw TalkMsg0440_HardlyNoOneHasSeenThe
-    dw DispatchTalkEvent_Case05_Case34
-    dw DispatchTalkEvent_Case05_Case35
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case34
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case35
     dw TalkMsg0445_IfYouHaveTheLightOrbYou
     dw TalkMsg0446_IfIHadTheLightOrbEven
     dw TalkScript606F_WantToKnowTheMostFundamental
     dw TalkMsg044A_HearMeOutIfYouWish
-    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case3A
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_StartScriptAtHL_B13
     dw TalkScript6083_HowMayOurChurchHelpYou
     dw TalkMsg044D_HeroReadTheSignTheFinder
     dw TalkMsg0450_HeroPeeredIntoTheVaseA
@@ -274,9 +274,9 @@ Jump_013_4134:: ; address name
     dw DispatchTalkEvent_Case05_ShowHeroCheckedTheSmall
     dw ChestItem_SilvrCape_Flag00AB
     dw ChestItem_Heaven
-    dw DispatchTalkEvent_Case05_Case4A
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case4A
     dw ChestItem_Heaven_Flag00AF
-    dw DispatchTalkEvent_Case05_Case4C
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case4C
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
     dw TalkScript60CE
     dw TalkMsg04A8_WhereIsMyCasketWhereRing
@@ -284,13 +284,13 @@ Jump_013_4134:: ; address name
     dw TalkScript60D0
     dw TalkMsg0463_HeroCheckedTheNoticeFollow
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E
-    dw DispatchTalkEvent_Case05_Case54
-    dw DispatchTalkEvent_Case05_Case55
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case54
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case55
     dw ChestItem_Heaven_Flag00B5
     dw TalkMsg046D_TheMonsterArmysGeneralIs
     dw TalkMsg046E_OurKingsCastleIsAnInvincible
     dw TalkMsg046F_WhatYouEGotTheThree
-    dw DispatchTalkEvent_Case05_Case5A
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case5A
     dw VaseItem_TinyMedal_Flag0200
     dw TalkScript6131
     dw TalkScript6059_Kweeeeeh
@@ -303,15 +303,15 @@ Jump_013_4134:: ; address name
     dw ChestItem_Thief_Flag00BD
     dw ChestItem_Bolt
     dw ChestItem_SteelFang_Flag00BF
-    dw DispatchTalkEvent_Case05_Case67
+    dw DispatchTalkEvent_Case05_TestFlagBit_Case67
     dw TalkScript6152_KamehaSoItWasYouWho
     dw TalkScript6198_ThisWayHereHere
-    dw DispatchTalkEvent_Case05_Case6A
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6A
     dw TalkMsg04A6_IWasTakingAWalkOutside
     dw TalkMsg04A4_SouthBeyondTheMountainsIs
     dw TalkMsg04A5_SeveralAncientRuinsRemain
-    dw DispatchTalkEvent_Case05_Case6E
-    dw DispatchTalkEvent_Case05_Case6F
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6E
+    dw DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6F
     dw TalkMsg0413_HeroCheckedTheTreasureChest_1349CE
     dw $0000 ; unused index (E-0207)
     dw ToggleMapBetween7FAnd92
@@ -459,7 +459,7 @@ Jump_013_42B3:: ; address name
 ; entry 13 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5FEF: '0 checked the grave. There was'
-DispatchTalkEvent_Case05_Case0D::
+DispatchTalkEvent_Case05_TestFlagBit::
 Jump_013_42BA:: ; address name
     ld de, $00A0
     call TestFlagBit
@@ -599,7 +599,7 @@ Jump_013_436E::
 ; entry 22 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerSpriteOverride, wSpriteSlots
-DispatchTalkEvent_Case05_Case16::
+DispatchTalkEvent_Case05_TestFlagBit_Case16::
 Jump_013_4375:: ; address name
     ld de, $0209
     call TestFlagBit
@@ -734,7 +734,7 @@ Jump_013_441D::
 ; entry 31 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerSpriteOverride
-DispatchTalkEvent_Case05_Case1F::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case1F::
 Jump_013_4424:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -840,7 +840,7 @@ Jump_013_4483:: ; address name
 ; entry 41 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-DispatchTalkEvent_Case05_Case29::
+DispatchTalkEvent_Case05_TestFlagBit_Case29::
 Jump_013_448F:: ; address name
     ld de, $00A4
     call TestFlagBit
@@ -985,7 +985,7 @@ Jump_013_4541::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case05_Case34::
+DispatchTalkEvent_Case05_TestFlagBit_Case34::
 Jump_013_4548:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1037,7 +1037,7 @@ Jump_013_459F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case05_Case35::
+DispatchTalkEvent_Case05_TestFlagBit_Case35::
 Jump_013_45A6:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1147,7 +1147,7 @@ Jump_013_464C:: ; address name
 ; entry 58 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case3A::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_StartScriptAtHL_B13::
 Jump_013_4653:: ; address name
     ld a, $0E
     ld [wScreenTableIndex], a
@@ -1290,7 +1290,7 @@ Jump_013_46E8:: ; address name
 ; reads: hTemp0
 DispatchTalkEvent_Case05_ShowHeroCheckedTheSmall::
 Jump_013_46EF:: ; address name
-    farcall DispatchTalkEvent_Case05_Case47_Sub01
+    farcall DispatchTalkEvent_Case05_Case47_TestFlagBit
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_4701
@@ -1339,7 +1339,7 @@ Jump_013_4723:: ; address name
 ; entry 74 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6096: 'You can take this treasure, but'
-DispatchTalkEvent_Case05_Case4A::
+DispatchTalkEvent_Case05_TestFlagBit_Case4A::
 Jump_013_4734:: ; address name
     ld de, $00AD
     call TestFlagBit
@@ -1369,7 +1369,7 @@ Jump_013_474A:: ; address name
 ; entry 76 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-DispatchTalkEvent_Case05_Case4C::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case4C::
 Jump_013_475B:: ; address name
     farcall DispatchTalkEvent_Shared01
     ldh a, [hTemp0]
@@ -1447,7 +1447,7 @@ Jump_013_479E:: ; address name
 ; entry 84 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60D4: '0 checked the gravestone. There was'
-DispatchTalkEvent_Case05_Case54::
+DispatchTalkEvent_Case05_TestFlagBit_Case54::
 Jump_013_47A5:: ; address name
     ld de, $00B2
     call TestFlagBit
@@ -1464,7 +1464,7 @@ Jump_013_47B4::
 ; entry 85 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60EA: 'You overcame the traps I laid'
-DispatchTalkEvent_Case05_Case55::
+DispatchTalkEvent_Case05_TestFlagBit_Case55::
 Jump_013_47BB:: ; address name
     ld de, $00B3
     call TestFlagBit
@@ -1527,7 +1527,7 @@ Jump_013_47FF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case05_Case5A::
+DispatchTalkEvent_Case05_TestFlagBit_Case5A::
 Jump_013_4806:: ; address name
     ld de, $00C2
     call TestFlagBit
@@ -1702,7 +1702,7 @@ Jump_013_48D9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case05_Case67::
+DispatchTalkEvent_Case05_TestFlagBit_Case67::
 Jump_013_48EA:: ; address name
     ld de, $00C0
     call TestFlagBit
@@ -1776,7 +1776,7 @@ Jump_013_4970:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY
 ; writes: wObject1
-DispatchTalkEvent_Case05_Case6A::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6A::
 Jump_013_4977:: ; address name
     xor a, a
     ld [wObject1 + $7], a
@@ -1814,7 +1814,7 @@ Jump_013_4995:: ; address name
 ; entry 110 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-DispatchTalkEvent_Case05_Case6E::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6E::
 Jump_013_499C:: ; address name
     farcall DispatchTalkEvent_Shared01
     ldh a, [hTemp0]
@@ -1832,7 +1832,7 @@ Jump_013_49AE::
 ; entry 111 of the `rst $00` table in DispatchTalkEvent_Case05
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
-DispatchTalkEvent_Case05_Case6F::
+DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6F::
 Jump_013_49B5:: ; address name
     farcall DispatchTalkEvent_Shared01
     ldh a, [hTemp0]
@@ -1927,13 +1927,13 @@ Jump_013_4A23:: ; address name
     dw VaseItem_TinyMedal_Flag01E6
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt
     dw TalkMsg0314_HeroTriedToOpenTheChest_134C97
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case12
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13
     dw TalkMsg0315_TheBorderIsClosedSoI
-    dw DispatchTalkEvent_Case04_Case14
+    dw DispatchTalkEvent_Case04_TestFlagBit
     dw TalkMsg031E_HisMajestyHasBeenCrankyIs
     dw TalkMsg031F_AfterTheGoldDiscoveryOur
     dw TalkMsg0320_IRememberTheKingToBe
-    dw DispatchTalkEvent_Case04_Case18
+    dw DispatchTalkEvent_Case04_TestFlagBit_Case18
     dw TalkMsg0ABD_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABE_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt
@@ -1950,9 +1950,9 @@ Jump_013_4A23:: ; address name
     dw TalkMsg032E_DoYouKnowLadyYunaOf
     dw TalkMsg032F_TheScholarInTheTavernSaid
     dw TalkMsg0330_DontYouThinkItsTooExpensive
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case29
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case2A
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case2B
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case29
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case2A
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case2B
     dw TalkScript5DCC_HowMayOurChurchServeYou
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt
     dw TalkMsg0D3B_Whinny
@@ -1963,7 +1963,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0336_SighIsntThatScholarAppealing
     dw TalkMsg0337_ICameFromTheEasternKingdom
     dw TalkMsg0ABF_HeroPeeredIntoTheBarrelIt
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case36
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case36
     dw TalkMsg0338_TheKingOfTheWestIs
     dw TalkMsg0339_ThisIsTheBorderWeShare
     dw TalkMsg033A_TheBorderHasBeenSealedBy
@@ -2003,8 +2003,8 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1352A0
     dw BarrelItem_TinyMedal_Flag01E7
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1352B8
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case5E
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case5F
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case5E
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case5F
     dw TalkMsg038C_TheLakeIsFrozenSoI
     dw TalkMsg038D_ThisIsWestaniaCastleWestania
     dw TalkMsg038E_NobodyFailsToBeImpressed
@@ -2013,7 +2013,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0391_IHurlKnivesWithIncredible
     dw TalkMsg0392_PleaseLineUpAndQuitPushing
     dw TalkMsg0393_OhLadyYunaToThinkThat
-    dw DispatchTalkEvent_Case04_Case68
+    dw DispatchTalkEvent_Case04_TestFlagBit_Case68
     dw TalkMsg0397_TheCastleIsInAnUproar
     dw TalkMsg0398_LadyYunaUsedToBeVery
     dw TalkMsg0399_InTheEastLivesAnOld
@@ -2023,7 +2023,7 @@ Jump_013_4A23:: ; address name
     dw DispatchTalkEvent_Case04_ShowYoureHereToCheer
     dw TalkScript5EF5_KingMagnificentDontYouAgree
     dw TalkMsg03A4_KingSighNotEvenThisYou
-    dw DispatchTalkEvent_Case04_Case72
+    dw DispatchTalkEvent_Case04_TestFlagBit_Case72
     dw TalkMsg03A6_ThisIsTheCastleOfEstria
     dw TalkMsg03A7_QueenHelenCameByAWhile
     dw TalkMsg03A8_TheSpiritsSpringHasFrozen
@@ -2034,7 +2034,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg03AD_IHeardThisOnTheSly
     dw TalkMsg03AF_AroundThesePartsThereAre
     dw DispatchTalkEvent_Case04_ShowThisIsNoPlace
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case7D
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case7D
     dw TalkMsg03B4_ABotanistDoesLiveHereBut
     dw TalkScript5F12_IRetiredAsATeacherAnd
     dw TalkScript5FD6_HowMayOurChurchServeYou
@@ -2043,7 +2043,7 @@ Jump_013_4A23:: ; address name
     dw TalkScript5FD6_HowMayOurChurchServeYou_1355EA
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1355F6
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD
-    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case86
+    dw DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case86
     dw TalkMsg03B8_IWantToReturnToThe
     dw TalkMsg03AC_ThereIsASpringInThe
     dw TalkMsg0396_ItsAMeanOldWorldOut
@@ -2062,10 +2062,10 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0AC1_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt_1357A9
     dw TalkScript5F4A
-    dw DispatchTalkEvent_Case04_Case99
+    dw DispatchTalkEvent_Case04_TestFlagBit_Case99
     dw DispatchTalkEvent_Case04_ShowHeroCheckedTheMarionette
     dw TalkMsg0A16_MyMaidIsAngryThatI
-    dw DispatchTalkEvent_Case04_Case9C
+    dw DispatchTalkEvent_Case04_TestFlagBit_Case9C
     dw ChestMagicKey_Flag01E0
     dw DispatchTalkEvent_Case04_Case9E
     dw TalkScript5FD2
@@ -2318,7 +2318,7 @@ Jump_013_4C97:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5D6F: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case12::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13::
 Jump_013_4C9E:: ; address name
     ld hl, Script_5D6F
     call StartScriptAtHL_B13
@@ -2337,7 +2337,7 @@ Jump_013_4CAA:: ; address name
 ; entry 20 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wJoypadHeld, wJoypadPressed
-DispatchTalkEvent_Case04_Case14::
+DispatchTalkEvent_Case04_TestFlagBit::
 Jump_013_4CB1:: ; address name
     ld de, $01E4
     call TestFlagBit
@@ -2443,7 +2443,7 @@ Jump_013_4D50::
 
 ; entry 24 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case18::
+DispatchTalkEvent_Case04_TestFlagBit_Case18::
 Jump_013_4D57:: ; address name
     ld de, $0094
     call TestFlagBit
@@ -2676,7 +2676,7 @@ Jump_013_4E7B:: ; address name
 ; entry 41 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case29::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case29::
 Jump_013_4E82:: ; address name
     ld a, $0A
     ld [wScreenTableIndex], a
@@ -2689,7 +2689,7 @@ Jump_013_4E82:: ; address name
 ; entry 42 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case2A::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case2A::
 Jump_013_4E93:: ; address name
     ld a, $08
     ld [wScreenTableIndex], a
@@ -2702,7 +2702,7 @@ Jump_013_4E93:: ; address name
 ; entry 43 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case2B::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case2B::
 Jump_013_4EA4:: ; address name
     ld a, $09
     ld [wScreenTableIndex], a
@@ -2840,7 +2840,7 @@ Jump_013_4F43:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5DC5: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case36::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case36::
 Jump_013_4F4A:: ; address name
     ld hl, Script_5DC5
     call StartScriptAtHL_B13
@@ -3479,7 +3479,7 @@ Jump_013_52B8:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5E87: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case5E::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case5E::
 Jump_013_52BF:: ; address name
     ld hl, Script_5E87
     call StartScriptAtHL_B13
@@ -3490,7 +3490,7 @@ Jump_013_52BF:: ; address name
 ; entry 95 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case5F::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case5F::
 Jump_013_52CB:: ; address name
     ld a, $0B
     ld [wScreenTableIndex], a
@@ -3606,7 +3606,7 @@ Jump_013_5358::
 
 ; entry 104 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case68::
+DispatchTalkEvent_Case04_TestFlagBit_Case68::
 Jump_013_535F:: ; address name
     ld de, $009D
     call TestFlagBit
@@ -3804,7 +3804,7 @@ Jump_013_5470::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case04_Case72::
+DispatchTalkEvent_Case04_TestFlagBit_Case72::
 Jump_013_5477:: ; address name
     ld de, $01E5
     call TestFlagBit
@@ -4010,7 +4010,7 @@ Jump_013_5596::
 ; entry 125 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case7D::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case7D::
 Jump_013_559D:: ; address name
     ld a, $0C
     ld [wScreenTableIndex], a
@@ -4111,7 +4111,7 @@ Jump_013_55FD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5F1F: 'Welcome to our inn!'
-DispatchTalkEvent_Case04_StartScriptAtHL_B13_Case86::
+DispatchTalkEvent_Case04_StartScriptAtHL_B13_StartScriptAtHL_B13_Case86::
 Jump_013_5604:: ; address name
     ld hl, Script_5F1F
     call StartScriptAtHL_B13
@@ -4424,7 +4424,7 @@ Jump_013_57B0:: ; address name
 
 ; entry 153 of the `rst $00` table in DispatchTalkEvent_Case04
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case04_Case99::
+DispatchTalkEvent_Case04_TestFlagBit_Case99::
 Jump_013_57B7:: ; address name
     ld de, $009A
     call TestFlagBit
@@ -4500,7 +4500,7 @@ Jump_013_581F:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case04_Case9C::
+DispatchTalkEvent_Case04_TestFlagBit_Case9C::
 Jump_013_5826:: ; address name
     ld de, $009F
     call TestFlagBit
@@ -4727,7 +4727,7 @@ Jump_013_5941:: ; address name
     rst $00
     dw DispatchTalkEvent_Case01_Return
     dw TalkScript5895
-    dw DispatchTalkEvent_Case01_Case02
+    dw DispatchTalkEvent_Case01_TestFlagBit
     dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
     dw TalkMsg001B_ThisHayIsPrettyGoodMaybe
     dw TalkMsg0026_HeroCheckedTheOvenItSmelled
@@ -4738,7 +4738,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0032_HelloThereYouMustBeThe
     dw TalkMsg003C_YoureTheKidsFromTheNew
     dw TalkMsg0040_OnThisIslandEveryDayGoes
-    dw DispatchTalkEvent_Case01_Case0D
+    dw DispatchTalkEvent_Case01_InventoryHasFreeSlotCheck_Bank13
     dw TalkMsg0034_TheHorridPrinceAndThatElemental
     dw TalkMsg020F_ThereAreSomeItemsThatCan
     dw TalkMsg003A_ThatWeirdApeThingIsWarubou
@@ -4750,21 +4750,21 @@ Jump_013_5941:: ; address name
     dw TalkMsg003F_InsideTheWellIsTheLogs
     dw DispatchTalkEvent_Case01_ShowImWarubouGreatLogsSpirit
     dw DispatchTalkEvent_Case01_ShowImPrinceKamehaOf
-    dw DispatchTalkEvent_Case01_Case19
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case19
     dw TalkMsg001A_IAccidentallyWentOutside
     dw DispatchTalkEvent_Case01_ShowCobiHeroWhileYoure
     dw DispatchTalkEvent_Case01_ShowTaraBigBrotherWhile
     dw TalkMsg011E_IfYourPartyIsWipedOut
     dw TalkMsg021F_DoYouKnowAboutLogTwigIts
     dw TalkMsg04D0_HeroReadTheSignMonsterArena
-    dw DispatchTalkEvent_Case01_Case20
-    dw DispatchTalkEvent_Case01_Case21
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case20
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case21
     dw TalkMsg021C_MonstersHateBeingAwayFrom
     dw TalkMsg0221_HelloThereYoungsterTakeThese
     dw TalkMsg0222_HeyALittleBittyMasterHi
-    dw DispatchTalkEvent_Case01_Case25
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case25
     dw TalkMsg0224_TakeCareToFindTinyMedals
-    dw DispatchTalkEvent_Case01_Case27
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case27
     dw TalkMsg0D8C_WataWataTerryBattledInThe
     dw TalkMsg0D8D_FwahahahahaHowAmusingEven
     dw TalkMsg022D_WarpWingReturnsYouInstantly
@@ -4772,10 +4772,10 @@ Jump_013_5941:: ; address name
     dw TalkMsg022C_ThereAreBooksThatChangeYour
     dw TalkMsg0005_YouFolksRunAMonsterFarm
     dw TalkMsg0006_TheresASpiritInGreatLogThats
-    dw DispatchTalkEvent_Case01_Case2F
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case2F
     dw TalkScript5120_SailingIsSureExhilarating
     dw TalkMsg000A_WellSoonBeReachingGreatLog
-    dw DispatchTalkEvent_Case01_Case32
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case32
     dw DispatchTalkEvent_Case01_ShowTheFarmIsFull
     dw DispatchTalkEvent_Case01_ShowTheFarmIsFull
     dw DispatchTalkEvent_Case01_ShowTheFarmIsFull
@@ -4787,21 +4787,21 @@ Jump_013_5941:: ; address name
     dw TalkMsg0243_HeroCheckedTheBookshelfBookmark
     dw TalkMsg0244_HeroCheckedTheBookshelfJournal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt
-    dw DispatchTalkEvent_Case01_Case3E
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case3E
     dw TalkMsg0249_HeroCheckedTheBookshelfDiary
     dw TalkMsg0256_HeroCheckedTheDresserItWas
     dw TalkMsg02B0_HeroPeeredIntoTheBarrelIt
-    dw DispatchTalkEvent_Case01_Case42
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case42
     dw TalkMsg025A_HeroCheckedTheDresserItWas
     dw TalkMsg025B_HeroCheckedTheBookshelfThis
     dw IfFlag134Msg0314_HeroTriedToOpenTheChest
-    dw DispatchTalkEvent_Case01_Case46
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case46
     dw TalkMsg04C5_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C6_HeroCheckedTheBookshelfHandbook
     dw TalkMsg04C7_HeroCheckedTheBookshelfHandbook
     dw TalkMsg08C0_WeGetMoreAndMoreStubborn
     dw DispatchTalkEvent_Case01_ShowHeresThatTinyMedalWait
-    dw DispatchTalkEvent_Case01_Case4C
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case4C
     dw TalkMsg0A50_ZzzzYawnHuhIsItMorning
     dw TalkMsg0A52_OurKindAlwaysStaysNearWater
     dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
@@ -4822,16 +4822,16 @@ Jump_013_5941:: ; address name
     dw TalkMsg0294_IfYouWinAnArenaTourney
     dw TalkMsg0290_SirloinIsTheTopsHarrumph
     dw TalkMsg0291_IIDidntFallForAny
-    dw DispatchTalkEvent_Case01_Case61
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case61
     dw TalkMsg0296_HeroPeeredIntoTheVaseIt
     dw VaseItem_TinyMedal_Flag010C
     dw TalkMsg027A_ListenThisIsASecretTheres
-    dw DispatchTalkEvent_Case01_Case65
-    dw DispatchTalkEvent_Case01_Case66
+    dw DispatchTalkEvent_Case01_GenerateNewKeyEntry
+    dw DispatchTalkEvent_Case01_SaveScreenBufferToBGMap1
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
-    dw DispatchTalkEvent_Case01_Case69
-    dw DispatchTalkEvent_Case01_Case6A
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case69
+    dw DispatchTalkEvent_Case01_SaveScreenBufferToBGMap1_Case6A
     dw TalkScript55CE_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
@@ -4839,7 +4839,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg02DC_GreatLogsStarryShrineWasnt
     dw TalkMsg0DD4_IfYouBreedTheParentsGo
     dw TalkMsg02DD_ParentsPassOnAbilitiesTo
-    dw DispatchTalkEvent_Case01_Case72
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case72
     dw TalkMsg0A6F_MyHusbandLovesToCollectThings
     dw TalkMsg0A75_HeroCheckedTheDresserItOverflowed
     dw TalkMsg0A76_HeroCheckedTheDresserItOverflowed
@@ -4852,7 +4852,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0A33_HaveYouBeenToTheStarry
     dw TalkMsg020A_ImChoppingSomeTreesDownTo
     dw TalkMsg08BF_MasterOnlyMakesMeChargeIt
-    dw DispatchTalkEvent_Case01_Case7F
+    dw DispatchTalkEvent_Case01_TestFlagBit_Case7F
     dw TalkMsg0A39_TheManHereHasRareKeys
     dw TalkMsg0A3C_KingIfYouSee
     dw TalkMsg0A3E_YoureFreeToGo
@@ -4889,7 +4889,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0025_HeroCheckedTheDresserItSmelled
     dw TalkMsg001D_HeroPeeredIntoTheBarrelIt
     dw TalkMsg001C_HeroCheckedThePumpItsRusted
-    dw DispatchTalkEvent_Case01_CaseA4
+    dw DispatchTalkEvent_Case01_FullyHealParty
     dw TalkMsg0037_HeroTriedToOpenTheChest_137788
     dw DispatchTalkEvent_Case01_StartScriptAtHL_B13
     dw DispatchTalkEvent_Case01_ShowTerryHereJustTake
@@ -4903,7 +4903,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg022F_EvenICanCastSpellsIf
     dw TalkMsg0242_MyDadsAFamousMonsterMaster
     dw TalkMsg02B1_HeroPeeredIntoTheOvenIt
-    dw DispatchTalkEvent_Case01_CaseB2
+    dw DispatchTalkEvent_Case01_TestFlagBit_CaseB2
     dw TalkMsg02A6_PuttingUpABridgeIsEasy
     dw TalkMsg0209_DidYouKnowYouCanRecord
     dw TalkMsg0A51_WhenAAppearsByAMonsters
@@ -4929,7 +4929,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0225_HeroPeeredIntoTheVaseThere
     dw VaseItem_TinyMedal_Flag0130
     dw TalkMsg024A_HeroCheckedThePlushDollIt
-    dw DispatchTalkEvent_Case01_CaseCC
+    dw DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseCC
     dw DispatchTalkEvent_Case01_ShowHereItIstheTinyMedal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt_137A93
     dw Talk00FC_YouHaveToEat
@@ -4953,9 +4953,9 @@ Jump_013_5941:: ; address name
     dw TalkMsg051E_TheGreatLogTreeAppearedTo
     dw TalkMsg055E_HeroCheckedTheBookshelfMagic
     dw TalkMsg0DD5_MonsterSkillsArePassedOn
-    dw DispatchTalkEvent_Case01_CaseE4
-    dw DispatchTalkEvent_Case01_CaseE5
-    dw DispatchTalkEvent_Case01_CaseE6
+    dw DispatchTalkEvent_Case01_RunFieldCommandTemp0
+    dw DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseE5
+    dw DispatchTalkEvent_Case01_StartMessageCommand09HL_B13
     dw DispatchTalkEvent_Case01_CaseE7
     dw $0000 ; unused index (E-0207)
     dw TalkMsg029B_IFoundAKey
@@ -4992,7 +4992,7 @@ Jump_013_5B34:: ; address name
 ; entry 2 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-DispatchTalkEvent_Case01_Case02::
+DispatchTalkEvent_Case01_TestFlagBit::
 Jump_013_5B3B:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -5064,7 +5064,7 @@ Jump_013_5BC7::
     ret
 
 Jump_013_5BD0::
-    call DispatchTalkEvent_Case01_Case02_Sub01
+    call DispatchTalkEvent_Case01_Case02_TestFlagBit
     ret
 
 Jump_013_5BD4::
@@ -5100,10 +5100,10 @@ Jump_013_5C04::
     ret
 
 ; only called from DispatchTalkEvent_Case01_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_Case02)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_TestFlagBit)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case01_Case02_Sub01::
+DispatchTalkEvent_Case01_Case02_TestFlagBit::
 Func_013_5C0B:: ; address name
     ld de, $0182
     call TestFlagBit
@@ -5423,7 +5423,7 @@ Jump_013_5E61::
     ret
 
 Jump_013_5E68::
-    call TalkMsg0016_ItSeemsToMeThatThe_Sub01
+    call TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit
     ret
 
 Jump_013_5E6C::
@@ -5514,7 +5514,7 @@ Jump_013_5EE7::
 ; 1 call site from 1 routine (e.g. TalkMsg0016_ItSeemsToMeThatThe)
 ; reads: hTemp0, wPartyCount, wInventory
 ; writes: hTemp0, hTemp1
-TalkMsg0016_ItSeemsToMeThatThe_Sub01::
+TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
 Func_013_5EF4:: ; address name
     ld de, $0191
     call TestFlagBit
@@ -5826,7 +5826,7 @@ Jump_013_6109::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case01_Case0D::
+DispatchTalkEvent_Case01_InventoryHasFreeSlotCheck_Bank13::
 Jump_013_6110:: ; address name
     call InventoryHasFreeSlotCheck_Bank13
     jr c, Jump_013_6116
@@ -6333,7 +6333,7 @@ Jump_013_6474::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSaveByte32, hTemp1, hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case01_Case19::
+DispatchTalkEvent_Case01_TestFlagBit_Case19::
 Jump_013_647B:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6792,7 +6792,7 @@ Jump_013_67C9:: ; address name
 
 ; entry 32 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case20::
+DispatchTalkEvent_Case01_TestFlagBit_Case20::
 Jump_013_67D0:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -6848,7 +6848,7 @@ Jump_013_6823::
 
 ; entry 33 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case21::
+DispatchTalkEvent_Case01_TestFlagBit_Case21::
 Jump_013_6832:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6938,7 +6938,7 @@ Jump_013_68B6::
 
 ; entry 37 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case25::
+DispatchTalkEvent_Case01_TestFlagBit_Case25::
 Jump_013_68BD:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -6969,7 +6969,7 @@ Jump_013_68DB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, hTemp0
 ; writes: hTemp0, hTemp1
-DispatchTalkEvent_Case01_Case27::
+DispatchTalkEvent_Case01_TestFlagBit_Case27::
 Jump_013_68E2:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7086,7 +7086,7 @@ Jump_013_6971:: ; address name
 
 ; entry 47 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case2F::
+DispatchTalkEvent_Case01_TestFlagBit_Case2F::
 Jump_013_6978:: ; address name
     ld de, $0013
     call TestFlagBit
@@ -7136,7 +7136,7 @@ Jump_013_69B1::
 
 ; entry 50 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case32::
+DispatchTalkEvent_Case01_TestFlagBit_Case32::
 Jump_013_69B8:: ; address name
     ld de, $0013
     call TestFlagBit
@@ -7294,7 +7294,7 @@ Jump_013_6A90:: ; address name
 
 ; entry 62 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case3E::
+DispatchTalkEvent_Case01_TestFlagBit_Case3E::
 Jump_013_6A97:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7344,7 +7344,7 @@ Jump_013_6ACA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5
 ; writes: hTemp1, hTemp2, hTemp3
-DispatchTalkEvent_Case01_Case42::
+DispatchTalkEvent_Case01_TestFlagBit_Case42::
 Jump_013_6AD1:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -7422,7 +7422,7 @@ Jump_013_6B40:: ; address name
 ; entry 70 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case01_Case46::
+DispatchTalkEvent_Case01_TestFlagBit_Case46::
 Jump_013_6B4E:: ; address name
     ld a, $96
     ld [wDataBank], a
@@ -7518,7 +7518,7 @@ Jump_013_6BCD::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_54AB: 'Hello, 0, welcome! This is the'
-DispatchTalkEvent_Case01_Case4C::
+DispatchTalkEvent_Case01_TestFlagBit_Case4C::
 Jump_013_6BD4:: ; address name
     ld de, $010A
     call TestFlagBit
@@ -7730,7 +7730,7 @@ Jump_013_6CAC:: ; address name
 ; entry 97 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank
-DispatchTalkEvent_Case01_Case61::
+DispatchTalkEvent_Case01_TestFlagBit_Case61::
 Jump_013_6CB3:: ; address name
     ld a, [wArenaRank]
     or a, a
@@ -7853,7 +7853,7 @@ Jump_013_6D61::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArenaRank, wTalkEventByte92, hTemp0
 ; writes: wDataBank, wScreenTableIndex, wTalkEventByte92
-DispatchTalkEvent_Case01_Case65::
+DispatchTalkEvent_Case01_GenerateNewKeyEntry::
 Jump_013_6D68:: ; address name
     ld a, $0C
     ld [wDataBank], a
@@ -7915,7 +7915,7 @@ Jump_013_6DCA::
 ; entry 102 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case01_Case66::
+DispatchTalkEvent_Case01_SaveScreenBufferToBGMap1::
 Jump_013_6DD1:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -8010,7 +8010,7 @@ Jump_013_6E6A::
 ; entry 105 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case01_Case69::
+DispatchTalkEvent_Case01_TestFlagBit_Case69::
 Jump_013_6E71:: ; address name
     ld a, $96
     ld [wDataBank], a
@@ -8040,7 +8040,7 @@ Jump_013_6E94::
 ; entry 106 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case01_Case6A::
+DispatchTalkEvent_Case01_SaveScreenBufferToBGMap1_Case6A::
 Jump_013_6EA3:: ; address name
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -8129,7 +8129,7 @@ Jump_013_6F08:: ; address name
 ; entry 114 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case01_Case72::
+DispatchTalkEvent_Case01_TestFlagBit_Case72::
 Jump_013_6F0F:: ; address name
     ld a, $0C
     ld [wDataBank], a
@@ -8338,7 +8338,7 @@ Jump_013_7029::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0, wPartyCount, wInventory, wObject1
 ; writes: hTemp0, hTemp1, wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case01_Case7F::
+DispatchTalkEvent_Case01_TestFlagBit_Case7F::
 Jump_013_7030:: ; address name
     ld de, $0134
     call TestFlagBit
@@ -8986,7 +8986,7 @@ Jump_013_7488::
     ret
 
 Jump_013_74AD::
-    farcall Talk04CB_ThatKeyIUsed_Sub01
+    farcall Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte
     ldh a, [hTemp0]
     or a, a
     jr nz, Jump_013_74BF
@@ -9430,7 +9430,7 @@ Jump_013_7760:: ; address name
 ; entry 164 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wOBJPaletteUploadRequest
-DispatchTalkEvent_Case01_CaseA4::
+DispatchTalkEvent_Case01_FullyHealParty::
 Jump_013_7767:: ; address name
     farcall FullyHealParty
     farcall MoveIncapacitatedPartyMembersBack
@@ -9630,7 +9630,7 @@ Jump_013_7876:: ; address name
 
 ; entry 178 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseB2::
+DispatchTalkEvent_Case01_TestFlagBit_CaseB2::
 Jump_013_787D:: ; address name
     ld de, $0022
     call TestFlagBit
@@ -9982,7 +9982,7 @@ Jump_013_7A2E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1
 ; writes: wFieldStateByte34
-DispatchTalkEvent_Case01_CaseCC::
+DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseCC::
 Jump_013_7A35:: ; address name
     farcall DispatchTalkEvent_Case01_CaseCC_Sub01
     ldh a, [hTemp1]
@@ -10464,7 +10464,7 @@ Jump_013_7D28:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGM2Mode, wObject5
 ; writes: hTemp0
-DispatchTalkEvent_Case01_CaseE4::
+DispatchTalkEvent_Case01_RunFieldCommandTemp0::
 Jump_013_7D2F:: ; address name
     ld a, [wGM2Mode]
     cp a, $01
@@ -10480,7 +10480,7 @@ Jump_013_7D2F:: ; address name
 ; entry 229 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGM2Mode, wRollState
-DispatchTalkEvent_Case01_CaseE5::
+DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseE5::
 Jump_013_7D45:: ; address name
     ld a, [wGM2Mode]
     cp a, $01
@@ -10502,7 +10502,7 @@ Jump_013_7D58::
 ; entry 230 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
-DispatchTalkEvent_Case01_CaseE6::
+DispatchTalkEvent_Case01_StartMessageCommand09HL_B13::
 Jump_013_7D65:: ; address name
     ldh a, [hPlayerX]
     cp a, $30
@@ -10861,7 +10861,7 @@ Jump_013_7F86:: ; address name
     ret
 
 ; the same 28 bytes as InventoryHasFreeSlotCheck (04:7C37)
-; 9 call sites from 8 routines (e.g. TalkMsg025E_MyGranddaughterIsPainfully, DispatchTalkEvent_Case01_Case0D, TalkMsg0016_ItSeemsToMeThatThe, DispatchTalkEvent_Case01_Case02, ...)
+; 9 call sites from 8 routines (e.g. TalkMsg025E_MyGranddaughterIsPainfully, DispatchTalkEvent_Case01_InventoryHasFreeSlotCheck_Bank13, TalkMsg0016_ItSeemsToMeThatThe, DispatchTalkEvent_Case01_TestFlagBit, ...)
 ; reads: wInventory
 ; points at: wInventory
 InventoryHasFreeSlotCheck_Bank13::

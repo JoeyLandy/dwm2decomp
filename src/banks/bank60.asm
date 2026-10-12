@@ -2,11 +2,11 @@ SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
 ; only called from RunMenuStateMenuState_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. RunMenuStateMenuState_Case05)
+; 1 call site from 1 routine (e.g. RunMenuStateMenuState_InitSoundHardware)
 ; reads: wCurrentKeyIndex, hTemp0
 ; writes: wKeyWorldSlot, wKeyRandomLo, wKeyRandomHi
 ; points at: wKeySeeds
-RunMenuStateMenuState_Case05_Sub01::
+RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex::
 Func_060_4001:: ; address name
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -38,22 +38,22 @@ Func_060_4001:: ; address name
     ld [wKeyRandomHi], a
 
 ; only called from DebugAutomap_Update_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0)
 ; reads: wCurrentKeyIndex
-DebugAutomap_Update_Sub01_Sub01::
+DebugAutomap_Update_Sub01_Sub01_Return_Sub01::
 Func_060_4035:: ; address name
     call DebugAutomap_Update_Sub01_Sub01_Sub02
-    call DebugAutomap_Update_Sub01_Sub01_Sub03
-    call DebugAutomap_Update_Sub01_Sub01_Sub05
+    call DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase
+    call DebugAutomap_Update_Sub01_Sub01_NextRandomSeed
     call DebugAutomap_Update_Sub01_Sub01_Sub04
     call DebugAutomap_Update_Sub01_Sub01_Sub06
     call DebugAutomap_Update_Sub01_Sub01_Return
     call DebugAutomap_Update_Sub01_Sub01_Sub09
     or a, a
-    jr nz, DebugAutomap_Update_Sub01_Sub01
+    jr nz, DebugAutomap_Update_Sub01_Sub01_Return_Sub01
     farcall DebugAutomap_Update_Sub01_Sub01_Sub0C
     call DebugAutomap_Update_Sub01_Sub01_Sub08
-    call DebugAutomap_Update_Sub01_Sub01_Sub0A
+    call DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
     call DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength
     call DebugAutomap_Update_Sub01_Sub01_Sub0B
     ld a, [wCurrentKeyIndex]
@@ -74,7 +74,7 @@ Func_060_4035:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength::
 Func_060_4076:: ; address name
     call LoadKeyWorldLevelBaseTripleForPartyStrength
@@ -1195,7 +1195,7 @@ Data_060_47C5:: ; address name
     db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: wPartyStrength, wKeyRandomHi, wKeyWorldWidth, wKeyWorldHeight, hTemp8, hTemp9
 ; writes: wKeyWorldFlags, wKeyWorldWidth, wMapWidthScreens, wKeyWorldHeight, wMapHeightScreens, hTemp8, hTemp9, wKeyWorldAreaCount
 ; points at: wVisitedScreens, wKeyWorldAreas
@@ -1498,11 +1498,11 @@ Data_060_4CC1:: ; address name
     db $03, $03, $03, $03 ; id 55
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: hTemp0, hTemp1, hTemp5, hTemp6
 ; writes: hTemp0, hTemp1, hTemp5, hTemp6, hTemp7
 ; points at: wKeyWorldAreas, hTemp7
-DebugAutomap_Update_Sub01_Sub01_Sub03::
+DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase::
 Func_060_4DA1:: ; address name
     ld b, $00
     ld hl, wKeyWorldChunks + $3
@@ -1563,7 +1563,7 @@ Jump_060_4DCE::
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; points at: wKeyWorldAreas, wKeyWorldAreaInfo
 DebugAutomap_Update_Sub01_Sub01_Sub04::
 Func_060_4DF6:: ; address name
@@ -1584,11 +1584,11 @@ Jump_060_4DFE::
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: hTemp7, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldAreas, wKeyWorldAreaInfo
-DebugAutomap_Update_Sub01_Sub01_Sub05::
+DebugAutomap_Update_Sub01_Sub01_NextRandomSeed::
 Func_060_4E0A:: ; address name
     ldh a, [hTemp7]
     cp a, $01
@@ -1830,7 +1830,7 @@ Jump_060_4F53::
     ret
 
 ; swaps [DE] with the first of the four wCD70 bytes whose high nibble matches [DE]'s (E-0124)
-; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub05)
+; 4 call sites from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_NextRandomSeed)
 ; reads: hTemp1
 ; writes: hTemp1
 ; points at: wKeyWorldAreas
@@ -1866,7 +1866,7 @@ Jump_060_4F76::
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: hTemp7, hTemp0
 ; writes: hTemp0, hTemp1, hTemp2
 ; points at: wKeyWorldAreaExits, wKeyWorldAreas
@@ -2130,13 +2130,13 @@ Jump_060_50E0::
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 DebugAutomap_Update_Sub01_Sub01_Return::
 Func_060_50E4:: ; address name
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: hTemp0, hTemp1, wKeyRandomHi, wKeyRandomLo
 ; writes: hTemp0, hTemp1
 ; points at: wKeyWorldByte8B
@@ -2248,7 +2248,7 @@ Data_060_5177:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: hTemp7, hTemp0, hTemp1, wKeyWorldAreaCount, wKeyWorldHeight, wKeyWorldWidth, hTemp5, hTemp2, ...
 ; writes: hTemp0, hTemp1, hTemp5, hTemp2, hTemp3, hTemp8, hTemp9
 ; points at: wKeyWorldAreas, wKeyWorldFloorInfo
@@ -2579,11 +2579,11 @@ Jump_060_5365::
     ret
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: wPartyStrength, wMapObjectCount
 ; writes: wKeyWorldBand, wMapObjectCount, hTemp0
 ; points at: wMapObjects
-DebugAutomap_Update_Sub01_Sub01_Sub0A::
+DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA::
 Func_060_5373:: ; address name
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
@@ -2628,12 +2628,12 @@ Jump_060_53A7::
     jr z, Jump_060_5379
     ret
 
-; address loaded by DebugAutomap_Update_Sub01_Sub01_Sub0A
+; address loaded by DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
 Data_060_53B3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0A, $0F, $0F, $0F, $0F, $14, $14, $14, $14
 
 ; wCD0F = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
-; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, FieldModeStateDispatch_Case04_Sub02_Sub01, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; writes: wKeyWorldBand
 SetKeyWorldBandForA::
 Func_060_53C3:: ; address name
@@ -2663,7 +2663,7 @@ Jump_060_53DF::
     ret
 
 ; picks a random open cell within wCD0D x wCD0E not used by another object and stores it for object hFFC6 (E-0130)
-; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 2 call sites from 2 routines (e.g. RefreshKeyWorldObjectsOnEntry, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; reads: wKeyWorldWidth, wKeyRandomHi, wKeyWorldHeight, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTemp5, ...
 ; writes: wKeyWorldPlaceFlag, hTemp3, hTemp4, hTemp5
 PlaceKeyWorldObjectAtRandomCell::
@@ -2803,7 +2803,7 @@ Jump_060_54AB::
     ret
 
 ; picks an object kind for the key level band wCD0F from the chance rows at $556F and its contents ([DE + 1]) (E-0130)
-; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveMapObjectsEntryMatching, DebugAutomap_Update_Sub01_Sub01_Sub0A)
+; 3 call sites from 3 routines (e.g. RefreshKeyWorldObjectsOnEntry, RemoveMapObjectsEntryMatching, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA)
 ; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
 RollKeyWorldObjectKind::
@@ -2996,7 +2996,7 @@ Data_060_555F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; 2 call sites from 2 routines (e.g. FieldModeStateDispatch_Case04_Sub02_Sub01, FieldModeStateDispatch_Case04_Sub02)
 ; reads: wKeyWorldBand, wKeyRandomHi, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1
-FieldModeStateDispatch_Shared05::
+FieldModeStateDispatch_NextRandomSeed::
 Func_060_596F:: ; address name
     ld a, [wKeyWorldBand]
     and a, $0F
@@ -3122,7 +3122,7 @@ Jump_060_5A15::
     ld [de], a
     ret
 
-; address loaded by FieldModeStateDispatch_Shared05
+; address loaded by FieldModeStateDispatch_NextRandomSeed
 Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     ds $13, $00
     db $55
@@ -3195,7 +3195,7 @@ Data_060_5A19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $F1, $0C, $1C, $05, $20, $F0, $C9, $F1, $C9
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: wKeyWorldFloorInfo, hTemp4, hTemp3
 ; writes: wKeyWorldGoalScreen, hTemp3, hTemp4, wKeyWorldGoalPos, wKeyWorldGoalPos2
 DebugAutomap_Update_Sub01_Sub01_Sub0B::
@@ -3290,7 +3290,7 @@ Data_060_5ED1:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Sub03)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase)
 ; reads: wKeyRandomHi
 RunRandomPatternCase::
 Func_060_5EE1:: ; address name
@@ -3298,19 +3298,19 @@ Func_060_5EE1:: ; address name
     ld a, [wKeyRandomHi]
     and a, $0F
     rst $00
-    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_Case01
     dw RunRandomPatternCase_Case02
     dw RunRandomPatternCase_Case03
     dw RunRandomPatternCase_Case02
     dw RunRandomPatternCase_Case01
-    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_Case01
     dw RunRandomPatternCase_Case02
     dw RunRandomPatternCase_Case03
     dw RunRandomPatternCase_Case02
     dw RunRandomPatternCase_Case01
-    dw RunRandomPatternCase_Case00
+    dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_Case01
     dw RunRandomPatternCase_Case02
     dw RunRandomPatternCase_Case03
@@ -3591,7 +3591,7 @@ Jump_060_605E::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyRandomLo, hTemp7, hTemp2, hTemp3, hTemp4, hTemp5, hTemp6, hTempA
 ; writes: hTempA
-RunRandomPatternCase_Case00::
+RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer::
 Jump_060_609E:: ; address name
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -3636,7 +3636,7 @@ Jump_060_60B2::
     ret
 
 ; copies three bytes at DE to the address in hFFC6/hFFC7 minus 3 and to hFFC8-hFFCA (E-0121)
-; 4 call sites from 4 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01, RunRandomPatternCase_Case00)
+; 4 call sites from 4 routines (e.g. RunRandomPatternCase_Case03, RunRandomPatternCase_Case02, RunRandomPatternCase_Case01, RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp2, hTemp3, hTemp4
 StoreThreeBytesBeforeTemp0Pointer::
@@ -4110,7 +4110,7 @@ Jump_060_649D::
     ld a, b
     ldh [hTemp0], a
     call RollKeyWorldObjectKind
-    call RemoveMapObjectsEntryMatching_Sub01
+    call RemoveMapObjectsEntryMatching_NextRandomSeed
     or a, a
     jr z, Jump_060_64B8
     pop bc
@@ -4177,7 +4177,7 @@ Jump_060_64E8::
 ; 1 call site from 1 routine (e.g. RemoveMapObjectsEntryMatching)
 ; reads: wMapWidthScreens, wKeyRandomHi, wMapHeightScreens, hTemp3, hTemp4, hTemp0, wMapObjectCount, hTempA, ...
 ; writes: hTempA, hTemp3, hTemp4, hTemp5
-RemoveMapObjectsEntryMatching_Sub01::
+RemoveMapObjectsEntryMatching_NextRandomSeed::
 Func_060_64F3:: ; address name
     push de
     xor a, a
@@ -4306,7 +4306,7 @@ Jump_060_6590::
     ret
 
 ; only called from FieldModeStateDispatch_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. FieldModeStateDispatch_Case04)
+; 1 call site from 1 routine (e.g. FieldModeStateDispatch_DrawFieldSprites_Case04)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wWarpPending, wKeyRandomHi
 ; writes: wScreenTriggerCount, wWarpPending, wKeyWorldBand, hTemp2, hTemp3
 ; points at: wScreenTriggers, hTemp3
@@ -4388,7 +4388,7 @@ Jump_060_65EF::
 Jump_060_661E::
     push de
     push bc
-    call FieldModeStateDispatch_Shared05
+    call FieldModeStateDispatch_NextRandomSeed
     call WriteKeyContentsWordRowsEntryForTemp2Temp3
     ld hl, hTemp3
     inc [hl]
@@ -4547,7 +4547,7 @@ Jump_060_687A::
 Jump_060_68C2::
     push de
     push bc
-    call FieldModeStateDispatch_Shared05
+    call FieldModeStateDispatch_NextRandomSeed
     call WriteRandomEntryFromTable690E
     pop bc
     pop de
@@ -4600,7 +4600,7 @@ Data_060_690E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; hFFC9 = hFFC6; picks hFFC7 from the chance row Data_060_6969[level / 10] and hFFC8 from row Data_060_6A09 + $3C * (level / 10) (E-0125)
-; 2 call sites from 2 routines (e.g. DebugAutomap_Update_Sub01, WriteKeyEntryTemp0)
+; 2 call sites from 2 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, WriteKeyEntryTemp0)
 ; reads: hTemp0
 ; writes: hTemp3, hTemp1, hTemp2
 RollKeyContentsForLevelTemp0::
@@ -4718,7 +4718,7 @@ Data_060_6A09:: ; address name
     db $53, $00, $54, $00, $55, $57, $58, $5A, $5B, $00, $5E, $60, $62, $00, $00, $64, $00, $00, $00, $00
 
 ; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
-; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_Sub01, DebugAutomap_Update_Sub01, RunScreenStateWhenNotFading_1B_Case01_Case21)
+; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex, DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0
 ; writes: rRAMB, rRAMG, hTemp0
 ; points at: sRecords
@@ -4760,7 +4760,7 @@ Jump_060_6C8E::
     ret
 
 ; when wCC42 < 20, writes wCC42 + $50 and the $194 bytes at wCD07 to SRAM bank 2 at $A000 + $195 * wCC42 (E-0121)
-; 7 call sites from 6 routines (e.g. DebugAutomap_Update_Sub01, RunFieldReturnPhase_Case02, FieldModeStateDispatch_Case05_Sub01_Case07, RunMenuStateMenuState_Case05, ...)
+; 7 call sites from 6 routines (e.g. DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunFieldReturnPhase_ResetLeadRecordFields55And5B, FieldModeStateDispatch_Case05_Sub01_Case07, RunMenuStateMenuState_InitSoundHardware, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
 ; points at: wKeyWorldFlags
@@ -4797,7 +4797,7 @@ Func_060_6C96:: ; address name
     ret
 
 ; when wCC42 < 20 and SRAM bank 2 slot wCC42 is marked wCC42 + $50, copies its $194 bytes to wCD07; counterpart of SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot (E-0124)
-; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunMenuStateMenuState_Case05, GameMode5_Init_Case02, GameMode5_Init_Case03, ...)
+; 8 call sites from 8 routines (e.g. DebugAutomap_Update, RunMenuStateMenuState_InitSoundHardware, GameMode5_Init_SendSGBPaletteSetPacket, GameMode5_Init_SendSGBPaletteSetPacket_Case03, ...)
 ; reads: wKeyWorldSlot
 ; writes: rRAMB, rRAMG
 ; points at: wKeyWorldFlags

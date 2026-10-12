@@ -327,7 +327,7 @@ Data_05F_68C8:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $17E8C8, $6E
 
 ; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then ShowMessageFromMessageIndex starts the text; 2 waits until wC52B bit 0 clears (text done), then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wC928 is 0, state 0 also calls Func_004_4470 and state 3 ClearBit1OfPlayerAndObjectFlags (probably freezing and releasing the player and objects). The steps after state 3 are not read (E-0079)
-; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, SceneWarubouFood2_Case17, ...)
+; 6 call sites from 6 routines (e.g. RunMessageBoxCarryWhenIdle_Bank5F, RunMessageBoxFar_Bank0F, RunMessageBoxFar_Bank12, SceneWarubouFood2_RunMessageBox, ...)
 ; reads: wMessageState
 RunMessageBox::
 Func_05F_6936:: ; address name
@@ -338,9 +338,9 @@ Func_05F_6936:: ; address name
 
 Jump_05F_693E::
     rst $00
-    dw RunMessageBox_Case00
-    dw RunMessageBox_Case01
-    dw RunMessageBox_Case02
+    dw RunMessageBox_SetBit1OfPlayerAndObjectFlags
+    dw RunMessageBox_ShowMessageFromMessageIndex
+    dw RunMessageBox_QueueSoundEffect
     dw RunMessageBox_Case03
 
 ; entry 0 of the `rst $00` table in RunMessageBox
@@ -348,7 +348,7 @@ Jump_05F_693E::
 ; reads: wStepPtrLo, wMessageGroup, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-RunMessageBox_Case00::
+RunMessageBox_SetBit1OfPlayerAndObjectFlags::
 Jump_05F_6947:: ; address name
     ld a, [wStepPtrLo]
     or a, a
@@ -388,7 +388,7 @@ Jump_05F_6988::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMessageGroup, wTextWindowState
 ; points at: wMessageState
-RunMessageBox_Case01::
+RunMessageBox_ShowMessageFromMessageIndex::
 Jump_05F_698D:: ; address name
     ld a, [wMessageGroup]
     bit 7, a
@@ -408,7 +408,7 @@ Jump_05F_699A::
 ; reads: wTextFlags, wMessageGroup, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wMessageState
-RunMessageBox_Case02::
+RunMessageBox_QueueSoundEffect::
 Jump_05F_69A2:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -461,7 +461,7 @@ Jump_05F_69ED::
     ret
 
 ; HL = wMessageIndex/wMessageGroup, then ShowMessageHL (E-0079)
-; 1 call site from 1 routine (e.g. RunMessageBox_Case01)
+; 1 call site from 1 routine (e.g. RunMessageBox_ShowMessageFromMessageIndex)
 ; reads: wMessageIndex, wMessageGroup, wMapType
 ; writes: wStringIndex, wStringCategory
 ShowMessageFromMessageIndex::
@@ -472,7 +472,7 @@ Func_05F_69F3:: ; address name
     ld h, a
 
 ; L = string index (wStringIndex, category 0), H & $3F = message group, which selects one of 12 table entries (rst $00); when wCC44 has bit 7 set and is not $80 another path is taken (not read) (E-0079)
-; 1 call site from 1 routine (e.g. RunOneTimeTreasure_Case02)
+; 1 call site from 1 routine (e.g. RunOneTimeTreasure_ShowMessageHL)
 ; reads: wMapType
 ; writes: wStringIndex, wStringCategory
 ShowMessageHL::
@@ -601,7 +601,7 @@ Jump_05F_6A85::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 0; calls Func_05F_6B43 with the coordinate; then hPlayerY += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 11 call sites from 9 routines (e.g. SceneDarckDefeated_Case23, SceneSpiritEnvoy_Case06, SceneSpiritEnvoy_Case04, SceneMermaidKingdom_Case21, ...)
+; 11 call sites from 9 routines (e.g. SceneDarckDefeated_StepPlayerDownTowardWC928, SceneSpiritEnvoy_StepPlayerDownTowardWC928_Case06, SceneSpiritEnvoy_StepPlayerDownTowardWC928, SceneMermaidKingdom_StepPlayerDownTowardWC928, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
 StepPlayerDownTowardWC928::
@@ -633,7 +633,7 @@ Jump_05F_6AB3::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 1; calls Func_05F_6B43 with the coordinate; then hPlayerX += 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 7 call sites from 6 routines (e.g. SceneDarckDefeated_Case23, SceneMedicineGiven_Case03, SceneMermaidKingdom_Case21, SceneHorsingAround_Shared01, ...)
+; 7 call sites from 6 routines (e.g. SceneDarckDefeated_StepPlayerDownTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case03, SceneMermaidKingdom_StepPlayerDownTowardWC928, SceneHorsingAround_StepPlayerLeftTowardWC928, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
 StepPlayerRightTowardWC928::
@@ -665,7 +665,7 @@ Jump_05F_6ADF::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 2; calls Func_05F_6B43 with the coordinate; then hPlayerY -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 15 call sites from 12 routines (e.g. SceneDarckDefeated_Case02, SceneMedicineGiven_Case03, SceneMedicineGiven_Case02, SceneMedicineGiven_Case00, ...)
+; 15 call sites from 12 routines (e.g. SceneDarckDefeated_StepPlayerLeftTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case03, SceneMedicineGiven_StepObjectTowardCoord_Case02, SceneMedicineGiven_StepObjectTowardCoord, ...)
 ; reads: hPlayerStateFlags, hPlayerY, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerY, wStepArrived
 StepPlayerUpTowardWC928::
@@ -697,7 +697,7 @@ Jump_05F_6B0B::
     ret
 
 ; sets bit 2 of hFF8C (moving) and hPlayerFacing = 3; calls Func_05F_6B43 with the coordinate; then hPlayerX -= 1; when it equals wC928 bit 2 is cleared and wC92C = 1, else wC92C = 0 (E-0071)
-; 16 call sites from 13 routines (e.g. SceneHomecoming_Case14, SceneDarckDefeated_Case02, SceneMedicineGiven_Case02, SceneMedicineGiven_Case00, ...)
+; 16 call sites from 13 routines (e.g. SceneHomecoming_ClearBit2AtHL_Bank0F, SceneDarckDefeated_StepPlayerLeftTowardWC928, SceneMedicineGiven_StepObjectTowardCoord_Case02, SceneMedicineGiven_StepObjectTowardCoord, ...)
 ; reads: hPlayerStateFlags, hPlayerX, wStepPtrLo
 ; writes: hPlayerStateFlags, hPlayerFacing, hPlayerX, wStepArrived
 StepPlayerLeftTowardWC928::
@@ -741,7 +741,7 @@ Jump_05F_6B4D::
     ret
 
 ; wC929 = object number (16-byte entries): sets bit 2 of wCB8C + 16n, stores direction wC92A & 3 at wCB86 + 16n and moves the object one pixel, two when wC92A bit 7 is set: direction 0 adds the step to Y (wCB8B + 16n), 1 adds it to X (wCB8A + 16n), 2 subtracts it from Y, 3 from X. When the moved coordinate equals wC928 it clears bit 2 and sets wC92C = 1, else wC92C = 0 (E-0061)
-; 145 call sites from 78 routines (e.g. ScenePendantSeller_Case01, SceneHomecoming_Case17, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
+; 145 call sites from 78 routines (e.g. ScenePendantSeller_StepObjectTowardCoord, SceneHomecoming_StepObjectTowardCoord, ScriptStepMoveObjects2And3To81B0, ScriptStepMoveObjects2And3To0340, ...)
 ; reads: wStepPtrHi, wStepTarget, wStepPtrLo
 ; writes: wStepArrived
 StepObjectTowardCoord::
@@ -847,7 +847,7 @@ Jump_05F_6BC2::
     ret
 
 ; the byte at the address in wC928/wC929 += the byte at Func_05F_6BE8 + wC921 / 2
-; 66 call sites from 54 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case0B, RunSceneScriptSubStep_Case08, ...)
+; 66 call sites from 54 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08, ...)
 ; reads: wStepPtrLo, wStepPtrHi, wScriptParam0
 AddStepDeltaToPointedByte::
 Func_05F_6BCD:: ; address name
@@ -871,7 +871,7 @@ Data_05F_6BE8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $FF, $FF, $00, $FF, $00, $FF, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
 ; for $78 frames blinks object hFFC6 by alternating byte wCB8B[16 * obj] between hFFC7 and $E0 (hidden) at a slowing rate; hFFC6 = 1 when done (E-0127)
-; 20 call sites from 19 routines (e.g. SceneDarckDefeated_Case00, SceneGrave_Case04, SceneShield_ShowABeautifulVoiceEchoed, SceneShieldGuardian_ShowOhMyGoodnessThank, ...)
+; 20 call sites from 19 routines (e.g. SceneDarckDefeated_ScriptStepBlinkObjectTemp0, SceneGrave_ScriptStepBlinkObjectTemp0, SceneShield_ShowABeautifulVoiceEchoed, SceneShieldGuardian_ShowOhMyGoodnessThank, ...)
 ; reads: wScriptParam0, hTemp0, hTemp1
 ; writes: wScriptParam0, hTemp0
 ScriptStepBlinkObjectTemp0::
@@ -934,7 +934,7 @@ Jump_05F_6C43::
     ret
 
 ; StartPaletteFade with A = $0F, wModeState = 4, wC8C5 = 0, wScriptParam0 = 0, then wScriptStep += 1 (E-0061)
-; 53 call sites from 50 routines (e.g. SceneDarckDefeated_Case8F, SceneDarckDefeated_ScriptStartFadeAndAdvanceStep, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
+; 53 call sites from 50 routines (e.g. SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_Case8F, SceneDarckDefeated_ScriptStartFadeAndAdvanceStep, SceneDarckDefeated_ShowWarubouWaheyYouDid, SceneThreeItems_ShowWarubouWaheyHeroAnd, ...)
 ; writes: wModeState, wFieldTransitionStep, wScriptParam0
 ; points at: wScriptStep
 ScriptStartFadeAndAdvanceStep::
@@ -952,7 +952,7 @@ Func_05F_6C5A:: ; address name
     ret
 
 ; wModeState = 3, wC904 = 0, wC8C7 = 2, far-calls SaveScreenBufferToBGMap1, then Func_00A_476E (E-0078)
-; 5 call sites from 5 routines (e.g. Talk00Event19, ArenaRounds_Case04, Talk09Event00_Case01, Talk09Event03_Case01, ...)
+; 5 call sites from 5 routines (e.g. Talk00Event19, ArenaRounds_StepScriptParam0Counter_Bank12, Talk09Event00_RunMessageBoxFar_Bank12, Talk09Event03_RunMessageBoxFar_Bank12, ...)
 ; writes: wModeState, wBattleTransitionStep, wFieldReturnPhase
 SetModeState3AndSaveScreen::
 Func_05F_6C71:: ; address name
@@ -967,7 +967,7 @@ Func_05F_6C71:: ; address name
     ret
 
 ; stores wC928 in the first wInventory slot that is $00 or $FF (no bound check), then sets bit 6 of wC836; HL kept (E-0071)
-; 19 call sites from 18 routines (e.g. GiveItemBlink_Case00, Talk00Event02_Case08, Talk00Event0B_Case02, Talk00Event0E_Case02, ...)
+; 19 call sites from 18 routines (e.g. GiveItemBlink_TestFlagBit, Talk00Event02_AddGoldCapped, Talk00Event0B_Case02, Talk00Event0E_Case02, ...)
 ; reads: wStepPtrLo, wGameFlags836
 ; writes: wGameFlags836
 ; points at: wInventory
@@ -995,7 +995,7 @@ Jump_05F_6C9B::
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_Case13, DispatchTalkEvent_Case02_Sub01_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, Talk08Event_Shared05)
+; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13, DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1035,11 +1035,11 @@ Jump_05F_6CD1::
     ret
 
 ; only called from Talk08Event_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
+; 1 call site from 1 routine (e.g. Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-Talk08Event_Shared05_Sub01::
+Talk08Event_Shared05_LoadSRAMRecordByte_Sub01::
 Func_05F_6CDB:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1075,11 +1075,11 @@ Jump_05F_6D03::
     ret
 
 ; only called from Talk08Event_Shared05 (E-0047)
-; 1 call site from 1 routine (e.g. Talk08Event_Shared05)
+; 1 call site from 1 routine (e.g. Talk08Event_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
-Talk08Event_Shared05_Sub02::
+Talk08Event_Shared05_LoadSRAMRecordByte::
 Func_05F_6D0D:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -1115,7 +1115,7 @@ Jump_05F_6D35::
     ret
 
 ; with hFF8D bits 1-3 set: wD7F1 = wC6FE[hFFC6] (bank 0 record), far-calls Func_014_7E96, LoadRecordListNameTiles and Func_004_4AA8, wC527 = $7F, then clears hFF8D bits 1-3 (E-0121)
-; 3 call sites from 3 routines (e.g. RewardItemOrKey2_Case03, RewardItemOrKey_Case0D, SceneMasterThanks_Case0A)
+; 3 call sites from 3 routines (e.g. RewardItemOrKey2_LoadListedRecordNameTilesForTemp0, RewardItemOrKey_LoadListedRecordNameTilesForTemp0, SceneMasterThanks_LoadListedRecordNameTilesForTemp0)
 ; reads: hFieldDrawFlags, hTemp0
 ; writes: hFieldDrawFlags, wArg1, wArg2, wOBJPaletteUploadRequest
 ; points at: wPartyList
@@ -1143,7 +1143,7 @@ Func_05F_6D3F:: ; address name
     ret
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
-; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_Case05, ...)
+; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_TestFlagBit_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
 ; reads: wArg5, wFarmLevel
 ; writes: wArg1, wArg2, wArg5
 ClearArg5IfAtOrAboveLimitForFarmLevel::
@@ -1174,7 +1174,7 @@ Data_05F_6DA8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $0A, $14, $1E, $1E
 
 ; sets bit 6 of the first used key entry (byte 3 bit 7) whose kind (byte 0 & $3F) equals hFFC6 (E-0125)
-; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_Case2B, SceneShield2_SetFlagBit, ...)
+; 11 call sites from 9 routines (e.g. Talk075F_KiralFetchMeMy, SceneDarckDefeated_ShowKingEvenThoughThe, SceneThreeItems_RunMessageBoxFar_Bank0F, SceneShield2_SetFlagBit, ...)
 ; reads: hTemp0
 ; points at: wKeyList
 MarkKeyEntryKindTemp0Bit6::
@@ -1223,7 +1223,7 @@ Jump_05F_6DD6::
     ret
 
 ; HL = the BG map entry at the scroll origin ((hScrollY & $F8) * 4 + $9800, rows wrapped by & $9B, + hScrollX / 8), then DrawFullScreenBufferToBGMap (E-0093)
-; 23 call sites from 23 routines (e.g. SceneHomecoming_ShowTHEEND, SceneDarckDefeated_Case02, SceneWallExit_ShowKamehaHeroThatWasnt, SceneReportToKing_Case08, ...)
+; 23 call sites from 23 routines (e.g. SceneHomecoming_ShowTHEEND, SceneDarckDefeated_StepPlayerLeftTowardWC928, SceneWallExit_ShowKamehaHeroThatWasnt, SceneReportToKing_DrawFullScreenBufferAtScroll, ...)
 ; reads: hScrollY, hScrollX
 DrawFullScreenBufferAtScroll::
 Func_05F_6DDB:: ; address name
@@ -1260,7 +1260,7 @@ Jump_05F_6E03::
     ret
 
 ; DE = the BG map row at hScrollY (& $F8); calls Func_05F_6E35 for the columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
-; 9 call sites from 9 routines (e.g. SceneDarckDefeated_RedrawColumnsBesideScreenAndStep, SceneThreeItems_ToRedrawColumnsBesideScreenAndStep, SceneExplosion_Case00, SceneWallExit_Case00, ...)
+; 9 call sites from 9 routines (e.g. SceneDarckDefeated_RedrawColumnsBesideScreenAndStep, SceneThreeItems_ToRedrawColumnsBesideScreenAndStep, SceneExplosion_TestFlagBit, SceneWallExit_RedrawColumnsBesideScreen, ...)
 ; reads: hScrollY, hScrollX
 RedrawColumnsBesideScreen::
 Func_05F_6E09:: ; address name
@@ -1284,16 +1284,16 @@ Func_05F_6E09:: ; address name
     push de
     ldh a, [hScrollX]
     sub a, $08
-    call RedrawColumnsBesideScreen_Sub01
+    call RedrawColumnsBesideScreen_WriteVRAMByte
     pop de
     ldh a, [hScrollX]
     add a, $A0
-    call RedrawColumnsBesideScreen_Sub01
+    call RedrawColumnsBesideScreen_WriteVRAMByte
     ret
 
 ; only called from RedrawColumnsBesideScreen (E-0047)
 ; 2 call sites from 1 routine (e.g. RedrawColumnsBesideScreen)
-RedrawColumnsBesideScreen_Sub01::
+RedrawColumnsBesideScreen_WriteVRAMByte::
 Func_05F_6E35:: ; address name
     srl a
     srl a
@@ -1321,7 +1321,7 @@ Jump_05F_6E44::
     ret
 
 ; only called from SceneDancing_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. SceneDancing_Case06_Sub01_Case06)
+; 1 call site from 1 routine (e.g. SceneDancing_Case06)
 ; reads: wScriptSubStep
 SceneDancing_Case06_Sub01::
 Func_05F_6E58:: ; address name
@@ -1339,7 +1339,7 @@ Func_05F_6E58:: ; address name
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case0B
-    dw SceneDancing_Case06_Sub01_Case0C
+    dw SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
@@ -1412,7 +1412,7 @@ Jump_05F_6E99::
     ret
 
 ; only called from SceneMermaidSong2_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_Case05)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05)
 ; reads: wScriptSubStep
 SceneMermaidSong2_Case05_Sub01::
 Func_05F_6EC3:: ; address name
@@ -1420,14 +1420,14 @@ Func_05F_6EC3:: ; address name
     rst $00
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
-    dw SceneMermaidSong2_Case05_Sub01_Case02
-    dw SceneMermaidSong2_Case05_Sub01_Case03
+    dw SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable
+    dw SceneMermaidSong2_Case05_Sub01_AddStepDeltaToPointedByte
     dw SceneMermaidSong2_Case05_Sub01_Case04
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneMermaidSong2_Case05_Sub01_Case07
     dw SceneDancing_Case06_Sub01_Case00
-    dw SceneDancing_Case06_Sub01_Case0C
+    dw SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte
     dw SceneMermaidSong2_Case05_Sub01_Case07
     dw SceneDancing_Case06_Sub01_Case00
     dw SceneDancing_Case06_Sub01_Case00
@@ -1452,7 +1452,7 @@ Jump_05F_6EE3:: ; address name
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: hPlayerY, wScriptSubStep
-SceneDancing_Case06_Sub01_Case0C::
+SceneDancing_Case06_Sub01_AddStepDeltaToPointedByte::
 Jump_05F_6EEE:: ; address name
     ld de, hPlayerY
     ld a, e
@@ -1597,7 +1597,7 @@ Jump_05F_6FDC::
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-SceneMermaidSong2_Case05_Sub01_Case03::
+SceneMermaidSong2_Case05_Sub01_AddStepDeltaToPointedByte::
 Jump_05F_6FE7:: ; address name
     ld de, wFollowerRecords + $7
     ld a, e
@@ -1635,7 +1635,7 @@ Jump_05F_7009:: ; address name
 ; reads: wScriptParam0, hPlayerFacing
 ; writes: hPlayerFacing, wFollowerRecords
 ; points at: hPlayerX
-SceneMermaidSong2_Case05_Sub01_Case02::
+SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable::
 Jump_05F_701C:: ; address name
     ld a, [wScriptParam0]
     and a, $07
@@ -1663,7 +1663,7 @@ Jump_05F_703D::
     ret
 
 ; every fourth step moves wC8F5/wC8F6 and wC8FA/wC8FB in opposite directions by the table at HL; after 32 steps advances wC92D (E-0125)
-; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_Case02)
+; 1 call site from 1 routine (e.g. SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable)
 ; reads: wScriptParam0, wFollowerRecords
 ; writes: wFollowerRecords, wScriptParam0
 ; points at: wScriptSubStep, wScriptParam0
@@ -1709,7 +1709,7 @@ Jump_05F_708D::
     inc [hl]
     ret
 
-; address loaded by SceneMermaidSong2_Case05_Sub01_Case04, SceneMermaidSong2_Case05_Sub01_Case02
+; address loaded by SceneMermaidSong2_Case05_Sub01_Case04, SceneMermaidSong2_Case05_Sub01_ScriptStepMoveTwoObjectsByTable
 Data_05F_7092:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FE, $00, $FF, $00, $FE, $FF, $FF, $FF, $FF, $FF, $FF, $FE, $00, $FF, $00, $FE
     db $00, $FE, $00, $FF, $01, $FE, $01, $FF, $01, $FF, $02, $FF, $01, $00, $02, $00
@@ -1723,13 +1723,13 @@ RunScriptSubStep::
 Func_05F_70D2:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw RunScriptSubStep_Case00
+    dw RunScriptSubStep_UpdateFollowersOnStep_Bank5F
     dw RunScriptSubStep_Case01
-    dw RunScriptSubStep_Case02
+    dw RunScriptSubStep_AddStepDeltaToPointedByte
     dw RunScriptSubStep_Case03
     dw RunScriptSubStep_Case04
     dw RunScriptSubStep_Case05
-    dw RunScriptSubStep_Case06
+    dw RunScriptSubStep_AddStepDeltaToPointedByte_Case06
     dw RunScriptSubStep_Case07
 
 ; entry 7 of the `rst $00` table in RunScriptSubStep
@@ -1785,7 +1785,7 @@ Jump_05F_7105::
 ; reads: wObject5, wScriptParam0, hPlayerStateFlags
 ; writes: wStepPtrLo, wStepPtrHi, wObject5, wScriptParam0, hPlayerStateFlags, hPlayerFacing
 ; points at: wScriptSubStep
-RunScriptSubStep_Case06::
+RunScriptSubStep_AddStepDeltaToPointedByte_Case06::
 Jump_05F_7138:: ; address name
     ld de, wObject5 + $5
     ld a, e
@@ -2020,7 +2020,7 @@ Jump_05F_7280:: ; address name
 ; reads: wObject5, wScriptParam0
 ; writes: wObject5, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_Case02::
+RunScriptSubStep_AddStepDeltaToPointedByte::
 Jump_05F_72B3:: ; address name
     ld a, $80
     ld [wObject5], a
@@ -2104,7 +2104,7 @@ Jump_05F_7303::
 ; reads: hPlayerStateFlags, hPlayerX, wScriptParam0
 ; writes: hPlayerStateFlags, wScriptParam0
 ; points at: wScriptSubStep
-RunScriptSubStep_Case00::
+RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
 Jump_05F_7345:: ; address name
     ldh a, [hPlayerStateFlags]
     or a, $04
@@ -2129,23 +2129,23 @@ RunSceneScriptSubStep::
 Func_05F_7363:: ; address name
     ld a, [wScriptSubStep]
     rst $00
-    dw RunSceneScriptSubStep_Case00
-    dw RunSceneScriptSubStep_Case01
-    dw RunSceneScriptSubStep_Case02
-    dw RunSceneScriptSubStep_Case03
-    dw RunSceneScriptSubStep_Case04
-    dw RunSceneScriptSubStep_Case05
-    dw RunSceneScriptSubStep_Case06
-    dw RunSceneScriptSubStep_Case07
-    dw RunSceneScriptSubStep_Case08
-    dw RunSceneScriptSubStep_Case09
-    dw RunSceneScriptSubStep_Case0A
-    dw RunSceneScriptSubStep_Case0B
-    dw RunSceneScriptSubStep_Case0C
-    dw RunSceneScriptSubStep_Case0D
-    dw RunSceneScriptSubStep_Case0E
-    dw RunSceneScriptSubStep_Case0F
-    dw RunSceneScriptSubStep_Case09
+    dw RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
+    dw RunSceneScriptSubStep_CopyBytes
+    dw RunSceneScriptSubStep_FullyHealParty
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04
+    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09
+    dw RunSceneScriptSubStep_NextTableByte
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E
+    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F
+    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09
     dw RunSceneScriptSubStep_AdvanceScriptStep
 
 ; entry 17 of the `rst $00` table in RunSceneScriptSubStep
@@ -2196,7 +2196,7 @@ Func_05F_73A8:: ; address name
 ; reads: wScriptParam0, wSpriteSlots, wScriptTemp4
 ; writes: wStepPtrLo, wStepPtrHi, wSpriteSlots, wScriptParam0, hTemp0, wPartyCount
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0F::
+RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F::
 Jump_05F_73B2:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2263,7 +2263,7 @@ Jump_05F_7402::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0E::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E::
 Jump_05F_742F:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2279,7 +2279,7 @@ Jump_05F_742F:: ; address name
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0D::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D::
 Jump_05F_743D:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2307,7 +2307,7 @@ Jump_05F_743D:: ; address name
 ; reads: wScriptParam1, wScriptParam0
 ; writes: hTemp0, wScriptParam1, wScriptParam0, wObject5
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0C::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C::
 Jump_05F_746F:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2360,7 +2360,7 @@ Jump_05F_74AA::
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0, wScriptParam1
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B::
 Jump_05F_74CD:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2396,12 +2396,12 @@ Jump_05F_74F6::
 ; reads: wRandomLo, wScriptParam0
 ; writes: wObject5, wScriptParam0
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case0A::
+RunSceneScriptSubStep_NextTableByte::
 Jump_05F_750C:: ; address name
     call NextTableByte
     ld a, [wRandomLo]
     and a, $03
-    jr z, RunSceneScriptSubStep_Case0A
+    jr z, RunSceneScriptSubStep_NextTableByte
     dec a
     dec a
     add a, $40
@@ -2425,7 +2425,7 @@ Jump_05F_750C:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptParam0, wScriptSubStep
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case09::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09::
 Jump_05F_753A:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2446,7 +2446,7 @@ Jump_05F_753A:: ; address name
 ; reads: wScriptParam0
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case08::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08::
 Jump_05F_7554:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2481,7 +2481,7 @@ Jump_05F_7554:: ; address name
 ; reads: wScriptParam0, wSpriteSlots
 ; writes: hTemp0, wStepPtrLo, wStepPtrHi, wScriptParam0, wSpriteSlots
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case07::
+RunSceneScriptSubStep_CycleSpriteFloatYDown::
 Jump_05F_7593:: ; address name
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2516,7 +2516,7 @@ Jump_05F_75C3::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case06::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06::
 Jump_05F_75D2:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2536,7 +2536,7 @@ Jump_05F_75D2:: ; address name
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case05::
+RunSceneScriptSubStep_AddStepDeltaToPointedByte::
 Jump_05F_75EC:: ; address name
     ld de, wObject5 + $5
     ld a, e
@@ -2565,7 +2565,7 @@ Jump_05F_75EC:: ; address name
 ; reads: wPartyCount
 ; writes: wObject5, wScriptTemp4, wPartyCount
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case04::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04::
 Jump_05F_7617:: ; address name
     xor a, a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2585,7 +2585,7 @@ Jump_05F_7617:: ; address name
 ; reads: wScriptParam0
 ; writes: wScriptParam0, hFieldDrawFlags, wOBJPaletteUploadRequest
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case03::
+RunSceneScriptSubStep_FullyHealParty::
 Jump_05F_7631:: ; address name
     ld a, [wScriptParam0]
     or a, a
@@ -2617,7 +2617,7 @@ Jump_05F_7646::
 ; reads: wScriptParam0, wIsCGB
 ; writes: wBGPaletteUploadRequest, wScriptParam0
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer, wScriptSubStep
-RunSceneScriptSubStep_Case02::
+RunSceneScriptSubStep_CopyBytes::
 Jump_05F_766C:: ; address name
     ld a, [wScriptParam0]
     srl a
@@ -2686,7 +2686,7 @@ Jump_05F_76BE::
 ; reads: wIsCGB
 ; writes: hPlayerFacing, wSpriteSlots
 ; points at: wBGPaletteBuffer, wBGPaletteCopy, wScriptSubStep
-RunSceneScriptSubStep_Case01::
+RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
 Jump_05F_76D6:: ; address name
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2714,7 +2714,7 @@ Jump_05F_76F6::
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0, wScriptMsgSelect, wObject5
 ; points at: wScriptSubStep
-RunSceneScriptSubStep_Case00::
+RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
 Jump_05F_7700:: ; address name
     ld a, $01
     ldh [hTemp0], a
@@ -2765,7 +2765,7 @@ Jump_05F_774C::
     ret
 
 ; starts the message whose index and group are at Data_05F_7787 + 2 * A + 16 * wC92E (wMessageState = 0) (E-0124)
-; 7 call sites from 7 routines (e.g. RunSceneScriptSubStep_Case0F, RunSceneScriptSubStep_Case0D, RunSceneScriptSubStep_Case08, RunSceneScriptSubStep_Case05, ...)
+; 7 call sites from 7 routines (e.g. RunSceneScriptSubStep_AddStepDeltaToPointedByte_Case0F, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0D, RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08, RunSceneScriptSubStep_AddStepDeltaToPointedByte, ...)
 ; reads: wScriptMsgSelect
 ; writes: wMessageIndex, wMessageGroup, wMessageState
 StartMessageFromTable7787::
@@ -2807,7 +2807,7 @@ Data_05F_7787:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $34, $05, $35, $05, $36, $05, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; wC928 = A, RunMessageBox, then carry set when wMessageState = $FF (idle), else A = 0 and carry clear (E-0079)
-; 5 call sites from 5 routines (e.g. RunSceneScriptSubStep_Case0E, RunSceneScriptSubStep_Case09, RunSceneScriptSubStep_Case06, RunSceneScriptSubStep_Case04, ...)
+; 5 call sites from 5 routines (e.g. RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case0E, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case09, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case06, RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_Case04, ...)
 ; reads: wMessageState
 ; writes: wStepPtrLo
 RunMessageBoxCarryWhenIdle_Bank5F::
@@ -3112,18 +3112,18 @@ RunOneTimeTreasure::
 Func_05F_7969:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw RunOneTimeTreasure_Case00
-    dw RunOneTimeTreasure_Case01
-    dw RunOneTimeTreasure_Case02
-    dw RunOneTimeTreasure_Case03
-    dw RunOneTimeTreasure_Case04
+    dw RunOneTimeTreasure_CopyItemNameToDE
+    dw RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags
+    dw RunOneTimeTreasure_ShowMessageHL
+    dw RunOneTimeTreasure_QueueSoundEffect
+    dw RunOneTimeTreasure_ApplyMapScreenFlagEvents
 
 ; entry 0 of the `rst $00` table in RunOneTimeTreasure
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam0, wScriptParam1, wMessageIndex, wMessageGroup, wInventory, wGameFlags836, hTemp0
 ; writes: wScriptParam0, wScriptParam1, wGameFlags836
 ; points at: wScriptStep, wScriptParam0, wInventory
-RunOneTimeTreasure_Case00::
+RunOneTimeTreasure_CopyItemNameToDE::
 Jump_05F_7977:: ; address name
     ld a, [wScriptParam0]
     cp a, $03
@@ -3215,7 +3215,7 @@ Jump_05F_79F5::
 ; reads: wScriptParam1, hPlayerY
 ; writes: wTextWindowState, wTextWindowStep, hSpriteWindowClipMode
 ; points at: wScriptStep
-RunOneTimeTreasure_Case01::
+RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags::
 Jump_05F_7A02:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -3250,7 +3250,7 @@ Jump_05F_7A3D::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScriptParam1, wTextWindowState, wScriptParam0
 ; points at: wScriptStep
-RunOneTimeTreasure_Case02::
+RunOneTimeTreasure_ShowMessageHL::
 Jump_05F_7A42:: ; address name
     ld a, [wScriptParam1]
     bit 7, a
@@ -3273,7 +3273,7 @@ Jump_05F_7A4F::
 ; reads: wTextFlags, wScriptParam1, hPlayerY
 ; writes: hSpriteWindowClipMode, wTextWindowState, wTextWindowStep
 ; points at: wScriptStep
-RunOneTimeTreasure_Case03::
+RunOneTimeTreasure_QueueSoundEffect::
 Jump_05F_7A5D:: ; address name
     ld a, [wTextFlags]
     bit 0, a
@@ -3304,7 +3304,7 @@ Jump_05F_7A87::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowState
 ; writes: wScriptCommandType, wScriptRunning, wModeState
-RunOneTimeTreasure_Case04::
+RunOneTimeTreasure_ApplyMapScreenFlagEvents::
 Jump_05F_7A8C:: ; address name
     ld a, [wTextWindowState]
     and a, $03

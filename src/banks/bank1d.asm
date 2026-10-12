@@ -412,10 +412,10 @@ Script_1D_44B0:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1D_4336
 
 ; only called from VaultMenu_Store_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case00_Sub01_Case00)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case00)
 ; reads: wScreenState, wScreenStep
 ; writes: wScreenStep
-VaultMenu_Store_Case00_Sub01::
+VaultMenu_Store_Case00_WaitForVRAMAccess::
 Func_01D_44BA:: ; address name
     ld a, [wScreenState]
     cp a, $03
@@ -525,7 +525,7 @@ Data_01D_460B:: ; address name
     db $A9, $A4, $EB, $AD ; id 0
 
 ; only called from VaultMenu_TakeOut_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case03_Sub01_Case03)
+; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case03)
 ; reads: wScreenStep, wScreenByteED, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, wGoldHi, wGoldMid, wGoldLo, ...
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 VaultMenu_TakeOut_Case03_Sub01::
@@ -645,7 +645,7 @@ Jump_01D_46D4::
     jp Jump_01D_4642
 
 ; only called from VaultMenu_Store_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case03_Sub01_Case03)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case03)
 ; reads: wScreenStep, wScreenByteED, wGoldHi, wGoldMid, wGoldLo, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, ...
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 VaultMenu_Store_Case03_Sub01::
@@ -900,7 +900,7 @@ Func_01D_4848:: ; address name
     ret
 
 ; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs Func_01C_689A and Func_0F2_6449; wD781 += 1 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case06)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep)
 ; reads: wScreenState, wScreenStep
 ; writes: wScreenStep
 DrawRect0140AtBGMap13E0AndStep::
@@ -922,14 +922,14 @@ Jump_01D_487B::
     ret
 
 ; only called from VaultMenu_Store_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case07_Sub01_Case07)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case07)
 ; reads: wSavedSpriteSlotCount, wIsCGB, wScreenStep
 ; writes: wArg1, wScreenStep
-VaultMenu_Store_Case07_Sub01::
+VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
 Func_01D_4883:: ; address name
     ld a, $01
     ld [wArg1], a
-    call VaultMenu_Store_Shared03
+    call VaultMenu_Store_CountNonZeroItemGridBytes
     ld a, [wSavedSpriteSlotCount]
     cp a, $02
     jr c, Jump_01D_48A5
@@ -1033,14 +1033,14 @@ Data_01D_4968:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
 ; only called from VaultMenu_Store_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case08_Sub01_Case08)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case08)
 ; reads: wDigits, wSavedSpriteSlotCount, wItemGridY, wScreenStep
 ; writes: wArg1, wDigits, wScreenStep, wScreenCounter, wGlyphListPos
-VaultMenu_Store_Case08_Sub01::
+VaultMenu_Store_Case08_HLToDecimalDigits::
 Func_01D_49D4:: ; address name
     xor a, a
     ld [wArg1], a
-    call VaultMenu_Store_Shared03
+    call VaultMenu_Store_CountNonZeroItemGridBytes
     call HLToDecimalDigits
     ld a, [wDigits + $1]
     and a, a
@@ -1105,7 +1105,7 @@ Jump_01D_4A3F::
     ret
 
 ; C = the number of non-zero bytes among the $18 bytes at wD7D5 (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Store_Shared03)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_CountNonZeroItemGridBytes)
 ; points at: wItemGrid
 CountNonZeroItemGridBytes::
 Func_01D_4A4E:: ; address name
@@ -1127,7 +1127,7 @@ Jump_01D_4A5A::
     jr c, Jump_01D_4A55
     ret
 
-; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_Shared03, VaultMenu_Store_Case0E_Sub01, VaultMenu_Setup_Case02)
+; 5 call sites from 4 routines (e.g. VaultMenu_TakeOut_Case03_Sub01, VaultMenu_Store_CountNonZeroItemGridBytes, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes, VaultMenu_Setup_Case02)
 ; writes: wSavedSpriteClipMode, wListPages
 ; points at: wItemStorage, wInventory
 Func_01D_4A62::
@@ -1195,7 +1195,7 @@ Jump_01D_4AAD::
     jr Jump_01D_4AB7
 
 ; only called from VaultMenu_Store_Shared03 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Shared03)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_CountNonZeroItemGridBytes)
 ; reads: wItemGridX
 VaultMenu_Store_Shared03_Sub01::
 Func_01D_4AB1:: ; address name
@@ -1227,7 +1227,7 @@ Data_01D_4AD4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
 ; only called from VaultMenu_Store_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0A_Sub01_Case0A)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0A)
 ; reads: wScreenState, wItemGridY, wItemGridX, wDigits, wIsCGB, wScreenStep
 ; writes: wDigits, wScreenByte93, wScreenByte94, wScreenStep
 ; points at: wScreenList, wItemStorage, wItemGrid, wInventory
@@ -1403,10 +1403,10 @@ Data_01D_4BE4:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B4, $B4, $B4, $B4, $B5
 
 ; only called from VaultMenu_Store_Case0B (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01_Case0B)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B)
 ; reads: wJoypadPressedRepeat, wScreenStep, wScreenState, wChoiceCursorF0, wItemGridX, wSavedSpriteSlotCount, wItemGridY
 ; writes: wScreenStep, wItemGridX, wItemGridY, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wNumberTens, wNumberOnes, ...
-VaultMenu_Store_Case0B_Sub01::
+VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 Func_01D_4BF9:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -1535,7 +1535,7 @@ Jump_01D_4CC0::
 Jump_01D_4CD3::
     ld a, $69
     call QueueSoundEffect
-    call VaultMenu_Store_Case0B_Sub01_Sub01
+    call VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D
     ld a, [wScreenState]
     cp a, $04
     jr z, Jump_01D_4D0A
@@ -1591,7 +1591,7 @@ Jump_01D_4D30::
     ret
 
 ; cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wJoypadRepeatTimer, wSelectedRecord, wItemGridX
 ; writes: wSelectedRecord
 BlinkCursorSelectedRecord_Bank1D_4D41::
@@ -1610,7 +1610,7 @@ Func_01D_4D41:: ; address name
     ld [wSelectedRecord], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridX
 DrawCursorTileBB_4D5B_Bank1D::
 Func_01D_4D5B:: ; address name
@@ -1618,7 +1618,7 @@ Func_01D_4D5B:: ; address name
     jr Jump_01D_4D65
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 2 call sites from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridX
 DrawBlankTileC3_4D5F_Bank1D::
 Func_01D_4D5F:: ; address name
@@ -1626,9 +1626,9 @@ Func_01D_4D5F:: ; address name
     jr Jump_01D_4D65
 
 ; only called from VaultMenu_Store_Case0B_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridX
-VaultMenu_Store_Case0B_Sub01_Sub01::
+VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D::
 Func_01D_4D63:: ; address name
     ld b, $BC
 
@@ -1651,12 +1651,12 @@ Jump_01D_4D65::
     ei
     ret
 
-; address loaded by VaultMenu_Store_Case0B_Sub01_Sub01
+; address loaded by VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D
 Data_01D_4D82:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A9, $00, $E9, $00, $29, $01, $69, $01
 
 ; only called from VaultMenu_Store_Case0B_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridY, wItemGridX
 ; points at: wItemGrid, wItemStorage
 VaultMenu_Store_Case0B_Sub01_Sub02::
@@ -1704,10 +1704,10 @@ Jump_01D_4DC5::
     ret
 
 ; only called from VaultMenu_Store_Case0D (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01_Case0D)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D)
 ; reads: wJoypadPressedRepeat, wNumberTens, wNumberOnes, wScreenState, wScreenStep, wNumberEditPos, wCountOnes, wCountTens
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep, wNumberTens, wNumberOnes, wNumberEditPos
-VaultMenu_Store_Case0D_Sub01::
+VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 Func_01D_4DC7:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 1, a
@@ -1746,7 +1746,7 @@ Jump_01D_4DE9::
     ret
 
 Jump_01D_4E0D::
-    call VaultMenu_Store_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
     ld a, [wNumberEditPos]
     cp a, $01
     jr nz, Jump_01D_4E1A
@@ -1764,7 +1764,7 @@ Jump_01D_4E1B::
     ret
 
 Jump_01D_4E27::
-    call VaultMenu_Store_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
     ld a, [wNumberEditPos]
     and a, a
     jr nz, Jump_01D_4E34
@@ -1947,7 +1947,7 @@ Jump_01D_4F45::
     ret
 
 Jump_01D_4F4D::
-    call VaultMenu_Store_Case0D_Sub01_Sub01
+    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
     ld a, [wNumberTens]
     and a, a
     jr nz, Jump_01D_4F5B
@@ -1993,28 +1993,28 @@ Jump_01D_4F84::
     ret
 
 ; cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 10 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
+; 10 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wJoypadRepeatTimer, wCursorBlinkCD, wNumberEditPos, wNumberTens, wNumberOnes
 ; writes: wCursorBlinkCD
 BlinkCursorBlinkCD_Bank1D_4F99::
 Func_01D_4F99:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, VaultMenu_Store_Case0D_Sub01_Sub01
+    jr c, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
     cp a, $10
-    jr c, VaultMenu_Store_Case0D_Sub01_Sub01
+    jr c, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
     cp a, $18
     jr c, Jump_01D_4FC6
     xor a, a
     ld [wCursorBlinkCD], a
 
 ; only called from VaultMenu_Store_Case0D_Sub01 (E-0047)
-; 3 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
+; 3 call sites from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wNumberEditPos, wNumberTens, wNumberOnes
-VaultMenu_Store_Case0D_Sub01_Sub01::
+VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D::
 Func_01D_4FB3:: ; address name
     ld a, [wNumberEditPos]
     and a, a
@@ -2052,12 +2052,12 @@ Jump_01D_4FC8::
     ei
     ret
 
-; address loaded by VaultMenu_Store_Case0D_Sub01_Sub01
+; address loaded by VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
 Data_01D_4FE5:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $61, $01, $62, $01
 
 ; writes wD7CA and wD7CB as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and + $162 (E-0120)
-; 6 call sites from 2 routines (e.g. VaultMenu_Store_Case0B_Sub01, VaultMenu_Store_Case0D_Sub01)
+; 6 call sites from 2 routines (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41, VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wNumberTens, wNumberOnes
 DrawNumberTensNumberOnesDigitsAtScroll161::
 Func_01D_4FE9:: ; address name
@@ -2086,7 +2086,7 @@ Func_01D_4FE9:: ; address name
     ret
 
 ; A = $FF when wD7B0 + TenTimesNumberTensPlusNumberOnes exceeds $18, else 0 (E-0122)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wListPages
 CheckListPagesPlusNumberAtMost18::
 Func_01D_5012:: ; address name
@@ -2104,7 +2104,7 @@ Jump_01D_5022::
     ret
 
 ; only called from VaultMenu_Store_Case0D_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99)
 ; reads: wItemGridY, wItemGridX, wTextCounter1
 ; writes: wTextCounter1, wTextCounter3
 ; points at: wItemGrid, wItemStorage
@@ -2180,7 +2180,7 @@ Jump_01D_5083::
 ; reads: wItemGridY, wItemGridX, wListPages, wCounterPtr0Lo, wScreenStep, wSavedSpriteClipMode
 ; writes: wTwoChoiceCursor, wTextCounter1, wTextCounter3, wCounterPtr0Lo, wScreenStep
 ; points at: wItemStorage, wInventory
-VaultMenu_Store_Case0E_Sub01::
+VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes::
 Func_01D_508B:: ; address name
     ld hl, wItemStorage
     ld a, [wItemGridY]
@@ -2457,11 +2457,11 @@ Func_01D_5297:: ; address name
     ret
 
 ; only called from routines of VaultMenu_Store (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Store_Shared02_Case13, VaultMenu_Store_Case17)
+; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case13, VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C)
 ; reads: hTemp2, hTemp1, hTemp0, wIsCGB, wScreenStep
 ; writes: wDigits, wScreenByteBD, wListEntries2, wScreenByteBF, wScreenByteC0, wScreenByteC1, wTextCounter0, wScreenStep
 ; points at: wScreenList, wBankedGoldLo, wScreenByteBD, wScreenByte93
-VaultMenu_Store_Shared02::
+VaultMenu_Store_Number24ToPackedBCD::
 Func_01D_52BD:: ; address name
     ld hl, wScreenList
     ld de, Data_01D_53A2
@@ -2605,17 +2605,17 @@ Jump_01D_536F::
     ld [wScreenStep], a
     ret
 
-; address loaded by VaultMenu_Store_Shared02
+; address loaded by VaultMenu_Store_Number24ToPackedBCD
 Data_01D_53A2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2, $B6, $BF, $C3, $C3, $C3, $C3, $C3
     db $C3, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; only called from VaultMenu_Store_Case14 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case14_Sub01_Case14)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case14)
 ; reads: wThreeDigits, wScreenState, hTemp2, hTemp1, wScreenStep, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo
 ; writes: wGrid2CursorX, wGrid2CursorY, wScreenArea, wDigits, wCountTens, wCountOnes, wItemGrid, wScreenStep, ...
 ; points at: wScreenList, wGoldLo, wBankedGoldLo
-VaultMenu_Store_Case14_Sub01::
+VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
 Func_01D_53BD:: ; address name
     ld hl, wScreenList
     ld de, Data_01D_548D
@@ -2718,12 +2718,12 @@ Jump_01D_5461::
     ld [wItemGrid], a
     jp Jump_01D_5427
 
-; address loaded by VaultMenu_Store_Case14_Sub01
+; address loaded by VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D
 Data_01D_548D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B6, $BF, $C3, $C3, $C3, $E0, $E0, $B7, $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5
 
 ; only called from VaultMenu_Store_Case15 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case15_Sub01_Case15)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case15)
 ; reads: wScreenStep, wThreeDigits, wBankedGoldLo, wBankedGoldMid, wBankedGoldHi, wGoldLo, wGoldMid, wGoldHi
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wBankedGoldHi, wBankedGoldMid, wBankedGoldLo, wGoldHi, ...
 VaultMenu_Store_Case15_Sub01::
@@ -2864,7 +2864,7 @@ Jump_01D_5536::
     ret
 
 ; only called from VaultMenu_TakeOut_Case15 (E-0047)
-; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case15_Sub01_Case15)
+; 1 call site from 1 routine (e.g. VaultMenu_TakeOut_Case15)
 ; reads: wScreenStep, wThreeDigits, wGoldLo, wGoldMid, wGoldHi, wBankedGoldLo, wBankedGoldMid, wBankedGoldHi
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wGoldHi, wGoldMid, wGoldLo, wBankedGoldHi, ...
 VaultMenu_TakeOut_Case15_Sub01::
@@ -3409,7 +3409,7 @@ Jump_01D_58D4::
     ret
 
 ; takes the byte at wC635 + 8 * wD7B6 + 2 * wD7B5 + 1 and stores its value / 10 in wD7D3 and value mod 10 in wD7D4 (E-0120)
-; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_Sub01)
+; 1 call site from 1 routine (e.g. VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41)
 ; reads: wItemGridY, wItemGridX
 ; writes: wCountOnes, wCountTens
 ; points at: wItemStorage
@@ -3601,7 +3601,7 @@ Jump_01D_59CD::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, Func_01D_4823, SaveBGMapRectWithAttrs, VaultMenu_Store_Case07_Sub01, ...)
+; 23 call sites from 16 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, Func_01D_4823, SaveBGMapRectWithAttrs, VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D::
 Func_01D_59CF:: ; address name
@@ -3672,7 +3672,7 @@ Func_01D_59F0:: ; address name
     ret
 
 ; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_Bank1D) and sets wC554 = HL + $21 (E-0124; a copy, not a clear: E-0226)
-; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Store_Case07_Sub01, VaultMenu_Store_Case0A_Sub01, VaultMenu_Store_Case14_Sub01, ...)
+; 8 call sites from 5 routines (e.g. LoadThreeTilesAndDrawRows4603To460B, VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, VaultMenu_Store_Case0A_Sub01, VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D, ...)
 ; writes: wTextCursorLo, wTextCursorHi
 DrawRectSetTextCursorLoPlus21_Bank1D::
 Func_01D_5A32:: ; address name
@@ -3744,7 +3744,7 @@ Jump_01D_5A7F::
     ret
 
 ; HL = 10 * wD7CA + wD7CB (E-0120)
-; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_Sub02, VaultMenu_Store_Case0E_Sub01)
+; 3 call sites from 3 routines (e.g. CheckListPagesPlusNumberAtMost18, VaultMenu_Store_Case0D_Sub01_Sub02, VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes)
 ; reads: wNumberTens, wNumberOnes
 TenTimesNumberTensPlusNumberOnes::
 Func_01D_5A80:: ; address name
@@ -3803,10 +3803,10 @@ Jump_01D_5ADE::
     ret
 
 ; only called from routines of VaultMenu_Store (E-0098)
-; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case07_Sub01, VaultMenu_Store_Case08_Sub01)
+; 2 call sites from 2 routines (e.g. VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D, VaultMenu_Store_Case08_HLToDecimalDigits)
 ; reads: wScreenState, wSavedSpriteClipMode, wItemGridY, wItemGridX, wArg1
 ; writes: wSavedSpriteSlotCount, wItemGridY, wChoiceCursorF0, wItemGridX
-VaultMenu_Store_Shared03::
+VaultMenu_Store_CountNonZeroItemGridBytes::
 Func_01D_5ADF:: ; address name
     ld a, [wScreenState]
     cp a, $03
@@ -3883,7 +3883,7 @@ Jump_01D_5B4C::
     ret
 
 ; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
-; 4 call sites from 4 routines (e.g. HibernateMenu_Case05_Case21, HibernateMenu_Case06_Case04, BreedMenu_ReturnToMap_Case0F, CallFunc5B4DInBank1D)
+; 4 call sites from 4 routines (e.g. HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
 ; reads: wArg1, hTemp0, wDigits, hTemp1
 ; writes: rRAMG2, rRAMB, wWindowTileBuffer
 DrawRecordStatsBoxForArg1::
@@ -3976,7 +3976,7 @@ Data_01D_5BEA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case20_Case00, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
 CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
@@ -4029,7 +4029,7 @@ Jump_01D_5C2E::
     ret
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_Case02, GameMode5_Update_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case15_Case00, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_Case04, SwapMonstersMenu_Case09_Case15_DrawListEntriesCell5SpeciesSprite, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
@@ -4111,11 +4111,11 @@ Func_01D_5C94:: ; address name
     jr Jump_01D_5CAF
 
 ; only called from HibernateMenu_Case05_Case3E (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_Case3E)
+; 1 call site from 1 routine (e.g. HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf0
-HibernateMenu_Case05_Case3E_Sub01::
+HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf::
 Func_01D_5CA3:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -4152,7 +4152,7 @@ Jump_01D_5CD3::
     ret
 
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
-; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_Case07, HibernateMenu_Case05_Case23, BreedMenu_Case04_Case06, BreedMenu_ReturnToMap_Case11, ...)
+; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23, BreedMenu_Case04_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
 ; reads: wArg1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
 ; points at: wNameGlyphBuf
@@ -4287,7 +4287,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 28 call sites from 28 routines (e.g. EggServiceMenu_Case05_Case0F, EggServiceMenu_Case05_Case12_Case06, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_Shared01, ...)
+; 28 call sites from 28 routines (e.g. EggServiceMenu_Case05_IsAmountInArg1AboveGold, EggServiceMenu_Case05_Case12_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
 ; points at: wListEntries
@@ -4308,7 +4308,7 @@ Func_01D_5DA1:: ; address name
     ret
 
 ; shows string (field $A4 of the record at WD789 cell 5) of category $0B at $9320 with size $0602 (E-0121)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_Case14)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_DecompressGraphicsArg1ToArg4)
 ; reads: wArg5, wArg6, hTemp0
 ; writes: rRAMG2, rRAMB, wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
@@ -4381,7 +4381,7 @@ Func_01D_5DF9:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_Case01_Case03, HibernateMenu_Case05_Case2C, HibernateMenu_Case05_Case0F, HibernateMenu_Case04_Case2F, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case05_RunFunc5925At0280_Case2C, HibernateMenu_Case05_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, ...)
 ; reads: wRecordsInUse
 ; writes: wRecordsInUse, rRAMG2, rRAMB
 ; points at: sRecords
@@ -4424,7 +4424,7 @@ Jump_01D_5E69::
     ret
 
 ; clears the wD789 list, then lists the party records whose SRAM record byte 0 is 2 and counts them in wD7A9 (E-0127)
-; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_Sub01, HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_Case05_Case40, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, ...)
+; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries, HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_Case05_Multiply8, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wListCount, wPartyCount
 ; writes: wListCount, rRAMG2, rRAMB
 ; points at: wListEntries, wPartyList, sRecords
@@ -4487,7 +4487,7 @@ Jump_01D_5EC2::
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wD789, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many state-1 records had byte $6E set (E-0104)
-; 12 call sites from 11 routines (e.g. HibernateMenu_Case03, StartRecordListOrNoneMessage, HibernateMenu_Case05_Case32, HibernateMenu_Case05_Case3C, ...)
+; 12 call sites from 11 routines (e.g. HibernateMenu_Case03, StartRecordListOrNoneMessage, HibernateMenu_Case05_DrawBox4965AndMenuAndStep, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C, ...)
 ; reads: wRecordCapacity, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, sRecords
@@ -4561,7 +4561,7 @@ Jump_01D_5F1B::
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_Case03, BreedMenu_Case04_Case02, BreedMenu_Case11_Case02, BattleEnd_Step5_Case01_Case01_Sub01_Case10, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_Case03, BreedMenu_Case04_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPartyList
@@ -4752,7 +4752,7 @@ Jump_01D_6025::
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_Case03, BreedMenu_Case03, BreedMenu_Case04_Case41, BreedMenu_Case05_Case01, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_Case03, BreedMenu_Case04_TenTimesTemp0PlusTen, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, sRecords
@@ -4931,7 +4931,7 @@ Jump_01D_6124::
     ret
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
-; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, BreedMenu_Case04_Case1C, DrawRecordNameAndSpeciesName)
+; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, BreedMenu_Case04_ComputeBreedingChild, DrawRecordNameAndSpeciesName)
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
 ; points at: wNameGlyphBuf
@@ -5171,7 +5171,7 @@ Data_01D_629B:: ; address name
     dw vTiles1 + $420, vTiles1 + $4A0, vTiles1 + $4B0
 
 ; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
-; 6 call sites from 6 routines (e.g. LibraryMenu_Case08, CloseHibernateMenu_Case03, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, CloseBreedMenu_Case03, ...)
+; 6 call sites from 6 routines (e.g. LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, CloseHibernateMenu_DrawRecordListNameTiles_Bank1D, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, CloseBreedMenu_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wPartyCount
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList, wTextWindowTileLo
@@ -5225,7 +5225,7 @@ Data_01D_62F9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $8D, $50, $8D, $A0, $8D
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 6 call sites from 6 routines (e.g. DrawRecordListPageMarks, MarkPartyMembersInRecordListPage, UpdatePagedListCursor_Sub04, DrawTwoChoiceCursorConfirmed, ...)
+; 6 call sites from 6 routines (e.g. DrawRecordListPageMarks, MarkPartyMembersInRecordListPage, UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF, DrawTwoChoiceCursorConfirmed, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_62FF:: ; address name
@@ -5247,7 +5247,7 @@ Func_01D_62FF:: ; address name
     ret
 
 ; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_Case05_Case11, EggServiceMenu_Case0F_Case05, BreedMenu_Case05_Case05, LoadTile4990AndRun6320, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_Case05_DrawRecordListPageMarks, EggServiceMenu_Case0F_DrawRecordListPageMarks, BreedMenu_Case05_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, wArg2, wArg1, wListPages
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
@@ -5431,10 +5431,10 @@ Data_01D_6422:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $83, $C3, $AB, $C3, $D3, $C3, $FB, $C3
 
 ; only called from routines of SwapMonstersMenu (E-0098)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_Case02, SwapMonstersMenu_Case07_Case02)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case06_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E, SwapMonstersMenu_Case07_SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wChoiceCursorF0
 ; writes: wMenuInputResult, wChoiceCursorF0
-SwapMonstersMenu_Shared01::
+SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E::
 Func_01D_642A:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5454,7 +5454,7 @@ Func_01D_642A:: ; address name
 Jump_01D_6448::
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_Shared01_Sub01
+    call SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5498,7 +5498,7 @@ Jump_01D_647D::
     ret
 
 ; cycles wD7B8 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Shared01)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wJoypadRepeatTimer, wCursorBlinkB8, wChoiceCursorF0
 ; writes: wCursorBlinkB8
 BlinkCursorBlinkB8_Bank1D_648E::
@@ -5517,7 +5517,7 @@ Func_01D_648E:: ; address name
     ld [wCursorBlinkB8], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Shared01)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
 DrawCursorTileBB_64A8_Bank1D::
 Func_01D_64A8:: ; address name
@@ -5525,7 +5525,7 @@ Func_01D_64A8:: ; address name
     jr Jump_01D_64B2
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 3 call sites from 1 routine (e.g. SwapMonstersMenu_Shared01)
+; 3 call sites from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
 DrawBlankTileC3_64AC_Bank1D::
 Func_01D_64AC:: ; address name
@@ -5533,9 +5533,9 @@ Func_01D_64AC:: ; address name
     jr Jump_01D_64B2
 
 ; only called from SwapMonstersMenu_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Shared01)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_BlinkCursorBlinkB8_Bank1D_648E)
 ; reads: wChoiceCursorF0
-SwapMonstersMenu_Shared01_Sub01::
+SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap::
 Func_01D_64B0:: ; address name
     ld b, $BC
 
@@ -5559,12 +5559,12 @@ Jump_01D_64B2::
     ei
     ret
 
-; address loaded by SwapMonstersMenu_Shared01_Sub01
+; address loaded by SwapMonstersMenu_Shared01_StepBGMapAddressBackOnScrollWrap
 Data_01D_64D2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $28, $01, $68, $01
 
 ; up/down moves wD7AB over wD7A9 entries ($FD), A selects ($FF, sound $69), B cancels ($FE); wD7AF = 0 (E-0128)
-; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_Case07, RunLinkSession8Case03Steps_Case07)
+; 2 call sites from 2 routines (e.g. SwapMonstersMenu_Case0D_HandleListCursorInput_1D, RunLinkSession8Case03Steps_HandleListCursorInput_1D)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wListPageIndex, wMenuInputResult, wListCursor
 HandleListCursorInput_1D::
@@ -5640,7 +5640,7 @@ Jump_01D_6532::
     ret
 
 ; wTwoChoiceCursor (0 or 1): Up and Down each toggle it, erase the old cursor (tile $C3), draw the new one (tile $BB), play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor (tile $BC), plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks (wD783 counts frames once wJoypadRepeatTimer reaches $14) and the result is 0. Cursor positions are BG map offsets $012F and $016F from the scroll origin (E-0068)
-; 27 call sites from 27 routines (e.g. ArenaMenu_Case26, ArenaMenu_Case04, ArenaMenu_Case0C, ArenaMenu_Case17, ...)
+; 27 call sites from 27 routines (e.g. ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case26, ArenaMenu_UpdateTwoChoiceCursor_Bank1D, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C, ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
 UpdateTwoChoiceCursor_Bank1D::
@@ -5777,7 +5777,7 @@ Data_01D_65F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $2F, $01, $6F, $01
 
 ; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
-; 7 call sites from 7 routines (e.g. SwapMonstersMenu_Case04_Case05, SwapMonstersMenu_Case05_Case25, SwapMonstersMenu_Case08_Case06, SwapMonstersMenu_Case08_Case15, ...)
+; 7 call sites from 7 routines (e.g. SwapMonstersMenu_Case04_UpdateListCursorListCursor, SwapMonstersMenu_Case05_UpdateListCursorListCursor, SwapMonstersMenu_Case08_UpdateListCursorListCursor, SwapMonstersMenu_Case08_GetListEntriesCell5Address, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wMenuInputResult, wListCursor, wListCursorAux
 UpdateListCursorListCursor::
@@ -5841,7 +5841,7 @@ Jump_01D_6644::
 Jump_01D_6656::
     ld a, $69
     call QueueSoundEffect
-    call UpdateListCursorListCursor_Sub04
+    call UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5889,7 +5889,7 @@ Func_01D_6688:: ; address name
 ; only called from UpdateListCursorListCursor (E-0047)
 ; 1 call site from 1 routine (e.g. UpdateListCursorListCursor)
 ; reads: wListCursor
-UpdateListCursorListCursor_Sub04::
+UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap::
 Func_01D_668C:: ; address name
     ld b, $BC
 
@@ -5913,12 +5913,12 @@ Jump_01D_668E::
     ei
     ret
 
-; address loaded by UpdateListCursorListCursor_Sub04
+; address loaded by UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap
 Data_01D_66AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
 ; row wD7AB runs 0..wD7B1 and page wD7AF runs 0..wD7B0 - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
-; 34 call sites from 34 routines (e.g. EggServiceMenu_Case05_Case06, KeyAppraisalMenu_Case03_Case05, MedalPrizeMenu_Case05_Case07, HibernateMenu_Case05_Case25, ...)
+; 34 call sites from 34 routines (e.g. EggServiceMenu_Case05_UpdatePagedListCursor, KeyAppraisalMenu_Case03_UpdatePagedListCursor, MedalPrizeMenu_Case05_Case07, HibernateMenu_Case05_UpdatePagedListCursor_Case25, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListLastRow, wListCursor, wListPageIndex, wListPages
 ; writes: wMenuInputResult, wListCursor, wListCursorAux, wListPageIndex
 UpdatePagedListCursor::
@@ -6049,7 +6049,7 @@ Jump_01D_6777::
     ret
 
 Jump_01D_6789::
-    call UpdatePagedListCursor_Sub04
+    call UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
@@ -6099,7 +6099,7 @@ Func_01D_67BB:: ; address name
 ; only called from UpdatePagedListCursor (E-0047)
 ; 1 call site from 1 routine (e.g. UpdatePagedListCursor)
 ; reads: wMenuInputResult, wListCursor
-UpdatePagedListCursor_Sub04::
+UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF::
 Func_01D_67BF:: ; address name
     ld b, $BC
 
@@ -6130,7 +6130,7 @@ Jump_01D_67C1::
     ei
     ret
 
-; address loaded by UpdatePagedListCursor_Sub04
+; address loaded by UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF
 Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01, $28, $00, $68, $00, $A8, $00
     db $E8, $00, $28, $01, $A8, $00, $E8, $00, $28, $01, $68, $01, $A8, $01, $A6, $00
@@ -6138,7 +6138,7 @@ Data_01D_67EE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_Sub01, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case09_Case1E, RunLinkSession8Case03Steps_Case04)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case09_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wArg3
@@ -6226,7 +6226,7 @@ Data_01D_6890:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
 ; for the three records listed at wD7F1 draws each species sprite at the positions in Data_01D_6909 (E-0128)
-; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_Case02, SwapMonstersMenu_Case0D_Case07, SwapMonstersMenu_Case08_Case20, ...)
+; 5 call sites from 5 routines (e.g. CallDrawPartySpeciesSpritesPreservingArg1AndTemp0, PauseMenu_Main_Case03_UpdateMenuCursor, SwapMonstersMenu_Case0D_HandleListCursorInput_1D, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case20, ...)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 DrawPartySpeciesSprites::
@@ -6383,7 +6383,7 @@ Jump_01D_695F::
     ret
 
 ; graphics number = the word wD7F1/wD7F2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wD7F4/wD7F5; on CGB it continues with the palette (not read) (E-0104)
-; 8 call sites from 8 routines (e.g. DecompressRecordSpeciesGraphicsToTiles0, LibraryMenu_Case10_Case03, RunNameEntryStateWhenNotFading_Case00_Case03, DecompressGraphicsA4ToTiles0, ...)
+; 8 call sites from 8 routines (e.g. DecompressRecordSpeciesGraphicsToTiles0, LibraryMenu_Case10_GridCellAddressFromGridCursorXAndGrid2CursorX, RunNameEntryStateWhenNotFading_Case00_Case03, DecompressGraphicsA4ToTiles0, ...)
 ; reads: wArg1, wArg2, wArg4, wArg5, wIsCGB, wArg3, rSTAT
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
@@ -6526,7 +6526,7 @@ Func_01D_6A36:: ; address name
     jr Jump_01D_6A59
 
 ; C = 0, then falls into the sprite part draw (Func_01D_6A36 body) (E-0122)
-; 6 call sites from 6 routines (e.g. PauseMenu_Main_Case01_Case02, RunNameEntryStateWhenNotFading_Shared01, SwapMonstersMenu_Case08_Case15, DrawWCA36SpritePart, ...)
+; 6 call sites from 6 routines (e.g. PauseMenu_Main_Case01_DrawMetaSpritePartC0, RunNameEntryStateWhenNotFading_Shared01, SwapMonstersMenu_Case08_GetListEntriesCell5Address, DrawWCA36SpritePart, ...)
 ; reads: wArg6, wFrameCounterLo, wArg3, wArg4, hScrollX, hScrollXHi, wArg5, hScrollY, ...
 ; writes: hSpriteAttrXor, hSpriteSubIndex, hSpriteTileOffset, hSpriteOriginX, hSpriteOriginXHi, hSpriteOriginY, hSpriteOriginYHi, hSpriteSetIndex
 DrawMetaSpritePartC0::
@@ -6596,7 +6596,7 @@ Jump_01D_6A9E::
     ret
 
 ; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
-; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_Case04, BreedMenu_Case04_DrawRecordListPageNames, EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames, SwapMonstersMenu_Case06_Case08, ...)
+; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_Case04_DrawRecordListPageNames, EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames, SwapMonstersMenu_Case06_LoadFamilyIconTileForRecordB_Bank1E, ...)
 ; reads: wListPageIndex, wListLastRow, wPartyCount, wArg1
 ; writes: rRAMG2, rRAMB
 ; points at: wPartyList, wListEntries
@@ -6693,11 +6693,11 @@ Data_01D_6B28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $20, $00, $60, $00, $A0, $00, $E0, $00, $20, $01
 
 ; only called from SwapMonstersMenu_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case03_Sub01_Case03)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries_Case03)
 ; reads: wGridCursorX, wScreenState, wListCount, wPartyCount
 ; writes: wScreenState, wScreenStep, wTwoChoiceCursor, wListPageIndex, wScriptCommandType, wScriptStartRequest, wScreenSubStep
 ; points at: wTextWindowTileLo
-SwapMonstersMenu_Case03_Sub01::
+SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries::
 Func_01D_6B32:: ; address name
     ld hl, wTextWindowTileLo
     xor a, a
@@ -6817,7 +6817,7 @@ Jump_01D_6C02::
     ret
 
 ; copies tiles listed at the address in wD7F3/4 to wD7F1/2 + 16 * n, six per call; wD7F5 = $FF when the $FF end is reached, else 0 (E-0128)
-; 7 call sites from 7 routines (e.g. CloseHibernateMenu_Case01, BreedMenu_Case04_Case20, BreedMenu_Case04_Case32, BreedMenu_Case05_Case08, ...)
+; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_Case04_LoadTileListSixPerCall, BreedMenu_Case04_LoadTileListSixPerCall_Case32, BreedMenu_Case05_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wArg3, wArg4, wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart, wArg5
 LoadTileListSixPerCall::
@@ -6999,7 +6999,7 @@ Jump_01D_6CF9::
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case1B_Case00, SwapMonstersMenu_Case0D_Case04, SwapMonstersMenu_Case08_Case1B, RunLinkSession8Case03Steps_Case04)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case1B_UpdatePagedListCursor, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Tiles_1D_6D20
@@ -7067,7 +7067,7 @@ Data_01D_6DE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $8C, $B0, $8C, $FF, $FF
 
 ; wD7F5 = the number of SRAM records (29 in bank 0 from sB356 plus one in bank 1) with bit 7 of byte 0 set (E-0125)
-; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case05_Case00, HibernateMenu_Case03, StartRecordListOrNoneMessage)
+; 4 call sites from 3 routines (e.g. PauseMenu_State3_Case05_LoadScreenBlock2D, HibernateMenu_Case03, StartRecordListOrNoneMessage)
 ; writes: rRAMG2, rRAMB, wArg5
 ; points at: sCompactRecords, sRecords
 CountFlaggedSRAMRecords::
@@ -7112,7 +7112,7 @@ Jump_01D_6E2D::
     ret
 
 ; packs SRAM record wD7F1's family, state, mark and other fields into the compact form in SRAM bank wD7F2 (wD7E0 workspace) (E-0131)
-; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_Case05_Case3F, HibernateMenu_Case04_Case16, HibernateMenu_Case04_Case42)
+; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wPackByteE1, wPackByteE6
 ; writes: rRAMB, rRAMG2, wPackByteE1, wPackFields, wPackWork, wArg5
 ; points at: wPackWork, wPackFields
@@ -8151,7 +8151,7 @@ Jump_01D_7470::
     ret
 
 ; unpacks the compact record in SRAM bank wD7F2 back into the record fields (family, state, mark ...) (E-0131)
-; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_Case05_Case3F, HibernateMenu_Case05_Case13, HibernateMenu_Case04_Case42)
+; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case05_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wArg5, wArg6, wArg7, wArg8
 ; writes: rRAMB, rRAMG2, wPackWork, wArg5
 ; points at: wNameGlyphBuf
@@ -8982,7 +8982,7 @@ Jump_01D_793C::
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $21 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, HibernateMenu_Shared03, HibernateMenu_Case05_Case2F_Sub03, ShowSaveFileInfoWindow, ...)
+; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, HibernateMenu_SetArg5ToListEntriesCell5, HibernateMenu_Case05_Case2F_LoadRecordNameEntry0, ShowSaveFileInfoWindow, ...)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry0::

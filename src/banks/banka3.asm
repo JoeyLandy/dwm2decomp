@@ -328,7 +328,7 @@ Data_0A3_4181:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $02, $01, $02
 
 ; copies 16 bytes of wBattleActionChoice to wDA2C, clears wC953/4, and outside link battles sets the formation for each side from Func_0A3_41CF and Func_0A3_4917 (E-0125)
-; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_Case06, RunBattleCommandEntry_BankA1_Case06)
+; 2 call sites from 2 routines (e.g. RunBattleCommandEntry_AddWordAtHLToBC_Bank30, RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1)
 ; reads: wLinkMode
 ; writes: wFormationSlot0, wFormationSlot1
 ; points at: wBattleActionChoice, wSavedActionChoices
@@ -355,7 +355,7 @@ Jump_0A3_418F::
     or a, a
     jr z, Jump_0A3_41B5
     ld de, wBattleActionChoice
-    call SaveActionChoicesAndPickFormations_Sub01
+    call SaveActionChoicesAndPickFormations_DivideBByA
     ld [wFormationSlot0], a
 
 Jump_0A3_41B5::
@@ -369,7 +369,7 @@ Jump_0A3_41B5::
     or a, a
     ret z
     ld de, wBattleActionChoice + $8
-    call SaveActionChoicesAndPickFormations_Sub01
+    call SaveActionChoicesAndPickFormations_DivideBByA
     ld [wFormationSlot1], a
     ret
 
@@ -850,7 +850,7 @@ Data_0A3_45B7:: ; address name
 ; only called from SaveActionChoicesAndPickFormations (E-0047)
 ; 2 call sites from 1 routine (e.g. SaveActionChoicesAndPickFormations)
 ; reads: hTemp0
-SaveActionChoicesAndPickFormations_Sub01::
+SaveActionChoicesAndPickFormations_DivideBByA::
 Func_0A3_4917:: ; address name
     push bc
     push de
@@ -918,7 +918,7 @@ Jump_0A3_494E::
     ret
 
 ; hFFC6 = 1 when the actor's chosen action is $D0-$E3, else 0 (E-0126)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case00_Sub01_Case01_Case00)
+; 1 call site from 1 routine (e.g. RunBattleActions_Case00_Sub01_Case01_ActorActionIsD0ToE3)
 ; reads: wBattleActor
 ; writes: hTemp0
 ; points at: wBattleActionChoice
@@ -1114,7 +1114,7 @@ Jump_0A3_4A59::
 ; 1 call site from 1 routine (e.g. ResolveStepBegin)
 ; reads: wBattleTarget
 ; points at: wSlotChoices
-ResolveStepBegin_Sub01::
+ResolveStepBegin_AdvanceRandom::
 Func_0A3_4A5F:: ; address name
     call AdvanceRandom
     ld a, $FF
@@ -1167,7 +1167,7 @@ Jump_0A3_4A99::
 ; only called from ActionEffect_Chance (E-0047)
 ; 1 call site from 1 routine (e.g. ActionEffect_Chance)
 ; reads: wRandomLo, wLinkMode, wBattleKind, wBattleActor
-ActionEffect_Chance_Sub01::
+ActionEffect_Chance_AdvanceRandom::
 Func_0A3_4AAF:: ; address name
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -1196,32 +1196,32 @@ Func_0A3_4AAF:: ; address name
 Jump_0A3_4AE2::
     ld a, c
     cp a, $B3
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
     cp a, $B4
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
     cp a, $B6
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
     cp a, $BD
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
 
 Jump_0A3_4AF3::
     ld a, c
     cp a, $B0
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
     cp a, $B2
-    jr z, ActionEffect_Chance_Sub01
+    jr z, ActionEffect_Chance_AdvanceRandom
     ret
 
-; address loaded by ActionEffect_Chance_Sub01
+; address loaded by ActionEffect_Chance_AdvanceRandom
 Data_0A3_4AFD:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $B0, $B1, $B2, $B3, $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD
 
 ; only called from BattleEnd_Step7_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step7_Case02)
+; 1 call site from 1 routine (e.g. BattleEnd_Step7_StartPaletteFade)
 ; reads: wPartyCount
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
-BattleEnd_Step7_Case02_Sub01::
+BattleEnd_Step7_Case02_SRAMRecordAddress::
 Func_0A3_4B0B:: ; address name
     ld a, $0A
     ld [rRAMG], a

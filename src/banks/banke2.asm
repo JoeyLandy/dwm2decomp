@@ -345,7 +345,7 @@ Jump_0E2_4276::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_Sacrifice:: ; heuristic: follows a terminator; C0
 Func_0E2_4279:: ; address name
-    farcall AIScore_Sacrifice_Sub02
+    farcall AIScore_Sacrifice_ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     ret z
@@ -399,8 +399,8 @@ Jump_0E2_42D2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_42E8::
-    call AIScore_Sacrifice_Sub03
-    farcall AIScore_Sacrifice_Sub01
+    call AIScore_Sacrifice_LinkRuleCheckWD044Bit6
+    farcall AIScore_Sacrifice_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
     jr nz, Jump_0E2_42FB
@@ -432,16 +432,16 @@ Func_0E2_4310:: ; address name
     farcall FailIfTwoAlliesBelowHalfHP
     ld a, c
     cp a, $01
-    jr z, AIScore_HealUs_Sub01
+    jr z, AIScore_HealUs_AnyFoeLacksStatus0MaskCC
     and a, a
-    jr nz, AIScore_HealUs_Sub01
+    jr nz, AIScore_HealUs_AnyFoeLacksStatus0MaskCC
     ld bc, $0069
     call AccumulateBank6WordToDA70
 
 ; only called from AIScore_HealUs (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_HealUs)
 ; reads: wBattleActor
-AIScore_HealUs_Sub01::
+AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
 Func_0E2_432D:: ; address name
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
@@ -468,7 +468,7 @@ Jump_0E2_434D::
 
 Jump_0E2_435D::
     ld a, [wBattleActor]
-    call AIScore_HealUs_Sub01_Sub01
+    call AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
@@ -498,7 +498,7 @@ Func_0E2_438D:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_HealUs_Sub01
+    call AIScore_HealUs_AnyFoeLacksStatus0MaskCC
     farcall FewerThanTwoAlliesAtHP1
     ld a, c
     and a, a
@@ -523,7 +523,7 @@ Jump_0E2_43BD::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MPass:: ; heuristic: follows a terminator; C0
 Func_0E2_43BE:: ; address name
-    farcall AIScore_MPass_Sub01
+    farcall AIScore_MPass_ActorLacksStatus4Bits67
     ld a, c
     and a, a
     ret z
@@ -650,7 +650,7 @@ Func_0E2_446C:: ; address name
 
 Jump_0E2_4485::
     call WeighWD044RuleBit5
-    call AIScore_Upper_Sub01
+    call AIScore_Upper_CompareFoeAverageATKWithAllyDEF
     farcall SetCToZero
     ld a, c
     and a, a
@@ -718,7 +718,7 @@ Jump_0E2_44F3::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_450A::
-    call AIScore_Sap_Sub01
+    call AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01
     farcall ResistanceAverageGateForAISide
     ld a, c
     cp a, $01
@@ -873,11 +873,11 @@ Jump_0E2_4618::
 ; 1 call site from 1 routine (e.g. AIScoreB_TwinHits)
 AIScore_TwinHits::
 Func_0E2_4619:: ; address name
-    farcall AIScore_TwinHits_Sub03
+    farcall AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
     and a, a
     ret z
-    farcall AIScore_TwinHits_Sub01
+    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4636
@@ -887,7 +887,7 @@ Func_0E2_4619:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4636::
-    farcall AIScore_TwinHits_Sub02
+    farcall AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
     jr z, Jump_0E2_464A
@@ -1336,7 +1336,7 @@ Func_0E2_493F:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_495C::
-    farcall AIScore_Transform_Sub01
+    farcall AIScore_Transform_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4970
@@ -1376,7 +1376,7 @@ Func_0E2_4984:: ; address name
 
 Jump_0E2_49A1::
     call WeighWD044RuleBit5
-    farcall AIScore_BeDragon_Sub01
+    farcall AIScore_BeDragon_GetBattleMaxHP_Bank05
     ld a, c
     and a, a
     jr nz, Jump_0E2_49B4
@@ -1435,7 +1435,7 @@ Jump_0E2_4A07::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_MegaMagic:: ; heuristic: follows a terminator; C0
 Func_0E2_4A08:: ; address name
-    farcall AIScore_MegaMagic_Sub04
+    farcall AIScore_MegaMagic_AIAttackSkillUsable_74D1
     ld a, c
     and a, a
     ret z
@@ -1511,7 +1511,7 @@ Jump_0E2_4A91::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_4AA1::
-    farcall AIScore_MegaMagic_Sub03
+    farcall AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_0E2_4AB5
@@ -1622,11 +1622,11 @@ Jump_0E2_4B6A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_FireAir:: ; heuristic: follows a terminator; C0
 Func_0E2_4B6B:: ; address name
-    farcall AIScore_FireAir_Sub02
+    farcall AIScore_FireAir_AIAttackSkillUsable_74D1
     ld a, c
     and a, a
     ret z
-    farcall AIScore_FireAir_Sub01
+    farcall AIScore_FireAir_ReadSlotAIModeIndexed_Bank05
     ld a, c
     and a, a
     jr nz, Jump_0E2_4B84
@@ -1732,13 +1732,13 @@ Func_0E2_4C30:: ; address name
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
-    jr nz, AIScore_Vacuum_Sub01
+    jr nz, AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates
     ld bc, $0010
     call AccumulateBank6WordToDA70
 
 ; only called from AIScore_Vacuum (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Vacuum)
-AIScore_Vacuum_Sub01::
+AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
 Func_0E2_4C49:: ; address name
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -1793,7 +1793,7 @@ Func_0E2_4CA1:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_Vacuum_Sub01
+    call AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a, a
@@ -2613,7 +2613,7 @@ Jump_0E2_526A::
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_BiAttack:: ; heuristic: follows a terminator; C0
 Func_0E2_526D:: ; address name
-    farcall AIScore_BiAttack_Sub02
+    farcall AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a, a
     ret z
@@ -2668,7 +2668,7 @@ Jump_0E2_52CD::
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_52DD::
-    farcall AIScore_BiAttack_Sub01
+    farcall AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_0E2_52ED
@@ -3056,7 +3056,7 @@ Jump_0E2_559A::
 
 Jump_0E2_55AA::
     call WeighWD044RuleBit1
-    farcall AIScore_EvilSlash_Sub01
+    farcall AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_0E2_55BD
@@ -3303,7 +3303,7 @@ Jump_0E2_5774::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_5784::
-    farcall AIScore_Berserker_Sub01
+    farcall AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5798
@@ -3348,7 +3348,7 @@ Jump_0E2_57C2::
     call AccumulateBank6WordToDA70
 
 Jump_0E2_57D2::
-    farcall AIScore_Ramming_Sub01
+    farcall AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
     jr z, Jump_0E2_57E6
@@ -3375,7 +3375,7 @@ Jump_0E2_57F6::
 
 Jump_0E2_5806::
     ld a, [wBattleActor]
-    call AIScore_Ramming_Sub02
+    call AIScore_Ramming_HPBandOfSlotTemp0
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
     and a, a
@@ -3418,11 +3418,11 @@ Jump_0E2_5855::
 ; reads: wBattleActor
 AIScore_Kamikaze:: ; heuristic: follows a terminator; C0
 Func_0E2_5856:: ; address name
-    farcall AIScore_Kamikaze_Sub02
+    farcall AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne
     ld a, c
     and a, a
     ret z
-    farcall AIScore_Kamikaze_Sub01
+    farcall AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_4024
     ld a, c
     cp a, $01
     jr z, Jump_0E2_5873
@@ -4655,7 +4655,7 @@ Func_0E2_60D7:: ; address name
     call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
-    call AIScore_StrongD_Sub01
+    call AIScore_StrongD_HPBandOfSlotTemp0
     farcall SetCToZero
     ld a, c
     and a, a
@@ -4735,7 +4735,7 @@ Func_0E2_6160:: ; address name
     call AIScoreGuardSkill_67CF
     ret z
     ld a, [wBattleActor]
-    call AIScore_Cover_Sub01
+    call AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty
     farcall SetCToZero
     ld a, c
     and a, a
@@ -4757,7 +4757,7 @@ Func_0E2_618D:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_TailWind_Sub01
+    call AIScore_TailWind_AccumulateBank6WordToDA70
     ret z
 
 Jump_0E2_619A::
@@ -4802,7 +4802,7 @@ Func_0E2_61CD:: ; address name
     and a, a
     ret z
     ld a, [wBattleActor]
-    call AIScore_AquaWall_Sub01
+    call AIScore_AquaWall_HPBandOfSlotTemp0
     call WeighWD044RuleBit5
     ret
 
@@ -4810,7 +4810,7 @@ Func_0E2_61CD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 AIScore_SealPray:: ; heuristic: follows a terminator; C0
 Func_0E2_61E0:: ; address name
-    farcall AIScore_SealPray_Sub02
+    farcall AIScore_SealPray_ActorCanPayMPCost_Bank05
     ld a, c
     and a, a
     ret z
@@ -4891,7 +4891,7 @@ Jump_0E2_6266::
 
 Jump_0E2_6276::
     ld a, [wBattleActor]
-    call AIScore_SuckAll_Sub01
+    call AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
     cp a, $01
@@ -4974,7 +4974,7 @@ Func_0E2_6303:: ; address name
     and a, a
     ret z
     ld a, [wBattleActor]
-    call AIScore_Meditate_Sub01
+    call AIScore_Meditate_HPBandOfSlotTemp0
     farcall ActorHPIsNotOne
     ld a, c
     and a, a
@@ -5224,7 +5224,7 @@ Jump_0E2_64BE::
     db $C9, $C9, $CD, $D4, $3E, $FA, $E7, $C5, $CB, $7F, $CC, $40, $65, $C9, $C9
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70
-; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub01, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 304 call sites from 118 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore, wAISkillScore2
 AccumulateBank6WordToDA6E::
 Func_0E2_64CE:: ; address name
@@ -5258,7 +5258,7 @@ Jump_0E2_64F4::
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E
-; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_Sub01, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
+; 223 call sites from 89 routines (e.g. AIScore_Skill00, AIScore_StrongD_HPBandOfSlotTemp0, AIScore_Blaze, AIAddScoresFor55BEAnd5731, ...)
 ; points at: wAISkillScore2, wAISkillScore
 AccumulateBank6WordToDA70::
 Func_0E2_64F5:: ; address name
@@ -5337,7 +5337,7 @@ Func_0E2_654B:: ; address name
 ; only called from AIScore_StrongD (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_StrongD)
 ; writes: hTemp0
-AIScore_StrongD_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_StrongD_HPBandOfSlotTemp0:: ; heuristic: follows a terminator; C0
 Func_0E2_656D:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5386,7 +5386,7 @@ Jump_0E2_65B7::
 ; only called from AIScore_AquaWall (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_AquaWall)
 ; writes: hTemp0
-AIScore_AquaWall_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_AquaWall_HPBandOfSlotTemp0:: ; heuristic: follows a terminator; C0
 Func_0E2_65B8:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5435,7 +5435,7 @@ Jump_0E2_6602::
 ; only called from AIScore_SuckAll (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SuckAll)
 ; writes: hTemp0
-AIScore_SuckAll_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_0E2_6603:: ; address name
     and a, $04
     ld c, a
@@ -5447,7 +5447,7 @@ Jump_0E2_6608::
     jr c, Jump_0E2_6615
     ldh [hTemp0], a
     push bc
-    call AIScore_SuckAll_Sub01_Sub01
+    call AIScore_SuckAll_Sub01_HPBandOfSlotTemp0
     pop bc
 
 Jump_0E2_6615::
@@ -5457,8 +5457,8 @@ Jump_0E2_6615::
     ret
 
 ; only called from AIScore_SuckAll_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_SuckAll_Sub01)
-AIScore_SuckAll_Sub01_Sub01::
+; 1 call site from 1 routine (e.g. AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty)
+AIScore_SuckAll_Sub01_HPBandOfSlotTemp0::
 Func_0E2_661A:: ; address name
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5478,7 +5478,7 @@ Jump_0E2_6633::
 ; only called from AIScore_Meditate (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Meditate)
 ; writes: hTemp0
-AIScore_Meditate_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Meditate_HPBandOfSlotTemp0:: ; heuristic: follows a terminator; C0
 Func_0E2_6634:: ; address name
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5525,9 +5525,9 @@ Jump_0E2_667E::
     ret
 
 ; only called from AIScore_HealUs_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_HealUs_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_HealUs_AnyFoeLacksStatus0MaskCC)
 ; writes: hTemp0
-AIScore_HealUs_Sub01_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty:: ; heuristic: follows a terminator; C0
 Func_0E2_667F:: ; address name
     and a, $04
     ld c, a
@@ -5539,7 +5539,7 @@ Jump_0E2_6684::
     jr c, Jump_0E2_6691
     ldh [hTemp0], a
     push bc
-    call AIScore_HealUs_Sub01_Sub01_Sub01
+    call AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
     pop bc
 
 Jump_0E2_6691::
@@ -5549,9 +5549,9 @@ Jump_0E2_6691::
     ret
 
 ; only called from AIScore_HealUs_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_HealUs_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattleActor
-AIScore_HealUs_Sub01_Sub01_Sub01::
+AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
 Func_0E2_6696:: ; address name
     push bc
     farcall HPBandOfSlotTemp0
@@ -5572,11 +5572,11 @@ Jump_0E2_66AC::
     call AccumulateBank6WordToDA6E
     ret
 
-; address loaded by AIScore_HealUs_Sub01_Sub01_Sub01
+; address loaded by AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
 Data_0E2_66B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1E, $1F, $20, $21, $22, $22
 
-; address loaded by AIScore_HealUs_Sub01_Sub01_Sub01
+; address loaded by AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
 Data_0E2_66BF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AB, $AC, $AD, $AE, $AF, $AF
 
@@ -5595,7 +5595,7 @@ Jump_0E2_66CA::
     jr c, Jump_0E2_66D7
     ldh [hTemp0], a
     push bc
-    call ForEachPresentSlotOfSideRun66DC_Sub01
+    call ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
     pop bc
 
 Jump_0E2_66D7::
@@ -5607,7 +5607,7 @@ Jump_0E2_66D7::
 ; only called from ForEachPresentSlotOfSideRun66DC (E-0047)
 ; 1 call site from 1 routine (e.g. ForEachPresentSlotOfSideRun66DC)
 ; reads: wBattleActor
-ForEachPresentSlotOfSideRun66DC_Sub01::
+ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
 Func_0E2_66DC:: ; address name
     push bc
     farcall HPBandOfSlotTemp0
@@ -5628,18 +5628,18 @@ Jump_0E2_66F2::
     call AccumulateBank6WordToDA6E
     ret
 
-; address loaded by ForEachPresentSlotOfSideRun66DC_Sub01
+; address loaded by ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
 Data_0E2_66FF:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1D, $1E, $1F, $20, $21, $22
 
-; address loaded by ForEachPresentSlotOfSideRun66DC_Sub01
+; address loaded by ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
 Data_0E2_6705:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AB, $AC, $AD, $AE, $AF
 
 ; only called from AIScore_Ramming (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Ramming)
 ; writes: hTemp0
-AIScore_Ramming_Sub02::
+AIScore_Ramming_HPBandOfSlotTemp0::
 Func_0E2_670B:: ; address name
     ldh [hTemp0], a
     push bc
@@ -5655,14 +5655,14 @@ Func_0E2_670B:: ; address name
     call AccumulateBank6WordToDA6E
     ret
 
-; address loaded by AIScore_Ramming_Sub02
+; address loaded by AIScore_Ramming_HPBandOfSlotTemp0
 Data_0E2_6727:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $1D, $1E, $1F, $20, $21, $22
 
 ; only called from AIScore_Cover (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Cover)
 ; writes: hTemp0
-AIScore_Cover_Sub01::
+AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
 Func_0E2_672D:: ; address name
     and a, $04
     ld c, a
@@ -5674,7 +5674,7 @@ Jump_0E2_6732::
     jr c, Jump_0E2_673F
     ldh [hTemp0], a
     push bc
-    call AIScore_Cover_Sub01_Sub01
+    call AIScore_Cover_Sub01_HPBandOfSlotTemp0
     pop bc
 
 Jump_0E2_673F::
@@ -5684,9 +5684,9 @@ Jump_0E2_673F::
     ret
 
 ; only called from AIScore_Cover_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. AIScore_Cover_Sub01)
+; 1 call site from 1 routine (e.g. AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty)
 ; reads: wBattleActor
-AIScore_Cover_Sub01_Sub01::
+AIScore_Cover_Sub01_HPBandOfSlotTemp0::
 Func_0E2_6744:: ; address name
     push bc
     farcall HPBandOfSlotTemp0
@@ -5707,17 +5707,17 @@ Jump_0E2_675A::
     call AccumulateBank6WordToDA6E
     ret
 
-; address loaded by AIScore_Cover_Sub01_Sub01
+; address loaded by AIScore_Cover_Sub01_HPBandOfSlotTemp0
 Data_0E2_6767:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $21, $20, $1F, $1E, $1D, $1D
 
-; address loaded by AIScore_Cover_Sub01_Sub01
+; address loaded by AIScore_Cover_Sub01_HPBandOfSlotTemp0
 Data_0E2_676D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $AA, $AA, $AB, $AC, $AD, $AE
 
 ; only called from AIScore_Upper (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Upper)
-AIScore_Upper_Sub01::
+AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
 Func_0E2_6773:: ; address name
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -5736,9 +5736,9 @@ Jump_0E2_678B::
 
 ; only called from AIScore_Sap (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sap)
-AIScore_Sap_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty_Sub01:: ; heuristic: follows a terminator; C0
 Func_0E2_678C:: ; address name
-    farcall AIScore_Sap_Sub01_Sub01
+    farcall AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a, a
     jr nz, Jump_0E2_679E
@@ -5777,7 +5777,7 @@ Func_0E2_67A5:: ; address name
 ; only called from AIScore_TailWind (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_TailWind)
 ; reads: wBattleTurn
-AIScore_TailWind_Sub01:: ; heuristic: follows a terminator; C0
+AIScore_TailWind_AccumulateBank6WordToDA70:: ; heuristic: follows a terminator; C0
 Func_0E2_67C0:: ; address name
     ld a, [wBattleTurn]
     ld c, a
@@ -5795,7 +5795,7 @@ AIScoreGuardSkill_67CF::
 Func_0E2_67CF:: ; address name
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
-    jr AIScore_TailWind_Sub01
+    jr AIScore_TailWind_AccumulateBank6WordToDA70
 
 ; WeighWD044RuleBit4, then adds score word $29 to wDA6E when Func_005_5758 fails and again when Func_005_5CF1 fails (E-0122)
 ; 2 call sites from 2 routines (e.g. AIScore_Vivify, AIScore_Farewell)
@@ -5824,7 +5824,7 @@ Jump_0E2_67F8::
 ; 9 call sites from 9 routines (e.g. AIScoreB_LureDance, AIScore_LureDance, AIScoreB_LushLicks, AIScore_LushLicks, ...)
 AIAddScoresFor5ECEAnd5FC7:: ; heuristic: follows a terminator; C0
 Func_0E2_67F9:: ; address name
-    farcall AIAddScoresFor5ECEAnd5FC7_Sub01
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp a, $01
     jr z, Jump_0E2_680D
@@ -5834,7 +5834,7 @@ Func_0E2_67F9:: ; address name
     call AccumulateBank6WordToDA6E
 
 Jump_0E2_680D::
-    farcall AIAddScoresFor5ECEAnd5FC7_Sub02
+    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
     ld a, c
     cp a, $01
     jr z, Jump_0E2_6821
@@ -5870,7 +5870,7 @@ Jump_0E2_6842::
 
 ; only called from AIScore_Sacrifice (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Sacrifice)
-AIScore_Sacrifice_Sub03:: ; heuristic: follows a terminator; C0
+AIScore_Sacrifice_LinkRuleCheckWD044Bit6:: ; heuristic: follows a terminator; C0
 Func_0E2_6843:: ; address name
     farcall LinkRuleCheckWD044Bit6
     ld a, c
@@ -5897,7 +5897,7 @@ Jump_0E2_6864::
     ret
 
 ; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-; 12 call sites from 12 routines (e.g. AIScore_HealUs_Sub01, AIAddPenaltyFor5758And5CF1, AIScore_Antidote, AIScore_DeChaos, ...)
+; 12 call sites from 12 routines (e.g. AIScore_HealUs_AnyFoeLacksStatus0MaskCC, AIAddPenaltyFor5758And5CF1, AIScore_Antidote, AIScore_DeChaos, ...)
 WeighWD044RuleBit4:: ; heuristic: follows a terminator; C0
 Func_0E2_6865:: ; address name
     farcall CheckWD044RuleBit4
@@ -5939,7 +5939,7 @@ Jump_0E2_6897::
     ret
 
 ; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wDA70 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091)
-; 22 call sites from 22 routines (e.g. AIScore_BigBang, AIScore_Vacuum_Sub01, AIScore_RockThrow, AIScore_Watershot, ...)
+; 22 call sites from 22 routines (e.g. AIScore_BigBang, AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_RockThrow, AIScore_Watershot, ...)
 WeighWD044RuleBit1:: ; heuristic: follows a terminator; C0
 Func_0E2_6898:: ; address name
     farcall CheckWD044RuleBit1

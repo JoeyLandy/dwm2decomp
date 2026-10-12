@@ -1369,7 +1369,7 @@ Script_96_700D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_96_7006
 
 ; only called from DebugMessageTest_Update_Case1C_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C_Sub01)
+; 1 call site from 1 routine (e.g. DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01)
 ; reads: wStringIndex
 ; writes: wStringIndex
 DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay::

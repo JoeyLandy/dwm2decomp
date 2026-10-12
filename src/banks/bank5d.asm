@@ -1,7 +1,7 @@
 SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
     db $5D
 
-; address loaded by RunGameMode2State_Case01
+; address loaded by RunGameMode2State_CopyScrollToHardware
 ; LZSS-compressed asset: 312 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_5D_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_05D_4001:: ; address name
@@ -145,7 +145,7 @@ WorldMapView10::
 Data_05D_43AC:: ; address name
     db $38, $39 ; id 0
 
-; address loaded by RunGameMode2State_Case04
+; address loaded by RunGameMode2State_CopyScrollToHardware_Case04
 ; LZSS-compressed asset: 439 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_5D_43AE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_05D_43AE:: ; address name

@@ -1,13 +1,13 @@
 SECTION "Bank E1", ROMX[$4000], BANK[$E1]
     db $E1
 
-; address loaded by GameMode5_Update_Case00_Case00_Case00
+; address loaded by GameMode5_Update_Case00_Case00_DecompressToVRAM
 ; LZSS-compressed asset: 213 bytes expand to 304 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_4001:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4001:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384001, $D5
 
-; address loaded by GameMode5_Update_Case00_Case00_Case00
+; address loaded by GameMode5_Update_Case00_Case00_DecompressToVRAM
 ; LZSS-compressed asset: 37 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_40D6:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_40D6:: ; address name
@@ -15,122 +15,122 @@ Data_0E1_40D6:: ; address name
     db $06, $07, $08, $09, $0A, $0B, $0C, $0D, $0E, $0F, $10, $11, $12, $13, $41, $0F
     db $4D, $13, $12, $1F, $42
 
-; address loaded by GameMode5_Update_Case00_Case00_Case00
+; address loaded by GameMode5_Update_Case00_Case00_DecompressToVRAM
 ; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_40FB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_40FB:: ; address name
     db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
     db $1F, $1F, $35
 
-; address loaded by GameMode5_Update_Case00_Case00_Case00
+; address loaded by GameMode5_Update_Case00_Case00_DecompressToVRAM
 BGPaletteBufferData_E1_410E:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_410E:: ; address name
     db $B5, $56, $FF, $7F, $D7, $56, $00, $00
 
-; address loaded by GameMode5_Update_Case00_Case01_Case00
+; address loaded by GameMode5_Update_Case00_Case01_DecompressToVRAM
 ; LZSS-compressed asset: 1169 bytes expand to 1600 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_4116:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4116:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384116, $491
 
-; address loaded by GameMode5_Update_Case00_Case01_Case00
+; address loaded by GameMode5_Update_Case00_Case01_DecompressToVRAM
 ; LZSS-compressed asset: 85 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_45A7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_45A7:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3845A7, $55
 
-; address loaded by GameMode5_Update_Case00_Case01_Case00
+; address loaded by GameMode5_Update_Case00_Case01_DecompressToVRAM
 ; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_45FC:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_45FC:: ; address name
     db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
     db $1F, $1F, $35
 
-; address loaded by GameMode5_Update_Case00_Case01_Case00
+; address loaded by GameMode5_Update_Case00_Case01_DecompressToVRAM
 BGPaletteBufferData_E1_460F:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_460F:: ; address name
     db $60, $31, $B5, $56, $E8, $62, $00, $00
 
-; address loaded by GameMode5_Update_Case00_Case02_Case00
+; address loaded by GameMode5_Update_Case00_Case02_DecompressToVRAM
 ; LZSS-compressed asset: 815 bytes expand to 1552 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_4617:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4617:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384617, $32F
 
-; address loaded by GameMode5_Update_Case00_Case02_Case00
+; address loaded by GameMode5_Update_Case00_Case02_DecompressToVRAM
 ; LZSS-compressed asset: 120 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_4946:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4946:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384946, $78
 
-; address loaded by GameMode5_Update_Case00_Case02_Case00
+; address loaded by GameMode5_Update_Case00_Case02_DecompressToVRAM
 ; LZSS-compressed asset: 20 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_49BE:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_49BE:: ; address name
     db $68, $01, $00, $08, $00, $00, $0F, $4D, $00, $60, $0F, $4D, $00, $C0, $0F, $4D
     db $00, $08, $1F, $34
 
-; address loaded by GameMode5_Update_Case00_Case02_Case00
+; address loaded by GameMode5_Update_Case00_Case02_DecompressToVRAM
 BGPaletteBufferData_E1_49D2:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_49D2:: ; address name
     db $0F, $3E, $BF, $73, $D7, $56, $00, $00
 
-; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 1165 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Gfx_E1_49DA:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_49DA:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3849DA, $48D
 
-; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 1438 bytes expand to 2048 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_4E67:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_4E67:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $384E67, $59E
 
-; address loaded by RunGameMode5Case00SubStates_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
 ; LZSS-compressed asset: 887 bytes expand to 1152 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles2Gfx_E1_5405:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5405:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $385405, $377
 
-; address loaded by GameMode5_Update_Case00_Case04_Case00
+; address loaded by GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 175 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles0Gfx_E1_577C:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_577C:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $38577C, $AF
 
-; address loaded by GameMode5_Update_Case00_Case04_Case00
+; address loaded by GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 152 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_582B:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_582B:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $38582B, $98
 
-; address loaded by GameMode5_Update_Case00_Case04_Case00
+; address loaded by GameMode5_Update_Case00_Case04_DecompressToVRAM
 ; LZSS-compressed asset: 76 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_58C3:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_58C3:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $3858C3, $4C
 
-; address loaded by RunGameMode5Case00SubStates_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
 ; LZSS-compressed asset: 101 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenTileBufferGfx_E1_590F:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_590F:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $38590F, $65
 
-; address loaded by RunGameMode5Case00SubStates_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
 ; LZSS-compressed asset: 19 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 ScreenAttrBufferGfx_E1_5974:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5974:: ; address name
     db $68, $01, $01, $01, $A0, $FF, $4D, $01, $5F, $0F, $4D, $01, $BF, $0F, $4D, $01
     db $1F, $1F, $35
 
-; address loaded by RunGameMode5Case00SubStates_Case06
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06
 ; LZSS-compressed asset: 112 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 BGMap0Gfx_E1_5987:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_5987:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $385987, $70
 
-; address loaded by RunGameMode5Case00SubStates_Case06
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06
 ; LZSS-compressed asset: 48 bytes expand to 1024 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 BGMap0Gfx_E1_59F7:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_0E1_59F7:: ; address name
@@ -138,7 +138,7 @@ Data_0E1_59F7:: ; address name
     db $00, $20, $1F, $4D, $00, $80, $1F, $4D, $00, $E0, $1F, $4D, $00, $40, $2F, $4D
     db $00, $A0, $2F, $4D, $00, $00, $3F, $4D, $00, $60, $3F, $4D, $00, $A0, $3F, $2C
 
-; address loaded by RunGameMode5Case00SubStates_Case06, GameMode5_Update_Case00_Case04_Case00
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case06, GameMode5_Update_Case00_Case04_DecompressToVRAM
 BGPaletteBufferData_E1_5A27:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5A27:: ; address name
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
@@ -146,7 +146,7 @@ Data_0E1_5A27:: ; address name
     db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
     db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
 
-; address loaded by RunGameMode5Case00SubStates_Case04
+; address loaded by RunGameMode5Case00SubStates_DecompressToVRAM_Case04
 BGPaletteBufferData_E1_5A67:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5A67:: ; address name
     db $0F, $54, $FF, $7F, $1F, $13, $AA, $04, $0F, $54, $FF, $7F, $1F, $13, $D5, $09
@@ -154,7 +154,7 @@ Data_0E1_5A67:: ; address name
     db $33, $05, $FF, $7F, $BD, $21, $AA, $04, $36, $04, $FF, $7F, $1F, $13, $AA, $04
     db $36, $04, $FF, $7F, $1F, $13, $D5, $09, $FF, $7F, $FF, $7F, $FF, $7F, $FF, $7F
 
-; address loaded by GameMode5_Update_Case00_Case04_Case00
+; address loaded by GameMode5_Update_Case00_Case04_DecompressToVRAM
 OBJPaletteBufferData_E1_5AA7:: ; heuristic: argument of a bank-switching copy helper; C0
 Data_0E1_5AA7:: ; address name
     db $20, $7C, $FF, $7F, $A8, $14, $00, $00, $20, $7C, $FF, $7F, $35, $04, $00, $00

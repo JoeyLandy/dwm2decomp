@@ -2,7 +2,7 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
+; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01_Return_Sub01)
 ; reads: wKeyWorldAreaCount, hTemp8, hTemp9
 ; writes: wKeyWorldByte46, hTemp8, hTemp9, hTemp0
 ; points at: wKeyWorldFloorState
@@ -70,10 +70,10 @@ Func_084_405C:: ; address name
     rst $00
     dw RunDebugAutomapCaseTemp0_Return
     dw RunDebugAutomapCaseTemp0_Case01
-    dw RunDebugAutomapCaseTemp0_Case02
-    dw RunDebugAutomapCaseTemp0_Case03
-    dw RunDebugAutomapCaseTemp0_Case04
-    dw RunDebugAutomapCaseTemp0_Case05
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
     dw RunDebugAutomapCaseTemp0_Case06
 
 ; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
@@ -120,7 +120,7 @@ Jump_084_408A::
 ; entry 2 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
-RunDebugAutomapCaseTemp0_Case02::
+RunDebugAutomapCaseTemp0_NextRandomSeed::
 Jump_084_4091:: ; address name
     ld hl, Data_084_41B8
     ld a, [wKeyWorldGoalKind]
@@ -158,7 +158,7 @@ Jump_084_40BB::
 ; entry 3 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind, wKeyRandomHi, hTemp8, hTemp9
-RunDebugAutomapCaseTemp0_Case03::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
 Jump_084_40C2:: ; address name
     ld hl, Data_084_41B8
     ld a, [wKeyWorldGoalKind]
@@ -197,7 +197,7 @@ Jump_084_40EC::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyWorldGoalKind, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseTemp0_Case04::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case04::
 Jump_084_40F3:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -259,14 +259,14 @@ Jump_084_4126::
 
 Jump_084_4150::
     ld a, $01
-    call RunDebugAutomapCaseTemp0_Shared01
+    call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
 ; entry 5 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp8, hTemp9, wKeyWorldByte46, wKeyRandomHi
 ; writes: hTemp0
-RunDebugAutomapCaseTemp0_Case05::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Case05::
 Jump_084_4156:: ; address name
     ldh a, [hTemp8]
     ld l, a
@@ -324,33 +324,33 @@ Jump_084_417F::
 
 Jump_084_41A9::
     xor a, a
-    call RunDebugAutomapCaseTemp0_Shared01
+    call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
 ; address loaded by RunDebugAutomapCaseTemp0_Case01
 Data_084_41AE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
-; address loaded by RunDebugAutomapCaseTemp0_Case02, RunDebugAutomapCaseTemp0_Case03
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed, RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
 Data_084_41B8:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_Case05
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case05
 Data_084_41C2:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $05, $06, $07, $08, $09, $05, $07, $09
 
-; address loaded by RunDebugAutomapCaseTemp0_Case04
+; address loaded by RunDebugAutomapCaseTemp0_NextRandomSeed_Case04
 Data_084_41CA:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $0B, $00, $0B, $00, $02, $00, $02, $02, $03, $0B, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0B, $01, $00, $0B, $00, $0B
 
 ; only called from routines of RunDebugAutomapCaseTemp0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_Case05, RunDebugAutomapCaseTemp0_Case04)
+; 2 call sites from 2 routines (e.g. RunDebugAutomapCaseTemp0_NextRandomSeed_Case05, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04)
 ; reads: wKeyWorldByte46, hTemp2, hTemp4, hTemp0, hTemp3
 ; writes: hTemp2, hTemp3, wKeyWorldByte46
 ; points at: wKeyWorldRoomTable
-RunDebugAutomapCaseTemp0_Shared01::
+RunDebugAutomapCaseTemp0_RandomBelowC::
 Func_084_41F2:: ; address name
     push af
     ld a, [wKeyWorldByte46]
@@ -383,7 +383,7 @@ Func_084_41F2:: ; address name
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_Shared01_Sub02
+    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank
     ldh a, [hTemp4]
     swap a
     or a, $0F
@@ -419,7 +419,7 @@ Jump_084_4241::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_Shared01_Sub02
+    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank
     ldh a, [hTemp4]
     swap a
     ld c, a
@@ -468,7 +468,7 @@ Jump_084_429B::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_Shared01_Sub01
+    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -495,10 +495,10 @@ Data_084_42C7:: ; address name
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
 ; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
-; 1 call site from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
+; 1 call site from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
 ; reads: hTemp3
 ; writes: hTemp4
-RunDebugAutomapCaseTemp0_Shared01_Sub01::
+RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
 Func_084_4327:: ; address name
     push hl
     ld a, e
@@ -537,10 +537,10 @@ Jump_084_433C::
     ret
 
 ; only called from RunDebugAutomapCaseTemp0_Shared01 (E-0047)
-; 2 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
+; 2 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
 ; reads: hTemp3
 ; writes: hTemp3, hTemp4
-RunDebugAutomapCaseTemp0_Shared01_Sub02::
+RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank::
 Func_084_435C:: ; address name
     push hl
     ld a, e
@@ -597,7 +597,7 @@ Jump_084_438C::
     ret
 
 ; repeats NextRandomSeed until wCD04 & $0F is below C (C must be 1-16); returns A = that value (E-0077)
-; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_Shared01)
+; 5 call sites from 1 routine (e.g. RunDebugAutomapCaseTemp0_RandomBelowC)
 ; reads: wKeyRandomHi
 RandomBelowC::
 Func_084_43AC:: ; address name
@@ -609,7 +609,7 @@ Func_084_43AC:: ; address name
     ret
 
 ; for each 8-byte entry of Data_084_4461 matching hMapId and the screen position, with its story flag set, runs Func_084_43F2 (hFFC6 = its value) (E-0125)
-; 3 call sites from 3 routines (e.g. LoadMapScreen, RunOneTimeTreasure_Case04, SetFlagRedraw)
+; 3 call sites from 3 routines (e.g. LoadMapScreen, RunOneTimeTreasure_ApplyMapScreenFlagEvents, SetFlagRedraw)
 ; reads: hMapId, hMapScreenX, hMapScreenY
 ; writes: hTemp0
 ApplyMapScreenFlagEvents::
@@ -1470,7 +1470,7 @@ Jump_084_4A87::
     ret
 
 ; only called from RunFieldReturnPhase_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunFieldReturnPhase_Case01)
+; 1 call site from 1 routine (e.g. RunFieldReturnPhase_OpenFieldMenuOnA)
 ; reads: wMapType, hMapId, hMapScreenX, hMapScreenY, wSpriteSnapshot, wSnapshotByte3E, wSnapshotByte3D, wSnapshotByte3C, ...
 ; writes: hSpriteWindowClipMode, hTemp0, rSVBK
 RunFieldReturnPhase_Case01_Sub02::

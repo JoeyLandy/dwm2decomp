@@ -386,7 +386,7 @@ Data_021_7473:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $087473, $D5
 
 ; compressed sprite graphics of monster id $0A5 (Watabou) (MonsterSpriteTable; the debug viewer decompresses it to vTiles0 + $200)
-; address loaded by DebugStaffRoll_Update_Sub01_Case02_Case00
+; address loaded by DebugStaffRoll_Update_Sub01_Case02_DecompressToVRAM
 ; LZSS-compressed asset: 249 bytes expand to 256 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 MonsterSprite_Watabou:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_021_7548:: ; address name
