@@ -4692,7 +4692,38 @@ Data_0F0_6530:: ; address name
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 6
     db $B6, $C3, $C7, $C8, $C9, $CA, $CB, $EA, $EB, $EC, $ED, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
-    INCBIN "dwm2-cobi-us.gbc", $3C25A5, $56
+
+; E-0234 (C0: no reference found; $B2 followed by eight $B7 frame tiles, between TileRect_F0_6530 and the unreferenced frames that follow; kept as bytes).
+; record: bytes
+FrameTiles_F0_65A5::
+Data_0F0_65A5:: ; address name
+    db $B2, $B7, $B7, $B7, $B7, $B7, $B7, $B7, $B7 ; id 0
+
+; E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5).
+; record: 7 x 5 tiles, one row per line
+TileRect_F0_65AE::
+Data_0F0_65AE:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+
+; E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5).
+; record: 7 x 5 tiles, one row per line
+TileRect_F0_65D1::
+Data_0F0_65D1:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $70, $71, $72, $76, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $73, $74, $75, $76, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
+
+; E-0234 (C1: no reference found; the top frame row ($B0 $B1.. $B2) of a 7 x 5 frame whose other four rows are TileRect_F0_65FB).
+; record: 7 x 1 tiles, one row per line
+TileRect_F0_65F4::
+Data_0F0_65F4:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 7 x 4 tiles, one row per line

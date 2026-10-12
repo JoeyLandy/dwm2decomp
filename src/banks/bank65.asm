@@ -14,8 +14,11 @@ Data_065_4001:: ; address name
     dw $0018, $3F7F, $0218, $0000 ; entry 6
     dw $318C, $7FFF, $5294, $0000 ; entry 7
 
-Data_065_4041:: ; heuristic: key-world screen header; C0
-    db $06, $03, $08, $0B, $0D, $33, $2C, $00
+; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; record: screen header
+KeyWorldScreenHeader_65_4041::
+Data_065_4041:: ; address name
+    db $06, $03, $08, $0B, $0D, $33, $2C, $00 ; entry 0
 
 ; LZSS-compressed asset: 123 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_065_4049:: ; heuristic: key-world screen tile map; C0
@@ -169,10 +172,22 @@ Data_065_4C79:: ; address name
     dw $0171, $3FBF, $5294, $0000 ; entry 5
     dw $7DA0, $3FBF, $5294, $0000 ; entry 6
     dw $318C, $7FFF, $5294, $0000 ; entry 7
-    INCBIN "dwm2-cobi-us.gbc", $194CB9, $90
 
-Data_065_4D49:: ; heuristic: key-world screen header; C0
-    db $01, $04, $06, $09, $0B, $33, $51, $00
+; E-0222 (derived: an 8-byte key-world screen header (bytes 6-7 pick the AutomapBlocks entry, E-0146) found by tiling a gap)
+; record: screen header
+KeyWorldScreenHeader_65_4CB9::
+Data_065_4CB9:: ; address name
+    db $03, $04, $06, $09, $0B, $33, $50, $00 ; entry 0
+
+; LZSS-compressed asset: 136 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
+Data_065_4CC1:: ; heuristic: key-world screen map found by tiling a gap after another; C0
+    INCBIN "dwm2-cobi-us.gbc", $194CC1, $88
+
+; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; record: screen header
+KeyWorldScreenHeader_65_4D49::
+Data_065_4D49:: ; address name
+    db $01, $04, $06, $09, $0B, $33, $51, $00 ; entry 0
 
 ; LZSS-compressed asset: 146 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_065_4D51:: ; heuristic: key-world screen tile map; C0

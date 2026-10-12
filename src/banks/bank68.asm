@@ -1352,7 +1352,7 @@ Data_068_4DA5:: ; address name
     dfar KeyWorldScreenHeader_66_5CC8
     dfar KeyWorldScreenHeader_62_76AE
     dfar KeyWorldScreenHeader_64_46A7
-    dfar Data_063_44A8
+    dfar KeyWorldScreenHeader_63_44A8
     dfar KeyWorldScreenHeader_66_5CC8
     dfar KeyWorldScreenHeader_64_79CF
     dfar KeyWorldScreenHeader_66_4635
@@ -1376,7 +1376,7 @@ Data_068_4DA5:: ; address name
     dfar KeyWorldScreenHeader_64_61C5 ; id 4
     dfar KeyWorldScreenHeader_63_65BE
     dfar KeyWorldScreenHeader_64_6073
-    dfar Data_065_4D49
+    dfar KeyWorldScreenHeader_65_4D49
     dfar KeyWorldScreenHeader_63_468C
     dfar KeyWorldScreenHeader_64_4843
     dfar KeyWorldScreenHeader_63_472D
@@ -2155,7 +2155,7 @@ Data_068_56BD:: ; address name
     dfar Data_065_72E6
     dfar KeyWorldScreenHeader_66_5560 ; id 3
     dfar KeyWorldScreenHeader_65_5F42
-    dfar Data_063_5DED
+    dfar KeyWorldScreenHeader_63_5DED
     dfar KeyWorldScreenHeader_62_694C
     dfar KeyWorldScreenHeader_64_7848
     dfar KeyWorldScreenHeader_63_6DB3
@@ -3180,7 +3180,7 @@ Data_068_633E:: ; address name
     dfar KeyWorldScreenHeader_62_78C0
     dfar KeyWorldScreenHeader_62_406A
     dfar KeyWorldScreenHeader_64_46A7
-    dfar Data_065_4D49
+    dfar KeyWorldScreenHeader_65_4D49
     dfar KeyWorldScreenHeader_62_774A
     dfar KeyWorldScreenHeader_62_40EE
     dfar KeyWorldScreenHeader_62_41C9
@@ -3636,7 +3636,7 @@ Data_068_66A7:: ; address name
     dfar KeyWorldScreenHeader_65_6736
     dfar KeyWorldScreenHeader_65_5FE5
     dfar KeyWorldScreenHeader_62_5209
-    dfar Data_065_4041
+    dfar KeyWorldScreenHeader_65_4041
     dfar Data_062_494B
     dfar Data_062_49AA
     dfar Data_065_7290

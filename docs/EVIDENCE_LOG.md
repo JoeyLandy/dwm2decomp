@@ -2430,6 +2430,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0234 — Tactic offsets (bank $30), effect tile blocks (bank $3A), unreferenced frames, key-world screens after tables
+
+- Kind: OBSERVATION (reading; C1) and TOOL.
+- **TacticOffsetTable (30:$5384, 4 words) and TacticOffsets0-3 ($538C-$540C).** The code at Jump_030_5307 indexes the table with GetActorSlotTacticLow2 (wSlotTactic & 3) and adds two offsets to the block address:
+  - E is $10 when wSlotTrait >= $97, else 0;
+  - C is 0, 4, 8 or 12 from a threshold test on A.
+  - CopyFourBytesNegatedByActorSlotTactic then copies four bytes to hTemp0, negating each one when bit 6 of the tactic byte is set. Each block is eight 4-byte records. What the bytes mean is not read.
+- **EffectTileBlockTable (3A:$4D5C, 4 words) and EffectTileBlock0-3.** Two effect routines read the word at index 3 or wBattleTarget & 3 and pass it to CopyVRAMRectToBuffer with C = 6. Each block is 6 x 6 tile numbers; block 3 is all $C3.
+- **Unreferenced frames (0C:$7796, $77F1, $7809; F0:$65AE, $65D1, $65F4).** No reference was found.
+  - The bytes form window frames out of the same frame tiles as the referenced rectangles beside them: top row $B0 $B1.. $B2, sides $B6/$B7, bottom row $B3 $B4.. $B5.
+  - F0:$65F4 is the top row of a 7 x 5 frame; its other four rows are the referenced TileRect_F0_65FB.
+  - F0:$65A5 (9 bytes, $B2 then eight $B7) stays C0 bytes.
+- **Tool.** tile_keyworld_screen_gaps (E-0222) now also seeds a gap at the end of a declared table, in banks that already hold a key-world screen stream. This finds the header-plus-screen pairs that follow a key-world palette set (65:$4CB9, 63:$51B0). It added 2 streams (4,676 total).
+- Unidentified INCBIN went from 6,435 to 5,677 bytes.
+- Binary verification: build/run289 PASS, 0 differing bytes; tests OK.
+
 ### E-0233 — Debug menu names and message test table (bank $01)
 
 - Kind: OBSERVATION (reading; C1).

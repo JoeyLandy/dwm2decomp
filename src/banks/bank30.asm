@@ -3001,7 +3001,7 @@ Jump_030_52F2::
 
 Jump_030_5307::
     call GetActorSlotTacticLow2
-    ld hl, Data_030_5384
+    ld hl, TacticOffsetTable
     call ReadBattleWordFromArray_Bank30
     add hl, de
     add hl, bc
@@ -3094,9 +3094,66 @@ Func_030_5378:: ; address name
     call AddSignedEToByteAtHLClamped
     ret
 
-; address loaded by RunBattleResolveStep_43C4_Case01_Sub04
-Data_030_5384:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C1384, $88
+; E-0234 (C1: the code at Jump_030_5307 indexes it with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the four bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set).
+; record: block of eight 4-byte records for this tactic
+TacticOffsetTable::
+Data_030_5384:: ; address name
+    dw TacticOffsets0 ; id 0
+    dw TacticOffsets1 ; id 1
+    dw TacticOffsets2 ; id 2
+    dw TacticOffsets3 ; id 3
+
+; E-0234 (C1: block 0 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2).
+; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)
+TacticOffsets0::
+Data_030_538C:: ; address name
+    db $07, $FF, $00, $03 ; id 0
+    db $05, $FF, $00, $02 ; id 1
+    db $03, $FF, $00, $01 ; id 2
+    db $02, $FF, $00, $01 ; id 3
+    db $0A, $FF, $00, $04 ; id 4
+    db $07, $FF, $00, $03 ; id 5
+    db $05, $FF, $00, $02 ; id 6
+    db $05, $00, $00, $01 ; id 7
+
+; E-0234 (C1: block 1 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2).
+; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)
+TacticOffsets1::
+Data_030_53AC:: ; address name
+    db $00, $07, $FE, $03 ; id 0
+    db $00, $05, $FE, $02 ; id 1
+    db $00, $04, $FF, $01 ; id 2
+    db $00, $03, $FF, $01 ; id 3
+    db $00, $0A, $FD, $04 ; id 4
+    db $00, $07, $FE, $03 ; id 5
+    db $00, $05, $FF, $02 ; id 6
+    db $00, $05, $00, $01 ; id 7
+
+; E-0234 (C1: block 2 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2).
+; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)
+TacticOffsets2::
+Data_030_53CC:: ; address name
+    db $FE, $00, $07, $03 ; id 0
+    db $FE, $00, $05, $02 ; id 1
+    db $FF, $00, $04, $01 ; id 2
+    db $FF, $00, $03, $01 ; id 3
+    db $FE, $00, $0A, $04 ; id 4
+    db $FE, $00, $07, $03 ; id 5
+    db $FF, $00, $05, $02 ; id 6
+    db $00, $00, $05, $01 ; id 7
+
+; E-0234 (C1: block 3 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2).
+; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)
+TacticOffsets3::
+Data_030_53EC:: ; address name
+    db $00, $00, $00, $FF ; id 0
+    db $00, $00, $00, $FE ; id 1
+    db $00, $00, $00, $FE ; id 2
+    db $00, $00, $00, $FF ; id 3
+    db $00, $00, $00, $FF ; id 4
+    db $00, $00, $00, $FE ; id 5
+    db $00, $00, $00, $FE ; id 6
+    db $00, $00, $00, $FF ; id 7
 
 ; A = wDA43[wBattleActor] & 3 (E-0072)
 ; 14 call sites from 13 routines (e.g. ScoreActionsWithAIScoreTableA, AIRunNextChoice, AIPickRandomSkillOfKind3, AddWeightsForSkillD_Sub01, ...)

@@ -261,8 +261,11 @@ Data_062_508E:: ; address name
     dw $1415, $7FFF, $03E2, $0000 ; entry 6
     dw $318C, $7FFF, $5294, $0000 ; entry 7
 
-Data_062_50CE:: ; heuristic: key-world screen header; C0
-    db $03, $04, $05, $0C, $0E, $33, $35, $00
+; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; record: screen header
+KeyWorldScreenHeader_62_50CE::
+Data_062_50CE:: ; address name
+    db $03, $04, $05, $0C, $0E, $33, $35, $00 ; entry 0
 
 ; LZSS-compressed asset: 144 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_062_50D6:: ; heuristic: key-world screen tile map; C0
@@ -416,8 +419,11 @@ Data_062_5D2D:: ; address name
     dw $1415, $3FBF, $25F5, $0000 ; entry 6
     dw $318C, $7FFF, $5294, $0000 ; entry 7
 
-Data_062_5D6D:: ; heuristic: key-world screen header; C0
-    db $05, $02, $06, $09, $0D, $33, $59, $00
+; E-0222 (derived: the 8-byte header of the screen stream that follows)
+; record: screen header
+KeyWorldScreenHeader_62_5D6D::
+Data_062_5D6D:: ; address name
+    db $05, $02, $06, $09, $0D, $33, $59, $00 ; entry 0
 
 ; LZSS-compressed asset: 125 bytes expand to 360 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Data_062_5D75:: ; heuristic: key-world screen tile map; C0

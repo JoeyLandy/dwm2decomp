@@ -17446,6 +17446,282 @@
         }
       ],
       "note": "E-0233 (C1: the sub-lists that DebugMessageTestTable's pointer words name ($4E98, $4EAE, $4EB9, $4EC1, $4EC8, $4ECB, $4ECF); their format is not read)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7796",
+      "label": "TileRect_0C_7796",
+      "count": 7,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 13,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "13 x 7 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5)."
+    },
+    {
+      "bank": "0C",
+      "addr": "77F1",
+      "label": "TileRect_0C_77F1",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "8 x 3 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7809",
+      "label": "TileRect_0C_7809",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 8,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "8 x 5 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5)."
+    },
+    {
+      "bank": "F0",
+      "addr": "65A5",
+      "label": "FrameTiles_F0_65A5",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 9,
+          "line": true,
+          "name": "bytes"
+        }
+      ],
+      "note": "E-0234 (C0: no reference found; $B2 followed by eight $B7 frame tiles, between TileRect_F0_6530 and the unreferenced frames that follow; kept as bytes)."
+    },
+    {
+      "bank": "F0",
+      "addr": "65AE",
+      "label": "TileRect_F0_65AE",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "7 x 5 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5)."
+    },
+    {
+      "bank": "F0",
+      "addr": "65D1",
+      "label": "TileRect_F0_65D1",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "7 x 5 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5)."
+    },
+    {
+      "bank": "F0",
+      "addr": "65F4",
+      "label": "TileRect_F0_65F4",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "row"
+        }
+      ],
+      "record": "7 x 1 tiles, one row per line",
+      "note": "E-0234 (C1: no reference found; the top frame row ($B0 $B1.. $B2) of a 7 x 5 frame whose other four rows are TileRect_F0_65FB)."
+    },
+    {
+      "bank": "30",
+      "addr": "5384",
+      "label": "TacticOffsetTable",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "block of eight 4-byte records for this tactic",
+          "reason": "tactic offset block"
+        }
+      ],
+      "note": "E-0234 (C1: the code at Jump_030_5307 indexes it with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the four bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set)."
+    },
+    {
+      "bank": "30",
+      "addr": "538C",
+      "label": "TacticOffsets0",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)"
+        }
+      ],
+      "note": "E-0234 (C1: block 0 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2)."
+    },
+    {
+      "bank": "30",
+      "addr": "53AC",
+      "label": "TacticOffsets1",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)"
+        }
+      ],
+      "note": "E-0234 (C1: block 1 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2)."
+    },
+    {
+      "bank": "30",
+      "addr": "53CC",
+      "label": "TacticOffsets2",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)"
+        }
+      ],
+      "note": "E-0234 (C1: block 2 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2)."
+    },
+    {
+      "bank": "30",
+      "addr": "53EC",
+      "label": "TacticOffsets3",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is set)"
+        }
+      ],
+      "note": "E-0234 (C1: block 3 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7 otherwise, the record within each half chosen by the threshold test before Jump_030_52F2)."
+    },
+    {
+      "bank": "3A",
+      "addr": "4D5C",
+      "label": "EffectTileBlockTable",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "6 x 6 tile block",
+          "reason": "effect tile block"
+        }
+      ],
+      "note": "E-0234 (C1: two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it to CopyVRAMRectToBuffer with C = 6; four words point at the four 36-byte blocks that follow)."
+    },
+    {
+      "bank": "3A",
+      "addr": "4D64",
+      "label": "EffectTileBlock0",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row of tile numbers"
+        }
+      ],
+      "note": "E-0234 (C1: block 0 of EffectTileBlockTable, 6 x 6 tile numbers)."
+    },
+    {
+      "bank": "3A",
+      "addr": "4D88",
+      "label": "EffectTileBlock1",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row of tile numbers"
+        }
+      ],
+      "note": "E-0234 (C1: block 1 of EffectTileBlockTable, 6 x 6 tile numbers)."
+    },
+    {
+      "bank": "3A",
+      "addr": "4DAC",
+      "label": "EffectTileBlock2",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row of tile numbers"
+        }
+      ],
+      "note": "E-0234 (C1: block 2 of EffectTileBlockTable, 6 x 6 tile numbers)."
+    },
+    {
+      "bank": "3A",
+      "addr": "4DD0",
+      "label": "EffectTileBlock3",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 6,
+          "line": true,
+          "name": "row of tile numbers"
+        }
+      ],
+      "note": "E-0234 (C1: block 3 of EffectTileBlockTable, 6 x 6 tile numbers, all $C3)."
     }
   ]
 }

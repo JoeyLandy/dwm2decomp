@@ -1754,7 +1754,7 @@ Jump_03A_4C9C:: ; address name
     ld e, l
     ld d, h
     ld a, $03
-    ld hl, Data_03A_4D5C
+    ld hl, EffectTileBlockTable
     call ReadWordTableEntry_Bank3A
     ld c, $06
     call CopyVRAMRectToBuffer
@@ -1780,7 +1780,7 @@ Jump_03A_4CC2:: ; address name
     ld d, h
     ld a, [wBattleTarget]
     and a, $03
-    ld hl, Data_03A_4D5C
+    ld hl, EffectTileBlockTable
     call ReadWordTableEntry_Bank3A
     ld c, $06
     call CopyVRAMRectToBuffer
@@ -1888,10 +1888,58 @@ Func_03A_4D47:: ; address name
 Data_03A_4D52:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E7, $00, $E4, $00, $EA, $00, $E1, $00, $ED, $00
 
-; address loaded by RunEffectRoutineEffectEvery5Frames_Table2_Case00, RunEffectRoutineEffectEvery5Frames_Table2_Case01, Func_03A_50D9_Case00, Func_03A_50D9_Case01
-Data_03A_4D5C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0E8D5C, $74
-    ds $24, $C3
+; E-0234 (C1: two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it to CopyVRAMRectToBuffer with C = 6; four words point at the four 36-byte blocks that follow).
+; record: 6 x 6 tile block
+EffectTileBlockTable::
+Data_03A_4D5C:: ; address name
+    dw EffectTileBlock0 ; id 0
+    dw EffectTileBlock1 ; id 1
+    dw EffectTileBlock2 ; id 2
+    dw EffectTileBlock3 ; id 3
+
+; E-0234 (C1: block 0 of EffectTileBlockTable, 6 x 6 tile numbers).
+; record: row of tile numbers
+EffectTileBlock0::
+Data_03A_4D64:: ; address name
+    db $14, $15, $16, $17, $18, $19 ; id 0
+    db $1A, $1B, $1C, $1D, $1E, $1F ; id 1
+    db $20, $21, $22, $23, $24, $25 ; id 2
+    db $26, $27, $28, $29, $2A, $2B ; id 3
+    db $2C, $2D, $2E, $2F, $30, $31 ; id 4
+    db $32, $33, $34, $35, $36, $37 ; id 5
+
+; E-0234 (C1: block 1 of EffectTileBlockTable, 6 x 6 tile numbers).
+; record: row of tile numbers
+EffectTileBlock1::
+Data_03A_4D88:: ; address name
+    db $38, $39, $3A, $3B, $3C, $3D ; id 0
+    db $3E, $3F, $40, $41, $42, $43 ; id 1
+    db $44, $45, $46, $47, $48, $49 ; id 2
+    db $4A, $4B, $4C, $4D, $4E, $4F ; id 3
+    db $50, $51, $52, $53, $54, $55 ; id 4
+    db $56, $57, $58, $59, $5A, $5B ; id 5
+
+; E-0234 (C1: block 2 of EffectTileBlockTable, 6 x 6 tile numbers).
+; record: row of tile numbers
+EffectTileBlock2::
+Data_03A_4DAC:: ; address name
+    db $5C, $5D, $5E, $5F, $60, $61 ; id 0
+    db $62, $63, $64, $65, $66, $67 ; id 1
+    db $68, $69, $6A, $6B, $6C, $6D ; id 2
+    db $6E, $6F, $70, $71, $72, $73 ; id 3
+    db $74, $75, $76, $77, $78, $79 ; id 4
+    db $7A, $7B, $7C, $7D, $7E, $7F ; id 5
+
+; E-0234 (C1: block 3 of EffectTileBlockTable, 6 x 6 tile numbers, all $C3).
+; record: row of tile numbers
+EffectTileBlock3::
+Data_03A_4DD0:: ; address name
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 0
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 1
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 2
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 3
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 4
+    db $C3, $C3, $C3, $C3, $C3, $C3 ; id 5
 
 ; entry 3 of the `rst $00` table in RunEffectRoutineEffectEvery5Frames
 ; no direct call (reached through a table, a jump or a vector)
@@ -2842,7 +2890,7 @@ Jump_03A_5215:: ; address name
     ld e, l
     ld d, h
     ld a, $03
-    ld hl, Data_03A_4D5C
+    ld hl, EffectTileBlockTable
     call ReadWordTableEntry_Bank3A
     ld c, $06
     call CopyVRAMRectToBuffer
@@ -2868,7 +2916,7 @@ Jump_03A_523B:: ; address name
     ld d, h
     ld a, [wBattleActor]
     and a, $03
-    ld hl, Data_03A_4D5C
+    ld hl, EffectTileBlockTable
     call ReadWordTableEntry_Bank3A
     ld c, $06
     call CopyVRAMRectToBuffer

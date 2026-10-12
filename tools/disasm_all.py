@@ -2099,7 +2099,8 @@ class Rom:
                 out.append(f"    {macro} ${op[3]:04X}, ${op[4]:02X}, ${op[5]:02X}")
 
     def tile_keyworld_screen_gaps(self) -> None:
-        """E-0222: after a key-world screen map stream, the bytes up to the next known layout that
+        """E-0222: after a key-world screen map stream (or a declared table in a bank holding one,
+        E-0234), the bytes up to the next known layout that
         tile exactly as further 360-byte screen streams, each optionally behind an 8-byte screen
         header (the E-0146 layout), are those screens; no chunk group reaches them."""
         from lzss_gfx import decompress as lz
@@ -2114,10 +2115,13 @@ class Rom:
             return used if len(out) == 360 and not ev["unwritten_reads"] and a - 0x4000 + used <= BANK else None
 
         added = gaps = 0
-        for (b, a), (size, used) in sorted(self.streams.items()):
-            if size != 360 or "screen" not in self.dreason.get((b, a), ""):
-                continue
-            lo = a + used
+        seeds = set()
+        for (b, a), (size, used) in self.streams.items():
+            if size == 360 and "screen" in self.dreason.get((b, a), ""):
+                seeds.add((b, a + used))
+        # a declared table (e.g. a key-world palette set) can also sit just before such screens
+        seeds |= {(bb, e) for bb, s, e in spans if any(b == bb for b, _ in seeds)}
+        for b, lo in sorted(seeds):
             marks = [x for x in self.dlabels[b] if x >= lo] + [x for (bb, x) in self.streams if bb == b and x >= lo] + \
                     [s for bb, s, e in spans if bb == b and s >= lo] + [0x8000]
             hi = min(marks)

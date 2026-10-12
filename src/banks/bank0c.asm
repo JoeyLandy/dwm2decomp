@@ -8269,7 +8269,36 @@ Data_00C_777E:: ; address name
     db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
-    INCBIN "dwm2-cobi-us.gbc", $033796, $9B
+
+; E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5).
+; record: 13 x 7 tiles, one row per line
+TileRect_0C_7796::
+Data_00C_7796:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $F0, $F1, $F2, $F3, $F4, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $C3, $A4, $A5, $A6, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 3
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 4
+    db $B6, $C3, $F5, $F6, $F7, $F8, $ED, $C3, $C3, $C3, $C3, $C3, $B7 ; id 5
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
+
+; E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5).
+; record: 8 x 3 tiles, one row per line
+TileRect_0C_77F1::
+Data_00C_77F1:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $E1, $C3, $E2, $C3, $E3, $B7 ; id 1
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
+
+; E-0234 (C1: no reference found; the bytes form a window frame with the frame tiles used by the referenced rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5).
+; record: 8 x 5 tiles, one row per line
+TileRect_0C_7809::
+Data_00C_7809:: ; address name
+    db $B0, $B1, $B1, $B1, $B1, $B1, $B1, $B2 ; id 0
+    db $B6, $C3, $AC, $C3, $AB, $C3, $AA, $B7 ; id 1
+    db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; id 2
+    db $B6, $C3, $A9, $C3, $A8, $C3, $A7, $B7 ; id 3
+    db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
 ; E-0161, E-0177, E-0187 (derived: a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as wArg1/wArg2 with wArg3 = width and wArg4 = rows)
 ; record: 6 x 5 tiles, one row per line
