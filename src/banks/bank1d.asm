@@ -2366,7 +2366,39 @@ Jump_01D_5168::
     inc a
     ld [wScreenStep], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $075186, $D3
+
+; E-0227 (C1: two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found, directly or by a computed base).
+; record: 95 numbers, then $FF
+OrderList_1D_5186::
+Data_01D_5186:: ; address name
+    db $21, $28, $29, $2A, $2E, $1F, $20, $2B, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $19, $1A, $1B, $1C, $1D, $1E, $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10, $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $22, $23, $24, $25, $26, $27, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D ; entry 0
+    db $FF ; end
+
+; E-0227 (C1: two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found, directly or by a computed base).
+; record: 95 numbers, then $FF
+OrderList_1D_51E6::
+Data_01D_51E6:: ; address name
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C, $22, $23, $24, $25, $26, $27, $19, $1A, $1B, $1C, $1D, $1E, $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10, $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61, $62, $21, $28, $29, $2A, $2E, $1F, $20, $2B, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D ; entry 0
+    db $FF ; end
+
+; writes $80 zero bytes from $9700 with interrupts off around each VRAM wait (Func_000_120A); no caller found (E-0227)
+; no direct call (reached through a table, a jump or a vector)
+ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
+Func_01D_5246:: ; address name
+    ld hl, vTiles2 + $700
+    ld bc, $0080
+
+Jump_01D_524C::
+    di
+    call WaitForVRAMAccess
+    xor a, a
+    ld [hl+], a
+    ei
+    dec bc
+    ld a, b
+    or a, c
+    jr nz, Jump_01D_524C
+    ret
 
 ; only called from ScriptCommandE5_Run_Case03_Case0F (E-0047)
 ; 1 call site from 1 routine (e.g. ScriptCommandE5_Run_Case03_Case0F)

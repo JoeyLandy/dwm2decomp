@@ -3098,7 +3098,7 @@ Jump_000_1205::
     ret
 
 ; loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set
-; 251 call sites from 145 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes, Func_000_2950_Case0F, CopyBBytesToVRAMFromDE, ...)
+; 252 call sites from 146 routines (e.g. VBlankHandler_Sub01, UploadBGPalettes, Func_000_2950_Case0F, CopyBBytesToVRAMFromDE, ...)
 ; reads: rSTAT
 WaitForVRAMAccess::
 Func_000_120A:: ; address name

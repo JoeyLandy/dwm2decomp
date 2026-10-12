@@ -14361,6 +14361,38 @@
       ],
       "record": "99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F",
       "note": "E-0226 (C1: ScriptCommandE5_Run_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other wScreenState))."
+    },
+    {
+      "bank": "1D",
+      "addr": "5186",
+      "label": "OrderList_1D_5186",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 95,
+          "name": "95 numbers ($01-$62), each once"
+        }
+      ],
+      "record": "95 numbers, then $FF",
+      "note": "E-0227 (C1: two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found, directly or by a computed base)."
+    },
+    {
+      "bank": "1D",
+      "addr": "51E6",
+      "label": "OrderList_1D_51E6",
+      "count": 1,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 95,
+          "name": "95 numbers ($01-$62), each once"
+        }
+      ],
+      "record": "95 numbers, then $FF",
+      "note": "E-0227 (C1: two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found, directly or by a computed base)."
     }
   ]
 }

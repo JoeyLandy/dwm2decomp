@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0227 — Two order lists and an unreferenced VRAM clear (bank $1D)
+
+- Kind: OBSERVATION (reading; C1).
+- **OrderList_1D_5186 / _51E6.** Two $FF-terminated lists of 95 numbers each, holding $01-$62 (with gaps) in two different orders. No reader was found, directly or through a computed base.
+- **ClearVRAM9700Block_Unreferenced ($5246).** It writes $80 zero bytes from vTiles2 + $700, waiting for VRAM around each write. No caller was found; it is a configured code entry.
+  - A first attempt seeded $5258, inside this routine; the entry was corrected to $5246, where the second list's $FF ends.
+- Binary verification: build/run277 PASS, 0 differing bytes.
+
 ### E-0226 — "ClearRect" wrappers copy from DE; bank-$1D tile runs
 
 - Kind: OBSERVATION (reading; C1) and a correction to E-0121 and E-0124.

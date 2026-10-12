@@ -6496,5 +6496,6 @@
   "39:6BB6": {"name": "TargetByAllyAGL", "note": "per-action target routine: DE = GetBattleAGL_Bank39, then the shared stat comparison at $6C30 (E-0219)", "evidence": "reading (E-0219)"},
   "39:6BBC": {"name": "TargetAllyWithStatusBit10", "note": "per-action target routine: scans the actor's side for wBattleStatus (+9 * slot) bit mask $10 (shared code at $6BE3) (E-0219)", "evidence": "reading (E-0219)"},
   "39:6BC9": {"name": "TargetAllyWithStatusBit40", "note": "as TargetAllyWithStatusBit10 with mask $40 (E-0219)", "evidence": "reading (E-0219)"},
-  "39:6BD6": {"name": "TargetAllyWithStatusBit20", "note": "as TargetAllyWithStatusBit10 with mask $20 (E-0219)", "evidence": "reading (E-0219)"}
+  "39:6BD6": {"name": "TargetAllyWithStatusBit20", "note": "as TargetAllyWithStatusBit10 with mask $20 (E-0219)", "evidence": "reading (E-0219)"},
+  "1D:5246": {"name": "ClearVRAM9700Block_Unreferenced", "note": "writes $80 zero bytes from $9700 with interrupts off around each VRAM wait (Func_000_120A); no caller found (E-0227)", "evidence": "reading (E-0227)"}
 }
