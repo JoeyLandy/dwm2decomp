@@ -2430,6 +2430,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0224 — Name entry and naming screen tile lists (bank $14)
+
+- Kind: OBSERVATION (reading; C1).
+- **NameEntryKeyPositions ($61E2).** 5 rows of 17 position words, indexed by wNameEntryCursorY and wNameEntryCursorX.
+- **Copy lists.** RunNameEntryStateWhenNotFading_Shared05 and ScriptCommandEB_Run_Shared04 copy one 16-byte bank-$1F tile per entry of a VRAM destination list, until $FFFF, from a parallel source list. The lists here:
+  - NameEntryTileDestList ($6D56, 79 entries; ScriptCommandEC_Run_Case01 also starts from entry 23 at $6D84);
+  - NameEntryTileDestListEmpty ($6DF6): only $FFFF, so the two cases that pass it copy nothing;
+  - NameEntryTileSrcListA ($6DF8) and NameEntryTileSrcListB ($6E98, then 16 bytes of $FF);
+  - NamingScreenTileDestListA/B ($5A28, $5A60).
+- **Result.** Bank $14 has no INCBIN left.
+- Binary verification: build/run273 PASS, 0 differing bytes; tests OK.
+
 ### E-0223 — Species pair-check lists (bank $81)
 
 - Kind: OBSERVATION (reading; C1).

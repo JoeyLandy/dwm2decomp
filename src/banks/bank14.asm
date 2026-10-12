@@ -52,7 +52,7 @@ Jump_014_403F:: ; address name
     ld [wArg1], a
     xor a, a
     ld [wArg2], a
-    ld de, Data_014_6D84
+    ld de, $6D84
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -215,7 +215,7 @@ Jump_014_4137:: ; address name
 ; points at: wScreenStep
 ScriptCommandEB_Run_Case01_Case01::
 Jump_014_413E:: ; address name
-    ld hl, Data_014_5A28
+    ld hl, NamingScreenTileDestListA
     ld de, Data_014_5A84
     call ScriptCommandEB_Run_Shared04
     cp a, $FF
@@ -3884,9 +3884,22 @@ Jump_014_5A15::
     xor a, a
     ret
 
-; address loaded by ScriptCommandEB_Run_Case01_Case01
-Data_014_5A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $051A28, $5C
+; E-0224 (C1: ScriptCommandEB_Run_Case01_Case01 passes $5A28 with sources Data_014_5A84 to ScriptCommandEB_Run_Shared04, which copies one tile per destination until $FFFF).
+; record: 27 VRAM destinations, then $FFFF
+NamingScreenTileDestListA::
+Data_014_5A28:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2A0, vTiles1 + $2B0 ; entry 0
+    dw vTiles1 + $2C0, vTiles1 + $2D0, vTiles1 + $2E0, vTiles1 + $2F0, vTiles1 + $6E0, vTiles1 + $6F0, vTiles1 + $700, vTiles1 + $710
+    dw vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750, vTiles1 + $760, vTiles1 + $770, vTiles1 + $780, vTiles1 + $790
+    dw vTiles1 + $7A0, vTiles1 + $7B0, vTiles1 + $7C0, vTiles1 + $7D0
+
+; E-0224 (C1: the second $FFFF-terminated destination list, right after the first; it ends at the source list Data_014_5A84).
+; record: 17 VRAM destinations, then $FFFF
+NamingScreenTileDestListB::
+Data_014_5A60:: ; address name
+    dw vTiles1 + $7E0, vTiles1 + $7F0, vTiles1 + $6B0, rIE, vTiles1 + $400, vTiles1 + $410, vTiles1 + $420, vTiles1 + $470 ; entry 0
+    dw vTiles1 + $480, vTiles1 + $490, vTiles1 + $4A0, vTiles1 + $4B0, vTiles1 + $3F0, vTiles1 + $6A0, vTiles1 + $6B0, vTiles1 + $6C0
+    dw vTiles1 + $6D0, rIE
 
 ; address loaded by ScriptCommandEB_Run_Case01_Case01
 Data_014_5A84:: ; heuristic: pointer load in the same bank (bank assumed); C0
@@ -4094,8 +4107,8 @@ Jump_014_5CD5::
 ; writes: wNameEntrySubState, wArg5
 RunNameEntryStateWhenNotFading_Case00_Case01::
 Jump_014_5D72:: ; address name
-    ld hl, Data_014_6D56
-    ld de, Data_014_6DF8
+    ld hl, NameEntryTileDestList
+    ld de, NameEntryTileSrcListA
     call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_5D86
@@ -4143,7 +4156,7 @@ Jump_014_5D8B:: ; address name
     add a, $CC
     ld [hl], a
     ei
-    ld hl, Data_014_6F3E
+    ld hl, $6F3E
     ld de, vTiles2 + $550
     call CopyTileBytesToVRAM_Bank14
     ld a, [wNameEntrySubState]
@@ -4762,7 +4775,7 @@ Func_014_618D:: ; address name
 
 Jump_014_618F::
     ld a, [wNameEntryCursorY]
-    ld hl, Data_014_61E2
+    ld hl, NameEntryKeyPositions
     cp a, $00
     jr z, Jump_014_61A1
     ld e, $22
@@ -4818,9 +4831,15 @@ Jump_014_61D2::
     ei
     ret
 
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case00_Sub02
-Data_014_61E2:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0521E2, $AA
+; E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case00_Sub02 reads row $22 * wNameEntryCursorY from $61E2, then the word for wNameEntryCursorX; 5 rows).
+; record: 17 position words (one per key column) for a keyboard row
+NameEntryKeyPositions::
+Data_014_61E2:: ; address name
+    dw $0101, $0102, $0103, $0104, $0105, $0106, $0107, $0108, $0109, $010A, $010B, $010C, $010D, $010F, $0110, $0111, $0112 ; id 0
+    dw $0141, $0142, $0143, $0144, $0145, $0146, $0147, $0148, $0149, $014A, $014B, $014C, $014D, $014F, $0150, $0151, $0152 ; id 1
+    dw $0181, $0182, $0183, $0184, $0185, $0186, $0187, $0188, $0189, $018A, $018B, $018C, $018D, $018F, $0190, $0191, $0192 ; id 2
+    dw $01C1, $01C2, $01C3, $01C4, $01C5, $01C6, $01C7, $01C8, $01C9, $01CA, $01CB, $01CC, $01CD, $01CF, $01D0, $01D1, $01D2 ; id 3
+    dw $0201, $0202, $0203, $0204, $0205, $0206, $0207, $0208, $0209, $020A, $020B, $020C, $020D, $020F, $0210, $0211, $0212 ; id 4
 
 ; entry 1 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -5197,8 +5216,8 @@ Jump_014_6476:: ; address name
 ; writes: wNameEntrySubState, wArg5
 RunNameEntryStateWhenNotFading_Case01_Case04::
 Jump_014_6488:: ; address name
-    ld hl, Data_014_6DF6
-    ld de, Data_014_6E98
+    ld hl, NameEntryTileDestListEmpty
+    ld de, NameEntryTileSrcListB
     call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_64A9
@@ -5221,8 +5240,8 @@ Jump_014_64A9::
 ; writes: wNameEntrySubState, wArg5
 RunNameEntryStateWhenNotFading_Case01_Case09::
 Jump_014_64AE:: ; address name
-    ld hl, Data_014_6DF6
-    ld de, Data_014_6DF8
+    ld hl, NameEntryTileDestListEmpty
+    ld de, NameEntryTileSrcListA
     call RunNameEntryStateWhenNotFading_Shared05
     cp a, $FF
     jr nz, Jump_014_64BF
@@ -6778,31 +6797,58 @@ Jump_014_6D42::
 Jump_014_6D54::
     jr Jump_014_6CF4
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case01
-Data_014_6D56:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $20, $90, $30, $90, $40, $90, $50, $90, $60, $90, $70, $90, $80, $90, $90, $90
-    db $A0, $90, $B0, $90, $C0, $90, $D0, $90, $E0, $90, $F0, $90, $00, $91, $10, $91
-    db $20, $91, $30, $91, $40, $91, $50, $91, $60, $91, $70, $91, $80, $91
+; E-0224 (C1: RunNameEntryStateWhenNotFading_Shared05 copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; ScriptCommandEC_Run_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall).
+; record: 79 VRAM destinations, then $FFFF
+NameEntryTileDestList::
+Data_014_6D56:: ; address name
+    dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
+    dw vTiles2 + $A0, vTiles2 + $B0, vTiles2 + $C0, vTiles2 + $D0, vTiles2 + $E0, vTiles2 + $F0, vTiles2 + $100, vTiles2 + $110
+    dw vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150, vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190
+    dw vTiles2 + $1A0, vTiles2 + $1B0, vTiles2 + $1C0, vTiles2 + $1D0, vTiles2 + $1E0, vTiles2 + $1F0, vTiles2 + $200, vTiles2 + $210
+    dw vTiles2 + $220, vTiles2 + $230, vTiles2 + $240, vTiles2 + $250, vTiles2 + $260, vTiles2 + $270, vTiles2 + $280, vTiles2 + $290
+    dw vTiles2 + $2A0, vTiles2 + $2B0, vTiles2 + $2C0, vTiles2 + $2D0, vTiles2 + $2E0, vTiles2 + $2F0, vTiles2 + $300, vTiles2 + $310
+    dw vTiles2 + $320, vTiles2 + $330, vTiles2 + $340, vTiles2 + $350, vTiles2 + $360, vTiles2 + $370, vTiles2 + $380, vTiles2 + $390
+    dw vTiles2 + $3A0, vTiles2 + $3B0, vTiles2 + $3C0, vTiles2 + $3D0, vTiles2 + $3E0, vTiles2 + $3F0, vTiles2 + $400, vTiles2 + $410
+    dw vTiles2 + $420, vTiles2 + $430, vTiles2 + $440, vTiles2 + $450, vTiles2 + $460, vTiles2 + $470, vTiles2 + $480, vTiles2 + $490
+    dw vTiles2 + $4A0, vTiles2 + $4B0, vTiles2 + $500, vTiles2 + $510, vTiles2 + $520, vTiles2 + $530, vTiles2 + $540, rIE
 
-; address loaded by ScriptCommandEC_Run_Case01
-Data_014_6D84:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $052D84, $72
+; E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case04 and _Case09 pass this list to RunNameEntryStateWhenNotFading_Shared05, which therefore copies nothing).
+; record: $FFFF: no destinations
+NameEntryTileDestListEmpty::
+Data_014_6DF6:: ; address name
+    dw $FFFF ; entry 0
 
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04, RunNameEntryStateWhenNotFading_Case01_Case09
-Data_014_6DF6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $FF
+; E-0224 (C1: the source list paired with NameEntryTileDestList (Case00_Case01) and with the empty list (Case01_Case09)).
+; record: 80 bank-$1F tile sources (the last is $FFFF)
+NameEntryTileSrcListA::
+Data_014_6DF8:: ; address name
+    dw $40B0, $40C0, $40D0, $40E0, $40F0, $4100, $4110, $4120 ; entry 0
+    dw $4130, $4140, $4150, $4160, $4170, $4010, $4020, $4030
+    dw $4040, $4180, $4190, $41A0, $41B0, $41C0, $41D0, $41E0
+    dw $41F0, $4200, $4210, $4220, $4230, $4240, $4050, $4060
+    dw $4070, $4080, $4250, $4260, $4270, $4280, $4290, $42A0
+    dw $42B0, $42C0, $42D0, $42E0, $42F0, $4300, $4310, $4090
+    dw $40A0, $49A0, $4990, $4320, $4330, $4340, $4350, $4360
+    dw $4370, $4380, $4390, $43A0, $43B0, $43C0, $43D0, $43E0
+    dw $40C0, $40B0, $40D0, $4150, $4960, $4AC0, $4B60, $4950
+    dw $4940, $4B00, $4A00, $4A00, $4A00, $4A00, $4A00, $FFFF
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case01, RunNameEntryStateWhenNotFading_Case01_Case09
-Data_014_6DF8:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $052DF8, $A0
-
-; address loaded by RunNameEntryStateWhenNotFading_Case01_Case04
-Data_014_6E98:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $052E98, $A6
-
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case02
-Data_014_6F3E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FF, $00, $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00
+; E-0224 (C1: passed with the empty destination list by Case01_Case04; 82 words and $FFFF, then 16 bytes of $FF before NameEntryKeyboard).
+; record: 82 bank-$1F tile sources, then $FFFF
+NameEntryTileSrcListB::
+Data_014_6E98:: ; address name
+    dw $4570, $4590, $45B0, $45D0, $45F0, $4610, $4620, $4630 ; entry 0
+    dw $4640, $4650, $4660, $4670, $4680, $4690, $46A0, $46B0
+    dw $46C0, $46D0, $46F0, $4700, $4710, $4720, $4730, $4740
+    dw $4750, $4020, $4030, $4040, $4050, $4060, $4760, $4770
+    dw $4780, $4790, $47A0, $47B0, $47C0, $47D0, $47E0, $47F0
+    dw $4800, $4820, $4840, $4860, $4870, $4880, $4890, $48A0
+    dw $48B0, $48C0, $48D0, $46E0, $49D0, $4070, $4080, $4090
+    dw $40A0, $4010, $4580, $45A0, $45C0, $45E0, $4600, $4810
+    dw $4830, $4850, $48E0, $48F0, $4400, $44F0, $42A0, $43A0
+    dw $4480, $4510, $4290, $4540, $4510, $4A00, $4A00, $4A00
+    dw $4A00, $4A00, $FFFF
+    db $FF, $00, $FF, $FF, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; end
 
 ; E-0216 (C1: RunNameEntryStateWhenNotFading_Case01_Case02 reads the byte at $6F4E + 17 * wNameEntryCursorY + wNameEntryCursorX as the chosen character; rows 0-3 are A-M 0-3, N-Z 4-7, a-m 8 9 ! ?, n-z; 10 rows, then 11 bytes not placed in a row).
 ; record: one row of 17 character codes (charmap.inc; codes without a charmap entry print as bytes)

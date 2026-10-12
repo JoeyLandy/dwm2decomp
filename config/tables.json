@@ -14181,6 +14181,116 @@
         "record": "groups of kind, count, key word, count words; $FF ends"
       },
       "note": "E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CallFunc4001InBank81KeepRegs_Sub01_Sub01 over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453)."
+    },
+    {
+      "bank": "14",
+      "addr": "61E2",
+      "label": "NameEntryKeyPositions",
+      "count": 5,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 34,
+          "per_line": 17,
+          "name": "17 position words for one keyboard row"
+        }
+      ],
+      "record": "17 position words (one per key column) for a keyboard row",
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case00_Sub02 reads row $22 * wNameEntryCursorY from $61E2, then the word for wNameEntryCursorX; 5 rows)."
+    },
+    {
+      "bank": "14",
+      "addr": "6D56",
+      "label": "NameEntryTileDestList",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 160,
+          "per_line": 8,
+          "ram": true,
+          "name": "79 VRAM destinations, then $FFFF"
+        }
+      ],
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Shared05 copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; ScriptCommandEC_Run_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall)."
+    },
+    {
+      "bank": "14",
+      "addr": "6DF6",
+      "label": "NameEntryTileDestListEmpty",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "name": "$FFFF: no destinations"
+        }
+      ],
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case04 and _Case09 pass this list to RunNameEntryStateWhenNotFading_Shared05, which therefore copies nothing)."
+    },
+    {
+      "bank": "14",
+      "addr": "6DF8",
+      "label": "NameEntryTileSrcListA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 160,
+          "per_line": 8,
+          "name": "80 bank-$1F tile sources (the last is $FFFF)"
+        }
+      ],
+      "note": "E-0224 (C1: the source list paired with NameEntryTileDestList (Case00_Case01) and with the empty list (Case01_Case09))."
+    },
+    {
+      "bank": "14",
+      "addr": "6E98",
+      "label": "NameEntryTileSrcListB",
+      "count": 1,
+      "tail": 16,
+      "fields": [
+        {
+          "type": "words",
+          "size": 166,
+          "per_line": 8,
+          "name": "82 bank-$1F tile sources, then $FFFF"
+        }
+      ],
+      "note": "E-0224 (C1: passed with the empty destination list by Case01_Case04; 82 words and $FFFF, then 16 bytes of $FF before NameEntryKeyboard)."
+    },
+    {
+      "bank": "14",
+      "addr": "5A28",
+      "label": "NamingScreenTileDestListA",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 56,
+          "per_line": 8,
+          "ram": true,
+          "name": "27 VRAM destinations, then $FFFF"
+        }
+      ],
+      "note": "E-0224 (C1: ScriptCommandEB_Run_Case01_Case01 passes $5A28 with sources Data_014_5A84 to ScriptCommandEB_Run_Shared04, which copies one tile per destination until $FFFF)."
+    },
+    {
+      "bank": "14",
+      "addr": "5A60",
+      "label": "NamingScreenTileDestListB",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 36,
+          "per_line": 8,
+          "ram": true,
+          "name": "17 VRAM destinations, then $FFFF"
+        }
+      ],
+      "note": "E-0224 (C1: the second $FFFF-terminated destination list, right after the first; it ends at the source list Data_014_5A84)."
     }
   ]
 }
