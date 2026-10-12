@@ -8734,7 +8734,7 @@ Script_0C_7BC1:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7BD1, Script_0C_7BCB
 Script_0C_7BCB:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8014 ; 'Tara Big brother! GreatLog will be'
+    script_message $8014 ; 'I hope you'll find many medals!'
     script_command $EE
     script_end
 Script_0C_7BD1:: ; heuristic: event script entry or jump target; C0
@@ -8746,7 +8746,7 @@ Script_0C_7BD4:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0C_7BE4, Script_0C_7BE1, Script_0C_7BDB
 Script_0C_7BDB:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8014 ; 'Tara Big brother! GreatLog will be'
+    script_message $8014 ; 'I hope you'll find many medals!'
     script_command $EE
     script_end
 Script_0C_7BE1:: ; heuristic: event script entry or jump target; C0
@@ -8806,7 +8806,7 @@ Script_0C_7C3D:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0C_7BF0
 Script_0C_7C41:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8024 ; '0 checked the bookshelf. Behavior of'
+    script_message $8024 ; 'At minimum, you must have three'
     script_command $EE
     script_end
     ds $3B9, $00

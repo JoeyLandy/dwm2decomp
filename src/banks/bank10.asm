@@ -3062,25 +3062,25 @@ Func_010_4F4D:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_4F54:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_message $0030 ; 'If some monster masters keep their'
+    script_message $0030 ; 'Heh, so these are the newcomers?'
     script_face $81, 1
-    script_message $0031 ; 'Heh, so these are the newcomers?'
+    script_message $0031 ; 'C'mon, Warubou!'
     script_command $1B
     script_sound $FF
     script_set_flag $0015
     script_end
 Script_4F66:: ; heuristic: event script entry or jump target; C0
-    script_message $404C ; 'Warubou It's a dead end, warooh!'
+    script_message $404C ; 'Have you heard about Magic Keys?'
     script_skip_if_no Script_4F6F
-    script_message $804E ; 'Wow, you kids sure learn quick!'
+    script_message $804E ; 'You need Magic Keys to open'
     script_end
 Script_4F6F:: ; heuristic: event script entry or jump target; C0
-    script_message $804D ; 'Have you heard about Magic Keys?'
+    script_message $804D ; 'Wow, you kids sure learn quick!'
     script_end
 Script_4F73:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_command $12
-    script_message $0033 ; 'Hello, there! You must be the'
+    script_message $0033 ; 'Oh It's all spinning around That'
     script_sound $FF
     script_end
 Script_4F7C:: ; heuristic: event script entry or jump target; C0
@@ -3091,14 +3091,14 @@ Script_4F7C:: ; heuristic: event script entry or jump target; C0
     script_sound $FF
     script_end
 Script_4F88:: ; heuristic: event script entry or jump target; C0
-    script_message $0045 ; '0 checked the peculiar door. It'
+    script_message $0045 ; 'You must be the farm kids.'
     script_command $11
     script_end
 Script_4F8D:: ; heuristic: event script entry or jump target; C0
     script_slide_y $82
-    script_message $0050 ; 'Warubou Wa-hey! Give me something! Then,'
+    script_message $0050 ; 'Warubou Wha ? I smell something!'
     script_command $14
-    script_message $0051 ; 'Warubou Wha ? I smell something!'
+    script_message $0051 ; 'Warubou What is this? Food? Perfect!'
     script_set_flag $000A
     script_command $15
     script_sound $FF
@@ -3106,80 +3106,80 @@ Script_4F8D:: ; heuristic: event script entry or jump target; C0
 Script_4F9D:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_command $16
-    script_message $005D ; 'Warubou Warooh! Will it hold? You'
+    script_message $005D ; 'Warubou Calm down and listen! What'
     script_end
 Script_4FA4:: ; heuristic: event script entry or jump target; C0
-    script_message $001E ; '0 peered into the barrel. It'
+    script_message $001E ; 'You e come at the right'
     script_command $6B
-    script_message $0020 ; 'Cobi Sure, Mama! We'll be fine.'
+    script_message $0020 ; 'Good, that's settled then. The Vault'
     script_set_flag $0003
     script_end
 Script_4FAF:: ; heuristic: event script entry or jump target; C0
-    script_message $006A ; 'Prince Kameha was saying the same'
+    script_message $006A ; 'Did you get the package from'
     script_command $17
-    script_message $006B ; 'Did you get the package from'
+    script_message $006B ; 'Oh goodness, you're filthy! What happened'
     script_end
 Script_4FB7:: ; heuristic: event script entry or jump target; C0
-    script_message $4028 ; '0 peered into the vase. It'
+    script_message $4028 ; 'I e heard that there are'
     script_skip_if_no Script_4FCC
-    script_message $802A ; 'Oh? Well, that's fine then. Go'
+    script_message $802A ; 'Monster masters are those people who'
     script_command $73
     script_slide_y $01
-    script_message $002D ; 'I aspired to be one long'
-    script_message $002C ; 'Cobi Hahah! 0 won't last a'
+    script_message $002D ; 'Tara Big brother can't do it'
+    script_message $002C ; 'I aspired to be one long'
     script_set_flag $0014
     script_end
 Script_4FCC:: ; heuristic: event script entry or jump target; C0
-    script_message $8029 ; 'I e heard that there are'
+    script_message $8029 ; 'Oh? Well, that's fine then. Go'
     script_end
 Script_4FD0:: ; heuristic: event script entry or jump target; C0
-    script_message $4028 ; '0 peered into the vase. It'
+    script_message $4028 ; 'I e heard that there are'
     script_skip_if_no Script_4FE4
-    script_message $802A ; 'Oh? Well, that's fine then. Go'
+    script_message $802A ; 'Monster masters are those people who'
     script_slide_y $01
-    script_message $002B ; 'Monster masters are those people who'
-    script_message $002C ; 'Cobi Hahah! 0 won't last a'
+    script_message $002B ; 'Cobi Hahah! 0 won't last a'
+    script_message $002C ; 'I aspired to be one long'
     script_set_flag $0014
     script_end
 Script_4FE4:: ; heuristic: event script entry or jump target; C0
-    script_message $8029 ; 'I e heard that there are'
+    script_message $8029 ; 'Oh? Well, that's fine then. Go'
     script_end
 Script_4FE8:: ; heuristic: event script entry or jump target; C0
-    script_message $0060 ; 'Warubou A new plug for the'
+    script_message $0060 ; 'Hah? The island's going to sink?'
     script_slide_y $01
-    script_message $0063 ; 'Look, an island just doesn't sink.'
-    script_message $0062 ; 'Cobi Why won't you believe us?'
+    script_message $0063 ; 'Tara Why aren't you listening? Papa,'
+    script_message $0062 ; 'Look, an island just doesn't sink.'
     script_set_flag $000E
     script_end
 Script_4FF7:: ; heuristic: event script entry or jump target; C0
-    script_message $0060 ; 'Warubou A new plug for the'
+    script_message $0060 ; 'Hah? The island's going to sink?'
     script_slide_y $01
-    script_message $0061 ; 'Hah? The island's going to sink?'
-    script_message $0062 ; 'Cobi Why won't you believe us?'
+    script_message $0061 ; 'Cobi Why won't you believe us?'
+    script_message $0062 ; 'Look, an island just doesn't sink.'
     script_set_flag $000E
     script_end
 Script_5006:: ; heuristic: event script entry or jump target; C0
-    script_message $007A ; 'You say the island will sink?'
+    script_message $007A ; 'Warubou Wa-hey! Good, you're back. You'
     script_slide_y $01
-    script_message $407B ; 'Warubou Wa-hey! Good, you're back. You'
+    script_message $407B ; 'Warubou No time to waste, warooh!'
     script_skip_if_no Script_5017
-    script_message $807C ; 'Warubou No time to waste, warooh!'
+    script_message $807C ; 'Warubou No? Then find someone!'
     script_set_flag $0016
     script_end
 Script_5017:: ; heuristic: event script entry or jump target; C0
-    script_message $807F ; 'Warubou Wa-hey! No more dawdling! GreatLog'
+    script_message $807F ; 'Warubou Wa-hey! Good, good, good! In'
     script_command $19
-    script_message $0080 ; 'Warubou Wa-hey! Good, good, good! In'
+    script_message $0080 ; 'Warubou This here is a Magic'
     script_command $1A
-    script_message $0081 ; 'Warubou This here is a Magic'
-    script_message $0082 ; '0 received the Oasis Key.'
+    script_message $0081 ; '0 received the Oasis Key.'
+    script_message $0082 ; 'Warubou Wa-hey! I trust you! Go!'
     script_set_flag $001A
     script_end
 Script_5029:: ; heuristic: event script entry or jump target; C0
-    script_message $407D ; 'Warubou No? Then find someone!'
+    script_message $407D ; 'Warubou Wa-hey? No one believed! You'
     script_skip_if_no Script_5036
 Script_502E:: ; heuristic: event script entry or jump target; C0
-    script_message $C07E ; 'Warubou Wa-hey? No one believed! You'
+    script_message $C07E ; 'Warubou Wa-hey! No more dawdling! GreatLog'
     script_skip_if_no Script_5036
     script_jump Script_502E
 Script_5036:: ; heuristic: event script entry or jump target; C0
@@ -3188,22 +3188,22 @@ Script_5039:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0011
     script_set_flag $0017
     script_command $18
-    script_message $0085 ; 'Warubou This you use to come'
-    script_message $0086 ; '0 received the GreatLog Key.'
+    script_message $0085 ; '0 received the GreatLog Key.'
+    script_message $0086 ; 'Warubou Dangerous are other worlds! So'
     script_command $1C
     script_walk 0, 2, 3
     script_walk 0, 1, 2
     script_face $80, 2
     script_face $00, 0
     script_face $01, 0
-    script_message $008C ; 'Cobi That's true If we both'
+    script_message $008C ; 'Slash Hey, why the long faces?'
     script_face $00, 1
     script_face $01, 3
     script_command $1D
     script_end
 Script_5063:: ; heuristic: event script entry or jump target; C0
     script_wait 30
-    script_message $0000 ; ''t 'l 'l 'l6 M 6'
+    script_message $0000 ; 'In the middle of the sea'
     script_command $75
     script_wait 60
     script_walk 3, 0, 1
@@ -3217,14 +3217,14 @@ Script_5063:: ; heuristic: event script entry or jump target; C0
     script_face $82, 1
     script_face $00, 3
     script_slide_y $82
-    script_message $0002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $0002 ; 'Tara There you are, big brother!'
     script_walk 2, 3, 1
     script_face $82, 1
     script_set_flag $0012
     script_end
 Script_509F:: ; heuristic: event script entry or jump target; C0
     script_wait 30
-    script_message $0000 ; ''t 'l 'l 'l6 M 6'
+    script_message $0000 ; 'In the middle of the sea'
     script_command $75
     script_wait 60
     script_walk 3, 0, 1
@@ -3238,16 +3238,16 @@ Script_509F:: ; heuristic: event script entry or jump target; C0
     script_face $82, 1
     script_face $00, 3
     script_slide_y $82
-    script_message $0001 ; 'In the middle of the sea'
+    script_message $0001 ; 'Cobi 0! Papa's calling. He's at'
     script_walk 2, 3, 1
     script_face $82, 1
     script_set_flag $0012
     script_end
 Script_50DB:: ; heuristic: event script entry or jump target; C0
-    script_message $0013 ; 'Land ho! There's GreatLog!'
+    script_message $0013 ; 'Tara Big brother! GreatLog will be'
     script_face $80, 1
     script_slide_y $80
-    script_message $0012 ; 'Cobi 0! They said GreatLog will'
+    script_message $0012 ; 'Land ho! There's GreatLog!'
     script_face $81, 1
     script_face $82, 1
     script_face $00, 1
@@ -3256,10 +3256,10 @@ Script_50DB:: ; heuristic: event script entry or jump target; C0
     script_command $77
     script_end
 Script_50F6:: ; heuristic: event script entry or jump target; C0
-    script_message $0011 ; '0 peered into the vase. Freshly'
+    script_message $0011 ; 'Cobi 0! They said GreatLog will'
     script_face $80, 1
     script_slide_y $80
-    script_message $0012 ; 'Cobi 0! They said GreatLog will'
+    script_message $0012 ; 'Land ho! There's GreatLog!'
     script_face $81, 1
     script_face $82, 1
     script_face $00, 1
@@ -3269,18 +3269,18 @@ Script_50F6:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5111:: ; heuristic: event script entry or jump target; C0
     script_command $6A
-    script_message $0015 ; 'This is a tale of children'
+    script_message $0015 ; 'Listen you two! Quit your horsing'
     script_walk 0, 2, 5
     script_face $80, 1
     script_face $81, 3
     script_end
 Script_5120:: ; heuristic: event script entry or jump target; C0
-    script_message $4007 ; 'There's a spirit in GreatLog that's'
+    script_message $4007 ; 'Sailing is sure exhilarating. Right?'
     script_skip_if_no Script_5129
-    script_message $8009 ; 'Good. That's good to hear! You'
+    script_message $8009 ; 'Is that so? Too bad! You'll'
     script_end
 Script_5129:: ; heuristic: event script entry or jump target; C0
-    script_message $8008 ; 'Sailing is sure exhilarating. Right?'
+    script_message $8008 ; 'Good. That's good to hear! You'
     script_end
 Script_512D:: ; heuristic: event script entry or jump target; C0
     script_command $82
@@ -3384,44 +3384,44 @@ Script_5173:: ; heuristic: event script entry or jump target; C0
     script_command $9D
     script_end
 Script_5175:: ; heuristic: event script entry or jump target; C0
-    script_message $0100 ; ''t 't 't0 3'l1 R 7'
-    script_message $0101 ; 'Are you going out to play?'
+    script_message $0100 ; 'Are you going out to play?'
+    script_message $0101 ; '0 received an Herb.'
     script_set_flag $01A7
     script_end
 Script_517F:: ; heuristic: event script entry or jump target; C0
-    script_message $0200 ; ''t 'l 'l S r N'
-    script_message $0201 ; 'You e been going out a'
+    script_message $0200 ; 'You e been going out a'
+    script_message $0201 ; 'Mom handed over 200G.'
     script_add_gold 200
     script_end
 Script_5189:: ; heuristic: event script entry or jump target; C0
-    script_message $48A1 ; 'Father put up a bridge across'
+    script_message $48A1 ; 'Oh? You'll run another errand?'
     script_skip_if_no Script_5192
-    script_message $88A4 ; 'Mama handed over 400G.'
+    script_message $88A4 ; 'No miracles today! Oh, well. Of'
     script_end
 Script_5192:: ; heuristic: event script entry or jump target; C0
-    script_message $88A2 ; 'Oh? You'll run another errand?'
-    script_message $08A3 ; 'My, what has gotten into you?'
+    script_message $88A2 ; 'My, what has gotten into you?'
+    script_message $08A3 ; 'Mama handed over 400G.'
     script_add_gold 400
     script_set_flag $0183
     script_end
 Script_519F:: ; heuristic: event script entry or jump target; C0
-    script_message $08A6 ; 'I need you to get me'
-    script_message $08A7 ; 'Oh You e found what I'
+    script_message $08A6 ; 'Oh You e found what I'
+    script_message $08A7 ; '0 handed over the Potion.'
     script_set_flag $0184
     script_end
 Script_51A9:: ; heuristic: event script entry or jump target; C0
-    script_message $48A1 ; 'Father put up a bridge across'
+    script_message $48A1 ; 'Oh? You'll run another errand?'
     script_skip_if_no Script_51B2
-    script_message $88A4 ; 'Mama handed over 400G.'
+    script_message $88A4 ; 'No miracles today! Oh, well. Of'
     script_end
 Script_51B2:: ; heuristic: event script entry or jump target; C0
-    script_message $88A8 ; '0 handed over the Potion.'
-    script_message $08A9 ; 'Well, could you go buy a'
+    script_message $88A8 ; 'Well, could you go buy a'
+    script_message $08A9 ; 'Mama handed over 600G.'
     script_add_gold 600
     script_set_flag $0185
     script_end
 Script_51BF:: ; heuristic: event script entry or jump target; C0
-    script_message $08A6 ; 'I need you to get me'
+    script_message $08A6 ; 'Oh You e found what I'
     script_message $08AC ; '0 handed over the Rib.'
     script_set_flag $0186
     script_end
@@ -3431,35 +3431,35 @@ Script_51BF:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_51F5:: ; heuristic: event script entry or jump target; C0
-    script_message $4A25 ; 'Oh Then I'll ask Cobi.'
+    script_message $4A25 ; 'I was going to ask Tara,'
     script_skip_if_no Script_51FE
-    script_message $8A26 ; 'I was going to ask Tara,'
+    script_message $8A26 ; 'Oh Then I'll ask Tara.'
     script_end
 Script_51FE:: ; heuristic: event script entry or jump target; C0
-    script_message $8A22 ; 'I was going to ask Cobi,'
-    script_message $0A23 ; 'The farm that your father always'
+    script_message $8A22 ; 'The farm that your father always'
+    script_message $0A23 ; 'Mama handed over 1,200G.'
     script_add_gold 1200
     script_set_flag $018B
     script_end
 Script_520B:: ; heuristic: event script entry or jump target; C0
-    script_message $4A21 ; 'Father dug under the island, and'
+    script_message $4A21 ; 'I was going to ask Cobi,'
     script_skip_if_no Script_5214
-    script_message $8A24 ; 'Mama handed over 1,200G.'
+    script_message $8A24 ; 'Oh Then I'll ask Cobi.'
     script_end
 Script_5214:: ; heuristic: event script entry or jump target; C0
-    script_message $8A22 ; 'I was going to ask Cobi,'
-    script_message $0A23 ; 'The farm that your father always'
+    script_message $8A22 ; 'The farm that your father always'
+    script_message $0A23 ; 'Mama handed over 1,200G.'
     script_add_gold 1200
     script_set_flag $018B
     script_end
 Script_5221:: ; heuristic: event script entry or jump target; C0
-    script_message $0A28 ; 'Buy some Sirloin for our dinner.'
-    script_message $0A29 ; 'They didn't have any around here.'
+    script_message $0A28 ; 'They didn't have any around here.'
+    script_message $0A29 ; '0 handed over the Sirloin.'
     script_set_flag $018C
     script_end
 Script_522B:: ; heuristic: event script entry or jump target; C0
-    script_message $0212 ; 'I hear rumors that Prince Kameha'
-    script_message $0213 ; 'Oh? You bought the LoveWater! This'
+    script_message $0212 ; 'Oh? You bought the LoveWater! This'
+    script_message $0213 ; '0 handed over the LoveWater.'
     script_walk 0, 3, 1
     script_walk 0, 2, 2
     script_face $80, 3
@@ -3474,133 +3474,133 @@ Script_522B:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5256:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0102
-    script_message $410D ; 'Oh, that's cute! Hahahahaha! We have'
+    script_message $410D ; 'Cobi Hi, I'm helping Papa to'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5260:: ; heuristic: event script entry or jump target; C0
-    script_message $410E ; 'Cobi Hi, I'm helping Papa to'
+    script_message $410E ; 'Cobi Hi, 0! What's up today?'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5267:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0105
-    script_message $4207 ; 'You're the child of the farmer?'
+    script_message $4207 ; 'Cobi 0, what was it like'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5271:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0109
-    script_message $48BC ; 'You have to tamp the ground'
+    script_message $48BC ; 'Cobi 0, what was it like'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_527B:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0115
-    script_message $4A30 ; 'Oh, don't be that way. I'm'
+    script_message $4A30 ; 'Cobi 0, what was it like'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5285:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0121
-    script_message $4502 ; 'People have been whispering that GreatLog'
+    script_message $4502 ; 'Cobi 0, tell me about what'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_528F:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0131
-    script_message $4B02 ; 'You and your monsters saved GreatLog'
+    script_message $4B02 ; 'Cobi 0, I envied you for'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5299:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0102
-    script_message $410F ; 'Cobi Hi, 0! What's up today?'
+    script_message $410F ; 'Tara I'm helping Papa take care'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52A3:: ; heuristic: event script entry or jump target; C0
-    script_message $4110 ; 'Tara I'm helping Papa take care'
+    script_message $4110 ; 'Tara Hi! How are you? Do'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52AA:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0105
-    script_message $4208 ; 'Cobi 0, what was it like'
+    script_message $4208 ; 'Tara Big brother, have you found'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52B4:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0109
-    script_message $48BD ; 'Cobi 0, what was it like'
+    script_message $48BD ; 'Tara Big brother, tell me about'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52BE:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0115
-    script_message $4A31 ; 'Cobi 0, what was it like'
+    script_message $4A31 ; 'Tara Big brother, tell me about'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52C8:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0121
-    script_message $4503 ; 'Cobi 0, tell me about what'
+    script_message $4503 ; 'Tara Big brother, tell me about'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52D2:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0131
-    script_message $4B03 ; 'Cobi 0, I envied you for'
+    script_message $4B03 ; 'Tara 0, I was a little'
     script_jump_data_bank Script_1F_5A3A
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_52DC:: ; heuristic: event script entry or jump target; C0
-    script_message $0105 ; 'Tara Big brother, while you're in'
-    script_message $0106 ; 'Why do you have a monster'
+    script_message $0105 ; 'Why do you have a monster'
+    script_message $0106 ; '0 received a PorkChop.'
     script_end
 Script_52E3:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0190
-    script_message $48AF ; 'My father was a Slime and'
+    script_message $48AF ; 'Beavern helped put up the bridge.'
     script_skip_if_no Script_52EF
-    script_message $88B1 ; 'I like to get help for'
+    script_message $88B1 ; 'If one joins you, could you'
     script_end
 Script_52EF:: ; heuristic: event script entry or jump target; C0
-    script_message $88B0 ; 'Beavern helped put up the bridge.'
+    script_message $88B0 ; 'I like to get help for'
     script_end
 Script_52F3:: ; heuristic: event script entry or jump target; C0
     script_message $48B3 ; 'A MadGopher joined you? Could you'
     script_skip_if_no Script_52FC
-    script_message $88B5 ; 'Great, 0! Thanks a lot! This'
+    script_message $88B5 ; '0, I need your help. Please'
     script_end
 Script_52FC:: ; heuristic: event script entry or jump target; C0
-    script_message $88B4 ; 'A MadGopher joined you? Could you'
+    script_message $88B4 ; 'Great, 0! Thanks a lot! This'
     script_command $3C
-    script_message $0D17 ; 'What's wrong, MadGopher? Did you find'
-    script_message $0D18 ; 'Here, 0! You need this!'
-    script_message $0D19 ; '0 received the Ice Key.'
+    script_message $0D17 ; 'Here, 0! You need this!'
+    script_message $0D18 ; '0 received the Ice Key.'
+    script_message $0D19 ; 'Be careful when you're traveling in'
     script_set_flag $0191
     script_end
 Script_530D:: ; heuristic: event script entry or jump target; C0
     script_message $48B3 ; 'A MadGopher joined you? Could you'
     script_skip_if_no Script_5316
-    script_message $88B5 ; 'Great, 0! Thanks a lot! This'
+    script_message $88B5 ; '0, I need your help. Please'
     script_end
 Script_5316:: ; heuristic: event script entry or jump target; C0
-    script_message $88B4 ; 'A MadGopher joined you? Could you'
+    script_message $88B4 ; 'Great, 0! Thanks a lot! This'
     script_command $3C
     script_message $0D48 ; 'Here, 0! You hold onto it.'
     script_set_flag $01A3
@@ -3609,33 +3609,33 @@ Script_5316:: ; heuristic: event script entry or jump target; C0
 Script_5324:: ; heuristic: event script entry or jump target; C0
     script_message $48B3 ; 'A MadGopher joined you? Could you'
     script_skip_if_no Script_532D
-    script_message $88B5 ; 'Great, 0! Thanks a lot! This'
+    script_message $88B5 ; '0, I need your help. Please'
     script_end
 Script_532D:: ; heuristic: event script entry or jump target; C0
-    script_message $88B4 ; 'A MadGopher joined you? Could you'
+    script_message $88B4 ; 'Great, 0! Thanks a lot! This'
     script_command $3C
-    script_message $0D47 ; 'What's wrong, MadGopher? Did you dig'
-    script_message $0D41 ; 'I like you to have this.'
-    script_message $0D19 ; '0 received the Ice Key.'
+    script_message $0D47 ; 'Here, 0! You hold onto it.'
+    script_message $0D41 ; '0 received a TinyMedal!'
+    script_message $0D19 ; 'Be careful when you're traveling in'
     script_set_flag $0191
     script_end
 Script_533E:: ; heuristic: event script entry or jump target; C0
 Data_010_533E:: ; address name
-    script_message $420D ; 'The castle is in an uproar'
+    script_message $420D ; 'You're too young to be shopping.'
     script_jump_data_bank Script_6659
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5345:: ; heuristic: event script entry or jump target; C0
 Data_010_5345:: ; address name
-    script_message $420E ; 'You're too young to be shopping.'
+    script_message $420E ; 'Welcome! How may I serve you'
     script_jump_data_bank Script_6659
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_534C:: ; heuristic: event script entry or jump target; C0
 Data_010_534C:: ; address name
-    script_message $4D89 ; 'I teased you as a cute'
+    script_message $4D89 ; 'Well, well! If it isn't the'
     script_jump_data_bank Script_6659
     db $FF
 
@@ -3643,13 +3643,13 @@ Data_010_534C:: ; address name
 Script_5353:: ; heuristic: event script entry or jump target; C0
 Data_010_5353:: ; address name
     script_set_flag $0103
-    script_message $411C ; 'Hm? Are you a master hopeful?'
+    script_message $411C ; 'Oh, hi! Good to see you'
     script_jump_data_bank Script_67B5
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_535D:: ; heuristic: event script entry or jump target; C0
-    script_message $411D ; 'Oh, hi! Good to see you'
+    script_message $411D ; 'How may the Vault serve you?'
     script_jump_data_bank Script_67B5
     db $FF
 
@@ -3657,18 +3657,18 @@ Script_535D:: ; heuristic: event script entry or jump target; C0
 Script_5364:: ; heuristic: event script entry or jump target; C0
 Data_010_5364:: ; address name
     script_set_flag $0127
-    script_message $4B1C ; 'The woman next to me cries'
+    script_message $4B1C ; 'Hello, GreatLog's hero! Do you still'
     script_jump_data_bank Script_67B5
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_536E:: ; heuristic: event script entry or jump target; C0
-    script_message $411F ; 'If your party is wiped out,'
+    script_message $411F ; 'Warubou Wa-hey! You remember the promise'
     script_skip_if_no Script_5377
-    script_message $8121 ; 'Warubou Quit dawdling, warooh!'
+    script_message $8121 ; 'Warubou Use a Magic Key and'
     script_end
 Script_5377:: ; heuristic: event script entry or jump target; C0
-    script_message $8120 ; 'Warubou Wa-hey! You remember the promise'
+    script_message $8120 ; 'Warubou Quit dawdling, warooh!'
     script_end
     db $00, $9E, $42, $06, $04, $00, $A2, $82, $FF, $00, $9F, $82, $FF, $00, $9E, $42
     db $06, $04, $00, $A2, $82, $FF, $00, $A0, $82, $FF, $00, $A3, $02, $3B, $0A, $2F
@@ -3677,22 +3677,22 @@ Script_5377:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_53AD:: ; heuristic: event script entry or jump target; C0
-    script_message $452A ; 'Grandpa and the others are going'
+    script_message $452A ; 'Warubou Wa-hey! Are you ready? Ready'
     script_skip_if_no Script_53B6
-    script_message $8531 ; 'Warubou Wa-hey! Take the treasures that'
+    script_message $8531 ; 'Warubou Wa-hey, well, hurry it up!'
     script_end
 Script_53B6:: ; heuristic: event script entry or jump target; C0
-    script_message $8530 ; 'Warubou Limbo is the King's domain!'
+    script_message $8530 ; 'Warubou Wa-hey! Take the treasures that'
     script_end
 Script_53BA:: ; heuristic: event script entry or jump target; C0
-    script_message $452A ; 'Grandpa and the others are going'
+    script_message $452A ; 'Warubou Wa-hey! Are you ready? Ready'
     script_skip_if_no Script_53C3
-    script_message $8531 ; 'Warubou Wa-hey! Take the treasures that'
+    script_message $8531 ; 'Warubou Wa-hey, well, hurry it up!'
     script_end
 Script_53C3:: ; heuristic: event script entry or jump target; C0
-    script_message $852B ; 'Warubou Wa-hey! Are you ready? Ready'
+    script_message $852B ; 'Warubou Wa-hey! Take the treasures that'
     script_command $5B
-    script_message $052F ; '0 received the SkyShield.'
+    script_message $052F ; 'Warubou Limbo is the King's domain!'
     script_set_flag $013B
     script_end
 Script_53CE:: ; heuristic: event script entry or jump target; C0
@@ -3702,274 +3702,274 @@ Script_53D0:: ; heuristic: event script entry or jump target; C0
     script_command $6E
     script_end
 Script_53D2:: ; heuristic: event script entry or jump target; C0
-    script_message $4A36 ; 'I'm a bug, so I'm not'
+    script_message $4A36 ; 'Prince Kameha has been missing from'
     script_skip_if_no Script_53DB
-    script_message $8A38 ; 'What's that? You saw Prince Kameha'
+    script_message $8A38 ; 'You better be telling the truth.'
     script_end
 Script_53DB:: ; heuristic: event script entry or jump target; C0
-    script_message $8A37 ; 'Prince Kameha has been missing from'
+    script_message $8A37 ; 'What's that? You saw Prince Kameha'
     script_set_flag $0117
     script_command $59
-    script_message $0A3A ; 'The man here has rare keys.'
-    script_message $0A3B ; 'Sire, this child claims to know'
+    script_message $0A3A ; 'Sire, this child claims to know'
+    script_message $0A3B ; 'King What's that? Is that so?'
     script_walk 0, 0, 1
-    script_message $0D28 ; '0 checked the treasure chest. The'
+    script_message $0D28 ; '0 obtained the Sky Key.'
     script_walk 0, 2, 1
     script_face $80, 0
-    script_message $0D29 ; '0 obtained the Sky Key.'
+    script_message $0D29 ; 'King Kameha made off with the'
     script_end
 Script_53FA:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0117
-    script_message $4504 ; 'Tara Big brother, tell me about'
+    script_message $4504 ; 'If the island sink, is no'
     script_skip_if_no Script_540D
-    script_message $8506 ; 'People have been saying that they'
+    script_message $8506 ; 'Hey! You're the kid who said'
     script_command $5A
-    script_message $0507 ; 'Hey! You're the kid who said'
+    script_message $0507 ; 'Prince Kameha came back! What with'
     script_set_flag $0122
     script_end
 Script_540D:: ; heuristic: event script entry or jump target; C0
-    script_message $8505 ; 'If the island sink, is no'
+    script_message $8505 ; 'People have been saying that they'
     script_command $5A
-    script_message $0507 ; 'Hey! You're the kid who said'
+    script_message $0507 ; 'Prince Kameha came back! What with'
     script_set_flag $0122
     script_end
 Script_5418:: ; heuristic: event script entry or jump target; C0
-    script_message $021D ; 'Monsters hate being away from their'
+    script_message $021D ; 'Take this slide as a shortcut!'
     script_sound $65
     script_walk 1, 0, 3
     script_end
 Script_5422:: ; heuristic: event script entry or jump target; C0
     script_message $4264 ; 'Oh You're so lucky to have'
     script_skip_if_no Script_542B
-    script_message $8266 ; 'R Really? Wow! Thank you! I'
+    script_message $8266 ; 'Oh Sorry It's your friend'
     script_end
 Script_542B:: ; heuristic: event script entry or jump target; C0
-    script_message $8265 ; 'Oh You're so lucky to have'
+    script_message $8265 ; 'R Really? Wow! Thank you! I'
     script_command $3A
     script_set_flag $012D
     script_end
 Script_5433:: ; heuristic: event script entry or jump target; C0
-    script_message $4B47 ; 'My granddaughter became a master. She's'
+    script_message $4B47 ; 'I became a master because I'
     script_skip_if_no Script_543C
-    script_message $8D81 ; 'Really? Let's go to the Arena!'
+    script_message $8D81 ; 'Aww How boring Visit us again!'
     script_end
 Script_543C:: ; heuristic: event script entry or jump target; C0
     script_message $8D80 ; 'Really? Let's go to the Arena!'
     script_command $7B
     script_end
 Script_5441:: ; heuristic: event script entry or jump target; C0
-    script_message $4227 ; 'There was also a letter. This'
+    script_message $4227 ; '0 checked the pedestal. It's the'
     script_skip_if_no Script_544A
-    script_message $8229 ; 'You may check your Catalog of'
+    script_message $8229 ; '0 put back the Library Guide.'
     script_end
 Script_544A:: ; heuristic: event script entry or jump target; C0
-    script_message $8228 ; '0 checked the pedestal. It's the'
+    script_message $8228 ; 'You may check your Catalog of'
     script_end
 Script_544E:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0108
-    script_message $422A ; '0 put back the Library Guide.'
+    script_message $422A ; 'Welcome to the Library. You may'
     script_jump_data_bank Script_1F_787B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5458:: ; heuristic: event script entry or jump target; C0
-    script_message $422B ; 'Welcome to the Library. You may'
+    script_message $422B ; 'Welcome to the Library. Which family'
     script_jump_data_bank Script_1F_787B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_545F:: ; heuristic: event script entry or jump target; C0
     script_set_flag $002D
-    script_message $4B49 ; 'My master has gotten good. You'll'
+    script_message $4B49 ; 'Hello, our young savior! Have you'
     script_jump_data_bank Script_1F_787B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5469:: ; heuristic: event script entry or jump target; C0
     script_set_flag $019E
-    script_message $4DF0 ; 'Congratulations, 0! You e cataloged every'
-    script_message $CDF1 ; 'Welcome to the Library! Your monster'
+    script_message $4DF0 ; 'Welcome to the Library! Your monster'
+    script_message $CDF1 ; 'We need fanfare right about now'
     script_jump_data_bank Script_1F_787B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5476:: ; heuristic: event script entry or jump target; C0
-    script_message $4230 ; 'Even I can cast spells if'
+    script_message $4230 ; 'Do you have any idea about'
     script_skip_if_no Script_547F
-    script_message $8232 ; 'Oh You e read this book'
+    script_message $8232 ; 'Monsters can be categorized in ten'
     script_end
 Script_547F:: ; heuristic: event script entry or jump target; C0
-    script_message $8231 ; 'Do you have any idea about'
+    script_message $8231 ; 'Oh You e read this book'
     script_end
 Script_5483:: ; heuristic: event script entry or jump target; C0
-    script_message $4246 ; '0 peered into the vase. It'
+    script_message $4246 ; 'Hey, let me ask you something.'
     script_skip_if_no Script_548C
-    script_message $8248 ; 'Did she say anything to you?'
+    script_message $8248 ; 'Good, you're lucky! Stay away, that's'
     script_end
 Script_548C:: ; heuristic: event script entry or jump target; C0
-    script_message $8247 ; 'Hey, let me ask you something.'
+    script_message $8247 ; 'Did she say anything to you?'
     script_end
 Script_5490:: ; heuristic: event script entry or jump target; C0
-    script_message $4257 ; '0 checked the dresser. It was'
+    script_message $4257 ; 'Did you know that there's a'
     script_skip_if_no Script_5499
-    script_message $8259 ; 'Monsters should have cute names.'
+    script_message $8259 ; 'Go visit the Christener. She's a'
     script_end
 Script_5499:: ; heuristic: event script entry or jump target; C0
-    script_message $8258 ; 'Did you know that there's a'
+    script_message $8258 ; 'Monsters should have cute names.'
     script_end
 Script_549D:: ; heuristic: event script entry or jump target; C0
-    script_message $44C3 ; 'I strike with my eight tentacles.'
+    script_message $44C3 ; 'Welcome. I'm the Christener. I can'
     script_jump_data_bank Script_96_6FF8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54A4:: ; heuristic: event script entry or jump target; C0
-    script_message $44C4 ; 'Welcome. I'm the Christener. I can'
+    script_message $44C4 ; 'Welcome. I'm the Christener. Do you'
     script_jump_data_bank Script_96_6FF8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54AB:: ; heuristic: event script entry or jump target; C0
-    script_message $4A4E ; 'The island used to be lush'
+    script_message $4A4E ; 'Hello, 0, welcome! This is the'
     script_jump_data_bank Script_1D_4335
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54B2:: ; heuristic: event script entry or jump target; C0
-    script_message $4A4F ; 'Hello, 0, welcome! This is the'
+    script_message $4A4F ; 'Hello, 0, welcome! Want to use'
     script_jump_data_bank Script_1D_4335
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_54B9:: ; heuristic: event script entry or jump target; C0
-    script_message $4A5A ; '0 read the sign. Ssh Monsters'
-    script_message $8A5B ; '0 checked the casket.'
+    script_message $4A5A ; '0 checked the casket.'
+    script_message $8A5B ; 'Zzz Use the plan Charge in'
     script_end
 Script_54C0:: ; heuristic: event script entry or jump target; C0
-    script_message $4A5A ; '0 read the sign. Ssh Monsters'
-    script_message $8A5C ; 'Zzz Use the plan Charge in'
+    script_message $4A5A ; '0 checked the casket.'
+    script_message $8A5C ; 'Zzz Hnnnnnrgh Huh? Being Cautious in'
     script_end
 Script_54C7:: ; heuristic: event script entry or jump target; C0
-    script_message $4A5E ; '0 read the sign. Watch your'
-    script_message $8A5F ; '0 peered into the hole.'
+    script_message $4A5E ; '0 peered into the hole.'
+    script_message $8A5F ; 'Zzz Zzz Some skills are developed'
     script_end
 Script_54CE:: ; heuristic: event script entry or jump target; C0
-    script_message $4281 ; 'Mama is a big worrier But'
+    script_message $4281 ; 'Oh, a cute little master! Are'
     script_skip_if_no Script_54D7
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_54D7:: ; heuristic: event script entry or jump target; C0
-    script_message $8282 ; 'Oh, a cute little master! Are'
+    script_message $8282 ; 'In the Kids Class final, watch'
     script_end
 Script_54DB:: ; heuristic: event script entry or jump target; C0
-    script_message $4A60 ; 'Zzz Zzz Some skills are developed'
+    script_message $4A60 ; 'Oh, you're the Kids Class Champ!'
     script_skip_if_no Script_54E4
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_54E4:: ; heuristic: event script entry or jump target; C0
-    script_message $8A61 ; 'Oh, you're the Kids Class Champ!'
+    script_message $8A61 ; 'In the C Class final, you'll'
     script_end
 Script_54E8:: ; heuristic: event script entry or jump target; C0
-    script_message $4A62 ; 'In the C Class final, you'll'
+    script_message $4A62 ; 'Oh, you're the C Class Champ!'
     script_skip_if_no Script_54F1
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_54F1:: ; heuristic: event script entry or jump target; C0
-    script_message $8A63 ; 'Oh, you're the C Class Champ!'
+    script_message $8A63 ; 'In the B Class final, you'll'
     script_end
 Script_54F5:: ; heuristic: event script entry or jump target; C0
-    script_message $4A64 ; 'In the B Class final, you'll'
+    script_message $4A64 ; 'Oh, you're the B Class Champ!'
     script_skip_if_no Script_54FE
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_54FE:: ; heuristic: event script entry or jump target; C0
-    script_message $8A65 ; 'Oh, you're the B Class Champ!'
+    script_message $8A65 ; 'In the A Class final, you'll'
     script_end
 Script_5502:: ; heuristic: event script entry or jump target; C0
-    script_message $4A66 ; 'In the A Class final, you'll'
+    script_message $4A66 ; 'Oh, you're the A Class Champ!'
     script_skip_if_no Script_550B
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_550B:: ; heuristic: event script entry or jump target; C0
-    script_message $8A67 ; 'Oh, you're the A Class Champ!'
+    script_message $8A67 ; 'In the S Class final, you'll'
     script_end
 Script_550F:: ; heuristic: event script entry or jump target; C0
-    script_message $4281 ; 'Mama is a big worrier But'
+    script_message $4281 ; 'Oh, a cute little master! Are'
     script_skip_if_no Script_5518
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_5518:: ; heuristic: event script entry or jump target; C0
-    script_message $8216 ; 'Aooh, LoveWater soothes sunburn'
+    script_message $8216 ; 'Play it safe against Skullroo. It's'
     script_end
 Script_551C:: ; heuristic: event script entry or jump target; C0
-    script_message $4A60 ; 'Zzz Zzz Some skills are developed'
+    script_message $4A60 ; 'Oh, you're the Kids Class Champ!'
     script_skip_if_no Script_5525
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_5525:: ; heuristic: event script entry or jump target; C0
-    script_message $8A7F ; 'Warubou Wa-hey, we don't have the'
+    script_message $8A7F ; 'In the C Class final, you'll'
     script_end
 Script_5529:: ; heuristic: event script entry or jump target; C0
-    script_message $4A62 ; 'In the C Class final, you'll'
+    script_message $4A62 ; 'Oh, you're the C Class Champ!'
     script_skip_if_no Script_5532
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_5532:: ; heuristic: event script entry or jump target; C0
-    script_message $8A80 ; 'In the C Class final, you'll'
+    script_message $8A80 ; 'In the B Class final, you'll'
     script_end
 Script_5536:: ; heuristic: event script entry or jump target; C0
-    script_message $4A64 ; 'In the B Class final, you'll'
+    script_message $4A64 ; 'Oh, you're the B Class Champ!'
     script_skip_if_no Script_553F
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_553F:: ; heuristic: event script entry or jump target; C0
-    script_message $8A81 ; 'In the B Class final, you'll'
+    script_message $8A81 ; 'In the A Class final, you'll'
     script_end
 Script_5543:: ; heuristic: event script entry or jump target; C0
-    script_message $4A66 ; 'In the A Class final, you'll'
+    script_message $4A66 ; 'Oh, you're the A Class Champ!'
     script_skip_if_no Script_554C
-    script_message $8283 ; 'In the Kids Class final, watch'
+    script_message $8283 ; 'Oh. Well, I'll be here for'
     script_end
 Script_554C:: ; heuristic: event script entry or jump target; C0
-    script_message $8A82 ; 'In the A Class final, you'll'
+    script_message $8A82 ; 'In the S Class final, you'll'
     script_end
 Script_5550:: ; heuristic: event script entry or jump target; C0
-    script_message $426B ; '0 checked the plush doll. It'
+    script_message $426B ; 'Welcome to the Arena! Masters pit'
     script_skip_if_no Script_5559
-    script_message $826D ; 'You're young, so you have to'
+    script_message $826D ; 'Oh, then you must be here'
     script_end
 Script_5559:: ; heuristic: event script entry or jump target; C0
-    script_message $C26C ; 'Welcome to the Arena! Masters pit'
+    script_message $C26C ; 'You're young, so you have to'
     script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5560:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0189
-    script_message $4270 ; 'Congratulations! You're the champ! For winning'
+    script_message $4270 ; 'Welcome to the Arena! The rules'
     script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_556A:: ; heuristic: event script entry or jump target; C0
-    script_message $4271 ; 'Welcome to the Arena! The rules'
+    script_message $4271 ; 'Hello, which Class will it be?'
     script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5571:: ; heuristic: event script entry or jump target; C0
-    script_message $4D86 ; 'A master who can satisfy me'
+    script_message $4D86 ; 'Welcome! Do you wish to battle?'
     script_jump_data_bank Script_0C_7A51
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5578:: ; heuristic: event script entry or jump target; C0
-    script_message $4275 ; 'Oh? But your key ring is'
-    script_message $8274 ; '0 received a Magic Key.'
+    script_message $4275 ; 'Here's the Magic Key you won!'
+    script_message $8274 ; 'Oh? But your key ring is'
     script_end
 Script_557F:: ; heuristic: event script entry or jump target; C0
-    script_message $0275 ; 'Oh? But your key ring is'
-    script_message $0273 ; 'Congratulations! You're the champ! The D'
+    script_message $0275 ; 'Here's the Magic Key you won!'
+    script_message $0273 ; '0 received a Magic Key.'
     script_end
 Script_5586:: ; heuristic: event script entry or jump target; C0
     script_message $04B0 ; 'I lost again. I need to'
@@ -3978,64 +3978,64 @@ Script_5586:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_558B:: ; heuristic: event script entry or jump target; C0
-    script_message $44B3 ; 'I'll be here for a while'
+    script_message $44B3 ; 'I lost again. I need to'
     script_skip_if_no Script_5594
-    script_message $84B2 ; 'Good! Let's get started!'
+    script_message $84B2 ; 'I'll be here for a while'
     script_end
 Script_5594:: ; heuristic: event script entry or jump target; C0
-    script_message $C4B1 ; 'I lost again. I need to'
+    script_message $C4B1 ; 'Good! Let's get started!'
     script_end
 Script_5598:: ; heuristic: event script entry or jump target; C0
-    script_message $48CF ; 'Many trees have submerged The island'
+    script_message $48CF ; 'Um I'm the Egg Evaluator. You'
     script_set_flag $010F
     script_jump_data_bank Script_96_6EF7
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55A2:: ; heuristic: event script entry or jump target; C0
-    script_message $48D0 ; 'Um I'm the Egg Evaluator. You'
+    script_message $48D0 ; 'I'm the Egg Evaluator. May I'
     script_jump_data_bank Script_96_6EF7
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55A9:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0028
-    script_message $4B20 ; 'My grandpa gave me a key,'
+    script_message $4B20 ; 'Oh, the savior of GreatLog. I'm'
     script_jump_data_bank Script_96_6EF7
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55B3:: ; heuristic: event script entry or jump target; C0
-    script_message $48D3 ; 'Go down these stairs to the'
+    script_message $48D3 ; 'Welcome to the Starry Shrine. I'm'
     script_set_flag $0110
     script_jump_data_bank Script_15_764B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55BD:: ; heuristic: event script entry or jump target; C0
-    script_message $48D4 ; 'Welcome to the Starry Shrine. I'm'
+    script_message $48D4 ; 'Welcome to the Starry Shrine. What'
     script_jump_data_bank Script_15_764B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55C4:: ; heuristic: event script entry or jump target; C0
     script_set_flag $002C
-    script_message $4B2E ; 'Warubou Wa-hey, the bond between human'
+    script_message $4B2E ; 'Aren't you GreatLog's savior? Well, has'
     script_jump_data_bank Script_15_764B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55CE:: ; heuristic: event script entry or jump target; C0
-    script_message $48D5 ; 'Welcome to the Starry Shrine. What'
+    script_message $48D5 ; 'I'm the Prof's assistant. Do you'
     script_skip_if_no Script_55D7
-    script_message $88D7 ; 'You can breed monsters and hatch'
+    script_message $88D7 ; 'Talk to the Prof if you'
     script_end
 Script_55D7:: ; heuristic: event script entry or jump target; C0
-    script_message $88D6 ; 'I'm the Prof's assistant. Do you'
+    script_message $88D6 ; 'You can breed monsters and hatch'
     script_end
 Script_55DB:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0112
-    script_message $4A6D ; 'I should be more assertive. It's'
+    script_message $4A6D ; 'You can call me the Medal'
     script_jump_data_bank Script_0C_7BA9
     db $FF
 
@@ -4048,161 +4048,161 @@ Script_55E5:: ; heuristic: event script entry or jump target; C0
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55EC:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0031
-    script_message $4B50 ; '0 found a Magic Key. But'
+    script_message $4B50 ; 'Well, who would have thought such'
     script_jump_data_bank Script_0C_7BA9
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_55F6:: ; heuristic: event script entry or jump target; C0
-    script_message $025F ; 'My granddaughter is painfully shy. She'
-    script_message $0260 ; 'I e never seen my granddaughter'
+    script_message $025F ; 'I e never seen my granddaughter'
+    script_message $0260 ; '0 received a LifeAcorn.'
     script_set_flag $012E
     script_end
 Script_5600:: ; heuristic: event script entry or jump target; C0
     script_message $48C8 ; 'Wait! Could I get you to'
     script_skip_if_no Script_5609
-    script_message $88CA ; 'Fantastic! I can open my shop'
+    script_message $88CA ; 'Oh That's very disappointing. I could'
     script_end
 Script_5609:: ; heuristic: event script entry or jump target; C0
-    script_message $88C9 ; 'Wait! Could I get you to'
+    script_message $88C9 ; 'Fantastic! I can open my shop'
     script_command $3D
-    script_message $0D40 ; 'What's that? Hey, a TinyMedal! That'
-    script_message $0D18 ; 'Here, 0! You need this!'
-    script_message $0D42 ; '0 received a TinyMedal!'
+    script_message $0D40 ; 'I like you to have this.'
+    script_message $0D18 ; '0 received the Ice Key.'
+    script_message $0D42 ; 'I'll pray for your safety. Take'
     script_set_flag $0134
     script_end
 Script_561A:: ; heuristic: event script entry or jump target; C0
     script_message $48C8 ; 'Wait! Could I get you to'
     script_skip_if_no Script_5623
-    script_message $88CA ; 'Fantastic! I can open my shop'
+    script_message $88CA ; 'Oh That's very disappointing. I could'
     script_end
 Script_5623:: ; heuristic: event script entry or jump target; C0
-    script_message $88C9 ; 'Wait! Could I get you to'
+    script_message $88C9 ; 'Fantastic! I can open my shop'
     script_command $3D
-    script_message $0D43 ; 'I'll pray for your safety. Take'
+    script_message $0D43 ; 'I like you to have this.'
     script_set_flag $01A5
     script_set_flag $0134
     script_end
 Script_5631:: ; heuristic: event script entry or jump target; C0
     script_message $48C8 ; 'Wait! Could I get you to'
     script_skip_if_no Script_563A
-    script_message $88CA ; 'Fantastic! I can open my shop'
+    script_message $88CA ; 'Oh That's very disappointing. I could'
     script_end
 Script_563A:: ; heuristic: event script entry or jump target; C0
-    script_message $88C9 ; 'Wait! Could I get you to'
+    script_message $88C9 ; 'Fantastic! I can open my shop'
     script_command $3D
-    script_message $0D40 ; 'What's that? Hey, a TinyMedal! That'
-    script_message $0D41 ; 'I like you to have this.'
-    script_message $0D42 ; '0 received a TinyMedal!'
+    script_message $0D40 ; 'I like you to have this.'
+    script_message $0D41 ; '0 received a TinyMedal!'
+    script_message $0D42 ; 'I'll pray for your safety. Take'
     script_set_flag $0134
     script_end
 Script_564B:: ; heuristic: event script entry or jump target; C0
 Data_010_564B:: ; address name
-    script_message $48CB ; 'Oh That's very disappointing. I could'
+    script_message $48CB ; 'ArmyAnt helped me get my shop'
     script_jump_data_bank Script_6659
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5652:: ; heuristic: event script entry or jump target; C0
-    script_message $48CC ; 'ArmyAnt helped me get my shop'
+    script_message $48CC ; 'Welcome! How may I serve you?'
     script_jump_data_bank Script_6659
     db $FF, $00, $8A, $4D, $E7, $59, $66, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5660:: ; heuristic: event script entry or jump target; C0
-    script_message $4A46 ; 'If you want to make a'
+    script_message $4A46 ; 'I'm a traveling merchant. I'm also'
     script_skip_if_no Script_5669
-    script_message $8A48 ; 'Then let's breed them!'
+    script_message $8A48 ; 'Oh, too bad. Another time.'
     script_end
 Script_5669:: ; heuristic: event script entry or jump target; C0
-    script_message $CA47 ; 'I'm a traveling merchant. I'm also'
+    script_message $CA47 ; 'Then let's breed them!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5670:: ; heuristic: event script entry or jump target; C0
-    script_message $4513 ; 'Kameha Yo, 0. Thanks for coming.'
+    script_message $4513 ; 'I'm a scientist. I e been'
     script_skip_if_no Script_5679
-    script_message $8515 ; 'Well, let's see about breeding!'
+    script_message $8515 ; 'Oh Perhaps on another occasion.'
     script_end
 Script_5679:: ; heuristic: event script entry or jump target; C0
-    script_message $C514 ; 'I'm a scientist. I e been'
+    script_message $C514 ; 'Well, let's see about breeding!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5680:: ; heuristic: event script entry or jump target; C0
-    script_message $44B7 ; 'If you eat any BadMeat like'
+    script_message $44B7 ; 'Hm? Little one, are you a'
     script_skip_if_no Script_5689
-    script_message $84B9 ; 'Good! Let's get this started!'
+    script_message $84B9 ; 'Oh, too bad. Another time. Tell'
     script_end
 Script_5689:: ; heuristic: event script entry or jump target; C0
-    script_message $C4B8 ; 'Hm? Little one, are you a'
+    script_message $C4B8 ; 'Good! Let's get this started!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5690:: ; heuristic: event script entry or jump target; C0
-    script_message $44C8 ; '0 checked the bookshelf. Handbook on'
+    script_message $44C8 ; 'I was once a great master'
     script_skip_if_no Script_569C
-    script_message $84CA ; 'Have you shown them to the'
+    script_message $84CA ; 'You e not found any yet?'
     script_set_flag $011D
     script_end
 Script_569C:: ; heuristic: event script entry or jump target; C0
-    script_message $84C9 ; 'I was once a great master'
+    script_message $84C9 ; 'Have you shown them to the'
     script_end
 Script_56A0:: ; heuristic: event script entry or jump target; C0
-    script_message $0B4C ; 'Those monsters don't surprise me. Bring'
+    script_message $0B4C ; 'Oh! Goodness! I'm surprised! I e'
     script_command $CF
     script_set_flag $002F
     script_end
 Script_56A8:: ; heuristic: event script entry or jump target; C0
-    script_message $0BBF ; 'Hey, hey, hey! We have to'
+    script_message $0BBF ; 'How good of you to overcome'
     script_command $CF
     script_end
 Script_56AD:: ; heuristic: event script entry or jump target; C0
     script_set_flag $011F
-    script_message $4297 ; '0 peered into the vase. It'
+    script_message $4297 ; 'Welcome to my Key Shop! I'
     script_jump_data_bank Script_0D_62B8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_56B7:: ; heuristic: event script entry or jump target; C0
-    script_message $4298 ; 'Welcome to my Key Shop! I'
+    script_message $4298 ; 'Welcome to my Key Shop! Should'
     script_jump_data_bank Script_0D_62B8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_56BE:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0113
-    script_message $4B1E ; 'If you have a lot of'
+    script_message $4B1E ; 'You're GreatLog's savior! Do you need'
     script_jump_data_bank Script_0D_62B8
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_56C8:: ; heuristic: event script entry or jump target; C0
-    script_message $44BD ; 'I learned how to Massacre! But'
+    script_message $44BD ; 'Yo! Up close, you look tougher'
     script_skip_if_no Script_56D1
-    script_message $84BF ; 'I like your style! Let's get'
+    script_message $84BF ; 'What? Are you sure about that?'
     script_end
 Script_56D1:: ; heuristic: event script entry or jump target; C0
-    script_message $C4BE ; 'Yo! Up close, you look tougher'
+    script_message $C4BE ; 'I like your style! Let's get'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_56D8:: ; heuristic: event script entry or jump target; C0
-    script_message $4277 ; 'If you want to enter, please'
+    script_message $4277 ; 'Welcome to the Arena! Would you'
     script_skip_if_no Script_56E1
-    script_message $8279 ; 'Your party may enter in battles'
+    script_message $8279 ; 'Oops, it's not your first time!'
     script_end
 Script_56E1:: ; heuristic: event script entry or jump target; C0
-    script_message $8278 ; 'Welcome to the Arena! Would you'
+    script_message $8278 ; 'Your party may enter in battles'
     script_end
 Script_56E5:: ; heuristic: event script entry or jump target; C0
-    script_message $4277 ; 'If you want to enter, please'
+    script_message $4277 ; 'Welcome to the Arena! Would you'
     script_skip_if_no Script_56EE
-    script_message $8B66 ; 'As a pro master, you can'
+    script_message $8B66 ; 'Oops, it's not your first time!'
     script_end
 Script_56EE:: ; heuristic: event script entry or jump target; C0
     script_message $8B65 ; 'As a pro master, you can'
@@ -4213,61 +4213,61 @@ Script_56F2:: ; heuristic: event script entry or jump target; C0
 Script_56F5:: ; heuristic: event script entry or jump target; C0
     script_walk 2, 3, 2
     script_face $00, 1
-    script_message $0546 ; 'You're today's guest of honor! You'
+    script_message $0546 ; 'Cobi 0, congratulations! I thought we'
     script_wait 60
     script_sound $28
-    script_message $0547 ; 'Cobi 0, congratulations! I thought we'
+    script_message $0547 ; 'Hehehe, no need to worry there!'
     script_command $5F
     script_end
 Script_5709:: ; heuristic: event script entry or jump target; C0
     script_walk 2, 3, 2
     script_face $00, 1
-    script_message $054A ; 'Warubou No one knows how many'
+    script_message $054A ; 'Tara 0, congratulations! I was sad'
     script_wait 60
     script_sound $28
-    script_message $0547 ; 'Cobi 0, congratulations! I thought we'
+    script_message $0547 ; 'Hehehe, no need to worry there!'
     script_command $5F
     script_end
 Script_571D:: ; heuristic: event script entry or jump target; C0
-    script_message $4111 ; 'Tara Hi! How are you? Do'
+    script_message $4111 ; 'Want to know how the farm'
     script_skip_if_no Script_5726
-    script_message $8113 ; 'Including the monsters with you, the'
+    script_message $8113 ; 'Aww You know already? Boring!'
     script_end
 Script_5726:: ; heuristic: event script entry or jump target; C0
-    script_message $8112 ; 'Want to know how the farm'
+    script_message $8112 ; 'Including the monsters with you, the'
     script_end
 Script_572A:: ; heuristic: event script entry or jump target; C0
-    script_message $4111 ; 'Tara Hi! How are you? Do'
+    script_message $4111 ; 'Want to know how the farm'
     script_skip_if_no Script_5733
-    script_message $8113 ; 'Including the monsters with you, the'
+    script_message $8113 ; 'Aww You know already? Boring!'
     script_end
 Script_5733:: ; heuristic: event script entry or jump target; C0
     script_message $8255 ; 'The farm grew a lot bigger.'
     script_end
 Script_5737:: ; heuristic: event script entry or jump target; C0
-    script_message $4111 ; 'Tara Hi! How are you? Do'
+    script_message $4111 ; 'Want to know how the farm'
     script_skip_if_no Script_5740
-    script_message $8113 ; 'Including the monsters with you, the'
+    script_message $8113 ; 'Aww You know already? Boring!'
     script_end
 Script_5740:: ; heuristic: event script entry or jump target; C0
-    script_message $88BE ; 'Tara Big brother, tell me about'
+    script_message $88BE ; 'Including the monsters with you, the'
     script_end
 Script_5744:: ; heuristic: event script entry or jump target; C0
-    script_message $4A54 ; 'Zzz Zzz Zzz Whoops! Was I'
+    script_message $4A54 ; 'Do you want to know how'
     script_skip_if_no Script_574D
-    script_message $8A58 ; 'Once a monster reaches its growth'
+    script_message $8A58 ; 'Everyone has a growth limit. Whether'
     script_end
 Script_574D:: ; heuristic: event script entry or jump target; C0
     script_command $65
-    script_message $8A57 ; 'N has reached its growth limit.'
+    script_message $8A57 ; 'Once a monster reaches its growth'
     script_end
 Script_5752:: ; heuristic: event script entry or jump target; C0
-    script_message $4289 ; 'My husband is a master still.'
+    script_message $4289 ; 'Hello there. Do you know about'
     script_skip_if_no Script_575B
-    script_message $828B ; 'The strongest master I e ever'
+    script_message $828B ; 'You don't know? Sorry about that.'
     script_end
 Script_575B:: ; heuristic: event script entry or jump target; C0
-    script_message $828A ; 'Hello there. Do you know about'
+    script_message $828A ; 'The strongest master I e ever'
     script_end
 Script_575F:: ; heuristic: event script entry or jump target; C0
     script_command $3E
@@ -4284,23 +4284,23 @@ Script_57A2:: ; heuristic: event script entry or jump target; C0
     script_wait 30
     script_command $7A
     script_walk_fast 0, 0, 5
-    script_message $4A36 ; 'I'm a bug, so I'm not'
+    script_message $4A36 ; 'Prince Kameha has been missing from'
     script_skip_if_no Script_57BD
-    script_message $8A38 ; 'What's that? You saw Prince Kameha'
+    script_message $8A38 ; 'You better be telling the truth.'
     script_walk_fast 0, 2, 5
     script_face $80, 0
     script_end
 Script_57BD:: ; heuristic: event script entry or jump target; C0
-    script_message $8A37 ; 'Prince Kameha has been missing from'
+    script_message $8A37 ; 'What's that? You saw Prince Kameha'
     script_set_flag $0117
     script_command $59
-    script_message $0A3A ; 'The man here has rare keys.'
-    script_message $0A3B ; 'Sire, this child claims to know'
+    script_message $0A3A ; 'Sire, this child claims to know'
+    script_message $0A3B ; 'King What's that? Is that so?'
     script_walk 0, 0, 1
-    script_message $0D28 ; '0 checked the treasure chest. The'
+    script_message $0D28 ; '0 obtained the Sky Key.'
     script_walk 0, 2, 1
     script_face $80, 0
-    script_message $0D29 ; '0 obtained the Sky Key.'
+    script_message $0D29 ; 'King Kameha made off with the'
     script_end
 Script_57DC:: ; heuristic: event script entry or jump target; C0
     script_face $00, 3
@@ -4314,266 +4314,266 @@ Script_57E3:: ; heuristic: event script entry or jump target; C0
     script_command $78
     script_end
 Script_57E8:: ; heuristic: event script entry or jump target; C0
-    script_message $0D61 ; 'What will you give to the'
+    script_message $0D61 ; 'Y has been given to the'
     script_command $78
     script_end
 Script_57ED:: ; heuristic: event script entry or jump target; C0
 Data_010_57ED:: ; address name
     script_set_flag $012C
-    script_message $4B16 ; 'When master's shop starts making money,'
+    script_message $4B16 ; 'I'm sorry. I was wrong about'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_57F7:: ; heuristic: event script entry or jump target; C0
-    script_message $4B17 ; 'I'm sorry. I was wrong about'
+    script_message $4B17 ; 'Hello! How may I serve you'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_57FE:: ; heuristic: event script entry or jump target; C0
-    script_message $4B21 ; 'Oh, the savior of GreatLog. I'm'
+    script_message $4B21 ; 'Hello, hero! Let me help you!'
     script_skip_if_no Script_5807
-    script_message $8B24 ; 'Oh? But there's no room for'
+    script_message $8B24 ; 'Oh Well, that's too bad, then.'
     script_end
 Script_5807:: ; heuristic: event script entry or jump target; C0
-    script_message $8B23 ; 'You'll take it? Excellent! I'll send'
+    script_message $8B23 ; 'Oh? But there's no room for'
     script_end
 Script_580B:: ; heuristic: event script entry or jump target; C0
-    script_message $4B21 ; 'Oh, the savior of GreatLog. I'm'
+    script_message $4B21 ; 'Hello, hero! Let me help you!'
     script_skip_if_no Script_5814
-    script_message $8B24 ; 'Oh? But there's no room for'
+    script_message $8B24 ; 'Oh Well, that's too bad, then.'
     script_end
 Script_5814:: ; heuristic: event script entry or jump target; C0
-    script_message $8B22 ; 'Hello, hero! Let me help you!'
+    script_message $8B22 ; 'You'll take it? Excellent! I'll send'
     script_command $6C
     script_set_flag $0029
     script_end
 Script_581C:: ; heuristic: event script entry or jump target; C0
-    script_message $4B53 ; 'Ah, the savior of GreatLog! You're'
+    script_message $4B53 ; 'Didn't you save GreatLog? That is'
     script_skip_if_no Script_5825
-    script_message $8B55 ; 'Great! Let's give it a try!'
+    script_message $8B55 ; 'Oh. Too bad. Maybe next time.'
     script_end
 Script_5825:: ; heuristic: event script entry or jump target; C0
-    script_message $CB54 ; 'Didn't you save GreatLog? That is'
+    script_message $CB54 ; 'Great! Let's give it a try!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_582C:: ; heuristic: event script entry or jump target; C0
-    script_message $4B57 ; 'When you breed monsters with another'
+    script_message $4B57 ; 'Ah, you must be the little'
     script_skip_if_no Script_5835
-    script_message $8B59 ; 'May good fortune arrive quickly. Please,'
+    script_message $8B59 ; 'May misfortune shun you. I'll await'
     script_end
 Script_5835:: ; heuristic: event script entry or jump target; C0
-    script_message $CB58 ; 'Ah, you must be the little'
+    script_message $CB58 ; 'May good fortune arrive quickly. Please,'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_583C:: ; heuristic: event script entry or jump target; C0
-    script_message $4B5B ; 'Generations of breeding passes on skills'
+    script_message $4B5B ; 'I didn't think GreatLog's hero could'
     script_skip_if_no Script_5845
-    script_message $8B5D ; 'Well, no time to lose! Quick!'
+    script_message $8B5D ; 'Oh That's so disappointing. Well, come'
     script_end
 Script_5845:: ; heuristic: event script entry or jump target; C0
-    script_message $CB5C ; 'I didn't think GreatLog's hero could'
+    script_message $CB5C ; 'Well, no time to lose! Quick!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_584C:: ; heuristic: event script entry or jump target; C0
-    script_message $4B6A ; 'When you're at the pro level,'
+    script_message $4B6A ; 'Are you perhaps GreatLog's savior? Hey,'
     script_skip_if_no Script_5855
-    script_message $8B6C ; 'OK! Let the breeding happen!'
+    script_message $8B6C ; 'No? Well, if we meet again'
     script_end
 Script_5855:: ; heuristic: event script entry or jump target; C0
-    script_message $CB6B ; 'Are you perhaps GreatLog's savior? Hey,'
+    script_message $CB6B ; 'OK! Let the breeding happen!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_585C:: ; heuristic: event script entry or jump target; C0
-    script_message $4B70 ; 'As I level up, my FrigidAir'
+    script_message $4B70 ; 'Hey! You're still at it, youngster?'
     script_skip_if_no Script_5865
-    script_message $8B72 ; 'Great! Good answer!'
+    script_message $8B72 ; 'That's too bad. It's a waste'
     script_end
 Script_5865:: ; heuristic: event script entry or jump target; C0
-    script_message $CB71 ; 'Hey! You're still at it, youngster?'
+    script_message $CB71 ; 'Great! Good answer!'
     script_jump_data_bank Script_0E_7F8B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_586C:: ; heuristic: event script entry or jump target; C0
-    script_message $0BC3 ; '0 received the Magic Key.'
+    script_message $0BC3 ; '0 checked the desk.'
     script_command $6F
-    script_message $0B4E ; 'Obtain the other key that doesn't'
+    script_message $0B4E ; '0 obtained the Brawn Key.'
     script_set_flag $003D
     script_end
 Script_5877:: ; heuristic: event script entry or jump target; C0
-    script_message $0BC3 ; '0 received the Magic Key.'
+    script_message $0BC3 ; '0 checked the desk.'
     script_command $6F
-    script_message $0BB5 ; 'There are still many things that'
+    script_message $0BB5 ; '0 obtained the Baffle Key.'
     script_set_flag $003D
     script_end
 Script_5882:: ; heuristic: event script entry or jump target; C0
-    script_message $0BC3 ; '0 received the Magic Key.'
+    script_message $0BC3 ; '0 checked the desk.'
     script_command $6F
-    script_message $0BB7 ; '0 found a Magic Key. But'
+    script_message $0BB7 ; '0 obtained the Soul Key.'
     script_set_flag $00C8
     script_end
 Script_588D:: ; heuristic: event script entry or jump target; C0
-    script_message $0BC3 ; '0 received the Magic Key.'
+    script_message $0BC3 ; '0 checked the desk.'
     script_command $6F
-    script_message $0BC0 ; 'How good of you to overcome'
+    script_message $0BC0 ; '0 obtained the Magic Key.'
     script_end
 Script_5895:: ; heuristic: event script entry or jump target; C0
     script_sound $60
     script_command $70
     script_end
 Script_5899:: ; heuristic: event script entry or jump target; C0
-    script_message $4BAD ; 'You need to strike the right'
+    script_message $4BAD ; 'Humph I'm Terry. I'm a master'
     script_skip_if_no Script_58A2
-    script_message $8BAF ; 'Terry Humph Confident, huh? I'll tell'
+    script_message $8BAF ; 'Terry Oh, it was someone else?'
     script_end
 Script_58A2:: ; heuristic: event script entry or jump target; C0
-    script_message $8BAE ; 'Humph I'm Terry. I'm a master'
+    script_message $8BAE ; 'Terry Humph Confident, huh? I'll tell'
     script_command $7C
     script_end
     db $00, $B0, $4B, $06, $04, $00, $AF, $8B, $FF, $00, $AE, $8B, $7C, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_58B5:: ; heuristic: event script entry or jump target; C0
-    script_message $4B8F ; 'It would be our Kingdom's shame'
+    script_message $4B8F ; 'Kameha I e gone to other'
     script_skip_if_no Script_58BE
-    script_message $8B91 ; 'Kameha So you're confident, huh? Let's'
+    script_message $8B91 ; 'Kameha What? Scared, 0?'
     script_end
 Script_58BE:: ; heuristic: event script entry or jump target; C0
-    script_message $8B90 ; 'i 't z ! S V'
+    script_message $8B90 ; 'Kameha So you're confident, huh? Let's'
     script_command $71
     script_end
 Script_58C3:: ; heuristic: event script entry or jump target; C0
-    script_message $0B95 ; 'Kameha Well, uh, luck and status'
-    script_message $0B93 ; 'Kameha Well, uh, luck and status'
+    script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
+    script_message $0B93 ; '0 received the Elf Key.'
     script_set_flag $003A
     script_end
 Script_58CD:: ; heuristic: event script entry or jump target; C0
-    script_message $0B95 ; 'Kameha Well, uh, luck and status'
-    script_message $0BC2 ; 'But there was nothing there.'
+    script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
+    script_message $0BC2 ; '0 received the Magic Key.'
     script_set_flag $003A
     script_end
     db $00, $95, $0B, $00, $9A, $0B, $0A, $3A, $00, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_58E1:: ; heuristic: event script entry or jump target; C0
-    script_message $4B8F ; 'It would be our Kingdom's shame'
+    script_message $4B8F ; 'Kameha I e gone to other'
     script_skip_if_no Script_58EA
-    script_message $8B91 ; 'Kameha So you're confident, huh? Let's'
+    script_message $8B91 ; 'Kameha What? Scared, 0?'
     script_end
 Script_58EA:: ; heuristic: event script entry or jump target; C0
-    script_message $8B90 ; 'i 't z ! S V'
+    script_message $8B90 ; 'Kameha So you're confident, huh? Let's'
     script_command $72
     script_end
 Script_58EF:: ; heuristic: event script entry or jump target; C0
-    script_message $0B95 ; 'Kameha Well, uh, luck and status'
-    script_message $0B9D ; 'Kameha That was a good warmup!'
+    script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
+    script_message $0B9D ; '0 received the Traveler Key.'
     script_set_flag $003C
     script_end
 Script_58F9:: ; heuristic: event script entry or jump target; C0
-    script_message $0B95 ; 'Kameha Well, uh, luck and status'
-    script_message $0BC2 ; 'But there was nothing there.'
+    script_message $0B95 ; 'Kameha What? Oh, it's 0. Did'
+    script_message $0BC2 ; '0 received the Magic Key.'
     script_set_flag $003C
     script_end
 Script_5903:: ; heuristic: event script entry or jump target; C0
     script_message $4B7C ; 'King Oh? It's our savior 0!'
     script_skip_if_no Script_590C
-    script_message $8B7E ; 'King You will? I knew I'
+    script_message $8B7E ; 'King You refuse my request? After'
     script_end
 Script_590C:: ; heuristic: event script entry or jump target; C0
-    script_message $8B7D ; 'King Oh? It's our savior 0!'
+    script_message $8B7D ; 'King You will? I knew I'
     script_set_flag $0192
     script_end
 Script_5913:: ; heuristic: event script entry or jump target; C0
-    script_message $0B80 ; 'King There is an evil master'
-    script_message $0B81 ; 'King Ah, you e finally caught'
+    script_message $0B80 ; 'King Ah, you e finally caught'
+    script_message $0B81 ; '0 received 10,000G.'
     script_set_flag $0194
     script_end
 Script_591D:: ; heuristic: event script entry or jump target; C0
-    script_message $4B83 ; 'King I was right to trust'
+    script_message $4B83 ; 'King Oh? It's our savior 0!'
     script_skip_if_no Script_5926
-    script_message $8B7E ; 'King You will? I knew I'
+    script_message $8B7E ; 'King You refuse my request? After'
     script_end
 Script_5926:: ; heuristic: event script entry or jump target; C0
-    script_message $8B84 ; 'King Oh? It's our savior 0!'
+    script_message $8B84 ; 'King You will? I knew I'
     script_set_flag $0195
     script_end
 Script_592D:: ; heuristic: event script entry or jump target; C0
-    script_message $0B80 ; 'King There is an evil master'
-    script_message $0B86 ; 'King There is an evil master'
+    script_message $0B80 ; 'King Ah, you e finally caught'
+    script_message $0B86 ; '0 received 20,000G.'
     script_set_flag $0197
     script_end
 Script_5937:: ; heuristic: event script entry or jump target; C0
-    script_message $4B83 ; 'King I was right to trust'
+    script_message $4B83 ; 'King Oh? It's our savior 0!'
     script_skip_if_no Script_5940
-    script_message $8B7E ; 'King You will? I knew I'
+    script_message $8B7E ; 'King You refuse my request? After'
     script_end
 Script_5940:: ; heuristic: event script entry or jump target; C0
-    script_message $8B87 ; '0 received 20,000G.'
+    script_message $8B87 ; 'King You will? I knew I'
     script_set_flag $0198
     script_end
 Script_5947:: ; heuristic: event script entry or jump target; C0
-    script_message $0B80 ; 'King There is an evil master'
-    script_message $0B89 ; 'King There is an evil master'
+    script_message $0B80 ; 'King Ah, you e finally caught'
+    script_message $0B89 ; '0 received 30,000G.'
     script_set_flag $019A
     script_end
 Script_5951:: ; heuristic: event script entry or jump target; C0
-    script_message $4B83 ; 'King I was right to trust'
+    script_message $4B83 ; 'King Oh? It's our savior 0!'
     script_skip_if_no Script_595A
-    script_message $8B7E ; 'King You will? I knew I'
+    script_message $8B7E ; 'King You refuse my request? After'
     script_end
 Script_595A:: ; heuristic: event script entry or jump target; C0
-    script_message $8B8A ; '0 received 30,000G.'
+    script_message $8B8A ; 'King You will? I knew I'
     script_set_flag $019B
     script_end
 Script_5961:: ; heuristic: event script entry or jump target; C0
-    script_message $0B80 ; 'King There is an evil master'
-    script_message $0B8C ; 'King There is an evil master'
+    script_message $0B80 ; 'King Ah, you e finally caught'
+    script_message $0B8C ; '0 received 40,000G.'
     script_set_flag $019D
     script_end
 Script_596B:: ; heuristic: event script entry or jump target; C0
     script_set_flag $012A
     script_message $41D0 ; 'This is a great spot to'
     script_skip_if_no Script_5977
-    script_message $81D2 ; 'Put the Dream Egg on the'
+    script_message $81D2 ; 'This talk is too early for'
     script_end
 Script_5977:: ; heuristic: event script entry or jump target; C0
-    script_message $81D1 ; 'This is a great spot to'
+    script_message $81D1 ; 'Put the Dream Egg on the'
     script_end
 Script_597B:: ; heuristic: event script entry or jump target; C0
-    script_message $41D3 ; 'This talk is too early for'
+    script_message $41D3 ; 'Have you ever found a Dream'
     script_skip_if_no Script_5984
-    script_message $81D2 ; 'Put the Dream Egg on the'
+    script_message $81D2 ; 'This talk is too early for'
     script_end
 Script_5984:: ; heuristic: event script entry or jump target; C0
-    script_message $81D1 ; 'This is a great spot to'
+    script_message $81D1 ; 'Put the Dream Egg on the'
     script_end
 Script_5988:: ; heuristic: event script entry or jump target; C0
     script_walk 2, 1, 6
     script_face $00, 3
-    script_message $01D4 ; 'Have you ever found a Dream'
+    script_message $01D4 ; 'You're the child of the farmer?'
     script_slide_y $82
-    script_message $0DDE ; 'm d Z S B V'
+    script_message $0DDE ; 'What? You don't know about the'
     script_walk 2, 3, 6
     script_set_flag $0187
     script_end
 Script_599F:: ; heuristic: event script entry or jump target; C0
-    script_message $0D49 ; 'Here, 0! You hold onto it.'
-    script_message $0D41 ; 'I like you to have this.'
+    script_message $0D49 ; 'Here's that TinyMedal.'
+    script_message $0D41 ; '0 received a TinyMedal!'
     script_set_flag $01A4
     script_end
 Script_59A9:: ; heuristic: event script entry or jump target; C0
-    script_message $0D44 ; 'I like you to have this.'
-    script_message $0D41 ; 'I like you to have this.'
+    script_message $0D44 ; 'Here it is-the TinyMedal. My master'
+    script_message $0D41 ; '0 received a TinyMedal!'
     script_set_flag $01A6
     script_end
 Script_59B3:: ; heuristic: event script entry or jump target; C0
@@ -4584,126 +4584,126 @@ Data_010_59B3:: ; address name
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59BA:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59C1:: ; heuristic: event script entry or jump target; C0
 Data_010_59C1:: ; address name
-    script_message $4144 ; 'When we get a hot spell,'
+    script_message $4144 ; 'Welcome to my item shop! You'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59C8:: ; heuristic: event script entry or jump target; C0
-    script_message $4145 ; 'Welcome to my item shop! You'
+    script_message $4145 ; 'Hello! How may I serve you'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59CF:: ; heuristic: event script entry or jump target; C0
-    script_message $4146 ; 'Hello! How may I serve you'
+    script_message $4146 ; 'The church welcomes you. We can'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59D6:: ; heuristic: event script entry or jump target; C0
-    script_message $4147 ; 'The church welcomes you. We can'
+    script_message $4147 ; 'I am a servant to the'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_59DD:: ; heuristic: event script entry or jump target; C0
-    script_message $4148 ; 'I am a servant to the'
+    script_message $4148 ; 'I am the leader of a'
     script_skip_if_no Script_59E6
-    script_message $814C ; 'Did you say yes? Yes, yes,'
+    script_message $814C ; 'You close the door to stardom?'
     script_end
 Script_59E6:: ; heuristic: event script entry or jump target; C0
-    script_message $8149 ; 'I am the leader of a'
+    script_message $8149 ; 'Did you say yes? Yes, yes,'
     script_set_flag $0042
     script_command $1F
     script_face $83, 2
-    script_message $0153 ; 'Next, monsters will perform some amazing,'
+    script_message $0153 ; 'Very good show! That was splendid'
     script_set_flag $0043
     script_end
 Script_59F7:: ; heuristic: event script entry or jump target; C0
-    script_message $4148 ; 'I am a servant to the'
+    script_message $4148 ; 'I am the leader of a'
     script_skip_if_no Script_5A00
-    script_message $814C ; 'Did you say yes? Yes, yes,'
+    script_message $814C ; 'You close the door to stardom?'
     script_end
 Script_5A00:: ; heuristic: event script entry or jump target; C0
     script_message $814B ; 'Did you say yes? Yes, yes,'
     script_set_flag $0042
     script_end
 Script_5A07:: ; heuristic: event script entry or jump target; C0
-    script_message $4148 ; 'I am a servant to the'
+    script_message $4148 ; 'I am the leader of a'
     script_skip_if_no Script_5A10
-    script_message $814C ; 'Did you say yes? Yes, yes,'
+    script_message $814C ; 'You close the door to stardom?'
     script_end
 Script_5A10:: ; heuristic: event script entry or jump target; C0
     script_message $814A ; 'Did you say yes? Yes, yes,'
     script_set_flag $0042
     script_end
 Script_5A17:: ; heuristic: event script entry or jump target; C0
-    script_message $014D ; 'You close the door to stardom?'
+    script_message $014D ; 'Ah, three healthy monsters! Very well'
     script_command $1F
     script_face $83, 2
-    script_message $0153 ; 'Next, monsters will perform some amazing,'
+    script_message $0153 ; 'Very good show! That was splendid'
     script_set_flag $0043
     script_end
 Script_5A25:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5A2C:: ; heuristic: event script entry or jump target; C0
-    script_message $4160 ; '0 checked the dresser. There were'
+    script_message $4160 ; 'King Ah, you're the monster tamer'
     script_skip_if_no Script_5A35
-    script_message $8D01 ; 'They say you use Magic Keys'
+    script_message $8D01 ; 'King Then, you are excused. I'm'
     script_end
 Script_5A35:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0044
-    script_message $8D02 ; 'King Then, you are excused. I'm'
+    script_message $8D02 ; 'King You wish to see our'
     script_command $21
-    script_message $4161 ; 'King Ah, you're the monster tamer'
+    script_message $4161 ; 'King I see. This is what'
     script_skip_if_no Script_5A45
-    script_message $8163 ; 'King Then make way to the'
+    script_message $8163 ; 'King Oh You won't? Then, I'
     script_end
 Script_5A45:: ; heuristic: event script entry or jump target; C0
-    script_message $8162 ; 'King I see. This is what'
+    script_message $8162 ; 'King Then make way to the'
     script_set_flag $0045
     script_end
 Script_5A4C:: ; heuristic: event script entry or jump target; C0
-    script_message $4165 ; 'King Investigate what concerns my people'
+    script_message $4165 ; 'King So? Have you decided to'
     script_skip_if_no Script_5A55
-    script_message $8163 ; 'King Then make way to the'
+    script_message $8163 ; 'King Oh You won't? Then, I'
     script_end
 Script_5A55:: ; heuristic: event script entry or jump target; C0
-    script_message $8162 ; 'King I see. This is what'
+    script_message $8162 ; 'King Then make way to the'
     script_set_flag $0045
     script_end
 Script_5A5C:: ; heuristic: event script entry or jump target; C0
-    script_message $016C ; 'The King is so frivolous. A'
+    script_message $016C ; 'So, have you discovered what concerns'
     script_walk_fast 0, 2, 4
     script_walk 1, 1, 1
     script_walk 1, 0, 4
-    script_message $016D ; 'So, have you discovered what concerns'
+    script_message $016D ; 'King The canal is managed by'
     script_slide_y $80
-    script_message $016E ; 'King The canal is managed by'
+    script_message $016E ; 'Your Majesty, I must remind you'
     script_walk_fast 1, 3, 1
     script_walk_fast 1, 1, 2
     script_walk_fast 1, 3, 2
     script_walk_fast 1, 1, 1
     script_face $81, 0
-    script_message $016F ; 'Your Majesty, I must remind you'
+    script_message $016F ; 'King What? Never mind, then! I'll'
     script_walk_fast 1, 3, 1
     script_walk_fast 1, 0, 5
     script_set_flag $0049
     script_end
 Script_5A95:: ; heuristic: event script entry or jump target; C0
-    script_message $0171 ; 'I feel badly for his Majesty,'
+    script_message $0171 ; 'What? Open the Canal Gate more?'
     script_command $22
     script_wait 30
     script_walk_fast 0, 2, 2
@@ -4712,19 +4712,19 @@ Script_5A95:: ; heuristic: event script entry or jump target; C0
     script_hide_object $00
     script_end
 Script_5AAB:: ; heuristic: event script entry or jump target; C0
-    script_message $0175 ; 'I discovered why the water is'
+    script_message $0175 ; 'I'm making a new home for'
     script_encounter $16
-    script_message $0176 ; 'I'm making a new home for'
+    script_message $0176 ; 'Gaah! You're too strong! You win!'
     script_face $80, 2
     script_slide_y $80
-    script_message $0177 ; 'Gaah! You're too strong! You win!'
+    script_message $0177 ; 'King What? So that's the truth?'
     script_face $81, 0
-    script_message $0178 ; 'King What? So that's the truth?'
+    script_message $0178 ; 'You will? So we can go'
     script_hide_object $01
     script_set_flag $0053
     script_command $25
     script_set_flag $0054
-    script_message $0179 ; 'You will? So we can go'
+    script_message $0179 ; 'King This should solve the water'
     script_walk 0, 0, 3
     script_end
 Script_5AD2:: ; heuristic: event script entry or jump target; C0
@@ -4734,44 +4734,44 @@ Script_5AD2:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5AD6:: ; heuristic: event script entry or jump target; C0
-    script_message $0181 ; 'The King appears to have turned'
+    script_message $0181 ; 'King The town's water shortage seems'
     script_set_flag $0055
     script_walk 1, 0, 8
     script_command $23
     script_walk_fast 0, 1, 3
     script_face $80, 2
-    script_message $0182 ; 'King The town's water shortage seems'
+    script_message $0182 ; 'King Wha-what? What happened?'
     script_face $81, 0
-    script_message $0183 ; 'King Wha-what? What happened?'
+    script_message $0183 ; 'We We were jumped by thieves'
     script_slide_y $80
-    script_message $0184 ; 'We We were jumped by thieves'
+    script_message $0184 ; 'King What? Arrrrgh! Round up all'
     script_command $24
     script_walk 0, 0, 1
     script_walk 0, 1, 1
     script_face $00, 3
-    script_message $0187 ; 'King Good! Your valor be praised!'
+    script_message $0187 ; 'King I apologize, but my treasures'
     script_walk 0, 0, 8
     script_set_flag $0056
     script_end
 Script_5B0D:: ; heuristic: event script entry or jump target; C0
-    script_message $4188 ; 'King I apologize, but my treasures'
+    script_message $4188 ; 'Wh-where is everybody? I haven't been'
     script_skip_if_no Script_5B16
-    script_message $818D ; '0 had no food to give'
+    script_message $818D ; 'Tch, what good are you? I'm'
     script_end
 Script_5B16:: ; heuristic: event script entry or jump target; C0
-    script_message $818C ; '0 received a WaterCall.'
-    script_message $018D ; '0 had no food to give'
+    script_message $818C ; '0 had no food to give'
+    script_message $018D ; 'Tch, what good are you? I'm'
     script_end
 Script_5B1D:: ; heuristic: event script entry or jump target; C0
-    script_message $4188 ; 'King I apologize, but my treasures'
+    script_message $4188 ; 'Wh-where is everybody? I haven't been'
     script_skip_if_no Script_5B26
-    script_message $818D ; '0 had no food to give'
+    script_message $818D ; 'Tch, what good are you? I'm'
     script_end
 Script_5B26:: ; heuristic: event script entry or jump target; C0
-    script_message $8189 ; 'Wh-where is everybody? I haven't been'
-    script_message $018A ; '0 handed over some food.'
-    script_message $018B ; 'Munch, munch Chew, gulp Fwoaar, that'
-    script_message $0D03 ; 'King You wish to see our'
+    script_message $8189 ; '0 handed over some food.'
+    script_message $018A ; 'Munch, munch Chew, gulp Fwoaar, that'
+    script_message $018B ; '0 received a WaterCall.'
+    script_message $0D03 ; 'That will help you for certain.'
     script_command $1E
     script_set_flag $0057
     script_end
@@ -4780,16 +4780,16 @@ Script_5B37:: ; heuristic: event script entry or jump target; C0
     script_command $26
     script_end
 Script_5B3C:: ; heuristic: event script entry or jump target; C0
-    script_message $0196 ; 'The leader of the thieves is'
+    script_message $0196 ; 'Heh, you have monsters in tow?'
     script_set_flag $0059
     script_encounter $00
-    script_message $0198 ; 'You again! You're determined! But it'
+    script_message $0198 ; 'You defeated my monster? Urggh Time'
     script_command $27
     script_end
 Script_5B49:: ; heuristic: event script entry or jump target; C0
-    script_message $0197 ; 'Heh, you have monsters in tow?'
+    script_message $0197 ; 'You again! You're determined! But it'
     script_encounter $00
-    script_message $0198 ; 'You again! You're determined! But it'
+    script_message $0198 ; 'You defeated my monster? Urggh Time'
     script_command $27
     script_end
 Script_5B53:: ; heuristic: event script entry or jump target; C0
@@ -4797,20 +4797,20 @@ Script_5B53:: ; heuristic: event script entry or jump target; C0
     script_command $63
     script_end
 Script_5B57:: ; heuristic: event script entry or jump target; C0
-    script_message $415C ; 'We frown upon strangers who wander'
+    script_message $415C ; 'Why are you snooping around? Are'
     script_skip_if_no Script_5B60
-    script_message $815E ; 'A new plug for the Log's'
+    script_message $815E ; 'Oh, it looked like you were'
     script_end
 Script_5B60:: ; heuristic: event script entry or jump target; C0
-    script_message $815D ; 'Why are you snooping around? Are'
+    script_message $815D ; 'A new plug for the Log's'
     script_end
 Script_5B64:: ; heuristic: event script entry or jump target; C0
-    script_message $4D04 ; 'That will help you for certain.'
+    script_message $4D04 ; 'Hello, have you found a plug'
     script_skip_if_no Script_5B6D
-    script_message $8D06 ; 'Oh. That's nice. Good for you.'
+    script_message $8D06 ; 'I can show you my navel'
     script_end
 Script_5B6D:: ; heuristic: event script entry or jump target; C0
-    script_message $8D05 ; 'Hello, have you found a plug'
+    script_message $8D05 ; 'Oh. That's nice. Good for you.'
     script_end
 Script_5B71:: ; heuristic: event script entry or jump target; C0
     script_wait 20
@@ -4823,56 +4823,56 @@ Script_5B76:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B7D:: ; heuristic: event script entry or jump target; C0
-    script_message $4147 ; 'The church welcomes you. We can'
+    script_message $4147 ; 'I am a servant to the'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B84:: ; heuristic: event script entry or jump target; C0
-    script_message $0806 ; 'Mermaids lived in the sea in'
+    script_message $0806 ; 'The birds are noisy It's a'
     script_command $28
-    script_message $0807 ; 'The birds are noisy It's a'
+    script_message $0807 ; 'See? What did I just say?'
     script_end
 Script_5B8C:: ; heuristic: event script entry or jump target; C0
 Data_010_5B8C:: ; address name
-    script_message $4809 ; 'I hope the volcanic island off'
+    script_message $4809 ; 'I don't have much but Would'
     script_jump_data_bank Script_6707
     db $FF, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B94:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5B9B:: ; heuristic: event script entry or jump target; C0
-    script_message $4818 ; 'Ah Shame Please come again.'
+    script_message $4818 ; 'Have you heard the legend about'
     script_skip_if_no Script_5BA4
-    script_message $881A ; 'Ah, you e heard already. It's'
+    script_message $881A ; 'Long ago, a deft craftsman made'
     script_end
 Script_5BA4:: ; heuristic: event script entry or jump target; C0
-    script_message $8819 ; 'Have you heard the legend about'
+    script_message $8819 ; 'Ah, you e heard already. It's'
     script_end
 Script_5BA8:: ; heuristic: event script entry or jump target; C0
-    script_message $4820 ; 'There's this old sailor man in'
+    script_message $4820 ; 'How may our church serve you?'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5BAF:: ; heuristic: event script entry or jump target; C0
 Data_010_5BAF:: ; address name
-    script_message $4823 ; 'I went to Polona a while'
+    script_message $4823 ; 'I offer quality merchandise. Would you'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5BB6:: ; heuristic: event script entry or jump target; C0
-    script_message $082C ; 'Listen, did you know? Mermaids appear'
-    script_message $082D ; '0 tried to check the chest.'
+    script_message $082C ; '0 tried to check the chest.'
+    script_message $082D ; 'Whoa! Hands off my merchandise!'
     script_end
 Script_5BBD:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
@@ -4891,13 +4891,13 @@ Script_5BC4:: ; heuristic: event script entry or jump target; C0
     script_sound $FF
     script_end
 Script_5BE8:: ; heuristic: event script entry or jump target; C0
-    script_message $0838 ; 'Hnnnr Hic Gnn Zzz Gfffff'
+    script_message $0838 ; 'Who are you? This is our'
     script_encounter $01
     script_command $2A
     script_set_flag $0066
     script_end
 Script_5BF2:: ; heuristic: event script entry or jump target; C0
-    script_message $0839 ; 'Who are you? This is our'
+    script_message $0839 ; 'You can keep trying, but you're'
     script_encounter $01
     script_command $2A
     script_set_flag $0066
@@ -4906,127 +4906,127 @@ Script_5BFC:: ; heuristic: event script entry or jump target; C0
     script_command $2A
     script_end
 Script_5BFE:: ; heuristic: event script entry or jump target; C0
-    script_message $083A ; 'You can keep trying, but you're'
+    script_message $083A ; 'Zzz Zzz Huh! Watch out!'
     script_slide_y $83
-    script_message $483B ; 'Zzz Zzz Huh! Watch out!'
+    script_message $483B ; 'What! Why are you with monsters?'
     script_skip_if_no Script_5C0C
-    script_message $883E ; 'The pirates loot is probably still'
+    script_message $883E ; 'It's a tale of high adventure'
     script_end
 Script_5C0C:: ; heuristic: event script entry or jump target; C0
-    script_message $883C ; 'What! Why are you with monsters?'
+    script_message $883C ; 'It was in my callow youth'
     script_wait 120
-    script_message $083D ; 'It was in my callow youth'
+    script_message $083D ; 'The pirates loot is probably still'
     script_set_flag $006D
     script_end
 Script_5C19:: ; heuristic: event script entry or jump target; C0
-    script_message $483F ; 'It's a tale of high adventure'
+    script_message $483F ; 'What? Are you here for my'
     script_skip_if_no Script_5C22
-    script_message $8841 ; 'The pirates stole the MoonRock from'
+    script_message $8841 ; 'It's a chance to hear an'
     script_end
 Script_5C22:: ; heuristic: event script entry or jump target; C0
-    script_message $8840 ; 'What? Are you here for my'
+    script_message $8840 ; 'The pirates stole the MoonRock from'
     script_end
 Script_5C26:: ; heuristic: event script entry or jump target; C0
-    script_message $083A ; 'You can keep trying, but you're'
+    script_message $083A ; 'Zzz Zzz Huh! Watch out!'
     script_slide_y $83
-    script_message $0DC4 ; 'The shoals that ringed the volcano'
+    script_message $0DC4 ; 'What is it? Ah, it's you.'
     script_end
 Script_5C2F:: ; heuristic: event script entry or jump target; C0
-    script_message $4810 ; 'You're not supposed to go near'
+    script_message $4810 ; 'In the past, mermaids are said'
     script_skip_if_no Script_5C38
-    script_message $8817 ; 'Erm The sense of rhythm just'
+    script_message $8817 ; 'Ah Shame Please come again.'
     script_end
 Script_5C38:: ; heuristic: event script entry or jump target; C0
-    script_message $8811 ; 'In the past, mermaids are said'
+    script_message $8811 ; 'Then I'll sing! Lalala lala la'
     script_command $2C
-    script_message $0816 ; 'Bravo, bravo! You were fabulous! You'
+    script_message $0816 ; 'Erm The sense of rhythm just'
     script_end
 Script_5C40:: ; heuristic: event script entry or jump target; C0
-    script_message $4810 ; 'You're not supposed to go near'
+    script_message $4810 ; 'In the past, mermaids are said'
     script_skip_if_no Script_5C49
-    script_message $8817 ; 'Erm The sense of rhythm just'
+    script_message $8817 ; 'Ah Shame Please come again.'
     script_end
 Script_5C49:: ; heuristic: event script entry or jump target; C0
-    script_message $8811 ; 'In the past, mermaids are said'
+    script_message $8811 ; 'Then I'll sing! Lalala lala la'
     script_command $2B
     script_end
 Script_5C4E:: ; heuristic: event script entry or jump target; C0
-    script_message $4810 ; 'You're not supposed to go near'
+    script_message $4810 ; 'In the past, mermaids are said'
     script_skip_if_no Script_5C57
-    script_message $8817 ; 'Erm The sense of rhythm just'
+    script_message $8817 ; 'Ah Shame Please come again.'
     script_end
 Script_5C57:: ; heuristic: event script entry or jump target; C0
-    script_message $8811 ; 'In the past, mermaids are said'
+    script_message $8811 ; 'Then I'll sing! Lalala lala la'
     script_command $2D
     script_end
 Script_5C5C:: ; heuristic: event script entry or jump target; C0
-    script_message $4810 ; 'You're not supposed to go near'
+    script_message $4810 ; 'In the past, mermaids are said'
     script_skip_if_no Script_5C65
-    script_message $8817 ; 'Erm The sense of rhythm just'
+    script_message $8817 ; 'Ah Shame Please come again.'
     script_end
 Script_5C65:: ; heuristic: event script entry or jump target; C0
-    script_message $8892 ; 'Kameha Aiyeeeeeh'
+    script_message $8892 ; 'Your monsters appear dispirited It's unfortunate,'
     script_end
 Script_5C69:: ; heuristic: event script entry or jump target; C0
-    script_message $484B ; 'I'm astonished. Mermaids exist.'
+    script_message $484B ; 'Do you want to go to'
     script_skip_if_no Script_5C72
-    script_message $884D ; 'Close your eyes a little while.'
+    script_message $884D ; 'Come back for a visit anytime!'
     script_end
 Script_5C72:: ; heuristic: event script entry or jump target; C0
-    script_message $884C ; 'Do you want to go to'
+    script_message $884C ; 'Close your eyes a little while.'
     script_command $2E
     script_end
 Script_5C77:: ; heuristic: event script entry or jump target; C0
-    script_message $0855 ; 'We mermaids are peaceful beings. We'
+    script_message $0855 ; 'Welcome, young human. I heard that'
     script_set_flag $0070
     script_end
 Script_5C7E:: ; heuristic: event script entry or jump target; C0
-    script_message $0DC5 ; 'What is it? Ah, it's you.'
-    script_message $0DC6 ; 'Welcome, my young hero! No words'
+    script_message $0DC5 ; 'Welcome, my young hero! No words'
+    script_message $0DC6 ; '0 received the Sailor Ring.'
     script_set_flag $005E
     script_end
 Script_5C88:: ; heuristic: event script entry or jump target; C0
     script_command $30
     script_end
 Script_5C8A:: ; heuristic: event script entry or jump target; C0
-    script_message $0859 ; 'The MoonRock is on the ghost'
+    script_message $0859 ; 'How could we die before enjoying'
     script_encounter $17
     script_set_flag $0071
     script_command $31
     script_end
 Script_5C94:: ; heuristic: event script entry or jump target; C0
-    script_message $085A ; 'How could we die before enjoying'
+    script_message $085A ; 'The treasures are ours No one'
     script_encounter $17
     script_set_flag $0072
     script_command $31
     script_end
 Script_5C9E:: ; heuristic: event script entry or jump target; C0
-    script_message $085C ; 'This is what became of us'
+    script_message $085C ; 'It nags and nags that we'
     script_encounter $17
     script_set_flag $0073
     script_command $31
     script_end
 Script_5CA8:: ; heuristic: event script entry or jump target; C0
-    script_message $085E ; 'Check the wooden crate'
+    script_message $085E ; 'Who disturbs us in our sleep'
     script_encounter $02
-    script_message $0860 ; 'You seem to not understand The'
+    script_message $0860 ; 'Child We have lost Finally, we'
     script_command $32
     script_set_flag $0075
     script_end
 Script_5CB5:: ; heuristic: event script entry or jump target; C0
-    script_message $085F ; 'Who disturbs us in our sleep'
+    script_message $085F ; 'You seem to not understand The'
     script_encounter $02
-    script_message $0860 ; 'You seem to not understand The'
+    script_message $0860 ; 'Child We have lost Finally, we'
     script_command $32
     script_set_flag $0075
     script_end
 Script_5CC2:: ; heuristic: event script entry or jump target; C0
-    script_message $0887 ; '? t I e . A'
+    script_message $0887 ; '0 checked the treasure chest. 0'
     script_command $33
     script_set_flag $0076
     script_end
 Script_5CCA:: ; heuristic: event script entry or jump target; C0
-    script_message $0863 ; '0 peered into the barrel. There'
+    script_message $0863 ; '0 checked the crate. There was'
     script_command $34
     script_end
 Script_5CCF:: ; heuristic: event script entry or jump target; C0
@@ -5034,7 +5034,7 @@ Script_5CCF:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5CD1:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_message $0868 ; '0 checked the pedestal. The MoonRock'
+    script_message $0868 ; 'Kameha Wahahahah! Thanks for guiding me'
     script_command $36
     script_wait 30
     script_sound $FF
@@ -5042,7 +5042,7 @@ Script_5CD1:: ; heuristic: event script entry or jump target; C0
 Script_5CDD:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_slide_y $80
-    script_message $0869 ; 'Kameha Wahahahah! Thanks for guiding me'
+    script_message $0869 ; 'Kameha Urk! How you catch up?'
     script_face $80, 1
     script_walk_fast 1, 3, 3
     script_walk_fast 1, 2, 1
@@ -5050,7 +5050,7 @@ Script_5CDD:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 2, 3, 3
     script_walk_fast 2, 0, 3
     script_face $82, 1
-    script_message $086A ; 'Kameha Urk! How you catch up?'
+    script_message $086A ; 'Aye, aye, sir! Right behind you!'
     script_command $37
     script_sound $65
     script_hide_object $00
@@ -5066,10 +5066,10 @@ Script_5CDD:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5D1C:: ; heuristic: event script entry or jump target; C0
     script_sound $28
-    script_message $086B ; 'Aye, aye, sir! Right behind you!'
+    script_message $086B ; 'Kameha Arrrrh, clear the way! I'm'
     script_command $38
     script_sound $00
-    script_message $0891 ; 'Oh. Tell me if you want'
+    script_message $0891 ; 'Kameha Aiyeeeeeh'
     script_sound $65
     script_wait 90
     script_sound $FF
@@ -5080,16 +5080,16 @@ Script_5D2F:: ; heuristic: event script entry or jump target; C0
     script_sound $FF
     script_end
 Script_5D36:: ; heuristic: event script entry or jump target; C0
-    script_message $488E ; '0 peered into the oven. Two'
+    script_message $488E ; 'This is the mermaid kingdom. Did'
     script_skip_if_no Script_5D3F
-    script_message $8890 ; 'Close your eyes for a little'
+    script_message $8890 ; 'Oh. Tell me if you want'
     script_end
 Script_5D3F:: ; heuristic: event script entry or jump target; C0
-    script_message $888F ; 'This is the mermaid kingdom. Did'
+    script_message $888F ; 'Close your eyes for a little'
     script_command $2F
     script_end
 Script_5D44:: ; heuristic: event script entry or jump target; C0
-    script_message $0893 ; 'Your monsters appear dispirited It's unfortunate,'
+    script_message $0893 ; 'Thick, suction- cupped tentacles snaked out'
     script_encounter $1E
     script_set_flag $00F4
     script_end
@@ -5100,91 +5100,91 @@ Script_5D4D:: ; heuristic: event script entry or jump target; C0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D54:: ; heuristic: event script entry or jump target; C0
-    script_message $4147 ; 'The church welcomes you. We can'
+    script_message $4147 ; 'I am a servant to the'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D5B:: ; heuristic: event script entry or jump target; C0
-    script_message $4308 ; 'The spring in the north, where'
+    script_message $4308 ; 'Have you heard about the spirit'
     script_skip_if_no Script_5D64
-    script_message $830A ; 'A long time ago the spirit'
+    script_message $830A ; 'Many years ago, our ancestors came'
     script_end
 Script_5D64:: ; heuristic: event script entry or jump target; C0
-    script_message $8309 ; 'Have you heard about the spirit'
+    script_message $8309 ; 'A long time ago the spirit'
     script_end
 Script_5D68:: ; heuristic: event script entry or jump target; C0
 Data_010_5D68:: ; address name
-    script_message $4310 ; 'The mine on the western border'
+    script_message $4310 ; 'Welcome! How may I serve you'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D6F:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5D76:: ; heuristic: event script entry or jump target; C0
-    script_message $0316 ; 'The border is closed, so I'
-    script_message $4317 ; '0 checked the shield. A beautiful'
+    script_message $0316 ; '0 checked the shield. A beautiful'
+    script_message $4317 ; 'I am surprised that you hear'
     script_skip_if_no Script_5D82
-    script_message $831A ; '0 checked the treasure chest. 0'
+    script_message $831A ; 'You may think terrible of me'
     script_end
 Script_5D82:: ; heuristic: event script entry or jump target; C0
-    script_message $8318 ; 'I am surprised that you hear'
+    script_message $8318 ; 'You will? No words of thanks'
     script_command $3F
     script_set_flag $01E8
     script_end
 Script_5D8A:: ; heuristic: event script entry or jump target; C0
-    script_message $031C ; 'If you restore this world's peace,'
+    script_message $031C ; 'What is that dirty medal? The'
     script_walk 0, 2, 1
     script_hide_object $00
     script_set_flag $0081
     script_end
 Script_5D97:: ; heuristic: event script entry or jump target; C0
-    script_message $0321 ; 'I remember the King to be'
+    script_message $0321 ; 'Ah, you are the spirit's envoy.'
     script_set_flag $0083
     script_command $40
     script_walk 1, 0, 2
     script_set_flag $0082
     script_end
 Script_5DA6:: ; heuristic: event script entry or jump target; C0
-    script_message $0359 ; 'I e heard from friends who'
+    script_message $0359 ; 'We reported to the King that'
     script_command $42
     script_sound $28
     script_set_flag $0087
     script_end
 Script_5DB0:: ; heuristic: event script entry or jump target; C0
 Data_010_5DB0:: ; address name
-    script_message $4331 ; 'Don't you think it's too expensive?'
+    script_message $4331 ; 'Welcome! What can I do for'
     script_jump_data_bank Script_6659
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DB7:: ; heuristic: event script entry or jump target; C0
 Data_010_5DB7:: ; address name
-    script_message $4332 ; 'Welcome! What can I do for'
+    script_message $4332 ; 'Greetings! How shall I serve you?'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DBE:: ; heuristic: event script entry or jump target; C0
 Data_010_5DBE:: ; address name
-    script_message $4333 ; 'Greetings! How shall I serve you?'
+    script_message $4333 ; 'Hello! Have a look at my'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DC5:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5DCC:: ; heuristic: event script entry or jump target; C0
-    script_message $4820 ; 'There's this old sailor man in'
+    script_message $4820 ; 'How may our church serve you?'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
@@ -5195,15 +5195,15 @@ Script_5DD3:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 1, 3, 4
     script_walk_fast 2, 1, 3
     script_slide_y $81
-    script_message $0349 ; 'Darn! Take this! SACRIFICE!'
+    script_message $0349 ; 'What? What was that explosion?'
     script_slide_y $82
-    script_message $034A ; 'What? What was that explosion?'
+    script_message $034A ; 'That dust there Is that the'
     script_slide_y $81
-    script_message $034B ; 'That dust there Is that the'
+    script_message $034B ; 'What? That's all that there was?'
     script_slide_y $82
-    script_message $034C ; 'What? That's all that there was?'
+    script_message $034C ; 'We better get word to the'
     script_walk_fast 2, 3, 3
-    script_message $034D ; 'We better get word to the'
+    script_message $034D ; 'That's true I e got to'
     script_walk_fast 1, 1, 4
     script_command $7E
     script_set_flag $0086
@@ -5213,29 +5213,29 @@ Script_5E02:: ; heuristic: event script entry or jump target; C0
     script_walk_fast 1, 3, 4
     script_walk_fast 2, 1, 3
     script_slide_y $81
-    script_message $0349 ; 'Darn! Take this! SACRIFICE!'
+    script_message $0349 ; 'What? What was that explosion?'
     script_slide_y $82
-    script_message $034A ; 'What? What was that explosion?'
+    script_message $034A ; 'That dust there Is that the'
     script_slide_y $81
-    script_message $034B ; 'That dust there Is that the'
+    script_message $034B ; 'What? That's all that there was?'
     script_slide_y $82
-    script_message $034C ; 'What? That's all that there was?'
+    script_message $034C ; 'We better get word to the'
     script_walk_fast 2, 3, 3
-    script_message $034D ; 'We better get word to the'
+    script_message $034D ; 'That's true I e got to'
     script_walk_fast 1, 1, 4
     script_command $7E
     script_set_flag $0086
     script_end
 Script_5E2F:: ; heuristic: event script entry or jump target; C0
-    script_message $0360 ; 'Kameha Where's the exit? We'll starve'
+    script_message $0360 ; '0 tapped on the wall. The'
     script_face $81, 2
     script_command $43
     script_end
 Script_5E37:: ; heuristic: event script entry or jump target; C0
-    script_message $0363 ; 'Kameha 0 That wasn't it'
+    script_message $0363 ; '0 tapped on the wall. Sound'
     script_face $81, 2
     script_command $43
-    script_message $0364 ; '0 tapped on the wall. Sound'
+    script_message $0364 ; 'Kameha That's it! That's the exit!'
     script_walk_fast 1, 2, 3
     script_hide_object $01
     script_wait 30
@@ -5247,48 +5247,48 @@ Script_5E37:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_5E5A:: ; heuristic: event script entry or jump target; C0
     script_command $44
-    script_message $0365 ; 'Kameha That's it! That's the exit!'
+    script_message $0365 ; 'I'm the real King, you fake!'
     script_slide_y $81
-    script_message $0366 ; 'I'm the real King, you fake!'
+    script_message $0366 ; 'What? How dare you, impostor! I'm'
     script_set_flag $008B
     script_end
 Script_5E67:: ; heuristic: event script entry or jump target; C0
-    script_message $0370 ; 'You suspect me still? Kiki! Gaaah!'
+    script_message $0370 ; 'Arrgh, you e ruined my plan'
     script_command $45
     script_face $81, 2
     script_slide_y $81
-    script_message $0374 ; 'Awaaargh! A m-m-monster! A monster was'
+    script_message $0374 ; 'Bravo! We're saved! Thank you for'
     script_set_flag $0094
     script_end
 Script_5E77:: ; heuristic: event script entry or jump target; C0
-    script_message $0372 ; 'The mirror shows a monster.'
+    script_message $0372 ; 'It almost worked to perfection! It's'
     script_command $45
     script_face $81, 2
     script_slide_y $81
-    script_message $0374 ; 'Awaaargh! A m-m-monster! A monster was'
+    script_message $0374 ; 'Bravo! We're saved! Thank you for'
     script_set_flag $0094
     script_end
 Script_5E87:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5E8E:: ; heuristic: event script entry or jump target; C0
 Data_010_5E8E:: ; address name
-    script_message $438B ; 'A woodsman came by a while'
+    script_message $438B ; 'Hello! How may I serve you?'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5E95:: ; heuristic: event script entry or jump target; C0
-    script_message $0394 ; 'Oh Lady Yuna To think that'
+    script_message $0394 ; '0 read the sign. Come all'
     script_sound $28
     script_command $64
     script_wait 90
     script_walk_fast 3, 2, 4
     script_face $83, 1
-    script_message $0395 ; '0 read the sign. Come all'
+    script_message $0395 ; 'Kameha Well, if it isn't 0!'
     script_walk 3, 0, 1
     script_face $83, 2
     script_wait 30
@@ -5311,7 +5311,7 @@ Script_5E95:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0095
     script_end
 Script_5EE6:: ; heuristic: event script entry or jump target; C0
-    script_message $039D ; 'This leads to Lady Yuna's room.'
+    script_message $039D ; 'You're here to cheer Lady Yuna.'
     script_walk 0, 2, 1
     script_walk 0, 1, 1
     script_face $80, 0
@@ -5319,46 +5319,46 @@ Script_5EE6:: ; heuristic: event script entry or jump target; C0
 Script_5EF5:: ; heuristic: event script entry or jump target; C0
     script_sound $28
     script_command $46
-    script_message $03A2 ; 'I am the King. What is'
+    script_message $03A2 ; 'King Magnificent! Don't you agree?'
     script_face $80, 1
-    script_message $03A3 ; 'King Magnificent! Don't you agree?'
+    script_message $03A3
     script_face $80, 0
-    script_message $03A4
+    script_message $03A4 ; 'King Sigh Not even this You'
     script_set_flag $0096
     script_end
 Script_5F0B:: ; heuristic: event script entry or jump target; C0
 Data_010_5F0B:: ; address name
-    script_message $43B3 ; 'I beg your pardon, please!'
+    script_message $43B3 ; 'Hello! What may I do for'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5F12:: ; heuristic: event script entry or jump target; C0
-    script_message $43B5 ; 'A botanist does live here But'
+    script_message $43B5 ; 'I retired as a teacher and'
     script_skip_if_no Script_5F1B
-    script_message $83B7 ; 'Lady Yuna was a rambunctious soul.'
+    script_message $83B7 ; 'Oh, you're rushed for time Sorry'
     script_end
 Script_5F1B:: ; heuristic: event script entry or jump target; C0
-    script_message $83B6 ; 'I retired as a teacher and'
+    script_message $83B6 ; 'Lady Yuna was a rambunctious soul.'
     script_end
 Script_5F1F:: ; heuristic: event script entry or jump target; C0
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5F26:: ; heuristic: event script entry or jump target; C0
-    script_message $03B0 ; 'Around these parts, there are times'
+    script_message $03B0 ; 'This is no place for a'
     script_slide_y $80
-    script_message $03B1 ; 'This is no place for a'
+    script_message $03B1 ; 'Oh? An envoy from the spirit!'
     script_walk 0, 2, 1
     script_hide_object $00
     script_set_flag $0097
     script_end
 Script_5F38:: ; heuristic: event script entry or jump target; C0
-    script_message $03B0 ; 'Around these parts, there are times'
+    script_message $03B0 ; 'This is no place for a'
     script_slide_y $81
-    script_message $03B1 ; 'This is no place for a'
+    script_message $03B1 ; 'Oh? An envoy from the spirit!'
     script_walk 1, 2, 1
     script_hide_object $01
     script_set_flag $0097
@@ -5367,7 +5367,7 @@ Script_5F4A:: ; heuristic: event script entry or jump target; C0
     script_command $47
     script_end
 Script_5F4C:: ; heuristic: event script entry or jump target; C0
-    script_message $0D4C ; 'What's that? Hey, a Magic Key!'
+    script_message $0D4C ; '? You startled me I don't'
     script_command $32
     script_set_flag $009A
     script_end
@@ -5375,63 +5375,63 @@ Script_5F54:: ; heuristic: event script entry or jump target; C0
     script_message $4AB5 ; '? You startled me I don't'
     script_set_flag $009A
     script_skip_if_no Script_5F61
-    script_message $8AC9 ; 'You will? Thank you! Let me'
+    script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
     script_command $32
     script_end
 Script_5F61:: ; heuristic: event script entry or jump target; C0
-    script_message $8AB6 ; '? You startled me I don't'
+    script_message $8AB6 ; 'You will? Thank you! Let me'
     script_set_flag $009B
     script_command $32
-    script_message $0AB7 ; 'You will? Thank you! Let me'
+    script_message $0AB7 ; '0 obtained YunaSoul.'
     script_end
 Script_5F6C:: ; heuristic: event script entry or jump target; C0
     script_message $4AB5 ; '? You startled me I don't'
     script_set_flag $009A
     script_skip_if_no Script_5F79
-    script_message $8AC9 ; 'You will? Thank you! Let me'
+    script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
     script_command $32
     script_end
 Script_5F79:: ; heuristic: event script entry or jump target; C0
-    script_message $8AC8 ; ''rP't 'ts i'l 'l 'l 'lJ'
+    script_message $8AC8 ; 'You will? Thank you! Let me'
     script_end
 Script_5F7D:: ; heuristic: event script entry or jump target; C0
-    script_message $0D4D ; '? You startled me I don't'
+    script_message $0D4D ; 'I don't remember who I am,'
     script_command $32
     script_end
 Script_5F82:: ; heuristic: event script entry or jump target; C0
-    script_message $4ACA ; 'Oh How terribly disappointing. I'll have'
+    script_message $4ACA ; 'I don't remember who I am,'
     script_skip_if_no Script_5F8C
-    script_message $8AC9 ; 'You will? Thank you! Let me'
+    script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
     script_command $32
     script_end
 Script_5F8C:: ; heuristic: event script entry or jump target; C0
-    script_message $8AB6 ; '? You startled me I don't'
+    script_message $8AB6 ; 'You will? Thank you! Let me'
     script_set_flag $009B
     script_command $32
-    script_message $0AB7 ; 'You will? Thank you! Let me'
+    script_message $0AB7 ; '0 obtained YunaSoul.'
     script_end
 Script_5F97:: ; heuristic: event script entry or jump target; C0
-    script_message $4ACA ; 'Oh How terribly disappointing. I'll have'
+    script_message $4ACA ; 'I don't remember who I am,'
     script_skip_if_no Script_5FA1
-    script_message $8AC9 ; 'You will? Thank you! Let me'
+    script_message $8AC9 ; 'Oh How terribly disappointing. I'll have'
     script_command $32
     script_end
 Script_5FA1:: ; heuristic: event script entry or jump target; C0
-    script_message $8AC8 ; ''rP't 'ts i'l 'l 'l 'lJ'
+    script_message $8AC8 ; 'You will? Thank you! Let me'
     script_end
 Script_5FA5:: ; heuristic: event script entry or jump target; C0
-    script_message $0D3C ; 'Whinny!'
-    script_message $0AD1 ; 'Yuna's soul filled her body.'
+    script_message $0D3C ; '!'
+    script_message $0AD1 ; 'STOP DON T MEDDLE'
     script_command $48
     script_end
 Script_5FAD:: ; heuristic: event script entry or jump target; C0
-    script_message $03A3 ; 'King Magnificent! Don't you agree?'
-    script_message $0DD2 ; 'Hm, fine, I'll ignore it. But'
-    script_message $0AD3 ; 'NEVER DID I EXPECT YUNA S'
+    script_message $03A3
+    script_message $0DD2 ; 'The princess did not reply. But'
+    script_message $0AD3 ; 'FOOLHARDY. BRAVE BUT FOOLISH.'
     script_command $48
     script_end
 Script_5FB8:: ; heuristic: event script entry or jump target; C0
-    script_message $0AEA ; '0 checked the blue flower. It'
+    script_message $0AEA ; 'Pardon me? You have medicine? This'
     script_walk 2, 1, 2
     script_hide_object $02
     script_hold_dpad $01, 3
@@ -5445,7 +5445,7 @@ Script_5FCB:: ; heuristic: event script entry or jump target; C0
     script_command $66
     script_end
 Script_5FCD:: ; heuristic: event script entry or jump target; C0
-    script_message $0A01 ; 'Queen Helen has become healthy.'
+    script_message $0A01 ; '0 checked the shield.'
     script_command $4A
     script_end
 Script_5FD2:: ; heuristic: event script entry or jump target; C0
@@ -5455,13 +5455,13 @@ Script_5FD4:: ; heuristic: event script entry or jump target; C0
     script_command $4B
     script_end
 Script_5FD6:: ; heuristic: event script entry or jump target; C0
-    script_message $4820 ; 'There's this old sailor man in'
+    script_message $4820 ; 'How may our church serve you?'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5FDD:: ; heuristic: event script entry or jump target; C0
-    script_message $0319 ; 'You will? No words of thanks'
+    script_message $0319 ; '0 checked the treasure chest. 0'
     script_hide_object $01
     script_set_flag $0080
     script_end
@@ -5469,128 +5469,128 @@ Script_5FE6:: ; heuristic: event script entry or jump target; C0
     script_command $7F
     script_end
 Script_5FE8:: ; heuristic: event script entry or jump target; C0
-    script_message $442E ; 'Good day. How may I help'
+    script_message $442E ; 'How may we serve your mortal'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_5FEF:: ; heuristic: event script entry or jump target; C0
-    script_message $040B ; 'The top of the tower collapsed'
+    script_message $040B ; '0 checked the grave. There was'
     script_command $4E
     script_set_flag $00A0
     script_end
 Script_5FF7:: ; heuristic: event script entry or jump target; C0
-    script_message $040B ; 'The top of the tower collapsed'
+    script_message $040B ; '0 checked the grave. There was'
     script_command $4E
     script_end
 Script_5FFC:: ; heuristic: event script entry or jump target; C0
-    script_message $0411 ; 'Be gone! If your soul can't'
+    script_message $0411 ; 'Fine! You e done well to'
     script_sound $66
     script_command $4F
     script_end
 Script_6003:: ; heuristic: event script entry or jump target; C0
 Data_010_6003:: ; address name
-    script_message $41BB ; 'Tch, I think I can help'
+    script_message $41BB ; 'Welcome to our inn!'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_600A:: ; heuristic: event script entry or jump target; C0
-    script_message $0412 ; 'Fine! You e done well to'
-    script_message $0DE6 ; 'The water flowed right over the'
+    script_message $0412 ; 'Kweeeeh!'
+    script_message $0DE6 ; 'Look! A MadCondor! It has something!'
     script_command $50
     script_set_flag $00A4
     script_end
 Script_6015:: ; heuristic: event script entry or jump target; C0
-    script_message $041D ; 'Hm? You're a stranger! You make'
+    script_message $041D ; 'Hm? You're from the village! Hurry'
     script_walk 0, 1, 1
     script_face $80, 3
     script_end
 Script_6020:: ; heuristic: event script entry or jump target; C0
-    script_message $4426 ; 'The new monster king makes others'
+    script_message $4426 ; 'You Are you a monster?'
     script_skip_if_no Script_6029
-    script_message $8428 ; 'Uh-huh You don't look very strong.'
+    script_message $8428 ; 'Uh-huh You look uh delicious.'
     script_end
 Script_6029:: ; heuristic: event script entry or jump target; C0
-    script_message $8427 ; 'You Are you a monster?'
+    script_message $8427 ; 'Uh-huh You don't look very strong.'
     script_end
 Script_602D:: ; heuristic: event script entry or jump target; C0
-    script_message $4426 ; 'The new monster king makes others'
+    script_message $4426 ; 'You Are you a monster?'
     script_skip_if_no Script_6036
-    script_message $8428 ; 'Uh-huh You don't look very strong.'
+    script_message $8428 ; 'Uh-huh You look uh delicious.'
     script_end
 Script_6036:: ; heuristic: event script entry or jump target; C0
-    script_message $8429 ; 'Uh-huh You look uh delicious.'
+    script_message $8429 ; 'Any way you want to look'
     script_end
 Script_603A:: ; heuristic: event script entry or jump target; C0
-    script_message $442E ; 'Good day. How may I help'
+    script_message $442E ; 'How may we serve your mortal'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6041:: ; heuristic: event script entry or jump target; C0
 Data_010_6041:: ; address name
-    script_message $442D ; 'Are you looking for something? Huh?'
+    script_message $442D ; 'Good day. How may I help'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6048:: ; heuristic: event script entry or jump target; C0
 Data_010_6048:: ; address name
-    script_message $4432 ; '0 tried to open the chest.'
+    script_message $4432 ; 'Welcome to the traveler's inn.'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_604F:: ; heuristic: event script entry or jump target; C0
-    script_message $0433 ; 'Welcome to the traveler's inn.'
+    script_message $0433 ; 'Kweeeeeh!'
     script_command $51
     script_encounter $05
     script_set_flag $00A8
     script_end
 Script_6059:: ; heuristic: event script entry or jump target; C0
-    script_message $0433 ; 'Welcome to the traveler's inn.'
+    script_message $0433 ; 'Kweeeeeh!'
     script_encounter $05
     script_set_flag $00A8
     script_end
 Script_6062:: ; heuristic: event script entry or jump target; C0
-    script_message $4439 ; 'A monster king has appeared to'
+    script_message $4439 ; 'I e lived here for 200'
     script_skip_if_no Script_606B
-    script_message $843B ; 'This area had been prosperous, but'
+    script_message $843B ; 'Oh You won't humor an old'
     script_end
 Script_606B:: ; heuristic: event script entry or jump target; C0
-    script_message $843A ; 'I e lived here for 200'
+    script_message $843A ; 'This area had been prosperous, but'
     script_end
 Script_606F:: ; heuristic: event script entry or jump target; C0
-    script_message $4447 ; 'If I had the LightOrb, even'
+    script_message $4447 ; 'Want to know the most fundamental'
     script_skip_if_no Script_6078
-    script_message $8449 ; 'Walk. Learn to walk everywhere. Be'
+    script_message $8449 ; 'I see. You wish to chart'
     script_end
 Script_6078:: ; heuristic: event script entry or jump target; C0
-    script_message $8448 ; 'Want to know the most fundamental'
+    script_message $8448 ; 'Walk. Learn to walk everywhere. Be'
     script_end
 Script_607C:: ; heuristic: event script entry or jump target; C0
 Data_010_607C:: ; address name
-    script_message $444B ; 'Hear me out if you wish'
+    script_message $444B ; 'Welcome! How may I serve you?'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6083:: ; heuristic: event script entry or jump target; C0
-    script_message $444C ; 'Welcome! How may I serve you?'
+    script_message $444C ; 'How may our church help you?'
     script_jump_data_bank Script_1F_77D4
     db $FF, $00, $51, $44, $E7, $0B, $69, $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6091:: ; heuristic: event script entry or jump target; C0
-    script_message $045A ; 'Those inside the haunted castle speak'
+    script_message $045A ; '0 checked the small hole. It'
     script_command $52
     script_end
 Script_6096:: ; heuristic: event script entry or jump target; C0
-    script_message $045D ; '0 checked the small hole. It's'
+    script_message $045D ; 'You can take this treasure, but'
     script_set_flag $00AD
     script_encounter $06
-    script_message $045F ; 'I'm up for your challenge anytime!'
+    script_message $045F ; 'Heh, you're not half bad! As'
     script_walk 0, 0, 2
     script_walk 0, 3, 2
     script_hide_object $00
@@ -5598,9 +5598,9 @@ Script_6096:: ; heuristic: event script entry or jump target; C0
     script_command $CE
     script_end
 Script_60B0:: ; heuristic: event script entry or jump target; C0
-    script_message $045E ; 'You can take this treasure, but'
+    script_message $045E ; 'I'm up for your challenge anytime!'
     script_encounter $06
-    script_message $045F ; 'I'm up for your challenge anytime!'
+    script_message $045F ; 'Heh, you're not half bad! As'
     script_walk 0, 0, 2
     script_walk 0, 3, 2
     script_hide_object $00
@@ -5608,7 +5608,7 @@ Script_60B0:: ; heuristic: event script entry or jump target; C0
     script_command $CE
     script_end
 Script_60C7:: ; heuristic: event script entry or jump target; C0
-    script_message $0460 ; 'Heh, you're not half bad! As'
+    script_message $0460 ; 'Let the power of justice smite'
     script_encounter $07
     script_command $67
     script_end
@@ -5620,22 +5620,22 @@ Script_60D0:: ; heuristic: event script entry or jump target; C0
     script_command $54
     script_end
 Script_60D4:: ; heuristic: event script entry or jump target; C0
-    script_message $4464 ; '0 checked the notice. Follow the'
+    script_message $4464 ; '0 checked the gravestone. There was'
     script_skip_if_no Script_60DD
-    script_message $849F ; 'I e become the Mayor, but'
+    script_message $849F ; '0 released the grave's button.'
     script_end
 Script_60DD:: ; heuristic: event script entry or jump target; C0
     script_sound $66
     script_wait 60
-    script_message $8465 ; '0 checked the gravestone. There was'
+    script_message $8465 ; 'A door opened somewhere'
     script_command $55
     script_set_flag $00B2
     script_end
 Script_60EA:: ; heuristic: event script entry or jump target; C0
-    script_message $0466 ; 'A door opened somewhere'
+    script_message $0466 ; 'You overcame the traps I laid'
     script_set_flag $00B3
     script_encounter $08
-    script_message $0468 ; 'Wahahahah! Here again, are you? I'
+    script_message $0468 ; 'You e beaten me fairly Take'
     script_command $56
     script_set_flag $00B4
     script_set_flag $00C5
@@ -5643,9 +5643,9 @@ Script_60EA:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00C7
     script_end
 Script_6103:: ; heuristic: event script entry or jump target; C0
-    script_message $0467 ; 'You overcame the traps I laid'
+    script_message $0467 ; 'Wahahahah! Here again, are you? I'
     script_encounter $08
-    script_message $0468 ; 'Wahahahah! Here again, are you? I'
+    script_message $0468 ; 'You e beaten me fairly Take'
     script_command $56
     script_set_flag $00B4
     script_set_flag $00C5
@@ -5653,13 +5653,13 @@ Script_6103:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00C7
     script_end
 Script_6119:: ; heuristic: event script entry or jump target; C0
-    script_message $0469 ; 'You e beaten me fairly Take'
+    script_message $0469 ; 'What? You have the three items?'
     script_walk 0, 2, 1
     script_hide_object $00
     script_set_flag $00B6
     script_end
 Script_6126:: ; heuristic: event script entry or jump target; C0
-    script_message $0471 ; 'Hm? How did you get in'
+    script_message $0471 ; 'I'm surprised anyone managed to find'
     script_command $68
     script_face $80, 0
     script_set_flag $00B8
@@ -5669,16 +5669,16 @@ Script_6131:: ; heuristic: event script entry or jump target; C0
     script_end
 Script_6133:: ; heuristic: event script entry or jump target; C0
     script_message $047A ; 'Ah, so good of you to'
-    script_message $447B ; 'Ah, so good of you to'
-    script_message $C47C ; '0 handed over the Heaven Helmet.'
-    script_message $847D ; '0 handed over the Heaven Armor.'
-    script_message $047E ; '0 handed over the Heaven Sword.'
+    script_message $447B ; '0 handed over the Heaven Helmet.'
+    script_message $C47C ; '0 handed over the Heaven Armor.'
+    script_message $847D ; '0 handed over the Heaven Sword.'
+    script_message $047E ; 'Good. You have brought the three'
     script_set_flag $00C0
     script_command $57
     script_set_flag $00C1
     script_end
 Script_614A:: ; heuristic: event script entry or jump target; C0
-    script_message $047F ; 'Good. You have brought the three'
+    script_message $047F ; 'Fwahahaha! Don't you ever give up?'
     script_command $57
     script_set_flag $00C1
     script_end
@@ -5687,7 +5687,7 @@ Script_6152:: ; heuristic: event script entry or jump target; C0
     script_hold_dpad $02, 4
     script_slide_y $80
     script_walk 0, 0, 1
-    script_message $0481 ; 'Gwaah! You e beaten me fairly!'
+    script_message $0481 ; 'Kameha So it was you who'
     script_walk 0, 3, 1
     script_wait 20
     script_walk 0, 1, 1
@@ -5699,7 +5699,7 @@ Script_6152:: ; heuristic: event script entry or jump target; C0
     script_walk 0, 3, 1
     script_wait 20
     script_face $80, 0
-    script_message $0482 ; 'Kameha So it was you who'
+    script_message $0482 ; 'Kameha If the three items that'
     script_command $58
     script_end
 Script_618B:: ; heuristic: event script entry or jump target; C0
@@ -5709,57 +5709,57 @@ Script_618B:: ; heuristic: event script entry or jump target; C0
     script_set_flag $00C4
     script_end
 Script_6198:: ; heuristic: event script entry or jump target; C0
-    script_message $04A7 ; 'I was taking a walk outside'
+    script_message $04A7 ; 'This way Here Here'
     script_command $7D
     script_end
 Script_619D:: ; heuristic: event script entry or jump target; C0
     script_message $4550 ; 'I heard from Lord Darck, but'
     script_skip_if_no Script_61A6
-    script_message $855D ; 'How dare you come without the'
+    script_message $855D ; 'You didn't bring the treasures? Well,'
     script_end
 Script_61A6:: ; heuristic: event script entry or jump target; C0
-    script_message $855C ; 'Wa-hey! can you hear me, 0?'
+    script_message $855C ; 'How dare you come without the'
     script_end
 Script_61AA:: ; heuristic: event script entry or jump target; C0
     script_message $4550 ; 'I heard from Lord Darck, but'
     script_skip_if_no Script_61B3
-    script_message $855D ; 'How dare you come without the'
+    script_message $855D ; 'You didn't bring the treasures? Well,'
     script_end
 Script_61B3:: ; heuristic: event script entry or jump target; C0
-    script_message $8551 ; 'I heard from Lord Darck, but'
-    script_message $0552 ; 'Surprisingly obedient, are you? Hand over'
+    script_message $8551 ; 'Surprisingly obedient, are you? Hand over'
+    script_message $0552 ; '0 handed over the TidalBell. 0'
     script_face $80, 2
     script_command $5C
-    script_message $0553 ; '0 handed over the TidalBell. 0'
+    script_message $0553 ; 'Take these to Lord Darck now.'
     script_walk 1, 2, 5
     script_wait 30
     script_hide_object $01
     script_face $80, 0
-    script_message $0554 ; 'Take these to Lord Darck now.'
+    script_message $0554 ; 'My work is done I am'
     script_set_flag $00D2
     script_encounter $1D
-    script_message $0556 ; 'You seem to still not realize'
+    script_message $0556 ; 'N No How could my monsters'
     script_command $5D
     script_set_flag $00D3
     script_end
 Script_61DC:: ; heuristic: event script entry or jump target; C0
-    script_message $0555 ; 'My work is done I am'
+    script_message $0555 ; 'You seem to still not realize'
     script_encounter $1D
-    script_message $0556 ; 'You seem to still not realize'
+    script_message $0556 ; 'N No How could my monsters'
     script_command $5D
     script_set_flag $00D3
     script_end
 Script_61E9:: ; heuristic: event script entry or jump target; C0
-    script_message $0557 ; 'N No How could my monsters'
+    script_message $0557 ; 'Darck Fawahahah! You chased your treasures'
     script_set_flag $00D0
     script_encounter $0A
-    script_message $0559 ; 'Darck Fwahahahah! Bravo! Splendid! You e'
+    script_message $0559 ; 'Darck Wha What? How could I'
     script_command $5E
     script_end
 Script_61F6:: ; heuristic: event script entry or jump target; C0
-    script_message $0558 ; 'Darck Fawahahah! You chased your treasures'
+    script_message $0558 ; 'Darck Fwahahahah! Bravo! Splendid! You e'
     script_encounter $0A
-    script_message $0559 ; 'Darck Fwahahahah! Bravo! Splendid! You e'
+    script_message $0559 ; 'Darck Wha What? How could I'
     script_command $5E
     script_end
 Script_6200:: ; heuristic: event script entry or jump target; C0
@@ -5769,88 +5769,88 @@ Script_6200:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0140
     script_end
 Script_620C:: ; heuristic: event script entry or jump target; C0
-    script_message $0704 ; 'Are you maybe a human?'
+    script_message $0704 ; 'So Cyal took a shine to'
     script_slide_y $81
-    script_message $0705 ; 'So Cyal took a shine to'
+    script_message $0705 ; 'Cyal Yay, you'll be my friend?'
     script_set_flag $0143
     script_end
 Script_6218:: ; heuristic: event script entry or jump target; C0
-    script_message $0710 ; 'Well, well It is a rare'
+    script_message $0710 ; 'Well, well, a human here is'
     script_command $C0
-    script_message $0711 ; 'Well, well, a human here is'
+    script_message $0711 ; 'Rolt That was fast, 0. I'
     script_slide_y $82
-    script_message $0712 ; 'Rolt That was fast, 0. I'
+    script_message $0712 ; 'Cyal 0, let's play! I want'
     script_walk 2, 0, 2
     script_set_flag $0146
     script_end
 Script_622C:: ; heuristic: event script entry or jump target; C0
-    script_message $0713 ; 'Cyal 0, let's play! I want'
+    script_message $0713 ; 'I'm the village's elder. What's that?'
     script_command $C0
-    script_message $0711 ; 'Well, well, a human here is'
+    script_message $0711 ; 'Rolt That was fast, 0. I'
     script_slide_y $82
-    script_message $0712 ; 'Rolt That was fast, 0. I'
+    script_message $0712 ; 'Cyal 0, let's play! I want'
     script_walk 2, 0, 2
     script_set_flag $0146
     script_end
 Script_6240:: ; heuristic: event script entry or jump target; C0
-    script_message $0716 ; 'Rolt 0, I can see that'
+    script_message $0716 ; 'Cyal Listen, 0. We should go'
     script_walk_fast 2, 0, 4
     script_set_flag $0147
     script_end
 Script_624B:: ; heuristic: event script entry or jump target; C0
     script_face $80, 0
     script_slide_y $80
-    script_message $071D ; 'Humans can't be trusted, but Please'
+    script_message $071D ; 'Cyal Oh! 0! I'm over here!'
     script_walk_fast 0, 2, 5
     script_wait 30
     script_face $00, 0
-    script_message $071E ; 'Cyal Oh! 0! I'm over here!'
+    script_message $071E ; '0 counted off'
     script_wait 30
-    script_message $071F ; '0 counted off'
+    script_message $071F ; 'Cyal Eeek, 0! Help me!'
     script_set_flag $0148
     script_end
 Script_626A:: ; heuristic: event script entry or jump target; C0
     script_slide_y $82
-    script_message $0720 ; 'Cyal Eeek, 0! Help me!'
+    script_message $0720 ; 'Master AgDevil, a human, ruff!'
     script_slide_y $83
-    script_message $0721 ; 'Master AgDevil, a human, ruff!'
+    script_message $0721 ; 'What shall we do, ruff?'
     script_walk 1, 0, 1
     script_face $82, 2
     script_face $83, 1
-    script_message $0722 ; 'What shall we do, ruff?'
+    script_message $0722 ; 'Human? They taste horrible You lot'
     script_walk 1, 2, 1
     script_walk 1, 1, 1
     script_face $81, 2
     script_set_flag $0149
     script_end
 Script_6290:: ; heuristic: event script entry or jump target; C0
-    script_message $0724 ; 'Tch, we have to eat the'
+    script_message $0724 ; 'That's what we'll do, kid. You're'
     script_set_flag $014A
     script_encounter $09
-    script_message $0754 ; 'I'm the Village Elder. By the'
+    script_message $0754 ; 'Too strong Arroooh!'
     script_command $C1
     script_set_flag $014B
     script_end
 Script_62A0:: ; heuristic: event script entry or jump target; C0
-    script_message $0727 ; 'Huh? It's here again, ruff! It's'
+    script_message $0727 ; 'You e come back again, ruff?'
     script_encounter $09
-    script_message $0754 ; 'I'm the Village Elder. By the'
+    script_message $0754 ; 'Too strong Arroooh!'
     script_command $C1
     script_set_flag $014B
     script_end
 Script_62AD:: ; heuristic: event script entry or jump target; C0
-    script_message $0728 ; 'You e come back again, ruff?'
+    script_message $0728 ; 'Rolt What? Cyal was abducted? Who'
     script_walk_fast 1, 0, 7
     script_slide_y $80
-    script_message $0729 ; 'Rolt What? Cyal was abducted? Who'
+    script_message $0729 ; 'Rolt, wait! Gone already'
     script_set_flag $014C
     script_end
 Script_62BD:: ; heuristic: event script entry or jump target; C0
-    script_message $4739 ; 'Rolt Urrrgh 0 Please Please save'
+    script_message $4739 ; 'The human in the forest again?'
     script_encounter $0B
-    script_message $073B ; 'What, you again? Rude, rude, rude!'
+    script_message $073B ; 'Wh-what? I Lost to a child?'
     script_command $C3
-    script_message $073C ; 'Wh-what? I Lost to a child?'
+    script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
     script_walk_fast 2, 3, 1
     script_walk_fast 2, 2, 1
     script_walk_fast 2, 3, 1
@@ -5863,25 +5863,25 @@ Script_62BD:: ; heuristic: event script entry or jump target; C0
     script_face $81, 1
     script_wait 30
     script_face $81, 3
-    script_message $073D ; 'Rolt Wow 0, you're tough. Oh!'
+    script_message $073D ; 'Rolt Cyal! Are you OK? Cyal!'
     script_wait 30
     script_face $81, 0
-    script_message $073E ; 'Rolt Cyal! Are you OK? Cyal!'
-    script_message $073F ; 'Cyal Big brother! I was so'
+    script_message $073E ; 'Cyal Big brother! I was so'
+    script_message $073F ; 'Rolt You're safe now. 0 did'
     script_face $82, 0
-    script_message $0740 ; 'Rolt You're safe now. 0 did'
+    script_message $0740 ; 'Rolt 0, I'm sorry we put'
     script_set_flag $0151
     script_set_flag $0203
     script_command $C6
     script_face $80, 3
-    script_message $0741 ; 'Rolt 0, I'm sorry we put'
+    script_message $0741 ; 'I'm glad that Cyal and Rolt'
     script_end
 Script_6313:: ; heuristic: event script entry or jump target; C0
-    script_message $073A ; 'The human in the forest again?'
+    script_message $073A ; 'What, you again? Rude, rude, rude!'
     script_encounter $0B
-    script_message $073B ; 'What, you again? Rude, rude, rude!'
+    script_message $073B ; 'Wh-what? I Lost to a child?'
     script_command $C3
-    script_message $073C ; 'Wh-what? I Lost to a child?'
+    script_message $073C ; 'Rolt Wow 0, you're tough. Oh!'
     script_walk_fast 2, 3, 1
     script_walk_fast 2, 2, 1
     script_walk_fast 2, 3, 1
@@ -5894,74 +5894,74 @@ Script_6313:: ; heuristic: event script entry or jump target; C0
     script_face $81, 1
     script_wait 30
     script_face $81, 3
-    script_message $073D ; 'Rolt Wow 0, you're tough. Oh!'
+    script_message $073D ; 'Rolt Cyal! Are you OK? Cyal!'
     script_wait 30
     script_face $81, 0
-    script_message $073E ; 'Rolt Cyal! Are you OK? Cyal!'
-    script_message $073F ; 'Cyal Big brother! I was so'
+    script_message $073E ; 'Cyal Big brother! I was so'
+    script_message $073F ; 'Rolt You're safe now. 0 did'
     script_face $82, 0
-    script_message $0740 ; 'Rolt You're safe now. 0 did'
+    script_message $0740 ; 'Rolt 0, I'm sorry we put'
     script_set_flag $0151
     script_set_flag $0203
     script_command $C6
     script_face $80, 3
-    script_message $0741 ; 'Rolt 0, I'm sorry we put'
+    script_message $0741 ; 'I'm glad that Cyal and Rolt'
     script_end
 Script_6369:: ; heuristic: event script entry or jump target; C0
-    script_message $0734 ; 'You're not going to the northern'
-    script_message $0735 ; 'Rolt I e found you at'
-    script_message $0736 ; 'Kikiki, what just you? That's utterly'
+    script_message $0734 ; 'Rolt I e found you at'
+    script_message $0735 ; 'Kikiki, what just you? That's utterly'
+    script_message $0736 ; 'Rolt Shut up! Give back Cyal!'
     script_walk_fast 2, 2, 2
     script_command $C2
     script_set_flag $014F
     script_end
 Script_637B:: ; heuristic: event script entry or jump target; C0
 Data_010_637B:: ; address name
-    script_message $470E ; 'This is Elven village. You're a'
+    script_message $470E ; 'Welcome! How may I help you'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6382:: ; heuristic: event script entry or jump target; C0
     script_set_flag $0142
-    script_message $4703 ; 'Even worse, you have monsters. Get'
+    script_message $4703 ; 'Are you maybe a human?'
 Script_6388:: ; heuristic: event script entry or jump target; C0
     script_skip_if_no Script_6392
     script_slide_y $81
-    script_message $CC57 ; 'Really! Wow! You're the first human'
+    script_message $CC57 ; 'Oh, don't lie! You don't look'
     script_jump Script_6388
 Script_6392:: ; heuristic: event script entry or jump target; C0
     script_slide_y $81
-    script_message $8C56 ; 'Young master The final test'
+    script_message $8C56 ; 'Really! Wow! You're the first human'
     script_end
 Script_6398:: ; heuristic: event script entry or jump target; C0
     script_slide_y $80
-    script_message $4759 ; '0 checked the oven. Stew simmered'
+    script_message $4759 ; 'Hoh? Ah, excuse my incivility. It's'
     script_skip_if_no Script_63A6
-    script_message $875D ; 'Kiral Oh! Foolish of me, I'
+    script_message $875D ; 'Kiral No? How disappointing. Your efforts'
     script_set_flag $0159
     script_end
 Script_63A6:: ; heuristic: event script entry or jump target; C0
-    script_message $875B ; 'Pii Ggzz Piiiiii'
+    script_message $875B ; 'Kiral Hohoh! Grand, grand! Go fetch'
     script_walk 0, 3, 2
     script_face $80, 1
     script_wait 30
     script_slide_y $80
-    script_message $075C ; 'Kiral Hohoh! Grand, grand! Go fetch'
+    script_message $075C ; 'Kiral Oh! Foolish of me, I'
     script_set_flag $015A
     script_end
 Script_63BC:: ; heuristic: event script entry or jump target; C0
-    script_message $475E ; 'Kiral No? How disappointing. Your efforts'
+    script_message $475E ; 'Kiral I need help with my'
     script_skip_if_no Script_63C5
-    script_message $875D ; 'Kiral Oh! Foolish of me, I'
+    script_message $875D ; 'Kiral No? How disappointing. Your efforts'
     script_end
 Script_63C5:: ; heuristic: event script entry or jump target; C0
-    script_message $875B ; 'Pii Ggzz Piiiiii'
+    script_message $875B ; 'Kiral Hohoh! Grand, grand! Go fetch'
     script_walk 0, 3, 2
     script_face $80, 1
     script_wait 30
     script_slide_y $80
-    script_message $075C ; 'Kiral Hohoh! Grand, grand! Go fetch'
+    script_message $075C ; 'Kiral Oh! Foolish of me, I'
     script_set_flag $015A
     script_end
 Script_63DB:: ; heuristic: event script entry or jump target; C0
@@ -5975,144 +5975,144 @@ Script_63E4:: ; heuristic: event script entry or jump target; C0
     script_set_flag $015E
     script_end
 Script_63ED:: ; heuristic: event script entry or jump target; C0
-    script_message $0769 ; '0 peered into the barrel. There'
-    script_message $076A ; 'PROFESSOR SAY GUARD TREASURE NEVER SURRENDER'
+    script_message $0769 ; 'PROFESSOR SAY GUARD TREASURE NEVER SURRENDER'
+    script_message $076A ; 'Roboster is acting strangely. It appears'
     script_end
 Script_63F4:: ; heuristic: event script entry or jump target; C0
-    script_message $076D ; 'PROFESSOR SAY GUARD TREASURE'
-    script_message $076E ; 'PRO SOR AY GGGGUARD TREZZZT'
+    script_message $076D ; 'PRO SOR AY GGGGUARD TREZZZT'
+    script_message $076E ; 'Its damage appears to have worsened.'
     script_end
 Script_63FB:: ; heuristic: event script entry or jump target; C0
-    script_message $0770 ; 'PRO SOR AY GGGGUARD TREZZZT'
-    script_message $0771 ; 'PIPIPI GGGGGGAGAGAGA'
+    script_message $0770 ; 'PIPIPI GGGGGGAGAGAGA'
+    script_message $0771 ; 'Roboster is acting bizarrely. It appears'
     script_end
 Script_6402:: ; heuristic: event script entry or jump target; C0
-    script_message $0773 ; 'PIPIPI GGGGGGAGAGAGA'
-    script_message $0774 ; 'PI PI'
+    script_message $0773 ; 'PI PI'
+    script_message $0774 ; 'Roboster is acting as if demented.'
     script_end
 Script_6409:: ; heuristic: event script entry or jump target; C0
-    script_message $0776 ; 'PI PI'
+    script_message $0776 ; 'Kiral Ah! Back! The treasure? What?'
     script_wait 30
-    script_message $0777 ; 'Kiral Ah! Back! The treasure? What?'
+    script_message $0777 ; 'Kiral Please Go stop him. He'
     script_set_flag $0162
     script_end
 Script_6416:: ; heuristic: event script entry or jump target; C0
-    script_message $076B ; 'Roboster is acting strangely. It appears'
+    script_message $076B ; '0 peered into the barrel. There'
     script_command $C4
     script_end
 Script_641B:: ; heuristic: event script entry or jump target; C0
-    script_message $077D ; '0 peered into the barrel. There'
-    script_message $077E ; 'Kiral Ah! Back! Is Rob-N Did'
-    script_message $077F ; '0 handed over the blue stone.'
+    script_message $077D ; 'Kiral Ah! Back! Is Rob-N Did'
+    script_message $077E ; '0 handed over the blue stone.'
+    script_message $077F ; 'Kiral This stone, the WizStone, it'
     script_walk_fast 0, 1, 3
     script_command $C5
     script_set_flag $0165
     script_set_flag $0204
     script_end
 Script_6430:: ; heuristic: event script entry or jump target; C0
-    script_message $0795 ; 'You appear to have the power'
-    script_message $0796 ; 'Sigh'
+    script_message $0795 ; 'Sigh'
+    script_message $0796 ; 'The old man's sigh sounded sad'
     script_end
 Script_6437:: ; heuristic: event script entry or jump target; C0
-    script_message $0797 ; 'The old man's sigh sounded sad'
-    script_message $0798 ; 'Sigh'
+    script_message $0797 ; 'Sigh'
+    script_message $0798 ; 'The old woman's sigh was desolate'
     script_end
 Script_643E:: ; heuristic: event script entry or jump target; C0
 Data_010_643E:: ; address name
-    script_message $479D ; 'Grrrr! I'm so angry! Monsters stole'
+    script_message $479D ; 'Hello! What may I do for'
     script_jump_data_bank Script_6707
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_6445:: ; heuristic: event script entry or jump target; C0
-    script_message $479E ; 'Hello! What may I do for'
+    script_message $479E ; 'Welcome to our traveler's inn.'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_644C:: ; heuristic: event script entry or jump target; C0
     script_slide_y $81
-    script_message $47A0 ; 'If you travel west along the'
+    script_message $47A0 ; 'Excuse me, are you a master?'
     script_skip_if_no Script_645A
-    script_message $87A2 ; 'Thank you! I knew you agree!'
+    script_message $87A2 ; 'I can't count on your support?'
     script_set_flag $01B0
     script_end
 Script_645A:: ; heuristic: event script entry or jump target; C0
-    script_message $87A1 ; 'Excuse me, are you a master?'
+    script_message $87A1 ; 'Thank you! I knew you agree!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
     script_set_flag $01B1
     script_end
 Script_6469:: ; heuristic: event script entry or jump target; C0
-    script_message $47A3 ; 'I can't count on your support?'
+    script_message $47A3 ; 'Have you changed your mind? You'
     script_skip_if_no Script_6472
-    script_message $87A2 ; 'Thank you! I knew you agree!'
+    script_message $87A2 ; 'I can't count on your support?'
     script_end
 Script_6472:: ; heuristic: event script entry or jump target; C0
-    script_message $87A1 ; 'Excuse me, are you a master?'
+    script_message $87A1 ; 'Thank you! I knew you agree!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
     script_set_flag $01B1
     script_end
 Script_6481:: ; heuristic: event script entry or jump target; C0
-    script_message $47AB ; 'That dealer, how expensive! Nobody can'
+    script_message $47AB ; 'Lately, the town of Miagen has'
     script_skip_if_no Script_648A
-    script_message $87AD ; 'It's rumored that monsters raid the'
+    script_message $87AD ; 'You didn't know? Well, listen up.'
     script_end
 Script_648A:: ; heuristic: event script entry or jump target; C0
-    script_message $87AC ; 'Lately, the town of Miagen has'
+    script_message $87AC ; 'It's rumored that monsters raid the'
     script_end
 Script_648E:: ; heuristic: event script entry or jump target; C0
-    script_message $07B6 ; 'How does this grand vase look?'
+    script_message $07B6 ; 'This pendant is yours for 38,000G'
     script_command $C7
     script_set_flag $01B9
     script_end
 Script_6496:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01BA
-    script_message $07B9 ; 'Who are you? You shouldn't be'
+    script_message $07B9 ; 'You're going to regret seeing us.'
     script_encounter $11
-    script_message $07BC ; 'We'll smash you as often as'
+    script_message $07BC ; 'Please! Mercy! Spare us! Take back'
     script_command $C8
     script_set_flag $01BB
     script_end
 Script_64A6:: ; heuristic: event script entry or jump target; C0
-    script_message $07BB ; 'What, not you again!'
+    script_message $07BB ; 'We'll smash you as often as'
     script_encounter $11
-    script_message $07BC ; 'We'll smash you as often as'
+    script_message $07BC ; 'Please! Mercy! Spare us! Take back'
     script_command $C8
     script_set_flag $01BB
     script_end
 Script_64B3:: ; heuristic: event script entry or jump target; C0
-    script_message $07BD ; 'Please! Mercy! Spare us! Take back'
+    script_message $07BD ; '0 opened the treasure chest. 0'
     script_hide_object $00
     script_hide_object $02
     script_set_flag $01BC
     script_end
 Script_64BE:: ; heuristic: event script entry or jump target; C0
-    script_message $07C3 ; 'That dealer is a greedy hound!'
+    script_message $07C3 ; 'For 47,000G this earring What? You'
     script_slide_y $81
-    script_message $07C4 ; 'For 47,000G this earring What? You'
+    script_message $07C4 ; 'You defeated the monsters? You're not'
     script_set_flag $01BD
     script_end
 Script_64CA:: ; heuristic: event script entry or jump target; C0
-    script_message $07CA ; 'Arrrgh! This is so infuriating! The'
+    script_message $07CA ; '0 showed the Pretty Ring.'
     script_slide_y $80
-    script_message $07CB ; '0 showed the Pretty Ring.'
-    script_message $07CC ; 'Ah That ring Is Is it'
-    script_message $07CD ; '0 handed over the Pretty Ring.'
+    script_message $07CB ; 'Ah That ring Is Is it'
+    script_message $07CC ; '0 handed over the Pretty Ring.'
+    script_message $07CD ; 'Thank you for getting the ring'
     script_set_flag $01BE
     script_end
 Script_64DC:: ; heuristic: event script entry or jump target; C0
-    script_message $07CF ; 'Things haven't been good for us.'
-    script_message $07D1 ; '0 received a SageRock.'
+    script_message $07CF ; 'Thank you for recovering our daughter's'
+    script_message $07D1 ; '0 received a SageRock. But there'
     script_end
 Script_64E3:: ; heuristic: event script entry or jump target; C0
-    script_message $07CF ; 'Things haven't been good for us.'
-    script_message $07D0 ; 'Thank you for recovering our daughter's'
+    script_message $07CF ; 'Thank you for recovering our daughter's'
+    script_message $07D0 ; '0 received a SageRock.'
     script_set_flag $01BF
     script_end
 Script_64ED:: ; heuristic: event script entry or jump target; C0
-    script_message $07DA ; 'The thieving monsters had a boss,'
+    script_message $07DA ; 'What? Where I get my wares?'
     script_command $C7
     script_walk_fast 1, 0, 2
     script_walk_fast 1, 1, 1
@@ -6120,7 +6120,7 @@ Script_64ED:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01C0
     script_end
 Script_6501:: ; heuristic: event script entry or jump target; C0
-    script_message $07DC ; 'That greedhound dealer scuttled off in'
+    script_message $07DC ; 'Milayou I thought this forest looked'
     script_command $C9
     script_set_flag $01C1
     script_end
@@ -6128,11 +6128,11 @@ Script_6509:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01C2
     script_message $0CDE ; 'What is it, you little brat?'
     script_encounter $12
-    script_message $0CE0 ; 'What is it, you little brat?'
+    script_message $0CE0 ; 'But No! I lost to this'
     script_command $CA
     script_walk 1, 2, 2
     script_face $00, 0
-    script_message $0CE1 ; 'But No! I lost to this'
+    script_message $0CE1 ; 'Milayou You are really special. I'
     script_walk 1, 0, 2
     script_hide_object $01
     script_set_flag $01C3
@@ -6141,51 +6141,51 @@ Script_6509:: ; heuristic: event script entry or jump target; C0
 Script_652C:: ; heuristic: event script entry or jump target; C0
     script_message $0CDF ; 'What is it, you little brat?'
     script_encounter $12
-    script_message $0CE0 ; 'What is it, you little brat?'
+    script_message $0CE0 ; 'But No! I lost to this'
     script_command $CA
     script_walk 1, 2, 2
     script_face $00, 0
-    script_message $0CE1 ; 'But No! I lost to this'
+    script_message $0CE1 ; 'Milayou You are really special. I'
     script_walk 1, 0, 2
     script_hide_object $01
     script_set_flag $01C3
     script_set_flag $0205
     script_end
 Script_654C:: ; heuristic: event script entry or jump target; C0
-    script_message $0CEF ; 'It sure was a thrilling time'
+    script_message $0CEF ; 'Milayou I asked for your support'
     script_slide_y $00
-    script_message $0CF0 ; 'Milayou I asked for your support'
+    script_message $0CF0 ; 'Milayou How do I know about'
     script_set_flag $01C4
     script_end
 Script_6558:: ; heuristic: event script entry or jump target; C0
     script_set_flag $01C6
-    script_message $4CF5 ; 'That greedy hound of a dealer'
+    script_message $4CF5 ; 'Milayou I knew you come back!'
     script_skip_if_no Script_6564
-    script_message $8CF7 ; 'Milayou Great! No holding back!'
+    script_message $8CF7 ; 'Milayou Oh I'm disappointed Come again'
     script_end
 Script_6564:: ; heuristic: event script entry or jump target; C0
-    script_message $8CF6 ; 'Milayou I knew you come back!'
+    script_message $8CF6 ; 'Milayou Great! No holding back!'
     script_encounter $13
-    script_message $0CF9 ; 'Milayou Want to spar with me?'
+    script_message $0CF9 ; 'Milayou I lost But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
     script_set_flag $01C7
     script_end
 Script_6578:: ; heuristic: event script entry or jump target; C0
-    script_message $4CF8 ; 'Milayou Oh I'm disappointed Come again'
+    script_message $4CF8 ; 'Milayou Want to spar with me?'
     script_skip_if_no Script_6581
-    script_message $8CF7 ; 'Milayou Great! No holding back!'
+    script_message $8CF7 ; 'Milayou Oh I'm disappointed Come again'
     script_end
 Script_6581:: ; heuristic: event script entry or jump target; C0
-    script_message $8CF6 ; 'Milayou I knew you come back!'
+    script_message $8CF6 ; 'Milayou Great! No holding back!'
     script_encounter $13
-    script_message $0CF9 ; 'Milayou Want to spar with me?'
+    script_message $0CF9 ; 'Milayou I lost But, good battle!'
     script_walk 1, 3, 2
     script_walk 1, 0, 6
     script_set_flag $01C7
     script_end
 Script_6595:: ; heuristic: event script entry or jump target; C0
-    script_message $0C48 ; 'You e conquered the Soul Tower.'
+    script_message $0C48 ; '0 checked the treasure chest. The'
     script_encounter $32
     script_command $74
     script_end
@@ -6193,7 +6193,7 @@ Script_659C:: ; heuristic: event script entry or jump target; C0
     script_command $CB
     script_end
 Script_659E:: ; heuristic: event script entry or jump target; C0
-    script_message $0C49 ; '0 checked the treasure chest. The'
+    script_message $0C49 ; '0 checked the treasure chest. It'
     script_command $CD
     script_end
 Script_65A3:: ; heuristic: event script entry or jump target; C0
@@ -6210,13 +6210,13 @@ Data_010_65AA:: ; address name
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_65B1:: ; heuristic: event script entry or jump target; C0
-    script_message $4128 ; 'Warubou Wa-hey! So, this is it?'
+    script_message $4128 ; 'Warubou Wa-hey! That's it! GreatLog is'
     script_jump_data_bank Script_690B
     db $FF
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_65B8:: ; heuristic: event script entry or jump target; C0
-    script_message $4127 ; 'Warubou There, your party's fine! So,'
+    script_message $4127 ; 'Warubou Wa-hey! So, this is it?'
     script_jump_data_bank Script_1F_77D4
     db $FF
 
@@ -6391,7 +6391,7 @@ Script_666B:: ; heuristic: event script entry or jump target; C0
     script_jump Script_665B
 Script_6674:: ; heuristic: event script entry or jump target; C0
     script_command $E3
-    script_message $8012 ; 'Cobi 0! They said GreatLog will'
+    script_message $8012 ; 'Thank you! Please come again.'
     script_command $E3
     script_end
 Script_667A:: ; heuristic: event script entry or jump target; C0
@@ -6490,7 +6490,7 @@ Script_6719:: ; heuristic: event script entry or jump target; C0
     script_jump Script_6709
 Script_6722:: ; heuristic: event script entry or jump target; C0
     script_command $E3
-    script_message $803E ; 'We live inside here. I'm keeping'
+    script_message $803E ; 'Thank you! Please come again!'
     script_command $E3
     script_end
 Script_6728:: ; heuristic: event script entry or jump target; C0

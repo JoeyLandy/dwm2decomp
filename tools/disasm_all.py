@@ -3120,7 +3120,7 @@ class Rom:
                 for t2 in trace(sb, t, {sb}):
                     data_entries.add((sb, t2))
         self.data_script_entries = done
-        self.script_mode = self.script_message_modes(code, {(b, a) for a in site_bank} | done)
+        self.script_mode = self.script_message_modes(code, {(b, a) for a in site_bank}, done)
         used = 0
         for sb in sorted({k[0] for k in code}):
             dl, dt = self.dlabels[sb], self.dtab[sb]
@@ -3168,15 +3168,30 @@ class Rom:
     # E-0242: the menu commands that set wMessageMode in their first state (and the ones that clear
     # it); ScriptCommand09_Case01_Sub01 shows a script message with the string displayer the mode
     # picks from Data_010_4AFF (string index = the low byte; the group byte is ignored) when the
-    # mode is not 0. F6 sets 9 and clears it again in a later state, so its exit mode is unknown.
+    # mode is not 0. F6 sets 9 and clears it in its last state; its scripts show the library farewell
+    # between F6 calls, so 9 is kept.
     MESSAGE_MODE_SET = {0xE0: 1, 0xE2: 2, 0xE5: 2, 0xE8: 3, 0xEB: 4, 0xED: 5, 0xEF: 6, 0xF2: 7, 0xF3: 7,
-                        0xF4: 8, 0xF6: -1, 0xF7: 10, 0xF8: 11, 0xE1: 0, 0xE3: 0, 0xEC: 0, 0xEE: 0}
+                        0xF4: 8, 0xF6: 9, 0xF7: 10, 0xF8: 11, 0xE1: 0, 0xE3: 0, 0xEC: 0, 0xEE: 0,
+                        # through the implementations they call: F0 runs ScriptCommandEF_Run in its
+                        # first state; F1 and E9 run ScriptCommandEE_Run, E6 ScriptCommandE3_Run
+                        0xF0: 6, 0xF1: 0, 0xE9: 0, 0xE6: 0}
 
-    def script_message_modes(self, code: dict, entries: set) -> dict:
-        """wMessageMode before each traced script instruction: 0 at every start site and data-bank
-        entry, changed by the commands in MESSAGE_MODE_SET, -1 where paths disagree."""
+    def script_message_modes(self, code: dict, entries: set, data_entries: set) -> dict:
+        """wMessageMode before each traced script instruction: 0 at every start site, changed by the
+        commands in MESSAGE_MODE_SET, carried through $E7 into the data bank the caller set, -1
+        where paths disagree; data-bank entries no traced $E7 reaches start at 0."""
         mode: dict[tuple[int, int], int] = {}
         todo = [(e, 0) for e in entries if e in code]
+        self._mode_walk(code, mode, todo)
+        self._mode_walk(code, mode, [(e, 0) for e in data_entries if e in code and e not in mode])
+        return mode
+
+    # the closing commands run in two calls around their farewell message; the mode is cleared by the
+    # second (an immediate repeat), so a single call keeps it
+    MESSAGE_MODE_CLOSERS = {0xE1, 0xE3, 0xEC, 0xEE, 0xF1, 0xE9, 0xE6}
+
+    def _mode_walk(self, code: dict, mode: dict, todo: list) -> None:
+        prev = {(sb, pc + 1 + len(arg)): op for (sb, pc), (op, arg) in code.items()}
         while todo:
             (sb, pc), m = todo.pop()
             old = mode.get((sb, pc))
@@ -3187,6 +3202,8 @@ class Rom:
             op, arg = code[(sb, pc)]
             out = self.MESSAGE_MODE_SET.get(op, m) if m != -1 else (
                 self.MESSAGE_MODE_SET[op] if self.MESSAGE_MODE_SET.get(op, -1) != -1 else -1)
+            if op in self.MESSAGE_MODE_CLOSERS and prev.get((sb, pc)) != op:
+                out = m
             nxt = []
             if op not in (0xFF, 0x07, 0xE4, 0xE7):
                 nxt.append(pc + 1 + len(arg))
@@ -3197,7 +3214,9 @@ class Rom:
             if op == 0xE4:
                 nxt += [pc + 2 + i + o for i, o in enumerate(arg)]
             todo += [((sb, t), out) for t in nxt if (sb, t) in code]
-        return mode
+            if op == 0xE7:  # E-0160: continues in the data bank the caller set in wDataBank
+                t = arg[0] | arg[1] << 8
+                todo += [((db, t), out) for db in self.e7_banks.get((sb, pc), ()) if (db, t) in code]
 
     def mode_message_preview(self, m: int, w: int) -> str | None:
         """The string a script message word shows under wMessageMode m > 0: index (low byte) of
@@ -3205,6 +3224,8 @@ class Rom:
         o = 0x10 * BANK - BANK + 0x4AFF + 3 * (m - 1)
         addr, bank = self.data[o] | self.data[o + 1] << 8, self.data[o + 2]
         r = bank * BANK - self.base(bank) + addr
+        if addr == 0x4001 and self.data[r:r + 3] == bytes([0xFA, 0x29, 0xC5]) and self.data[r + 3] == 0xFE:
+            return self.message_preview(w, bank)  # ld a, [wStringIndex] / cp a, n: a message bank
         if not 0x4000 <= addr < 0x8000 or self.data[r] != 0x11:  # ld de, table
             return None
         table = self.data[r + 1] | self.data[r + 2] << 8
@@ -3236,15 +3257,17 @@ class Rom:
         self.e4_fallbacks = getattr(self, "e4_fallbacks", 0) + 1
         return 2
 
-    def message_preview(self, word: int) -> str | None:
+    def message_preview(self, word: int, bank: int | None = None) -> str | None:
         """First words of message `word` on ShowMessageHL's normal path (E-0080/E-0081): group =
         high byte & $3F picks the bank (MESSAGE_GROUP_BANKS, from ShowMessageHL's 14 cases); the
-        low byte indexes MessageStrings_BankBB ($4032; bank $86: $4016), or the bank's overflow
-        table (minus the threshold at $4005) at and above that threshold. None when unknown."""
+        low byte is the string index in category 0 of MessageStrings_BankBB ($4032; bank $86:
+        $4016), or of the bank's overflow table (minus the threshold at $4005) at and above that
+        threshold (E-0243: a category table, read on two levels). None when unknown."""
         g, i = (word >> 8) & 0x3F, word & 0xFF
-        if g >= len(self.MESSAGE_GROUP_BANKS):
-            return None
-        bank = self.MESSAGE_GROUP_BANKS[g]
+        if bank is None:  # E-0242: a message-mode displayer can name the message bank directly
+            if g >= len(self.MESSAGE_GROUP_BANKS):
+                return None
+            bank = self.MESSAGE_GROUP_BANKS[g]
         if not hasattr(self, "_name_addr"):
             self._name_addr = {v["name"]: k for k, v in self.names.items()}
         table = 0x4016 if bank == 0x86 else 0x4032
@@ -3255,7 +3278,12 @@ class Rom:
                 return None
             i -= self.data[o + 5]
             bank, table = ov
-        p = self._u16(bank, table + 2 * i)
+        # E-0243: the table goes to BeginStringDisplay, so LookupString reads two levels: the list of
+        # category 0 (wStringCategory = 0), then word i of that list
+        lst = self._u16(bank, table)
+        if not 0x4000 <= lst < 0x8000:
+            return None
+        p = self._u16(bank, lst + 2 * i)
         if not 0x4000 <= p < 0x8000:
             return None
         chars = []
@@ -3285,7 +3313,9 @@ class Rom:
                 macro = {0x00: "script_message", 0xEA: "script_message_unless_flag0",
                          0xF5: "script_message_by_screen"}[op]
                 macro = f"    {macro} ${w:04X}"
-                out.append(macro + (f" ; '{text}'" if text else ""))
+                # the quote is of the index as written: with flag 0 set ($EA), or for screen table index 0 ($F5)
+                pre = {0x00: "", 0xEA: "flag 0 set: ", 0xF5: "screen 0: "}[op]
+                out.append(macro + (f" ; {pre}'{text}'" if text else ""))
             elif op == 0x06:
                 out.append(f"    script_skip_if_no {lab(a + 2 + arg[0])}")
             elif op == 0x07:

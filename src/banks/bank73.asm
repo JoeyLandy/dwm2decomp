@@ -3191,56 +3191,56 @@ MapMessageTable_530C::
 Data_073_530C:: ; address name
     dw $0000 ; id 200 none
     dw $0000 ; id 201 none
-    dw $0C04 ; id 202 'The Tower's many treasures are heavily'
-    dw $0C08 ; id 203 'Not bad, not bad at all.'
-    dw $0C0C ; id 204 'You're quite good. The treasures are'
-    dw $0C10 ; id 205 'Wow, aren't you good. Go ahead'
-    dw $0C14 ; id 206 'Well done. So it shall be.'
+    dw $0C04 ; id 202 'This is the second floor- the'
+    dw $0C08 ; id 203 'This is the third floor- the'
+    dw $0C0C ; id 204 'This is the fourth floor- the'
+    dw $0C10 ; id 205 'This is the fifth floor- the'
+    dw $0C14 ; id 206 'Well. How impressive. I must commend'
     dw $0000 ; id 207 none
     dw $0000 ; id 208 none
     dw $0000 ; id 209 none
     dw $0000 ; id 210 none
-    dw $0C1C ; id 211 'It's not that easy to win'
-    dw $0C20 ; id 212 'Well played. I can't complain. Fine.'
-    dw $0C24 ; id 213 'Bravo. Take the treasures. Upstairs is'
-    dw $0C28 ; id 214 'Remarkable, I must admit. You have'
-    dw $0C2C ; id 215 'You're quite tough. The treasures are'
+    dw $0C1C ; id 211 'This is the second floor- the'
+    dw $0C20 ; id 212 'This is the third floor- the'
+    dw $0C24 ; id 213 'This is the fourth floor- the'
+    dw $0C28 ; id 214 'This is the fifth floor- the'
+    dw $0C2C ; id 215 'Ah, you have impressed me. It's'
     dw $0000 ; id 216 none
     dw $0000 ; id 217 none
     dw $0000 ; id 218 none
     dw $0000 ; id 219 none
-    dw $0C34 ; id 220 'It's brutal up ahead. I wouldn't'
-    dw $0C38 ; id 221 'You're quite good at this. Sure,'
-    dw $0C3C ; id 222 'You e shown me your worth.'
-    dw $0C40 ; id 223 'Fine, we will confer all the'
-    dw $0C44 ; id 224 'All right. Good enough. The treasures'
+    dw $0C34 ; id 220 'This is the second floor. This'
+    dw $0C38 ; id 221 'This is the third floor. It's'
+    dw $0C3C ; id 222 'This is the fourth floor. The'
+    dw $0C40 ; id 223 'This is the fifth floor. Welcome'
+    dw $0C44 ; id 224 'Oh? Well, well, you're the first'
     dw $0000 ; id 225 none
     dw $0000 ; id 226 none
     dw $0000 ; id 227 none
     dw $0000 ; id 228 none
-    dw $0C07 ; id 229
-    dw $0C0B ; id 230
-    dw $0C0F ; id 231
-    dw $0C13 ; id 232
-    dw $0C16 ; id 233
+    dw $0C07 ; id 229 'Not bad, not bad at all.'
+    dw $0C0B ; id 230 'You're quite good. The treasures are'
+    dw $0C0F ; id 231 'Wow, aren't you good. Go ahead'
+    dw $0C13 ; id 232 'Well done. So it shall be.'
+    dw $0C16 ; id 233 'Well. How impressive. Conquering the Power'
     dw $0000 ; id 234 none
     dw $0000 ; id 235 none
     dw $0000 ; id 236 none
     dw $0000 ; id 237 none
-    dw $0C1F ; id 238
-    dw $0C23 ; id 239
-    dw $0C27 ; id 240
-    dw $0C2B ; id 241
-    dw $0C2E ; id 242
+    dw $0C1F ; id 238 'Well played. I can't complain. Fine.'
+    dw $0C23 ; id 239 'Bravo. Take the treasures. Upstairs is'
+    dw $0C27 ; id 240 'Remarkable, I must admit. You have'
+    dw $0C2B ; id 241 'You're quite tough. The treasures are'
+    dw $0C2E ; id 242 'You are to be commended for'
     dw $0000 ; id 243 none
     dw $0000 ; id 244 none
     dw $0000 ; id 245 none
     dw $0000 ; id 246 none
-    dw $0C37 ; id 247
-    dw $0C3B ; id 248
-    dw $0C3F ; id 249
-    dw $0C43 ; id 250
-    dw $0C46 ; id 251 'Hello! You e come back! Are'
+    dw $0C37 ; id 247 'You're quite good at this. Sure,'
+    dw $0C3B ; id 248 'You e shown me your worth.'
+    dw $0C3F ; id 249 'Fine, we will confer all the'
+    dw $0C43 ; id 250 'All right. Good enough. The treasures'
+    dw $0C46 ; id 251 'You are good! I like you!'
     dw $0000 ; id 252 none
     dw $0000 ; id 253 none
 

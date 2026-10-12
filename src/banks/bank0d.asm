@@ -4687,12 +4687,12 @@ Script_0D_62B8:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0D_62CA, Script_0D_62C4, Script_0D_62BE
 Script_0D_62BE:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8002 ; 'Cobi 0! Papa's calling. He's at'
+    script_message $8002 ; 'Okay. Come back if you find'
     script_command $EE
     script_end
 Script_0D_62C4:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8003 ; 'Tara There you are, big brother!'
+    script_message $8003 ; 'Don't come if you have no'
     script_command $EE
     script_end
 Script_0D_62CA:: ; heuristic: event script entry or jump target; C0
@@ -4716,7 +4716,7 @@ Script_0D_62E6:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0D_62CD
 Script_0D_62ED:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8007 ; 'There's a spirit in GreatLog that's'
+    script_message $8007 ; 'Hah? I'm not appraising any key'
     script_command $EE
     script_end
 Script_0D_62F3:: ; heuristic: event script entry or jump target; C0

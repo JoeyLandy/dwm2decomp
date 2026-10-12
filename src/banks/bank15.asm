@@ -7657,7 +7657,7 @@ Script_15_764C:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_15_765A, Script_15_7657, Script_15_7651
 Script_15_7651:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $8020 ; 'Cobi Sure, Mama! We'll be fine.'
+    script_message $8020 ; 'Become a great master!'
     script_command $EE
     script_end
 Script_15_7657:: ; heuristic: event script entry or jump target; C0

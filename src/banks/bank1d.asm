@@ -180,7 +180,7 @@ Script_1D_4336:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_1D_434B, Script_1D_4348, Script_1D_4342, Script_1D_433C
 Script_1D_433C:: ; heuristic: event script entry or jump target; C0
     script_command $EC
-    script_message $8015 ; 'This is a tale of children'
+    script_message $8015 ; 'Come see me if you get'
     script_command $EC
     script_end
 Script_1D_4342:: ; heuristic: event script entry or jump target; C0

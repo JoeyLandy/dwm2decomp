@@ -2430,6 +2430,22 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0243 — Message quotes were one string off; message modes through $E7 and the closing commands
+
+- Kind: OBSERVATION (reading of BeginStringDisplay/LookupString use by the message banks; C2 for the lookup) and TOOL. **Correction** to E-0153 and every message quote since.
+- **The off-by-one.** Each message bank's displayer passes MessageStrings_BankBB ($4032; bank $86: $4016) in DE to BeginStringDisplay. LookupString then reads two levels: the word for category 0 (wStringCategory = 0, which is $4034, the list right after it), then word `index` of that list. message_preview had read $4032 itself as the list, so every quote showed string index - 1.
+  - Example: message $0001 is "Cobi 0! Papa's calling. He's at the stern.", not "In the middle of the sea". In bank $28, flat word 1 equals list word 0.
+  - The overflow tables go to BeginStringDisplay too and are read the same way.
+  - Message-word notes in tables (`names: message`) use the same routine and are corrected with it.
+- **Modes, continued from E-0242.**
+  - The mode is carried through $E7 into the data bank the caller set.
+  - F0 (the Christener's renaming) runs ScriptCommandEF_Run in its first state, so it sets mode 6.
+  - F6 (the library) keeps mode 9 for the farewell it shows between calls.
+  - Mode 8 (0E:$4001) is a message bank like the group banks (threshold $88, overflow in bank $96), so its messages are quoted.
+  - The closing commands (E1, E3, E6, E9, EC, EE, F1) clear the mode only on an immediate second call, so the farewell between the two calls is quoted from the menu's table. The shop's "Thank you! Please come again." is an example.
+  - $EA and $F5 quotes are prefixed "flag 0 set:" and "screen 0:", since they quote the index as written.
+- Binary verification: build/run308 PASS, 0 differing bytes; tests OK.
+
 ### E-0242 — Named script opcodes; script message quotes follow wMessageMode
 
 - Kind: OBSERVATION (reading of the fetch handlers, ScriptCommand09_Case01_Sub01 and the menu commands; C1) and TOOL. **Correction** to E-0153's quotes.

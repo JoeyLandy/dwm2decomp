@@ -9499,22 +9499,22 @@ Data_00E_7F75:: ; address name
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
 Script_0E_7F8B:: ; heuristic: event script entry or jump target; C0
     script_command $F4
-    script_message_by_screen $C003
+    script_message_by_screen $C003 ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7F8F:: ; heuristic: event script entry or jump target; C0
     script_command $F4
     script_choice_jump Script_0E_7F99, Script_0E_7F93
 Script_0E_7F93:: ; heuristic: event script entry or jump target; C0
     script_command $E9
-    script_message_by_screen $8002
+    script_message_by_screen $8002 ; screen 0: 'Its accessory is in the Vault.'
     script_command $E9
     script_end
 Script_0E_7F99:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C005
+    script_message_by_screen $C005 ; screen 0: 'Its accessory is in the Vault.'
     script_command $F4
 Script_0E_7F9D:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_0E_7FA8, Script_0E_7FAC, Script_0E_7FA1
 Script_0E_7FA1:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C004
+    script_message_by_screen $C004 ; screen 0: 'Its accessory is in the Vault.'
     script_command $F4
     script_jump Script_0E_7F8F
 Script_0E_7FA8:: ; heuristic: event script entry or jump target; C0
@@ -9524,12 +9524,12 @@ Script_0E_7FAC:: ; heuristic: event script entry or jump target; C0
     script_command $F4
     script_choice_jump Script_0E_7FC1, Script_0E_7FB7, Script_0E_7FB1
 Script_0E_7FB1:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C006
+    script_message_by_screen $C006 ; screen 0: 'Its accessory is in the Vault.'
     script_jump Script_0E_7FBA
 Script_0E_7FB7:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C007
+    script_message_by_screen $C007 ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7FBA:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C003
+    script_message_by_screen $C003 ; screen 0: 'Its accessory is in the Vault.'
     script_command $F4
     script_jump Script_0E_7F8F
 Script_0E_7FC1:: ; heuristic: event script entry or jump target; C0
@@ -9538,29 +9538,29 @@ Script_0E_7FC1:: ; heuristic: event script entry or jump target; C0
 Script_0E_7FC5:: ; heuristic: event script entry or jump target; C0
     script_jump Script_0E_7FCB
 Script_0E_7FC8:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C00C
+    script_message_by_screen $C00C ; screen 0: 'Is it OK to save the'
 Script_0E_7FCB:: ; heuristic: event script entry or jump target; C0
     script_command $F4
     script_choice_jump Script_0E_7FD5, Script_0E_7FCF
 Script_0E_7FCF:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C008
+    script_message_by_screen $C008 ; screen 0: 'Its accessory is in the Vault.'
     script_jump Script_0E_7FD8
 Script_0E_7FD5:: ; heuristic: event script entry or jump target; C0
-    script_message_by_screen $C00B
+    script_message_by_screen $C00B ; screen 0: 'Its accessory is in the Vault.'
 Script_0E_7FD8:: ; heuristic: event script entry or jump target; C0
     script_command $F4
     script_choice_jump Script_0E_7FE2, Script_0E_7FDC
 Script_0E_7FDC:: ; heuristic: event script entry or jump target; C0
     script_command $E9
-    script_message_by_screen $8002
+    script_message_by_screen $8002 ; screen 0: 'Its accessory is in the Vault.'
     script_command $E9
     script_end
 Script_0E_7FE2:: ; heuristic: event script entry or jump target; C0
     script_command $F4
-    script_message_by_screen $C009
+    script_message_by_screen $C009 ; screen 0: 'Its accessory is in the Vault.'
     script_command $F4
     script_command $E9
-    script_message_by_screen $000A
+    script_message_by_screen $000A ; screen 0: 'Its accessory is in the Vault.'
     script_command $E9
     script_end
     ds $13, $00

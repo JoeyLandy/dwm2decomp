@@ -1165,7 +1165,7 @@ Script_96_6EF8:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_96_6F06, Script_96_6F03, Script_96_6EFD
 Script_96_6EFD:: ; heuristic: event script entry or jump target; C0
     script_command $EE
-    script_message $800A ; 'Is that so? Too bad! You'll'
+    script_message $800A ; 'Please come see me when you'
     script_command $EE
     script_end
 Script_96_6F03:: ; heuristic: event script entry or jump target; C0
@@ -1316,11 +1316,11 @@ Script_96_6FF8:: ; heuristic: event script entry or jump target; C0
     script_choice_jump Script_96_7003, Script_96_6FFD
 Script_96_6FFD:: ; heuristic: event script entry or jump target; C0
     script_command $F1
-    script_message $8022 ; 'Tara We'll be OK! I'm going'
+    script_message $8022 ; 'Come here for renaming monsters.'
     script_command $F1
     script_end
 Script_96_7003:: ; heuristic: event script entry or jump target; C0
-    script_message $C023 ; 'Go to the Vault and pick'
+    script_message $C023 ; 'Pick the monster to rename.'
 Script_96_7006:: ; heuristic: event script entry or jump target; C0
     script_command $F0
     script_choice_jump Script_96_700D, Script_96_700A
