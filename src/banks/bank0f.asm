@@ -5344,7 +5344,7 @@ Jump_00F_60FE:: ; address name
     ld a, $72
     call QueueSoundEffect
     ld a, $52
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     xor a, a
     ldh [hTemp1], a
@@ -6967,7 +6967,7 @@ Jump_00F_6ADD:: ; address name
     xor a, a
     ld [wObject1 + OBJ_SET_MODE], a
     ld a, $D6
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     xor a, a
     ldh [hTemp1], a
@@ -7218,7 +7218,7 @@ Jump_00F_6BF6:: ; address name
     ld hl, vTiles0 + $700
     call DecompressToVRAM
     ld a, $45
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     xor a, a
     ld [wScriptParam0], a
     ld hl, wScriptStep
@@ -8593,7 +8593,7 @@ Jump_00F_74F7:: ; address name
     ld hl, vTiles0 + $600
     call DecompressToVRAM
     ld a, $27
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ld hl, wScriptStep
     inc [hl]
     ret

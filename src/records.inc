@@ -64,7 +64,7 @@ DEF SPECIES_RESISTANCES EQU $12 ; 27 base resistance levels: copied to a new rec
 
 ; Offsets into a 16-byte field object slot (wObject1-4; config/record_fields.json "object", E-0300).
 DEF OBJ_SET_MODE EQU $01 ; 0: UpdateAndDrawSpriteSlots takes the sprite set from +2; otherwise another path (E-0300)
-DEF OBJ_SPRITE_SET EQU $02 ; sprite set index (bits 0-6) (E-0300)
+DEF OBJ_SPRITE_ID EQU $02 ; sprite id word: with OBJ_SET_MODE 0, bits 0-6 of the low byte are the set index, bit 7 selects DrawMetaSpriteSet_Bank26 and a non-zero high byte DrawMetaSpriteSet_Bank27; monster objects store the species word here (E-0300, E-0308) (E-0308)
 DEF OBJ_ATTR EQU $06 ; attribute bits (bits 0-2 to hSpriteAttrXor) (E-0300)
 DEF OBJ_STATE EQU $07 ; state (E-0134)
 DEF OBJ_TILE_OFFSET EQU $08 ; tile offset (hSpriteTileOffset) (E-0300)

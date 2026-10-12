@@ -3978,7 +3978,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case04::
 Jump_0E0_5FFE:: ; address name
     call DrawSpriteSlots
     ld d, $60
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
@@ -4002,9 +4002,9 @@ Jump_0E0_5FFE:: ; address name
     ld [wWorkBuf + $6], a
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
     db $FE, $FE, $FE, $FF, $FF, $FF, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
 
@@ -4041,9 +4041,9 @@ Jump_0E0_605D:: ; address name
     ld b, $00
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ld a, [wWorkBuf + $6]
     inc a
     ld [wWorkBuf + $6], a
@@ -4115,7 +4115,7 @@ Jump_0E0_60DF:: ; address name
     ld a, $02
     ld c, $03
     call SetSpriteSlotByte5
-    ld a, [wObject1 + OBJ_SPRITE_SET]
+    ld a, [wObject1 + OBJ_SPRITE_ID]
     cp a, $F0
     jr nz, .set_object1
     ld a, $02
@@ -4137,7 +4137,7 @@ Jump_0E0_60DF:: ; address name
 
 .set_object1:
     sub a, $02
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ld a, [wObject1 + OBJ_STATE]
     inc a
     ld [wObject1 + OBJ_STATE], a
@@ -4193,7 +4193,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case06::
 Jump_0E0_6165:: ; address name
     call DrawSpriteSlots
     ld d, $50
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
@@ -4212,9 +4212,9 @@ Jump_0E0_6165:: ; address name
     ld [wWorkBuf + $6], a
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
 ; entry 9 of the `rst $00` table in DebugStaffRoll_Scene01
@@ -4225,7 +4225,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case09::
 Jump_0E0_6194:: ; address name
     call DrawSpriteSlots
     ld d, $60
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
@@ -4244,9 +4244,9 @@ Jump_0E0_6194:: ; address name
     ld [wWorkBuf + $6], a
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
 ; entry 7 of the `rst $00` table in DebugStaffRoll_Scene01
@@ -4257,7 +4257,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case07::
 Jump_0E0_61C3:: ; address name
     call DrawSpriteSlots
     ld d, $40
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
@@ -4276,9 +4276,9 @@ Jump_0E0_61C3:: ; address name
     ld [wWorkBuf + $6], a
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
 ; entry 8 of the `rst $00` table in DebugStaffRoll_Scene01
@@ -4289,7 +4289,7 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Case08::
 Jump_0E0_61F2:: ; address name
     call DrawSpriteSlots
     ld d, $50
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     ld e, a
     ld a, $02
     call StepSpriteSlotToward
@@ -4308,9 +4308,9 @@ Jump_0E0_61F2:: ; address name
     ld [wWorkBuf + $6], a
     ld hl, $6038
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
 ; entry 23 of the `rst $00` table in DebugStaffRoll_Scene01
@@ -4778,9 +4778,9 @@ Jump_0E0_6551:: ; address name
     ld b, $00
     ld hl, $6038
     add hl, bc
-    ld a, [wObject2 + $3]
+    ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
     ld a, [wObject2 + OBJ_X]
     add a, [hl]
     ld [wObject2 + OBJ_X], a
@@ -5613,9 +5613,9 @@ Jump_0E0_6B0A:: ; address name
     ld b, $00
     ld hl, $6038
     add hl, bc
-    ld a, [wObject2 + $3]
+    ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
     ld a, [wWorkBuf + $6]
     srl a
     srl a
@@ -5629,9 +5629,9 @@ Jump_0E0_6B0A:: ; address name
 .set_sprite_slot_count_to_04:
     ld a, $04
     ld [wSpriteSlotCount], a
-    ld a, [wObject2 + $3]
+    ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     call StepWD0A2Mod30
     ret nz
     xor a, a
@@ -6025,9 +6025,9 @@ Jump_0E0_6DEE:: ; address name
     ld b, $00
     ld hl, $6E83
     add hl, bc
-    ld a, [wObject1 + $3]
+    ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ld e, a
     ld d, $10
     ld a, $02

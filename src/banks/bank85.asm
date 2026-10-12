@@ -4660,7 +4660,7 @@ Func_085_5B53:: ; address name
     push bc
     ld a, b
     swap a
-    ld hl, wObject1 + OBJ_SPRITE_SET
+    ld hl, wObject1 + OBJ_SPRITE_ID
     add_a_to_hl
     ldh a, [hTemp0]
     ld [hl+], a

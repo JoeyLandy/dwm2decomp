@@ -5133,16 +5133,16 @@ Func_0F0_67EE:: ; address name
     cp a, $03
     jr nz, .read_bank_f0_byte_c8
     ld a, [wBankF0ByteA8]
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ld a, [wBankF0ByteA9]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
     jr .skip5
 
 .read_bank_f0_byte_c8:
     ld a, [wBankF0ByteC8]
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ld a, [wBankF0ByteC9]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
 
 .skip5:
     ld hl, Run67EEWithArg1ForF0ScreenKind_TestFlagBit_Data_6A02

@@ -2431,6 +2431,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0308 — Field object bytes 2-3 are one sprite id word
+
+- Kind: STATIC (C1).
+- **The draw rule.** UpdateAndDrawSpriteSlots reads +2 and +3 together when OBJ_SET_MODE (+1) is 0:
+  - bits 0-6 of +2 give the sprite set index;
+  - when +3 is non-zero it draws with DrawMetaSpriteSet_Bank27;
+  - otherwise bit 7 of +2 chooses DrawMetaSpriteSet_Bank26 over DrawMetaSpriteSet_Bank25.
+- **What stores there.** Scenes write a monster's species word there: wRecordBufA/B + MON_SPECIES + 1 goes to + $3. Species ids at or above $100 therefore draw from bank $27.
+- **Rename.** OBJ_SPRITE_SET becomes OBJ_SPRITE_ID, a 2-byte field. Object byte 3 now reads as OBJ_SPRITE_ID + 1 in all 33 uses.
+- **Still numeric.** wObject1/2 + $4/$5: 3 uses.
+- Binary verification: build/run426 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0307 — Species byte 1 is the sex-ratio class
 
 - Kind: STATIC (C1).

@@ -84,7 +84,7 @@
     "buffers": ["wObject1", "wObject2", "wObject3", "wObject4"],
     "fields": {
       "01": {"const": "OBJ_SET_MODE", "note": "0: UpdateAndDrawSpriteSlots takes the sprite set from +2; otherwise another path", "evidence": "E-0300"},
-      "02": {"const": "OBJ_SPRITE_SET", "note": "sprite set index (bits 0-6)", "evidence": "E-0300"},
+      "02": {"size": 2, "const": "OBJ_SPRITE_ID", "note": "sprite id word: with OBJ_SET_MODE 0, bits 0-6 of the low byte are the set index, bit 7 selects DrawMetaSpriteSet_Bank26 and a non-zero high byte DrawMetaSpriteSet_Bank27; monster objects store the species word here (E-0300, E-0308)", "evidence": "E-0308"},
       "06": {"const": "OBJ_ATTR", "note": "attribute bits (bits 0-2 to hSpriteAttrXor)", "evidence": "E-0300"},
       "07": {"const": "OBJ_STATE", "note": "state", "evidence": "E-0134"},
       "08": {"const": "OBJ_TILE_OFFSET", "note": "tile offset (hSpriteTileOffset)", "evidence": "E-0300"},

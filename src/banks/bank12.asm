@@ -1703,10 +1703,10 @@ Jump_012_4A5A:: ; address name
     ld hl, wChildRecord
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     ld a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ldh [hTemp1], a
     xor a, a
     ldh [hTemp2], a
@@ -1933,10 +1933,10 @@ Jump_012_4BB4:: ; address name
     ld hl, wChildRecord
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     ld a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ldh [hTemp1], a
     xor a, a
     ldh [hTemp2], a
@@ -2246,10 +2246,10 @@ Jump_012_4D6B:: ; address name
     ld hl, wRecordBufA
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject1 + OBJ_SPRITE_SET], a
+    ld [wObject1 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     ld a, [hl]
-    ld [wObject1 + $3], a
+    ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ldh [hTemp1], a
     xor a, a
     ldh [hTemp2], a
@@ -2265,10 +2265,10 @@ Jump_012_4D6B:: ; address name
     ld hl, wRecordBufB
     add_a_to_hl
     ld a, [hl+]
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ldh [hTemp0], a
     ld a, [hl]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
     ldh [hTemp1], a
     xor a, a
     ldh [hTemp2], a

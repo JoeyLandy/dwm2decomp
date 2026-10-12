@@ -3671,16 +3671,16 @@ Func_024_568E:: ; address name
     and a, a
     jr nz, .read_record_buf_a2
     ld a, [wRecordBufB + MON_SPECIES]
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ld a, [wRecordBufB + MON_SPECIES + 1]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
     jr .set_sprite_slot_count_to_03
 
 .read_record_buf_a2:
     ld a, [wRecordBufA + MON_SPECIES]
-    ld [wObject2 + OBJ_SPRITE_SET], a
+    ld [wObject2 + OBJ_SPRITE_ID], a
     ld a, [wRecordBufA + MON_SPECIES + 1]
-    ld [wObject2 + $3], a
+    ld [wObject2 + OBJ_SPRITE_ID + 1], a
 
 .set_sprite_slot_count_to_03:
     ld a, $03
