@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0248 — Message words and started scripts quoted in code
+
+- Kind: TOOL (C1 quotes, by the E-0243 lookup).
+- **Message words.** An `ld hl, $XXXX` directly before a call or jump to a routine that takes a message word in HL (names matching MessageHL or MessageCommand09HL: StartMessageCommand09HL_*, StartMessageHL_*, ShowMessageHL) now ends with the quoted message. It uses the normal ShowMessageHL path (group = high byte & $3F). There are 1,354 such lines, most of them DispatchTalkEvent cases, for example `ld hl, $04CF ; '0 peered into the vase. It'`.
+- **Started scripts.** A routine whose first four instructions load an event script gets a header line `; starts Script_XXXX: '<first message>'`; there are 160 such routines. The message is quoted under the script's message mode (E-0242).
+- **Limits.** Talk events in key worlds go through the wMapType bit-7 path (banks $83/$8A), and menus through wMessageMode. Those messages are quoted by the normal path, so they can be wrong.
+- Binary verification: build/run315 PASS, 0 differing bytes; tests OK.
+
 ### E-0247 — Map object records: byte 8 is the facing
 
 - Kind: OBSERVATION (reading; C1).

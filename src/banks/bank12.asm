@@ -3931,7 +3931,7 @@ Talk09Event00_Case04::
 Jump_012_58E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0129
+    ld hl, $0129 ; 'Warubou Wa-hey! No good, no good!'
     call StartMessageHL_B0F_Bank12
     ret
 
@@ -4088,7 +4088,7 @@ Talk09Event03_Case02::
 Jump_012_59D3:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $012A
+    ld hl, $012A ; 'Warubou Wa-hey That was no good.'
     call StartMessageHL_B0F_Bank12
     ret
 

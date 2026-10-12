@@ -71,7 +71,7 @@ Jump_073_4053:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_407B
-    ld hl, $003E
+    ld hl, $003E ; 'GreatLog's major facilities are situated above'
     call StartMessageHL_B73
     ld a, [wPendingFieldEvent]
     and a, $0F
@@ -129,7 +129,7 @@ Jump_073_4098:: ; address name
 ; points at: wScriptStep
 Talk08Event_Case0B_Case00::
 Jump_073_40BA:: ; address name
-    ld hl, $4037
+    ld hl, $4037 ; '0 tried to open the chest.'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -168,7 +168,7 @@ Jump_073_40E2:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_4105
-    ld hl, $0038
+    ld hl, $0038 ; '0 peered into the vase. A'
     call StartMessageHL_B73
     ld a, [wIsCGB]
     or a, a
@@ -184,7 +184,7 @@ Jump_073_4100::
     ret
 
 Jump_073_4105::
-    ld hl, $0039
+    ld hl, $0039 ; 'Hey! You brats! Scram! Hands off'
     call StartMessageHL_B73
     ld a, $0B
     ld [wScriptStep], a
@@ -195,7 +195,7 @@ Jump_073_4105::
 ; points at: wScriptStep
 Talk08Event_Case0C_Case07::
 Jump_073_4111:: ; address name
-    ld hl, $000F
+    ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ld hl, wScriptStep
@@ -295,7 +295,7 @@ Jump_073_41AD::
     ld a, [de]
     or a, a
     jr nz, Jump_073_41C3
-    ld hl, $0032
+    ld hl, $0032 ; 'Hello, there! You must be the'
     call StartMessageHL_B73
     ld a, $1E
     ld [wStepPtrLo], a
@@ -305,7 +305,7 @@ Jump_073_41AD::
 Jump_073_41C3::
     dec a
     jr nz, Jump_073_41D8
-    ld hl, $0030
+    ld hl, $0030 ; 'Heh, so these are the newcomers?'
     call StartMessageHL_B73
     ld a, $2C
     ld [wStepPtrLo], a
@@ -315,7 +315,7 @@ Jump_073_41C3::
 Jump_073_41D8::
     dec a
     jr nz, Jump_073_41F1
-    ld hl, $0031
+    ld hl, $0031 ; 'C'mon, Warubou!'
     call StartMessageHL_B73
     ld hl, $03E8
     ld a, l
@@ -328,7 +328,7 @@ Jump_073_41D8::
 Jump_073_41F1::
     dec a
     jr nz, Jump_073_420A
-    ld hl, $0044
+    ld hl, $0044 ; '0 checked the peculiar door. It'
     call StartMessageHL_B73
     ld hl, $01F4
     ld a, l
@@ -339,7 +339,7 @@ Jump_073_41F1::
     ret
 
 Jump_073_420A::
-    ld hl, $0045
+    ld hl, $0045 ; 'You must be the farm kids.'
     call StartMessageHL_B73
     ld hl, $00C8
     ld a, l
@@ -350,7 +350,7 @@ Jump_073_420A::
     ret
 
 Jump_073_4220::
-    ld hl, $0035
+    ld hl, $0035 ; 'The King is too lenient on'
     call StartMessageHL_B73
     ret
 
@@ -368,7 +368,7 @@ Jump_073_4236::
     ld a, [de]
     or a, a
     jr nz, Jump_073_4250
-    ld hl, $0046
+    ld hl, $0046 ; 'Thanks for coming by. I'll always'
     call StartMessageHL_B73
     ld hl, $0064
     ld a, l
@@ -381,7 +381,7 @@ Jump_073_4236::
 Jump_073_4250::
     dec a
     jr nz, Jump_073_4220
-    ld hl, $0047
+    ld hl, $0047 ; '0 read the notice. We guarantee'
     call StartMessageHL_B73
     ld hl, $0032
     ld a, l
@@ -596,7 +596,7 @@ Jump_073_4387:: ; address name
     ld a, [wTextYesNoResult]
     or a, a
     jr nz, Jump_073_43A7
-    ld hl, $002F
+    ld hl, $002F ; 'If some monster masters keep their'
     call StartMessageHL_B73
     ld hl, $0064
     ld a, l
@@ -609,7 +609,7 @@ Jump_073_4387:: ; address name
     ret
 
 Jump_073_43A7::
-    ld hl, $0036
+    ld hl, $0036 ; 'There were many wild monsters in'
     call StartMessageHL_B73
     ld a, $09
     ld [wScriptStep], a
@@ -622,7 +622,7 @@ Talk08Event_Case0A_Case00::
 Jump_073_43B3:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $002E
+    ld hl, $002E ; 'Go help your mother now.'
     call StartMessageHL_B73
     ret
 
@@ -1004,7 +1004,7 @@ Talk08Event_Case08_Case00::
 Jump_073_45E4:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4021
+    ld hl, $4021 ; 'Tara We'll be OK! I'm going'
     call StartMessageHL_B73
     ret
 
@@ -1058,7 +1058,7 @@ Jump_073_4635:: ; address name
 ; points at: wScriptStep
 Talk08Event_Case08_Case05::
 Jump_073_463C:: ; address name
-    ld hl, $0052
+    ld hl, $0052 ; 'Oh my, the well isn't safe!'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -1099,7 +1099,7 @@ Talk08Event_Case06_Case0D::
 Jump_073_466F:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $001B
+    ld hl, $001B ; 'This hay is pretty good. Maybe'
     call StartMessageHL_B73
     ld a, [wMenuSelectedMember]
     ld de, wTextBuf2 + $2
@@ -1313,7 +1313,7 @@ Jump_073_47FD:: ; address name
     ld [wScriptParam0], a
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
-    ld hl, $4013
+    ld hl, $4013 ; 'Tara Big brother! GreatLog will be'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -1350,7 +1350,7 @@ Talk08Event_Case09_Case00::
 Jump_073_4860:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4024
+    ld hl, $4024 ; '0 checked the dresser. Children's clothes'
     call StartMessageHL_B73
     ret
 
@@ -1388,12 +1388,12 @@ Jump_073_4888:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_4899
-    ld hl, $0025
+    ld hl, $0025 ; '0 checked the dresser. It smelled'
     call StartMessageHL_B73
     ret
 
 Jump_073_4899::
-    ld hl, $0053
+    ld hl, $0053 ; 'Warubou Wa-hey! I'm starving!'
     call StartMessageHL_B73
     ret
 
@@ -1420,7 +1420,7 @@ Jump_073_48A0:: ; address name
     jr nz, Jump_073_48CB
 
 Jump_073_48BF::
-    ld hl, $0026
+    ld hl, $0026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ld a, $0C
     ld [wScriptStep], a
@@ -1437,12 +1437,12 @@ Jump_073_48CB::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, Jump_073_48BF
-    ld hl, $4026
+    ld hl, $4026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ret
 
 Jump_073_48E9::
-    ld hl, $000F
+    ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ld a, $0C
@@ -1725,7 +1725,7 @@ Talk08Event_Case07_Case00::
 Jump_073_4A9E:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $401D
+    ld hl, $401D ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     ret
 
@@ -1763,12 +1763,12 @@ Jump_073_4AC6:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_4AD7
-    ld hl, $001E
+    ld hl, $001E ; 'You e come at the right'
     call StartMessageHL_B73
     ret
 
 Jump_073_4AD7::
-    ld hl, $001F
+    ld hl, $001F ; 'Cobi Sure, Mama! We'll be fine.'
     call StartMessageHL_B73
     ret
 
@@ -1798,19 +1798,19 @@ Jump_073_4ADE:: ; address name
     jr z, Jump_073_4B15
     cp a, $FF
     jr z, Jump_073_4B15
-    ld hl, $001B
+    ld hl, $001B ; 'This hay is pretty good. Maybe'
     call StartMessageHL_B73
     ret
 
 Jump_073_4B15::
-    ld hl, $401B
+    ld hl, $401B ; 'This hay is pretty good. Maybe'
     call StartMessageHL_B73
     ld a, $0A
     ld [wScriptStep], a
     ret
 
 Jump_073_4B21::
-    ld hl, $000F
+    ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
@@ -1874,7 +1874,7 @@ Talk08Event_Case05_Case00::
 Jump_073_4B80:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4010
+    ld hl, $4010 ; '0 peered into the vase. Freshly'
     call StartMessageHL_B73
     ret
 
@@ -1912,12 +1912,12 @@ Jump_073_4BA8:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_4BB9
-    ld hl, $0011
+    ld hl, $0011 ; 'Cobi 0! They said GreatLog will'
     call StartMessageHL_B73
     ret
 
 Jump_073_4BB9::
-    ld hl, $0012
+    ld hl, $0012 ; 'Land ho! There's GreatLog!'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
@@ -1947,7 +1947,7 @@ Talk08Event_Case04_Case00::
 Jump_073_4BDB:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $400B
+    ld hl, $400B ; 'GreatLog's King asked us to settle'
     call StartMessageHL_B73
     ret
 
@@ -1985,12 +1985,12 @@ Jump_073_4C03:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_073_4C14
-    ld hl, $000C
+    ld hl, $000C ; 'GreatLog's King asked us to settle'
     call StartMessageHL_B73
     ret
 
 Jump_073_4C14::
-    ld hl, $000E
+    ld hl, $000E ; 'Worried about your monsters? Don't be!'
     call StartMessageHL_B73
     ret
 
@@ -2012,7 +2012,7 @@ Jump_073_4C1B:: ; address name
     jr c, Jump_073_4C41
 
 Jump_073_4C2F::
-    ld hl, $000D
+    ld hl, $000D ; 'When our farm gets established in'
     call StartMessageHL_B73
     ld a, $29
     ld [wStepPtrLo], a
@@ -2024,12 +2024,12 @@ Jump_073_4C41::
     ldh a, [hTemp0]
     or a, a
     jr z, Jump_073_4C2F
-    ld hl, $0043
+    ld hl, $0043 ; '0 checked the odd object. It'
     call StartMessageHL_B73
     ret
 
 Jump_073_4C53::
-    ld hl, $000F
+    ld hl, $000F ; '0 peered into the barrel. It'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
@@ -2090,7 +2090,7 @@ Talk08Event_Case03_Case00::
 Jump_073_4CAE:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4008
+    ld hl, $4008 ; 'Good. That's good to hear! You'
     call StartMessageHL_B73
     call Talk08Event_Shared05
     ld a, [wScriptParam0]
@@ -2174,7 +2174,7 @@ Talk08Event_Case02_Case00::
 Jump_073_4D36:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4005
+    ld hl, $4005 ; 'You folks run a monster farm?'
     call StartMessageHL_B73
     ret
 
@@ -2219,7 +2219,7 @@ Jump_073_4D5B:: ; address name
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
     farcall FullyHealParty
-    ld hl, $0006
+    ld hl, $0006 ; 'There's a spirit in GreatLog that's'
     call StartMessageHL_B73
     ret
 
@@ -2252,7 +2252,7 @@ Talk08Event_Case01_Case00::
 Jump_073_4D9B:: ; address name
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $4002
+    ld hl, $4002 ; 'Tara There you are, big brother!'
     call StartMessageHL_B73
     call Talk08Event_Shared05
     ld a, [wScriptParam0]
@@ -2322,7 +2322,7 @@ Jump_073_4E03:: ; address name
 ; points at: wScriptStep
 Talk08Event_Case00_Case00::
 Jump_073_4E15:: ; address name
-    ld hl, $0000
+    ld hl, $0000 ; 'In the middle of the sea'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -2366,7 +2366,7 @@ Jump_073_4E41:: ; address name
 Talk08Event_Case0B_Case08::
 Jump_073_4E48:: ; address name
     farcall FullyHealParty
-    ld hl, $0001
+    ld hl, $0001 ; 'Cobi 0! Papa's calling. He's at'
     call StartMessageHL_B73
     xor a, a
     ld [wScriptParam0], a
@@ -3409,7 +3409,7 @@ Func_073_5449:: ; address name
 ; points at: wScriptStep
 SceneWizstone_Case08::
 Jump_073_5461:: ; address name
-    ld hl, $0782
+    ld hl, $0782 ; '0 received the SmartBook.'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -3459,7 +3459,7 @@ Jump_073_5488::
 ; points at: wScriptStep
 SceneWizstone_Case05::
 Jump_073_54AF:: ; address name
-    ld hl, $0781
+    ld hl, $0781 ; 'Kiral Yes! Yes! Success! I owe'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -3479,7 +3479,7 @@ Jump_073_54BA:: ; address name
 ; points at: wScriptStep
 SceneWizstone_Case02::
 Jump_073_54BF:: ; address name
-    ld hl, $0780
+    ld hl, $0780 ; 'Professor Kiral used the WizStone on'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -3781,7 +3781,7 @@ Jump_073_5670::
     ld [wSpriteSlotCount], a
     xor a, a
     ld [wObject1 + $7], a
-    ld hl, $0725
+    ld hl, $0725 ; 'Tch, I can't enjoy my meal'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -4413,7 +4413,7 @@ Jump_073_5A22:: ; address name
 ; points at: wScriptStep
 SceneThreeItemsBattle_Case01::
 Jump_073_5A3D:: ; address name
-    ld hl, $0480
+    ld hl, $0480 ; 'Gwaah! You e beaten me fairly!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -5033,7 +5033,7 @@ Func_073_5DDD:: ; address name
 ; points at: wScriptStep
 SceneMadcondorCry_Case04::
 Jump_073_5DED:: ; address name
-    ld hl, $0433
+    ld hl, $0433 ; 'Kweeeeeh!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -5754,7 +5754,7 @@ Jump_073_620B:: ; address name
     jr Jump_073_621B
 
 Jump_073_6218::
-    ld hl, $0D4B
+    ld hl, $0D4B ; 'What's that? Hey, a Magic Key!'
 
 Jump_073_621B::
     call StartMessageHL_B73b
@@ -5788,7 +5788,7 @@ Jump_073_622D:: ; address name
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0D3E
+    ld hl, $0D3E ; 'Huh? There is something here. Under'
     call StartMessageHL_B73b
     ret
 
@@ -6023,7 +6023,7 @@ Jump_073_6387:: ; address name
     jr Jump_073_6397
 
 Jump_073_6394::
-    ld hl, $0D16
+    ld hl, $0D16 ; 'What's wrong, MadGopher? Did you find'
 
 Jump_073_6397::
     call StartMessageHL_B73b
@@ -6086,7 +6086,7 @@ Jump_073_63DA:: ; address name
     ld [wScriptParam0], a
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0D15
+    ld hl, $0D15 ; 'OK! Let me dig! One-two, one-two!'
     call StartMessageHL_B73b
     ret
 
@@ -7521,7 +7521,7 @@ Jump_073_6B46:: ; address name
     ld [wObject1 + $7], a
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $0849
+    ld hl, $0849 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ret
 
@@ -7645,7 +7645,7 @@ Jump_073_6BC6:: ; address name
     farcall AppendItemWC928ToInventory
     ld de, $006E
     call SetFlagBit
-    ld hl, $0813
+    ld hl, $0813 ; '0 received a TinyMedal.'
     call StartMessageHL_B73b
     xor a, a
     ldh [hFieldDrawFlags], a
@@ -7706,7 +7706,7 @@ Jump_073_6C3E:: ; address name
     ld de, $006E
     call TestFlagBit
     jr nc, Jump_073_6C5B
-    ld hl, $0815
+    ld hl, $0815 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ret
 
@@ -7716,12 +7716,12 @@ Jump_073_6C5B::
     jr z, Jump_073_6C6C
     or a, a
     jr z, Jump_073_6C6C
-    ld hl, $0814
+    ld hl, $0814 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ret
 
 Jump_073_6C6C::
-    ld hl, $0812
+    ld hl, $0812 ; 'Bravo, bravo! You were fabulous! You'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -7768,7 +7768,7 @@ Func_073_6C77:: ; address name
     inc [hl]
     ld a, $30
     ld [wObject1 + $B], a
-    ld hl, $0886
+    ld hl, $0886 ; 'N's dancing lured a mermaid to'
     call StartMessageHL_B73b
     ret
 
@@ -7965,7 +7965,7 @@ Jump_073_6E05::
 ; points at: wScriptStep
 UnreferencedScriptStepDispatch_73_6D52_Case00::
 Jump_073_6E0C:: ; address name
-    ld hl, $4D0F
+    ld hl, $4D0F ; 'Hm, you are quite strong I'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -8469,7 +8469,7 @@ Jump_073_70C2:: ; address name
     ld b, $B4
     call StepScriptParam0Counter_Bank73
     ret nc
-    ld hl, $005C
+    ld hl, $005C ; 'Warubou Warooh! Will it hold? You'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -8564,7 +8564,7 @@ Jump_073_715A:: ; address name
     ld b, $78
     call StepScriptParam0Counter_Bank73
     ret nc
-    ld hl, $005B
+    ld hl, $005B ; 'Warubou Wa-hey! It's the only way!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -8781,12 +8781,12 @@ Jump_073_72D6:: ; address name
     ld de, $0001
     call TestFlagBit
     jr c, Jump_073_72F9
-    ld hl, $0058
+    ld hl, $0058 ; 'Cobi That's ours! Give it back!'
     call StartMessageHL_B73b
     ret
 
 Jump_073_72F9::
-    ld hl, $005E
+    ld hl, $005E ; 'Tara That's ours! Give it back!'
     call StartMessageHL_B73b
     ret
 
@@ -8817,7 +8817,7 @@ Jump_073_7317:: ; address name
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
-    ld hl, $0055
+    ld hl, $0055 ; 'Warubou Wa-hey! Some prince! Dirty mouth!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -8831,7 +8831,7 @@ Jump_073_7329:: ; address name
     ld de, wObject2 + $C
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
-    ld hl, $0054
+    ld hl, $0054 ; 'Kameha Gimme it! You just ate!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
@@ -8845,7 +8845,7 @@ Jump_073_733B:: ; address name
     ld de, wObject1 + $C
     call ScriptApplyStepDeltaAtDE_Bank73
     ret nc
-    ld hl, $0053
+    ld hl, $0053 ; 'Warubou Wa-hey! I'm starving!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]

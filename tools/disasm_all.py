@@ -1444,7 +1444,47 @@ class Rom:
         for label, items in (("reads", r), ("writes", w), ("points at", p)):
             if items:
                 out.append(f"; {label}: " + ", ".join(items[:8]) + (", ..." if len(items) > 8 else ""))
+        out += self.script_start_lines(bank, addr)
         return out
+
+    def script_start_lines(self, bank: int, addr: int) -> list[str]:
+        """E-0248: a routine whose first instructions load an event script (script_refs) gets a line
+        naming the script and quoting its first message, so talk-event cases read as dialogue."""
+        refs = getattr(self, "script_refs", {})
+        ins, pc = self.insn[bank], addr
+        for _ in range(4):
+            if pc not in ins or isinstance(ins[pc][0], str):
+                break
+            if (bank, pc) in refs:
+                label = refs[(bank, pc)]
+                quote = self.script_first_quote(label)
+                return [f"; starts {label}" + (f": {quote}" if quote else "")]
+            pc += ins[pc][0]
+        return []
+
+    def script_first_quote(self, label: str) -> str | None:
+        """The first message (quoted) a script shows, following it linearly from its label."""
+        if not hasattr(self, "_script_addr"):
+            self._script_addr = {lab: (b, a) for b in range(self.nbanks) for a, lab in self.dlabels[b].items()
+                                 if lab.startswith("Script_")}
+        where = self._script_addr.get(label)
+        if not where:
+            return None
+        sb, a = where
+        for (rb, lo), sc in getattr(self, "script_at", {}).items():
+            if rb != sb or not lo <= a < sc["end"]:
+                continue
+            for pc, op, arg in sc["ins"]:
+                if pc < a:
+                    continue
+                if op in (0x00, 0xEA, 0xF5):
+                    w = arg[0] | arg[1] << 8
+                    m = getattr(self, "script_mode", {}).get((sb, pc), 0)
+                    text = self.message_preview(w) if m == 0 else (self.mode_message_preview(m, w) if m > 0 else None)
+                    return f"'{text}'" if text else None
+                if op in (0xFF, 0x07, 0xE7):
+                    return None
+        return None
 
     def routine_extent(self, bank: int, addr: int) -> int | None:
         """Length in bytes of the self-contained routine at `addr`, or None.
@@ -4040,9 +4080,26 @@ class Rom:
             if text == "stop":
                 out.append(f"    db $10, ${self.data[bank*BANK+pc-base+1]:02X} ; stop")
             else:
-                out.append(f"    {text}")
+                out.append(f"    {text}" + self.message_word_note(bank, pc + n, text))
             pc += n
         return hdr + "\n".join(self.compress_farcalls(out)) + "\n"
+
+    MESSAGE_HL_CALLEE = re.compile(r"MessageHL|MessageCommand09HL")
+
+    def message_word_note(self, bank: int, nxt: int, text: str) -> str:
+        """E-0248: `ld hl, $XXXX` right before a call to a routine that takes a message word in HL
+        (StartMessageHL_*, StartMessageCommand09HL_*, ShowMessageHL) quotes the message (the
+        normal ShowMessageHL path: group = high byte & $3F)."""
+        m = re.match(r"ld hl, \$([0-9A-F]{4})$", text)
+        it = self.insn[bank].get(nxt)
+        if not m or not it or it[0] == "dw" or it[2] not in ("call", "jp") or it[3] is None:
+            return ""
+        r = self.resolve(bank, it[3])
+        name = self.labels[r[0]].get(r[1], "") if r else ""
+        if not self.MESSAGE_HL_CALLEE.search(name):
+            return ""
+        quote = self.message_preview(int(m.group(1), 16))
+        return f" ; '{quote}'" if quote else ""
 
 
 def main() -> int:

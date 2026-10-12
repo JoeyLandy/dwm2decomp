@@ -101,7 +101,7 @@ Jump_085_4071:: ; address name
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld hl, $4D52
+    ld hl, $4D52 ; 'N headed off to the farm.'
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
     dec [hl]
@@ -176,7 +176,7 @@ Jump_085_40C3:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ld hl, $4D51
+    ld hl, $4D51 ; 'N joined the party.'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -301,7 +301,7 @@ Jump_085_41CC:: ; address name
     ld a, $F0
     ld [wNameGlyphBuf + $5], a
     ld [wTextBuf1 + $C], a
-    ld hl, $4D0F
+    ld hl, $4D0F ; 'Hm, you are quite strong I'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -373,7 +373,7 @@ Jump_085_4249:: ; address name
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld hl, $4D52
+    ld hl, $4D52 ; 'N headed off to the farm.'
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
     dec [hl]
@@ -448,7 +448,7 @@ Jump_085_429B:: ; address name
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ld hl, $4D51
+    ld hl, $4D51 ; 'N joined the party.'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -596,7 +596,7 @@ Jump_085_43AF:: ; address name
 ; points at: wScriptStep
 SceneWatchOut_Case05::
 Jump_085_43CA:: ; address name
-    ld hl, $4D50
+    ld hl, $4D50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -678,7 +678,7 @@ Jump_085_442D:: ; address name
     ld a, $F0
     ld [wNameGlyphBuf + $6], a
     ld [wTextBuf1 + $C], a
-    ld hl, $41B7
+    ld hl, $41B7 ; 'Cooh, I heard from others held'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -1393,7 +1393,7 @@ Jump_085_48AE:: ; address name
     ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_085_48BA
-    ld hl, $0BC2
+    ld hl, $0BC2 ; '0 received the Magic Key.'
 
 Jump_085_48BA::
     call StartMessageHL_B85
@@ -1425,7 +1425,7 @@ Jump_085_48C2:: ; address name
     jr z, Jump_085_48F5
 
 Jump_085_48E9::
-    ld hl, $0B9E
+    ld hl, $0B9E ; 'Kameha That was a good warmup!'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1457,14 +1457,14 @@ Jump_085_4912::
 Jump_085_4921::
     ld de, $003C
     call SetFlagBit
-    ld hl, $0B9C
+    ld hl, $0B9C ; 'Kameha That was a good warmup!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_085_4932::
-    ld hl, $0B97
+    ld hl, $0B97 ; 'Kameha Wahahahah! You're weak! You're a'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1506,7 +1506,7 @@ Jump_085_495B:: ; address name
     ld a, [wScriptParam0]
     or a, a
     jr nz, Jump_085_4967
-    ld hl, $0BC2
+    ld hl, $0BC2 ; '0 received the Magic Key.'
 
 Jump_085_4967::
     call StartMessageHL_B85
@@ -1538,7 +1538,7 @@ Jump_085_496F:: ; address name
     jr z, Jump_085_49A2
 
 Jump_085_4996::
-    ld hl, $0B94
+    ld hl, $0B94 ; 'Kameha Well, uh, luck and status'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1570,14 +1570,14 @@ Jump_085_49BF::
 Jump_085_49CE::
     ld de, $003A
     call SetFlagBit
-    ld hl, $0B92
+    ld hl, $0B92 ; 'Kameha Well, uh, luck and status'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_085_49DF::
-    ld hl, $0B97
+    ld hl, $0B97 ; 'Kameha Wahahahah! You're weak! You're a'
     call StartMessageHL_B85
     ld a, $04
     ld [wScriptStep], a
@@ -1618,12 +1618,12 @@ Jump_085_4A04:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_085_4A15
-    ld hl, $0D82
+    ld hl, $0D82 ; 'Aww I lose. You are good!'
     call StartMessageHL_B85
     ret
 
 Jump_085_4A15::
-    ld hl, $0D83
+    ld hl, $0D83 ; 'Yay! I won! Am I awesome?'
     call StartMessageHL_B85
     ret
 
@@ -1663,7 +1663,7 @@ Jump_085_4A35:: ; address name
     ld a, [wBattleScene]
     or a, a
     jr nz, Jump_085_4A51
-    ld hl, $0BB1
+    ld hl, $0BB1 ; 'Terry Well, this proves that I'
     call StartMessageHL_B85
     ld a, $01
     ld [wLinkByte94], a
@@ -1672,7 +1672,7 @@ Jump_085_4A35:: ; address name
     ret
 
 Jump_085_4A51::
-    ld hl, $0BB2
+    ld hl, $0BB2 ; 'Terry Humph Don't take it hard.'
     call StartMessageHL_B85
     ret
 
@@ -1883,7 +1883,7 @@ Jump_085_4B94::
 ; points at: wScriptStep
 SceneLimboMonster2_Case0C::
 Jump_085_4BB2:: ; address name
-    ld hl, $0BA7
+    ld hl, $0BA7 ; 'Warubou Wa-hey, my kid has a'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -1941,14 +1941,14 @@ Jump_085_4C00:: ; address name
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_4C18
-    ld hl, $0BA3
+    ld hl, $0BA3 ; 'Warubou Wa-hey! I was thinking GreatLog'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_085_4C18::
-    ld hl, $4BA4
+    ld hl, $4BA4 ; 'Warubou Wa-hey! I was thinking GreatLog'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2021,7 +2021,7 @@ Jump_085_4C7F::
     ld [wScriptParam0], a
     cp a, $40
     ret nz
-    ld hl, $0B2C
+    ld hl, $0B2C ; 'Warubou Wa-hey, my kid has a'
     call StartMessageHL_B85
     ld a, $04
     ldh [hTemp1], a
@@ -2155,14 +2155,14 @@ Jump_085_4D69:: ; address name
     ld a, [wArg5]
     cp a, $FF
     jr nz, Jump_085_4D81
-    ld hl, $0B28
+    ld hl, $0B28 ; 'Warubou Wa-hey, I have a favor'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
     ret
 
 Jump_085_4D81::
-    ld hl, $4B29
+    ld hl, $4B29 ; 'Warubou Wa-hey, I have a favor'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2501,7 +2501,7 @@ SceneGiveBackCyal_Case05::
 Jump_085_4F8E:: ; address name
     ld a, $03
     ld [wSpriteSlots + $7], a
-    ld hl, $0737
+    ld hl, $0737 ; 'Humph How boring'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -2776,7 +2776,7 @@ Jump_085_510A:: ; address name
     ld [wSpriteSlots + $C], a
     ld a, $20
     ld [wObject1 + $C], a
-    ld hl, $078D
+    ld hl, $078D ; 'Roboster stopped moving'
     call StartMessageHL_B85
     xor a, a
     ld [wScriptParam0], a
@@ -2912,7 +2912,7 @@ Jump_085_51B9::
 Jump_085_51C7::
     ld de, $0163
     call SetFlagBit
-    ld hl, $0779
+    ld hl, $0779 ; 'PROFE SOR ORDER MUST OBEY'
     call StartMessageHL_B85
     xor a, a
     ld [wScriptParam0], a
@@ -3309,7 +3309,7 @@ Jump_085_53DF:: ; address name
 Jump_085_53ED::
     ld a, $00
     ld [wScriptParam1], a
-    ld hl, $0473
+    ld hl, $0473 ; 'You! I e never seen you'
     call StartMessageHL_B85
     ret
 
@@ -3322,7 +3322,7 @@ Jump_085_53F9::
     jr nz, Jump_085_5411
     ld a, $01
     ld [wScriptParam1], a
-    ld hl, $0475
+    ld hl, $0475 ; 'Oh, you're the cooking crew. Do'
     call StartMessageHL_B85
     ret
 
@@ -3331,7 +3331,7 @@ Jump_085_5411::
     jr nz, Jump_085_53ED
     ld a, $02
     ld [wScriptParam1], a
-    ld hl, $0474
+    ld hl, $0474 ; 'Hm? Are you a new recruit?'
     call StartMessageHL_B85
     ret
 
@@ -3362,7 +3362,7 @@ Jump_085_542B:: ; address name
     ret
 
 Jump_085_543A::
-    ld hl, $085D
+    ld hl, $085D ; 'Check the wooden crate'
     call StartMessageHL_B85
     ret
 
@@ -3519,7 +3519,7 @@ Jump_085_5514:: ; address name
     ld a, [wStepArrived]
     or a, a
     ret z
-    ld hl, $0186
+    ld hl, $0186 ; 'King Good! Your valor be praised!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3635,7 +3635,7 @@ Jump_085_55D0:: ; address name
     ld a, $01
     ld [wFieldTransitionKind], a
     farcall ScriptStartFadeAndAdvanceStep
-    ld hl, $0185
+    ld hl, $0185 ; 'King The hideout of the thieves'
     call StartMessageHL_B85
     ret
 
@@ -3725,7 +3725,7 @@ Jump_085_5647:: ; address name
 ; points at: wScriptStep
 SceneCanalGate_Case02::
 Jump_085_5664:: ; address name
-    ld hl, $0172
+    ld hl, $0172 ; 'King Arrgh! I know that! I'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3821,7 +3821,7 @@ Jump_085_56FF:: ; address name
     ld de, wObject5 + $5
     call ScriptApplyStepDeltaAtDE_Bank85
     ret nc
-    ld hl, $0084
+    ld hl, $0084 ; 'Warubou This you use to come'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -3841,7 +3841,7 @@ Jump_085_571A:: ; address name
     ld [wObject5 + $4], a
     ld a, $30
     ld [wObject5 + $5], a
-    ld hl, $0083
+    ld hl, $0083 ; 'Warubou Wa-hey! Forgot something!'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
