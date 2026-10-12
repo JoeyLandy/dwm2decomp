@@ -4080,12 +4080,12 @@ Func_085_57FE:: ; address name
     ldh [hTemp0], a
     ret
 
-; only called from DispatchTalkEvent_Case05_Case0F (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_ShowBeGoneIfYour)
+; only called from FhuntTalkEvents_Case0F (E-0047)
+; 1 call site from 1 routine (e.g. FhuntTalkEvents_ShowBeGoneIfYour)
 ; reads: wPartyCount, hTemp0, hTemp1
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList
-DispatchTalkEvent_Case05_Case0F_WriteRAMGAndTemp0::
+FhuntTalkEvents_Case0F_WriteRAMGAndTemp0::
 Func_085_5840:: ; address name
     ld a, [wPartyCount]
     or a, a
@@ -4134,12 +4134,12 @@ Func_085_5840:: ; address name
     ldh [hTemp0], a
     ret
 
-; only called from DispatchTalkEvent_Case05_Case29 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_TestFlagBit_Case29)
+; only called from FhuntTalkEvents_Case29 (E-0047)
+; 1 call site from 1 routine (e.g. FhuntTalkEvents_TestFlagBit_Case29)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi, wPartyCount, hTemp0, hTemp1
 ; writes: hTemp0, rRAMG
 ; points at: wPartyList
-DispatchTalkEvent_Case05_Case29_WriteTemp0AndRAMG::
+FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
 Func_085_5882:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4269,11 +4269,11 @@ Data_085_5912:: ; address name
     dw $0119, $011B, $011F, $0120, $0124, $0126, $0127, $0129
     dw $012A, $012F, $0130, $0135, $0137, $0000
 
-; only called from DispatchTalkEvent_Case05_Case47 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_ShowHeroCheckedTheSmall)
+; only called from FhuntTalkEvents_Case47 (E-0047)
+; 1 call site from 1 routine (e.g. FhuntTalkEvents_ShowHeroCheckedTheSmall)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamLo, hPlayerSpriteStreamHi
 ; writes: hTemp0
-DispatchTalkEvent_Case05_Case47_TestFlagBit::
+FhuntTalkEvents_Case47_TestFlagBit::
 Func_085_594E:: ; address name
     ld de, $0000
     call TestFlagBit
@@ -4352,11 +4352,11 @@ Data_085_5991:: ; address name
     dw $013C, $013D, $0140, $015A, $0149, $014D, $014E, $015B
     dw $0144, $0000
 
-; only called from routines of DispatchTalkEvent (E-0098)
-; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case4C, DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6E, DispatchTalkEvent_Case05_StartScriptAtHL_B13_Case6F)
+; only called from routines of FhuntTalkEvents (E-0098)
+; 3 call sites from 3 routines (e.g. FhuntTalkEvents_StartScriptAtHL_B13_Case4C, FhuntTalkEvents_StartScriptAtHL_B13_Case6E, FhuntTalkEvents_StartScriptAtHL_B13_Case6F)
 ; reads: hPlayerSpriteOverride, hPlayerSpriteStreamHi, hPlayerSpriteStreamLo
 ; writes: hTemp0, hTemp1
-DispatchTalkEvent_WriteTemp0AndTemp1::
+FhuntTalkEvents_WriteTemp0AndTemp1::
 Func_085_5A75:: ; address name
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4470,7 +4470,7 @@ Func_085_5A9D:: ; address name
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
-; 14 call sites from 9 routines (e.g. DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case0A, TalkMsg0016_ItSeemsToMeThatThe, DispatchTalkEvent_Case01_TestFlagBit_Case19, TalkMsg0A3C_KingIfYouSee, ...)
+; 14 call sites from 9 routines (e.g. ReadableTalkEvents_TestFlagBit_Case0A, TalkMsg0016_ItSeemsToMeThatThe, GreatLogTalkEvents_TestFlagBit_Case19, TalkMsg0A3C_KingIfYouSee, ...)
 ; writes: hTemp0, hTemp1
 ; points at: wWorkBuf
 TotalSpeciesFlaggedOrListed::
@@ -4493,7 +4493,7 @@ Func_085_5B04:: ; address name
     ret
 
 ; hFFC6 = 1 when a used key entry has kind hFFC6, else 0 (E-0125)
-; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, DispatchTalkEvent_Case01_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_SetFlagBit, SceneKamehaKeyBattle_SetFlagBit)
+; 7 call sites from 4 routines (e.g. TalkMsg0512_KamehaYo0Thanks, GreatLogTalkEvents_ShowHeroFoundAMagic, SceneKamehaKeyBattle2_SetFlagBit, SceneKamehaKeyBattle_SetFlagBit)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wKeyList
@@ -4893,7 +4893,7 @@ Func_085_5DB9:: ; address name
     ret
 
 ; copies the 48-byte preset $5E11, $5E41 or $5E71 (C = 0, 1, other) to wSpeciesFlags (E-0124)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_StartMessageCommand09HL_B13)
+; 1 call site from 1 routine (e.g. GreatLogTalkEvents_StartMessageCommand09HL_B13)
 ; points at: wSpeciesFlags
 LoadSpeciesFlagsPresetC::
 Func_085_5DF5:: ; address name

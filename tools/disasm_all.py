@@ -1672,8 +1672,15 @@ class Rom:
         if not hasattr(self, "shape_named"):
             self.shape_named: set[str] = set()  # labels these rules gave (never renamed again)
 
+        live = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
+
         def bare(lab: str) -> bool:  # a structural label no rule has renamed
-            return lab not in self.shape_named and re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab) ==                 re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab)
+            if lab in self.shape_named:
+                return False
+            root = re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2})+$", "", lab)
+            # E-0288: a case of a dispatcher that has a descriptive name (Parent_Desc_Case05) is as bare as
+            # a case of a structural one; a numbered descriptive name has no label at its root
+            return root == re.sub(r"(_(Case|Sub|Shared|Table[0-9])[0-9A-F]{2}).*$", "", lab) or root in live
 
         def stem(addr: int) -> str:
             nm = self.sym_name(addr, True) or f"w{addr:04X}"
@@ -1966,6 +1973,53 @@ class Rom:
                 self.labels[b][a] = new
                 self.shape_named.add(new)
         log(f"wait/guard steps: {guards}; constant-store steps: {stores}")
+        # E-0288: a step made of `ld hl, V` / `set n, [hl]` or `res n, [hl]` pairs (and constant loads), then ret
+        # or a jump: Parent_Set<V>Bit<n> / Parent_Clear<V>Bit<n> after the first, Etc when there are more
+        bits = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                m = pat.match(lab) if bare(lab) else None
+                if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                texts, pc = [], a
+                for _ in range(12):
+                    v = ins.get(pc)
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b] and
+                                                 not self.labels[b][pc].startswith("Jump_")):
+                        break
+                    texts.append(v[1])
+                    if v[2] in ("ret", "jp", "jr") and "," not in v[1]:
+                        break
+                    pc += v[0]
+                if not texts or not (texts[-1] == "ret" or re.match(r"j[pr] ", texts[-1]) and "," not in texts[-1]):
+                    continue
+                ops, ok, hl = [], True, None
+                for t in texts[:-1]:
+                    mh = re.match(r"ld hl, \$([0-9A-F]{4})$", t)
+                    mb = re.match(r"(set|res) (\d), \[hl\]$", t)
+                    if mh:
+                        hl = int(mh.group(1), 16)
+                    elif mb and hl is not None:
+                        ops.append(("Set" if mb.group(1) == "set" else "Clear", hl, mb.group(2)))
+                    elif not re.match(r"ld (a|b|c|d|e), \$[0-9A-F]{2}$", t):
+                        ok = False
+                        break
+                if not ok or not ops:
+                    continue
+                verb, addr, bit = ops[0]
+                new = f"{m.group(1)}_{verb}{stem(addr)}Bit{bit}" + ("Etc" if len(ops) > 1 else "")
+                if len(new) > 80:
+                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(m.group(1)) + 1:]}"
+                    if new in used:
+                        continue
+                used.add(new)
+                self.labels[b][a] = new
+                self.shape_named.add(new)
+                bits += 1
+        log(f"bit set/clear steps: {bits}")
         # E-0282: a structural routine still without a descriptive name, by the RAM it touches (build_xrefs):
         # Parent_Write<V>[And<W>][Etc] when it writes RAM, else Parent_Read<V>[And<W>][Etc] (E-0284: Etc = more than two)
         def sym_stem(nm: str) -> str:

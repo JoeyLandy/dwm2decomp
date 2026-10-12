@@ -4867,7 +4867,7 @@ Func_002_5E2C:: ; address name
     ret
 
 ; calls Func_002_5E85 and falls into it, running it twice (E-0126)
-; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B, RefreshRecordListAndNameTiles, PriestMenu_Case02_SRAMRecordAddress, RefreshRecordListAndNameTiles_BankF1)
+; 4 call sites from 4 routines (e.g. RunFieldReturnPhase_ResetLeadRecordFields55And5B, RefreshRecordListAndNameTiles, PriestMenu_PayForService_SRAMRecordAddress, RefreshRecordListAndNameTiles_BankF1)
 ; reads: wPartyCount, wPartyList, hTemp0
 ; writes: rRAMG, wPartyList
 RunMoveIncapacitatedPartyMembersBackTwice::
@@ -8197,7 +8197,7 @@ Func_002_730E:: ; address name
     ret
 
 ; with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)
-; 9 call sites from 9 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, RunScreenStateWhenNotFading_1B_Case01_RunSaveGameSteps, GameMode6_Init, ...)
+; 9 call sites from 9 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, LinkKeyTrade_RunSaveGameSteps, GameMode6_Init, ...)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps::
@@ -8213,7 +8213,7 @@ Func_002_7333:: ; address name
     jr RunSaveGameSteps_7347_CallRunSaveGameSteps_7347_ClearSRAMBanks2And
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of wC8C3) (E-0124)
-; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_RunSaveGameSteps_7347, KeyAppraisalMenu_Case03_RunSaveGameSteps_7347, BreedMenu_Case04_WriteScreenSubStepAndScreenStepEtc)
+; 3 call sites from 3 routines (e.g. RunPauseMenuScreen_RunSaveGameSteps_7347, KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_7347, BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep, rRAMB
 RunSaveGameSteps_7347::
@@ -8255,7 +8255,7 @@ Jump_002_7377:: ; address name
     ret
 
 ; sums $29A * 10 bytes from sA06F in SRAM bank 1 and stores the complement plus $4321 at sBA73 (E-0129)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
 ; writes: rRAMB
 ; points at: sBank1Records, sBank1Checksum
 ComputeSRAMBank1RecordChecksum::
@@ -8361,7 +8361,7 @@ Func_002_737F:: ; address name
     ret
 
 ; copies SRAM bank-1 record wC8C4 ($6F bytes at sA06F + $6F * n) through Func_01D_6E39, then wC8C4 += 1; after 30 records wC8C3 += 1 (the next save step) (E-0120)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
 ; reads: wSaveRecordIndex
 ; writes: wArg1, wArg3, wArg4, wArg2, wSaveRecordIndex
 ; points at: wSaveStep
@@ -8394,7 +8394,7 @@ Func_002_73E6:: ; address name
     ret
 
 ; copies the SRAM bank-0 records from sB356 (and the bank-1 record at sA000) to the backup area at sAD71 in SRAM bank 1 (E-0127)
-; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1)
+; 2 call sites from 2 routines (e.g. RunSaveGameSteps_7347, Func_002_7718)
 ; writes: rRAMB
 ; points at: sCompactRecords, sRecordBackup, sRecords
 BackupRecordsToSRAMBank1::
@@ -8843,7 +8843,7 @@ Func_002_7674:: ; address name
     ret
 
 ; SRAM bank 1: copies hFF8A ($0E bytes), wC60C ($291), wCBD7 ($6B) and wCC42 ($B5) to sBB01 onward while summing them; stores sum + $9753 at sBF98 and $55 at sBB00 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1_Case01)
+; 2 call sites from 2 routines (e.g. RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0C, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum)
 ; reads: hTemp2, hTemp3
 ; writes: rRAMG, rRAMB, hTemp2, hTemp3, sSaveChecksumLo, sSaveChecksumHi, sSaveSignature
 ; points at: sSaveData, hPlayerSpriteVariant, wPlayerName, wStoryFlags, wKeyWorldSlot
@@ -8938,12 +8938,10 @@ Func_002_76F2:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1_Case01)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum)
 ; reads: wSaveStep
 ; writes: rRAMG, wSaveStep
-RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1::
-Func_002_7718:: ; address name
+Func_002_7718::
     ld a, $0A
     ld [rRAMG], a
     ld a, [wSaveStep]

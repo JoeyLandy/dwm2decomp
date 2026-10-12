@@ -997,7 +997,7 @@ Func_05F_6C8C:: ; address name
     ret
 
 ; wStepArrived = 1 when a party record has bit 7 of field $55 set, else 0 (E-0124)
-; 5 call sites from 4 routines (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13, DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18, DispatchTalkEvent_Case04_ShowYoureHereToCheer, GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
+; 5 call sites from 4 routines (e.g. YoldTalkEvents_TestFlagBit_Case13, KalkaTalkEvents_TestFlagBit_Case18, NordenTalkEvents_ShowYoureHereToCheer, GoldItemOrLoss_SetWStepArrivedIfPartyHasField55Bit7)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, wStepArrived
 ; points at: wPartyList
@@ -1145,7 +1145,7 @@ Func_05F_6D3F:: ; address name
     ret
 
 ; for record $FF in bank 1 (Func_014_7E96): if wD7F5 is not $FF and is >= Data_05F_6DA8[wC7C7 & 3], sets wD7F5 = $FF (E-0121)
-; 9 call sites from 9 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_TestFlagBit_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
+; 9 call sites from 9 routines (e.g. GreatLogTalkEvents_ShowTheFarmIsFull, GreatLogTalkEvents_TestFlagBit_Case42, Talk08D1_TheEvaluatorSaidI, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
 ; reads: wArg5, wFarmLevel
 ; writes: wArg1, wArg2, wArg5
 ClearArg5IfAtOrAboveLimitForFarmLevel::

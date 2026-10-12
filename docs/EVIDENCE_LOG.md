@@ -2431,6 +2431,41 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0288 — Cases of named dispatchers count as bare; bit steps; 34 dispatchers named by reading
+
+- Kind: TOOL + STATIC (C1 names, read from each dispatcher's steps and quoted strings).
+- **Bare test.** name_trampoline_cases used to treat `Parent_Desc_Case05` as descriptive, so the shape rules skipped the cases of dispatchers that already had a descriptive name. Now a structural label is bare when the root left after removing its trailing `_CaseNN`/`_SubNN` is a live label. A numbered descriptive name made by a rule is still exempt, because shape_named holds those names.
+- **Bit steps.** A new rule names a step made of `ld hl, V` with `set n, [hl]` or `res n, [hl]` pairs, then `ret` or a jump. It becomes Parent_Set<V>Bit<n> or Parent_Clear<V>Bit<n>, with Etc when there are more pairs. Example: the text control codes $0D, $15, $1A, $1D and $1E are SetTextControlBit7, SetTextFlagsBit1, SetTextFlagsBit5, SetTextControlBit0 and ClearTextControlBit0.
+- **Talk categories.** DispatchTalkEvent's categories are named by the region their quoted messages describe. Each category's group dispatcher now carries that name, so its handlers do too:
+
+  | Category | Name | What the messages describe |
+  | --- | --- | --- |
+  | 0 | FieldTalkEvents | field events |
+  | 1 | GreatLogTalkEvents | messages $00xx–$02xx: Warubou, Prince Kameha |
+  | 2 | KalkaTalkEvents | messages $013x–$01Cx: the Kalka oasis |
+  | 3 | YoldTalkEvents | messages $08xx: Yold, Polona, Port Ritz |
+  | 4 | NordenTalkEvents | messages $03xx, $0ABx |
+  | 5 | FhuntTalkEvents | messages $04xx: Fhunt, Pei |
+  | 6 | DarckTalkEvents | Darck's scripts |
+  | 7 | ElvenVillageTalkEvents | messages $07xx, $0Cxx |
+  | 9 | KeyWorldTalkEvents | the key world |
+  | $0A | ReadableTalkEvents | notices and bookshelves |
+
+  The farcall stubs follow as DispatchTalkEvent_To<Name>.
+- **Menu and battle dispatchers**, each by its step calls or strings:
+  - Breeding: BreedMenu_ChooseParents, NpcBreedMenu_ChooseAndBreed, EggServiceMenu_ChooseAndPay, EggServiceMenu_Bank1B_PickRecords.
+  - Other menus: HibernateMenu_ChooseRecords, PriestMenu_PayForService, LibraryMenu_ShowMonsterEntry, MedalPrizeMenu_ChoosePrize, KeyAppraisalMenu_ChooseKey, GameMode6_Update_SavePrompt.
+  - Monster lists and stats: SwapMonstersMenu_ShowMonsterDetails, SwapMonstersMenu_MoveRecords, RunScreenStateWhenNotFading_F1_ShowRecordStats, RunLinkSession5Exchange_ShowRecordStats.
+  - Pause menu: PauseMenu_Skills_UseFieldSkill, PauseMenu_Items_UseItem.
+  - Link: LinkKeyTrade, RunScreenStateWhenNotFading_F1_LinkBreed, RunLinkSession5Exchange_LinkBreed.
+  - Battle: RunBattleSetup_FleeCommand ('Retire now?', '0 fled!'), RunBattleSetup_CommandMenu, RunBattleActions_StatusChecks ('0 woke up!', 'SealPray was broken!'), RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters ('The first monster is 0!'), RunBattlePhaseWhenTextIdle_A0_ResultsScreen ('RESULTS', 'received WG.').
+- **Not named.** RollCounterChanceAndRunEvent_Sub01 is the largest bare dispatcher: 75 cases that add to wTopStat1 and adjust wFamilyScores. Its meaning is not established, so it keeps its structural name.
+- **Counts.**
+  - Bare dispatchers: 200 → 166.
+  - Labels under a bare dispatcher: 2,201 → 1,245.
+  - Structural labels the generator leaves unnamed: 308 → 266.
+- Binary verification: build/run385 PASS, 0 differing bytes; tests OK (skipped=3) after updating one pinned name.
+
 ### E-0287 — Branch targets become local labels named by shape; two sound routines named
 
 - Kind: TOOL (naming of branch targets; C2 for the shape each name states, no claim about purpose).

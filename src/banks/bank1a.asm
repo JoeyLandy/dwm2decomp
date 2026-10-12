@@ -2,7 +2,7 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1A
 
 ; wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE
-; 17 call sites from 15 routines (e.g. PauseMenu_Skills_SRAMRecordAddressMapped_Shared02, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_ShowStringBank08AtTilesHL_Bank31, LoadSelectedSkillRecord_Bank31, ...)
+; 17 call sites from 15 routines (e.g. PauseMenu_Skills_SRAMRecordAddressMapped_Shared02, AddSkillBaseWeightAndLoadSkill, RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31, LoadSelectedSkillRecord_Bank31, ...)
 ; reads: wRecordBuffer
 ; points at: wRecordBufferData
 LoadSkillRecord::
@@ -3301,7 +3301,7 @@ Func_01A_7276:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_73AD (E-0114)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_CopyRectRecord73ADToScreenBuffer, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_FleeCommand_CopyRectRecord73ADToScreenBuffer, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount, RunBattleSetup_BankA0_Case00_ClearAndLayoutTileBlocksForBattleFoeCount_Case07)
 CopyRectRecord73ADToScreenBuffer::
 Func_01A_727D:: ; address name
     ld hl, TileRect_1A_73AD

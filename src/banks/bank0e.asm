@@ -803,7 +803,7 @@ Func_00E_5370:: ; address name
     db $11, $85, $53, $CD, $FE, $25, $C9
 
 ; Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case04_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_Case16, RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E, ...)
+; 6 call sites from 6 routines (e.g. RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_Case16, RunLinkSession5Exchange_Case01_Sub01_Case0E_WriteStringIndexAndStringCategoryEtc, RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case16, RunScreenStateWhenNotFading_F1_Case0E_ShowString_Bank0E, ...)
 ShowString_Bank0E::
 Func_00E_537E:: ; address name
     call BeginStringDisplay_Bank0E
@@ -988,7 +988,7 @@ Data_00E_5662:: ; address name
     db $F0
 
 ; clears the child record wCAD0 and fills it from the two parents (wC991, wCA36): species from the breeding table Data_00E_6208, then names, skills, resistances and stat bonuses (E-0131)
-; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, NpcBreedMenu_Case04_ComputeBreedingChild, BreedMenu_Case04_ComputeBreedingChild, ...)
+; 6 call sites from 6 routines (e.g. DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD, RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild, BreedMenu_ChooseParents_ComputeBreedingChild, ...)
 ; reads: wArg6, wArg7, wArg5, wSaveByte16, wArg1, wSpeciesRecord, wNameEntryState
 ; writes: wArg6, wArg7, wSpeciesIdLo, wSpeciesIdHi, wNameEntryState, wArg5
 ; points at: wChildRecord, wRecordBufA, wRecordBufB
@@ -1945,7 +1945,7 @@ Func_00E_5C11:: ; address name
     ret
 
 ; monster id = wD7F1/wD7F2: LoadSpeciesRecord, then copies species bytes 8-10 to wD7F5-wD7F7 (E-0117)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050)
+; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050)
 ; reads: wArg1, wArg2, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wArg5, wArg6, wArg7
 LoadSpeciesBytes8To10ToArg5::
@@ -2587,7 +2587,7 @@ Data_00E_5F89:: ; address name
     db $5B, $5D, $5F, $61, $63, $65, $67, $69
 
 ; wD7F5 = the 2-bit entry of the matrix Data_00E_603F for the combined personality indexes of wC986 and wCA2B (E-0128)
-; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunScreenStateWhenNotFading_F1_Case04_BeginString_Bank0E_Cat0_Case16)
+; 2 call sites from 2 routines (e.g. ApplyBreedingBonusToChildStats, RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0_Case16)
 ; writes: wArg5
 ; points at: wRecordBufA, wRecordBufB
 PersonalityPairValueToArg5::
@@ -2802,7 +2802,7 @@ Func_00E_6138:: ; address name
     ret
 
 ; wD7F5 = the family (0-10) of species id wD7F6/7 by id ranges (< $1B, $43, $67, $85, $A8, $CA, $F1, $111, $139, $15C, or more) (E-0128)
-; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForTemp0, DebugToggleArg1Marker, LibraryMenu_Case10_Case06_FamilyForSpeciesIdArg6)
+; 5 call sites from 4 routines (e.g. ComputeBreedingChild, DrawSpeciesAndFamilyIconForTemp0, DebugToggleArg1Marker, LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6)
 ; reads: wArg6, wArg7
 ; writes: wArg5
 FamilyForSpeciesIdArg6::
@@ -2888,7 +2888,7 @@ Func_00E_615A:: ; address name
     ret
 
 ; loads species wCADB; when its byte wD009 is non-zero, rolls against Data_00E_61FC[byte & 3] and stores 1 in wCADE on success, else 0 (E-0124)
-; 2 call sites from 2 routines (e.g. ComputeBreedingChild, MedalPrizeMenu_Case05_Case0E_SetArg5ToListEntriesCell4)
+; 2 call sites from 2 routines (e.g. ComputeBreedingChild, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4)
 ; reads: wChildRecord, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 RollWCADEFromSpeciesFlag::

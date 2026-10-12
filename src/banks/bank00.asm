@@ -1834,7 +1834,7 @@ Func_000_0B2B:: ; address name
     ret
 
 ; C2 static reading (E-0014): selects ROM bank B; C times reads a byte from [DE] (advancing DE once), waits for STAT bit 1 to clear, ORs the byte into [HL] and advances HL; then restores the caller's bank. Clobbers B.
-; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, DrawNameGlyphBufGlyphsOverlaying8DAnd8E, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM, HibernateMenu_Case05_Case03_Sub01_GlyphCopyArgsForA_Bank15, ...)
+; 17 call sites from 12 routines (e.g. DebugResultsDisplay_Init, DrawNameGlyphBufGlyphsOverlaying8DAnd8E, RunNameEntryStateWhenNotFading_Case01_OrFromBankWaitVRAM, HibernateMenu_ChooseRecords_Case03_Sub01_GlyphCopyArgsForA_Bank15, ...)
 ; reads: rSTAT
 ; writes: rROMB0
 OrFromBankWaitVRAM::
@@ -4393,7 +4393,7 @@ Func_000_1872:: ; address name
     ret
 
 ; HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows
-; 103 call sites from 44 routines (e.g. EggServiceMenu_Case0F_FillTilesBxC, CloseHibernateMenu_FillTilesBxC, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_Case05_FillTilesBxC, ...)
+; 103 call sites from 44 routines (e.g. EggServiceMenu_Case0F_FillTilesBxC, CloseHibernateMenu_FillTilesBxC, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_ChooseRecords_FillTilesBxC, ...)
 ; reads: rSTAT, wTextWindowTileLo
 ; writes: wTextWindowTileLo
 FillTilesBxC::
@@ -5680,7 +5680,7 @@ Func_000_1F89:: ; address name
     ret
 
 ; A = record, C = field offset (SRAMRecordAddress): copies three bytes from the record to hFFC6-hFFC8; HL kept (E-0108)
-; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, SwapMonstersMenu_Case09_Case13_LoadRecordThreeBytesToTemp0)
+; 3 call sites from 2 routines (e.g. TriggerEventC9IfExpDigitsRepeat, SwapMonstersMenu_ShowMonsterDetails_Case13_LoadRecordThreeBytesToTemp0)
 ; writes: hTemp0, hTemp1, hTemp2
 LoadRecordThreeBytesToTemp0::
 Func_000_1F95:: ; address name
@@ -5696,7 +5696,7 @@ Func_000_1F95:: ; address name
     ret
 
 ; A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved
-; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13, PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc, HibernateMenu_Case05_Case32_CopyRecordNameToNameGlyphBuf, ...)
+; 29 call sites from 25 routines (e.g. LoadRecordListNameTiles, YoldTalkEvents_TestFlagBit_Case13, PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc, HibernateMenu_ChooseRecords_Case32_CopyRecordNameToNameGlyphBuf, ...)
 ; points at: wNameGlyphBuf
 CopyRecordNameToNameGlyphBuf::
 Func_000_1FA4:: ; address name
@@ -5753,7 +5753,7 @@ Func_000_1FD1:: ; address name
     ret
 
 ; DE = monster id, HL = VRAM destination, C = palette slot: decompresses the id's picture stream (MonsterPictureTable, bank $38) to HL; on CGB also copies the 16-byte palette from MonsterPaletteTable (bank $7B) to slot C of wC49F
-; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_Case10_DrawTileRectFromArg1Params, ...)
+; 19 call sites from 16 routines (e.g. DebugMonsterPictureViewer_Update, DrawRecordMonsterPictureForMenuSelectedMember, PauseMenu_Main_Case03_Case01_Sub01_LoadScreenBlockForPartySize, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, ...)
 ; reads: wIsCGB
 ; writes: rROMB0
 ; points at: wBGPaletteBuffer
@@ -5885,7 +5885,7 @@ Func_000_2038:: ; address name
     ret
 
 ; DE = monster id, HL = BG map address, hFFC6 = palette number: writes the 6 x 6 attribute bytes (plus hFFC6) of the id's MonsterAttributeMapTable entry to VRAM bank 1 (a default pattern when the entry is zero)
-; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, LibraryMenu_Case10_DrawTileRectFromArg1Params, SwapMonstersMenu_Case0D_DrawRect6x6From651BAtScroll41, SwapMonstersMenu_Case09_DrawTileRectAtHLFromDE_Bank1E, ...)
+; 15 call sites from 13 routines (e.g. DebugMonsterPictureViewer_Update, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params, SwapMonstersMenu_Case0D_DrawRect6x6From651BAtScroll41, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E, ...)
 ; reads: hTemp0
 ; writes: rROMB0, rVBK
 LoadMonsterPictureAttributes::
@@ -6577,7 +6577,7 @@ Func_000_23CA:: ; address name
     ret
 
 ; HL = $4558 + 2 * A, switches to ROM bank 8 and continues with the shared read at CopyItemNameToDE_Skip (E-0126)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13)
+; 1 call site from 1 routine (e.g. YoldTalkEvents_TestFlagBit_Case13)
 ; writes: rROMB0
 ReadBank08Table4558WordForA::
 Func_000_241A:: ; address name
@@ -6768,7 +6768,7 @@ Func_000_24E5:: ; address name
     ret
 
 ; HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)
-; 73 call sites from 57 routines (e.g. ArenaMenu_Case12_ReadGridCursorX_Sub03, ArenaMenu_Case02_ReadGridCursorX_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, BreedMenu_Case04_Case0E_StepBGMapAddressBackOnScrollWrap, ...)
+; 73 call sites from 57 routines (e.g. ArenaMenu_Case12_ReadGridCursorX_Sub03, ArenaMenu_Case02_ReadGridCursorX_Sub03, DrawC5BEC6AtScrollOffsetDE_Bank15, BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap, ...)
 ; reads: hScrollX
 StepBGMapAddressBackOnScrollWrap::
 Func_000_24F8:: ; address name
@@ -7544,7 +7544,7 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextBeepSound_Case0B
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextDelayCounter
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case0D
+    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit7
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteVRAMByte
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc
     dw StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark
@@ -7552,16 +7552,16 @@ Func_000_2950:: ; address name
     dw StepStringDisplayUntilDone_Sub01_Sub02_ShowTextContinueMark_Case12
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextGlyphDestLoAndTextGlyphDestHiEtc_Case13
     dw ClearStringDisplayFlags
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case15
+    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit1
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case17
+    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit2Etc
     dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case18
     dw StepStringDisplayUntilDone_Sub01_Sub02_WriteTextStartPosLoAndTextStartPosHiEtc_Case19
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case1A
+    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit5
     dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1B
     dw StepStringDisplayUntilDone_Sub01_Sub02_IncrementTextPosLoWord_Case1C
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case1D
-    dw StepStringDisplayUntilDone_Sub01_Sub02_Case1E
+    dw StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit0
+    dw StepStringDisplayUntilDone_Sub01_Sub02_ClearTextControlBit0
     dw AcknowledgeTextPrompt
 
 ; entry 0 of the `rst $00` table in Func_000_2950
@@ -7729,7 +7729,7 @@ Jump_000_2A3B:: ; address name
 ; entry 13 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case0D::
+StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit7::
 Jump_000_2A6D:: ; address name
     ld hl, wTextControl
     set 7, [hl]
@@ -8079,7 +8079,7 @@ Func_000_2C6A:: ; address name
 ; entry 21 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextFlags
-StepStringDisplayUntilDone_Sub01_Sub02_Case15::
+StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit1::
 Jump_000_2C75:: ; address name
     ld hl, wTextFlags
     set 1, [hl]
@@ -8124,7 +8124,7 @@ Jump_000_2C7B:: ; address name
 ; entry 23 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextFlags, wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case17::
+StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit2Etc::
 Jump_000_2CAD:: ; address name
     ld hl, wTextFlags
     set 2, [hl]
@@ -8184,7 +8184,7 @@ Jump_000_2CC5:: ; address name
 ; entry 26 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextFlags
-StepStringDisplayUntilDone_Sub01_Sub02_Case1A::
+StepStringDisplayUntilDone_Sub01_Sub02_SetTextFlagsBit5::
 Jump_000_2CFD:: ; address name
     ld hl, wTextFlags
     set 5, [hl]
@@ -8223,7 +8223,7 @@ Jump_000_2D15:: ; address name
 ; entry 29 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case1D::
+StepStringDisplayUntilDone_Sub01_Sub02_SetTextControlBit0::
 Jump_000_2D27:: ; address name
     ld hl, wTextControl
     set 0, [hl]
@@ -8232,7 +8232,7 @@ Jump_000_2D27:: ; address name
 ; entry 30 of the `rst $00` table in Func_000_2950
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextControl
-StepStringDisplayUntilDone_Sub01_Sub02_Case1E::
+StepStringDisplayUntilDone_Sub01_Sub02_ClearTextControlBit0::
 Jump_000_2D2D:: ; address name
     ld hl, wTextControl
     res 0, [hl]
@@ -8462,7 +8462,7 @@ Func_000_2E72:: ; address name
     ret
 
 ; H = string category, L = string index, DE = destination: stores them in wStringDestLo/Hi, wStringCategory and wStringIndex and far-calls CopyStringToBuffer_Bank08, which copies the string with its $F0 terminator to DE (categories 9 and above go to Func_095_465F) (E-0059)
-; 24 call sites from 23 routines (e.g. PauseMenu_Skills_Case03_CopyStringHLToDE, PauseMenu_Skills_Case03_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Skills_Case03_Case07_Sub01_NextTableByte, ...)
+; 24 call sites from 23 routines (e.g. PauseMenu_Skills_UseFieldSkill_CopyStringHLToDE, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte, ...)
 ; writes: wStringDestLo, wStringDestHi, wStringCategory, wStringIndex
 CopyStringHLToDE::
 Func_000_2E81:: ; address name
@@ -8494,7 +8494,7 @@ Func_000_2E98:: ; address name
     ret
 
 ; HL = destination: writes A (0-255) as 1-3 decimal digit glyphs (charmap '0' = $00) without leading zeros, then $F0; HL ends on the terminator; clobbers A, D, E (E-0074)
-; 10 call sites from 4 routines (e.g. ShowRaiseAmountOrRefuse, WriteRecordField4BAndStatsDecimal, RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07, RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1)
+; 10 call sites from 4 routines (e.g. ShowRaiseAmountOrRefuse, WriteRecordField4BAndStatsDecimal, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1)
 WriteDecimalByteString::
 Func_000_2EAC:: ; address name
     cp a, $64
@@ -8533,7 +8533,7 @@ Func_000_2EC5:: ; address name
     ret
 
 ; writes the 24-bit number in hFFC6-hFFC8 as decimal digits from the millions down (dividing by 1,000,000, 100,000 and 10,000), then the 16-bit remainder through the shared writer (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc, RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG)
+; 2 call sites from 2 routines (e.g. BattleEnd_Step4_Sub02_WriteBattleResolveStepAndBattleSubPhaseEtc, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG)
 ; reads: hTemp0, hTemp1
 ; writes: hTemp6
 WriteNumber24AsDecimalString::
@@ -8737,7 +8737,7 @@ Func_000_2FDC:: ; address name
     ret
 
 ; copies from DE to HL until 5 glyphs other than $8D and $8E have been copied ($8D/$8E, which have no charmap entry, are copied without counting); a $8D or $8E right after the fifth glyph is copied too; then writes $F0. Clobbers A, B; DE and HL advance (E-0072)
-; 16 call sites from 16 routines (e.g. PauseMenu_Skills_Case02_UpdateMenuCursor, PauseMenu_Skills_Case03_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Items_Case02_UpdateMenuCursor, ...)
+; 16 call sites from 16 routines (e.g. PauseMenu_Skills_Case02_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Items_UseItem_UpdateMenuCursor, ...)
 CopyFiveGlyphsPlusMarks::
 Func_000_2FE1:: ; address name
     ld b, $05
@@ -11165,7 +11165,7 @@ Func_000_3F32:: ; address name
     ret
 
 ; Z set when A equals the queued action (wQueuedActionId, wDAAC) or is its partner in one of the pairs $34-$AD, $35-$AE, $6A-$CC, $A1-$CF, $8F-$AA (the pairs are symmetric); Z clear otherwise. A and BC are kept (E-0049)
-; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, RunBattleActions_Case00_Sub01_Case01_QueuedActionMatches)
+; 3 call sites from 3 routines (e.g. SkillPassesRepeatCheck, CheckSkillMPCost, RunBattleActions_StatusChecks_Case01_QueuedActionMatches)
 ; reads: wQueuedActionId
 QueuedActionMatches::
 Func_000_3F47:: ; address name

@@ -2,7 +2,7 @@ SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
 ; if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650
-; 12 call sites from 11 routines (e.g. ShowString_Bank08, ShowStringHL_Bank08, DebugMessageTest_Update_ToBeginStringDisplay_Bank08, PauseMenu_Items_Case02_BeginStringDisplay_Bank08AndStep, ...)
+; 12 call sites from 11 routines (e.g. ShowString_Bank08, ShowStringHL_Bank08, DebugMessageTest_Update_ToBeginStringDisplay_Bank08, PauseMenu_Items_UseItem_BeginStringDisplay_Bank08AndStep, ...)
 ; reads: wStringCategory
 BeginStringDisplay_Bank08::
 Func_008_4001:: ; address name

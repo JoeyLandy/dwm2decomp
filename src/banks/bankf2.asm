@@ -914,7 +914,7 @@ Data_0F2_48D1:: ; address name
     db $F0
 
 ; shows string $10 of category 0 (ShowString_Bank0E) at vTiles2 + $20 with size $011E, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault, RunScreenStateWhenNotFading_F1_Case0D_DrawRects5E13And66DF)
+; 4 call sites from 4 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault, RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowString10Bank0EAtTiles2020ThenDefault::
 Func_0F2_49CF:: ; address name
@@ -1081,7 +1081,7 @@ Func_0F2_4AF3:: ; address name
     ret
 
 ; ShowCombinedPersonalityName, then DrawWCA3ANameAtTiles2290 (E-0122)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ShowPersonalityNameAndWCA3AName, RunScreenStateWhenNotFading_F1_Case0D_ShowPersonalityNameAndWCA3AName)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowPersonalityNameAndWCA3AName, RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowPersonalityNameAndWCA3AName)
 ShowPersonalityNameAndWCA3AName::
 Func_0F2_4AFE:: ; address name
     call ShowCombinedPersonalityName
@@ -1089,7 +1089,7 @@ Func_0F2_4AFE:: ; address name
     ret
 
 ; writes the EXP wCA83-wCA85 as seven digits and, below the level cap, the EXP still needed for the next level (E-0129)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_Case0D_DrawFamilyIconAndCountForWCA38)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
 ; reads: wRecordBufB, hTemp0, wSpeciesExpCurve, hTemp1, hTemp2
 ; writes: wDigits, hTemp0, hTemp1, wSpeciesIdLo, wSpeciesIdHi, hTemp2, wArg1, wArg2, ...
 ; points at: hTemp2
@@ -1194,7 +1194,7 @@ Func_0F2_4B05:: ; address name
     jr .call_bg_map_address_at_scroll_bank_f2_514_d
 
 ; shows string wCACF of category $0B (ShowString_Bank08) at vTiles2 + $320 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_DecompressGraphicsArg1ToArg4, RunScreenStateWhenNotFading_F1_Case0D_DecompressGraphicsArg1ToArg4)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4, RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4)
 ; reads: wRecordBufB
 ; writes: wStringIndex, wStringCategory, rRAMG2, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowWCACFCategory11StringAtTiles2320::
@@ -1219,7 +1219,7 @@ Func_0F2_4BD0:: ; address name
     ret
 
 ; loads the species record of wCA36/7 and shows string [wD013] of category $0D at vTiles2 + $680 with size $0206 (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep_Case1A, RunScreenStateWhenNotFading_F1_Case0D_ShowSpeciesCategory13StringAtTiles2680)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1A)
 ; reads: wRecordBufB, wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowSpeciesCategory13StringAtTiles2680::
@@ -1247,7 +1247,7 @@ Func_0F2_4BFC:: ; address name
     ret
 
 ; runs Func_0F2_4C3D and Func_0F2_4D72 (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_RunF24C3DAnd4D72, RunScreenStateWhenNotFading_F1_Case0D_RunF24C3DAnd4D72)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_RunF24C3DAnd4D72, RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72)
 RunF24C3DAnd4D72::
 Func_0F2_4C36:: ; address name
     call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
@@ -1639,7 +1639,7 @@ Func_0F2_4E63:: ; address name
     ret
 
 ; for the three species words of wCA2B (offsets Data_0F2_4F41 or 4F44 by bit 4 of wCA38) decompresses their graphics to the targets in Data_0F2_4ED4 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawTileRectAtHLFromDE_Bank37_Case1E, RunScreenStateWhenNotFading_F1_Case0D_DrawTileRectAtHLFromDE_BankF1_Case1E)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Case1E, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E)
 ; reads: wRecordBufB, hTemp0, hTemp1
 ; writes: hTemp0, hTemp1, wArg1, wArg2
 ; points at: wRecordBufB, wArg3
@@ -1806,7 +1806,7 @@ Data_0F2_4F44:: ; address name
     db $0B, $1C, $1A
 
 ; writes the level wCA81 (marked $6F at the cap wCA82), its digits and the status marks from wCA80 into the BG map (E-0129)
-; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81, RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawLevelAndStatusRowForWCA81_Case1D, RunScreenStateWhenNotFading_F1_Case0D_DrawLevelAndStatusRowForWCA81, ...)
+; 5 call sites from 5 routines (e.g. DrawRecordBufBStatsScreen, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81, RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForWCA81_Case1D, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawLevelAndStatusRowForWCA81, ...)
 ; reads: hTemp1, hTemp0, wDigits, wRecordBufB
 ; writes: hTemp0, hTemp1
 DrawLevelAndStatusRowForWCA81::
@@ -1950,7 +1950,7 @@ Func_0F2_4FF9:: ; address name
     ret
 
 ; runs Func_0F2_4F47, DrawFiveRecordBufBStatsColumn and DrawFourRecordBufBStatsDigits (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep, RunScreenStateWhenNotFading_F1_Case0D_ToDrawRecordBufBStatsScreenAndStep)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawRecordBufBStatsScreenAndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRecordBufBStatsScreen)
 DrawRecordBufBStatsScreen::
 Func_0F2_5002:: ; address name
     call DrawLevelAndStatusRowForWCA81
@@ -2105,7 +2105,7 @@ Func_0F2_50C6:: ; address name
     jp DrawFamilyIconAndCountForWCA38_ReadArg1
 
 ; loads the family icon of wCA38 & $0F into tile wD7F4; the next entry draws tile $1E and the count wCA2B[wD7F1] at the scroll offset wD7F2/3 (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_Case0D_DrawFamilyIconAndCountForWCA38)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawFamilyIconAndCountForWCA38, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIconAndCountForWCA38)
 ; reads: wRecordBufB, wArg4, wArg1, wArg2, wArg3, wDigits
 ; writes: wWorkBuf
 ; points at: wRecordBufB
@@ -2217,7 +2217,7 @@ Func_0F2_516E:: ; address name
     ret
 
 ; reorders the three bytes wArg5-7 by the permutation MonsterArgOrderTable[wArg2:wArg1] (byte k says where wArg5 + k goes among wArg1-3), then copies the result back to wArg5-7 (E-0171)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050)
+; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050)
 ; reads: wArg1, wArg2, wArg3
 ; writes: wArg5, wArg6, wArg7
 ; points at: wArg1, wArg5
@@ -3873,25 +3873,25 @@ Data_0F2_61FB:: ; address name
     d24 1 ; id 103
 
 ; a bare ret (E-0116)
-; 1 call site from 1 routine (e.g. RunScreenStateWhenNotFading_1B_Case01_WriteScreenStepAndLinkSendByteEtc)
+; 1 call site from 1 routine (e.g. LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc)
 ReturnStub_6333::
 Func_0F2_6333:: ; address name
     ret
     db $CD, $55, $63, $CD, $46, $63, $C9
 
-; only called from KeyAppraisalMenu_Case03_Case05 (E-0047)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_UpdatePagedListCursor)
+; only called from KeyAppraisalMenu_ChooseKey_Case05 (E-0047)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor)
 ; writes: wScreenStep
-KeyAppraisalMenu_Case03_Case05_CopyWD09EToKeyList::
+KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList::
 Func_0F2_633B:: ; address name
-    call KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf
+    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf
     call CopyWD09EToKeyList
     xor a, a
     ld [wScreenStep], a
     ret
 
 ; copies $C0 bytes from wD09E to wKeyList (E-0122)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_CopyWD09EToKeyList)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList)
 ; points at: wKeyList
 CopyWD09EToKeyList::
 Func_0F2_6346:: ; address name
@@ -3907,12 +3907,12 @@ Func_0F2_6346:: ; address name
     jr nz, .loop
     ret
 
-; only called from KeyAppraisalMenu_Case03_Case05_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_CopyWD09EToKeyList)
+; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_CopyWD09EToKeyList)
 ; reads: wWorkBuf
 ; writes: wKeyGenCount, wWorkBuf
 ; points at: wKeyList
-KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
+KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
 Func_0F2_6355:: ; address name
     ld hl, wWorkBuf + $1
     ld c, $C0
@@ -3931,9 +3931,9 @@ Func_0F2_6355:: ; address name
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount
+    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount
     ld hl, wKeyList
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
+    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
     ret
 
 .clear_work_buf:
@@ -3941,26 +3941,26 @@ Func_0F2_6355:: ; address name
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
+    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
     ld hl, wKeyList
-    call KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount
+    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount
     ret
 
-; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
+; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01::
+KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01::
 Func_0F2_6393:: ; address name
     ld b, $00
     ld c, $20
 
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop::
+KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop::
 Jump_0F2_6397:: ; address name
     ld a, [hl]
     cp a, $FF
-    jr z, KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
+    jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
     push hl
     inc hl
     inc hl
@@ -4018,21 +4018,21 @@ Jump_0F2_6397:: ; address name
 .restore2:
     pop hl
 
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip::
+KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip::
 Jump_0F2_63E3:: ; address name
     ld a, $04
     add_a_to_hl
     inc b
     dec c
-    jr nz, KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop
+    jr nz, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop
     ret
 
-; only called from KeyAppraisalMenu_Case03_Case05_Sub01_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_Case03_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
+; only called from KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf)
 ; reads: wKeyGenCount
 ; writes: wKeyGenCount
 ; points at: wKeySeeds, wKeyGenList
-KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount::
+KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount::
 Func_0F2_63EF:: ; address name
     ld b, $00
     ld c, $20
@@ -4040,7 +4040,7 @@ Func_0F2_63EF:: ; address name
 .loop:
     ld a, [hl]
     cp a, $FF
-    jr z, KeyAppraisalMenu_Case03_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
+    jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
     push hl
     inc hl
     inc hl
@@ -4333,7 +4333,7 @@ Data_0F2_6586:: ; address name
     db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
 
 ; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
-; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Sub01, BattleEnd_Step7_Case02_SRAMRecordAddress)
+; 2 call sites from 2 routines (e.g. Func_0A0_5491, BattleEnd_Step7_Case02_SRAMRecordAddress)
 ; reads: wPartyCount, wCounterPtr0Lo, wCounterPtr0Hi
 ; writes: wCounterPtr0Lo, wCounterPtr0Hi
 ; points at: wPartyList
@@ -4460,10 +4460,10 @@ Func_0F2_667D:: ; address name
     ld c, $01
     ret
 
-; only called from DispatchTalkEvent_Case01_Case65 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_GenerateNewKeyEntry)
+; only called from GreatLogTalkEvents_Case65 (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogTalkEvents_GenerateNewKeyEntry)
 ; points at: wArenaEntry
-DispatchTalkEvent_Case01_Case65_Sub01::
+GreatLogTalkEvents_Case65_Sub01::
 Func_0F2_6692:: ; address name
     ld hl, wArenaEntry
     ld bc, $020F

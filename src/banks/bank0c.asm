@@ -24,7 +24,7 @@ Func_00C_4001:: ; address name
     dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D
     dw LibraryMenu_StoreBAtWordTableEntry_Bank0C
     dw LibraryMenu_WriteScreenState_Case0F
-    dw LibraryMenu_Case10
+    dw LibraryMenu_ShowMonsterEntry
 
 ; entry 0 of the `rst $00` table in LibraryMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -1064,35 +1064,35 @@ Jump_00C_4676:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 16 of the `rst $00` table in LibraryMenu
+; LibraryMenu screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite parts of a monster, sets the palette and the numbers
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-LibraryMenu_Case10::
+LibraryMenu_ShowMonsterEntry::
 Jump_00C_4684:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw LibraryMenu_Case10_FillTilesFromRequest
-    dw LibraryMenu_Case10_DecompressToVRAM_Case01
-    dw LibraryMenu_Case10_DrawTileRectFromArg1Params
-    dw LibraryMenu_Case10_GridCellAddressFromGridCursorXAndGrid2CursorX
-    dw LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050
-    dw LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case05
-    dw LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06
-    dw LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case07
-    dw LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08
-    dw LibraryMenu_Case10_DecompressToVRAM
-    dw LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C
-    dw LibraryMenu_Case10_WriteBGPalette0From555C
-    dw LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits
-    dw LibraryMenu_Case10_StoreBAtWordTableEntry_Bank0C
+    dw LibraryMenu_ShowMonsterEntry_FillTilesFromRequest
+    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01
+    dw LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params
+    dw LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08
+    dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM
+    dw LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C
+    dw LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C
+    dw LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits
+    dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 
-; entry 0 of the `rst $00` table in LibraryMenu_Case10
+; entry 0 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep, wScreenSubStep
-LibraryMenu_Case10_FillTilesFromRequest::
+LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
 Jump_00C_46A4:: ; address name
-    call LibraryMenu_FillTilesFromRequest
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1150,12 +1150,12 @@ Data_00C_4718:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $FF, $FF, $FF, $FF, $60, $FF, $60, $FF, $60 ; id 4
     db $FF, $60, $FF, $60, $FF, $60, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00 ; id 5
 
-; entry 1 of the `rst $00` table in LibraryMenu_Case10
+; entry 1 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, rSVBK, wBGPaletteUploadRequest, wScreenStep, wScreenSubStep
 ; points at: wWindowTileBuffer, wWindowAttrBuffer, wScreenBlock9C
-LibraryMenu_Case10_DecompressToVRAM_Case01::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01::
 Jump_00C_4778:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -1236,12 +1236,12 @@ Jump_00C_4778:: ; address name
     ld hl, wWindowTileBuffer + $3D
     ld bc, $1201
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX
+    call LibraryMenu_ShowMonsterEntry_Case01_Sub01
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $108
     ld bc, $0201
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02
+    call LibraryMenu_ShowMonsterEntry_Case01_Sub02
     ld de, wScreenBlock9C
     ld hl, wWindowTileBuffer + $130
     ld bc, $0401
@@ -1330,11 +1330,11 @@ Data_00C_48F6:: ; address name
     db $B4, $B5, $B6, $B7, $B8, $B9, $BA, $BB, $BC, $BD, $BE, $BF, $C0, $C1, $C2, $C3, $C4, $C5 ; id 0
     db $7E, $7F
 
-; entry 2 of the `rst $00` table in LibraryMenu_Case10
+; entry 2 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
-LibraryMenu_Case10_DrawTileRectFromArg1Params::
+LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
 Jump_00C_490A:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -1417,11 +1417,11 @@ Jump_00C_490A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in LibraryMenu_Case10
+; entry 3 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wScreenStep
-LibraryMenu_Case10_GridCellAddressFromGridCursorXAndGrid2CursorX::
+LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
 Jump_00C_49B5:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
@@ -1439,12 +1439,12 @@ Jump_00C_49B5:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in LibraryMenu_Case10
+; entry 4 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wWorkBuf, wArg1, ...
 ; points at: wArg5
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050::
 Jump_00C_49DA:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1504,7 +1504,7 @@ Jump_00C_49DA:: ; address name
     ld [wStringIndex], a
     ld a, c
     add a, a
-    ld de, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Data
+    ld de, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Data
     add a, e
     ld e, a
     jr nc, .skip
@@ -1538,16 +1538,16 @@ Jump_00C_49DA:: ; address name
     ld [wScreenStep], a
     ret
 
-; address loaded by LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_4AA0:: ; address name
     db $40, $94, $D0, $94, $60, $95
 
-; entry 5 of the `rst $00` table in LibraryMenu_Case10
+; entry 5 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case05::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05::
 Jump_00C_4AA6:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1596,11 +1596,11 @@ Jump_00C_4AA6:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in LibraryMenu_Case10
+; entry 6 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06::
 Jump_00C_4B12:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1610,7 +1610,7 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
-    call LibraryMenu_Case10_Case06_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1618,7 +1618,7 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
-    call LibraryMenu_Case10_Case06_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1626,24 +1626,24 @@ Jump_00C_4B12:: ; address name
     ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
-    call LibraryMenu_Case10_Case06_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08
     pop hl
     sla l
     rl h
     ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
-    call LibraryMenu_Case10_Case06_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in LibraryMenu_Case10
+; entry 7 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenStep
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case07::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07::
 Jump_00C_4B5C:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1669,12 +1669,12 @@ Jump_00C_4B5C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in LibraryMenu_Case10
+; entry 8 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wGridCursorX, wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wGrid2CursorX, wGrid2CursorY
 ; writes: wScreenStep, wGrid2CursorY, wGrid2CursorX, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScreenSubStep
 ; points at: wScreenCountPlusOne
-LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08::
 Jump_00C_4B95:: ; address name
     call DrawThreeMetaSpritePartsFor5050
     ld a, [wGridCursorY]
@@ -1766,7 +1766,7 @@ Jump_00C_4B95:: ; address name
     jr z, .loop
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_FillTilesFromRequest
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1844,7 +1844,7 @@ Jump_00C_4B95:: ; address name
     jr z, .loop3
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_FillTilesFromRequest
+    call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01
     ld hl, vTiles1 + $220
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1871,11 +1871,11 @@ Jump_00C_4B95:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in LibraryMenu_Case10
+; entry 9 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-LibraryMenu_Case10_DecompressToVRAM::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
 Jump_00C_4CE2:: ; address name
     call LibraryMenu_FillTileRectWithArg1Tile
     ld b, $46
@@ -1888,11 +1888,11 @@ Jump_00C_4CE2:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in LibraryMenu_Case10
+; entry 10 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorY, wGridCursorX, wGrid2CursorX, wScreenStep
 ; writes: wWindowTileBuffer, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wBGPaletteUploadRequest, wScreenStep
-LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C::
+LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
 Jump_00C_4CFB:: ; address name
     ld de, TileRect_0C_56D9
     ld hl, wWindowTileBuffer + $64
@@ -1941,11 +1941,11 @@ Jump_00C_4CFB:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in LibraryMenu_Case10
+; entry 11 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-LibraryMenu_Case10_WriteBGPalette0From555C::
+LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C::
 Jump_00C_4D6B:: ; address name
     call WriteBGPalette0From555C
     call LibraryMenu_WriteWorkBuf
@@ -1955,12 +1955,12 @@ Jump_00C_4D6B:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in LibraryMenu_Case10
+; entry 12 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wScreenStep, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
 ; points at: wWindowTileBuffer
-LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits::
+LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
 Jump_00C_4D7C:: ; address name
     ld a, $01
     ld [wArg1], a
@@ -1999,11 +1999,11 @@ Jump_00C_4D7C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 13 of the `rst $00` table in LibraryMenu_Case10
+; entry 13 of the `rst $00` table in LibraryMenu_ShowMonsterEntry
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGrid2CursorX
 ; writes: wScreenStep, wScreenState, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wScriptCommandType, wScriptStartRequest
-LibraryMenu_Case10_StoreBAtWordTableEntry_Bank0C::
+LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
 Jump_00C_4DD6:: ; address name
     ld a, [wGrid2CursorX]
     ld b, $C3
@@ -2033,10 +2033,10 @@ Jump_00C_4DD6:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; only called from LibraryMenu_Case10_Case06 (E-0047)
-; 2 call sites from 1 routine (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06)
+; only called from LibraryMenu_ShowMonsterEntry_Case06 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-LibraryMenu_Case10_Case06_ShowString_Bank08::
+LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08::
 Func_00C_4E16:: ; address name
     push de
     inc hl
@@ -2090,11 +2090,11 @@ Func_00C_4E16:: ; address name
     farcall ShowString_Bank0B
     ret
 
-; only called from LibraryMenu_Case10_Case06 (E-0047)
-; 2 call sites from 1 routine (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06)
+; only called from LibraryMenu_ShowMonsterEntry_Case06 (E-0047)
+; 2 call sites from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06)
 ; reads: wArg5
 ; writes: wArg6, wArg7, wWorkBuf
-LibraryMenu_Case10_Case06_FamilyForSpeciesIdArg6::
+LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6::
 Func_00C_4E75:: ; address name
     push af
     inc hl
@@ -2143,7 +2143,7 @@ Func_00C_4E75:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_Case10_WriteBGPalette0From555C)
+; 2 call sites from 2 routines (e.g. LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C)
 ; reads: wGrid2CursorY
 ; writes: wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
@@ -2263,7 +2263,7 @@ Data_00C_4F68:: ; address name
     db $00, $92, $90, $92, $20, $93, $B0, $93, $40, $94, $D0, $94
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_Case10_WriteBGPalette0From555C)
+; 2 call sites from 2 routines (e.g. LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C)
 ; reads: wGridCursorY
 ; writes: wWorkBuf
 LibraryMenu_WriteWorkBuf::
@@ -2316,7 +2316,7 @@ Data_00C_4FAA:: ; address name
     db $C0, $90, $10, $91, $60, $91, $B0, $91
 
 ; with the pointer from Func_00C_5050 draws sub-indices 0, 4 and 2 (Func_01D_6A36) at Y = $10, $24 and $38, X = $6C (E-0121)
-; 5 call sites from 5 routines (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case05, ...)
+; 5 call sites from 5 routines (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05, ...)
 ; writes: wArg1, wArg2, wArg3, wArg4, wArg5, wArg6, hSpriteSubIndex
 DrawThreeMetaSpritePartsFor5050::
 Func_00C_4FC2:: ; address name
@@ -2360,7 +2360,7 @@ Func_00C_4FC2:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 2 call sites from 2 routines (e.g. LibraryMenu_WriteScreenState, LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits)
+; 2 call sites from 2 routines (e.g. LibraryMenu_WriteScreenState, LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits)
 ; reads: wGrid2CursorY
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03::
 Func_00C_501F:: ; address name
@@ -2400,7 +2400,7 @@ Func_00C_501F:: ; address name
     ret
 
 ; HL = the word Data_00C_5916[GridIndexFromGridCursorXGridCursorY] + GridIndexFromGrid2CursorXGrid2CursorY (E-0124)
-; 15 call sites from 10 routines (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, DrawThreeMetaSpritePartsFor5050, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case06, ...)
+; 15 call sites from 10 routines (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08, DrawThreeMetaSpritePartsFor5050, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06, ...)
 GridCellAddressFromGridCursorXAndGrid2CursorX::
 Func_00C_5050:: ; address name
     call GridIndexFromGridCursorXGridCursorY
@@ -2424,7 +2424,7 @@ Func_00C_5050:: ; address name
     ret
 
 ; A = the byte at Data_00C_594F[GridIndexFromGridCursorXGridCursorY] + wD78B (E-0122)
-; 6 call sites from 3 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08)
+; 6 call sites from 3 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08)
 ; reads: wGrid2CursorY
 ReadGridCellByteForGridCursorXGridCursorY::
 Func_00C_506C:: ; address name
@@ -2446,7 +2446,7 @@ Func_00C_506C:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 4 call sites from 3 routines (e.g. LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D, LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_Case10_LibraryMenu_HLToDecimalDigits)
+; 4 call sites from 3 routines (e.g. LibraryMenu_CopyRectTo20ByteRows_Bank0C_Case0D, LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits)
 ; reads: wGridCursorY, wDigits, wArg1
 ; writes: wDigits
 ; points at: wScreenCountPlusOne
@@ -2549,7 +2549,7 @@ Data_00C_510F:: ; address name
     db $7E, $C3, $A6, $C3, $CE, $C3, $F6, $C3, $1E, $C4, $46, $C4
 
 ; only called from routines of LibraryMenu (E-0098)
-; 3 call sites from 3 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_WriteScrollYAndScrollXEtc, LibraryMenu_Case10_DecompressToVRAM)
+; 3 call sites from 3 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_WriteScrollYAndScrollXEtc, LibraryMenu_ShowMonsterEntry_DecompressToVRAM)
 ; reads: wIsCGB
 ; writes: rSVBK
 LibraryMenu_WriteSVBK::
@@ -2586,7 +2586,7 @@ Func_00C_511B:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 14 call sites from 4 routines (e.g. LibraryMenu_FillTileRectWithArg1Tile, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C, LibraryMenu_Case10_FillTilesFromRequest)
+; 14 call sites from 4 routines (e.g. LibraryMenu_FillTileRectWithArg1Tile, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C, LibraryMenu_ShowMonsterEntry_FillTilesFromRequest)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank0C::
 Func_00C_5145:: ; address name
@@ -2630,7 +2630,7 @@ Func_00C_5156:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 4 call sites from 4 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_LoadMapHeader, LibraryMenu_WriteScrollYAndScrollXEtc, LibraryMenu_Case10_DecompressToVRAM)
+; 4 call sites from 4 routines (e.g. LibraryMenu_WriteScreenState_Case0F, LibraryMenu_LoadMapHeader, LibraryMenu_WriteScrollYAndScrollXEtc, LibraryMenu_ShowMonsterEntry_DecompressToVRAM)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 LibraryMenu_FillTileRectWithArg1Tile::
 Func_00C_5177:: ; address name
@@ -2816,7 +2816,7 @@ Func_00C_525B:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $20 and size word $1702, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2020AndStep, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C)
+; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2020AndStep, LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2020::
 Func_00C_5269:: ; address name
@@ -2834,7 +2834,7 @@ Func_00C_5269:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $200 and size word $5301, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2200AndStep, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C)
+; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2200AndStep, LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2200::
 Func_00C_5283:: ; address name
@@ -2851,10 +2851,10 @@ Func_00C_5283:: ; address name
     call FillTilesFromRequest
     ret
 
-; only called from routines of LibraryMenu (E-0098)
-; 3 call sites from 2 routines (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_Case10_FillTilesFromRequest)
+; only called from routines of LibraryMenu_ShowMonsterEntry (E-0098)
+; 3 call sites from 2 routines (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_ShowMonsterEntry_FillTilesFromRequest)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-LibraryMenu_FillTilesFromRequest::
+LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Shared01::
 Func_00C_529D:: ; address name
     ld hl, vTiles2
     ld a, l
@@ -2949,7 +2949,7 @@ Func_00C_52FB:: ; address name
     ret
 
 ; only called from routines of LibraryMenu (E-0098)
-; 5 call sites from 4 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case05)
+; 5 call sites from 4 routines (e.g. LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05)
 ; reads: wArg5
 ; writes: wArg1, wArg2, wArg3, wArg4, wSpeciesIdLo, wSpeciesIdHi
 ; points at: wMonsterLibraryBuf
@@ -2993,16 +2993,16 @@ Func_00C_530A:: ; address name
     ld a, $FE
     ret
 
-; only called from LibraryMenu_Case10_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_DecompressToVRAM_Case01)
+; only called from LibraryMenu_ShowMonsterEntry_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01)
 ; points at: wScreenBlock9C
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX::
+LibraryMenu_ShowMonsterEntry_Case01_Sub01::
 Func_00C_534A:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterIconKindTable_536A
     add hl, de
     ld a, [hl]
-    ld hl, LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Data
+    ld hl, LibraryMenu_ShowMonsterEntry_Case01_Sub01_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -3397,23 +3397,23 @@ Data_00C_536A:: ; address name
     db $03 ; id 371 Orgodemir
     db $02 ; id 372 Darck
 
-; address loaded by LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by LibraryMenu_ShowMonsterEntry_Case01_Sub01
+LibraryMenu_ShowMonsterEntry_Case01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_54DF:: ; address name
     db $E9, $54, $EB, $54, $ED, $54, $EF, $54, $F1, $54, $7C, $80, $7D, $80, $7E, $80
     db $7E, $7E, $7F, $80
 
-; only called from LibraryMenu_Case10_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_DecompressToVRAM_Case01)
+; only called from LibraryMenu_ShowMonsterEntry_Case01 (E-0047)
+; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_DecompressToVRAM_Case01)
 ; points at: wScreenBlock9C
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02::
+LibraryMenu_ShowMonsterEntry_Case01_Sub02::
 Func_00C_54F3:: ; address name
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, MonsterClassByteTable_5562
     add hl, de
     ld a, [hl]
     add a, a
-    ld hl, LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data
+    ld hl, LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3429,52 +3429,52 @@ Func_00C_54F3:: ; address name
     jr nz, .loop
     ret
 
-; address loaded by LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by LibraryMenu_ShowMonsterEntry_Case01_Sub02
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_5513:: ; address name
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry00
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry01
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry02
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry03
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry04
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry05
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry06
-    dw LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry07
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry00
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry01
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry02
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry03
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry04
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry05
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry06
+    dw LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry07
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry00:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5523:: ; address name
     db $81, $80, $80, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry01:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5527:: ; address name
     db $82, $80, $80, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry02:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_552B:: ; address name
     db $82, $81, $80, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry03:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_552F:: ; address name
     db $82, $82, $80, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry04:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5533:: ; address name
     db $82, $82, $81, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry05:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_5537:: ; address name
     db $82, $82, $82, $80
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry06:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_553B:: ; address name
     db $82, $82, $82, $81
 
-LibraryMenu_Case10_Case01_GridCellAddressFromGridCursorXAndGrid2CursorX_Sub02_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
+LibraryMenu_ShowMonsterEntry_Case01_Sub02_Data_Entry07:: ; heuristic: target of a monotone pointer table; C0
 Data_00C_553F:: ; address name
     db $82, $82, $82, $82
 
 ; writes six bytes from Data_00C_555C to the CGB background palette data (rBCPS = $80, auto-increment), waiting for VRAM access (E-0122)
-; 1 call site from 1 routine (e.g. LibraryMenu_Case10_WriteBGPalette0From555C)
+; 1 call site from 1 routine (e.g. LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C)
 ; reads: rSTAT
 WriteBGPalette0From555C::
 Func_00C_5543:: ; address name
@@ -3950,12 +3950,12 @@ Data_00C_589A:: ; address name
     db $B6, $92, $93, $94, $95, $96, $97, $98, $99, $9A, $9B, $9C, $9D, $9E, $9F, $A0, $A1, $A2, $A3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc, LibraryMenu_StoreBAtWordTableEntry_Bank0C, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C
+; address loaded by LibraryMenu_CopyRectTo20ByteRows_Bank0C, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc, LibraryMenu_StoreBAtWordTableEntry_Bank0C, LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_58FE:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $41, $C4
 
-; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_Case10_CopyRectTo20ByteRows_Bank0C, LibraryMenu_Case10_StoreBAtWordTableEntry_Bank0C
+; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C, LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_590A:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_590A:: ; address name
     db $81, $C3, $A9, $C3, $D1, $C3, $F9, $C3, $21, $C4, $49, $C4
@@ -3966,13 +3966,13 @@ Data_00C_5916:: ; address name
     db $01, $00, $24, $00, $47, $00, $6A, $00, $8D, $00, $B0, $00, $D3, $00, $F6, $00
     db $19, $01, $3C, $01, $5F, $01, $FF, $FF
 
-; address loaded by LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08
+; address loaded by LibraryMenu_BGMapAddressAtScroll_Bank0C, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08
 LibraryMenu_BGMapAddressAtScroll_Bank0C_Data_592E:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_592E:: ; address name
     db $1B, $00, $43, $00, $67, $00, $85, $00, $A8, $00, $CA, $00, $F1, $00, $11, $01
     db $39, $01, $5C, $01, $75, $01
 
-; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+; address loaded by LibraryMenu_GridIndexFromGridCursorXGridCursorY, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Case0C, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case08, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data_5944:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_00C_5944:: ; address name
     db $04, $05, $05, $04, $04, $04, $04, $04, $05, $05, $03
@@ -7158,7 +7158,7 @@ Jump_00C_6F5E:: ; address name
     ret
 
 ; runs Func_00C_72CC for the bottom box, copies $64 bytes of tiles (and CGB attributes) and draws the two screen-buffer rectangles at scroll + $1CC and + $1A0 (E-0125)
-; 4 call sites from 4 routines (e.g. ArenaMenu_RedrawFullScreenBoxes_0C_Case1E, ArenaMenu_RedrawFullScreenBoxes_0C, ArenaMenu_SubtractArg1AmountFromGold, NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep)
+; 4 call sites from 4 routines (e.g. ArenaMenu_RedrawFullScreenBoxes_0C_Case1E, ArenaMenu_RedrawFullScreenBoxes_0C, ArenaMenu_SubtractArg1AmountFromGold, NpcBreedMenu_ChooseAndBreed_ToRedrawFullScreenBoxes_0CAndStep)
 ; reads: wIsCGB
 ; writes: wArg1, wArg2
 ; points at: wWindowTileBuffer, wWindowAttrBuffer

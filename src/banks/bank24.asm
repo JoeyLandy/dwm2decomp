@@ -182,7 +182,7 @@ Func_024_4117:: ; address name
     rst $00
     dw GameMode6_Update_Case00
     dw GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24
-    dw GameMode6_Update_Case02
+    dw GameMode6_Update_SavePrompt
     dw GameMode6_Update_Case03
     dw GameMode6_Update_Case04
     dw GameMode6_Update_Case05
@@ -336,35 +336,35 @@ Jump_024_4225:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update
+; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-GameMode6_Update_Case02::
+GameMode6_Update_SavePrompt::
 Jump_024_424D:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case02_WriteScreenStepAndScreenSubStep
-    dw GameMode6_Update_Case02_LoadRecordCapacityFromFarmLevelTable
-    dw GameMode6_Update_Case02_RunSaveGameSteps
-    dw GameMode6_Update_Case02_ToShowStringAInDefaultWindow_Bank24AndStep
-    dw GameMode6_Update_Case02_GameMode6_Update_ShowYesNo
-    dw GameMode6_Update_Case02_UpdateTwoChoiceCursor_Bank1D
-    dw GameMode6_Update_Case02_ToGameMode6_Update_Shared04
-    dw GameMode6_Update_Case02_GameMode6_Update_ShowMonsterEg
-    dw GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor
-    dw GameMode6_Update_Case02_SetScreenStepTo05
-    dw GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24
-    dw GameMode6_Update_Case02_ReturnStub_51A3
-    dw GameMode6_Update_Case02_DecompressToVRAM
-    dw GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep
-    dw GameMode6_Update_Case02_GameMode6_Update_UpdateAndDrawSpriteSlots
-    dw GameMode6_Update_Case02_SetScreenStep
+    dw GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable
+    dw GameMode6_Update_SavePrompt_RunSaveGameSteps
+    dw GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep
+    dw GameMode6_Update_SavePrompt_ShowYesNo_Case04
+    dw GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D
+    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03
+    dw GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg
+    dw GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor
+    dw GameMode6_Update_SavePrompt_SetScreenStepTo05
+    dw GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24
+    dw GameMode6_Update_SavePrompt_ReturnStub_51A3
+    dw GameMode6_Update_SavePrompt_DecompressToVRAM
+    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared06AndStep
+    dw GameMode6_Update_SavePrompt_GameMode6_Update_UpdateAndDrawSpriteSlots
+    dw GameMode6_Update_SavePrompt_SetScreenStep
 
-; entry 0 of the `rst $00` table in GameMode6_Update_Case02
+; entry 0 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wScreenSubStep, wRecordCapacity, wRecordsInUse, wScreenStep
 ; writes: wScreenStep, wScreenSubStep
-GameMode6_Update_Case02_WriteScreenStepAndScreenSubStep::
+GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep::
 Jump_024_4271:: ; address name
     ld a, [wBattleScene]
     cp a, $08
@@ -399,12 +399,12 @@ Jump_024_4271:: ; address name
     ret
     db $0A, $14, $1E
 
-; entry 1 of the `rst $00` table in GameMode6_Update_Case02
+; entry 1 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenStep
 ; writes: rRAMG, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wSaveStep, wSaveRecordIndex, wScreenStep
 ; points at: sRecords, wRecordBufB
-GameMode6_Update_Case02_LoadRecordCapacityFromFarmLevelTable::
+GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable::
 Jump_024_42B3:: ; address name
     farcall LoadRecordCapacityFromFarmLevelTable
     ld a, $0A
@@ -449,10 +449,10 @@ Jump_024_42B3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update_Case02
+; entry 2 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSaveStep
-GameMode6_Update_Case02_RunSaveGameSteps::
+GameMode6_Update_SavePrompt_RunSaveGameSteps::
 Jump_024_4309:: ; address name
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -461,11 +461,11 @@ Jump_024_4309:: ; address name
     call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update_Case02
+; entry 3 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case02_ToShowStringAInDefaultWindow_Bank24AndStep::
+GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep::
 Jump_024_4319:: ; address name
     ld a, $05
     call ShowStringAInDefaultWindow_Bank24
@@ -474,15 +474,15 @@ Jump_024_4319:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 4 of the `rst $00` table in GameMode6_Update_Case02
+; entry 4 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep
-GameMode6_Update_Case02_GameMode6_Update_ShowYesNo::
+GameMode6_Update_SavePrompt_ShowYesNo_Case04::
 Jump_024_4326:: ; address name
     ld a, $6C
     call QueueSoundEffect
-    call GameMode6_Update_ShowYesNo
+    call GameMode6_Update_SavePrompt_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
@@ -499,18 +499,18 @@ Jump_024_4326:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update_Case02
+; entry 5 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case02_UpdateTwoChoiceCursor_Bank1D::
+GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D::
 Jump_024_4355:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
-    jr z, .call_game_mode6_update_show_yes_no
+    jr z, .call_game_mode6_update_save_prompt_show_yes
     cp a, $FF
     jr z, .check_two_choice_cursor
     ret
@@ -518,7 +518,7 @@ Jump_024_4355:: ; address name
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
     and a, a
-    jr nz, .call_game_mode6_update_show_yes_no
+    jr nz, .call_game_mode6_update_save_prompt_show_yes
     ld a, $07
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenStep]
@@ -526,8 +526,8 @@ Jump_024_4355:: ; address name
     ld [wScreenStep], a
     ret
 
-.call_game_mode6_update_show_yes_no:
-    call GameMode6_Update_ShowYesNo
+.call_game_mode6_update_save_prompt_show_yes:
+    call GameMode6_Update_SavePrompt_ShowYesNo
     call CopyWCA2CNameToTextBuf0
     ld a, $06
     call ShowStringAInDefaultWindow_Bank24
@@ -536,18 +536,18 @@ Jump_024_4355:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in GameMode6_Update_Case02
+; entry 6 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case02_ToGameMode6_Update_Shared04::
+GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03::
 Jump_024_4390:: ; address name
     call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update_Case02
+; entry 7 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep
-GameMode6_Update_Case02_GameMode6_Update_ShowMonsterEg::
+GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
 Jump_024_4394:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -568,18 +568,18 @@ Jump_024_4394:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 8 of the `rst $00` table in GameMode6_Update_Case02
+; entry 8 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor::
+GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
 Jump_024_43C3:: ; address name
-    call GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc
+    call GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc
     ld a, [wMenuInputResult]
     and a, a
     ret z
     cp a, $FE
-    jr z, .call_game_mode6_update_show_yes_no
+    jr z, .call_game_mode6_update_save_prompt_show_yes
     cp a, $FF
     jr z, .check_two_choice_cursor
     ret
@@ -600,15 +600,15 @@ Jump_024_43C3:: ; address name
     ld [wScreenStep], a
     ret
 
-.call_game_mode6_update_show_yes_no:
-    call GameMode6_Update_ShowYesNo
+.call_game_mode6_update_save_prompt_show_yes:
+    call GameMode6_Update_SavePrompt_ShowYesNo
     ld de, TileRect_24_5A0A
     ld hl, wWindowTileBuffer + $112
     ld bc, $0605
     call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call ReturnStub_51A3
     call BGMapAddressAtScroll_Bank24
@@ -617,7 +617,7 @@ Jump_024_43C3:: ; address name
     call DrawScreenBufferRectToBGMap_24
     xor a, a
     ld b, $C3
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     xor a, a
     ld [wTwoChoiceCursor], a
@@ -628,20 +628,20 @@ Jump_024_43C3:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in GameMode6_Update_Case02
+; entry 9 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-GameMode6_Update_Case02_SetScreenStepTo05::
+GameMode6_Update_SavePrompt_SetScreenStepTo05::
 Jump_024_4432:: ; address name
     ld a, $05
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in GameMode6_Update_Case02
+; entry 10 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCount, wScreenStep, wTwoChoiceCursor
 ; writes: wScreenStep
-GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24::
+GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24::
 Jump_024_4438:: ; address name
     ld a, [wListCount]
     and a, a
@@ -656,19 +656,19 @@ Jump_024_4438:: ; address name
 .read_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
     ld b, $BC
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in GameMode6_Update_Case02
+; entry 11 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wScreenStep
 ; writes: wScreenStep
 ; points at: wWindowTileBuffer
-GameMode6_Update_Case02_ReturnStub_51A3::
+GameMode6_Update_SavePrompt_ReturnStub_51A3::
 Jump_024_445F:: ; address name
     ld a, [wBattleScene]
     cp a, $08
@@ -703,12 +703,12 @@ Jump_024_445F:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in GameMode6_Update_Case02
+; entry 12 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTwoChoiceCursor, wScreenState
 ; writes: wScreenStep, wScreenState
 ; points at: wWindowTileBuffer
-GameMode6_Update_Case02_DecompressToVRAM::
+GameMode6_Update_SavePrompt_DecompressToVRAM::
 Jump_024_44AA:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -754,11 +754,11 @@ Tiles_24_44FE::
 Data_024_44FE:: ; address name
     db $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00, $FF, $00 ; entry 0
 
-; entry 13 of the `rst $00` table in GameMode6_Update_Case02
+; entry 13 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep::
+GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared06AndStep::
 Jump_024_450E:: ; address name
     call GameMode6_Update_TestFlagBit
     ld a, [wScreenStep]
@@ -766,18 +766,18 @@ Jump_024_450E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in GameMode6_Update_Case02
+; entry 14 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case02_GameMode6_Update_UpdateAndDrawSpriteSlots::
+GameMode6_Update_SavePrompt_GameMode6_Update_UpdateAndDrawSpriteSlots::
 Jump_024_4519:: ; address name
     call GameMode6_Update_UpdateAndDrawSpriteSlots
-    call GameMode6_Update_Case02_Case0E_Sub01
+    call GameMode6_Update_SavePrompt_Case0E_Sub01
     ret
 
-; entry 15 of the `rst $00` table in GameMode6_Update_Case02
+; entry 15 of the `rst $00` table in GameMode6_Update_SavePrompt
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenSubStep
-GameMode6_Update_Case02_SetScreenStep::
+GameMode6_Update_SavePrompt_SetScreenStep::
 Jump_024_4520:: ; address name
     xor a, a
     ld [wScreenStep], a
@@ -792,7 +792,7 @@ GameMode6_Update_Case03::
 Jump_024_452A:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep
+    dw GameMode6_Update_Case03_ToGameMode6_Update_Shared06AndStep
     dw GameMode6_Update_Case03_GameMode6_Update_UpdateAndDrawSpriteSlots
     dw GameMode6_Update_Case03_SetSaveStep
     dw GameMode6_Update_Case03_RunSaveGameSteps
@@ -801,7 +801,7 @@ Jump_024_452A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep::
+GameMode6_Update_Case03_ToGameMode6_Update_Shared06AndStep::
 Jump_024_4536:: ; address name
     call GameMode6_Update_TestFlagBit
     ld a, [wScreenStep]
@@ -999,7 +999,7 @@ Jump_024_463A:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wTwoChoiceCursor]
     ld b, $BB
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, [wBattleScene]
     cp a, $08
@@ -1030,7 +1030,7 @@ Jump_024_463A:: ; address name
     call DrawScreenBufferRectToBGMap_24
     ld a, [wTwoChoiceCursor]
     ld b, $C3
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     xor a, a
     ld [wScreenSubStep], a
@@ -1127,7 +1127,7 @@ Jump_024_4724:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     xor a, a
     ld b, $BC
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
@@ -1212,7 +1212,7 @@ GameMode6_Update_Case05::
 Jump_024_47CF:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep
+    dw GameMode6_Update_Case05_ToGameMode6_Update_Shared04AndStep
     dw GameMode6_Update_Case05_ToCopyRectTo20ByteRowsJp_Bank24AndStep
     dw GameMode6_Update_Case05_ClampRecordListPageCursor4
     dw GameMode6_Update_Case05_DrawRecordListPageSpeciesNames
@@ -1229,7 +1229,7 @@ Jump_024_47CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep::
+GameMode6_Update_Case05_ToGameMode6_Update_Shared04AndStep::
 Jump_024_47EB:: ; address name
     call GameMode6_Update_FillTilesFromRequest
     ld a, [wScreenStep]
@@ -1374,7 +1374,7 @@ GameMode6_Update_Case05_StoreBAtWordTableEntry_Bank24_52CE::
 Jump_024_48C8:: ; address name
     ld a, [wTwoChoiceCursor]
     ld b, $C3
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     ld a, $04
     ld [wScreenState], a
@@ -1501,7 +1501,7 @@ Jump_024_49AF:: ; address name
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, $01
     ld b, $BC
-    ld hl, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data
+    ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
     call StoreBAtWordTableEntry_Bank24_52CE
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
@@ -1983,7 +1983,7 @@ Jump_024_4CF2:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_ReturnStub_51A3, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0F_ShowInfoOKYesN)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_ReturnStub_51A3, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0F_ShowInfoOKYesN)
 ; reads: wLinkByteEB
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01::
 Func_024_4D21:: ; address name
@@ -2035,10 +2035,10 @@ Func_024_4D36:: ; address name
     jr nz, .loop2
     ret
 
-; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case02_UpdateTwoChoiceCursor_Bank1D, GameMode6_Update_Case02_GameMode6_Update_ShowYesNo)
+; only called from routines of GameMode6_Update_SavePrompt (E-0098)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D, GameMode6_Update_SavePrompt_ShowYesNo_Case04)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextFlags, wTextControl
-GameMode6_Update_ShowYesNo::
+GameMode6_Update_SavePrompt_ShowYesNo::
 Func_024_4D65:: ; address name
     ld hl, vTiles2 + $6D0
     ld a, l
@@ -2071,7 +2071,7 @@ Func_024_4D65:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_Case02_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case05_GameMode6_Update_ShowMonsterEg)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case05_GameMode6_Update_ShowMonsterEg)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wTextFlags, wTextControl
 GameMode6_Update_ShowMonsterEg::
 Func_024_4DA8:: ; address name
@@ -2106,7 +2106,7 @@ Func_024_4DA8:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_WriteScreenStepAndScreenState, GameMode6_Update_Case02_ToGameMode6_Update_Shared04, GameMode6_Update_Case02_RunSaveGameSteps, GameMode6_Update_Case03_RunSaveGameSteps, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Update_Case00_WriteScreenStepAndScreenState, GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared03, GameMode6_Update_SavePrompt_RunSaveGameSteps, GameMode6_Update_Case03_RunSaveGameSteps, ...)
 ; reads: wBattleScene
 ; writes: wLinkSceneByte4B, wGameMode, wModeState, wModeChangeRequest
 ; points at: wScreenState
@@ -2136,7 +2136,7 @@ Func_024_4DEB:: ; address name
     ret
 
 ; the same steps as CopyRectTo20ByteRows (copy a B x C rectangle from DE to HL with rows 20 bytes apart; on CGB zero-fill the same rectangle at HL + $0E68 with rSVBK = 2) but encoded with jp instead of jr, so its bytes differ (E-0066)
-; 22 call sites from 16 routines (e.g. GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case02_DecompressToVRAM, GameMode6_Update_Case02_ReturnStub_51A3, ...)
+; 22 call sites from 16 routines (e.g. GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_SavePrompt_DecompressToVRAM, GameMode6_Update_SavePrompt_ReturnStub_51A3, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRowsJp_Bank24::
@@ -2202,7 +2202,7 @@ Func_024_4E12:: ; address name
     ret
 
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wC554 = HL + $1C1, and on CGB copies its attributes (E-0127)
-; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case02_DecompressToVRAM, ...)
+; 18 call sites from 15 routines (e.g. GameMode6_Init, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_SavePrompt_DecompressToVRAM, ...)
 ; reads: wIsCGB
 ; writes: wTextCursorLo, wTextCursorHi, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -2322,7 +2322,7 @@ Func_024_4ED5:: ; address name
     ret
 
 ; wStringIndex = A, wStringCategory = 0, string window = vTiles1 with size word $1202 (as SetDefaultStringWindow), then far-calls BeginStringDisplay_Bank33_7037 (E-0072)
-; 15 call sites from 12 routines (e.g. GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case02_DecompressToVRAM, GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, ...)
+; 15 call sites from 12 routines (e.g. GameMode6_Update_Case00_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_SavePrompt_DecompressToVRAM, GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, ...)
 ; writes: wStringIndex, wStringCategory, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ShowStringAInDefaultWindow_Bank24::
 Func_024_4EE8:: ; address name
@@ -2343,7 +2343,7 @@ Func_024_4EE8:: ; address name
     ret
 
 ; HL = wCA2C, then copies up to 10 name bytes to wC130 with a $F0 terminator (E-0124)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_UpdateTwoChoiceCursor_Bank1D, GameMode6_Update_Case02_Case0E_Sub01_CopyWCA2CNameToTextBuf0)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D, GameMode6_Update_SavePrompt_Case0E_Sub01_CopyWCA2CNameToTextBuf0)
 ; points at: wTextBuf0
 CopyWCA2CNameToTextBuf0::
 Func_024_4F0C:: ; address name
@@ -2776,7 +2776,7 @@ Data_024_519D:: ; address name
     db $E1, $00, $E7, $00, $ED, $00
 
 ; a bare ret (E-0115)
-; 6 call sites from 6 routines (e.g. GameMode6_Init_Sub01_WriteVRAMByteInc, GameMode6_Update_Case02_DecompressToVRAM, GameMode6_Update_Case02_ReturnStub_51A3, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, ...)
+; 6 call sites from 6 routines (e.g. GameMode6_Init_Sub01_WriteVRAMByteInc, GameMode6_Update_SavePrompt_DecompressToVRAM, GameMode6_Update_SavePrompt_ReturnStub_51A3, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, ...)
 ReturnStub_51A3::
 Func_024_51A3:: ; address name
     ret
@@ -2954,7 +2954,7 @@ Func_024_527E:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_DecompressToVRAM)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_DecompressToVRAM)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24_52BA::
 Func_024_52BA:: ; address name
@@ -2979,7 +2979,7 @@ Func_024_52BA:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 16 bytes appear in 4 banks)
-; 17 call sites from 12 routines (e.g. GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE, ...)
+; 17 call sites from 12 routines (e.g. GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg, GameMode6_Update_Case04_StoreBAtWordTableEntry_Bank24_52CE, ...)
 StoreBAtWordTableEntry_Bank24_52CE::
 Func_024_52CE:: ; address name
     push bc
@@ -3054,7 +3054,7 @@ Func_024_5392:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep, GameMode6_Update_Case0E_ShowInfoOKYesN)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_ToGameMode6_Update_Shared04AndStep, GameMode6_Update_Case0E_ShowInfoOKYesN)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 GameMode6_Update_FillTilesFromRequest::
 Func_024_53A0:: ; address name
@@ -3340,33 +3340,33 @@ Jump_024_5531:: ; address name
     ld [wScreenStep], a
     ret
 
-; only called from GameMode6_Update_Case02_Case0E (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_GameMode6_Update_UpdateAndDrawSpriteSlots)
+; only called from GameMode6_Update_SavePrompt_Case0E (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_GameMode6_Update_UpdateAndDrawSpriteSlots)
 ; reads: wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01::
+GameMode6_Update_SavePrompt_Case0E_Sub01::
 Func_024_5553:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteSpriteSlotsAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndObject1Etc
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject5AndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_CopyWCA2CNameToTextBuf0
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject1AndScreenSubStep
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject5AndSpriteSlotsEtc
-    dw GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndSpriteSlotsEtc
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteSpriteSlotsAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndObject1Etc
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject5AndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_CopyWCA2CNameToTextBuf0
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject1AndScreenSubStep
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject5AndSpriteSlotsEtc
+    dw GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndSpriteSlotsEtc
 
 ; entry 1 of the `rst $00` table in Func_024_5553
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wSpriteSlots, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteSpriteSlotsAndScreenSubStep::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteSpriteSlotsAndScreenSubStep::
 Jump_024_5573:: ; address name
     ld a, [wSpriteSlots + $9]
     and a, $03
@@ -3388,7 +3388,7 @@ Jump_024_5573:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wObject2, wScreenSubStep
 ; writes: wObject2, wObject1, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndObject1Etc::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndObject1Etc::
 Jump_024_5591:: ; address name
     ld a, [wObject1 + $9]
     and a, $03
@@ -3411,7 +3411,7 @@ Jump_024_5591:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenSubStep
 ; writes: wScreenCounter, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteScreenCounterAndScreenSubStep::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteScreenCounterAndScreenSubStep::
 Jump_024_55B1:: ; address name
     ld a, [wScreenCounter]
     inc a
@@ -3429,7 +3429,7 @@ Jump_024_55B1:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wScreenSubStep
 ; writes: wObject5, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject5AndScreenSubStep::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject5AndScreenSubStep::
 Jump_024_55C7:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3447,7 +3447,7 @@ Jump_024_55C7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRecordBufB, wObject2, wScreenSubStep
 ; writes: wObject2, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndScreenSubStep::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndScreenSubStep::
 Jump_024_55DA:: ; address name
     ld a, [wRecordBufB + $6E]
     and a, a
@@ -3476,7 +3476,7 @@ Jump_024_55DA:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_CopyWCA2CNameToTextBuf0::
+GameMode6_Update_SavePrompt_Case0E_Sub01_CopyWCA2CNameToTextBuf0::
 Jump_024_5603:: ; address name
     call CopyWCA2CNameToTextBuf0
     ld a, $04
@@ -3490,7 +3490,7 @@ Jump_024_5603:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wObject1, wScreenSubStep
 ; writes: wObject1, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject1AndScreenSubStep::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject1AndScreenSubStep::
 Jump_024_5613:: ; address name
     ld a, $03
     ld [wObject1 + $7], a
@@ -3512,7 +3512,7 @@ Jump_024_5613:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wScreenSubStep
 ; writes: wObject5, wSpriteSlots, wScreenSubStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject5AndSpriteSlotsEtc::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject5AndSpriteSlotsEtc::
 Jump_024_5631:: ; address name
     xor a, a
     ld [wObject5], a
@@ -3536,7 +3536,7 @@ Jump_024_5631:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSpriteSlots, wObject2, wScreenStep
 ; writes: wObject2, wSpriteSlots, wScreenSubStep, wScreenStep
-GameMode6_Update_Case02_Case0E_Sub01_WriteObject2AndSpriteSlotsEtc::
+GameMode6_Update_SavePrompt_Case0E_Sub01_WriteObject2AndSpriteSlotsEtc::
 Jump_024_5653:: ; address name
     ld a, $01
     ld [wObject2 + $7], a
@@ -3560,7 +3560,7 @@ Jump_024_5653:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 4 call sites from 3 routines (e.g. GameMode6_Update, GameMode6_Update_Case02_GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode6_Update_Case03_GameMode6_Update_UpdateAndDrawSpriteSlots)
+; 4 call sites from 3 routines (e.g. GameMode6_Update, GameMode6_Update_SavePrompt_GameMode6_Update_UpdateAndDrawSpriteSlots, GameMode6_Update_Case03_GameMode6_Update_UpdateAndDrawSpriteSlots)
 ; reads: wRecordBufB
 GameMode6_Update_UpdateAndDrawSpriteSlots::
 Func_024_567C:: ; address name
@@ -3572,7 +3572,7 @@ Func_024_567C:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep, GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_SavePrompt_ToGameMode6_Update_Shared06AndStep, GameMode6_Update_Case03_ToGameMode6_Update_Shared06AndStep)
 ; reads: wRecordBufB, wBattleScene, wIsCGB, wRecordBufA
 ; writes: hTemp0, hTemp1, wObject2, wSpriteSlotCount, wOBJPaletteUploadRequest, wObject5
 ; points at: wSpriteSlots, wObject1, hTemp0, wObject2
@@ -3758,7 +3758,7 @@ Data_024_5814:: ; address name
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 11
     db $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3 ; id 12
 
-; address loaded by GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case02_ReturnStub_51A3, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case0E_ShowInfoOKYesN and 1 more
+; address loaded by GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_SavePrompt_ReturnStub_51A3, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case0E_ShowInfoOKYesN and 1 more
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_58CA:: ; address name
     ds $78, $C3
@@ -3823,8 +3823,8 @@ Data_024_5A82:: ; address name
     db $7D, $7F, $7F, $C3, $C3, $C3, $C3, $B7 ; id 3
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_Case02_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg and 2 more
-GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24, GameMode6_Update_Case04_Case08_CopyRectTo20ByteRowsJp_Bank24, GameMode6_Update_Case04_GameMode6_Update_ShowMonsterEg and 2 more
+GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5AAA:: ; address name
     db $23, $C4, $4B, $C4
 
@@ -3924,29 +3924,29 @@ Object2Init_24_5C29::
 Data_024_5C29:: ; address name
     db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00 ; entry 0
 
-; only called from GameMode6_Update_Case02_Case08 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_WriteScreenStepAndTwoChoiceCursor)
+; only called from GameMode6_Update_SavePrompt_Case08 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wTwoChoiceCursor
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenCounter
-GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
+GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
 Func_024_5C39:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_game_mode6_update_case02_case08_sub01
+    jr nz, .call_game_mode6_update_save_prompt_case08
     bit 7, a
-    jr nz, .call_game_mode6_update_case02_case08_sub012
+    jr nz, .call_game_mode6_update_save_prompt_case082
     ld a, [wJoypadPressed]
     bit 0, a
-    jr nz, .call_game_mode6_update_case02_case08_sub013
+    jr nz, .call_game_mode6_update_save_prompt_case083
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter
+    call GameMode6_Update_SavePrompt_Case08_Sub01_WriteScreenCounter
     xor a, a
     ld [wMenuInputResult], a
     ret
 
-.call_game_mode6_update_case02_case08_sub01:
-    call GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+.call_game_mode6_update_save_prompt_case08:
+    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
     ld a, [wTwoChoiceCursor]
     and a, a
     jr nz, .set_two_choice_cursor
@@ -3959,8 +3959,8 @@ Func_024_5C39:: ; address name
     ld [wTwoChoiceCursor], a
     jr .clear_screen_counter
 
-.call_game_mode6_update_case02_case08_sub012:
-    call GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+.call_game_mode6_update_save_prompt_case082:
+    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr c, .set_two_choice_cursor2
@@ -3975,15 +3975,15 @@ Func_024_5C39:: ; address name
 .clear_screen_counter:
     xor a, a
     ld [wScreenCounter], a
-    call GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor
+    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
     ld [wMenuInputResult], a
     ret
 
-.call_game_mode6_update_case02_case08_sub013:
-    call GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
+.call_game_mode6_update_save_prompt_case083:
+    call GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
     ld a, $69
     call QueueSoundEffect
     ld a, $FF
@@ -3995,53 +3995,53 @@ Func_024_5C39:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
+; only called from GameMode6_Update_SavePrompt_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
 ; reads: wJoypadRepeatTimer, wScreenCounter, wTwoChoiceCursor
 ; writes: wScreenCounter
-GameMode6_Update_Case02_Case08_Sub01_WriteScreenCounter::
+GameMode6_Update_SavePrompt_Case08_Sub01_WriteScreenCounter::
 Func_024_5CA7:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor
+    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
     cp a, $10
-    jr c, GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor
+    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
     cp a, $18
-    jr c, GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
     xor a, a
     ld [wScreenCounter], a
 
-; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
+; only called from GameMode6_Update_SavePrompt_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor::
+GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor::
 Func_024_5CC1:: ; address name
     ld b, $BB
-    jr GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
+; only called from GameMode6_Update_SavePrompt_Case08_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Case02_Case08_Sub01_ReadTwoChoiceCursor_Sub03::
+GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03::
 Func_024_5CC5:: ; address name
     ld b, $C3
-    jr GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; only called from GameMode6_Update_Case02_Case08_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
+; only called from GameMode6_Update_SavePrompt_Case08_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc)
 ; reads: wTwoChoiceCursor
-GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap::
+GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap::
 Func_024_5CC9:: ; address name
     ld b, $BC
 
-GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
+GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
 Jump_024_5CCB:: ; address name
     ld a, [wTwoChoiceCursor]
     add a, a
-    ld hl, GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -4059,7 +4059,7 @@ Jump_024_5CCB:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24_5CEB::
 Func_024_5CEB:: ; address name
@@ -4080,8 +4080,8 @@ Func_024_5CEB:: ; address name
     add_a_to_hl
     ret
 
-; address loaded by GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
-GameMode6_Update_Case02_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
+GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5D0C:: ; address name
     db $2B, $01, $6B, $01
 
@@ -4290,7 +4290,7 @@ Func_024_60DB:: ; address name
     rst $00
     dw PriestMenu_SwapMonstersMenu
     dw PriestMenu_Case01
-    dw PriestMenu_Case02
+    dw PriestMenu_PayForService
 
 ; entry 0 of the `rst $00` table in PriestMenu
 ; no direct call (reached through a table, a jump or a vector)
@@ -4379,37 +4379,37 @@ Jump_024_6143:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 2 of the `rst $00` table in PriestMenu
+; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and SubtractArg1AmountFromGold
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-PriestMenu_Case02::
+PriestMenu_PayForService::
 Jump_024_615B:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw PriestMenu_Case02_UpdateListCursorListCursor
-    dw PriestMenu_Case02_CopyTileBytesToVRAM_Bank24
-    dw PriestMenu_Case02_CopyRectTo20ByteRows_Bank24
-    dw PriestMenu_Case02_WriteScreenStepAndTwoChoiceCursorEtc
-    dw PriestMenu_Case02_DrawGoldPanel_Bank24
-    dw PriestMenu_Case02_LoadSRAMRecordByte
-    dw PriestMenu_Case02_WriteListEntriesAndGrid2CursorXEtc
-    dw PriestMenu_Case02_QueueSoundEffect
-    dw PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D
-    dw PriestMenu_Case02_WriteScreenStepAndScriptCommandTypeEtc
-    dw PriestMenu_Case02_SubtractArg1AmountFromGold
-    dw PriestMenu_Case02_QueueMusic
-    dw PriestMenu_Case02_WriteScreenCounterAndScreenStep
-    dw PriestMenu_Case02_Case0D
-    dw PriestMenu_Case02_WriteScreenCounterAndScreenStep
-    dw PriestMenu_Case02_FillTilesFromRequest
-    dw PriestMenu_Case02_SRAMRecordAddress
-    dw PriestMenu_Case02_WriteTwoChoiceCursorAndScriptCommandTypeEtc
+    dw PriestMenu_PayForService_UpdateListCursorListCursor
+    dw PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24
+    dw PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24
+    dw PriestMenu_PayForService_WriteScreenStepAndTwoChoiceCursorEtc
+    dw PriestMenu_PayForService_DrawGoldPanel_Bank24
+    dw PriestMenu_PayForService_LoadSRAMRecordByte
+    dw PriestMenu_PayForService_WriteListEntriesAndGrid2CursorXEtc
+    dw PriestMenu_PayForService_QueueSoundEffect
+    dw PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D
+    dw PriestMenu_PayForService_WriteScreenStepAndScriptCommandTypeEtc
+    dw PriestMenu_PayForService_SubtractArg1AmountFromGold
+    dw PriestMenu_PayForService_QueueMusic
+    dw PriestMenu_PayForService_WriteScreenCounterAndScreenStep
+    dw PriestMenu_PayForService_Case0D
+    dw PriestMenu_PayForService_WriteScreenCounterAndScreenStep
+    dw PriestMenu_PayForService_FillTilesFromRequest
+    dw PriestMenu_PayForService_SRAMRecordAddress
+    dw PriestMenu_PayForService_WriteTwoChoiceCursorAndScriptCommandTypeEtc
 
-; entry 0 of the `rst $00` table in PriestMenu_Case02
+; entry 0 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wListCursor, wScreenStep
 ; writes: wMenuInputResult, wListCount, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep, wChoiceCursor
-PriestMenu_Case02_UpdateListCursorListCursor::
+PriestMenu_PayForService_UpdateListCursorListCursor::
 Jump_024_6183:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -4439,32 +4439,32 @@ Jump_024_6183:: ; address name
 .check_list_cursor:
     ld a, [wListCursor]
     and a, a
-    jr z, .call_priest_menu_load_sram_record_byte
+    jr z, .call_priest_menu_pay_for_service_load_sram
     cp a, $01
-    jr z, .call_priest_menu_load_sram_record_byte2
+    jr z, .call_priest_menu_pay_for_service_load_sram2
     cp a, $02
-    jr z, .call_priest_menu_load_sram_record_byte3
+    jr z, .call_priest_menu_pay_for_service_load_sram3
     jr .set_two_choice_cursor_to_04
 
-.call_priest_menu_load_sram_record_byte:
+.call_priest_menu_pay_for_service_load_sram:
     ld b, $80
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld a, $01
     jr .set_two_choice_cursor
 
-.call_priest_menu_load_sram_record_byte2:
+.call_priest_menu_pay_for_service_load_sram2:
     ld b, $04
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld a, $02
     jr .set_two_choice_cursor
 
-.call_priest_menu_load_sram_record_byte3:
+.call_priest_menu_pay_for_service_load_sram3:
     ld b, $01
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld a, $03
@@ -4478,7 +4478,7 @@ Jump_024_6183:: ; address name
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $BC
-    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
+    ld hl, PriestMenu_PayForService_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     xor a, a
     ld [wChoiceCursor], a
@@ -4488,11 +4488,11 @@ Jump_024_6183:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 1 of the `rst $00` table in PriestMenu_Case02
+; entry 1 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
-PriestMenu_Case02_CopyTileBytesToVRAM_Bank24::
+PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24::
 Jump_024_620A:: ; address name
     ld a, [wListCursor]
     ld [wTwoChoiceCursor], a
@@ -4531,17 +4531,17 @@ Tiles_24_6259::
 Data_024_6259:: ; address name
     db $FF, $60, $FF, $60, $FF, $60, $FF, $1F, $FF, $3F, $FF, $70, $FF, $60, $FF, $60 ; entry 0
 
-; entry 2 of the `rst $00` table in PriestMenu_Case02
+; entry 2 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-PriestMenu_Case02_CopyRectTo20ByteRows_Bank24::
+PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
 Jump_024_6269:: ; address name
     ld de, TileRect_24_6C49
     ld hl, wWindowTileBuffer + $DC
     ld bc, $0B07
     call CopyRectTo20ByteRows_Bank24
-    call PriestMenu_Case02_Case02_LoadSRAMRecordByte
+    call PriestMenu_PayForService_Case02_LoadSRAMRecordByte
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
     ld de, $01CC
@@ -4551,13 +4551,13 @@ Jump_024_6269:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 3 of the `rst $00` table in PriestMenu_Case02
+; entry 3 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-PriestMenu_Case02_WriteScreenStepAndTwoChoiceCursorEtc::
+PriestMenu_PayForService_WriteScreenStepAndTwoChoiceCursorEtc::
 Jump_024_628C:: ; address name
-    call PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc
+    call PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc
     ld a, [wMenuInputResult]
     and a, a
     ret z
@@ -4591,11 +4591,11 @@ Jump_024_628C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 4 of the `rst $00` table in PriestMenu_Case02
+; entry 4 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor
 ; writes: wArg1, wArg2, wScreenStep, wScriptCommandType, wScriptStartRequest
-PriestMenu_Case02_DrawGoldPanel_Bank24::
+PriestMenu_PayForService_DrawGoldPanel_Bank24::
 Jump_024_62C9:: ; address name
     ld b, $00
     ld c, $07
@@ -4605,7 +4605,7 @@ Jump_024_62C9:: ; address name
     ld [wArg1], a
     ld a, $0B
     ld [wArg2], a
-    call PriestMenu_Case02_Case04_CopyBytesDEToHL_Bank24
+    call PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24
     ld de, TileRect_24_6B8B
     ld hl, wWindowTileBuffer + $64
     ld bc, $0A09
@@ -4613,7 +4613,7 @@ Jump_024_62C9:: ; address name
     call DrawGoldPanel_Bank24
     ld a, [wListCursor]
     ld b, $BB
-    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
+    ld hl, PriestMenu_PayForService_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -4621,7 +4621,7 @@ Jump_024_62C9:: ; address name
     call DrawScreenBufferRectNoOrigin_Bank24
     ld a, [wListCursor]
     ld b, $C3
-    ld hl, PriestMenu_Case02_UpdateListCursorListCursor_Data
+    ld hl, PriestMenu_PayForService_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
     xor a, a
     ld [wScreenStep], a
@@ -4631,12 +4631,12 @@ Jump_024_62C9:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in PriestMenu_Case02
+; entry 5 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wChoiceCursor, hTemp0, wScreenStep
 ; writes: rRAMG, rRAMB, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wPartyList
-PriestMenu_Case02_LoadSRAMRecordByte::
+PriestMenu_PayForService_LoadSRAMRecordByte::
 Jump_024_631E:: ; address name
     ld a, [wListCursor]
     and a, a
@@ -4693,12 +4693,12 @@ Jump_024_631E:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 6 of the `rst $00` table in PriestMenu_Case02
+; entry 6 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep, wChoiceCursor, hTemp0
 ; writes: wListEntries, wGrid2CursorX, wGrid2CursorY, wTextBuf0, wScreenStep, wScriptCommandType, wScriptStartRequest, rRAMG, ...
 ; points at: wPartyList, wArg4, wTextBuf0
-PriestMenu_Case02_WriteListEntriesAndGrid2CursorXEtc::
+PriestMenu_PayForService_WriteListEntriesAndGrid2CursorXEtc::
 Jump_024_637B:: ; address name
     ld a, [wListCursor]
     and a, a
@@ -4800,11 +4800,11 @@ Jump_024_637B:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 7 of the `rst $00` table in PriestMenu_Case02
+; entry 7 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursor, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-PriestMenu_Case02_QueueSoundEffect::
+PriestMenu_PayForService_QueueSoundEffect::
 Jump_024_6445:: ; address name
     ld a, $6C
     call QueueSoundEffect
@@ -4814,7 +4814,7 @@ Jump_024_6445:: ; address name
     call CopyRectTo20ByteRows_Bank24
     ld a, [wChoiceCursor]
     ld b, $BC
-    ld hl, PriestMenu_Case02_QueueSoundEffect_Data
+    ld hl, PriestMenu_PayForService_QueueSoundEffect_Data
     call StoreBAtWordTableEntry_Bank24
     call BGMapAddressAtScroll_Bank24_6866
     ld bc, $140D
@@ -4837,11 +4837,11 @@ Data_024_6479:: ; address name
     db $B6, $C3, $A5, $F5, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 8 of the `rst $00` table in PriestMenu_Case02
+; entry 8 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wGrid2CursorY, wGrid2CursorX, wListEntries, wArg1, wScreenStep
 ; writes: wArg3, wArg2, wArg1, wTwoChoiceCursor, wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest
-PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D::
+PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
 Jump_024_6497:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -4854,7 +4854,7 @@ Jump_024_6497:: ; address name
     ret
 
 .loop:
-    call PriestMenu_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
     xor a, a
     ld [wScreenSubStep], a
     ld a, $02
@@ -4884,7 +4884,7 @@ Jump_024_6497:: ; address name
     ld a, [wArg1]
     cp a, $FF
     jr z, .set_screen_sub_step_to_01
-    call PriestMenu_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
     xor a, a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -4904,13 +4904,13 @@ Jump_024_6497:: ; address name
     ld a, $01
     jr .set_two_choice_cursor
 
-; entry 9 of the `rst $00` table in PriestMenu_Case02
+; entry 9 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenSubStep
-PriestMenu_Case02_WriteScreenStepAndScriptCommandTypeEtc::
+PriestMenu_PayForService_WriteScreenStepAndScriptCommandTypeEtc::
 Jump_024_6513:: ; address name
-    call PriestMenu_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
     ld a, [wScreenSubStep]
     and a, a
     jr nz, .set_screen_step_to_04
@@ -4929,11 +4929,11 @@ Jump_024_6513:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 10 of the `rst $00` table in PriestMenu_Case02
+; entry 10 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wScreenStep, wListCursor, wGrid2CursorX, wListEntries
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenSubStep, wArg3, wArg2, wArg1
-PriestMenu_Case02_SubtractArg1AmountFromGold::
+PriestMenu_PayForService_SubtractArg1AmountFromGold::
 Jump_024_6535:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -4955,7 +4955,7 @@ Jump_024_6535:: ; address name
     ld bc, $140D
     ld de, $01CC
     call DrawScreenBufferRectNoOrigin_Bank24
-    call PriestMenu_CopyRecordNameToNameGlyphBuf
+    call PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -4996,12 +4996,12 @@ Jump_024_6535:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 11 of the `rst $00` table in PriestMenu_Case02
+; entry 11 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wIsCGB, wScreenStep, wScreenCounter, wGlyphListPos
 ; writes: hSpriteWindowClipMode, wScreenSubStep, wScreenStep, wScreenCounter, wGlyphListPos
 ; points at: wScreenTileBuffer, wWindowTileBuffer, wScreenAttrBuffer, wWindowAttrBuffer
-PriestMenu_Case02_QueueMusic::
+PriestMenu_PayForService_QueueMusic::
 Jump_024_65B1:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -5080,12 +5080,12 @@ Jump_024_65B1:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 15 of the `rst $00` table in PriestMenu_Case02
+; entry 15 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: hSpriteWindowClipMode, wScreenStep
 ; points at: wTextWindowTileLo, wWindowTileBuffer
-PriestMenu_Case02_FillTilesFromRequest::
+PriestMenu_PayForService_FillTilesFromRequest::
 Jump_024_6655:: ; address name
     ld hl, wTextWindowTileLo
     xor a, a
@@ -5113,12 +5113,12 @@ Jump_024_6655:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 12 of the `rst $00` table in PriestMenu_Case02
+; entry 12 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wScreenStep
 ; writes: wScreenCounter, wScreenStep
 ; points at: wScreenCounter
-PriestMenu_Case02_WriteScreenCounterAndScreenStep::
+PriestMenu_PayForService_WriteScreenCounterAndScreenStep::
 Jump_024_668D:: ; address name
     ld hl, wScreenCounter
     inc [hl]
@@ -5132,22 +5132,22 @@ Jump_024_668D:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in PriestMenu_Case02
+; entry 13 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep
-PriestMenu_Case02_Case0D::
+PriestMenu_PayForService_Case0D::
 Jump_024_66A3:: ; address name
     ld a, [wScreenSubStep]
     rst $00
-    dw PriestMenu_Case02_Case0D_CopyBytes
-    dw PriestMenu_Case02_Case0D_CopyBytes_Case01
+    dw PriestMenu_PayForService_Case0D_CopyBytes
+    dw PriestMenu_PayForService_Case0D_CopyBytes_Case01
 
-; entry 0 of the `rst $00` table in PriestMenu_Case02_Case0D
+; entry 0 of the `rst $00` table in PriestMenu_PayForService_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wScreenSubStep
 ; writes: wScreenSubStep
 ; points at: wBGPaletteBuffer, wBGPaletteCopy
-PriestMenu_Case02_Case0D_CopyBytes::
+PriestMenu_PayForService_Case0D_CopyBytes::
 Jump_024_66AB:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -5163,12 +5163,12 @@ Jump_024_66AB:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; entry 1 of the `rst $00` table in PriestMenu_Case02_Case0D
+; entry 1 of the `rst $00` table in PriestMenu_PayForService_Case0D
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCounter, wIsCGB, wScreenStep, wListCursor
 ; writes: wBGPaletteUploadRequest, wScreenCounter, wScreenSubStep, wScreenStep
 ; points at: wDMGPaletteBGP, wBGPaletteCopy, wBGPaletteBuffer
-PriestMenu_Case02_Case0D_CopyBytes_Case01::
+PriestMenu_PayForService_Case0D_CopyBytes_Case01::
 Jump_024_66C5:: ; address name
     ld a, [wScreenCounter]
     sra a
@@ -5237,12 +5237,12 @@ Jump_024_66C5:: ; address name
     farcall RestartMapMusic
     ret
 
-; entry 16 of the `rst $00` table in PriestMenu_Case02
+; entry 16 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wChoiceCursor, wListCursor, wScreenStep
 ; writes: rRAMG, rRAMB, wScreenStep, wOBJPaletteUploadRequest, wScriptCommandType, wScriptStartRequest
 ; points at: wPartyList
-PriestMenu_Case02_SRAMRecordAddress::
+PriestMenu_PayForService_SRAMRecordAddress::
 Jump_024_673C:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5256,7 +5256,7 @@ Jump_024_673C:: ; address name
     ld c, $55
     call SRAMRecordAddress
     ld a, [wListCursor]
-    ld de, PriestMenu_Case02_SRAMRecordAddress_Data
+    ld de, PriestMenu_PayForService_SRAMRecordAddress_Data
     add a, e
     ld e, a
     jr nc, .skip
@@ -5303,7 +5303,7 @@ Jump_024_673C:: ; address name
     xor a, a
     ld [rRAMG], a
     ld [rRAMB], a
-    call PriestMenu_CopyRecordNameToNameGlyphBuf
+    call PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5316,26 +5316,26 @@ Jump_024_673C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by PriestMenu_Case02_SRAMRecordAddress
-PriestMenu_Case02_SRAMRecordAddress_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_SRAMRecordAddress
+PriestMenu_PayForService_SRAMRecordAddress_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_67BD:: ; address name
     db $00, $FB, $FE
 
-; entry 17 of the `rst $00` table in PriestMenu_Case02
+; entry 17 of the `rst $00` table in PriestMenu_PayForService
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest, wScreenStep
-PriestMenu_Case02_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
+PriestMenu_PayForService_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 Jump_024_67C0:: ; address name
     ld b, $80
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld b, $04
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld b, $01
-    call PriestMenu_LoadSRAMRecordByte
+    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
     cp a, $FF
     jr z, .clear_two_choice_cursor
     ld a, $01
@@ -5358,7 +5358,7 @@ Jump_024_67C0:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 6 call sites from 6 routines (e.g. PriestMenu_Case01_DrawGoldPanel_Bank24, DrawGoldPanel_Bank24, PriestMenu_Case02_FillTilesFromRequest, PriestMenu_Case02_QueueSoundEffect, ...)
+; 6 call sites from 6 routines (e.g. PriestMenu_Case01_DrawGoldPanel_Bank24, DrawGoldPanel_Bank24, PriestMenu_PayForService_FillTilesFromRequest, PriestMenu_PayForService_QueueSoundEffect, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank24::
@@ -5416,7 +5416,7 @@ Func_024_67FD:: ; address name
     ret
 
 ; DE = offset into wScreenTileBuffer, B = width, C = rows, HL = BG map address: CopyRectToBGMapWrapped from wScreenTileBuffer + DE; on CGB the same rectangle is then copied from wD000 + DE (rSVBK = 2) into VRAM bank 1, the attributes; on DMG BC, DE and HL are kept. wC554/wC555 are not written (E-0062)
-; 9 call sites from 8 routines (e.g. PriestMenu_Case01_BGMapAddressAtScroll_Bank24_6866, PriestMenu_Case02_FillTilesFromRequest, PriestMenu_Case02_QueueMusic, PriestMenu_Case02_SubtractArg1AmountFromGold, ...)
+; 9 call sites from 8 routines (e.g. PriestMenu_Case01_BGMapAddressAtScroll_Bank24_6866, PriestMenu_PayForService_FillTilesFromRequest, PriestMenu_PayForService_QueueMusic, PriestMenu_PayForService_SubtractArg1AmountFromGold, ...)
 ; reads: wIsCGB
 ; writes: rVBK, rSVBK
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
@@ -5455,7 +5455,7 @@ Func_024_6837:: ; address name
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-; 10 call sites from 9 routines (e.g. PriestMenu_Case01_BGMapAddressAtScroll_Bank24_6866, PriestMenu_Case02_FillTilesFromRequest, PriestMenu_Case02_QueueMusic, PriestMenu_Case02_SubtractArg1AmountFromGold, ...)
+; 10 call sites from 9 routines (e.g. PriestMenu_Case01_BGMapAddressAtScroll_Bank24_6866, PriestMenu_PayForService_FillTilesFromRequest, PriestMenu_PayForService_QueueMusic, PriestMenu_PayForService_SubtractArg1AmountFromGold, ...)
 ; reads: hScrollY, hScrollX
 BGMapAddressAtScroll_Bank24_6866::
 Func_024_6866:: ; address name
@@ -5477,7 +5477,7 @@ Func_024_6866:: ; address name
     ret
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-; 4 call sites from 3 routines (e.g. PriestMenu_Case02_QueueMusic, PriestMenu_Shared02_CopyBytesDEToHL_Bank24, PriestMenu_Case02_Case04_CopyBytesDEToHL_Bank24)
+; 4 call sites from 3 routines (e.g. PriestMenu_PayForService_QueueMusic, PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24, PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24)
 CopyBytesDEToHL_Bank24::
 Func_024_6887:: ; address name
     ld a, [de]
@@ -5490,7 +5490,7 @@ Func_024_6887:: ; address name
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same 18 bytes appear in 7 banks)
-; 3 call sites from 2 routines (e.g. PriestMenu_Case02_QueueMusic, PriestMenu_Case02_Case04_CopyBytesDEToHL_Bank24)
+; 3 call sites from 2 routines (e.g. PriestMenu_PayForService_QueueMusic, PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24)
 ; writes: rSVBK
 CopyLow3BitsToWRAMBank2_Bank24::
 Func_024_6890:: ; address name
@@ -5511,7 +5511,7 @@ Func_024_6890:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 4 call sites from 3 routines (e.g. PriestMenu_Case02_QueueSoundEffect, PriestMenu_Case02_DrawGoldPanel_Bank24, PriestMenu_Case02_UpdateListCursorListCursor)
+; 4 call sites from 3 routines (e.g. PriestMenu_PayForService_QueueSoundEffect, PriestMenu_PayForService_DrawGoldPanel_Bank24, PriestMenu_PayForService_UpdateListCursorListCursor)
 StoreBAtWordTableEntry_Bank24::
 Func_024_68A2:: ; address name
     push bc
@@ -5526,7 +5526,7 @@ Func_024_68A2:: ; address name
     ret
 
 ; copies an 8 x 3 frame (Data_024_68EB) into the screen buffer at wC370, converts wGold to packed BCD (Number24ToPackedBCD) and Func_015_6676, then writes the digits as tiles $E0 + d at wC386 (E-0074)
-; 3 call sites from 3 routines (e.g. PriestMenu_Case01_DrawGoldPanel_Bank24, PriestMenu_Case02_SubtractArg1AmountFromGold, PriestMenu_Case02_DrawGoldPanel_Bank24)
+; 3 call sites from 3 routines (e.g. PriestMenu_Case01_DrawGoldPanel_Bank24, PriestMenu_PayForService_SubtractArg1AmountFromGold, PriestMenu_PayForService_DrawGoldPanel_Bank24)
 ; reads: wGoldLo, wGoldMid, wGoldHi
 ; writes: wDigits
 ; points at: wArg3
@@ -5567,12 +5567,12 @@ Data_024_68EB:: ; address name
     db $B6, $BF, $C3, $C3, $C3, $C3, $C3, $B7 ; id 1
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 2
 
-; only called from routines of PriestMenu (E-0098)
-; 6 call sites from 2 routines (e.g. PriestMenu_Case02_WriteTwoChoiceCursorAndScriptCommandTypeEtc, PriestMenu_Case02_UpdateListCursorListCursor)
+; only called from routines of PriestMenu_PayForService (E-0098)
+; 6 call sites from 2 routines (e.g. PriestMenu_PayForService_WriteTwoChoiceCursorAndScriptCommandTypeEtc, PriestMenu_PayForService_UpdateListCursorListCursor)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
-PriestMenu_LoadSRAMRecordByte::
+PriestMenu_PayForService_LoadSRAMRecordByte_Shared01::
 Func_024_6903:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5619,12 +5619,12 @@ Func_024_6903:: ; address name
     ld a, $FF
     ret
 
-; only called from PriestMenu_Case02_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_CopyRectTo20ByteRows_Bank24)
+; only called from PriestMenu_PayForService_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24)
 ; reads: wPartyCount, hTemp0
 ; writes: rRAMG, rRAMB
 ; points at: wPartyList
-PriestMenu_Case02_Case02_LoadSRAMRecordByte::
+PriestMenu_PayForService_Case02_LoadSRAMRecordByte::
 Func_024_6944:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -5646,13 +5646,13 @@ Func_024_6944:: ; address name
     push de
     ldh a, [hTemp0]
     bit 0, a
-    call nz, PriestMenu_Case02_Case02_Sub01_Sub01
+    call nz, PriestMenu_PayForService_Case02_Sub01_Sub01
     ldh a, [hTemp0]
     bit 2, a
-    call nz, PriestMenu_Case02_Case02_Sub01_Sub02
+    call nz, PriestMenu_PayForService_Case02_Sub01_Sub02
     ldh a, [hTemp0]
     bit 7, a
-    call nz, PriestMenu_Case02_Case02_Sub01_Sub03
+    call nz, PriestMenu_PayForService_Case02_Sub01_Sub03
     pop de
     pop bc
     pop hl
@@ -5666,14 +5666,14 @@ Func_024_6944:: ; address name
     ld [rRAMB], a
     ret
 
-; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_LoadSRAMRecordByte)
-PriestMenu_Case02_Case02_Sub01_Sub01::
+; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
+PriestMenu_PayForService_Case02_Sub01_Sub01::
 Func_024_6987:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_Case02_Case02_Sub01_Sub01_Data
+    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub01_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5683,14 +5683,14 @@ Func_024_6987:: ; address name
     pop de
     ret
 
-; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_LoadSRAMRecordByte)
-PriestMenu_Case02_Case02_Sub01_Sub02::
+; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
+PriestMenu_PayForService_Case02_Sub01_Sub02::
 Func_024_699A:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_Case02_Case02_Sub01_Sub02_Data
+    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub02_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5700,14 +5700,14 @@ Func_024_699A:: ; address name
     pop de
     ret
 
-; only called from PriestMenu_Case02_Case02_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case02_LoadSRAMRecordByte)
-PriestMenu_Case02_Case02_Sub01_Sub03::
+; only called from PriestMenu_PayForService_Case02_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case02_LoadSRAMRecordByte)
+PriestMenu_PayForService_Case02_Sub01_Sub03::
 Func_024_69AD:: ; address name
     push de
     ld a, e
     add a, a
-    ld hl, PriestMenu_Case02_Case02_Sub01_Sub03_Data
+    ld hl, PriestMenu_PayForService_Case02_Sub01_Sub03_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5717,44 +5717,44 @@ Func_024_69AD:: ; address name
     pop de
     ret
 
-; address loaded by PriestMenu_Case02_Case02_Sub01_Sub01
-PriestMenu_Case02_Case02_Sub01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub01
+PriestMenu_PayForService_Case02_Sub01_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69C0:: ; address name
     db $F7, $C3, $1F, $C4, $47, $C4
 
-; address loaded by PriestMenu_Case02_Case02_Sub01_Sub02
-PriestMenu_Case02_Case02_Sub01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub02
+PriestMenu_PayForService_Case02_Sub01_Sub02_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69C6:: ; address name
     db $F8, $C3, $20, $C4, $48, $C4
 
-; address loaded by PriestMenu_Case02_Case02_Sub01_Sub03
-PriestMenu_Case02_Case02_Sub01_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_Case02_Sub01_Sub03
+PriestMenu_PayForService_Case02_Sub01_Sub03_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_69CC:: ; address name
     db $F9, $C3, $21, $C4, $49, $C4
 
-; only called from PriestMenu_Case02_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_WriteScreenStepAndTwoChoiceCursorEtc)
+; only called from PriestMenu_PayForService_Case03 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_WriteScreenStepAndTwoChoiceCursorEtc)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wPartyCount, wChoiceCursor
 ; writes: wMenuInputResult, wChoiceCursor, wCursorBlinkAE
-PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc::
+PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
 Func_024_69D2:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_priest_menu_case02_case03_sub01_read
+    jr nz, .call_priest_menu_pay_for_service_case03_sub01
     bit 7, a
-    jr nz, .call_priest_menu_case02_case03_sub01_read2
+    jr nz, .call_priest_menu_pay_for_service_case03_sub012
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, .call_queue_sound_effect
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE
+    call PriestMenu_PayForService_Case03_Sub01_WriteCursorBlinkAE
     xor a, a
     ld [wMenuInputResult], a
     ret
 
-.call_priest_menu_case02_case03_sub01_read:
-    call PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor_Sub03
+.call_priest_menu_pay_for_service_case03_sub01:
+    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
     ld a, [wChoiceCursor]
     and a, a
     jr nz, .set_choice_cursor
@@ -5768,8 +5768,8 @@ Func_024_69D2:: ; address name
     ld [wChoiceCursor], a
     jr .clear_cursor_blink_ae
 
-.call_priest_menu_case02_case03_sub01_read2:
-    call PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor_Sub03
+.call_priest_menu_pay_for_service_case03_sub012:
+    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
     ld a, [wPartyCount]
     dec a
     ld b, a
@@ -5787,7 +5787,7 @@ Func_024_69D2:: ; address name
 .clear_cursor_blink_ae:
     xor a, a
     ld [wCursorBlinkAE], a
-    call PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor
+    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $FD
@@ -5797,7 +5797,7 @@ Func_024_69D2:: ; address name
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
+    call PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
     ld a, $FF
     ld [wMenuInputResult], a
     ret
@@ -5807,53 +5807,53 @@ Func_024_69D2:: ; address name
     ld [wMenuInputResult], a
     ret
 
-; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc)
+; only called from PriestMenu_PayForService_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
-PriestMenu_Case02_Case03_Sub01_WriteCursorBlinkAE::
+PriestMenu_PayForService_Case03_Sub01_WriteCursorBlinkAE::
 Func_024_6A46:: ; address name
     ld a, [wJoypadRepeatTimer]
     cp a, $14
-    jr c, PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor
+    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
     ld a, [wCursorBlinkAE]
     inc a
     ld [wCursorBlinkAE], a
     cp a, $10
-    jr c, PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor
+    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
     cp a, $18
-    jr c, PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor_Sub03
+    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
     xor a, a
     ld [wCursorBlinkAE], a
 
-; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc)
+; only called from PriestMenu_PayForService_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc)
 ; reads: wChoiceCursor
-PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor::
+PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor::
 Func_024_6A60:: ; address name
     ld b, $BB
-    jr PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc)
+; only called from PriestMenu_PayForService_Case03_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc)
 ; reads: wChoiceCursor
-PriestMenu_Case02_Case03_Sub01_ReadChoiceCursor_Sub03::
+PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03::
 Func_024_6A64:: ; address name
     ld b, $C3
-    jr PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-; only called from PriestMenu_Case02_Case03_Sub01 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_Case03_WriteMenuInputResultAndChoiceCursorEtc)
+; only called from PriestMenu_PayForService_Case03_Sub01 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc)
 ; reads: wChoiceCursor
-PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap::
+PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap::
 Func_024_6A68:: ; address name
     ld b, $BC
 
-PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
+PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
 Jump_024_6A6A:: ; address name
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5870,16 +5870,16 @@ Jump_024_6A6A:: ; address name
     ei
     ret
 
-; address loaded by PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
-PriestMenu_Case02_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
+PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_6A8A:: ; address name
     db $E1, $00, $21, $01, $61, $01
 
-; only called from PriestMenu_Case02_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. PriestMenu_Case02_DrawGoldPanel_Bank24)
+; only called from PriestMenu_PayForService_Case04 (E-0047)
+; 1 call site from 1 routine (e.g. PriestMenu_PayForService_DrawGoldPanel_Bank24)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
-PriestMenu_Case02_Case04_CopyBytesDEToHL_Bank24::
+PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24::
 Func_024_6A90:: ; address name
     push bc
     push hl
@@ -5936,19 +5936,19 @@ Func_024_6A90:: ; address name
 
 .next:
     dec c
-    jr nz, PriestMenu_Case02_Case04_CopyBytesDEToHL_Bank24
+    jr nz, PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24
     ret
 
-; only called from routines of PriestMenu (E-0098)
-; 3 call sites from 2 routines (e.g. PriestMenu_Case02_WriteScreenStepAndScriptCommandTypeEtc, PriestMenu_Case02_UpdateTwoChoiceCursor_Bank1D)
+; only called from routines of PriestMenu_PayForService (E-0098)
+; 3 call sites from 2 routines (e.g. PriestMenu_PayForService_WriteScreenStepAndScriptCommandTypeEtc, PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
-PriestMenu_BGMapAddressAtScroll_Bank24_6866::
+PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866::
 Func_024_6AE4:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $AE
     ld c, $00
-    call PriestMenu_Shared02_CopyBytesDEToHL_Bank24
+    call PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
     ld a, [wIsCGB]
     and a, a
     jr z, .call_bg_map_address_at_scroll_bank24_6866
@@ -5958,7 +5958,7 @@ Func_024_6AE4:: ; address name
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $00
-    call PriestMenu_Shared02_CopyBytesDEToHL_Bank24
+    call PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
     ldh a, [rSVBK]
     res 1, a
     ldh [rSVBK], a
@@ -5970,9 +5970,9 @@ Func_024_6AE4:: ; address name
     call DrawScreenBufferRectNoOrigin_Bank24
     ret
 
-; only called from PriestMenu_Shared02 (E-0047)
-; 2 call sites from 1 routine (e.g. PriestMenu_BGMapAddressAtScroll_Bank24_6866)
-PriestMenu_Shared02_CopyBytesDEToHL_Bank24::
+; only called from PriestMenu_PayForService_Shared02 (E-0047)
+; 2 call sites from 1 routine (e.g. PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866)
+PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24::
 Func_024_6B19:: ; address name
     push hl
     push de
@@ -5994,15 +5994,15 @@ Func_024_6B19:: ; address name
     inc c
     ld a, c
     cp a, $05
-    jr c, PriestMenu_Shared02_CopyBytesDEToHL_Bank24
+    jr c, PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
     ret
 
-; only called from routines of PriestMenu (E-0098)
-; 2 call sites from 2 routines (e.g. PriestMenu_Case02_SRAMRecordAddress, PriestMenu_Case02_SubtractArg1AmountFromGold)
+; only called from routines of PriestMenu_PayForService (E-0098)
+; 2 call sites from 2 routines (e.g. PriestMenu_PayForService_SRAMRecordAddress, PriestMenu_PayForService_SubtractArg1AmountFromGold)
 ; reads: wChoiceCursor
 ; writes: rRAMG, rRAMB, wNameGlyphBuf
 ; points at: wPartyList, wNameGlyphBuf, wTextBuf0
-PriestMenu_CopyRecordNameToNameGlyphBuf::
+PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf::
 Func_024_6B3A:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -6041,7 +6041,7 @@ Func_024_6B3A:: ; address name
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; 3 call sites from 1 routine (e.g. PriestMenu_Case02_CopyTileBytesToVRAM_Bank24)
+; 3 call sites from 1 routine (e.g. PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24)
 ; reads: rSTAT
 CopyTileBytesToVRAM_Bank24::
 Func_024_6B7A:: ; address name
@@ -6098,13 +6098,13 @@ Data_024_6C49:: ; address name
     db $B6, $C3, $DA, $DB, $DC, $DD, $DE, $C3, $C3, $C3, $B7 ; id 5
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 6
 
-; address loaded by PriestMenu_Case02_UpdateListCursorListCursor, PriestMenu_Case02_DrawGoldPanel_Bank24
-PriestMenu_Case02_UpdateListCursorListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_UpdateListCursorListCursor, PriestMenu_PayForService_DrawGoldPanel_Bank24
+PriestMenu_PayForService_UpdateListCursorListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_6C96:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3
 
-; address loaded by PriestMenu_Case02_QueueSoundEffect
-PriestMenu_Case02_QueueSoundEffect_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PriestMenu_PayForService_QueueSoundEffect
+PriestMenu_PayForService_QueueSoundEffect_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_6C9E:: ; address name
     db $F1, $C3, $19, $C4, $41, $C4
 

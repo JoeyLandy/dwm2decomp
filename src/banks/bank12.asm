@@ -6723,7 +6723,7 @@ Func_012_6893:: ; address name
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing key, and saves the random seed in wC787; hFFC6 = 1, or 0 when the list is full (E-0129)
-; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, DispatchTalkEvent_Case01_GenerateNewKeyEntry, ...)
+; 14 call sites from 11 routines (e.g. ArenaMenu_RandomModulo52, ArenaMenu_SetFlagBit, KeyWorldDoorItem_StartMessageA, GreatLogTalkEvents_GenerateNewKeyEntry, ...)
 ; reads: hTemp0, hTemp2, hTemp1, hTempA, wKeyRetryCount, wKeyRandomLo, wKeyRandomHi, wGameFlags836
 ; writes: wKeyRetryCount, hTemp0, hTemp1, hTempA, wGameFlags836
 ; points at: wKeySeeds
@@ -6942,7 +6942,7 @@ Func_012_6990:: ; address name
     ret
 
 ; removes key entry hFFC6: clears the matching wC88E link, marks its SRAM-bank-2 slot free and shifts the later entries down (E-0130)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case01_TestListEntryBit7_Case10, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0, wCurrentKeyIndex
 ; writes: rRAMB, rRAMG
 ; points at: wKeySeeds, wCurrentKeyIndex
@@ -10367,7 +10367,7 @@ Func_012_7D5E:: ; address name
     ret
 
 ; hFFC6 = the party index whose record species (field $0B) equals the word hFFC6/7, or $80 when none (E-0125)
-; 7 call sites from 7 routines (e.g. TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit, DispatchTalkEvent_Case01_TestFlagBit_Case27, DispatchTalkEvent_Case01_TestFlagBit_Case7F, LoadListedRecordNameTilesForTemp0, ...)
+; 7 call sites from 7 routines (e.g. TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit, GreatLogTalkEvents_TestFlagBit_Case27, GreatLogTalkEvents_TestFlagBit_Case7F, LoadListedRecordNameTilesForTemp0, ...)
 ; reads: hTemp0, hTemp1, wPartyCount
 ; writes: rRAMG, hTemp0
 ; points at: wPartyList
@@ -10412,7 +10412,7 @@ Func_012_7D95:: ; address name
     ret
 
 ; hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches
-; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal, DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A, DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case38, ...)
+; 48 call sites from 24 routines (e.g. RollFieldEventOnTallTiles, YoldTalkEvents_ShowHeroCheckedThePedestal, YoldTalkEvents_StartScriptAtHL_B04_Case6A, KalkaTalkEvents_TestFlagBit_Case38, ...)
 ; reads: hTemp0
 ; writes: hTemp0
 ; points at: wInventory
@@ -10448,7 +10448,7 @@ Func_012_7DCE:: ; address name
     ret
 
 ; hFFC6 = inventory slot: moves each wInventory byte after it down by one up to slot $17 (the last slot keeps its old value), then wC634 = $FF; nothing moves when the slot is $17 (E-0106)
-; 18 call sites from 11 routines (e.g. DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A, DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
+; 18 call sites from 11 routines (e.g. YoldTalkEvents_StartScriptAtHL_B04_Case6A, KalkaTalkEvents_StartScriptAtHL_B04_Case39, Talk075F_KiralFetchMeMy, Talk07A4_CouldYouHumorThis, ...)
 ; reads: hTemp0
 ; writes: wInventory
 ; points at: wInventory
@@ -10479,7 +10479,7 @@ Func_012_7DF1:: ; address name
     ret
 
 ; hFFC7 = the index of the first party member knowing skill $76-$7D or $92 and hFFC8 = that skill, or hFFC7 = $80 (E-0128)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13)
+; 1 call site from 1 routine (e.g. YoldTalkEvents_TestFlagBit_Case13)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG, hTemp1, hTemp2
 ; points at: wPartyList
@@ -10558,10 +10558,10 @@ Func_012_7E0F:: ; address name
     ld [rRAMG], a
     ret
 
-; only called from DispatchTalkEvent_Case01_CaseCC (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case01_StartScriptAtHL_B13_CaseCC)
+; only called from GreatLogTalkEvents_CaseCC (E-0047)
+; 1 call site from 1 routine (e.g. GreatLogTalkEvents_StartScriptAtHL_B13_CaseCC)
 ; writes: hTemp1
-DispatchTalkEvent_Case01_CaseCC_WriteTemp1::
+GreatLogTalkEvents_CaseCC_WriteTemp1::
 Func_012_7E80:: ; address name
     xor a, a
     ldh [hTemp1], a

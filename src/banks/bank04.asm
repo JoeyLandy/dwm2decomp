@@ -3368,7 +3368,7 @@ Func_004_55DF:: ; address name
     ret
 
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case0A, TalkScript5441_HeroCheckedThePedestalIts, Talk0046_ThanksForComingBy, ...)
+; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, ReadableTalkEvents_TestFlagBit_Case0A, TalkScript5441_HeroCheckedThePedestalIts, Talk0046_ThanksForComingBy, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 StartScriptAtHL_B04::
 Func_004_5603:: ; address name
@@ -3382,14 +3382,14 @@ Func_004_5603:: ; address name
     ld [wModeState], a
     ret
 
-; only called from DispatchTalkEvent_Case0A (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case0A)
+; talk category $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf")
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToReadableTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case0A_Sub01::
+ReadableTalkEvents::
 Func_004_5616:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case0A_Sub01_TestFlagBit
+    dw ReadableTalkEvents_TestFlagBit
     dw TalkScript4F54_HehSoTheseAreTheNewcomers
     dw TalkScript5111_ListenYouTwoQuitYourHorsing
     dw $0000 ; unused index (E-0207)
@@ -3399,7 +3399,7 @@ Func_004_5616:: ; address name
     dw Talk0046_ThanksForComingBy
     dw TalkMsg0047_HeroReadTheNoticeWeGuarantee
     dw TalkScript5441_HeroCheckedThePedestalIts
-    dw DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case0A
+    dw ReadableTalkEvents_TestFlagBit_Case0A
     dw TalkMsg0233_HeroCheckedTheBookshelfMonster
     dw TalkMsg0234_HeroCheckedTheBookshelfMonster
     dw TalkMsg0235_HeroCheckedTheBookshelfPersonalities
@@ -3412,7 +3412,7 @@ Func_004_5616:: ; address name
     dw TalkMsg023C_HeroCheckedTheBookshelfAccessory
     dw TalkMsg023D_HeroCheckedTheBookshelfHidden
     dw TalkMsg023E_HeroReadTheNoticePleaseReturn
-    dw DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case17
+    dw ReadableTalkEvents_TestFlagBit_Case17
     dw TalkMsg0010_HeroPeeredIntoTheVaseFreshly
     dw TalkMsg000F_HeroPeeredIntoTheBarrelIt
     dw MapEventCountKeysAndStartScript5039
@@ -3425,10 +3425,10 @@ Func_004_5616:: ; address name
     dw IfFlag00D1Msg0D39_AhGreatLogsMightyHero
     dw IfFlag00D1Msg0D3A_ToBeHonestI
 
-; entry 0 of the `rst $00` table in Func_004_5616
+; entry 0 of the `rst $00` table in ReadableTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5063: 'In the middle of the sea'
-DispatchTalkEvent_Case0A_Sub01_TestFlagBit::
+ReadableTalkEvents_TestFlagBit::
 Jump_004_5660:: ; address name
     ld de, $0001
     call TestFlagBit
@@ -3578,11 +3578,11 @@ Jump_004_5738:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 10 of the `rst $00` table in Func_004_5616
+; entry 10 of the `rst $00` table in ReadableTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX, hTemp1, hTemp0
 ; writes: wSpriteSlots, wDataBank
-DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case0A::
+ReadableTalkEvents_TestFlagBit_Case0A::
 Jump_004_573F:: ; address name
     ldh a, [hPlayerX]
     cp a, $40
@@ -3735,9 +3735,9 @@ Jump_004_57F1:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 23 of the `rst $00` table in Func_004_5616
+; entry 23 of the `rst $00` table in ReadableTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case0A_Sub01_TestFlagBit_Case17::
+ReadableTalkEvents_TestFlagBit_Case17::
 Jump_004_57F8:: ; address name
     ld de, $0025
     call TestFlagBit
@@ -3879,10 +3879,10 @@ Jump_004_58B4:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; only called from DispatchTalkEvent_Case03 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case03)
+; talk category 3: jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToYoldTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case03_Sub01::
+YoldTalkEvents::
 Func_004_58C2:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
@@ -3892,8 +3892,8 @@ Func_004_58C2:: ; address name
     dw TalkMsg0803_ISawAHauntedShipIn
     dw TalkMsg0804_TheVolcanicIslandOffTheCoast
     dw TalkMsg0805_MermaidsLivedInTheSeaIn
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04
+    dw YoldTalkEvents_TestFlagBit
+    dw YoldTalkEvents_StartScriptAtHL_B04
     dw TalkMsg080A_HeroPeeredIntoTheBarrelA
     dw TalkMsg080B_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal
@@ -3905,8 +3905,8 @@ Func_004_58C2:: ; address name
     dw TalkMsg080D_YouCouldMeetMermaidsHere
     dw TalkMsg080E_ImFromThePortInThe
     dw TalkMsg080F_YoureNotSupposedToGoNear
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case14
+    dw YoldTalkEvents_TestFlagBit_Case13
+    dw YoldTalkEvents_StartScriptAtHL_B04_Case14
     dw TalkScript5B9B_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
@@ -3918,7 +3918,7 @@ Func_004_58C2:: ; address name
     dw TalkScript5BA8_HowMayOurChurchServeYou
     dw TalkMsg0821_AllSortsOfPeopleComeHere
     dw TalkMsg0822_IWentToPolonaAWhile
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case20
+    dw YoldTalkEvents_StartScriptAtHL_B04_Case20
     dw TalkMsg0824_ThereIsALighthouseToThe
     dw TalkMsg0825_MyShipSankInTheEastern
     dw TalkMsg0826_TheOldManInTheTaverns
@@ -3930,15 +3930,15 @@ Func_004_58C2:: ; address name
     dw TalkScript5BB6_HeroTriedToCheckTheChest
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal_Flag0063
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case2C
+    dw YoldTalkEvents_StartScriptAtHL_B04_Case2C
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
     dw TalkScript5BC4
     dw TalkMsg0834_WhenThatOldManGetsGrogged
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
-    dw DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case34
+    dw YoldTalkEvents_ShowHnnnrHicGnnZzz
+    dw YoldTalkEvents_TestFlagBit_Case34
     dw ChestItem_Rib
     dw ChestItem_LoveWater
     dw ChestItem_LoveWater_Flag0069
@@ -3947,26 +3947,26 @@ Func_004_58C2:: ; address name
     dw ChestItem_Warp
     dw TalkMsg0843_ISawAChildCrossThe
     dw TalkMsg0844_WatchMeDanceAndYoullWant
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case3D
-    dw DispatchTalkEvent_Case03_Sub01_ShowThisIsTheMermaid
+    dw YoldTalkEvents_TestFlagBit_Case3D
+    dw YoldTalkEvents_ShowThisIsTheMermaid
     dw TalkMsg084F_IKnowNotAllHumansAre
     dw TalkMsg0850_ThePiratesCaughtUsInNets
     dw TalkMsg0851_TheHarMirrorWasExquisite
     dw TalkMsg0852_TheMoonRockFellFromTheSky
     dw TalkMsg0853_ThePiratesSankWithTheirShip
     dw TalkMsg0854_WeMermaidsArePeacefulBeings
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case45
+    dw YoldTalkEvents_TestFlagBit_Case45
     dw TalkScript5C88
     dw TalkScript5C8A_HowCouldWeDieBeforeEnjoying
     dw TalkScript5C94_TheTreasuresAreOursNoOne
     dw TalkScript5C9E_ItNagsAndNagsThatWe
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case4A
-    dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case4C
-    dw DispatchTalkEvent_Case03_Sub01_SetSpriteSlotsPlus7
+    dw YoldTalkEvents_TestFlagBit_Case4A
+    dw YoldTalkEvents_ShowHeroCheckedTheTreasure
+    dw YoldTalkEvents_StartScriptAtHL_B04_Case4C
+    dw YoldTalkEvents_SetSpriteSlotsPlus7
     dw ChestItem_LogTwig
-    dw DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal
-    dw DispatchTalkEvent_Case03_Sub01_SetFlagBit
+    dw YoldTalkEvents_ShowHeroCheckedThePedestal
+    dw YoldTalkEvents_SetFlagBit
     dw TalkScript5CDD_KamehaUrkHowYouCatchUp
     dw TalkScript5D1C_KamehaArrrrhClearTheWayIm
     dw TalkScript5D2F
@@ -3992,10 +3992,10 @@ Func_004_58C2:: ; address name
     dw BarrelItem_INTseed
     dw TalkMsg0862_HeroPeeredIntoTheBarrelThere
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
-    dw DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A
+    dw YoldTalkEvents_StartScriptAtHL_B04_Case6A
     dw TalkMsg00FF_Composing
     dw TalkScript5D44_ThickSuctionCuppedTentacles
-    dw DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case6D
+    dw YoldTalkEvents_TestFlagBit_Case6D
 
 ; starts message $0800 through StartMessageCommand09HL (script command $09); that string begins 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case00)
 ; no direct call (reached through a table, a jump or a vector)
@@ -4069,9 +4069,9 @@ Jump_004_59E3:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 6 of the `rst $00` table in Func_004_58C2
+; entry 6 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case03_Sub01_TestFlagBit::
+YoldTalkEvents_TestFlagBit::
 Jump_004_59F9:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4095,10 +4095,10 @@ Jump_004_59F9:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 7 of the `rst $00` table in Func_004_58C2
+; entry 7 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04::
+YoldTalkEvents_StartScriptAtHL_B04::
 Jump_004_5A24:: ; address name
     ld a, $04
     ld [wScreenTableIndex], a
@@ -4214,12 +4214,12 @@ Jump_004_5A9E:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 19 of the `rst $00` table in Func_004_58C2
+; entry 19 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp1, wStepArrived, hTemp2
 ; writes: rRAMG
 ; points at: wPartyList, wNameGlyphBuf
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case13::
+YoldTalkEvents_TestFlagBit_Case13::
 Jump_004_5AA5:: ; address name
     ld de, $006F
     call TestFlagBit
@@ -4276,11 +4276,11 @@ Jump_004_5AA5:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 20 of the `rst $00` table in Func_004_58C2
+; entry 20 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5B94: 'Welcome to our inn!'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case14::
+YoldTalkEvents_StartScriptAtHL_B04_Case14::
 Jump_004_5B1D:: ; address name
     ld hl, Script_5B94
     call StartScriptAtHL_B04
@@ -4397,10 +4397,10 @@ Jump_004_5B92:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 32 of the `rst $00` table in Func_004_58C2
+; entry 32 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case20::
+YoldTalkEvents_StartScriptAtHL_B04_Case20::
 Jump_004_5B99:: ; address name
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4537,11 +4537,11 @@ Jump_004_5C2C:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 44 of the `rst $00` table in Func_004_58C2
+; entry 44 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5BBD: 'Welcome to our inn!'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case2C::
+YoldTalkEvents_StartScriptAtHL_B04_Case2C::
 Jump_004_5C3D:: ; address name
     ld hl, Script_5BBD
     call StartScriptAtHL_B04
@@ -4639,10 +4639,10 @@ Jump_004_5CB7:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 51 of the `rst $00` table in Func_004_58C2
+; entry 51 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wObject3
-DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz::
+YoldTalkEvents_ShowHnnnrHicGnnZzz::
 Jump_004_5CBE:: ; address name
     ld de, $005F
     call TestFlagBit
@@ -4691,7 +4691,7 @@ Jump_004_5CBE:: ; address name
     ret
 
 ; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B (E-0124)
-; 2 call sites from 1 routine (e.g. DispatchTalkEvent_Case03_Sub01_ShowHnnnrHicGnnZzz)
+; 2 call sites from 1 routine (e.g. YoldTalkEvents_ShowHnnnrHicGnnZzz)
 ; reads: wPartyCount, hTemp1, hTemp0
 ; writes: rRAMG
 ; points at: wPartyList
@@ -4730,9 +4730,9 @@ Func_004_5D14:: ; address name
     scf
     ret
 
-; entry 52 of the `rst $00` table in Func_004_58C2
+; entry 52 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case34::
+YoldTalkEvents_TestFlagBit_Case34::
 Jump_004_5D44:: ; address name
     ld de, $0066
     call TestFlagBit
@@ -4850,10 +4850,10 @@ Jump_004_5DDC:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 61 of the `rst $00` table in Func_004_58C2
+; entry 61 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C69: 'Do you want to go to'
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case3D::
+YoldTalkEvents_TestFlagBit_Case3D::
 Jump_004_5DE3:: ; address name
     ld de, $006F
     call TestFlagBit
@@ -4862,9 +4862,9 @@ Jump_004_5DE3:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 62 of the `rst $00` table in Func_004_58C2
+; entry 62 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case03_Sub01_ShowThisIsTheMermaid::
+YoldTalkEvents_ShowThisIsTheMermaid::
 Jump_004_5DF1:: ; address name
     ld de, $00F1
     call TestFlagBit
@@ -4960,11 +4960,11 @@ Jump_004_5E5D:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 69 of the `rst $00` table in Func_004_58C2
+; entry 69 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case45::
+YoldTalkEvents_TestFlagBit_Case45::
 Jump_004_5E73:: ; address name
     ld de, $005E
     call TestFlagBit
@@ -5041,10 +5041,10 @@ Jump_004_5ED2:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 74 of the `rst $00` table in Func_004_58C2
+; entry 74 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CA8: 'Who disturbs us in our sleep'
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case4A::
+YoldTalkEvents_TestFlagBit_Case4A::
 Jump_004_5ED9:: ; address name
     ld de, $0074
     call TestFlagBit
@@ -5060,11 +5060,11 @@ Jump_004_5ED9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 75 of the `rst $00` table in Func_004_58C2
+; entry 75 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGameFlags836
 ; writes: wGameFlags836
-DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedTheTreasure::
+YoldTalkEvents_ShowHeroCheckedTheTreasure::
 Jump_004_5EF5:: ; address name
     call InventoryHasFreeSlotCheck
     jr c, .read_game_flags836
@@ -5081,10 +5081,10 @@ Jump_004_5EF5:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 76 of the `rst $00` table in Func_004_58C2
+; entry 76 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CCA: '0 checked the crate. There was'
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case4C::
+YoldTalkEvents_StartScriptAtHL_B04_Case4C::
 Jump_004_5F12:: ; address name
     ld hl, Script_5CCA
     call StartScriptAtHL_B04
@@ -5092,10 +5092,10 @@ Jump_004_5F12:: ; address name
     call SetFlagBit
     ret
 
-; entry 77 of the `rst $00` table in Func_004_58C2
+; entry 77 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wSpriteSlots
-DispatchTalkEvent_Case03_Sub01_SetSpriteSlotsPlus7::
+YoldTalkEvents_SetSpriteSlotsPlus7::
 Jump_004_5F1F:: ; address name
     xor a, a
     ld [wSpriteSlots + $7], a
@@ -5114,11 +5114,11 @@ Jump_004_5F24:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 79 of the `rst $00` table in Func_004_58C2
+; entry 79 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case03_Sub01_ShowHeroCheckedThePedestal::
+YoldTalkEvents_ShowHeroCheckedThePedestal::
 Jump_004_5F35:: ; address name
     ld de, $007A
     call TestFlagBit
@@ -5138,11 +5138,11 @@ Jump_004_5F35:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 80 of the `rst $00` table in Func_004_58C2
+; entry 80 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerY, hPlayerX
 ; writes: wSpriteSlots, wObject1, wObject2
-DispatchTalkEvent_Case03_Sub01_SetFlagBit::
+YoldTalkEvents_SetFlagBit::
 Jump_004_5F5A:: ; address name
     ldh a, [hPlayerY]
     cp a, $30
@@ -5454,11 +5454,11 @@ Jump_004_60D8:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 106 of the `rst $00` table in Func_004_58C2
+; entry 106 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
 ; starts Script_5CCF
-DispatchTalkEvent_Case03_Sub01_StartScriptAtHL_B04_Case6A::
+YoldTalkEvents_StartScriptAtHL_B04_Case6A::
 Jump_004_60DF:: ; address name
     ld hl, Script_5CCF
     call StartScriptAtHL_B04
@@ -5488,10 +5488,10 @@ Jump_004_6103:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 109 of the `rst $00` table in Func_004_58C2
+; entry 109 of the `rst $00` table in YoldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case03_Sub01_TestFlagBit_Case6D::
+YoldTalkEvents_TestFlagBit_Case6D::
 Jump_004_610A:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -5509,10 +5509,10 @@ Jump_004_610A:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; only called from DispatchTalkEvent_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case02)
+; talk category 2: jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToKalkaTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case02_Sub01::
+KalkaTalkEvents::
 Func_004_612B:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
@@ -5526,7 +5526,7 @@ Func_004_612B:: ; address name
     dw TalkMsg0137_HeroCheckedTheOvenASharp
     dw VaseItem_Herb
     dw TalkMsg0138_TheUndergroundCanalIsAhead
-    dw DispatchTalkEvent_Case02_Sub01_WriteSpriteSlotsAndDataBank
+    dw KalkaTalkEvents_WriteSpriteSlotsAndDataBank
     dw TalkMsg0139_TheKingCalledACircusTroupe
     dw TalkMsg013A_ThisIsAsiyaTheDesertFlower
     dw TalkMsg013B_OurKingCameIntoAnEnormous
@@ -5534,20 +5534,20 @@ Func_004_612B:: ; address name
     dw TalkMsg013D_StrongMonstersAreInTheWell
     dw TalkMsg013E_OurKingHasBeenAFan
     dw TalkMsg013F_TheCircusMasterWasTrying
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit
+    dw KalkaTalkEvents_TestFlagBit
     dw TalkMsg0140_NoOneEntersTheCastleWithout
     dw TalkMsg0141_IfYouWantToGetIn
     dw TalkMsg0142_DidYouWantSomethingHoney
     dw TalkMsg0143_WhenWeGetAHotSpell
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case17
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18
+    dw KalkaTalkEvents_TestFlagBit_Case17
+    dw KalkaTalkEvents_TestFlagBit_Case18
     dw TalkMsg014F_HeroPeeredIntoTheVaseIt
     dw VaseItem_Antidote_Flag0047
     dw TalkMsg0137_HeroCheckedTheOvenASharp_046456
     dw IfFlag056Msg018F_WeDidntHelpTheThievesOne
     dw TalkMsg01BE_HeroCheckedTheDresserThere
     dw TalkMsg0037_HeroTriedToOpenTheChest_046472
-    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04
+    dw KalkaTalkEvents_StartScriptAtHL_B04
     dw TalkMsg0150_IHeardThatTheThievesDisappear
     dw TalkMsg0154_SeveralOfOurMembersCameBack
     dw TalkMsg0155_WhenTheThievesRaidedUsWe
@@ -5555,14 +5555,14 @@ Func_004_612B:: ; address name
     dw TalkMsg0157_HehDidYouSeeTheLooks
     dw TalkMsg0158_ThisIsTheKingsTreasuryNo
     dw TalkMsg0159_WhatSeeHisMajestysTreasure
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case27
+    dw KalkaTalkEvents_TestFlagBit_Case27
     dw TalkMsg015A_HisMajestyIsHonestAndMost
-    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29
+    dw KalkaTalkEvents_StartScriptAtHL_B04_Case29
     dw TalkMsg015F_HeroCheckedTheDresserThere
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2B
+    dw KalkaTalkEvents_TestFlagBit_Case2B
     dw TalkMsg0166_ThatFoolIsATerribleSwindler
     dw TalkMsg0167_HumphAMirageLakeHeSays
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2E
+    dw KalkaTalkEvents_TestFlagBit_Case2E
     dw VaseItem_Herb_Flag004B
     dw VaseItem_PorkChop
     dw VaseItem_TinyMedal
@@ -5571,21 +5571,21 @@ Func_004_612B:: ; address name
     dw ChestItem_Wind
     dw ChestItem_WarpWing
     dw ChestItem_AGL
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case37
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case38
-    dw DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case39
+    dw KalkaTalkEvents_TestFlagBit_Case37
+    dw KalkaTalkEvents_TestFlagBit_Case38
+    dw KalkaTalkEvents_StartScriptAtHL_B04_Case39
     dw TalkMsg0194_ThievesDroveUsFromOurHomes
     dw TalkMsg0195_TheLeaderOfTheThievesIs
-    dw DispatchTalkEvent_Case02_Sub01_RunFieldCommandTemp0
+    dw KalkaTalkEvents_RunFieldCommandTemp0
     dw TalkMsg01B5_KyoohSwimmingInADesertThis
     dw TalkMsg01BC_HeroCheckedTheTreasureChest
     dw TalkMsg01BD_HeroPeeredIntoTheVaseIt
     dw TalkMsg01C0_HeroCheckedTheTreasureChest
     dw TalkMsg01BF_HeroPeeredIntoTheVaseThe
     dw VaseItem_BeefJerky
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case43
-    dw DispatchTalkEvent_Case02_Sub01_WaitStoryFlagsPlus61
-    dw DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case45
+    dw KalkaTalkEvents_TestFlagBit_Case43
+    dw KalkaTalkEvents_WaitStoryFlagsPlus61
+    dw KalkaTalkEvents_TestFlagBit_Case45
 
 ; starts message $0130 through StartMessageCommand09HL (script command $09); that string begins 'This is Kalka, an oasis village.' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case02_Sub01_Case00)
 ; no direct call (reached through a table, a jump or a vector)
@@ -5736,11 +5736,11 @@ Jump_004_624F:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 10 of the `rst $00` table in Func_004_612B
+; entry 10 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hPlayerX
 ; writes: wSpriteSlots, wDataBank
-DispatchTalkEvent_Case02_Sub01_WriteSpriteSlotsAndDataBank::
+KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
 Jump_004_6283:: ; address name
     ldh a, [hPlayerX]
     cp a, $30
@@ -5881,10 +5881,10 @@ Jump_004_6338:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 18 of the `rst $00` table in Func_004_612B
+; entry 18 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case02_Sub01_TestFlagBit::
+KalkaTalkEvents_TestFlagBit::
 Jump_004_634E:: ; address name
     ld a, $03
     ld [wScreenTableIndex], a
@@ -5968,10 +5968,10 @@ Jump_004_63C5:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 23 of the `rst $00` table in Func_004_612B
+; entry 23 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case17::
+KalkaTalkEvents_TestFlagBit_Case17::
 Jump_004_63CC:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -5989,10 +5989,10 @@ Jump_004_63CC:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 24 of the `rst $00` table in Func_004_612B
+; entry 24 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount, wStepArrived
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case18::
+KalkaTalkEvents_TestFlagBit_Case18::
 Jump_004_63ED:: ; address name
     ld de, $0042
     call TestFlagBit
@@ -6092,11 +6092,11 @@ Jump_004_6472:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 31 of the `rst $00` table in Func_004_612B
+; entry 31 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5A25: 'Welcome to our inn!'
-DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04::
+KalkaTalkEvents_StartScriptAtHL_B04::
 Jump_004_6479:: ; address name
     ld hl, Script_5A25
     call StartScriptAtHL_B04
@@ -6232,9 +6232,9 @@ Jump_004_6509:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 39 of the `rst $00` table in Func_004_612B
+; entry 39 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case27::
+KalkaTalkEvents_TestFlagBit_Case27::
 Jump_004_653D:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6280,11 +6280,11 @@ Jump_004_6562:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 41 of the `rst $00` table in Func_004_612B
+; entry 41 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; starts Script_5B71
-DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case29::
+KalkaTalkEvents_StartScriptAtHL_B04_Case29::
 Jump_004_6587:: ; address name
     ld a, [wStoryFlags + $61]
     bit 3, a
@@ -6301,9 +6301,9 @@ Jump_004_6594:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 43 of the `rst $00` table in Func_004_612B
+; entry 43 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2B::
+KalkaTalkEvents_TestFlagBit_Case2B::
 Jump_004_659B:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6397,10 +6397,10 @@ Jump_004_6621:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 46 of the `rst $00` table in Func_004_612B
+; entry 46 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5A95: 'What? Open the Canal Gate more?'
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case2E::
+KalkaTalkEvents_TestFlagBit_Case2E::
 Jump_004_6637:: ; address name
     ld de, $0049
     call TestFlagBit
@@ -6515,10 +6515,10 @@ Jump_004_66C2:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 55 of the `rst $00` table in Func_004_612B
+; entry 55 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5AAB: 'I'm making a new home for'
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case37::
+KalkaTalkEvents_TestFlagBit_Case37::
 Jump_004_66D3:: ; address name
     ld de, $005A
     call TestFlagBit
@@ -6532,11 +6532,11 @@ Jump_004_66D3:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 56 of the `rst $00` table in Func_004_612B
+; entry 56 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case38::
+KalkaTalkEvents_TestFlagBit_Case38::
 Jump_004_66E9:: ; address name
     ld de, $0056
     call TestFlagBit
@@ -6582,12 +6582,12 @@ Jump_004_66E9:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 57 of the `rst $00` table in Func_004_612B
+; entry 57 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags, hTemp0
 ; starts Script_5B37
-DispatchTalkEvent_Case02_Sub01_StartScriptAtHL_B04_Case39::
+KalkaTalkEvents_StartScriptAtHL_B04_Case39::
 Jump_004_674D:: ; address name
     ld a, [wStoryFlags + $61]
     set 4, a
@@ -6632,10 +6632,10 @@ Jump_004_6782:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 60 of the `rst $00` table in Func_004_612B
+; entry 60 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: hTemp0
-DispatchTalkEvent_Case02_Sub01_RunFieldCommandTemp0::
+KalkaTalkEvents_RunFieldCommandTemp0::
 Jump_004_6798:: ; address name
     ld a, $03
     ldh [hTemp0], a
@@ -6705,10 +6705,10 @@ Jump_004_67DB:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 67 of the `rst $00` table in Func_004_612B
+; entry 67 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5B53
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case43::
+KalkaTalkEvents_TestFlagBit_Case43::
 Jump_004_67EC:: ; address name
     ld de, $0058
     call TestFlagBit
@@ -6717,11 +6717,11 @@ Jump_004_67EC:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 68 of the `rst $00` table in Func_004_612B
+; entry 68 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wStoryFlags
 ; writes: wStoryFlags
-DispatchTalkEvent_Case02_Sub01_WaitStoryFlagsPlus61::
+KalkaTalkEvents_WaitStoryFlagsPlus61::
 Jump_004_67FA:: ; address name
     ld a, [wStoryFlags + $61]
     bit 4, a
@@ -6730,10 +6730,10 @@ Jump_004_67FA:: ; address name
     ld [wStoryFlags + $61], a
     ret
 
-; entry 69 of the `rst $00` table in Func_004_612B
+; entry 69 of the `rst $00` table in KalkaTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
-DispatchTalkEvent_Case02_Sub01_TestFlagBit_Case45::
+KalkaTalkEvents_TestFlagBit_Case45::
 Jump_004_6806:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -6751,21 +6751,21 @@ Jump_004_6806:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; only called from DispatchTalkEvent_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case06)
+; talk category 6: two flag-tested handlers that start Darck's scripts ("Darck Fawahahah! You chased your treasures")
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToDarckTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case06_Sub01::
+DarckTalkEvents::
 Func_004_6827:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case06_Sub01_TestFlagBit
-    dw DispatchTalkEvent_Case06_Sub01_TestFlagBit_Case01
+    dw DarckTalkEvents_TestFlagBit
+    dw DarckTalkEvents_TestFlagBit_Case01
 
-; entry 0 of the `rst $00` table in Func_004_6827
+; entry 0 of the `rst $00` table in DarckTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: hTemp0
 ; writes: hTemp0
-DispatchTalkEvent_Case06_Sub01_TestFlagBit::
+DarckTalkEvents_TestFlagBit::
 Jump_004_682F:: ; address name
     ld de, $00D2
     call TestFlagBit
@@ -6802,10 +6802,10 @@ Jump_004_682F:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in Func_004_6827
+; entry 1 of the `rst $00` table in DarckTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_61E9: 'Darck Fawahahah! You chased your treasures'
-DispatchTalkEvent_Case06_Sub01_TestFlagBit_Case01::
+DarckTalkEvents_TestFlagBit_Case01::
 Jump_004_687C:: ; address name
     ld de, $00D0
     call TestFlagBit
@@ -6819,17 +6819,17 @@ Jump_004_687C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; only called from DispatchTalkEvent_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case00)
+; talk category 0: jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToFieldTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case00_Sub01::
+FieldTalkEvents::
 Func_004_6892:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case00_Sub01_Return
+    dw FieldTalkEvents_Return
     dw TalkScript512F
     dw TalkScript5131
-    dw DispatchTalkEvent_Case00_Sub01_Return
+    dw FieldTalkEvents_Return
     dw TalkScript5137
     dw TalkScript5139
     dw TalkScript513B
@@ -6853,19 +6853,19 @@ Func_004_6892:: ; address name
     dw TalkScript515F
     dw TalkScript5169
     dw TalkScript516B
-    dw DispatchTalkEvent_Case00_Sub01_TestFlagBit
-    dw DispatchTalkEvent_Case00_Sub01_TestFlagBit_Case1C
+    dw FieldTalkEvents_TestFlagBit
+    dw FieldTalkEvents_TestFlagBit_Case1C
     dw TalkScript5171
     dw TalkScript5173
     dw TalkScript5164
     dw TalkScript515B
     dw TalkScript515D
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24
-    dw DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25
-    dw DispatchTalkEvent_Case00_Sub01_SetFollowerDelay
-    dw DispatchTalkEvent_Case00_Sub01_Return
+    dw FieldTalkEvents_StartScriptAtHL_B04
+    dw FieldTalkEvents_StartScriptAtHL_B04_Case23
+    dw FieldTalkEvents_StartScriptAtHL_B04_Case24
+    dw FieldTalkEvents_StartScriptAtHL_B04_Case25
+    dw FieldTalkEvents_SetFollowerDelay
+    dw FieldTalkEvents_Return
 
 ; starts Script_5173 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
@@ -6885,9 +6885,9 @@ Jump_004_68ED:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 28 of the `rst $00` table in Func_004_6892
+; entry 28 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case00_Sub01_TestFlagBit_Case1C::
+FieldTalkEvents_TestFlagBit_Case1C::
 Jump_004_68F4:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -6899,9 +6899,9 @@ Jump_004_68F4:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 27 of the `rst $00` table in Func_004_6892
+; entry 27 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case00_Sub01_TestFlagBit::
+FieldTalkEvents_TestFlagBit::
 Jump_004_6904:: ; address name
     ld de, $0024
     call TestFlagBit
@@ -6994,11 +6994,11 @@ Jump_004_694C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 34 of the `rst $00` table in Func_004_6892
+; entry 34 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04::
+FieldTalkEvents_StartScriptAtHL_B04::
 Jump_004_6953:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7014,11 +7014,11 @@ Jump_004_6953:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 35 of the `rst $00` table in Func_004_6892
+; entry 35 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case23::
+FieldTalkEvents_StartScriptAtHL_B04_Case23::
 Jump_004_696C:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7037,11 +7037,11 @@ Jump_004_696C:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 36 of the `rst $00` table in Func_004_6892
+; entry 36 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay, wPartyCount, hPlayerFacing
 ; writes: wFollowerRecords, wScriptParam1
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case24::
+FieldTalkEvents_StartScriptAtHL_B04_Case24::
 Jump_004_698B:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7062,11 +7062,11 @@ Jump_004_698B:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 37 of the `rst $00` table in Func_004_6892
+; entry 37 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFollowerDelay
 ; starts Script_57DC
-DispatchTalkEvent_Case00_Sub01_StartScriptAtHL_B04_Case25::
+FieldTalkEvents_StartScriptAtHL_B04_Case25::
 Jump_004_69AC:: ; address name
     ld a, [wFollowerDelay]
     or a, a
@@ -7075,11 +7075,11 @@ Jump_004_69AC:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 38 of the `rst $00` table in Func_004_6892
+; entry 38 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wFollowerDelay
 ; starts Script_514B
-DispatchTalkEvent_Case00_Sub01_SetFollowerDelay::
+FieldTalkEvents_SetFollowerDelay::
 Jump_004_69B8:: ; address name
     xor a, a
     ld [wFollowerDelay], a
@@ -7130,10 +7130,10 @@ Jump_004_69D9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 0 of the `rst $00` table in Func_004_6892
+; entry 0 of the `rst $00` table in FieldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
-DispatchTalkEvent_Case00_Sub01_Return::
+FieldTalkEvents_Return::
 Jump_004_69E0:: ; address name
     ret
 
@@ -7245,16 +7245,16 @@ Jump_004_6A2E:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; only called from DispatchTalkEvent_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case07)
+; talk category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages $0700-$07BF, $0C00-$0CFF)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToElvenVillageTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case07_Sub01::
+ElvenVillageTalkEvents::
 Func_004_6A35:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit
-    dw DispatchTalkEvent_Case07_Sub01_ShowYoureAHumanHow
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case02
+    dw ElvenVillageTalkEvents_TestFlagBit
+    dw ElvenVillageTalkEvents_ShowYoureAHumanHow
+    dw ElvenVillageTalkEvents_TestFlagBit_Case02
     dw TalkMsg0708_HelloMunchkinEnjoyYourStay
     dw TalkMsg0709_AHumanHereItsBeenSeveral
     dw TalkMsg070A_YoureNotLikeUsYouScare
@@ -7262,15 +7262,15 @@ Func_004_6A35:: ; address name
     dw TalkMsg070C_ThisHorseWasHereBeforeUs
     dw TalkMsg070D_ThisIsElvenVillageYoureA
     dw TalkMsg0752_IEHeardThatHumansAre
-    dw DispatchTalkEvent_Case07_Sub01_StartScriptAtHL_B04
-    dw DispatchTalkEvent_Case07_Sub01_ShowWellWellItIs
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case0C
+    dw ElvenVillageTalkEvents_StartScriptAtHL_B04
+    dw ElvenVillageTalkEvents_ShowWellWellItIs
+    dw ElvenVillageTalkEvents_TestFlagBit_Case0C
     dw TalkMsg0723_TchWeHaveToEatThe
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case0E
+    dw ElvenVillageTalkEvents_TestFlagBit_Case0E
     dw TalkMsg072F_ThisIsElvensLookoutPostWe
     dw TalkMsg0730_HorridMonstersThatAttack
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case11
-    dw DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case12
+    dw ElvenVillageTalkEvents_TestFlagBit_Case11
+    dw ElvenVillageTalkEvents_TestFlagBit_Case12
     dw VaseItem_TinyMedal_Flag0153
     dw VaseItem_INTseed
     dw VaseItem_Potion
@@ -7350,7 +7350,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C03_TheTowersManyTreasuresAre
     dw TalkMsg0C02_OnlyAHandfulOfMastersHave
-    dw DispatchTalkEvent_Case07_Sub01_ShowThisIsThePower
+    dw ElvenVillageTalkEvents_ShowThisIsThePower
     dw TalkScript659C
     dw TalkScript659C
     dw TalkScript659C
@@ -7382,7 +7382,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C1B_ItsNotThatEasyToWin
     dw TalkMsg0C1A_InThisTowerYourOpponents
-    dw DispatchTalkEvent_Case07_Sub01_ShowThisIsTheBaffle
+    dw ElvenVillageTalkEvents_ShowThisIsTheBaffle
     dw TalkScript659C_0478A5
     dw TalkScript659C_0478A5
     dw TalkScript659C_0478A5
@@ -7414,7 +7414,7 @@ Func_004_6A35:: ; address name
     dw $0000 ; unused index (E-0207)
     dw TalkMsg0C33_ItsBrutalUpAheadIWouldnt
     dw TalkMsg0C32_TheMonstersHereAreAwfulIm
-    dw DispatchTalkEvent_Case07_Sub01_ShowIfYouEMade
+    dw ElvenVillageTalkEvents_ShowIfYouEMade
     dw TalkScript659C_0479FC
     dw TalkScript659C_0479FC
     dw TalkScript659C_0479FC
@@ -7438,10 +7438,10 @@ Func_004_6A35:: ; address name
     dw ChestItem_LoveWater_Flag01FA
     ds $10, $00
 
-; entry 0 of the `rst $00` table in Func_004_6A35
+; entry 0 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6200
-DispatchTalkEvent_Case07_Sub01_TestFlagBit::
+ElvenVillageTalkEvents_TestFlagBit::
 Jump_004_6BB9:: ; address name
     ld de, $0140
     call TestFlagBit
@@ -7461,9 +7461,9 @@ Jump_004_6BB9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in Func_004_6A35
+; entry 1 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_ShowYoureAHumanHow::
+ElvenVillageTalkEvents_ShowYoureAHumanHow::
 Jump_004_6BDD:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7529,9 +7529,9 @@ Jump_004_6BDD:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 2 of the `rst $00` table in Func_004_6A35
+; entry 2 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case02::
+ElvenVillageTalkEvents_TestFlagBit_Case02::
 Jump_004_6C59:: ; address name
     ld de, $0152
     call TestFlagBit
@@ -7757,10 +7757,10 @@ Jump_004_6D95:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 10 of the `rst $00` table in Func_004_6A35
+; entry 10 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTableIndex, wDataBank
-DispatchTalkEvent_Case07_Sub01_StartScriptAtHL_B04::
+ElvenVillageTalkEvents_StartScriptAtHL_B04::
 Jump_004_6DC9:: ; address name
     ld a, $10
     ld [wScreenTableIndex], a
@@ -7770,9 +7770,9 @@ Jump_004_6DC9:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 11 of the `rst $00` table in Func_004_6A35
+; entry 11 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_ShowWellWellItIs::
+ElvenVillageTalkEvents_ShowWellWellItIs::
 Jump_004_6DDA:: ; address name
     ld de, $0151
     call TestFlagBit
@@ -7838,10 +7838,10 @@ Jump_004_6DDA:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 12 of the `rst $00` table in Func_004_6A35
+; entry 12 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_626A: 'Master AgDevil, a human, ruff!'
-DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case0C::
+ElvenVillageTalkEvents_TestFlagBit_Case0C::
 Jump_004_6E56:: ; address name
     ld de, $0148
     call TestFlagBit
@@ -7866,10 +7866,10 @@ Jump_004_6E64:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 14 of the `rst $00` table in Func_004_6A35
+; entry 14 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6290: 'That's what we'll do, kid. You're'
-DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case0E::
+ElvenVillageTalkEvents_TestFlagBit_Case0E::
 Jump_004_6E7A:: ; address name
     ld de, $014A
     call TestFlagBit
@@ -7941,10 +7941,10 @@ Jump_004_6ECA:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 17 of the `rst $00` table in Func_004_6A35
+; entry 17 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_62BD: 'The human in the forest again?'
-DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case11::
+ElvenVillageTalkEvents_TestFlagBit_Case11::
 Jump_004_6EEF:: ; address name
     ld de, $0150
     call TestFlagBit
@@ -7960,10 +7960,10 @@ Jump_004_6EEF:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 18 of the `rst $00` table in Func_004_6A35
+; entry 18 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6369: 'Rolt I e found you at'
-DispatchTalkEvent_Case07_Sub01_TestFlagBit_Case12::
+ElvenVillageTalkEvents_TestFlagBit_Case12::
 Jump_004_6F0B:: ; address name
     ld de, $014C
     call TestFlagBit
@@ -9333,9 +9333,9 @@ Jump_004_7724:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 98 of the `rst $00` table in Func_004_6A35
+; entry 98 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_ShowThisIsThePower::
+ElvenVillageTalkEvents_ShowThisIsThePower::
 Jump_004_772B:: ; address name
     ld de, $01D3
     call TestFlagBit
@@ -9610,9 +9610,9 @@ Jump_004_7882:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 130 of the `rst $00` table in Func_004_6A35
+; entry 130 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_ShowThisIsTheBaffle::
+ElvenVillageTalkEvents_ShowThisIsTheBaffle::
 Jump_004_7889:: ; address name
     ld de, $0173
     call TestFlagBit
@@ -9878,9 +9878,9 @@ Jump_004_79D9:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 162 of the `rst $00` table in Func_004_6A35
+; entry 162 of the `rst $00` table in ElvenVillageTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case07_Sub01_ShowIfYouEMade::
+ElvenVillageTalkEvents_ShowIfYouEMade::
 Jump_004_79E0:: ; address name
     ld de, $00DE
     call TestFlagBit
@@ -10130,20 +10130,20 @@ Jump_004_7B18:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; only called from DispatchTalkEvent_Case09 (E-0047)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case09)
+; talk category 9: the key-world events (Warubou's messages, KeyWorldBossBattle, KeyWorldFloorBattle; E-0286)
+; 1 call site from 1 routine (e.g. DispatchTalkEvent_ToKeyWorldTalkEvents)
 ; reads: wTalkEventGroup
-DispatchTalkEvent_Case09_Sub01::
+KeyWorldTalkEvents::
 Func_004_7B29:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
     dw TalkScript5133
-    dw DispatchTalkEvent_Case09_Sub01_StartScriptAtHL_B04
-    dw DispatchTalkEvent_Case09_Sub01_StartScriptAtHL_B04_Case02
+    dw KeyWorldTalkEvents_StartScriptAtHL_B04
+    dw KeyWorldTalkEvents_StartScriptAtHL_B04_Case02
     dw TalkScript5135
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
-    dw DispatchTalkEvent_Case09_Sub01_ShowWarubouUseAMagic
+    dw KeyWorldTalkEvents_ShowWarubouUseAMagic
     dw TalkScript65AA_WarubouWaheyYouDidItHero
     dw TalkScript65B8_WarubouWaheySoThisIsIt
 
@@ -10156,12 +10156,12 @@ Jump_004_7B3F:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in Func_004_7B29
+; entry 1 of the `rst $00` table in KeyWorldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldFloor
 ; writes: wDataBank, wScreenTableIndex
 ; points at: wKeyWorldFloorState
-DispatchTalkEvent_Case09_Sub01_StartScriptAtHL_B04::
+KeyWorldTalkEvents_StartScriptAtHL_B04::
 Jump_004_7B46:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -10196,12 +10196,12 @@ Jump_004_7B46:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 2 of the `rst $00` table in Func_004_7B29
+; entry 2 of the `rst $00` table in KeyWorldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMapType, hPlayerFacing
 ; writes: wSpriteSlots, wDataBank
 ; starts Script_65AA: 'Warubou Wa-hey! You did it, 0!'
-DispatchTalkEvent_Case09_Sub01_StartScriptAtHL_B04_Case02::
+KeyWorldTalkEvents_StartScriptAtHL_B04_Case02::
 Jump_004_7B82:: ; address name
     ld a, [wMapType]
     cp a, $84
@@ -10228,7 +10228,7 @@ Jump_004_7B82:: ; address name
     ret
 
 ; A = 1 when the player stands on one of the trigger columns for wCD0B (1, 7, 8 or 9) on the matching map screen, else 0 (E-0127)
-; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case09_Sub01_StartScriptAtHL_B04_Case02)
+; 1 call site from 1 routine (e.g. KeyWorldTalkEvents_StartScriptAtHL_B04_Case02)
 ; reads: wKeyWorldGoalKind, hMapScreenX, hPlayerX
 IsPlayerAtKeyWorldGoalKindTriggerColumn::
 Func_004_7BAB:: ; address name
@@ -10309,10 +10309,10 @@ Jump_004_7C05:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 6 of the `rst $00` table in Func_004_7B29
+; entry 6 of the `rst $00` table in KeyWorldTalkEvents
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wKeyWorldGoalKind
-DispatchTalkEvent_Case09_Sub01_ShowWarubouUseAMagic::
+KeyWorldTalkEvents_ShowWarubouUseAMagic::
 Jump_004_7C0C:: ; address name
     ld a, [wKeyWorldGoalKind]
     cp a, $05

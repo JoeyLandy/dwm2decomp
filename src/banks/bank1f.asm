@@ -1250,7 +1250,7 @@ Script_1F_5C11:: ; heuristic: event script entry or jump target; C0
     script_jump Script_1F_5BF6
 
 ; for the visible entries of record-list page wD7AF draws each record name at Data_01F_5C9C[n] (the fifth through the mark-overlay drawer) (E-0128)
-; 8 call sites from 8 routines (e.g. HibernateMenu_Case05_ToDrawRecordListPageNames, BreedMenu_Case04_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
+; 8 call sites from 8 routines (e.g. HibernateMenu_ChooseRecords_ToDrawRecordListPageNames, BreedMenu_ChooseParents_DrawRecordListPageNames, BreedMenu_ReturnToMap_ToDrawRecordListPageNames, BreedMenu_Case12_ToDrawRecordListPageNames, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, wScreenStep, wListPages
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wScreenStep
 ; points at: wListEntries
@@ -2148,7 +2148,7 @@ Data_01F_720D:: ; address name
     db $C3, $1E, $1F, $20, $21, $22, $23, $42, $43, $44, $45, $46, $47, $66, $67, $68, $69, $6A, $6B, $C3 ; row 5
 
 ; copies 16 glyph tiles (Data_01F_73BC) from bank $1F to the VRAM addresses in Data_01F_73CC (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_WriteScreenStep, RunScreenStateWhenNotFading_F1_Case0D_ShowString10Bank0EAtTiles2020ThenDefault)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault, RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep)
 LoadSixteenGlyphTilesFromTable73BC::
 Func_01F_7375:: ; address name
     ld c, $00
@@ -2216,7 +2216,7 @@ Data_01F_73CC:: ; address name
     db $F0, $8F, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
 ; first call: draws the 6 x 6 frame Data_01F_651B and loads the picture of species wCA36 at vTiles2 + $200; second call: loads its CGB attributes and draws the picture (E-0128)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps, RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA36MonsterPictureInTwoSteps)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawWCA36MonsterPictureInTwoSteps, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawWCA36MonsterPictureInTwoSteps)
 ; reads: wScreenSubStep, wRecordBufB, wIsCGB, wScreenStep
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wScreenSubStep, ...
 DrawWCA36MonsterPictureInTwoSteps::
@@ -2303,7 +2303,7 @@ Func_01F_73EC:: ; address name
     ret
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map: E-0186)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep, RunScreenStateWhenNotFading_F1_Case0D_ToClearBGMapAndLoadFrameTilesAndStep)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToClearBGMapAndLoadFrameTilesAndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearBGMapAndLoadFrameTiles)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 ClearBGMapAndLoadFrameTiles::
 Func_01F_7494:: ; address name
@@ -2342,7 +2342,7 @@ Func_01F_7494:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_662B (12 x 15 at scroll + $68) and Data_01F_653F (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_UpdatePagedListCursor_Case15, RunScreenStateWhenNotFading_F1_Case0D_UpdatePagedListCursor_Case15)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case15, RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case15)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects662BAnd653F::
 Func_01F_74E3:: ; address name
@@ -2387,7 +2387,7 @@ Func_01F_74E3:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep, RunScreenStateWhenNotFading_F1_Case0D_ToDrawRects6B4FAnd6C27AndStep)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep, RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects6B4FAnd6C27::
 Func_01F_753A:: ; address name
@@ -2432,7 +2432,7 @@ Func_01F_753A:: ; address name
     ret
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ClearTilesAndDrawRects6C5FAnd6D37, RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37, RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
 ClearTilesAndDrawRects6C5FAnd6D37::
 Func_01F_7591:: ; address name
@@ -2488,7 +2488,7 @@ Func_01F_7591:: ; address name
     ret
 
 ; shows the eight skill names of the record at wCA2B (field $34) in rows from vTiles2 + $200, or string $0E of category 8 when it has none (E-0129)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ShowRecordBufBSkillNamesOrNone, RunScreenStateWhenNotFading_F1_Case0D_ShowRecordBufBSkillNamesOrNone)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone, RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone)
 ; reads: wRecordBufB
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
 ; points at: wRecordBufB
@@ -2594,7 +2594,7 @@ Func_01F_7601:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_6E47 and Data_01F_6D6F, clears tile rows and sets up the summary text window (E-0128)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_UpdatePagedListCursor_Case1B, RunScreenStateWhenNotFading_F1_Case0D_UpdatePagedListCursor_Case1B)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_Case1B, RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7, wTextWindowTileLo, ...
 DrawSummaryFrames6E47And6D6F::
 Func_01F_76B5:: ; address name
@@ -2671,7 +2671,7 @@ Func_01F_76B5:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_5E13 (12 x 3 at scroll + 8) and Data_01F_66DF (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_Case0D_DrawRects5E13And66DF)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_ShowRecordStats_DrawRects5E13And66DF, RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects5E13And66DF::
 Func_01F_7754:: ; address name

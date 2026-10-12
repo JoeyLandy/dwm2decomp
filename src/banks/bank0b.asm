@@ -11,7 +11,7 @@ Func_00B_4001:: ; address name
     db $11, $16, $40, $CD, $FE, $25, $C9
 
 ; Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 6 call sites from 5 routines (e.g. LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case05, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_Case10_Case06_ShowString_Bank08, ...)
+; 6 call sites from 5 routines (e.g. LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case05, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07, LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08, ...)
 ShowString_Bank0B::
 Func_00B_400F:: ; address name
     call BeginStringDisplay_Bank0B

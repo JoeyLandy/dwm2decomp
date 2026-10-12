@@ -2,7 +2,7 @@ SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3A
 
 ; reads the effect flags in wDAD2. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88, it returns unless wDAD2 bit 0 or bit 6 is set. Then it tests bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (Data_03A_40CC, Data_03A_4294, Data_03A_445C, Data_03A_47EC, Data_03A_486C; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF returns; other entries go on to ActionEffectTable_Flag3_ClearEffectFlags52 or the effect code, which is not read (E-0057)
-; 15 call sites from 13 routines (e.g. RunBattleActions_Case00_Sub01_CompareActionIdWithCD, RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ...)
+; 15 call sites from 13 routines (e.g. RunBattleActions_StatusChecks_CompareActionIdWithCD, RunBattleStep4_Case00_Sub01_SelectEffectByEffectFlags, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ResolveStep0EEffect_Case03_SkipTurnIfActorAbsent, ...)
 ; reads: wBattleTarget, wBattleActionId, wEffectFlags, wDefeatByteBF, wRecordBufferData, wBattleActor, wBattleArg0, wEffectTileOffset
 ; writes: wBattleActor, wEffectRoutine, wEffectId, wEffectFrameCounter, wEffectFlags52, wBattleArg0, wEffectTileOffset, wEffectByteB5, ...
 ; points at: wEffectSpriteX, wEffectStep, wEffectByteB3, wEffectFlags
@@ -3774,7 +3774,7 @@ Data_03A_575E:: ; address name
     db $02, $04, $00, $06
 
 ; reads the effect flags in wDAD3 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set wBattleActor to wBattleTarget and select a table (Data_03A_60B7 or Data_03A_6107) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
-; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, RunBattleActions_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ...)
+; 15 call sites from 12 routines (e.g. RunBattleEffectAnimation, RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable, ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, ...)
 ; reads: wEffectFlags2, wBattleTarget, wBattleActionId
 ; writes: wBattleActor
 SelectEffectByEffectFlags2Flags::
@@ -5137,7 +5137,7 @@ Func_03A_6157:: ; address name
 .read_battle_sub_phase:
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattleActions_Case00
+    dw RunBattleActions_ToRunBattleActions_StatusChecks
     dw RunBattleActions_ToRunBattleResolveStep
     dw RunBattleActions_LoadSkillRecord
     dw RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc
@@ -5151,9 +5151,9 @@ Func_03A_6157:: ; address name
 
 ; entry 0 of the `rst $00` table in RunBattleActions
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case00::
+RunBattleActions_ToRunBattleActions_StatusChecks::
 Jump_03A_618C:: ; address name
-    farcall RunBattleActions_Case00_Sub01
+    farcall RunBattleActions_StatusChecks
     ret
 
 ; entry 1 of the `rst $00` table in RunBattleActions
@@ -7220,7 +7220,7 @@ Func_03A_6D53:: ; address name
     ret
 
 ; D = Data_03A_6DAA[wBattleActionId]; returns at once when it is $FF; for action $CF first runs Func_03A_6D91; then ShowBattleText (E-0118)
-; 2 call sites from 2 routines (e.g. RunBattleActions_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable)
+; 2 call sites from 2 routines (e.g. RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable, RunBattleStep4_Case00_Sub01_ShowActionBattleTextFromActionBattleTextTable)
 ; reads: wBattleActionId
 ; writes: wStringIndex, wStringCategory
 ShowActionBattleTextFromActionBattleTextTable::
@@ -7580,7 +7580,7 @@ Data_03A_6EA5:: ; address name
     db $D6 ; id 63
 
 ; D = message index. The same as ShowBattleText, but it stores 0 in wStringCategory: the entry at Data_03A_6F06 + 2 * D is called first when non-zero, then BeginStringDisplay_Bank2F shows category 0 (E-0056)
-; 22 call sites from 14 routines (e.g. RunCommandEntryResolveStep_AddAx9ToHL, RunBattleActions_Case00_Sub01_Case00_ShowBattleTextCategory0, RunBattleActions_Case00_Sub01_Case00_PickRandomActionWhenUncontrolled, ShowActorStatusRecoveryMessage, ...)
+; 22 call sites from 14 routines (e.g. RunCommandEntryResolveStep_AddAx9ToHL, RunBattleActions_StatusChecks_Case00_ShowBattleTextCategory0, RunBattleActions_StatusChecks_Case00_PickRandomActionWhenUncontrolled, ShowActorStatusRecoveryMessage, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleTextCategory0::
 Func_03A_6EE5:: ; address name
@@ -8055,7 +8055,7 @@ Func_03A_7183:: ; address name
     ret
 
 ; D = message index. If the 16-bit entry at Data_03A_71B4 + 2 * D is non-zero it is called first through Func_000_000B (a per-message routine, not read). Then it stores D in wStringIndex, 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category 1 (E-0056)
-; 66 call sites from 56 routines (e.g. RunBattleActions_Case00_Sub01_Case01_ShowBattleText, RunBattleActions_Case00_Sub01_Case06_ShowGWasShattered, RunBattleActions_Case00_Sub01_Case06_ShowSealPrayWasBroken, RunBattleActions_Case00_Sub01_Case09_ShowHeroDroppedDead, ...)
+; 66 call sites from 56 routines (e.g. RunBattleActions_StatusChecks_Case01_ShowBattleText, RunBattleActions_StatusChecks_Case06_ShowGWasShattered, RunBattleActions_StatusChecks_Case06_ShowSealPrayWasBroken, RunBattleActions_StatusChecks_Case09_ShowHeroDroppedDead, ...)
 ; writes: wStringIndex, wStringCategory
 ShowBattleText::
 Func_03A_7193:: ; address name
@@ -8653,7 +8653,7 @@ Func_03A_74FE:: ; address name
     ret
 
 ; copies the actor, skill and target names to wC130/wC140/wC150 and picks the action message from Data_03A_7603 (or special messages $49-$4C) (E-0129)
-; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_Case00_Sub01_Case01_ActorActionIsD0ToE3, RunBattleActions_Case00_Sub01_Case01_QueuedActionMatches, RunBattleStep4_Case00_Sub01_CheckSkillMPCost)
+; 4 call sites from 4 routines (e.g. ApplyActionResultAndMarkFormation, RunBattleActions_StatusChecks_Case01_ActorActionIsD0ToE3, RunBattleActions_StatusChecks_Case01_QueuedActionMatches, RunBattleStep4_Case00_Sub01_CheckSkillMPCost)
 ; reads: wBattleActionId, wBattleActor, wSavedActorSlot
 ; writes: wSavedActorSlot, wNameSlot, wStringIndex, wStringCategory
 ; points at: wBattleTargetChoice, wTextBuf2
@@ -9778,11 +9778,11 @@ Func_03A_7B82:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 3 call sites from 3 routines (e.g. RunBattleSetup_Case01_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_Case01_CopyRectRecord7750ToScreenBufferFar, RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar)
+; 3 call sites from 3 routines (e.g. RunBattleSetup_CommandMenu_DrawWC2B8LeftToBGMapRow9_74B4AndStep_Case0C, RunBattleSetup_CommandMenu_CopyRectRecord7750ToScreenBufferFar, RunBattleSetup_Case02_CopyRectRecord7750ToScreenBufferFar)
 ; reads: wLinkMode, wBattleArg1, wSlotChoices, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wLinkRole
 ; writes: wNameSlot, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wSlotChoices, wTextBuf0
-RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared06::
+RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared03::
 Func_03A_7BA0:: ; address name
     ld a, $FF
     ld hl, wSlotChoices
@@ -9827,19 +9827,19 @@ Func_03A_7BA0:: ; address name
     jr nz, .loop
     ld a, [wSlotChoices]
     ld hl, vTiles1 + $6D0
-    call RunBattleSetup_Shared06_CopySlotNameToHL
+    call RunBattleSetup_Shared03_CopySlotNameToHL
     ld hl, vTiles1 + $770
     ld a, [wSlotChoices + $1]
-    call RunBattleSetup_Shared06_CopySlotNameToHL
+    call RunBattleSetup_Shared03_CopySlotNameToHL
     ld hl, vTiles2 + $10
     ld a, [wSlotChoices + $2]
 
-; only called from RunBattleSetup_Shared06 (E-0047)
-; 2 call sites from 1 routine (e.g. RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared06)
+; only called from RunBattleSetup_Shared03 (E-0047)
+; 2 call sites from 1 routine (e.g. RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_Shared03)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: wNameSlot, wStringCategory, wStringIndex, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; points at: wTextBuf0
-RunBattleSetup_Shared06_CopySlotNameToHL::
+RunBattleSetup_Shared03_CopySlotNameToHL::
 Func_03A_7BF9:: ; address name
     cp a, $FF
     jr z, .set_string_category_to_02

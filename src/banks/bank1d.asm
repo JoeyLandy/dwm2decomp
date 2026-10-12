@@ -3910,7 +3910,7 @@ Func_01D_5ADF:: ; address name
     ret
 
 ; record wD7F1 (bank 1): writes its mark (field $0E), level (field $56) and four stat words (fields from Data_01D_5BE6) into the screen buffer (E-0128)
-; 4 call sites from 4 routines (e.g. HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
+; 4 call sites from 4 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5, CallFunc5B4DInBank1D)
 ; reads: wArg1, hTemp0, wDigits, hTemp1
 ; writes: rRAMG2, rRAMB, wWindowTileBuffer
 DrawRecordStatsBoxForArg1::
@@ -4005,7 +4005,7 @@ Data_01D_5BEA:: ; address name
     db $D4, $C3, $D8, $C3, $FC, $C3, $00, $C4
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, runs Func_01D_6899 for the record at WD789 cell 5, then restores them (E-0125)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_Case09_Case20_UpdatePagedListCursor, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_Case20_UpdatePagedListCursor, ...)
 ; writes: wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
 CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
@@ -4058,7 +4058,7 @@ Func_01D_5BF2:: ; address name
     ret
 
 ; saves wD7F1-wD7F9 and hFFC6-hFFD2, draws the species sprite of the record at WD789 cell 5 at ($90, $40) (Func_01D_69DA), then restores them (E-0127)
-; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_Case09_Case15_DrawListEntriesCell5SpeciesSprite, ...)
+; 6 call sites from 6 routines (e.g. GameMode5_Update_LinkExchangeJoypadPerFrame, GameMode5_Update_LinkExchangeJoypadPerFrame_Case04, RunLinkSession4ScreenState_Case08_SetLinkSendByte_Case04, SwapMonstersMenu_ShowMonsterDetails_Case15_DrawListEntriesCell5SpeciesSprite, ...)
 ; reads: hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, wArg1, wArg2
 ; points at: wRecordBuffer, wArg1, hTemp0
@@ -4125,7 +4125,7 @@ Func_01D_5C35:: ; address name
     jr nz, .loop4
     ret
 
-; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf (E-0126)
+; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf0
@@ -4137,14 +4137,14 @@ Func_01D_5C94:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    jr HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf
+    jr HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf
 
-; only called from HibernateMenu_Case05_Case3E (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E)
+; only called from HibernateMenu_ChooseRecords_Case3E (E-0047)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf0
-HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf::
 Func_01D_5CA3:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -4152,7 +4152,7 @@ Func_01D_5CA3:: ; address name
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
-HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf::
 Jump_01D_5CAF:: ; address name
     ld c, $01
     call CopyRecordNameToNameGlyphBuf
@@ -4182,7 +4182,7 @@ Jump_01D_5CAF:: ; address name
     ret
 
 ; record wD7F1: draws its name at vTiles1 + $780 and the name of its species (field $0B) at vTiles1 + $270 (E-0127)
-; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23, BreedMenu_Case04_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
+; 11 call sites from 11 routines (e.g. NpcBreedMenu_Case11_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_Case06, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_Case11, ...)
 ; reads: wArg1, hTemp0, hTemp1, wDataBank
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf, wDataBank
 ; points at: wNameGlyphBuf
@@ -4247,7 +4247,7 @@ Func_01D_5CD7:: ; address name
     ret
 
 ; entry wD7FC (3 bytes per entry): decompresses the tiles named at Data_01D_5D78 to vTiles2 and copies the $40-byte palette named at Data_01D_5D7E into wBGPaletteBuffer (E-0120)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_LoadAreaGraphicsForAreaGraphicsIndex)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_LoadAreaGraphicsForAreaGraphicsIndex)
 ; reads: wAreaGraphicsIndex
 ; points at: wBGPaletteBuffer
 LoadAreaGraphicsForAreaGraphicsIndex::
@@ -4317,7 +4317,7 @@ Func_01D_5D84:: ; address name
     ret
 
 ; wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB
-; 28 call sites from 28 routines (e.g. EggServiceMenu_Case05_IsAmountInArg1AboveGold, EggServiceMenu_Case05_Case12_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
+; 28 call sites from 28 routines (e.g. EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold, EggServiceMenu_ChooseAndPay_Case12_SubtractArg1AmountFromGold, GetListEntriesCell4AddressWithSRAM, EggServiceMenu_SetArg5ToListEntriesCell4, ...)
 ; reads: wListPageIndex, wListCursor
 ; writes: wArg5, wArg6
 ; points at: wListEntries
@@ -4338,7 +4338,7 @@ Func_01D_5DA1:: ; address name
     ret
 
 ; shows string (field $A4 of the record at WD789 cell 5) of category $0B at $9320 with size $0602 (E-0121)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_DecompressGraphicsArg1ToArg4)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_DecompressGraphicsArg1ToArg4)
 ; reads: wArg5, wArg6, hTemp0
 ; writes: rRAMG2, rRAMB, wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
@@ -4374,7 +4374,7 @@ Func_01D_5DBC:: ; address name
     ret
 
 ; loads the species of the record at WD789 cell 5 (field $0B) and shows string [wD013] of category $0D at $9680 with size $0602 (E-0121)
-; 1 call site from 1 routine (e.g. SwapMonstersMenu_Case09_ShowSpeciesCategory13StringOfListEntriesCell5Record)
+; 1 call site from 1 routine (e.g. SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep)
 ; reads: hTemp0, hTemp1, wSpeciesRecord
 ; writes: rRAMG2, rRAMB, wSpeciesIdLo, wSpeciesIdHi, wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
@@ -4411,7 +4411,7 @@ Func_01D_5DF9:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): wD7AA = how many have byte 0 equal to 1 or 2 (in use) (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case05_RunFunc5925At0280_Case2C, HibernateMenu_Case05_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, ...)
 ; reads: wRecordsInUse
 ; writes: wRecordsInUse, rRAMG2, rRAMB
 ; points at: sRecords
@@ -4454,7 +4454,7 @@ Func_01D_5E3F:: ; address name
     ret
 
 ; clears the wD789 list, then lists the party records whose SRAM record byte 0 is 2 and counts them in wD7A9 (E-0127)
-; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries, HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_Case05_Multiply8, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, ...)
+; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries, HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_ChooseRecords_Multiply8, HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wListCount, wPartyCount
 ; writes: wListCount, rRAMG2, rRAMB
 ; points at: wListEntries, wPartyList, sRecords
@@ -4517,7 +4517,7 @@ Func_01D_5E79:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wD789, then appends the number of every record whose byte 0 is 1 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many state-1 records had byte $6E set (E-0104)
-; 12 call sites from 11 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage, HibernateMenu_Case05_DrawBox4965AndMenuAndStep, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C, ...)
+; 12 call sites from 11 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, StartRecordListOrNoneMessage, HibernateMenu_ChooseRecords_DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, ...)
 ; reads: wRecordCapacity, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, sRecords
@@ -4591,7 +4591,7 @@ Func_01D_5ECE:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_Case04_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPartyList
@@ -4782,7 +4782,7 @@ Func_01D_5F9C:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789, then appends every record whose byte 0 is 1 or 2 and byte $6E is non-zero; wD7A9 = the list length (E-0104)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_Case04_TenTimesTemp0PlusTen, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_ListRecordsInUseWithByte6ESet, BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_TenTimesTemp0PlusTen, BreedMenu_Case05_ListRecordsInUseWithByte6ESet, ...)
 ; reads: wRecordCapacity
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, sRecords
@@ -4961,7 +4961,7 @@ Func_01D_6088:: ; address name
     ret
 
 ; draws the $F0-terminated text at wC8CF glyph by glyph; marks $8D and $8E are ORed onto the previous tile (E-0125)
-; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, BreedMenu_Case04_ComputeBreedingChild, DrawRecordNameAndSpeciesName)
+; 4 call sites from 3 routines (e.g. DrawRecordListPageSpeciesNames, BreedMenu_ChooseParents_ComputeBreedingChild, DrawRecordNameAndSpeciesName)
 ; reads: wGlyphListPos, wGlyphListStart
 ; writes: wGlyphListPos, wGlyphListStart
 ; points at: wNameGlyphBuf
@@ -5201,7 +5201,7 @@ Data_01D_629B:: ; address name
     dw vTiles1 + $420, vTiles1 + $4A0, vTiles1 + $4B0
 
 ; with SRAM enabled, for each of the wC6FD record numbers in wC6FE copies the record's name (CopyRecordNameToNameGlyphBuf, C = 1) and draws it as glyph tiles at the VRAM address from Data_01D_62F9 (CopyGlyphTilesToVRAM); then disables SRAM (E-0106)
-; 6 call sites from 6 routines (e.g. LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, CloseHibernateMenu_DrawRecordListNameTiles_Bank1D, HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D, CloseBreedMenu_DrawRecordListNameTiles_Bank1D, ...)
+; 6 call sites from 6 routines (e.g. LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C_Case08, CloseHibernateMenu_DrawRecordListNameTiles_Bank1D, HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D, CloseBreedMenu_DrawRecordListNameTiles_Bank1D, ...)
 ; reads: wPartyCount
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wPartyList, wTextWindowTileLo
@@ -5278,7 +5278,7 @@ Func_01D_62FF:: ; address name
     ret
 
 ; for the visible entries of page wD7AF draws each record's mark ($CC/$CD from field $0E, or $CE for state 2) beside it (E-0130)
-; 10 call sites from 10 routines (e.g. EggServiceMenu_Case05_DrawRecordListPageMarks, EggServiceMenu_Case0F_DrawRecordListPageMarks, BreedMenu_Case05_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
+; 10 call sites from 10 routines (e.g. EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks, EggServiceMenu_Case0F_DrawRecordListPageMarks, BreedMenu_Case05_DrawRecordListPageMarks, LoadTile4990AndRun6320, ...)
 ; reads: wListPageIndex, wListLastRow, wListCount, hTemp0, wArg2, wArg1, wListPages
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
@@ -5818,7 +5818,7 @@ Data_01D_65F2:: ; address name
     db $2F, $01, $6F, $01
 
 ; list cursor over wD7A9 entries: Up/Down move wD7AB with wrap, erase and redraw the cursor, play sound $69 and set wMenuInputResult = $FD; A draws the confirmed cursor, plays sound $69 and sets $FF; B sets $FE; with no input the cursor blinks and the result is 0 (the codes of UpdatePagedListCursor) (E-0106)
-; 7 call sites from 7 routines (e.g. SwapMonstersMenu_Case04_UpdateListCursorListCursor, SwapMonstersMenu_Case05_UpdateListCursorListCursor, SwapMonstersMenu_Case08_UpdateListCursorListCursor, SwapMonstersMenu_Case08_GetListEntriesCell5Address, ...)
+; 7 call sites from 7 routines (e.g. SwapMonstersMenu_MoveRecords_UpdateListCursorListCursor, SwapMonstersMenu_Case05_UpdateListCursorListCursor, SwapMonstersMenu_Case08_UpdateListCursorListCursor, SwapMonstersMenu_Case08_GetListEntriesCell5Address, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListCount, wListCursor
 ; writes: wMenuInputResult, wListCursor, wListCursorAux
 UpdateListCursorListCursor::
@@ -5961,7 +5961,7 @@ Data_01D_66AE:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00
 
 ; row wD7AB runs 0..wD7B1 and page wD7AF runs 0..wD7B0 - 1, both wrapping; Up/Down move the row (wMenuInputResult = $FD), Left/Right move the page ($FB); a move erases the old cursor (tile $C3) and draws the new one (tile $BB) with sound $69; A draws tile $BC, plays sound $69 and sets $FF; B sets $FE. When the range is a single entry the press only blinks the cursor and the result is 0, as with no input (E-0068)
-; 34 call sites from 34 routines (e.g. EggServiceMenu_Case05_UpdatePagedListCursor, KeyAppraisalMenu_Case03_UpdatePagedListCursor, MedalPrizeMenu_Case05_WriteJoypadPressedRepeatAndMenuInputResultEtc, HibernateMenu_Case05_UpdatePagedListCursor_Case25, ...)
+; 34 call sites from 34 routines (e.g. EggServiceMenu_ChooseAndPay_UpdatePagedListCursor, KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc, HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case25, ...)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListLastRow, wListCursor, wListPageIndex, wListPages
 ; writes: wMenuInputResult, wListCursor, wListCursorAux, wListPageIndex
 UpdatePagedListCursor::
@@ -6183,7 +6183,7 @@ Data_01D_67EE:: ; address name
     db $A4, $01, $A2, $00, $E2, $00, $22, $01, $62, $01, $A2, $01
 
 ; for the three records listed at wD7F1 loads each species' sprite graphics and palette to the slots in Data_01D_6890 (E-0128)
-; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case09_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. PauseMenu_Main_Case03_Case01_LoadPartySpeciesSpriteGraphics, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_Case1E, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 ; reads: wArg1, wArg2, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB, rRAMG
 ; points at: wArg3
@@ -6430,7 +6430,7 @@ Func_01D_6915:: ; address name
     ret
 
 ; graphics number = the word wD7F1/wD7F2: reads its far pointer (3 bytes per entry) from Data_004_4EAA in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in wD7F4/wD7F5; on CGB it continues with the palette (not read) (E-0104)
-; 8 call sites from 8 routines (e.g. DecompressRecordSpeciesGraphicsToTiles0, LibraryMenu_Case10_GridCellAddressFromGridCursorXAndGrid2CursorX, RunNameEntryStateWhenNotFading_Case00_Case03, DecompressGraphicsA4ToTiles0, ...)
+; 8 call sites from 8 routines (e.g. DecompressRecordSpeciesGraphicsToTiles0, LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX, RunNameEntryStateWhenNotFading_Case00_Case03, DecompressGraphicsA4ToTiles0, ...)
 ; reads: wArg1, wArg2, wArg4, wArg5, wIsCGB, wArg3, rSTAT
 ; writes: wOBJPaletteUploadRequest
 ; points at: wOBJPaletteBuffer
@@ -6644,7 +6644,7 @@ Jump_01D_6A59:: ; address name
     ret
 
 ; for each party record found on the current list page (wD789 page wD7AF) draws a party mark at its row (scroll offsets Data_01D_6B28 when wD7F1 is set, else screen-buffer offsets Data_01D_6B1E) (E-0128)
-; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_Case04_DrawRecordListPageNames, EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames, SwapMonstersMenu_Case06_LoadFamilyIconTileForRecordB_Bank1E, ...)
+; 14 call sites from 10 routines (e.g. HibernateMenu_Case06_SetArg5ToListEntriesCell5, BreedMenu_ChooseParents_DrawRecordListPageNames, EggServiceMenu_Bank1B_Case0E_DrawRecordListPageNames, SwapMonstersMenu_Case06_LoadFamilyIconTileForRecordB_Bank1E, ...)
 ; reads: wListPageIndex, wListLastRow, wPartyCount, wArg1
 ; writes: rRAMG2, rRAMB
 ; points at: wPartyList, wListEntries
@@ -6867,7 +6867,7 @@ Func_01D_6B32:: ; address name
     ret
 
 ; copies tiles listed at the address in wD7F3/4 to wD7F1/2 + 16 * n, six per call; wD7F5 = $FF when the $FF end is reached, else 0 (E-0128)
-; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_Case04_LoadTileListSixPerCall, BreedMenu_Case04_LoadTileListSixPerCall_Case32, BreedMenu_Case05_DrawGoldBoxAndStep_Bank15, ...)
+; 7 call sites from 7 routines (e.g. CloseHibernateMenu_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall, BreedMenu_ChooseParents_LoadTileListSixPerCall_Case32, BreedMenu_Case05_DrawGoldBoxAndStep_Bank15, ...)
 ; reads: wArg3, wArg4, wGlyphListStart, wArg1, wArg2, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart, wArg5
 LoadTileListSixPerCall::
@@ -7050,7 +7050,7 @@ Jump_01D_6CB2:: ; address name
     ret
 
 ; copies tiles from Data_01D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (CopyTileBytesToVRAM_Bank1D) (E-0118)
-; 4 call sites from 4 routines (e.g. SwapMonstersMenu_Case09_Case1B_UpdatePagedListCursor, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
+; 4 call sites from 4 routines (e.g. SwapMonstersMenu_ShowMonsterDetails_Case1B_UpdatePagedListCursor, SwapMonstersMenu_Case0D_UploadTilesFromData6D20, SwapMonstersMenu_Case08_UpdateListCursorListCursor_Case1B, RunLinkSession8Case03Steps_UploadTilesFromData6D20)
 UploadTilesFromData6D20::
 Func_01D_6D07:: ; address name
     ld hl, Tiles_1D_6D20
@@ -7168,7 +7168,7 @@ Func_01D_6DF8:: ; address name
     ret
 
 ; packs SRAM record wD7F1's family, state, mark and other fields into the compact form in SRAM bank wD7F2 (wD7E0 workspace) (E-0131)
-; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
+; 4 call sites from 4 routines (e.g. SaveStepCopyBank1RecordSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wPackByteE1, wPackByteE6
 ; writes: rRAMB, rRAMG2, wPackByteE1, wPackFields, wPackWork, wArg5
 ; points at: wPackWork, wPackFields
@@ -8216,7 +8216,7 @@ Jump_01D_7121:: ; address name
     ret
 
 ; unpacks the compact record in SRAM bank wD7F2 back into the record fields (family, state, mark ...) (E-0131)
-; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case05_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
+; 4 call sites from 4 routines (e.g. ScanBank1RecordStepSaveRecordIndex, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42)
 ; reads: wArg2, wArg5, wArg6, wArg7, wArg8
 ; writes: rRAMB, rRAMG2, wPackWork, wArg5
 ; points at: wNameGlyphBuf
@@ -9048,7 +9048,7 @@ Jump_01D_75DA:: ; address name
     ret
 
 ; record wD7F1 (SRAM bank wD7F2): unpacks byte $21 into the four 2-bit fields wD7F5-wD7F8, sets wMenuInputResult = bits 7-6 of byte $27, and copies the 5-glyph name entry at offset 3 (Func_01D_7A90); one of six name entries in the record (E-0120)
-; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, HibernateMenu_SetArg5ToListEntriesCell5, HibernateMenu_Case05_Case2F_LoadRecordNameEntry0, ShowSaveFileInfoWindow, ...)
+; 6 call sites from 6 routines (e.g. UnpackRecordFromBank1Slot, HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Shared01, HibernateMenu_ChooseRecords_Case2F_LoadRecordNameEntry0, ShowSaveFileInfoWindow, ...)
 ; reads: wArg2
 ; writes: rRAMB, wMenuInputResult
 LoadRecordNameEntry0::

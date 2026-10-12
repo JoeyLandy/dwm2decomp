@@ -6358,7 +6358,7 @@ Func_001_6E31:: ; address name
     ret
 
 ; with SRAM enabled creates a record from the template Data_001_7098[hFFC7] (wD869 = hFFC7, level hFFC8); kinds 1 and 2 also set field $6E = 1 (E-0124)
-; 11 call sites from 11 routines (e.g. DispatchTalkEvent_Case01_ShowTheFarmIsFull, DispatchTalkEvent_Case01_TestFlagBit_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
+; 11 call sites from 11 routines (e.g. GreatLogTalkEvents_ShowTheFarmIsFull, GreatLogTalkEvents_TestFlagBit_Case42, AddRecordArg5AsFollower, UnreferencedScriptStepDispatch_73_6D52_ClearArg5IfAtOrAboveLimitForFarmLevel, ...)
 ; reads: hTemp1, hTemp2, wBattleArg0
 ; writes: rRAMG, rRAMB, wBattleArg1, wBattleArg2
 CreateMonsterRecordOfKindTemp1::

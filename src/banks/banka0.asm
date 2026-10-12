@@ -36,13 +36,11 @@ Func_0A0_4001:: ; address name
     call GameMode7_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case00_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
 ; reads: wScreenCountPlusOne
 ; writes: wBattleTurn
 ; points at: wSlotMarks, wBattleArg0
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_CarryUnlessBattleSlotOutSlotEmpty::
-Func_0A0_4047:: ; address name
+Func_0A0_4047::
     xor a, a
     ld hl, wBattleSlotOut + $4
     ld [hl+], a
@@ -236,33 +234,29 @@ Func_0A0_4181:: ; address name
     jr nz, .loop
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case00_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_WriteSpeciesIdLoAndSpeciesIdHi::
-Func_0A0_418E:: ; address name
+Func_0A0_418E::
     ld bc, $0204
-    jr RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC_Loop
+    jr Func_0A0_4193_Loop
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case00_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
 ; reads: wSpeciesRecord
 ; writes: wSpeciesIdLo, wSpeciesIdHi
 ; points at: wSlotDamageFlags, wBattleSlotOut, wBattleMonsterId
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC::
-Func_0A0_4193:: ; address name
+Func_0A0_4193::
     ld bc, $0304
 
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC_Loop::
+Func_0A0_4193_Loop::
 Jump_0A0_4196:: ; address name
     push bc
     call RunA04410Or456FBySlotC
     pop bc
     inc c
     dec b
-    jr nz, RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC_Loop
+    jr nz, Func_0A0_4193_Loop
     call AdjustSkillsForBattleStart_A0
     ld de, wSlotDamageFlags
     ld bc, $0800
@@ -317,7 +311,7 @@ Func_0A0_41E3:: ; address name
     ret
 
 ; replaces skill $8F by $AA for slots without wD8AF set and marks skills $34 and $35 of the foe slots with tiles $AD and $AE (E-0127)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC)
+; 1 call site from 1 routine (e.g. Func_0A0_4193)
 ; points at: wSlotNameSuffix, wBattleSkills
 AdjustSkillsForBattleStart_A0::
 Func_0A0_41F2:: ; address name
@@ -508,7 +502,7 @@ Func_0A0_42A5:: ; address name
     ret
 
 ; copies the 20 x 18 screen tile buffer to the BG map at HL (32-byte rows) (E-0124)
-; 3 call sites from 3 routines (e.g. GameMode7_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0_Case05, RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0)
+; 3 call sites from 3 routines (e.g. GameMode7_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_Case05, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0)
 ; points at: wScreenTileBuffer
 CopyScreenTileBufferToVRAM_A0::
 Func_0A0_42B2:: ; address name
@@ -708,7 +702,7 @@ Data_0A0_4387:: ; address name
     db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; runs Func_0A0_4410 for slots 0-3 or Func_0A0_456F for slots 4-7, clears the species record buffer and restores wD868 (E-0122)
-; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_RunA04410Or456FBySlotC, RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC)
+; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_RunA04410Or456FBySlotC, Func_0A0_4193)
 ; reads: wBattleArg0
 ; writes: wBattleArg0
 RunA04410Or456FBySlotC::
@@ -1186,10 +1180,8 @@ Func_0A0_46A1:: ; address name
     jr nz, .loop
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case00_Case06 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06)
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel::
-Func_0A0_46C3:: ; address name
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
+Func_0A0_46C3::
     push bc
     call ComputeWildEncounterLevel
     pop bc
@@ -1197,7 +1189,7 @@ Func_0A0_46C3:: ; address name
     ret
 
 ; computes the wild monster level wCFE3 and band wCFE4 from the party's stat totals (wD0F2-wD0FE) and size (E-0131)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel)
+; 1 call site from 1 routine (e.g. Func_0A0_46C3)
 ; reads: wBattlerRecords, wBattlerRecordSlot1
 ; writes: wWildLevel, wWildBand
 ComputeWildEncounterLevel::
@@ -1583,7 +1575,7 @@ Data_0A0_48F5:: ; address name
     db $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF
 
 ; copies battler records 0 and 1 ($4E bytes each, wBattlerRecords and wD123) to wD1BF and wD20D (E-0118)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06)
 ; points at: wBattlerRecords, wBattlerRecordSlot4, wBattlerRecordSlot1, wBattlerRecordSlot5
 BackupBattlerRecords0And1::
 Func_0A0_4900:: ; address name
@@ -1598,7 +1590,7 @@ Func_0A0_4900:: ; address name
     ret
 
 ; hFFC7 = min(4 * wCFE3 / 5 + 5, 99); runs Func_0A0_494F for B slots from C with wD86A = Data_0A0_4B0A[slot] (E-0125)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel)
+; 1 call site from 1 routine (e.g. Func_0A0_46C3)
 ; reads: wWildLevel
 ; writes: hTemp1, wBattleArg2, wBattleArg3
 ApplyLevelScaledStatsToSlots::
@@ -2114,7 +2106,7 @@ Func_0A0_4C2C:: ; address name
     ret
 
 ; copies rectangle Data_0A0_4DC7 to the screen buffer; unless bit 1 of wC57F is set, writes tiles $DA-$DE at wC1C3 (E-0122)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles)
 ; reads: wLinkRole
 DrawRect4DC7AndWriteDATiles::
 Func_0A0_4C36:: ; address name
@@ -2476,44 +2468,44 @@ Func_0A0_4F8E:: ; address name
     ret nz
     ld a, [wBattlePhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case00
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
     dw RunBattlePhaseWhenTextIdle_A0_Case01
     dw RunBattlePhaseWhenTextIdle_A0_Case02
-    dw RunBattlePhaseWhenTextIdle_A0_Case03
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0
+; by wBattleStep: waits for the link, computes the wild level and shows each opposing monster's picture ('The first/second/third monster is 0!', 'Please wait')
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
 Jump_0A0_4F9F:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitFadeState
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WriteLinkRecvBufferAndBattleSetupByte98Etc
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case03
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_SetBattleStep
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case05
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_BeginStringDisplay_Bank07
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheFirstMonsterIs
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case0A
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheSecondMonsterIs
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAndStep
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WriteBattleStepAndTemp0
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheThirdMonsterIs
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAndStep_Case0F
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case10
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_ShowPleaseWait
-    dw RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case12
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitFadeState
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case02
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case05
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheFirstMonsterIs
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case0A
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheSecondMonsterIs
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteBattleStepAndTemp0
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheThirdMonsterIs
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_Case0F
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case10
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowPleaseWait
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case12
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_WaitFadeState::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitFadeState::
 Jump_0A0_4FC9:: ; address name
     ld a, [wFadeState]
     and a, a
@@ -2524,12 +2516,12 @@ Jump_0A0_4FC9:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage::
 Jump_0A0_4FD8:: ; address name
     ld a, [wLinkMessage]
     cp a, $0C
@@ -2540,12 +2532,12 @@ Jump_0A0_4FD8:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wRandomLo, wRandomHi
 ; writes: wLinkRecvBuffer, wBattleSetupByte98, wLinkTimeoutLo, wLinkTimeoutHi, wLinkBufferPtrLo, wLinkBufferPtrHi, wLinkBufferCountLo, wLinkSendByte, ...
 ; points at: wBattleStep, wLinkRecvBuffer, wLinkPartnerName
-RunBattlePhaseWhenTextIdle_A0_Case00_WriteLinkRecvBufferAndBattleSetupByte98Etc::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case02::
 Jump_0A0_4FE7:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -2571,12 +2563,12 @@ Jump_0A0_4FE7:: ; address name
     ld [wLinkReady], a
     ret
 
-; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wLinkSendByte, wLinkReady
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case03::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case03::
 Jump_0A0_501D:: ; address name
     ld a, [wLinkMessage]
     cp a, $F0
@@ -2589,11 +2581,11 @@ Jump_0A0_501D:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_SetBattleStep::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep::
 Jump_0A0_5030:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -2601,12 +2593,12 @@ Jump_0A0_5030:: ; address name
     ld [wLinkSendByte], a
     ret
 
-; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wLinkRole, wRandomLo, wRandomHi, wLinkPartnerName, wLinkPartnerByte1
 ; writes: wLinkSendByte, wLinkPartnerName, wRandomSeed2Lo, wRandomLo, wLinkPartnerByte1, wRandomSeed2Hi, wRandomHi
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case05::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case05::
 Jump_0A0_503A:: ; address name
     ld a, [wLinkMessage]
     cp a, $03
@@ -2641,22 +2633,22 @@ Jump_0A0_503A:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 6 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCountPlusOne
 ; writes: wEncounterKind, wBattleFoeCount, wSide1Flag
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel_Case06::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_Case06::
 Jump_0A0_5076:: ; address name
-    call RunBattlePhaseWhenTextIdle_A0_Case00_Case06_CarryUnlessBattleSlotOutSlotEmpty
+    call Func_0A0_4047
     ld a, [wScreenCountPlusOne]
     cp a, $02
     jr z, .set_encounter_kind_to_01
     ld a, $02
     ld [wEncounterKind], a
     ld bc, $0300
-    call RunBattlePhaseWhenTextIdle_A0_Case00_Case06_ComputeWildEncounterLevel
-    call RunBattlePhaseWhenTextIdle_A0_Case00_Case06_RunA04410Or456FBySlotC
+    call Func_0A0_46C3
+    call Func_0A0_4193
     ld hl, wBattleStep
     inc [hl]
     ret
@@ -2669,17 +2661,17 @@ Jump_0A0_5076:: ; address name
     ld a, $02
     ld [wSide1Flag], a
     call BackupBattlerRecords0And1
-    call RunBattlePhaseWhenTextIdle_A0_Case00_Case06_WriteSpeciesIdLoAndSpeciesIdHi
+    call Func_0A0_418E
     ld hl, wBattleStep
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 7 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFadeState, wScreenCountPlusOne
 ; writes: wStringIndex, wStringCategory
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_BeginStringDisplay_Bank07::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07::
 Jump_0A0_50AD:: ; address name
     ld a, [wFadeState]
     or a, a
@@ -2693,12 +2685,12 @@ Jump_0A0_50AD:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 8 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheFirstMonsterIs::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheFirstMonsterIs::
 Jump_0A0_50C8:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2719,12 +2711,12 @@ Jump_0A0_50C8:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wBattlePictureIds
 ; writes: hTemp0, wBGPaletteUploadRequest
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
 Jump_0A0_50F2:: ; address name
     ld a, [wIsCGB]
     or a, a
@@ -2749,22 +2741,22 @@ Jump_0A0_50F2:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCountPlusOne, wIsCGB, wBattlePictureIds
 ; writes: hTemp0
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case0A::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case0A::
 Jump_0A0_511F:: ; address name
     ld hl, vBGMap0 + $E1
     ld a, [wScreenCountPlusOne]
     cp a, $02
-    jr nz, .call_run_battle_phase_when_text_idle_a0_write
+    jr nz, .call_run_battle_phase_when_text_idle_a0
     ld hl, vBGMap0 + $E4
 
-.call_run_battle_phase_when_text_idle_a0_write:
+.call_run_battle_phase_when_text_idle_a0:
     ld d, $14
-    call RunBattlePhaseWhenTextIdle_A0_WriteVRAMByteInc
+    call RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc
     ld a, [wIsCGB]
     or a, a
     jr z, .done
@@ -2788,12 +2780,12 @@ Jump_0A0_511F:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 11 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheSecondMonsterIs::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheSecondMonsterIs::
 Jump_0A0_5158:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2814,12 +2806,12 @@ Jump_0A0_5158:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 12 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattlePictureIds
 ; writes: wBGPaletteUploadRequest
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAndStep::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep::
 Jump_0A0_5182:: ; address name
     ld a, [wBattlePictureIds + $2]
     ld e, a
@@ -2834,25 +2826,25 @@ Jump_0A0_5182:: ; address name
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 13 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenCountPlusOne, wBattleStep, wIsCGB, wBattlePictureIds
 ; writes: wBattleStep, hTemp0
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_WriteBattleStepAndTemp0::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteBattleStepAndTemp0::
 Jump_0A0_519C:: ; address name
     ld hl, vBGMap0 + $E7
     ld a, [wScreenCountPlusOne]
     cp a, $02
-    jr nz, .call_run_battle_phase_when_text_idle_a0_write
+    jr nz, .call_run_battle_phase_when_text_idle_a0
     ld a, [wBattleStep]
     add a, $03
     ld [wBattleStep], a
     ld hl, vBGMap0 + $EA
 
-.call_run_battle_phase_when_text_idle_a0_write:
+.call_run_battle_phase_when_text_idle_a0:
     ld d, $38
-    call RunBattlePhaseWhenTextIdle_A0_WriteVRAMByteInc
+    call RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc
     ld a, [wIsCGB]
     or a, a
     jr z, .done
@@ -2876,12 +2868,12 @@ Jump_0A0_519C:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 14 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattlePictureIds
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_ShowTheThirdMonsterIs::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheThirdMonsterIs::
 Jump_0A0_51DD:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2902,12 +2894,12 @@ Jump_0A0_51DD:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 15 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattlePictureIds
 ; writes: wBGPaletteUploadRequest
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAndStep_Case0F::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_Case0F::
 Jump_0A0_5207:: ; address name
     ld a, [wBattlePictureIds + $4]
     ld e, a
@@ -2922,16 +2914,16 @@ Jump_0A0_5207:: ; address name
     inc [hl]
     ret
 
-; entry 16 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 16 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wIsCGB, wBattlePictureIds
 ; writes: hTemp0
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case10::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case10::
 Jump_0A0_5221:: ; address name
     ld d, $5C
     ld hl, vBGMap0 + $ED
-    call RunBattlePhaseWhenTextIdle_A0_WriteVRAMByteInc
+    call RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc
     ld a, [wIsCGB]
     or a, a
     jr z, .done
@@ -2949,12 +2941,12 @@ Jump_0A0_5221:: ; address name
     inc [hl]
     ret
 
-; entry 17 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 17 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wStringCategory, wStringIndex, wLinkSendByte
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case00_ShowPleaseWait::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowPleaseWait::
 Jump_0A0_5246:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -2970,12 +2962,12 @@ Jump_0A0_5246:: ; address name
     inc [hl]
     ret
 
-; entry 18 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case00
+; entry 18 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wBattleStep, wLinkSendByte
 ; points at: wBattlePhase
-RunBattlePhaseWhenTextIdle_A0_Case00_WaitLinkMessage_Case12::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_Case12::
 Jump_0A0_5265:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -2988,9 +2980,9 @@ Jump_0A0_5265:: ; address name
     inc [hl]
     ret
 
-; only called from routines of RunBattlePhaseWhenTextIdle_A0 (E-0098)
-; 3 call sites from 3 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case10, RunBattlePhaseWhenTextIdle_A0_Case00_WriteBattleStepAndTemp0, RunBattlePhaseWhenTextIdle_A0_Case00_LoadMonsterPictureAttributes_Case0A)
-RunBattlePhaseWhenTextIdle_A0_WriteVRAMByteInc::
+; only called from routines of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (E-0098)
+; 3 call sites from 3 routines (e.g. RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case10, RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteBattleStepAndTemp0, RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_Case0A)
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc::
 Func_0A0_5278:: ; address name
     ld bc, $0606
 
@@ -3361,13 +3353,11 @@ Jump_0A0_547E:: ; address name
     ld [wBattleStep], a
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wPartyCount
 ; writes: rRAMG
 ; points at: wPartyList, wBattleBuffer72
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Sub01::
-Func_0A0_5491:: ; address name
+Func_0A0_5491::
     ld a, $0A
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -3421,31 +3411,31 @@ Func_0A0_5491:: ; address name
     ld [rRAMG], a
     ret
 
-; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0
+; by wBattleStep: the results screen ('RESULTS ... Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.')
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
 Jump_0A0_54DD:: ; address name
     ld a, [wBattleStep]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1_Case01
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_ShowString_Bank07
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0_Case05
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_Case05
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResultStep, wBattleResultCounter, wLinkRole, wBattleResultDelay
 ; writes: wBattleKindFlags, wBattleResultByte9B, wBattleResultByte9C, wBattleResultStep, wBattleResultCounter, wSaveStep, wSaveRecordIndex
 ; points at: wBattleSlotOut, wBattleStatus, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00::
 Jump_0A0_54F7:: ; address name
     ld a, $01
     ld [wBattleKindFlags], a
@@ -3524,24 +3514,24 @@ Jump_0A0_54F7:: ; address name
     ld [wBattleResultStep], a
     ld a, [wBattleResultDelay]
     ld [wBattleResultCounter], a
-    call RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-    call RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
+    call Func_0A0_5A6C
+    call Func_0A0_5B47
     xor a, a
     ld [wSaveStep], a
     ld [wSaveRecordIndex], a
     ld hl, wBattleStep
     inc [hl]
-    call RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Sub01
+    call Func_0A0_5491
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSaveStep, wBattleResultStep
 ; writes: wStringIndex, wStringCategory
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1_Case01::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SaveGameToSRAMWithChecksum::
 Jump_0A0_558C:: ; address name
-    farcall RunBattlePhaseWhenTextIdle_A0_Case03_Case01_BackupRecordsToSRAMBank1
+    farcall Func_002_7718
     ld a, [wSaveStep]
     bit 7, a
     ret z
@@ -3556,11 +3546,11 @@ Jump_0A0_558C:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 2 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; points at: wScreenTileBuffer, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
 Jump_0A0_55B6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3575,11 +3565,11 @@ Jump_0A0_55B6:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 3 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_ShowString_Bank07::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
 Jump_0A0_55D1:: ; address name
     ld hl, vTiles1 + $700
     ld a, l
@@ -3615,16 +3605,16 @@ Jump_0A0_55D1:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 4 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResultStep, wWildLevel, wLinkRuleTurnLimit, wWildBand, wWildByteE5
 ; writes: wWindowTileBuffer
 ; points at: wKeyNameBuf, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles::
 Jump_0A0_5622:: ; address name
     call DrawRect4DC7AndWriteDATiles
     ld a, [wBattleResultStep]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles_Data
+    ld hl, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles_Data
     add a, a
     add_a_to_hl
     ld e, [hl]
@@ -3660,13 +3650,13 @@ Jump_0A0_5622:: ; address name
     ld [wWindowTileBuffer], a
     ld de, wKeyNameBuf
     ld hl, wScreenTileBuffer + $71
-    call RunBattlePhaseWhenTextIdle_A0_Case03_Case04_WriteTwoDigitsFromDEStepRow
+    call Func_0A0_569E
     ld hl, wBattleStep
     inc [hl]
     ret
 
 ; writes A as two digit tiles at HL, with a blank ($C3) for a leading zero (E-0122)
-; 3 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles)
+; 3 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles)
 ; reads: wDigits
 WriteTwoDigitsBlankLeading_A0::
 Func_0A0_5678:: ; address name
@@ -3705,17 +3695,15 @@ Func_0A0_5693:: ; address name
     ld a, c
     ret
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles)
 ; reads: wDigits
-RunBattlePhaseWhenTextIdle_A0_Case03_Case04_WriteTwoDigitsFromDEStepRow::
-Func_0A0_569E:: ; address name
+Func_0A0_569E::
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
     call WriteTwoDigitsFromDEStepRow
 
 ; writes [DE] (DE += 1) as two digit tiles at HL (no leading zero digit), then HL moves to the next row ($40 on) (E-0124)
-; 3 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case04_WriteTwoDigitsFromDEStepRow)
+; 3 call sites from 1 routine (e.g. Func_0A0_569E)
 ; reads: wDigits
 WriteTwoDigitsFromDEStepRow::
 Func_0A0_56A7:: ; address name
@@ -3745,16 +3733,16 @@ Func_0A0_56A7:: ; address name
     ld h, a
     ret
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles
-RunBattlePhaseWhenTextIdle_A0_Case03_DrawRect4DC7AndWriteDATiles_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRect4DC7AndWriteDATiles_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0A0_56CA:: ; address name
     db $04, $F7, $04, $0E, $04, $12, $04, $16
 
-; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 5 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextBuf0
 ; points at: wTextBuf0, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_CopyScreenTileBufferToVRAM_A0_Case05::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_Case05::
 Jump_0A0_56D2:: ; address name
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0
@@ -3771,19 +3759,19 @@ Jump_0A0_56D2:: ; address name
     inc [hl]
     ret
 
-; entry 6 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 6 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wBattleSubPhase, wBattleResultStep
 ; writes: wStringCategory, wStringIndex, wBattleSubPhase
 ; points at: wBattleStep, wTextBuf2
-RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1::
 Jump_0A0_56F7:: ; address name
     ld a, [wWorkBuf + $9]
     cp a, $FF
     jr nz, .call_copy_f0_string_from_table5_a4_a_to_text
     ld hl, wBattleStep
     inc [hl]
-    jr RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07_ReadBattleSubPhase
+    jr RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07_ReadBattleSubPhase
 
 .call_copy_f0_string_from_table5_a4_a_to_text:
     call CopyF0StringFromTable5A4AToTextBuf1
@@ -3807,18 +3795,18 @@ Jump_0A0_56F7:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 7 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wBattleSubPhase
 ; writes: wStringCategory, wStringIndex, wBattleSubPhase
 ; points at: wTextBuf2, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07::
 Jump_0A0_5732:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
 
-RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07_ReadBattleSubPhase::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07_ReadBattleSubPhase::
 Jump_0A0_5737:: ; address name
     ld a, [wBattleSubPhase]
     call CopyF0StringFromTable5A4AToTextBuf1
@@ -3844,12 +3832,12 @@ Jump_0A0_5737:: ; address name
     inc [hl]
     ret
 
-; entry 8 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 8 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wWorkBuf, wBattleResultStep
 ; writes: hTemp0, hTemp1, hTemp2, wStringCategory, wStringIndex, wBattleSubPhase, wLinkSendByte
 ; points at: wTextBuf2, wBattleStep
-RunBattlePhaseWhenTextIdle_A0_Case03_ShowReceivedWG::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG::
 Jump_0A0_5772:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3880,22 +3868,22 @@ Jump_0A0_5772:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 9 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case09::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09::
 Jump_0A0_57B1:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WaitTextFlags
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WaitTextFlags
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case09
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WaitTextFlags::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WaitTextFlags::
 Jump_0A0_57B9:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -3906,12 +3894,12 @@ Jump_0A0_57B9:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case09
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage, wRecordBufB
 ; writes: wBattleScene, wLinkRules, wRecordBufB, wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wScreenState, ...
 ; points at: wRecordBufA, wRecordBufB, wModeChangeRequest, wBGFillFlag
-RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder::
 Jump_0A0_57C8:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -4057,7 +4045,7 @@ Jump_0A0_57C8:: ; address name
     ret
 
 ; HL >>= 2 (arithmetic), and 1 when that leaves 0 (E-0118)
-; 6 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder)
+; 6 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
 QuarterHLAtLeast1::
 Func_0A0_590B:: ; address name
     sra h
@@ -4071,7 +4059,7 @@ Func_0A0_590B:: ; address name
     ret
 
 ; writes '???' ($98 three times, the charmap '?') followed by seven $F0 bytes at HL: a 10-byte name field holding a placeholder (E-0111)
-; 4 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder)
+; 4 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
 WriteUnknownNamePlaceholder::
 Func_0A0_591A:: ; address name
     ld a, $98
@@ -4097,7 +4085,7 @@ Func_0A0_591A:: ; address name
     ret
 
 ; appends the eight skills at wCA5F (mapped through the pair list Data_0A0_597A) to the first free slot of wCA67, then clears wCA5F (E-0127)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case09_WriteUnknownNamePlaceholder)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case09_WriteUnknownNamePlaceholder)
 AppendMappedSkillsToWCA67::
 Func_0A0_5939:: ; address name
     ld de, wRecordBufB + $3C
@@ -4209,22 +4197,22 @@ Data_0A0_597A:: ; address name
     db $9A, $99 ; id 43
     db $FF, $FF ; end
 
-; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
+; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case0A::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A::
 Jump_0A0_59D4:: ; address name
     ld a, [wBattleSubPhase]
     rst $00
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_WaitTextFlags
-    dw RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_StartPaletteFade
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_WaitTextFlags
+    dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_StartPaletteFade
 
-; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case0A
+; entry 0 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wLinkSendByte
 ; points at: wBattleSubPhase
-RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_WaitTextFlags::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_WaitTextFlags::
 Jump_0A0_59DC:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -4235,12 +4223,12 @@ Jump_0A0_59DC:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03_Case0A
+; entry 1 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMessage
 ; writes: wGameMode, wModeState, wGameMode2State, wGameMode2Arg, wScreenState, wLinkSession, wLinkExchangeState, wLinkRole, ...
 ; points at: wModeChangeRequest
-RunBattlePhaseWhenTextIdle_A0_Case03_Case0A_StartPaletteFade::
+RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case0A_StartPaletteFade::
 Jump_0A0_59EB:: ; address name
     ld a, [wLinkMessage]
     cp a, $01
@@ -4275,7 +4263,7 @@ Jump_0A0_59EB:: ; address name
     db $0A, $14, $1E
 
 ; copies the $F0-terminated string at Data_0A0_5A4A[A] to wC140, including the terminator (E-0122)
-; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1_Case07, RunBattlePhaseWhenTextIdle_A0_Case03_CopyF0StringFromTable5A4AToTextBuf1)
+; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1_Case07, RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTable5A4AToTextBuf1)
 ; points at: wTextBuf1
 CopyF0StringFromTable5A4AToTextBuf1::
 Func_0A0_5A30:: ; address name
@@ -4304,13 +4292,11 @@ Data_0A0_5A4A:: ; address name
     db $19, $F0, $0A, $1D, $14, $F0, $0D, $0E, $0F, $F0, $0A, $10, $15, $F0, $12, $17
     db $1D, $F0
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wBattleResultStep, wLinkRuleTurnLimit, wBattleRewardByte97, wBattleRewardByte98, wWildLevel
 ; writes: wWorkBuf, wWildBand, wWildByteE5
 ; points at: wKeyNameBuf
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0::
-Func_0A0_5A6C:: ; address name
+Func_0A0_5A6C::
     ld a, [wBattleResultStep]
     ld hl, wKeyNameBuf
     add_a_to_hl
@@ -4323,9 +4309,9 @@ Func_0A0_5A6C:: ; address name
 .read_link_rule_turn_limit:
     ld [hl], a
     ld a, [wLinkRuleTurnLimit]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B25
+    ld hl, Data_0A0_5B25
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B2C
+    ld hl, Data_0A0_5B2C
     add_a_to_hl
     push hl
     ld hl, wKeyNameBuf
@@ -4353,9 +4339,9 @@ Func_0A0_5A6C:: ; address name
     ld a, l
     ld [wWorkBuf], a
     ld [wWildBand], a
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B33
+    ld hl, Data_0A0_5B33
     call CountTableBytesAtOrBelowA_BankA0
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B39
+    ld hl, Data_0A0_5B39
     add_a_to_hl
     ld a, [wWildLevel]
     ld e, a
@@ -4409,14 +4395,14 @@ Func_0A0_5A6C:: ; address name
 
 .call_count_table_bytes_at_or_below_a_bank_a0:
     ld a, e
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B3F
+    ld hl, Data_0A0_5B3F
     call CountTableBytesAtOrBelowA_BankA0
     ld [wWorkBuf + $1], a
     ld [wWildByteE5], a
     ret
 
 ; HL = ascending table of thresholds: C = A = the number of leading bytes that are <= A (the index of the first byte above A); HL ends on that byte. The table must contain a byte above A (E-0065) (the same 11 bytes appear in 2 banks)
-; 3 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0)
+; 3 call sites from 1 routine (e.g. Func_0A0_5A6C)
 CountTableBytesAtOrBelowA_BankA0::
 Func_0A0_5B1A:: ; address name
     ld c, $00
@@ -4432,37 +4418,30 @@ Func_0A0_5B1A:: ; address name
     ld a, c
     ret
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5B25:: ; address name
+; address loaded by Func_0A0_5A6C
+Data_0A0_5B25:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $0B, $15, $29, $33, $3D, $FF
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5B2C:: ; address name
+; address loaded by Func_0A0_5A6C
+Data_0A0_5B2C:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $0A, $05, $00, $FB, $F6, $EC
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5B33:: ; address name
+; address loaded by Func_0A0_5A6C
+Data_0A0_5B33:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $03, $05, $07, $09, $FF
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5B39:: ; address name
+; address loaded by Func_0A0_5A6C
+Data_0A0_5B39:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $EC, $F6, $FB, $00, $05, $0A
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_CountTableBytesAtOrBelowA_BankA0_Data_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5B3F:: ; address name
+; address loaded by Func_0A0_5A6C
+Data_0A0_5B3F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $14, $28, $32, $3C, $46, $50, $5A, $FF
 
-; only called from RunBattlePhaseWhenTextIdle_A0_Case03_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00)
+; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Case00)
 ; reads: wLinkReceivedByte, wBattleResultStep, wWorkBuf, wGoldLo, wGoldMid, wGoldHi
 ; writes: wWorkBuf, rRAMG, rRAMB, wGoldLo, wGoldMid, wGoldHi
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress::
-Func_0A0_5B47:: ; address name
+Func_0A0_5B47::
     ld a, $FF
     ld [wWorkBuf + $9], a
     ld [wWorkBuf + $A], a
@@ -4493,7 +4472,7 @@ Func_0A0_5B47:: ; address name
     call OffsetByIndexOfMinOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D5A
+    ld hl, Data_0A0_5D5A
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4502,7 +4481,7 @@ Func_0A0_5B47:: ; address name
     ld [wWorkBuf + $A], a
     ld a, [wWorkBuf + $1]
     add a, a
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D6A
+    ld hl, Data_0A0_5D6A
     add_a_to_hl
     ld a, [hl+]
     ld d, [hl]
@@ -4513,7 +4492,7 @@ Func_0A0_5B47:: ; address name
     call OffsetByIndexOfMaxOfFiveWords
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62
+    ld hl, Data_0A0_5D62
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4526,7 +4505,7 @@ Func_0A0_5B47:: ; address name
 .read_work_buf:
     push hl
     ld a, [wWorkBuf + $1]
-    ld hl, RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62
+    ld hl, Data_0A0_5D62
     add_a_to_hl
     ld c, [hl]
     pop hl
@@ -4650,7 +4629,7 @@ Func_0A0_5B47:: ; address name
     ret
 
 ; the word at HL += C, capped at 999; C becomes the amount actually added (E-0124)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress)
+; 1 call site from 1 routine (e.g. Func_0A0_5B47)
 AddCToWordCappedAt999::
 Func_0A0_5C8F:: ; address name
     ld a, [hl+]
@@ -4686,7 +4665,7 @@ Func_0A0_5C8F:: ; address name
     ret
 
 ; the word at HL -= C; results at or below 0 become 1 (B = the amount actually taken) (E-0124)
-; 7 call sites from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress)
+; 7 call sites from 1 routine (e.g. Func_0A0_5B47)
 SubtractCFromWordMin1::
 Func_0A0_5CB2:: ; address name
     ld b, c
@@ -4718,7 +4697,7 @@ Func_0A0_5CB2:: ; address name
     ret
 
 ; finds the entry with the smallest of five words after HL (ties broken randomly), stores its index in wD0A6 and returns HL + Data_0A0_5D54[index] (E-0122)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress)
+; 1 call site from 1 routine (e.g. Func_0A0_5B47)
 ; writes: wWorkBuf
 OffsetByIndexOfMinOfFiveWords::
 Func_0A0_5CCD:: ; address name
@@ -4765,7 +4744,7 @@ Func_0A0_5CF9:: ; address name
     ret
 
 ; finds the entry with the largest of five words after HL (ties broken randomly), stores its index in wD0A6 and returns HL + Data_0A0_5D54[index] (E-0122)
-; 1 call site from 1 routine (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress)
+; 1 call site from 1 routine (e.g. Func_0A0_5B47)
 ; writes: wWorkBuf
 OffsetByIndexOfMaxOfFiveWords::
 Func_0A0_5D0C:: ; address name
@@ -4826,19 +4805,16 @@ OffsetByIndexOfMinOfFiveWords_Data:: ; heuristic: pointer load in the same bank 
 Data_0A0_5D54:: ; address name
     db $00, $04, $06, $08, $0A, $0C
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5D5A:: ; address name
+; address loaded by Func_0A0_5B47
+Data_0A0_5D5A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $02, $03, $04, $05, $06, $08, $0A
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5D62:: ; address name
+; address loaded by Func_0A0_5B47
+Data_0A0_5D62:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $01, $01, $01, $01, $01, $01, $01, $01
 
-; address loaded by RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress
-RunBattlePhaseWhenTextIdle_A0_Case03_Case00_SRAMRecordAddress_Data_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-Data_0A0_5D6A:: ; address name
+; address loaded by Func_0A0_5B47
+Data_0A0_5D6A:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03, $E8, $03
 
 ; only called from RunBattlePhaseWhenTextIdle_A0_Case01_Case00 (E-0047)

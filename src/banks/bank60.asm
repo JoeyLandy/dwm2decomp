@@ -4731,7 +4731,7 @@ Data_060_6A09:: ; address name
     db $53, $00, $54, $00, $55, $57, $58, $5A, $5B, $00, $5E, $60, $62, $00, $00, $64, $00, $00, $00, $00
 
 ; hFFC6 = the index of the first of 20 SRAM-bank-2 slots ($195 bytes apart) whose marker is not $50 + index, or $FF when all match (E-0125)
-; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex, DebugAutomap_Update_RollKeyContentsForLevelTemp0, RunScreenStateWhenNotFading_1B_Case01_DrawThreeTilesAtBGMap20FFromDE_Case21)
+; 3 call sites from 3 routines (e.g. RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex, DebugAutomap_Update_RollKeyContentsForLevelTemp0, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Case21)
 ; reads: hTemp0
 ; writes: rRAMB, rRAMG, hTemp0
 ; points at: sRecords

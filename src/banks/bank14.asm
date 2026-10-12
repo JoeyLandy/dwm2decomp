@@ -140,7 +140,7 @@ Func_014_40CC:: ; address name
     dw HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
     dw HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc
     dw HibernateMenu_Case04
-    dw HibernateMenu_Case05
+    dw HibernateMenu_ChooseRecords
     dw HibernateMenu_Case06
     dw HibernateMenu_Case07
     dw HibernateMenu_SwapMonstersMenu
@@ -661,91 +661,91 @@ Jump_014_4409:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 5 of the `rst $00` table in HibernateMenu
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and UnpackRecordFromBank1Slot
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-HibernateMenu_Case05::
+HibernateMenu_ChooseRecords::
 Jump_014_4446:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_WriteArg1AndArg2Etc
-    dw HibernateMenu_Case05_ToHibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case06
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM
-    dw HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case12
-    dw HibernateMenu_Case05_UnpackRecordFromBank1Slot
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM_Case1B
-    dw HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case1C
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
+    dw HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case06
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM
+    dw HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case12
+    dw HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_Case1B
+    dw HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case1C
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_ListRecordsState1WithByte6EClear
-    dw HibernateMenu_Case05_ToDrawRecordListPageNames
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor_Case25
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280_Case2C
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14_Case2E
-    dw HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14
+    dw HibernateMenu_ChooseRecords_ListRecordsState1WithByte6EClear
+    dw HibernateMenu_ChooseRecords_ToDrawRecordListPageNames
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case25
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E
+    dw HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14
     dw DrawBox4965AndMenuAndStep
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case31
-    dw HibernateMenu_Case05_DrawBox4965AndMenuAndStep
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case31
+    dw HibernateMenu_ChooseRecords_DrawBox4965AndMenuAndStep
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_WriteArg1AndArg2Etc
-    dw HibernateMenu_Case05_ToHibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case06
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor_Case3B
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM
-    dw HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E
-    dw HibernateMenu_Case05_PackRecordFieldsToBank1Slot
-    dw HibernateMenu_Case05_Multiply8
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
+    dw HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case06
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case3B
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM
+    dw HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E
+    dw HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot
+    dw HibernateMenu_ChooseRecords_Multiply8
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
 
-; entry 50 of the `rst $00` table in HibernateMenu_Case05
+; entry 50 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wListCursor, wListPageIndex, wSelectedRecord
 ; writes: wSelectedRecord, wItemGridX, wItemGridY, wListCursor, wListPageIndex
-HibernateMenu_Case05_DrawBox4965AndMenuAndStep::
+HibernateMenu_ChooseRecords_DrawBox4965AndMenuAndStep::
 Jump_014_44DA:: ; address name
     call DrawBox4965AndMenuAndStep
     farcall ListRecordsState1WithByte6EClear
@@ -762,24 +762,24 @@ Jump_014_44DA:: ; address name
     ld a, [wSelectedRecord]
     ld b, a
     ld c, $00
-    call HibernateMenu_Case05_Case32_CopyRecordNameToNameGlyphBuf
+    call HibernateMenu_ChooseRecords_Case32_CopyRecordNameToNameGlyphBuf
     xor a, a
     ld [wListCursor], a
     ld [wListPageIndex], a
     ret
 
-; entry 60 of the `rst $00` table in HibernateMenu_Case05
+; entry 60 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wItemGridX, wItemGridY
 ; writes: wListCursor, wListPageIndex, wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
 ; points at: wTextWindowTileLo
-HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C::
+HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C::
 Jump_014_450C:: ; address name
     call BGMapAddressAtScroll_Bank14
     push hl
     ld a, [wListCursor]
     add a, a
-    ld hl, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C_Data
+    ld hl, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -828,16 +828,16 @@ Jump_014_450C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; address loaded by HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C
-HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C
+HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_4586:: ; address name
     db $21, $00, $61, $00, $A1, $00, $E1, $00, $21, $01
 
-; entry 62 of the `rst $00` table in HibernateMenu_Case05
+; entry 62 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep, wListCursor
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor
-HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E::
+HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E::
 Jump_014_4590:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -853,8 +853,8 @@ Jump_014_4590:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, .call_hibernate_menu_write_svbk
-    farcall HibernateMenu_Case05_Case3E_CopyRecordNameToNameGlyphBuf
-    call HibernateMenu_SetArg5ToListEntriesCell5
+    farcall HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf
+    call HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Shared01
     jp HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK
 
 .call_hibernate_menu_write_svbk:
@@ -875,12 +875,12 @@ Jump_014_4590:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 63 of the `rst $00` table in HibernateMenu_Case05
+; entry 63 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenSubStep, wSelectedRecord, wArg5, wArg6, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg1, wArg2, wArg3, wArg4, wSelectedRecord, wScreenSubStep, ...
 ; points at: wRecordBufA, sCompactRecords, sRecords
-HibernateMenu_Case05_PackRecordFieldsToBank1Slot::
+HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
 Jump_014_45DE:: ; address name
     ld a, [wScreenSubStep]
     and a, a
@@ -968,12 +968,12 @@ Jump_014_45DE:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 64 of the `rst $00` table in HibernateMenu_Case05
+; entry 64 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSelectedRecord
 ; writes: rRAMG2, rRAMB, wItemGridX, wItemGridY, wSelectedRecord, wListCursor, wChoiceCursor, wListPageIndex, ...
 ; points at: sCompactRecords, wRecordBufA, sRecords
-HibernateMenu_Case05_Multiply8::
+HibernateMenu_ChooseRecords_Multiply8::
 Jump_014_46A1:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -1018,10 +1018,10 @@ Jump_014_46A1:: ; address name
     ld [wCursorBlinkAE], a
     ret
 
-; entry 5 of the `rst $00` table in HibernateMenu_Case05
+; entry 5 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTextWindowTileLo, wScreenStep
-HibernateMenu_Case05_FillTilesBxC::
+HibernateMenu_ChooseRecords_FillTilesBxC::
 Jump_014_46F4:: ; address name
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -1041,11 +1041,11 @@ Jump_014_46F4:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in HibernateMenu_Case05
+; entry 7 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14::
+HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
 Jump_014_4718:: ; address name
     ld a, [wListCursor]
     ld b, $BB
@@ -1064,11 +1064,11 @@ Jump_014_4718:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 9 of the `rst $00` table in HibernateMenu_Case05
+; entry 9 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14::
+HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
 Jump_014_4742:: ; address name
     ld c, $0D
     ld hl, $01D4
@@ -1083,11 +1083,11 @@ Jump_014_4742:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 10 of the `rst $00` table in HibernateMenu_Case05
+; entry 10 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case05_BGMapAddressAtScroll_Bank14::
+HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
 Jump_014_475E:: ; address name
     call BGMapAddressAtScroll_Bank14
     ld bc, $140D
@@ -1098,10 +1098,10 @@ Jump_014_475E:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 11 of the `rst $00` table in HibernateMenu_Case05
+; entry 11 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
+HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
 Jump_014_4772:: ; address name
     ld hl, TileCopyDestList_14_5C36
     ld de, TileCopySrcList_14_5C4A
@@ -1112,10 +1112,10 @@ Jump_014_4772:: ; address name
     inc [hl]
     ret
 
-; entry 45 of the `rst $00` table in HibernateMenu_Case05
+; entry 45 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D::
+HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D::
 Jump_014_4783:: ; address name
     ld hl, TileCopyDestList_14_5C8A
     ld de, TileCopySrcList_14_5C9A
@@ -1126,11 +1126,11 @@ Jump_014_4783:: ; address name
     inc [hl]
     ret
 
-; entry 46 of the `rst $00` table in HibernateMenu_Case05
+; entry 46 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wChoiceCursor, wCursorBlinkAE, wScreenStep
-HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14_Case2E::
+HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E::
 Jump_014_4794:: ; address name
     ld de, TileRect_14_47C0
     ld hl, wWindowTileBuffer + $110
@@ -1160,11 +1160,11 @@ Data_014_47C0:: ; address name
     db $B6, $C3, $74, $75, $C3, $C3, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 47 of the `rst $00` table in HibernateMenu_Case05
+; entry 47 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wScreenStep, wChoiceCursor, wScreenState
 ; writes: wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest, wScreenByteB2, wScreenByteB3, wScreenState, wScreenSubStep, ...
-HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14::
+HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14::
 Jump_014_47E8:: ; address name
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -1212,7 +1212,7 @@ Jump_014_47E8:: ; address name
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14
+    call HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14
     ld a, [wChoiceCursor]
     and a, a
     jp nz, .check_screen_state
@@ -1279,8 +1279,8 @@ Jump_014_47E8:: ; address name
     ld a, [wScreenStep]
     cp a, $3F
     jr nz, .set_two_choice_cursor_to_01
-    call HibernateMenu_Case05_Case2F_LoadRecordNameEntry0
-    call HibernateMenu_Case05_Case2F_SetArg5ToListEntriesCell5
+    call HibernateMenu_ChooseRecords_Case2F_LoadRecordNameEntry0
+    call HibernateMenu_ChooseRecords_Case2F_SetArg5ToListEntriesCell5
 
 .set_two_choice_cursor_to_01:
     ld a, $01
@@ -1307,7 +1307,7 @@ Jump_014_47E8:: ; address name
     ret
 
 ; once the joypad repeat timer reaches $14, cycles wD7AE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wJoypadRepeatTimer, wCursorBlinkAE, wChoiceCursor
 ; writes: wCursorBlinkAE
 BlinkCursorBlinkAE_Bank14::
@@ -1326,33 +1326,33 @@ Func_014_48ED:: ; address name
     ld [wCursorBlinkAE], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wChoiceCursor
 DrawCursorTileBB_Bank14::
 Func_014_4907:: ; address name
     ld b, $BB
-    jr HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor
+    jr HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-; 2 call sites from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; 2 call sites from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wChoiceCursor
 DrawBlankTileC3_Bank14::
 Func_014_490B:: ; address name
     ld b, $C3
-    jr HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor
+    jr HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor
 
-; only called from HibernateMenu_Case05_Case2F (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; only called from HibernateMenu_ChooseRecords_Case2F (E-0047)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wChoiceCursor
-HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14::
+HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14::
 Func_014_490F:: ; address name
     ld b, $BC
 
-HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor::
+HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_ReadChoiceCursor::
 Jump_014_4911:: ; address name
     ld a, [wChoiceCursor]
     add a, a
-    ld hl, HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_Data
+    ld hl, HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1368,13 +1368,13 @@ Jump_014_4911:: ; address name
     ei
     ret
 
-; address loaded by HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14
-HibernateMenu_Case05_Case2F_BGMapAddressAtScroll_Bank14_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14
+HibernateMenu_ChooseRecords_Case2F_BGMapAddressAtScroll_Bank14_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_492E:: ; address name
     db $2D, $01, $6D, $01
 
 ; copies box Data_014_4965 to wC410, runs Func_014_5925, blanks the cursor entry wD7AB of Data_014_5B1E and wD781 += 1 (E-0124)
-; 5 call sites from 5 routines (e.g. HibernateMenu_Case04_Multiply8, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5, HibernateMenu_Case05_Multiply8, ...)
+; 5 call sites from 5 routines (e.g. HibernateMenu_Case04_Multiply8, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5, HibernateMenu_ChooseRecords_Multiply8, ...)
 ; reads: wListCursor, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 DrawBox4965AndMenuAndStep::
@@ -1406,11 +1406,11 @@ TileRect_14_4965::
 Data_014_4965:: ; address name
     db $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 0
 
-; entry 27 of the `rst $00` table in HibernateMenu_Case05
+; entry 27 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX, wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-HibernateMenu_Case05_CopyFromBankWaitVRAM_Case1B::
+HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_Case1B::
 Jump_014_496D:: ; address name
     ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $730
@@ -1448,11 +1448,11 @@ Data_014_49AE:: ; address name
     db $B6, $C3, $EF, $73, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; entry 28 of the `rst $00` table in HibernateMenu_Case05
+; entry 28 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor, wScreenState
-HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case1C::
+HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case1C::
 Jump_014_49CC:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -1465,7 +1465,7 @@ Jump_014_49CC:: ; address name
     ret
 
 .loop:
-    call HibernateMenu_Case05_Case1C_BGMapAddressAtScroll_Bank14
+    call HibernateMenu_ChooseRecords_Case1C_BGMapAddressAtScroll_Bank14
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, $01
@@ -1484,7 +1484,7 @@ Jump_014_49CC:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, .loop
-    call HibernateMenu_Case05_Case1C_BGMapAddressAtScroll_Bank14
+    call HibernateMenu_ChooseRecords_Case1C_BGMapAddressAtScroll_Bank14
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1496,16 +1496,16 @@ Jump_014_49CC:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; only called from HibernateMenu_Case05_Case1C (E-0047)
-; 2 call sites from 1 routine (e.g. HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case1C)
+; only called from HibernateMenu_ChooseRecords_Case1C (E-0047)
+; 2 call sites from 1 routine (e.g. HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case1C)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
-HibernateMenu_Case05_Case1C_BGMapAddressAtScroll_Bank14::
+HibernateMenu_ChooseRecords_Case1C_BGMapAddressAtScroll_Bank14::
 Func_014_4A1F:: ; address name
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $AE
     ld c, $00
-    call HibernateMenu_Case05_Case1C_Sub01_CopyBytesDEToHL_Bank14
+    call HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14
     ld a, [wIsCGB]
     and a, a
     jr z, .call_bg_map_address_at_scroll_bank14
@@ -1515,7 +1515,7 @@ Func_014_4A1F:: ; address name
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $00
-    call HibernateMenu_Case05_Case1C_Sub01_CopyBytesDEToHL_Bank14
+    call HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14
     ldh a, [rSVBK]
     res 1, a
     ldh [rSVBK], a
@@ -1527,9 +1527,9 @@ Func_014_4A1F:: ; address name
     call DrawScreenBufferRect_Bank14
     ret
 
-; only called from HibernateMenu_Case05_Case1C_Sub01 (E-0047)
-; 2 call sites from 1 routine (e.g. HibernateMenu_Case05_Case1C_BGMapAddressAtScroll_Bank14)
-HibernateMenu_Case05_Case1C_Sub01_CopyBytesDEToHL_Bank14::
+; only called from HibernateMenu_ChooseRecords_Case1C_Sub01 (E-0047)
+; 2 call sites from 1 routine (e.g. HibernateMenu_ChooseRecords_Case1C_BGMapAddressAtScroll_Bank14)
+HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14::
 Func_014_4A54:: ; address name
     push hl
     push de
@@ -1551,14 +1551,14 @@ Func_014_4A54:: ; address name
     inc c
     ld a, c
     cp a, $05
-    jr c, HibernateMenu_Case05_Case1C_Sub01_CopyBytesDEToHL_Bank14
+    jr c, HibernateMenu_ChooseRecords_Case1C_Sub01_CopyBytesDEToHL_Bank14
     ret
 
-; entry 0 of the `rst $00` table in HibernateMenu_Case05
+; entry 0 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wListPageIndex, wCursorBlinkAE, wScreenStep
-HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14::
+HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14::
 Jump_014_4A75:: ; address name
     ld de, TileRect_14_4AA8
     ld hl, wWindowTileBuffer + $64
@@ -1611,7 +1611,7 @@ Data_014_4B02:: ; address name
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 10
 
 ; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle Data_014_5B36 to wC364 and wD781 += 1 (E-0124)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_UpdatePagedListCursor)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_UpdatePagedListCursor)
 ; reads: wScreenStep
 ; writes: wScreenStep
 ClearTilesAndDrawRect5B36AndStep::
@@ -1637,18 +1637,18 @@ Func_014_4B5A:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 31 of the `rst $00` table in HibernateMenu_Case05
+; entry 31 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-HibernateMenu_Case05_ListRecordsState1WithByte6EClear::
+HibernateMenu_ChooseRecords_ListRecordsState1WithByte6EClear::
 Jump_014_4B92:: ; address name
     farcall ListRecordsState1WithByte6EClear
     jr HibernateMenu_ClampRecordListPageCursor5
     db $21, $2D, $5F, $06, $1D, $D7
 
 ; only called from routines of HibernateMenu (E-0098)
-; 2 call sites from 2 routines (e.g. HibernateMenu_Case04_WriteListCursorAndListPageIndexEtc, HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C)
+; 2 call sites from 2 routines (e.g. HibernateMenu_Case04_WriteListCursorAndListPageIndexEtc, HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
 HibernateMenu_ClampRecordListPageCursor5::
@@ -1680,18 +1680,18 @@ Func_014_4BA0:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 32 of the `rst $00` table in HibernateMenu_Case05
+; entry 32 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
-HibernateMenu_Case05_ToDrawRecordListPageNames::
+HibernateMenu_ChooseRecords_ToDrawRecordListPageNames::
 Jump_014_4BE3:: ; address name
     farcall DrawRecordListPageNames
     ret
 
-; entry 33 of the `rst $00` table in HibernateMenu_Case05
+; entry 33 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21::
 Jump_014_4BEA:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1714,11 +1714,11 @@ Jump_014_4BEA:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 35 of the `rst $00` table in HibernateMenu_Case05
+; entry 35 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23::
 Jump_014_4C1C:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1733,12 +1733,12 @@ Jump_014_4C1C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 37 of the `rst $00` table in HibernateMenu_Case05
+; entry 37 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wTextWindowTileLo
-HibernateMenu_Case05_UpdatePagedListCursor_Case25::
+HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case25::
 Jump_014_4C3C:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -1800,11 +1800,11 @@ Jump_014_4C3C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 13 of the `rst $00` table in HibernateMenu_Case05
+; entry 13 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case05_WriteScreenStep::
+HibernateMenu_ChooseRecords_WriteScreenStep::
 Jump_014_4CA8:: ; address name
     ld hl, TileCopyDestList_14_5C5E
     ld de, TileCopySrcList_14_5C74
@@ -1816,11 +1816,11 @@ Jump_014_4CA8:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 14 of the `rst $00` table in HibernateMenu_Case05
+; entry 14 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D::
+HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
 Jump_014_4CBC:: ; address name
     farcall DrawRecordListNameTiles_Bank1D
     farcall ListPartyRecordsWithState2ToListEntries
@@ -1829,11 +1829,11 @@ Jump_014_4CBC:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 44 of the `rst $00` table in HibernateMenu_Case05
+; entry 44 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGridCursorX
 ; writes: wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-HibernateMenu_Case05_RunFunc5925At0280_Case2C::
+HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C::
 Jump_014_4CD0:: ; address name
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
@@ -1859,10 +1859,10 @@ Jump_014_4CD0:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 49 of the `rst $00` table in HibernateMenu_Case05
+; entry 49 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScriptCommandType, wScriptStartRequest
-HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case31::
+HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case31::
 Jump_014_4D10:: ; address name
     call BGMapAddressAtScroll_Bank14
     ld bc, $140D
@@ -1876,10 +1876,10 @@ Jump_014_4D10:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 15 of the `rst $00` table in HibernateMenu_Case05
+; entry 15 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep, wScreenState, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
-HibernateMenu_Case05_RunFunc5925At0280::
+HibernateMenu_ChooseRecords_RunFunc5925At0280::
 Jump_014_4D2B:: ; address name
     ld de, TileRect_14_5AC4
     ld hl, wWindowTileBuffer + $64
@@ -1910,103 +1910,103 @@ HibernateMenu_Case04::
 Jump_014_4D64:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_ListRecordsState1WithByte6EClear
-    dw HibernateMenu_Case05_ToDrawRecordListPageNames
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor_Case25
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14_Case2E
-    dw HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14
+    dw HibernateMenu_ChooseRecords_ListRecordsState1WithByte6EClear
+    dw HibernateMenu_ChooseRecords_ToDrawRecordListPageNames
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case25
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E
+    dw HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14
     dw DrawBox4965AndMenuAndStep
     dw HibernateMenu_Case04_BGMapAddressAtScroll_Bank14
     dw HibernateMenu_Case04_SetArg5ToListEntriesCell5
     dw HibernateMenu_Case04_PackRecordFieldsToBank1Slot
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM_Case1B
-    dw HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case1C
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_Case1B
+    dw HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case1C
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_WriteArg1AndArg2Etc
-    dw HibernateMenu_Case05_ToHibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case06
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
+    dw HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case06
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_Case04_RunFunc5925At0280
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM
     dw HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D
     dw HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case32
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_ListRecordsState1WithByte6EClear
-    dw HibernateMenu_Case05_ToDrawRecordListPageNames
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor_Case3B
+    dw HibernateMenu_ChooseRecords_ListRecordsState1WithByte6EClear
+    dw HibernateMenu_ChooseRecords_ToDrawRecordListPageNames
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case3B
     dw HibernateMenu_Case04_WriteListCursorAndListPageIndexEtc
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14_Case2E
-    dw HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E
+    dw HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14
     dw DrawBox4965AndMenuAndStep
     dw HibernateMenu_Case04_BGMapAddressAtScroll_Bank14_Case41
     dw HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42
     dw HibernateMenu_Case04_Multiply8
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
 
-; entry 2 of the `rst $00` table in HibernateMenu_Case05
+; entry 2 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-HibernateMenu_Case05_WriteArg1AndArg2Etc::
+HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc::
 Jump_014_4DFE:: ; address name
     farcall HibernateMenu_WriteListCountAndRAMG2Etc
     jp HibernateMenu_ClampRecordListPageCursor5
 
-; entry 3 of the `rst $00` table in HibernateMenu_Case05
+; entry 3 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
-HibernateMenu_Case05_ToHibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc::
+HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03::
 Jump_014_4E07:: ; address name
-    farcall HibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
+    farcall HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc
     ret
 
-; entry 4 of the `rst $00` table in HibernateMenu_Case05
+; entry 4 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-HibernateMenu_Case05_SetArg5ToListEntriesCell5::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
 Jump_014_4E0E:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2024,17 +2024,17 @@ Jump_014_4E0E:: ; address name
     call CopyRectTo20ByteRows_Bank14
     pop af
     ld [wArg1], a
-    farcall HibernateMenu_Case05_Case04_RecordAddressWithBank1Slot1D
+    farcall HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 6 of the `rst $00` table in HibernateMenu_Case05
+; entry 6 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wScreenStep
 ; writes: wArg1, wScreenStep
-HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case06::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case06::
 Jump_014_4E46:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2043,7 +2043,7 @@ Jump_014_4E46:: ; address name
     ld l, a
     ld a, [hl]
     ld [wArg1], a
-    farcall HibernateMenu_Case05_Case06_RecordAddressWithBank1Slot1D
+    farcall HibernateMenu_ChooseRecords_Case06_RecordAddressWithBank1Slot1D
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2103,7 +2103,7 @@ Jump_014_4EA7:: ; address name
     ret
 
 ; only called from routines of HibernateMenu (E-0098)
-; 4 call sites from 3 routines (e.g. HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D)
+; 4 call sites from 3 routines (e.g. HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D, HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wIsCGB, rSVBK
 ; writes: rSVBK
 HibernateMenu_WriteSVBK::
@@ -2188,11 +2188,11 @@ Func_014_4F30:: ; address name
     jr c, HibernateMenu_Shared02_CopyBytesDEToHL_Bank14
     ret
 
-; entry 16 of the `rst $00` table in HibernateMenu_Case05
+; entry 16 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep, wTwoChoiceCursor
-HibernateMenu_Case05_CopyFromBankWaitVRAM::
+HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM::
 Jump_014_4F51:: ; address name
     ld de, Tiles1Plus6F0Tiles_1F_4330
     ld hl, vTiles2 + $730
@@ -2272,12 +2272,12 @@ Jump_014_4FCC:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 18 of the `rst $00` table in HibernateMenu_Case05
+; entry 18 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wScreenStep
 ; writes: rRAMG2, rRAMB, wArg2, wArg3, wArg4, wArg1, wListEntries2, wScreenByteBF, ...
 ; points at: sCompactRecords, sRecords
-HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case12::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case12::
 Jump_014_5002:: ; address name
     ld a, $0A
     ld [rRAMG2], a
@@ -2356,11 +2356,11 @@ Jump_014_5002:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 19 of the `rst $00` table in HibernateMenu_Case05
+; entry 19 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListEntries2, wScreenByteBF, wScreenByteC0, wScreenByteC1, wArg5, wArg6, wScreenStep
 ; writes: wArg1, wArg2, wArg3, wArg4, rRAMG2, rRAMB, wScreenStep, wScriptCommandType, ...
-HibernateMenu_Case05_UnpackRecordFromBank1Slot::
+HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
 Jump_014_5095:: ; address name
     ld a, [wListEntries2]
     ld [wArg1], a
@@ -2525,11 +2525,11 @@ Jump_014_5171:: ; address name
     ld [wCursorBlinkAE], a
     ret
 
-; entry 8 of the `rst $00` table in HibernateMenu_Case05
+; entry 8 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wListCursor, wScreenStep
 ; writes: wMenuInputResult, wTwoChoiceCursor, wScreenStep, wScriptCommandType, wScriptStartRequest
-HibernateMenu_Case05_UpdatePagedListCursor::
+HibernateMenu_ChooseRecords_UpdatePagedListCursor::
 Jump_014_51E9:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -2655,12 +2655,12 @@ Jump_014_529C:: ; address name
     ld [wScriptStartRequest], a
     ret
 
-; entry 59 of the `rst $00` table in HibernateMenu_Case05
+; entry 59 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wScreenStep, wListCursor, wScreenState
 ; writes: wMenuInputResult, wScreenStep, wTwoChoiceCursor, wScriptCommandType, wScriptStartRequest
 ; points at: wTextWindowTileLo
-HibernateMenu_Case05_UpdatePagedListCursor_Case3B::
+HibernateMenu_ChooseRecords_UpdatePagedListCursor_Case3B::
 Jump_014_52E4:: ; address name
     xor a, a
     ld [wMenuInputResult], a
@@ -2904,22 +2904,22 @@ HibernateMenu_Case06::
 Jump_014_5492:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_ListRecordsState1WithByte6EClear
-    dw HibernateMenu_Case05_ToDrawRecordListPageNames
+    dw HibernateMenu_ChooseRecords_ListRecordsState1WithByte6EClear
+    dw HibernateMenu_ChooseRecords_ToDrawRecordListPageNames
     dw HibernateMenu_Case06_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case23
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case23
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
     dw HibernateMenu_Case06_UpdatePagedListCursor
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
     dw HibernateMenu_Case06_SaveAndHideSpriteState_Bank1E
 
 ; entry 4 of the `rst $00` table in HibernateMenu_Case06
@@ -3081,38 +3081,38 @@ HibernateMenu_Case07::
 Jump_014_55C9:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
     dw ClearTilesAndDrawRect5B36AndStep
-    dw HibernateMenu_Case05_WriteArg1AndArg2Etc
-    dw HibernateMenu_Case05_ToHibernateMenu_Case05_Case03_WriteRAMG2AndRAMBEtc
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_FillTilesBxC
-    dw HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case06
-    dw HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14
-    dw HibernateMenu_Case05_UpdatePagedListCursor
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
-    dw HibernateMenu_Case05_CopyFromBankWaitVRAM
-    dw HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D
+    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
+    dw HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Case03
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5
+    dw HibernateMenu_ChooseRecords_FillTilesBxC
+    dw HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case06
+    dw HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14
+    dw HibernateMenu_ChooseRecords_UpdatePagedListCursor
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM
+    dw HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D
     dw HibernateMenu_Case07_SetArg5ToListEntriesCell5
-    dw HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14
-    dw HibernateMenu_Case05_BGMapAddressAtScroll_Bank14
-    dw HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart
-    dw HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14
-    dw HibernateMenu_Case05_WriteScreenStep
-    dw HibernateMenu_Case05_DrawRecordListNameTiles_Bank1D
-    dw HibernateMenu_Case05_RunFunc5925At0280
+    dw HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14
+    dw HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14
+    dw HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    dw HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14
+    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
+    dw HibernateMenu_ChooseRecords_RunFunc5925At0280
 
-; entry 17 of the `rst $00` table in HibernateMenu_Case05
+; entry 17 of the `rst $00` table in HibernateMenu_ChooseRecords
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuInputResult, wTwoChoiceCursor, wScreenStep, wListCursor
 ; writes: wScreenStep, wScreenSubStep, wScriptCommandType, wScriptStartRequest, wTwoChoiceCursor
-HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D::
+HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
 Jump_014_5601:: ; address name
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3128,7 +3128,7 @@ Jump_014_5601:: ; address name
     ld a, [wTwoChoiceCursor]
     cp a, $01
     jr z, .call_hibernate_menu_write_svbk
-    call HibernateMenu_SetArg5ToListEntriesCell5
+    call HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Shared01
     jp HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK
 
 .call_hibernate_menu_write_svbk:
@@ -3213,11 +3213,11 @@ Jump_014_56A4:: ; address name
     farcall SwapMonstersMenu
     ret
 
-; only called from HibernateMenu_Case05_Case32 (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_DrawBox4965AndMenuAndStep)
+; only called from HibernateMenu_ChooseRecords_Case32 (E-0047)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_DrawBox4965AndMenuAndStep)
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf0
-HibernateMenu_Case05_Case32_CopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_Case32_CopyRecordNameToNameGlyphBuf::
 Func_014_56B0:: ; address name
     push bc
     ld a, $0A
@@ -3261,12 +3261,12 @@ Func_014_56B0:: ; address name
     ld [de], a
     ret
 
-; only called from routines of HibernateMenu (E-0098)
-; 2 call sites from 2 routines (e.g. HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D)
+; only called from routines of HibernateMenu_ChooseRecords (E-0098)
+; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D)
 ; reads: wArg5, wArg6, wTextBuf1
 ; writes: wArg2, wArg3, wArg4, wArg1, wNameGlyphBuf, wTextBuf1
 ; points at: sCompactRecords, wNameGlyphBuf, wTextBuf1, sRecords
-HibernateMenu_SetArg5ToListEntriesCell5::
+HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Shared01::
 Func_014_56EB:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3324,12 +3324,12 @@ Func_014_56EB:: ; address name
     ld [wTextBuf1], a
     ret
 
-; only called from HibernateMenu_Case05_Case2F (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; only called from HibernateMenu_ChooseRecords_Case2F (E-0047)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wArg5, wArg6
 ; writes: rRAMG2, rRAMB, wNameGlyphBuf
 ; points at: wNameGlyphBuf, wTextBuf1
-HibernateMenu_Case05_Case2F_SetArg5ToListEntriesCell5::
+HibernateMenu_ChooseRecords_Case2F_SetArg5ToListEntriesCell5::
 Func_014_574E:: ; address name
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3368,12 +3368,12 @@ Func_014_574E:: ; address name
     ld [de], a
     ret
 
-; only called from HibernateMenu_Case05_Case2F (E-0047)
-; 1 call site from 1 routine (e.g. HibernateMenu_Case05_BlinkCursorBlinkAE_Bank14)
+; only called from HibernateMenu_ChooseRecords_Case2F (E-0047)
+; 1 call site from 1 routine (e.g. HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14)
 ; reads: wSelectedRecord, wTextBuf0
 ; writes: wArg2, wArg3, wArg4, wArg1, wNameGlyphBuf, wTextBuf0
 ; points at: sCompactRecords, wNameGlyphBuf, wTextBuf0, sRecords
-HibernateMenu_Case05_Case2F_LoadRecordNameEntry0::
+HibernateMenu_ChooseRecords_Case2F_LoadRecordNameEntry0::
 Func_014_578E:: ; address name
     ld a, [wSelectedRecord]
     cp a, $1D
@@ -3483,7 +3483,7 @@ Func_014_5800:: ; address name
     ret
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the same 58 bytes appear in 8 banks)
-; 15 call sites from 14 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_Case05_CopyRectTo20ByteRows_Bank14_Case2E, ...)
+; 15 call sites from 14 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_Case2E, ...)
 ; reads: wIsCGB
 ; writes: rSVBK
 CopyRectTo20ByteRows_Bank14::
@@ -3588,7 +3588,7 @@ Func_014_585B:: ; address name
     ret
 
 ; only called from routines of HibernateMenu (E-0098)
-; 5 call sites from 5 routines (e.g. HibernateMenu_Case01_HibernateMenu_WriteGlyphListPosAndGlyphListStart, HibernateMenu_Case05_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D, HibernateMenu_Case06_SaveAndHideSpriteState_Bank1E, HibernateMenu_Case05_WriteScreenStep, ...)
+; 5 call sites from 5 routines (e.g. HibernateMenu_Case01_HibernateMenu_WriteGlyphListPosAndGlyphListStart, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Case2D, HibernateMenu_Case06_SaveAndHideSpriteState_Bank1E, HibernateMenu_ChooseRecords_WriteScreenStep, ...)
 ; reads: wGlyphListStart, wGlyphListPos
 ; writes: wGlyphListPos, wGlyphListStart
 HibernateMenu_WriteGlyphListPosAndGlyphListStart::
@@ -3654,7 +3654,7 @@ Func_014_5898:: ; address name
     ret
 
 ; stores tile $C3 at the addresses of entries 0-4 of the word table Data_014_5B1E (E-0122)
-; 2 call sites from 2 routines (e.g. HibernateMenu_Case05_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_Case05_UpdatePagedListCursor)
+; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Case3C, HibernateMenu_ChooseRecords_UpdatePagedListCursor)
 EraseFiveEntriesOf5B1E::
 Func_014_58EE:: ; address name
     ld c, $00
@@ -3673,7 +3673,7 @@ Func_014_58EE:: ; address name
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers A, DE, HL (the same 14 bytes appear in 8 banks)
-; 16 call sites from 14 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E, ...)
+; 16 call sites from 14 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, HibernateMenu_Case04_UpdateTwoChoiceCursor_Bank1D, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E, ...)
 StoreBAtWordTableEntry_Bank14::
 Func_014_5902:: ; address name
     push bc
@@ -3688,7 +3688,7 @@ Func_014_5902:: ; address name
     ret
 
 ; runs Func_014_5925 with C = 2, HL = $0280, DE = $00B4, wD7F1/2 = 0/8 (E-0122)
-; 4 call sites from 4 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_Case05_RunFunc5925At0280_Case2C, HibernateMenu_Case05_RunFunc5925At0280)
+; 4 call sites from 4 routines (e.g. HibernateMenu_Case01_RunFunc5925At0280, HibernateMenu_Case04_RunFunc5925At0280, HibernateMenu_ChooseRecords_RunFunc5925At0280_Case2C, HibernateMenu_ChooseRecords_RunFunc5925At0280)
 ; writes: wArg1, wArg2
 RunFunc5925At0280::
 Func_014_5910:: ; address name
@@ -3703,7 +3703,7 @@ Func_014_5910:: ; address name
     ret
 
 ; copies a wD7F1 x wD7F2 block inside the screen buffer from offset DE to offset HL, C rows, with CGB attributes (E-0127)
-; 4 call sites from 4 routines (e.g. RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_Case05_CopyScreenBufferRectWithAttrs_Bank14, DrawBox1D4AndCopyRect5595)
+; 4 call sites from 4 routines (e.g. RunFunc5925At0280, DrawBox4965AndMenuAndStep, HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14, DrawBox1D4AndCopyRect5595)
 ; reads: wArg1, wArg2, wIsCGB
 ; points at: wScreenTileBuffer, wScreenAttrBuffer
 CopyScreenBufferRectWithAttrs_Bank14::
@@ -3767,7 +3767,7 @@ Func_014_5925:: ; address name
     ret
 
 ; wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)
-; 2 call sites from 2 routines (e.g. HibernateMenu_Case05_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5)
+; 2 call sites from 2 routines (e.g. HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_Case21, HibernateMenu_Case06_SetArg5ToListEntriesCell5)
 ; reads: hTemp0
 ; writes: rRAMG2, rRAMB, wWorkBuf
 LoadFamilyIconTileForRecordB_Bank14::
@@ -3933,7 +3933,7 @@ Data_014_5AC4:: ; address name
     db $B6, $C3, $AD, $AE, $AF, $EE, $C3, $C3, $C3, $B7 ; id 7
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; id 8
 
-; address loaded by HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, HibernateMenu_Case05_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_Case05_StoreBAtWordTableEntry_Bank14, DrawBox4965AndMenuAndStep and 10 more
+; address loaded by HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_Case3E, HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14, DrawBox4965AndMenuAndStep and 10 more
 HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5B1E:: ; address name
     db $79, $C3, $A1, $C3, $C9, $C3, $F1, $C3, $19, $C4, $22, $C4, $4A, $C4, $80, $C3
@@ -8352,7 +8352,7 @@ Data_014_7D79:: ; address name
     db "Soffi", $F0 ; id 139
 
 ; only called from routines of HibernateMenu (E-0098)
-; 4 call sites from 4 routines (e.g. HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case05_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42, HibernateMenu_Case07_SetArg5ToListEntriesCell5)
+; 4 call sites from 4 routines (e.g. HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot, HibernateMenu_Case04_SetArg5ToListEntriesCell5_Case42, HibernateMenu_Case07_SetArg5ToListEntriesCell5)
 ; reads: wArg1
 ; writes: rRAMG2, rRAMB, wArg5, wArg6, wArg7
 ; points at: sCompactRecords, sRecords, wRecordBufB
@@ -8558,7 +8558,7 @@ Func_014_7D7F:: ; address name
     ret
 
 ; clears SRAM record wD7F1 (when below 30) and moves the later stored records up to fill the gap, updating the party list (E-0131)
-; 19 call sites from 18 routines (e.g. RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, NpcBreedMenu_Case04_WriteTwoChoiceCursorAndScreenSubStepEtc, HibernateMenu_Case05_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, ...)
+; 19 call sites from 18 routines (e.g. RunLinkSession4ScreenState_Case08_Case04_ComputeBreedingChild, NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc, HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot, HibernateMenu_Case04_PackRecordFieldsToBank1Slot, ...)
 ; reads: wArg1, wArg2, wPartyCount
 ; writes: rRAMG2, rRAMB, wArg3, wArg5, wArg6, wArg7, wPartyCount
 ; points at: sRecords, sRecord1, wPartyList

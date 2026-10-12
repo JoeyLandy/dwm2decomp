@@ -30,7 +30,7 @@ Func_016_4007:: ; address name
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a table with one usability check per item id (a check refuses by setting wItemId = $FF; ApplyItemEffect then performs the use, E-0089) (most entries are the shared Jump_016_462F; for example Func_016_40F6 refuses use when the words at save-record offsets $5B and $5D, the monster's current and maximum HP, are equal)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_CheckItemUsable, PauseMenu_Items_Case02_CheckItemUsable_Case16, PauseMenu_Items_Case02_ShowButItCouldntBe)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_UseItem_CheckItemUsable, PauseMenu_Items_UseItem_CheckItemUsable_Case16, PauseMenu_Items_UseItem_ShowButItCouldntBe)
 ; reads: wItemId
 CheckItemUsable::
 Func_016_4025:: ; address name
@@ -146,7 +146,7 @@ Jump_016_40F5:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 1 Herb, 2 LoveWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Herb::
@@ -175,7 +175,7 @@ Func_016_40F6:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 3 WorldDew, 11 SageRock; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew)
 ; reads: wPartyCount
 ; writes: wItemId, wItemRecordByte0A
 ItemUsable_WorldDew::
@@ -332,7 +332,7 @@ Func_016_41B3:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 4 Potion, 5 ElfWater; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Potion::
@@ -361,7 +361,7 @@ Func_016_41FD:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_Antidote::
@@ -412,7 +412,7 @@ Jump_016_4249:: ; address name
     ret
 
 ; when a party member without bit 7 of field $55 has bit 0 set, copies the eligible names to wC160 and wD08E = $32 + their count; otherwise wItemId = $FF (E-0127)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0)
 ; reads: wPartyCount
 ; writes: wItemId, wItemRecordByte0A
 ListPartyMembersWithField55Bit0::
@@ -549,7 +549,7 @@ Jump_016_4316:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf)
 ; reads: wTargetRecord
 ; writes: wItemId
 ItemUsable_WorldLeaf::
@@ -788,7 +788,7 @@ Jump_016_4446:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent_Case11, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent)
+; 2 call sites from 2 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent)
 ; reads: wEncounterRate
 ; writes: wItemId
 ItemUsable_Repellent::
@@ -807,7 +807,7 @@ Jump_016_4453:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Warp)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp)
 ItemUsable_Warp::
 Func_016_4454:: ; address name
     call ItemUsable_WarpWing
@@ -866,7 +866,7 @@ Jump_016_4458:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 41 WarpWing, 54 TidalBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 2 call sites from 2 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing, ItemUsable_Warp)
+; 2 call sites from 2 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing, ItemUsable_Warp)
 ; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_WarpWing::
@@ -891,7 +891,7 @@ Func_016_44AD:: ; address name
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId = $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell)
 ; reads: wMapType, hMapId
 ; writes: wItemId
 ItemUsable_ExitBell::
@@ -1257,7 +1257,7 @@ Func_016_466A:: ; address name
     ret
 
 ; returns when wItemId is $FF; otherwise jumps through a 95-entry table with one effect per item id. The Herb entry adds (wC5E7 after NextTableByte) / 11 + wD08F to record wD083 (Func_016_57D1) and then runs ConsumeSelectedItemByChance; CheckItemUsable is the matching usability check (E-0089)
-; 3 call sites from 3 routines (e.g. PauseMenu_Items_Case02_ApplyItemEffect, PauseMenu_Items_Case02_ApplyItemEffect_Case19, PauseMenu_Items_Case02_UpdateMenuCursor_Case1D)
+; 3 call sites from 3 routines (e.g. PauseMenu_Items_UseItem_ApplyItemEffect, PauseMenu_Items_UseItem_ApplyItemEffect_Case19, PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D)
 ; reads: wItemId
 ApplyItemEffect::
 Func_016_468E:: ; address name
@@ -3000,11 +3000,11 @@ Data_016_51C9:: ; address name
     db $00 ; id 254
     db $00 ; id 255
 
-; only called from PauseMenu_Skills_Case03_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_WaitTextFlags)
+; only called from PauseMenu_Skills_UseFieldSkill_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_WaitTextFlags)
 ; reads: wInventorySlot
 ; writes: wItemId
-PauseMenu_Skills_Case03_Case02_WriteItemId::
+PauseMenu_Skills_UseFieldSkill_Case02_WriteItemId::
 Func_016_52C9:: ; address name
     ld a, [wInventorySlot]
     cp a, $14
@@ -3015,30 +3015,30 @@ Func_016_52C9:: ; address name
 
 .skip:
     rst $00
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent_Case11
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Warp
-    dw PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp
+    dw PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing
 
 ; entry 0 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Herb::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Herb::
 Jump_016_52FF:: ; address name
     call ItemUsable_Herb
     call SetWD08D12IfItemRefused
@@ -3046,7 +3046,7 @@ Jump_016_52FF:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldDew::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldDew::
 Jump_016_5306:: ; address name
     call ItemUsable_WorldDew
     call SetWD08D12IfItemRefused
@@ -3056,7 +3056,7 @@ Jump_016_5306:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember, wTargetRecord
 ; writes: wItemId
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion::
 Jump_016_530D:: ; address name
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -3076,7 +3076,7 @@ Jump_016_530D:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf::
 Jump_016_5325:: ; address name
     call ItemUsable_WorldLeaf
     call SetWD08D12IfItemRefused
@@ -3084,7 +3084,7 @@ Jump_016_5325:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote::
 Jump_016_532C:: ; address name
     call ItemUsable_Antidote
     call SetWD08D12IfItemRefused
@@ -3092,7 +3092,7 @@ Jump_016_532C:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0::
 Jump_016_5333:: ; address name
     call ListPartyMembersWithField55Bit0
     call SetWD08D12IfItemRefused
@@ -3102,7 +3102,7 @@ Jump_016_5333:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wInventorySlot, wItemId
 ; writes: wItemMessage
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent::
 Jump_016_533A:: ; address name
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
@@ -3125,7 +3125,7 @@ Jump_016_533A:: ; address name
 
 ; entry 15 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell::
 Jump_016_5359:: ; address name
     call ItemUsable_ExitBell
     call SetWD08D14IfItemRefused
@@ -3135,7 +3135,7 @@ Jump_016_5359:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGoldHi, wGoldMid, wGoldLo, wInventory
 ; writes: wItemId, wItemMessage
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent_Case11::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11::
 Jump_016_5360:: ; address name
     call ItemUsable_Repellent
     call SetWD08D14IfItemRefused
@@ -3172,7 +3172,7 @@ Jump_016_5360:: ; address name
 ; reads: wMapObjectCount
 ; writes: wItemId, wItemMessage
 ; points at: wMapObjects
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Warp::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp::
 Jump_016_5398:: ; address name
     call ItemUsable_Warp
     call SetWD08D14IfItemRefused
@@ -3208,14 +3208,14 @@ Jump_016_5398:: ; address name
 
 ; entry 19 of the `rst $00` table in Func_016_52C9
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing::
+PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing::
 Jump_016_53C7:: ; address name
     call ItemUsable_WarpWing
     call SetWD08D14IfItemRefused
     ret
 
 ; when wItemId is $FF (refused): wD08D = $12 (E-0119)
-; 6 call sites from 6 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ListPartyMembersWithField55Bit0, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Antidote, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WorldLeaf, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Potion, ...)
+; 6 call sites from 6 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ListPartyMembersWithField55Bit0, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Antidote, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WorldLeaf, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Potion, ...)
 ; reads: wItemId
 ; writes: wItemMessage
 SetWD08D12IfItemRefused::
@@ -3228,7 +3228,7 @@ Func_016_53CE:: ; address name
     ret
 
 ; when wItemId is $FF (refused): wD08D = $14 (E-0119)
-; 5 call sites from 5 routines (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_WarpWing, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Warp, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent_Case11, PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_ExitBell, ...)
+; 5 call sites from 5 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_WarpWing, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Warp, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent_Case11, PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_ExitBell, ...)
 ; reads: wItemId
 ; writes: wItemMessage
 SetWD08D14IfItemRefused::
@@ -3240,41 +3240,41 @@ Func_016_53DA:: ; address name
     ld [wItemMessage], a
     ret
 
-; only called from PauseMenu_Skills_Case03_Case07 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_WriteRAMGAndRAMBEtc)
+; only called from PauseMenu_Skills_UseFieldSkill_Case07 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc)
 ; reads: wItemId, wInventorySlot
-PauseMenu_Skills_Case03_Case07_WaitItemId::
+PauseMenu_Skills_UseFieldSkill_Case07_WaitItemId::
 Func_016_53E6:: ; address name
     ld a, [wItemId]
     cp a, $FF
     ret z
     ld a, [wInventorySlot]
     rst $00
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01
     dw FullHealRecordTargetRecord
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealPartyRecordAIfHurt
-    dw PauseMenu_Skills_Case03_Case07_Sub01_FullHealPartyRecordA
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06
-    dw PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case08
-    dw PauseMenu_Skills_Case03_Case07_Sub01_FullHealRecordTargetRecord
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped
-    dw PauseMenu_Skills_Case03_Case07_Sub01_ClearPartyRecordFlag55Bit0
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case0D
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SetTalkCountdown
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave_Case0F
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B
-    dw PauseMenu_Skills_Case03_Case07_Sub01_NextTableByte
-    dw PauseMenu_Skills_Case03_Case07_Sub01_SetGameMode2Byte50
-    dw PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetTalkCountdown
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetItemMessageTo0B
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetGameMode2Byte50
+    dw PauseMenu_Skills_UseFieldSkill_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer
 
 ; entry 0 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount::
 Jump_016_5418:: ; address name
     ld a, $0A
     ld [wItemEffectAmount], a
@@ -3288,7 +3288,7 @@ Jump_016_5418:: ; address name
 ; entry 1 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemEffectRange, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01::
 Jump_016_542B:: ; address name
     ld a, $0F
     ld [wItemEffectAmount], a
@@ -3300,7 +3300,7 @@ Jump_016_542B:: ; address name
     ret
 
 ; record wD083: copies its word at field $5D (max HP) into field $5B (HP) (StoreHLToRecordField), then wD08D = 6 (E-0117)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_FullHealRecordTargetRecord)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord)
 ; reads: wTargetRecord
 ; writes: wItemMessage
 FullHealRecordTargetRecord::
@@ -3321,7 +3321,7 @@ Func_016_543E:: ; address name
 ; reads: wItemRecordByte0A, wTargetRecord
 ; writes: wItemEffectAmount, wItemEffectRange, wItemMessage, wTargetRecord
 ; points at: wPartyCount
-PauseMenu_Skills_Case03_Case07_Sub01_HealPartyRecordAIfHurt::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt::
 Jump_016_5457:: ; address name
     ld a, $1E
     ld [wItemEffectAmount], a
@@ -3336,7 +3336,7 @@ Jump_016_5457:: ; address name
     ld a, $02
 
 ; A = party index: returns when it is not below wC6FD, when record byte $55 bit 7 is set, or when HP ($5B) already equals max HP ($5D); otherwise Func_016_56AF (a random heal) (E-0120)
-; 2 call sites from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_HealPartyRecordAIfHurt)
+; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealPartyRecordAIfHurt)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
 ; points at: wPartyCount
@@ -3373,7 +3373,7 @@ Func_016_5473:: ; address name
 ; reads: wItemRecordByte0A, wTargetRecord
 ; writes: wItemMessage, wTargetRecord
 ; points at: wPartyCount
-PauseMenu_Skills_Case03_Case07_Sub01_FullHealPartyRecordA::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA::
 Jump_016_549B:: ; address name
     ld a, [wItemRecordByte0A]
     ld [wItemMessage], a
@@ -3384,7 +3384,7 @@ Jump_016_549B:: ; address name
     ld a, $02
 
 ; A = party index: returns when it is not below wC6FD or the record's byte $55 bit 7 is set; otherwise wD083 = A and the record's HP word ($5B) = its max HP word ($5D) (E-0117)
-; 2 call sites from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_FullHealPartyRecordA)
+; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealPartyRecordA)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
 ; points at: wPartyCount
@@ -3408,7 +3408,7 @@ Func_016_54AD:: ; address name
 ; entry 5 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount::
 Jump_016_54CD:: ; address name
     ld a, $0F
     ld [wItemEffectAmount], a
@@ -3420,7 +3420,7 @@ Jump_016_54CD:: ; address name
 ; entry 6 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06::
 Jump_016_54DB:: ; address name
     ld a, $1E
     ld [wItemEffectAmount], a
@@ -3432,7 +3432,7 @@ Jump_016_54DB:: ; address name
 ; entry 7 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemEffectAmount, wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07::
 Jump_016_54E9:: ; address name
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3445,7 +3445,7 @@ Jump_016_54E9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTargetRecord
 ; writes: wItemMessage, wLevelUpGains
-PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case08::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case08::
 Jump_016_54F7:: ; address name
     ld a, [wTargetRecord]
     ld c, $55
@@ -3476,7 +3476,7 @@ Jump_016_54F7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTargetRecord
 ; writes: wItemMessage, wLevelUpGains
-PauseMenu_Skills_Case03_Case07_Sub01_FullHealRecordTargetRecord::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_FullHealRecordTargetRecord::
 Jump_016_5522:: ; address name
     ld a, [wTargetRecord]
     ld c, $55
@@ -3493,7 +3493,7 @@ Jump_016_5522:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTargetRecord
 ; writes: wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped::
 Jump_016_553A:: ; address name
     ld a, [wTargetRecord]
     ld c, $55
@@ -3508,7 +3508,7 @@ Jump_016_553A:: ; address name
 ; reads: wItemRecordByte0A, wTargetRecord
 ; writes: wItemMessage, wTargetRecord
 ; points at: wPartyCount
-PauseMenu_Skills_Case03_Case07_Sub01_ClearPartyRecordFlag55Bit0::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0::
 Jump_016_554A:: ; address name
     ld a, [wItemRecordByte0A]
     ld [wItemMessage], a
@@ -3519,7 +3519,7 @@ Jump_016_554A:: ; address name
     ld a, $02
 
 ; A = party index: returns when it is not below wC6FD or byte $55 bit 7 is set; otherwise clears bit 0 of the record's byte $55 (E-0117)
-; 2 call sites from 1 routine (e.g. PauseMenu_Skills_Case03_Case07_Sub01_ClearPartyRecordFlag55Bit0)
+; 2 call sites from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_ClearPartyRecordFlag55Bit0)
 ; reads: wTargetRecord
 ; writes: wTargetRecord
 ; points at: wPartyCount
@@ -3540,7 +3540,7 @@ Func_016_555C:: ; address name
 ; entry 12 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave::
 Jump_016_5573:: ; address name
     ld a, $01
     ld [wDataBankSave], a
@@ -3554,7 +3554,7 @@ Jump_016_5573:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSelectedMember
 ; writes: wDataBankSave, wNewRecordByte0D, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_SRAMRecordAddressMapped_Case0D::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SRAMRecordAddressMapped_Case0D::
 Jump_016_5583:: ; address name
     ld a, $01
     ld [wDataBankSave], a
@@ -3575,7 +3575,7 @@ Jump_016_5583:: ; address name
 ; entry 14 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTalkCountdown, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_SetTalkCountdown::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetTalkCountdown::
 Jump_016_55A5:: ; address name
     ld a, $C8
     ld [wTalkCountdown], a
@@ -3588,7 +3588,7 @@ Jump_016_55A5:: ; address name
 ; entry 15 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBankSave, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_SetDataBankSave_Case0F::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetDataBankSave_Case0F::
 Jump_016_55B5:: ; address name
     ld a, $04
     ld [wDataBankSave], a
@@ -3601,7 +3601,7 @@ Jump_016_55B5:: ; address name
 ; entry 16 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetItemMessageTo0B::
 Jump_016_55C5:: ; address name
     ld a, $0B
     ld [wItemMessage], a
@@ -3612,7 +3612,7 @@ Jump_016_55C5:: ; address name
 ; reads: wMapType, wPendingFieldEvent, wRandomLo, wRandomHi
 ; writes: wSpriteSlotCount, wScreenSavedFlag, wPendingFieldEvent, wItemId, wItemMessage, wInventory
 ; points at: wGoldLo, wTextBuf3
-PauseMenu_Skills_Case03_Case07_Sub01_NextTableByte::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_NextTableByte::
 Jump_016_55CB:: ; address name
     ld a, [wMapType]
     cp a, $80
@@ -3718,7 +3718,7 @@ Jump_016_55CB:: ; address name
 ; entry 18 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wGameMode2Byte50, wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_SetGameMode2Byte50::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_SetGameMode2Byte50::
 Jump_016_568E:: ; address name
     ld a, $01
     ld [wGameMode2Byte50], a
@@ -3731,7 +3731,7 @@ Jump_016_568E:: ; address name
 ; entry 19 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemMessage, wItemId
-PauseMenu_Skills_Case03_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer::
+PauseMenu_Skills_UseFieldSkill_Case07_Sub01_MarkVisitedScreens5x5AroundPlayer::
 Jump_016_569E:: ; address name
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1C
@@ -3741,7 +3741,7 @@ Jump_016_569E:: ; address name
     ret
 
 ; reads the next table byte, then heals record wD083's HP by wC5E7 / (wD08F + 1) + wD090 (capped at max HP) (E-0122)
-; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount_Case01, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordHPByRandomAmount)
+; 3 call sites from 3 routines (e.g. HealPartyRecordAIfHurt, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount_Case01, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordHPByRandomAmount)
 ; reads: wRandomLo, wItemEffectAmount, wItemEffectRange, wTargetRecord
 HealRecordHPByRandomAmount::
 Func_016_56AF:: ; address name
@@ -3761,7 +3761,7 @@ Func_016_56AF:: ; address name
     ret
 
 ; heals record wD083's MP by wD08F (capped at max MP) (E-0122)
-; 3 call sites from 3 routines (e.g. PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06, PauseMenu_Skills_Case03_Case07_Sub01_HealRecordMPByItemEffectAmount)
+; 3 call sites from 3 routines (e.g. PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case07, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount_Case06, PauseMenu_Skills_UseFieldSkill_Case07_Sub01_HealRecordMPByItemEffectAmount)
 ; reads: wItemEffectAmount, wTargetRecord
 HealRecordMPByItemEffectAmount::
 Func_016_56CC:: ; address name
@@ -3784,7 +3784,7 @@ Func_016_56D9:: ; address name
     ret
 
 ; for special maps copies the eight monster entries of the current screen (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wD09F, removes duplicates and stores the count in wD09D; normal maps use Func_00A_4D5E (E-0129)
-; 1 call site from 1 routine (e.g. PauseMenu_Skills_Case03_Case02_Sub01_ItemUsable_Repellent)
+; 1 call site from 1 routine (e.g. PauseMenu_Skills_UseFieldSkill_Case02_Sub01_ItemUsable_Repellent)
 ; reads: wMapType, wWorkBuf
 ; writes: wWorkBuf
 CollectUniqueEncounterIdsToWD09F::
@@ -4662,7 +4662,7 @@ Data_016_5AA7:: ; address name
     db $01, $02, $04, $08, $10, $20, $40, $80
 
 ; sets the bit of monster id wSpeciesIdLo/Hi in wSpeciesFlags (TestSpeciesFlag) and clears the high nibble of wC7FB (E-0070)
-; 8 call sites from 8 routines (e.g. RunBattleEndStep5SubSteps_FillBytes, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord, MedalPrizeMenu_Case05_Case0E_SetArg5ToListEntriesCell4, ...)
+; 8 call sites from 8 routines (e.g. RunBattleEndStep5SubSteps_FillBytes, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord, GameMode5_Update_Case01_Case06_Case06_LoadMonsterRecord, MedalPrizeMenu_ChoosePrize_Case0E_SetArg5ToListEntriesCell4, ...)
 ; reads: wSpeciesFlagCount
 ; writes: wSpeciesFlagCount
 SetSpeciesFlag::
@@ -9811,7 +9811,7 @@ Data_016_7A42:: ; address name
     db $62, $C2, $A2, $C2, $E2, $C2
 
 ; writes the 16-byte icon tile of family wD09D (Data_016_7ACD + 16 * family) to VRAM tile wD09E through Func_016_7AAF; corrected in E-0124, first named as a palette load (E-0122)
-; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, LibraryMenu_Case10_DrawThreeMetaSpritePartsFor5050, LibraryMenu_Case10_Case06_FamilyForSpeciesIdArg6, ...)
+; 19 call sites from 19 routines (e.g. DrawSaveSummaryPartyEntryC, ShowSpeciesNameAndIconForSlotB, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050, LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6, ...)
 ; reads: wWorkBuf
 LoadFamilyIconTileForWorkBuf::
 Func_016_7A48:: ; address name
