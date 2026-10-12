@@ -19865,6 +19865,4068 @@
         }
       ],
       "note": "E-0255 (C1: StepItemDescriptionText reads the word at $7158 + 2 * the item number under the item grid cursor and shows the text from there plus wTextCounter1/2; 99 words, one per ItemTable entry)."
+    },
+    {
+      "bank": "F0",
+      "addr": "6CB5",
+      "label": "FamilyBandSpeciesTable",
+      "count": 11,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "band lists of this family",
+          "reason": "family band lists"
+        }
+      ],
+      "note": "E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wTopSpecies; 11 families in StringTable_MonsterFamilies order)."
+    },
+    {
+      "bank": "F0",
+      "addr": "6CCB",
+      "label": "FamilyBandLists_Slime",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 0 (Slime) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6D1F",
+        "size": 2,
+        "label": "FamilyBandSpecies_Slime_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6D1F",
+      "label": "FamilyBandLists_Dragon",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 1 (Dragon) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6D7D",
+        "size": 2,
+        "label": "FamilyBandSpecies_Dragon_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6D7D",
+      "label": "FamilyBandLists_Beast",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 2 (Beast) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6DDD",
+        "size": 2,
+        "label": "FamilyBandSpecies_Beast_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6DDD",
+      "label": "FamilyBandLists_Bird",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 3 (Bird) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6E33",
+        "size": 2,
+        "label": "FamilyBandSpecies_Bird_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6E33",
+      "label": "FamilyBandLists_Plant",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 4 (Plant) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6E89",
+        "size": 2,
+        "label": "FamilyBandSpecies_Plant_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6E89",
+      "label": "FamilyBandLists_Bug",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 5 (Bug) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6EDD",
+        "size": 2,
+        "label": "FamilyBandSpecies_Bug_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6EDD",
+      "label": "FamilyBandLists_Demon",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 6 (Demon) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6F37",
+        "size": 2,
+        "label": "FamilyBandSpecies_Demon_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6F37",
+      "label": "FamilyBandLists_Zombie",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 7 (Zombie) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6F8D",
+        "size": 2,
+        "label": "FamilyBandSpecies_Zombie_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6F8D",
+      "label": "FamilyBandLists_Material",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 8 (Material) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "6FED",
+        "size": 2,
+        "label": "FamilyBandSpecies_Material_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "6FED",
+      "label": "FamilyBandLists_Water",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 9 (Water) of FamilyBandSpeciesTable, one list per wRankBand).",
+      "lists": {
+        "until": "704B",
+        "size": 2,
+        "label": "FamilyBandSpecies_Water_",
+        "fields": [
+          {
+            "type": "words",
+            "size": 2,
+            "names": "monster",
+            "name": "species ($FEFE ends the list)"
+          }
+        ],
+        "record": "species"
+      }
+    },
+    {
+      "bank": "F0",
+      "addr": "704B",
+      "label": "FamilyBandLists_Boss",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list for this band",
+          "reason": "family band species list"
+        }
+      ],
+      "note": "E-0256 (C1: family 10 (Boss) of FamilyBandSpeciesTable, one list per wRankBand)."
+    },
+    {
+      "bank": "F0",
+      "addr": "705B",
+      "label": "FamilyBandSpecies_Boss",
+      "count": 30,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "names": "monster",
+          "name": "species ($FFFF skipped, $FEFE ends a list)"
+        }
+      ],
+      "note": "E-0256 (C1: the boss family's eight band pointers start at successive words of this one list, so each band's list is a tail of it; 30 words up to RandomModulo29_BankF0 at $7097)."
+    },
+    {
+      "bank": "60",
+      "addr": "6D6D",
+      "label": "KeyWorldBandSpeciesTable",
+      "count": 88,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list (count, then words)",
+          "reason": "band species list"
+        }
+      ],
+      "note": "E-0256 (C1: PickRandomMonsterFromBandList (with RollKeyWorldMonsterTableKeyWorldMonsters and ...BossMonsters) reads the word at $6D6D + 16 * hTemp1 + 2 * hTemp0 and picks one of the count words that follow the list's count byte; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E1D",
+      "label": "KeyWorldBandSpecies_Slime_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E24",
+      "label": "KeyWorldBandSpecies_Slime_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E2D",
+      "label": "KeyWorldBandSpecies_Slime_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E36",
+      "label": "KeyWorldBandSpecies_Slime_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E41",
+      "label": "KeyWorldBandSpecies_Slime_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E4A",
+      "label": "KeyWorldBandSpecies_Slime_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E51",
+      "label": "KeyWorldBandSpecies_Slime_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E54",
+      "label": "KeyWorldBandSpecies_Slime_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E59",
+      "label": "KeyWorldBandSpecies_Dragon_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E60",
+      "label": "KeyWorldBandSpecies_Dragon_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E6B",
+      "label": "KeyWorldBandSpecies_Dragon_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E76",
+      "label": "KeyWorldBandSpecies_Dragon_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E7F",
+      "label": "KeyWorldBandSpecies_Dragon_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E8C",
+      "label": "KeyWorldBandSpecies_Dragon_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E95",
+      "label": "KeyWorldBandSpecies_Dragon_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E9C",
+      "label": "KeyWorldBandSpecies_Dragon_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6E9F",
+      "label": "KeyWorldBandSpecies_Beast_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EAC",
+      "label": "KeyWorldBandSpecies_Beast_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EB9",
+      "label": "KeyWorldBandSpecies_Beast_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EC6",
+      "label": "KeyWorldBandSpecies_Beast_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6ED3",
+      "label": "KeyWorldBandSpecies_Beast_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EDC",
+      "label": "KeyWorldBandSpecies_Beast_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EE1",
+      "label": "KeyWorldBandSpecies_Beast_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EE4",
+      "label": "KeyWorldBandSpecies_Beast_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EE7",
+      "label": "KeyWorldBandSpecies_Bird_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EEC",
+      "label": "KeyWorldBandSpecies_Bird_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6EF5",
+      "label": "KeyWorldBandSpecies_Bird_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F02",
+      "label": "KeyWorldBandSpecies_Bird_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F0F",
+      "label": "KeyWorldBandSpecies_Bird_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F18",
+      "label": "KeyWorldBandSpecies_Bird_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F1D",
+      "label": "KeyWorldBandSpecies_Bird_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F22",
+      "label": "KeyWorldBandSpecies_Bird_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F25",
+      "label": "KeyWorldBandSpecies_Plant_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F2E",
+      "label": "KeyWorldBandSpecies_Plant_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F35",
+      "label": "KeyWorldBandSpecies_Plant_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F40",
+      "label": "KeyWorldBandSpecies_Plant_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F4F",
+      "label": "KeyWorldBandSpecies_Plant_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F54",
+      "label": "KeyWorldBandSpecies_Plant_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F59",
+      "label": "KeyWorldBandSpecies_Plant_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F5C",
+      "label": "KeyWorldBandSpecies_Plant_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F63",
+      "label": "KeyWorldBandSpecies_Bug_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F6C",
+      "label": "KeyWorldBandSpecies_Bug_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F73",
+      "label": "KeyWorldBandSpecies_Bug_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F7E",
+      "label": "KeyWorldBandSpecies_Bug_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F8D",
+      "label": "KeyWorldBandSpecies_Bug_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F92",
+      "label": "KeyWorldBandSpecies_Bug_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F99",
+      "label": "KeyWorldBandSpecies_Bug_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F9C",
+      "label": "KeyWorldBandSpecies_Bug_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6F9F",
+      "label": "KeyWorldBandSpecies_Demon_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FA4",
+      "label": "KeyWorldBandSpecies_Demon_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FA9",
+      "label": "KeyWorldBandSpecies_Demon_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FB0",
+      "label": "KeyWorldBandSpecies_Demon_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FB9",
+      "label": "KeyWorldBandSpecies_Demon_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FC6",
+      "label": "KeyWorldBandSpecies_Demon_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FD7",
+      "label": "KeyWorldBandSpecies_Demon_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FE0",
+      "label": "KeyWorldBandSpecies_Demon_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FE3",
+      "label": "KeyWorldBandSpecies_Zombie_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FE6",
+      "label": "KeyWorldBandSpecies_Zombie_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "6FEF",
+      "label": "KeyWorldBandSpecies_Zombie_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7000",
+      "label": "KeyWorldBandSpecies_Zombie_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "700D",
+      "label": "KeyWorldBandSpecies_Zombie_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7010",
+      "label": "KeyWorldBandSpecies_Zombie_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7015",
+      "label": "KeyWorldBandSpecies_Zombie_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "701E",
+      "label": "KeyWorldBandSpecies_Zombie_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7021",
+      "label": "KeyWorldBandSpecies_Material_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "702C",
+      "label": "KeyWorldBandSpecies_Material_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7035",
+      "label": "KeyWorldBandSpecies_Material_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "703C",
+      "label": "KeyWorldBandSpecies_Material_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "704D",
+      "label": "KeyWorldBandSpecies_Material_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "705A",
+      "label": "KeyWorldBandSpecies_Material_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7063",
+      "label": "KeyWorldBandSpecies_Material_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7066",
+      "label": "KeyWorldBandSpecies_Material_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7069",
+      "label": "KeyWorldBandSpecies_Water_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7070",
+      "label": "KeyWorldBandSpecies_Water_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7079",
+      "label": "KeyWorldBandSpecies_Water_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7084",
+      "label": "KeyWorldBandSpecies_Water_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7091",
+      "label": "KeyWorldBandSpecies_Water_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "709C",
+      "label": "KeyWorldBandSpecies_Water_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70A7",
+      "label": "KeyWorldBandSpecies_Water_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70AE",
+      "label": "KeyWorldBandSpecies_Water_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70B1",
+      "label": "KeyWorldBandSpecies_Boss_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 0 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70BE",
+      "label": "KeyWorldBandSpecies_Boss_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 1 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70CB",
+      "label": "KeyWorldBandSpecies_Boss_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 2 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70D8",
+      "label": "KeyWorldBandSpecies_Boss_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 3 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70E5",
+      "label": "KeyWorldBandSpecies_Boss_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 4 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "70F2",
+      "label": "KeyWorldBandSpecies_Boss_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 5 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "7100",
+      "label": "KeyWorldBandSpecies_Boss_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 6 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "60",
+      "addr": "710D",
+      "label": "KeyWorldBandSpecies_Boss_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 32,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 7 of KeyWorldBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6D57",
+      "label": "EncounterBandSpeciesTable",
+      "count": 88,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "species list (count, then words)",
+          "reason": "band species list"
+        }
+      ],
+      "note": "E-0256 (C1: PickEncounterMonsterForSlotC reads the word at $6D57 + 16 * PickRandomBand0To10 + 2 * wWildBand and picks one of the count words after the count byte with AdvanceRandom; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E07",
+      "label": "EncounterBandSpecies_Slime_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E0E",
+      "label": "EncounterBandSpecies_Slime_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E17",
+      "label": "EncounterBandSpecies_Slime_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E20",
+      "label": "EncounterBandSpecies_Slime_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E2B",
+      "label": "EncounterBandSpecies_Slime_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E34",
+      "label": "EncounterBandSpecies_Slime_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E3B",
+      "label": "EncounterBandSpecies_Slime_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E3E",
+      "label": "EncounterBandSpecies_Slime_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 0 (Slime), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E43",
+      "label": "EncounterBandSpecies_Dragon_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E4A",
+      "label": "EncounterBandSpecies_Dragon_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E55",
+      "label": "EncounterBandSpecies_Dragon_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E60",
+      "label": "EncounterBandSpecies_Dragon_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E69",
+      "label": "EncounterBandSpecies_Dragon_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E76",
+      "label": "EncounterBandSpecies_Dragon_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E7F",
+      "label": "EncounterBandSpecies_Dragon_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E86",
+      "label": "EncounterBandSpecies_Dragon_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 1 (Dragon), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E89",
+      "label": "EncounterBandSpecies_Beast_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6E96",
+      "label": "EncounterBandSpecies_Beast_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EA3",
+      "label": "EncounterBandSpecies_Beast_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EB0",
+      "label": "EncounterBandSpecies_Beast_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EBD",
+      "label": "EncounterBandSpecies_Beast_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EC6",
+      "label": "EncounterBandSpecies_Beast_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6ECB",
+      "label": "EncounterBandSpecies_Beast_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6ECE",
+      "label": "EncounterBandSpecies_Beast_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 2 (Beast), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6ED1",
+      "label": "EncounterBandSpecies_Bird_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6ED6",
+      "label": "EncounterBandSpecies_Bird_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EDF",
+      "label": "EncounterBandSpecies_Bird_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EEC",
+      "label": "EncounterBandSpecies_Bird_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6EF9",
+      "label": "EncounterBandSpecies_Bird_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F02",
+      "label": "EncounterBandSpecies_Bird_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F07",
+      "label": "EncounterBandSpecies_Bird_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F0C",
+      "label": "EncounterBandSpecies_Bird_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 3 (Bird), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F0F",
+      "label": "EncounterBandSpecies_Plant_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F18",
+      "label": "EncounterBandSpecies_Plant_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F1F",
+      "label": "EncounterBandSpecies_Plant_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F2A",
+      "label": "EncounterBandSpecies_Plant_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F39",
+      "label": "EncounterBandSpecies_Plant_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F3E",
+      "label": "EncounterBandSpecies_Plant_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F43",
+      "label": "EncounterBandSpecies_Plant_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F46",
+      "label": "EncounterBandSpecies_Plant_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 4 (Plant), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F4D",
+      "label": "EncounterBandSpecies_Bug_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F56",
+      "label": "EncounterBandSpecies_Bug_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F5D",
+      "label": "EncounterBandSpecies_Bug_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F68",
+      "label": "EncounterBandSpecies_Bug_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 14,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F77",
+      "label": "EncounterBandSpecies_Bug_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F7C",
+      "label": "EncounterBandSpecies_Bug_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F83",
+      "label": "EncounterBandSpecies_Bug_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F86",
+      "label": "EncounterBandSpecies_Bug_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 5 (Bug), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F89",
+      "label": "EncounterBandSpecies_Demon_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F8E",
+      "label": "EncounterBandSpecies_Demon_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F93",
+      "label": "EncounterBandSpecies_Demon_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6F9A",
+      "label": "EncounterBandSpecies_Demon_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FA3",
+      "label": "EncounterBandSpecies_Demon_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FB0",
+      "label": "EncounterBandSpecies_Demon_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FC1",
+      "label": "EncounterBandSpecies_Demon_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FCA",
+      "label": "EncounterBandSpecies_Demon_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 6 (Demon), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FCD",
+      "label": "EncounterBandSpecies_Zombie_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FD0",
+      "label": "EncounterBandSpecies_Zombie_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FD9",
+      "label": "EncounterBandSpecies_Zombie_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FEA",
+      "label": "EncounterBandSpecies_Zombie_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FF7",
+      "label": "EncounterBandSpecies_Zombie_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FFA",
+      "label": "EncounterBandSpecies_Zombie_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 4,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "6FFF",
+      "label": "EncounterBandSpecies_Zombie_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7008",
+      "label": "EncounterBandSpecies_Zombie_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 7 (Zombie), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "700B",
+      "label": "EncounterBandSpecies_Material_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7016",
+      "label": "EncounterBandSpecies_Material_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "701F",
+      "label": "EncounterBandSpecies_Material_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7026",
+      "label": "EncounterBandSpecies_Material_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7037",
+      "label": "EncounterBandSpecies_Material_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7044",
+      "label": "EncounterBandSpecies_Material_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "704D",
+      "label": "EncounterBandSpecies_Material_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7050",
+      "label": "EncounterBandSpecies_Material_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 8 (Material), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7053",
+      "label": "EncounterBandSpecies_Water_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "705A",
+      "label": "EncounterBandSpecies_Water_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 8,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7063",
+      "label": "EncounterBandSpecies_Water_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "706E",
+      "label": "EncounterBandSpecies_Water_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "707B",
+      "label": "EncounterBandSpecies_Water_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7086",
+      "label": "EncounterBandSpecies_Water_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 10,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7091",
+      "label": "EncounterBandSpecies_Water_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 6,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "7098",
+      "label": "EncounterBandSpecies_Water_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 9 (Water), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "709B",
+      "label": "EncounterBandSpecies_Boss_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 0 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70A8",
+      "label": "EncounterBandSpecies_Boss_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 1 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70B5",
+      "label": "EncounterBandSpecies_Boss_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 2 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70C2",
+      "label": "EncounterBandSpecies_Boss_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 3 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70CF",
+      "label": "EncounterBandSpecies_Boss_4",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 4 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70DC",
+      "label": "EncounterBandSpecies_Boss_5",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 5 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70EA",
+      "label": "EncounterBandSpecies_Boss_6",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 12,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 6 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "A0",
+      "addr": "70F7",
+      "label": "EncounterBandSpecies_Boss_7",
+      "count": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "count"
+        },
+        {
+          "type": "words",
+          "size": 32,
+          "per_line": 8,
+          "names": "monster",
+          "name": "species"
+        }
+      ],
+      "note": "E-0256 (C1: row 10 (Boss), band 7 of EncounterBandSpeciesTable)."
     }
   ]
 }

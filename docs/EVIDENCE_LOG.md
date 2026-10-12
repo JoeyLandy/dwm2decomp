@@ -2430,6 +2430,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0256 — Species lists by family and band (banks $F0, $60, $A0)
+
+- Kind: OBSERVATION (reading; C1).
+- **FamilyBandSpeciesTable (F0:$6CB5, 11 words).** RankFamilyScoresIntoFamilyRanking reads two words:
+  - the word for the family (wFamilyRanking order);
+  - then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that family's list.
+  - It walks the species words up to $FEFE, taking one when RandomModulo29_BankF0 gives an odd number, and stores the pick in wTopSpecies.
+  - Families 0-9 have contiguous band lists (FamilyBandSpecies_<family>_NNN). The boss family's eight bands start at successive words of one list (FamilyBandSpecies_Boss).
+- **KeyWorldBandSpeciesTable (60:$6D6D) and EncounterBandSpeciesTable (A0:$6D57), 88 words each (11 families x 8 bands).**
+  - PickRandomMonsterFromBandList (bank $60) indexes the table with 16 * hTemp1 + 2 * hTemp0.
+  - PickEncounterMonsterForSlotC (bank $A0) indexes it with 16 * PickRandomBand0To10 + 2 * wWildBand.
+  - Each list is a count byte, then that many species words. They are laid out as KeyWorldBandSpecies_<family>_<band> and EncounterBandSpecies_<family>_<band>, with monster names on the words.
+- Binary verification: build/run330 PASS, 0 differing bytes; tests OK.
+
 ### E-0255 — Item descriptions
 
 - Kind: OBSERVATION (reading; C1).

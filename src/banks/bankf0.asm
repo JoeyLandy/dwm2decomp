@@ -3563,7 +3563,7 @@ Jump_0F0_5DA0:: ; address name
     ld [wArg1], a
     xor a, a
     ld [wArg2], a
-    ld de, Data_0F0_6DC4
+    ld de, $6DC4
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -5478,7 +5478,7 @@ Jump_0F0_6C4F::
     ld a, [hl]
     res 7, a
     add a, a
-    ld de, Data_0F0_6CB5
+    ld de, FamilyBandSpeciesTable
     add a, e
     ld e, a
     jr nc, Jump_0F0_6C5D
@@ -5550,377 +5550,974 @@ Jump_0F0_6CA5::
     ld [wTopSpeciesByte], a
     ret
 
-; address loaded by RankFamilyScoresIntoFamilyRanking
-Data_0F0_6CB5:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_0F0_6CCB
-    dw Data_0F0_6D1F
-    dw Data_0F0_6D7D
-    dw Data_0F0_6DDD
-    dw Data_0F0_6E33
-    dw Data_0F0_6E89
-    dw Data_0F0_6EDD
-    dw Data_0F0_6F37
-    dw Data_0F0_6F8D
-    dw Data_0F0_6FED
-    dw Data_0F0_704B
-
-Data_0F0_6CCB:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6CDB
-    dw Data_0F0_6CE3
-    dw Data_0F0_6CEF
-    dw Data_0F0_6CF9
-    dw Data_0F0_6D05
-    dw Data_0F0_6D0F
-    dw Data_0F0_6D17
-    dw Data_0F0_6D1B
-
-Data_0F0_6CDB:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $00, $05, $00, $0F, $00, $FE, $FE
-
-Data_0F0_6CE3:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $00, $07, $00, $0A, $00, $14, $00, $1A, $00, $FE, $FE
-
-Data_0F0_6CEF:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $00, $08, $00, $09, $00, $0B, $00, $FE, $FE
-
-Data_0F0_6CF9:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $00, $06, $00, $0C, $00, $0D, $00, $0E, $00, $FE, $FE
-
-Data_0F0_6D05:: ; heuristic: target of a monotone pointer table; C0
-    db $11, $00, $13, $00, $15, $00, $16, $00, $FE, $FE
-
-Data_0F0_6D0F:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $00, $12, $00, $17, $00, $FE, $FE
-
-Data_0F0_6D17:: ; heuristic: target of a monotone pointer table; C0
-    db $18, $00, $FE, $FE
-
-Data_0F0_6D1B:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $00, $FE, $FE
-
-Data_0F0_6D1F:: ; heuristic: target of a monotone pointer table; C0
-    dw Data_0F0_6D2F
-    dw Data_0F0_6D37
-    dw Data_0F0_6D43
-    dw Data_0F0_6D4F
-    dw Data_0F0_6D59
-    dw Data_0F0_6D67
-    dw Data_0F0_6D71
-    dw Data_0F0_6D79
-
-; LZSS-compressed asset: 43 bytes expand to 40 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D2F:: ; heuristic: target of a monotone pointer table; C0
-    db $28, $00, $31, $00, $32, $00, $FE, $FE
-
-; LZSS-compressed asset: 45 bytes expand to 42 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D37:: ; heuristic: target of a monotone pointer table; C0
-    db $2A, $00, $2E, $00, $34, $00, $36, $00, $39, $00, $FE, $FE
-
-; LZSS-compressed asset: 39 bytes expand to 36 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D43:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $00, $25, $00, $26, $00, $27, $00, $3A, $00, $FE, $FE
-
-; LZSS-compressed asset: 46 bytes expand to 43 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D4F:: ; heuristic: target of a monotone pointer table; C0
-    db $2B, $00, $2C, $00, $30, $00, $35, $00, $FE, $FE
-
-; LZSS-compressed asset: 44 bytes expand to 41 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D59:: ; heuristic: target of a monotone pointer table; C0
-    db $29, $00, $2D, $00, $2F, $00, $33, $00, $37, $00, $3B, $00, $FE, $FE
-
-; LZSS-compressed asset: 59 bytes expand to 56 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D67:: ; heuristic: target of a monotone pointer table; C0
-    db $38, $00, $3D, $00, $3E, $00, $3F, $00, $FE, $FE
-
-; LZSS-compressed asset: 63 bytes expand to 60 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D71:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $00, $40, $00, $42, $00, $FE, $FE
-
-; LZSS-compressed asset: 40 bytes expand to 65 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D79:: ; heuristic: target of a monotone pointer table; C0
-    db $41, $00, $FE, $FE
-
-Data_0F0_6D7D:: ; heuristic: target of a monotone pointer table; C0
-    db $8D, $6D, $9B, $6D, $A9, $6D, $B7, $6D, $C5, $6D, $CF, $6D, $D5, $6D, $D9, $6D
-
-; LZSS-compressed asset: 75 bytes expand to 72 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D8D:: ; heuristic: target of a monotone pointer table; C0
-    db $48, $00, $49, $00, $4A, $00, $4B, $00, $50, $00, $5B, $00, $FE, $FE
-
-; LZSS-compressed asset: 80 bytes expand to 77 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6D9B:: ; heuristic: target of a monotone pointer table; C0
-    db $4D, $00, $4E, $00, $53, $00, $54, $00, $57, $00, $5A, $00, $FE, $FE
-
-; LZSS-compressed asset: 74 bytes expand to 71 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DA9:: ; heuristic: target of a monotone pointer table; C0
-    db $47, $00, $4F, $00, $51, $00, $52, $00, $58, $00, $59, $00, $FE, $FE
-
-; LZSS-compressed asset: 88 bytes expand to 85 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DB7:: ; heuristic: target of a monotone pointer table; C0
-    db $55, $00, $56, $00, $5D, $00, $5E, $00, $65, $00, $66, $00, $FE
-
-; address loaded by RunScreenStep_F0_5B50_Case09
-Data_0F0_6DC4:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $FE
-
-; LZSS-compressed asset: 79 bytes expand to 76 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DC5:: ; heuristic: target of a monotone pointer table; C0
-    db $4C, $00, $5F, $00, $62, $00, $63, $00, $FE, $FE
-
-; LZSS-compressed asset: 95 bytes expand to 92 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DCF:: ; heuristic: target of a monotone pointer table; C0
-    db $5C, $00, $61, $00, $FE, $FE
-
-; LZSS-compressed asset: 55 bytes expand to 96 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DD5:: ; heuristic: target of a monotone pointer table; C0
-    db $60, $00, $FE, $FE
-
-; LZSS-compressed asset: 51 bytes expand to 100 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DD9:: ; heuristic: target of a monotone pointer table; C0
-    db $64, $00, $FE, $FE
-
-Data_0F0_6DDD:: ; heuristic: target of a monotone pointer table; C0
-    db $ED, $6D, $F3, $6D, $FD, $6D, $0B, $6E, $19, $6E, $23, $6E, $29, $6E, $2F, $6E
-
-; LZSS-compressed asset: 109 bytes expand to 106 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DED:: ; heuristic: target of a monotone pointer table; C0
-    db $6A, $00, $73, $00, $FE, $FE
-
-; LZSS-compressed asset: 112 bytes expand to 109 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DF3:: ; heuristic: target of a monotone pointer table; C0
-    db $6D, $00, $70, $00, $74, $00, $75, $00, $FE, $FE
-
-; LZSS-compressed asset: 103 bytes expand to 108 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6DFD:: ; heuristic: target of a monotone pointer table; C0
-    db $6C, $00, $71, $00, $72, $00, $76, $00, $77, $00, $84, $00, $FE, $FE
-
-; LZSS-compressed asset: 56 bytes expand to 107 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E0B:: ; heuristic: target of a monotone pointer table; C0
-    db $6B, $00, $6E, $00, $6F, $00, $78, $00, $79, $00, $7A, $00, $FE, $FE
-
-; LZSS-compressed asset: 126 bytes expand to 123 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E19:: ; heuristic: target of a monotone pointer table; C0
-    db $7B, $00, $7C, $00, $7D, $00, $80, $00, $FE, $FE
-
-; LZSS-compressed asset: 129 bytes expand to 126 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E23:: ; heuristic: target of a monotone pointer table; C0
-    db $7E, $00, $7F, $00, $FE, $FE
-
-; LZSS-compressed asset: 132 bytes expand to 129 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E29:: ; heuristic: target of a monotone pointer table; C0
-    db $81, $00, $83, $00, $FE, $FE
-
-; LZSS-compressed asset: 73 bytes expand to 130 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E2F:: ; heuristic: target of a monotone pointer table; C0
-    db $82, $00, $FE, $FE
-
-Data_0F0_6E33:: ; heuristic: target of a monotone pointer table; C0
-    db $43, $6E, $4D, $6E, $55, $6E, $61, $6E, $71, $6E, $77, $6E, $7D, $6E, $81, $6E
-
-; LZSS-compressed asset: 148 bytes expand to 145 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E43:: ; heuristic: target of a monotone pointer table; C0
-    db $91, $00, $93, $00, $95, $00, $A6, $00, $FE, $FE
-
-; LZSS-compressed asset: 144 bytes expand to 141 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E4D:: ; heuristic: target of a monotone pointer table; C0
-    db $8D, $00, $90, $00, $97, $00, $FE, $FE
-
-; LZSS-compressed asset: 145 bytes expand to 142 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E55:: ; heuristic: target of a monotone pointer table; C0
-    db $8E, $00, $8F, $00, $92, $00, $96, $00, $98, $00, $FE, $FE
-
-; LZSS-compressed asset: 147 bytes expand to 148 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E61:: ; heuristic: target of a monotone pointer table; C0
-    db $94, $00, $99, $00, $9A, $00, $9D, $00, $9E, $00, $9F, $00, $A7, $00, $FE, $FE
-
-; LZSS-compressed asset: 163 bytes expand to 160 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E71:: ; heuristic: target of a monotone pointer table; C0
-    db $A0, $00, $A1, $00, $FE, $FE
-
-; LZSS-compressed asset: 157 bytes expand to 154 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E77:: ; heuristic: target of a monotone pointer table; C0
-    db $9A, $00, $9B, $00, $FE, $FE
-
-; LZSS-compressed asset: 107 bytes expand to 162 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E7D:: ; heuristic: target of a monotone pointer table; C0
-    db $A2, $00, $FE, $FE
-
-; LZSS-compressed asset: 166 bytes expand to 163 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E81:: ; heuristic: target of a monotone pointer table; C0
-    db $A3, $00, $A4, $00, $A5, $00, $FE, $FE
-
-Data_0F0_6E89:: ; heuristic: target of a monotone pointer table; C0
-    db $99, $6E, $A3, $6E, $AB, $6E, $B7, $6E, $C7, $6E, $CD, $6E, $D5, $6E, $D9, $6E
-
-; LZSS-compressed asset: 179 bytes expand to 176 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6E99:: ; heuristic: target of a monotone pointer table; C0
-    db $B0, $00, $B5, $00, $B9, $00, $BB, $00, $FE, $FE
-
-; LZSS-compressed asset: 181 bytes expand to 178 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EA3:: ; heuristic: target of a monotone pointer table; C0
-    db $B2, $00, $B3, $00, $BA, $00, $FE, $FE
-
-; LZSS-compressed asset: 185 bytes expand to 182 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EAB:: ; heuristic: target of a monotone pointer table; C0
-    db $B6, $00, $B7, $00, $B8, $00, $BD, $00, $C2, $00, $FE, $FE
-
-; LZSS-compressed asset: 180 bytes expand to 177 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EB7:: ; heuristic: target of a monotone pointer table; C0
-    db $B1, $00, $B4, $00, $BC, $00, $BE, $00, $BF, $00, $C1, $00, $C9, $00, $FE, $FE
-
-; LZSS-compressed asset: 195 bytes expand to 192 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EC7:: ; heuristic: target of a monotone pointer table; C0
-    db $C0, $00, $C5, $00, $FE, $FE
-
-; LZSS-compressed asset: 198 bytes expand to 195 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6ECD:: ; heuristic: target of a monotone pointer table; C0
-    db $C3, $00, $C4, $00, $C7, $00, $FE, $FE
-
-; LZSS-compressed asset: 103 bytes expand to 198 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6ED5:: ; heuristic: target of a monotone pointer table; C0
-    db $C6, $00, $FE, $FE
-
-; LZSS-compressed asset: 105 bytes expand to 200 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6ED9:: ; heuristic: target of a monotone pointer table; C0
-    db $C8, $00, $FE, $FE
-
-Data_0F0_6EDD:: ; heuristic: target of a monotone pointer table; C0
-    db $ED, $6E, $F3, $6E, $F9, $6E, $FF, $6E, $0B, $6F, $17, $6F, $29, $6F, $33, $6F
-
-; LZSS-compressed asset: 214 bytes expand to 211 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EED:: ; heuristic: target of a monotone pointer table; C0
-    db $D3, $00, $D6, $00, $FE, $FE
-
-; LZSS-compressed asset: 223 bytes expand to 220 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EF3:: ; heuristic: target of a monotone pointer table; C0
-    db $DC, $00, $DD, $00, $FE, $FE
-
-; LZSS-compressed asset: 215 bytes expand to 212 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EF9:: ; heuristic: target of a monotone pointer table; C0
-    db $D4, $00, $D8, $00, $FE, $FE
-
-; LZSS-compressed asset: 212 bytes expand to 215 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6EFF:: ; heuristic: target of a monotone pointer table; C0
-    db $D7, $00, $D9, $00, $E1, $00, $EA, $00, $EC, $00, $FE, $FE
-
-; LZSS-compressed asset: 221 bytes expand to 218 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F0B:: ; heuristic: target of a monotone pointer table; C0
-    db $DA, $00, $DB, $00, $DF, $00, $E2, $00, $E8, $00, $FE, $FE
-
-; LZSS-compressed asset: 225 bytes expand to 222 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F17:: ; heuristic: target of a monotone pointer table; C0
-    db $DE, $00, $E0, $00, $E3, $00, $E4, $00, $E5, $00, $E6, $00, $E9, $00, $EB, $00
-    db $FE, $FE
-
-; LZSS-compressed asset: 234 bytes expand to 231 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F29:: ; heuristic: target of a monotone pointer table; C0
-    db $E7, $00, $ED, $00, $EE, $00, $F0, $00, $FE, $FE
-
-; LZSS-compressed asset: 79 bytes expand to 239 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F33:: ; heuristic: target of a monotone pointer table; C0
-    db $EF, $00, $FE, $FE
-
-Data_0F0_6F37:: ; heuristic: target of a monotone pointer table; C0
-    db $47, $6F, $4B, $6F, $55, $6F, $67, $6F, $75, $6F, $79, $6F, $7F, $6F, $89, $6F
-
-; LZSS-compressed asset: 121 bytes expand to 246 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F47:: ; heuristic: target of a monotone pointer table; C0
-    db $F6, $00, $FE, $FE
-
-; LZSS-compressed asset: 245 bytes expand to 249 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F4B:: ; heuristic: target of a monotone pointer table; C0
-    db $F9, $00, $00, $01, $04, $01, $05, $01, $FE, $FE
-
-; LZSS-compressed asset: 251 bytes expand to 248 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F55:: ; heuristic: target of a monotone pointer table; C0
-    db $F8, $00, $FA, $00, $FD, $00, $FE, $00, $FF, $00, $01, $01, $02, $01, $0F, $01
-    db $FE, $FE
-
-; LZSS-compressed asset: 254 bytes expand to 251 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F67:: ; heuristic: target of a monotone pointer table; C0
-    db $FB, $00, $FC, $00, $03, $01, $06, $01, $09, $01, $0E, $01, $FE, $FE, $0A, $01
-    db $FE, $FE
-
-; LZSS-compressed asset: 250 bytes expand to 247 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F79:: ; heuristic: target of a monotone pointer table; C0
-    db $F7, $00, $0B, $01, $FE, $FE
-
-; LZSS-compressed asset: 266 bytes expand to 263 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F7F:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $01, $08, $01, $0D, $01, $10, $01, $FE, $FE
-
-; LZSS-compressed asset: 52 bytes expand to 268 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F89:: ; heuristic: target of a monotone pointer table; C0
-    db $0C, $01, $FE, $FE
-
-Data_0F0_6F8D:: ; heuristic: target of a monotone pointer table; C0
-    db $9D, $6F, $A9, $6F, $B1, $6F, $BB, $6F, $CB, $6F, $D9, $6F, $E5, $6F, $E9, $6F
-
-; LZSS-compressed asset: 286 bytes expand to 283 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6F9D:: ; heuristic: target of a monotone pointer table; C0
-    db $1B, $01, $1D, $01, $1E, $01, $22, $01, $31, $01, $FE, $FE
-
-; LZSS-compressed asset: 284 bytes expand to 281 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FA9:: ; heuristic: target of a monotone pointer table; C0
-    db $19, $01, $1C, $01, $28, $01, $FE, $FE
-
-; LZSS-compressed asset: 285 bytes expand to 282 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FB1:: ; heuristic: target of a monotone pointer table; C0
-    db $1A, $01, $21, $01, $27, $01, $37, $01, $FE, $FE
-
-; LZSS-compressed asset: 290 bytes expand to 287 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FBB:: ; heuristic: target of a monotone pointer table; C0
-    db $1F, $01, $20, $01, $23, $01, $26, $01, $2B, $01, $2C, $01, $30, $01, $FE, $FE
-
-; LZSS-compressed asset: 287 bytes expand to 292 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FCB:: ; heuristic: target of a monotone pointer table; C0
-    db $24, $01, $29, $01, $2F, $01, $32, $01, $34, $01, $38, $01, $FE, $FE
-
-; LZSS-compressed asset: 296 bytes expand to 293 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FD9:: ; heuristic: target of a monotone pointer table; C0
-    db $25, $01, $2A, $01, $2D, $01, $2E, $01, $33, $01, $FE, $FE, $35, $01, $FE, $FE
-
-; LZSS-compressed asset: 207 bytes expand to 310 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FE9:: ; heuristic: target of a monotone pointer table; C0
-    db $36, $01, $FE, $FE
-
-Data_0F0_6FED:: ; heuristic: target of a monotone pointer table; C0
-    db $FD, $6F, $05, $70, $0F, $70, $1B, $70, $29, $70, $35, $70, $41, $70, $47, $70
-
-; LZSS-compressed asset: 319 bytes expand to 316 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_6FFD:: ; heuristic: target of a monotone pointer table; C0
-    db $3C, $01, $3D, $01, $44, $01, $FE, $FE
-
-; LZSS-compressed asset: 326 bytes expand to 323 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_7005:: ; heuristic: target of a monotone pointer table; C0
-    db $43, $01, $49, $01, $4D, $01, $5B, $01, $FE, $FE
-
-; LZSS-compressed asset: 323 bytes expand to 320 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_700F:: ; heuristic: target of a monotone pointer table; C0
-    db $40, $01, $41, $01, $45, $01, $4C, $01, $5A, $01, $FE, $FE
-
-; LZSS-compressed asset: 321 bytes expand to 318 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_701B:: ; heuristic: target of a monotone pointer table; C0
-    db $3E, $01, $3F, $01, $42, $01, $46, $01, $47, $01, $4A, $01, $FE, $FE
-
-; LZSS-compressed asset: 331 bytes expand to 328 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_7029:: ; heuristic: target of a monotone pointer table; C0
-    db $48, $01, $4B, $01, $4E, $01, $4F, $01, $50, $01, $FE, $FE
-
-; LZSS-compressed asset: 340 bytes expand to 337 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_7035:: ; heuristic: target of a monotone pointer table; C0
-    db $51, $01, $52, $01, $54, $01, $55, $01, $57, $01, $FE, $FE
-
-; LZSS-compressed asset: 345 bytes expand to 342 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_7041:: ; heuristic: target of a monotone pointer table; C0
-    db $56, $01, $58, $01, $FE, $FE
-
-; LZSS-compressed asset: 312 bytes expand to 345 (tools/lzss_gfx.py, E-0016/E-0017; C1)
-Data_0F0_7047:: ; heuristic: target of a monotone pointer table; C0
-    db $59, $01, $FE, $FE
-
-Data_0F0_704B:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $3C304B, $4C
+; E-0256 (C1: RankFamilyScoresIntoFamilyRanking walks wFamilyRanking (10 families), reads the word at $6CB5 + 2 * family, then the word at 2 * wRankBand (BandOfFamilyBitCount: 4-7) of that list, and walks the species words up to $FEFE (or $FFFF) taking one when RandomModulo29_BankF0 gives an odd number; the chosen species goes to wTopSpecies; 11 families in StringTable_MonsterFamilies order).
+; record: band lists of this family
+FamilyBandSpeciesTable::
+Data_0F0_6CB5:: ; address name
+    dw FamilyBandLists_Slime ; id 0
+    dw FamilyBandLists_Dragon ; id 1
+    dw FamilyBandLists_Beast ; id 2
+    dw FamilyBandLists_Bird ; id 3
+    dw FamilyBandLists_Plant ; id 4
+    dw FamilyBandLists_Bug ; id 5
+    dw FamilyBandLists_Demon ; id 6
+    dw FamilyBandLists_Zombie ; id 7
+    dw FamilyBandLists_Material ; id 8
+    dw FamilyBandLists_Water ; id 9
+    dw FamilyBandLists_Boss ; id 10
+
+; E-0256 (C1: family 0 (Slime) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Slime::
+Data_0F0_6CCB:: ; address name
+    dw FamilyBandSpecies_Slime_000 ; id 0
+    dw FamilyBandSpecies_Slime_001 ; id 1
+    dw FamilyBandSpecies_Slime_002 ; id 2
+    dw FamilyBandSpecies_Slime_003 ; id 3
+    dw FamilyBandSpecies_Slime_004 ; id 4
+    dw FamilyBandSpecies_Slime_005 ; id 5
+    dw FamilyBandSpecies_Slime_006 ; id 6
+    dw FamilyBandSpecies_Slime_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_000::
+Data_0F0_6CDB:: ; address name
+    dw $0002 ; id 0 SpotSlime
+    dw $0005 ; id 1 Snaily
+    dw $000F ; id 2 Slabbit
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_001::
+Data_0F0_6CE3:: ; address name
+    dw $0004 ; id 0 TreeSlime
+    dw $0007 ; id 1 Babble
+    dw $000A ; id 2 Slime
+    dw $0014 ; id 3 TropicGel
+    dw $001A ; id 4 WonderEgg
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_002::
+Data_0F0_6CEF:: ; address name
+    dw $0003 ; id 0 WingSlime
+    dw $0008 ; id 1 BoxSlime
+    dw $0009 ; id 2 PearlGel
+    dw $000B ; id 3 Healer
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_003::
+Data_0F0_6CF9:: ; address name
+    dw $0001 ; id 0 DrakSlime
+    dw $0006 ; id 1 SlimeNite
+    dw $000C ; id 2 FangSlime
+    dw $000D ; id 3 RockSlime
+    dw $000E ; id 4 SlimeBorg
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_004::
+Data_0F0_6D05:: ; address name
+    dw $0011 ; id 0 Metaly
+    dw $0013 ; id 1 SpotKing
+    dw $0015 ; id 2 MimeSlime
+    dw $0016 ; id 3 HaloSlime
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_005::
+Data_0F0_6D0F:: ; address name
+    dw $0010 ; id 0 KingSlime
+    dw $0012 ; id 1 Metabble
+    dw $0017 ; id 2 MetalKing
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_006::
+Data_0F0_6D17:: ; address name
+    dw $0018 ; id 0 GoldSlime
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Slime; it runs to the next list)
+; record: species
+FamilyBandSpecies_Slime_007::
+Data_0F0_6D1B:: ; address name
+    dw $0019 ; id 0 GranSlime
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 1 (Dragon) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Dragon::
+Data_0F0_6D1F:: ; address name
+    dw FamilyBandSpecies_Dragon_000 ; id 0
+    dw FamilyBandSpecies_Dragon_001 ; id 1
+    dw FamilyBandSpecies_Dragon_002 ; id 2
+    dw FamilyBandSpecies_Dragon_003 ; id 3
+    dw FamilyBandSpecies_Dragon_004 ; id 4
+    dw FamilyBandSpecies_Dragon_005 ; id 5
+    dw FamilyBandSpecies_Dragon_006 ; id 6
+    dw FamilyBandSpecies_Dragon_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_000::
+Data_0F0_6D2F:: ; address name
+    dw $0028 ; id 0 FairyDrak
+    dw $0031 ; id 1 Chamelgon
+    dw $0032 ; id 2 LizardFly
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_001::
+Data_0F0_6D37:: ; address name
+    dw $002A ; id 0 Poisongon
+    dw $002E ; id 1 MiniDrak
+    dw $0034 ; id 2 KingCobra
+    dw $0036 ; id 3 SnakeBat
+    dw $0039 ; id 4 Crestpent
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_002::
+Data_0F0_6D43:: ; address name
+    dw $0024 ; id 0 DragonKid
+    dw $0025 ; id 1 Tortragon
+    dw $0026 ; id 2 Pteranod
+    dw $0027 ; id 3 Gasgon
+    dw $003A ; id 4 WingSnake
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_003::
+Data_0F0_6D4F:: ; address name
+    dw $002B ; id 0 Swordgon
+    dw $002C ; id 1 Drygon
+    dw $0030 ; id 2 Rayburn
+    dw $0035 ; id 3 Vampirus
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_004::
+Data_0F0_6D59:: ; address name
+    dw $0029 ; id 0 LizardMan
+    dw $002D ; id 1 Dragon
+    dw $002F ; id 2 MadDragon
+    dw $0033 ; id 3 Andreal
+    dw $0037 ; id 4 Spikerous
+    dw $003B ; id 5 Coatol
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_005::
+Data_0F0_6D67:: ; address name
+    dw $0038 ; id 0 GreatDrak
+    dw $003D ; id 1 BattleRex
+    dw $003E ; id 2 SkyDragon
+    dw $003F ; id 3 Serpentia
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_006::
+Data_0F0_6D71:: ; address name
+    dw $003C ; id 0 Orochi
+    dw $0040 ; id 1 Divinegon
+    dw $0042 ; id 2 GigaDraco
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Dragon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Dragon_007::
+Data_0F0_6D79:: ; address name
+    dw $0041 ; id 0 Orligon
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 2 (Beast) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Beast::
+Data_0F0_6D7D:: ; address name
+    dw FamilyBandSpecies_Beast_000 ; id 0
+    dw FamilyBandSpecies_Beast_001 ; id 1
+    dw FamilyBandSpecies_Beast_002 ; id 2
+    dw FamilyBandSpecies_Beast_003 ; id 3
+    dw FamilyBandSpecies_Beast_004 ; id 4
+    dw FamilyBandSpecies_Beast_005 ; id 5
+    dw FamilyBandSpecies_Beast_006 ; id 6
+    dw FamilyBandSpecies_Beast_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_000::
+Data_0F0_6D8D:: ; address name
+    dw $0048 ; id 0 Almiraj
+    dw $0049 ; id 1 CatFly
+    dw $004A ; id 2 PillowRat
+    dw $004B ; id 3 Saccer
+    dw $0050 ; id 4 Antbear
+    dw $005B ; id 5 FairyRat
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_001::
+Data_0F0_6D9B:: ; address name
+    dw $004D ; id 0 Skullroo
+    dw $004E ; id 1 WindBeast
+    dw $0053 ; id 2 Mommonja
+    dw $0054 ; id 3 HammerMan
+    dw $0057 ; id 4 ArrowDog
+    dw $005A ; id 5 MadGopher
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_002::
+Data_0F0_6DA9:: ; address name
+    dw $0047 ; id 0 Tonguella
+    dw $004F ; id 1 Beavern
+    dw $0051 ; id 2 SuperTen
+    dw $0052 ; id 3 IronTurt
+    dw $0058 ; id 4 NoctoKing
+    dw $0059 ; id 5 BeastNite
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_003::
+Data_0F0_6DB7:: ; address name
+    dw $0055 ; id 0 Grizzly
+    dw $0056 ; id 1 Yeti
+    dw $005D ; id 2 Goategon
+    dw $005E ; id 3 WildApe
+    dw $0065 ; id 4 CatMage
+    dw $0066 ; id 5 Dumbira
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_004::
+Data_0F0_6DC5:: ; address name
+    dw $004C ; id 0 GulpBeast
+    dw $005F ; id 1 Trumpeter
+    dw $0062 ; id 2 MadCat
+    dw $0063 ; id 3 BigEye
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_005::
+Data_0F0_6DCF:: ; address name
+    dw $005C ; id 0 Unicorn
+    dw $0061 ; id 1 DarkHorn
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_006::
+Data_0F0_6DD5:: ; address name
+    dw $0060 ; id 0 KingLeo
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Beast; it runs to the next list)
+; record: species
+FamilyBandSpecies_Beast_007::
+Data_0F0_6DD9:: ; address name
+    dw $0064 ; id 0 Gorago
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 3 (Bird) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Bird::
+Data_0F0_6DDD:: ; address name
+    dw FamilyBandSpecies_Bird_000 ; id 0
+    dw FamilyBandSpecies_Bird_001 ; id 1
+    dw FamilyBandSpecies_Bird_002 ; id 2
+    dw FamilyBandSpecies_Bird_003 ; id 3
+    dw FamilyBandSpecies_Bird_004 ; id 4
+    dw FamilyBandSpecies_Bird_005 ; id 5
+    dw FamilyBandSpecies_Bird_006 ; id 6
+    dw FamilyBandSpecies_Bird_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_000::
+Data_0F0_6DED:: ; address name
+    dw $006A ; id 0 Picky
+    dw $0073 ; id 1 Dracky
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_001::
+Data_0F0_6DF3:: ; address name
+    dw $006D ; id 0 Florajay
+    dw $0070 ; id 1 MadRaven
+    dw $0074 ; id 2 KiteHawk
+    dw $0075 ; id 3 BigRoost
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_002::
+Data_0F0_6DFD:: ; address name
+    dw $006C ; id 0 BullBird
+    dw $0071 ; id 1 MistyWing
+    dw $0072 ; id 2 AquaHawk
+    dw $0076 ; id 3 StubBird
+    dw $0077 ; id 4 LandOwl
+    dw $0084 ; id 5 CragDevil
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_003::
+Data_0F0_6E0B:: ; address name
+    dw $006B ; id 0 Wyvern
+    dw $006E ; id 1 DuckKite
+    dw $006F ; id 2 MadPecker
+    dw $0078 ; id 3 MadGoose
+    dw $0079 ; id 4 MadCondor
+    dw $007A ; id 5 Emyu
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_004::
+Data_0F0_6E19:: ; address name
+    dw $007B ; id 0 Blizzardy
+    dw $007C ; id 1 Phoenix
+    dw $007D ; id 2 ZapBird
+    dw $0080 ; id 3 FunkyBird
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_005::
+Data_0F0_6E23:: ; address name
+    dw $007E ; id 0 Garudian
+    dw $007F ; id 1 WhipBird
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_006::
+Data_0F0_6E29:: ; address name
+    dw $0081 ; id 0 RainHawk
+    dw $0083 ; id 1 Shantak
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Bird; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bird_007::
+Data_0F0_6E2F:: ; address name
+    dw $0082 ; id 0 Azurile
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 4 (Plant) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Plant::
+Data_0F0_6E33:: ; address name
+    dw FamilyBandSpecies_Plant_000 ; id 0
+    dw FamilyBandSpecies_Plant_001 ; id 1
+    dw FamilyBandSpecies_Plant_002 ; id 2
+    dw FamilyBandSpecies_Plant_003 ; id 3
+    dw FamilyBandSpecies_Plant_004 ; id 4
+    dw FamilyBandSpecies_Plant_005 ; id 5
+    dw FamilyBandSpecies_Plant_006 ; id 6
+    dw FamilyBandSpecies_Plant_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_000::
+Data_0F0_6E43:: ; address name
+    dw $0091 ; id 0 CactiBall
+    dw $0093 ; id 1 Toadstool
+    dw $0095 ; id 2 Slurperon
+    dw $00A6 ; id 3 Eggplaton
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_001::
+Data_0F0_6E4D:: ; address name
+    dw $008D ; id 0 MadPlant
+    dw $0090 ; id 1 WingTree
+    dw $0097 ; id 2 Oniono
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_002::
+Data_0F0_6E55:: ; address name
+    dw $008E ; id 0 FireWeed
+    dw $008F ; id 1 FloraMan
+    dw $0092 ; id 2 Gulpple
+    dw $0096 ; id 3 Stubsuck
+    dw $0098 ; id 4 DanceVegi
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_003::
+Data_0F0_6E61:: ; address name
+    dw $0094 ; id 0 AmberWeed
+    dw $0099 ; id 1 TreeBoy
+    dw $009A ; id 2 Devipine
+    dw $009D ; id 3 BeanMan
+    dw $009E ; id 4 EvilSeed
+    dw $009F ; id 5 ManEater
+    dw $00A7 ; id 6 FooHero
+    dw $FEFE ; id 7
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_004::
+Data_0F0_6E71:: ; address name
+    dw $00A0 ; id 0 Snapper
+    dw $00A1 ; id 1 GhosTree
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_005::
+Data_0F0_6E77:: ; address name
+    dw $009A ; id 0 Devipine
+    dw $009B ; id 1 FaceTree
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_006::
+Data_0F0_6E7D:: ; address name
+    dw $00A2 ; id 0 Rosevine
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Plant; it runs to the next list)
+; record: species
+FamilyBandSpecies_Plant_007::
+Data_0F0_6E81:: ; address name
+    dw $00A3 ; id 0 Egdracil
+    dw $00A4 ; id 1 Warubou
+    dw $00A5 ; id 2 Watabou
+    dw $FEFE ; id 3
+
+; E-0256 (C1: family 5 (Bug) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Bug::
+Data_0F0_6E89:: ; address name
+    dw FamilyBandSpecies_Bug_000 ; id 0
+    dw FamilyBandSpecies_Bug_001 ; id 1
+    dw FamilyBandSpecies_Bug_002 ; id 2
+    dw FamilyBandSpecies_Bug_003 ; id 3
+    dw FamilyBandSpecies_Bug_004 ; id 4
+    dw FamilyBandSpecies_Bug_005 ; id 5
+    dw FamilyBandSpecies_Bug_006 ; id 6
+    dw FamilyBandSpecies_Bug_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_000::
+Data_0F0_6E99:: ; address name
+    dw $00B0 ; id 0 GiantSlug
+    dw $00B5 ; id 1 GiantWorm
+    dw $00B9 ; id 2 ArmyAnt
+    dw $00BB ; id 3 TailEater
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_001::
+Data_0F0_6EA3:: ; address name
+    dw $00B2 ; id 0 Gophecada
+    dw $00B3 ; id 1 Butterfly
+    dw $00BA ; id 2 GoHopper
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_002::
+Data_0F0_6EAB:: ; address name
+    dw $00B6 ; id 0 Lipsy
+    dw $00B7 ; id 1 StagBug
+    dw $00B8 ; id 2 Pyuro
+    dw $00BD ; id 3 Eyeder
+    dw $00C2 ; id 4 Belzebub
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_003::
+Data_0F0_6EB7:: ; address name
+    dw $00B1 ; id 0 Catapila
+    dw $00B4 ; id 1 WeedBug
+    dw $00BC ; id 2 ArmorPede
+    dw $00BE ; id 3 GiantMoth
+    dw $00BF ; id 4 Droll
+    dw $00C1 ; id 5 MadHornet
+    dw $00C9 ; id 6 MultiEyes
+    dw $FEFE ; id 7
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_004::
+Data_0F0_6EC7:: ; address name
+    dw $00C0 ; id 0 ArmyCrab
+    dw $00C5 ; id 1 Sickler
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_005::
+Data_0F0_6ECD:: ; address name
+    dw $00C3 ; id 0 WarMantis
+    dw $00C4 ; id 1 HornBeet
+    dw $00C7 ; id 2 Digster
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_006::
+Data_0F0_6ED5:: ; address name
+    dw $00C6 ; id 0 Armorpion
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Bug; it runs to the next list)
+; record: species
+FamilyBandSpecies_Bug_007::
+Data_0F0_6ED9:: ; address name
+    dw $00C8 ; id 0 Skularach
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 6 (Demon) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Demon::
+Data_0F0_6EDD:: ; address name
+    dw FamilyBandSpecies_Demon_000 ; id 0
+    dw FamilyBandSpecies_Demon_001 ; id 1
+    dw FamilyBandSpecies_Demon_002 ; id 2
+    dw FamilyBandSpecies_Demon_003 ; id 3
+    dw FamilyBandSpecies_Demon_004 ; id 4
+    dw FamilyBandSpecies_Demon_005 ; id 5
+    dw FamilyBandSpecies_Demon_006 ; id 6
+    dw FamilyBandSpecies_Demon_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_000::
+Data_0F0_6EED:: ; address name
+    dw $00D3 ; id 0 Pixy
+    dw $00D6 ; id 1 Demonite
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_001::
+Data_0F0_6EF3:: ; address name
+    dw $00DC ; id 0 1EyeClown
+    dw $00DD ; id 1 Gremlin
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_002::
+Data_0F0_6EF9:: ; address name
+    dw $00D4 ; id 0 MedusaEye
+    dw $00D8 ; id 1 EyeBall
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_003::
+Data_0F0_6EFF:: ; address name
+    dw $00D7 ; id 0 DarkEye
+    dw $00D9 ; id 1 SkulRider
+    dw $00E1 ; id 2 Orc
+    dw $00EA ; id 3 Gigantes
+    dw $00EC ; id 4 EvilArmor
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_004::
+Data_0F0_6F0B:: ; address name
+    dw $00DA ; id 0 EvilBeast
+    dw $00DB ; id 1 Bubblemon
+    dw $00DF ; id 2 Lionex
+    dw $00E2 ; id 3 Ogre
+    dw $00E8 ; id 4 MadKnight
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_005::
+Data_0F0_6F17:: ; address name
+    dw $00DE ; id 0 ArcDemon
+    dw $00E0 ; id 1 GoatHorn
+    dw $00E3 ; id 2 GateGuard
+    dw $00E4 ; id 3 ChopClown
+    dw $00E5 ; id 4 BossTroll
+    dw $00E6 ; id 5 Grendal
+    dw $00E9 ; id 6 EvilWell
+    dw $00EB ; id 7 Centasaur
+    dw $FEFE ; id 8
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_006::
+Data_0F0_6F29:: ; address name
+    dw $00E7 ; id 0 Akubar
+    dw $00ED ; id 1 Jamirus
+    dw $00EE ; id 2 Durran
+    dw $00F0 ; id 3 LampGenie
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Demon; it runs to the next list)
+; record: species
+FamilyBandSpecies_Demon_007::
+Data_0F0_6F33:: ; address name
+    dw $00EF ; id 0 Titanis
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 7 (Zombie) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Zombie::
+Data_0F0_6F37:: ; address name
+    dw FamilyBandSpecies_Zombie_000 ; id 0
+    dw FamilyBandSpecies_Zombie_001 ; id 1
+    dw FamilyBandSpecies_Zombie_002 ; id 2
+    dw FamilyBandSpecies_Zombie_003 ; id 3
+    dw FamilyBandSpecies_Zombie_004 ; id 4
+    dw FamilyBandSpecies_Zombie_005 ; id 5
+    dw FamilyBandSpecies_Zombie_006 ; id 6
+    dw FamilyBandSpecies_Zombie_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_000::
+Data_0F0_6F47:: ; address name
+    dw $00F6 ; id 0 Spooky
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_001::
+Data_0F0_6F4B:: ; address name
+    dw $00F9 ; id 0 RotRaven
+    dw $0100 ; id 1 Mudron
+    dw $0104 ; id 2 Inverzon
+    dw $0105 ; id 3 FoxFire
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_002::
+Data_0F0_6F55:: ; address name
+    dw $00F8 ; id 0 PutrePup
+    dw $00FA ; id 1 Mummy
+    dw $00FD ; id 2 Shadow
+    dw $00FE ; id 3 Skulpent
+    dw $00FF ; id 4 Hork
+    dw $0101 ; id 5 NiteWhip
+    dw $0102 ; id 6 WindMerge
+    dw $010F ; id 7 PomPomBom
+    dw $FEFE ; id 8
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_003::
+Data_0F0_6F67:: ; address name
+    dw $00FB ; id 0 DarkCrab
+    dw $00FC ; id 1 DeadNite
+    dw $0103 ; id 2 Reaper
+    dw $0106 ; id 3 CaptDead
+    dw $0109 ; id 4 BoneSlave
+    dw $010E ; id 5 MadSpirit
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_004::
+Data_0F0_6F75:: ; address name
+    dw $010A ; id 0 Skeletor
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_005::
+Data_0F0_6F79:: ; address name
+    dw $00F7 ; id 0 Skullgon
+    dw $010B ; id 1 Servant
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_006::
+Data_0F0_6F7F:: ; address name
+    dw $0107 ; id 0 DeadNoble
+    dw $0108 ; id 1 WhiteKing
+    dw $010D ; id 2 Copycat
+    dw $0110 ; id 3 Niterich
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Zombie; it runs to the next list)
+; record: species
+FamilyBandSpecies_Zombie_007::
+Data_0F0_6F89:: ; address name
+    dw $010C ; id 0 Lazamanus
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 8 (Material) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Material::
+Data_0F0_6F8D:: ; address name
+    dw FamilyBandSpecies_Material_000 ; id 0
+    dw FamilyBandSpecies_Material_001 ; id 1
+    dw FamilyBandSpecies_Material_002 ; id 2
+    dw FamilyBandSpecies_Material_003 ; id 3
+    dw FamilyBandSpecies_Material_004 ; id 4
+    dw FamilyBandSpecies_Material_005 ; id 5
+    dw FamilyBandSpecies_Material_006 ; id 6
+    dw FamilyBandSpecies_Material_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_000::
+Data_0F0_6F9D:: ; address name
+    dw $011B ; id 0 MadCandle
+    dw $011D ; id 1 Facer
+    dw $011E ; id 2 SpikyBoy
+    dw $0122 ; id 3 Goopi
+    dw $0131 ; id 4 MudDoll
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_001::
+Data_0F0_6FA9:: ; address name
+    dw $0119 ; id 0 JewelBag
+    dw $011C ; id 1 CoilBird
+    dw $0128 ; id 2 Brushead
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_002::
+Data_0F0_6FB1:: ; address name
+    dw $011A ; id 0 EvilWand
+    dw $0121 ; id 1 Puppetor
+    dw $0127 ; id 2 CurseLamp
+    dw $0137 ; id 3 ProtoMech
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_003::
+Data_0F0_6FBB:: ; address name
+    dw $011F ; id 0 MadMirror
+    dw $0120 ; id 1 RogueNite
+    dw $0123 ; id 2 Voodoll
+    dw $0126 ; id 3 SabreMan
+    dw $012B ; id 4 EvilPot
+    dw $012C ; id 5 Gismo
+    dw $0130 ; id 6 Exaucers
+    dw $FEFE ; id 7
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_004::
+Data_0F0_6FCB:: ; address name
+    dw $0124 ; id 0 MetalDrak
+    dw $0129 ; id 1 Roboster
+    dw $012F ; id 2 Mimic
+    dw $0132 ; id 3 Golem
+    dw $0134 ; id 4 BombCrag
+    dw $0138 ; id 5 CloudKing
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_005::
+Data_0F0_6FD9:: ; address name
+    dw $0125 ; id 0 Balzak
+    dw $012A ; id 1 Roboster2
+    dw $012D ; id 2 LavaMan
+    dw $012E ; id 3 IceMan
+    dw $0133 ; id 4 StoneMan
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_006::
+Data_0F0_6FE5:: ; address name
+    dw $0135 ; id 0 GoldGolem
+    dw $FEFE ; id 1
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Material; it runs to the next list)
+; record: species
+FamilyBandSpecies_Material_007::
+Data_0F0_6FE9:: ; address name
+    dw $0136 ; id 0 DarkMate
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 9 (Water) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Water::
+Data_0F0_6FED:: ; address name
+    dw FamilyBandSpecies_Water_000 ; id 0
+    dw FamilyBandSpecies_Water_001 ; id 1
+    dw FamilyBandSpecies_Water_002 ; id 2
+    dw FamilyBandSpecies_Water_003 ; id 3
+    dw FamilyBandSpecies_Water_004 ; id 4
+    dw FamilyBandSpecies_Water_005 ; id 5
+    dw FamilyBandSpecies_Water_006 ; id 6
+    dw FamilyBandSpecies_Water_007 ; id 7
+
+; E-0199 (derived: list for entry $00 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_000::
+Data_0F0_6FFD:: ; address name
+    dw $013C ; id 0 Petiteel
+    dw $013D ; id 1 Moray
+    dw $0144 ; id 2 PutreFish
+    dw $FEFE ; id 3
+
+; E-0199 (derived: list for entry $01 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_001::
+Data_0F0_7005:: ; address name
+    dw $0143 ; id 0 Octokid
+    dw $0149 ; id 1 Gamanian
+    dw $014D ; id 2 Scallopa
+    dw $015B ; id 3 Starfish
+    dw $FEFE ; id 4
+
+; E-0199 (derived: list for entry $02 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_002::
+Data_0F0_700F:: ; address name
+    dw $0140 ; id 0 Anemon
+    dw $0141 ; id 1 Aquarella
+    dw $0145 ; id 2 Octoreach
+    dw $014C ; id 3 RogueWave
+    dw $015A ; id 4 Pumpoise
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $03 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_003::
+Data_0F0_701B:: ; address name
+    dw $013E ; id 0 WalrusMan
+    dw $013F ; id 1 RayGigas
+    dw $0142 ; id 2 Merman
+    dw $0146 ; id 3 Angleron
+    dw $0147 ; id 4 FishRider
+    dw $014A ; id 5 Clawster
+    dw $FEFE ; id 6
+
+; E-0199 (derived: list for entry $04 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_004::
+Data_0F0_7029:: ; address name
+    dw $0148 ; id 0 RushFish
+    dw $014B ; id 1 CancerMan
+    dw $014E ; id 2 SeaHorse
+    dw $014F ; id 3 HoodSquid
+    dw $0150 ; id 4 MerTiger
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $05 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_005::
+Data_0F0_7035:: ; address name
+    dw $0151 ; id 0 AxeShark
+    dw $0152 ; id 1 Octogon
+    dw $0154 ; id 2 Digong
+    dw $0155 ; id 3 WhaleMage
+    dw $0157 ; id 4 Octoraid
+    dw $FEFE ; id 5
+
+; E-0199 (derived: list for entry $06 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_006::
+Data_0F0_7041:: ; address name
+    dw $0156 ; id 0 Aquadon
+    dw $0158 ; id 1 Grakos
+    dw $FEFE ; id 2
+
+; E-0199 (derived: list for entry $07 of FamilyBandLists_Water; it runs to the next list)
+; record: species
+FamilyBandSpecies_Water_007::
+Data_0F0_7047:: ; address name
+    dw $0159 ; id 0 Poseidon
+    dw $FEFE ; id 1
+
+; E-0256 (C1: family 10 (Boss) of FamilyBandSpeciesTable, one list per wRankBand).
+; record: species list for this band
+FamilyBandLists_Boss::
+Data_0F0_704B:: ; address name
+    dw FamilyBandSpecies_Boss ; id 0
+    dw Data_0F0_705D ; id 1
+    dw Data_0F0_705F ; id 2
+    dw Data_0F0_7061 ; id 3
+    dw Data_0F0_7063 ; id 4
+    dw Data_0F0_7065 ; id 5
+    dw Data_0F0_7067 ; id 6
+    dw Data_0F0_7085 ; id 7
+
+; E-0256 (C1: the boss family's eight band pointers start at successive words of this one list, so each band's list is a tail of it; 30 words up to RandomModulo29_BankF0 at $7097).
+; record: species ($FFFF skipped, $FEFE ends a list)
+FamilyBandSpecies_Boss::
+Data_0F0_705B:: ; address name
+    dw $FFFF ; id 0
+Data_0F0_705D:: ; heuristic: family band species list; C0
+    dw $FFFF ; id 1
+Data_0F0_705F:: ; heuristic: family band species list; C0
+    dw $FFFF ; id 2
+Data_0F0_7061:: ; heuristic: family band species list; C0
+    dw $FFFF ; id 3
+Data_0F0_7063:: ; heuristic: family band species list; C0
+    dw $FFFF ; id 4
+Data_0F0_7065:: ; heuristic: family band species list; C0
+    dw $FFFF ; id 5
+Data_0F0_7067:: ; heuristic: family band species list; C0
+    dw $015F ; id 6 DracoLord
+    dw $0160 ; id 7 DracoLord
+    dw $0162 ; id 8 Hargon
+    dw $0163 ; id 9 Sidoh
+    dw $0165 ; id 10 Baramos
+    dw $0166 ; id 11 Zoma
+    dw $0168 ; id 12 Pizzaro
+    dw $016A ; id 13 Esterk
+    dw $016B ; id 14 Mirudraas
+    dw $016C ; id 15 Mirudraas
+    dw $016D ; id 16 Mudou
+    dw $016E ; id 17 DeathMore
+    dw $016F ; id 18 DeathMore
+    dw $0174 ; id 19 Darck
+    dw $FEFE ; id 20
+Data_0F0_7085:: ; heuristic: family band species list; C0
+    dw $0161 ; id 21 LordDraco
+    dw $0164 ; id 22 Genosidoh
+    dw $0167 ; id 23 AsuraZoma
+    dw $0169 ; id 24 PsychoPiz
+    dw $0170 ; id 25 DeathMore
+    dw $0171 ; id 26 Darkdrium
+    dw $0172 ; id 27 Orgodemir
+    dw $0173 ; id 28 Orgodemir
+    dw $FEFE ; id 29
 
 ; NextTableByte; L = wC5E7, H = (wC5E7 rotated left through carry) & B; returns A = HL mod $29 (E-0118)
 ; 14 call sites from 4 routines (e.g. Talk00Event0B_Case04_Sub01, RankFamilyScoresIntoFamilyRanking, RollMarkChangeCountChance, RollCounterChanceAndRun72C8)

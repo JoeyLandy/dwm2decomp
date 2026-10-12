@@ -1486,7 +1486,7 @@ Func_0A0_4874:: ; address name
     add a, a
     add a, a
     add a, a
-    ld hl, Data_0A0_6D57
+    ld hl, EncounterBandSpeciesTable
     add_a_to_hl
     ld a, [wWildBand]
     add a, a
@@ -7527,363 +7527,973 @@ Data_0A0_6D4F:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0A0_6D53:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $A1, $00, $AE, $00
 
-; address loaded by PickEncounterMonsterForSlotC
-Data_0A0_6D57:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_0A0_6E07
-    dw Data_0A0_6E0E
-    dw Data_0A0_6E17
-    dw Data_0A0_6E20
-    dw Data_0A0_6E2B
-    dw Data_0A0_6E34
-    dw Data_0A0_6E3B
-    dw Data_0A0_6E3E
-    dw Data_0A0_6E43
-    dw Data_0A0_6E4A
-    dw Data_0A0_6E55
-    dw Data_0A0_6E60
-    dw Data_0A0_6E69
-    dw Data_0A0_6E76
-    dw Data_0A0_6E7F
-    dw Data_0A0_6E86
-    dw Data_0A0_6E89
-    dw Data_0A0_6E96
-    dw Data_0A0_6EA3
-    dw Data_0A0_6EB0
-    dw Data_0A0_6EBD
-    dw Data_0A0_6EC6
-    dw Data_0A0_6ECB
-    dw Data_0A0_6ECE
-    dw Data_0A0_6ED1
-    dw Data_0A0_6ED6
-    dw Data_0A0_6EDF
-    dw Data_0A0_6EEC
-    dw Data_0A0_6EF9
-    dw Data_0A0_6F02
-    dw Data_0A0_6F07
-    dw Data_0A0_6F0C
-    dw Data_0A0_6F0F
-    dw Data_0A0_6F18
-    dw Data_0A0_6F1F
-    dw Data_0A0_6F2A
-    dw Data_0A0_6F39
-    dw Data_0A0_6F3E
-    dw Data_0A0_6F43
-    dw Data_0A0_6F46
-    dw Data_0A0_6F4D
-    dw Data_0A0_6F56
-    dw Data_0A0_6F5D
-    dw Data_0A0_6F68
-    dw Data_0A0_6F77
-    dw Data_0A0_6F7C
-    dw Data_0A0_6F83
-    dw Data_0A0_6F86
-    dw Data_0A0_6F89
-    dw Data_0A0_6F8E
-    dw Data_0A0_6F93
-    dw Data_0A0_6F9A
-    dw Data_0A0_6FA3
-    dw Data_0A0_6FB0
-    dw Data_0A0_6FC1
-    dw Data_0A0_6FCA
-    dw Data_0A0_6FCD
-    dw Data_0A0_6FD0
-    dw Data_0A0_6FD9
-    dw Data_0A0_6FEA
-    dw Data_0A0_6FF7
-    dw Data_0A0_6FFA
-    dw Data_0A0_6FFF
-    dw Data_0A0_7008
-    dw Data_0A0_700B
-    dw Data_0A0_7016
-    dw Data_0A0_701F
-    dw Data_0A0_7026
-    dw Data_0A0_7037
-    dw Data_0A0_7044
-    dw Data_0A0_704D
-    dw Data_0A0_7050
-    dw Data_0A0_7053
-    dw Data_0A0_705A
-    dw Data_0A0_7063
-    dw Data_0A0_706E
-    dw Data_0A0_707B
-    dw Data_0A0_7086
-    dw Data_0A0_7091
-    dw Data_0A0_7098
-    dw Data_0A0_709B
-    dw Data_0A0_70A8
-    dw Data_0A0_70B5
-    dw Data_0A0_70C2
-    dw Data_0A0_70CF
-    dw Data_0A0_70DC
-    dw Data_0A0_70EA
-    dw Data_0A0_70F7
-
-Data_0A0_6E07:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $02, $00, $05, $00, $0F, $00
-
-Data_0A0_6E0E:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $04, $00, $07, $00, $0A, $00, $14, $00
-
-Data_0A0_6E17:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $02, $00, $08, $00, $09, $00, $0B, $00
-
-Data_0A0_6E20:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $01, $00, $06, $00, $0C, $00, $0D, $00, $0E, $00
-
-Data_0A0_6E2B:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $11, $00, $13, $00, $15, $00, $16, $00
-
-Data_0A0_6E34:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $10, $00, $12, $00, $17, $00
-
-Data_0A0_6E3B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $18, $00
-
-Data_0A0_6E3E:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $19, $00, $1A, $00
-
-Data_0A0_6E43:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $28, $00, $31, $00, $32, $00
-
-Data_0A0_6E4A:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $2A, $00, $2E, $00, $34, $00, $36, $00, $39, $00
-
-Data_0A0_6E55:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $24, $00, $25, $00, $26, $00, $27, $00, $3A, $00
-
-Data_0A0_6E60:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $2B, $00, $2C, $00, $30, $00, $35, $00
-
-Data_0A0_6E69:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $29, $00, $2D, $00, $2F, $00, $33, $00, $37, $00, $3B, $00
-
-Data_0A0_6E76:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $38, $00, $3D, $00, $3E, $00, $3F, $00
-
-Data_0A0_6E7F:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $3C, $00, $40, $00, $42, $00
-
-Data_0A0_6E86:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $41, $00
-
-Data_0A0_6E89:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $48, $00, $49, $00, $4A, $00, $4B, $00, $50, $00, $5B, $00
-
-Data_0A0_6E96:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $4D, $00, $4E, $00, $53, $00, $54, $00, $57, $00, $5A, $00
-
-Data_0A0_6EA3:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $47, $00, $4F, $00, $51, $00, $52, $00, $58, $00, $59, $00
-
-Data_0A0_6EB0:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $55, $00, $56, $00, $5D, $00, $5E, $00, $65, $00, $66, $00
-
-Data_0A0_6EBD:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $4C, $00, $5F, $00, $62, $00, $63, $00
-
-Data_0A0_6EC6:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $5C, $00, $61, $00
-
-Data_0A0_6ECB:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $60, $00
-
-Data_0A0_6ECE:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $64, $00
-
-Data_0A0_6ED1:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $6A, $00, $73, $00
-
-Data_0A0_6ED6:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $6D, $00, $70, $00, $74, $00, $75, $00
-
-Data_0A0_6EDF:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $6C, $00, $71, $00, $72, $00, $76, $00, $77, $00, $84, $00
-
-Data_0A0_6EEC:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $6B, $00, $6E, $00, $6F, $00, $78, $00, $79, $00, $7A, $00
-
-Data_0A0_6EF9:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $7B, $00, $7C, $00, $7D, $00, $80, $00
-
-Data_0A0_6F02:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $7E, $00, $7F, $00
-
-Data_0A0_6F07:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $81, $00, $83, $00
-
-Data_0A0_6F0C:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $82, $00
-
-Data_0A0_6F0F:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $91, $00, $93, $00, $95, $00, $A6, $00
-
-Data_0A0_6F18:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $8D, $00, $90, $00, $97, $00
-
-Data_0A0_6F1F:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $8E, $00, $8F, $00, $92, $00, $96, $00, $98, $00
-
-Data_0A0_6F2A:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $94, $00, $99, $00, $9A, $00, $9D, $00, $9E, $00, $9F, $00, $A7, $00
-
-Data_0A0_6F39:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $A0, $00, $A1, $00
-
-Data_0A0_6F3E:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $9B, $00, $9C, $00
-
-Data_0A0_6F43:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $A2, $00
-
-Data_0A0_6F46:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $A3, $00, $A4, $00, $A5, $00
-
-Data_0A0_6F4D:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $B0, $00, $B5, $00, $B9, $00, $BB, $00
-
-Data_0A0_6F56:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $B2, $00, $B3, $00, $BA, $00
-
-Data_0A0_6F5D:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $B6, $00, $B7, $00, $B8, $00, $BD, $00, $C2, $00
-
-Data_0A0_6F68:: ; heuristic: target of a monotone pointer table; C0
-    db $07, $B1, $00, $B4, $00, $BC, $00, $BE, $00, $BF, $00, $C1, $00, $C9, $00
-
-Data_0A0_6F77:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $C0, $00, $C5, $00
-
-Data_0A0_6F7C:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $C3, $00, $C4, $00, $C7, $00
-
-Data_0A0_6F83:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $C6, $00
-
-Data_0A0_6F86:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $C8, $00
-
-Data_0A0_6F89:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $D3, $00, $D6, $00
-
-Data_0A0_6F8E:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $DC, $00, $DD, $00
-
-Data_0A0_6F93:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $D4, $00, $D8, $00, $E1, $00
-
-Data_0A0_6F9A:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $D7, $00, $D9, $00, $EA, $00, $EC, $00
-
-Data_0A0_6FA3:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $D5, $00, $DA, $00, $DB, $00, $DF, $00, $E2, $00, $E8, $00
-
-Data_0A0_6FB0:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $DE, $00, $E0, $00, $E3, $00, $E4, $00, $E5, $00, $E6, $00, $E9, $00, $EB
-    db $00
-
-Data_0A0_6FC1:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $E7, $00, $ED, $00, $EE, $00, $F0, $00
-
-Data_0A0_6FCA:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $EF, $00
-
-Data_0A0_6FCD:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $F6, $00
-
-Data_0A0_6FD0:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $F9, $00, $00, $01, $04, $01, $05, $01
-
-Data_0A0_6FD9:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $F8, $00, $FA, $00, $FD, $00, $FE, $00, $FF, $00, $01, $01, $02, $01, $0F
-    db $01
-
-Data_0A0_6FEA:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $FB, $00, $FC, $00, $03, $01, $06, $01, $09, $01, $0E, $01
-
-Data_0A0_6FF7:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $0A, $01
-
-Data_0A0_6FFA:: ; heuristic: target of a monotone pointer table; C0
-    db $02, $F7, $00, $0B, $01
-
-Data_0A0_6FFF:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $07, $01, $08, $01, $0D, $01, $10, $01
-
-Data_0A0_7008:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $0C, $01
-
-Data_0A0_700B:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $1B, $01, $1D, $01, $1E, $01, $22, $01, $31, $01
-
-Data_0A0_7016:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $19, $01, $1C, $01, $28, $01, $37, $01
-
-Data_0A0_701F:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $1A, $01, $21, $01, $27, $01
-
-Data_0A0_7026:: ; heuristic: target of a monotone pointer table; C0
-    db $08, $1F, $01, $20, $01, $23, $01, $26, $01, $2B, $01, $2C, $01, $30, $01, $38
-    db $01
-
-Data_0A0_7037:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $24, $01, $29, $01, $2F, $01, $32, $01, $33, $01, $34, $01
-
-Data_0A0_7044:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $25, $01, $2A, $01, $2D, $01, $2E, $01
-
-Data_0A0_704D:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $35, $01
-
-Data_0A0_7050:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $36, $01
-
-Data_0A0_7053:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $3C, $01, $3D, $01, $44, $01
-
-Data_0A0_705A:: ; heuristic: target of a monotone pointer table; C0
-    db $04, $43, $01, $49, $01, $4D, $01, $5B, $01
-
-Data_0A0_7063:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $40, $01, $41, $01, $45, $01, $4C, $01, $5A, $01
-
-Data_0A0_706E:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $3E, $01, $3F, $01, $42, $01, $46, $01, $47, $01, $4A, $01
-
-Data_0A0_707B:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $48, $01, $4B, $01, $4E, $01, $4F, $01, $50, $01
-
-Data_0A0_7086:: ; heuristic: target of a monotone pointer table; C0
-    db $05, $51, $01, $52, $01, $54, $01, $55, $01, $57, $01
-
-Data_0A0_7091:: ; heuristic: target of a monotone pointer table; C0
-    db $03, $53, $01, $56, $01, $58, $01
-
-Data_0A0_7098:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $59, $01
-
-Data_0A0_709B:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70A8:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70B5:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70C2:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70CF:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70DC:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01, $06
-
-Data_0A0_70EA:: ; heuristic: target of a monotone pointer table; C0
-    db $06, $5F, $01, $62, $01, $65, $01, $6A, $01, $6B, $01, $6D, $01
-
-Data_0A0_70F7:: ; heuristic: target of a monotone pointer table; C0
-    db $10, $60, $01, $61, $01, $63, $01, $64, $01, $66, $01, $67, $01, $68, $01, $69
-    db $01, $6C, $01, $6E, $01, $6F, $01, $70, $01, $71, $01, $72, $01, $73, $01, $74
-    db $01
+; E-0256 (C1: PickEncounterMonsterForSlotC reads the word at $6D57 + 16 * PickRandomBand0To10 + 2 * wWildBand and picks one of the count words after the count byte with AdvanceRandom; 11 rows (families, StringTable_MonsterFamilies order) of 8 bands).
+; record: species list (count, then words)
+EncounterBandSpeciesTable::
+Data_0A0_6D57:: ; address name
+    dw EncounterBandSpecies_Slime_0 ; id 0
+    dw EncounterBandSpecies_Slime_1 ; id 1
+    dw EncounterBandSpecies_Slime_2 ; id 2
+    dw EncounterBandSpecies_Slime_3 ; id 3
+    dw EncounterBandSpecies_Slime_4 ; id 4
+    dw EncounterBandSpecies_Slime_5 ; id 5
+    dw EncounterBandSpecies_Slime_6 ; id 6
+    dw EncounterBandSpecies_Slime_7 ; id 7
+    dw EncounterBandSpecies_Dragon_0 ; id 8
+    dw EncounterBandSpecies_Dragon_1 ; id 9
+    dw EncounterBandSpecies_Dragon_2 ; id 10
+    dw EncounterBandSpecies_Dragon_3 ; id 11
+    dw EncounterBandSpecies_Dragon_4 ; id 12
+    dw EncounterBandSpecies_Dragon_5 ; id 13
+    dw EncounterBandSpecies_Dragon_6 ; id 14
+    dw EncounterBandSpecies_Dragon_7 ; id 15
+    dw EncounterBandSpecies_Beast_0 ; id 16
+    dw EncounterBandSpecies_Beast_1 ; id 17
+    dw EncounterBandSpecies_Beast_2 ; id 18
+    dw EncounterBandSpecies_Beast_3 ; id 19
+    dw EncounterBandSpecies_Beast_4 ; id 20
+    dw EncounterBandSpecies_Beast_5 ; id 21
+    dw EncounterBandSpecies_Beast_6 ; id 22
+    dw EncounterBandSpecies_Beast_7 ; id 23
+    dw EncounterBandSpecies_Bird_0 ; id 24
+    dw EncounterBandSpecies_Bird_1 ; id 25
+    dw EncounterBandSpecies_Bird_2 ; id 26
+    dw EncounterBandSpecies_Bird_3 ; id 27
+    dw EncounterBandSpecies_Bird_4 ; id 28
+    dw EncounterBandSpecies_Bird_5 ; id 29
+    dw EncounterBandSpecies_Bird_6 ; id 30
+    dw EncounterBandSpecies_Bird_7 ; id 31
+    dw EncounterBandSpecies_Plant_0 ; id 32
+    dw EncounterBandSpecies_Plant_1 ; id 33
+    dw EncounterBandSpecies_Plant_2 ; id 34
+    dw EncounterBandSpecies_Plant_3 ; id 35
+    dw EncounterBandSpecies_Plant_4 ; id 36
+    dw EncounterBandSpecies_Plant_5 ; id 37
+    dw EncounterBandSpecies_Plant_6 ; id 38
+    dw EncounterBandSpecies_Plant_7 ; id 39
+    dw EncounterBandSpecies_Bug_0 ; id 40
+    dw EncounterBandSpecies_Bug_1 ; id 41
+    dw EncounterBandSpecies_Bug_2 ; id 42
+    dw EncounterBandSpecies_Bug_3 ; id 43
+    dw EncounterBandSpecies_Bug_4 ; id 44
+    dw EncounterBandSpecies_Bug_5 ; id 45
+    dw EncounterBandSpecies_Bug_6 ; id 46
+    dw EncounterBandSpecies_Bug_7 ; id 47
+    dw EncounterBandSpecies_Demon_0 ; id 48
+    dw EncounterBandSpecies_Demon_1 ; id 49
+    dw EncounterBandSpecies_Demon_2 ; id 50
+    dw EncounterBandSpecies_Demon_3 ; id 51
+    dw EncounterBandSpecies_Demon_4 ; id 52
+    dw EncounterBandSpecies_Demon_5 ; id 53
+    dw EncounterBandSpecies_Demon_6 ; id 54
+    dw EncounterBandSpecies_Demon_7 ; id 55
+    dw EncounterBandSpecies_Zombie_0 ; id 56
+    dw EncounterBandSpecies_Zombie_1 ; id 57
+    dw EncounterBandSpecies_Zombie_2 ; id 58
+    dw EncounterBandSpecies_Zombie_3 ; id 59
+    dw EncounterBandSpecies_Zombie_4 ; id 60
+    dw EncounterBandSpecies_Zombie_5 ; id 61
+    dw EncounterBandSpecies_Zombie_6 ; id 62
+    dw EncounterBandSpecies_Zombie_7 ; id 63
+    dw EncounterBandSpecies_Material_0 ; id 64
+    dw EncounterBandSpecies_Material_1 ; id 65
+    dw EncounterBandSpecies_Material_2 ; id 66
+    dw EncounterBandSpecies_Material_3 ; id 67
+    dw EncounterBandSpecies_Material_4 ; id 68
+    dw EncounterBandSpecies_Material_5 ; id 69
+    dw EncounterBandSpecies_Material_6 ; id 70
+    dw EncounterBandSpecies_Material_7 ; id 71
+    dw EncounterBandSpecies_Water_0 ; id 72
+    dw EncounterBandSpecies_Water_1 ; id 73
+    dw EncounterBandSpecies_Water_2 ; id 74
+    dw EncounterBandSpecies_Water_3 ; id 75
+    dw EncounterBandSpecies_Water_4 ; id 76
+    dw EncounterBandSpecies_Water_5 ; id 77
+    dw EncounterBandSpecies_Water_6 ; id 78
+    dw EncounterBandSpecies_Water_7 ; id 79
+    dw EncounterBandSpecies_Boss_0 ; id 80
+    dw EncounterBandSpecies_Boss_1 ; id 81
+    dw EncounterBandSpecies_Boss_2 ; id 82
+    dw EncounterBandSpecies_Boss_3 ; id 83
+    dw EncounterBandSpecies_Boss_4 ; id 84
+    dw EncounterBandSpecies_Boss_5 ; id 85
+    dw EncounterBandSpecies_Boss_6 ; id 86
+    dw EncounterBandSpecies_Boss_7 ; id 87
+
+; E-0256 (C1: row 0 (Slime), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_0::
+Data_0A0_6E07:: ; address name
+    db $03 ; entry 0
+    dw $0002 ; SpotSlime
+    dw $0005 ; Snaily
+    dw $000F ; Slabbit
+
+; E-0256 (C1: row 0 (Slime), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_1::
+Data_0A0_6E0E:: ; address name
+    db $04 ; entry 0
+    dw $0004 ; TreeSlime
+    dw $0007 ; Babble
+    dw $000A ; Slime
+    dw $0014 ; TropicGel
+
+; E-0256 (C1: row 0 (Slime), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_2::
+Data_0A0_6E17:: ; address name
+    db $04 ; entry 0
+    dw $0002 ; SpotSlime
+    dw $0008 ; BoxSlime
+    dw $0009 ; PearlGel
+    dw $000B ; Healer
+
+; E-0256 (C1: row 0 (Slime), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_3::
+Data_0A0_6E20:: ; address name
+    db $05 ; entry 0
+    dw $0001 ; DrakSlime
+    dw $0006 ; SlimeNite
+    dw $000C ; FangSlime
+    dw $000D ; RockSlime
+    dw $000E ; SlimeBorg
+
+; E-0256 (C1: row 0 (Slime), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_4::
+Data_0A0_6E2B:: ; address name
+    db $04 ; entry 0
+    dw $0011 ; Metaly
+    dw $0013 ; SpotKing
+    dw $0015 ; MimeSlime
+    dw $0016 ; HaloSlime
+
+; E-0256 (C1: row 0 (Slime), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_5::
+Data_0A0_6E34:: ; address name
+    db $03 ; entry 0
+    dw $0010 ; KingSlime
+    dw $0012 ; Metabble
+    dw $0017 ; MetalKing
+
+; E-0256 (C1: row 0 (Slime), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_6::
+Data_0A0_6E3B:: ; address name
+    db $01 ; entry 0
+    dw $0018 ; GoldSlime
+
+; E-0256 (C1: row 0 (Slime), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Slime_7::
+Data_0A0_6E3E:: ; address name
+    db $02 ; entry 0
+    dw $0019 ; GranSlime
+    dw $001A ; WonderEgg
+
+; E-0256 (C1: row 1 (Dragon), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_0::
+Data_0A0_6E43:: ; address name
+    db $03 ; entry 0
+    dw $0028 ; FairyDrak
+    dw $0031 ; Chamelgon
+    dw $0032 ; LizardFly
+
+; E-0256 (C1: row 1 (Dragon), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_1::
+Data_0A0_6E4A:: ; address name
+    db $05 ; entry 0
+    dw $002A ; Poisongon
+    dw $002E ; MiniDrak
+    dw $0034 ; KingCobra
+    dw $0036 ; SnakeBat
+    dw $0039 ; Crestpent
+
+; E-0256 (C1: row 1 (Dragon), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_2::
+Data_0A0_6E55:: ; address name
+    db $05 ; entry 0
+    dw $0024 ; DragonKid
+    dw $0025 ; Tortragon
+    dw $0026 ; Pteranod
+    dw $0027 ; Gasgon
+    dw $003A ; WingSnake
+
+; E-0256 (C1: row 1 (Dragon), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_3::
+Data_0A0_6E60:: ; address name
+    db $04 ; entry 0
+    dw $002B ; Swordgon
+    dw $002C ; Drygon
+    dw $0030 ; Rayburn
+    dw $0035 ; Vampirus
+
+; E-0256 (C1: row 1 (Dragon), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_4::
+Data_0A0_6E69:: ; address name
+    db $06 ; entry 0
+    dw $0029 ; LizardMan
+    dw $002D ; Dragon
+    dw $002F ; MadDragon
+    dw $0033 ; Andreal
+    dw $0037 ; Spikerous
+    dw $003B ; Coatol
+
+; E-0256 (C1: row 1 (Dragon), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_5::
+Data_0A0_6E76:: ; address name
+    db $04 ; entry 0
+    dw $0038 ; GreatDrak
+    dw $003D ; BattleRex
+    dw $003E ; SkyDragon
+    dw $003F ; Serpentia
+
+; E-0256 (C1: row 1 (Dragon), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_6::
+Data_0A0_6E7F:: ; address name
+    db $03 ; entry 0
+    dw $003C ; Orochi
+    dw $0040 ; Divinegon
+    dw $0042 ; GigaDraco
+
+; E-0256 (C1: row 1 (Dragon), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Dragon_7::
+Data_0A0_6E86:: ; address name
+    db $01 ; entry 0
+    dw $0041 ; Orligon
+
+; E-0256 (C1: row 2 (Beast), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_0::
+Data_0A0_6E89:: ; address name
+    db $06 ; entry 0
+    dw $0048 ; Almiraj
+    dw $0049 ; CatFly
+    dw $004A ; PillowRat
+    dw $004B ; Saccer
+    dw $0050 ; Antbear
+    dw $005B ; FairyRat
+
+; E-0256 (C1: row 2 (Beast), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_1::
+Data_0A0_6E96:: ; address name
+    db $06 ; entry 0
+    dw $004D ; Skullroo
+    dw $004E ; WindBeast
+    dw $0053 ; Mommonja
+    dw $0054 ; HammerMan
+    dw $0057 ; ArrowDog
+    dw $005A ; MadGopher
+
+; E-0256 (C1: row 2 (Beast), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_2::
+Data_0A0_6EA3:: ; address name
+    db $06 ; entry 0
+    dw $0047 ; Tonguella
+    dw $004F ; Beavern
+    dw $0051 ; SuperTen
+    dw $0052 ; IronTurt
+    dw $0058 ; NoctoKing
+    dw $0059 ; BeastNite
+
+; E-0256 (C1: row 2 (Beast), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_3::
+Data_0A0_6EB0:: ; address name
+    db $06 ; entry 0
+    dw $0055 ; Grizzly
+    dw $0056 ; Yeti
+    dw $005D ; Goategon
+    dw $005E ; WildApe
+    dw $0065 ; CatMage
+    dw $0066 ; Dumbira
+
+; E-0256 (C1: row 2 (Beast), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_4::
+Data_0A0_6EBD:: ; address name
+    db $04 ; entry 0
+    dw $004C ; GulpBeast
+    dw $005F ; Trumpeter
+    dw $0062 ; MadCat
+    dw $0063 ; BigEye
+
+; E-0256 (C1: row 2 (Beast), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_5::
+Data_0A0_6EC6:: ; address name
+    db $02 ; entry 0
+    dw $005C ; Unicorn
+    dw $0061 ; DarkHorn
+
+; E-0256 (C1: row 2 (Beast), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_6::
+Data_0A0_6ECB:: ; address name
+    db $01 ; entry 0
+    dw $0060 ; KingLeo
+
+; E-0256 (C1: row 2 (Beast), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Beast_7::
+Data_0A0_6ECE:: ; address name
+    db $01 ; entry 0
+    dw $0064 ; Gorago
+
+; E-0256 (C1: row 3 (Bird), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_0::
+Data_0A0_6ED1:: ; address name
+    db $02 ; entry 0
+    dw $006A ; Picky
+    dw $0073 ; Dracky
+
+; E-0256 (C1: row 3 (Bird), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_1::
+Data_0A0_6ED6:: ; address name
+    db $04 ; entry 0
+    dw $006D ; Florajay
+    dw $0070 ; MadRaven
+    dw $0074 ; KiteHawk
+    dw $0075 ; BigRoost
+
+; E-0256 (C1: row 3 (Bird), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_2::
+Data_0A0_6EDF:: ; address name
+    db $06 ; entry 0
+    dw $006C ; BullBird
+    dw $0071 ; MistyWing
+    dw $0072 ; AquaHawk
+    dw $0076 ; StubBird
+    dw $0077 ; LandOwl
+    dw $0084 ; CragDevil
+
+; E-0256 (C1: row 3 (Bird), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_3::
+Data_0A0_6EEC:: ; address name
+    db $06 ; entry 0
+    dw $006B ; Wyvern
+    dw $006E ; DuckKite
+    dw $006F ; MadPecker
+    dw $0078 ; MadGoose
+    dw $0079 ; MadCondor
+    dw $007A ; Emyu
+
+; E-0256 (C1: row 3 (Bird), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_4::
+Data_0A0_6EF9:: ; address name
+    db $04 ; entry 0
+    dw $007B ; Blizzardy
+    dw $007C ; Phoenix
+    dw $007D ; ZapBird
+    dw $0080 ; FunkyBird
+
+; E-0256 (C1: row 3 (Bird), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_5::
+Data_0A0_6F02:: ; address name
+    db $02 ; entry 0
+    dw $007E ; Garudian
+    dw $007F ; WhipBird
+
+; E-0256 (C1: row 3 (Bird), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_6::
+Data_0A0_6F07:: ; address name
+    db $02 ; entry 0
+    dw $0081 ; RainHawk
+    dw $0083 ; Shantak
+
+; E-0256 (C1: row 3 (Bird), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bird_7::
+Data_0A0_6F0C:: ; address name
+    db $01 ; entry 0
+    dw $0082 ; Azurile
+
+; E-0256 (C1: row 4 (Plant), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_0::
+Data_0A0_6F0F:: ; address name
+    db $04 ; entry 0
+    dw $0091 ; CactiBall
+    dw $0093 ; Toadstool
+    dw $0095 ; Slurperon
+    dw $00A6 ; Eggplaton
+
+; E-0256 (C1: row 4 (Plant), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_1::
+Data_0A0_6F18:: ; address name
+    db $03 ; entry 0
+    dw $008D ; MadPlant
+    dw $0090 ; WingTree
+    dw $0097 ; Oniono
+
+; E-0256 (C1: row 4 (Plant), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_2::
+Data_0A0_6F1F:: ; address name
+    db $05 ; entry 0
+    dw $008E ; FireWeed
+    dw $008F ; FloraMan
+    dw $0092 ; Gulpple
+    dw $0096 ; Stubsuck
+    dw $0098 ; DanceVegi
+
+; E-0256 (C1: row 4 (Plant), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_3::
+Data_0A0_6F2A:: ; address name
+    db $07 ; entry 0
+    dw $0094 ; AmberWeed
+    dw $0099 ; TreeBoy
+    dw $009A ; Devipine
+    dw $009D ; BeanMan
+    dw $009E ; EvilSeed
+    dw $009F ; ManEater
+    dw $00A7 ; FooHero
+
+; E-0256 (C1: row 4 (Plant), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_4::
+Data_0A0_6F39:: ; address name
+    db $02 ; entry 0
+    dw $00A0 ; Snapper
+    dw $00A1 ; GhosTree
+
+; E-0256 (C1: row 4 (Plant), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_5::
+Data_0A0_6F3E:: ; address name
+    db $02 ; entry 0
+    dw $009B ; FaceTree
+    dw $009C ; HerbMan
+
+; E-0256 (C1: row 4 (Plant), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_6::
+Data_0A0_6F43:: ; address name
+    db $01 ; entry 0
+    dw $00A2 ; Rosevine
+
+; E-0256 (C1: row 4 (Plant), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Plant_7::
+Data_0A0_6F46:: ; address name
+    db $03 ; entry 0
+    dw $00A3 ; Egdracil
+    dw $00A4 ; Warubou
+    dw $00A5 ; Watabou
+
+; E-0256 (C1: row 5 (Bug), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_0::
+Data_0A0_6F4D:: ; address name
+    db $04 ; entry 0
+    dw $00B0 ; GiantSlug
+    dw $00B5 ; GiantWorm
+    dw $00B9 ; ArmyAnt
+    dw $00BB ; TailEater
+
+; E-0256 (C1: row 5 (Bug), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_1::
+Data_0A0_6F56:: ; address name
+    db $03 ; entry 0
+    dw $00B2 ; Gophecada
+    dw $00B3 ; Butterfly
+    dw $00BA ; GoHopper
+
+; E-0256 (C1: row 5 (Bug), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_2::
+Data_0A0_6F5D:: ; address name
+    db $05 ; entry 0
+    dw $00B6 ; Lipsy
+    dw $00B7 ; StagBug
+    dw $00B8 ; Pyuro
+    dw $00BD ; Eyeder
+    dw $00C2 ; Belzebub
+
+; E-0256 (C1: row 5 (Bug), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_3::
+Data_0A0_6F68:: ; address name
+    db $07 ; entry 0
+    dw $00B1 ; Catapila
+    dw $00B4 ; WeedBug
+    dw $00BC ; ArmorPede
+    dw $00BE ; GiantMoth
+    dw $00BF ; Droll
+    dw $00C1 ; MadHornet
+    dw $00C9 ; MultiEyes
+
+; E-0256 (C1: row 5 (Bug), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_4::
+Data_0A0_6F77:: ; address name
+    db $02 ; entry 0
+    dw $00C0 ; ArmyCrab
+    dw $00C5 ; Sickler
+
+; E-0256 (C1: row 5 (Bug), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_5::
+Data_0A0_6F7C:: ; address name
+    db $03 ; entry 0
+    dw $00C3 ; WarMantis
+    dw $00C4 ; HornBeet
+    dw $00C7 ; Digster
+
+; E-0256 (C1: row 5 (Bug), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_6::
+Data_0A0_6F83:: ; address name
+    db $01 ; entry 0
+    dw $00C6 ; Armorpion
+
+; E-0256 (C1: row 5 (Bug), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Bug_7::
+Data_0A0_6F86:: ; address name
+    db $01 ; entry 0
+    dw $00C8 ; Skularach
+
+; E-0256 (C1: row 6 (Demon), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_0::
+Data_0A0_6F89:: ; address name
+    db $02 ; entry 0
+    dw $00D3 ; Pixy
+    dw $00D6 ; Demonite
+
+; E-0256 (C1: row 6 (Demon), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_1::
+Data_0A0_6F8E:: ; address name
+    db $02 ; entry 0
+    dw $00DC ; 1EyeClown
+    dw $00DD ; Gremlin
+
+; E-0256 (C1: row 6 (Demon), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_2::
+Data_0A0_6F93:: ; address name
+    db $03 ; entry 0
+    dw $00D4 ; MedusaEye
+    dw $00D8 ; EyeBall
+    dw $00E1 ; Orc
+
+; E-0256 (C1: row 6 (Demon), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_3::
+Data_0A0_6F9A:: ; address name
+    db $04 ; entry 0
+    dw $00D7 ; DarkEye
+    dw $00D9 ; SkulRider
+    dw $00EA ; Gigantes
+    dw $00EC ; EvilArmor
+
+; E-0256 (C1: row 6 (Demon), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_4::
+Data_0A0_6FA3:: ; address name
+    db $06 ; entry 0
+    dw $00D5 ; AgDevil
+    dw $00DA ; EvilBeast
+    dw $00DB ; Bubblemon
+    dw $00DF ; Lionex
+    dw $00E2 ; Ogre
+    dw $00E8 ; MadKnight
+
+; E-0256 (C1: row 6 (Demon), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_5::
+Data_0A0_6FB0:: ; address name
+    db $08 ; entry 0
+    dw $00DE ; ArcDemon
+    dw $00E0 ; GoatHorn
+    dw $00E3 ; GateGuard
+    dw $00E4 ; ChopClown
+    dw $00E5 ; BossTroll
+    dw $00E6 ; Grendal
+    dw $00E9 ; EvilWell
+    dw $00EB ; Centasaur
+
+; E-0256 (C1: row 6 (Demon), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_6::
+Data_0A0_6FC1:: ; address name
+    db $04 ; entry 0
+    dw $00E7 ; Akubar
+    dw $00ED ; Jamirus
+    dw $00EE ; Durran
+    dw $00F0 ; LampGenie
+
+; E-0256 (C1: row 6 (Demon), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Demon_7::
+Data_0A0_6FCA:: ; address name
+    db $01 ; entry 0
+    dw $00EF ; Titanis
+
+; E-0256 (C1: row 7 (Zombie), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_0::
+Data_0A0_6FCD:: ; address name
+    db $01 ; entry 0
+    dw $00F6 ; Spooky
+
+; E-0256 (C1: row 7 (Zombie), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_1::
+Data_0A0_6FD0:: ; address name
+    db $04 ; entry 0
+    dw $00F9 ; RotRaven
+    dw $0100 ; Mudron
+    dw $0104 ; Inverzon
+    dw $0105 ; FoxFire
+
+; E-0256 (C1: row 7 (Zombie), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_2::
+Data_0A0_6FD9:: ; address name
+    db $08 ; entry 0
+    dw $00F8 ; PutrePup
+    dw $00FA ; Mummy
+    dw $00FD ; Shadow
+    dw $00FE ; Skulpent
+    dw $00FF ; Hork
+    dw $0101 ; NiteWhip
+    dw $0102 ; WindMerge
+    dw $010F ; PomPomBom
+
+; E-0256 (C1: row 7 (Zombie), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_3::
+Data_0A0_6FEA:: ; address name
+    db $06 ; entry 0
+    dw $00FB ; DarkCrab
+    dw $00FC ; DeadNite
+    dw $0103 ; Reaper
+    dw $0106 ; CaptDead
+    dw $0109 ; BoneSlave
+    dw $010E ; MadSpirit
+
+; E-0256 (C1: row 7 (Zombie), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_4::
+Data_0A0_6FF7:: ; address name
+    db $01 ; entry 0
+    dw $010A ; Skeletor
+
+; E-0256 (C1: row 7 (Zombie), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_5::
+Data_0A0_6FFA:: ; address name
+    db $02 ; entry 0
+    dw $00F7 ; Skullgon
+    dw $010B ; Servant
+
+; E-0256 (C1: row 7 (Zombie), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_6::
+Data_0A0_6FFF:: ; address name
+    db $04 ; entry 0
+    dw $0107 ; DeadNoble
+    dw $0108 ; WhiteKing
+    dw $010D ; Copycat
+    dw $0110 ; Niterich
+
+; E-0256 (C1: row 7 (Zombie), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Zombie_7::
+Data_0A0_7008:: ; address name
+    db $01 ; entry 0
+    dw $010C ; Lazamanus
+
+; E-0256 (C1: row 8 (Material), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_0::
+Data_0A0_700B:: ; address name
+    db $05 ; entry 0
+    dw $011B ; MadCandle
+    dw $011D ; Facer
+    dw $011E ; SpikyBoy
+    dw $0122 ; Goopi
+    dw $0131 ; MudDoll
+
+; E-0256 (C1: row 8 (Material), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_1::
+Data_0A0_7016:: ; address name
+    db $04 ; entry 0
+    dw $0119 ; JewelBag
+    dw $011C ; CoilBird
+    dw $0128 ; Brushead
+    dw $0137 ; ProtoMech
+
+; E-0256 (C1: row 8 (Material), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_2::
+Data_0A0_701F:: ; address name
+    db $03 ; entry 0
+    dw $011A ; EvilWand
+    dw $0121 ; Puppetor
+    dw $0127 ; CurseLamp
+
+; E-0256 (C1: row 8 (Material), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_3::
+Data_0A0_7026:: ; address name
+    db $08 ; entry 0
+    dw $011F ; MadMirror
+    dw $0120 ; RogueNite
+    dw $0123 ; Voodoll
+    dw $0126 ; SabreMan
+    dw $012B ; EvilPot
+    dw $012C ; Gismo
+    dw $0130 ; Exaucers
+    dw $0138 ; CloudKing
+
+; E-0256 (C1: row 8 (Material), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_4::
+Data_0A0_7037:: ; address name
+    db $06 ; entry 0
+    dw $0124 ; MetalDrak
+    dw $0129 ; Roboster
+    dw $012F ; Mimic
+    dw $0132 ; Golem
+    dw $0133 ; StoneMan
+    dw $0134 ; BombCrag
+
+; E-0256 (C1: row 8 (Material), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_5::
+Data_0A0_7044:: ; address name
+    db $04 ; entry 0
+    dw $0125 ; Balzak
+    dw $012A ; Roboster2
+    dw $012D ; LavaMan
+    dw $012E ; IceMan
+
+; E-0256 (C1: row 8 (Material), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_6::
+Data_0A0_704D:: ; address name
+    db $01 ; entry 0
+    dw $0135 ; GoldGolem
+
+; E-0256 (C1: row 8 (Material), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Material_7::
+Data_0A0_7050:: ; address name
+    db $01 ; entry 0
+    dw $0136 ; DarkMate
+
+; E-0256 (C1: row 9 (Water), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_0::
+Data_0A0_7053:: ; address name
+    db $03 ; entry 0
+    dw $013C ; Petiteel
+    dw $013D ; Moray
+    dw $0144 ; PutreFish
+
+; E-0256 (C1: row 9 (Water), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_1::
+Data_0A0_705A:: ; address name
+    db $04 ; entry 0
+    dw $0143 ; Octokid
+    dw $0149 ; Gamanian
+    dw $014D ; Scallopa
+    dw $015B ; Starfish
+
+; E-0256 (C1: row 9 (Water), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_2::
+Data_0A0_7063:: ; address name
+    db $05 ; entry 0
+    dw $0140 ; Anemon
+    dw $0141 ; Aquarella
+    dw $0145 ; Octoreach
+    dw $014C ; RogueWave
+    dw $015A ; Pumpoise
+
+; E-0256 (C1: row 9 (Water), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_3::
+Data_0A0_706E:: ; address name
+    db $06 ; entry 0
+    dw $013E ; WalrusMan
+    dw $013F ; RayGigas
+    dw $0142 ; Merman
+    dw $0146 ; Angleron
+    dw $0147 ; FishRider
+    dw $014A ; Clawster
+
+; E-0256 (C1: row 9 (Water), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_4::
+Data_0A0_707B:: ; address name
+    db $05 ; entry 0
+    dw $0148 ; RushFish
+    dw $014B ; CancerMan
+    dw $014E ; SeaHorse
+    dw $014F ; HoodSquid
+    dw $0150 ; MerTiger
+
+; E-0256 (C1: row 9 (Water), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_5::
+Data_0A0_7086:: ; address name
+    db $05 ; entry 0
+    dw $0151 ; AxeShark
+    dw $0152 ; Octogon
+    dw $0154 ; Digong
+    dw $0155 ; WhaleMage
+    dw $0157 ; Octoraid
+
+; E-0256 (C1: row 9 (Water), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_6::
+Data_0A0_7091:: ; address name
+    db $03 ; entry 0
+    dw $0153 ; KingSquid
+    dw $0156 ; Aquadon
+    dw $0158 ; Grakos
+
+; E-0256 (C1: row 9 (Water), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Water_7::
+Data_0A0_7098:: ; address name
+    db $01 ; entry 0
+    dw $0159 ; Poseidon
+
+; E-0256 (C1: row 10 (Boss), band 0 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_0::
+Data_0A0_709B:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 1 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_1::
+Data_0A0_70A8:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 2 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_2::
+Data_0A0_70B5:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 3 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_3::
+Data_0A0_70C2:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 4 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_4::
+Data_0A0_70CF:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 5 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_5::
+Data_0A0_70DC:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+    db $06
+
+; E-0256 (C1: row 10 (Boss), band 6 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_6::
+Data_0A0_70EA:: ; address name
+    db $06 ; entry 0
+    dw $015F ; DracoLord
+    dw $0162 ; Hargon
+    dw $0165 ; Baramos
+    dw $016A ; Esterk
+    dw $016B ; Mirudraas
+    dw $016D ; Mudou
+
+; E-0256 (C1: row 10 (Boss), band 7 of EncounterBandSpeciesTable).
+; record: count; species
+EncounterBandSpecies_Boss_7::
+Data_0A0_70F7:: ; address name
+    db $10 ; entry 0
+    dw $0160 ; DracoLord
+    dw $0161 ; LordDraco
+    dw $0163 ; Sidoh
+    dw $0164 ; Genosidoh
+    dw $0166 ; Zoma
+    dw $0167 ; AsuraZoma
+    dw $0168 ; Pizzaro
+    dw $0169 ; PsychoPiz
+    dw $016C ; Mirudraas
+    dw $016E ; DeathMore
+    dw $016F ; DeathMore
+    dw $0170 ; DeathMore
+    dw $0171 ; Darkdrium
+    dw $0172 ; Orgodemir
+    dw $0173 ; Orgodemir
+    dw $0174 ; Darck
     ds $EE8, $00
