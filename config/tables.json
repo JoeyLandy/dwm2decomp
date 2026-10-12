@@ -18157,7 +18157,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$0E"
+          "name": "$0E: bit 0 = sex (C1, E-0291)"
         },
         {
           "type": "text",
@@ -18900,7 +18900,7 @@
         {
           "type": "db",
           "size": 1,
-          "name": "$0E"
+          "name": "$0E: bit 0 = sex (C1, E-0291)"
         },
         {
           "type": "text",

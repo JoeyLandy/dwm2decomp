@@ -2934,7 +2934,7 @@ Func_003_5171:: ; address name
     deref_hl
     push hl
     ld a, c
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddressMapped
     ld a, [hl]
     pop hl
@@ -7348,7 +7348,7 @@ Jump_003_6F00:: ; address name
     ld a, $00
     ld [rRAMB], a
     ld a, [wPauseMenuStep]
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddressMapped
     ld a, [hl]
     swap a
@@ -7398,7 +7398,7 @@ Jump_003_6F48:: ; address name
     ld a, $00
     ld [rRAMB], a
     ld a, [wPauseMenuStep]
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddressMapped
     ld a, [wMenuCursor]
     and a, $03

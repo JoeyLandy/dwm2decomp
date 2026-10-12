@@ -7495,7 +7495,7 @@ Func_01B_7487:: ; address name
     ld h, a
     push hl
     ld a, b
-    ld c, $0E
+    ld c, MON_SEX
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]

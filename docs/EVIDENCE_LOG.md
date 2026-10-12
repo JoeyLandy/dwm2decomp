@@ -2431,6 +2431,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0291 — Record byte $0E bit 0 is the monster's sex; observations on $6D and $6E
+
+- Kind: STATIC (C1).
+- **$0E bit 0 = sex.** Two readings support this.
+  - In BreedMenu (15:$4370 area), after the first parent is picked, the code loads bit 0 of that record's byte $0E. It then compares it with bit 0 of every listed record. When none differs, the menu steps back (wScreenStep -= 2, wTwoChoiceCursor = 3). Breeding therefore needs a partner whose bit 0 is different.
+  - The record list (1D:$5326 area) draws mark tile $CC + (byte $0E & 1) when byte $6E is 2, and tile $CE otherwise.
+  - Which value means which sex is not established. The glyphs $CC/$CD have no charmap entry.
+  - The table layouts (PresetMonsterRecords, DefaultMonsterRecord) now name the field.
+- **Constant.** MON_SEX ($0E) is added to config/record_fields.json. Record field loads named: 398 → 416.
+- **Not named, observations only.**
+  - $6E: CreateMonsterRecordOfKindTemp1 sets it to 1 for kinds 1 and 2. BreedMenu and EggServiceMenu store values into it. The record list shows the sex mark only when it is 2. The lists ListRecordsInUseWithByte6EClear and ListRecordsInUseWithByte6ESet filter on it. What it means is not established.
+  - $6D: copied into wChildRecord by BreedMenu_CopyToChildThenTalkEvent16. Bank 03 reads it with `and a, $0F`.
+- Binary verification: build/run393 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0290 — Monster record field constants (MON_*); ATK/DEF/AGL/INT words
 
 - Kind: TOOL + STATIC (C1 for the stat fields; the other fields keep their earlier evidence).

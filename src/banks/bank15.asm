@@ -877,7 +877,7 @@ Jump_015_45DC:: ; address name
     ld l, a
     push hl
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
@@ -889,7 +889,7 @@ Jump_015_45DC:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
@@ -3255,7 +3255,7 @@ Jump_015_55D2:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
@@ -6259,7 +6259,7 @@ Func_015_688D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0E
+    ld c, MON_SEX
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -6488,7 +6488,7 @@ Func_015_69C6:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01

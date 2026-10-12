@@ -3559,7 +3559,7 @@ Jump_016_5583:: ; address name
     ld a, $01
     ld [wDataBankSave], a
     ld a, [wMenuSelectedMember]
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $01

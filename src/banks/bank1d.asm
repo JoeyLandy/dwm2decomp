@@ -3923,7 +3923,7 @@ Func_01D_5B4D:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, b
-    ld c, $0E
+    ld c, MON_SEX
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
@@ -5333,7 +5333,7 @@ Func_01D_6320:: ; address name
     push hl
     push bc
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01

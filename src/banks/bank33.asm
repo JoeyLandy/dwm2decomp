@@ -2682,7 +2682,7 @@ Jump_033_5CAC:: ; address name
     ld h, a
     push hl
     ld a, b
-    ld c, $0E
+    ld c, MON_SEX
     ld b, $01
     call LoadSRAMRecordByte
     ldh a, [hTemp0]

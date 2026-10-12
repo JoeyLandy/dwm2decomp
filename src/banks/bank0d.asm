@@ -823,7 +823,7 @@ Jump_00D_4869:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddress
     ld a, [hl]
     and a, a
@@ -1180,7 +1180,7 @@ EggServiceMenu_ChooseAndPay_Case12_GetListEntriesCell4AddressWithSRAM_Case05::
 Jump_00D_4ABF:: ; address name
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
@@ -2439,7 +2439,7 @@ Jump_00D_52AB:: ; address name
     ld [rRAMB], a
     push hl
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     call LoadSRAMRecordByte
     ldh a, [hTemp0]
     and a, $01
@@ -7932,7 +7932,7 @@ Data_00D_78F6:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $004A ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -7956,7 +7956,7 @@ Data_00D_799B:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $011E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -7980,7 +7980,7 @@ Data_00D_7A40:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $00BC ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $05 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8004,7 +8004,7 @@ Data_00D_7AE5:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0092 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $04 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8028,7 +8028,7 @@ Data_00D_7B8A:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $005E ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $02 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8052,7 +8052,7 @@ Data_00D_7C2F:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0080 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $03 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8076,7 +8076,7 @@ Data_00D_7CD4:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $010D ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8100,7 +8100,7 @@ Data_00D_7D79:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0033 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $01 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8124,7 +8124,7 @@ Data_00D_7E1E:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $010A ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33
@@ -8148,7 +8148,7 @@ Data_00D_7EC3:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $0133 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $08 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33

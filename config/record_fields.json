@@ -5,6 +5,7 @@
     "01": {"const": "MON_NAME", "note": "name, 10 bytes ending in $F0", "evidence": "E-0034"},
     "0B": {"const": "MON_SPECIES", "note": "word compared with monster ids by talk events $29/$47 (C1: the species id)", "evidence": "E-0236"},
     "0D": {"const": "MON_FAMILY", "note": "low nibble = family", "evidence": "E-0122"},
+    "0E": {"const": "MON_SEX", "note": "bit 0 = sex (C1): after the first parent is chosen, breeding steps back when no other listed record has a different bit 0; the record list draws mark tile $CC + bit 0 when byte $6E is 2", "evidence": "E-0291"},
     "0F": {"const": "MON_SECOND_NAME", "note": "second name, 10 bytes (the name typed at name entry)", "evidence": "E-0034"},
     "34": {"const": "MON_SKILLS", "note": "skills, 8 bytes", "evidence": "E-0122"},
     "3C": {"const": "MON_SKILL_LIST", "note": "the list AppendMappedSkillsToWCA67 appends to, up to $FF", "evidence": "E-0237"},

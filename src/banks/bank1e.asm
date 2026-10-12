@@ -7557,7 +7557,7 @@ Func_01E_725D:: ; address name
     push hl
     push de
     ld a, [hl]
-    ld c, $0E
+    ld c, MON_SEX
     ld b, $01
     call LoadSRAMRecordByte
     pop de

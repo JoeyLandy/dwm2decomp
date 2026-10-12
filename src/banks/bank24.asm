@@ -3019,7 +3019,7 @@ Data_024_52ED:: ; address name
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; name, bytes 1-10 (E-0034)
     dw $00D4 ; word $0B (compared with monster ids by talk events $29/$47, E-0236)
     db $07 ; $0D: low nibble = family (E-0122)
-    db $00 ; $0E
+    db $00 ; $0E: bit 0 = sex (C1, E-0291)
     db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0 ; second name, bytes 15-24 (E-0034)
     db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $19-$28
     db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00 ; $29-$33

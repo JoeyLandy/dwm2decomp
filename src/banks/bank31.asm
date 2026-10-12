@@ -6624,7 +6624,7 @@ Func_031_6678:: ; address name
     swap a
     push af
     ld a, c
-    ld c, $0E
+    ld c, MON_SEX
     call SRAMRecordAddressMapped
     ld a, [hl]
     and a, $0F
