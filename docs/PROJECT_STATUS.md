@@ -53,25 +53,25 @@ Disassembler run (2026-10-09, `python -I -u tools/disasm_all.py`, progress in st
 
 Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced code look like data (compressed graphics, palettes, pointer tables), not missed code; evidence and caveats in [E-0008](EVIDENCE_LOG.md). Heuristic rules and the one failure found are in E-0009. Reproduce: `python -I -u tools/disasm_all.py` (about 2 minutes, progress on stderr), then `python -I tools/build.py --out build/runN`.
 
-Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code; the cartridge header (`$0104-$014F`) is an INCBIN slice, not annotated.
+Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-11, after E-0232)
+## Readability state (2026-10-12, after E-0244)
 
-Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run285). Measured from the generated `src/`:
+Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run309; 160 tests, 3 skipped). Measured from the generated `src/`:
 
 | Measure | State |
 | --- | --- |
 | Routines with only an address name (`tools/rank_unnamed.py`) | 0 |
 | `call`/`farcall` operands that reach a named routine | 100% |
-| Code labels | 9,100: 5,337 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps), 148 still spelling a RAM address (E-0155), the rest descriptive |
-| RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 (from 1,611 before E-0132); buffers print as `Name + $offset`, and WRAM-bank-2 attribute positions use `of` aliases (E-0132 to E-0137) |
-| Data decoded field by field | monster pictures, sprites and palettes named by monster; all 183 map records and 35 special maps with screen arrays and palettes; key-world tilesets, rooms and chunk groups; 512 meta-sprite sets (3,397 frames); EXP, stat-growth and skill-requirement tables; AI personality weights; SGB borders; map-screen flag tiles; map interaction spots and step triggers; map object selectors and lists; tile rectangles; automap blocks; the text font; formations; the four-stage breeding tables; wild-encounter grids and groups, scripted encounters and encounter rates; key-world generation, area layouts, warp lists and object spot grids; world-map screen cells; arena encounter lists; sound wave sets and note tables; the rejected-name list; monster pedigree and link conversion tables; action effect, sound and battle-text tables; string tables in every bank; copies of library routines found by relocated byte matching; wild encounter grids, warp lists, map object lists and key-world screens found by tiling gaps; tile copy lists and rectangle records derived from their copiers (E-0138 to E-0232) |
-| Event scripts | 3,359 commands decoded into `script_*` macros with message quotes, including data-bank scripts reached by `$E7`; all 89 `$E7` jumps name their target bank, and `$E4` menus branch N ways (E-0152, E-0153, E-0160, E-0184, E-0188) |
-| `INCBIN` bytes not inside a known compressed stream | 6,731 (from about 645,000 before E-0139); 371 false pointer-run streams removed (E-0203) and five false back-to-back streams replaced by tables (E-0194); every data label that code loads names its readers (E-0162) |
+| RAM operands with only an address name (`tools/rank_unnamed.py --ram`) | 0 |
+| Code labels | 9,450: 5,495 structural (`_CaseNN`/`_SubNN`/`_SharedNN` state-machine steps, now prefixed by named parents such as `ShopMenu_Case03`), 151 still spelling a RAM address (E-0155), the rest descriptive |
+| `INCBIN` without an asset comment | 0 (build/measure2.py, E-0240/E-0241): every remaining `INCBIN` is an annotated compressed asset (LZSS stream with its expanded size, SGB transfer, ...). The cartridge header is laid out field by field (E-0239) |
+| Data decoded field by field | as listed under E-0138 to E-0232, plus (E-0233 to E-0241): debug menu names, tactic offsets, effect tile blocks, glyph tile destination lists, preset and default monster records, MonsterTableA2 (ids $250-$2AC), action handler masks and the action-id effect table, key-world return destinations, arena messages, shop item lists, item values and shop percentages, item sort orders, skill replacement pairs, OBJ palettes, field and trigger sprite records, sound test tables, map exit warps, sequence frame lists, tile upload runs |
+| Event scripts | 3,580 script lines. Every opcode with inline bytes has a named macro (`script_walk`, `script_wait`, `script_face`, `script_encounter`, ..., E-0242). 21 menu command types are named constants (`SCRIPT_SHOP`, `SCRIPT_BREED`, `SCRIPT_LIBRARY`, ..., E-0244), covering 429 of 633 `script_command` lines. About 150 one-off cutscene command types keep their numbers |
+| Message quotes | read on LookupString's two levels (E-0243; they were one string off before) and under the wMessageMode the script's menu command set (E-0242) |
 | Likely game bugs | six executed and pinned by emulator tests (E-0075, E-0099, E-0154) |
-| Immediates kept numeric although they look like addresses | step deltas, battle message bytes, sprite positions (E-0132, E-0137) |
 
-Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Message words and most script command-type meanings are not yet decoded. Proven data is kept out of code through `config/data_regions.json` and `config/tables.json`; map, key-world and meta-sprite layouts are derived in tools/disasm_all.py.
+Most routine and RAM names are C1 readings, and many describe mechanics or which routines use a byte rather than game meaning (for example wScreenByteB2, wBattleTemp7A). Not yet done: names for the one-off cutscene command types; meanings for most `_CaseNN` state-machine steps; many record fields (the SRAM monster record beyond its names, MonsterTable bytes 6-9).
 
 ## Readability state (2026-10-09, after E-0027)
 
