@@ -34,6 +34,12 @@ class MonotoneTables(unittest.TestCase):
         words = [0x4018, 0x401C, 0x4020, 0x4120, 0x4130, 0x4140, 0x4150, 0x4160, 0x4170, 0x4180]
         self.assertEqual(len(table_at(0x4010, words)), 10)
 
+    def test_a_trailing_word_on_the_tables_own_target_is_data(self):
+        # E-0301: the 11th word sits at 0x4024, the first target, and only continues the run by chance
+        words = [0x4024 + 0x10 * i for i in range(10)] + [0x5D79]
+        dt = table_at(0x4010, words)
+        self.assertEqual(sorted(dt), [0x4010 + 2 * i for i in range(10)])
+
     def test_pointing_before_the_table_is_rejected(self):
         words = [0x4020 + 8 * i for i in range(10)]  # all targets precede the table at 0x4100
         self.assertEqual(table_at(0x4100, words), {})

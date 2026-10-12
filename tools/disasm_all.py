@@ -1146,15 +1146,11 @@ class Rom:
                         chain.append((q, w))
                         prev = w
                         q += stride
-                    # E-0301: a run ends before a position an earlier entry points at (that target is the
-                    # data the table indexes, as the SGB packet sets after 17:$4055; a sub-list there is
-                    # found as a chain of its own when the scan resumes)
-                    seen_t: set[int] = set()
-                    for k, (qq, ww) in enumerate(chain):
-                        if qq in seen_t:
-                            chain = chain[:k]
-                            break
-                        seen_t.add(ww)
+                    # E-0301: trailing entries that sit on a position an earlier entry points at are the
+                    # data the table indexes (the first SGB packet after the table at 17:$4055), not
+                    # pointers; a multi-level index, whose sub-tables inside it continue the run, keeps them
+                    while len(chain) > 1 and chain[-1][0] in {ww for _, ww in chain[:-1]}:
+                        chain.pop()
                     if len(chain) > len(best):
                         best = chain
                 if (len(best) >= 8 and best[0][1] >= best[0][0]

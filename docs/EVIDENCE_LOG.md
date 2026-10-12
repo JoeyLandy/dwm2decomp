@@ -2438,12 +2438,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - The word that pointed at 5D79 is at 17:407F, which is table entry $15, not $18; I had counted `dw` lines.
   - 407F is not a table entry at all. The table at 17:4055 indexes the packets that follow it, so it has (407F - 4055) / 2 = $15 entries. 407F is the first packet: `79 5D 08 00 0B 8C D0 F4 60 ...`, a DATA_SND packet (command $0F, one packet). Its first two bytes had been taken for the pointer $5D79.
 - **What 5D79 really is.** It lies inside SGBBorder0MapAndPalettes, the LZSS stream that starts at 17:5B03 and runs for 989 bytes to $5EE0, where SGBBorder1MapAndPalettes starts. The tile/attribute pairs at its start ($8E $14, $8F $14, ...) are literals in that stream.
-- **Tool fix.** structure_data now ends a monotone pointer run before any position that an earlier entry of the same run points to. Such a position is the data the table indexes; a sub-list there is found as a chain of its own when the scan resumes. The only change in the generated source is in bank $17:
+- **Tool fix.** structure_data now drops a run's trailing entries when they sit on a position that an earlier entry of the same run points to. Such a position is the data the table indexes. A multi-level index keeps the sub-tables inside it, because the run continues through them.
+  - The first commit, cf2c93c, cut the run at the first such position instead. That broke tests/test_structure_data.py's self-pointing-index test, which I committed while it was failing.
+  - The narrowed rule produces the same generated source, passes that test, and adds a test of its own.
+  - The only change in the generated source is in bank $17:
   - packet 0 is plain `db` bytes;
   - the border-0 stream is one `INCBIN` of $3DD bytes;
   - the false label and its names.json entry are removed.
 - **Counts.** INCBIN slices without an asset comment: 0 (build/measure2.py). Data labels with only an address name: 0.
-- Binary verification: build/run415 PASS, 0 differing bytes; tests OK (skipped=3).
+- Binary verification: build/run416 PASS, 0 differing bytes; tests OK (skipped=3) after the narrowing.
 
 ### E-0300 — Field object slots and the script meta-sprite object (OBJ_*, SCRIPTOBJ_*)
 
