@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0292 — Strings shown through category-setting wrappers are quoted; joining after battle
+
+- Kind: TOOL + STATIC (C1 names).
+- **Quoting through wrappers.** string_index_note quoted a `ld [wStringIndex], a` only when the caller also stored a constant wStringCategory. It now also handles a callee that stores the category itself: the callee starts with `ld a, $NN` / `ld [wStringCategory], a`, as ShowStringCategory5_Bank16 does. The note takes that category and follows the callee's first call or far call to the real displayer. 25 more string displays are quoted. Examples:
+  - '0 got up, looking hopeful. Allow 0 to join you?'
+  - 'But there is no more room!'
+  - 'You have no eggs.'
+  - "You can't travel all alone."
+
+  The Parent_Show<words> rule (E-0274) then names the steps that show them.
+- **Dispatchers named:**
+  - BattleEnd_AskToJoin: bank $2F category-5 strings $0B, $0D and $0E.
+  - BattleEnd_AddJoinedMonster: SetRecordState2ForB, SwapMonstersMenu, RestoreRecordAFully.
+  - PauseMenu_State3_RecordJourney: 'Want to record your journey?', 'Your progress has been recorded.'
+  - RunBattleActions_WearOffAndDefeat: "0's Ironize wore off!", '0 dropped dead!'
+  - GameMode6_Update_SwitchMonster: 'Switch with which?'
+- **Counts.** Structural labels the generator leaves unnamed: 249 → 243. Bare dispatchers: 151 → 146.
+- Binary verification: build/run394 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0291 — Record byte $0E bit 0 is the monster's sex; observations on $6D and $6E
 
 - Kind: STATIC (C1).

@@ -4591,7 +4591,7 @@ Func_01D_5ECE:: ; address name
     ret
 
 ; over the first wD7FF SRAM records ($A5 bytes each from sA000; wD7FF is set by LoadRecordCapacityFromFarmLevelTable): clears wD789 and wD7BE (30 bytes each), then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wD7A9 = the list length, wD7B9 = how many in-use records had byte $6E set (E-0104)
-; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5, ...)
+; 13 call sites from 13 routines (e.g. HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc, BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear, BreedMenu_Case11_ListRecordsInUseWithByte6EClear, BattleEnd_AskToJoin_ClampRecordListPageCursor5, ...)
 ; reads: wRecordCapacity, wListCount, wPartyCount, wRecordsFlagged
 ; writes: wListCount, rRAMG2, rRAMB, wRecordsFlagged
 ; points at: wListEntries, wListEntries2, sRecords, wPartyList

@@ -5033,49 +5033,49 @@ BattleEnd_Step5_Case00_WriteBattleFoeCountAndSpeciesIdLoEtc_Data_5D0B:: ; heuris
 Data_016_5D0B:: ; address name
     db $00, $11, $12, $13, $14, $15, $16, $07
 
-; only called from BattleEnd_Step5_Case01_Case01 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01)
+; by wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to join you?' (category 5 string $0B), then the follow-ups ($0D 'But there is no more room! Release a monster to make room?', $0E 'Which will you choose?')
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin)
 ; reads: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01::
+BattleEnd_AskToJoin::
 Func_016_5D13:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02
-    dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
-    dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep
-    dw BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826
-    dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09
-    dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F
-    dw BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex
-    dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E
-    dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case12
-    dw BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15
-    dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16
-    dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17
-    dw BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18
-    dw BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19
-    dw BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor4
-    dw BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer
-    dw BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case1C
+    dw BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix
+    dw BattleEnd_AskToJoin_WaitTextFlags
+    dw BattleEnd_AskToJoin_ShowHeroGotUpLooking
+    dw BattleEnd_AskToJoin_LoadCursorTileAndRect7826
+    dw BattleEnd_AskToJoin_ShowHeroDepartedSadly
+    dw BattleEnd_AskToJoin_WriteVRAMByte
+    dw BattleEnd_AskToJoin_ShowButThereIsNo
+    dw BattleEnd_AskToJoin_LoadCursorTileAndRect7826
+    dw BattleEnd_AskToJoin_ShowHeroDepartedSadly
+    dw BattleEnd_AskToJoin_ShowWhichWillYouChoose
+    dw BattleEnd_AskToJoin_BuildBattleMenuScreen_733F
+    dw BattleEnd_AskToJoin_ShowYouHaveNoEggs
+    dw BattleEnd_AskToJoin_ShowChooseAMonsterTo
+    dw BattleEnd_AskToJoin_MovePagedListCursor
+    dw BattleEnd_AskToJoin_WriteVRAMByte_Case0E
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case0F
+    dw BattleEnd_AskToJoin_ClampRecordListPageCursor5
+    dw BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C
+    dw BattleEnd_AskToJoin_WriteVRAMByte_Case12
+    dw BattleEnd_AskToJoin_AdvanceBattleSubStep
+    dw BattleEnd_AskToJoin_ShowGWasSetFree
+    dw BattleEnd_AskToJoin_WaitTextFlags_Case15
+    dw BattleEnd_AskToJoin_ShowChooseAnEggTo
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case17
+    dw BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18
+    dw BattleEnd_AskToJoin_MovePagedListCursor_Case19
+    dw BattleEnd_AskToJoin_ClampRecordListPageCursor4
+    dw BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer
+    dw BattleEnd_AskToJoin_WaitTextFlags_Case1C
 
-; entry 0 of the `rst $00` table in Func_016_5D13
+; entry 0 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleKind, hTemp0
 ; writes: wStringIndex, wSubMenuCursor2, wMenuOption, wCommandCursorMax
 ; points at: wBattleSubStep, wTextBuf0
-BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix::
+BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
 Jump_016_5D51:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -5093,7 +5093,7 @@ Jump_016_5D51:: ; address name
 
 .set_string_index_to_1E:
     ld a, $1E
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 got up, looking hopeful. But'
     call ShowStringCategory5_Bank16
     ret
 
@@ -5107,12 +5107,12 @@ Jump_016_5D51:: ; address name
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in Func_016_5D13
+; entry 1 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleSubPhase, wBattleResolveStep, wBattleSubStep
 ; points at: wBattleStep
-BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags::
+BattleEnd_AskToJoin_WaitTextFlags::
 Jump_016_5D8C:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5125,29 +5125,29 @@ Jump_016_5D8C:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 2 of the `rst $00` table in Func_016_5D13
+; entry 2 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case02::
+BattleEnd_AskToJoin_ShowHeroGotUpLooking::
 Jump_016_5DA0:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, $0B
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 got up, looking hopeful. Allow'
     call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_016_5D13
+; entry 3 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wMenuState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826::
+BattleEnd_AskToJoin_LoadCursorTileAndRect7826::
 Jump_016_5DB2:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5171,14 +5171,14 @@ Jump_016_5DB2:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in Func_016_5D13
+; entry 4 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wTextBuf0
-BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton::
+BattleEnd_AskToJoin_ShowHeroDepartedSadly::
 Jump_016_5DE6:: ; address name
     ld de, wMenuState
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data
+    ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
     call SetDEFlagOnBButton
     ret z
     ld hl, wBattleSubStep
@@ -5189,24 +5189,24 @@ Jump_016_5DE6:: ; address name
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
     ld a, $0C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 departed sadly'
     call ShowStringCategory5_Bank16
     ld a, $01
     ld [wBattleSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in Func_016_5D13
+; entry 5 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wFarmLevel, wTemp0, wTemp1
 ; writes: wBattleSubStep
 ; points at: wBattleSubStep, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte::
+BattleEnd_AskToJoin_WriteVRAMByte::
 Jump_016_5E0B:: ; address name
     ld a, $BC
     ld hl, vBGMap0 + $12F
     call WriteVRAMByte
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
     add_a_to_hl
     ld a, [wTemp0]
     ld b, a
@@ -5227,42 +5227,42 @@ Jump_016_5E0B:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 6 of the `rst $00` table in Func_016_5D13
+; entry 6 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16AndStep::
+BattleEnd_AskToJoin_ShowButThereIsNo::
 Jump_016_5E3B:: ; address name
     ld a, $0D
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'But there is no more room!'
     call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in Func_016_5D13
+; entry 9 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16_Case09::
+BattleEnd_AskToJoin_ShowWhichWillYouChoose::
 Jump_016_5E48:: ; address name
     ld a, [wTextFlags]
     or a, a
     ret nz
     ld a, $0E
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Which will you choose?'
     call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_016_5D13
+; entry 10 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wMenuState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F::
+BattleEnd_AskToJoin_BuildBattleMenuScreen_733F::
 Jump_016_5E5A:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5289,15 +5289,15 @@ Jump_016_5E5A:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in Func_016_5D13
+; entry 11 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor2, wTemp1
 ; writes: wMenuState, wListPage, wStringIndex, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wScreenTileBuffer
-BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B::
+BattleEnd_AskToJoin_ShowYouHaveNoEggs::
 Jump_016_5E96:: ; address name
     ld de, wMenuState
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B_Data
+    ld hl, BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data
     call SetDEFlagOnBButton
     ret z
     ld a, [wJoypadPressed]
@@ -5319,7 +5319,7 @@ Jump_016_5E96:: ; address name
     or a, a
     jr nz, .set_battle_sub_step_to_16
     ld a, $0F
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'You have no eggs.'
     call ShowStringCategory5_Bank16
     ld a, $09
     ld [wBattleSubStep], a
@@ -5340,11 +5340,11 @@ Jump_016_5E96:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 12 of the `rst $00` table in Func_016_5D13
+; entry 12 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wListEntries, wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex::
+BattleEnd_AskToJoin_ShowChooseAMonsterTo::
 Jump_016_5EEC:: ; address name
     ld hl, wListEntries
     ld bc, $001E
@@ -5361,21 +5361,21 @@ Jump_016_5EEC:: ; address name
     ld a, $BC
     call WriteVRAMByte
     ld a, $11
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Choose a monster to release.'
     call ShowStringCategory5Immediate_Bank16
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 13 of the `rst $00` table in Func_016_5D13
+; entry 13 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wJoypadPressed, wListPage
 ; writes: wSubMenuCursor2, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor::
+BattleEnd_AskToJoin_MovePagedListCursor::
 Jump_016_5F24:: ; address name
     ld de, wMenuState
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
@@ -5403,15 +5403,15 @@ Jump_016_5F24:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 14 of the `rst $00` table in Func_016_5D13
+; entry 14 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState
 ; writes: wScreenTileBuffer, wMenuSubState, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E::
+BattleEnd_AskToJoin_WriteVRAMByte_Case0E::
 Jump_016_5F5C:: ; address name
     ld a, [wMenuState]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5438,15 +5438,15 @@ Jump_016_5F5C:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in Func_016_5D13
+; entry 15 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSubState, wSubMenuCursor2
 ; writes: wScreenTileBuffer, wWindowTileBuffer, wListPage, wBattleSubStep
 ; points at: wMenuSubState, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F::
+BattleEnd_AskToJoin_MovePagedListCursor_Case0F::
 Jump_016_5FA4:: ; address name
     ld de, wMenuSubState
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     call MovePagedListCursor
     ld a, [wJoypadPressed]
     bit 0, a
@@ -5494,12 +5494,12 @@ Jump_016_5FA4:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 16 of the `rst $00` table in Func_016_5D13
+; entry 16 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp0, wMenuState, wSubMenuCursor2
 ; writes: wListCount, wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
 ; points at: wScreenTileBuffer, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor5::
+BattleEnd_AskToJoin_ClampRecordListPageCursor5::
 Jump_016_6017:: ; address name
     ld a, [wTemp0]
     ld [wListCount], a
@@ -5524,17 +5524,17 @@ Jump_016_6017:: ; address name
     inc [hl]
     ret
 
-; entry 17 of the `rst $00` table in Func_016_5D13
+; entry 17 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wListPageIndex
 ; writes: wMenuState, wSubMenuCursor2, wListPage, wScreenTileBuffer, wListPageSize, wListPageCount, wListLastPageSize, wBattleSubStep
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc::
+BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Jump_016_6058:: ; address name
     farcall CopyRectRecord796FToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
     ld [wMenuState], a
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data
+    ld hl, BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5564,12 +5564,12 @@ Jump_016_6058:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 18 of the `rst $00` table in Func_016_5D13
+; entry 18 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wSubMenuCursor2, wMenuState, wPartyCount, wPartyList, wBattleSlotOut
 ; writes: wStringIndex, wBattleSubStep, rRAMG
 ; points at: wListEntries, wBattleSubStep, wBattleSlotOut
-BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case12::
+BattleEnd_AskToJoin_WriteVRAMByte_Case12::
 Jump_016_60B5:: ; address name
     ld a, $BC
     ld hl, vBGMap0 + $16D
@@ -5594,7 +5594,7 @@ Jump_016_60B5:: ; address name
 
 .loop:
     ld a, $15
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'You can't travel all alone.'
     call ShowStringCategory5_Bank16
     ld a, $09
     ld [wBattleSubStep], a
@@ -5654,34 +5654,34 @@ Jump_016_60B5:: ; address name
     inc [hl]
     ret
 
-; entry 19 of the `rst $00` table in Func_016_5D13
+; entry 19 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep::
+BattleEnd_AskToJoin_AdvanceBattleSubStep::
 Jump_016_614C:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; entry 20 of the `rst $00` table in Func_016_5D13
+; entry 20 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_ShowStringCategory5_Bank16::
+BattleEnd_AskToJoin_ShowGWasSetFree::
 Jump_016_6151:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
     ld a, $13
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'G was set free in the'
     call ShowStringCategory5_Bank16
     ret
 
-; entry 21 of the `rst $00` table in Func_016_5D13
+; entry 21 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wSubMenuCursor2, wMenuState, wPartyCount, wPartyList
 ; writes: rRAMG, rRAMB, wArg1, wArg2, wBattlePartyCount, wPartyList, wTemp0, wTemp1, ...
 ; points at: wListEntries, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15::
+BattleEnd_AskToJoin_WaitTextFlags_Case15::
 Jump_016_615E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -5740,12 +5740,12 @@ Jump_016_615E:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 22 of the `rst $00` table in Func_016_5D13
+; entry 22 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1, wMenuOption, wCommandCursorMax
 ; writes: wWindowTileBuffer, wStringIndex, wListCount, wListLastPageSize, wCommandPageCount, wListPageCount, wListPageSize, wListPage, ...
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16::
+BattleEnd_AskToJoin_ShowChooseAnEggTo::
 Jump_016_61D2:: ; address name
     call BuildBattleMenuScreen_733F
     farcall CopyRectRecord7848ToScreenBuffer
@@ -5755,7 +5755,7 @@ Jump_016_61D2:: ; address name
     ld a, $6C
     call QueueSoundEffect
     ld a, $16
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Choose an egg to abandon.'
     call ShowStringCategory5Immediate_Bank16
     call CountRecordsByField6E
     call ListRecordsWithField6EToListEntries
@@ -5800,15 +5800,15 @@ Jump_016_61D2:: ; address name
     inc [hl]
     ret
 
-; entry 23 of the `rst $00` table in Func_016_5D13
+; entry 23 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressedRepeat, wWindowTileBuffer, wJoypadPressed, wMenuState, wListPage
 ; writes: wCommandCursorMax, wMenuOption, wBattleSubStep
 ; points at: wMenuState, wBattleSubStep, wScreenTileBuffer
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17::
+BattleEnd_AskToJoin_MovePagedListCursor_Case17::
 Jump_016_6250:: ; address name
     ld de, wMenuState
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case17_Data
     call MovePagedListCursor
     ld a, [wJoypadPressedRepeat]
     and a, $30
@@ -5847,12 +5847,12 @@ Jump_016_6250:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 24 of the `rst $00` table in Func_016_5D13
+; entry 24 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPageCount, wCommandCursorMax
 ; writes: wWindowTileBuffer, wMenuSelectedMember, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18::
+BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18::
 Jump_016_62A9:: ; address name
     call BuildBattleMenuScreen_733F
     farcall CopyRectRecord78AAToScreenBuffer
@@ -5872,7 +5872,7 @@ Jump_016_62A9:: ; address name
 .call_draw_four_list_entries_for_page_list:
     call DrawFourListEntriesForPageListPage
     ld a, [wCommandCursorMax]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case17_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -5902,14 +5902,14 @@ Jump_016_62A9:: ; address name
     inc [hl]
     ret
 
-; entry 25 of the `rst $00` table in Func_016_5D13
+; entry 25 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex, wBattleSubStep
 ; points at: wMenuSelectedMember, wBattleSubStep, wListEntries, wTextBuf1
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19::
+BattleEnd_AskToJoin_MovePagedListCursor_Case19::
 Jump_016_631B:: ; address name
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -5946,7 +5946,7 @@ Jump_016_631B:: ; address name
     ld de, wTextBuf1
     call CopyStringHLToDE
     ld a, $18
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'G's egg was abandoned.'
     call ShowStringCategory5_Bank16
     xor a, a
     ld [rRAMG], a
@@ -5959,12 +5959,12 @@ Jump_016_631B:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 26 of the `rst $00` table in Func_016_5D13
+; entry 26 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuState, wMenuOption
 ; writes: wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
 ; points at: wScreenTileBuffer, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_ClampRecordListPageCursor4::
+BattleEnd_AskToJoin_ClampRecordListPageCursor4::
 Jump_016_637E:: ; address name
     ld a, [wMenuState]
     ld [wListCursor], a
@@ -5987,18 +5987,18 @@ Jump_016_637E:: ; address name
     inc [hl]
     ret
 
-; entry 27 of the `rst $00` table in Func_016_5D13
+; entry 27 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor, wListPageIndex, wCommandPageCount
 ; writes: wMenuState, wCommandCursorMax, wMenuOption, wListPage, wScreenTileBuffer, wWindowTileBuffer, wListPageSize, wListPageCount, ...
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer::
+BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer::
 Jump_016_63B9:: ; address name
     farcall CopyRectRecord78AAToScreenBuffer
     ld a, [wListCursor]
     ld [wMenuState], a
     ld [wCommandCursorMax], a
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case17_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -6048,12 +6048,12 @@ Jump_016_63B9:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 28 of the `rst $00` table in Func_016_5D13
+; entry 28 of the `rst $00` table in BattleEnd_AskToJoin
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wArg1, wArg2, wBattleResolveStep, wBattleSubStep
 ; points at: wListEntries, wBattleSubPhase
-BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case1C::
+BattleEnd_AskToJoin_WaitTextFlags_Case1C::
 Jump_016_643D:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6088,7 +6088,7 @@ Jump_016_643D:: ; address name
     ret
 
 ; runs Func_016_65FF; unless A is pressed, writes 1 at DE when B is pressed (E-0122)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_ShowYouHaveNoEggs, BattleEnd_AskToJoin_ShowHeroDepartedSadly)
 ; reads: wJoypadPressed
 SetDEFlagOnBButton::
 Func_016_6480:: ; address name
@@ -6104,7 +6104,7 @@ Func_016_6480:: ; address name
     ret
 
 ; counts the first Data_016_75EB[wC7C7] SRAM records: wC0A1 = those with field $6E set, wC0A0 = the others (E-0125)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B, BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix)
+; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_ShowChooseAnEggTo, BattleEnd_AskToJoin_ShowYouHaveNoEggs, BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB, wTemp0, wTemp1
 ; points at: sRecords
@@ -6115,7 +6115,7 @@ Func_016_6493:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6160,7 +6160,7 @@ Func_016_6493:: ; address name
     ret
 
 ; lists the party records and then the stored records (state 1, field $6E clear) in wD789 and sets the page counts wCFD0-wCFD3 (E-0130)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_ShowChooseAMonsterTo)
 ; reads: wPartyCount, wTemp0, wFarmLevel, wSubMenuCursor2, wListPageCount
 ; writes: rRAMG, rRAMB, wTemp0, wListLastPageSize, wListPageCount, wListPageSize, wScreenTileBuffer
 ; points at: wListEntries, wPartyList, sRecords
@@ -6187,7 +6187,7 @@ Func_016_64DC:: ; address name
     dec b
     jr nz, .loop
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6289,7 +6289,7 @@ Func_016_64DC:: ; address name
     ret
 
 ; fills wD789 ($1E bytes) with $FF, then lists the indexes of the first Data_016_75EB[wC7C7] SRAM records that have field $6E set (E-0127)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_ShowChooseAnEggTo)
 ; reads: wFarmLevel
 ; writes: rRAMG, rRAMB
 ; points at: wListEntries, sRecords
@@ -6304,7 +6304,7 @@ Func_016_65B1:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -6345,7 +6345,7 @@ Func_016_65B1:: ; address name
     ret
 
 ; up/down/left/right move the cursor at [DE] and the page wCFD1 within the page sizes wCFD0/wCFD3 and page count wCFD2 (E-0130)
-; 8 call sites from 8 routines (e.g. BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19, ...)
+; 8 call sites from 8 routines (e.g. BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A, BattleEnd_AddJoinedMonster_MovePagedListCursor, BattleEnd_AskToJoin_MovePagedListCursor_Case19, ...)
 ; reads: wJoypadPressedRepeat, wListPageCount, wListPage, wListLastPageSize, wListPageSize, wFrameCounterLo
 ; writes: wFrameCounterLo, wListPage
 MovePagedListCursor::
@@ -6496,38 +6496,38 @@ Func_016_66CB:: ; address name
     pop hl
     ret
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F
-BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F
+BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66DD:: ; address name
     db $B9, $C1, $F9, $C1, $39, $C2, $79, $C2, $B9, $C2
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
-BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_ShowHeroDepartedSadly, BattleEnd_AddJoinedMonster_MovePagedListCursor
+BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66E7:: ; address name
     db $2F, $99, $6F, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case19, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_MovePagedListCursor_Case0F, BattleEnd_AskToJoin_MovePagedListCursor_Case19, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C
+BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66EB:: ; address name
     db $2D, $99, $6D, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_MovePagedListCursor_Case17, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18, BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer
+BattleEnd_AskToJoin_MovePagedListCursor_Case17_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66EF:: ; address name
     db $A1, $98, $E1, $98, $21, $99, $61, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A and 1 more
-BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_MovePagedListCursor, BattleEnd_AskToJoin_WriteVRAMByte_Case0E, BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A and 1 more
+BattleEnd_AskToJoin_MovePagedListCursor_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_66F7:: ; address name
     db $21, $98, $61, $98, $A1, $98, $E1, $98, $21, $99
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B
-BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Case0B_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_ShowYouHaveNoEggs
+BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_6701:: ; address name
     db $2B, $99, $6B, $99
 
 ; shows five record names of page wCFD1 at vTiles2 + $3B0 and the slot numbers ($E1-$E3) or marks ($B6) beside them (E-0128)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor, BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex)
+; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_MovePagedListCursor, BattleEnd_AskToJoin_ShowChooseAMonsterTo)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wListPage, wPartyCount, wListPageCount
 ; writes: wTextWindowRows, wTextWindowWidth, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wListEntries
@@ -6713,7 +6713,7 @@ Func_016_67E0:: ; address name
     ret
 
 ; for the four entries of WD789 page wCFD1 runs Func_016_6891 with wD868 = 0-3, draws the page digit, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case17, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16)
+; 4 call sites from 4 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18, BattleEnd_AskToJoin_MovePagedListCursor_Case17, BattleEnd_AskToJoin_ShowChooseAnEggTo)
 ; reads: wListPage
 ; writes: wTextWindowRows, wTextWindowWidth, rRAMG, rRAMB, wBattleArg0, wTextWindowTileLo, wTextWindowTileHi
 ; points at: wListEntries
@@ -6914,7 +6914,7 @@ Func_016_6926:: ; address name
     ret
 
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls BeginStringDisplay_Bank2F (E-0072)
-; 16 call sites from 14 routines (e.g. ShowRecordNameString1D, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6, ...)
+; 16 call sites from 14 routines (e.g. ShowRecordNameString1D, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex, BattleEnd_AddJoinedMonster_ShowHeroWasSentTo, ...)
 ; writes: wStringCategory
 ShowStringCategory5_Bank16::
 Func_016_6955:: ; address name
@@ -6924,7 +6924,7 @@ Func_016_6955:: ; address name
     ret
 
 ; wStringCategory = 5 (wStringIndex set by the caller), then far-calls ShowString_Bank2F (E-0074)
-; 9 call sites from 9 routines (e.g. BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case13, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values, BattleEnd_Step5_Case04_Sub01_LoadCursorTileAndRect7826, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep, ...)
+; 9 call sites from 9 routines (e.g. BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13, BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11, BattleEnd_AddJoinedMonster_ShowWillYouTakeHero, BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo, ...)
 ; writes: wStringCategory
 ShowStringCategory5Immediate_Bank16::
 Func_016_6961:: ; address name
@@ -6934,7 +6934,7 @@ Func_016_6961:: ; address name
     ret
 
 ; copies the name of record wD789[5 * wC470 + wC46B] to wC140 and shows string $12 of category 5 (E-0125)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_MovePagedListCursor)
 ; reads: wSubMenuCursor2, wMenuState
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wListEntries, wTextBuf1
@@ -6971,12 +6971,12 @@ Func_016_696D:: ; address name
     xor a, a
     ld [rRAMG], a
     ld a, $12
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Do you want to release G?'
     call ShowStringCategory5Immediate_Bank16
     ret
 
 ; copies the monster name of record wD789[wC471 * 4 + wCFD6] (its id word at field $0B) into wC140, then shows string $17 of category 5 (ShowStringCategory5Immediate_Bank16) (E-0120)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18)
 ; reads: wMenuOption, wCommandCursorMax
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wListEntries, wTextBuf1
@@ -7004,12 +7004,12 @@ Func_016_69AB:: ; address name
     ld de, wTextBuf1
     call CopyStringHLToDE
     ld a, $17
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Abandon G's egg?'
     call ShowStringCategory5Immediate_Bank16
     ret
 
 ; copies the name of record wD868[wC46C] to wC130 and shows string $1D of category 5 (E-0124)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F, BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case0B)
+; 2 call sites from 2 routines (e.g. BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B)
 ; reads: wMenuSubState
 ; writes: rRAMG, rRAMB, wStringIndex
 ; points at: wBattleArg0, wTextBuf0
@@ -7035,12 +7035,12 @@ Func_016_69E2:: ; address name
     dec b
     jr nz, .loop
     ld a, $1D
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Send 0 back to the farm?'
     call ShowStringCategory5_Bank16
     ret
 
 ; copies the name of battle slot wDAAB to DE and appends tile $A7 + (wD8AF[slot] & 1) before the terminator (E-0124)
-; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton, BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix)
+; 3 call sites from 3 routines (e.g. RunBattleEndStep5SubSteps_ShowPleaseNameHero, BattleEnd_AskToJoin_ShowHeroDepartedSadly, BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wDisplaySlot
 ; points at: wSlotNameSuffix
 CopyBattleMonsterNameWithLetterSuffix::
@@ -7097,7 +7097,7 @@ RunBattleEndStep5SubSteps::
 Func_016_6A4E:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep
+    dw RunBattleEndStep5SubSteps_ShowPleaseNameHero
     dw RunBattleEndStep5SubSteps_FillBytes
     dw RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
@@ -7107,12 +7107,12 @@ Func_016_6A4E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wTextBuf0, wBattleSubStep
-RunBattleEndStep5SubSteps_CopyBattleMonsterNameWithLetterSuffixAndStep::
+RunBattleEndStep5SubSteps_ShowPleaseNameHero::
 Jump_016_6A5C:: ; address name
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
     ld a, $14
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Please name 0.'
     call ShowStringCategory5_Bank16
     ld hl, wBattleSubStep
     inc [hl]
@@ -7263,7 +7263,7 @@ Jump_016_6B57:: ; address name
     xor a, a
     ld [rRAMB], a
     ld a, [wFarmLevel]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data
+    ld hl, BattleEnd_AskToJoin_WriteVRAMByte_Data
     add_a_to_hl
     ld b, [hl]
     ld hl, sRecords
@@ -7381,40 +7381,40 @@ Jump_016_6C0A:: ; address name
     ld [hl], $01
     ret
 
-; only called from BattleEnd_Step5_Case04 (E-0047)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_LoadBattleMonsterPictureAndTitle)
+; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and RestoreRecordAFully: places the monster that joined
+; 1 call site from 1 routine (e.g. BattleEnd_Step5_BattleEnd_AddJoinedMonster)
 ; reads: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01::
+BattleEnd_AddJoinedMonster::
 Func_016_6C16:: ; address name
     ld a, [wBattleSubStep]
     rst $00
-    dw BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01
-    dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor
-    dw BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6
-    dw BattleEnd_Step5_Case04_Sub01_SetBattleStep
-    dw BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex
-    dw BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09
-    dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case0B
-    dw BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C
-    dw BattleEnd_Step5_Case04_Sub01_ClampRecordListPageCursor5
-    dw BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu
-    dw BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F
-    dw BattleEnd_Step5_Case04_Sub01_LoadCursorTileAndRect7826
-    dw BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values
-    dw BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully
-    dw BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case13
+    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01
+    dw BattleEnd_AddJoinedMonster_MovePagedListCursor
+    dw BattleEnd_AddJoinedMonster_ShowHeroWasSentTo
+    dw BattleEnd_AddJoinedMonster_SetBattleStep
+    dw BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex
+    dw BattleEnd_AddJoinedMonster_SetRecordState2ForB
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16
+    dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09
+    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B
+    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C
+    dw BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5
+    dw BattleEnd_AddJoinedMonster_SwapMonstersMenu
+    dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F
+    dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero
+    dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11
+    dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
+    dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13
 
-; entry 0 of the `rst $00` table in Func_016_6C16
+; entry 0 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wWorkBuf, wBattlePartyCount
 ; writes: rRAMG, rRAMB, wStringIndex, wMenuState
 ; points at: wScreenTileBuffer, wBattleArg0, wPartyList, wTextBuf0, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F::
+BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F::
 Jump_016_6C42:: ; address name
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
@@ -7457,7 +7457,7 @@ Jump_016_6C42:: ; address name
     ld [rRAMG], a
     farcall LoadCursorTileAndRect7826
     ld a, $19
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Will you take 0 with you?'
     call ShowStringCategory5Immediate_Bank16
     ld hl, wBattleSubStep
     inc [hl]
@@ -7465,12 +7465,12 @@ Jump_016_6C42:: ; address name
     ld [wMenuState], a
     ret
 
-; entry 1 of the `rst $00` table in Func_016_6C16
+; entry 1 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case01::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case01::
 Jump_016_6C9E:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7491,14 +7491,14 @@ Jump_016_6C9E:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in Func_016_6C16
+; entry 2 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuState
 ; writes: wBattleSubStep
 ; points at: wMenuState, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_MovePagedListCursor::
+BattleEnd_AddJoinedMonster_MovePagedListCursor::
 Jump_016_6CC8:: ; address name
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_SetDEFlagOnBButton_Data
+    ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
     ld de, wMenuState
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7523,11 +7523,11 @@ Jump_016_6CC8:: ; address name
     inc [hl]
     ret
 
-; entry 3 of the `rst $00` table in Func_016_6C16
+; entry 3 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6::
+BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
 Jump_016_6CF5:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -7535,21 +7535,21 @@ Jump_016_6CF5:: ; address name
     or a, a
     jr z, .set_string_index_to_1A
     ld a, $20
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 was sent to the farm.'
     call ShowStringCategory5_Bank16
     ret
 
 .set_string_index_to_1A:
     ld a, $1A
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 was sent back to the'
     call ShowStringCategory5_Bank16
     ret
 
-; entry 4 of the `rst $00` table in Func_016_6C16
+; entry 4 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleSubStep
 ; points at: wBattleStep
-BattleEnd_Step5_Case04_Sub01_SetBattleStep::
+BattleEnd_AddJoinedMonster_SetBattleStep::
 Jump_016_6D11:: ; address name
     ld hl, wBattleStep
     inc [hl]
@@ -7559,12 +7559,12 @@ Jump_016_6D11:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 5 of the `rst $00` table in Func_016_6C16
+; entry 5 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPartyCount
 ; writes: wBattleSubStep, wStringIndex
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex::
+BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
 Jump_016_6D1E:: ; address name
     ld a, [wPartyCount]
     cp a, $03
@@ -7580,22 +7580,22 @@ Jump_016_6D1E:: ; address name
     or a, a
     jr z, .set_string_index_to_1B
     ld a, $21
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 joined the party.'
     call ShowStringCategory5_Bank16
     ret
 
 .set_string_index_to_1B:
     ld a, $1B
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 joined the party.'
     call ShowStringCategory5_Bank16
     ret
 
-; entry 6 of the `rst $00` table in Func_016_6C16
+; entry 6 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wPartyCount
 ; writes: wBattlePartyCount
 ; points at: wBattleArg0, wPartyCount, wPartyList, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB::
+BattleEnd_AddJoinedMonster_SetRecordState2ForB::
 Jump_016_6D47:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7620,11 +7620,11 @@ Jump_016_6D47:: ; address name
     inc [hl]
     ret
 
-; entry 7 of the `rst $00` table in Func_016_6C16
+; entry 7 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubStep
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
 Jump_016_6D7B:: ; address name
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7634,15 +7634,15 @@ Jump_016_6D7B:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 8 of the `rst $00` table in Func_016_6C16
+; entry 8 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wMenuSubState
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep::
+BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
 Jump_016_6D8D:: ; address name
     call CopyRect7923AndDrawBattleArg0Values
     ld a, $1C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Choose the monster to send home.'
     call ShowStringCategory5Immediate_Bank16
     xor a, a
     ld [wMenuSubState], a
@@ -7652,12 +7652,12 @@ Jump_016_6D8D:: ; address name
     inc [hl]
     ret
 
-; entry 9 of the `rst $00` table in Func_016_6C16
+; entry 9 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wMenuSubState
 ; writes: wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wScreenTileBuffer, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case09::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case09::
 Jump_016_6DA6:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -7675,7 +7675,7 @@ Jump_016_6DA6:: ; address name
     ld bc, $140D
     call CopyRect32StrideToVRAM_Bank16
     ld a, [wMenuSubState]
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7685,14 +7685,14 @@ Jump_016_6DA6:: ; address name
     inc [hl]
     ret
 
-; entry 10 of the `rst $00` table in Func_016_6C16
+; entry 10 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wBattlePartyCount
 ; writes: rRAMG, rRAMB, wBattleSubStep
 ; points at: wMenuSubState, wBattleArg0, wTextBuf0, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0A::
+BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0A::
 Jump_016_6DE4:: ; address name
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     ld de, wMenuSubState
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7734,12 +7734,12 @@ Jump_016_6DE4:: ; address name
     inc [hl]
     ret
 
-; entry 11 of the `rst $00` table in Func_016_6C16
+; entry 11 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSubState
 ; writes: wMenuSelectedMember, wListPageSize, wListPage, wListPageCount, wListLastPageSize
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect32StrideToVRAM_Bank16_Case0B::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_Case0B::
 Jump_016_6E38:: ; address name
     xor a, a
     ld [wMenuSelectedMember], a
@@ -7755,7 +7755,7 @@ Jump_016_6E38:: ; address name
     ld [wListPageCount], a
     ld a, $02
     ld [wListLastPageSize], a
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     ld a, [wMenuSubState]
     add a, a
     add_a_to_hl
@@ -7770,14 +7770,14 @@ Jump_016_6E38:: ; address name
     inc [hl]
     ret
 
-; entry 12 of the `rst $00` table in Func_016_6C16
+; entry 12 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wMenuSelectedMember, wMenuSubState
 ; writes: rRAMG, rRAMB, wStringIndex, wBattleSubStep
 ; points at: wMenuSelectedMember, wBattleSubStep, wBattleArg0, wTextBuf0
-BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C::
+BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C::
 Jump_016_6E80:: ; address name
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F_Data
+    ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Case0F_Data
     ld de, wMenuSelectedMember
     call MovePagedListCursor
     ld a, [wJoypadPressed]
@@ -7813,7 +7813,7 @@ Jump_016_6E80:: ; address name
     dec b
     jr nz, .loop
     ld a, $1A
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; '0 was sent back to the'
     call ShowStringCategory5_Bank16
     ld a, $12
     ld [wBattleSubStep], a
@@ -7829,12 +7829,12 @@ Jump_016_6E80:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 13 of the `rst $00` table in Func_016_6C16
+; entry 13 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattlePartyCount, wMenuSubState
 ; writes: wListCount, wListCursor, wListPageIndex, wScreenState, wScreenStep, wScreenSubStep
 ; points at: wListEntries, wBattleArg0, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_ClampRecordListPageCursor5::
+BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
 Jump_016_6EE9:: ; address name
     ld hl, wListEntries
     ld bc, $001E
@@ -7869,12 +7869,12 @@ Jump_016_6EE9:: ; address name
     inc [hl]
     ret
 
-; entry 14 of the `rst $00` table in Func_016_6C16
+; entry 14 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep, wSavedSpriteClipMode, wSavedFieldDrawFlags, wSavedSpriteSlotCount
 ; writes: hSpriteWindowClipMode, hSpriteHideTile, hFieldDrawFlags, wSpriteSlotCount
 ; points at: wBattleScreenFlags, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu::
+BattleEnd_AddJoinedMonster_SwapMonstersMenu::
 Jump_016_6F30:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -7902,18 +7902,18 @@ Jump_016_6F30:: ; address name
     inc [hl]
     ret
 
-; entry 15 of the `rst $00` table in Func_016_6C16
+; entry 15 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListCursor
 ; writes: wMenuSubState, wBattleSubStep
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F::
+BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F::
 Jump_016_6F6F:: ; address name
     call BuildBattleMenuScreen_733F
     call CopyRect7923AndDrawBattleArg0Values
     ld a, [wListCursor]
     ld [wMenuSubState], a
-    ld hl, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc_Data
+    ld hl, BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -7928,10 +7928,10 @@ Jump_016_6F6F:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 16 of the `rst $00` table in Func_016_6C16
+; entry 16 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenTileBuffer, wWindowTileBuffer, wStringIndex, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_LoadCursorTileAndRect7826::
+BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
 Jump_016_6FA4:: ; address name
     ld a, $1F
     ld [wScreenTileBuffer + $10C], a
@@ -7955,16 +7955,16 @@ Jump_016_6FA4:: ; address name
     ld bc, $0805
     call CopyRect32StrideToVRAM_Bank16
     ld a, $19
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Will you take 0 with you?'
     call ShowStringCategory5Immediate_Bank16
     ld a, $01
     ld [wBattleSubStep], a
     ret
 
-; entry 17 of the `rst $00` table in Func_016_6C16
+; entry 17 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wMenuSelectedMember, wStringIndex, wBattleSubStep
-BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values::
+BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11::
 Jump_016_6FEE:: ; address name
     call CopyRect7923AndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12F
@@ -7972,18 +7972,18 @@ Jump_016_6FEE:: ; address name
     xor a, a
     ld [wMenuSelectedMember], a
     ld a, $1C
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Choose the monster to send home.'
     call ShowStringCategory5Immediate_Bank16
     ld a, $09
     ld [wBattleSubStep], a
     ret
 
-; entry 18 of the `rst $00` table in Func_016_6C16
+; entry 18 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wMenuSubState, wBattlePartyCount
 ; writes: wBattleSubStep
 ; points at: wBattleArg0, wPartyList, wScreenTileBuffer
-BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully::
+BattleEnd_AddJoinedMonster_RestoreRecordAFully::
 Jump_016_7008:: ; address name
     ld a, [wMenuSubState]
     ld hl, wBattleArg0
@@ -8022,11 +8022,11 @@ Jump_016_7008:: ; address name
     ld [wBattleSubStep], a
     ret
 
-; entry 19 of the `rst $00` table in Func_016_6C16
+; entry 19 of the `rst $00` table in BattleEnd_AddJoinedMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringIndex, wBattleSubStep, wMenuState
 ; points at: wScreenTileBuffer
-BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case13::
+BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13::
 Jump_016_7051:: ; address name
     call BuildBattleMenuScreen_733F
     ld hl, vBGMap0
@@ -8035,7 +8035,7 @@ Jump_016_7051:: ; address name
     call CopyRect32StrideToVRAM_Bank16
     farcall LoadCursorTileAndRect7826
     ld a, $19
-    ld [wStringIndex], a
+    ld [wStringIndex], a ; 'Will you take 0 with you?'
     call ShowStringCategory5Immediate_Bank16
     ld a, $01
     ld [wBattleSubStep], a
@@ -8044,7 +8044,7 @@ Jump_016_7051:: ; address name
     ret
 
 ; copies rectangle record $7923 to the screen buffer and draws the wD868 values at vTiles2 + $3B0 (E-0122)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0Values, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F, BattleEnd_Step5_Case04_Sub01_CopyRect7923AndDrawBattleArg0ValuesAndStep)
+; 3 call sites from 3 routines (e.g. BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_Case11, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo)
 CopyRect7923AndDrawBattleArg0Values::
 Func_016_7078:: ; address name
     farcall CopyRectRecord7923ToScreenBuffer
@@ -8052,7 +8052,7 @@ Func_016_7078:: ; address name
     ret
 
 ; for record A: field 0 = 1, field $55 = 0, HP (field $5B) = max HP ($5D), MP ($5F) = max MP ($61) (E-0127)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully)
+; 1 call site from 1 routine (e.g. BattleEnd_AddJoinedMonster_RestoreRecordAFully)
 ; writes: rRAMG, rRAMB
 RestoreRecordAFully::
 Func_016_7082:: ; address name
@@ -8107,14 +8107,14 @@ Func_016_7082:: ; address name
     ret
 
 ; A = B, then falls into SetRecordState2 (E-0126)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB)
+; 1 call site from 1 routine (e.g. BattleEnd_AddJoinedMonster_SetRecordState2ForB)
 ; writes: rRAMG, rRAMB
 SetRecordState2ForB::
 Func_016_70C5:: ; address name
     ld a, b
 
 ; A = record: sets its byte 0 (state) to 2 in SRAM bank 0 (SRAMRecordAddress with C = 0) (E-0118)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully)
+; 1 call site from 1 routine (e.g. BattleEnd_AddJoinedMonster_RestoreRecordAFully)
 ; writes: rRAMG, rRAMB
 SetRecordState2::
 Func_016_70C6:: ; address name
@@ -8130,7 +8130,7 @@ Func_016_70C6:: ; address name
     ret
 
 ; with SRAM enabled runs Func_016_710F for each of the first one to three party records (E-0124)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully, BattleEnd_Step5_Case04_Sub01_SetRecordState2ForB, BattleEnd_Step5_Case01_Case01_Sub01_WaitTextFlags_Case15)
+; 3 call sites from 3 routines (e.g. BattleEnd_AddJoinedMonster_RestoreRecordAFully, BattleEnd_AddJoinedMonster_SetRecordState2ForB, BattleEnd_AskToJoin_WaitTextFlags_Case15)
 ; reads: wPartyList, wPartyCount
 ; writes: rRAMG, rRAMB
 RunFunc710FForPartyMembers::
@@ -8277,7 +8277,7 @@ Func_016_7183:: ; address name
     ret
 
 ; A = 1 when Data $71AC[battle monster id of wDAAB] is at least 6, else 0 (E-0124)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case04_Sub01_WriteBattleSubStepAndStringIndex, BattleEnd_Step5_Case04_Sub01_BattleMonsterTable71ACAtLeast6)
+; 2 call sites from 2 routines (e.g. BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex, BattleEnd_AddJoinedMonster_ShowHeroWasSentTo)
 ; reads: wDisplaySlot
 ; points at: wBattleMonsterId
 BattleMonsterTable71ACAtLeast6::
@@ -8687,7 +8687,7 @@ Data_016_71AC:: ; address name
     db $07 ; id 372 Darck
 
 ; B = width, C = rows, DE = source with rows 32 bytes apart, HL = VRAM address with rows 32 bytes apart: copies a B x C rectangle with WriteVRAMByteInc; DE and HL end at the start of the row below; B kept, C = 0 (E-0066)
-; 21 call sites from 20 routines (e.g. BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case13, BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully, BattleEnd_Step5_Case04_Sub01_LoadCursorTileAndRect7826, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F, ...)
+; 21 call sites from 20 routines (e.g. BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13, BattleEnd_AddJoinedMonster_RestoreRecordAFully, BattleEnd_AddJoinedMonster_ShowWillYouTakeHero, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, ...)
 CopyRect32StrideToVRAM_Bank16::
 Func_016_7321:: ; address name
     push bc
@@ -8716,7 +8716,7 @@ Func_016_7321:: ; address name
     ret
 
 ; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines for wD88F and wD890) (E-0122)
-; 11 call sites from 11 routines (e.g. BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case13, BattleEnd_Step5_Case04_Sub01_RestoreRecordAFully, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F_Case0F, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, ...)
+; 11 call sites from 11 routines (e.g. BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_Case13, BattleEnd_AddJoinedMonster_RestoreRecordAFully, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F_Case0F, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, ...)
 BuildBattleMenuScreen_733F::
 Func_016_733F:: ; address name
     farcall ClearAttributesAndScreenBuffer_Bank31
@@ -9094,8 +9094,8 @@ Func_016_756F:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; address loaded by BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte, CountRecordsByField6E, ListPartyAndStoredRecordsForPage, ListRecordsWithField6EToListEntries and 1 more
-BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by BattleEnd_AskToJoin_WriteVRAMByte, CountRecordsByField6E, ListPartyAndStoredRecordsForPage, ListRecordsWithField6EToListEntries and 1 more
+BattleEnd_AskToJoin_WriteVRAMByte_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_016_75EB:: ; address name
     db $0A, $14, $1E
 
@@ -9362,7 +9362,7 @@ Func_016_7720:: ; address name
     ret
 
 ; far-calls DecompressGraphicsA4ToTiles0 and continues at DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary (E-0127)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_Case00_CopyBlockToTileBuffer, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_RecordJourney_Case00_CopyBlockToTileBuffer, RunGameMode5Case01SubStates_Case02_Case00_ShowMaster)
 ; reads: wBattlerRecords, wGameMode, wTitlePlayHoursLo, wTitlePlayHoursHi, wTitlePlayMinutes, wTitlePartyCount
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wTitlePlayerName, wTitlePartySummary

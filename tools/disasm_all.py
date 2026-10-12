@@ -5330,6 +5330,30 @@ class Rom:
         if not target or not (0 <= target[0] < self.nbanks):
             return ""
         tb, ta = target
+        if cat is None:  # E-0292: a wrapper that sets the category itself (ShowStringCategory5_Bank16)
+            t_ins = self.insn[tb]
+            v0 = t_ins.get(ta)
+            v1 = t_ins.get(ta + v0[0]) if v0 and v0[0] != "dw" else None
+            mc = re.match(r"ld a, \$([0-9A-F]{2})$", v0[1]) if v1 else None
+            if mc and v1[0] != "dw" and v1[1] in ("ld [$C528], a", "ld [wStringCategory], a"):
+                cat, pc2, seen, nxt = int(mc.group(1), 16), ta + v0[0] + v1[0], [], None
+                for _ in range(5):
+                    v = t_ins.get(pc2)
+                    if not v or v[0] == "dw":
+                        break
+                    if v[2] in ("call", "jp") and v[3] is not None:
+                        nxt = self.resolve(tb, v[3])
+                        break
+                    if v[1] == "rst $10":
+                        hl = re.search(r"ld hl, \$([0-9A-F]{4})", " ".join(seen[-2:]))
+                        bb = re.search(r"ld b, \$([0-9A-F]{2})", " ".join(seen[-2:]))
+                        nxt = (int(bb.group(1), 16), int(hl.group(1), 16)) if hl and bb else None
+                        break
+                    seen.append(v[1])
+                    pc2 += v[0]
+                if not nxt or not (0 <= nxt[0] < self.nbanks):
+                    return ""
+                tb, ta = nxt
         name = self.labels[tb].get(ta, "")
         if not self.STRING_CALLEE.search(name):
             return ""

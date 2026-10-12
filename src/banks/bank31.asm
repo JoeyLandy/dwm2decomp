@@ -1214,7 +1214,7 @@ Jump_031_46CA:: ; address name
     dw BattleEnd_Step5_Case01
     dw BattleEnd_Step5_SwapMonstersMenu
     dw BattleEnd_Step5_BuildAndDrawBattleScreen
-    dw BattleEnd_Step5_LoadBattleMonsterPictureAndTitle
+    dw BattleEnd_Step5_BattleEnd_AddJoinedMonster
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step5
 ; no direct call (reached through a table, a jump or a vector)
@@ -1264,7 +1264,7 @@ Jump_031_471C:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
     dw BattleEnd_Step5_Case01_CopyRect32StrideToVRAM
-    dw BattleEnd_Step5_Case01_Case01
+    dw BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin
 
 ; entry 0 of the `rst $00` table in BattleEnd_Step5_Case01
 ; no direct call (reached through a table, a jump or a vector)
@@ -1288,9 +1288,9 @@ Jump_031_4724:: ; address name
 
 ; entry 1 of the `rst $00` table in BattleEnd_Step5_Case01
 ; no direct call (reached through a table, a jump or a vector)
-BattleEnd_Step5_Case01_Case01::
+BattleEnd_Step5_Case01_ToBattleEnd_AskToJoin::
 Jump_031_474A:: ; address name
-    farcall BattleEnd_Step5_Case01_Case01_Sub01
+    farcall BattleEnd_AskToJoin
     ret
 
 ; entry 2 of the `rst $00` table in BattleEnd_Step5
@@ -1356,9 +1356,9 @@ Func_031_47A9:: ; address name
 ; entry 4 of the `rst $00` table in BattleEnd_Step5
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScreenFlags
-BattleEnd_Step5_LoadBattleMonsterPictureAndTitle::
+BattleEnd_Step5_BattleEnd_AddJoinedMonster::
 Jump_031_47B9:: ; address name
-    farcall BattleEnd_Step5_Case04_Sub01
+    farcall BattleEnd_AddJoinedMonster
     ld a, [wBattleScreenFlags]
     or a, a
     call nz, LoadBattleMonsterPictureAndTitle
@@ -1378,7 +1378,7 @@ Func_031_47C7:: ; address name
     ret
 
 ; loads the picture of battle monster wDAAB at vTiles2 + $140, uploads palettes, loads name tiles and shows string 5 of category 2 (bank 09) at vTiles1 + $6D0, then restores the default window (E-0121)
-; 4 call sites from 4 routines (e.g. BattleEnd_Step5_LoadBattleMonsterPictureAndTitle, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM)
+; 4 call sites from 4 routines (e.g. BattleEnd_Step5_BattleEnd_AddJoinedMonster, BattleEnd_Step5_BuildAndDrawBattleScreen, BuildBattleScreenBuffer, BattleEnd_Step5_Case01_CopyRect32StrideToVRAM)
 ; reads: wDisplaySlot
 ; writes: wBattleScreenFlags, wBGPaletteUploadRequest, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex
 ; points at: wBattleMonsterId
@@ -10456,13 +10456,13 @@ Func_031_7C0D:: ; address name
     pop hl
     ret
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_AddJoinedMonster_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 477 bytes expand to 704 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus240Gfx_31_7C1E:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7C1E:: ; address name
     INCBIN "dwm2-cobi-us.gbc", $0C7C1E, $1DD
 
-; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_Step5_Case04_Sub01_SwapMonstersMenu, GameMode4_Init and 2 more
+; address loaded by GameMode5_Init_SendSGBPaletteSetPacket_Case04, RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc, BattleEnd_AddJoinedMonster_SwapMonstersMenu, GameMode4_Init and 2 more
 ; LZSS-compressed asset: 151 bytes expand to 224 (tools/lzss_gfx.py, E-0016/E-0017; C1)
 Tiles1Plus5F0Gfx_31_7DFB:: ; heuristic: stream decompressed by a call to DecompressTo*; C0
 Data_031_7DFB:: ; address name

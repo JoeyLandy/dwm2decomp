@@ -5131,7 +5131,7 @@ Func_01B_660D:: ; address name
     ret
 
 ; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B, GameMode6_Update_Case0F_ShowSwitchWithWhich)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B, GameMode6_Update_Case04_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B, GameMode6_Update_SwitchMonster_ShowSwitchWithWhich)
 ; reads: wScreenState
 EggServiceMenu_Bank1B::
 Func_01B_665E:: ; address name

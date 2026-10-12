@@ -3733,7 +3733,7 @@ Func_061_5F39:: ; address name
     jp .skip
 
 ; hFFC6 = 1 when bit 7 of wCD07 is set; otherwise on map types $80/$85 the wCE7E entry of the current area (wCD74), else 0 (E-0129)
-; 1 call site from 1 routine (e.g. BattleEnd_Step5_Case01_Case01_Sub01_CopyBattleMonsterNameWithLetterSuffix)
+; 1 call site from 1 routine (e.g. BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix)
 ; reads: wKeyWorldFlags, wMapType, wKeyWorldFloor, hMapScreenY, hMapScreenX
 ; writes: hTemp0
 ; points at: wKeyWorldFloorInfo, wKeyWorldAreaInfo

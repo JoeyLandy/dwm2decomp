@@ -3395,7 +3395,7 @@ Func_01A_72C9:: ; address name
     ret
 
 ; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle Data_01A_7826 to the screen buffer and plays sound $6C (E-0122)
-; 7 call sites from 7 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_LoadCursorTileAndRect7826, BattleEnd_Step5_Case04_Sub01_BuildBattleMenuScreen_733F, BattleEnd_Step5_Case04_Sub01_MovePagedListCursor_Case0C, BattleEnd_Step5_Case04_Sub01_LoadCursorTileAndRect7826, ...)
+; 7 call sites from 7 routines (e.g. BattleEnd_AskToJoin_LoadCursorTileAndRect7826, BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_733F, BattleEnd_AddJoinedMonster_MovePagedListCursor_Case0C, BattleEnd_AddJoinedMonster_ShowWillYouTakeHero, ...)
 LoadCursorTileAndRect7826::
 Func_01A_72DB:: ; address name
     ld de, Tiles1Plus6F0Tiles_1F_4330
@@ -3410,7 +3410,7 @@ Func_01A_72DB:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_7848 (E-0115)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F, BattleEnd_Step5_Case01_Case01_Sub01_MovePagedListCursor_Case0F, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16)
+; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_BuildBattleMenuScreen_733F, BattleEnd_AskToJoin_MovePagedListCursor_Case0F, BattleEnd_AskToJoin_ShowChooseAnEggTo)
 CopyRectRecord7848ToScreenBuffer::
 Func_01A_72F4:: ; address name
     ld hl, TileRect_1A_7848
@@ -3418,7 +3418,7 @@ Func_01A_72F4:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_787E, then QueueSoundEffect $6C (E-0079)
-; 6 call sites from 6 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteVRAMByte_Case0E, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer, ...)
+; 6 call sites from 6 routines (e.g. BattleEnd_AskToJoin_WriteVRAMByte_Case0E, BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18, BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer, ...)
 CopyRectRecord787EAndPlaySound6C::
 Func_01A_72FB:: ; address name
     ld hl, TileRect_1A_787E
@@ -3428,7 +3428,7 @@ Func_01A_72FB:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_78AA (E-0115)
-; 3 call sites from 3 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case16, BattleEnd_Step5_Case01_Case01_Sub01_BuildBattleMenuScreen_733F_Case18, BattleEnd_Step5_Case01_Case01_Sub01_CopyRectRecord78AAToScreenBuffer)
+; 3 call sites from 3 routines (e.g. BattleEnd_AskToJoin_ShowChooseAnEggTo, BattleEnd_AskToJoin_BuildBattleMenuScreen_733F_Case18, BattleEnd_AskToJoin_CopyRectRecord78AAToScreenBuffer)
 CopyRectRecord78AAToScreenBuffer::
 Func_01A_7307:: ; address name
     ld hl, TileRect_1A_78AA
@@ -3444,7 +3444,7 @@ Func_01A_730E:: ; address name
     ret
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = Data_01A_796F, then QueueSoundEffect $6C (E-0115)
-; 2 call sites from 2 routines (e.g. BattleEnd_Step5_Case01_Case01_Sub01_WriteStringIndex, BattleEnd_Step5_Case01_Case01_Sub01_WriteMenuStateAndSubMenuCursor2Etc)
+; 2 call sites from 2 routines (e.g. BattleEnd_AskToJoin_ShowChooseAMonsterTo, BattleEnd_AskToJoin_CopyRectRecord796FToScreenBufferAndPlaySound6C)
 CopyRectRecord796FToScreenBufferAndPlaySound6C::
 Func_01A_7315:: ; address name
     ld hl, TileRect_1A_796F

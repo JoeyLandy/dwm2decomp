@@ -5146,7 +5146,7 @@ Func_03A_6157:: ; address name
     dw RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleActions_CheckActionBDOrRun63B2And63D2
     dw RunBattleActions_ToRunBattleActions_UseItem
-    dw RunBattleActions_Case09
+    dw RunBattleActions_WearOffAndDefeat
     dw RunBattleActions_SetBattlePhase
 
 ; entry 0 of the `rst $00` table in RunBattleActions
@@ -5468,7 +5468,7 @@ Jump_03A_6300:: ; address name
     ret
 
 ; returns A = 0 for action $BD while wDABA & $7F is non-zero; otherwise runs Func_03A_63B2 and, without carry, Func_03A_63D2 (E-0122)
-; 5 call sites from 5 routines (e.g. RunBattleActions_CheckActionBDOrRun63B2And63D2, RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_Case09_ShowHeroDroppedDead, RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08, ...)
+; 5 call sites from 5 routines (e.g. RunBattleActions_CheckActionBDOrRun63B2And63D2, RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty, RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead, RunActionResolveStep_CheckActionBDOrRun63B2And63D2_Case08, ...)
 ; reads: wBattleActionId, wDefeatFlagsBA
 CheckActionBDOrRun63B2And63D2::
 Func_03A_639A:: ; address name
@@ -5563,26 +5563,26 @@ Jump_03A_6408:: ; address name
     farcall RunBattleActions_UseItem
     ret
 
-; entry 9 of the `rst $00` table in RunBattleActions
+; by wBattleResolveStep: battle texts "0's Ironize wore off!" and '0 dropped dead!'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleResolveStep
-RunBattleActions_Case09::
+RunBattleActions_WearOffAndDefeat::
 Jump_03A_640F:: ; address name
     ld a, [wBattleResolveStep]
     rst $00
-    dw RunBattleActions_Case09_WriteBattleActorAndBattleResolveStep
-    dw RunBattleActions_Case09_ShowHeroSIronizeWore
-    dw RunBattleActions_Case09_AddAx9ToHL
-    dw RunBattleActions_Case09_ShowHeroDroppedDead
-    dw RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleActions_Case09_WaitTextFlags
-    dw RunBattleActions_Case09_QueueMusic
+    dw RunBattleActions_WearOffAndDefeat_WriteBattleActorAndBattleResolveStep
+    dw RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore
+    dw RunBattleActions_WearOffAndDefeat_AddAx9ToHL
+    dw RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead
+    dw RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty
+    dw RunBattleActions_WearOffAndDefeat_WaitTextFlags
+    dw RunBattleActions_WearOffAndDefeat_QueueMusic
 
-; entry 0 of the `rst $00` table in RunBattleActions_Case09
+; entry 0 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleActor, wBattleResolveStep
 ; points at: wBattleResolveStep, wSideFlags0, wSlotPairBytes, wBattleStatus
-RunBattleActions_Case09_WriteBattleActorAndBattleResolveStep::
+RunBattleActions_WearOffAndDefeat_WriteBattleActorAndBattleResolveStep::
 Jump_03A_6421:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5655,12 +5655,12 @@ Jump_03A_6421:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 1 of the `rst $00` table in RunBattleActions_Case09
+; entry 1 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor
 ; writes: wBattleResolveStep
 ; points at: wBattleResolveStep, wBattleStatus5
-RunBattleActions_Case09_ShowHeroSIronizeWore::
+RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore::
 Jump_03A_6480:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5692,12 +5692,12 @@ Jump_03A_6480:: ; address name
 .return:
     ret
 
-; entry 2 of the `rst $00` table in RunBattleActions_Case09
+; entry 2 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleActor, wBattleArg0, wLoadSlot
 ; writes: wBattleArg0, wBattleTarget
 ; points at: wBattleResolveStep, wBattleStatus
-RunBattleActions_Case09_AddAx9ToHL::
+RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
 Jump_03A_64AF:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5724,8 +5724,8 @@ Jump_03A_64AF:: ; address name
 .read_battle_actor:
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunBattleActions_Case09_Case02_GetBattleMaxHP_Bank3A
-    call RunBattleActions_Case09_Case02_AddDoubleAToHL_Bank3A
+    call RunBattleActions_WearOffAndDefeat_Case02_GetBattleMaxHP_Bank3A
+    call RunBattleActions_WearOffAndDefeat_Case02_AddDoubleAToHL_Bank3A
     ld a, [wBattleArg0]
     ld d, a
     farcall ShowBattleText
@@ -5736,11 +5736,11 @@ Jump_03A_64AF:: ; address name
     dec [hl]
     ret
 
-; only called from RunBattleActions_Case09_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case09_AddAx9ToHL)
+; only called from RunBattleActions_WearOffAndDefeat_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleActions_WearOffAndDefeat_AddAx9ToHL)
 ; reads: wBattleActor
 ; writes: wBattleDamageLo, wBattleDamageHi
-RunBattleActions_Case09_Case02_GetBattleMaxHP_Bank3A::
+RunBattleActions_WearOffAndDefeat_Case02_GetBattleMaxHP_Bank3A::
 Func_03A_64F8:: ; address name
     push bc
     ld a, [wBattleActor]
@@ -5786,12 +5786,12 @@ Func_03A_64F8:: ; address name
     ld [wBattleDamageHi], a
     ret
 
-; only called from RunBattleActions_Case09_Case02 (E-0047)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case09_AddAx9ToHL)
+; only called from RunBattleActions_WearOffAndDefeat_Case02 (E-0047)
+; 1 call site from 1 routine (e.g. RunBattleActions_WearOffAndDefeat_AddAx9ToHL)
 ; reads: wBattleActor, wBattleDamageLo, wBattleDamageHi, wBattleArg0
 ; writes: wLoadSlot, wBattleArg0, wDefeatStep
 ; points at: wBattleHP
-RunBattleActions_Case09_Case02_AddDoubleAToHL_Bank3A::
+RunBattleActions_WearOffAndDefeat_Case02_AddDoubleAToHL_Bank3A::
 Func_03A_6533:: ; address name
     xor a, a
     ld [wLoadSlot], a
@@ -5843,11 +5843,11 @@ Func_03A_6533:: ; address name
     call SetBit0OfLevelUpGainsIndexed_Bank3A
     ret
 
-; entry 3 of the `rst $00` table in RunBattleActions_Case09
+; entry 3 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleSubPhase, wBattleResolveStep
 ; points at: wBattleResolveStep
-RunBattleActions_Case09_ShowHeroDroppedDead::
+RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead::
 Jump_03A_6584:: ; address name
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5862,12 +5862,12 @@ Jump_03A_6584:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 4 of the `rst $00` table in RunBattleActions_Case09
+; entry 4 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wLinkMode, wLinkRules, wLinkRuleTurnLimit
 ; writes: wBattleResolveStep, wStringIndex, wStringCategory, wBattleStep, wBattleSubPhase
 ; points at: wBattleActor, wSlotMarks, wBattleTurn, wBattleResolveStep, wTextBuf0
-RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty::
 Jump_03A_65A4:: ; address name
     ld hl, wBattleActor
     inc [hl]
@@ -5875,7 +5875,7 @@ Jump_03A_65A4:: ; address name
     cp a, $08
     jr z, .skip
     call CarryUnlessBattleSlotOutSlotEmpty
-    jr c, RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty
+    jr c, RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty
     ld a, $01
     ld [wBattleResolveStep], a
     ret
@@ -5966,7 +5966,7 @@ Jump_03A_65A4:: ; address name
     ret
 
 ; C = first slot, B = count, D = value: wDA5B[slot] = D for every present slot in the range (CarryUnlessBattleSlotOutSlotEmpty) (E-0113)
-; 4 call sites from 1 routine (e.g. RunBattleActions_Case09_CarryUnlessBattleSlotOutSlotEmpty)
+; 4 call sites from 1 routine (e.g. RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty)
 ; points at: wSlotMarks
 SetSlotMarksForPresentSlots::
 Func_03A_6650:: ; address name
@@ -5984,11 +5984,11 @@ Func_03A_6650:: ; address name
     jr nz, SetSlotMarksForPresentSlots
     ret
 
-; entry 5 of the `rst $00` table in RunBattleActions_Case09
+; entry 5 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattleStep, wBattleSubPhase, wBattleResolveStep
-RunBattleActions_Case09_WaitTextFlags::
+RunBattleActions_WearOffAndDefeat_WaitTextFlags::
 Jump_03A_6665:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -6001,11 +6001,11 @@ Jump_03A_6665:: ; address name
     ld [wBattleResolveStep], a
     ret
 
-; entry 6 of the `rst $00` table in RunBattleActions_Case09
+; entry 6 of the `rst $00` table in RunBattleActions_WearOffAndDefeat
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wBattlePhase, wBattleStep, wBattleSubPhase, wBattleResolveStep, wBattleScene
-RunBattleActions_Case09_QueueMusic::
+RunBattleActions_WearOffAndDefeat_QueueMusic::
 Jump_03A_6677:: ; address name
     ld a, [wTextFlags]
     or a, a
@@ -9895,7 +9895,7 @@ Func_03A_7BF9:: ; address name
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case02_GetBattleMaxHP_Bank3A)
+; 1 call site from 1 routine (e.g. RunBattleActions_WearOffAndDefeat_Case02_GetBattleMaxHP_Bank3A)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank3A::
 Func_03A_7C66:: ; address name
@@ -9928,7 +9928,7 @@ Jump_03A_7C89:: ; address name
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 4 call sites from 4 routines (e.g. RunBattleActions_Case09_Case02_AddDoubleAToHL_Bank3A, RunActionResolveStep_AddDoubleAToHL_Bank3A, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty)
+; 4 call sites from 4 routines (e.g. RunBattleActions_WearOffAndDefeat_Case02_AddDoubleAToHL_Bank3A, RunActionResolveStep_AddDoubleAToHL_Bank3A, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case04, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty)
 AddDoubleAToHL_Bank3A::
 Func_03A_7C93:: ; address name
     add a, a
@@ -9999,7 +9999,7 @@ Data_03A_7CE5:: ; address name
     db $DF, $FE, $00, $FD, $73, $EF, $BF
 
 ; Sets bit 0 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 1 call site from 1 routine (e.g. RunBattleActions_Case09_Case02_AddDoubleAToHL_Bank3A)
+; 1 call site from 1 routine (e.g. RunBattleActions_WearOffAndDefeat_Case02_AddDoubleAToHL_Bank3A)
 ; points at: wLevelUpGains
 SetBit0OfLevelUpGainsIndexed_Bank3A::
 Func_03A_7CEC:: ; address name
@@ -10023,7 +10023,7 @@ Func_03A_7CF9:: ; address name
     ret
 
 ; Sets bit 2 of the byte at wD095 + A; keeps HL; clobbers A (the same 13 bytes appear in 12 banks)
-; 3 call sites from 3 routines (e.g. RunBattleActions_Case09_Case02_AddDoubleAToHL_Bank3A, RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01)
+; 3 call sites from 3 routines (e.g. RunBattleActions_WearOffAndDefeat_Case02_AddDoubleAToHL_Bank3A, RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_Case01)
 ; points at: wLevelUpGains
 SetBit2OfLevelUpGainsIndexed_Bank3A::
 Func_03A_7D06:: ; address name

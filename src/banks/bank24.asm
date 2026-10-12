@@ -195,7 +195,7 @@ Func_024_4117:: ; address name
     dw GameMode6_Update_SwapMonstersMenu
     dw GameMode6_Update_SwapMonstersMenu_Case0D
     dw GameMode6_Update_Case0E
-    dw GameMode6_Update_Case0F
+    dw GameMode6_Update_SwitchMonster
 
 ; entry 0 of the `rst $00` table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
@@ -1829,27 +1829,27 @@ Jump_024_4BB0:: ; address name
     ld [wScreenState], a
     ret
 
-; entry 15 of the `rst $00` table in GameMode6_Update
+; by wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
-GameMode6_Update_Case0F::
+GameMode6_Update_SwitchMonster::
 Jump_024_4C18:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case0F_ShowInfoOKYesN
-    dw GameMode6_Update_Case0F_ListRecordsInUseWithByte6EClear
-    dw GameMode6_Update_Case0F_DrawRecordListPageNames
-    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case0F_AdvanceScreenStep
-    dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case0F_ShowSwitchWithWhich
+    dw GameMode6_Update_SwitchMonster_ShowInfoOKYesN
+    dw GameMode6_Update_SwitchMonster_ListRecordsInUseWithByte6EClear
+    dw GameMode6_Update_SwitchMonster_DrawRecordListPageNames
+    dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_SwitchMonster_AdvanceScreenStep
+    dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
+    dw GameMode6_Update_SwitchMonster_ShowSwitchWithWhich
 
-; entry 0 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 0 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wBattleScene, wListCursor, wScreenStep
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenStep
-GameMode6_Update_Case0F_ShowInfoOKYesN::
+GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
 Jump_024_4C2C:: ; address name
     ld b, $46
     ld de, Tiles1Gfx_46_4001
@@ -1870,7 +1870,7 @@ Jump_024_4C2C:: ; address name
     ld a, $0D
     ld [wStringIndex], a ; 'InfoOKYesN'
     farcall ShowString_Bank33_7045
-    call GameMode6_Update_Case0F_Case00_FillTilesFromRequest
+    call GameMode6_Update_SwitchMonster_Case00_FillTilesFromRequest
     ld a, [wBattleScene]
     cp a, $08
     jr z, .check_battle_scene
@@ -1880,7 +1880,7 @@ Jump_024_4C2C:: ; address name
     ld a, [wBattleScene]
     cp a, $08
     jr z, .skip
-    call GameMode6_Update_Case0F_Case00_LoadSRAMRecordWord
+    call GameMode6_Update_SwitchMonster_Case00_LoadSRAMRecordWord
     jr .skip2
 
 .skip:
@@ -1903,11 +1903,11 @@ Jump_024_4C2C:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 1 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 1 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wListPages, wScreenStep
 ; writes: wArg1, wArg2, wScreenStep
-GameMode6_Update_Case0F_ListRecordsInUseWithByte6EClear::
+GameMode6_Update_SwitchMonster_ListRecordsInUseWithByte6EClear::
 Jump_024_4CA0:: ; address name
     farcall ListRecordsInUseWithByte6EClear
     farcall ClampRecordListPageCursor5
@@ -1929,10 +1929,10 @@ Jump_024_4CA0:: ; address name
     ld [wScreenStep], a
     ret
 
-; entry 2 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 2 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wArg1
-GameMode6_Update_Case0F_DrawRecordListPageNames::
+GameMode6_Update_SwitchMonster_DrawRecordListPageNames::
 Jump_024_4CD2:: ; address name
     farcall DrawRecordListPageNames
     xor a, a
@@ -1940,28 +1940,28 @@ Jump_024_4CD2:: ; address name
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; entry 3 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 3 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B::
+GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B::
 Jump_024_4CE3:: ; address name
     farcall EggServiceMenu_Bank1B
     ret
 
-; entry 5 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 5 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case0F_AdvanceScreenStep::
+GameMode6_Update_SwitchMonster_AdvanceScreenStep::
 Jump_024_4CEA:: ; address name
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; entry 7 of the `rst $00` table in GameMode6_Update_Case0F
+; entry 7 of the `rst $00` table in GameMode6_Update_SwitchMonster
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringIndex, wStringCategory
-GameMode6_Update_Case0F_ShowSwitchWithWhich::
+GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
 Jump_024_4CF2:: ; address name
     ld hl, vTiles1
     ld a, l
@@ -1983,7 +1983,7 @@ Jump_024_4CF2:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_ReturnStub_51A3, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0F_ShowInfoOKYesN)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_SavePrompt_ReturnStub_51A3, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_SwitchMonster_ShowInfoOKYesN)
 ; reads: wLinkByteEB
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Shared01::
 Func_024_4D21:: ; address name
@@ -2504,10 +2504,10 @@ Func_024_4FA3:: ; address name
     ld [de], a
     ret
 
-; only called from GameMode6_Update_Case0F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_ShowInfoOKYesN)
+; only called from GameMode6_Update_SwitchMonster_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SwitchMonster_ShowInfoOKYesN)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
-GameMode6_Update_Case0F_Case00_FillTilesFromRequest::
+GameMode6_Update_SwitchMonster_Case00_FillTilesFromRequest::
 Func_024_4FD9:: ; address name
     ld hl, vTiles1 + $500
     ld a, l
@@ -2914,12 +2914,12 @@ Func_024_5201:: ; address name
     ld [wScreenByteBD], a
     ret
 
-; only called from GameMode6_Update_Case0F_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. GameMode6_Update_Case0F_ShowInfoOKYesN)
+; only called from GameMode6_Update_SwitchMonster_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. GameMode6_Update_SwitchMonster_ShowInfoOKYesN)
 ; reads: wListPageIndex, wListCursor, hTemp0, hTemp1
 ; writes: rRAMG2, rRAMB
 ; points at: wListEntries
-GameMode6_Update_Case0F_Case00_LoadSRAMRecordWord::
+GameMode6_Update_SwitchMonster_Case00_LoadSRAMRecordWord::
 Func_024_527E:: ; address name
     ld a, [wListPageIndex]
     ld b, a
@@ -3039,7 +3039,7 @@ Data_024_52ED:: ; address name
     db $00 ; $A4: equipped item (E-0125)
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8 banks)
-; 3 call sites from 3 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4, GameMode6_Update_Case0E_ListRecordsInUseWithByte6ESet, GameMode6_Update_Case0F_ListRecordsInUseWithByte6EClear)
+; 3 call sites from 3 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4, GameMode6_Update_Case0E_ListRecordsInUseWithByte6ESet, GameMode6_Update_SwitchMonster_ListRecordsInUseWithByte6EClear)
 StoreC5BEC6AtHLStride2_Bank24::
 Func_024_5392:: ; address name
     ld a, $C5

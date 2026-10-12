@@ -918,7 +918,7 @@ Func_003_4538:: ; address name
     ret
 
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte) (E-0067) (the same 15 bytes appear in 3 banks)
-; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case00_UpdateMenuCursor, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_UpdateMenuCursor, PauseMenu_State3_Case06_UpdateMenuCursor)
+; 4 call sites from 4 routines (e.g. PauseMenu_State3_Case00_UpdateMenuCursor, PauseMenu_State3_Case01_UpdateMenuCursor_Case0E, PauseMenu_State3_Case01_UpdateMenuCursor, PauseMenu_State3_RecordJourney_UpdateMenuCursor)
 WriteBCTileAtWordTableEntry_Bank03::
 Func_003_454C:: ; address name
     add a, a
@@ -1100,7 +1100,7 @@ PauseMenu_State3_Case04_UpdateMenuCursor_Data:: ; heuristic: pointer load in the
 Data_003_463F:: ; address name
     db $64, $98, $A4, $98, $E4, $98
 
-; address loaded by PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D, PauseMenu_State3_Case06_UpdateMenuCursor
+; address loaded by PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D, PauseMenu_State3_RecordJourney_UpdateMenuCursor
 PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_4645:: ; address name
     db $2F, $99, $6F, $99
@@ -1111,7 +1111,7 @@ Data_003_4649:: ; address name
     db $82, $99, $84, $99, $86, $99, $88, $99, $8A, $99, $8C, $99, $8E, $99, $90, $99
 
 ; runs the routine for wC0A4 (jump table of four screens) (E-0122)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_RunPauseMenuScreen, PauseMenu_Items_UseItem_RunPauseMenuScreen)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_RecordJourney_RunPauseMenuScreen, PauseMenu_Items_UseItem_RunPauseMenuScreen)
 ; reads: wPauseMenuScreen
 RunPauseMenuScreen::
 Func_003_4659:: ; address name
@@ -6587,7 +6587,7 @@ Jump_003_6A9D:: ; address name
     dw PauseMenu_State3_Case03
     dw PauseMenu_State3_Case04
     dw PauseMenu_State3_Case05
-    dw PauseMenu_State3_Case06
+    dw PauseMenu_State3_RecordJourney
 
 ; entry 0 of the `rst $00` table in PauseMenu_State3
 ; no direct call (reached through a table, a jump or a vector)
@@ -6722,10 +6722,10 @@ Jump_003_6B67:: ; address name
     dw PauseMenu_State3_Case01_UpdateMenuCursor
     dw PauseMenu_State3_Case01_BuildScreenBlocks21To24
     dw PauseMenu_State3_Case01_UpdateMenuCursor_Case03
-    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep
+    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep
     dw PauseMenu_State3_Case01_TestListEntryBit7
     dw PauseMenu_State3_Case01_ExitPauseMenuToField
-    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07
+    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep_Case07
     dw PauseMenu_State3_Case01_BeginStringDisplay_Bank08AndStep
     dw PauseMenu_State3_Case01_WaitTextFlags
     dw PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount
@@ -6989,7 +6989,7 @@ Jump_003_6C90:: ; address name
 ; entry 4 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep::
+PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep::
 Jump_003_6D31:: ; address name
     call PauseMenu_State3_BuildScreenBlocks21To24
     ld hl, wTemp1
@@ -7075,7 +7075,7 @@ Jump_003_6D90:: ; address name
 ; entry 7 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07::
+PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep_Case07::
 Jump_003_6DA3:: ; address name
     call PauseMenu_State3_BuildScreenBlocks21To24
     ld hl, wTemp1
@@ -8270,31 +8270,31 @@ Func_003_74E2:: ; address name
     ld [de], a
     ret
 
-; entry 6 of the `rst $00` table in PauseMenu_State3
+; by wTemp1: 'Want to record your journey?', then 'Your progress has been recorded.'
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTemp1
-PauseMenu_State3_Case06::
+PauseMenu_State3_RecordJourney::
 Jump_003_74EF:: ; address name
     ld a, [wTemp1]
     rst $00
-    dw PauseMenu_State3_Case06_ShowMaster
-    dw PauseMenu_State3_Case06_LoadScreenBlock2B
-    dw PauseMenu_State3_Case06_UpdateMenuCursor
-    dw PauseMenu_State3_Case06_RunPauseMenuScreen
-    dw PauseMenu_State3_Case06_ShowYourProgressHasBeen
-    dw PauseMenu_State3_Case06_WriteTemp0AndTemp1
-    dw PauseMenu_State3_Case06_Case06
+    dw PauseMenu_State3_RecordJourney_ShowMaster
+    dw PauseMenu_State3_RecordJourney_LoadScreenBlock2B
+    dw PauseMenu_State3_RecordJourney_UpdateMenuCursor
+    dw PauseMenu_State3_RecordJourney_RunPauseMenuScreen
+    dw PauseMenu_State3_RecordJourney_ShowYourProgressHasBeen
+    dw PauseMenu_State3_RecordJourney_WriteTemp0AndTemp1
+    dw PauseMenu_State3_RecordJourney_Case06
 
-; entry 0 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 0 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ; writes: hSpriteWindowClipMode, wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wStringCategory, wStringIndex, wScreenTileBuffer
 ; points at: wTemp1
-PauseMenu_State3_Case06_ShowMaster::
+PauseMenu_State3_RecordJourney_ShowMaster::
 Jump_003_7501:: ; address name
     xor a, a
     ldh [hSpriteWindowClipMode], a
-    call PauseMenu_State3_Case06_Case00_CopyBlockToTileBuffer
+    call PauseMenu_State3_RecordJourney_Case00_CopyBlockToTileBuffer
     ld a, [wTextWindowTileLo]
     ld l, a
     ld a, [wTextWindowTileHi]
@@ -8338,19 +8338,19 @@ Jump_003_7501:: ; address name
     ld a, $25
     ld [wStringIndex], a ; 'Want to record your journey?'
     farcall BeginStringDisplay_Bank37
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     ld hl, wTemp1
     inc [hl]
     ret
 
-; entry 1 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 1 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags
 ; writes: wMenuRowCount, wMenuPageCount, wSubMenuCursor
 ; points at: wTemp1
-PauseMenu_State3_Case06_LoadScreenBlock2B::
+PauseMenu_State3_RecordJourney_LoadScreenBlock2B::
 Jump_003_7571:: ; address name
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     ld a, [wTextFlags]
     or a, a
     ret nz
@@ -8373,12 +8373,12 @@ Jump_003_7571:: ; address name
     inc [hl]
     ret
 
-; entry 2 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 2 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wJoypadPressed, wSubMenuCursor, wModeState
 ; writes: wPauseMenuScreen, wTemp0, wTemp1
 ; points at: wSubMenuCursor, wTemp1, wScreenTileBuffer
-PauseMenu_State3_Case06_UpdateMenuCursor::
+PauseMenu_State3_RecordJourney_UpdateMenuCursor::
 Jump_003_75A4:: ; address name
     ld hl, wSubMenuCursor
     ld de, PauseMenu_Items_UseItem_UpdateMenuCursor_Case1D_Data
@@ -8395,7 +8395,7 @@ Jump_003_75A4:: ; address name
     ld a, [wSubMenuCursor]
     and a, $01
     jr nz, .loop
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     xor a, a
     ld [wPauseMenuScreen], a
     ld hl, wTemp1
@@ -8405,7 +8405,7 @@ Jump_003_75A4:: ; address name
 .loop:
     ld a, [wModeState]
     bit 3, a
-    jr nz, PauseMenu_State3_Case06_Case06_Skip
+    jr nz, PauseMenu_State3_RecordJourney_Case06_Skip
     xor a, a
     ld [wTemp0], a
     ld [wTemp1], a
@@ -8414,16 +8414,16 @@ Jump_003_75A4:: ; address name
 .check_bit1:
     bit 1, a
     jr nz, .loop
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     ret
 
-; entry 3 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 3 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wPauseMenuScreen
 ; points at: wTemp1
-PauseMenu_State3_Case06_RunPauseMenuScreen::
+PauseMenu_State3_RecordJourney_RunPauseMenuScreen::
 Jump_003_75EE:: ; address name
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     call RunPauseMenuScreen
     ld a, [wPauseMenuScreen]
     cp a, $04
@@ -8432,13 +8432,13 @@ Jump_003_75EE:: ; address name
     inc [hl]
     ret
 
-; entry 4 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 4 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wStringCategory, wStringIndex
 ; points at: wTemp1
-PauseMenu_State3_Case06_ShowYourProgressHasBeen::
+PauseMenu_State3_RecordJourney_ShowYourProgressHasBeen::
 Jump_003_75FF:: ; address name
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     ld a, $00
     ld [wStringCategory], a
     ld a, $26
@@ -8448,35 +8448,35 @@ Jump_003_75FF:: ; address name
     inc [hl]
     ret
 
-; entry 5 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 5 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wTextFlags, wModeState
 ; writes: wTemp0, wTemp1
 ; points at: wScreenTileBuffer
-PauseMenu_State3_Case06_WriteTemp0AndTemp1::
+PauseMenu_State3_RecordJourney_WriteTemp0AndTemp1::
 Jump_003_7617:: ; address name
     ld a, [wTextFlags]
     or a, a
     jr z, .check_mode_state
-    call PauseMenu_State3_WriteRAMGAndRAMBEtc
+    call PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc
     ret
 
 .check_mode_state:
     ld a, [wModeState]
     bit 3, a
-    jr nz, PauseMenu_State3_Case06_Case06_Skip
+    jr nz, PauseMenu_State3_RecordJourney_Case06_Skip
     xor a, a
     ld [wTemp0], a
     ld [wTemp1], a
     ret
 
-; entry 6 of the `rst $00` table in PauseMenu_State3_Case06
+; entry 6 of the `rst $00` table in PauseMenu_State3_RecordJourney
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_State3_Case06_Case06::
+PauseMenu_State3_RecordJourney_Case06::
 Jump_003_7630:: ; address name
     jp BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts
 
-PauseMenu_State3_Case06_Case06_Skip::
+PauseMenu_State3_RecordJourney_Case06_Skip::
 Jump_003_7633:: ; address name
     ld bc, $0240
     ld hl, wScreenTileBuffer
@@ -8487,11 +8487,11 @@ Jump_003_7633:: ; address name
     ld [wTemp1], a
     ret
 
-; only called from routines of PauseMenu_State3 (E-0098)
-; 7 call sites from 6 routines (e.g. PauseMenu_State3_Case06_WriteTemp0AndTemp1, PauseMenu_State3_Case06_ShowYourProgressHasBeen, PauseMenu_State3_Case06_RunPauseMenuScreen, PauseMenu_State3_Case06_UpdateMenuCursor, ...)
+; only called from routines of PauseMenu_State3_RecordJourney (E-0098)
+; 7 call sites from 6 routines (e.g. PauseMenu_State3_RecordJourney_WriteTemp0AndTemp1, PauseMenu_State3_RecordJourney_ShowYourProgressHasBeen, PauseMenu_State3_RecordJourney_RunPauseMenuScreen, PauseMenu_State3_RecordJourney_UpdateMenuCursor, ...)
 ; reads: wBattlerRecords, wTitleByte0A
 ; writes: rRAMG, rRAMB, hSpriteSetIndex, hSpriteSubIndex, hSpriteTileOffset, hSpriteAttrXor, hSpriteOriginX, hSpriteOriginXHi, ...
-PauseMenu_State3_WriteRAMGAndRAMBEtc::
+PauseMenu_State3_RecordJourney_WriteRAMGAndRAMBEtc::
 Func_003_7647:: ; address name
     ld a, $0A
     ld [rRAMG], a
@@ -8580,7 +8580,7 @@ Func_003_76C9:: ; address name
     ret
 
 ; only called from routines of PauseMenu_State3 (E-0098)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_WriteMenuRowCountAndMenuPageCount, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep_Case07, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared03AndStep)
 ; reads: wSubMenuCursor
 PauseMenu_State3_BuildScreenBlocks21To24::
 Func_003_76D5:: ; address name
@@ -8665,10 +8665,10 @@ Func_003_7763:: ; address name
     farcall CopyBlockToTileBuffer
     ret
 
-; only called from PauseMenu_State3_Case06_Case00 (E-0047)
-; 1 call site from 1 routine (e.g. PauseMenu_State3_Case06_ShowMaster)
+; only called from PauseMenu_State3_RecordJourney_Case00 (E-0047)
+; 1 call site from 1 routine (e.g. PauseMenu_State3_RecordJourney_ShowMaster)
 ; reads: wMenuSelectedMember
-PauseMenu_State3_Case06_Case00_CopyBlockToTileBuffer::
+PauseMenu_State3_RecordJourney_Case00_CopyBlockToTileBuffer::
 Func_003_776C:: ; address name
     ld e, $2A
     farcall CopyBlockToTileBuffer
@@ -8683,7 +8683,7 @@ Func_003_776C:: ; address name
     ret
 
 ; copies screen block $2B into the tile buffer (E-0114)
-; 2 call sites from 2 routines (e.g. PauseMenu_State3_Case06_LoadScreenBlock2B, PauseMenu_Items_UseItem_LoadScreenBlock2B)
+; 2 call sites from 2 routines (e.g. PauseMenu_State3_RecordJourney_LoadScreenBlock2B, PauseMenu_Items_UseItem_LoadScreenBlock2B)
 LoadScreenBlock2B::
 Func_003_7791:: ; address name
     ld e, $2B
@@ -8744,7 +8744,7 @@ Func_003_779A:: ; address name
     ld a, h
     ld [wTextWindowTileHi], a
     ld a, [de]
-    call PauseMenu_State3_Shared06_Sub01
+    call PauseMenu_State3_Shared05_Sub01
     cp a, $FF
     jr z, .set_string_category_to_06
     and a, $3F
@@ -8822,9 +8822,9 @@ Func_003_779A:: ; address name
     ld [wTextWindowWidth], a
     ret
 
-; only called from PauseMenu_State3_Shared06 (E-0047)
+; only called from PauseMenu_State3_Shared05 (E-0047)
 ; 1 call site from 1 routine (e.g. PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc)
-PauseMenu_State3_Shared06_Sub01::
+PauseMenu_State3_Shared05_Sub01::
 Func_003_7880:: ; address name
     push af
     cp a, $FF
@@ -8847,7 +8847,7 @@ Func_003_7880:: ; address name
 .skip:
     push af
     ld a, c
-    ld hl, PauseMenu_State3_Shared06_Sub01_Data
+    ld hl, PauseMenu_State3_Shared05_Sub01_Data
     add a, a
     add_a_to_hl
     deref_hl
@@ -8871,8 +8871,8 @@ PauseMenu_State3_WriteTextWindowRowsAndTextWindowWidthEtc_Data:: ; heuristic: po
 Data_003_78B9:: ; address name
     db $40, $94, $00, $95, $C0, $95, $80, $96, $40, $97
 
-; address loaded by PauseMenu_State3_Shared06_Sub01
-PauseMenu_State3_Shared06_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
+; address loaded by PauseMenu_State3_Shared05_Sub01
+PauseMenu_State3_Shared05_Sub01_Data:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_003_78C3:: ; address name
     db $46, $99, $86, $99, $C6, $99, $06, $9A
 

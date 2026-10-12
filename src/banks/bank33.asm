@@ -4133,7 +4133,7 @@ Func_033_7037:: ; address name
     db $11, $4C, $70, $CD, $FE, $25, $C9
 
 ; Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; 7 call sites from 7 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0E_ShowSwitchWhichEgg, GameMode6_Update_Case0F_ShowInfoOKYesN, ...)
+; 7 call sites from 7 routines (e.g. GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN, GameMode6_Update_Case0E_ShowInfoOKYesN, GameMode6_Update_Case0E_ShowSwitchWhichEgg, GameMode6_Update_SwitchMonster_ShowInfoOKYesN, ...)
 ShowString_Bank33_7045::
 Func_033_7045:: ; address name
     call BeginStringDisplay_Bank33_7037
