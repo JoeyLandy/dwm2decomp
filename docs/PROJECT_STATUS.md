@@ -55,7 +55,31 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-12, after E-0276)
+## Readability state (2026-10-12, after E-0291)
+
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run393). Tests: 173 run, 3 skipped. The figures below are measured from the generated `src/`:
+
+| Measure | State |
+| --- | --- |
+| Labels with only an address name (routines, branch targets, data) | 0. `tools/rank_unnamed.py` reports 0 routines; there is no primary `Func_`/`Jump_`/`Data_` label left. Address names remain as aliases under the names. |
+| RAM operands with only an address name | 0 (`tools/rank_unnamed.py --ram`) |
+| Branch targets | 13,086 former `Jump_BBB_AAAA` targets now have names (E-0287). Each is named by its shape: `.loop`, `.done`, `.return`, `.return_01`, `.set_sprite_slot_count`, `.check_script_param0`, `.call_queue_music`, `.next`, `.skip`, and so on. A target used by one routine is an RGBDS local label; 12,485 of them are local. A target shared by several routines is a global `<Routine>_<Shape>`. |
+| Global labels with a structural part (`_CaseNN`/`_SubNN`/`_SharedNN`) | 2,820 of 33,238, down from about 4,270. The generator leaves 249 labels structural, 151 of them dispatchers whose cases inherit their name. 1,012 labels sit under those dispatchers. |
+| Dispatchers named by reading (E-0276, E-0288) | Talk categories by region: Field, GreatLog, Kalka, Yold, Norden, Fhunt, Darck, ElvenVillage, KeyWorld, Readable. Menu flows: BreedMenu_ChooseParents, PriestMenu_PayForService, PauseMenu_Items_UseItem, and others. Battle phases: BattleEnd_GainExperience, RunBattleSetup_FleeCommand, RunBattleActions_UseItem, and others. |
+| Event scripts | Every command type is a named constant. This includes the field and key-world talk events $80-$A1: StepTriggerReward, PartyDefeatedReturn, HealPartyEvent, KeyWorldBossBattle, and the rest (E-0286). |
+| Monster record fields | src/records.inc (E-0290, E-0291) has `MON_*` constants for 21 offsets: state, name, species, family, sex, second name, skills, skill list, status, level, EXP, HP, max HP, MP, max MP, ATK, DEF, AGL, INT, personality, item. 416 `ld c, $NN` loads before record-access routines use them. |
+| `INCBIN` without an asset comment | 1 slice of 359 bytes: SGBPacketSet18 (17:5D79). Only its first 64 bytes are identified (E-0289). |
+| Battle results | ComputeBattleResultRank and ApplyBattleResultStatChanges are read, with their threshold and adjustment tables (E-0289). |
+
+Most names are C1 readings, and many describe mechanics rather than game meaning. Still open:
+- 151 dispatchers keep structural names. The largest is RollCounterChanceAndRunEvent_Sub01, with 75 cases that change wTopStat1 and wFamilyScores; its meaning is not established.
+- Monster record bytes not yet read: $19-$33, $57, $6B, $6D, $6E, $73-$A3.
+- Species records beyond family and EXP curve.
+- MonsterTable bytes 6-9.
+- Object slot bytes 0 and $F.
+- Which sex value bit 0 of $0E stands for.
+
+## Readability state (2026-10-12, after E-0276; superseded above)
 
 Binary identity passes (SHA-256 `8e38a742...766d4e`, 0 differing bytes, build/run357; 160 tests, 3 skipped). Measured from the generated `src/`:
 
