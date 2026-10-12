@@ -4220,7 +4220,7 @@ Jump_014_5DE0:: ; address name
     ld a, [wArg2]
     or a, a
     jr z, Jump_014_5E10
-    ld hl, Data_014_5EAF
+    ld hl, SpriteSlotsInit_14_5EAF
 
 Jump_014_5E10::
     ld de, wSpriteSlots
@@ -4315,9 +4315,11 @@ Data_014_5E99:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_014_5E9F:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $08, $08, $04, $00, $00, $00, $00, $08, $08, $04, $00, $00
 
-; address loaded by RunNameEntryStateWhenNotFading_Case00_Case03
-Data_014_5EAF:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00
+; E-0264 (derived: Func_014_5E8C copies these 16 bytes to wSpriteSlots)
+; record: 16 bytes copied to wSpriteSlots
+SpriteSlotsInit_14_5EAF::
+Data_014_5EAF:: ; address name
+    db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00 ; entry 0
 
 ; entry 4 of the `rst $00` table in RunNameEntryStateWhenNotFading_Case00
 ; no direct call (reached through a table, a jump or a vector)

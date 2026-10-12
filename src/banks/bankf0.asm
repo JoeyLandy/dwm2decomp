@@ -5056,7 +5056,7 @@ Func_0F0_67EE:: ; address name
     jr Jump_0F0_67FE
 
 Jump_0F0_67FB::
-    ld hl, Data_0F0_6A18
+    ld hl, SpriteSlotsInit_F0_6A18
 
 Jump_0F0_67FE::
     ld de, wSpriteSlots
@@ -5069,7 +5069,7 @@ Jump_0F0_67FE::
     jr Jump_0F0_6814
 
 Jump_0F0_6811::
-    ld hl, Data_0F0_6A38
+    ld hl, Object1Init_F0_6A38
 
 Jump_0F0_6814::
     ld de, wObject1
@@ -5117,7 +5117,7 @@ Jump_0F0_6848::
     ld a, [wArg1]
     and a, a
     jr z, Jump_0F0_68D3
-    ld hl, Data_0F0_6A48
+    ld hl, Object2Init_F0_6A48
     ld de, wObject2
     ld b, $10
     call CopyBytesDEFromHL_BankF0
@@ -5222,21 +5222,27 @@ Data_0F0_6A02:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F0_6A08:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
-; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
-Data_0F0_6A18:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00
+; E-0264 (derived: Func_0F0_68DF copies these 16 bytes to wSpriteSlots)
+; record: 16 bytes copied to wSpriteSlots
+SpriteSlotsInit_F0_6A18::
+Data_0F0_6A18:: ; address name
+    db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
 Data_0F0_6A28:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
-; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
-Data_0F0_6A38:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $01, $00, $F0, $40, $01, $03, $10, $00, $00, $F0, $40, $04, $00, $00
+; E-0264 (derived: Func_0F0_68DF copies these 16 bytes to wObject1)
+; record: 16 bytes copied to wObject1
+Object1Init_F0_6A38::
+Data_0F0_6A38:: ; address name
+    db $00, $01, $01, $00, $F0, $40, $01, $03, $10, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
 
-; address loaded by Run67EEWithArg1ForF0ScreenKind_Sub01
-Data_0F0_6A48:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
+; E-0264 (derived: Func_0F0_68DF copies these 16 bytes to wObject2)
+; record: 16 bytes copied to wObject2
+Object2Init_F0_6A48::
+Data_0F0_6A48:: ; address name
+    db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by RunLinkSession8Exchange_Case01_Sub01_Table5_Case09
 Data_0F0_6A58:: ; heuristic: pointer load in the same bank (bank assumed); C0

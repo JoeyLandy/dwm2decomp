@@ -378,7 +378,12 @@ Jump_00F_423E::
     ld hl, wScriptStep
     inc [hl]
     ret
-    db $DE, $67, $1F, $33, $3C, $12, $00, $00
+
+; E-0264 (derived: Func_000_0952 copies these 8 bytes to wOBJPaletteBuffer + $20)
+; record: 8 bytes copied to wOBJPaletteBuffer + $20
+OBJPaletteBufferPlus20Init_0F_425E::
+Data_00F_425E:: ; address name
+    db $DE, $67, $1F, $33, $3C, $12, $00, $00 ; entry 0
 
 ; entry 40 of the `rst $00` table in SceneHomecoming
 ; no direct call (reached through a table, a jump or a vector)

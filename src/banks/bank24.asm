@@ -3579,13 +3579,13 @@ Func_024_568E:: ; address name
     jr Jump_024_569E
 
 Jump_024_569B::
-    ld hl, Data_024_5BF9
+    ld hl, SpriteSlotsInit_24_5BF9
 
 Jump_024_569E::
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_Bank24
-    ld hl, Data_024_5C09
+    ld hl, Object1Init_24_5C09
     ld de, wObject1
     ld b, $10
     call CopyBytesDEFromHL_Bank24
@@ -3645,7 +3645,7 @@ Jump_024_5713::
     jr Jump_024_572D
 
 Jump_024_572A::
-    ld hl, Data_024_5C29
+    ld hl, Object2Init_24_5C29
 
 Jump_024_572D::
     ld de, wObject2
@@ -3885,21 +3885,27 @@ Data_024_5BE3:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_024_5BE9:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $A0, $40, $04, $03, $00, $00, $00, $A0, $40, $04, $00, $00
 
-; address loaded by GameMode6_Update_Shared07
-Data_024_5BF9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $01, $00, $A0, $40, $01, $03, $00, $00, $00, $A0, $40, $04, $00, $00
+; E-0264 (derived: Func_024_578B copies these 16 bytes to wSpriteSlots)
+; record: 16 bytes copied to wSpriteSlots
+SpriteSlotsInit_24_5BF9::
+Data_024_5BF9:: ; address name
+    db $00, $01, $01, $00, $A0, $40, $01, $03, $00, $00, $00, $A0, $40, $04, $00, $00 ; entry 0
 
-; address loaded by GameMode6_Update_Shared07
-Data_024_5C09:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $0C, $00, $E0, $40, $05, $01, $10, $00, $00, $E0, $40, $04, $00, $00
+; E-0264 (derived: Func_024_578B copies these 16 bytes to wObject1)
+; record: 16 bytes copied to wObject1
+Object1Init_24_5C09::
+Data_024_5C09:: ; address name
+    db $00, $01, $0C, $00, $E0, $40, $05, $01, $10, $00, $00, $E0, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by GameMode6_Update_Shared07
 Data_024_5C19:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $00, $00, $00, $D0, $40, $02, $01, $20, $00, $00, $D0, $40, $04, $00, $00
 
-; address loaded by GameMode6_Update_Shared07
-Data_024_5C29:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00
+; E-0264 (derived: Func_024_578B copies these 16 bytes to wObject2)
+; record: 16 bytes copied to wObject2
+Object2Init_24_5C29::
+Data_024_5C29:: ; address name
+    db $00, $00, $00, $00, $B0, $40, $02, $03, $20, $00, $00, $B0, $40, $04, $00, $00 ; entry 0
 
 ; only called from GameMode6_Update_Case02_Case08 (E-0047)
 ; 1 call site from 1 routine (e.g. GameMode6_Update_Case02_Case08)

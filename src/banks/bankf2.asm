@@ -395,7 +395,7 @@ Func_0F2_4248:: ; address name
     jr Jump_0F2_4258
 
 Jump_0F2_4255::
-    ld hl, Data_0F2_430E
+    ld hl, SpriteSlotsInit_F2_430E
 
 Jump_0F2_4258::
     ld de, wSpriteSlots
@@ -408,7 +408,7 @@ Jump_0F2_4258::
     jr Jump_0F2_426E
 
 Jump_0F2_426B::
-    ld hl, Data_0F2_432E
+    ld hl, Object1Init_F2_432E
 
 Jump_0F2_426E::
     ld de, wObject1
@@ -493,17 +493,21 @@ Data_0F2_42F2:: ; heuristic: pointer load in the same bank (bank assumed); C0
 Data_0F2_42FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $00, $00, $F0, $40, $04, $01, $00, $00, $00, $F0, $40, $04, $00, $00
 
-; address loaded by GameMode8_Update_Case00_Sub01
-Data_0F2_430E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00
+; E-0264 (derived: Func_0F2_42D9 copies these 16 bytes to wSpriteSlots)
+; record: 16 bytes copied to wSpriteSlots
+SpriteSlotsInit_F2_430E::
+Data_0F2_430E:: ; address name
+    db $00, $01, $01, $00, $F0, $40, $01, $01, $00, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
 
 ; address loaded by GameMode8_Update_Case00_Sub01
 Data_0F2_431E:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00
 
-; address loaded by GameMode8_Update_Case00_Sub01
-Data_0F2_432E:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00
+; E-0264 (derived: Func_0F2_42D9 copies these 16 bytes to wObject1)
+; record: 16 bytes copied to wObject1
+Object1Init_F2_432E::
+Data_0F2_432E:: ; address name
+    db $00, $01, $0C, $00, $F0, $40, $05, $03, $10, $00, $00, $F0, $40, $04, $00, $00 ; entry 0
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)

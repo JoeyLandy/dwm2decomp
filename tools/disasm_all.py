@@ -2344,6 +2344,77 @@ class Rom:
                 added += 1
         log(f"key-world screen gaps tiled: {gaps} ({added} streams)")
 
+    # (name prefix, source register, destination register, count register)
+    COPIERS = [("CopyBytesDEFromHL", "hl", "de", "b"), ("CopyBBytesHLToDE", "hl", "de", "b"),
+               ("CopyBytesDEToHL", "de", "hl", "bc"), ("CopyBBytesDEToHL", "de", "hl", "b"),
+               ("CopyBytes", "hl", "de", "bc")]
+
+    def add_copy_source_blocks(self) -> None:
+        """E-0264: a block a copier (COPIERS) copies from a constant same-bank address to a RAM symbol,
+        with a constant count, is laid out as <RamName>Init_BB_AAAA, count bytes, when it is free."""
+        copiers: dict[tuple[int, int], tuple[str, str, str]] = {}
+        for k, info in self.names.items():
+            if info.get("data"):
+                continue
+            for pre, src, dst, cnt in self.COPIERS:
+                if info["name"] == pre or info["name"].startswith(pre + "_Bank"):
+                    copiers[k] = (src, dst, cnt)
+                    break
+        if not copiers:
+            return
+        # byte-identical copies of a named copier (named only later by name_copies) behave the same
+        pats = {}
+        for (b, a), regs in list(copiers.items()):
+            if (size := self.routine_extent(b, a)):
+                pats[self.data[b * BANK - self.base(b) + a:b * BANK - self.base(b) + a + size]] = regs
+        for b in range(self.nbanks):
+            for a in self.labels[b]:
+                if (b, a) in copiers or a not in self.insn[b]:
+                    continue
+                off = b * BANK - self.base(b) + a
+                for pat, regs in pats.items():
+                    if self.data[off:off + len(pat)] == pat and self.routine_extent(b, a) == len(pat):
+                        copiers[(b, a)] = regs
+                        break
+        taken = [(t["bank"], t["addr"], t["addr"] + t.get("tail", 0) + t["count"] * sum(
+            2 if f["type"] == "ptr" else f.get("size", 1) for f in t["fields"])) for t in self.schemas]
+        made = 0
+        for cb in range(1, self.nbanks):
+            ins = self.insn[cb]
+            order = sorted(a for a, v in ins.items() if v[0] != "dw")
+            for k, a in enumerate(order):
+                v = ins[a]
+                if v[2] != "call" or v[3] is None or (r := self.resolve(cb, v[3])) not in copiers:
+                    continue
+                src, dst, cnt = copiers[r]
+                regs: dict[str, int] = {}
+                for x in reversed(order[max(0, k - 5):k]):
+                    if ins[x][2] in SETUP_BARRIER:
+                        break
+                    m = re.match(r"ld (hl|de|bc|b), \$([0-9A-F]{2,4})$", ins[x][1])
+                    if m and m.group(1) not in regs:
+                        regs[m.group(1)] = int(m.group(2), 16)
+                n = regs.get(cnt) if cnt in regs else (regs["bc"] >> 8 if cnt == "b" and "bc" in regs else None)
+                s_, d_ = regs.get(src), regs.get(dst)
+                if not (n and s_ and d_) or not 0x4000 <= s_ < 0x8000 or not 0xC000 <= d_ < 0xE000 or n > 0x100:
+                    continue
+                cur = self.dlabels[cb].get(s_)
+                if (cur and not cur.startswith("Data_")) or any(b == cb and lo < s_ + n and s_ < hi for b, lo, hi in taken) \
+                        or any(q in self.covered[cb] for q in range(s_, s_ + n)) \
+                        or any(q in self.dlabels[cb] for q in range(s_ + 1, s_ + n)):
+                    continue
+                sym = self.sym_name(d_, True) or f"w{d_:04X}"
+                stem = re.sub(r"[^A-Za-z0-9]", "", sym.replace(" + $", "Plus"))
+                stem = stem[1:] if stem[:1] in "wh" else stem
+                taken.append((cb, s_, s_ + n))
+                self.schemas.append({"bank": cb, "addr": s_, "label": f"{stem}Init_{cb:02X}_{s_:04X}", "count": 1,
+                                     "fields": [{"type": "db", "size": n, "line": True,
+                                                 "name": f"{n} bytes copied to {sym}"}],
+                                     "note": f"E-0264 (derived: {self.labels[r[0]].get(r[1], 'a copier')} copies these "
+                                             f"{n} bytes to {sym})"})
+                made += 1
+        log(f"copy source blocks derived: {made}")
+
     def add_tile_upload_runs(self) -> None:
         """E-0238: `ld hl, n` followed by k calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*,
         which advances HL and DE), with only `ld de, n` between the calls, uploads k tiles from n."""
@@ -3854,6 +3925,7 @@ class Rom:
         self.add_string_table_schemas()
         self.add_tile_copy_lists()
         self.add_tile_upload_runs()
+        self.add_copy_source_blocks()
         self.add_rect_record_schemas()
         self.prepare_object_selectors()
         self.prepare_tables()

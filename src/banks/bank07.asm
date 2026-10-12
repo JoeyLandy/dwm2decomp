@@ -1992,7 +1992,12 @@ Data_007_589C:: ; address name
     db $B6, $15, $24, $22, $21, $C3, $10, $1D, $20, $1D, $23, $C3, $C3, $C5, $C3, $C3, $C6, $B7 ; row 2
     db $B6, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $C3, $B7 ; row 3
     db $B3, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B4, $B5 ; row 4
-    db $DE, $67, $1F, $33, $3C, $12, $00, $00
+
+; E-0264 (derived: Func_000_0952 copies these 8 bytes to wOBJPaletteBuffer + $20)
+; record: 8 bytes copied to wOBJPaletteBuffer + $20
+OBJPaletteBufferPlus20Init_07_58FA::
+Data_007_58FA:: ; address name
+    db $DE, $67, $1F, $33, $3C, $12, $00, $00 ; entry 0
 
 ; entry 0 of the `rst $00` table in GameMode5_Update
 ; no direct call (reached through a table, a jump or a vector)

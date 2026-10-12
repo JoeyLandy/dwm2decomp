@@ -2430,6 +2430,16 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0264 — Blocks copied into RAM, named after their destination
+
+- Kind: TOOL (derived from call sites; C1).
+- add_copy_source_blocks looks at each call to a copier whose registers are known:
+  - CopyBytes (HL to DE, BC bytes), CopyBytesDEFromHL and CopyBBytesHLToDE (HL to DE, B bytes), CopyBytesDEToHL (DE to HL, BC bytes) and CopyBBytesDEToHL (DE to HL, B bytes);
+  - byte-identical copies in other banks count too.
+- When the five instructions before the call load a constant same-bank source, a RAM destination and a constant count, the source is laid out as `<RamName>Init_BB_AAAA` with that many bytes, for example SpriteSlotsInit_F0_6A18, Object1Init_..., OBJPaletteBufferPlus20Init_07_58FA. Sources that overlap another layout or carry a label inside are skipped.
+- 11 blocks are laid out. A source loaded before a `jr` to a shared copy is only seen on the fall-through path.
+- Binary verification: build/run344 PASS, 0 differing bytes; tests OK.
+
 ### E-0263 — Encounter words name their monsters
 
 - Kind: OBSERVATION (reading; C1) and TOOL.
