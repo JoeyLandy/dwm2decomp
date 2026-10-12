@@ -4386,18 +4386,18 @@ RunScreenCounterStep_61A7::
 Func_01B_61A7:: ; address name
     ld a, [wScreenCounter]
     rst $00
-    dw RunScreenCounterStep_61A7_Case00
-    dw RunScreenCounterStep_61A7_Case01
-    dw RunScreenCounterStep_61A7_Case00
-    dw RunScreenCounterStep_61A7_Case01
-    dw RunScreenCounterStep_61A7_Case00
+    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBC3
+    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBBC
+    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBC3
+    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBBC
+    dw WriteTileBAtBGMap20FPlusGlyphListStartWithBC3
     dw RunScreenCounterStep_61A7_Case05
 
 ; entry 0 of the `rst $00` table in RunScreenCounterStep_61A7
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGlyphListStart, wScreenCounter
 ; writes: wScreenCounter
-RunScreenCounterStep_61A7_Case00::
+WriteTileBAtBGMap20FPlusGlyphListStartWithBC3::
 Jump_01B_61B7:: ; address name
     ld b, $C3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
@@ -4406,7 +4406,7 @@ Jump_01B_61B7:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wGlyphListStart, wScreenCounter
 ; writes: wScreenCounter
-RunScreenCounterStep_61A7_Case01::
+WriteTileBAtBGMap20FPlusGlyphListStartWithBBC::
 Jump_01B_61BB:: ; address name
     ld b, $BC
 

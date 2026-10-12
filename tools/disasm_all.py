@@ -1453,6 +1453,35 @@ class Rom:
                 self.labels[b][a] = new
                 shown += 1
         log(f"structural steps named after the string they show: {shown}")
+        # E-0275: an entry that only loads one register with a constant and falls through, or `jr`s, into
+        # other code is that code with the register preset: <Target>With<R><n>
+        entries = 0
+        for b in range(self.nbanks):
+            ins = self.insn[b]
+            for a, lab in list(self.labels[b].items()):
+                if not pat.match(lab) or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
+                    continue
+                v = ins[a]
+                mm = re.match(r"ld (a|b|c|d|e), \$([0-9A-F]{2})$", v[1])
+                if not mm:
+                    continue
+                nxt = ins.get(a + v[0])
+                if nxt and nxt[2] == "jr" and nxt[3] is not None and "," not in nxt[1]:
+                    tgt = nxt[3]
+                elif a + v[0] in self.labels[b]:
+                    tgt = a + v[0]
+                else:
+                    continue
+                tname = self.labels[b].get(tgt)
+                if not tname or tname.startswith(("Jump_", "Func_")):
+                    continue
+                new = f"{tname}With{mm.group(1).upper()}{mm.group(2)}"
+                if new in used or len(new) > 80:
+                    continue
+                used.add(new)
+                self.labels[b][a] = new
+                entries += 1
+        log(f"register-preset entries named after the code they enter: {entries}")
 
     def rename_address_prefixed_children(self) -> None:
         """E-0245: structural names (`_CaseNN`, `_SubNN`, `_SharedNN`) are derived before
