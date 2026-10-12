@@ -1456,7 +1456,7 @@ Jump_012_4863:: ; address name
 ; reads: wArenaFlags, wArenaRank
 StartMessageFromTable48B9ByArenaRank::
 Func_012_488B:: ; address name
-    ld de, Data_012_48B9
+    ld de, ArenaRankMessageTable
     sla a
     add a, e
     ld e, a
@@ -1492,9 +1492,16 @@ Jump_012_48B4::
     call StartMessageA
     ret
 
-; address loaded by StartMessageFromTable48B9ByArenaRank
-Data_012_48B9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0488B9, $60
+; E-0237 (C1: StartMessageFromTable48B9ByArenaRank reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words).
+; record: one row per arena rank
+ArenaRankMessageTable::
+Data_012_48B9:: ; address name
+    dw $0040, $008C, $0013, $0017, $0014, $0018, $0015, $001B ; id 0
+    dw $0041, $008D, $0013, $0017, $0014, $0018, $0015, $001C ; id 1
+    dw $0042, $008E, $0013, $0017, $0014, $0018, $0015, $001D ; id 2
+    dw $0043, $008F, $0013, $0017, $0014, $0018, $0015, $001E ; id 3
+    dw $0044, $0090, $0013, $0017, $0014, $0018, $0015, $001F ; id 4
+    dw $FFFF, $FFFF, $0013, $0019, $0014, $001A, $0016, $0020 ; id 5
 
 ; implements script command type 9F; reached through ScriptCommand9F in bank $10 (E-0038)
 ; 1 call site from 1 routine (e.g. ScriptCommand9F)

@@ -4117,7 +4117,7 @@ Jump_0A0_594D::
     jr z, Jump_0A0_596E
     push hl
     ld c, a
-    ld hl, Data_0A0_597A
+    ld hl, SkillReplacementPairs
 
 Jump_0A0_5957::
     ld a, [hl]
@@ -4154,9 +4154,55 @@ Jump_0A0_5973::
     jr nz, Jump_0A0_5973
     ret
 
-; address loaded by AppendMappedSkillsToWCA67
-Data_0A0_597A:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $28197A, $5A
+; E-0237 (C1: AppendMappedSkillsToWCA67 takes each of the 8 bytes at wRecordBufB + $34 up to $FF, replaces it by the second byte of the first pair here whose first byte matches (pairs end at $FF), appends it after the last used byte of wRecordBufB + $3C, then fills the 8 bytes with $FF; 44 pairs and $FF $FF).
+; record: byte to match, replacement
+SkillReplacementPairs::
+Data_0A0_597A:: ; address name
+    db $02, $01 ; id 0
+    db $03, $01 ; id 1
+    db $05, $04 ; id 2
+    db $06, $04 ; id 3
+    db $08, $07 ; id 4
+    db $09, $07 ; id 5
+    db $0B, $0A ; id 6
+    db $0C, $0A ; id 7
+    db $0E, $0D ; id 8
+    db $0F, $0D ; id 9
+    db $11, $10 ; id 10
+    db $12, $10 ; id 11
+    db $14, $13 ; id 12
+    db $17, $16 ; id 13
+    db $18, $16 ; id 14
+    db $1A, $19 ; id 15
+    db $1C, $1B ; id 16
+    db $1D, $1B ; id 17
+    db $1F, $1E ; id 18
+    db $26, $25 ; id 19
+    db $28, $27 ; id 20
+    db $2A, $29 ; id 21
+    db $2C, $2B ; id 22
+    db $20, $2F ; id 23
+    db $37, $36 ; id 24
+    db $41, $40 ; id 25
+    db $42, $40 ; id 26
+    db $43, $40 ; id 27
+    db $45, $44 ; id 28
+    db $46, $44 ; id 29
+    db $47, $44 ; id 30
+    db $49, $48 ; id 31
+    db $4D, $4C ; id 32
+    db $4F, $4E ; id 33
+    db $64, $63 ; id 34
+    db $74, $73 ; id 35
+    db $77, $76 ; id 36
+    db $86, $85 ; id 37
+    db $87, $85 ; id 38
+    db $88, $85 ; id 39
+    db $8C, $8B ; id 40
+    db $8E, $8D ; id 41
+    db $98, $97 ; id 42
+    db $9A, $99 ; id 43
+    db $FF, $FF ; end
 
 ; entry 10 of the `rst $00` table in RunBattlePhaseWhenTextIdle_A0_Case03
 ; no direct call (reached through a table, a jump or a vector)

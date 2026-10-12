@@ -2430,6 +2430,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0237 — Action handler masks, key-world return destinations, arena messages, item order lists, shop values, skill replacement pairs
+
+- Kind: OBSERVATION (reading; C1, code entries C0).
+- **ActionHandlerMaskTable (30:$4D34, 240 words).** ActorActionDataWord reads the word for the actor's chosen action byte. RunActorActionHandlersForAISlots skips $FFFF and passes any other word to RunHandlersForSetBitsInBC. The table runs up to that routine.
+- **KeyListMapDestinationTable (02:$7006, 13 x 8).** After Jump_002_6EC7, the code indexes it with the key list byte & $3F and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from bytes 0-4. Bytes 5-7 are not read.
+- **ArenaRankMessageTable (12:$48B9, 6 x 8 words).** StartMessageFromTable48B9ByArenaRank passes the low byte at 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) to StartMessageA.
+- **ItemOrderListA/B (F2:$6526, $6586).** Each list is 95 bytes plus $FF. ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01 copies the wInventory bytes that match, in list order, to wWorkBuf. That makes these an inventory sort order.
+- **ShopPercentTable (1C:$6320, 24 bytes) and ItemValueTable (1C:$6338, 99 words).** ScriptCommandE2_Run_Shared03 computes word[DE] * byte[wScreenTableIndex] / 100, and its three callers pass DE = 2 * a wItemGrid byte. The percentages are 75, 80 and one 0.
+- **SkillReplacementPairs (A0:$597A, 44 pairs, then $FF $FF).** AppendMappedSkillsToWCA67 maps each byte at wRecordBufB + $34 through the pairs and appends it after the used bytes at wRecordBufB + $3C.
+- **Tiles_0C_4718.** ScriptCommandF6_Run_Case10_Case00 copies these 6 tiles to vTiles2 + $610.
+- **Bank $05 code ($61C4-$6226).** UnreferencedEstimateStrongestFoeHit computes the highest opposing ATK minus half the actor's DEF and subtracts it from the actor's HP, but returns C = $FF on both paths. After its `ret`, an unreachable `ld c, $00 / ret` follows (UnreferencedReturnC0_05_6223).
+- Unidentified INCBIN went from 3,690 to 2,656 bytes.
+- Binary verification: build/run294 PASS, 0 differing bytes; tests OK.
+
 ### E-0236 — Unreferenced battle routines (bank $3B), increment rows, grid encounters, talk-event word lists, listed strings as text
 
 - Kind: OBSERVATION (reading; C1, code entries C0) and TOOL.

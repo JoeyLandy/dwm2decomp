@@ -7415,7 +7415,7 @@ Jump_002_6EC7::
     add a, a
     add a, a
     add a, a
-    ld hl, Data_002_7006
+    ld hl, KeyListMapDestinationTable
     add_a_to_hl
     ld a, [hl+]
     ldh [hMapId], a
@@ -7538,9 +7538,23 @@ Jump_002_6FDE::
     ldh [hPlayerSpriteOverride], a
     ret
 
-; address loaded by RunMenuStateMenuState_Case05
-Data_002_7006:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $00B006, $68
+; E-0237 (C1: the code after Jump_002_6EC7 takes the key list byte & $3F as the index, sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from the 8-byte record at $7006 + 8 * index; 13 records).
+; record: map number, screen X, screen Y, player X, player Y; three bytes not read
+KeyListMapDestinationTable::
+Data_002_7006:: ; address name
+    db $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
+    db $05, $01, $00, $50, $30, $00, $00, $00 ; id 1
+    db $29, $00, $00, $40, $40, $00, $00, $00 ; id 2
+    db $45, $00, $00, $40, $40, $00, $00, $00 ; id 3
+    db $68, $00, $00, $40, $40, $00, $00, $00 ; id 4
+    db $9D, $00, $00, $40, $40, $00, $00, $00 ; id 5
+    db $A4, $00, $00, $40, $40, $00, $00, $00 ; id 6
+    db $AF, $00, $00, $40, $40, $00, $00, $00 ; id 7
+    db $B2, $00, $00, $40, $40, $00, $00, $00 ; id 8
+    db $C5, $00, $00, $40, $40, $00, $00, $00 ; id 9
+    db $D0, $00, $00, $40, $40, $00, $00, $00 ; id 10
+    db $D9, $00, $00, $40, $40, $00, $00, $00 ; id 11
+    db $E2, $00, $00, $40, $40, $00, $00, $00 ; id 12
 
 ; with SRAM bank 1 selected: hFFC6 = 1 when sBB00 is not the signature $55 (no save); otherwise 2 when VerifySaveBank1Checksum or VerifySaveBank3Checksum returns non-zero (damaged save), else 0 (valid); then disables SRAM (E-0109)
 ; 4 call sites from 4 routines (e.g. DebugBattleSetup_Update_Sub01, GameMode5_Init_Case01, ShowSaveFileInfoWindow, LoadSaveFileSummary)

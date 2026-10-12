@@ -18335,6 +18335,155 @@
         }
       ],
       "note": "E-0236 (C1: DispatchTalkEvent_Case05_Case47_Sub01 (unless flag 0 is set) compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear; a match sets hTemp0 to 2; 113 words; what the words identify is not read)."
+    },
+    {
+      "bank": "30",
+      "addr": "4D34",
+      "label": "ActionHandlerMaskTable",
+      "count": 240,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "name": "handler bit mask ($FFFF = none)"
+        }
+      ],
+      "note": "E-0237 (C1: ActorActionDataWord reads the word at $4D34 + 2 * the actor's chosen action byte; RunActorActionHandlersForAISlots skips $FFFF and otherwise passes it to RunHandlersForSetBitsInBC; 240 words up to that routine at $4F14)."
+    },
+    {
+      "bank": "02",
+      "addr": "7006",
+      "label": "KeyListMapDestinationTable",
+      "count": 13,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 5,
+          "name": "hMapId, hMapScreenX, hMapScreenY, hPlayerX, hPlayerY"
+        },
+        {
+          "type": "db",
+          "size": 3,
+          "name": "not read"
+        }
+      ],
+      "record": "map number, screen X, screen Y, player X, player Y; three bytes not read",
+      "note": "E-0237 (C1: the code after Jump_002_6EC7 takes the key list byte & $3F as the index, sets game mode 1 and loads hMapId, hMapScreenX, hMapScreenY, hPlayerX and hPlayerY from the 8-byte record at $7006 + 8 * index; 13 records)."
+    },
+    {
+      "bank": "12",
+      "addr": "48B9",
+      "label": "ArenaRankMessageTable",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 16,
+          "per_line": 8,
+          "name": "message indexes 0-7 (the low byte is passed to StartMessageA)"
+        }
+      ],
+      "record": "one row per arena rank",
+      "note": "E-0237 (C1: StartMessageFromTable48B9ByArenaRank reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words)."
+    },
+    {
+      "bank": "F2",
+      "addr": "6526",
+      "label": "ItemOrderListA",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "item numbers in order, $FF ends the list"
+        }
+      ],
+      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
+    },
+    {
+      "bank": "F2",
+      "addr": "6586",
+      "label": "ItemOrderListB",
+      "count": 8,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "item numbers in order, $FF ends the list"
+        }
+      ],
+      "note": "E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF)."
+    },
+    {
+      "bank": "1C",
+      "addr": "6320",
+      "label": "ShopPercentTable",
+      "count": 24,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "percentage"
+        }
+      ],
+      "note": "E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0)."
+    },
+    {
+      "bank": "1C",
+      "addr": "6338",
+      "label": "ItemValueTable",
+      "count": 99,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 2,
+          "per_line": 8,
+          "name": "value"
+        }
+      ],
+      "note": "E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE)."
+    },
+    {
+      "bank": "A0",
+      "addr": "597A",
+      "label": "SkillReplacementPairs",
+      "count": 44,
+      "id_base": 0,
+      "tail": 2,
+      "fields": [
+        {
+          "type": "db",
+          "size": 2,
+          "name": "byte to match, replacement"
+        }
+      ],
+      "note": "E-0237 (C1: AppendMappedSkillsToWCA67 takes each of the 8 bytes at wRecordBufB + $34 up to $FF, replaces it by the second byte of the first pair here whose first byte matches (pairs end at $FF), appends it after the last used byte of wRecordBufB + $3C, then fills the 8 bytes with $FF; 44 pairs and $FF $FF)."
+    },
+    {
+      "bank": "0C",
+      "addr": "4718",
+      "label": "Tiles_0C_4718",
+      "count": 6,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "tile (16 bytes, 2 bits per pixel)"
+        }
+      ],
+      "note": "E-0237 (C1: ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each)."
     }
   ]
 }

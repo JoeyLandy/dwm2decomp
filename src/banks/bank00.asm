@@ -10759,7 +10759,7 @@ Data_000_3E13:: ; address name
     db $FF, $FF
 
 ; A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)
-; 38 call sites from 35 routines (e.g. FailIfAbleAllyKnowsSkill42To47, CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, ...)
+; 39 call sites from 36 routines (e.g. UnreferencedEstimateStrongestFoeHit, FailIfAbleAllyKnowsSkill42To47, CheckSlotStatusBlockWide_Bank05, FailIfAbleAllyKnowsSkillList6D1A, ...)
 ; points at: wBattleStatus
 CheckSlotStatusBlock::
 Func_000_3E25:: ; address name
@@ -10800,7 +10800,7 @@ Jump_000_3E50::
     ret
 
 ; A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved
-; 290 call sites from 244 routines (e.g. CheckSlotStatusBlock, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, CheckLoneFoeHPNotBelowAIDamageEstimates, ...)
+; 290 call sites from 244 routines (e.g. CheckSlotStatusBlock, AnySlotLacksStatusMask, FoeHPCheckReadsWrongSlot, CheckFoeStatus7Bit2, ...)
 ; points at: wBattleSlotOut
 CarryUnlessBattleSlotOutSlotEmpty::
 Func_000_3E54:: ; address name
@@ -10835,7 +10835,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 180 call sites from 118 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FoeHPCheckReadsWrongSlot, ...)
+; 181 call sites from 119 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, UnreferencedEstimateStrongestFoeHit, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h

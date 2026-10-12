@@ -5149,12 +5149,12 @@ Func_01C_5F26:: ; address name
 ScriptCommandE2_Run_Shared03::
 Func_01C_5F3E:: ; address name
     push bc
-    ld hl, Data_01C_6320
+    ld hl, ShopPercentTable
     ld a, [wScreenTableIndex]
     add_a_to_hl
     ld a, [hl]
     push af
-    ld hl, Data_01C_6338
+    ld hl, ItemValueTable
     add hl, de
     ld c, [hl]
     inc hl
@@ -5337,16 +5337,138 @@ Data_01C_6302:: ; address name
     db $B6, $C3, $A5, $EE, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ScriptCommandE2_Run_Shared03
-Data_01C_6320:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $4B, $4B, $4B, $50, $50, $00, $50, $50, $50, $50, $50, $50, $50, $50, $50, $4B
-    db $50, $50, $50, $50, $50, $50, $50, $50
+; E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the byte at $6320 + wScreenTableIndex, multiplies the ItemValueTable word by it (Multiply8By16) and divides by 100 (Divide24ByA); values 75 and 80, one 0).
+; record: percentage
+ShopPercentTable::
+Data_01C_6320:: ; address name
+    db $4B ; id 0
+    db $4B ; id 1
+    db $4B ; id 2
+    db $50 ; id 3
+    db $50 ; id 4
+    db $00 ; id 5
+    db $50 ; id 6
+    db $50 ; id 7
+    db $50 ; id 8
+    db $50 ; id 9
+    db $50 ; id 10
+    db $50 ; id 11
+    db $50 ; id 12
+    db $50 ; id 13
+    db $50 ; id 14
+    db $4B ; id 15
+    db $50 ; id 16
+    db $50 ; id 17
+    db $50 ; id 18
+    db $50 ; id 19
+    db $50 ; id 20
+    db $50 ; id 21
+    db $50 ; id 22
+    db $50 ; id 23
 
-; address loaded by ScriptCommandE2_Run_Shared03
-Data_01C_6338:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $072338, $5D
-    ds $23, $00
-    INCBIN "dwm2-cobi-us.gbc", $0723B8, $46
+; E-0237 (C1: ScriptCommandE2_Run_Shared03 reads the word at $6338 + DE, where its three callers pass DE = 2 * a byte of wItemGrid; the word is scaled by ShopPercentTable; 99 words up to the table at $63FE).
+; record: value
+ItemValueTable::
+Data_01C_6338:: ; address name
+    dw $0000 ; id 0
+    dw $000A ; id 1
+    dw $0032 ; id 2
+    dw $01F4 ; id 3
+    dw $00C8 ; id 4
+    dw $07D0 ; id 5
+    dw $0004 ; id 6
+    dw $0014 ; id 7
+    dw $0014 ; id 8
+    dw $0014 ; id 9
+    dw $0014 ; id 10
+    dw $03E8 ; id 11
+    dw $03E8 ; id 12
+    dw $0014 ; id 13
+    dw $0014 ; id 14
+    dw $0014 ; id 15
+    dw $0014 ; id 16
+    dw $0014 ; id 17
+    dw $0014 ; id 18
+    dw $2710 ; id 19
+    dw $2710 ; id 20
+    dw $2710 ; id 21
+    dw $2710 ; id 22
+    dw $2710 ; id 23
+    dw $2710 ; id 24
+    dw $000A ; id 25
+    dw $0028 ; id 26
+    dw $00C8 ; id 27
+    dw $03E8 ; id 28
+    dw $0014 ; id 29
+    dw $1388 ; id 30
+    dw $0320 ; id 31
+    dw $0064 ; id 32
+    dw $04B0 ; id 33
+    dw $02BC ; id 34
+    dw $0320 ; id 35
+    dw $05DC ; id 36
+    dw $0BB8 ; id 37
+    dw $0FA0 ; id 38
+    dw $1388 ; id 39
+    dw $0032 ; id 40
+    dw $0019 ; id 41
+    dw $0032 ; id 42
+    dw $0032 ; id 43
+    dw $0001 ; id 44
+    dw $0001 ; id 45
+    dw $0032 ; id 46
+    dw $0000 ; id 47
+    dw $0000 ; id 48
+    dw $0000 ; id 49
+    dw $0000 ; id 50
+    dw $0000 ; id 51
+    dw $0000 ; id 52
+    dw $0000 ; id 53
+    dw $0000 ; id 54
+    dw $0000 ; id 55
+    dw $0000 ; id 56
+    dw $0000 ; id 57
+    dw $0000 ; id 58
+    dw $0000 ; id 59
+    dw $0000 ; id 60
+    dw $0000 ; id 61
+    dw $0000 ; id 62
+    dw $0000 ; id 63
+    dw $00C8 ; id 64
+    dw $01F4 ; id 65
+    dw $00C8 ; id 66
+    dw $01F4 ; id 67
+    dw $00C8 ; id 68
+    dw $01F4 ; id 69
+    dw $00C8 ; id 70
+    dw $01F4 ; id 71
+    dw $00C8 ; id 72
+    dw $01F4 ; id 73
+    dw $00C8 ; id 74
+    dw $01F4 ; id 75
+    dw $03E8 ; id 76
+    dw $03E8 ; id 77
+    dw $03E8 ; id 78
+    dw $07D0 ; id 79
+    dw $1388 ; id 80
+    dw $03E8 ; id 81
+    dw $03E8 ; id 82
+    dw $0014 ; id 83
+    dw $0000 ; id 84
+    dw $0000 ; id 85
+    dw $0000 ; id 86
+    dw $0000 ; id 87
+    dw $0000 ; id 88
+    dw $0000 ; id 89
+    dw $03E8 ; id 90
+    dw $03E8 ; id 91
+    dw $07D0 ; id 92
+    dw $07D0 ; id 93
+    dw $07D0 ; id 94
+    dw $07D0 ; id 95
+    dw $07D0 ; id 96
+    dw $07D0 ; id 97
+    dw $0000 ; id 98
 
 ; address loaded by ScriptCommandE2_Run_Case03_Case03, ScriptCommandE2_Run_Case04_Case03, ScriptCommandE5_Run_Case03_Case09
 Data_01C_63FE:: ; heuristic: pointer load in the same bank (bank assumed); C0

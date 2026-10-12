@@ -2,15 +2,15 @@ SECTION "Bank 05", ROMX[$4000], BANK[$05]
     db $05
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (E-0064)
-; 12 call sites from 11 routines (e.g. AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, AIScore_Transform_Sub01, PassIfFoeAverageDEFAtMostTwiceAllyATK, ...)
+; 13 call sites from 12 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, AIScore_Transform_Sub01, ...)
 ; points at: wBattleATK
-GetBattleATK_Bank05:: ; heuristic: follows a terminator; C0
+GetBattleATK_Bank05::
 Func_005_4001:: ; address name
     ld hl, wBattleATK
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleDEF; A = its low byte (E-0064)
-; 18 call sites from 15 routines (e.g. AIScore_Upper_Sub01_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, AIScore_BeDragon_Sub01, ...)
+; 19 call sites from 16 routines (e.g. UnreferencedEstimateStrongestFoeHit, AIScore_Upper_Sub01_Sub01_Sub01, AnyFoeHasDEFAtLeast2, AIScore_BiAttack_Sub02_Sub01, ...)
 ; points at: wBattleDEF
 GetBattleDEF_Bank05::
 Func_005_4006:: ; address name
@@ -26,7 +26,7 @@ Func_005_400B:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxMP; A = its low byte (E-0064)
-; 12 call sites from 7 routines (e.g. AIScore_BeDragon_Sub01, ActorMPBelowThreeQuarters, AIScore_Transform_Sub01, CompareMPWithThreeQuartersMax, ...)
+; 12 call sites from 7 routines (e.g. AIScore_BeDragon_Sub01, ActorMPBelowThreeQuarters, CompareMPWithThreeQuartersMax, AIScore_MPass_Sub01_Sub01, ...)
 ; points at: wBattleMaxMP
 GetBattleMaxMP_Bank05::
 Func_005_4010:: ; address name
@@ -34,7 +34,7 @@ Func_005_4010:: ; address name
     jr Jump_005_402E
 
 ; A = battle slot: HL = the word for that slot at wBattleHP; A = its low byte (E-0064)
-; 25 call sites from 21 routines (e.g. FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_Meditate_Sub01_Sub01, HPBandOfSlotTemp0, ...)
+; 26 call sites from 22 routines (e.g. UnreferencedEstimateStrongestFoeHit, FoeHPCheckReadsWrongSlot, CheckLoneFoeHPNotBelowAIDamageEstimates, AIScore_Meditate_Sub01_Sub01, ...)
 ; points at: wBattleHP
 GetBattleHP_Bank05::
 Func_005_4015:: ; address name
@@ -6775,13 +6775,91 @@ Func_005_61B1:: ; address name
 Jump_005_61C1::
     ld c, $00
     ret
-    INCBIN "dwm2-cobi-us.gbc", $0161C4, $65
+
+; C = 1 when the actor's AI mode is below 2; otherwise takes the highest ATK of the three opposing slots without a status block, subtracts half the actor's DEF (at least 1) and subtracts that from the actor's HP, but both outcomes return C = $FF; no caller found (E-0237)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleActor
+UnreferencedEstimateStrongestFoeHit:: ; configured code entry (E-0237); C0
+Func_005_61C4:: ; address name
+    ld a, [wBattleActor]
+    call ReadSlotAIModeIndexed_Bank05
+    cp a, $02
+    jr c, Jump_005_6226
+    ld a, [wBattleActor]
+    and a, $04
+    xor a, $04
+    ld c, a
+    ld b, $03
+    ld de, $FFFF
+
+Jump_005_61DB::
+    ld a, c
+    call CheckSlotStatusBlock
+    jr c, Jump_005_61EF
+    call GetBattleATK_Bank05
+    push bc
+    ld b, d
+    ld c, e
+    call CompareHLToBC
+    pop bc
+    jr nc, Jump_005_61EF
+    ld d, h
+    ld e, l
+
+Jump_005_61EF::
+    inc c
+    dec b
+    jr nz, Jump_005_61DB
+    ld a, d
+    and a, e
+    cp a, $FF
+    jr z, Jump_005_6220
+    ld a, [wBattleActor]
+    call GetBattleDEF_Bank05
+    srl h
+    rr l
+    ld a, e
+    sub a, l
+    ld e, a
+    ld a, d
+    sbc a, h
+    ld d, a
+    bit 7, a
+    jr z, Jump_005_6210
+    ld de, $0001
+
+Jump_005_6210::
+    ld a, [wBattleActor]
+    call GetBattleHP_Bank05
+    ld a, l
+    sub a, e
+    ld l, a
+    ld a, h
+    sbc a, d
+    ld h, a
+    bit 7, a
+    jr nz, Jump_005_6220
+
+Jump_005_6220::
+    ld c, $FF
+    ret
+
+; ld c, $00 / ret after UnreferencedEstimateStrongestFoeHit's ret; nothing reaches it (E-0237)
+; no direct call (reached through a table, a jump or a vector)
+UnreferencedReturnC0_05_6223:: ; configured code entry (E-0237); C0
+Func_005_6223:: ; address name
+    ld c, $00
+    ret
+
+Jump_005_6226::
+    ld c, $01
+    ret
 
 ; only called from AIScore_Curse_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Curse_Sub01)
 ; reads: wBattleActor
 ; points at: wBattleStatus
-AIScore_Curse_Sub01_Sub02::
+AIScore_Curse_Sub01_Sub02:: ; heuristic: follows a terminator; C0
 Func_005_6229:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -6830,7 +6908,7 @@ Jump_005_6264::
 ; C = $FF when an occupied ally's HP is below Func_005_6298 for it, else $00 (E-0125)
 ; 3 call sites from 3 routines (e.g. AIHealUsable, AIScore_Hustle_Sub01, AIScore_LoveRain_Sub01)
 ; reads: wBattleActor
-AnyAllyHPBelow6298::
+AnyAllyHPBelow6298:: ; heuristic: follows a terminator; C0
 Func_005_626B:: ; address name
     ld a, [wBattleActor]
     and a, $04
@@ -8476,7 +8554,7 @@ Func_005_6B07:: ; address name
     ret
 
 ; A = the byte at wDA53 + A; clobbers HL (the same 10 bytes appear in 5 banks)
-; 35 call sites from 35 routines (e.g. FailIfAbleAllyKnowsSkill42To47, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, FailIfAllyLacksMPForSkillList5AF8, ...)
+; 36 call sites from 36 routines (e.g. UnreferencedEstimateStrongestFoeHit, FailIfAbleAllyKnowsSkill42To47, FailIfAbleAllyKnowsSkillList6D1A, FailIfAbleAllyWithStatus6KnowsSkill78To92, ...)
 ; points at: wSlotAIMode
 ReadSlotAIModeIndexed_Bank05::
 Func_005_6B16:: ; address name
@@ -8686,11 +8764,11 @@ Func_005_6BF8:: ; address name
     ret
 
 ; C = slot, D = mask: walks the slot's 8 skill numbers (every other byte of the 16 bytes at wD989 + 16 * C), loading part of each skill record into hFFC6 (LoadSkillRecordPart with wD868 = 5, wD869 = 1); returns A = hFFC6 & D for the first skill with a masked bit set, else A = 0; BC kept (E-0092)
-; 8 call sites from 8 routines (e.g. AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Sub01_Sub01, AIScore_DanceShut_Sub01_Sub01, ...)
+; 8 call sites from 8 routines (e.g. AIScore_SuckAir_Sub01_Sub02, AnyActiveFoeHasSkillFlag40, AnyFoeHasSkillFlag10, AIScore_AquaWall_Sub01_Sub01, ...)
 ; reads: hTemp0
 ; writes: wBattleArg0, wBattleArg1, wBattleArg2, wBattleArg3, wRecordBuffer
 ; points at: hTemp0, wBattleSkills
-SlotHasSkillWithFlagD:: ; heuristic: follows a terminator; C0
+SlotHasSkillWithFlagD::
 Func_005_6C02:: ; address name
     push bc
     ld a, $05
@@ -9355,7 +9433,7 @@ Data_005_6F6B:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $06, $02, $06, $01, $00, $03
 
 ; A = first slot, B = slot count, HL = a status field (wBattleStatus + n), E = mask: C = $FF when some present slot in the range has (HL + 9 * slot) & E clear; C = 0 when every slot is absent or has a masked bit set (E-0071)
-; 21 call sites from 20 routines (e.g. AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Mask22, AIScore_MagicWall_Sub01_Sub01, ...)
+; 21 call sites from 20 routines (e.g. AIScore_Curse_Sub01_Sub02, AnyFoeLacksStatus2Bit3, AnyFoeLacksStatus5Bits67, AnyFoeLacksStatus2Mask22, ...)
 AnySlotLacksStatusMask::
 Func_005_6FA1:: ; address name
     ld c, a

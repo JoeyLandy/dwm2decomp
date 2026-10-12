@@ -4075,11 +4075,11 @@ Jump_0F2_6459::
     ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_6469
-    ld de, Data_0F2_6586
+    ld de, ItemOrderListB
     jr Jump_0F2_646C
 
 Jump_0F2_6469::
-    ld de, Data_0F2_6526
+    ld de, ItemOrderListA
 
 Jump_0F2_646C::
     call ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01
@@ -4097,12 +4097,12 @@ Jump_0F2_6475::
     ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_6487
-    ld de, Data_0F2_6526
+    ld de, ItemOrderListA
     ld a, $01
     jr Jump_0F2_648B
 
 Jump_0F2_6487::
-    ld de, Data_0F2_6586
+    ld de, ItemOrderListB
     xor a, a
 
 Jump_0F2_648B::
@@ -4182,12 +4182,12 @@ Jump_0F2_64CC::
     ld a, [wCounterPtr0Lo]
     and a, a
     jr nz, Jump_0F2_64DE
-    ld de, Data_0F2_6526
+    ld de, ItemOrderListA
     ld a, $01
     jr Jump_0F2_64E2
 
 Jump_0F2_64DE::
-    ld de, Data_0F2_6586
+    ld de, ItemOrderListB
     xor a, a
 
 Jump_0F2_64E2::
@@ -4249,13 +4249,31 @@ Jump_0F2_651F::
     jr nz, Jump_0F2_651F
     ret
 
-; address loaded by ScriptCommandE5_Run_Case03_Case0E_Sub03, Run64C7UnlessScreenStateIs3_Sub01
-Data_0F2_6526:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $3CA526, $60
+; E-0237 (C1: passed in DE (when wCounterPtr0Lo is not zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
+; record: item numbers in order, $FF ends the list
+ItemOrderListA::
+Data_0F2_6526:: ; address name
+    db $21, $28, $29, $2A, $2E, $1F, $20, $2B, $01, $02, $03, $04 ; id 0
+    db $05, $06, $07, $08, $09, $0A, $0B, $0C, $19, $1A, $1B, $1C ; id 1
+    db $1D, $1E, $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10 ; id 2
+    db $11, $12, $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47 ; id 3
+    db $48, $49, $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53 ; id 4
+    db $54, $55, $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F ; id 5
+    db $60, $61, $62, $22, $23, $24, $25, $26, $27, $30, $31, $32 ; id 6
+    db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
 
-; address loaded by ScriptCommandE5_Run_Case03_Case0E_Sub03, Run64C7UnlessScreenStateIs3_Sub01
-Data_0F2_6586:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $3CA586, $60
+; E-0237 (C1: passed in DE (when wCounterPtr0Lo is zero at one of the two choices) to ScriptCommandE5_Run_Case03_Case0E_Sub03_Sub01, which walks the list up to $FF and, for each byte found among the 24 wInventory bytes, appends that inventory byte to wWorkBuf; 95 item numbers and $FF).
+; record: item numbers in order, $FF ends the list
+ItemOrderListB::
+Data_0F2_6586:: ; address name
+    db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0A, $0B, $0C ; id 0
+    db $22, $23, $24, $25, $26, $27, $19, $1A, $1B, $1C, $1D, $1E ; id 1
+    db $13, $14, $15, $16, $17, $18, $0D, $0E, $0F, $10, $11, $12 ; id 2
+    db $2C, $2D, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49 ; id 3
+    db $4A, $4B, $4C, $4D, $4E, $4F, $50, $51, $52, $53, $54, $55 ; id 4
+    db $56, $57, $58, $59, $5A, $5B, $5C, $5D, $5E, $5F, $60, $61 ; id 5
+    db $62, $21, $28, $29, $2A, $2E, $1F, $20, $2B, $30, $31, $32 ; id 6
+    db $33, $34, $35, $36, $37, $38, $39, $3A, $3B, $3C, $3D, $FF ; id 7
 
 ; for each party record sets HP (field $5B) and MP (field $5F) down to their maxima when they exceed them (E-0129)
 ; 2 call sites from 2 routines (e.g. RunBattlePhaseWhenTextIdle_A0_Case03_Case00_Sub01, BattleEnd_Step7_Case02_Sub01)

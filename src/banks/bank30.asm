@@ -2277,7 +2277,7 @@ Func_030_4D25:: ; address name
     call ActorActionChoiceAddress
     ld c, [hl]
     ld b, $00
-    ld hl, Data_030_4D34
+    ld hl, ActionHandlerMaskTable
     add hl, bc
     add hl, bc
     ld a, [hl+]
@@ -2285,23 +2285,250 @@ Func_030_4D25:: ; address name
     ld c, a
     ret
 
-; address loaded by ActorActionDataWord
-Data_030_4D34:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $0C0D34, $6A
-    ds $10, $FF
-    INCBIN "dwm2-cobi-us.gbc", $0C0DAE, $56
-    ds $12, $FF
-    db $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00
-    db $04, $00, $04, $00, $FF, $FF, $10, $00, $80, $00, $04, $00, $04, $00, $04, $00
-    db $10, $00
-    ds $12, $FF
-    db $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00
-    db $04, $00, $02, $00, $20, $00, $0A, $00
-    ds $10, $FF
-    db $10, $00, $10, $00
-    ds $12, $FF
-    db $02, $00
-    ds $8A, $FF
+; E-0237 (C1: ActorActionDataWord reads the word at $4D34 + 2 * the actor's chosen action byte; RunActorActionHandlersForAISlots skips $FFFF and otherwise passes it to RunHandlersForSetBitsInBC; 240 words up to that routine at $4F14).
+; record: handler bit mask ($FFFF = none)
+ActionHandlerMaskTable::
+Data_030_4D34:: ; address name
+    dw $0041 ; id 0
+    dw $0040 ; id 1
+    dw $0040 ; id 2
+    dw $0040 ; id 3
+    dw $0040 ; id 4
+    dw $0040 ; id 5
+    dw $0040 ; id 6
+    dw $0040 ; id 7
+    dw $0040 ; id 8
+    dw $0040 ; id 9
+    dw $0040 ; id 10
+    dw $0040 ; id 11
+    dw $0040 ; id 12
+    dw $0040 ; id 13
+    dw $0040 ; id 14
+    dw $0040 ; id 15
+    dw $0040 ; id 16
+    dw $0040 ; id 17
+    dw $0040 ; id 18
+    dw $0004 ; id 19
+    dw $0004 ; id 20
+    dw $FFFF ; id 21
+    dw $0010 ; id 22
+    dw $0010 ; id 23
+    dw $0010 ; id 24
+    dw $0010 ; id 25
+    dw $0010 ; id 26
+    dw $0010 ; id 27
+    dw $0010 ; id 28
+    dw $0010 ; id 29
+    dw $0010 ; id 30
+    dw $0010 ; id 31
+    dw $FFFF ; id 32
+    dw $0010 ; id 33
+    dw $0010 ; id 34
+    dw $0010 ; id 35
+    dw $0010 ; id 36
+    dw $FFFF ; id 37
+    dw $FFFF ; id 38
+    dw $0004 ; id 39
+    dw $0004 ; id 40
+    dw $FFFF ; id 41
+    dw $FFFF ; id 42
+    dw $0004 ; id 43
+    dw $0004 ; id 44
+    dw $FFFF ; id 45
+    dw $0004 ; id 46
+    dw $0004 ; id 47
+    dw $0004 ; id 48
+    dw $FFFF ; id 49
+    dw $0004 ; id 50
+    dw $0004 ; id 51
+    dw $0004 ; id 52
+    dw $FFFF ; id 53
+    dw $FFFF ; id 54
+    dw $FFFF ; id 55
+    dw $FFFF ; id 56
+    dw $FFFF ; id 57
+    dw $FFFF ; id 58
+    dw $FFFF ; id 59
+    dw $FFFF ; id 60
+    dw $0040 ; id 61
+    dw $0040 ; id 62
+    dw $0040 ; id 63
+    dw $0040 ; id 64
+    dw $0040 ; id 65
+    dw $0040 ; id 66
+    dw $0040 ; id 67
+    dw $0040 ; id 68
+    dw $0040 ; id 69
+    dw $0040 ; id 70
+    dw $0040 ; id 71
+    dw $0040 ; id 72
+    dw $0040 ; id 73
+    dw $0040 ; id 74
+    dw $0040 ; id 75
+    dw $0040 ; id 76
+    dw $0040 ; id 77
+    dw $FFFF ; id 78
+    dw $FFFF ; id 79
+    dw $0041 ; id 80
+    dw $0041 ; id 81
+    dw $0041 ; id 82
+    dw $0041 ; id 83
+    dw $0041 ; id 84
+    dw $0041 ; id 85
+    dw $0041 ; id 86
+    dw $0041 ; id 87
+    dw $0041 ; id 88
+    dw $0041 ; id 89
+    dw $0041 ; id 90
+    dw $0041 ; id 91
+    dw $0041 ; id 92
+    dw $0041 ; id 93
+    dw $0041 ; id 94
+    dw $0041 ; id 95
+    dw $0041 ; id 96
+    dw $0041 ; id 97
+    dw $0041 ; id 98
+    dw $0041 ; id 99
+    dw $0041 ; id 100
+    dw $0041 ; id 101
+    dw $0041 ; id 102
+    dw $0041 ; id 103
+    dw $FFFF ; id 104
+    dw $FFFF ; id 105
+    dw $FFFF ; id 106
+    dw $FFFF ; id 107
+    dw $FFFF ; id 108
+    dw $FFFF ; id 109
+    dw $FFFF ; id 110
+    dw $FFFF ; id 111
+    dw $FFFF ; id 112
+    dw $0004 ; id 113
+    dw $0004 ; id 114
+    dw $0004 ; id 115
+    dw $0004 ; id 116
+    dw $0004 ; id 117
+    dw $0004 ; id 118
+    dw $0004 ; id 119
+    dw $0004 ; id 120
+    dw $0004 ; id 121
+    dw $0004 ; id 122
+    dw $FFFF ; id 123
+    dw $0010 ; id 124
+    dw $0080 ; id 125
+    dw $0004 ; id 126
+    dw $0004 ; id 127
+    dw $0004 ; id 128
+    dw $0010 ; id 129
+    dw $FFFF ; id 130
+    dw $FFFF ; id 131
+    dw $FFFF ; id 132
+    dw $FFFF ; id 133
+    dw $FFFF ; id 134
+    dw $FFFF ; id 135
+    dw $FFFF ; id 136
+    dw $FFFF ; id 137
+    dw $FFFF ; id 138
+    dw $0004 ; id 139
+    dw $0004 ; id 140
+    dw $0004 ; id 141
+    dw $0004 ; id 142
+    dw $0004 ; id 143
+    dw $0004 ; id 144
+    dw $0004 ; id 145
+    dw $0004 ; id 146
+    dw $0004 ; id 147
+    dw $0002 ; id 148
+    dw $0020 ; id 149
+    dw $000A ; id 150
+    dw $FFFF ; id 151
+    dw $FFFF ; id 152
+    dw $FFFF ; id 153
+    dw $FFFF ; id 154
+    dw $FFFF ; id 155
+    dw $FFFF ; id 156
+    dw $FFFF ; id 157
+    dw $FFFF ; id 158
+    dw $0010 ; id 159
+    dw $0010 ; id 160
+    dw $FFFF ; id 161
+    dw $FFFF ; id 162
+    dw $FFFF ; id 163
+    dw $FFFF ; id 164
+    dw $FFFF ; id 165
+    dw $FFFF ; id 166
+    dw $FFFF ; id 167
+    dw $FFFF ; id 168
+    dw $FFFF ; id 169
+    dw $0002 ; id 170
+    dw $FFFF ; id 171
+    dw $FFFF ; id 172
+    dw $FFFF ; id 173
+    dw $FFFF ; id 174
+    dw $FFFF ; id 175
+    dw $FFFF ; id 176
+    dw $FFFF ; id 177
+    dw $FFFF ; id 178
+    dw $FFFF ; id 179
+    dw $FFFF ; id 180
+    dw $FFFF ; id 181
+    dw $FFFF ; id 182
+    dw $FFFF ; id 183
+    dw $FFFF ; id 184
+    dw $FFFF ; id 185
+    dw $FFFF ; id 186
+    dw $FFFF ; id 187
+    dw $FFFF ; id 188
+    dw $FFFF ; id 189
+    dw $FFFF ; id 190
+    dw $FFFF ; id 191
+    dw $FFFF ; id 192
+    dw $FFFF ; id 193
+    dw $FFFF ; id 194
+    dw $FFFF ; id 195
+    dw $FFFF ; id 196
+    dw $FFFF ; id 197
+    dw $FFFF ; id 198
+    dw $FFFF ; id 199
+    dw $FFFF ; id 200
+    dw $FFFF ; id 201
+    dw $FFFF ; id 202
+    dw $FFFF ; id 203
+    dw $FFFF ; id 204
+    dw $FFFF ; id 205
+    dw $FFFF ; id 206
+    dw $FFFF ; id 207
+    dw $FFFF ; id 208
+    dw $FFFF ; id 209
+    dw $FFFF ; id 210
+    dw $FFFF ; id 211
+    dw $FFFF ; id 212
+    dw $FFFF ; id 213
+    dw $FFFF ; id 214
+    dw $FFFF ; id 215
+    dw $FFFF ; id 216
+    dw $FFFF ; id 217
+    dw $FFFF ; id 218
+    dw $FFFF ; id 219
+    dw $FFFF ; id 220
+    dw $FFFF ; id 221
+    dw $FFFF ; id 222
+    dw $FFFF ; id 223
+    dw $FFFF ; id 224
+    dw $FFFF ; id 225
+    dw $FFFF ; id 226
+    dw $FFFF ; id 227
+    dw $FFFF ; id 228
+    dw $FFFF ; id 229
+    dw $FFFF ; id 230
+    dw $FFFF ; id 231
+    dw $FFFF ; id 232
+    dw $FFFF ; id 233
+    dw $FFFF ; id 234
+    dw $FFFF ; id 235
+    dw $FFFF ; id 236
+    dw $FFFF ; id 237
+    dw $FFFF ; id 238
+    dw $FFFF ; id 239
 
 ; for bit numbers 0-15 in turn (BitMaskWords16): when the bit is set in BC (C for 0-7, B for 8-15), calls handler E through CallFlagBitHandlerE; stops early when a handler returns carry (E-0102)
 ; 1 call site from 1 routine (e.g. RunActorActionHandlersForAISlots)

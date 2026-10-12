@@ -1100,7 +1100,7 @@ Jump_00C_46A4:: ; address name
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, Data_00C_4718
+    ld hl, Tiles_0C_4718
     ld de, vTiles2 + $610
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
@@ -1135,9 +1135,16 @@ Jump_00C_46A4:: ; address name
     ld [wScreenSubStep], a
     ret
 
-; address loaded by ScriptCommandF6_Run_Case10_Case00
-Data_00C_4718:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $030718, $60
+; E-0237 (C1: ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C six times, 16 bytes each).
+; record: tile (16 bytes, 2 bits per pixel)
+Tiles_0C_4718::
+Data_00C_4718:: ; address name
+    db $FF, $03, $FF, $03, $FF, $03, $FF, $FF, $FF, $FF, $FF, $03, $FF, $03, $FF, $03 ; id 0
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $03, $FF, $03, $FF, $03, $FF, $03, $FF, $03 ; id 1
+    db $FF, $03, $FF, $03, $FF, $03, $FF, $03, $FF, $03, $FF, $00, $FF, $00, $FF, $00 ; id 2
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00 ; id 3
+    db $FF, $00, $FF, $00, $FF, $00, $FF, $FF, $FF, $FF, $FF, $60, $FF, $60, $FF, $60 ; id 4
+    db $FF, $60, $FF, $60, $FF, $60, $FF, $FF, $FF, $FF, $FF, $00, $FF, $00, $FF, $00 ; id 5
 
 ; entry 1 of the `rst $00` table in ScriptCommandF6_Run_Case10
 ; no direct call (reached through a table, a jump or a vector)
