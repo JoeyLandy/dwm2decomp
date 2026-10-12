@@ -2430,6 +2430,20 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0235 — Glyph tile destination lists and preset monster records (bank $0D)
+
+- Kind: OBSERVATION (reading; C1).
+- **GlyphTileDestTable0-3 ($5F89, $5FF1, $6041, $60A9) and GlyphTileDests*.** The routine ending at $5F86 picks a table by wArg5 (0, 1, 2, else $60A9) and then reads two words:
+  - the word at 2 * C in that table;
+  - then the word at 2 * wGlyphListStart in the list it points at.
+  - It returns that word as HL (a VRAM tile address), with DE = $4010 + 16 * glyph, B = $1F and C = $10, for a bank-$1F tile copy.
+  - Tables 0-2 hold four lists each, of 12, 9 and 12 words; table 3 holds one list of 12 words.
+- **PresetMonsterRecordTable ($78D6, 16 words) and PresetMonsterRecords ($78F6, 10 x $A5).** ScriptCommandF4_Run_Case04_Case13 copies $A5 bytes from the record at word [2 * wScreenTableIndex] to wRecordBufB.
+  - The last six words repeat the first.
+  - The records use the SRAM record format. Only byte 0 (E-0104) and the two names at bytes 1-10 and 15-24 (E-0034) have read meanings; both names are "???". The other bytes are kept as rows.
+- Unidentified INCBIN went from 5,677 to 4,601 bytes.
+- Binary verification: build/run290 PASS, 0 differing bytes; tests OK.
+
 ### E-0234 — Tactic offsets (bank $30), effect tile blocks (bank $3A), unreferenced frames, key-world screens after tables
 
 - Kind: OBSERVATION (reading; C1) and TOOL.

@@ -4337,19 +4337,19 @@ Func_00D_5F2C:: ; address name
     jr z, Jump_00D_5F5E
     cp a, $02
     jr z, Jump_00D_5F59
-    ld de, Data_00D_60A9
+    ld de, GlyphTileDestTable3
     jr Jump_00D_5F66
 
 Jump_00D_5F59::
-    ld de, Data_00D_6041
+    ld de, GlyphTileDestTable2
     jr Jump_00D_5F66
 
 Jump_00D_5F5E::
-    ld de, Data_00D_5FF1
+    ld de, GlyphTileDestTable1
     jr Jump_00D_5F66
 
 Jump_00D_5F63::
-    ld de, Data_00D_5F89
+    ld de, GlyphTileDestTable0
 
 Jump_00D_5F66::
     ld a, c
@@ -4379,22 +4379,129 @@ Jump_00D_5F6E::
     ld c, $10
     ret
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
-Data_00D_5F89:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $035F89, $68
+; E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 0).
+; record: list of VRAM tile addresses
+GlyphTileDestTable0::
+Data_00D_5F89:: ; address name
+    dw GlyphTileDests0_0 ; id 0
+    dw GlyphTileDests0_1 ; id 1
+    dw GlyphTileDests0_2 ; id 2
+    dw GlyphTileDests0_3 ; id 3
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
-Data_00D_5FF1:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $035FF1, $50
+; E-0235 (C1: list 0 of GlyphTileDestTable0; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests0_0::
+Data_00D_5F91:: ; address name
+    dw vTiles1 + $500, vTiles1 + $510, vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550 ; entry 0
+    dw vTiles1 + $560, vTiles1 + $570, vTiles1 + $580, vTiles1 + $590, vTiles1 + $5A0, vTiles1 + $5B0
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
-Data_00D_6041:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $036041, $68
+; E-0235 (C1: list 1 of GlyphTileDestTable0; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests0_1::
+Data_00D_5FA9:: ; address name
+    dw vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750 ; entry 0
+    dw vTiles1 + $760, vTiles1 + $770, vTiles1 + $780, vTiles1 + $790, vTiles1 + $7A0, vTiles1 + $7B0
 
-; address loaded by DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Sub01
-Data_00D_60A9:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    db $AB, $60, $00, $96, $10, $96, $20, $96, $30, $96, $40, $96, $50, $96, $60, $96
-    db $70, $96, $80, $96, $90, $96, $A0, $96, $B0, $96
+; E-0235 (C1: list 2 of GlyphTileDestTable0; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests0_2::
+Data_00D_5FC1:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290 ; entry 0
+    dw vTiles1 + $2A0, vTiles1 + $2B0, vTiles1 + $2C0, vTiles1 + $6E0, vTiles1 + $6F0, vTiles1 + $7C0
+
+; E-0235 (C1: list 3 of GlyphTileDestTable0; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests0_3::
+Data_00D_5FD9:: ; address name
+    dw vTiles1 + $2D0, vTiles1 + $2E0, vTiles1 + $2F0, vTiles1 + $7D0, vTiles1 + $7E0, vTiles1 + $7F0 ; entry 0
+    dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750
+
+; E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 1).
+; record: list of VRAM tile addresses
+GlyphTileDestTable1::
+Data_00D_5FF1:: ; address name
+    dw GlyphTileDests1_0 ; id 0
+    dw GlyphTileDests1_1 ; id 1
+    dw GlyphTileDests1_2 ; id 2
+    dw GlyphTileDests1_3 ; id 3
+
+; E-0235 (C1: list 0 of GlyphTileDestTable1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests1_0::
+Data_00D_5FF9:: ; address name
+    dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290 ; entry 0
+    dw vTiles1 + $2A0, vTiles1 + $2B0, vTiles1 + $2C0
+
+; E-0235 (C1: list 1 of GlyphTileDestTable1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests1_1::
+Data_00D_600B:: ; address name
+    dw vTiles1 + $500, vTiles1 + $510, vTiles1 + $520, vTiles1 + $530, vTiles1 + $540, vTiles1 + $550 ; entry 0
+    dw vTiles1 + $560, vTiles1 + $570, vTiles1 + $580
+
+; E-0235 (C1: list 2 of GlyphTileDestTable1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests1_2::
+Data_00D_601D:: ; address name
+    dw vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740, vTiles1 + $750 ; entry 0
+    dw vTiles1 + $760, vTiles1 + $770, vTiles1 + $780
+
+; E-0235 (C1: list 3 of GlyphTileDestTable1; 9 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests1_3::
+Data_00D_602F:: ; address name
+    dw vTiles1 + $590, vTiles1 + $5A0, vTiles1 + $5B0, vTiles1 + $5C0, vTiles1 + $5D0, vTiles1 + $5E0 ; entry 0
+    dw vTiles1 + $790, vTiles1 + $7A0, vTiles1 + $7B0
+
+; E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 2).
+; record: list of VRAM tile addresses
+GlyphTileDestTable2::
+Data_00D_6041:: ; address name
+    dw GlyphTileDests2_0 ; id 0
+    dw GlyphTileDests2_1 ; id 1
+    dw GlyphTileDests2_2 ; id 2
+    dw GlyphTileDests2_3 ; id 3
+
+; E-0235 (C1: list 0 of GlyphTileDestTable2; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests2_0::
+Data_00D_6049:: ; address name
+    dw vTiles2 + $100, vTiles2 + $110, vTiles2 + $120, vTiles2 + $130, vTiles2 + $140, vTiles2 + $150 ; entry 0
+    dw vTiles2 + $160, vTiles2 + $170, vTiles2 + $180, vTiles2 + $190, vTiles2 + $1A0, vTiles2 + $1B0
+
+; E-0235 (C1: list 1 of GlyphTileDestTable2; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests2_1::
+Data_00D_6061:: ; address name
+    dw vTiles2 + $200, vTiles2 + $210, vTiles2 + $220, vTiles2 + $230, vTiles2 + $240, vTiles2 + $250 ; entry 0
+    dw vTiles2 + $260, vTiles2 + $270, vTiles2 + $280, vTiles2 + $290, vTiles2 + $2A0, vTiles2 + $2B0
+
+; E-0235 (C1: list 2 of GlyphTileDestTable2; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests2_2::
+Data_00D_6079:: ; address name
+    dw vTiles2 + $300, vTiles2 + $310, vTiles2 + $320, vTiles2 + $330, vTiles2 + $340, vTiles2 + $350 ; entry 0
+    dw vTiles2 + $360, vTiles2 + $370, vTiles2 + $380, vTiles2 + $390, vTiles2 + $3A0, vTiles2 + $3B0
+
+; E-0235 (C1: list 3 of GlyphTileDestTable2; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests2_3::
+Data_00D_6091:: ; address name
+    dw vTiles2 + $400, vTiles2 + $410, vTiles2 + $420, vTiles2 + $430, vTiles2 + $440, vTiles2 + $450 ; entry 0
+    dw vTiles2 + $460, vTiles2 + $470, vTiles2 + $480, vTiles2 + $490, vTiles2 + $4A0, vTiles2 + $4B0
+
+; E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 3 or more).
+; record: list of VRAM tile addresses
+GlyphTileDestTable3::
+Data_00D_60A9:: ; address name
+    dw GlyphTileDests3_0 ; id 0
+
+; E-0235 (C1: list 0 of GlyphTileDestTable3; 12 words).
+; record: VRAM tile addresses, indexed by wGlyphListStart
+GlyphTileDests3_0::
+Data_00D_60AB:: ; address name
+    dw vTiles2 + $600, vTiles2 + $610, vTiles2 + $620, vTiles2 + $630, vTiles2 + $640, vTiles2 + $650 ; entry 0
+    dw vTiles2 + $660, vTiles2 + $670, vTiles2 + $680, vTiles2 + $690, vTiles2 + $6A0, vTiles2 + $6B0
 
 ; clears wD789 ($20 bytes), then lists the indexes of the used wKeyList entries there and stores their count in wD7A9 (E-0125)
 ; 2 call sites from 2 routines (e.g. ScriptCommandF2_Run_Case03_Case00, RunScreenStateWhenNotFading_1B_Case01_Case00)
@@ -6981,7 +7088,7 @@ Jump_00D_72F4:: ; address name
     call ScriptCommandF4_Run_Shared01
     ld a, [wScreenTableIndex]
     sla a
-    ld de, Data_00D_78D6
+    ld de, PresetMonsterRecordTable
     add a, e
     ld e, a
     jr nc, Jump_00D_7304
@@ -7753,97 +7860,168 @@ Data_00D_78B8:: ; address name
     db $B6, $C3, $76, $73, $C3, $B7 ; id 3
     db $B3, $B4, $B4, $B4, $B4, $B5 ; id 4
 
-; address loaded by ScriptCommandF4_Run_Case04_Case13
-Data_00D_78D6:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_00D_78F6
-    dw Data_00D_799B
-    dw Data_00D_7A40
-    dw Data_00D_7AE5
-    dw Data_00D_7B8A
-    dw Data_00D_7C2F
-    dw Data_00D_7CD4
-    dw Data_00D_7D79
-    dw Data_00D_7E1E
-    dw Data_00D_7EC3
-    db $F6, $78, $F6, $78, $F6, $78, $F6, $78, $F6, $78, $F6, $78
+; E-0235 (C1: ScriptCommandF4_Run_Case04_Case13 reads the word at $78D6 + 2 * wScreenTableIndex and copies $A5 bytes from it to wRecordBufB; the first ten words point at ten consecutive records and the last six repeat the first).
+; record: $A5-byte monster record
+PresetMonsterRecordTable::
+Data_00D_78D6:: ; address name
+    dw PresetMonsterRecords ; id 0
+    dw Data_00D_799B ; id 1
+    dw Data_00D_7A40 ; id 2
+    dw Data_00D_7AE5 ; id 3
+    dw Data_00D_7B8A ; id 4
+    dw Data_00D_7C2F ; id 5
+    dw Data_00D_7CD4 ; id 6
+    dw Data_00D_7D79 ; id 7
+    dw Data_00D_7E1E ; id 8
+    dw Data_00D_7EC3 ; id 9
+    dw PresetMonsterRecords ; id 10
+    dw PresetMonsterRecords ; id 11
+    dw PresetMonsterRecords ; id 12
+    dw PresetMonsterRecords ; id 13
+    dw PresetMonsterRecords ; id 14
+    dw PresetMonsterRecords ; id 15
 
-Data_00D_78F6:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $4A, $00, $02, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $25, $36, $61
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $03794C, $4F
-
-Data_00D_799B:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $1E, $01, $08, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $07, $0D, $6B, $6F
-    ds $1E, $00
-    INCBIN "dwm2-cobi-us.gbc", $0379F1, $4F
-
-Data_00D_7A40:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $BC, $00, $05, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $13, $33, $6D
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037A96, $4F
-
-Data_00D_7AE5:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $92, $00, $04, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $19, $2F, $3C, $9B
-    ds $1E, $00
-    INCBIN "dwm2-cobi-us.gbc", $037B3B, $4F
-
-Data_00D_7B8A:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $5E, $00, $02, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $20, $34, $63, $90
-    ds $1E, $00
-    INCBIN "dwm2-cobi-us.gbc", $037BE0, $4F
-
-Data_00D_7C2F:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $80, $00, $03, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $79, $7B, $92
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037C85, $4F
-
-Data_00D_7CD4:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $0D, $01, $07, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $3A, $3B, $A0
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037D2A, $4F
-
-Data_00D_7D79:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $33, $00, $01, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $19, $82, $9C
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037DCF, $4F
-
-Data_00D_7E1E:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $0A, $01, $07, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $50, $51, $52
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037E74, $4F
-
-Data_00D_7EC3:: ; heuristic: target of a monotone pointer table; C0
-    db $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $33, $01, $08, $00, $98
-    db $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $FF, $FF, $FF, $FF, $98, $98
-    db $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $98, $98, $98, $F0, $F0, $F0, $F0
-    db $F0, $F0, $F0, $00, $6F, $81, $91
-    ds $1F, $00
-    INCBIN "dwm2-cobi-us.gbc", $037F19, $4D
-    ds $9A, $00
+; E-0235 (C1: the ten records PresetMonsterRecordTable points at, $A5 bytes apart; only bytes 0, 1-10 and 15-24 have read meanings, the rest are kept as bytes).
+; record: one $A5-byte monster record in the SRAM record format
+PresetMonsterRecords::
+Data_00D_78F6:: ; address name
+    db $01 ; id 0
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $4A, $00, $02, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $25, $36, $61, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $12, $23, $00
+    db $00, $00, $58, $00, $58, $00, $5C, $00, $5C, $00, $7F, $00, $5D, $00, $45, $00
+    db $7F, $01, $00, $00, $00, $00, $C8, $C8, $96, $50, $00, $00, $00, $01, $01, $00
+    db $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03
+    db $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_799B:: ; heuristic: preset monster record; C0
+    db $01 ; id 1
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $1E, $01, $08, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $07, $0D, $6B, $6F, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2A, $2A, $00
+    db $00, $00, $E6, $00, $E6, $00, $E0, $00, $E0, $00, $E2, $00, $10, $01, $32, $01
+    db $F1, $02, $00, $00, $00, $00, $0A, $C8, $B4, $DC, $00, $00, $00, $00, $00, $02
+    db $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00
+    db $00, $00, $01, $01, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7A40:: ; heuristic: preset monster record; C0
+    db $01 ; id 2
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $BC, $00, $05, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $13, $33, $6D, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $1C, $23, $00
+    db $00, $00, $7B, $00, $7B, $00, $AD, $00, $AD, $00, $77, $00, $A6, $00, $B4, $00
+    db $65, $01, $00, $00, $00, $00, $46, $64, $AA, $D2, $01, $01, $01, $01, $01, $01
+    db $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01
+    db $01, $01, $03, $03, $00, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7AE5:: ; heuristic: preset monster record; C0
+    db $01 ; id 3
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $92, $00, $04, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $19, $2F, $3C, $9B, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $25, $25, $00
+    db $00, $00, $A6, $00, $A6, $00, $9F, $00, $9F, $00, $D6, $00, $D4, $00, $9B, $00
+    db $EB, $02, $00, $00, $00, $00, $D2, $28, $96, $D2, $01, $01, $01, $02, $02, $01
+    db $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02
+    db $02, $02, $00, $00, $02, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7B8A:: ; heuristic: preset monster record; C0
+    db $01 ; id 4
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $5E, $00, $02, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $20, $34, $63, $90, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $23, $00
+    db $00, $00, $90, $00, $90, $00, $40, $00, $40, $00, $C6, $00, $4F, $00, $98, $00
+    db $C5, $01, $00, $00, $00, $00, $C8, $96, $96, $1E, $00, $00, $00, $01, $01, $00
+    db $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03
+    db $03, $03, $03, $03, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7C2F:: ; heuristic: preset monster record; C0
+    db $01 ; id 5
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $80, $00, $03, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $79, $7B, $92, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2E, $32, $00
+    db $00, $00, $74, $01, $74, $01, $5F, $01, $5F, $01, $69, $01, $47, $01, $CB, $01
+    db $B1, $01, $00, $00, $00, $00, $64, $96, $64, $82, $00, $00, $00, $03, $03, $00
+    db $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03
+    db $03, $03, $02, $02, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7CD4:: ; heuristic: preset monster record; C0
+    db $01 ; id 6
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $0D, $01, $07, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $3A, $3B, $A0, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $35, $35, $00
+    db $00, $00, $73, $01, $73, $01, $46, $02, $46, $02, $F8, $00, $A1, $01, $CA, $01
+    db $F4, $01, $00, $00, $00, $00, $14, $C8, $64, $B4, $00, $00, $00, $00, $00, $00
+    db $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01
+    db $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7D79:: ; heuristic: preset monster record; C0
+    db $01 ; id 7
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $33, $00, $01, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $19, $82, $9C, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $3B, $3B, $00
+    db $00, $00, $F6, $01, $F6, $01, $47, $01, $47, $01, $AD, $01, $BF, $01, $E9, $01
+    db $AB, $01, $00, $00, $00, $00, $B4, $8C, $64, $8C, $02, $02, $02, $00, $00, $00
+    db $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01
+    db $01, $01, $00, $00, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7E1E:: ; heuristic: preset monster record; C0
+    db $01 ; id 8
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $0A, $01, $07, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $50, $51, $52, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2B, $37, $00
+    db $00, $00, $55, $01, $55, $01, $35, $01, $35, $01, $5D, $01, $3D, $01, $0B, $01
+    db $91, $01, $00, $00, $00, $00, $78, $82, $64, $5A, $00, $00, $01, $02, $00, $02
+    db $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00
+    db $00, $00, $00, $00, $01, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+Data_00D_7EC3:: ; heuristic: preset monster record; C0
+    db $01 ; id 9
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $33, $01, $08, $00
+    db "???", $F0, $F0, $F0, $F0, $F0, $F0, $F0
+    db $00, $FF, $FF, $FF, $FF, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $6F, $81, $91, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $36, $36, $00
+    db $00, $00, $D3, $01, $D3, $01, $BA, $01, $BA, $01, $AC, $01, $78, $01, $4B, $01
+    db $E0, $01, $00, $00, $00, $00, $78, $64, $64, $82, $01, $01, $01, $01, $00, $03
+    db $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01
+    db $01, $01, $01, $01, $02, $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00
+    db $98, $98, $98, $F0, $F0, $F0, $F0, $F0, $F0, $F0, $00, $00
+    ds $98, $00

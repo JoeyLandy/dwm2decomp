@@ -17722,6 +17722,375 @@
         }
       ],
       "note": "E-0234 (C1: block 3 of EffectTileBlockTable, 6 x 6 tile numbers, all $C3)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5F89",
+      "label": "GlyphTileDestTable0",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 0)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5F91",
+      "label": "GlyphTileDests0_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 0 of GlyphTileDestTable0; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5FA9",
+      "label": "GlyphTileDests0_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 1 of GlyphTileDestTable0; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5FC1",
+      "label": "GlyphTileDests0_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 2 of GlyphTileDestTable0; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5FD9",
+      "label": "GlyphTileDests0_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 3 of GlyphTileDestTable0; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5FF1",
+      "label": "GlyphTileDestTable1",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 1)."
+    },
+    {
+      "bank": "0D",
+      "addr": "5FF9",
+      "label": "GlyphTileDests1_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 0 of GlyphTileDestTable1; 9 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "600B",
+      "label": "GlyphTileDests1_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 1 of GlyphTileDestTable1; 9 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "601D",
+      "label": "GlyphTileDests1_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 2 of GlyphTileDestTable1; 9 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "602F",
+      "label": "GlyphTileDests1_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 18,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 3 of GlyphTileDestTable1; 9 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "6041",
+      "label": "GlyphTileDestTable2",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 2)."
+    },
+    {
+      "bank": "0D",
+      "addr": "6049",
+      "label": "GlyphTileDests2_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 0 of GlyphTileDestTable2; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "6061",
+      "label": "GlyphTileDests2_1",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 1 of GlyphTileDestTable2; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "6079",
+      "label": "GlyphTileDests2_2",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 2 of GlyphTileDestTable2; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "6091",
+      "label": "GlyphTileDests2_3",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 3 of GlyphTileDestTable2; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "60A9",
+      "label": "GlyphTileDestTable3",
+      "count": 1,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "list of VRAM tile addresses",
+          "reason": "glyph tile destination list"
+        }
+      ],
+      "note": "E-0235 (C1: the routine ending at $5F86 picks this table by wArg5 (0, 1, 2, else $60A9), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10 for a bank-$1F tile copy); wArg5 = 3 or more)."
+    },
+    {
+      "bank": "0D",
+      "addr": "60AB",
+      "label": "GlyphTileDests3_0",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 24,
+          "per_line": 6,
+          "ram": true,
+          "name": "VRAM tile addresses, indexed by wGlyphListStart"
+        }
+      ],
+      "note": "E-0235 (C1: list 0 of GlyphTileDestTable3; 12 words)."
+    },
+    {
+      "bank": "0D",
+      "addr": "78D6",
+      "label": "PresetMonsterRecordTable",
+      "count": 16,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "$A5-byte monster record",
+          "reason": "preset monster record"
+        }
+      ],
+      "note": "E-0235 (C1: ScriptCommandF4_Run_Case04_Case13 reads the word at $78D6 + 2 * wScreenTableIndex and copies $A5 bytes from it to wRecordBufB; the first ten words point at ten consecutive records and the last six repeat the first)."
+    },
+    {
+      "bank": "0D",
+      "addr": "78F6",
+      "label": "PresetMonsterRecords",
+      "count": 10,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "record byte 0 (0 = empty, 1 or 2 = in use, E-0104)"
+        },
+        {
+          "type": "text",
+          "size": 10,
+          "name": "name, bytes 1-10 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "bytes 11-14"
+        },
+        {
+          "type": "text",
+          "size": 10,
+          "name": "second name, bytes 15-24 (E-0034)"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 25-40"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 41-56"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 57-72"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 73-88"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 89-104"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 105-120"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 121-136"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 137-152"
+        },
+        {
+          "type": "db",
+          "size": 12,
+          "line": true,
+          "name": "bytes 153-164"
+        }
+      ],
+      "record": "one $A5-byte monster record in the SRAM record format",
+      "note": "E-0235 (C1: the ten records PresetMonsterRecordTable points at, $A5 bytes apart; only bytes 0, 1-10 and 15-24 have read meanings, the rest are kept as bytes)."
     }
   ]
 }
