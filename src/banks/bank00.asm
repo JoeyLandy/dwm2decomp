@@ -8737,7 +8737,7 @@ Func_000_2FDC:: ; address name
     ret
 
 ; copies from DE to HL until 5 glyphs other than $8D and $8E have been copied ($8D/$8E, which have no charmap entry, are copied without counting); a $8D or $8E right after the fifth glyph is copied too; then writes $F0. Clobbers A, B; DE and HL advance (E-0072)
-; 16 call sites from 16 routines (e.g. PauseMenu_Skills_Case02_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Items_UseItem_UpdateMenuCursor, ...)
+; 16 call sites from 16 routines (e.g. PauseMenu_Skills_ChooseTarget_UpdateMenuCursor, PauseMenu_Skills_UseFieldSkill_CopyTileBufferToBGMap, PauseMenu_Items_Case00_UpdateMenuCursor, PauseMenu_Items_UseItem_UpdateMenuCursor, ...)
 CopyFiveGlyphsPlusMarks::
 Func_000_2FE1:: ; address name
     ld b, $05

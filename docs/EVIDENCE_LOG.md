@@ -2448,7 +2448,8 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
   - RunBattleActions_WearOffAndDefeat: "0's Ironize wore off!", '0 dropped dead!'
   - GameMode6_Update_SwitchMonster: 'Switch with which?'
 - **Counts.** Structural labels the generator leaves unnamed: 249 → 243. Bare dispatchers: 151 → 146.
-- Binary verification: build/run394 PASS, 0 differing bytes; tests OK (skipped=3).
+- **Pause menu.** Also named, from their steps and order: PauseMenu_Skills_ChooseMember ('A dead monster can't use a ...'), PauseMenu_Skills_ChooseSkill and PauseMenu_Skills_ChooseTarget (screens built from record field $5F, MP), PauseMenu_Items_ChooseItem.
+- Binary verification: build/run395 PASS, 0 differing bytes; tests OK (skipped=3).
 
 ### E-0291 — Record byte $0E bit 0 is the monster's sex; observations on $6D and $6E
 

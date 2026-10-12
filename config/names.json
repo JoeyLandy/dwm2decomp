@@ -7294,5 +7294,9 @@
   "16:6C16": {"name": "BattleEnd_AddJoinedMonster", "note": "by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and RestoreRecordAFully: places the monster that joined", "evidence": "E-0292 (C1: from its steps' calls)"},
   "03:74EF": {"name": "PauseMenu_State3_RecordJourney", "note": "by wTemp1: 'Want to record your journey?', then 'Your progress has been recorded.'", "evidence": "E-0292 (C1: from the quoted strings)"},
   "3A:640F": {"name": "RunBattleActions_WearOffAndDefeat", "note": "by wBattleResolveStep: battle texts \"0's Ironize wore off!\" and '0 dropped dead!'", "evidence": "E-0292 (C1: from the quoted battle texts)"},
-  "24:4C18": {"name": "GameMode6_Update_SwitchMonster", "note": "by wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?'", "evidence": "E-0292 (C1: from the quoted strings)"}
+  "24:4C18": {"name": "GameMode6_Update_SwitchMonster", "note": "by wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?'", "evidence": "E-0292 (C1: from the quoted strings)"},
+  "03:5E95": {"name": "PauseMenu_Skills_ChooseMember", "note": "by wTemp1: the record list and cursor; a dead member is refused ('A dead monster can't use a ...')", "evidence": "E-0292 (C1: from its steps and string)"},
+  "03:5FAF": {"name": "PauseMenu_Skills_ChooseSkill", "note": "by wTemp1: the screen built from the member's record field $5F (MP) with a cursor, then the skill's string", "evidence": "E-0292 (C1: from its steps' calls)"},
+  "03:60F9": {"name": "PauseMenu_Skills_ChooseTarget", "note": "by wTemp1: the record field $5F screen with a cursor, before PauseMenu_Skills_UseFieldSkill", "evidence": "E-0292 (C1: from its steps' calls and order)"},
+  "03:5340": {"name": "PauseMenu_Items_ChooseItem", "note": "by wTemp1: the item list (screen block $0E) with a cursor, before PauseMenu_Items_UseItem", "evidence": "E-0292 (C1: from its steps' calls and order)"}
 }
