@@ -4466,10 +4466,7 @@ Jump_085_5AEE::
     ld a, $01
     ldh [hTemp0], a
     ret
-    db $61, $01, $64, $01, $67, $01, $69, $01
-
-Data_085_5B00:: ; heuristic: target of a monotone pointer table; C0
-    db $74, $01, $00, $00
+    db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
 ; runs CountSpeciesPerFamilyFlaggedOrListed and sums the eleven per-family counts at wD09D into hFFC6/hFFC7 (E-0122)
 ; 14 call sites from 9 routines (e.g. DispatchTalkEvent_Case0A_Sub01_Case0A, DispatchTalkEvent_Case01_Case07, DispatchTalkEvent_Case01_Case19, TalkMsg0A3C_KingIfYouSee, ...)
@@ -4927,52 +4924,4 @@ Jump_085_5E0A::
     db $FE, $FF, $FF, $07, $F0, $FF, $FF, $FF, $87, $FF, $FF, $FF, $7F, $FC, $FF, $FF
     db $1F, $E0, $FF, $FF, $FF, $00, $FF, $FF, $FF, $03, $F8, $FF, $FF, $FF, $C1, $FF
     db $FF, $FF, $01, $FE, $FF, $FF, $FF, $F1, $FF, $FF, $FF, $8F, $FF, $FF, $1F
-    ds $284, $00
-
-Data_085_6124:: ; heuristic: target of a monotone pointer table; C0
-    ds $2F, $00
-
-Data_085_6153:: ; heuristic: target of a monotone pointer table; C0
-    ds $41, $00
-
-Data_085_6194:: ; heuristic: target of a monotone pointer table; C0
-    ds $3B, $00
-
-Data_085_61CF:: ; heuristic: target of a monotone pointer table; C0
-    ds $39, $00
-
-Data_085_6208:: ; heuristic: target of a monotone pointer table; C0
-    ds $34, $00
-
-Data_085_623C:: ; heuristic: target of a monotone pointer table; C0
-    ds $2A, $00
-
-Data_085_6266:: ; heuristic: target of a monotone pointer table; C0
-    ds $29A, $00
-
-Data_085_6500:: ; heuristic: target of a monotone pointer table; C0
-    ds $500, $00
-
-Data_085_6A00:: ; heuristic: target of a monotone pointer table; C0
-    ds $300, $00
-
-Data_085_6D00:: ; heuristic: target of a monotone pointer table; C0
-    ds $200, $00
-
-Data_085_6F00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_085_7000:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_085_7100:: ; heuristic: target of a monotone pointer table; C0
-    ds $200, $00
-
-Data_085_7300:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_085_7400:: ; heuristic: target of a monotone pointer table; C0
-    ds $200, $00
-
-Data_085_7600:: ; heuristic: target of a monotone pointer table; C0
-    ds $A00, $00
+    ds $2160, $00

@@ -4772,9 +4772,7 @@ Data_037_6175:: ; address name
     db $00 ; id 136 ?
     db $00 ; id 137 ?
     db $00 ; id 138 ?
-Data_037_6200:: ; heuristic: label inside a table; C0
     db $00 ; id 139 ?
-Data_037_6201:: ; heuristic: label inside a table; C0
     db $00 ; id 140 ?
     db $5A ; id 141 MadPlant
     db $5B ; id 142 FireWeed
@@ -5035,9 +5033,7 @@ Data_037_62F5:: ; address name
     db $09 ; id 8
     db $0A ; id 9
     db $0B ; id 10
-Data_037_6300:: ; heuristic: label inside a table; C0
     db $0C ; id 11
-Data_037_6301:: ; heuristic: label inside a table; C0
     db $10 ; id 12
     db $11 ; id 13
     db $12 ; id 14
@@ -5459,115 +5455,4 @@ Data_037_64D7:: ; address name
 ; address loaded by RunLinkExchangeState_44D6_Case01_Sub01_Case04_Case18
 Data_037_6516:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $FC, $C3, $24, $C4, $4C, $C4
-    ds $E5, $00
-
-Data_037_6601:: ; heuristic: target of a monotone pointer table; C0
-    ds $200, $00
-
-Data_037_6801:: ; heuristic: target of a monotone pointer table; C0
-    ds $1FF, $00
-
-Data_037_6A00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6A01:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_6B00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6B01:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_6C00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6C01:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_6D00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6D01:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_6E00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6E01:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_6F00:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_6F01:: ; heuristic: target of a monotone pointer table; C0
-    ds $6D, $00
-
-Data_037_6F6E:: ; heuristic: target of a monotone pointer table; C0
-    ds $92, $00
-
-Data_037_7000:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_7001:: ; heuristic: target of a monotone pointer table; C0
-    ds $FF, $00
-
-Data_037_7100:: ; heuristic: target of a monotone pointer table; C0
-    db $00
-
-Data_037_7101:: ; heuristic: target of a monotone pointer table; C0
-    ds $6F, $00
-
-Data_037_7170:: ; heuristic: target of a monotone pointer table; C0
-    ds $190, $00
-
-Data_037_7300:: ; heuristic: target of a monotone pointer table; C0
-    ds $72, $00
-
-Data_037_7372:: ; heuristic: target of a monotone pointer table; C0
-    ds $18E, $00
-
-Data_037_7500:: ; heuristic: target of a monotone pointer table; C0
-    ds $74, $00
-
-Data_037_7574:: ; heuristic: target of a monotone pointer table; C0
-    ds $8C, $00
-
-Data_037_7600:: ; heuristic: target of a monotone pointer table; C0
-    ds $78, $00
-
-Data_037_7678:: ; heuristic: target of a monotone pointer table; C0
-    ds $88, $00
-
-Data_037_7700:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_037_7800:: ; heuristic: target of a monotone pointer table; C0
-    ds $77, $00
-
-Data_037_7877:: ; heuristic: target of a monotone pointer table; C0
-    ds $89, $00
-
-Data_037_7900:: ; heuristic: target of a monotone pointer table; C0
-    ds $179, $00
-
-Data_037_7A79:: ; heuristic: target of a monotone pointer table; C0
-    ds $87, $00
-
-Data_037_7B00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_037_7C00:: ; heuristic: target of a monotone pointer table; C0
-    ds $7B, $00
-
-Data_037_7C7B:: ; heuristic: target of a monotone pointer table; C0
-    ds $85, $00
-
-Data_037_7D00:: ; heuristic: target of a monotone pointer table; C0
-    ds $17D, $00
-
-Data_037_7E7D:: ; heuristic: target of a monotone pointer table; C0
-    ds $83, $00
-
-Data_037_7F00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
+    ds $1AE4, $00

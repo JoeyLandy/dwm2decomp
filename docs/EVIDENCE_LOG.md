@@ -2430,6 +2430,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0252 — Orphan pointer-table guesses dropped
+
+- Kind: TOOL.
+- drop_orphan_guess_labels removes a data label whose only reason was "target of a monotone pointer table" once nothing points at it any more: no `dw` word, code load, table, stream, script, sound track or configured name.
+  - Such labels were left behind when their runs were undone (E-0165, E-0240) or laid out by tables.
+  - Most marked zero padding in bank $38 or the insides of other data.
+- 537 labels were dropped. Address-named data labels went from 2,845 to 2,308.
+- Binary verification: build/run323 PASS, 0 differing bytes; tests OK.
+
 ### E-0251 — Key-world rooms labelled; the bank $95 string extension derived
 
 - Kind: TOOL (derived from E-0141 and E-0217; C2 for the positions).

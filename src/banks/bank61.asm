@@ -3968,9 +3968,7 @@ Data_061_6226:: ; heuristic: special map record; C0
 Data_061_6240:: ; heuristic: special map record; C0
     dfar SpecialMap04Tileset ; id 4
     dfar SpecialMap04Palettes
-    db $01, $02, $4F, $4C, $00
-Data_061_624B:: ; heuristic: label inside a table; C0
-    db $00, $00, $01, $40, $80, $00, $01, $40, $80
+    db $01, $02, $4F, $4C, $00, $00, $00, $01, $40, $80, $00, $01, $40, $80
     dfar SpecialMap04Screens
     dfar SpecialMap04Attrs
 Data_061_625A:: ; heuristic: special map record; C0

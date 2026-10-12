@@ -741,7 +741,6 @@ Data_05E_43A0:: ; address name
     db $56, $56, $56, $03, $57
     db $56, $56, $05, $57, $57
     db $57, $06, $06, $06, $57 ; id 141
-Data_05E_5151:: ; heuristic: label inside a table; C0
     db $04, $56, $03, $07, $05
     db $56, $56, $57, $57, $57
     db $56, $56, $56, $01, $57
@@ -999,7 +998,6 @@ Data_05E_5151:: ; heuristic: label inside a table; C0
     db $58, $16, $16, $16, $58 ; id 192
     db $14, $56, $56, $56, $15
     db $56, $56, $56, $56, $56
-Data_05E_5656:: ; heuristic: label inside a table; C0
     db $56, $56, $56, $56, $56
     db $56, $56, $56, $56, $56
     db $58, $1A, $16, $1B, $58 ; id 193
@@ -1737,7 +1735,4 @@ Data_05E_7CBE:: ; address name
     db $68, $01, $02, $02, $FF, $F4, $04, $04, $04, $04, $02, $F8, $FF, $39, $02, $57
     db $0F, $4D, $02, $EC, $FF, $0D, $02, $0A, $0C, $02, $D4, $08, $01, $01, $02, $02
     db $06, $06, $06, $02, $EE, $0F, $07, $02, $CC, $0F, $15, $02, $43, $1F, $11
-    ds $291, $00
-
-Data_05E_7F7E:: ; heuristic: target of a monotone pointer table; C0
-    ds $82, $00
+    ds $313, $00

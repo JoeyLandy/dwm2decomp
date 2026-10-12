@@ -4292,9 +4292,7 @@ Data_072_6F23:: ; address name
     dfar KeyWorldRoom00_Y1X3_Tiles
     dfar KeyWorldRoom02_Y1X3_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
-    dw KeyWorldRoom00_Y1X0_Tiles
-Data_072_6F40:: ; heuristic: label inside a table; C0
-    db $70
+    dfar KeyWorldRoom00_Y1X0_Tiles
     dfar KeyWorldRoom76_Y2X1_Tiles
     dfar KeyWorldRoom05_Y1X1_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
@@ -4482,13 +4480,11 @@ KeyWorldRoom7B:: ; heuristic: string; C0
     dfar KeyWorldRoom01_Y0X1_Attrs
     dfar KeyWorldRoom11_Y2X1_Attrs
     dfar KeyWorldRoom01_Y1X3_Attrs
-Data_072_715D:: ; heuristic: label inside a table; C0
     dfar KeyWorldRoom04_Y0X0_Attrs
     dfar KeyWorldRoom03_Y2X1_Attrs
     dfar KeyWorldRoom01_Y3X1_Attrs
     dfar KeyWorldRoom04_Y1X3_Attrs
     dfar KeyWorldRoom02_Y2X1_Attrs
-Data_072_716C:: ; heuristic: label inside a table; C0
     dfar KeyWorldRoom03_Y0X2_Attrs
     dfar KeyWorldRoom03_Y3X2_Attrs
     dfar KeyWorldRoom01_Y3X3_Attrs
@@ -4497,7 +4493,6 @@ Data_072_7175:: ; address name
     db $02, $03, $05 ; id 124
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
-Data_072_717E:: ; heuristic: label inside a table; C0
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles
     dfar KeyWorldRoom05_Y1X0_Tiles

@@ -3088,7 +3088,6 @@ Data_068_5FD5:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs
     dfar KeyWorld01_0_Y0X0_Attrs
     dfar KeyWorld01_0_Y2X0_Attrs
-Data_068_6266:: ; heuristic: label inside a table; C0
     dfar KeyWorld0A_0_Y1X1_Attrs
     dfar KeyWorld01_0_Y0X0_Attrs
     dfar KeyWorld01_0_Y0X0_Attrs
@@ -3263,11 +3262,8 @@ Data_068_633E:: ; address name
     dfar KeyWorld01_0_Y0X0_Attrs
     dfar KeyWorld40_4_Y0X3_Attrs
     dfar KeyWorld40_1_Y3X2_Attrs
-    dw KeyWorld1C_1_Y1X2_Attrs
-Data_068_645A:: ; heuristic: label inside a table; C0
-    db $62
+    dfar KeyWorld1C_1_Y1X2_Attrs
     dfar KeyWorld02_0_Y0X3_Attrs
-Data_068_645E:: ; heuristic: label inside a table; C0
     dfar KeyWorldScreenHeader_64_7848 ; id 3
     dfar KeyWorldScreenHeader_63_6D0B
     dfar KeyWorldScreenHeader_62_528E
@@ -3277,7 +3273,6 @@ Data_068_645E:: ; heuristic: label inside a table; C0
     dfar KeyWorldScreenHeader_64_46A7
     dfar KeyWorldScreenHeader_63_5437
     dfar KeyWorldScreenHeader_62_75B0
-Data_068_6479:: ; heuristic: label inside a table; C0
     dfar KeyWorldScreenHeader_62_41C9
     dfar KeyWorldScreenHeader_62_406A
     dfar KeyWorldScreenHeader_64_697E
@@ -3346,9 +3341,7 @@ Data_068_6479:: ; heuristic: label inside a table; C0
     dfar KeyWorldScreenHeader_65_41F0
     dfar KeyWorldScreenHeader_65_6DE3
     dfar KeyWorldScreenHeader_65_5B98
-    dw KeyWorldScreenHeader_64_6311
-Data_068_6547:: ; heuristic: label inside a table; C0
-    db $64
+    dfar KeyWorldScreenHeader_64_6311
     dfar KeyWorldScreenHeader_63_468C
     dfar KeyWorldScreenHeader_65_6F70
     dfar KeyWorld40_2_Y3X3_Attrs
@@ -3356,23 +3349,16 @@ Data_068_6547:: ; heuristic: label inside a table; C0
     dfar KeyWorld0A_0_Y1X1_Attrs
     dfar KeyWorld01_0_Y2X3_Attrs
     dfar KeyWorld40_2_Y2X2_Attrs
-    dw KeyWorld12_1_Y1X2_Attrs
-Data_068_655F:: ; heuristic: label inside a table; C0
-    db $64
+    dfar KeyWorld12_1_Y1X2_Attrs
     dfar KeyWorld17_1_Y0X2_Attrs
-Data_068_6563:: ; heuristic: label inside a table; C0
-    dw KeyWorld02_0_Y0X3_Attrs
-Data_068_6565:: ; heuristic: label inside a table; C0
-    db $65
+    dfar KeyWorld02_0_Y0X3_Attrs
     dfar KeyWorld42_1_Y2X0_Attrs
     dfar KeyWorld3F_3_Y0X1_Attrs
     dfar KeyWorld1E_0_Y1X2_Attrs
     dfar KeyWorld00_0_Y1X3_Attrs
-Data_068_6572:: ; heuristic: label inside a table; C0
     dfar KeyWorld42_1_Y3X0_Attrs
     dfar KeyWorld40_5_Y1X1_Attrs
     dfar KeyWorld10_0_Y2X2_Attrs
-Data_068_657B:: ; heuristic: label inside a table; C0
     dfar KeyWorld08_0_Y2X3_Attrs
     dfar KeyWorldScreenHeader_66_5CC8 ; id 6
     dfar KeyWorldScreenHeader_66_5CC8
@@ -3440,28 +3426,16 @@ Data_068_657B:: ; heuristic: label inside a table; C0
     dfar KeyWorld08_0_Y2X1_Attrs
     dfar KeyWorldScreenHeader_65_5B98 ; id 8
     dfar KeyWorldScreenHeader_62_68C2
-    dw KeyWorldScreenHeader_65_416D
-Data_068_6646:: ; heuristic: label inside a table; C0
-    db $65
-    dw KeyWorldScreenHeader_65_70BD
-Data_068_6649:: ; heuristic: label inside a table; C0
-    db $65
-    dw KeyWorldScreenHeader_63_6744
-Data_068_664C:: ; heuristic: label inside a table; C0
-    db $63
-Data_068_664D:: ; heuristic: label inside a table; C0
+    dfar KeyWorldScreenHeader_65_416D
+    dfar KeyWorldScreenHeader_65_70BD
+    dfar KeyWorldScreenHeader_63_6744
     dfar KeyWorldScreenHeader_64_6272
-    dw KeyWorldScreenHeader_63_468C
-Data_068_6652:: ; heuristic: label inside a table; C0
-    db $63
+    dfar KeyWorldScreenHeader_63_468C
     dfar KeyWorldScreenHeader_65_7023
     dfar KeyWorldScreenHeader_64_4843
     dfar KeyWorldScreenHeader_63_4867
-Data_068_665C:: ; heuristic: label inside a table; C0
     dfar KeyWorldScreenHeader_64_6828
-    dw KeyWorldScreenHeader_66_4DE4
-Data_068_6661:: ; heuristic: label inside a table; C0
-    db $66
+    dfar KeyWorldScreenHeader_66_4DE4
     dfar KeyWorldScreenHeader_66_4859
     dfar KeyWorldScreenHeader_66_4917
     dfar KeyWorldScreenHeader_66_4EF7

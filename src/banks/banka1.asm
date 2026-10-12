@@ -4625,9 +4625,7 @@ Data_0A1_5A92:: ; address name
     db $78, $29, $31, $00, $00 ; id 70
     db $79, $29, $31, $00, $00 ; id 71
     db $7A, $01, $21, $00, $00 ; id 72
-    db $7B ; id 73
-Data_0A1_5C00:: ; heuristic: label inside a table; C0
-    db $19, $31, $19, $39
+    db $7B, $19, $31, $19, $39 ; id 73
     db $7C, $29, $49, $00, $00 ; id 74
     db $7D, $29, $49, $00, $00 ; id 75
     db $7E, $29, $49, $00, $00 ; id 76
@@ -4692,25 +4690,16 @@ Data_0A1_5C00:: ; heuristic: label inside a table; C0
     db $CC, $01, $01, $00, $00 ; id 135
     db $CD, $01, $01, $00, $00 ; id 136
     db $CE, $01, $01, $00, $00 ; id 137
-    db $D2 ; id 138
-Data_0A1_5D45:: ; heuristic: label inside a table; C0
-    db $01, $09, $00, $00
+    db $D2, $01, $09, $00, $00 ; id 138
     db $D3, $01, $09, $00, $00 ; id 139
     db $D4, $01, $09, $00, $00 ; id 140
     db $D5, $01, $09, $00, $00 ; id 141
     db $D6, $01, $09, $00, $00 ; id 142
-    db $D7, $01, $09 ; id 143
-Data_0A1_5D60:: ; heuristic: label inside a table; C0
-    db $00, $00
+    db $D7, $01, $09, $00, $00 ; id 143
     db $DB, $09, $01, $00, $00 ; id 144
     db $DC, $09, $01, $00, $00 ; id 145
-    db $DD, $09, $01 ; id 146
-Data_0A1_5D6F:: ; heuristic: label inside a table; C0
-    db $00, $00
-    db $DE ; id 147
-Data_0A1_5D72:: ; heuristic: label inside a table; C0
-    db $09, $01, $00, $00
-Data_0A1_5D76:: ; heuristic: label inside a table; C0
+    db $DD, $09, $01, $00, $00 ; id 146
+    db $DE, $09, $01, $00, $00 ; id 147
     db $DF, $09, $01, $00, $00 ; id 148
     db $E0, $09, $01, $00, $00 ; id 149
 
@@ -4743,9 +4732,7 @@ Data_0A1_5D80:: ; address name
     db $3B, $53, $44, $00, $00 ; id 22
     db $3C, $24, $44, $00, $00 ; id 23
     db $3D, $24, $44, $00, $00 ; id 24
-    db $3E, $62, $44 ; id 25
-Data_0A1_5E00:: ; heuristic: label inside a table; C0
-    db $00, $00
+    db $3E, $62, $44, $00, $00 ; id 25
     db $3F, $62, $44, $00, $00 ; id 26
     db $40, $62, $44, $00, $00 ; id 27
     db $41, $24, $44, $00, $00 ; id 28
@@ -4848,7 +4835,6 @@ Data_0A1_5E00:: ; heuristic: label inside a table; C0
     db $BE, $40, $44, $00, $00 ; id 125
     db $BF, $40, $44, $00, $00 ; id 126
     db $C0, $40, $44, $00, $00 ; id 127
-Data_0A1_6000:: ; heuristic: label inside a table; C0
     db $C1, $40, $44, $00, $00 ; id 128
     db $C2, $40, $44, $00, $00 ; id 129
     db $C3, $40, $44, $00, $00 ; id 130
@@ -4871,76 +4857,4 @@ Data_0A1_6000:: ; heuristic: label inside a table; C0
     db $DE, $10, $44, $00, $00 ; id 147
     db $DF, $10, $44, $00, $00 ; id 148
     db $E0, $10, $44, $00, $00 ; id 149
-    ds $92, $00
-
-Data_0A1_6100:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6200:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6300:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6400:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6500:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6600:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_6700:: ; heuristic: target of a monotone pointer table; C0
-    ds $A00, $00
-
-Data_0A1_7100:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7200:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7300:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7400:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7500:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7600:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7700:: ; heuristic: target of a monotone pointer table; C0
-    ds $121, $00
-
-Data_0A1_7821:: ; heuristic: target of a monotone pointer table; C0
-    ds $23, $00
-
-Data_0A1_7844:: ; heuristic: target of a monotone pointer table; C0
-    ds $BC, $00
-
-Data_0A1_7900:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7A00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7B00:: ; heuristic: target of a monotone pointer table; C0
-    ds $139, $00
-
-Data_0A1_7C39:: ; heuristic: target of a monotone pointer table; C0
-    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
-Data_0A1_7C44:: ; heuristic: target of a monotone pointer table; C0
-    ds $BC, $00
-
-Data_0A1_7D00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7E00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
-
-Data_0A1_7F00:: ; heuristic: target of a monotone pointer table; C0
-    ds $100, $00
+    ds $1F92, $00

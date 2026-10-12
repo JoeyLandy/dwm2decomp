@@ -3210,7 +3210,6 @@ Data_011_5C78:: ; address name
     dfar Map7DAttrs0
     dfar Map7DScreens0
     dfar Map7DAttrs0
-Data_011_5C9C:: ; heuristic: label inside a table; C0
     dfar Map7DScreens0
     dfar Map7DAttrs0
     dfar Map7DScreens0
@@ -3268,7 +3267,6 @@ Data_011_5D08:: ; address name
     dfar Map80Attrs0
     dfar Map80Screens0
     dfar Map80Attrs0
-Data_011_5D2C:: ; heuristic: label inside a table; C0
     dfar Map80Screens0
     dfar Map80Attrs0
     dfar Map80Screens0
@@ -4389,7 +4387,6 @@ Data_011_67A6:: ; address name
     dw MapWarps05 ; entry 5
     dw MapWarps06 ; entry 6
     dw MapWarps07 ; entry 7
-Data_011_67B6:: ; heuristic: label inside a table; C0
     dw MapWarps08 ; entry 8
     dw MapWarps09 ; entry 9
     dw MapWarps0A ; entry 10
@@ -4444,7 +4441,6 @@ Data_011_67B6:: ; heuristic: label inside a table; C0
     dw MapWarps3B ; entry 59
     dw MapWarps3C ; entry 60
     dw MapWarps3D ; entry 61
-Data_011_6822:: ; heuristic: label inside a table; C0
     dw MapWarps3E ; entry 62
     dw MapWarps3F ; entry 63
     dw MapWarps40 ; entry 64
@@ -4469,7 +4465,6 @@ Data_011_6822:: ; heuristic: label inside a table; C0
     dw MapWarps53 ; entry 83
     dw MapWarps54 ; entry 84
     dw MapWarps55 ; entry 85
-Data_011_6852:: ; heuristic: label inside a table; C0
     dw MapWarps56 ; entry 86
     dw MapWarps57 ; entry 87
     dw MapWarps58 ; entry 88
@@ -4494,7 +4489,6 @@ Data_011_6852:: ; heuristic: label inside a table; C0
     dw MapWarps0B ; entry 107
     dw MapWarps0B ; entry 108
     dw MapWarps0B ; entry 109
-Data_011_6882:: ; heuristic: label inside a table; C0
     dw MapWarps0B ; entry 110
     dw MapWarps0B ; entry 111
     dw MapWarps70 ; entry 112
@@ -5460,9 +5454,7 @@ Data_011_7314:: ; address name
     db $FD, $01, $80, $60, $64, $00, $11, $08, $06 ; id 5
     db $FD, $11, $80, $20, $64, $01, $11, $08, $02 ; id 6
     db $FD, $11, $80, $70, $64, $01, $11, $08, $07 ; id 7
-    db $FD, $00, $10, $20 ; id 8
-Data_011_7360:: ; heuristic: label inside a table; C0
-    db $66, $00, $10, $01, $02
+    db $FD, $00, $10, $20, $66, $00, $10, $01, $02 ; id 8
     db $FD, $01, $10, $60, $66, $00, $11, $01, $06 ; id 9
     db $80 ; end
 
@@ -5493,10 +5485,8 @@ MapWarps70::
 Data_011_7396:: ; address name
     db $FD, $B1, $40, $40, $71, $01, $30, $04, $08 ; id 0
     db $FD, $A4, $40, $40, $77, $12, $30, $04, $08 ; id 1
-Data_011_73A8:: ; heuristic: label inside a table; C0
     db $FD, $94, $40, $40, $77, $20, $30, $04, $08 ; id 2
     db $FD, $56, $40, $40, $78, $00, $31, $04, $08 ; id 3
-Data_011_73BA:: ; heuristic: label inside a table; C0
     db $FD, $56, $50, $40, $78, $00, $31, $04, $08 ; id 4
     db $FD, $04, $40, $40, $7A, $00, $31, $04, $08 ; id 5
     db $FD, $36, $40, $40, $7B, $10, $10, $04, $04 ; id 6

@@ -182,7 +182,6 @@ Data_04B_4EF7:: ; address name
     dfar Map2BAttrs0_Y2X0 ; entry 8
     dfar Map2BAttrs2_Y2X1 ; entry 9
     dfar Map2BAttrs0_Y2X2 ; entry 10
-Data_04B_4F18:: ; heuristic: label inside a table; C0
     dfar Map2BAttrs0_Y0X0 ; entry 11
     dfar Map2BAttrs0_Y3X0 ; entry 12
     dfar Map2BAttrs2_Y3X1 ; entry 13

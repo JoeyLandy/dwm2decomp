@@ -2018,6 +2018,25 @@ class Rom:
                         labels += 1
         log(f"tile-byte pointer runs undone: {dropped} words, {labels} labels")
 
+    def drop_orphan_guess_labels(self) -> None:
+        """E-0252: a data label whose only reason was a monotone pointer table, when no `dw` word, no
+        code load, table, stream, script or name points at it any more (its run was undone or laid
+        out otherwise), has no evidence left; drop it rather than print an unexplained label."""
+        dropped = 0
+        for b in range(self.nbanks):
+            still = set(self.dtab[b].values()) | {t for (bb, _), (tb, t) in self.dref.items() if tb == b}
+            for t in list(self.dlabels[b]):
+                if t in still or (b, t) in self.table_at or (b, t) in self.streams or (b, t) in self.names \
+                        or (b, t) in getattr(self, "script_at", {}) or (b, t) in self.track_at:
+                    continue
+                if not self.dlabels[b][t].startswith("Data_"):
+                    continue
+                if self.dreason.get((b, t), "target of a monotone pointer table").startswith(
+                        "target of a monotone pointer table"):
+                    del self.dlabels[b][t]
+                    dropped += 1
+        log(f"orphan pointer-table guess labels dropped: {dropped}")
+
     def drop_stream_pointer_runs(self) -> None:
         """E-0240: a heuristic `dw` word strictly inside a compressed stream with its own evidence
         (a decompress call, a far-pointer table, a map or key-world table; not one found only by a
@@ -3769,6 +3788,7 @@ class Rom:
         self.prepare_scripts()
         self.drop_tile_pointer_runs()
         self.drop_stream_pointer_runs()
+        self.drop_orphan_guess_labels()
         self.expand_families(self.families)
         self.name_dispatch_cases()
         self.apply_names()
