@@ -67,7 +67,7 @@ Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/ru
 | Branch targets | 13,086 named by shape (E-0287). Most are local labels such as `.loop`, `.set_sprite_slot_count`, `.call_queue_music`, `.return_01`; the rest are `<Routine>_<Shape>` globals. |
 | Record and structure fields | 1,818 operands use field constants from src/records.inc (E-0290 to E-0308): `MON_*` (the $A5-byte monster record), `BATTLER_*` (the $4E-byte battler record), `SPECIES_*` (the 47-byte species record), `OBJ_*` and `SCRIPTOBJ_*` (field objects). |
 | Monster record bytes not read | $28, $33 |
-| Species record bytes not read | 2-3, 5, $0B-$0F, $11, $2D-$2E |
+| Species record bytes not read | 2-3, 5, $2D-$2E ($0B is a category-$0D string index of unknown content) |
 | Event scripts and talk events | Every command type is a named constant (E-0244, E-0286, E-0293). Talk categories are named by region (E-0288). |
 | String quotes | Message words, string displays (including through category and index wrappers, E-0292 and E-0294) and battle text are quoted at their call sites. |
 | `INCBIN` without an asset comment | 0 (E-0301 corrected E-0289's reading of 17:5D79) |

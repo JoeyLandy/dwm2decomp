@@ -75,7 +75,7 @@
       "06": {"const": "SPECIES_MAX_LEVEL", "note": "base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it", "evidence": "E-0299"},
       "07": {"const": "SPECIES_EXP_CURVE", "note": "the ExpTable row (EXP curve)", "evidence": "E-0148"},
       "08": {"size": 3, "const": "SPECIES_SKILLS", "note": "three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF", "evidence": "E-0299"},
-      "10": {"const": "SPECIES_GROWTH", "note": "stat growth row: passed to StatFromGrowthRow and ReadStatGrowthGain (level-up gains)", "evidence": "E-0299"},
+      "0C": {"size": 6, "const": "SPECIES_GROWTH", "note": "six stat growth rows, one per stat in the order of wLevelUpGains (bytes $0C-$11; C1: HP, MP, ATK, DEF, AGL, INT): ComputeLevelUpStatGainsForBattleArg1 passes each to ReadStatGrowthGain, and new and wild monsters pass each to StatFromGrowthRow", "evidence": "E-0299, E-0309"},
       "12": {"size": 27, "const": "SPECIES_RESISTANCES", "note": "27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one", "evidence": "E-0299"}
     }
   },

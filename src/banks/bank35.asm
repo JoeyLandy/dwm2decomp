@@ -463,9 +463,8 @@ Data_035_433B:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_DrakSlime:: ; heuristic: species record; C0
@@ -478,9 +477,8 @@ Data_035_436A:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3B, $40, $89 ; natural skills (C1, E-0299)
-    db $00, $10, $0A, $0D, $08 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $0A, $0D, $08, $14, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $00, $02, $02, $02, $02, $02, $02, $02, $02, $03, $02, $02, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_SpotSlime:: ; heuristic: species record; C0
@@ -493,9 +491,8 @@ Data_035_4399:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $8B, $9E ; natural skills (C1, E-0299)
-    db $00, $11, $01, $11, $04 ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $01, $11, $04, $11, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_WingSlime:: ; heuristic: species record; C0
@@ -508,9 +505,8 @@ Data_035_43C8:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $48, $62, $99 ; natural skills (C1, E-0299)
-    db $00, $0D, $02, $0B, $0B ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $02, $0B, $0B, $18, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_TreeSlime:: ; heuristic: species record; C0
@@ -523,9 +519,8 @@ Data_035_43F7:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $60, $71 ; natural skills (C1, E-0299)
-    db $00, $0D, $0B, $08, $0E ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $0B, $08, $0E, $11, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4B, $00 ; bytes 45-46
 SpeciesRecord_Snaily:: ; heuristic: species record; C0
@@ -538,9 +533,8 @@ Data_035_4426:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $23, $4E ; natural skills (C1, E-0299)
-    db $00, $0B, $0A, $11, $14 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0A, $11, $14, $14, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $03, $02, $02, $03, $02, $02, $02, $02, $02, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_SlimeNite:: ; heuristic: species record; C0
@@ -553,9 +547,8 @@ Data_035_4455:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $25, $56 ; natural skills (C1, E-0299)
-    db $00, $0E, $01, $0F, $0E ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $01, $0F, $0E, $14, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_Babble:: ; heuristic: species record; C0
@@ -568,9 +561,8 @@ Data_035_4484:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2E, $5F, $80 ; natural skills (C1, E-0299)
-    db $00, $11, $07, $11, $08 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $07, $11, $08, $0E, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $03, $02, $02, $02, $02, $00, $00, $03, $01, $01, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_BoxSlime:: ; heuristic: species record; C0
@@ -583,9 +575,8 @@ Data_035_44B3:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $25, $6F ; natural skills (C1, E-0299)
-    db $00, $0B, $0A, $0E, $13 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0A, $0E, $13, $0E, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $00, $00, $01, $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_PearlGel:: ; heuristic: species record; C0
@@ -598,9 +589,8 @@ Data_035_44E2:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $68, $7F ; natural skills (C1, E-0299)
-    db $01, $0A, $10, $08, $16 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0A, $10, $08, $16, $0E, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $46, $00 ; bytes 45-46
 SpeciesRecord_Slime:: ; heuristic: species record; C0
@@ -613,9 +603,8 @@ Data_035_4511:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $3D, $7F ; natural skills (C1, E-0299)
-    db $00, $16, $0B, $0E, $11 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $16, $0B, $0E, $11, $0B, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $46, $00 ; bytes 45-46
 SpeciesRecord_Healer:: ; heuristic: species record; C0
@@ -628,9 +617,8 @@ Data_035_4540:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $19, $25 ; natural skills (C1, E-0299)
-    db $00, $0B, $0F, $0B, $0B ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0F, $0B, $0B, $14, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $02, $02, $03, $03, $02, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01, $02, $02, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_FangSlime:: ; heuristic: species record; C0
@@ -643,9 +631,8 @@ Data_035_456F:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $68, $90 ; natural skills (C1, E-0299)
-    db $00, $19, $01, $12, $0D ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $19, $01, $12, $0D, $14, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $03, $02, $02, $02, $03, $03, $03, $02, $00, $00, $00, $01, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_RockSlime:: ; heuristic: species record; C0
@@ -658,9 +645,8 @@ Data_035_459E:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6A, $6F, $94 ; natural skills (C1, E-0299)
-    db $03, $0D, $0A, $0E, $17 ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0D, $0A, $0E, $17, $10, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $00, $00, $02, $02, $02, $03, $02, $02, $02, $02, $02, $03, $02, $00, $02, $00, $00, $01, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $51, $00 ; bytes 45-46
 SpeciesRecord_SlimeBorg:: ; heuristic: species record; C0
@@ -673,9 +659,8 @@ Data_035_45CD:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4A, $65, $96 ; natural skills (C1, E-0299)
-    db $00, $12, $0B, $14, $0F ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0B, $14, $0F, $0E, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $01, $02, $01, $02, $02, $03, $02, $02, $03, $02, $02, $03, $02, $01, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $57, $00 ; bytes 45-46
 SpeciesRecord_Slabbit:: ; heuristic: species record; C0
@@ -688,9 +673,8 @@ Data_035_45FC:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $7D, $8D, $A2 ; natural skills (C1, E-0299)
-    db $00, $0F, $07, $0E, $08 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $07, $0E, $08, $15, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $00, $00, $00, $00, $00, $02, $01, $01, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_KingSlime:: ; heuristic: species record; C0
@@ -703,9 +687,8 @@ Data_035_462B:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $38, $1E ; natural skills (C1, E-0299)
-    db $00, $12, $0E, $0F, $0E ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0E, $0F, $0E, $14, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $67, $00 ; bytes 45-46
 SpeciesRecord_Metaly:: ; heuristic: species record; C0
@@ -718,9 +701,8 @@ Data_035_465A:: ; address name
     db $14 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $10, $13 ; natural skills (C1, E-0299)
-    db $00, $00, $1E, $0B, $1E ; bytes 11-15
-    db $1F ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $1E, $0B, $1E, $1F, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $03, $03, $03, $03, $03, $00, $00, $00, $03, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $C8, $00 ; bytes 45-46
 SpeciesRecord_Metabble:: ; heuristic: species record; C0
@@ -733,9 +715,8 @@ Data_035_4689:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $07, $15 ; natural skills (C1, E-0299)
-    db $00, $00, $1E, $0E, $1F ; bytes 11-15
-    db $1F ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $1E, $0E, $1F, $1F, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $00, $00, $03, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $BC, $02 ; bytes 45-46
 SpeciesRecord_SpotKing:: ; heuristic: species record; C0
@@ -748,9 +729,8 @@ Data_035_46B8:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5C, $61, $93 ; natural skills (C1, E-0299)
-    db $00, $12, $0B, $12, $0B ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0B, $12, $0B, $14, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $03, $02, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $00, $01, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $67, $00 ; bytes 45-46
 SpeciesRecord_TropicGel:: ; heuristic: species record; C0
@@ -763,9 +743,8 @@ Data_035_46E7:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $71, $8B ; natural skills (C1, E-0299)
-    db $00, $0F, $14, $13, $09 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $14, $13, $09, $0E, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $02, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_MimeSlime:: ; heuristic: species record; C0
@@ -778,9 +757,8 @@ Data_035_4716:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $34, $8F, $A1 ; natural skills (C1, E-0299)
-    db $00, $0A, $0C, $08, $13 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0A, $0C, $08, $13, $14, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_HaloSlime:: ; heuristic: species record; C0
@@ -793,9 +771,8 @@ Data_035_4745:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $9C, $A0 ; natural skills (C1, E-0299)
-    db $02, $09, $14, $0B, $0D ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $16 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $09, $14, $0B, $0D, $0C, $16 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $02, $01, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $52, $00 ; bytes 45-46
 SpeciesRecord_MetalKing:: ; heuristic: species record; C0
@@ -808,9 +785,8 @@ Data_035_4774:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $35, $3F ; natural skills (C1, E-0299)
-    db $00, $00, $1F, $0F, $1F ; bytes 11-15
-    db $1F ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $1F, $0F, $1F, $1F, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $00, $00, $03, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $84, $03 ; bytes 45-46
 SpeciesRecord_GoldSlime:: ; heuristic: species record; C0
@@ -823,9 +799,8 @@ Data_035_47A3:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3C, $3E, $81 ; natural skills (C1, E-0299)
-    db $03, $00, $1F, $13, $1F ; bytes 11-15
-    db $1F ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $00, $1F, $13, $1F, $1F, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $01, $03, $02, $03 ; 27 base resistance levels (C1, E-0299)
     db $9C, $00 ; bytes 45-46
 SpeciesRecord_GranSlime:: ; heuristic: species record; C0
@@ -838,9 +813,8 @@ Data_035_47D2:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $20, $8A, $A6 ; natural skills (C1, E-0299)
-    db $02, $19, $1D, $1B, $1F ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $1F ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $19, $1D, $1B, $1F, $06, $1F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $03, $03, $01, $01, $03, $03, $03, $03, $03, $03, $03, $02, $03, $03, $03, $02, $03, $02, $02, $02, $02, $03, $02 ; 27 base resistance levels (C1, E-0299)
     db $A7, $00 ; bytes 45-46
 SpeciesRecord_WonderEgg:: ; heuristic: species record; C0
@@ -853,9 +827,8 @@ Data_035_4801:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $15, $35, $3C ; natural skills (C1, E-0299)
-    db $00, $08, $0D, $0B, $13 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $0D, $0B, $13, $0B, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $01, $02, $01, $02, $03, $01, $00, $03, $00, $00, $00, $00, $02, $01, $02, $02, $02, $02, $02, $02, $01, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_Butch:: ; heuristic: species record; C0
@@ -868,9 +841,8 @@ Data_035_4830:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_DragonKid:: ; heuristic: species record; C0
@@ -883,9 +855,8 @@ Data_035_485F:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $71, $95 ; natural skills (C1, E-0299)
-    db $00, $0A, $03, $11, $02 ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0A, $03, $11, $02, $05, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $00, $00, $02, $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $30, $00 ; bytes 45-46
 SpeciesRecord_Tortragon:: ; heuristic: species record; C0
@@ -898,9 +869,8 @@ Data_035_488E:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $35, $36, $4A ; natural skills (C1, E-0299)
-    db $03, $0F, $0B, $12, $06 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0F, $0B, $12, $06, $07, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $00, $02, $01, $00, $00, $00, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_Pteranod:: ; heuristic: species record; C0
@@ -913,9 +883,8 @@ Data_035_48BD:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $48, $99 ; natural skills (C1, E-0299)
-    db $02, $0E, $0B, $12, $02 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $0B, $12, $02, $14, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_Gasgon:: ; heuristic: species record; C0
@@ -928,9 +897,8 @@ Data_035_48EC:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $15, $20, $6E ; natural skills (C1, E-0299)
-    db $02, $11, $0F, $0D, $0B ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $11, $0F, $0D, $0B, $07, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_FairyDrak:: ; heuristic: species record; C0
@@ -943,9 +911,8 @@ Data_035_491B:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2E, $71, $8B ; natural skills (C1, E-0299)
-    db $00, $09, $0D, $11, $10 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $0D, $11, $10, $0E, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_LizardMan:: ; heuristic: species record; C0
@@ -958,9 +925,8 @@ Data_035_494A:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5D, $67, $6B ; natural skills (C1, E-0299)
-    db $05, $11, $0A, $13, $0D ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $11, $0A, $13, $0D, $05, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $02, $02, $01, $01, $01, $01, $00, $02, $00, $00, $01, $00, $00, $03, $00, $02, $00, $00, $01, $02, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_Poisongon:: ; heuristic: species record; C0
@@ -973,9 +939,8 @@ Data_035_4979:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5F, $73, $8B ; natural skills (C1, E-0299)
-    db $00, $15, $10, $0F, $0D ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $15, $10, $0F, $0D, $07, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $02, $01, $01, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_Swordgon:: ; heuristic: species record; C0
@@ -988,9 +953,8 @@ Data_035_49A8:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5C, $65, $96 ; natural skills (C1, E-0299)
-    db $05, $09, $03, $17, $06 ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $09, $03, $17, $06, $01, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $03, $00, $02, $01, $01, $00, $01, $01, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $31, $00 ; bytes 45-46
 SpeciesRecord_Drygon:: ; heuristic: species record; C0
@@ -1003,9 +967,8 @@ Data_035_49D7:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $6F, $90 ; natural skills (C1, E-0299)
-    db $00, $0B, $02, $13, $0D ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $02, $13, $0D, $07, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $03, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $33, $00 ; bytes 45-46
 SpeciesRecord_Dragon:: ; heuristic: species record; C0
@@ -1018,9 +981,8 @@ Data_035_4A06:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $50, $9D ; natural skills (C1, E-0299)
-    db $00, $11, $01, $14, $10 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $01, $14, $10, $07, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $38, $00 ; bytes 45-46
 SpeciesRecord_MiniDrak:: ; heuristic: species record; C0
@@ -1033,9 +995,8 @@ Data_035_4A35:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $6F, $7E ; natural skills (C1, E-0299)
-    db $00, $0E, $08, $11, $0E ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $08, $11, $0E, $12, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $01, $00, $00, $02, $00, $02, $00, $00, $01, $02, $02, $01, $02, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_MadDragon:: ; heuristic: species record; C0
@@ -1048,9 +1009,8 @@ Data_035_4A64:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6B, $6C, $7A ; natural skills (C1, E-0299)
-    db $00, $13, $00, $15, $05 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $00, $15, $05, $08, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $01, $02, $02, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_Rayburn:: ; heuristic: species record; C0
@@ -1063,9 +1023,8 @@ Data_035_4A93:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $51, $5A, $5F ; natural skills (C1, E-0299)
-    db $02, $0E, $02, $11, $10 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $02, $11, $10, $0F, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $00, $00, $02, $00, $00, $00, $01, $00, $00, $02, $00, $02, $01, $00, $00, $00, $00, $02, $01, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $45, $00 ; bytes 45-46
 SpeciesRecord_Chamelgon:: ; heuristic: species record; C0
@@ -1078,9 +1037,8 @@ Data_035_4AC2:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $34, $60, $72 ; natural skills (C1, E-0299)
-    db $00, $11, $12, $0B, $06 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $12, $0B, $06, $08, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $00, $00, $00, $00, $00, $02, $01, $00, $03, $00, $00, $03, $00, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_LizardFly:: ; heuristic: species record; C0
@@ -1093,9 +1051,8 @@ Data_035_4AF1:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $27, $40 ; natural skills (C1, E-0299)
-    db $00, $0B, $0B, $11, $11 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0B, $11, $11, $0D, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $00, $00, $00, $00, $01, $00, $00, $00, $01, $00, $00, $02, $00, $03, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_Andreal:: ; heuristic: species record; C0
@@ -1108,9 +1065,8 @@ Data_035_4B20:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $2E, $73 ; natural skills (C1, E-0299)
-    db $05, $15, $0F, $13, $11 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $15, $0F, $13, $11, $13, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $02, $02, $02, $00, $02, $00, $00, $02, $00, $02, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_KingCobra:: ; heuristic: species record; C0
@@ -1123,9 +1079,8 @@ Data_035_4B4F:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5F, $75, $79 ; natural skills (C1, E-0299)
-    db $00, $12, $08, $10, $0D ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $08, $10, $0D, $13, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $00, $00, $00, $01, $01, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $02, $00, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $49, $00 ; bytes 45-46
 SpeciesRecord_Vampirus:: ; heuristic: species record; C0
@@ -1138,9 +1093,8 @@ Data_035_4B7E:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $4E, $63 ; natural skills (C1, E-0299)
-    db $02, $0E, $07, $0A, $08 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $07, $0A, $08, $13, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $01, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01, $02, $00, $02, $00, $01, $00, $01, $01, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $37, $00 ; bytes 45-46
 SpeciesRecord_SnakeBat:: ; heuristic: species record; C0
@@ -1153,9 +1107,8 @@ Data_035_4BAD:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4B, $8B, $A7 ; natural skills (C1, E-0299)
-    db $02, $0A, $09, $15, $0F ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0A, $09, $15, $0F, $09, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $02, $00, $00, $01, $00, $00, $00, $02, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $38, $00 ; bytes 45-46
 SpeciesRecord_Spikerous:: ; heuristic: species record; C0
@@ -1168,9 +1121,8 @@ Data_035_4BDC:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4B, $6E, $70 ; natural skills (C1, E-0299)
-    db $03, $14, $08, $13, $18 ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $02 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $14, $08, $13, $18, $01, $02 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $00, $01, $01, $00, $00, $01, $00, $00, $03, $00, $02, $00, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $45, $00 ; bytes 45-46
 SpeciesRecord_GreatDrak:: ; heuristic: species record; C0
@@ -1183,9 +1135,8 @@ Data_035_4C0B:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $44, $53, $9D ; natural skills (C1, E-0299)
-    db $02, $15, $05, $17, $0E ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $15, $05, $17, $0E, $10, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $03, $02, $01, $01, $01, $01, $02, $03, $01, $01, $02, $01, $01, $03, $00, $03, $01, $01, $03, $01, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $64, $00 ; bytes 45-46
 SpeciesRecord_Crestpent:: ; heuristic: species record; C0
@@ -1198,9 +1149,8 @@ Data_035_4C3A:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $33, $3B, $5F ; natural skills (C1, E-0299)
-    db $00, $0E, $04, $0F, $05 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $04, $0F, $05, $13, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $02, $00, $00, $00, $00, $02, $02, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_WingSnake:: ; heuristic: species record; C0
@@ -1213,9 +1163,8 @@ Data_035_4C69:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $62, $6A, $73 ; natural skills (C1, E-0299)
-    db $00, $0F, $08, $14, $11 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $08, $14, $11, $0E, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $02, $01, $01, $00, $00, $00, $02, $00, $01, $00, $00, $00, $03, $00, $03, $00, $00, $00, $00, $02, $02, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_Coatol:: ; heuristic: species record; C0
@@ -1228,9 +1177,8 @@ Data_035_4C98:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $52, $6B ; natural skills (C1, E-0299)
-    db $00, $19, $0E, $14, $16 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $19, $0E, $14, $16, $12, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $01, $01, $02, $02, $01, $01, $01, $01, $01, $03, $01, $03, $01, $01, $01, $01, $02, $02, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $6C, $00 ; bytes 45-46
 SpeciesRecord_Orochi:: ; heuristic: species record; C0
@@ -1243,9 +1191,8 @@ Data_035_4CC7:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $50, $63 ; natural skills (C1, E-0299)
-    db $00, $18, $0D, $18, $15 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $0D, $18, $15, $0B, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $01, $02, $02, $02, $01, $01, $03, $01, $01, $03, $00, $03, $01, $02, $02, $02, $01, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $6C, $00 ; bytes 45-46
 SpeciesRecord_BattleRex:: ; heuristic: species record; C0
@@ -1258,9 +1205,8 @@ Data_035_4CF6:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $5E, $6B ; natural skills (C1, E-0299)
-    db $05, $17, $10, $1A, $14 ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $10, $1A, $14, $11, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $01, $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $6D, $00 ; bytes 45-46
 SpeciesRecord_SkyDragon:: ; heuristic: species record; C0
@@ -1273,9 +1219,8 @@ Data_035_4D25:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $66, $89 ; natural skills (C1, E-0299)
-    db $02, $0F, $0B, $14, $0E ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0F, $0B, $14, $0E, $12, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $01, $01, $02, $02, $01, $01, $01, $01, $01, $03, $00, $03, $01, $01, $02, $01, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $61, $00 ; bytes 45-46
 SpeciesRecord_Serpentia:: ; heuristic: species record; C0
@@ -1288,9 +1233,8 @@ Data_035_4D54:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $54, $5A, $65 ; natural skills (C1, E-0299)
-    db $00, $17, $07, $18, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $17, $07, $18, $15, $12, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $02, $02, $02, $01, $01, $02, $01, $01, $03, $00, $02, $00, $01, $01, $01, $01, $01, $01, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $67, $00 ; bytes 45-46
 SpeciesRecord_Divinegon:: ; heuristic: species record; C0
@@ -1303,9 +1247,8 @@ Data_035_4D83:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $44, $9F ; natural skills (C1, E-0299)
-    db $02, $1A, $19, $1C, $18 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $1A, $19, $1C, $18, $14, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $03, $03, $02, $02, $02, $02, $02, $03, $02, $02, $03, $02, $02, $03, $01, $03, $02, $02, $03, $02, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $96, $00 ; bytes 45-46
 SpeciesRecord_Orligon:: ; heuristic: species record; C0
@@ -1318,9 +1261,8 @@ Data_035_4DB2:: ; address name
     db $4B ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $6E, $94 ; natural skills (C1, E-0299)
-    db $03, $19, $18, $1C, $19 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $18 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $19, $18, $1C, $19, $15, $18 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $02, $02, $01, $02, $02, $03, $02, $02, $03, $02, $02, $03, $00, $03, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $99, $00 ; bytes 45-46
 SpeciesRecord_GigaDraco:: ; heuristic: species record; C0
@@ -1333,9 +1275,8 @@ Data_035_4DE1:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $4B, $6C ; natural skills (C1, E-0299)
-    db $03, $1E, $18, $1D, $0C ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $1E, $18, $1D, $0C, $06, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $01, $01, $01, $01, $01, $01, $03, $01, $02, $00, $03, $02, $02, $01, $01, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $7A, $00 ; bytes 45-46
 SpeciesRecord_Tonguella:: ; heuristic: species record; C0
@@ -1348,9 +1289,8 @@ Data_035_4E10:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $61, $71, $8B ; natural skills (C1, E-0299)
-    db $00, $0E, $05, $0F, $0C ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $05, $0F, $0C, $0B, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Almiraj:: ; heuristic: species record; C0
@@ -1363,9 +1303,8 @@ Data_035_4E3F:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $68, $6E ; natural skills (C1, E-0299)
-    db $00, $12, $05, $0E, $09 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $05, $0E, $09, $0F, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_CatFly:: ; heuristic: species record; C0
@@ -1378,9 +1317,8 @@ Data_035_4E6E:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2B, $33, $76 ; natural skills (C1, E-0299)
-    db $00, $0B, $0A, $0D, $08 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0A, $0D, $08, $12, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $01, $01, $03, $03, $03, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_PillowRat:: ; heuristic: species record; C0
@@ -1393,9 +1331,8 @@ Data_035_4E9D:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2B, $6F, $7D ; natural skills (C1, E-0299)
-    db $00, $0E, $11, $08, $08 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $11, $08, $08, $13, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Saccer:: ; heuristic: species record; C0
@@ -1408,9 +1345,8 @@ Data_035_4ECC:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $69, $72 ; natural skills (C1, E-0299)
-    db $00, $10, $05, $09, $11 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $05, $09, $11, $00, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $01, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_GulpBeast:: ; heuristic: species record; C0
@@ -1423,9 +1359,8 @@ Data_035_4EFB:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6C, $6F, $90 ; natural skills (C1, E-0299)
-    db $00, $18, $01, $1A, $0D ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $01, $1A, $0D, $07, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Skullroo:: ; heuristic: species record; C0
@@ -1438,9 +1373,8 @@ Data_035_4F2A:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $68, $78, $A8 ; natural skills (C1, E-0299)
-    db $00, $0E, $0A, $0B, $08 ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $02 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0A, $0B, $08, $10, $02 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $01, $01, $01, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_WindBeast:: ; heuristic: species record; C0
@@ -1453,9 +1387,8 @@ Data_035_4F59:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $10, $51 ; natural skills (C1, E-0299)
-    db $02, $0D, $14, $0D, $0F ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0D, $14, $0D, $0F, $0F, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $00, $01, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_Beavern:: ; heuristic: species record; C0
@@ -1468,9 +1401,8 @@ Data_035_4F88:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $68, $91 ; natural skills (C1, E-0299)
-    db $00, $16, $08, $08, $15 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $16, $08, $08, $15, $0A, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02, $02, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Antbear:: ; heuristic: species record; C0
@@ -1483,9 +1415,8 @@ Data_035_4FB7:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5E, $62, $8B ; natural skills (C1, E-0299)
-    db $00, $0E, $07, $11, $0B ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $07, $11, $0B, $09, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $38, $00 ; bytes 45-46
 SpeciesRecord_SuperTen:: ; heuristic: species record; C0
@@ -1498,9 +1429,8 @@ Data_035_4FE6:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $79, $7C, $9E ; natural skills (C1, E-0299)
-    db $00, $12, $07, $0D, $0C ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $07, $0D, $0C, $0B, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $02, $01, $00, $00, $02, $02, $02, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_IronTurt:: ; heuristic: species record; C0
@@ -1513,9 +1443,8 @@ Data_035_5015:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $39, $94, $97 ; natural skills (C1, E-0299)
-    db $03, $12, $05, $11, $17 ; bytes 11-15
-    db $02 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $12, $05, $11, $17, $02, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $02, $02, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Mommonja:: ; heuristic: species record; C0
@@ -1528,9 +1457,8 @@ Data_035_5044:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $7A, $93, $A8 ; natural skills (C1, E-0299)
-    db $00, $0E, $0B, $10, $0E ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0B, $10, $0E, $14, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_HammerMan:: ; heuristic: species record; C0
@@ -1543,9 +1471,8 @@ Data_035_5073:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $68, $6B, $70 ; natural skills (C1, E-0299)
-    db $03, $11, $13, $11, $0B ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $11, $13, $11, $0B, $11, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $02, $02, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_Grizzly:: ; heuristic: species record; C0
@@ -1558,9 +1485,8 @@ Data_035_50A2:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $62, $63, $8D ; natural skills (C1, E-0299)
-    db $00, $14, $00, $1B, $07 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $00, $1B, $07, $09, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03, $02, $02, $03, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_Yeti:: ; heuristic: species record; C0
@@ -1573,9 +1499,8 @@ Data_035_50D1:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $53, $90 ; natural skills (C1, E-0299)
-    db $00, $12, $0B, $0F, $09 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0B, $0F, $09, $0A, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $02, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $03, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_ArrowDog:: ; heuristic: species record; C0
@@ -1588,9 +1513,8 @@ Data_035_5100:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $4E, $93 ; natural skills (C1, E-0299)
-    db $00, $09, $07, $15, $13 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $07, $15, $13, $0D, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_NoctoKing:: ; heuristic: species record; C0
@@ -1603,9 +1527,8 @@ Data_035_512F:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2E, $71, $84 ; natural skills (C1, E-0299)
-    db $02, $16, $0D, $12, $0F ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $16, $0D, $12, $0F, $14, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $02, $02, $00, $00, $00, $00, $00, $00, $01, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $4B, $00 ; bytes 45-46
 SpeciesRecord_BeastNite:: ; heuristic: species record; C0
@@ -1618,9 +1541,8 @@ Data_035_515E:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $65, $67 ; natural skills (C1, E-0299)
-    db $05, $15, $04, $16, $0E ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $15, $04, $16, $0E, $08, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $00, $00, $02, $01, $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_MadGopher:: ; heuristic: species record; C0
@@ -1633,9 +1555,8 @@ Data_035_518D:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $57, $5B, $A6 ; natural skills (C1, E-0299)
-    db $00, $0E, $0D, $11, $09 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0D, $11, $09, $08, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $01, $01, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_FairyRat:: ; heuristic: species record; C0
@@ -1648,9 +1569,8 @@ Data_035_51BC:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2B, $2E, $54 ; natural skills (C1, E-0299)
-    db $00, $0C, $05, $0D, $0E ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $05, $0D, $0E, $11, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $00, $01, $00, $00, $00, $01, $02, $02, $01, $00, $01, $01, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_Unicorn:: ; heuristic: species record; C0
@@ -1663,9 +1583,8 @@ Data_035_51EB:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $1E, $A7 ; natural skills (C1, E-0299)
-    db $02, $13, $15, $0E, $0D ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $19 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $13, $15, $0E, $0D, $0C, $19 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $02, $02, $01, $01, $02, $03, $03, $01, $01, $00, $02, $00, $01, $01, $03, $02, $02, $03, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $63, $00 ; bytes 45-46
 SpeciesRecord_Goategon:: ; heuristic: species record; C0
@@ -1678,9 +1597,8 @@ Data_035_521A:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $2B, $71 ; natural skills (C1, E-0299)
-    db $00, $13, $09, $11, $0D ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $09, $11, $0D, $11, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $01, $01, $00, $00, $02, $01, $01, $01, $01, $01, $01, $03, $03, $01, $01, $01, $02, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $50, $00 ; bytes 45-46
 SpeciesRecord_WildApe:: ; heuristic: species record; C0
@@ -1693,9 +1611,8 @@ Data_035_5249:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6D, $7D, $A7 ; natural skills (C1, E-0299)
-    db $00, $0D, $01, $14, $0A ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $01, $14, $0A, $08, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_Trumpeter:: ; heuristic: species record; C0
@@ -1708,9 +1625,8 @@ Data_035_5278:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6E, $7E, $90 ; natural skills (C1, E-0299)
-    db $03, $11, $08, $15, $11 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $11, $08, $15, $11, $0E, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $01, $01, $01, $01, $01, $00, $00, $02, $00, $00, $01, $02, $03, $01, $00, $00, $01, $00, $00, $00, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $58, $00 ; bytes 45-46
 SpeciesRecord_KingLeo:: ; heuristic: species record; C0
@@ -1723,9 +1639,8 @@ Data_035_52A7:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $44, $63 ; natural skills (C1, E-0299)
-    db $00, $14, $0E, $18, $17 ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $0E, $18, $17, $11, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01, $01, $02, $01, $02, $01, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $7C, $00 ; bytes 45-46
 SpeciesRecord_DarkHorn:: ; heuristic: species record; C0
@@ -1738,9 +1653,8 @@ Data_035_52D6:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $33, $69 ; natural skills (C1, E-0299)
-    db $00, $11, $04, $13, $12 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $04, $13, $12, $0A, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $01, $01, $02, $03, $01, $03, $01, $03, $03, $03, $01, $01, $01, $00, $02, $01, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $64, $00 ; bytes 45-46
 SpeciesRecord_MadCat:: ; heuristic: species record; C0
@@ -1753,9 +1667,8 @@ Data_035_5305:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $51, $62, $8D ; natural skills (C1, E-0299)
-    db $00, $0F, $07, $12, $0E ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $07, $12, $0E, $11, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $01, $01, $00, $01, $00, $03, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $53, $00 ; bytes 45-46
 SpeciesRecord_BigEye:: ; heuristic: species record; C0
@@ -1768,9 +1681,8 @@ Data_035_5334:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $44, $A1 ; natural skills (C1, E-0299)
-    db $00, $0E, $08, $0E, $0B ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $08, $0E, $0B, $07, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $01, $03, $00, $02, $00, $02, $02, $03, $00, $00, $00, $00, $01, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_Gorago:: ; heuristic: species record; C0
@@ -1783,9 +1695,8 @@ Data_035_5363:: ; address name
     db $41 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $6C, $80 ; natural skills (C1, E-0299)
-    db $00, $1D, $1C, $1E, $18 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $1D, $1C, $1E, $18, $18, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $02, $02, $02, $02, $02, $02, $01, $03, $03, $03, $01, $01, $02, $02, $01, $01, $03, $03, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $90, $00 ; bytes 45-46
 SpeciesRecord_CatMage:: ; heuristic: species record; C0
@@ -1798,9 +1709,8 @@ Data_035_5392:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $2E, $3A ; natural skills (C1, E-0299)
-    db $00, $07, $06, $0A, $04 ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $07, $06, $0A, $04, $06, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $00, $02, $01, $02, $02, $01, $01, $00, $00, $00, $00, $00, $02, $03, $00, $03, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_Dumbira:: ; heuristic: species record; C0
@@ -1813,9 +1723,8 @@ Data_035_53C1:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5E, $65, $6D ; natural skills (C1, E-0299)
-    db $05, $0F, $0A, $09, $08 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $0F, $0A, $09, $08, $0E, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $00, $00, $02, $02, $01, $03, $00, $00, $01, $02, $02, $01, $00, $01, $02, $01, $01, $01, $03, $01, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $49, $00 ; bytes 45-46
 SpeciesRecord_Picky:: ; heuristic: species record; C0
@@ -1828,9 +1737,8 @@ Data_035_53F0:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $2E, $58 ; natural skills (C1, E-0299)
-    db $00, $0B, $0C, $0E, $08 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0C, $0E, $08, $12, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Wyvern:: ; heuristic: species record; C0
@@ -1843,9 +1751,8 @@ Data_035_541F:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $2F, $44 ; natural skills (C1, E-0299)
-    db $02, $11, $0D, $13, $0B ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $11, $0D, $13, $0B, $10, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_BullBird:: ; heuristic: species record; C0
@@ -1858,9 +1765,8 @@ Data_035_544E:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $59, $68, $6F ; natural skills (C1, E-0299)
-    db $00, $0E, $08, $11, $09 ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $08, $11, $09, $06, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_Florajay:: ; heuristic: species record; C0
@@ -1873,9 +1779,8 @@ Data_035_547D:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $29, $56, $A0 ; natural skills (C1, E-0299)
-    db $00, $06, $12, $0C, $03 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $06, $12, $0C, $03, $15, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $03, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_DuckKite:: ; heuristic: species record; C0
@@ -1888,9 +1793,8 @@ Data_035_54AC:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $34, $75 ; natural skills (C1, E-0299)
-    db $00, $0B, $0B, $09, $0C ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0B, $09, $0C, $12, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $01, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_MadPecker:: ; heuristic: species record; C0
@@ -1903,9 +1807,8 @@ Data_035_54DB:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $27, $51 ; natural skills (C1, E-0299)
-    db $00, $09, $07, $14, $0E ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $07, $14, $0E, $17, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $4B, $00 ; bytes 45-46
 SpeciesRecord_MadRaven:: ; heuristic: species record; C0
@@ -1918,9 +1821,8 @@ Data_035_550A:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6A, $99, $A8 ; natural skills (C1, E-0299)
-    db $00, $06, $0E, $11, $0C ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $06, $0E, $11, $0C, $12, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_MistyWing:: ; heuristic: species record; C0
@@ -1933,9 +1835,8 @@ Data_035_5539:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $38, $80, $A6 ; natural skills (C1, E-0299)
-    db $02, $0C, $11, $08, $0F ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0C, $11, $08, $0F, $16, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $01, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_AquaHawk:: ; heuristic: species record; C0
@@ -1948,9 +1849,8 @@ Data_035_5568:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $24, $62, $9B ; natural skills (C1, E-0299)
-    db $00, $07, $08, $06, $0D ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $07, $08, $06, $0D, $0E, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $02, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02, $02, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_Dracky:: ; heuristic: species record; C0
@@ -1963,9 +1863,8 @@ Data_035_5597:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $21, $2F, $32 ; natural skills (C1, E-0299)
-    db $00, $0B, $04, $08, $0D ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $04, $08, $0D, $11, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $34, $00 ; bytes 45-46
 SpeciesRecord_KiteHawk:: ; heuristic: species record; C0
@@ -1978,9 +1877,8 @@ Data_035_55C6:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $39, $75, $99 ; natural skills (C1, E-0299)
-    db $02, $0D, $08, $08, $07 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0D, $08, $08, $07, $09, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $31, $00 ; bytes 45-46
 SpeciesRecord_BigRoost:: ; heuristic: species record; C0
@@ -1993,9 +1891,8 @@ Data_035_55F5:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $51, $7E, $95 ; natural skills (C1, E-0299)
-    db $00, $08, $05, $0E, $0C ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $05, $0E, $0C, $11, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $34, $00 ; bytes 45-46
 SpeciesRecord_StubBird:: ; heuristic: species record; C0
@@ -2008,9 +1905,8 @@ Data_035_5624:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $58, $65 ; natural skills (C1, E-0299)
-    db $00, $10, $0C, $14, $14 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $0C, $14, $14, $0E, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $02, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_LandOwl:: ; heuristic: species record; C0
@@ -2023,9 +1919,8 @@ Data_035_5653:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $52, $7D ; natural skills (C1, E-0299)
-    db $00, $0F, $0A, $15, $0D ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $0A, $15, $0D, $0B, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $00, $00, $01, $02, $02, $01, $00, $00, $00, $00, $01, $01, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $51, $00 ; bytes 45-46
 SpeciesRecord_MadGoose:: ; heuristic: species record; C0
@@ -2038,9 +1933,8 @@ Data_035_5682:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $48, $7A ; natural skills (C1, E-0299)
-    db $00, $11, $06, $11, $0F ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $06, $11, $0F, $14, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $01, $01, $02, $02, $02, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_MadCondor:: ; heuristic: species record; C0
@@ -2053,9 +1947,8 @@ Data_035_56B1:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $19, $66 ; natural skills (C1, E-0299)
-    db $02, $0E, $0B, $12, $0C ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $0B, $12, $0C, $11, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $02, $02, $01, $00, $00, $02, $00, $01, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_Emyu:: ; heuristic: species record; C0
@@ -2068,9 +1961,8 @@ Data_035_56E0:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $48, $7C, $A7 ; natural skills (C1, E-0299)
-    db $00, $09, $0D, $14, $13 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $1E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $0D, $14, $13, $17, $1E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $02, $00, $01, $00, $01, $02, $02, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $59, $00 ; bytes 45-46
 SpeciesRecord_Blizzardy:: ; heuristic: species record; C0
@@ -2083,9 +1975,8 @@ Data_035_570F:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $44, $53 ; natural skills (C1, E-0299)
-    db $02, $14, $07, $0B, $11 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $14, $07, $0B, $11, $13, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $02, $02, $03, $00, $00, $02, $00, $00, $01, $00, $00, $01, $00, $01, $03, $00, $01, $00, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_Phoenix:: ; heuristic: species record; C0
@@ -2098,9 +1989,8 @@ Data_035_573E:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $62, $99 ; natural skills (C1, E-0299)
-    db $00, $10, $0D, $13, $08 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $0D, $13, $08, $13, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $03, $00, $00, $01, $00, $03, $03, $03, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_ZapBird:: ; heuristic: species record; C0
@@ -2113,9 +2003,8 @@ Data_035_576D:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3F, $4A, $52 ; natural skills (C1, E-0299)
-    db $02, $14, $07, $13, $11 ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $14, $07, $13, $11, $16, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $00, $00, $01, $02, $00, $02, $00, $00, $01, $00, $01, $01, $00, $01, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $5A, $00 ; bytes 45-46
 SpeciesRecord_Garudian:: ; heuristic: species record; C0
@@ -2128,9 +2017,8 @@ Data_035_579C:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $48, $5D ; natural skills (C1, E-0299)
-    db $02, $0A, $07, $08, $0E ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0A, $07, $08, $0E, $16, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $03, $00, $03, $00, $02, $00, $00, $00, $01, $01, $01, $01, $02, $03, $03, $03, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $46, $00 ; bytes 45-46
 SpeciesRecord_WhipBird:: ; heuristic: species record; C0
@@ -2143,9 +2031,8 @@ Data_035_57CB:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $35, $84, $85 ; natural skills (C1, E-0299)
-    db $03, $1B, $13, $0C, $14 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $1B, $13, $0C, $14, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $01, $01, $02, $00, $00, $01, $00, $00, $02, $00, $01, $01, $00, $02, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $67, $00 ; bytes 45-46
 SpeciesRecord_FunkyBird:: ; heuristic: species record; C0
@@ -2158,9 +2045,8 @@ Data_035_57FA:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $78, $7B, $7C ; natural skills (C1, E-0299)
-    db $00, $0E, $14, $08, $09 ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $14, $08, $09, $10, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $03, $00, $01, $00, $02, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03, $03, $03, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_RainHawk:: ; heuristic: species record; C0
@@ -2173,9 +2059,8 @@ Data_035_5829:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3D, $81, $94 ; natural skills (C1, E-0299)
-    db $02, $19, $1B, $0F, $18 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $18 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $19, $1B, $0F, $18, $12, $18 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $02, $02, $01, $01, $02, $01, $01, $03, $03, $01, $03, $01, $02, $03, $01, $02, $01, $03, $03, $03, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $8A, $00 ; bytes 45-46
 SpeciesRecord_Azurile:: ; heuristic: species record; C0
@@ -2188,9 +2073,8 @@ Data_035_5858:: ; address name
     db $4B ; base level cap (C1, E-0299)
     db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3F, $9F, $A0 ; natural skills (C1, E-0299)
-    db $02, $1B, $18, $18, $0C ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $1B, $18, $18, $0C, $18, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $03, $02, $01, $01, $02, $02, $02, $03, $02, $02, $02, $02, $03, $03, $03, $01, $01, $03, $03, $03, $03, $03, $02 ; 27 base resistance levels (C1, E-0299)
     db $90, $00 ; bytes 45-46
 SpeciesRecord_Shantak:: ; heuristic: species record; C0
@@ -2203,9 +2087,8 @@ Data_035_5887:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $19, $40, $9D ; natural skills (C1, E-0299)
-    db $02, $18, $16, $12, $14 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $16 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $18, $16, $12, $14, $18, $16 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $02, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $01, $01, $02, $02, $02, $03, $03, $03, $03, $03, $02 ; 27 base resistance levels (C1, E-0299)
     db $84, $00 ; bytes 45-46
 SpeciesRecord_CragDevil:: ; heuristic: species record; C0
@@ -2218,9 +2101,8 @@ Data_035_58B6:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $34, $A8 ; natural skills (C1, E-0299)
-    db $00, $07, $08, $0D, $05 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $07, $08, $0D, $05, $0E, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $03, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $03, $00, $01, $00, $02, $01, $01, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $8A, $00 ; bytes 45-46
 SpeciesRecord_MadPlant:: ; heuristic: species record; C0
@@ -2233,9 +2115,8 @@ Data_035_58E5:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $23, $27, $2B ; natural skills (C1, E-0299)
-    db $00, $0F, $18, $0B, $0D ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $18, $0B, $0D, $06, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $03, $03, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_FireWeed:: ; heuristic: species record; C0
@@ -2248,9 +2129,8 @@ Data_035_5914:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $22, $72 ; natural skills (C1, E-0299)
-    db $00, $0E, $1A, $0A, $0C ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $1A, $0A, $0C, $05, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $00, $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $02, $00, $00, $00, $00, $02, $02, $02, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_FloraMan:: ; heuristic: species record; C0
@@ -2263,9 +2143,8 @@ Data_035_5943:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $21, $24 ; natural skills (C1, E-0299)
-    db $00, $11, $14, $06, $09 ; bytes 11-15
-    db $02 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $14, $06, $09, $02, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $02, $02, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_WingTree:: ; heuristic: species record; C0
@@ -2278,9 +2157,8 @@ Data_035_5972:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $20, $5B, $A4 ; natural skills (C1, E-0299)
-    db $02, $0C, $14, $06, $0B ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0C, $14, $06, $0B, $0E, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $03, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_CactiBall:: ; heuristic: species record; C0
@@ -2293,9 +2171,8 @@ Data_035_59A1:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $60, $6A, $76 ; natural skills (C1, E-0299)
-    db $00, $12, $12, $0C, $0F ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $12, $0C, $0F, $09, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Gulpple:: ; heuristic: species record; C0
@@ -2308,9 +2185,8 @@ Data_035_59D0:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $61, $6A, $71 ; natural skills (C1, E-0299)
-    db $00, $10, $11, $09, $06 ; bytes 11-15
-    db $02 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $11, $09, $06, $02, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_Toadstool:: ; heuristic: species record; C0
@@ -2323,9 +2199,8 @@ Data_035_59FF:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $61, $71, $93 ; natural skills (C1, E-0299)
-    db $00, $0E, $12, $08, $09 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $12, $08, $09, $0D, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $02, $02, $01, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_AmberWeed:: ; heuristic: species record; C0
@@ -2338,9 +2213,8 @@ Data_035_5A2E:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $38, $39 ; natural skills (C1, E-0299)
-    db $00, $0C, $18, $08, $11 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $18, $08, $11, $0C, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $01, $00, $00, $01, $02, $02, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Slurperon:: ; heuristic: species record; C0
@@ -2353,9 +2227,8 @@ Data_035_5A5D:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $76, $8B ; natural skills (C1, E-0299)
-    db $00, $08, $05, $07, $02 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $02 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $05, $07, $02, $07, $02 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $00, $00, $01, $01, $01, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $2A, $00 ; bytes 45-46
 SpeciesRecord_Stubsuck:: ; heuristic: species record; C0
@@ -2368,9 +2241,8 @@ Data_035_5A8C:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $5B, $A4 ; natural skills (C1, E-0299)
-    db $00, $11, $0B, $04, $02 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0B, $04, $02, $09, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $00, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $02, $03, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $33, $00 ; bytes 45-46
 SpeciesRecord_Oniono:: ; heuristic: species record; C0
@@ -2383,9 +2255,8 @@ Data_035_5ABB:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $68, $71 ; natural skills (C1, E-0299)
-    db $00, $0D, $14, $0E, $0B ; bytes 11-15
-    db $03 ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $14, $0E, $0B, $03, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $01, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_DanceVegi:: ; heuristic: species record; C0
@@ -2398,9 +2269,8 @@ Data_035_5AEA:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $79, $7A, $7D ; natural skills (C1, E-0299)
-    db $00, $0B, $15, $07, $06 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $15, $07, $06, $14, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $02, $02, $01, $00, $00, $02, $03, $02, $01, $00, $00, $01, $00, $01, $01, $00, $01, $01, $02, $03, $03, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_TreeBoy:: ; heuristic: species record; C0
@@ -2413,9 +2283,8 @@ Data_035_5B19:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $24, $7C ; natural skills (C1, E-0299)
-    db $00, $0F, $12, $08, $03 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $12, $08, $03, $0C, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $00, $01, $02, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $49, $00 ; bytes 45-46
 SpeciesRecord_Devipine:: ; heuristic: species record; C0
@@ -2428,9 +2297,8 @@ Data_035_5B48:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $71, $73 ; natural skills (C1, E-0299)
-    db $00, $0E, $07, $08, $04 ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $07, $08, $04, $05, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $00, $00, $00, $00, $02, $02, $00, $00, $00, $01, $00, $01, $00, $01, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $34, $00 ; bytes 45-46
 SpeciesRecord_FaceTree:: ; heuristic: species record; C0
@@ -2443,9 +2311,8 @@ Data_035_5B77:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $33, $75, $76 ; natural skills (C1, E-0299)
-    db $00, $0C, $14, $0B, $08 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $14, $0B, $08, $0A, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $02, $02, $02, $02, $01, $00, $00, $03, $00, $00, $00, $01, $02, $02, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $51, $00 ; bytes 45-46
 SpeciesRecord_HerbMan:: ; heuristic: species record; C0
@@ -2458,9 +2325,8 @@ Data_035_5BA6:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $75, $8A, $92 ; natural skills (C1, E-0299)
-    db $00, $13, $11, $07, $0A ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $11, $07, $0A, $0F, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $03, $00, $00, $00, $02, $02, $02, $00, $00, $00, $03, $00, $00, $00, $00, $02, $00, $03, $03, $03, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $58, $00 ; bytes 45-46
 SpeciesRecord_BeanMan:: ; heuristic: species record; C0
@@ -2473,9 +2339,8 @@ Data_035_5BD5:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $32, $A9 ; natural skills (C1, E-0299)
-    db $00, $0E, $0F, $0C, $0E ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0F, $0C, $0E, $0F, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $00, $00, $01, $02, $02, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $03, $03, $03, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $4B, $00 ; bytes 45-46
 SpeciesRecord_EvilSeed:: ; heuristic: species record; C0
@@ -2488,9 +2353,8 @@ Data_035_5C04:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5C, $60, $7F ; natural skills (C1, E-0299)
-    db $02, $08, $0B, $08, $05 ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $08, $0B, $08, $05, $01, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $00, $00, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $32, $00 ; bytes 45-46
 SpeciesRecord_ManEater:: ; heuristic: species record; C0
@@ -2503,9 +2367,8 @@ Data_035_5C33:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $55, $69, $71 ; natural skills (C1, E-0299)
-    db $00, $0E, $0C, $13, $07 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0C, $13, $07, $0A, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $00, $00, $01, $03, $03, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $03, $03, $03, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Snapper:: ; heuristic: species record; C0
@@ -2518,9 +2381,8 @@ Data_035_5C62:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $33, $4E, $65 ; natural skills (C1, E-0299)
-    db $00, $11, $0E, $14, $0D ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $10 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0E, $14, $0D, $0A, $10 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $01, $00, $00, $02, $03, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03, $03, $03, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $57, $00 ; bytes 45-46
 SpeciesRecord_GhosTree:: ; heuristic: species record; C0
@@ -2533,9 +2395,8 @@ Data_035_5C91:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $7A, $80 ; natural skills (C1, E-0299)
-    db $00, $08, $0D, $09, $06 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $0D, $09, $06, $07, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $00, $01, $01, $01, $02, $02, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $02, $02, $02, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_Rosevine:: ; heuristic: species record; C0
@@ -2548,9 +2409,8 @@ Data_035_5CC0:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $63, $82, $96 ; natural skills (C1, E-0299)
-    db $00, $18, $1E, $17, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $1E, $17, $15, $12, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $01, $01, $02, $03, $03, $01, $01, $01, $03, $01, $01, $01, $01, $02, $01, $03, $03, $03, $01, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $81, $00 ; bytes 45-46
 SpeciesRecord_Egdracil:: ; heuristic: species record; C0
@@ -2563,9 +2423,8 @@ Data_035_5CEF:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1E, $71, $9D ; natural skills (C1, E-0299)
-    db $00, $19, $12, $15, $18 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $19, $12, $15, $18, $0F, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $01, $02, $02, $03, $03, $03, $01, $01, $01, $03, $01, $01, $01, $02, $01, $01, $03, $03, $03, $01, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $80, $00 ; bytes 45-46
 SpeciesRecord_Warubou:: ; heuristic: species record; C0
@@ -2578,9 +2437,8 @@ Data_035_5D1E:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $83, $A3 ; natural skills (C1, E-0299)
-    db $00, $16, $07, $0C, $0D ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $16, $07, $0C, $0D, $18, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $03, $03, $01, $01, $03, $03, $03, $01, $01, $01, $03, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $72, $00 ; bytes 45-46
 SpeciesRecord_Watabou:: ; heuristic: species record; C0
@@ -2593,9 +2451,8 @@ Data_035_5D4D:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3C, $9E, $A2 ; natural skills (C1, E-0299)
-    db $00, $0A, $1B, $0B, $0E ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $1E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0A, $1B, $0B, $0E, $18, $1E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $03, $03, $01, $03, $03, $03, $03, $03, $01, $01, $03, $01, $02, $03, $03, $03, $03, $03, $03, $03, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $8F, $00 ; bytes 45-46
 SpeciesRecord_Eggplaton:: ; heuristic: species record; C0
@@ -2608,9 +2465,8 @@ Data_035_5D7C:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $76, $7A ; natural skills (C1, E-0299)
-    db $00, $08, $0E, $0D, $13 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $0E, $0D, $13, $07, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $01, $01, $03, $03, $01, $01, $01, $01, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $32, $00 ; bytes 45-46
 SpeciesRecord_FooHero:: ; heuristic: species record; C0
@@ -2623,9 +2479,8 @@ Data_035_5DAB:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $16, $67 ; natural skills (C1, E-0299)
-    db $00, $08, $04, $07, $04 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $04, $07, $04, $09, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $01, $02, $03, $03, $02, $02, $01, $02, $00, $01, $01, $01, $02, $00, $01, $03, $00, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_GiantSlug:: ; heuristic: species record; C0
@@ -2638,9 +2493,8 @@ Data_035_5DDA:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $8B, $95, $A2 ; natural skills (C1, E-0299)
-    db $00, $0B, $08, $0E, $09 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $08, $0E, $09, $0B, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $03, $01, $01, $01, $03, $01, $01, $01, $01, $00, $00, $02, $02, $02, $00, $00, $00, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_Catapila:: ; heuristic: species record; C0
@@ -2653,9 +2507,8 @@ Data_035_5E09:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $5F, $84 ; natural skills (C1, E-0299)
-    db $00, $0D, $05, $0B, $0E ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $05, $0B, $0E, $0B, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $00, $02, $00, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00, $00, $00, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_Gophecada:: ; heuristic: species record; C0
@@ -2668,9 +2521,8 @@ Data_035_5E38:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $01 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $36, $4E ; natural skills (C1, E-0299)
-    db $00, $06, $0B, $0E, $12 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $06, $0B, $0E, $12, $08, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_Butterfly:: ; heuristic: species record; C0
@@ -2683,9 +2535,8 @@ Data_035_5E67:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2E, $4E, $75 ; natural skills (C1, E-0299)
-    db $00, $0B, $02, $0D, $07 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $02, $0D, $07, $0C, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $36, $00 ; bytes 45-46
 SpeciesRecord_WeedBug:: ; heuristic: species record; C0
@@ -2698,9 +2549,8 @@ Data_035_5E96:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $38, $39 ; natural skills (C1, E-0299)
-    db $00, $11, $0D, $0A, $0C ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0D, $0A, $0C, $05, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $45, $00 ; bytes 45-46
 SpeciesRecord_GiantWorm:: ; heuristic: species record; C0
@@ -2713,9 +2563,8 @@ Data_035_5EC5:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $56, $76, $A4 ; natural skills (C1, E-0299)
-    db $00, $0D, $08, $10, $08 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $08, $10, $08, $0D, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $00, $00, $00, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_Lipsy:: ; heuristic: species record; C0
@@ -2728,9 +2577,8 @@ Data_035_5EF4:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $8B, $8F, $A3 ; natural skills (C1, E-0299)
-    db $00, $0C, $08, $09, $09 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $08, $09, $09, $04, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $03, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $00, $00, $00, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $33, $00 ; bytes 45-46
 SpeciesRecord_StagBug:: ; heuristic: species record; C0
@@ -2743,9 +2591,8 @@ Data_035_5F23:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $40, $8D ; natural skills (C1, E-0299)
-    db $00, $0D, $07, $10, $14 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $07, $10, $14, $09, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $01, $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $01, $01, $02, $02, $02, $00, $00, $00, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_Pyuro:: ; heuristic: species record; C0
@@ -2758,9 +2605,8 @@ Data_035_5F52:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $29, $48, $93 ; natural skills (C1, E-0299)
-    db $02, $08, $08, $07, $0D ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $08, $08, $07, $0D, $0B, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $02, $01, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $00, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_ArmyAnt:: ; heuristic: species record; C0
@@ -2773,9 +2619,8 @@ Data_035_5F81:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $61, $70 ; natural skills (C1, E-0299)
-    db $00, $08, $04, $0B, $11 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $04, $0B, $11, $0D, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $00, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $2F, $00 ; bytes 45-46
 SpeciesRecord_GoHopper:: ; heuristic: species record; C0
@@ -2788,9 +2633,8 @@ Data_035_5FB0:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $4E, $68 ; natural skills (C1, E-0299)
-    db $00, $0B, $04, $08, $0E ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $04, $08, $0E, $0E, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $00, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $30, $00 ; bytes 45-46
 SpeciesRecord_TailEater:: ; heuristic: species record; C0
@@ -2803,9 +2647,8 @@ Data_035_5FDF:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $53, $73, $7F ; natural skills (C1, E-0299)
-    db $00, $0C, $0A, $10, $0B ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $0A, $10, $0B, $0E, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $02, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $01, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_ArmorPede:: ; heuristic: species record; C0
@@ -2818,9 +2661,8 @@ Data_035_600E:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $2D, $6D ; natural skills (C1, E-0299)
-    db $03, $0F, $0A, $11, $14 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $02 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0F, $0A, $11, $14, $0B, $02 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $02, $00, $00, $00, $02, $00, $00, $00, $00, $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_Eyeder:: ; heuristic: species record; C0
@@ -2833,9 +2675,8 @@ Data_035_603D:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $16, $A9 ; natural skills (C1, E-0299)
-    db $02, $09, $0B, $06, $03 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $09, $0B, $06, $03, $0A, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $00, $02, $01, $01, $01, $02, $00, $00, $01, $00, $00, $00, $02, $02, $02, $01, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $36, $00 ; bytes 45-46
 SpeciesRecord_GiantMoth:: ; heuristic: species record; C0
@@ -2848,9 +2689,8 @@ Data_035_606C:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $02 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $48, $60, $7F ; natural skills (C1, E-0299)
-    db $02, $0E, $09, $10, $0C ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $09, $10, $0C, $14, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $03, $01, $00, $00, $02, $01, $01, $01, $00, $00, $00, $03, $02, $02, $01, $01, $01, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_Droll:: ; heuristic: species record; C0
@@ -2863,9 +2703,8 @@ Data_035_609B:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2B, $59, $A4 ; natural skills (C1, E-0299)
-    db $00, $11, $0A, $0F, $10 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0A, $0F, $10, $07, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $03, $01, $01, $00, $03, $00, $00, $01, $00, $00, $00, $03, $03, $03, $01, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_ArmyCrab:: ; heuristic: species record; C0
@@ -2878,9 +2717,8 @@ Data_035_60CA:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $4E, $5E ; natural skills (C1, E-0299)
-    db $01, $10, $08, $0E, $13 ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $10, $08, $0E, $13, $05, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $01, $03, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $03, $03, $03, $00, $00, $00, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_MadHornet:: ; heuristic: species record; C0
@@ -2893,9 +2731,8 @@ Data_035_60F9:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5F, $60, $99 ; natural skills (C1, E-0299)
-    db $00, $14, $05, $13, $0D ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $05, $13, $0D, $14, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $00, $02, $00, $00, $00, $02, $01, $01, $00, $00, $01, $01, $02, $02, $02, $01, $01, $01, $03, $03, $00 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_Belzebub:: ; heuristic: species record; C0
@@ -2908,9 +2745,8 @@ Data_035_6128:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $20, $6F ; natural skills (C1, E-0299)
-    db $00, $17, $13, $08, $07 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $17, $13, $08, $07, $0E, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $02, $03, $00, $00, $03, $00, $00, $01, $01, $00, $00, $02, $02, $02, $01, $01, $01, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $45, $00 ; bytes 45-46
 SpeciesRecord_WarMantis:: ; heuristic: species record; C0
@@ -2923,9 +2759,8 @@ Data_035_6157:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $51, $59, $67 ; natural skills (C1, E-0299)
-    db $05, $17, $10, $0C, $09 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $10, $0C, $09, $0B, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $00, $00, $01, $00, $01, $01, $02, $03, $01, $01, $02, $01, $01, $01, $01, $01, $01, $02, $02, $02, $01, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $5A, $00 ; bytes 45-46
 SpeciesRecord_HornBeet:: ; heuristic: species record; C0
@@ -2938,9 +2773,8 @@ Data_035_6186:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4B, $52, $5A ; natural skills (C1, E-0299)
-    db $00, $15, $13, $17, $14 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $15, $13, $17, $14, $0C, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $02, $00, $02, $01, $00, $00, $02, $00, $00, $01, $00, $02, $02, $02, $03, $02, $00, $00, $00, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $65, $00 ; bytes 45-46
 SpeciesRecord_Sickler:: ; heuristic: species record; C0
@@ -2953,9 +2787,8 @@ Data_035_61B5:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $5A, $62 ; natural skills (C1, E-0299)
-    db $00, $13, $0D, $09, $07 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $0D, $09, $07, $0E, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $01, $00, $01, $01, $02, $02, $01, $01, $02, $01, $01, $01, $01, $00, $00, $02, $02, $02, $01, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $49, $00 ; bytes 45-46
 SpeciesRecord_Armorpion:: ; heuristic: species record; C0
@@ -2968,9 +2801,8 @@ Data_035_61E4:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5B, $65, $6B ; natural skills (C1, E-0299)
-    db $03, $16, $14, $18, $17 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $16, $14, $18, $17, $0F, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $01, $00, $02, $01, $03, $02, $01, $01, $03, $01, $01, $03, $01, $02, $02, $03, $03, $03, $01, $01, $01, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $81, $00 ; bytes 45-46
 SpeciesRecord_Digster:: ; heuristic: species record; C0
@@ -2983,9 +2815,8 @@ Data_035_6213:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $20, $94, $9D ; natural skills (C1, E-0299)
-    db $01, $18, $0A, $13, $1A ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $18, $0A, $13, $1A, $01, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $01, $01, $02, $02, $00, $00, $02, $00, $00, $03, $00, $01, $01, $02, $02, $02, $00, $00, $00, $02, $02, $03 ; 27 base resistance levels (C1, E-0299)
     db $59, $00 ; bytes 45-46
 SpeciesRecord_Skularach:: ; heuristic: species record; C0
@@ -2998,9 +2829,8 @@ Data_035_6242:: ; address name
     db $41 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4A, $63, $73 ; natural skills (C1, E-0299)
-    db $00, $12, $17, $19, $18 ; bytes 11-15
-    db $1E ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $17, $19, $18, $1E, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $02, $01, $03, $01, $03, $02, $01, $01, $01, $01, $01, $02, $01, $03, $03, $02, $02, $02, $02, $02, $02, $03, $03, $01 ; 27 base resistance levels (C1, E-0299)
     db $92, $00 ; bytes 45-46
 SpeciesRecord_MultiEyes:: ; heuristic: species record; C0
@@ -3013,9 +2843,8 @@ Data_035_6271:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $2D, $72 ; natural skills (C1, E-0299)
-    db $00, $0E, $0F, $13, $0D ; bytes 11-15
-    db $02 ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0F, $13, $0D, $02, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $01, $00, $00, $00, $00, $03, $03, $01, $02, $02, $02, $01, $01, $00, $00, $00, $00, $01, $02, $02, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_Pixy:: ; heuristic: species record; C0
@@ -3028,9 +2857,8 @@ Data_035_62A0:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $21, $2D, $9C ; natural skills (C1, E-0299)
-    db $00, $0B, $07, $0F, $08 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $07, $0F, $08, $0F, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $01, $02, $01, $01, $03, $02, $02, $02, $01, $01, $03, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_MedusaEye:: ; heuristic: species record; C0
@@ -3043,9 +2871,8 @@ Data_035_62CF:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $2E, $59 ; natural skills (C1, E-0299)
-    db $00, $0B, $0D, $0E, $0F ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0D, $0E, $0F, $08, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $01, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01, $01, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_AgDevil:: ; heuristic: species record; C0
@@ -3058,9 +2885,8 @@ Data_035_62FE:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $15, $71 ; natural skills (C1, E-0299)
-    db $00, $10, $0B, $12, $0C ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $0B, $12, $0C, $10, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $02, $02, $02, $02, $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $01, $01, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $52, $00 ; bytes 45-46
 SpeciesRecord_Demonite:: ; heuristic: species record; C0
@@ -3073,9 +2899,8 @@ Data_035_632D:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $40, $44 ; natural skills (C1, E-0299)
-    db $00, $0D, $01, $05, $04 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $01, $05, $04, $09, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $02, $00, $00, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $37, $00 ; bytes 45-46
 SpeciesRecord_DarkEye:: ; heuristic: species record; C0
@@ -3088,9 +2913,8 @@ Data_035_635C:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5C, $72, $7F ; natural skills (C1, E-0299)
-    db $00, $0B, $12, $0A, $10 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $12, $0A, $10, $09, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $03, $03, $01, $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $02, $02, $01, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_EyeBall:: ; heuristic: species record; C0
@@ -3103,9 +2927,8 @@ Data_035_638B:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $36, $90, $A5 ; natural skills (C1, E-0299)
-    db $00, $10, $11, $0E, $0E ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $11, $0E, $0E, $0D, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_SkulRider:: ; heuristic: species record; C0
@@ -3118,9 +2941,8 @@ Data_035_63BA:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $50, $65, $8D ; natural skills (C1, E-0299)
-    db $00, $11, $0B, $11, $0D ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0B, $11, $0D, $0F, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $02, $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $02, $02, $01, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_EvilBeast:: ; heuristic: species record; C0
@@ -3133,9 +2955,8 @@ Data_035_63E9:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $35, $44 ; natural skills (C1, E-0299)
-    db $03, $10, $0A, $14, $16 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $10, $0A, $14, $16, $04, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $02, $02, $03, $00, $00, $03, $01, $01, $01, $00, $00, $03, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_Bubblemon:: ; heuristic: species record; C0
@@ -3148,9 +2969,8 @@ Data_035_6418:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4C, $53, $96 ; natural skills (C1, E-0299)
-    db $01, $0E, $0D, $0F, $07 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0E, $0D, $0F, $07, $07, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $03, $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $01, $00, $00, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_1EyeClown:: ; heuristic: species record; C0
@@ -3163,9 +2983,8 @@ Data_035_6447:: ; address name
     db $19 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $04, $10 ; natural skills (C1, E-0299)
-    db $00, $0A, $01, $05, $09 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0A, $01, $05, $09, $09, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $02, $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $30, $00 ; bytes 45-46
 SpeciesRecord_Gremlin:: ; heuristic: species record; C0
@@ -3178,9 +2997,8 @@ Data_035_6476:: ; address name
     db $19 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $16, $33 ; natural skills (C1, E-0299)
-    db $00, $0D, $07, $08, $04 ; bytes 11-15
-    db $02 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $07, $08, $04, $02, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $01, $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $31, $00 ; bytes 45-46
 SpeciesRecord_ArcDemon:: ; heuristic: species record; C0
@@ -3193,9 +3011,8 @@ Data_035_64A5:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $51, $52 ; natural skills (C1, E-0299)
-    db $03, $0E, $0D, $11, $0C ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0E, $0D, $11, $0C, $07, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $03, $02, $02, $02, $02, $00, $00, $03, $00, $01, $00, $00, $00, $03, $00, $01, $00, $00, $02, $01, $00, $00, $00, $00, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $53, $00 ; bytes 45-46
 SpeciesRecord_Lionex:: ; heuristic: species record; C0
@@ -3208,9 +3025,8 @@ Data_035_64D4:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $19, $51 ; natural skills (C1, E-0299)
-    db $03, $0F, $0B, $0E, $0F ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0F, $0B, $0E, $0F, $0C, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $03, $02, $02, $02, $02, $02, $02, $03, $01, $01, $01, $00, $00, $03, $00, $02, $02, $01, $00, $02, $02, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_GoatHorn:: ; heuristic: species record; C0
@@ -3223,9 +3039,8 @@ Data_035_6503:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $0A, $10 ; natural skills (C1, E-0299)
-    db $03, $14, $0B, $11, $0D ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $14, $0B, $11, $0D, $0B, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $00, $00, $03, $00, $01, $01, $02, $02, $03, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $02, $00 ; 27 base resistance levels (C1, E-0299)
     db $5F, $00 ; bytes 45-46
 SpeciesRecord_Orc:: ; heuristic: species record; C0
@@ -3238,9 +3053,8 @@ Data_035_6532:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1E, $27, $57 ; natural skills (C1, E-0299)
-    db $00, $13, $07, $13, $0D ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $07, $13, $0D, $0D, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $03, $03, $02, $00, $00, $02, $01, $01, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_Ogre:: ; heuristic: species record; C0
@@ -3253,9 +3067,8 @@ Data_035_6561:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5E, $69, $6C ; natural skills (C1, E-0299)
-    db $03, $0F, $08, $14, $0C ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0F, $08, $14, $0C, $0A, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $02, $02, $02, $02, $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $00, $00, $00, $00, $00, $02, $02, $02, $02, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_GateGuard:: ; heuristic: species record; C0
@@ -3268,9 +3081,8 @@ Data_035_6590:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $5C, $84 ; natural skills (C1, E-0299)
-    db $00, $12, $0C, $12, $0E ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0C, $12, $0E, $0A, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $03, $02, $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $00, $00, $00, $00, $01, $02, $02, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $56, $00 ; bytes 45-46
 SpeciesRecord_ChopClown:: ; heuristic: species record; C0
@@ -3283,9 +3095,8 @@ Data_035_65BF:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $51, $62 ; natural skills (C1, E-0299)
-    db $00, $11, $0C, $14, $0B ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0C, $14, $0B, $14, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $03, $01, $00, $03, $01, $01, $00, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_BossTroll:: ; heuristic: species record; C0
@@ -3298,9 +3109,8 @@ Data_035_65EE:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $6C, $6F, $97 ; natural skills (C1, E-0299)
-    db $03, $18, $03, $19, $16 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $18, $03, $19, $16, $04, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $01, $01, $00, $02, $00, $01, $00, $00, $00, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $49, $00 ; bytes 45-46
 SpeciesRecord_Grendal:: ; heuristic: species record; C0
@@ -3313,9 +3123,8 @@ Data_035_661D:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $50, $55, $97 ; natural skills (C1, E-0299)
-    db $05, $17, $01, $12, $18 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $01, $12, $18, $0C, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $01, $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_Akubar:: ; heuristic: species record; C0
@@ -3328,9 +3137,8 @@ Data_035_664C:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $44, $8A ; natural skills (C1, E-0299)
-    db $00, $18, $1E, $17, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $1E, $17, $15, $12, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $03, $02, $02, $02, $01, $02, $03, $01, $03, $02, $01, $01, $03, $00, $02, $01, $00, $02, $00, $01, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $7C, $00 ; bytes 45-46
 SpeciesRecord_MadKnight:: ; heuristic: species record; C0
@@ -3343,9 +3151,8 @@ Data_035_667B:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $56, $67, $6C ; natural skills (C1, E-0299)
-    db $05, $11, $09, $12, $14 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $11, $09, $12, $14, $0A, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $02, $02, $02, $03, $00, $01, $01, $01, $01, $03, $00, $01, $01, $02, $02, $02, $01, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $52, $00 ; bytes 45-46
 SpeciesRecord_EvilWell:: ; heuristic: species record; C0
@@ -3358,9 +3165,8 @@ Data_035_66AA:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $68, $90 ; natural skills (C1, E-0299)
-    db $00, $17, $0E, $0A, $0F ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $17, $0E, $0A, $0F, $06, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $01, $01, $03, $00, $00, $01, $01, $01, $03, $01, $01, $01, $01, $01, $01, $00, $01, $01, $00, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_Gigantes:: ; heuristic: species record; C0
@@ -3373,9 +3179,8 @@ Data_035_66D9:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $54, $68, $6B ; natural skills (C1, E-0299)
-    db $03, $1B, $00, $1B, $07 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $1B, $00, $1B, $07, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $00, $01, $03, $00, $00, $00, $02, $02, $03, $00, $00, $00, $00, $02, $00, $02, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_Centasaur:: ; heuristic: species record; C0
@@ -3388,9 +3193,8 @@ Data_035_6708:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $17 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $33, $50, $65 ; natural skills (C1, E-0299)
-    db $02, $14, $01, $18, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $14, $01, $18, $15, $12, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $01, $00, $02, $00, $01, $01, $01, $01, $03, $00, $00, $01, $01, $02, $01, $02, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $5B, $00 ; bytes 45-46
 SpeciesRecord_EvilArmor:: ; heuristic: species record; C0
@@ -3403,9 +3207,8 @@ Data_035_6737:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $50, $52, $5D ; natural skills (C1, E-0299)
-    db $05, $10, $01, $11, $1D ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $10, $01, $11, $1D, $05, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $02, $00, $02, $00, $00, $00, $01, $03, $00, $00, $01, $00, $00, $02, $00, $00, $00, $01, $02, $01, $00, $00, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_Jamirus:: ; heuristic: species record; C0
@@ -3418,9 +3221,8 @@ Data_035_6766:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $63, $99 ; natural skills (C1, E-0299)
-    db $02, $18, $09, $15, $18 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $18, $09, $15, $18, $17, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $03, $03, $01, $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $00, $00, $00, $02, $00, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $6D, $00 ; bytes 45-46
 SpeciesRecord_Durran:: ; heuristic: species record; C0
@@ -3433,9 +3235,8 @@ Data_035_6795:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $48, $55, $57 ; natural skills (C1, E-0299)
-    db $05, $19, $18, $17, $0F ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $19, $18, $17, $0F, $11, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $03, $02, $01, $03, $02, $02, $03, $01, $02, $02, $01, $01, $03, $01, $01, $01, $03, $03, $02, $02, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $7D, $00 ; bytes 45-46
 SpeciesRecord_Titanis:: ; heuristic: species record; C0
@@ -3448,9 +3249,8 @@ Data_035_67C4:: ; address name
     db $4B ; base level cap (C1, E-0299)
     db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $6E, $82 ; natural skills (C1, E-0299)
-    db $03, $19, $18, $19, $16 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $19, $18, $19, $16, $17, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $01, $01, $03, $01, $01, $02, $01, $01, $03, $01, $02, $02, $02, $02, $02, $00, $00, $00, $00, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $7F, $00 ; bytes 45-46
 SpeciesRecord_LampGenie:: ; heuristic: species record; C0
@@ -3463,9 +3263,8 @@ Data_035_67F3:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $2F, $99 ; natural skills (C1, E-0299)
-    db $02, $0A, $0C, $0B, $16 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0A, $0C, $0B, $16, $0F, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $00, $01, $01, $03, $01, $01, $01, $01, $01, $03, $00, $01, $01, $01, $02, $01, $00, $00, $00, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $51, $00 ; bytes 45-46
 SpeciesRecord_Spooky:: ; heuristic: species record; C0
@@ -3478,9 +3277,8 @@ Data_035_6822:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $7F, $93, $A5 ; natural skills (C1, E-0299)
-    db $00, $0B, $0C, $0D, $08 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0C, $0D, $08, $12, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $03, $03, $03, $01, $01, $03, $01, $01, $03, $01, $00, $00, $02, $02, $02, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Skullgon:: ; heuristic: species record; C0
@@ -3493,9 +3291,8 @@ Data_035_6851:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $44, $53, $6D ; natural skills (C1, E-0299)
-    db $03, $06, $01, $17, $0F ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $06, $01, $17, $0F, $04, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $02, $02, $02, $02, $00, $00, $02, $00, $00, $03, $00, $00, $02, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_PutrePup:: ; heuristic: species record; C0
@@ -3508,9 +3305,8 @@ Data_035_6880:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $2B, $36 ; natural skills (C1, E-0299)
-    db $00, $11, $0D, $11, $08 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0D, $11, $08, $0B, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_RotRaven:: ; heuristic: species record; C0
@@ -3523,9 +3319,8 @@ Data_035_68AF:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4A, $52, $70 ; natural skills (C1, E-0299)
-    db $00, $0E, $08, $0C, $0B ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $08, $0C, $0B, $12, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_Mummy:: ; heuristic: species record; C0
@@ -3538,9 +3333,8 @@ Data_035_68DE:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $60, $6B ; natural skills (C1, E-0299)
-    db $00, $0F, $11, $0C, $09 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $11, $0C, $09, $04, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $03, $01, $01, $01, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $41, $00 ; bytes 45-46
 SpeciesRecord_DarkCrab:: ; heuristic: species record; C0
@@ -3553,9 +3347,8 @@ Data_035_690D:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $35, $39, $A4 ; natural skills (C1, E-0299)
-    db $01, $0C, $08, $0F, $14 ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0C, $08, $0F, $14, $01, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $03, $02, $00, $00, $03, $00, $00, $02, $00, $00, $00, $03, $03, $03, $00, $00, $00, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_DeadNite:: ; heuristic: species record; C0
@@ -3568,9 +3361,8 @@ Data_035_693C:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $22, $24 ; natural skills (C1, E-0299)
-    db $00, $11, $07, $13, $09 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $07, $13, $09, $0C, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $02, $02, $03, $00, $00, $02, $00, $00, $03, $00, $00, $00, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_Shadow:: ; heuristic: species record; C0
@@ -3583,9 +3375,8 @@ Data_035_696B:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $44, $79, $84 ; natural skills (C1, E-0299)
-    db $02, $09, $06, $06, $14 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $09, $06, $06, $14, $08, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $01, $02, $02, $03, $00, $00, $03, $00, $00, $03, $00, $00, $01, $02, $03, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_Skulpent:: ; heuristic: species record; C0
@@ -3598,9 +3389,8 @@ Data_035_699A:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $5F, $95 ; natural skills (C1, E-0299)
-    db $00, $11, $13, $17, $09 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $13, $17, $09, $0C, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $01, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_Hork:: ; heuristic: species record; C0
@@ -3613,9 +3403,8 @@ Data_035_69C9:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $73, $80, $8B ; natural skills (C1, E-0299)
-    db $00, $11, $0D, $10, $08 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $0D, $10, $08, $0B, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_Mudron:: ; heuristic: species record; C0
@@ -3628,9 +3417,8 @@ Data_035_69F8:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $1B, $1E ; natural skills (C1, E-0299)
-    db $01, $06, $0A, $0B, $11 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $06, $0A, $0B, $11, $07, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $03, $02, $00, $00, $03, $01, $01, $02, $00, $00, $00, $03, $03, $03, $00, $00, $00, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_NiteWhip:: ; heuristic: species record; C0
@@ -3643,9 +3431,8 @@ Data_035_6A27:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $48, $4A, $A6 ; natural skills (C1, E-0299)
-    db $00, $11, $04, $0A, $03 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $11, $04, $0A, $03, $0F, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $01, $01, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_WindMerge:: ; heuristic: species record; C0
@@ -3658,9 +3445,8 @@ Data_035_6A56:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $24, $57 ; natural skills (C1, E-0299)
-    db $02, $10, $13, $13, $0C ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $10, $13, $13, $0C, $0D, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $01, $00, $02, $02, $02, $00, $00, $02, $01, $01, $02, $00, $00, $00, $02, $02, $02, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_Reaper:: ; heuristic: species record; C0
@@ -3673,9 +3459,8 @@ Data_035_6A85:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $5A, $75, $80 ; natural skills (C1, E-0299)
-    db $00, $13, $03, $15, $11 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $03, $15, $11, $13, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $00, $02, $03, $02, $01, $01, $03, $00, $00, $02, $00, $00, $01, $03, $03, $03, $01, $01, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $53, $00 ; bytes 45-46
 SpeciesRecord_Inverzon:: ; heuristic: species record; C0
@@ -3688,9 +3473,8 @@ Data_035_6AB4:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2E, $73, $7D ; natural skills (C1, E-0299)
-    db $00, $07, $02, $0E, $07 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $07, $02, $0E, $07, $04, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $01, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $2C, $00 ; bytes 45-46
 SpeciesRecord_FoxFire:: ; heuristic: species record; C0
@@ -3703,9 +3487,8 @@ Data_035_6AE3:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $07 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $04, $A5 ; natural skills (C1, E-0299)
-    db $00, $09, $0F, $06, $08 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $0F, $06, $08, $0D, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $00, $01, $00, $00, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $02, $00, $02, $02, $02, $01, $01, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $3E, $00 ; bytes 45-46
 SpeciesRecord_CaptDead:: ; heuristic: species record; C0
@@ -3718,9 +3501,8 @@ Data_035_6B12:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $5D, $62 ; natural skills (C1, E-0299)
-    db $01, $09, $14, $11, $10 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $09, $14, $11, $10, $08, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $01, $02, $02, $02, $02, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $00, $00, $00, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_DeadNoble:: ; heuristic: species record; C0
@@ -3733,9 +3515,8 @@ Data_035_6B41:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $19, $5D, $85 ; natural skills (C1, E-0299)
-    db $00, $15, $02, $1A, $13 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $15, $02, $1A, $13, $0F, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $01, $01, $01, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $02, $02, $03, $02, $03, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $5F, $00 ; bytes 45-46
 SpeciesRecord_WhiteKing:: ; heuristic: species record; C0
@@ -3748,9 +3529,8 @@ Data_035_6B70:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $0D, $3C ; natural skills (C1, E-0299)
-    db $00, $14, $18, $0E, $14 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $1B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $18, $0E, $14, $0F, $1B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $02, $03, $01, $03, $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $7A, $00 ; bytes 45-46
 SpeciesRecord_BoneSlave:: ; heuristic: species record; C0
@@ -3763,9 +3543,8 @@ Data_035_6B9F:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $52, $63 ; natural skills (C1, E-0299)
-    db $00, $0E, $0D, $11, $0C ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $01 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0D, $11, $0C, $07, $01 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $01, $02, $02, $02, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_Skeletor:: ; heuristic: species record; C0
@@ -3778,9 +3557,8 @@ Data_035_6BCE:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $57, $63 ; natural skills (C1, E-0299)
-    db $05, $10, $0B, $12, $0C ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $10, $0B, $12, $0C, $10, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $02, $00, $02, $02, $02, $03, $01, $01, $02, $00, $00, $03, $00, $00, $01, $02, $02, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_Servant:: ; heuristic: species record; C0
@@ -3793,9 +3571,8 @@ Data_035_6BFD:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $10, $8A ; natural skills (C1, E-0299)
-    db $05, $17, $15, $19, $12 ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $15, $19, $12, $0F, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $03, $02, $01, $02, $02, $02, $03, $01, $01, $03, $01, $01, $03, $01, $01, $02, $03, $03, $03, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $7A, $00 ; bytes 45-46
 SpeciesRecord_Lazamanus:: ; heuristic: species record; C0
@@ -3808,9 +3585,8 @@ Data_035_6C2C:: ; address name
     db $4B ; base level cap (C1, E-0299)
     db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $31, $79, $7B ; natural skills (C1, E-0299)
-    db $00, $18, $14, $1E, $14 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $14, $1E, $14, $0C, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $02, $02, $03, $01, $01, $03, $01, $01, $03, $00, $02, $02, $01, $01, $01, $01, $01, $01, $01, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $78, $00 ; bytes 45-46
 SpeciesRecord_Copycat:: ; heuristic: species record; C0
@@ -3823,9 +3599,8 @@ Data_035_6C5B:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $01 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3A, $76, $9E ; natural skills (C1, E-0299)
-    db $00, $0B, $14, $01, $02 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $05 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $14, $01, $02, $15, $05 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $02, $02, $03, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $03, $02, $01, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $38, $00 ; bytes 45-46
 SpeciesRecord_MadSpirit:: ; heuristic: species record; C0
@@ -3838,9 +3613,8 @@ Data_035_6C8A:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $71, $7F, $84 ; natural skills (C1, E-0299)
-    db $02, $0E, $0C, $0F, $0C ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0E, $0C, $0F, $0C, $10, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $01, $02, $02, $03, $01, $01, $03, $00, $00, $03, $00, $00, $00, $02, $02, $02, $01, $01, $01, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_PomPomBom:: ; heuristic: species record; C0
@@ -3853,9 +3627,8 @@ Data_035_6CB9:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $84, $7B ; natural skills (C1, E-0299)
-    db $00, $05, $15, $0D, $0B ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $05, $15, $0D, $0B, $0E, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $02, $01, $01, $00, $03, $03, $03, $00, $01, $02, $00, $00, $02, $00, $00, $01, $01, $01, $03, $01, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $48, $00 ; bytes 45-46
 SpeciesRecord_Niterich:: ; heuristic: species record; C0
@@ -3868,9 +3641,8 @@ Data_035_6CE8:: ; address name
     db $41 ; base level cap (C1, E-0299)
     db $14 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $84, $96 ; natural skills (C1, E-0299)
-    db $05, $1B, $0D, $18, $17 ; bytes 11-15
-    db $13 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $1B, $0D, $18, $17, $13, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $02, $03, $03, $03, $03, $01, $01, $02, $01, $01, $03, $01, $00, $03, $01, $03, $03, $01, $00, $01, $01, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $3B, $00 ; bytes 45-46
 SpeciesRecord_JewelBag:: ; heuristic: species record; C0
@@ -3883,9 +3655,8 @@ Data_035_6D17:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $33, $34 ; natural skills (C1, E-0299)
-    db $00, $0D, $0B, $09, $12 ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $0B, $09, $12, $11, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_EvilWand:: ; heuristic: species record; C0
@@ -3898,9 +3669,8 @@ Data_035_6D46:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $22, $44, $A9 ; natural skills (C1, E-0299)
-    db $00, $0E, $0F, $11, $0C ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $0F, $11, $0C, $09, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $02, $00, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $02, $00, $00, $03, $01, $01, $01, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_MadCandle:: ; heuristic: species record; C0
@@ -3913,9 +3683,8 @@ Data_035_6D75:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $69, $A2 ; natural skills (C1, E-0299)
-    db $00, $0C, $0A, $0E, $06 ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $0A, $0E, $06, $11, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $01, $01, $02, $00, $02, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $37, $00 ; bytes 45-46
 SpeciesRecord_CoilBird:: ; heuristic: species record; C0
@@ -3928,9 +3697,8 @@ Data_035_6DA4:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $22, $23, $9D ; natural skills (C1, E-0299)
-    db $00, $10, $0D, $05, $0E ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $0D, $05, $0E, $0E, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $02, $02, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $39, $00 ; bytes 45-46
 SpeciesRecord_Facer:: ; heuristic: species record; C0
@@ -3943,9 +3711,8 @@ Data_035_6DD3:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $15, $A0 ; natural skills (C1, E-0299)
-    db $00, $08, $17, $0B, $0C ; bytes 11-15
-    db $03 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $17, $0B, $0C, $03, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $01, $02, $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $01, $01, $01, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3C, $00 ; bytes 45-46
 SpeciesRecord_SpikyBoy:: ; heuristic: species record; C0
@@ -3958,9 +3725,8 @@ Data_035_6E02:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $15, $54, $6A ; natural skills (C1, E-0299)
-    db $00, $09, $0D, $0E, $11 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $0D, $0E, $11, $07, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_MadMirror:: ; heuristic: species record; C0
@@ -3973,9 +3739,8 @@ Data_035_6E31:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $36, $3A, $A5 ; natural skills (C1, E-0299)
-    db $00, $0F, $0B, $08, $06 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $0B, $08, $06, $0B, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $02, $00, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_RogueNite:: ; heuristic: species record; C0
@@ -3988,9 +3753,8 @@ Data_035_6E60:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $5E, $6B ; natural skills (C1, E-0299)
-    db $00, $0E, $04, $14, $15 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $04, $14, $15, $0A, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $01, $01, $03, $00, $00, $01, $00, $00, $03, $00, $00, $02, $01, $01, $01, $00, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Puppetor:: ; heuristic: species record; C0
@@ -4003,9 +3767,8 @@ Data_035_6E8F:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $76, $7A, $A3 ; natural skills (C1, E-0299)
-    db $00, $0D, $09, $07, $04 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $0B ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0D, $09, $07, $04, $07, $0B ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $01, $01, $02, $01, $01, $02, $00, $00, $02, $00, $00, $02, $00, $00, $01, $01, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $34, $00 ; bytes 45-46
 SpeciesRecord_Goopi:: ; heuristic: species record; C0
@@ -4018,9 +3781,8 @@ Data_035_6EBE:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $8D, $95 ; natural skills (C1, E-0299)
-    db $00, $08, $0D, $0B, $0E ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $0D, $0B, $0E, $07, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $2C, $00 ; bytes 45-46
 SpeciesRecord_Voodoll:: ; heuristic: species record; C0
@@ -4033,9 +3795,8 @@ Data_035_6EED:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $2E, $34 ; natural skills (C1, E-0299)
-    db $00, $0E, $11, $0C, $0C ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0E, $11, $0C, $0C, $08, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $00, $01, $02, $00, $00, $01, $00, $00, $02, $00, $00, $02, $02, $02, $01, $00, $00, $00, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_MetalDrak:: ; heuristic: species record; C0
@@ -4048,9 +3809,8 @@ Data_035_6F1C:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $6C, $7E ; natural skills (C1, E-0299)
-    db $03, $12, $0D, $14, $17 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $12, $0D, $14, $17, $09, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $00, $00, $02, $01, $00, $03, $00, $00, $02, $00, $00, $03, $00, $01, $03, $02, $03, $02, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $51, $00 ; bytes 45-46
 SpeciesRecord_Balzak:: ; heuristic: species record; C0
@@ -4063,9 +3823,8 @@ Data_035_6F4B:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $0D, $66 ; natural skills (C1, E-0299)
-    db $03, $15, $0B, $17, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $15, $0B, $17, $15, $12, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $01, $01, $02, $01, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $5D, $00 ; bytes 45-46
 SpeciesRecord_SabreMan:: ; heuristic: species record; C0
@@ -4078,9 +3837,8 @@ Data_035_6F7A:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $5A, $60 ; natural skills (C1, E-0299)
-    db $00, $08, $03, $09, $0B ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $08, $03, $09, $0B, $0C, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $01, $00, $02, $00, $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $01, $01, $01, $00, $00, $00, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $35, $00 ; bytes 45-46
 SpeciesRecord_CurseLamp:: ; heuristic: species record; C0
@@ -4093,9 +3851,8 @@ Data_035_6FA9:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $29, $2D ; natural skills (C1, E-0299)
-    db $02, $0C, $12, $09, $13 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0C, $12, $09, $13, $0D, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $01, $02, $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $02, $02, $02, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Brushead:: ; heuristic: species record; C0
@@ -4108,9 +3865,8 @@ Data_035_6FD8:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $76, $7E, $A1 ; natural skills (C1, E-0299)
-    db $00, $07, $06, $0E, $04 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $03 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $07, $06, $0E, $04, $04, $03 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $00, $00, $02, $01, $01, $00, $00, $00, $02, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $28, $00 ; bytes 45-46
 SpeciesRecord_Roboster:: ; heuristic: species record; C0
@@ -4123,9 +3879,8 @@ Data_035_7007:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $62, $63, $65 ; natural skills (C1, E-0299)
-    db $05, $0C, $05, $15, $16 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $0C, $05, $15, $16, $18, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $02, $01, $02, $03, $00, $00, $00, $00, $00, $03, $00, $01, $02, $02, $02, $01, $02, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $53, $00 ; bytes 45-46
 SpeciesRecord_Roboster2:: ; heuristic: species record; C0
@@ -4138,9 +3893,8 @@ Data_035_7036:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $16 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $52, $5E, $67 ; natural skills (C1, E-0299)
-    db $03, $17, $0D, $18, $1A ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $17, $0D, $18, $1A, $16, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $03, $02, $03, $03, $00, $00, $00, $00, $00, $03, $00, $02, $03, $03, $03, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $6F, $00 ; bytes 45-46
 SpeciesRecord_EvilPot:: ; heuristic: species record; C0
@@ -4153,9 +3907,8 @@ Data_035_7065:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $6C, $A5 ; natural skills (C1, E-0299)
-    db $00, $12, $13, $0F, $12 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $13, $0F, $12, $09, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $02, $02, $02, $03, $01, $01, $01, $01, $01, $03, $01, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_Gismo:: ; heuristic: species record; C0
@@ -4168,9 +3921,8 @@ Data_035_7094:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $44, $89 ; natural skills (C1, E-0299)
-    db $02, $0D, $0F, $0B, $0E ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $12 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $0D, $0F, $0B, $0E, $14, $12 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $02, $01, $02, $00, $00, $02, $00, $00, $00, $00, $01, $02, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_LavaMan:: ; heuristic: species record; C0
@@ -4183,9 +3935,8 @@ Data_035_70C3:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $40, $97 ; natural skills (C1, E-0299)
-    db $00, $12, $0C, $11, $18 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $12, $0C, $11, $18, $04, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $01, $02, $00, $01, $00, $00, $03, $00, $00, $01, $00, $00, $03, $00, $03, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_IceMan:: ; heuristic: species record; C0
@@ -4198,9 +3949,8 @@ Data_035_70F2:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $44, $94 ; natural skills (C1, E-0299)
-    db $00, $10, $06, $12, $18 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $10, $06, $12, $18, $04, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $00, $03, $00, $00, $03, $00, $00, $00, $01, $00, $03, $00, $01, $03, $00, $00, $00, $00, $00, $00, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_Mimic:: ; heuristic: species record; C0
@@ -4213,9 +3963,8 @@ Data_035_7121:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $13, $A8 ; natural skills (C1, E-0299)
-    db $00, $19, $0A, $14, $0C ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $19, $0A, $14, $0C, $01, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $02, $01, $02, $01, $01, $03, $01, $01, $01, $01, $01, $03, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $4E, $00 ; bytes 45-46
 SpeciesRecord_Exaucers:: ; heuristic: species record; C0
@@ -4228,9 +3977,8 @@ Data_035_7150:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $31, $48, $78 ; natural skills (C1, E-0299)
-    db $00, $14, $0D, $0F, $06 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $0D, $0F, $06, $07, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $02, $01, $01, $03, $01, $01, $01, $01, $01, $02, $00, $01, $02, $01, $01, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $40, $00 ; bytes 45-46
 SpeciesRecord_MudDoll:: ; heuristic: species record; C0
@@ -4243,9 +3991,8 @@ Data_035_717F:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $76, $7C, $7D ; natural skills (C1, E-0299)
-    db $00, $0C, $03, $0D, $0E ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0C, $03, $0D, $0E, $01, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $01, $00, $03, $01, $00, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $00, $00, $00, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $33, $00 ; bytes 45-46
 SpeciesRecord_Golem:: ; heuristic: species record; C0
@@ -4258,9 +4005,8 @@ Data_035_71AE:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $68, $69, $9F ; natural skills (C1, E-0299)
-    db $03, $11, $04, $0C, $15 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $11, $04, $0C, $15, $04, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $01, $01, $00, $03, $01, $01, $03, $00, $00, $00, $00, $00, $03, $00, $00, $03, $00, $00, $00, $01, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $43, $00 ; bytes 45-46
 SpeciesRecord_StoneMan:: ; heuristic: species record; C0
@@ -4273,9 +4019,8 @@ Data_035_71DD:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $94, $97, $9D ; natural skills (C1, E-0299)
-    db $03, $18, $0A, $17, $18 ; bytes 11-15
-    db $01 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $18, $0A, $17, $18, $01, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $01, $01, $01, $00, $03, $01, $01, $03, $00, $01, $00, $00, $00, $03, $00, $01, $03, $00, $02, $01, $01, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $5D, $00 ; bytes 45-46
 SpeciesRecord_BombCrag:: ; heuristic: species record; C0
@@ -4288,9 +4033,8 @@ Data_035_720C:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $15, $20, $4B ; natural skills (C1, E-0299)
-    db $03, $0F, $0B, $11, $14 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $0F, $0B, $11, $14, $00, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $02, $00, $01, $03, $01, $01, $01, $01, $01, $03, $00, $02, $02, $01, $01, $01, $00, $00, $00, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_GoldGolem:: ; heuristic: species record; C0
@@ -4303,9 +4047,8 @@ Data_035_723B:: ; address name
     db $4B ; base level cap (C1, E-0299)
     db $12 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $81, $85 ; natural skills (C1, E-0299)
-    db $05, $18, $15, $18, $1B ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $18, $15, $18, $1B, $11, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $02, $03, $03, $03, $02, $02, $02, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $92, $00 ; bytes 45-46
 SpeciesRecord_DarkMate:: ; heuristic: species record; C0
@@ -4318,9 +4061,8 @@ Data_035_726A:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $13, $3F, $80 ; natural skills (C1, E-0299)
-    db $00, $18, $15, $0C, $19 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $18, $15, $0C, $19, $15, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $03, $03, $03, $03, $03, $03, $02, $02, $03, $02, $02, $02, $03, $03, $03, $01, $01, $03, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $88, $00 ; bytes 45-46
 SpeciesRecord_ProtoMech:: ; heuristic: species record; C0
@@ -4333,9 +4075,8 @@ Data_035_7299:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $54, $68, $6F ; natural skills (C1, E-0299)
-    db $00, $03, $02, $06, $03 ; bytes 11-15
-    db $04 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $03, $02, $06, $03, $04, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $00, $01, $01, $03, $01, $01, $01, $01, $00, $02, $00, $00, $00, $03, $02, $00, $00, $00, $00, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_CloudKing:: ; heuristic: species record; C0
@@ -4348,9 +4089,8 @@ Data_035_72C8:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0A, $38, $81 ; natural skills (C1, E-0299)
-    db $02, $08, $18, $0E, $10 ; bytes 11-15
-    db $0B ; stat growth row (C1, E-0299)
-    db $1A ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $08, $18, $0E, $10, $0B, $1A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $00, $00, $01, $03, $01, $00, $02, $03, $02, $02, $01, $00, $00, $01, $00, $02, $02, $03, $02, $01, $01, $01, $00, $00, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $75, $00 ; bytes 45-46
 SpeciesRecord_Petiteel:: ; heuristic: species record; C0
@@ -4363,9 +4103,8 @@ Data_035_72F7:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $03 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $29, $2D, $6F ; natural skills (C1, E-0299)
-    db $00, $0F, $11, $0C, $09 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0F, $11, $0C, $09, $0E, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $00, $00, $00, $00, $00, $02, $01, $00, $01, $00, $00, $02, $00, $00, $02, $00, $03, $02, $00, $00, $00, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $42, $00 ; bytes 45-46
 SpeciesRecord_Moray:: ; heuristic: species record; C0
@@ -4378,9 +4117,8 @@ Data_035_7326:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2F, $69, $73 ; natural skills (C1, E-0299)
-    db $01, $0C, $11, $12, $13 ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0C, $11, $12, $13, $16, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $01, $00, $00, $00, $02, $01, $00, $01, $01, $00, $02, $00, $00, $02, $00, $03, $00, $00, $00, $00, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4C, $00 ; bytes 45-46
 SpeciesRecord_WalrusMan:: ; heuristic: species record; C0
@@ -4393,9 +4131,8 @@ Data_035_7355:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $58, $6B, $6C ; natural skills (C1, E-0299)
-    db $03, $17, $08, $17, $10 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $17, $08, $17, $10, $07, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $01, $00, $00, $00, $02, $00, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $02, $02, $01, $01, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4A, $00 ; bytes 45-46
 SpeciesRecord_RayGigas:: ; heuristic: species record; C0
@@ -4408,9 +4145,8 @@ Data_035_7384:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $93, $9B ; natural skills (C1, E-0299)
-    db $02, $16, $09, $18, $13 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $16, $09, $18, $13, $09, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $00, $01, $02, $00, $00, $00, $01, $00, $02, $00, $00, $02, $00, $00, $00, $00, $02, $02, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_Anemon:: ; heuristic: species record; C0
@@ -4423,9 +4159,8 @@ Data_035_73B3:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $60, $73 ; natural skills (C1, E-0299)
-    db $00, $09, $0E, $0A, $0D ; bytes 11-15
-    db $05 ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $09, $0E, $0A, $0D, $05, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $00, $01, $02, $01, $01, $00, $00, $00, $02, $01, $00, $02, $00, $01, $02, $00, $00, $01, $02, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_Aquarella:: ; heuristic: species record; C0
@@ -4438,9 +4173,8 @@ Data_035_73E2:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $06 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $38, $62, $91 ; natural skills (C1, E-0299)
-    db $00, $0B, $08, $11, $0E ; bytes 11-15
-    db $06 ; stat growth row (C1, E-0299)
-    db $04 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $08, $11, $0E, $06, $04 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $00, $00, $02, $01, $00, $00, $00, $00, $02, $01, $00, $02, $00, $02, $02, $01, $00, $00, $02, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $3A, $00 ; bytes 45-46
 SpeciesRecord_Merman:: ; heuristic: species record; C0
@@ -4453,9 +4187,8 @@ Data_035_7411:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1E, $27, $71 ; natural skills (C1, E-0299)
-    db $01, $10, $11, $0E, $12 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $10, $11, $0E, $12, $14, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $00, $00, $00, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $02, $01, $01, $01, $01, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $59, $00 ; bytes 45-46
 SpeciesRecord_Octokid:: ; heuristic: species record; C0
@@ -4468,9 +4201,8 @@ Data_035_7440:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $16, $1B, $7A ; natural skills (C1, E-0299)
-    db $01, $07, $0F, $07, $0D ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $07, $0F, $07, $0D, $11, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $00, $01, $02, $01, $01, $01, $00, $00, $02, $00, $00, $02, $00, $01, $01, $01, $01, $00, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_PutreFish:: ; heuristic: species record; C0
@@ -4483,9 +4215,8 @@ Data_035_746F:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $04 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $34, $4C, $6F ; natural skills (C1, E-0299)
-    db $01, $05, $04, $08, $03 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $05, $04, $08, $03, $0E, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $01, $01, $02, $01, $01, $01, $00, $00, $00, $00, $00, $01, $01, $02, $01, $01, $00, $00, $00, $00, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $3F, $00 ; bytes 45-46
 SpeciesRecord_Octoreach:: ; heuristic: species record; C0
@@ -4498,9 +4229,8 @@ Data_035_749E:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $76, $78, $91 ; natural skills (C1, E-0299)
-    db $01, $17, $15, $18, $14 ; bytes 11-15
-    db $08 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $17, $15, $18, $14, $08, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $00, $00, $02, $01, $00, $01, $01, $01, $02, $01, $00, $02, $00, $01, $01, $01, $01, $02, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $59, $00 ; bytes 45-46
 SpeciesRecord_Angleron:: ; heuristic: species record; C0
@@ -4513,9 +4243,8 @@ Data_035_74CD:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $2E, $71 ; natural skills (C1, E-0299)
-    db $01, $11, $10, $17, $14 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $11, $10, $17, $14, $09, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $00, $02, $00, $00, $00, $02, $00, $02, $02, $00, $00, $02, $00, $00, $02, $00, $01, $00, $00, $00, $00, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_FishRider:: ; heuristic: species record; C0
@@ -4528,9 +4257,8 @@ Data_035_74FC:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $0D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $52, $65, $95 ; natural skills (C1, E-0299)
-    db $01, $12, $13, $10, $16 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $07 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $12, $13, $10, $16, $0D, $07 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $01, $02, $01, $01, $01, $00, $02, $02, $01, $00, $02, $00, $00, $00, $02, $00, $00, $02, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $55, $00 ; bytes 45-46
 SpeciesRecord_RushFish:: ; heuristic: species record; C0
@@ -4543,9 +4271,8 @@ Data_035_752B:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $08 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $70, $7E ; natural skills (C1, E-0299)
-    db $03, $09, $06, $0C, $07 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $06 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $09, $06, $0C, $07, $12, $06 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $00, $00, $02, $00, $00, $00, $01, $02, $02, $00, $00, $02, $00, $00, $01, $01, $01, $00, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $3D, $00 ; bytes 45-46
 SpeciesRecord_Gamanian:: ; heuristic: species record; C0
@@ -4558,9 +4285,8 @@ Data_035_755A:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $61, $8B ; natural skills (C1, E-0299)
-    db $00, $0B, $0A, $15, $11 ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $0B, $0A, $15, $11, $16, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $00, $01, $02, $03, $00, $00, $01, $01, $02, $00, $00, $02, $00, $00, $00, $02, $01, $01, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $4D, $00 ; bytes 45-46
 SpeciesRecord_Clawster:: ; heuristic: species record; C0
@@ -4573,9 +4299,8 @@ Data_035_7589:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $55, $5E, $63 ; natural skills (C1, E-0299)
-    db $01, $0C, $14, $18, $12 ; bytes 11-15
-    db $14 ; stat growth row (C1, E-0299)
-    db $0E ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0C, $14, $18, $12, $14, $0E ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $00, $01, $00, $03, $02, $01, $01, $00, $00, $02, $01, $01, $02, $01, $00, $00, $00, $01, $01, $02, $00, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $5B, $00 ; bytes 45-46
 SpeciesRecord_CancerMan:: ; heuristic: species record; C0
@@ -4588,9 +4313,8 @@ Data_035_75B8:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $0F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $52, $56, $65 ; natural skills (C1, E-0299)
-    db $05, $17, $0D, $18, $15 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $0D, $18, $15, $0E, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $01, $01, $01, $02, $00, $01, $01, $01, $00, $02, $01, $00, $02, $00, $01, $01, $00, $00, $00, $02, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $5B, $00 ; bytes 45-46
 SpeciesRecord_RogueWave:: ; heuristic: species record; C0
@@ -4603,9 +4327,8 @@ Data_035_75E7:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $09 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4C, $73, $9B ; natural skills (C1, E-0299)
-    db $01, $0B, $07, $12, $09 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0B, $07, $12, $09, $18, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $00, $01, $02, $02, $00, $00, $01, $01, $02, $01, $00, $02, $01, $00, $01, $01, $01, $02, $02, $00, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $4F, $00 ; bytes 45-46
 SpeciesRecord_Scallopa:: ; heuristic: species record; C0
@@ -4618,9 +4341,8 @@ Data_035_7616:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $39, $7F ; natural skills (C1, E-0299)
-    db $01, $11, $13, $09, $17 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $11, $13, $09, $17, $07, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $01, $01, $02, $01, $00, $00, $01, $00, $02, $00, $00, $02, $01, $02, $02, $00, $00, $02, $02, $00, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $54, $00 ; bytes 45-46
 SpeciesRecord_SeaHorse:: ; heuristic: species record; C0
@@ -4633,9 +4355,8 @@ Data_035_7645:: ; address name
     db $28 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $44, $91, $96 ; natural skills (C1, E-0299)
-    db $01, $15, $09, $11, $0E ; bytes 11-15
-    db $0F ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $15, $09, $11, $0E, $0F, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $00, $00, $00, $00, $03, $01, $00, $00, $01, $00, $02, $01, $00, $02, $00, $01, $01, $01, $01, $00, $03, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $47, $00 ; bytes 45-46
 SpeciesRecord_HoodSquid:: ; heuristic: species record; C0
@@ -4648,9 +4369,8 @@ Data_035_7674:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $11 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $63, $7A ; natural skills (C1, E-0299)
-    db $01, $0B, $15, $10, $0A ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $13 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $0B, $15, $10, $0A, $0E, $13 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $01, $01, $02, $00, $01, $01, $01, $01, $02, $01, $00, $02, $00, $00, $00, $01, $02, $02, $02, $01, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $59, $00 ; bytes 45-46
 SpeciesRecord_MerTiger:: ; heuristic: species record; C0
@@ -4663,9 +4383,8 @@ Data_035_76A3:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $10 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $10, $2F, $90 ; natural skills (C1, E-0299)
-    db $05, $17, $05, $1A, $18 ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $17, $05, $1A, $18, $0A, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $00, $01, $01, $02, $02, $01, $01, $01, $00, $02, $02, $00, $02, $01, $01, $02, $02, $01, $00, $02, $01, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $63, $00 ; bytes 45-46
 SpeciesRecord_AxeShark:: ; heuristic: species record; C0
@@ -4678,9 +4397,8 @@ Data_035_76D2:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $27, $65, $97 ; natural skills (C1, E-0299)
-    db $05, $19, $14, $1C, $15 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $19, $14, $1C, $15, $0E, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $00, $02, $02, $03, $02, $02, $02, $02, $02, $02, $01, $02, $00, $02, $02, $02, $01, $02, $02, $01, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $76, $00 ; bytes 45-46
 SpeciesRecord_Octogon:: ; heuristic: species record; C0
@@ -4693,9 +4411,8 @@ Data_035_7701:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $13 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1B, $63, $7C ; natural skills (C1, E-0299)
-    db $01, $18, $09, $19, $12 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $14 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $18, $09, $19, $12, $09, $14 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $00, $00, $02, $01, $00, $02, $01, $01, $02, $02, $00, $02, $00, $02, $01, $01, $01, $02, $02, $01, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $64, $00 ; bytes 45-46
 SpeciesRecord_KingSquid:: ; heuristic: species record; C0
@@ -4708,9 +4425,8 @@ Data_035_7730:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $1E, $65, $69 ; natural skills (C1, E-0299)
-    db $01, $19, $0E, $1A, $17 ; bytes 11-15
-    db $0C ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $19, $0E, $1A, $17, $0C, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $01, $01, $02, $00, $02, $02, $01, $01, $03, $01, $01, $02, $01, $02, $01, $01, $01, $01, $02, $01, $02, $03 ; 27 base resistance levels (C1, E-0299)
     db $75, $00 ; bytes 45-46
 SpeciesRecord_Digong:: ; heuristic: species record; C0
@@ -4723,9 +4439,8 @@ Data_035_775F:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $6F, $73 ; natural skills (C1, E-0299)
-    db $03, $12, $17, $19, $0B ; bytes 11-15
-    db $0A ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $12, $17, $19, $0B, $0A, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $01, $02, $02, $02, $01, $01, $01, $02, $03, $01, $01, $03, $01, $01, $02, $02, $01, $01, $02, $01, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $6A, $00 ; bytes 45-46
 SpeciesRecord_WhaleMage:: ; heuristic: species record; C0
@@ -4738,9 +4453,8 @@ Data_035_778E:: ; address name
     db $2D ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $21, $4C, $91 ; natural skills (C1, E-0299)
-    db $01, $1D, $15, $17, $12 ; bytes 11-15
-    db $03 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $1D, $15, $17, $12, $03, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $02, $01, $02, $02, $03, $01, $01, $01, $00, $02, $02, $02, $02, $01, $01, $02, $02, $01, $00, $02, $00, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $68, $00 ; bytes 45-46
 SpeciesRecord_Aquadon:: ; heuristic: species record; C0
@@ -4753,9 +4467,8 @@ Data_035_77BD:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $32, $48, $6E ; natural skills (C1, E-0299)
-    db $05, $18, $14, $1A, $0A ; bytes 11-15
-    db $11 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $18, $14, $1A, $0A, $11, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $02, $02, $01, $02, $02, $02, $02, $01, $01, $02, $02, $03, $02, $01, $03, $01, $02, $02, $02, $02, $02, $02, $02, $02, $03 ; 27 base resistance levels (C1, E-0299)
     db $7D, $00 ; bytes 45-46
 SpeciesRecord_Octoraid:: ; heuristic: species record; C0
@@ -4768,9 +4481,8 @@ Data_035_77EC:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $55, $62, $67 ; natural skills (C1, E-0299)
-    db $03, $12, $09, $1B, $15 ; bytes 11-15
-    db $15 ; stat growth row (C1, E-0299)
-    db $0D ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $12, $09, $1B, $15, $15, $0D ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $01, $02, $02, $02, $03, $02, $02, $01, $02, $02, $02, $02, $01, $01, $01, $01, $01, $01, $02, $01, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $73, $00 ; bytes 45-46
 SpeciesRecord_Grakos:: ; heuristic: species record; C0
@@ -4783,9 +4495,8 @@ Data_035_781B:: ; address name
     db $37 ; base level cap (C1, E-0299)
     db $15 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $2D, $6A, $7E ; natural skills (C1, E-0299)
-    db $01, $17, $12, $19, $12 ; bytes 11-15
-    db $10 ; stat growth row (C1, E-0299)
-    db $0A ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $17, $12, $19, $12, $10, $0A ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $02, $00, $00, $00, $01, $02, $02, $03, $01, $01, $02, $02, $03, $01, $00, $00, $02, $02, $02, $02, $02, $02, $02, $02, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $77, $00 ; bytes 45-46
 SpeciesRecord_Poseidon:: ; heuristic: species record; C0
@@ -4798,9 +4509,8 @@ Data_035_784A:: ; address name
     db $41 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $8A, $95 ; natural skills (C1, E-0299)
-    db $03, $1C, $16, $17, $18 ; bytes 11-15
-    db $0D ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $1C, $16, $17, $18, $0D, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $01, $01, $02, $02, $03, $02, $02, $02, $03, $02, $02, $02, $02, $01, $03, $03, $03, $03, $03, $02, $02, $03, $03 ; 27 base resistance levels (C1, E-0299)
     db $8E, $00 ; bytes 45-46
 SpeciesRecord_Pumpoise:: ; heuristic: species record; C0
@@ -4813,9 +4523,8 @@ Data_035_7879:: ; address name
     db $23 ; base level cap (C1, E-0299)
     db $0C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $4E, $89, $95 ; natural skills (C1, E-0299)
-    db $01, $11, $08, $0D, $16 ; bytes 11-15
-    db $07 ; stat growth row (C1, E-0299)
-    db $08 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $11, $08, $0D, $16, $07, $08 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $00, $01, $00, $02, $01, $00, $00, $00, $01, $02, $01, $00, $02, $00, $00, $00, $00, $00, $00, $02, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $44, $00 ; bytes 45-46
 SpeciesRecord_Starfish:: ; heuristic: species record; C0
@@ -4828,9 +4537,8 @@ Data_035_78A8:: ; address name
     db $1E ; base level cap (C1, E-0299)
     db $05 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $25, $5F, $76 ; natural skills (C1, E-0299)
-    db $01, $07, $13, $05, $09 ; bytes 11-15
-    db $09 ; stat growth row (C1, E-0299)
-    db $0F ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $07, $13, $05, $09, $09, $0F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $00, $01, $02, $00, $02, $00, $00, $01, $00, $01, $00, $01, $01, $03, $01, $00, $01, $00, $00, $00, $00, $03 ; 27 base resistance levels (C1, E-0299)
     db $8E, $00 ; bytes 45-46
 SpeciesRecord_DracoLord:: ; heuristic: species record; C0
@@ -4843,9 +4551,8 @@ Data_035_78D7:: ; address name
     db $32 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $3B, $9F ; natural skills (C1, E-0299)
-    db $02, $14, $1E, $15, $14 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $14, $1E, $15, $14, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $01, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $01, $01, $03, $02, $03, $03, $03, $03, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $10, $02 ; bytes 45-46
 SpeciesRecord_DracoLord_7906:: ; heuristic: species record; C0
@@ -4858,9 +4565,8 @@ Data_035_7906:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $6C, $81 ; natural skills (C1, E-0299)
-    db $02, $15, $1E, $18, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $15, $1E, $18, $15, $17, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $01, $01, $01, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03, $03, $03, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $58, $02 ; bytes 45-46
 SpeciesRecord_LordDraco:: ; heuristic: species record; C0
@@ -4873,9 +4579,8 @@ Data_035_7935:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $3F, $8A ; natural skills (C1, E-0299)
-    db $03, $16, $1F, $18, $16 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $16 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $16, $1F, $18, $16, $18, $16 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03, $03, $03, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $84, $02 ; bytes 45-46
 SpeciesRecord_Hargon:: ; heuristic: species record; C0
@@ -4888,9 +4593,8 @@ Data_035_7964:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $07, $85 ; natural skills (C1, E-0299)
-    db $00, $13, $1E, $14, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $13, $1E, $14, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $01, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $00, $00, $03, $02, $03, $03, $03, $03, $02, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $1C, $02 ; bytes 45-46
 SpeciesRecord_Sidoh:: ; heuristic: species record; C0
@@ -4903,9 +4607,8 @@ Data_035_7993:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3F, $40, $44 ; natural skills (C1, E-0299)
-    db $01, $18, $1E, $18, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $18, $1E, $18, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $01, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03, $03, $03, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $44, $02 ; bytes 45-46
 SpeciesRecord_Genosidoh:: ; heuristic: species record; C0
@@ -4918,9 +4621,8 @@ Data_035_79C2:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $38, $48, $66 ; natural skills (C1, E-0299)
-    db $01, $19, $1F, $19, $11 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $16 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $19, $1F, $19, $11, $12, $16 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $01, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $01, $01, $03, $03, $03, $03, $03, $03, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $68, $02 ; bytes 45-46
 SpeciesRecord_Baramos:: ; heuristic: species record; C0
@@ -4933,9 +4635,8 @@ Data_035_79F1:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $3F, $4B ; natural skills (C1, E-0299)
-    db $00, $14, $1E, $14, $14 ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $1E, $14, $14, $16, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $00, $02, $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $01, $01, $03, $03, $03, $03, $03, $03, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $1C, $02 ; bytes 45-46
 SpeciesRecord_Zoma:: ; heuristic: species record; C0
@@ -4948,9 +4649,8 @@ Data_035_7A20:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $19 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $44, $83 ; natural skills (C1, E-0299)
-    db $02, $18, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $18, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $03, $03, $01, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03, $03, $03, $02, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $84, $02 ; bytes 45-46
 SpeciesRecord_AsuraZoma:: ; heuristic: species record; C0
@@ -4963,9 +4663,8 @@ Data_035_7A4F:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $67, $8A ; natural skills (C1, E-0299)
-    db $05, $1A, $1E, $1D, $16 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $0C ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $1A, $1E, $1D, $16, $17, $0C ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $03, $03, $01, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $02, $02, $03, $03, $03, $03, $03, $03, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $90, $02 ; bytes 45-46
 SpeciesRecord_Pizzaro:: ; heuristic: species record; C0
@@ -4978,9 +4677,8 @@ Data_035_7A7E:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $18 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3F, $40, $63 ; natural skills (C1, E-0299)
-    db $03, $15, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $15, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $00, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $00, $00, $03, $03, $03, $03, $03, $03, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $48, $02 ; bytes 45-46
 SpeciesRecord_PsychoPiz:: ; heuristic: species record; C0
@@ -4993,9 +4691,8 @@ Data_035_7AAD:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $44, $83 ; natural skills (C1, E-0299)
-    db $05, $1E, $1E, $1B, $12 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $15 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $1E, $1E, $1B, $12, $18, $15 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $01, $01, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $02, $01, $01, $03, $03, $03, $03, $03, $03, $02, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $74, $02 ; bytes 45-46
 SpeciesRecord_Esterk:: ; heuristic: species record; C0
@@ -5008,9 +4705,8 @@ Data_035_7ADC:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $63, $65, $67 ; natural skills (C1, E-0299)
-    db $05, $1D, $1E, $1A, $18 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $1D, $1E, $1A, $18, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $02, $00, $01, $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $02, $01, $03, $02, $03, $03, $03, $03, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $58, $02 ; bytes 45-46
 SpeciesRecord_Mirudraas:: ; heuristic: species record; C0
@@ -5023,9 +4719,8 @@ Data_035_7B0B:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $01, $07, $0D ; natural skills (C1, E-0299)
-    db $02, $15, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $15, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $02, $02, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $50, $02 ; bytes 45-46
 SpeciesRecord_Mirudraas_7B3A:: ; heuristic: species record; C0
@@ -5038,9 +4733,8 @@ Data_035_7B3A:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $83, $89 ; natural skills (C1, E-0299)
-    db $02, $1D, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $1D, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $00, $00, $00, $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $03, $01, $03, $03, $03, $03, $03, $03, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $60, $02 ; bytes 45-46
 SpeciesRecord_Mudou:: ; heuristic: species record; C0
@@ -5053,9 +4747,8 @@ Data_035_7B69:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $44, $73 ; natural skills (C1, E-0299)
-    db $02, $15, $1E, $1A, $18 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $15, $1E, $1A, $18, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $03, $00, $01, $03, $03, $03, $02, $03, $03, $02, $03, $03, $00, $03, $03, $03, $02, $03, $03, $03, $03, $00, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $38, $02 ; bytes 45-46
 SpeciesRecord_DeathMore:: ; heuristic: species record; C0
@@ -5068,9 +4761,8 @@ Data_035_7B98:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $1B ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $3F, $85 ; natural skills (C1, E-0299)
-    db $02, $15, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $15, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $01, $01, $02, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     db $48, $02 ; bytes 45-46
 SpeciesRecord_DeathMore_7BC7:: ; heuristic: species record; C0
@@ -5083,9 +4775,8 @@ Data_035_7BC7:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $6F, $82 ; natural skills (C1, E-0299)
-    db $03, $18, $1E, $1A, $15 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $03 ; byte 11: string index, category $0D
+    db $18, $1E, $1A, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $02, $01, $03 ; 27 base resistance levels (C1, E-0299)
     db $6C, $02 ; bytes 45-46
 SpeciesRecord_DeathMore_7BF6:: ; heuristic: species record; C0
@@ -5098,9 +4789,8 @@ Data_035_7BF6:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3E, $83, $8A ; natural skills (C1, E-0299)
-    db $01, $1D, $1E, $1E, $18 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $01 ; byte 11: string index, category $0D
+    db $1D, $1E, $1E, $18, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03, $03, $03, $03, $02, $03 ; 27 base resistance levels (C1, E-0299)
     db $C0, $02 ; bytes 45-46
 SpeciesRecord_Darkdrium:: ; heuristic: species record; C0
@@ -5113,9 +4803,8 @@ Data_035_7C25:: ; address name
     db $50 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $0D, $40, $44 ; natural skills (C1, E-0299)
-    db $02, $1F, $1E, $1F, $18 ; bytes 11-15
-    db $17 ; stat growth row (C1, E-0299)
-    db $17 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $1F, $1E, $1F, $18, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $03, $03, $03, $02, $02, $03, $03, $02, $03, $03, $02, $02, $02, $03, $03, $03, $03, $03, $03, $03, $03, $02 ; 27 base resistance levels (C1, E-0299)
     db $AC, $02 ; bytes 45-46
 SpeciesRecord_Orgodemir:: ; heuristic: species record; C0
@@ -5128,9 +4817,8 @@ Data_035_7C54:: ; address name
     db $41 ; base level cap (C1, E-0299)
     db $1E ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $07, $6B, $8A ; natural skills (C1, E-0299)
-    db $02, $18, $19, $1A, $17 ; bytes 11-15
-    db $16 ; stat growth row (C1, E-0299)
-    db $1F ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $18, $19, $1A, $17, $16, $1F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $02, $02, $02, $03, $02, $01, $02, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $6C, $02 ; bytes 45-46
 SpeciesRecord_Orgodemir_7C83:: ; heuristic: species record; C0
@@ -5143,9 +4831,8 @@ Data_035_7C83:: ; address name
     db $46 ; base level cap (C1, E-0299)
     db $1F ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3D, $83, $A0 ; natural skills (C1, E-0299)
-    db $05, $1B, $1F, $1E, $17 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $1F ; byte 17
+    db $05 ; byte 11: string index, category $0D
+    db $1B, $1F, $1E, $17, $18, $1F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $03, $03, $03, $02, $03, $03, $03, $03, $02, $03, $03, $02, $03, $03, $02, $02, $03, $03, $03, $03, $02, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $20, $03 ; bytes 45-46
 SpeciesRecord_Darck:: ; heuristic: species record; C0
@@ -5158,9 +4845,8 @@ Data_035_7CB2:: ; address name
     db $3C ; base level cap (C1, E-0299)
     db $1A ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $04, $07, $68 ; natural skills (C1, E-0299)
-    db $02, $17, $19, $12, $17 ; bytes 11-15
-    db $0E ; stat growth row (C1, E-0299)
-    db $11 ; byte 17
+    db $02 ; byte 11: string index, category $0D
+    db $17, $19, $12, $17, $0E, $11 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $02, $00, $00, $00, $01, $03, $03, $03, $02, $03, $03, $03, $02, $03, $02, $00, $01, $03, $03, $03, $03, $03, $03, $01, $00, $01 ; 27 base resistance levels (C1, E-0299)
     db $24, $02 ; bytes 45-46
 SpeciesRecord_Tatsu:: ; heuristic: species record; C0
@@ -5173,9 +4859,8 @@ Data_035_7CE1:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $02, $02, $03, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Diago:: ; heuristic: species record; C0
@@ -5188,9 +4873,8 @@ Data_035_7D10:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $03, $02, $02, $00, $00, $01, $01, $01, $02, $01, $00, $01, $01, $01, $00, $00, $03, $00, $01, $01, $01, $01, $01, $01, $01, $01, $00 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Samsi:: ; heuristic: species record; C0
@@ -5203,9 +4887,8 @@ Data_035_7D3F:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $01, $03, $00, $01, $02, $02, $03, $01, $01, $01, $00, $01, $00, $00, $01, $02, $01, $01, $01, $01, $01, $01, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Bazoo:: ; heuristic: species record; C0
@@ -5218,9 +4901,8 @@ Data_035_7D6E:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $01, $02, $03, $03, $03, $03, $02, $02, $02, $02, $02, $01, $00, $01, $03, $02, $02, $02, $02, $02, $02, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_179:: ; heuristic: species record; C0
@@ -5233,9 +4915,8 @@ Data_035_7D9D:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $02, $02, $03, $01, $01, $02, $02, $01, $01, $00, $03, $03, $02, $03, $02, $02, $01, $01, $02, $02, $01 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_17A:: ; heuristic: species record; C0
@@ -5248,9 +4929,8 @@ Data_035_7DCC:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $00, $02, $02, $02, $02, $02, $02, $03, $03, $02, $02, $02, $02, $00, $00, $00, $01, $01, $01, $01, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_17B:: ; heuristic: species record; C0
@@ -5263,9 +4943,8 @@ Data_035_7DFB:: ; address name
     db $00 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $FF, $FF, $FF ; natural skills (C1, E-0299)
-    db $00, $00, $00, $00, $00 ; bytes 11-15
-    db $00 ; stat growth row (C1, E-0299)
-    db $00 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $00, $00, $00, $00, $00, $00 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $03, $03, $03, $03, $03, $03, $03, $03, $03, $01, $02, $02, $03, $03, $03, $03, $03, $03, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Lamia:: ; heuristic: species record; C0
@@ -5278,9 +4957,8 @@ Data_035_7E2A:: ; address name
     db $63 ; base level cap (C1, E-0299)
     db $1C ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $19, $1B, $1E ; natural skills (C1, E-0299)
-    db $00, $14, $18, $13, $15 ; bytes 11-15
-    db $12 ; stat growth row (C1, E-0299)
-    db $18 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $14, $18, $13, $15, $12, $18 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $01, $02, $02, $02, $03, $03, $03, $02, $03, $03, $01, $01, $02, $01, $01, $01, $02, $03, $03, $02, $01, $02, $02, $01, $02 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Dimensaur:: ; heuristic: species record; C0
@@ -5293,9 +4971,8 @@ Data_035_7E59:: ; address name
     db $09 ; base level cap (C1, E-0299)
     db $1D ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $40, $3D, $3F ; natural skills (C1, E-0299)
-    db $00, $1F, $1F, $1F, $1F ; bytes 11-15
-    db $1F ; stat growth row (C1, E-0299)
-    db $1F ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $1F, $1F, $1F, $1F, $1F, $1F ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $02, $02, $03, $02, $02, $02, $02, $03, $02, $01, $02, $01, $03, $03, $03, $03, $03, $01, $02, $01, $01 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
 SpeciesRecord_Kagebou:: ; heuristic: species record; C0
@@ -5308,9 +4985,8 @@ Data_035_7E88:: ; address name
     db $63 ; base level cap (C1, E-0299)
     db $00 ; EXP curve: ExpTable row (wSpeciesExpCurve)
     db $3C, $3E, $85 ; natural skills (C1, E-0299)
-    db $00, $17, $0F, $18, $10 ; bytes 11-15
-    db $18 ; stat growth row (C1, E-0299)
-    db $09 ; byte 17
+    db $00 ; byte 11: string index, category $0D
+    db $17, $0F, $18, $10, $18, $09 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $00, $00, $00, $00, $00, $00, $00, $03, $03, $01, $01, $03, $03, $01, $02, $01, $00, $00, $03, $03, $03, $03, $03, $03, $02, $00, $00 ; 27 base resistance levels (C1, E-0299)
     db $00, $00 ; bytes 45-46
     ds $149, $00

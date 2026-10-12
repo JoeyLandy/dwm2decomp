@@ -2431,6 +2431,17 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0309 — Species bytes $0C-$11 are six stat growth rows (correction to E-0299)
+
+- Kind: STATIC (C1 for the stat order).
+- **Correction.** E-0299 named species byte $10 alone the stat growth row. In fact bytes $0C-$11 are six rows, one per stat, read in the same order each time:
+  - ComputeLevelUpStatGainsForBattleArg1 passes each to ReadStatGrowthGain with B = 0-5, filling wLevelUpGains + 0-5.
+  - GameMode4_Init_Sub01_Sub07 and ApplyLevelScaledStatsToSlots pass each to StatFromGrowthRow for new and wild monsters.
+- **Stat order.** Assumed to be HP, MP, ATK, DEF, AGL, INT, the game's usual order, as for the base-stat accessors (E-0124). That makes it C1.
+- **Names given.** SPECIES_GROWTH is now a 6-byte field at $0C, used as SPECIES_GROWTH + 0-5 (18 operands). In the SpeciesRecords layout, byte 11 is the category-$0D string index and bytes 12-17 are the growth rows.
+- **Still unread.** Species bytes 2-3, 5, $2D-$2E. GameMode4_Init_Sub01_Sub07 copies $2D-$2E into a new battler record.
+- Binary verification: build/run427 PASS, 0 differing bytes; tests OK (skipped=3).
+
 ### E-0308 — Field object bytes 2-3 are one sprite id word
 
 - Kind: STATIC (C1).

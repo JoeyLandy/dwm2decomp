@@ -2680,32 +2680,32 @@ Func_01A_6418:: ; address name
     jr nc, .return
     ld d, a
     call ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress
-    ld a, [wSpeciesRecord + $C]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH]
     call ReadStatGrowthGain
     ld b, $00
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains], a
-    ld a, [wSpeciesRecord + $D]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 1]
     call ReadStatGrowthGain
     ld b, $01
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $1], a
-    ld a, [wSpeciesRecord + $E]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 2]
     call ReadStatGrowthGain
     ld b, $02
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $2], a
-    ld a, [wSpeciesRecord + $F]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 3]
     call ReadStatGrowthGain
     ld b, $03
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $3], a
-    ld a, [wSpeciesRecord + SPECIES_GROWTH]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 4]
     call ReadStatGrowthGain
     ld b, $04
     call AddGrowthTemp1IfGrowthTemp0MatchesB
     ld [wLevelUpGains + $4], a
-    ld a, [wSpeciesRecord + $11]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 5]
     call ReadStatGrowthGain
     ld b, $05
     call AddGrowthTemp1IfGrowthTemp0MatchesB

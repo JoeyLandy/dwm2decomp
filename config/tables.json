@@ -19758,18 +19758,13 @@
         },
         {
           "type": "db",
-          "size": 5,
-          "name": "bytes 11-15"
+          "size": 1,
+          "name": "byte 11: string index, category $0D"
         },
         {
           "type": "db",
-          "size": 1,
-          "name": "stat growth row (C1, E-0299)"
-        },
-        {
-          "type": "db",
-          "size": 1,
-          "name": "byte 17"
+          "size": 6,
+          "name": "six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)"
         },
         {
           "type": "db",

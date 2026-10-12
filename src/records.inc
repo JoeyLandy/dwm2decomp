@@ -59,7 +59,7 @@ DEF SPECIES_JOIN_CLASS EQU $04 ; join-chance class 0-7: after a battle BattleEnd
 DEF SPECIES_MAX_LEVEL EQU $06 ; base level cap: copied to a new record's $57 (MON_MAX_LEVEL); BattleEnd_Step3 compares the level with it; ComputeBreedingChild starts the child's cap from it (E-0299)
 DEF SPECIES_EXP_CURVE EQU $07 ; the ExpTable row (EXP curve) (E-0148)
 DEF SPECIES_SKILLS EQU $08 ; three natural skills: copied to the first three entries of a new record's skill list $3C (MON_SKILL_LIST), the rest $FF (E-0299)
-DEF SPECIES_GROWTH EQU $10 ; stat growth row: passed to StatFromGrowthRow and ReadStatGrowthGain (level-up gains) (E-0299)
+DEF SPECIES_GROWTH EQU $0C ; six stat growth rows, one per stat in the order of wLevelUpGains (bytes $0C-$11; C1: HP, MP, ATK, DEF, AGL, INT): ComputeLevelUpStatGainsForBattleArg1 passes each to ReadStatGrowthGain, and new and wild monsters pass each to StatFromGrowthRow (E-0299, E-0309)
 DEF SPECIES_RESISTANCES EQU $12 ; 27 base resistance levels: copied to a new record's $73-$8D (MON_RESISTANCES); LoadWD01AByteArg4 reads one (E-0299)
 
 ; Offsets into a 16-byte field object slot (wObject1-4; config/record_fields.json "object", E-0300).

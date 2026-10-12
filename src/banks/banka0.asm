@@ -1692,7 +1692,7 @@ Func_0A0_494F:: ; address name
     ld [hl+], a
     ld [hl+], a
     push hl
-    ld a, [wSpeciesRecord + $C]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH]
     ldh [hTemp0], a
     farcall StatFromGrowthRow
     pop hl
@@ -1700,7 +1700,7 @@ Func_0A0_494F:: ; address name
     ld [wBattleArg0], a
     call ScaleStatByWildLevelCapped999
     call StoreTemp2WordAtHL_BankA0
-    ld a, [wSpeciesRecord + $D]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 1]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
@@ -1709,25 +1709,25 @@ Func_0A0_494F:: ; address name
     ld [wBattleArg0], a
     call ScaleStatByWildLevelCapped999
     call StoreTemp2WordAtHL_BankA0
-    ld a, [wSpeciesRecord + $E]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 2]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
     pop hl
     call ScaleStatByWildLevelCapped999
-    ld a, [wSpeciesRecord + $F]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 3]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
     pop hl
     call ScaleStatByWildLevelCapped999
-    ld a, [wSpeciesRecord + SPECIES_GROWTH]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 4]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
     pop hl
     call ScaleStatByWildLevelCapped999
-    ld a, [wSpeciesRecord + $11]
+    ld a, [wSpeciesRecord + SPECIES_GROWTH + 5]
     ldh [hTemp0], a
     push hl
     farcall StatFromGrowthRow
