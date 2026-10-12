@@ -19415,6 +19415,66 @@
         }
       ],
       "note": "E-0241 (C0: no reference found in any bank (no address load, word or split high/low load of $70C5-$7244); 384 bytes after BandOfFamilyBitCount's last ret, all values 0-7, in runs that climb to 6 or 7 separated by zeros; meaning unknown, kept as 16-byte rows)."
+    },
+    {
+      "bank": "35",
+      "addr": "403B",
+      "label": "SpeciesRecordPointers",
+      "count": 384,
+      "id_base": 0,
+      "id_names": "monster",
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "47-byte species record",
+          "reason": "species record"
+        }
+      ],
+      "note": "E-0253 (C1: CopySpeciesRecordPrefix reads the word at $403B + 2 * monster id (wSpeciesIdLo/Hi) and copies the first B bytes of the record it points at (E-0062, E-0069); 384 words, 324 distinct records)."
+    },
+    {
+      "bank": "35",
+      "addr": "433B",
+      "label": "SpeciesRecords",
+      "count": 324,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "db",
+          "size": 1,
+          "name": "family (StringTable_MonsterFamilies index; $FF unused)"
+        },
+        {
+          "type": "db",
+          "size": 6,
+          "name": "bytes 1-6"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "EXP curve: ExpTable row (wSpeciesExpCurve)"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 8-23"
+        },
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "bytes 24-39"
+        },
+        {
+          "type": "db",
+          "size": 7,
+          "line": true,
+          "name": "bytes 40-46"
+        }
+      ],
+      "record": "family; bytes 1-6; EXP curve; bytes 8-46",
+      "note": "E-0253 (C1: the 324 records SpeciesRecordPointers points at, 47 bytes each and contiguous up to $7EB7; each is labelled SpeciesRecord_<monster> after the first id that uses it; byte 0 is the family (E-0069) and byte 7 the EXP curve (E-0148); the other bytes are not read here)."
     }
   ]
 }

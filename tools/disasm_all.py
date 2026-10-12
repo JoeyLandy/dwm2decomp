@@ -3142,6 +3142,15 @@ class Rom:
                         if tgt and 0 < tb < self.nbanks:
                             give(tb, tgt, f"KeyWorldRoom{n:02X}_Y{i // 4}X{i % 4}_{part}")
         log(f"key-world rooms named: {named - before}")
+        # E-0253: species records, by the first monster id whose pointer names them
+        before = named
+        sp = next((t for t in self.schemas if t["label"] == "SpeciesRecordPointers"), None)
+        if sp:
+            for i in range(sp["count"]):
+                nm = re.sub(r"[^A-Za-z0-9]", "", self.monster_name(i)) if 0 < i < 0x180 else ""
+                give(sp["bank"], self._u16(sp["bank"], sp["addr"] + 2 * i),
+                     f"SpeciesRecord_{nm}" if nm else f"SpeciesRecord_{i:03X}")
+        log(f"species records named: {named - before}")
 
     def prepare_tracks(self) -> None:
         """Decode the sound track regions named by tables flagged "tracks" (E-0019).

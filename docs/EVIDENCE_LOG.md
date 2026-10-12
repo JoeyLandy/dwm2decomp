@@ -2430,6 +2430,15 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0253 — Species records laid out and labelled by monster
+
+- Kind: OBSERVATION (C1) and TOOL.
+- **SpeciesRecordPointers (35:$403B, 384 words, by monster id) and SpeciesRecords ($433B-$7EB7, 324 contiguous 47-byte records).** CopySpeciesRecordPrefix (E-0062, E-0069) reads the word at $403B + 2 * id and copies from the record it points at.
+  - The rows name byte 0, the family (E-0069), and byte 7, the EXP curve (E-0148). The other bytes are kept as rows.
+  - Each record is labelled SpeciesRecord_<monster>, after the first id whose pointer names it.
+- This replaces 324 monotone-pointer-table guesses.
+- Binary verification: build/run324 PASS, 0 differing bytes; tests OK.
+
 ### E-0252 — Orphan pointer-table guesses dropped
 
 - Kind: TOOL.
