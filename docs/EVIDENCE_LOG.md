@@ -2431,6 +2431,13 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0271 — Script-starting talk cases named from the script's first message
+
+- Kind: TOOL (C1 names from the E-0248 quotes).
+- A structural routine whose body is an optional `ld a, n / ld [wDataBank], a`, then `ld hl, Script_X / call StartScriptAtHL_* / ret`, is named TalkScriptXXXX_<first words>. The words come from the first message of Script_X (the generated `; starts Script_X:` line), for example TalkScript4F54_HehSoTheseAreTheNewcomers and TalkScript5BA8_HowMayOurChurchServeYou.
+- 94 routines are renamed (build/name_scriptcases.py, applied in place by build/apply_names_inplace.py).
+- Binary verification: build/run352 PASS, 0 differing bytes; tests OK.
+
 ### E-0270 — Trampoline cases named after their target
 
 - Kind: TOOL (structural naming from the instructions; C2 for what each does).

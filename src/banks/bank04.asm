@@ -3364,7 +3364,7 @@ Func_004_55DF:: ; address name
     ret
 
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, DispatchTalkEvent_Case0A_Sub01_Case0A, DispatchTalkEvent_Case0A_Sub01_Case09, Talk0046_ThanksForComingBy, ...)
+; 187 call sites from 129 routines (e.g. MapEventCountKeysAndStartScript5039, DispatchTalkEvent_Case0A_Sub01_Case0A, TalkScript5441_HeroCheckedThePedestalIts, Talk0046_ThanksForComingBy, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 StartScriptAtHL_B04::
 Func_004_5603:: ; address name
@@ -3386,15 +3386,15 @@ Func_004_5616:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case0A_Sub01_Case00
-    dw DispatchTalkEvent_Case0A_Sub01_Case01
-    dw DispatchTalkEvent_Case0A_Sub01_Case02
+    dw TalkScript4F54_HehSoTheseAreTheNewcomers
+    dw TalkScript5111_ListenYouTwoQuitYourHorsing
     dw $0000 ; unused index (E-0207)
     dw StartScript4F73AndSetFlag5
     dw StartScript4F7CAndSetFlag06
     dw IfFlag000AStartScript4F9D
     dw Talk0046_ThanksForComingBy
     dw TalkMsg0047_HeroReadTheNoticeWeGuarantee
-    dw DispatchTalkEvent_Case0A_Sub01_Case09
+    dw TalkScript5441_HeroCheckedThePedestalIts
     dw DispatchTalkEvent_Case0A_Sub01_Case0A
     dw TalkMsg0233_HeroCheckedTheBookshelfMonster
     dw TalkMsg0234_HeroCheckedTheBookshelfMonster
@@ -3438,19 +3438,19 @@ Jump_004_566F::
     call StartScriptAtHL_B04
     ret
 
-; entry 1 of the `rst $00` table in Func_004_5616
+; starts Script_4F54 (StartScriptAtHL); its first message begins 'Heh, so these are the newcomers?' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case01)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_4F54: 'Heh, so these are the newcomers?'
-DispatchTalkEvent_Case0A_Sub01_Case01::
+TalkScript4F54_HehSoTheseAreTheNewcomers::
 Jump_004_5676:: ; address name
     ld hl, Script_4F54
     call StartScriptAtHL_B04
     ret
 
-; entry 2 of the `rst $00` table in Func_004_5616
+; starts Script_5111 (StartScriptAtHL); its first message begins 'Listen you two! Quit your horsing' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case02)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5111: 'Listen you two! Quit your horsing'
-DispatchTalkEvent_Case0A_Sub01_Case02::
+TalkScript5111_ListenYouTwoQuitYourHorsing::
 Jump_004_567D:: ; address name
     ld hl, Script_5111
     call StartScriptAtHL_B04
@@ -3565,10 +3565,10 @@ Jump_004_5731:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 9 of the `rst $00` table in Func_004_5616
+; starts Script_5441 (StartScriptAtHL); its first message begins '0 checked the pedestal. It's the' (E-0271; was DispatchTalkEvent_Case0A_Sub01_Case09)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5441: '0 checked the pedestal. It's the'
-DispatchTalkEvent_Case0A_Sub01_Case09::
+TalkScript5441_HeroCheckedThePedestalIts::
 Jump_004_5738:: ; address name
     ld hl, Script_5441
     call StartScriptAtHL_B04
@@ -3903,7 +3903,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg080F_YoureNotSupposedToGoNear
     dw DispatchTalkEvent_Case03_Sub01_Case13
     dw DispatchTalkEvent_Case03_Sub01_Case14
-    dw DispatchTalkEvent_Case03_Sub01_Case15
+    dw TalkScript5B9B_HaveYouHeardTheLegendAbout
     dw TalkMsg081B_AhhThisIsHeavenlyItMakes
     dw TalkMsg081C_ICameFromFarAwayTo
     dw TalkMsg088B_HeroReadTheSignWelcomeTo
@@ -3911,7 +3911,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg081D_ThisIsPortRitzWhereShips
     dw TalkMsg081E_ThePiratesWereSwallowedBy
     dw TalkMsg081F_TheresThisOldSailorManIn
-    dw DispatchTalkEvent_Case03_Sub01_Case1D
+    dw TalkScript5BA8_HowMayOurChurchServeYou
     dw TalkMsg0821_AllSortsOfPeopleComeHere
     dw TalkMsg0822_IWentToPolonaAWhile
     dw DispatchTalkEvent_Case03_Sub01_Case20
@@ -3923,13 +3923,13 @@ Func_004_58C2:: ; address name
     dw TalkMsg082A_TheSeasLevelHasGoneDown
     dw TalkMsg082B_ListenDidYouKnowMermaids
     dw TalkMsg088D_HeroPeeredIntoTheOvenTwo
-    dw DispatchTalkEvent_Case03_Sub01_Case29
+    dw TalkScript5BB6_HeroTriedToCheckTheChest
     dw TalkMsg082E_HeroPeeredIntoTheBarrelIt
     dw BarrelItem_TinyMedal_Flag0063
     dw DispatchTalkEvent_Case03_Sub01_Case2C
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
-    dw DispatchTalkEvent_Case03_Sub01_Case2F
+    dw TalkScript5BC4
     dw TalkMsg0834_WhenThatOldManGetsGrogged
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
@@ -3952,10 +3952,10 @@ Func_004_58C2:: ; address name
     dw TalkMsg0853_ThePiratesSankWithTheirShip
     dw TalkMsg0854_WeMermaidsArePeacefulBeings
     dw DispatchTalkEvent_Case03_Sub01_Case45
-    dw DispatchTalkEvent_Case03_Sub01_Case46
-    dw DispatchTalkEvent_Case03_Sub01_Case47
-    dw DispatchTalkEvent_Case03_Sub01_Case48
-    dw DispatchTalkEvent_Case03_Sub01_Case49
+    dw TalkScript5C88
+    dw TalkScript5C8A_HowCouldWeDieBeforeEnjoying
+    dw TalkScript5C94_TheTreasuresAreOursNoOne
+    dw TalkScript5C9E_ItNagsAndNagsThatWe
     dw DispatchTalkEvent_Case03_Sub01_Case4A
     dw DispatchTalkEvent_Case03_Sub01_Case4B
     dw DispatchTalkEvent_Case03_Sub01_Case4C
@@ -3963,9 +3963,9 @@ Func_004_58C2:: ; address name
     dw ChestItem_LogTwig
     dw DispatchTalkEvent_Case03_Sub01_Case4F
     dw DispatchTalkEvent_Case03_Sub01_Case50
-    dw DispatchTalkEvent_Case03_Sub01_Case51
-    dw DispatchTalkEvent_Case03_Sub01_Case52
-    dw DispatchTalkEvent_Case03_Sub01_Case53
+    dw TalkScript5CDD_KamehaUrkHowYouCatchUp
+    dw TalkScript5D1C_KamehaArrrrhClearTheWayIm
+    dw TalkScript5D2F
     dw ChestItem_Repellent
     dw ChestItem_Warp_Flag00E1
     dw ChestItem_WorldLeaf
@@ -3990,7 +3990,7 @@ Func_004_58C2:: ; address name
     dw TalkMsg0864_HeroCheckedTheLedgerVoyage
     dw DispatchTalkEvent_Case03_Sub01_Case6A
     dw TalkMsg00FF_Composing
-    dw DispatchTalkEvent_Case03_Sub01_Case6C
+    dw TalkScript5D44_ThickSuctionCuppedTentacles
     dw DispatchTalkEvent_Case03_Sub01_Case6D
 
 ; starts message $0800 through StartMessageCommand09HL (script command $09); that string begins 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case03_Sub01_Case00)
@@ -4284,10 +4284,10 @@ Jump_004_5B1D:: ; address name
     ld [wDataBank], a
     ret
 
-; entry 21 of the `rst $00` table in Func_004_58C2
+; starts Script_5B9B (StartScriptAtHL); its first message begins 'Have you heard the legend about' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case15)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5B9B: 'Have you heard the legend about'
-DispatchTalkEvent_Case03_Sub01_Case15::
+TalkScript5B9B_HaveYouHeardTheLegendAbout::
 Jump_004_5B29:: ; address name
     ld hl, Script_5B9B
     call StartScriptAtHL_B04
@@ -4365,11 +4365,11 @@ Jump_004_5B78:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 29 of the `rst $00` table in Func_004_58C2
+; sets wDataBank = $1F, then starts Script_5BA8 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5BA8: 'How may our church serve you?'
-DispatchTalkEvent_Case03_Sub01_Case1D::
+TalkScript5BA8_HowMayOurChurchServeYou::
 Jump_004_5B7F:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -4503,10 +4503,10 @@ Jump_004_5C17:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 41 of the `rst $00` table in Func_004_58C2
+; starts Script_5BB6 (StartScriptAtHL); its first message begins '0 tried to check the chest.' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case29)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5BB6: '0 tried to check the chest.'
-DispatchTalkEvent_Case03_Sub01_Case29::
+TalkScript5BB6_HeroTriedToCheckTheChest::
 Jump_004_5C1E:: ; address name
     ld hl, Script_5BB6
     call StartScriptAtHL_B04
@@ -4570,10 +4570,10 @@ Jump_004_5C5F:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 47 of the `rst $00` table in Func_004_58C2
+; starts Script_5BC4 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case2F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5BC4
-DispatchTalkEvent_Case03_Sub01_Case2F::
+TalkScript5BC4::
 Jump_004_5C66:: ; address name
     ld hl, Script_5BC4
     call StartScriptAtHL_B04
@@ -5001,37 +5001,37 @@ Jump_004_5EB6::
     call StartMessageCommand09HL_B04
     ret
 
-; entry 70 of the `rst $00` table in Func_004_58C2
+; starts Script_5C88 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case46)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C88
-DispatchTalkEvent_Case03_Sub01_Case46::
+TalkScript5C88::
 Jump_004_5EBD:: ; address name
     ld hl, Script_5C88
     call StartScriptAtHL_B04
     ret
 
-; entry 71 of the `rst $00` table in Func_004_58C2
+; starts Script_5C8A (StartScriptAtHL); its first message begins 'How could we die before enjoying' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case47)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C8A: 'How could we die before enjoying'
-DispatchTalkEvent_Case03_Sub01_Case47::
+TalkScript5C8A_HowCouldWeDieBeforeEnjoying::
 Jump_004_5EC4:: ; address name
     ld hl, Script_5C8A
     call StartScriptAtHL_B04
     ret
 
-; entry 72 of the `rst $00` table in Func_004_58C2
+; starts Script_5C94 (StartScriptAtHL); its first message begins 'The treasures are ours No one' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case48)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C94: 'The treasures are ours No one'
-DispatchTalkEvent_Case03_Sub01_Case48::
+TalkScript5C94_TheTreasuresAreOursNoOne::
 Jump_004_5ECB:: ; address name
     ld hl, Script_5C94
     call StartScriptAtHL_B04
     ret
 
-; entry 73 of the `rst $00` table in Func_004_58C2
+; starts Script_5C9E (StartScriptAtHL); its first message begins 'It nags and nags that we' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case49)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5C9E: 'It nags and nags that we'
-DispatchTalkEvent_Case03_Sub01_Case49::
+TalkScript5C9E_ItNagsAndNagsThatWe::
 Jump_004_5ED2:: ; address name
     ld hl, Script_5C9E
     call StartScriptAtHL_B04
@@ -5156,28 +5156,28 @@ Jump_004_5F5A:: ; address name
     ld [wObject2 + $B], a
     ret
 
-; entry 81 of the `rst $00` table in Func_004_58C2
+; starts Script_5CDD (StartScriptAtHL); its first message begins 'Kameha Urk! How you catch up?' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case51)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5CDD: 'Kameha Urk! How you catch up?'
-DispatchTalkEvent_Case03_Sub01_Case51::
+TalkScript5CDD_KamehaUrkHowYouCatchUp::
 Jump_004_5F7C:: ; address name
     ld hl, Script_5CDD
     call StartScriptAtHL_B04
     ret
 
-; entry 82 of the `rst $00` table in Func_004_58C2
+; starts Script_5D1C (StartScriptAtHL); its first message begins 'Kameha Arrrrh, clear the way! I'm' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case52)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D1C: 'Kameha Arrrrh, clear the way! I'm'
-DispatchTalkEvent_Case03_Sub01_Case52::
+TalkScript5D1C_KamehaArrrrhClearTheWayIm::
 Jump_004_5F83:: ; address name
     ld hl, Script_5D1C
     call StartScriptAtHL_B04
     ret
 
-; entry 83 of the `rst $00` table in Func_004_58C2
+; starts Script_5D2F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case03_Sub01_Case53)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D2F
-DispatchTalkEvent_Case03_Sub01_Case53::
+TalkScript5D2F::
 Jump_004_5F8A:: ; address name
     ld hl, Script_5D2F
     call StartScriptAtHL_B04
@@ -5475,10 +5475,10 @@ Jump_004_60FC:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 108 of the `rst $00` table in Func_004_58C2
+; starts Script_5D44 (StartScriptAtHL); its first message begins 'Thick, suction- cupped tentacles snaked out' (E-0271; was DispatchTalkEvent_Case03_Sub01_Case6C)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D44: 'Thick, suction- cupped tentacles snaked out'
-DispatchTalkEvent_Case03_Sub01_Case6C::
+TalkScript5D44_ThickSuctionCuppedTentacles::
 Jump_004_6103:: ; address name
     ld hl, Script_5D44
     call StartScriptAtHL_B04
@@ -6823,39 +6823,39 @@ Func_004_6892:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case00_Sub01_Case00
-    dw DispatchTalkEvent_Case00_Sub01_Case01
-    dw DispatchTalkEvent_Case00_Sub01_Case02
+    dw TalkScript512F
+    dw TalkScript5131
     dw DispatchTalkEvent_Case00_Sub01_Case00
-    dw DispatchTalkEvent_Case00_Sub01_Case04
-    dw DispatchTalkEvent_Case00_Sub01_Case05
-    dw DispatchTalkEvent_Case00_Sub01_Case06
-    dw DispatchTalkEvent_Case00_Sub01_Case07
-    dw DispatchTalkEvent_Case00_Sub01_Case08
-    dw DispatchTalkEvent_Case00_Sub01_Case09
-    dw DispatchTalkEvent_Case00_Sub01_Case0A
-    dw DispatchTalkEvent_Case00_Sub01_Case0B
-    dw DispatchTalkEvent_Case00_Sub01_Case0B
-    dw DispatchTalkEvent_Case00_Sub01_Case0B
-    dw DispatchTalkEvent_Case00_Sub01_Case0E
-    dw DispatchTalkEvent_Case00_Sub01_Case0F
-    dw DispatchTalkEvent_Case00_Sub01_Case10
-    dw DispatchTalkEvent_Case00_Sub01_Case11
-    dw DispatchTalkEvent_Case00_Sub01_Case12
-    dw DispatchTalkEvent_Case00_Sub01_Case13
-    dw DispatchTalkEvent_Case00_Sub01_Case14
-    dw DispatchTalkEvent_Case00_Sub01_Case15
-    dw DispatchTalkEvent_Case00_Sub01_Case16
-    dw DispatchTalkEvent_Case00_Sub01_Case17
-    dw DispatchTalkEvent_Case00_Sub01_Case18
-    dw DispatchTalkEvent_Case00_Sub01_Case19
-    dw DispatchTalkEvent_Case00_Sub01_Case1A
+    dw TalkScript5137
+    dw TalkScript5139
+    dw TalkScript513B
+    dw TalkScript513D
+    dw TalkScript513F
+    dw TalkScript5141
+    dw TalkScript5143
+    dw TalkScript5145
+    dw TalkScript5145
+    dw TalkScript5145
+    dw TalkScript5147
+    dw TalkScript5149
+    dw TalkScript514B
+    dw TalkScript514D
+    dw TalkScript514F
+    dw TalkScript5151
+    dw TalkScript5153
+    dw TalkScript5155
+    dw TalkScript5157
+    dw TalkScript5159
+    dw TalkScript515F
+    dw TalkScript5169
+    dw TalkScript516B
     dw DispatchTalkEvent_Case00_Sub01_Case1B
     dw DispatchTalkEvent_Case00_Sub01_Case1C
-    dw DispatchTalkEvent_Case00_Sub01_Case1D
-    dw DispatchTalkEvent_Case00_Sub01_Case1E
-    dw DispatchTalkEvent_Case00_Sub01_Case1F
-    dw DispatchTalkEvent_Case00_Sub01_Case20
-    dw DispatchTalkEvent_Case00_Sub01_Case21
+    dw TalkScript5171
+    dw TalkScript5173
+    dw TalkScript5164
+    dw TalkScript515B
+    dw TalkScript515D
     dw DispatchTalkEvent_Case00_Sub01_Case22
     dw DispatchTalkEvent_Case00_Sub01_Case23
     dw DispatchTalkEvent_Case00_Sub01_Case24
@@ -6863,19 +6863,19 @@ Func_004_6892:: ; address name
     dw DispatchTalkEvent_Case00_Sub01_Case26
     dw DispatchTalkEvent_Case00_Sub01_Case00
 
-; entry 30 of the `rst $00` table in Func_004_6892
+; starts Script_5173 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5173
-DispatchTalkEvent_Case00_Sub01_Case1E::
+TalkScript5173::
 Jump_004_68E6:: ; address name
     ld hl, Script_5173
     call StartScriptAtHL_B04
     ret
 
-; entry 29 of the `rst $00` table in Func_004_6892
+; starts Script_5171 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1D)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5171
-DispatchTalkEvent_Case00_Sub01_Case1D::
+TalkScript5171::
 Jump_004_68ED:: ; address name
     ld hl, Script_5171
     call StartScriptAtHL_B04
@@ -6909,82 +6909,82 @@ Jump_004_690D::
     call StartScriptAtHL_B04
     ret
 
-; entry 26 of the `rst $00` table in Func_004_6892
+; starts Script_516B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1A)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_516B
-DispatchTalkEvent_Case00_Sub01_Case1A::
+TalkScript516B::
 Jump_004_6914:: ; address name
     ld hl, Script_516B
     call StartScriptAtHL_B04
     ret
 
-; entry 25 of the `rst $00` table in Func_004_6892
+; starts Script_5169 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case19)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5169
-DispatchTalkEvent_Case00_Sub01_Case19::
+TalkScript5169::
 Jump_004_691B:: ; address name
     ld hl, Script_5169
     call StartScriptAtHL_B04
     ret
 
-; entry 24 of the `rst $00` table in Func_004_6892
+; starts Script_515F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case18)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515F
-DispatchTalkEvent_Case00_Sub01_Case18::
+TalkScript515F::
 Jump_004_6922:: ; address name
     ld hl, Script_515F
     call StartScriptAtHL_B04
     ret
 
-; entry 31 of the `rst $00` table in Func_004_6892
+; starts Script_5164 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5164
-DispatchTalkEvent_Case00_Sub01_Case1F::
+TalkScript5164::
 Jump_004_6929:: ; address name
     ld hl, Script_5164
     call StartScriptAtHL_B04
     ret
 
-; entry 21 of the `rst $00` table in Func_004_6892
+; starts Script_5155 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case15)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5155
-DispatchTalkEvent_Case00_Sub01_Case15::
+TalkScript5155::
 Jump_004_6930:: ; address name
     ld hl, Script_5155
     call StartScriptAtHL_B04
     ret
 
-; entry 22 of the `rst $00` table in Func_004_6892
+; starts Script_5157 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case16)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5157
-DispatchTalkEvent_Case00_Sub01_Case16::
+TalkScript5157::
 Jump_004_6937:: ; address name
     ld hl, Script_5157
     call StartScriptAtHL_B04
     ret
 
-; entry 23 of the `rst $00` table in Func_004_6892
+; starts Script_5159 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case17)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5159
-DispatchTalkEvent_Case00_Sub01_Case17::
+TalkScript5159::
 Jump_004_693E:: ; address name
     ld hl, Script_5159
     call StartScriptAtHL_B04
     ret
 
-; entry 32 of the `rst $00` table in Func_004_6892
+; starts Script_515B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case20)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515B
-DispatchTalkEvent_Case00_Sub01_Case20::
+TalkScript515B::
 Jump_004_6945:: ; address name
     ld hl, Script_515B
     call StartScriptAtHL_B04
     ret
 
-; entry 33 of the `rst $00` table in Func_004_6892
+; starts Script_515D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case21)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_515D
-DispatchTalkEvent_Case00_Sub01_Case21::
+TalkScript515D::
 Jump_004_694C:: ; address name
     ld hl, Script_515D
     call StartScriptAtHL_B04
@@ -7081,46 +7081,46 @@ Jump_004_69B8:: ; address name
     ld [wFollowerDelay], a
     ret
 
-; entry 16 of the `rst $00` table in Func_004_6892
+; starts Script_514B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case10)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514B
-DispatchTalkEvent_Case00_Sub01_Case10::
+TalkScript514B::
 Jump_004_69BD:: ; address name
     ld hl, Script_514B
     call StartScriptAtHL_B04
     ret
 
-; entry 17 of the `rst $00` table in Func_004_6892
+; starts Script_514D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case11)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514D
-DispatchTalkEvent_Case00_Sub01_Case11::
+TalkScript514D::
 Jump_004_69C4:: ; address name
     ld hl, Script_514D
     call StartScriptAtHL_B04
     ret
 
-; entry 18 of the `rst $00` table in Func_004_6892
+; starts Script_514F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case12)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_514F
-DispatchTalkEvent_Case00_Sub01_Case12::
+TalkScript514F::
 Jump_004_69CB:: ; address name
     ld hl, Script_514F
     call StartScriptAtHL_B04
     ret
 
-; entry 19 of the `rst $00` table in Func_004_6892
+; starts Script_5151 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case13)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5151
-DispatchTalkEvent_Case00_Sub01_Case13::
+TalkScript5151::
 Jump_004_69D2:: ; address name
     ld hl, Script_5151
     call StartScriptAtHL_B04
     ret
 
-; entry 20 of the `rst $00` table in Func_004_6892
+; starts Script_5153 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case14)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5153
-DispatchTalkEvent_Case00_Sub01_Case14::
+TalkScript5153::
 Jump_004_69D9:: ; address name
     ld hl, Script_5153
     call StartScriptAtHL_B04
@@ -7133,109 +7133,109 @@ DispatchTalkEvent_Case00_Sub01_Case00::
 Jump_004_69E0:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in Func_004_6892
+; starts Script_512F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case01)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
-DispatchTalkEvent_Case00_Sub01_Case01::
+TalkScript512F::
 Jump_004_69E1:: ; address name
     ld hl, Script_512F
     call StartScriptAtHL_B04
     ret
 
-; entry 2 of the `rst $00` table in Func_004_6892
+; starts Script_5131 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case02)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5131
-DispatchTalkEvent_Case00_Sub01_Case02::
+TalkScript5131::
 Jump_004_69E8:: ; address name
     ld hl, Script_5131
     call StartScriptAtHL_B04
     ret
 
-; entry 4 of the `rst $00` table in Func_004_6892
+; starts Script_5137 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case04)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5137
-DispatchTalkEvent_Case00_Sub01_Case04::
+TalkScript5137::
 Jump_004_69EF:: ; address name
     ld hl, Script_5137
     call StartScriptAtHL_B04
     ret
 
-; entry 5 of the `rst $00` table in Func_004_6892
+; starts Script_5139 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case05)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5139
-DispatchTalkEvent_Case00_Sub01_Case05::
+TalkScript5139::
 Jump_004_69F6:: ; address name
     ld hl, Script_5139
     call StartScriptAtHL_B04
     ret
 
-; entry 6 of the `rst $00` table in Func_004_6892
+; starts Script_513B (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case06)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513B
-DispatchTalkEvent_Case00_Sub01_Case06::
+TalkScript513B::
 Jump_004_69FD:: ; address name
     ld hl, Script_513B
     call StartScriptAtHL_B04
     ret
 
-; entry 7 of the `rst $00` table in Func_004_6892
+; starts Script_513D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case07)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513D
-DispatchTalkEvent_Case00_Sub01_Case07::
+TalkScript513D::
 Jump_004_6A04:: ; address name
     ld hl, Script_513D
     call StartScriptAtHL_B04
     ret
 
-; entry 8 of the `rst $00` table in Func_004_6892
+; starts Script_513F (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_513F
-DispatchTalkEvent_Case00_Sub01_Case08::
+TalkScript513F::
 Jump_004_6A0B:: ; address name
     ld hl, Script_513F
     call StartScriptAtHL_B04
     ret
 
-; entry 9 of the `rst $00` table in Func_004_6892
+; starts Script_5141 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case09)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5141
-DispatchTalkEvent_Case00_Sub01_Case09::
+TalkScript5141::
 Jump_004_6A12:: ; address name
     ld hl, Script_5141
     call StartScriptAtHL_B04
     ret
 
-; entry 10 of the `rst $00` table in Func_004_6892
+; starts Script_5143 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0A)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5143
-DispatchTalkEvent_Case00_Sub01_Case0A::
+TalkScript5143::
 Jump_004_6A19:: ; address name
     ld hl, Script_5143
     call StartScriptAtHL_B04
     ret
 
-; entry 11 of the `rst $00` table in Func_004_6892
+; starts Script_5145 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0B)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5145
-DispatchTalkEvent_Case00_Sub01_Case0B::
+TalkScript5145::
 Jump_004_6A20:: ; address name
     ld hl, Script_5145
     call StartScriptAtHL_B04
     ret
 
-; entry 14 of the `rst $00` table in Func_004_6892
+; starts Script_5147 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0E)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5147
-DispatchTalkEvent_Case00_Sub01_Case0E::
+TalkScript5147::
 Jump_004_6A27:: ; address name
     ld hl, Script_5147
     call StartScriptAtHL_B04
     ret
 
-; entry 15 of the `rst $00` table in Func_004_6892
+; starts Script_5149 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case0F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5149
-DispatchTalkEvent_Case00_Sub01_Case0F::
+TalkScript5149::
 Jump_004_6A2E:: ; address name
     ld hl, Script_5149
     call StartScriptAtHL_B04
@@ -7333,7 +7333,7 @@ Func_004_6A35:: ; address name
     dw ChestItem_ExitBell_Flag01CC
     dw ChestItem_TinyMedal
     dw ChestItem_Friend
-    dw DispatchTalkEvent_Case07_Sub01_Case55
+    dw TalkScript6595_HeroCheckedTheTreasureChest
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7347,10 +7347,10 @@ Func_004_6A35:: ; address name
     dw TalkMsg0C03_TheTowersManyTreasuresAre
     dw TalkMsg0C02_OnlyAHandfulOfMastersHave
     dw DispatchTalkEvent_Case07_Sub01_Case62
-    dw DispatchTalkEvent_Case07_Sub01_Case63
-    dw DispatchTalkEvent_Case07_Sub01_Case63
-    dw DispatchTalkEvent_Case07_Sub01_Case63
-    dw DispatchTalkEvent_Case07_Sub01_Case63
+    dw TalkScript659C
+    dw TalkScript659C
+    dw TalkScript659C
+    dw TalkScript659C
     dw Talk0C17
     dw ChestItem_TinyMedal_Flag01D5
     dw ChestItem_AGL_Flag01D6
@@ -7368,7 +7368,7 @@ Func_004_6A35:: ; address name
     dw ChestItem_DracoCape
     dw ChestItem_Herb_Flag0171
     dw ChestItem_TinyMedal_Flag0172
-    dw DispatchTalkEvent_Case07_Sub01_Case78
+    dw TalkScript659E_HeroCheckedTheTreasureChest
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -7379,10 +7379,10 @@ Func_004_6A35:: ; address name
     dw TalkMsg0C1B_ItsNotThatEasyToWin
     dw TalkMsg0C1A_InThisTowerYourOpponents
     dw DispatchTalkEvent_Case07_Sub01_Case82
-    dw DispatchTalkEvent_Case07_Sub01_Case83
-    dw DispatchTalkEvent_Case07_Sub01_Case83
-    dw DispatchTalkEvent_Case07_Sub01_Case83
-    dw DispatchTalkEvent_Case07_Sub01_Case83
+    dw TalkScript659C_0478A5
+    dw TalkScript659C_0478A5
+    dw TalkScript659C_0478A5
+    dw TalkScript659C_0478A5
     dw Talk0C2F
     dw ChestItem_SkyBell_Flag0175
     dw ChestItem_Smart
@@ -7411,10 +7411,10 @@ Func_004_6A35:: ; address name
     dw TalkMsg0C33_ItsBrutalUpAheadIWouldnt
     dw TalkMsg0C32_TheMonstersHereAreAwfulIm
     dw DispatchTalkEvent_Case07_Sub01_CaseA2
-    dw DispatchTalkEvent_Case07_Sub01_CaseA3
-    dw DispatchTalkEvent_Case07_Sub01_CaseA3
-    dw DispatchTalkEvent_Case07_Sub01_CaseA3
-    dw DispatchTalkEvent_Case07_Sub01_CaseA3
+    dw TalkScript659C_0479FC
+    dw TalkScript659C_0479FC
+    dw TalkScript659C_0479FC
+    dw TalkScript659C_0479FC
     dw Talk0C47
     dw ChestItem_ExitBell_Flag00F5
     dw ChestItem_War_Flag00F6
@@ -9304,10 +9304,10 @@ Jump_004_7705:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 85 of the `rst $00` table in Func_004_6A35
+; starts Script_6595 (StartScriptAtHL); its first message begins '0 checked the treasure chest. The' (E-0271; was DispatchTalkEvent_Case07_Sub01_Case55)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6595: '0 checked the treasure chest. The'
-DispatchTalkEvent_Case07_Sub01_Case55::
+TalkScript6595_HeroCheckedTheTreasureChest::
 Jump_004_7716:: ; address name
     ld hl, Script_6595
     call StartScriptAtHL_B04
@@ -9347,10 +9347,10 @@ Jump_004_7740::
     call StartMessageCommand09HL_B04
     ret
 
-; entry 99 of the `rst $00` table in Func_004_6A35
+; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_Case63)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
-DispatchTalkEvent_Case07_Sub01_Case63::
+TalkScript659C::
 Jump_004_7747:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -9581,10 +9581,10 @@ Jump_004_7863:: ; address name
     call StartTreasureFlagDE_B04
     ret
 
-; entry 120 of the `rst $00` table in Func_004_6A35
+; starts Script_659E (StartScriptAtHL); its first message begins '0 checked the treasure chest. It' (E-0271; was DispatchTalkEvent_Case07_Sub01_Case78)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659E: '0 checked the treasure chest. It'
-DispatchTalkEvent_Case07_Sub01_Case78::
+TalkScript659E_HeroCheckedTheTreasureChest::
 Jump_004_7874:: ; address name
     ld hl, Script_659E
     call StartScriptAtHL_B04
@@ -9624,10 +9624,10 @@ Jump_004_789E::
     call StartMessageCommand09HL_B04
     ret
 
-; entry 131 of the `rst $00` table in Func_004_6A35
+; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_Case83)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
-DispatchTalkEvent_Case07_Sub01_Case83::
+TalkScript659C_0478A5::
 Jump_004_78A5:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -9892,10 +9892,10 @@ Jump_004_79F5::
     call StartMessageCommand09HL_B04
     ret
 
-; entry 163 of the `rst $00` table in Func_004_6A35
+; starts Script_659C (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case07_Sub01_CaseA3)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_659C
-DispatchTalkEvent_Case07_Sub01_CaseA3::
+TalkScript659C_0479FC::
 Jump_004_79FC:: ; address name
     ld hl, Script_659C
     call StartScriptAtHL_B04
@@ -10133,20 +10133,20 @@ DispatchTalkEvent_Case09_Sub01::
 Func_004_7B29:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case09_Sub01_Case00
+    dw TalkScript5133
     dw DispatchTalkEvent_Case09_Sub01_Case01
     dw DispatchTalkEvent_Case09_Sub01_Case02
-    dw DispatchTalkEvent_Case09_Sub01_Case03
+    dw TalkScript5135
     dw TalkMsg0120_WarubouQuitDawdlingWarooh
     dw TalkMsg0122_WarubouWaheyYouDidItHero
     dw DispatchTalkEvent_Case09_Sub01_Case06
-    dw DispatchTalkEvent_Case09_Sub01_Case07
-    dw DispatchTalkEvent_Case09_Sub01_Case08
+    dw TalkScript65AA_WarubouWaheyYouDidItHero
+    dw TalkScript65B8_WarubouWaheySoThisIsIt
 
-; entry 0 of the `rst $00` table in Func_004_7B29
+; starts Script_5133 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case09_Sub01_Case00)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5133
-DispatchTalkEvent_Case09_Sub01_Case00::
+TalkScript5133::
 Jump_004_7B3F:: ; address name
     ld hl, Script_5133
     call StartScriptAtHL_B04
@@ -10280,10 +10280,10 @@ Jump_004_7BF5::
     xor a, a
     ret
 
-; entry 3 of the `rst $00` table in Func_004_7B29
+; starts Script_5135 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case09_Sub01_Case03)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5135
-DispatchTalkEvent_Case09_Sub01_Case03::
+TalkScript5135::
 Jump_004_7BF7:: ; address name
     ld hl, Script_5135
     call StartScriptAtHL_B04
@@ -10321,11 +10321,11 @@ Jump_004_7C0C:: ; address name
     call StartMessageCommand09HL_B04
     ret
 
-; entry 7 of the `rst $00` table in Func_004_7B29
+; sets wDataBank = $10, then starts Script_65AA (StartScriptAtHL); its first message begins 'Warubou Wa-hey! You did it, 0!' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case07)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_65AA: 'Warubou Wa-hey! You did it, 0!'
-DispatchTalkEvent_Case09_Sub01_Case07::
+TalkScript65AA_WarubouWaheyYouDidItHero::
 Jump_004_7C1F:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -10333,11 +10333,11 @@ Jump_004_7C1F:: ; address name
     call StartScriptAtHL_B04
     ret
 
-; entry 8 of the `rst $00` table in Func_004_7B29
+; sets wDataBank = $1F, then starts Script_65B8 (StartScriptAtHL); its first message begins 'Warubou Wa-hey! So, this is it?' (E-0271; was DispatchTalkEvent_Case09_Sub01_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_65B8: 'Warubou Wa-hey! So, this is it?'
-DispatchTalkEvent_Case09_Sub01_Case08::
+TalkScript65B8_WarubouWaheySoThisIsIt::
 Jump_004_7C2B:: ; address name
     ld a, $1F
     ld [wDataBank], a

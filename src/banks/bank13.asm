@@ -46,7 +46,7 @@ Func_013_4025:: ; address name
     ret
 
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)
-; 252 call sites from 135 routines (e.g. DispatchTalkEvent_Case08, IfFlag0021StartScript5988, Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, ...)
+; 252 call sites from 135 routines (e.g. TalkScript512D, IfFlag0021StartScript5988, Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, ...)
 ; writes: wScriptPointerLo, wScriptPointerHi, wScriptStartRequest, wModeState
 StartScriptAtHL_B13::
 Func_013_4049:: ; address name
@@ -140,7 +140,7 @@ Jump_013_40E9::
     dw DispatchTalkEvent_Case05
     dw DispatchTalkEvent_Case06
     dw DispatchTalkEvent_Case07
-    dw DispatchTalkEvent_Case08
+    dw TalkScript512D
     dw DispatchTalkEvent_Case09
     dw DispatchTalkEvent_Case0A
 
@@ -211,16 +211,16 @@ Jump_013_4134:: ; address name
     dw TalkMsg0408_AHugeBirdPerchesAtopThe
     dw TalkMsg0409_TheTowersGateIsTightlySealed
     dw TalkMsg040A_TheTopOfTheTowerCollapsed
-    dw DispatchTalkEvent_Case05_Case0B
+    dw TalkScript5FE8_HowMayWeServeYourMortal
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone
     dw DispatchTalkEvent_Case05_Case0D
-    dw DispatchTalkEvent_Case05_Case0E
+    dw TalkScript6003_WelcomeToOurInn
     dw DispatchTalkEvent_Case05_Case0F
     dw ChestItem_ExitBell_Flag00A1
     dw TalkMsg0413_HeroCheckedTheTreasureChest
     dw ChestItem_Cleric_Flag00A2
     dw ChestMagicKey
-    dw DispatchTalkEvent_Case05_Case14
+    dw TalkScript600A_Kweeeeh
     dw DispatchTalkEvent_Case05_Case15
     dw DispatchTalkEvent_Case05_Case16
     dw TalkMsg041E_ThisIsTheTownOfPei
@@ -235,19 +235,19 @@ Jump_013_4134:: ; address name
     dw TalkMsg042A_ThisIsJustARumorBut
     dw TalkMsg042B_TheTunnelInTheWestWill
     dw TalkMsg042C_AreYouLookingForSomething
-    dw DispatchTalkEvent_Case05_Case23
+    dw TalkScript603A_HowMayWeServeYourMortal
     dw DispatchTalkEvent_Case05_Case24
     dw TalkMsg0430_HeroPeeredIntoTheVaseIt
     dw TalkMsg04AA_HeroReadTheSignDetermine
     dw TalkMsg0DD3_InnDownstairsRoomsAvailable
-    dw DispatchTalkEvent_Case05_Case28
+    dw TalkScript6048_WelcomeToTheTravelersInn
     dw DispatchTalkEvent_Case05_Case29
     dw DispatchTalkEvent_Case05_Case2A
     dw TalkMsg0436_HeroOpenedTheTreasureChest
     dw ChestItem_WorldDew_Flag00AA
     dw TalkMsg0437_ThisIsTheCastleOfHitano
     dw TalkMsg0438_AMonsterKingHasAppearedTo
-    dw DispatchTalkEvent_Case05_Case2F
+    dw TalkScript6062_IELivedHereFor2Hero
     dw TalkMsg043C_TheCastleIsUnderTheMonster
     dw TalkMsg043E_TheCaveToTheSouthThat
     dw TalkMsg043F_TheNewMonsterKingIsSaid
@@ -256,14 +256,14 @@ Jump_013_4134:: ; address name
     dw DispatchTalkEvent_Case05_Case35
     dw TalkMsg0445_IfYouHaveTheLightOrbYou
     dw TalkMsg0446_IfIHadTheLightOrbEven
-    dw DispatchTalkEvent_Case05_Case38
+    dw TalkScript606F_WantToKnowTheMostFundamental
     dw TalkMsg044A_HearMeOutIfYouWish
     dw DispatchTalkEvent_Case05_Case3A
-    dw DispatchTalkEvent_Case05_Case3B
+    dw TalkScript6083_HowMayOurChurchHelpYou
     dw TalkMsg044D_HeroReadTheSignTheFinder
     dw TalkMsg0450_HeroPeeredIntoTheVaseA
     dw TalkMsg0314_HeroTriedToOpenTheChest
-    dw DispatchTalkEvent_Case05_Case3F
+    dw TalkScript6048_WelcomeToTheTravelersInn_1346A3
     dw TalkMsg0452_TheChangeStaffWillOpenPaths
     dw TalkMsg0453_HeyKiddoYoureNewHereDont
     dw TalkMsg0454_HeyKiddoYoureNewHereDont
@@ -278,10 +278,10 @@ Jump_013_4134:: ; address name
     dw ChestItem_Heaven_Flag00AF
     dw DispatchTalkEvent_Case05_Case4C
     dw TalkMsg0462_HeroCheckedTheNoticeLayThe
-    dw DispatchTalkEvent_Case05_Case4E
+    dw TalkScript60CE
     dw TalkMsg04A8_WhereIsMyCasketWhereRing
     dw TalkMsg04A9_HeroCheckedTheNoticeGuide
-    dw DispatchTalkEvent_Case05_Case51
+    dw TalkScript60D0
     dw TalkMsg0463_HeroCheckedTheNoticeFollow
     dw TalkMsg040E_HeroCheckedTheGraveTheTombstone_13479E
     dw DispatchTalkEvent_Case05_Case54
@@ -292,8 +292,8 @@ Jump_013_4134:: ; address name
     dw TalkMsg046F_WhatYouEGotTheThree
     dw DispatchTalkEvent_Case05_Case5A
     dw VaseItem_TinyMedal_Flag0200
-    dw DispatchTalkEvent_Case05_Case5C
-    dw DispatchTalkEvent_Case05_Case5D
+    dw TalkScript6131
+    dw TalkScript6059_Kweeeeeh
     dw TalkMsg0DE2_HeroCheckedTheTombstoneThere
     dw TalkMsg0476_AwaarghImLateImLateThey
     dw TalkMsg0477_TheyKeepPilingOnTheseLudicrous
@@ -304,8 +304,8 @@ Jump_013_4134:: ; address name
     dw ChestItem_Bolt
     dw ChestItem_SteelFang_Flag00BF
     dw DispatchTalkEvent_Case05_Case67
-    dw DispatchTalkEvent_Case05_Case68
-    dw DispatchTalkEvent_Case05_Case69
+    dw TalkScript6152_KamehaSoItWasYouWho
+    dw TalkScript6198_ThisWayHereHere
     dw DispatchTalkEvent_Case05_Case6A
     dw TalkMsg04A6_IWasTakingAWalkOutside
     dw TalkMsg04A4_SouthBeyondTheMountainsIs
@@ -436,11 +436,11 @@ Jump_013_42A0::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 11 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $1F, then starts Script_5FE8 (StartScriptAtHL); its first message begins 'How may we serve your mortal' (E-0271; was DispatchTalkEvent_Case05_Case0B)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5FE8: 'How may we serve your mortal'
-DispatchTalkEvent_Case05_Case0B::
+TalkScript5FE8_HowMayWeServeYourMortal::
 Jump_013_42A7:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -473,11 +473,11 @@ Jump_013_42C9::
     call StartScriptAtHL_B13
     ret
 
-; entry 14 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $10, then starts Script_6003 (StartScriptAtHL); its first message begins 'Welcome to our inn!' (E-0271; was DispatchTalkEvent_Case05_Case0E)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_6003: 'Welcome to our inn!'
-DispatchTalkEvent_Case05_Case0E::
+TalkScript6003_WelcomeToOurInn::
 Jump_013_42D0:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -553,10 +553,10 @@ Jump_013_4324:: ; address name
     call StartTreasureFlagDE_B13
     ret
 
-; entry 20 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_600A (StartScriptAtHL); its first message begins 'Kweeeeh!' (E-0271; was DispatchTalkEvent_Case05_Case14)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_600A: 'Kweeeeh!'
-DispatchTalkEvent_Case05_Case14::
+TalkScript600A_Kweeeeh::
 Jump_013_4335:: ; address name
     ld hl, Script_600A
     call StartScriptAtHL_B13
@@ -776,11 +776,11 @@ Jump_013_444A:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 35 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $1F, then starts Script_603A (StartScriptAtHL); its first message begins 'How may we serve your mortal' (E-0271; was DispatchTalkEvent_Case05_Case23)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_603A: 'How may we serve your mortal'
-DispatchTalkEvent_Case05_Case23::
+TalkScript603A_HowMayWeServeYourMortal::
 Jump_013_4451:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -825,11 +825,11 @@ Jump_013_447C:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 40 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $10, then starts Script_6048 (StartScriptAtHL); its first message begins 'Welcome to the traveler's inn.' (E-0271; was DispatchTalkEvent_Case05_Case28)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_6048: 'Welcome to the traveler's inn.'
-DispatchTalkEvent_Case05_Case28::
+TalkScript6048_WelcomeToTheTravelersInn::
 Jump_013_4483:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -916,10 +916,10 @@ Jump_013_44F1::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 47 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_6062 (StartScriptAtHL); its first message begins 'I e lived here for 200' (E-0271; was DispatchTalkEvent_Case05_Case2F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6062: 'I e lived here for 200'
-DispatchTalkEvent_Case05_Case2F::
+TalkScript6062_IELivedHereFor2Hero::
 Jump_013_44F8:: ; address name
     ld hl, Script_6062
     call StartScriptAtHL_B13
@@ -1127,10 +1127,10 @@ Jump_013_463E::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 56 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_606F (StartScriptAtHL); its first message begins 'Want to know the most fundamental' (E-0271; was DispatchTalkEvent_Case05_Case38)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_606F: 'Want to know the most fundamental'
-DispatchTalkEvent_Case05_Case38::
+TalkScript606F_WantToKnowTheMostFundamental::
 Jump_013_4645:: ; address name
     ld hl, Script_606F
     call StartScriptAtHL_B13
@@ -1157,11 +1157,11 @@ Jump_013_4653:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 59 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $1F, then starts Script_6083 (StartScriptAtHL); its first message begins 'How may our church help you?' (E-0271; was DispatchTalkEvent_Case05_Case3B)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_6083: 'How may our church help you?'
-DispatchTalkEvent_Case05_Case3B::
+TalkScript6083_HowMayOurChurchHelpYou::
 Jump_013_4664:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -1209,11 +1209,11 @@ Jump_013_469C:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 63 of the `rst $00` table in DispatchTalkEvent_Case05
+; sets wDataBank = $10, then starts Script_6048 (StartScriptAtHL); its first message begins 'Welcome to the traveler's inn.' (E-0271; was DispatchTalkEvent_Case05_Case3F)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_6048: 'Welcome to the traveler's inn.'
-DispatchTalkEvent_Case05_Case3F::
+TalkScript6048_WelcomeToTheTravelersInn_1346A3::
 Jump_013_46A3:: ; address name
     ld a, $10
     ld [wDataBank], a
@@ -1393,10 +1393,10 @@ Jump_013_4774:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 78 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_60CE (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case05_Case4E)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60CE
-DispatchTalkEvent_Case05_Case4E::
+TalkScript60CE::
 Jump_013_477B:: ; address name
     ld hl, Script_60CE
     call StartScriptAtHL_B13
@@ -1419,10 +1419,10 @@ Jump_013_4789:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 81 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_60D0 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case05_Case51)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_60D0
-DispatchTalkEvent_Case05_Case51::
+TalkScript60D0::
 Jump_013_4790:: ; address name
     ld hl, Script_60D0
     call StartScriptAtHL_B13
@@ -1588,19 +1588,19 @@ Jump_013_4864:: ; address name
     call StartTreasureFlagDE_B13
     ret
 
-; entry 92 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_6131 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case05_Case5C)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6131
-DispatchTalkEvent_Case05_Case5C::
+TalkScript6131::
 Jump_013_4875:: ; address name
     ld hl, Script_6131
     call StartScriptAtHL_B13
     ret
 
-; entry 93 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_6059 (StartScriptAtHL); its first message begins 'Kweeeeeh!' (E-0271; was DispatchTalkEvent_Case05_Case5D)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6059: 'Kweeeeeh!'
-DispatchTalkEvent_Case05_Case5D::
+TalkScript6059_Kweeeeeh::
 Jump_013_487C:: ; address name
     ld hl, Script_6059
     call StartScriptAtHL_B13
@@ -1754,19 +1754,19 @@ Jump_013_4962::
     call StartScriptAtHL_B13
     ret
 
-; entry 104 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_6152 (StartScriptAtHL); its first message begins 'Kameha So it was you who' (E-0271; was DispatchTalkEvent_Case05_Case68)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6152: 'Kameha So it was you who'
-DispatchTalkEvent_Case05_Case68::
+TalkScript6152_KamehaSoItWasYouWho::
 Jump_013_4969:: ; address name
     ld hl, Script_6152
     call StartScriptAtHL_B13
     ret
 
-; entry 105 of the `rst $00` table in DispatchTalkEvent_Case05
+; starts Script_6198 (StartScriptAtHL); its first message begins 'This way Here Here' (E-0271; was DispatchTalkEvent_Case05_Case69)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_6198: 'This way Here Here'
-DispatchTalkEvent_Case05_Case69::
+TalkScript6198_ThisWayHereHere::
 Jump_013_4970:: ; address name
     ld hl, Script_6198
     call StartScriptAtHL_B13
@@ -1917,7 +1917,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0305_UrrrrrghTheWesternWretches
     dw TalkMsg0306_EveryonesBeenActingStrangely
     dw TalkMsg0307_TheSpringInTheNorthWhere
-    dw DispatchTalkEvent_Case04_Case08
+    dw TalkScript5D5B_HaveYouHeardAboutTheSpirit
     dw TalkMsg030B_AroundThesePartsWeGetA
     dw TalkMsg030C_ItsBecomeMuchColderWeMay
     dw DispatchTalkEvent_Case04_Case0B
@@ -1953,7 +1953,7 @@ Jump_013_4A23:: ; address name
     dw DispatchTalkEvent_Case04_Case29
     dw DispatchTalkEvent_Case04_Case2A
     dw DispatchTalkEvent_Case04_Case2B
-    dw DispatchTalkEvent_Case04_Case2C
+    dw TalkScript5DCC_HowMayOurChurchServeYou
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt
     dw TalkMsg0D3B_Whinny
     dw TalkMsg0314_HeroTriedToOpenTheChest_134ECF
@@ -1978,14 +1978,14 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0342_HurryWeHaveToBeatThe
     dw TalkMsg0344_TheGoldIsOursTheWest
     dw TalkMsg0343_TheVeinOfGoldIsJust
-    dw DispatchTalkEvent_Case04_Case45
-    dw DispatchTalkEvent_Case04_Case46
+    dw TalkScript5DD3_WhatWhatWasThatExplosion
+    dw TalkScript5E02_WhatWhatWasThatExplosion
     dw ChestItem_VITbelt
     dw DispatchTalkEvent_Case04_Case48
     dw DispatchTalkEvent_Case04_Case49
-    dw DispatchTalkEvent_Case04_Case4A
-    dw DispatchTalkEvent_Case04_Case4B
-    dw DispatchTalkEvent_Case04_Case4C
+    dw TalkScript5E2F_HeroTappedOnTheWallThe
+    dw TalkScript5E37_HeroTappedOnTheWallSound
+    dw TalkScript5E5A_ImTheRealKingYouFake
     dw DispatchTalkEvent_Case04_Case4D
     dw TalkMsg037E_ThisIsTheTownOfWeston
     dw TalkMsg037F_TheWestsCastleHasSeenA
@@ -2021,7 +2021,7 @@ Jump_013_4A23:: ; address name
     dw TalkMsg039B_BeforeLadyYunaWouldBeUp
     dw DispatchTalkEvent_Case04_Case6E
     dw DispatchTalkEvent_Case04_Case6F
-    dw DispatchTalkEvent_Case04_Case70
+    dw TalkScript5EF5_KingMagnificentDontYouAgree
     dw TalkMsg03A4_KingSighNotEvenThisYou
     dw DispatchTalkEvent_Case04_Case72
     dw TalkMsg03A6_ThisIsTheCastleOfEstria
@@ -2036,11 +2036,11 @@ Jump_013_4A23:: ; address name
     dw DispatchTalkEvent_Case04_Case7C
     dw DispatchTalkEvent_Case04_Case7D
     dw TalkMsg03B4_ABotanistDoesLiveHereBut
-    dw DispatchTalkEvent_Case04_Case7F
-    dw DispatchTalkEvent_Case04_Case80
-    dw DispatchTalkEvent_Case04_Case81
-    dw DispatchTalkEvent_Case04_Case82
-    dw DispatchTalkEvent_Case04_Case83
+    dw TalkScript5F12_IRetiredAsATeacherAnd
+    dw TalkScript5FD6_HowMayOurChurchServeYou
+    dw TalkScript5FE6
+    dw TalkScript5FD6_HowMayOurChurchServeYou_1355DE
+    dw TalkScript5FD6_HowMayOurChurchServeYou_1355EA
     dw TalkMsg0313_HeroPeeredIntoTheOvenIt_1355F6
     dw TalkMsg0312_HeroPeeredIntoTheBarrelIt_1355FD
     dw DispatchTalkEvent_Case04_Case86
@@ -2061,14 +2061,14 @@ Jump_013_4A23:: ; address name
     dw TalkMsg0AC0_HeroCheckedTheBookshelfHistory
     dw TalkMsg0AC1_HeroCheckedTheBookshelfHistory
     dw TalkMsg0ABC_HeroPeeredIntoTheOvenIt_1357A9
-    dw DispatchTalkEvent_Case04_Case98
+    dw TalkScript5F4A
     dw DispatchTalkEvent_Case04_Case99
     dw DispatchTalkEvent_Case04_Case9A
     dw TalkMsg0A16_MyMaidIsAngryThatI
     dw DispatchTalkEvent_Case04_Case9C
     dw ChestMagicKey_Flag01E0
     dw DispatchTalkEvent_Case04_Case9E
-    dw DispatchTalkEvent_Case04_Case9F
+    dw TalkScript5FD2
     dw DispatchTalkEvent_Case04_CaseA0
     dw DispatchTalkEvent_Case04_CaseA1
     dw ChestItem_Bolt_Flag01E9
@@ -2079,7 +2079,7 @@ Jump_013_4A23:: ; address name
     dw ChestItem_Mage_Flag01EE
     dw ChestItem_Divine_Flag01EF
     dw ChestItem_MeteOrb
-    dw DispatchTalkEvent_Case04_CaseAA
+    dw TalkScript5FC9
 
 ; starts message $0300 through StartMessageCommand09HL (script command $09); that string begins 'This is Norden, the kingdom of the' (E-0268, the E-0082 shape; was DispatchTalkEvent_Case04_Case00)
 ; no direct call (reached through a table, a jump or a vector)
@@ -2177,10 +2177,10 @@ Jump_013_4BEA::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 8 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5D5B (StartScriptAtHL); its first message begins 'Have you heard about the spirit' (E-0271; was DispatchTalkEvent_Case04_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5D5B: 'Have you heard about the spirit'
-DispatchTalkEvent_Case04_Case08::
+TalkScript5D5B_HaveYouHeardAboutTheSpirit::
 Jump_013_4BF1:: ; address name
     ld hl, Script_5D5B
     call StartScriptAtHL_B13
@@ -2712,11 +2712,11 @@ Jump_013_4EA4:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 44 of the `rst $00` table in DispatchTalkEvent_Case04
+; sets wDataBank = $1F, then starts Script_5DCC (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case04_Case2C)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5DCC: 'How may our church serve you?'
-DispatchTalkEvent_Case04_Case2C::
+TalkScript5DCC_HowMayOurChurchServeYou::
 Jump_013_4EB5:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -3049,19 +3049,19 @@ Jump_013_5056:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 69 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5DD3 (StartScriptAtHL); its first message begins 'What? What was that explosion?' (E-0271; was DispatchTalkEvent_Case04_Case45)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5DD3: 'What? What was that explosion?'
-DispatchTalkEvent_Case04_Case45::
+TalkScript5DD3_WhatWhatWasThatExplosion::
 Jump_013_505D:: ; address name
     ld hl, Script_5DD3
     call StartScriptAtHL_B13
     ret
 
-; entry 70 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5E02 (StartScriptAtHL); its first message begins 'What? What was that explosion?' (E-0271; was DispatchTalkEvent_Case04_Case46)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5E02: 'What? What was that explosion?'
-DispatchTalkEvent_Case04_Case46::
+TalkScript5E02_WhatWhatWasThatExplosion::
 Jump_013_5064:: ; address name
     ld hl, Script_5E02
     call StartScriptAtHL_B13
@@ -3178,28 +3178,28 @@ Jump_013_5129::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 74 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5E2F (StartScriptAtHL); its first message begins '0 tapped on the wall. The' (E-0271; was DispatchTalkEvent_Case04_Case4A)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5E2F: '0 tapped on the wall. The'
-DispatchTalkEvent_Case04_Case4A::
+TalkScript5E2F_HeroTappedOnTheWallThe::
 Jump_013_5130:: ; address name
     ld hl, Script_5E2F
     call StartScriptAtHL_B13
     ret
 
-; entry 75 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5E37 (StartScriptAtHL); its first message begins '0 tapped on the wall. Sound' (E-0271; was DispatchTalkEvent_Case04_Case4B)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5E37: '0 tapped on the wall. Sound'
-DispatchTalkEvent_Case04_Case4B::
+TalkScript5E37_HeroTappedOnTheWallSound::
 Jump_013_5137:: ; address name
     ld hl, Script_5E37
     call StartScriptAtHL_B13
     ret
 
-; entry 76 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5E5A (StartScriptAtHL); its first message begins 'I'm the real King, you fake!' (E-0271; was DispatchTalkEvent_Case04_Case4C)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5E5A: 'I'm the real King, you fake!'
-DispatchTalkEvent_Case04_Case4C::
+TalkScript5E5A_ImTheRealKingYouFake::
 Jump_013_513E:: ; address name
     ld hl, Script_5E5A
     call StartScriptAtHL_B13
@@ -3767,10 +3767,10 @@ Jump_013_5444::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 112 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5EF5 (StartScriptAtHL); its first message begins 'King Magnificent! Don't you agree?' (E-0271; was DispatchTalkEvent_Case04_Case70)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5EF5: 'King Magnificent! Don't you agree?'
-DispatchTalkEvent_Case04_Case70::
+TalkScript5EF5_KingMagnificentDontYouAgree::
 Jump_013_544B:: ; address name
     ld hl, Script_5EF5
     call StartScriptAtHL_B13
@@ -4036,20 +4036,20 @@ Jump_013_55BD::
     call StartMessageCommand09HL_B13
     ret
 
-; entry 127 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5F12 (StartScriptAtHL); its first message begins 'I retired as a teacher and' (E-0271; was DispatchTalkEvent_Case04_Case7F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5F12: 'I retired as a teacher and'
-DispatchTalkEvent_Case04_Case7F::
+TalkScript5F12_IRetiredAsATeacherAnd::
 Jump_013_55C4:: ; address name
     ld hl, Script_5F12
     call StartScriptAtHL_B13
     ret
 
-; entry 128 of the `rst $00` table in DispatchTalkEvent_Case04
+; sets wDataBank = $1F, then starts Script_5FD6 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case04_Case80)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5FD6: 'How may our church serve you?'
-DispatchTalkEvent_Case04_Case80::
+TalkScript5FD6_HowMayOurChurchServeYou::
 Jump_013_55CB:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -4057,20 +4057,20 @@ Jump_013_55CB:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 129 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5FE6 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case04_Case81)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5FE6
-DispatchTalkEvent_Case04_Case81::
+TalkScript5FE6::
 Jump_013_55D7:: ; address name
     ld hl, Script_5FE6
     call StartScriptAtHL_B13
     ret
 
-; entry 130 of the `rst $00` table in DispatchTalkEvent_Case04
+; sets wDataBank = $1F, then starts Script_5FD6 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case04_Case82)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5FD6: 'How may our church serve you?'
-DispatchTalkEvent_Case04_Case82::
+TalkScript5FD6_HowMayOurChurchServeYou_1355DE::
 Jump_013_55DE:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -4078,11 +4078,11 @@ Jump_013_55DE:: ; address name
     call StartScriptAtHL_B13
     ret
 
-; entry 131 of the `rst $00` table in DispatchTalkEvent_Case04
+; sets wDataBank = $1F, then starts Script_5FD6 (StartScriptAtHL); its first message begins 'How may our church serve you?' (E-0271; was DispatchTalkEvent_Case04_Case83)
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wDataBank
 ; starts Script_5FD6: 'How may our church serve you?'
-DispatchTalkEvent_Case04_Case83::
+TalkScript5FD6_HowMayOurChurchServeYou_1355EA::
 Jump_013_55EA:: ; address name
     ld a, $1F
     ld [wDataBank], a
@@ -4413,10 +4413,10 @@ Jump_013_57A9:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 152 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5F4A (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case04_Case98)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5F4A
-DispatchTalkEvent_Case04_Case98::
+TalkScript5F4A::
 Jump_013_57B0:: ; address name
     ld hl, Script_5F4A
     call StartScriptAtHL_B13
@@ -4553,10 +4553,10 @@ Jump_013_586B:: ; address name
     ld [wObject2 + $7], a
     ret
 
-; entry 159 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5FD2 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case04_Case9F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5FD2
-DispatchTalkEvent_Case04_Case9F::
+TalkScript5FD2::
 Jump_013_5870:: ; address name
     ld hl, Script_5FD2
     call StartScriptAtHL_B13
@@ -4700,19 +4700,19 @@ Jump_013_5922:: ; address name
     call StartTreasureFlagDE_B13
     ret
 
-; entry 170 of the `rst $00` table in DispatchTalkEvent_Case04
+; starts Script_5FC9 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case04_CaseAA)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5FC9
-DispatchTalkEvent_Case04_CaseAA::
+TalkScript5FC9::
 Jump_013_5933:: ; address name
     ld hl, Script_5FC9
     call StartScriptAtHL_B13
     ret
 
-; entry 8 of the `rst $00` table in DispatchTalkEvent
+; starts Script_512D (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case08)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512D
-DispatchTalkEvent_Case08::
+TalkScript512D::
 Jump_013_593A:: ; address name
     ld hl, Script_512D
     call StartScriptAtHL_B13
@@ -4726,7 +4726,7 @@ Jump_013_5941:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
     dw DispatchTalkEvent_Case01_Case00
-    dw DispatchTalkEvent_Case01_Case01
+    dw TalkScript5895
     dw DispatchTalkEvent_Case01_Case02
     dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
     dw TalkMsg001B_ThisHayIsPrettyGoodMaybe
@@ -4768,12 +4768,12 @@ Jump_013_5941:: ; address name
     dw TalkMsg0D8C_WataWataTerryBattledInThe
     dw TalkMsg0D8D_FwahahahahaHowAmusingEven
     dw TalkMsg022D_WarpWingReturnsYouInstantly
-    dw DispatchTalkEvent_Case01_Case2B
+    dw TalkScript5476_DoYouHaveAnyIdeaAbout
     dw TalkMsg022C_ThereAreBooksThatChangeYour
     dw TalkMsg0005_YouFolksRunAMonsterFarm
     dw TalkMsg0006_TheresASpiritInGreatLogThats
     dw DispatchTalkEvent_Case01_Case2F
-    dw DispatchTalkEvent_Case01_Case30
+    dw TalkScript5120_SailingIsSureExhilarating
     dw TalkMsg000A_WellSoonBeReachingGreatLog
     dw DispatchTalkEvent_Case01_Case32
     dw DispatchTalkEvent_Case01_Case33
@@ -4806,10 +4806,10 @@ Jump_013_5941:: ; address name
     dw TalkMsg0A52_OurKindAlwaysStaysNearWater
     dw TalkMsg0A53_ZzzZzzZzzWhoopsWasI
     dw TalkMsg0A59_HeroReadTheSignSshMonsters
-    dw DispatchTalkEvent_Case01_Case51
-    dw DispatchTalkEvent_Case01_Case52
+    dw TalkScript54B9_HeroCheckedTheCasket
+    dw TalkScript54C0_HeroCheckedTheCasket
     dw TalkMsg0A5D_HeroReadTheSignWatchYour
-    dw DispatchTalkEvent_Case01_Case54
+    dw TalkScript54C7_HeroPeeredIntoTheHole
     dw TalkMsg0292_TheyTakeEntryFeesFromMasters
     dw TalkMsg027D_WhatDoYouSupposeMonsters
     dw TalkMsg027E_GRAHHUNGRYLOOKDELICIOUS
@@ -4832,7 +4832,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
     dw DispatchTalkEvent_Case01_Case69
     dw DispatchTalkEvent_Case01_Case6A
-    dw DispatchTalkEvent_Case01_Case6B
+    dw TalkScript55CE_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08CD_HeroCheckedTheDoorTheDoor
@@ -4884,7 +4884,7 @@ Jump_013_5941:: ; address name
     dw Talk04C0_AllRightyWellDo
     dw Talk0276_IfYouWantTo
     dw StartScript5709Or56F5IfFlagD1
-    dw DispatchTalkEvent_Case01_Case9F
+    dw TalkScript56F2
     dw TalkMsg0024_HeroCheckedTheDresserChildrens
     dw TalkMsg0025_HeroCheckedTheDresserItSmelled
     dw TalkMsg001D_HeroPeeredIntoTheBarrelIt
@@ -4907,7 +4907,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg02A6_PuttingUpABridgeIsEasy
     dw TalkMsg0209_DidYouKnowYouCanRecord
     dw TalkMsg0A51_WhenAAppearsByAMonsters
-    dw DispatchTalkEvent_Case01_CaseB6
+    dw TalkScript5744_DoYouWantToKnowHow
     dw Talk08D1_TheEvaluatorSaidI
     dw Talk04D2_UpAheadIsThe
     dw TalkMsg021F_DoYouKnowAbout
@@ -4917,7 +4917,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0284_IComeToWatchEveryDay
     dw TalkMsg0285_MonstersMirrorTheirMasters
     dw TalkMsg0288_MyHusbandIsAMasterStill
-    dw DispatchTalkEvent_Case01_CaseC0
+    dw TalkScript5752_HelloThereDoYouKnowAbout
     dw TalkMsg0293_IfYouWinInTheS
     dw TalkMsg0295_InAnArenaBattleYouCant
     dw TalkMsg027B_WhichToTakeMonstersYouE
@@ -4980,10 +4980,10 @@ DispatchTalkEvent_Case01_Case00::
 Jump_013_5B33:: ; address name
     ret
 
-; entry 1 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_5895 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case01_Case01)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5895
-DispatchTalkEvent_Case01_Case01::
+TalkScript5895::
 Jump_013_5B34:: ; address name
     ld hl, Script_5895
     call StartScriptAtHL_B13
@@ -7051,10 +7051,10 @@ Jump_013_6955:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 43 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_5476 (StartScriptAtHL); its first message begins 'Do you have any idea about' (E-0271; was DispatchTalkEvent_Case01_Case2B)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5476: 'Do you have any idea about'
-DispatchTalkEvent_Case01_Case2B::
+TalkScript5476_DoYouHaveAnyIdeaAbout::
 Jump_013_695C:: ; address name
     ld hl, Script_5476
     call StartScriptAtHL_B13
@@ -7109,10 +7109,10 @@ Jump_013_6994::
     call StartScriptAtHL_B13
     ret
 
-; entry 48 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_5120 (StartScriptAtHL); its first message begins 'Sailing is sure exhilarating. Right?' (E-0271; was DispatchTalkEvent_Case01_Case30)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5120: 'Sailing is sure exhilarating. Right?'
-DispatchTalkEvent_Case01_Case30::
+TalkScript5120_SailingIsSureExhilarating::
 Jump_013_699B:: ; address name
     ld hl, Script_5120
     call StartScriptAtHL_B13
@@ -7571,19 +7571,19 @@ Jump_013_6C0F:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 81 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_54B9 (StartScriptAtHL); its first message begins '0 checked the casket.' (E-0271; was DispatchTalkEvent_Case01_Case51)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_54B9: '0 checked the casket.'
-DispatchTalkEvent_Case01_Case51::
+TalkScript54B9_HeroCheckedTheCasket::
 Jump_013_6C16:: ; address name
     ld hl, Script_54B9
     call StartScriptAtHL_B13
     ret
 
-; entry 82 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_54C0 (StartScriptAtHL); its first message begins '0 checked the casket.' (E-0271; was DispatchTalkEvent_Case01_Case52)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_54C0: '0 checked the casket.'
-DispatchTalkEvent_Case01_Case52::
+TalkScript54C0_HeroCheckedTheCasket::
 Jump_013_6C1D:: ; address name
     ld hl, Script_54C0
     call StartScriptAtHL_B13
@@ -7598,10 +7598,10 @@ Jump_013_6C24:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 84 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_54C7 (StartScriptAtHL); its first message begins '0 peered into the hole.' (E-0271; was DispatchTalkEvent_Case01_Case54)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_54C7: '0 peered into the hole.'
-DispatchTalkEvent_Case01_Case54::
+TalkScript54C7_HeroPeeredIntoTheHole::
 Jump_013_6C2B:: ; address name
     ld hl, Script_54C7
     call StartScriptAtHL_B13
@@ -8069,10 +8069,10 @@ Jump_013_6ECF::
     call StartScriptAtHL_B13
     ret
 
-; entry 107 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_55CE (StartScriptAtHL); its first message begins 'I'm the Prof's assistant. Do you' (E-0271; was DispatchTalkEvent_Case01_Case6B)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_55CE: 'I'm the Prof's assistant. Do you'
-DispatchTalkEvent_Case01_Case6B::
+TalkScript55CE_ImTheProfsAssistantDoYou::
 Jump_013_6EDE:: ; address name
     ld hl, Script_55CE
     call StartScriptAtHL_B13
@@ -9367,10 +9367,10 @@ Jump_013_7720::
     call StartScriptAtHL_B13
     ret
 
-; entry 159 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_56F2 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case01_Case9F)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_56F2
-DispatchTalkEvent_Case01_Case9F::
+TalkScript56F2::
 Jump_013_7727:: ; address name
     ld hl, Script_56F2
     call StartScriptAtHL_B13
@@ -9693,10 +9693,10 @@ Jump_013_78D0:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 182 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_5744 (StartScriptAtHL); its first message begins 'Do you want to know how' (E-0271; was DispatchTalkEvent_Case01_CaseB6)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5744: 'Do you want to know how'
-DispatchTalkEvent_Case01_CaseB6::
+TalkScript5744_DoYouWantToKnowHow::
 Jump_013_78D7:: ; address name
     ld hl, Script_5744
     call StartScriptAtHL_B13
@@ -9855,10 +9855,10 @@ Jump_013_79A8:: ; address name
     call StartMessageCommand09HL_B13
     ret
 
-; entry 192 of the `rst $00` table in DispatchTalkEvent_Case01
+; starts Script_5752 (StartScriptAtHL); its first message begins 'Hello there. Do you know about' (E-0271; was DispatchTalkEvent_Case01_CaseC0)
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5752: 'Hello there. Do you know about'
-DispatchTalkEvent_Case01_CaseC0::
+TalkScript5752_HelloThereDoYouKnowAbout::
 Jump_013_79AF:: ; address name
     ld hl, Script_5752
     call StartScriptAtHL_B13
