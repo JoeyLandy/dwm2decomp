@@ -389,7 +389,7 @@ RunPlayerMoveTypeMapMoveType::
 Func_00A_4214:: ; address name
     ld a, [wMapMoveType]
     rst $00
-    dw RunPlayerMoveTypeMapMoveType_Case00
+    dw RunPlayerMoveTypeMapMoveType_Return
     dw RunPlayerMoveTypeMapMoveType_Case01
     dw RunPlayerMoveTypeMapMoveType_Case02
     dw RunPlayerMoveTypeMapMoveType_Case03
@@ -400,7 +400,7 @@ Func_00A_4214:: ; address name
 
 ; entry 0 of the `rst $00` table in RunPlayerMoveTypeMapMoveType
 ; no direct call (reached through a table, a jump or a vector)
-RunPlayerMoveTypeMapMoveType_Case00::
+RunPlayerMoveTypeMapMoveType_Return::
 Jump_00A_4228:: ; address name
     ret
 
@@ -977,12 +977,12 @@ Func_00A_465D:: ; address name
     rst $00
     dw RunBattleIntroKindCase_Case00
     dw RunBattleIntroKindCase_Case01
-    dw RunBattleIntroKindCase_Case02
+    dw RunBattleIntroKindCase_SetBattleKindTo02
     dw RunBattleIntroKindCase_Case03
-    dw RunBattleIntroKindCase_Case04
+    dw RunBattleIntroKindCase_SetBattleKindTo04
     dw RunBattleIntroKindCase_Case05
     dw RunBattleIntroKindCase_Case06
-    dw RunBattleIntroKindCase_Case07
+    dw RunBattleIntroKindCase_SetBattleKindTo05
 
 ; entry 6 of the `rst $00` table in RunBattleIntroKindCase
 ; no direct call (reached through a table, a jump or a vector)
@@ -2542,7 +2542,7 @@ Jump_00A_50A6::
 ; entry 2 of the `rst $00` table in RunBattleIntroKindCase
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleKind
-RunBattleIntroKindCase_Case02::
+RunBattleIntroKindCase_SetBattleKindTo02::
 Jump_00A_50CB:: ; address name
     ld a, $02
     ld [wBattleKind], a
@@ -2750,7 +2750,7 @@ Jump_00A_51EB::
 ; entry 4 of the `rst $00` table in RunBattleIntroKindCase
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleKind
-RunBattleIntroKindCase_Case04::
+RunBattleIntroKindCase_SetBattleKindTo04::
 Jump_00A_51F1:: ; address name
     ld a, $04
     ld [wBattleKind], a
@@ -2759,7 +2759,7 @@ Jump_00A_51F1:: ; address name
 ; entry 7 of the `rst $00` table in RunBattleIntroKindCase
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wBattleKind
-RunBattleIntroKindCase_Case07::
+RunBattleIntroKindCase_SetBattleKindTo05::
 Jump_00A_51F7:: ; address name
     ld a, $05
     ld [wBattleKind], a
@@ -2897,7 +2897,7 @@ Jump_00A_52AE:: ; address name
     ld a, [wTransitionCounter]
     rst $00
     dw RunBattleTransitionStep_Case01_Case00_Case00
-    dw RunBattleTransitionStep_Case01_Case00_Case01
+    dw RunBattleTransitionStep_Case01_Case00_AdvanceBattleTransitionStep
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
@@ -2961,7 +2961,7 @@ Jump_00A_52F2::
 ; entry 1 of the `rst $00` table in RunBattleTransitionStep_Case01_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleTransitionStep
-RunBattleTransitionStep_Case01_Case00_Case01::
+RunBattleTransitionStep_Case01_Case00_AdvanceBattleTransitionStep::
 Jump_00A_5309:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]
@@ -3059,7 +3059,7 @@ Jump_00A_5364::
     rst $00
     dw AddHLToTransitionBGPtrLoInBGMap_Case00
     dw AddHLToTransitionBGPtrLoInBGMap_Case01
-    dw AddHLToTransitionBGPtrLoInBGMap_Case02
+    dw AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep
 
 ; entry 0 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
 ; no direct call (reached through a table, a jump or a vector)
@@ -3256,7 +3256,7 @@ Jump_00A_54A4::
 ; entry 2 of the `rst $00` table in AddHLToTransitionBGPtrLoInBGMap
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleTransitionStep
-AddHLToTransitionBGPtrLoInBGMap_Case02::
+AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep::
 Jump_00A_54AA:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]
@@ -3271,7 +3271,7 @@ Jump_00A_54AF:: ; address name
     rst $00
     dw RunBattleTransitionStep_Case01_Case02_Case00
     dw RunBattleTransitionStep_Case01_Case02_Case01
-    dw RunBattleTransitionStep_Case01_Case02_Case02
+    dw RunBattleTransitionStep_Case01_Case02_AdvanceBattleTransitionStep
 
 ; entry 0 of the `rst $00` table in RunBattleTransitionStep_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
@@ -3413,7 +3413,7 @@ Jump_00A_5589:: ; address name
 ; entry 2 of the `rst $00` table in RunBattleTransitionStep_Case01_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleTransitionStep
-RunBattleTransitionStep_Case01_Case02_Case02::
+RunBattleTransitionStep_Case01_Case02_AdvanceBattleTransitionStep::
 Jump_00A_558E:: ; address name
     ld hl, wBattleTransitionStep
     inc [hl]

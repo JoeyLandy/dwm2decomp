@@ -72,7 +72,7 @@ Func_085_4047:: ; address name
     dw SceneWatchOut_Case02
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_Case05
+    dw SceneWatchOut_ToStartMessageHL_B85AndStep
     dw SceneWatchOut_Case01
     dw SceneWatchOut_Case07
     dw SceneWatchOut_Case08
@@ -319,7 +319,7 @@ Func_085_4207:: ; address name
     dw SceneWaterReward_Case02
     dw SceneWatchOut_Case03
     dw SceneWatchOut_Case01
-    dw SceneWatchOut_Case05
+    dw SceneWatchOut_ToStartMessageHL_B85AndStep
     dw SceneWatchOut_Case01
     dw SceneWaterReward_Case07
     dw SceneWatchOut_Case08
@@ -594,7 +594,7 @@ Jump_085_43AF:: ; address name
 ; entry 5 of the `rst $00` table in SceneWatchOut
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneWatchOut_Case05::
+SceneWatchOut_ToStartMessageHL_B85AndStep::
 Jump_085_43CA:: ; address name
     ld hl, $4D50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
@@ -1098,12 +1098,12 @@ Func_085_4717:: ; address name
     ld a, [wScriptStep]
     rst $00
     dw SaveScreen_Case00
-    dw SaveScreen_Case01
+    dw SaveScreen_SetScriptStartRequestTo80
 
 ; entry 1 of the `rst $00` table in SaveScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-SaveScreen_Case01::
+SaveScreen_SetScriptStartRequestTo80::
 Jump_085_471F:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -1188,12 +1188,12 @@ Func_085_479B:: ; address name
     dw SceneChestServant_Case01
     dw SceneChestServant_Case01
     dw SceneChestServant_Case04
-    dw SceneChestServant_Case05
+    dw SceneChestServant_SetScriptStartRequestTo80
 
 ; entry 5 of the `rst $00` table in SceneChestServant
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-SceneChestServant_Case05::
+SceneChestServant_SetScriptStartRequestTo80::
 Jump_085_47AB:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -1800,10 +1800,10 @@ Func_085_4B0F:: ; address name
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_Case08
-    dw SceneLimboMonster2_Case09
-    dw SceneLimboMonster2_Case09
+    dw SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85
+    dw SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85
     dw SceneWatchOut_Case01
-    dw SceneLimboMonster2_Case0C
+    dw SceneLimboMonster2_ToStartMessageHL_B85AndStep
     dw SceneWatchOut_Case01
     dw SceneLimboMonster2_Case0E
     dw SceneLimboMonster2_Case0F
@@ -1881,7 +1881,7 @@ Jump_085_4B94::
 ; entry 12 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneLimboMonster2_Case0C::
+SceneLimboMonster2_ToStartMessageHL_B85AndStep::
 Jump_085_4BB2:: ; address name
     ld hl, $0BA7 ; 'Warubou Wa-hey, my kid has a'
     call StartMessageHL_B85
@@ -1891,7 +1891,7 @@ Jump_085_4BB2:: ; address name
 
 ; entry 9 of the `rst $00` table in SceneLimboMonster2
 ; no direct call (reached through a table, a jump or a vector)
-SceneLimboMonster2_Case09::
+SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
 Jump_085_4BBD:: ; address name
     ld de, wObject2 + $C
     ld hl, $0BA6
@@ -1970,8 +1970,8 @@ Func_085_4C24:: ; address name
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_ToScriptStepMoveFollowersToLeader
     dw SceneLimboMonster2_Case08
-    dw SceneLimboMonster_Case09
-    dw SceneLimboMonster_Case09
+    dw SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85
+    dw SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85
     dw SceneWatchOut_Case01
     dw SceneLimboMonster_Case0C
     dw SceneWatchOut_Case01
@@ -2042,7 +2042,7 @@ Jump_085_4C7F::
 
 ; entry 9 of the `rst $00` table in SceneLimboMonster
 ; no direct call (reached through a table, a jump or a vector)
-SceneLimboMonster_Case09::
+SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85::
 Jump_085_4CBC:: ; address name
     ld de, wObject2 + $C
     ld hl, $0B2B
@@ -2417,12 +2417,12 @@ Func_085_4F14:: ; address name
     dw SceneGiveBackCyal_Case07
     dw SceneGiveBackCyal_Case08
     dw SceneGiveBackCyal_Case09
-    dw SceneGiveBackCyal_Case0A
+    dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
 ; entry 10 of the `rst $00` table in SceneGiveBackCyal
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-SceneGiveBackCyal_Case0A::
+SceneGiveBackCyal_SetScriptStartRequestTo80::
 Jump_085_4F2E:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3648,7 +3648,7 @@ Func_085_55F5:: ; address name
     rst $00
     dw SceneCanalGate_Case00
     dw SceneCanalGate_Case00
-    dw SceneCanalGate_Case02
+    dw SceneCanalGate_ToStartMessageHL_B85AndStep
     dw SceneWatchOut_Case01
     dw SceneCanalGate_Case04
     dw SceneCanalGate_Case05
@@ -3723,7 +3723,7 @@ Jump_085_5647:: ; address name
 ; entry 2 of the `rst $00` table in SceneCanalGate
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-SceneCanalGate_Case02::
+SceneCanalGate_ToStartMessageHL_B85AndStep::
 Jump_085_5664:: ; address name
     ld hl, $0172 ; 'King Arrgh! I know that! I'
     call StartMessageHL_B85
@@ -3944,7 +3944,7 @@ Jump_085_579C::
     ret
 
 ; stores DE in wC928/9 and far-calls AddStepDeltaToPointedByte each frame; after 32 frames starts message HL, clears wScriptParam0 and advances wScriptStep (E-0121)
-; 2 call sites from 2 routines (e.g. SceneLimboMonster2_Case09, SceneLimboMonster_Case09)
+; 2 call sites from 2 routines (e.g. SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85, SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85)
 ; reads: wScriptParam0
 ; writes: wStepPtrLo, wStepPtrHi, wScriptParam0
 ; points at: wScriptStep

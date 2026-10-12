@@ -2177,8 +2177,8 @@ Func_0A0_4C74:: ; address name
     ret
 
 ; only called from routines of RunBattleSetup_BankA0 (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Case00_Case03, RunBattleSetup_BankA0_Case00_Case01)
-RunBattleSetup_BankA0_Shared01::
+; 2 call sites from 2 routines (e.g. RunBattleSetup_BankA0_Case00_ToRunBattleSetup_BankA0_Shared01AndStep, RunBattleSetup_BankA0_Case00_Case01)
+RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0::
 Func_0A0_4C81:: ; address name
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1A0
@@ -2264,7 +2264,7 @@ Func_0A0_4CED:: ; address name
     ret
 
 ; the same 28 bytes as CopyRect32StrideToVRAM (31:753F)
-; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_Shared01, DrawWC2A4AndWC2B8Rects_BankA0, DrawWC2B8Rect11x9ToBGMapRow9_BankA0, ...)
+; 10 call sites from 9 routines (e.g. DrawWC338RowsToBGMapRow13_BankA0, RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0, DrawWC2A4AndWC2B8Rects_BankA0, DrawWC2B8Rect11x9ToBGMapRow9_BankA0, ...)
 CopyRect32StrideToVRAM_BankA0::
 Func_0A0_4CFA:: ; address name
     push bc
@@ -4926,7 +4926,7 @@ Func_0A0_5E07:: ; address name
     rst $00
     dw RunBattleSetup_BankA0_Case00
     dw RunBattleSetup_BankA0_Case01
-    dw RunBattleSetup_BankA0_Case02
+    dw RunBattleSetup_BankA0_Return
     dw RunBattleSetup_BankA0_Case03
     dw RunBattleSetup_BankA0_Case04
     dw RunBattleSetup_BankA0_Case05
@@ -4948,10 +4948,10 @@ Jump_0A0_5E25:: ; address name
     dw RunBattleSetup_BankA0_Case00_Case00
     dw RunBattleSetup_BankA0_Case00_Case01
     dw RunBattleSetup_BankA0_Case00_Case02
-    dw RunBattleSetup_BankA0_Case00_Case03
+    dw RunBattleSetup_BankA0_Case00_ToRunBattleSetup_BankA0_Shared01AndStep
     dw RunBattleSetup_BankA0_Case00_Case04
     dw RunBattleSetup_BankA0_Case00_Case05
-    dw RunBattleSetup_BankA0_Case00_Case06
+    dw RunBattleSetup_BankA0_Case00_ToBeginStringDisplay_Bank2FAndStep
     dw RunBattleSetup_BankA0_Case00_Case07
 
 ; entry 0 of the `rst $00` table in RunBattleSetup_BankA0_Case00
@@ -4988,7 +4988,7 @@ Jump_0A0_5E39:: ; address name
 ; points at: wBattleResolveStep
 RunBattleSetup_BankA0_Case00_Case01::
 Jump_0A0_5E71:: ; address name
-    call RunBattleSetup_BankA0_Shared01
+    call RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0
     ld hl, Data_0A0_6977
     ld a, [wMenuState]
     and a, $03
@@ -5033,9 +5033,9 @@ Jump_0A0_5EBD::
 ; entry 3 of the `rst $00` table in RunBattleSetup_BankA0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleSetup_BankA0_Case00_Case03::
+RunBattleSetup_BankA0_Case00_ToRunBattleSetup_BankA0_Shared01AndStep::
 Jump_0A0_5EBE:: ; address name
-    call RunBattleSetup_BankA0_Shared01
+    call RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5140,7 +5140,7 @@ Jump_0A0_5F40:: ; address name
 ; entry 6 of the `rst $00` table in RunBattleSetup_BankA0_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleSetup_BankA0_Case00_Case06::
+RunBattleSetup_BankA0_Case00_ToBeginStringDisplay_Bank2FAndStep::
 Jump_0A0_5F51:: ; address name
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
@@ -5845,7 +5845,7 @@ Jump_0A0_63E8:: ; address name
 
 ; entry 2 of the `rst $00` table in RunBattleSetup_BankA0
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleSetup_BankA0_Case02::
+RunBattleSetup_BankA0_Return::
 Jump_0A0_63F2:: ; address name
     ret
 

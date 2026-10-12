@@ -2,7 +2,7 @@ SECTION "Bank 13", ROMX[$4000], BANK[$13]
     db $13
 
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)
-; 783 call sites from 406 routines (e.g. Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, DispatchTalkEvent_Case01_CaseEE, ...)
+; 783 call sites from 406 routines (e.g. Talk0D90_HumphImTerry, Talk0B6D_BreedingFireAndIce, Talk0B56_WhenYouBreedMonsters, DispatchTalkEvent_Case01_ToStartMessageCommand09HL_B13, ...)
 ; writes: wScriptParam0, wScriptParam1, wScriptStartRequest, wModeState, wScriptCommandType, wScriptRunning, wScriptStep
 StartMessageCommand09HL_B13::
 Func_013_4001:: ; address name
@@ -4725,7 +4725,7 @@ DispatchTalkEvent_Case01::
 Jump_013_5941:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case01_Case00
+    dw DispatchTalkEvent_Case01_Return
     dw TalkScript5895
     dw DispatchTalkEvent_Case01_Case02
     dw TalkMsg0023_HeroCheckedTheBookshelfBehavior
@@ -4874,9 +4874,9 @@ Jump_013_5941:: ; address name
     dw DispatchTalkEvent_Case01_Case92
     dw TalkMsg0299_ImApprenticingUnderTheBoss
     dw TalkMsg029A_DayAfterDayIExamineKeys
-    dw DispatchTalkEvent_Case01_Case95
-    dw DispatchTalkEvent_Case01_Case95
-    dw DispatchTalkEvent_Case01_Case95
+    dw DispatchTalkEvent_Case01_Return_Case95
+    dw DispatchTalkEvent_Case01_Return_Case95
+    dw DispatchTalkEvent_Case01_Return_Case95
     dw TalkMsg0504_IfTheIslandSink
     dw TalkMsg0512_KamehaYo0Thanks
     dw ChestItem_LifeAcorn_Flag011B
@@ -4963,7 +4963,7 @@ Jump_013_5941:: ; address name
     dw TalkMsg0220_InOtherWorldsYoull_7DC5
     dw ChestItem_Snow
     dw ChestItem_MagicBelt
-    dw DispatchTalkEvent_Case01_CaseEE
+    dw DispatchTalkEvent_Case01_ToStartMessageCommand09HL_B13
     dw $0000 ; unused index (E-0207)
     dw Talk0B56_WhenYouBreedMonsters
     dw Talk0B6D_BreedingFireAndIce
@@ -4976,7 +4976,7 @@ Jump_013_5941:: ; address name
 ; entry 0 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_5895
-DispatchTalkEvent_Case01_Case00::
+DispatchTalkEvent_Case01_Return::
 Jump_013_5B33:: ; address name
     ret
 
@@ -9120,7 +9120,7 @@ Jump_013_7579:: ; address name
 
 ; entry 149 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_Case95::
+DispatchTalkEvent_Case01_Return_Case95::
 Jump_013_7580:: ; address name
     ret
 
@@ -10617,7 +10617,7 @@ Jump_013_7DEC:: ; address name
 
 ; entry 238 of the `rst $00` table in DispatchTalkEvent_Case01
 ; no direct call (reached through a table, a jump or a vector)
-DispatchTalkEvent_Case01_CaseEE::
+DispatchTalkEvent_Case01_ToStartMessageCommand09HL_B13::
 Jump_013_7DFD:: ; address name
     ld hl, $055F ; '0 checked the bookshelf. Magic Keys'
     call StartMessageCommand09HL_B13

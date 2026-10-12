@@ -10,14 +10,14 @@ Func_00C_4001:: ; address name
     rst $00
     dw LibraryMenu_Case00
     dw LibraryMenu_Case01
-    dw LibraryMenu_Case02
+    dw LibraryMenu_ToClearStringWindowAt2020AndStep
     dw LibraryMenu_Case03
     dw LibraryMenu_Case04
     dw LibraryMenu_Case05
     dw LibraryMenu_Case06
     dw LibraryMenu_Case07
     dw LibraryMenu_Case08
-    dw LibraryMenu_Case09
+    dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_Case0A
     dw LibraryMenu_Case0B
     dw LibraryMenu_Case0C
@@ -100,7 +100,7 @@ Jump_00C_406F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case02::
+LibraryMenu_ToClearStringWindowAt2020AndStep::
 Jump_00C_4087:: ; address name
     call ClearStringWindowAt2020
     ld a, [wScreenState]
@@ -684,7 +684,7 @@ Func_00C_4424:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-LibraryMenu_Case09::
+LibraryMenu_ToClearStringWindowAt2200AndStep::
 Jump_00C_443D:: ; address name
     call ClearStringWindowAt2200
     ld a, [wScreenState]
@@ -2807,7 +2807,7 @@ Func_00C_525B:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $20 and size word $1702, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case02, LibraryMenu_Case10_Case0A)
+; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2020AndStep, LibraryMenu_Case10_Case0A)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2020::
 Func_00C_5269:: ; address name
@@ -2825,7 +2825,7 @@ Func_00C_5269:: ; address name
     ret
 
 ; sets the string window to tile destination vTiles2 + $200 and size word $5301, then FillTilesFromRequest (clears it) (E-0117)
-; 2 call sites from 2 routines (e.g. LibraryMenu_Case09, LibraryMenu_Case10_Case0A)
+; 2 call sites from 2 routines (e.g. LibraryMenu_ToClearStringWindowAt2200AndStep, LibraryMenu_Case10_Case0A)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 ClearStringWindowAt2200::
 Func_00C_5283:: ; address name
@@ -5567,21 +5567,21 @@ Func_00C_659F:: ; address name
     dw ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_Case04
     dw ArenaMenu_Case05
-    dw ArenaMenu_Case06
+    dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_Case07
     dw ArenaMenu_Case08
-    dw ArenaMenu_Case06
+    dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_Case0A
     dw ArenaMenu_Case0B
     dw ArenaMenu_Case0C
-    dw ArenaMenu_Case0D
+    dw ArenaMenu_AdvanceScreenState_Case0D
     dw ArenaMenu_Case0E
     dw ArenaMenu_Case0F
     dw ArenaMenu_Case10
     dw ArenaMenu_Case11
     dw ArenaMenu_Case12
     dw ArenaMenu_Case13
-    dw ArenaMenu_Case14
+    dw ArenaMenu_AdvanceScreenState_Case14
     dw ArenaMenu_Case15
     dw ShowTwoChoiceBoxAtWC412
     dw ArenaMenu_Case17
@@ -5590,10 +5590,10 @@ Func_00C_659F:: ; address name
     dw ArenaMenu_Case1A
     dw ArenaMenu_Case1B
     dw ArenaMenu_Case1C
-    dw ArenaMenu_Case06
+    dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_Case1E
     dw ArenaMenu_Case08
-    dw ArenaMenu_Case06
+    dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_Case21
     dw ArenaMenu_Case22
     dw ArenaMenu_Case23
@@ -6227,7 +6227,7 @@ Jump_00C_6A04:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_Case06::
+ArenaMenu_AdvanceScreenState::
 Jump_00C_6A21:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6387,7 +6387,7 @@ Jump_00C_6AF2::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_Case0D::
+ArenaMenu_AdvanceScreenState_Case0D::
 Jump_00C_6B10:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6688,7 +6688,7 @@ Jump_00C_6CD0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-ArenaMenu_Case14::
+ArenaMenu_AdvanceScreenState_Case14::
 Jump_00C_6D05:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6901,7 +6901,7 @@ Jump_00C_6E59:: ; address name
     ret
 
 Jump_00C_6E85::
-    call ArenaMenu_Case1B_Sub01
+    call ArenaMenu_Case1B_Return
     xor a, a
 
 Jump_00C_6E89::
@@ -7113,7 +7113,7 @@ Jump_00C_6FBC::
     ret
 
 ; runs Func_00C_72CC for the bottom box, copies $64 bytes of tiles (and CGB attributes) and draws the two screen-buffer rectangles at scroll + $1CC and + $1A0 (E-0125)
-; 4 call sites from 4 routines (e.g. ArenaMenu_Case1E, ArenaMenu_Case1A, ArenaMenu_Case07, NpcBreedMenu_Case04_Case18)
+; 4 call sites from 4 routines (e.g. ArenaMenu_Case1E, ArenaMenu_Case1A, ArenaMenu_Case07, NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep)
 ; reads: wIsCGB
 ; writes: wArg1, wArg2
 ; points at: wWindowTileBuffer, wWindowAttrBuffer
@@ -7840,7 +7840,7 @@ Func_00C_73B3:: ; address name
 
 ; only called from ArenaMenu_Case1B (E-0047)
 ; 1 call site from 1 routine (e.g. ArenaMenu_Case1B)
-ArenaMenu_Case1B_Sub01::
+ArenaMenu_Case1B_Return::
 Func_00C_73C6:: ; address name
     ret
 

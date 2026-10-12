@@ -2133,45 +2133,45 @@ ApplyEquipmentEffectKeepA_Sub01::
 Func_016_4A98:: ; address name
     sub a, $40
     rst $00
-    dw ApplyEquipmentEffectKeepA_Sub01_Case00
-    dw ApplyEquipmentEffectKeepA_Sub01_Case01
-    dw ApplyEquipmentEffectKeepA_Sub01_Case02
-    dw ApplyEquipmentEffectKeepA_Sub01_Case03
-    dw ApplyEquipmentEffectKeepA_Sub01_Case04
-    dw ApplyEquipmentEffectKeepA_Sub01_Case05
-    dw ApplyEquipmentEffectKeepA_Sub01_Case06
-    dw ApplyEquipmentEffectKeepA_Sub01_Case07
-    dw ApplyEquipmentEffectKeepA_Sub01_Case08
-    dw ApplyEquipmentEffectKeepA_Sub01_Case09
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0B
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case0C
-    dw ApplyEquipmentEffectKeepA_Sub01_Case13
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case14
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case1A
-    dw ApplyEquipmentEffectKeepA_Sub01_Case22
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case05
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case06
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case07
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case08
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_Return
+    dw ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case14
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case1A
+    dw ApplyEquipmentEffectKeepA_Sub01_Return_Case22
 
 ; entry 0 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case00::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1::
 Jump_016_4AE1:: ; address name
     ld a, $1E
     ld c, $5D
@@ -2180,7 +2180,7 @@ Jump_016_4AE1:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case01::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01::
 Jump_016_4AE9:: ; address name
     ld a, $50
     ld c, $5D
@@ -2189,7 +2189,7 @@ Jump_016_4AE9:: ; address name
 
 ; entry 2 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case02::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02::
 Jump_016_4AF1:: ; address name
     ld a, $1E
     ld c, $61
@@ -2198,7 +2198,7 @@ Jump_016_4AF1:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case03::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03::
 Jump_016_4AF9:: ; address name
     ld a, $50
     ld c, $61
@@ -2207,7 +2207,7 @@ Jump_016_4AF9:: ; address name
 
 ; entry 4 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case04::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1::
 Jump_016_4B01:: ; address name
     ld a, $0A
     ld c, $63
@@ -2216,7 +2216,7 @@ Jump_016_4B01:: ; address name
 
 ; entry 5 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case05::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case05::
 Jump_016_4B09:: ; address name
     ld a, $32
     ld c, $63
@@ -2225,7 +2225,7 @@ Jump_016_4B09:: ; address name
 
 ; entry 6 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case06::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case06::
 Jump_016_4B11:: ; address name
     ld a, $0A
     ld c, $65
@@ -2234,7 +2234,7 @@ Jump_016_4B11:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case07::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case07::
 Jump_016_4B19:: ; address name
     ld a, $32
     ld c, $65
@@ -2243,7 +2243,7 @@ Jump_016_4B19:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case08::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case08::
 Jump_016_4B21:: ; address name
     ld a, $0A
     ld c, $67
@@ -2252,7 +2252,7 @@ Jump_016_4B21:: ; address name
 
 ; entry 9 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case09::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09::
 Jump_016_4B29:: ; address name
     ld a, $32
     ld c, $67
@@ -2261,7 +2261,7 @@ Jump_016_4B29:: ; address name
 
 ; entry 10 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case0A::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A::
 Jump_016_4B31:: ; address name
     ld a, $32
     ld c, $69
@@ -2270,7 +2270,7 @@ Jump_016_4B31:: ; address name
 
 ; entry 11 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case0B::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B::
 Jump_016_4B39:: ; address name
     ld a, $64
     ld c, $69
@@ -2279,13 +2279,13 @@ Jump_016_4B39:: ; address name
 
 ; entry 12 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case0C::
+ApplyEquipmentEffectKeepA_Sub01_Return::
 Jump_016_4B41:: ; address name
     ret
 
 ; entry 19 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case13::
+ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13::
 Jump_016_4B42:: ; address name
     ld a, $05
     ld c, $65
@@ -2294,19 +2294,19 @@ Jump_016_4B42:: ; address name
 
 ; entry 20 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case14::
+ApplyEquipmentEffectKeepA_Sub01_Return_Case14::
 Jump_016_4B4A:: ; address name
     ret
 
 ; entry 26 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case1A::
+ApplyEquipmentEffectKeepA_Sub01_Return_Case1A::
 Jump_016_4B4B:: ; address name
     ret
 
 ; entry 34 of the `rst $00` table in Func_016_4A98
 ; no direct call (reached through a table, a jump or a vector)
-ApplyEquipmentEffectKeepA_Sub01_Case22::
+ApplyEquipmentEffectKeepA_Sub01_Return_Case22::
 Jump_016_4B4C:: ; address name
     ret
 
@@ -2383,7 +2383,7 @@ Jump_016_4B8F::
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: leaves the word unchanged when it is 999; otherwise word -= A, but never below 1 (E-0103)
-; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_Case13, ApplyEquipmentEffectKeepA_Sub01_Case0B, ApplyEquipmentEffectKeepA_Sub01_Case0A, ApplyEquipmentEffectKeepA_Sub01_Case09, ...)
+; 9 call sites from 9 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case13, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0B, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case0A, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordFloor1_Case09, ...)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordFloor1::
@@ -2425,7 +2425,7 @@ Jump_016_4BBF::
     ret
 
 ; A = amount, record wD083 (SRAMRecordAddressMapped), field offset C: as SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before it (the second half is not read to its end) (E-0103)
-; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_Case03, ApplyEquipmentEffectKeepA_Sub01_Case02, ApplyEquipmentEffectKeepA_Sub01_Case01, ApplyEquipmentEffectKeepA_Sub01_Case00)
+; 4 call sites from 4 routines (e.g. ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case03, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case02, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1_Case01, ApplyEquipmentEffectKeepA_Sub01_ToSubtractAFromRecordWordPairFloor1)
 ; reads: wTargetRecord, hTemp0
 ; writes: hTemp0
 SubtractAFromRecordWordPairFloor1::
@@ -3266,7 +3266,7 @@ Func_016_53E6:: ; address name
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0D
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0E
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case0F
-    dw PauseMenu_Skills_Case03_Case07_Sub01_Case10
+    dw PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case11
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case12
     dw PauseMenu_Skills_Case03_Case07_Sub01_Case13
@@ -3601,7 +3601,7 @@ Jump_016_55B5:: ; address name
 ; entry 16 of the `rst $00` table in Func_016_53E6
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wItemMessage
-PauseMenu_Skills_Case03_Case07_Sub01_Case10::
+PauseMenu_Skills_Case03_Case07_Sub01_SetItemMessageTo0B::
 Jump_016_55C5:: ; address name
     ld a, $0B
     ld [wItemMessage], a
@@ -5055,7 +5055,7 @@ Func_016_5D13:: ; address name
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case10
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case11
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case12
-    dw BattleEnd_Step5_Case01_Case01_Sub01_Case13
+    dw BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case14
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case15
     dw BattleEnd_Step5_Case01_Case01_Sub01_Case16
@@ -5653,7 +5653,7 @@ Jump_016_6143::
 ; entry 19 of the `rst $00` table in Func_016_5D13
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-BattleEnd_Step5_Case01_Case01_Sub01_Case13::
+BattleEnd_Step5_Case01_Case01_Sub01_AdvanceBattleSubStep::
 Jump_016_614C:: ; address name
     ld hl, wBattleSubStep
     inc [hl]
@@ -7089,7 +7089,7 @@ Func_016_6A4E:: ; address name
     dw RunBattleEndStep5SubSteps_Case00
     dw RunBattleEndStep5SubSteps_Case01
     dw RunBattleEndStep5SubSteps_Case02
-    dw RunBattleEndStep5SubSteps_Case03
+    dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
     dw RunBattleEndStep5SubSteps_Case04
 
 ; entry 0 of the `rst $00` table in RunBattleEndStep5SubSteps
@@ -7234,7 +7234,7 @@ Jump_016_6B47::
 ; entry 3 of the `rst $00` table in RunBattleEndStep5SubSteps
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep
-RunBattleEndStep5SubSteps_Case03::
+RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
 Jump_016_6B52:: ; address name
     ld hl, wBattleSubStep
     inc [hl]

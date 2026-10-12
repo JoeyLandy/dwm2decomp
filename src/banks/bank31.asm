@@ -1963,7 +1963,7 @@ Jump_031_4B2E:: ; address name
     dw RunBattleSetup_Case00_Case01
     dw RunBattleSetup_Case00_Case02
     dw RunBattleSetup_Case00_Case03
-    dw RunBattleSetup_Case00_Case04
+    dw RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep
     dw RunBattleSetup_Case00_Case05
     dw RunBattleSetup_Case00_Case06
     dw RunBattleSetup_Case00_Case07
@@ -2063,7 +2063,7 @@ Jump_031_4B8F:: ; address name
 ; points at: wBattleResolveStep
 RunBattleSetup_Case00_Case02::
 Jump_031_4BCC:: ; address name
-    call RunBattleSetup_Shared05
+    call RunBattleSetup_ToCopyRect32StrideToVRAM
     ld hl, Data_031_639F
     ld a, [wMenuState]
     and a, $03
@@ -2109,9 +2109,9 @@ Jump_031_4C18::
 ; entry 4 of the `rst $00` table in RunBattleSetup_Case00
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleSetup_Case00_Case04::
+RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep::
 Jump_031_4C19:: ; address name
-    call RunBattleSetup_Shared05
+    call RunBattleSetup_ToCopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4073,7 +4073,7 @@ Jump_031_5829:: ; address name
     dw RunBattleSetup_Case02_Case0E
     dw RunBattleSetup_Case02_Case0F
     dw RunBattleSetup_Case02_Case10
-    dw RunBattleSetup_Case02_Case11
+    dw RunBattleSetup_Case02_ToDrawWC338RowsToBGMapRow13AndStep
     dw RunBattleSetup_Case02_Case12
     dw RunBattleSetup_Case02_Case13
 
@@ -4724,7 +4724,7 @@ Jump_031_5C58:: ; address name
 ; entry 17 of the `rst $00` table in RunBattleSetup_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleResolveStep
-RunBattleSetup_Case02_Case11::
+RunBattleSetup_Case02_ToDrawWC338RowsToBGMapRow13AndStep::
 Jump_031_5C63:: ; address name
     call DrawWC338RowsToBGMapRow13
     ld hl, wBattleResolveStep
@@ -9122,8 +9122,8 @@ Func_031_7486:: ; address name
     farcall CopyRectRecord73ADToScreenBuffer
 
 ; only called from routines of RunBattleSetup (E-0098)
-; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_Case04, RunBattleSetup_Case00_Case02)
-RunBattleSetup_Shared05::
+; 2 call sites from 2 routines (e.g. RunBattleSetup_Case00_ToRunBattleSetup_Shared05AndStep, RunBattleSetup_Case00_Case02)
+RunBattleSetup_ToCopyRect32StrideToVRAM::
 Func_031_748C:: ; address name
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1A0

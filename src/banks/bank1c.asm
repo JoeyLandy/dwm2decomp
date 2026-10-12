@@ -73,7 +73,7 @@ Func_01C_4075:: ; address name
     dw InnMenu_Case02
     dw InnMenu_Case03
     dw InnMenu_Case04
-    dw InnMenu_Case05
+    dw InnMenu_AdvanceScreenState
     dw InnMenu_Case06
     dw InnMenu_Case07
     dw InnMenu_Case08
@@ -282,7 +282,7 @@ Jump_01C_41DC:: ; address name
 ; entry 5 of the `rst $00` table in InnMenu
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenState
-InnMenu_Case05::
+InnMenu_AdvanceScreenState::
 Jump_01C_41E6:: ; address name
     ld hl, wScreenState
     inc [hl]
@@ -1187,7 +1187,7 @@ Jump_01C_46F4:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw ShopMenu_Case01_Case00
-    dw ShopMenu_Case01_Case01
+    dw ShopMenu_Case01_ToCopyTileListFromBank1F_1C
     dw ShopMenu_Case01_ToInitItemListScreenListAndCount
     dw ShopMenu_Case01_Case03
     dw ShopMenu_Case01_Case04
@@ -1202,7 +1202,7 @@ Jump_01C_4702:: ; address name
 
 ; entry 1 of the `rst $00` table in ShopMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-ShopMenu_Case01_Case01::
+ShopMenu_Case01_ToCopyTileListFromBank1F_1C::
 Jump_01C_4706:: ; address name
     ld hl, TileCopyDestList_1C_5F86
     ld de, TileCopySrcList_1C_5FE8
@@ -1462,7 +1462,7 @@ Jump_01C_488E:: ; address name
     dw ShopMenu_Case03_Case01
     dw ShopMenu_Case03_Case02
     dw ShopMenu_Case03_Case03
-    dw ShopMenu_Case03_Case04
+    dw ShopMenu_Case03_AdvanceScreenStep
     dw ShopMenu_Case03_Case05
     dw ShopMenu_Case03_Case06
     dw ShopMenu_Case03_Case07
@@ -1829,7 +1829,7 @@ Jump_01C_4ABB::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-ShopMenu_Case03_Case04::
+ShopMenu_Case03_AdvanceScreenStep::
 Jump_01C_4ABC:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -6499,7 +6499,7 @@ Jump_01C_69C1::
     ret
 
 ; for each entry from wD783 of the destination list at HL and the source list at DE copies a 16-byte tile from bank $1F, until $FF; then wD781 += 1 (E-0127)
-; 2 call sites from 2 routines (e.g. ShopMenu_Case01_Case01, VaultMenu_Case01_Case01)
+; 2 call sites from 2 routines (e.g. ShopMenu_Case01_ToCopyTileListFromBank1F_1C, VaultMenu_Case01_ToCopyTileListFromBank1F_1C)
 ; reads: wScreenCounter
 ; writes: wGlyphListPos, wScreenCounter
 ; points at: wScreenStep
@@ -6754,7 +6754,7 @@ Jump_01C_6B38::
     dw ShopMenu_Shared01_Case00
     dw ShopMenu_Shared01_Case01
     dw ShopMenu_Shared01_ToStepItemDescriptionText
-    dw ShopMenu_Shared01_Case03
+    dw ShopMenu_Shared01_Return
 
 ; entry 0 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
@@ -6836,7 +6836,7 @@ Jump_01C_6C70:: ; address name
 
 ; entry 3 of the `rst $00` table in Func_01C_6AF7
 ; no direct call (reached through a table, a jump or a vector)
-ShopMenu_Shared01_Case03::
+ShopMenu_Shared01_Return::
 Jump_01C_6C77:: ; address name
     ret
 
@@ -7000,8 +7000,8 @@ Jump_01C_6D4D:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw VaultMenu_Case01_Case00
-    dw VaultMenu_Case01_Case01
-    dw VaultMenu_Case01_Case02
+    dw VaultMenu_Case01_ToCopyTileListFromBank1F_1C
+    dw VaultMenu_Case01_ToVaultMenu_Shared06AndStep
     dw VaultMenu_Case01_Case03
     dw VaultMenu_Case01_ToInitItemListScreenListAndCount
     dw VaultMenu_Case01_Case05
@@ -7023,7 +7023,7 @@ Jump_01C_6D5D:: ; address name
 
 ; entry 1 of the `rst $00` table in VaultMenu_Case01
 ; no direct call (reached through a table, a jump or a vector)
-VaultMenu_Case01_Case01::
+VaultMenu_Case01_ToCopyTileListFromBank1F_1C::
 Jump_01C_6D73:: ; address name
     ld hl, TileCopyDestList_1C_5F86
     ld de, TileCopySrcList_1C_604A
@@ -7034,7 +7034,7 @@ Jump_01C_6D73:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-VaultMenu_Case01_Case02::
+VaultMenu_Case01_ToVaultMenu_Shared06AndStep::
 Jump_01C_6D7D:: ; address name
     farcall VaultMenu_Shared06
     ld a, [wScreenStep]

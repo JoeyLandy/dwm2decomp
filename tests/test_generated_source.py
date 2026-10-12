@@ -352,7 +352,8 @@ class NestedDispatchCases(unittest.TestCase):
         start = text.index("RunLinkSession5Exchange_Case01_Sub01_Case0D::")  # parent Func_037_4AFD (E-0245 prefix)
         body = text[start:text.index("\n\n", start)]
         self.assertIn("rst $00", body)
-        self.assertIn("dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04", body)
+        # its targets carry the case's name as a prefix (CaseNN, or a shape name such as _To..., E-0272)
+        self.assertRegex(body, r"dw RunLinkSession5Exchange_Case01_Sub01_Case0D_\w+")
 
 
 class InlineTableTrim(unittest.TestCase):

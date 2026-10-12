@@ -1593,7 +1593,7 @@ Func_0F1_4AD0:: ; address name
     ret nz
     ld a, [wScreenState]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case00
+    dw RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep
     dw RunScreenStateWhenNotFading_F1_Case01
     dw RunScreenStateWhenNotFading_F1_Case02
     dw RunScreenStateWhenNotFading_F1_Case03
@@ -1616,7 +1616,7 @@ Func_0F1_4AD0:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunScreenStateWhenNotFading_F1_Case00::
+RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
 Jump_0F1_4AFD:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -2834,7 +2834,7 @@ RunScreenStateWhenNotFading_F1_Case11::
 Jump_0F1_525E:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case11_Case00
+    dw RunScreenStateWhenNotFading_F1_Case11_AdvanceScreenStep
     dw ShowString0EAndStep_BankF1
     dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_Case11_ToBreedMenu
@@ -2856,7 +2856,7 @@ Jump_0F1_5276:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case11_Case00::
+RunScreenStateWhenNotFading_F1_Case11_AdvanceScreenStep::
 Jump_0F1_527D:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2925,31 +2925,31 @@ RunScreenStateWhenNotFading_F1_Case0D::
 Jump_0F1_52D8:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case00
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToClearBGMapAndLoadFrameTilesAndStep
     dw RunScreenStateWhenNotFading_F1_Case0D_Case01
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case02
+    dw RunScreenStateWhenNotFading_F1_Case0D_AdvanceScreenStep
     dw RunScreenStateWhenNotFading_F1_Case0D_Case03
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case04
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToDrawRecordBufBStatsScreenAndStep
     dw RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA36MonsterPictureInTwoSteps
     dw RunScreenStateWhenNotFading_F1_Case0D_Case06
     dw RunScreenStateWhenNotFading_F1_Case0D_Case07
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case08
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case0E
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_Return
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToFillTilesBxCAndStep
     dw RunScreenStateWhenNotFading_F1_Case0D_Case0F
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case10
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA2CNameAndWCA36StringAndStep
     dw RunScreenStateWhenNotFading_F1_Case0D_Case11
     dw RunScreenStateWhenNotFading_F1_Case0D_Case12
     dw RunScreenStateWhenNotFading_F1_Case0D_Case13
     dw RunScreenStateWhenNotFading_F1_Case0D_Case14
     dw RunScreenStateWhenNotFading_F1_Case0D_Case15
     dw RunScreenStateWhenNotFading_F1_Case0D_Case16
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case17
-    dw RunScreenStateWhenNotFading_F1_Case0D_Case18
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToDrawRects6B4FAnd6C27AndStep
+    dw RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep
     dw RunScreenStateWhenNotFading_F1_Case0D_Case19
     dw RunScreenStateWhenNotFading_F1_Case0D_Case1A
     dw RunScreenStateWhenNotFading_F1_Case0D_Case1B
@@ -2961,7 +2961,7 @@ Jump_0F1_52D8:: ; address name
 
 ; entry 8 of the `rst $00` table in RunScreenStateWhenNotFading_F1_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunScreenStateWhenNotFading_F1_Case0D_Case08::
+RunScreenStateWhenNotFading_F1_Case0D_Return::
 Jump_0F1_531E:: ; address name
     ret
 
@@ -2969,7 +2969,7 @@ Jump_0F1_531E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case00::
+RunScreenStateWhenNotFading_F1_Case0D_ToClearBGMapAndLoadFrameTilesAndStep::
 Jump_0F1_531F:: ; address name
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
@@ -2991,7 +2991,7 @@ Jump_0F1_532D:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case02::
+RunScreenStateWhenNotFading_F1_Case0D_AdvanceScreenStep::
 Jump_0F1_533C:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -3035,7 +3035,7 @@ Jump_0F1_535A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case04::
+RunScreenStateWhenNotFading_F1_Case0D_ToDrawRecordBufBStatsScreenAndStep::
 Jump_0F1_5379:: ; address name
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
@@ -3129,7 +3129,7 @@ Jump_0F1_53D9:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case0E::
+RunScreenStateWhenNotFading_F1_Case0D_ToFillTilesBxCAndStep::
 Jump_0F1_5412:: ; address name
     ld hl, vTiles2 + $200
     ld bc, $0F02
@@ -3160,7 +3160,7 @@ Jump_0F1_5423:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case10::
+RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA2CNameAndWCA36StringAndStep::
 Jump_0F1_543D:: ; address name
     call DrawWCA2CNameAndWCA36String
     ld a, [wScreenStep]
@@ -3309,7 +3309,7 @@ Jump_0F1_5526:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case17::
+RunScreenStateWhenNotFading_F1_Case0D_ToDrawRects6B4FAnd6C27AndStep::
 Jump_0F1_5532:: ; address name
     farcall DrawRects6B4FAnd6C27
     ld a, [wScreenStep]
@@ -3321,7 +3321,7 @@ Jump_0F1_5532:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_F1_Case0D_Case18::
+RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep::
 Jump_0F1_5540:: ; address name
     farcall ClearTilesAndDrawRects6C5FAnd6D37
     ld a, [wScreenStep]
@@ -3718,7 +3718,7 @@ Jump_0F1_57C9::
     ret
 
 ; draws the name at wCA2C at vTiles1 + $780 and shows string [wCA36] of category [wCA37] + 2 at $8A70 with size $0109 (E-0121)
-; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_Case10)
+; 2 call sites from 2 routines (e.g. RunScreenStateWhenNotFading_F1_Case0D_Case1D, RunScreenStateWhenNotFading_F1_Case0D_ToDrawWCA2CNameAndWCA36StringAndStep)
 ; writes: wStringIndex, wStringCategory
 ; points at: wTextWindowTileLo
 DrawWCA2CNameAndWCA36String::

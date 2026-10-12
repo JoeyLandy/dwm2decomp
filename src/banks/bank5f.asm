@@ -1260,7 +1260,7 @@ Jump_05F_6E03::
     ret
 
 ; DE = the BG map row at hScrollY (& $F8); calls Func_05F_6E35 for the columns at hScrollX - 8 and hScrollX + $A0, just off the left and right edges (E-0121)
-; 9 call sites from 9 routines (e.g. SceneDarckDefeated_Case0D, SceneThreeItems_Case00, SceneExplosion_Case00, SceneWallExit_Case00, ...)
+; 9 call sites from 9 routines (e.g. SceneDarckDefeated_Case0D, SceneThreeItems_ToRedrawColumnsBesideScreenAndStep, SceneExplosion_Case00, SceneWallExit_Case00, ...)
 ; reads: hScrollY, hScrollX
 RedrawColumnsBesideScreen::
 Func_05F_6E09:: ; address name
@@ -2146,12 +2146,12 @@ Func_05F_7363:: ; address name
     dw RunSceneScriptSubStep_Case0E
     dw RunSceneScriptSubStep_Case0F
     dw RunSceneScriptSubStep_Case09
-    dw RunSceneScriptSubStep_Case11
+    dw RunSceneScriptSubStep_AdvanceScriptStep
 
 ; entry 17 of the `rst $00` table in RunSceneScriptSubStep
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-RunSceneScriptSubStep_Case11::
+RunSceneScriptSubStep_AdvanceScriptStep::
 Jump_05F_738B:: ; address name
     ld hl, wScriptStep
     inc [hl]
@@ -3344,57 +3344,57 @@ Jump_05F_7AC8::
     ld [wScriptStartRequest], a
     ld a, [wScriptParam0]
     rst $00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
     dw ScriptCommand0E_Run_Case1E
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
-    dw ScriptCommand0E_Run_Case00
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
+    dw ScriptCommand0E_Run_Return
 
 ; entry 30 of the `rst $00` table in ScriptCommand0E_Run
 ; no direct call (reached through a table, a jump or a vector)
@@ -3407,7 +3407,7 @@ Jump_05F_7B3B:: ; address name
 
 ; entry 0 of the `rst $00` table in ScriptCommand0E_Run
 ; no direct call (reached through a table, a jump or a vector)
-ScriptCommand0E_Run_Case00::
+ScriptCommand0E_Run_Return::
 Jump_05F_7B40:: ; address name
     ret
     ds $4BF, $00

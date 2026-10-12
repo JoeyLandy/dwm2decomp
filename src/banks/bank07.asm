@@ -1770,7 +1770,7 @@ Jump_007_5115::
     ret
 
 ; wStringCategory = H, wStringIndex = L, then far-calls BeginStringDisplay_Bank07 (E-0114)
-; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case02_Case04, RunLinkSession4ScreenState_Case03_Case08, RunLinkSession4ScreenState_Case04_Case03, RunLinkSession4ScreenState_Case04_Case01)
+; 4 call sites from 4 routines (e.g. RunLinkSession4ScreenState_Case02_Case04, RunLinkSession4ScreenState_Case03_ToShowStringHL_Bank07AndStep, RunLinkSession4ScreenState_Case04_Case03, RunLinkSession4ScreenState_Case04_Case01)
 ; writes: wStringCategory, wStringIndex
 ShowStringHL_Bank07::
 Func_007_512B:: ; address name
@@ -4368,18 +4368,18 @@ GameMode5_Update_Case01_Case06::
 Jump_007_683A:: ; address name
     ld a, [wLinkScreenSubState]
     rst $00
-    dw GameMode5_Update_Case01_Case06_Case00
+    dw GameMode5_Update_Case01_Case06_ToStartPaletteFadeAndStep
     dw GameMode5_Update_Case01_Case06_Case01
     dw GameMode5_Update_Case01_Case06_Case02
     dw GameMode5_Update_Case01_Case06_Case03
-    dw GameMode5_Update_Case01_Case06_Case04
+    dw GameMode5_Update_Case01_Case06_AdvanceLinkScreenSubState
     dw GameMode5_Update_Case01_Case06_Case05
     dw GameMode5_Update_Case01_Case06_Case06
 
 ; entry 0 of the `rst $00` table in GameMode5_Update_Case01_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_Case00::
+GameMode5_Update_Case01_Case06_ToStartPaletteFadeAndStep::
 Jump_007_684C:: ; address name
     ld a, $04
     call StartPaletteFade
@@ -4485,7 +4485,7 @@ Jump_007_68D9::
 ; entry 4 of the `rst $00` table in GameMode5_Update_Case01_Case06
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-GameMode5_Update_Case01_Case06_Case04::
+GameMode5_Update_Case01_Case06_AdvanceLinkScreenSubState::
 Jump_007_68DE:: ; address name
     ld hl, wLinkScreenSubState
     inc [hl]
@@ -5573,7 +5573,7 @@ Jump_007_6F34:: ; address name
     dw RunLinkSession4ScreenState_Case03_Case05
     dw RunLinkSession4ScreenState_Case03_Case06
     dw RunLinkSession4ScreenState_Case03_Case07
-    dw RunLinkSession4ScreenState_Case03_Case08
+    dw RunLinkSession4ScreenState_Case03_ToShowStringHL_Bank07AndStep
     dw RunLinkSession4ScreenState_Case03_Case09
     dw RunLinkSession4ScreenState_Case03_Case0A
     dw RunLinkSession4ScreenState_Case03_Case0B
@@ -5888,7 +5888,7 @@ Jump_007_713C:: ; address name
 ; entry 8 of the `rst $00` table in RunLinkSession4ScreenState_Case03
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case03_Case08::
+RunLinkSession4ScreenState_Case03_ToShowStringHL_Bank07AndStep::
 Jump_007_7153:: ; address name
     ld hl, $0306
     call ShowStringHL_Bank07
@@ -7083,7 +7083,7 @@ Jump_007_7864:: ; address name
     dw RunLinkSession4ScreenState_Case04_Case07
     dw RunLinkSession4ScreenState_Case04_Case08
     dw RunLinkSession4ScreenState_Case04_Case09
-    dw RunLinkSession4ScreenState_Case04_Case0A
+    dw RunLinkSession4ScreenState_Case04_AdvanceLinkScreenSubState
     dw RunLinkSession4ScreenState_Case04_Case0B
 
 ; entry 0 of the `rst $00` table in RunLinkSession4ScreenState_Case04
@@ -7340,7 +7340,7 @@ Jump_007_79CF:: ; address name
 ; entry 10 of the `rst $00` table in RunLinkSession4ScreenState_Case04
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wLinkScreenSubState
-RunLinkSession4ScreenState_Case04_Case0A::
+RunLinkSession4ScreenState_Case04_AdvanceLinkScreenSubState::
 Jump_007_79E4:: ; address name
     ld hl, wLinkScreenSubState
     inc [hl]

@@ -1323,11 +1323,22 @@ class Rom:
                 self.ram_use[(b, e)] = (list(reads), list(writes), list(ptrs))
 
     def name_trampoline_cases(self) -> None:
-        """E-0270: a structural routine (Parent_CaseNN / _SubNN / _SharedNN) whose whole body is one call or
-        far call and `ret`, or one `jp`, only forwards to that routine; it becomes Parent_To<Target>."""
+        """E-0270/E-0272: name structural routines (Parent_CaseNN / _SubNN / _SharedNN) of a few
+        single-purpose shapes after what their instructions do:
+          constant loads (ld a/b/c/d/e/hl/de/bc, n), one call or far call, an optional step increment
+          (ld hl, V / inc [hl], or ld a, [V] / inc a / ld [V], a), ret; or one jp   -> Parent_To<Target>[AndStep]
+          ld a, n / ld [V], a / ret                                                   -> Parent_Set<V>To<n>
+          a step increment of V, then ret                                             -> Parent_Advance<V>
+          ret                                                                         -> Parent_Return"""
         pat = re.compile(r"^(\w+?)_(?:Case|Sub|Shared)[0-9A-F]{2}$")
         used = {lab for b in range(self.nbanks) for lab in self.labels[b].values()}
         renamed = 0
+
+        def stem(addr: int) -> str:
+            nm = self.sym_name(addr, True) or f"w{addr:04X}"
+            nm = re.sub(r"[^A-Za-z0-9]", "", nm.replace(" + $", "Plus"))
+            return nm[1:] if nm[:1] in "wh" else nm
+
         for b in range(self.nbanks):
             ins = self.insn[b]
             for a, lab in list(self.labels[b].items()):
@@ -1335,39 +1346,61 @@ class Rom:
                 if not m or (b, a) in self.config_name_keys or a not in ins or ins[a][0] == "dw":
                     continue
                 seq, pc = [], a
-                for _ in range(4):
+                for _ in range(12):
                     v = ins.get(pc)
-                    if not v or v[0] == "dw":
+                    if not v or v[0] == "dw" or (pc != a and pc in self.labels[b]):
                         break
-                    seq.append((pc, v))
-                    if v[2] in ("ret", "jp"):
+                    seq.append(v)
+                    if v[2] in ("ret", "jp", "jr", "jrc", "jpc", "callc", "retc") or v[1].startswith(("jr ", "jp ", "ret ")):
                         break
                     pc += v[0]
-                target = None
-                kinds = [v[2] for _, v in seq]
-                if kinds[:2] == ["call", "ret"] and seq[0][1][3] is not None:
-                    target = self.resolve(b, seq[0][1][3])
-                elif kinds[:1] == ["jp"] and seq[0][1][3] is not None:
-                    target = self.resolve(b, seq[0][1][3])
-                elif len(seq) == 4 and seq[2][1][1] == "rst $10" and kinds[3] == "ret":
-                    hl = next((re.match(r"ld hl, \$([0-9A-F]{4})$", v[1]) for _, v in seq[:2]
-                               if v[1].startswith("ld hl,")), None)
-                    bb = next((re.match(r"ld b, \$([0-9A-F]{2})$", v[1]) for _, v in seq[:2]
-                               if v[1].startswith("ld b,")), None)
-                    if hl and bb:
-                        target = (int(bb.group(1), 16), int(hl.group(1), 16))
-                if not target or not 0 <= target[0] < self.nbanks:
+                if not seq or seq[-1][2] not in ("ret", "jp") or seq[-1][1].startswith(("ret ", "jp ")) and "," in seq[-1][1]:
                     continue
-                tname = self.labels[target[0]].get(target[1])
-                if not tname or tname.startswith(("Func_", "Jump_")) or pat.match(tname) and tname.startswith(m.group(1)):
+                texts = [v[1] for v in seq]
+                parent, new = m.group(1), None
+                if texts == ["ret"]:
+                    new = f"{parent}_Return"
+                elif len(seq) == 3 and re.match(r"ld a, \$([0-9A-F]{2})$", texts[0]) and \
+                        (mv := re.match(r"ld \[\$([0-9A-F]{4})\], a$", texts[1])) and texts[2] == "ret":
+                    new = f"{parent}_Set{stem(int(mv.group(1), 16))}To{texts[0][-2:]}"
+                else:
+                    body = texts[:-1] if seq[-1][2] == "ret" else texts
+                    step = None
+                    if len(body) >= 2 and (mh := re.match(r"ld hl, \$([0-9A-F]{4})$", body[-2])) and body[-1] == "inc [hl]":
+                        step, body = int(mh.group(1), 16), body[:-2]
+                    elif len(body) >= 3 and (m1 := re.match(r"ld a, \[\$([0-9A-F]{4})\]$", body[-3])) and body[-2] == "inc a" \
+                            and body[-1] == f"ld [${m1.group(1)}], a":
+                        step, body = int(m1.group(1), 16), body[:-3]
+                    if step is not None and not body:
+                        new = f"{parent}_Advance{stem(step)}"
+                    else:
+                        loads = [t for t in body if re.match(r"ld (a|b|c|d|e|hl|de|bc), \$[0-9A-F]+$", t)]
+                        rest = [t for t in body if t not in loads]
+                        target = None
+                        if len(rest) == 1 and rest[0].startswith(("call ", "jp ")):
+                            v = next(v for v in seq if v[1] == rest[0])
+                            if v[3] is not None and (rest[0].startswith("call ") or seq[-1] is v):
+                                target = self.resolve(b, v[3])
+                        elif rest == ["rst $10"]:
+                            hl = next((re.match(r"ld hl, \$([0-9A-F]{4})$", t) for t in loads if t.startswith("ld hl,")), None)
+                            bb = next((re.match(r"ld b, \$([0-9A-F]{2})$", t) for t in loads if t.startswith("ld b,")), None)
+                            if hl and bb:
+                                target = (int(bb.group(1), 16), int(hl.group(1), 16))
+                        if target and 0 <= target[0] < self.nbanks:
+                            tname = self.labels[target[0]].get(target[1])
+                            if tname and not tname.startswith(("Func_", "Jump_")) and not (
+                                    pat.match(tname) and tname.startswith(parent)):
+                                new = f"{parent}_To{tname}" + ("AndStep" if step is not None else "")
+                if not new or len(new) > 80:
                     continue
-                new = f"{m.group(1)}_To{tname}"
-                if new in used or len(new) > 80:
-                    continue
+                if new in used:
+                    new = f"{new}_{lab[len(parent) + 1:]}"  # keep the case number when the name repeats
+                    if new in used:
+                        continue
                 used.add(new)
                 self.labels[b][a] = new
                 renamed += 1
-        log(f"trampoline cases named after their target: {renamed}")
+        log(f"single-purpose structural routines named from their shape: {renamed}")
 
     def rename_address_prefixed_children(self) -> None:
         """E-0245: structural names (`_CaseNN`, `_SubNN`, `_SharedNN`) are derived before

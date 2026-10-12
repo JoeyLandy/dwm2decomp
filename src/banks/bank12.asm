@@ -8,13 +8,13 @@ Talk00Event1E::
 Func_012_4001:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1E_Case00
+    dw Talk00Event1E_ToStartMessageAAndStep
     dw Talk00Event1E_Case01
 
 ; entry 0 of the `rst $00` table in Talk00Event1E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event1E_Case00::
+Talk00Event1E_ToStartMessageAAndStep::
 Jump_012_4009:: ; address name
     ld a, $10
     call StartMessageA
@@ -29,7 +29,7 @@ Talk00Event1D::
 Func_012_4013:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event1D_Case00
+    dw Talk00Event1D_ToStartMessageAAndStep
     dw Talk00Event1E_Case01
 
 ; entry 1 of the `rst $00` table in Talk00Event1E
@@ -47,7 +47,7 @@ Jump_012_401B:: ; address name
 ; entry 0 of the `rst $00` table in Talk00Event1D
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event1D_Case00::
+Talk00Event1D_ToStartMessageAAndStep::
 Jump_012_4026:: ; address name
     ld a, $0F
     call StartMessageA
@@ -703,7 +703,7 @@ Func_012_43DA:: ; address name
     dw ArenaRounds_Case07
     dw ArenaRounds_Case08
     dw ArenaRounds_Case09
-    dw ArenaRounds_Case0A
+    dw ArenaRounds_ToStartArenaRankMessageAndStep
     dw ArenaRounds_Case03
     dw ArenaRounds_Case04
     dw ArenaRounds_Case0D
@@ -711,7 +711,7 @@ Func_012_43DA:: ; address name
     dw ArenaRounds_Case07
     dw ArenaRounds_Case08
     dw ArenaRounds_Case09
-    dw ArenaRounds_Case12
+    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12
     dw ArenaRounds_Case03
     dw ArenaRounds_Case04
     dw ArenaRounds_Case15
@@ -865,7 +865,7 @@ Func_012_44DB:: ; address name
     dw ArenaRounds_Case07
     dw ArenaRounds_Case08
     dw ArenaRounds_Case09
-    dw ArenaRounds_Case0A
+    dw ArenaRounds_ToStartArenaRankMessageAndStep
     dw ArenaRounds_Case03
     dw ArenaRounds_Case04
     dw ArenaGridBattle_Case0E
@@ -873,7 +873,7 @@ Func_012_44DB:: ; address name
     dw ArenaRounds_Case07
     dw ArenaRounds_Case08
     dw ArenaRounds_Case09
-    dw ArenaRounds_Case12
+    dw ArenaRounds_ToStartArenaRankMessageAndStep_Case12
     dw ArenaRounds_Case03
     dw ArenaRounds_Case04
     dw ArenaGridBattle_Case16
@@ -969,7 +969,7 @@ Jump_012_4587:: ; address name
 ; entry 18 of the `rst $00` table in ArenaRounds
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ArenaRounds_Case12::
+ArenaRounds_ToStartArenaRankMessageAndStep_Case12::
 Jump_012_4595:: ; address name
     ld a, $06
     call StartArenaRankMessage
@@ -1004,7 +1004,7 @@ Jump_012_45BF::
 ; entry 10 of the `rst $00` table in ArenaRounds
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-ArenaRounds_Case0A::
+ArenaRounds_ToStartArenaRankMessageAndStep::
 Jump_012_45CC:: ; address name
     ld a, $04
     call StartArenaRankMessage
@@ -1524,7 +1524,7 @@ Func_012_4919:: ; address name
     dw Talk00Event21_Case03
     dw Talk00Event21_Case03
     dw Talk00Event21_Case0D
-    dw Talk00Event21_Case0E
+    dw Talk00Event21_ToStartMessageAAndStep
     dw Talk00Event21_Case0F
     dw Talk00Event21_Case01
     dw Talk00Event21_Case03
@@ -1574,7 +1574,7 @@ Func_012_4965:: ; address name
     dw Talk00Event21_Case03
     dw Talk00Event21_Case03
     dw Talk00Event21_Case0D
-    dw Talk00Event21_Case0E
+    dw Talk00Event21_ToStartMessageAAndStep
     dw Talk00Event21_Case0F
     dw Talk00Event21_Case01
     dw Talk00Event21_Case03
@@ -1677,7 +1677,7 @@ Func_012_4A1E:: ; address name
     dw Talk00Event21_Case03
     dw Talk00Event21_Case03
     dw Talk00Event21_Case0D
-    dw Talk00Event21_Case0E
+    dw Talk00Event21_ToStartMessageAAndStep
     dw Talk00Event21_Case0F
     dw Talk00Event17_Case11
     dw Talk00Event21_Case03
@@ -1981,7 +1981,7 @@ Func_012_4C07:: ; address name
     dw Talk00Event21_Case03
     dw Talk00Event21_Case03
     dw Talk00Event21_Case0D
-    dw Talk00Event21_Case0E
+    dw Talk00Event21_ToStartMessageAAndStep
     dw Talk00Event21_Case0F
     dw Talk00Event21_Case01
     dw Talk00Event21_Case03
@@ -2073,7 +2073,7 @@ Jump_012_4CA0:: ; address name
 ; entry 14 of the `rst $00` table in Talk00Event21
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event21_Case0E::
+Talk00Event21_ToStartMessageAAndStep::
 Jump_012_4CAA:: ; address name
     ld a, $0E
     call StartMessageA
@@ -2813,7 +2813,7 @@ Talk00Event0A::
 Func_012_50B3:: ; address name
     ld a, [wScriptStep]
     rst $00
-    dw Talk00Event0A_Case00
+    dw Talk00Event0A_ToStartMessageAAndStep
     dw Talk00Event0A_Case01
     dw Talk00Event0A_Case02
 
@@ -2846,7 +2846,7 @@ Jump_012_50D1:: ; address name
 ; entry 0 of the `rst $00` table in Talk00Event0A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScriptStep
-Talk00Event0A_Case00::
+Talk00Event0A_ToStartMessageAAndStep::
 Jump_012_50DB:: ; address name
     ld a, $12
     call StartMessageA
@@ -5780,12 +5780,12 @@ Func_012_63A1:: ; address name
     dw Talk00Event0F_Case02
     dw Talk00Event0F_Case03
     dw Talk00Event0F_Case04
-    dw Talk00Event0F_Case05
+    dw Talk00Event0F_SetScriptStartRequestTo80
 
 ; entry 5 of the `rst $00` table in Talk00Event0F
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScriptStartRequest
-Talk00Event0F_Case05::
+Talk00Event0F_SetScriptStartRequestTo80::
 Jump_012_63B1:: ; address name
     ld a, $80
     ld [wScriptStartRequest], a
@@ -6607,7 +6607,7 @@ Func_012_6813:: ; address name
     ret
 
 ; wMessageIndex = A, wMessageState = 0: the next RunMessageBox call opens the window and shows that string of the group already in wMessageGroup (E-0063, E-0079)
-; 35 call sites from 15 routines (e.g. Talk00Event0A_Case00, Talk00Event1E_Case00, Talk00Event1D_Case00, StartArenaRankMessage, ...)
+; 35 call sites from 15 routines (e.g. Talk00Event0A_ToStartMessageAAndStep, Talk00Event1E_ToStartMessageAAndStep, Talk00Event1D_ToStartMessageAAndStep, StartArenaRankMessage, ...)
 ; writes: wMessageIndex, wMessageState
 StartMessageA::
 Func_012_6820:: ; address name

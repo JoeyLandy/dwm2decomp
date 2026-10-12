@@ -854,10 +854,10 @@ Jump_033_523B::
     ret nz
     ld a, [wScreenState]
     rst $00
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case00
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_AdvanceScreenState
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case01
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case03
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_AdvanceScreenState_Case03
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case06
@@ -1392,7 +1392,7 @@ Func_033_5550:: ; address name
 ; entry 0 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenState
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case00::
+RunLinkSession6Exchange_Case01_Sub01_Table2_AdvanceScreenState::
 Jump_033_555F:: ; address name
     ld hl, wScreenState
     inc [hl]
@@ -1522,7 +1522,7 @@ Jump_033_55C8::
 ; entry 3 of the `rst $00` table in Func_033_5215
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenState
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case03::
+RunLinkSession6Exchange_Case01_Sub01_Table2_AdvanceScreenState_Case03::
 Jump_033_55E0:: ; address name
     ld hl, wScreenState
     inc [hl]
@@ -2553,8 +2553,8 @@ Jump_033_5C4F:: ; address name
     ld a, [wScreenStep]
     rst $00
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case00
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_AdvanceScreenStep
+    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_AdvanceScreenStep
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case04
     dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05
@@ -2596,7 +2596,7 @@ Jump_033_5C63:: ; address name
 ; entry 1 of the `rst $00` table in Func_033_5215_Table2_Case0E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01::
+RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_AdvanceScreenStep::
 Jump_033_5CA7:: ; address name
     ld hl, wScreenStep
     inc [hl]

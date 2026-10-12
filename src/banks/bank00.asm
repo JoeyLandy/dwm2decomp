@@ -376,7 +376,7 @@ Func_000_0355:: ; address name
     dw RunGameModeInit_ToGameMode0_Init
     dw RunGameModeInit_ToGameMode1_Init
     dw RunGameModeInit_ToGameMode2_Init
-    dw RunGameModeInit_Case03
+    dw RunGameModeInit_Return
     dw RunGameModeInit_ToGameMode4_Init
     dw RunGameModeInit_ToGameMode5_Init
     dw RunGameModeInit_ToGameMode6_Init
@@ -406,7 +406,7 @@ Jump_000_0379:: ; address name
 
 ; entry 3 of the `rst $00` table in RunGameModeInit
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeInit_Case03::
+RunGameModeInit_Return::
 Jump_000_0380:: ; address name
     ret
 
@@ -608,7 +608,7 @@ Jump_000_049E::
     dw RunGameModeUpdate_ToGameMode0_Update
     dw RunGameModeUpdate_ToGameMode1_Update
     dw RunGameModeUpdate_ToGameMode2_Update
-    dw RunGameModeUpdate_Case03
+    dw RunGameModeUpdate_Return
     dw RunGameModeUpdate_ToGameMode4_Update
     dw RunGameModeUpdate_ToGameMode5_Update
     dw RunGameModeUpdate_ToGameMode6_Update
@@ -638,7 +638,7 @@ Jump_000_04C2:: ; address name
 
 ; entry 3 of the `rst $00` table in RunGameModeUpdate
 ; no direct call (reached through a table, a jump or a vector)
-RunGameModeUpdate_Case03::
+RunGameModeUpdate_Return::
 Jump_000_04C9:: ; address name
     ret
 

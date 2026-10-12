@@ -200,7 +200,7 @@ Jump_014_412B:: ; address name
     rst $00
     dw HibernateMenu_Case01_ToSetupTileMap6D84AtBGMap1
     dw HibernateMenu_Case01_Case01
-    dw HibernateMenu_Case01_Case02
+    dw HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep
     dw HibernateMenu_Case01_Case03
 
 ; entry 0 of the `rst $00` table in HibernateMenu_Case01
@@ -228,7 +228,7 @@ Jump_014_413E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-HibernateMenu_Case01_Case02::
+HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep::
 Jump_014_414F:: ; address name
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]

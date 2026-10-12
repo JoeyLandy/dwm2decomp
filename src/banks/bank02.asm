@@ -2425,18 +2425,18 @@ Func_002_4F4C:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Return
+    dw FieldModeStateDispatch_Case05_Sub01_Return
+    dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Case03
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
-    dw FieldModeStateDispatch_Case05_Sub01_Case00
+    dw FieldModeStateDispatch_Case05_Sub01_Return
+    dw FieldModeStateDispatch_Case05_Sub01_Return
+    dw FieldModeStateDispatch_Case05_Sub01_Return
     dw FieldModeStateDispatch_Case05_Sub01_Case07
 
 ; entry 0 of the `rst $00` table in Func_002_4F4C
 ; no direct call (reached through a table, a jump or a vector)
-FieldModeStateDispatch_Case05_Sub01_Case00::
+FieldModeStateDispatch_Case05_Sub01_Return::
 Jump_002_4F7E:: ; address name
     ret
 
@@ -2621,7 +2621,7 @@ Func_002_5074:: ; address name
     ld a, [wFieldEventKind]
     and a, $0F
     rst $00
-    dw RunFieldEventFieldEventKind_Case00
+    dw RunFieldEventFieldEventKind_Return
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_Case03
@@ -2654,7 +2654,7 @@ Jump_002_50A9:: ; address name
 
 ; entry 0 of the `rst $00` table in RunFieldEventFieldEventKind
 ; no direct call (reached through a table, a jump or a vector)
-RunFieldEventFieldEventKind_Case00::
+RunFieldEventFieldEventKind_Return::
 Jump_002_50AD:: ; address name
     ret
 
@@ -5238,7 +5238,7 @@ Jump_002_609D::
     dw PlayMapMusic_Case00
     dw PlayMapMusic_Case00
     dw PlayMapMusic_Case00
-    dw PlayMapMusic_Case1C
+    dw PlayMapMusic_Return
     dw PlayMapMusic_Case1D
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -5528,7 +5528,7 @@ Jump_002_62D5:: ; address name
 
 ; entry 28 of the `rst $00` table in PlayMapMusic
 ; no direct call (reached through a table, a jump or a vector)
-PlayMapMusic_Case1C::
+PlayMapMusic_Return::
 Jump_002_62DA:: ; address name
     ret
 
@@ -7000,13 +7000,13 @@ Jump_002_6C46::
     dw RunMenuStateMenuState_Case03
     dw RunMenuStateMenuState_Case04
     dw RunMenuStateMenuState_Case05
-    dw RunMenuStateMenuState_Case06
-    dw RunMenuStateMenuState_Case06
-    dw RunMenuStateMenuState_Case06
+    dw RunMenuStateMenuState_Return
+    dw RunMenuStateMenuState_Return
+    dw RunMenuStateMenuState_Return
 
 ; entry 6 of the `rst $00` table in RunMenuStateMenuState
 ; no direct call (reached through a table, a jump or a vector)
-RunMenuStateMenuState_Case06::
+RunMenuStateMenuState_Return::
 Jump_002_6C5E:: ; address name
     ret
 

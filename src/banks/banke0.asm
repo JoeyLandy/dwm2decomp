@@ -1517,7 +1517,7 @@ Jump_0E0_4AF8::
     ld [wDebugState], a
     xor a, a
     ld [wDebugSubState], a
-    call DrawHexByteAtBGMap8A_Sub02
+    call DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM
     call DrawSlotStatusBitsDebug
     xor a, a
     ld [wDebugCounter], a
@@ -2261,7 +2261,7 @@ Func_0E0_50FD:: ; address name
 
 ; only called from DrawHexByteAtBGMap8A (E-0047)
 ; 1 call site from 1 routine (e.g. DrawHexByteAtBGMap8A)
-DrawHexByteAtBGMap8A_Sub02::
+DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM::
 Func_0E0_510C:: ; address name
     ld hl, vBGMap0
     ld de, $53EB

@@ -754,7 +754,7 @@ Func_061_4472:: ; address name
     and a, $07
     rst $00
     dw LoadMapScreen_Sub03_Case00
-    dw LoadMapScreen_Sub03_Case01
+    dw LoadMapScreen_Sub03_Return
     dw LoadMapScreen_Sub03_Case02
     dw LoadMapScreen_Sub03_Case03
     dw LoadMapScreen_Sub03_Case03
@@ -1622,7 +1622,7 @@ Data_061_4818:: ; address name
 
 ; entry 1 of the `rst $00` table in Func_061_4472
 ; no direct call (reached through a table, a jump or a vector)
-LoadMapScreen_Sub03_Case01::
+LoadMapScreen_Sub03_Return::
 Jump_061_5418:: ; address name
     ret
     db $C9
@@ -2626,14 +2626,14 @@ Func_061_596F:: ; address name
     dw CheckWarpsByMapType_ToReturnStub_5CCF
     dw CheckWarpsByMapType_Case02
     dw CheckWarpsByMapType_Case03
-    dw CheckWarpsByMapType_Case04
+    dw CheckWarpsByMapType_Return
     dw CheckWarpsByMapType_Case05
     dw CheckWarpsByMapType_Case06
-    dw CheckWarpsByMapType_Case04
+    dw CheckWarpsByMapType_Return
 
 ; entry 4 of the `rst $00` table in CheckWarpsByMapType
 ; no direct call (reached through a table, a jump or a vector)
-CheckWarpsByMapType_Case04::
+CheckWarpsByMapType_Return::
 Jump_061_5985:: ; address name
     ret
 

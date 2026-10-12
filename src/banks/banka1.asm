@@ -1308,7 +1308,7 @@ Func_0A1_4744:: ; address name
     ld a, [wMapType]
     and a, $07
     rst $00
-    dw RunGameMode2MapTypeState_Case00
+    dw RunGameMode2MapTypeState_Return
     dw RunGameMode2MapTypeState_Case01
     dw RunGameMode2MapTypeState_Case01
     dw RunGameMode2MapTypeState_Case03
@@ -1319,7 +1319,7 @@ Func_0A1_4744:: ; address name
 
 ; entry 0 of the `rst $00` table in RunGameMode2MapTypeState
 ; no direct call (reached through a table, a jump or a vector)
-RunGameMode2MapTypeState_Case00::
+RunGameMode2MapTypeState_Return::
 Jump_0A1_475A:: ; address name
     ret
 

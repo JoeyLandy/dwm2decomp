@@ -1107,9 +1107,9 @@ Func_003_4659:: ; address name
     ld a, [wPauseMenuScreen]
     rst $00
     dw RunPauseMenuScreen_Case00
-    dw RunPauseMenuScreen_Case01
+    dw RunPauseMenuScreen_AdvancePauseMenuScreen
     dw RunPauseMenuScreen_Case02
-    dw RunPauseMenuScreen_Case03
+    dw RunPauseMenuScreen_AdvancePauseMenuScreen_Case03
 
 ; entry 0 of the `rst $00` table in RunPauseMenuScreen
 ; no direct call (reached through a table, a jump or a vector)
@@ -1130,7 +1130,7 @@ Jump_003_4665:: ; address name
 ; entry 1 of the `rst $00` table in RunPauseMenuScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wPauseMenuScreen
-RunPauseMenuScreen_Case01::
+RunPauseMenuScreen_AdvancePauseMenuScreen::
 Jump_003_4677:: ; address name
     ld hl, wPauseMenuScreen
     inc [hl]
@@ -1153,7 +1153,7 @@ Jump_003_467C:: ; address name
 ; entry 3 of the `rst $00` table in RunPauseMenuScreen
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wPauseMenuScreen
-RunPauseMenuScreen_Case03::
+RunPauseMenuScreen_AdvancePauseMenuScreen_Case03::
 Jump_003_468D:: ; address name
     ld hl, wPauseMenuScreen
     inc [hl]
@@ -1185,7 +1185,7 @@ Jump_003_46A7:: ; address name
     dw PauseMenu_Main_Case00_Case00
     dw PauseMenu_Main_Case00_Case01
     dw PauseMenu_Main_Case00_Case02
-    dw PauseMenu_Main_Case00_Case03
+    dw PauseMenu_Main_Case00_Return
 
 ; entry 0 of the `rst $00` table in PauseMenu_Main_Case00
 ; no direct call (reached through a table, a jump or a vector)
@@ -1205,7 +1205,7 @@ Jump_003_46BF::
 
 ; entry 3 of the `rst $00` table in PauseMenu_Main_Case00
 ; no direct call (reached through a table, a jump or a vector)
-PauseMenu_Main_Case00_Case03::
+PauseMenu_Main_Case00_Return::
 Jump_003_46C3:: ; address name
     ret
 
@@ -6679,10 +6679,10 @@ Jump_003_6B67:: ; address name
     dw PauseMenu_State3_Case01_Case01
     dw PauseMenu_State3_Case01_Case02
     dw PauseMenu_State3_Case01_Case03
-    dw PauseMenu_State3_Case01_Case04
+    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep
     dw PauseMenu_State3_Case01_Case05
     dw PauseMenu_State3_Case01_Case06
-    dw PauseMenu_State3_Case01_Case07
+    dw PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07
     dw PauseMenu_State3_Case01_Case08
     dw PauseMenu_State3_Case01_Case09
     dw PauseMenu_State3_Case01_Case0A
@@ -6946,7 +6946,7 @@ Jump_003_6D29::
 ; entry 4 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_Case04::
+PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep::
 Jump_003_6D31:: ; address name
     call PauseMenu_State3_Shared04
     ld hl, wTemp1
@@ -7032,7 +7032,7 @@ Jump_003_6D90:: ; address name
 ; entry 7 of the `rst $00` table in PauseMenu_State3_Case01
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wTemp1
-PauseMenu_State3_Case01_Case07::
+PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07::
 Jump_003_6DA3:: ; address name
     call PauseMenu_State3_Shared04
     ld hl, wTemp1
@@ -8533,7 +8533,7 @@ Func_003_76C9:: ; address name
     ret
 
 ; only called from routines of PauseMenu_State3 (E-0098)
-; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0A, PauseMenu_State3_Case01_Case07, PauseMenu_State3_Case01_Case04)
+; 3 call sites from 3 routines (e.g. PauseMenu_State3_Case01_Case0A, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep_Case07, PauseMenu_State3_Case01_ToPauseMenu_State3_Shared04AndStep)
 ; reads: wSubMenuCursor
 PauseMenu_State3_Shared04::
 Func_003_76D5:: ; address name

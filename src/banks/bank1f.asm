@@ -2294,7 +2294,7 @@ Jump_01F_745C::
     ret
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3), then copies three tiles from bank $1F to vTiles1 + $7E0, + $7F0 and vTiles2 + $6F0 (E-0121; fill, not a tile map: E-0186)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case00, RunScreenStateWhenNotFading_F1_Case0D_Case00)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep, RunScreenStateWhenNotFading_F1_Case0D_ToClearBGMapAndLoadFrameTilesAndStep)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 ClearBGMapAndLoadFrameTiles::
 Func_01F_7494:: ; address name
@@ -2378,7 +2378,7 @@ Func_01F_74E3:: ; address name
     ret
 
 ; draws the tile rectangles Data_01F_6B4F (12 x 18 at scroll + 8) and Data_01F_6C27 (8 x 7 at scroll + $160) (E-0121)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case17, RunScreenStateWhenNotFading_F1_Case0D_Case17)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep, RunScreenStateWhenNotFading_F1_Case0D_ToDrawRects6B4FAnd6C27AndStep)
 ; writes: wArg5, wArg6, wArg1, wArg2, wArg3, wArg4, wArg7
 DrawRects6B4FAnd6C27::
 Func_01F_753A:: ; address name
@@ -2423,7 +2423,7 @@ Func_01F_753A:: ; address name
     ret
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles Data_01F_6C5F (12 x 18) and Data_01F_6D37 (8 x 7) (E-0127)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_Case18)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18, RunScreenStateWhenNotFading_F1_Case0D_ToClearTilesAndDrawRects6C5FAnd6D37AndStep)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth, wArg5, wArg6, wArg1, wArg2, ...
 ClearTilesAndDrawRects6C5FAnd6D37::
 Func_01F_7591:: ; address name

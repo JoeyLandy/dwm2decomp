@@ -7038,13 +7038,13 @@ Func_03A_6C93:: ; address name
     dw RunDefeatStepMinus1Step_Case00
     dw RunDefeatStepMinus1Step_Case01
     dw RunDefeatStepMinus1Step_Case02
-    dw RunDefeatStepMinus1Step_Case03
-    dw RunDefeatStepMinus1Step_Case03
-    dw RunDefeatStepMinus1Step_Case03
-    dw RunDefeatStepMinus1Step_Case03
-    dw RunDefeatStepMinus1Step_Case03
+    dw RunDefeatStepMinus1Step_Return
+    dw RunDefeatStepMinus1Step_Return
+    dw RunDefeatStepMinus1Step_Return
+    dw RunDefeatStepMinus1Step_Return
+    dw RunDefeatStepMinus1Step_Return
     dw RunDefeatStepMinus1Step_Case08
-    dw RunDefeatStepMinus1Step_Case03
+    dw RunDefeatStepMinus1Step_Return
 
 ; entry 0 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
@@ -7078,7 +7078,7 @@ Jump_03A_6CC2:: ; address name
 
 ; entry 3 of the `rst $00` table in RunDefeatStepMinus1Step
 ; no direct call (reached through a table, a jump or a vector)
-RunDefeatStepMinus1Step_Case03::
+RunDefeatStepMinus1Step_Return::
 Jump_03A_6CC6:: ; address name
     ret
 

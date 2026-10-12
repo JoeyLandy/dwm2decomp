@@ -186,12 +186,12 @@ Jump_024_414C::
     dw GameMode6_Update_Case03
     dw GameMode6_Update_Case04
     dw GameMode6_Update_Case05
-    dw GameMode6_Update_Case06
-    dw GameMode6_Update_Case06
-    dw GameMode6_Update_Case06
-    dw GameMode6_Update_Case06
-    dw GameMode6_Update_Case06
-    dw GameMode6_Update_Case06
+    dw GameMode6_Update_Return
+    dw GameMode6_Update_Return
+    dw GameMode6_Update_Return
+    dw GameMode6_Update_Return
+    dw GameMode6_Update_Return
+    dw GameMode6_Update_Return
     dw GameMode6_Update_Case0C
     dw GameMode6_Update_Case0D
     dw GameMode6_Update_Case0E
@@ -346,17 +346,17 @@ Jump_024_424D:: ; address name
     dw GameMode6_Update_Case02_Case00
     dw GameMode6_Update_Case02_Case01
     dw GameMode6_Update_Case02_Case02
-    dw GameMode6_Update_Case02_Case03
+    dw GameMode6_Update_Case02_ToShowStringAInDefaultWindow_Bank24AndStep
     dw GameMode6_Update_Case02_Case04
     dw GameMode6_Update_Case02_Case05
     dw GameMode6_Update_Case02_ToGameMode6_Update_Shared04
     dw GameMode6_Update_Case02_Case07
     dw GameMode6_Update_Case02_Case08
-    dw GameMode6_Update_Case02_Case09
+    dw GameMode6_Update_Case02_SetScreenStepTo05
     dw GameMode6_Update_Case02_Case0A
     dw GameMode6_Update_Case02_Case0B
     dw GameMode6_Update_Case02_Case0C
-    dw GameMode6_Update_Case02_Case0D
+    dw GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep
     dw GameMode6_Update_Case02_Case0E
     dw GameMode6_Update_Case02_Case0F
 
@@ -465,7 +465,7 @@ Jump_024_4309:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case02_Case03::
+GameMode6_Update_Case02_ToShowStringAInDefaultWindow_Bank24AndStep::
 Jump_024_4319:: ; address name
     ld a, $05
     call ShowStringAInDefaultWindow_Bank24
@@ -631,7 +631,7 @@ Jump_024_43F1::
 ; entry 9 of the `rst $00` table in GameMode6_Update_Case02
 ; no direct call (reached through a table, a jump or a vector)
 ; writes: wScreenStep
-GameMode6_Update_Case02_Case09::
+GameMode6_Update_Case02_SetScreenStepTo05::
 Jump_024_4432:: ; address name
     ld a, $05
     ld [wScreenStep], a
@@ -758,7 +758,7 @@ Data_024_44FE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case02_Case0D::
+GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep::
 Jump_024_450E:: ; address name
     call GameMode6_Update_Shared07
     ld a, [wScreenStep]
@@ -792,7 +792,7 @@ GameMode6_Update_Case03::
 Jump_024_452A:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case03_Case00
+    dw GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep
     dw GameMode6_Update_Case03_Case01
     dw GameMode6_Update_Case03_Case02
     dw GameMode6_Update_Case03_Case03
@@ -801,7 +801,7 @@ Jump_024_452A:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case03_Case00::
+GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep::
 Jump_024_4536:: ; address name
     call GameMode6_Update_Shared07
     ld a, [wScreenStep]
@@ -856,7 +856,7 @@ Jump_024_4567:: ; address name
     dw GameMode6_Update_Case04_ToBreedMenu
     dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case04_Case06
+    dw GameMode6_Update_Case04_AdvanceScreenStep
     dw GameMode6_Update_Case04_Case07
     dw GameMode6_Update_Case04_Case08
     dw GameMode6_Update_Case04_ToEggServiceMenu_Bank1B
@@ -883,7 +883,7 @@ Jump_024_458E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case04_Case06::
+GameMode6_Update_Case04_AdvanceScreenStep::
 Jump_024_4595:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -1212,8 +1212,8 @@ GameMode6_Update_Case05::
 Jump_024_47CF:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw GameMode6_Update_Case05_Case00
-    dw GameMode6_Update_Case05_Case01
+    dw GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep
+    dw GameMode6_Update_Case05_ToCopyRectTo20ByteRowsJp_Bank24AndStep
     dw GameMode6_Update_Case05_Case02
     dw GameMode6_Update_Case05_Case03
     dw GameMode6_Update_Case05_Case04
@@ -1229,7 +1229,7 @@ Jump_024_47CF:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case05_Case00::
+GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep::
 Jump_024_47EB:: ; address name
     call GameMode6_Update_Shared05
     ld a, [wScreenStep]
@@ -1241,7 +1241,7 @@ Jump_024_47EB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case05_Case01::
+GameMode6_Update_Case05_ToCopyRectTo20ByteRowsJp_Bank24AndStep::
 Jump_024_47F6:: ; address name
     ld de, TileRect_24_5B10
     ld hl, wWindowTileBuffer + $64
@@ -1582,7 +1582,7 @@ Jump_024_4A4C:: ; address name
 
 ; entry 6 of the `rst $00` table in GameMode6_Update
 ; no direct call (reached through a table, a jump or a vector)
-GameMode6_Update_Case06::
+GameMode6_Update_Return::
 Jump_024_4A5C:: ; address name
     ret
 
@@ -1841,7 +1841,7 @@ Jump_024_4C18:: ; address name
     dw GameMode6_Update_Case0F_Case02
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
-    dw GameMode6_Update_Case0F_Case05
+    dw GameMode6_Update_Case0F_AdvanceScreenStep
     dw GameMode6_Update_Case0F_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_Case0F_Case07
 
@@ -1951,7 +1951,7 @@ Jump_024_4CE3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-GameMode6_Update_Case0F_Case05::
+GameMode6_Update_Case0F_AdvanceScreenStep::
 Jump_024_4CEA:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -3048,7 +3048,7 @@ Func_024_5392:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_Case00, GameMode6_Update_Case0E_Case00)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case05_ToGameMode6_Update_Shared05AndStep, GameMode6_Update_Case0E_Case00)
 ; writes: wTextWindowTileLo, wTextWindowTileHi, wTextWindowRows, wTextWindowWidth
 GameMode6_Update_Shared05::
 Func_024_53A0:: ; address name
@@ -3566,7 +3566,7 @@ Func_024_567C:: ; address name
     ret
 
 ; only called from routines of GameMode6_Update (E-0098)
-; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_Case0D, GameMode6_Update_Case03_Case00)
+; 2 call sites from 2 routines (e.g. GameMode6_Update_Case02_ToGameMode6_Update_Shared07AndStep, GameMode6_Update_Case03_ToGameMode6_Update_Shared07AndStep)
 ; reads: wRecordBufB, wBattleScene, wIsCGB, wRecordBufA
 ; writes: hTemp0, hTemp1, wObject2, wSpriteSlotCount, wOBJPaletteUploadRequest, wObject5
 ; points at: wSpriteSlots, wObject1, hTemp0, wObject2

@@ -4269,7 +4269,7 @@ Func_032_5A3A:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
     dw RunDefeatSequence_Case00
-    dw RunDefeatSequence_Case01
+    dw RunDefeatSequence_ToBlankTargetMonsterPictureAndStep
     dw RunDefeatSequence_Case02
 
 ; entry 0 of the `rst $00` table in RunDefeatSequence
@@ -4292,7 +4292,7 @@ Jump_032_5A44:: ; address name
 ; entry 1 of the `rst $00` table in RunDefeatSequence
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep2
-RunDefeatSequence_Case01::
+RunDefeatSequence_ToBlankTargetMonsterPictureAndStep::
 Jump_032_5A5B:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
@@ -4362,7 +4362,7 @@ Jump_032_5AA9::
     ret
 
 ; for the target's picture slot fills $24 tiles at vTiles2 + $140, $380 or $5C0 with the pattern $FF, $00 (E-0127)
-; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_Case01, RunBattleActions_Case00_Sub01_Case09_Case00, RunDefeatSequence_Case01, RunBattleSubStep2_66F1_Case01, ...)
+; 11 call sites from 11 routines (e.g. RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep, RunBattleActions_Case00_Sub01_Case09_Case00, RunDefeatSequence_ToBlankTargetMonsterPictureAndStep, RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep, ...)
 ; reads: wLinkMode, wLinkRole, wBattleTarget, rSTAT
 BlankTargetMonsterPicture::
 Func_032_5AB3:: ; address name
@@ -4948,9 +4948,9 @@ Func_032_5EAB:: ; address name
     dw ResolveStep0EEffect_Case03
     dw ResolveStep0EEffect_Case04
     dw ResolveStep0EEffect_Case05
-    dw ResolveStep0EEffect_Case06
-    dw ResolveStep0EEffect_Case06
-    dw ResolveStep0EEffect_Case06
+    dw ResolveStep0EEffect_Return
+    dw ResolveStep0EEffect_Return
+    dw ResolveStep0EEffect_Return
     dw ResolveStep0EEffect_Case09
 
 ; entry 0 of the `rst $00` table in ResolveStep0EEffect
@@ -5370,7 +5370,7 @@ Func_032_618A:: ; address name
     ld a, [wEffectSubStep]
     rst $00
     dw RunEffectSubStep_618A_Case00
-    dw RunEffectSubStep_618A_Case01
+    dw RunEffectSubStep_618A_ToBlankTargetMonsterPictureAndStep
     dw RunEffectSubStep_618A_Case02
 
 ; entry 0 of the `rst $00` table in RunEffectSubStep_618A
@@ -5391,7 +5391,7 @@ Jump_032_6194:: ; address name
 ; entry 1 of the `rst $00` table in RunEffectSubStep_618A
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunEffectSubStep_618A_Case01::
+RunEffectSubStep_618A_ToBlankTargetMonsterPictureAndStep::
 Jump_032_61A9:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5544,7 +5544,7 @@ Func_032_627C:: ; address name
     ld a, [wEffectSubStep]
     rst $00
     dw ResolveStep0EEffect_Case04_Case02_Sub01_Case00
-    dw ResolveStep0EEffect_Case04_Case02_Sub01_Case01
+    dw ResolveStep0EEffect_Case04_Case02_Sub01_ToBlankTargetMonsterPictureAndStep
     dw ResolveStep0EEffect_Case04_Case02_Sub01_Case02
 
 ; entry 0 of the `rst $00` table in Func_032_627C
@@ -5565,7 +5565,7 @@ Jump_032_6286:: ; address name
 ; entry 1 of the `rst $00` table in Func_032_627C
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-ResolveStep0EEffect_Case04_Case02_Sub01_Case01::
+ResolveStep0EEffect_Case04_Case02_Sub01_ToBlankTargetMonsterPictureAndStep::
 Jump_032_629B:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5774,7 +5774,7 @@ Func_032_63C2:: ; address name
     ld a, [wEffectSubStep]
     rst $00
     dw RunEffectSubStep_63C2_Case00
-    dw RunEffectSubStep_63C2_Case01
+    dw RunEffectSubStep_63C2_ToBlankTargetMonsterPictureAndStep
     dw RunEffectSubStep_63C2_Case02
 
 ; entry 0 of the `rst $00` table in RunEffectSubStep_63C2
@@ -5795,7 +5795,7 @@ Jump_032_63CC:: ; address name
 ; entry 1 of the `rst $00` table in RunEffectSubStep_63C2
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunEffectSubStep_63C2_Case01::
+RunEffectSubStep_63C2_ToBlankTargetMonsterPictureAndStep::
 Jump_032_63E1:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5860,7 +5860,7 @@ Jump_032_642E::
 
 ; entry 6 of the `rst $00` table in ResolveStep0EEffect
 ; no direct call (reached through a table, a jump or a vector)
-ResolveStep0EEffect_Case06::
+ResolveStep0EEffect_Return::
 Jump_032_643C:: ; address name
     ret
 
@@ -6023,7 +6023,7 @@ Func_032_652E:: ; address name
     ld a, [wEffectSubStep]
     rst $00
     dw RunEffectSubStep_652E_Case00
-    dw RunEffectSubStep_652E_Case01
+    dw RunEffectSubStep_652E_ToBlankTargetMonsterPictureAndStep
     dw RunEffectSubStep_652E_Case02
 
 ; entry 0 of the `rst $00` table in RunEffectSubStep_652E
@@ -6044,7 +6044,7 @@ Jump_032_6538:: ; address name
 ; entry 1 of the `rst $00` table in RunEffectSubStep_652E
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wEffectSubStep
-RunEffectSubStep_652E_Case01::
+RunEffectSubStep_652E_ToBlankTargetMonsterPictureAndStep::
 Jump_032_654D:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -6338,7 +6338,7 @@ Func_032_66F1:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
     dw RunBattleSubStep2_66F1_Case00
-    dw RunBattleSubStep2_66F1_Case01
+    dw RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep
     dw RunBattleSubStep2_66F1_Case02
 
 ; entry 0 of the `rst $00` table in RunBattleSubStep2_66F1
@@ -6359,7 +6359,7 @@ Jump_032_66FB:: ; address name
 ; entry 1 of the `rst $00` table in RunBattleSubStep2_66F1
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep2
-RunBattleSubStep2_66F1_Case01::
+RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep::
 Jump_032_6710:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
@@ -6430,7 +6430,7 @@ Func_032_6764:: ; address name
     ld a, [wBattleSubStep2]
     rst $00
     dw RunBattleSubStep2_6764_Case00
-    dw RunBattleSubStep2_6764_Case01
+    dw RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep
     dw RunBattleSubStep2_6764_Case02
 
 ; entry 0 of the `rst $00` table in RunBattleSubStep2_6764
@@ -6453,7 +6453,7 @@ Jump_032_676E:: ; address name
 ; entry 1 of the `rst $00` table in RunBattleSubStep2_6764
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wBattleSubStep2
-RunBattleSubStep2_6764_Case01::
+RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep::
 Jump_032_6785:: ; address name
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2

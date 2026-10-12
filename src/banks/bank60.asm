@@ -47,7 +47,7 @@ Func_060_4035:: ; address name
     call DebugAutomap_Update_Sub01_Sub01_Sub05
     call DebugAutomap_Update_Sub01_Sub01_Sub04
     call DebugAutomap_Update_Sub01_Sub01_Sub06
-    call DebugAutomap_Update_Sub01_Sub01_Sub07
+    call DebugAutomap_Update_Sub01_Sub01_Return
     call DebugAutomap_Update_Sub01_Sub01_Sub09
     or a, a
     jr nz, DebugAutomap_Update_Sub01_Sub01
@@ -2131,7 +2131,7 @@ Jump_060_50E0::
 
 ; only called from DebugAutomap_Update_Sub01_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. DebugAutomap_Update_Sub01_Sub01)
-DebugAutomap_Update_Sub01_Sub01_Sub07::
+DebugAutomap_Update_Sub01_Sub01_Return::
 Func_060_50E4:: ; address name
     ret
 

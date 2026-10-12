@@ -2,7 +2,7 @@ SECTION "Bank 15", ROMX[$4000], BANK[$15]
     db $15
 
 ; implements script command type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode; reached through ScriptCommandEE in bank $10 (E-0038, E-0244)
-; 4 call sites from 4 routines (e.g. CloseRenameMenu_ToCloseBreedMenu, ScriptCommandEE, CloseMenuE9_ToCloseBreedMenu, CloseMenuE9_Case03)
+; 4 call sites from 4 routines (e.g. CloseRenameMenu_ToCloseBreedMenu, ScriptCommandEE, CloseMenuE9_ToCloseBreedMenu, CloseMenuE9_ToCloseBreedMenu_Case03)
 ; reads: wScreenList
 CloseBreedMenu::
 Func_015_4001:: ; address name
@@ -381,7 +381,7 @@ Jump_015_422B:: ; address name
     dw BreedMenu_Case04_Case0C
     dw BreedMenu_Case04_Case0D
     dw BreedMenu_Case04_Case0E
-    dw BreedMenu_Case04_Case0F
+    dw BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep
     dw BreedMenu_Case04_Case10
     dw BreedMenu_Case04_Case11
     dw BreedMenu_Case04_Case12
@@ -391,7 +391,7 @@ Jump_015_422B:: ; address name
     dw BreedMenu_Case04_Case16
     dw BreedMenu_Case04_Case03
     dw DrawListEntriesCell5IconAndLevelAndStep
-    dw BreedMenu_Case04_Case19
+    dw BreedMenu_Case04_ToClearThreeTileRowsAndStep
     dw DrawListEntriesCell5RecordNamesAndStep
     dw BreedMenu_Case04_Case1B
     dw BreedMenu_Case04_Case1C
@@ -827,7 +827,7 @@ Jump_015_4570:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case0F::
+BreedMenu_Case04_ToCopyRectTo20ByteRows_Bank15AndStep::
 Jump_015_45A5:: ; address name
     ld de, Data_015_7505
     ld hl, wWindowTileBuffer + $10C
@@ -1116,7 +1116,7 @@ Func_015_4771:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case04_Case19::
+BreedMenu_Case04_ToClearThreeTileRowsAndStep::
 Jump_015_479C:: ; address name
     call ClearThreeTileRows
     ld a, [wScreenStep]
@@ -2518,7 +2518,7 @@ Jump_015_50D1:: ; address name
     dw BreedMenu_Case05_Case07
     dw BreedMenu_Case05_Case08
     dw BreedMenu_Case04_Case0B
-    dw BreedMenu_Case05_Case0A
+    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case05_Case0B
     dw BreedMenu_Case04_Case0E
     dw BreedMenu_Case05_Case0D
@@ -2872,7 +2872,7 @@ Jump_015_5358:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-BreedMenu_Case05_Case0A::
+BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
 Jump_015_5376:: ; address name
     ld hl, TileCopyDestList_15_72E1
     ld de, TileCopySrcList_15_72F1
@@ -3386,7 +3386,7 @@ Jump_015_56B0:: ; address name
     dw BreedMenu_Case07_Case13
     dw BreedMenu_Case07_Case14
     dw BreedMenu_Case07_Case15
-    dw BreedMenu_Case05_Case0A
+    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case05_Case0B
     dw BreedMenu_Case04_Case0E
     dw BreedMenu_Case07_Case19
@@ -5080,7 +5080,7 @@ Jump_015_625C:: ; address name
     dw DrawPair72A9And72C5AndStep
     dw BreedMenu_Case12_Case03
     dw BreedMenu_Case12_Case04
-    dw BreedMenu_Case05_Case0A
+    dw BreedMenu_Case05_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_Case12_ToDrawRecordListPageNames
     dw BreedMenu_Case12_Case07
     dw BreedMenu_Case04_Case1C
@@ -5410,7 +5410,7 @@ Jump_015_644D::
     ret
 
 ; copies the 20 x 11 rectangle Data_015_70C5 into wC364, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119)
-; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, KeyAppraisalMenu_Case03_Case09, RunLinkSession8Exchange_Case01_Sub01_Table4_Case01)
+; 3 call sites from 3 routines (e.g. DrawRect70C5IfLinkModeAndStep, KeyAppraisalMenu_Case03_ToCopyRect70C5ToWC364AndDrawAndStep, RunLinkSession8Exchange_Case01_Sub01_Table4_ToCopyRect70C5ToWC364AndDrawAndStep)
 CopyRect70C5ToWC364AndDraw::
 Func_015_645F:: ; address name
     ld de, TileRect_15_70C5
@@ -6488,7 +6488,7 @@ Func_015_69C6:: ; address name
     ret
 
 ; clears 4 tiles at vTiles2 + $7C0, 3 at vTiles1 + $400 and 2 at vTiles1 + $4A0 (FillTilesBxC); falls through (E-0122)
-; 3 call sites from 3 routines (e.g. BreedMenu_Case04_Case19, BreedMenu_Case04_Case14, BreedMenu_Case12_Case04)
+; 3 call sites from 3 routines (e.g. BreedMenu_Case04_ToClearThreeTileRowsAndStep, BreedMenu_Case04_Case14, BreedMenu_Case12_Case04)
 ClearThreeTileRows::
 Func_015_69E3:: ; address name
     ld hl, vTiles2 + $7C0

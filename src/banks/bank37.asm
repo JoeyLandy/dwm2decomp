@@ -740,7 +740,7 @@ Func_037_4AFD:: ; address name
     ret nz
     ld a, [wScreenState]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_ToSwapMonstersMenuAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case01
     dw RunLinkSession5Exchange_Case01_Sub01_Case02
     dw RunLinkSession5Exchange_Case01_Sub01_Case03
@@ -763,7 +763,7 @@ Func_037_4AFD:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-RunLinkSession5Exchange_Case01_Sub01_Case00::
+RunLinkSession5Exchange_Case01_Sub01_ToSwapMonstersMenuAndStep::
 Jump_037_4B2A:: ; address name
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -2080,7 +2080,7 @@ RunLinkSession5Exchange_Case01_Sub01_Case11::
 Jump_037_531D:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case11_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_Case11_AdvanceScreenStep
     dw ShowString0EAndStep_Bank37
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
     dw RunLinkSession5Exchange_Case01_Sub01_Case11_ToBreedMenu
@@ -2102,7 +2102,7 @@ Jump_037_5335:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case11_Case00::
+RunLinkSession5Exchange_Case01_Sub01_Case11_AdvanceScreenStep::
 Jump_037_533C:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2190,20 +2190,20 @@ RunLinkSession5Exchange_Case01_Sub01_Case0D::
 Jump_037_53C0:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case00
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case01
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case02
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_AdvanceScreenStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case03
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawWCA36MonsterPictureInTwoSteps
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case06
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case07
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Return
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case0E
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case0F
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case10
@@ -2213,7 +2213,7 @@ Jump_037_53C0:: ; address name
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case14
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case15
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case16
-    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case17
+    dw RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case18
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case19
     dw RunLinkSession5Exchange_Case01_Sub01_Case0D_Case1A
@@ -2226,7 +2226,7 @@ Jump_037_53C0:: ; address name
 
 ; entry 8 of the `rst $00` table in Func_037_4AFD_Case0D
 ; no direct call (reached through a table, a jump or a vector)
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case08::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_Return::
 Jump_037_5406:: ; address name
     ret
 
@@ -2234,7 +2234,7 @@ Jump_037_5406:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case00::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_ToClearBGMapAndLoadFrameTilesAndStep::
 Jump_037_5407:: ; address name
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
@@ -2256,7 +2256,7 @@ Jump_037_5415:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case02::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_AdvanceScreenStep::
 Jump_037_5424:: ; address name
     ld a, [wScreenStep]
     inc a
@@ -2309,7 +2309,7 @@ Jump_037_5452:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep::
 Jump_037_5471:: ; address name
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
@@ -2607,7 +2607,7 @@ Jump_037_564E:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession5Exchange_Case01_Sub01_Case0D_Case17::
+RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRects6B4FAnd6C27AndStep::
 Jump_037_565A:: ; address name
     farcall DrawRects6B4FAnd6C27
     ld a, [wScreenStep]

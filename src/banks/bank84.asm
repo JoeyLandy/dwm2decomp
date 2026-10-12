@@ -68,7 +68,7 @@ RunDebugAutomapCaseTemp0::
 Func_084_405C:: ; address name
     ldh a, [hTemp0]
     rst $00
-    dw RunDebugAutomapCaseTemp0_Case00
+    dw RunDebugAutomapCaseTemp0_Return
     dw RunDebugAutomapCaseTemp0_Case01
     dw RunDebugAutomapCaseTemp0_Case02
     dw RunDebugAutomapCaseTemp0_Case03
@@ -78,7 +78,7 @@ Func_084_405C:: ; address name
 
 ; entry 0 of the `rst $00` table in RunDebugAutomapCaseTemp0
 ; no direct call (reached through a table, a jump or a vector)
-RunDebugAutomapCaseTemp0_Case00::
+RunDebugAutomapCaseTemp0_Return::
 Jump_084_406D:: ; address name
     ret
 

@@ -2227,10 +2227,10 @@ Jump_01B_547D:: ; address name
     dw RunScreenStateWhenNotFading_1B_Case01_Case07
     dw RunScreenStateWhenNotFading_1B_Case01_Case16
     dw RunScreenStateWhenNotFading_1B_Case01_Case17
-    dw RunScreenStateWhenNotFading_1B_Case01_Case18
+    dw RunScreenStateWhenNotFading_1B_Case01_ToBeginString_Bank1B_Cat0AndStep
     dw RunScreenStateWhenNotFading_1B_Case01_Case0C
     dw RunScreenStateWhenNotFading_1B_Case01_Case0D
-    dw RunScreenStateWhenNotFading_1B_Case01_Case1B
+    dw RunScreenStateWhenNotFading_1B_Case01_ToBeginString_Bank1B_Cat0AndStep_Case1B
     dw RunScreenStateWhenNotFading_1B_Case01_Case1C
     dw RunScreenStateWhenNotFading_1B_Case01_Case1D
     dw RunScreenStateWhenNotFading_1B_Case01_Case1E
@@ -3632,7 +3632,7 @@ Jump_01B_5CD3:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_1B_Case01_Case18::
+RunScreenStateWhenNotFading_1B_Case01_ToBeginString_Bank1B_Cat0AndStep::
 Jump_01B_5CFE:: ; address name
     ld a, $07
     call BeginString_Bank1B_Cat0
@@ -3645,7 +3645,7 @@ Jump_01B_5CFE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunScreenStateWhenNotFading_1B_Case01_Case1B::
+RunScreenStateWhenNotFading_1B_Case01_ToBeginString_Bank1B_Cat0AndStep_Case1B::
 Jump_01B_5D0B:: ; address name
     ld a, $0B
     call BeginString_Bank1B_Cat0
@@ -5125,7 +5125,7 @@ Func_01B_665E:: ; address name
     dw EggServiceMenu_Bank1B_Case00
     dw EggServiceMenu_Bank1B_Case01
     dw EggServiceMenu_Bank1B_Case02
-    dw EggServiceMenu_Bank1B_Case03
+    dw EggServiceMenu_Bank1B_AdvanceScreenState
     dw EggServiceMenu_Bank1B_Case04
     dw EggServiceMenu_Bank1B_Case05
     dw EggServiceMenu_Bank1B_Case06
@@ -5280,7 +5280,7 @@ Jump_01B_6708::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenState
 ; writes: wScreenState
-EggServiceMenu_Bank1B_Case03::
+EggServiceMenu_Bank1B_AdvanceScreenState::
 Jump_01B_671F:: ; address name
     ld a, [wScreenState]
     inc a
@@ -6090,7 +6090,7 @@ Jump_01B_6C61:: ; address name
     dw EggServiceMenu_Bank1B_Case05_Case06
     dw EggServiceMenu_Bank1B_Case05_Case07
     dw EggServiceMenu_Bank1B_Case05_Case08
-    dw EggServiceMenu_Bank1B_Case05_Case09
+    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep
     dw EggServiceMenu_Bank1B_Case05_Case0A
     dw EggServiceMenu_Bank1B_Case05_Case02
     dw EggServiceMenu_Bank1B_Case05_Case0C
@@ -6098,7 +6098,7 @@ Jump_01B_6C61:: ; address name
     dw EggServiceMenu_Bank1B_Case05_Case02
     dw EggServiceMenu_Bank1B_Case05_Case0F
     dw EggServiceMenu_Bank1B_Case05_Case10
-    dw EggServiceMenu_Bank1B_Case05_Case11
+    dw EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11
     dw EggServiceMenu_Bank1B_Case05_Case0A
     dw EggServiceMenu_Bank1B_Case05_Case02
     dw EggServiceMenu_Bank1B_Case05_Case03
@@ -6108,7 +6108,7 @@ Jump_01B_6C61:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_Case11::
+EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep_Case11::
 Jump_01B_6C91:: ; address name
     ld a, $09
     call ShowStringA10_Bank1B
@@ -6121,7 +6121,7 @@ Jump_01B_6C91:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-EggServiceMenu_Bank1B_Case05_Case09::
+EggServiceMenu_Bank1B_Case05_ToShowStringA10_Bank1BAndStep::
 Jump_01B_6C9E:: ; address name
     ld a, $0C
     call ShowStringA10_Bank1B

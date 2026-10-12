@@ -1132,7 +1132,7 @@ Jump_01D_4A5A::
     ret
 
 ; only called from routines of VaultMenu (E-0098)
-; 5 call sites from 4 routines (e.g. VaultMenu_Case04_Case03_Sub01, VaultMenu_Shared05, VaultMenu_Case03_Case0E_Sub01, VaultMenu_Case01_Case02)
+; 5 call sites from 4 routines (e.g. VaultMenu_Case04_Case03_Sub01, VaultMenu_Shared05, VaultMenu_Case03_Case0E_Sub01, VaultMenu_Case01_ToVaultMenu_Shared06AndStep)
 ; writes: wSavedSpriteClipMode, wListPages
 ; points at: wItemStorage, wInventory
 VaultMenu_Shared06::
@@ -4436,7 +4436,7 @@ Jump_01D_5E69::
     ret
 
 ; clears the wD789 list, then lists the party records whose SRAM record byte 0 is 2 and counts them in wD7A9 (E-0127)
-; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_Sub01, HibernateMenu_Case01_Case02, HibernateMenu_Case05_Case40, HibernateMenu_Case05_Case0E, ...)
+; 19 call sites from 19 routines (e.g. SwapMonstersMenu_Case03_Sub01, HibernateMenu_Case01_ToListPartyRecordsWithState2ToListEntriesAndStep, HibernateMenu_Case05_Case40, HibernateMenu_Case05_Case0E, ...)
 ; reads: wListCount, wPartyCount
 ; writes: wListCount, rRAMG2, rRAMB
 ; points at: wListEntries, wPartyList, sRecords

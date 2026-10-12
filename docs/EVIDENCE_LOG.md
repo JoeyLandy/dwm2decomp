@@ -2431,6 +2431,19 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0272 — Single-purpose structural routines named from their shape
+
+- Kind: TOOL (structural naming from the instructions; C2 for what each does).
+- name_trampoline_cases (E-0270) now names more shapes of structural routine:
+  - constant argument loads, one call or far call, an optional step increment (`ld hl, V / inc [hl]` or `ld a, [V] / inc a / ld [V], a`), then `ret`, or a lone `jp`: Parent_To<Target>, plus AndStep when it advances;
+  - `ld a, n / ld [V], a / ret`: Parent_Set<V>To<n>;
+  - a step increment alone: Parent_Advance<V>;
+  - a lone `ret`: Parent_Return.
+  - When a name repeats within a family, the case number is kept as a suffix.
+- 389 routines are renamed, for example RunGameModeInit_Return, PauseMenu_State3_Case01_To…AndStep and RunPauseMenuScreen_AdvancePauseMenuScreen. Two tests that pinned case names now check the same property by pattern.
+- Structural labels went from 5,044 to 4,539 (case_shapes count, which includes non-case structural names).
+- Binary verification: build/run353 PASS, 0 differing bytes; tests OK.
+
 ### E-0271 — Script-starting talk cases named from the script's first message
 
 - Kind: TOOL (C1 names from the E-0248 quotes).

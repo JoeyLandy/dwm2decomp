@@ -863,7 +863,7 @@ Jump_004_4574::
     ld a, [hl]
     rst $00
     dw UpdateSpriteSlots_Case00
-    dw UpdateSpriteSlots_Case01
+    dw UpdateSpriteSlots_Return
     dw UpdateSpriteSlots_Case02
     dw UpdateSpriteSlots_Case03
     dw UpdateSpriteSlots_Case04
@@ -1151,7 +1151,7 @@ Jump_004_46F8::
 
 ; entry 1 of the `rst $00` table in UpdateSpriteSlots
 ; no direct call (reached through a table, a jump or a vector)
-UpdateSpriteSlots_Case01::
+UpdateSpriteSlots_Return::
 Jump_004_4704:: ; address name
     ret
 
@@ -6822,10 +6822,10 @@ DispatchTalkEvent_Case00_Sub01::
 Func_004_6892:: ; address name
     ld a, [wTalkEventGroup]
     rst $00
-    dw DispatchTalkEvent_Case00_Sub01_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Return
     dw TalkScript512F
     dw TalkScript5131
-    dw DispatchTalkEvent_Case00_Sub01_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Return
     dw TalkScript5137
     dw TalkScript5139
     dw TalkScript513B
@@ -6861,7 +6861,7 @@ Func_004_6892:: ; address name
     dw DispatchTalkEvent_Case00_Sub01_Case24
     dw DispatchTalkEvent_Case00_Sub01_Case25
     dw DispatchTalkEvent_Case00_Sub01_Case26
-    dw DispatchTalkEvent_Case00_Sub01_Case00
+    dw DispatchTalkEvent_Case00_Sub01_Return
 
 ; starts Script_5173 (StartScriptAtHL) (E-0271; was DispatchTalkEvent_Case00_Sub01_Case1E)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7129,7 +7129,7 @@ Jump_004_69D9:: ; address name
 ; entry 0 of the `rst $00` table in Func_004_6892
 ; no direct call (reached through a table, a jump or a vector)
 ; starts Script_512F
-DispatchTalkEvent_Case00_Sub01_Case00::
+DispatchTalkEvent_Case00_Sub01_Return::
 Jump_004_69E0:: ; address name
     ret
 

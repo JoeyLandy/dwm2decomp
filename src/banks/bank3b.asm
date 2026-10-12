@@ -518,7 +518,7 @@ Func_03B_42F4:: ; address name
     dw RunBattleActions_Case08_Sub01_Case04
     dw RunBattleActions_Case08_Sub01_Case05
     dw RunBattleActions_Case08_Sub01_Case06
-    dw RunBattleActions_Case08_Sub01_Case07
+    dw RunBattleActions_Case08_Sub01_Return
     dw RunBattleActions_Case08_Sub01_Case08
     dw RunBattleActions_Case08_Sub01_ToRunBattleSubStep2_6764
     dw RunBattleActions_Case08_Sub01_Case0A
@@ -889,7 +889,7 @@ Func_03B_453D:: ; address name
 
 ; entry 7 of the `rst $00` table in Func_03B_42F4
 ; no direct call (reached through a table, a jump or a vector)
-RunBattleActions_Case08_Sub01_Case07::
+RunBattleActions_Case08_Sub01_Return::
 Jump_03B_4547:: ; address name
     ret
 

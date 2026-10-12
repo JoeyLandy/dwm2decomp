@@ -1936,7 +1936,7 @@ Func_0F2_4FF9:: ; address name
     ret
 
 ; runs Func_0F2_4F47, DrawFiveRecordBufBStatsColumn and DrawFourRecordBufBStatsDigits (E-0126)
-; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_Case04, RunScreenStateWhenNotFading_F1_Case0D_Case04)
+; 2 call sites from 2 routines (e.g. RunLinkSession5Exchange_Case01_Sub01_Case0D_ToDrawRecordBufBStatsScreenAndStep, RunScreenStateWhenNotFading_F1_Case0D_ToDrawRecordBufBStatsScreenAndStep)
 DrawRecordBufBStatsScreen::
 Func_0F2_5002:: ; address name
     call DrawLevelAndStatusRowForWCA81

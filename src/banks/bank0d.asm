@@ -338,22 +338,22 @@ Func_00D_45D1:: ; address name
     dw EggServiceMenu_Case01
     dw EggServiceMenu_Case02
     dw EggServiceMenu_Case03
-    dw EggServiceMenu_Case04
+    dw EggServiceMenu_Return
     dw EggServiceMenu_Case05
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
-    dw EggServiceMenu_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
+    dw EggServiceMenu_Return_Case06
     dw EggServiceMenu_Case0D
-    dw EggServiceMenu_Case06
+    dw EggServiceMenu_Return_Case06
     dw EggServiceMenu_Case0F
 
 ; entry 6 of the `rst $00` table in EggServiceMenu
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Case06::
+EggServiceMenu_Return_Case06::
 Jump_00D_45F5:: ; address name
     ret
 
@@ -543,7 +543,7 @@ Jump_00D_46FB::
 
 ; entry 4 of the `rst $00` table in EggServiceMenu
 ; no direct call (reached through a table, a jump or a vector)
-EggServiceMenu_Case04::
+EggServiceMenu_Return::
 Jump_00D_470F:: ; address name
     ret
 
@@ -3077,7 +3077,7 @@ Jump_00D_5722:: ; address name
     dw KeyAppraisalMenu_Case03_Case06
     dw KeyAppraisalMenu_Case03_Case07
     dw KeyAppraisalMenu_Case03_Case08
-    dw KeyAppraisalMenu_Case03_Case09
+    dw KeyAppraisalMenu_Case03_ToCopyRect70C5ToWC364AndDrawAndStep
     dw KeyAppraisalMenu_Case03_Case0A
     dw KeyAppraisalMenu_Case03_Case0B
     dw KeyAppraisalMenu_Case03_Case06
@@ -3496,7 +3496,7 @@ Jump_00D_5A2F::
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-KeyAppraisalMenu_Case03_Case09::
+KeyAppraisalMenu_Case03_ToCopyRect70C5ToWC364AndDrawAndStep::
 Jump_00D_5A3C:: ; address name
     farcall CopyRect70C5ToWC364AndDraw
     ld a, [wScreenStep]
@@ -6815,22 +6815,22 @@ Func_00D_711C:: ; address name
     ld a, [wScreenState]
     rst $00
     dw NpcBreedMenu_Case00
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
     dw NpcBreedMenu_Case04
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
     dw NpcBreedMenu_Case0C
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
-    dw NpcBreedMenu_Case01
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
+    dw NpcBreedMenu_Return
     dw NpcBreedMenu_Case11
 
 ; entry 0 of the `rst $00` table in NpcBreedMenu
@@ -6849,7 +6849,7 @@ Jump_00D_7144:: ; address name
 
 ; entry 1 of the `rst $00` table in NpcBreedMenu
 ; no direct call (reached through a table, a jump or a vector)
-NpcBreedMenu_Case01::
+NpcBreedMenu_Return::
 Jump_00D_7158:: ; address name
     ret
 
@@ -6884,9 +6884,9 @@ Jump_00D_7159:: ; address name
     dw NpcBreedMenu_Case04_Case15
     dw NpcBreedMenu_Case04_Case16
     dw NpcBreedMenu_Case04_Case17
-    dw NpcBreedMenu_Case04_Case18
+    dw NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep
     dw NpcBreedMenu_Case04_Case19
-    dw NpcBreedMenu_Case04_Case1A
+    dw NpcBreedMenu_Case04_ToRestorePlayerPositionState_Bank0DAndStep
     dw NpcBreedMenu_Case04_Case1B
 
 ; entry 0 of the `rst $00` table in NpcBreedMenu_Case04
@@ -7337,7 +7337,7 @@ Data_00D_7499:: ; heuristic: pointer load in the same bank (bank assumed); C0
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-NpcBreedMenu_Case04_Case18::
+NpcBreedMenu_Case04_ToRedrawFullScreenBoxes_0CAndStep::
 Jump_00D_74AD:: ; address name
     farcall RedrawFullScreenBoxes_0C
     ld a, [wScreenStep]
@@ -7376,7 +7376,7 @@ Jump_00D_74BB:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-NpcBreedMenu_Case04_Case1A::
+NpcBreedMenu_Case04_ToRestorePlayerPositionState_Bank0DAndStep::
 Jump_00D_74F1:: ; address name
     call RestorePlayerPositionState_Bank0D
     ld a, [wScreenStep]
@@ -7753,7 +7753,7 @@ Func_00D_778C:: ; address name
     ret
 
 ; the same 80 bytes as RestorePlayerPositionState (15:6E14)
-; 1 call site from 1 routine (e.g. NpcBreedMenu_Case04_Case1A)
+; 1 call site from 1 routine (e.g. NpcBreedMenu_Case04_ToRestorePlayerPositionState_Bank0DAndStep)
 ; reads: wSavedPlayerState
 ; writes: hPlayerX, hPlayerY, hPlayerFacing, wFollowerRecords, wSpriteSlots, wSavedPositionValid
 RestorePlayerPositionState_Bank0D::

@@ -1098,7 +1098,7 @@ Jump_0F0_4E71:: ; address name
 Jump_0F0_4E8A::
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case00
+    dw RunLinkSession8Exchange_Case01_Sub01_Table3_ToBeginString_BankF0_Cat0AndStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case01
     dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case02
     dw RunLinkSession8Exchange_Case01_Sub01_Table3_Case03
@@ -1108,7 +1108,7 @@ Jump_0F0_4E8A::
 ; entry 0 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Table3_Case00::
+RunLinkSession8Exchange_Case01_Sub01_Table3_ToBeginString_BankF0_Cat0AndStep::
 Jump_0F0_4E9A:: ; address name
     ld a, $06
     call BeginString_BankF0_Cat0
@@ -1444,7 +1444,7 @@ Jump_0F0_5094::
     ld a, [wScreenStep]
     rst $00
     dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case00
-    dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case01
+    dw RunLinkSession8Exchange_Case01_Sub01_Table4_ToCopyRect70C5ToWC364AndDrawAndStep
     dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case02
     dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case03
     dw RunLinkSession8Exchange_Case01_Sub01_Table4_Case04
@@ -1453,7 +1453,7 @@ Jump_0F0_5094::
 ; entry 1 of the `rst $00` table in Func_0F0_4CA0
 ; no direct call (reached through a table, a jump or a vector)
 ; points at: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Table4_Case01::
+RunLinkSession8Exchange_Case01_Sub01_Table4_ToCopyRect70C5ToWC364AndDrawAndStep::
 Jump_0F0_50A4:: ; address name
     farcall CopyRect70C5ToWC364AndDraw
     ld hl, wScreenStep
@@ -3163,7 +3163,7 @@ RunLinkSession8Exchange_Case01_Sub01_Case0C::
 Jump_0F0_5ACE:: ; address name
     ld a, [wScreenStep]
     rst $00
-    dw RunLinkSession8Exchange_Case01_Sub01_Case0C_Case00
+    dw RunLinkSession8Exchange_Case01_Sub01_Case0C_ToBeginString_BankF0_Cat0AndStep
     dw RunLinkSession8Exchange_Case01_Sub01_Case0C_Case01
     dw RunLinkSession8Exchange_Case01_Sub01_Case0C_Case02
     dw RunLinkSession8Exchange_Case01_Sub01_Case04_Case03
@@ -3172,7 +3172,7 @@ Jump_0F0_5ACE:: ; address name
 ; no direct call (reached through a table, a jump or a vector)
 ; reads: wScreenStep
 ; writes: wScreenStep
-RunLinkSession8Exchange_Case01_Sub01_Case0C_Case00::
+RunLinkSession8Exchange_Case01_Sub01_Case0C_ToBeginString_BankF0_Cat0AndStep::
 Jump_0F0_5ADA:: ; address name
     ld a, $08
     call BeginString_BankF0_Cat0
@@ -6704,7 +6704,7 @@ RollCounterChanceAndRunEvent_Sub01::
 Func_0F0_72C8:: ; address name
     ld a, [wRollState]
     rst $00
-    dw RollCounterChanceAndRunEvent_Sub01_Case00
+    dw RollCounterChanceAndRunEvent_Sub01_ToAddBClampedToC
     dw RollCounterChanceAndRunEvent_Sub01_Case01
     dw RollCounterChanceAndRunEvent_Sub01_Case02
     dw RollCounterChanceAndRunEvent_Sub01_Case03
@@ -6805,7 +6805,7 @@ Func_0F0_72C8:: ; address name
 
 ; entry 0 of the `rst $00` table in Func_0F0_72C8
 ; no direct call (reached through a table, a jump or a vector)
-RollCounterChanceAndRunEvent_Sub01_Case00::
+RollCounterChanceAndRunEvent_Sub01_ToAddBClampedToC::
 Jump_0F0_7390:: ; address name
     ld hl, wFamilyScores + $7
     ld b, $01

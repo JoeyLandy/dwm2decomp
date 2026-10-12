@@ -1728,7 +1728,7 @@ Func_005_4812:: ; address name
 
 ; only called from AIScore_SlimeBlow_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_SlimeBlow_Sub01)
-AIScore_SlimeBlow_Sub01_Sub01::
+AIScore_SlimeBlow_Sub01_ToFoeOfFamilyEPresent::
 Func_005_481C:: ; address name
     ld e, $00
     call FoeOfFamilyEPresent
@@ -1736,7 +1736,7 @@ Func_005_481C:: ; address name
 
 ; only called from AIScore_DrakSlash_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_DrakSlash_Sub01)
-AIScore_DrakSlash_Sub01_Sub01::
+AIScore_DrakSlash_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4822:: ; address name
     ld e, $01
     call FoeOfFamilyEPresent
@@ -1744,7 +1744,7 @@ Func_005_4822:: ; address name
 
 ; only called from AIScore_BeastCut_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BeastCut_Sub01)
-AIScore_BeastCut_Sub01_Sub01::
+AIScore_BeastCut_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4828:: ; address name
     ld e, $02
     call FoeOfFamilyEPresent
@@ -1752,7 +1752,7 @@ Func_005_4828:: ; address name
 
 ; only called from AIScore_BirdBlow_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BirdBlow_Sub01)
-AIScore_BirdBlow_Sub01_Sub01::
+AIScore_BirdBlow_Sub01_ToFoeOfFamilyEPresent::
 Func_005_482E:: ; address name
     ld e, $03
     call FoeOfFamilyEPresent
@@ -1760,7 +1760,7 @@ Func_005_482E:: ; address name
 
 ; only called from AIScore_BugBlow_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_BugBlow_Sub01)
-AIScore_BugBlow_Sub01_Sub01::
+AIScore_BugBlow_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4834:: ; address name
     ld e, $05
     call FoeOfFamilyEPresent
@@ -1768,7 +1768,7 @@ Func_005_4834:: ; address name
 
 ; only called from AIScore_Shears_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_Shears_Sub01)
-AIScore_Shears_Sub01_Sub01::
+AIScore_Shears_Sub01_ToFoeOfFamilyEPresent::
 Func_005_483A:: ; address name
     ld e, $04
     call FoeOfFamilyEPresent
@@ -1776,7 +1776,7 @@ Func_005_483A:: ; address name
 
 ; only called from AIScore_DevilCut_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_DevilCut_Sub01)
-AIScore_DevilCut_Sub01_Sub01::
+AIScore_DevilCut_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4840:: ; address name
     ld e, $06
     call FoeOfFamilyEPresent
@@ -1784,7 +1784,7 @@ Func_005_4840:: ; address name
 
 ; only called from AIScore_ZombieCut_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_ZombieCut_Sub01)
-AIScore_ZombieCut_Sub01_Sub01::
+AIScore_ZombieCut_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4846:: ; address name
     ld e, $07
     call FoeOfFamilyEPresent
@@ -1792,7 +1792,7 @@ Func_005_4846:: ; address name
 
 ; only called from AIScore_CleanCut_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_CleanCut_Sub01)
-AIScore_CleanCut_Sub01_Sub01::
+AIScore_CleanCut_Sub01_ToFoeOfFamilyEPresent::
 Func_005_484C:: ; address name
     ld e, $08
     call FoeOfFamilyEPresent
@@ -1800,7 +1800,7 @@ Func_005_484C:: ; address name
 
 ; only called from AIScore_AquaCut_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. AIScore_AquaCut_Sub01)
-AIScore_AquaCut_Sub01_Sub01::
+AIScore_AquaCut_Sub01_ToFoeOfFamilyEPresent::
 Func_005_4852:: ; address name
     ld e, $09
     call FoeOfFamilyEPresent
@@ -9493,7 +9493,7 @@ Jump_005_6FD6::
     ret
 
 ; E = family: C = 0 when one of the actor's three opposite slots is present and its species family (GetSlotSpeciesFamily) equals E; otherwise C = $FF (E-0092)
-; 10 call sites from 10 routines (e.g. AIScore_SlimeBlow_Sub01_Sub01, AIScore_DrakSlash_Sub01_Sub01, AIScore_BeastCut_Sub01_Sub01, AIScore_BirdBlow_Sub01_Sub01, ...)
+; 10 call sites from 10 routines (e.g. AIScore_SlimeBlow_Sub01_ToFoeOfFamilyEPresent, AIScore_DrakSlash_Sub01_ToFoeOfFamilyEPresent, AIScore_BeastCut_Sub01_ToFoeOfFamilyEPresent, AIScore_BirdBlow_Sub01_ToFoeOfFamilyEPresent, ...)
 ; reads: wBattleActor
 FoeOfFamilyEPresent:: ; heuristic: follows a terminator; C0
 Func_005_6FD9:: ; address name
@@ -10594,7 +10594,7 @@ Func_005_7524:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_SlimeBlow_Sub01_Sub01
+    call AIScore_SlimeBlow_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_7534
@@ -10614,7 +10614,7 @@ Func_005_753A:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_DrakSlash_Sub01_Sub01
+    call AIScore_DrakSlash_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_754A
@@ -10634,7 +10634,7 @@ Func_005_7550:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_BeastCut_Sub01_Sub01
+    call AIScore_BeastCut_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_7560
@@ -10654,7 +10654,7 @@ Func_005_7566:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_BirdBlow_Sub01_Sub01
+    call AIScore_BirdBlow_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_7576
@@ -10674,7 +10674,7 @@ Func_005_757C:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_BugBlow_Sub01_Sub01
+    call AIScore_BugBlow_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_758C
@@ -10694,7 +10694,7 @@ Func_005_7592:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_Shears_Sub01_Sub01
+    call AIScore_Shears_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_75A2
@@ -10714,7 +10714,7 @@ Func_005_75A8:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_DevilCut_Sub01_Sub01
+    call AIScore_DevilCut_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_75B8
@@ -10734,7 +10734,7 @@ Func_005_75BE:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_ZombieCut_Sub01_Sub01
+    call AIScore_ZombieCut_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_75CE
@@ -10754,7 +10754,7 @@ Func_005_75D4:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_CleanCut_Sub01_Sub01
+    call AIScore_CleanCut_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_75E4
@@ -10774,7 +10774,7 @@ Func_005_75EA:: ; address name
     ld a, c
     and a, a
     ret z
-    call AIScore_AquaCut_Sub01_Sub01
+    call AIScore_AquaCut_Sub01_ToFoeOfFamilyEPresent
     ld a, c
     and a, a
     jr nz, Jump_005_75FA
