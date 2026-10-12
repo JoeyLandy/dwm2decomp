@@ -1720,7 +1720,7 @@ Jump_01C_49D5::
     ld d, $00
     sla e
     rl d
-    ld hl, Data_01C_63FE
+    ld hl, ItemNamesCopy_1C
     add hl, de
     ld e, [hl]
     inc hl
@@ -3631,7 +3631,7 @@ Jump_01C_5589::
     ld d, $00
     sla e
     rl d
-    ld hl, Data_01C_63FE
+    ld hl, ItemNamesCopy_1C
     add hl, de
     ld e, [hl]
     inc hl
@@ -5574,379 +5574,469 @@ Data_01C_6338:: ; address name
     dw $07D0 ; id 97
     dw $0000 ; id 98
 
-; address loaded by ShopMenu_Case03_Case03, ShopMenu_Case04_Case03, VaultMenu_Case03_Case09
-Data_01C_63FE:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    dw Data_01C_64C4
-    dw Data_01C_64C5
-    dw Data_01C_64CA
-    dw Data_01C_64D4
-    dw Data_01C_64DD
-    dw Data_01C_64E4
-    dw Data_01C_64ED
-    dw Data_01C_64F6
-    dw Data_01C_64FF
-    dw Data_01C_6506
-    dw Data_01C_6510
-    dw Data_01C_6518
-    dw Data_01C_6521
-    dw Data_01C_652B
-    dw Data_01C_6533
-    dw Data_01C_653B
-    dw Data_01C_6543
-    dw Data_01C_654B
-    dw Data_01C_6555
-    dw Data_01C_655F
-    dw Data_01C_6566
-    dw Data_01C_656E
-    dw Data_01C_6576
-    dw Data_01C_657F
-    dw Data_01C_6586
-    dw Data_01C_658E
-    dw Data_01C_6598
-    dw Data_01C_65A1
-    dw Data_01C_65A5
-    dw Data_01C_65AD
-    dw Data_01C_65B5
-    dw Data_01C_65BD
-    dw Data_01C_65C7
-    dw Data_01C_65D1
-    dw Data_01C_65DB
-    dw Data_01C_65E1
-    dw Data_01C_65E9
-    dw Data_01C_65EF
-    dw Data_01C_65F5
-    dw Data_01C_65FB
-    dw Data_01C_6601
-    dw Data_01C_6607
-    dw Data_01C_6610
-    dw Data_01C_6619
-    dw Data_01C_6622
-    dw Data_01C_662C
-    dw Data_01C_6635
-    dw Data_01C_663D
-    dw Data_01C_663E
-    dw Data_01C_6648
-    dw Data_01C_6651
-    dw Data_01C_6657
-    dw Data_01C_6660
-    dw Data_01C_666A
-    dw Data_01C_6672
-    dw Data_01C_667C
-    dw Data_01C_6686
-    dw Data_01C_668B
-    dw Data_01C_6693
-    dw Data_01C_669B
-    dw Data_01C_66A3
-    dw Data_01C_66AC
-    dw Data_01C_66B4
-    dw Data_01C_66B4
-    dw Data_01C_66B4
-    dw Data_01C_66BC
-    dw Data_01C_66C6
-    dw Data_01C_66D0
-    dw Data_01C_66D8
-    dw Data_01C_66E2
-    dw Data_01C_66EC
-    dw Data_01C_66F6
-    dw Data_01C_6700
-    dw Data_01C_6705
-    dw Data_01C_670D
-    dw Data_01C_6714
-    dw Data_01C_671A
-    dw Data_01C_6724
-    dw Data_01C_672E
-    dw Data_01C_6738
-    dw Data_01C_6741
-    dw Data_01C_674B
-    dw Data_01C_6754
-    dw Data_01C_675E
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_6766
-    dw Data_01C_676C
-    dw Data_01C_6774
-    dw Data_01C_6779
-    dw Data_01C_677F
-    dw Data_01C_6786
-    dw Data_01C_678E
-    dw Data_01C_6795
-    dw Data_01C_679D
+; E-0261 (C1: ShopMenu_Case03_Case03, ShopMenu_Case04_Case03 and VaultMenu_Case03_Case09 read the word at $63FE + 2 * item number and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 + 16 * character); the names equal StringTable_ItemNames (08:$4716) for the 99 items).
+; record: item name
+ItemNamesCopy_1C::
+Data_01C_63FE:: ; address name
+    dw ItemName1C_00 ; id 0
+    dw ItemName1C_Herb ; id 1
+    dw ItemName1C_LoveWater ; id 2
+    dw ItemName1C_WorldDew ; id 3
+    dw ItemName1C_Potion ; id 4
+    dw ItemName1C_ElfWater ; id 5
+    dw ItemName1C_Antidote ; id 6
+    dw ItemName1C_MoonHerb ; id 7
+    dw ItemName1C_Laurel ; id 8
+    dw ItemName1C_AwakeSand ; id 9
+    dw ItemName1C_SkyBell ; id 10
+    dw ItemName1C_SageRock ; id 11
+    dw ItemName1C_WorldLeaf ; id 12
+    dw ItemName1C_ATKseed ; id 13
+    dw ItemName1C_DEFseed ; id 14
+    dw ItemName1C_AGLseed ; id 15
+    dw ItemName1C_INTseed ; id 16
+    dw ItemName1C_LifeAcorn ; id 17
+    dw ItemName1C_MysticNut ; id 18
+    dw ItemName1C_Quest ; id 19
+    dw ItemName1C_Horror ; id 20
+    dw ItemName1C_BeNice ; id 21
+    dw ItemName1C_Cheater ; id 22
+    dw ItemName1C_Smart ; id 23
+    dw ItemName1C_Comedy ; id 24
+    dw ItemName1C_BeefJerky ; id 25
+    dw ItemName1C_PorkChop ; id 26
+    dw ItemName1C_Rib ; id 27
+    dw ItemName1C_Sirloin ; id 28
+    dw ItemName1C_BadMeat ; id 29
+    dw ItemName1C_MeteOrb ; id 30
+    dw ItemName1C_BeastTail ; id 31
+    dw ItemName1C_Repellent ; id 32
+    dw ItemName1C_ShinyHarp ; id 33
+    dw ItemName1C_Mist ; id 34
+    dw ItemName1C_Friend ; id 35
+    dw ItemName1C_Wind ; id 36
+    dw ItemName1C_Bolt ; id 37
+    dw ItemName1C_Snow ; id 38
+    dw ItemName1C_Fire ; id 39
+    dw ItemName1C_Warp ; id 40
+    dw ItemName1C_WarpWing ; id 41
+    dw ItemName1C_ExitBell ; id 42
+    dw ItemName1C_Bookmark ; id 43
+    dw ItemName1C_TinyMedal ; id 44
+    dw ItemName1C_GoldPass ; id 45
+    dw ItemName1C_LogTwig ; id 46
+    dw ItemName1C_2F ; id 47
+    dw ItemName1C_WaterCall ; id 48
+    dw ItemName1C_MoonRock ; id 49
+    dw ItemName1C_Crest ; id 50
+    dw ItemName1C_YunaSoul ; id 51
+    dw ItemName1C_SleepHerb ; id 52
+    dw ItemName1C_Change ; id 53
+    dw ItemName1C_TidalBell ; id 54
+    dw ItemName1C_HarMirror ; id 55
+    dw ItemName1C_Sky ; id 56
+    dw ItemName1C_Heaven ; id 57
+    dw Data_01C_6693 ; id 58
+    dw Data_01C_669B ; id 59
+    dw ItemName1C_WizStone ; id 60
+    dw ItemName1C_Pretty ; id 61
+    dw ItemName1C_Accessory ; id 62
+    dw ItemName1C_Accessory ; id 63
+    dw ItemName1C_Accessory ; id 64
+    dw ItemName1C_DracoBelt ; id 65
+    dw ItemName1C_MagicBelt ; id 66
+    dw ItemName1C_OddBelt ; id 67
+    dw ItemName1C_StoneFang ; id 68
+    dw ItemName1C_SteelFang ; id 69
+    dw ItemName1C_MermScale ; id 70
+    dw ItemName1C_DrakScale ; id 71
+    dw ItemName1C_AGL ; id 72
+    dw ItemName1C_Starry ; id 73
+    dw Data_01C_670D ; id 74
+    dw ItemName1C_Wise ; id 75
+    dw ItemName1C_MagicCape ; id 76
+    dw ItemName1C_DracoCape ; id 77
+    dw ItemName1C_SilvrCape ; id 78
+    dw ItemName1C_GoldCape ; id 79
+    dw ItemName1C_PltnmCape ; id 80
+    dw ItemName1C_OrcaCape ; id 81
+    dw ItemName1C_BraveCape ; id 82
+    dw ItemName1C_DScale ; id 83
+    dw ItemName1C_None ; id 84
+    dw ItemName1C_None ; id 85
+    dw ItemName1C_None ; id 86
+    dw ItemName1C_None ; id 87
+    dw ItemName1C_None ; id 88
+    dw ItemName1C_None ; id 89
+    dw ItemName1C_None ; id 90
+    dw ItemName1C_Divine ; id 91
+    dw ItemName1C_War ; id 92
+    dw ItemName1C_Mage ; id 93
+    dw ItemName1C_Fight ; id 94
+    dw ItemName1C_Sailor ; id 95
+    dw ItemName1C_Thief ; id 96
+    dw ItemName1C_Cleric ; id 97
+    dw ItemName1C_62 ; id 98
 
-Data_01C_64C4:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_00:: ; heuristic: item name; C0
+Data_01C_64C4:: ; address name
     db $F0
 
-Data_01C_64C5:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Herb:: ; heuristic: item name; C0
+Data_01C_64C5:: ; address name
     db $11, $28, $35, $25, $F0
 
-Data_01C_64CA:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_LoveWater:: ; heuristic: item name; C0
+Data_01C_64CA:: ; address name
     db $15, $32, $39, $28, $20, $24, $37, $28, $35, $F0
 
-Data_01C_64D4:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_WorldDew:: ; heuristic: item name; C0
+Data_01C_64D4:: ; address name
     db $20, $32, $35, $2F, $27, $0D, $28, $3A, $F0
 
-Data_01C_64DD:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Potion:: ; heuristic: item name; C0
+Data_01C_64DD:: ; address name
     db $19, $32, $37, $2C, $32, $31, $F0
 
-Data_01C_64E4:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_ElfWater:: ; heuristic: item name; C0
+Data_01C_64E4:: ; address name
     db $0E, $2F, $29, $20, $24, $37, $28, $35, $F0
 
-Data_01C_64ED:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Antidote:: ; heuristic: item name; C0
+Data_01C_64ED:: ; address name
     db $0A, $31, $37, $2C, $27, $32, $37, $28, $F0
 
-Data_01C_64F6:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MoonHerb:: ; heuristic: item name; C0
+Data_01C_64F6:: ; address name
     db $16, $32, $32, $31, $11, $28, $35, $25, $F0
 
-Data_01C_64FF:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Laurel:: ; heuristic: item name; C0
+Data_01C_64FF:: ; address name
     db $15, $24, $38, $35, $28, $2F, $F0
 
-Data_01C_6506:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_AwakeSand:: ; heuristic: item name; C0
+Data_01C_6506:: ; address name
     db $0A, $3A, $24, $2E, $28, $1C, $24, $31, $27, $F0
 
-Data_01C_6510:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_SkyBell:: ; heuristic: item name; C0
+Data_01C_6510:: ; address name
     db $1C, $2E, $3C, $0B, $28, $2F, $2F, $F0
 
-Data_01C_6518:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_SageRock:: ; heuristic: item name; C0
+Data_01C_6518:: ; address name
     db $1C, $24, $2A, $28, $1B, $32, $26, $2E, $F0
 
-Data_01C_6521:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_WorldLeaf:: ; heuristic: item name; C0
+Data_01C_6521:: ; address name
     db $20, $32, $35, $2F, $27, $15, $28, $24, $29, $F0
 
-Data_01C_652B:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_ATKseed:: ; heuristic: item name; C0
+Data_01C_652B:: ; address name
     db $0A, $1D, $14, $36, $28, $28, $27, $F0
 
-Data_01C_6533:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_DEFseed:: ; heuristic: item name; C0
+Data_01C_6533:: ; address name
     db $0D, $0E, $0F, $36, $28, $28, $27, $F0
 
-Data_01C_653B:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_AGLseed:: ; heuristic: item name; C0
+Data_01C_653B:: ; address name
     db $0A, $10, $15, $36, $28, $28, $27, $F0
 
-Data_01C_6543:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_INTseed:: ; heuristic: item name; C0
+Data_01C_6543:: ; address name
     db $12, $17, $1D, $36, $28, $28, $27, $F0
 
-Data_01C_654B:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_LifeAcorn:: ; heuristic: item name; C0
+Data_01C_654B:: ; address name
     db $15, $2C, $29, $28, $0A, $26, $32, $35, $31, $F0
 
-Data_01C_6555:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MysticNut:: ; heuristic: item name; C0
+Data_01C_6555:: ; address name
     db $16, $3C, $36, $37, $2C, $26, $17, $38, $37, $F0
 
-Data_01C_655F:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Quest:: ; heuristic: item name; C0
+Data_01C_655F:: ; address name
     db $1A, $38, $28, $36, $37, $50, $F0
 
-Data_01C_6566:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Horror:: ; heuristic: item name; C0
+Data_01C_6566:: ; address name
     db $11, $32, $35, $35, $32, $35, $50, $F0
 
-Data_01C_656E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_BeNice:: ; heuristic: item name; C0
+Data_01C_656E:: ; address name
     db $0B, $28, $17, $2C, $26, $28, $50, $F0
 
-Data_01C_6576:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Cheater:: ; heuristic: item name; C0
+Data_01C_6576:: ; address name
     db $0C, $2B, $28, $24, $37, $28, $35, $50, $F0
 
-Data_01C_657F:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Smart:: ; heuristic: item name; C0
+Data_01C_657F:: ; address name
     db $1C, $30, $24, $35, $37, $50, $F0
 
-Data_01C_6586:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Comedy:: ; heuristic: item name; C0
+Data_01C_6586:: ; address name
     db $0C, $32, $30, $28, $27, $3C, $50, $F0
 
-Data_01C_658E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_BeefJerky:: ; heuristic: item name; C0
+Data_01C_658E:: ; address name
     db $0B, $28, $28, $29, $13, $28, $35, $2E, $3C, $F0
 
-Data_01C_6598:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_PorkChop:: ; heuristic: item name; C0
+Data_01C_6598:: ; address name
     db $19, $32, $35, $2E, $0C, $2B, $32, $33, $F0
 
-Data_01C_65A1:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Rib:: ; heuristic: item name; C0
+Data_01C_65A1:: ; address name
     db $1B, $2C, $25, $F0
 
-Data_01C_65A5:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Sirloin:: ; heuristic: item name; C0
+Data_01C_65A5:: ; address name
     db $1C, $2C, $35, $2F, $32, $2C, $31, $F0
 
-Data_01C_65AD:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_BadMeat:: ; heuristic: item name; C0
+Data_01C_65AD:: ; address name
     db $0B, $24, $27, $16, $28, $24, $37, $F0
 
-Data_01C_65B5:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MeteOrb:: ; heuristic: item name; C0
+Data_01C_65B5:: ; address name
     db $16, $28, $37, $28, $18, $35, $25, $F0
 
-Data_01C_65BD:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_BeastTail:: ; heuristic: item name; C0
+Data_01C_65BD:: ; address name
     db $0B, $28, $24, $36, $37, $1D, $24, $2C, $2F, $F0
 
-Data_01C_65C7:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Repellent:: ; heuristic: item name; C0
+Data_01C_65C7:: ; address name
     db $1B, $28, $33, $28, $2F, $2F, $28, $31, $37, $F0
 
-Data_01C_65D1:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_ShinyHarp:: ; heuristic: item name; C0
+Data_01C_65D1:: ; address name
     db $1C, $2B, $2C, $31, $3C, $11, $24, $35, $33, $F0
 
-Data_01C_65DB:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Mist:: ; heuristic: item name; C0
+Data_01C_65DB:: ; address name
     db $16, $2C, $36, $37, $51, $F0
 
-Data_01C_65E1:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Friend:: ; heuristic: item name; C0
+Data_01C_65E1:: ; address name
     db $0F, $35, $2C, $28, $31, $27, $51, $F0
 
-Data_01C_65E9:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Wind:: ; heuristic: item name; C0
+Data_01C_65E9:: ; address name
     db $20, $2C, $31, $27, $51, $F0
 
-Data_01C_65EF:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Bolt:: ; heuristic: item name; C0
+Data_01C_65EF:: ; address name
     db $0B, $32, $2F, $37, $51, $F0
 
-Data_01C_65F5:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Snow:: ; heuristic: item name; C0
+Data_01C_65F5:: ; address name
     db $1C, $31, $32, $3A, $51, $F0
 
-Data_01C_65FB:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Fire:: ; heuristic: item name; C0
+Data_01C_65FB:: ; address name
     db $0F, $2C, $35, $28, $51, $F0
 
-Data_01C_6601:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Warp:: ; heuristic: item name; C0
+Data_01C_6601:: ; address name
     db $20, $24, $35, $33, $51, $F0
 
-Data_01C_6607:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_WarpWing:: ; heuristic: item name; C0
+Data_01C_6607:: ; address name
     db $20, $24, $35, $33, $20, $2C, $31, $2A, $F0
 
-Data_01C_6610:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_ExitBell:: ; heuristic: item name; C0
+Data_01C_6610:: ; address name
     db $0E, $3B, $2C, $37, $0B, $28, $2F, $2F, $F0
 
-Data_01C_6619:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Bookmark:: ; heuristic: item name; C0
+Data_01C_6619:: ; address name
     db $0B, $32, $32, $2E, $30, $24, $35, $2E, $F0
 
-Data_01C_6622:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_TinyMedal:: ; heuristic: item name; C0
+Data_01C_6622:: ; address name
     db $1D, $2C, $31, $3C, $16, $28, $27, $24, $2F, $F0
 
-Data_01C_662C:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_GoldPass:: ; heuristic: item name; C0
+Data_01C_662C:: ; address name
     db $10, $32, $2F, $27, $19, $24, $36, $36, $F0
 
-Data_01C_6635:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_LogTwig:: ; heuristic: item name; C0
+Data_01C_6635:: ; address name
     db $15, $32, $2A, $1D, $3A, $2C, $2A, $F0
 
-Data_01C_663D:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_2F:: ; heuristic: item name; C0
+Data_01C_663D:: ; address name
     db $F0
 
-Data_01C_663E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_WaterCall:: ; heuristic: item name; C0
+Data_01C_663E:: ; address name
     db $20, $24, $37, $28, $35, $0C, $24, $2F, $2F, $F0
 
-Data_01C_6648:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MoonRock:: ; heuristic: item name; C0
+Data_01C_6648:: ; address name
     db $16, $32, $32, $31, $1B, $32, $26, $2E, $F0
 
-Data_01C_6651:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Crest:: ; heuristic: item name; C0
+Data_01C_6651:: ; address name
     db $0C, $35, $28, $36, $37, $F0
 
-Data_01C_6657:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_YunaSoul:: ; heuristic: item name; C0
+Data_01C_6657:: ; address name
     db $22, $38, $31, $24, $1C, $32, $38, $2F, $F0
 
-Data_01C_6660:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_SleepHerb:: ; heuristic: item name; C0
+Data_01C_6660:: ; address name
     db $1C, $2F, $28, $28, $33, $11, $28, $35, $25, $F0
 
-Data_01C_666A:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Change:: ; heuristic: item name; C0
+Data_01C_666A:: ; address name
     db $0C, $2B, $24, $31, $2A, $28, $51, $F0
 
-Data_01C_6672:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_TidalBell:: ; heuristic: item name; C0
+Data_01C_6672:: ; address name
     db $1D, $2C, $27, $24, $2F, $0B, $28, $2F, $2F, $F0
 
-Data_01C_667C:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_HarMirror:: ; heuristic: item name; C0
+Data_01C_667C:: ; address name
     db $11, $24, $35, $16, $2C, $35, $35, $32, $35, $F0
 
-Data_01C_6686:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Sky:: ; heuristic: item name; C0
+Data_01C_6686:: ; address name
     db $1C, $2E, $3C, $5E, $F0
 
-Data_01C_668B:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Heaven:: ; heuristic: item name; C0
+Data_01C_668B:: ; address name
     db $11, $28, $24, $39, $28, $31, $52, $F0
 
-Data_01C_6693:: ; heuristic: target of a monotone pointer table; C0
+Data_01C_6693:: ; heuristic: item name; C0
     db $11, $28, $24, $39, $28, $31, $54, $F0
 
-Data_01C_669B:: ; heuristic: target of a monotone pointer table; C0
+Data_01C_669B:: ; heuristic: item name; C0
     db $11, $28, $24, $39, $28, $31, $53, $F0
 
-Data_01C_66A3:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_WizStone:: ; heuristic: item name; C0
+Data_01C_66A3:: ; address name
     db $20, $2C, $3D, $1C, $37, $32, $31, $28, $F0
 
-Data_01C_66AC:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Pretty:: ; heuristic: item name; C0
+Data_01C_66AC:: ; address name
     db $19, $35, $28, $37, $37, $3C, $55, $F0
 
-Data_01C_66B4:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Accessory:: ; heuristic: item name; C0
+Data_01C_66B4:: ; address name
     db $1F, $12, $1D, $25, $28, $2F, $37, $F0
 
-Data_01C_66BC:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_DracoBelt:: ; heuristic: item name; C0
+Data_01C_66BC:: ; address name
     db $0D, $35, $24, $26, $32, $0B, $28, $2F, $37, $F0
 
-Data_01C_66C6:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MagicBelt:: ; heuristic: item name; C0
+Data_01C_66C6:: ; address name
     db $16, $24, $2A, $2C, $26, $0B, $28, $2F, $37, $F0
 
-Data_01C_66D0:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_OddBelt:: ; heuristic: item name; C0
+Data_01C_66D0:: ; address name
     db $18, $27, $27, $0B, $28, $2F, $37, $F0
 
-Data_01C_66D8:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_StoneFang:: ; heuristic: item name; C0
+Data_01C_66D8:: ; address name
     db $1C, $37, $32, $31, $28, $0F, $24, $31, $2A, $F0
 
-Data_01C_66E2:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_SteelFang:: ; heuristic: item name; C0
+Data_01C_66E2:: ; address name
     db $1C, $37, $28, $28, $2F, $0F, $24, $31, $2A, $F0
 
-Data_01C_66EC:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MermScale:: ; heuristic: item name; C0
+Data_01C_66EC:: ; address name
     db $16, $28, $35, $30, $1C, $26, $24, $2F, $28, $F0
 
-Data_01C_66F6:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_DrakScale:: ; heuristic: item name; C0
+Data_01C_66F6:: ; address name
     db $0D, $35, $24, $2E, $1C, $26, $24, $2F, $28, $F0
 
-Data_01C_6700:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_AGL:: ; heuristic: item name; C0
+Data_01C_6700:: ; address name
     db $0A, $10, $15, $55, $F0
 
-Data_01C_6705:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Starry:: ; heuristic: item name; C0
+Data_01C_6705:: ; address name
     db $1C, $37, $24, $35, $35, $3C, $55, $F0
 
-Data_01C_670D:: ; heuristic: target of a monotone pointer table; C0
+Data_01C_670D:: ; heuristic: item name; C0
     db $1C, $30, $24, $35, $37, $56, $F0
 
-Data_01C_6714:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Wise:: ; heuristic: item name; C0
+Data_01C_6714:: ; address name
     db $20, $2C, $36, $28, $56, $F0
 
-Data_01C_671A:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_MagicCape:: ; heuristic: item name; C0
+Data_01C_671A:: ; address name
     db $16, $24, $2A, $2C, $26, $0C, $24, $33, $28, $F0
 
-Data_01C_6724:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_DracoCape:: ; heuristic: item name; C0
+Data_01C_6724:: ; address name
     db $0D, $35, $24, $26, $32, $0C, $24, $33, $28, $F0
 
-Data_01C_672E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_SilvrCape:: ; heuristic: item name; C0
+Data_01C_672E:: ; address name
     db $1C, $2C, $2F, $39, $35, $0C, $24, $33, $28, $F0
 
-Data_01C_6738:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_GoldCape:: ; heuristic: item name; C0
+Data_01C_6738:: ; address name
     db $10, $32, $2F, $27, $0C, $24, $33, $28, $F0
 
-Data_01C_6741:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_PltnmCape:: ; heuristic: item name; C0
+Data_01C_6741:: ; address name
     db $19, $2F, $37, $31, $30, $0C, $24, $33, $28, $F0
 
-Data_01C_674B:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_OrcaCape:: ; heuristic: item name; C0
+Data_01C_674B:: ; address name
     db $18, $35, $26, $24, $0C, $24, $33, $28, $F0
 
-Data_01C_6754:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_BraveCape:: ; heuristic: item name; C0
+Data_01C_6754:: ; address name
     db $0B, $35, $24, $39, $28, $0C, $24, $33, $28, $F0
 
-Data_01C_675E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_DScale:: ; heuristic: item name; C0
+Data_01C_675E:: ; address name
     db $0D, $9C, $1C, $26, $24, $2F, $28, $F0
 
-Data_01C_6766:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_None:: ; heuristic: item name; C0
+Data_01C_6766:: ; address name
     db $15, $2C, $29, $28, $55, $F0
 
-Data_01C_676C:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Divine:: ; heuristic: item name; C0
+Data_01C_676C:: ; address name
     db $0D, $2C, $39, $2C, $31, $28, $55, $F0
 
-Data_01C_6774:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_War:: ; heuristic: item name; C0
+Data_01C_6774:: ; address name
     db $20, $24, $35, $55, $F0
 
-Data_01C_6779:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Mage:: ; heuristic: item name; C0
+Data_01C_6779:: ; address name
     db $16, $24, $2A, $28, $55, $F0
 
-Data_01C_677F:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Fight:: ; heuristic: item name; C0
+Data_01C_677F:: ; address name
     db $0F, $2C, $2A, $2B, $37, $55, $F0
 
-Data_01C_6786:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Sailor:: ; heuristic: item name; C0
+Data_01C_6786:: ; address name
     db $1C, $24, $2C, $2F, $32, $35, $55, $F0
 
-Data_01C_678E:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Thief:: ; heuristic: item name; C0
+Data_01C_678E:: ; address name
     db $1D, $2B, $2C, $28, $29, $55, $F0
 
-Data_01C_6795:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_Cleric:: ; heuristic: item name; C0
+Data_01C_6795:: ; address name
     db $0C, $2F, $28, $35, $2C, $26, $55, $F0
 
-Data_01C_679D:: ; heuristic: target of a monotone pointer table; C0
+ItemName1C_62:: ; heuristic: item name; C0
+Data_01C_679D:: ; address name
     db $F0
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
@@ -7355,7 +7445,7 @@ Jump_01C_7011::
     ld d, $00
     sla e
     rl d
-    ld hl, Data_01C_63FE
+    ld hl, ItemNamesCopy_1C
     add hl, de
     ld e, [hl]
     inc hl

@@ -2430,6 +2430,14 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0261 — Bank $1C item name copy; a target-naming table option
+
+- Kind: OBSERVATION (reading; C1) and TOOL.
+- **ItemNamesCopy_1C (1C:$63FE, 99 words).** ShopMenu_Case03_Case03, ShopMenu_Case04_Case03 and VaultMenu_Case03_Case09 read the word for an item number and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 + 16 * character). The names equal StringTable_ItemNames. Each is labelled ItemName1C_<item>.
+- **Tool.** A table can now carry `"target_names": {"by": "item" | "monster" | "index", "prefix": ...}`, and its pointer targets are labelled prefix + name. A named item wins a shared target over item 0.
+- A scan of the remaining address-named data found no other pointer table of 20 or more $F0-terminated names.
+- Binary verification: build/run337 PASS, 0 differing bytes; tests OK.
+
 ### E-0260 — Names that spelled a callee's or table's address
 
 - Kind: naming (TOOL-assisted, reviewed by hand).

@@ -3157,6 +3157,15 @@ class Rom:
             if m:
                 for i in range(t["count"]):
                     give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"DefaultName_{m.group(1)}_{i:02X}")
+        for t in self.schemas:  # E-0261: "target_names": {"by": "item" | "monster" | "index", "prefix": ...}
+            tn = t.get("target_names")
+            if not tn:
+                continue
+            for i in (list(range(1, t["count"])) + [0]) if tn["by"] != "index" else range(t["count"]):
+                nm = self.item_name(i) if tn["by"] == "item" else (
+                    self.monster_name(i) if tn["by"] == "monster" and 0 < i < 0x180 else "")
+                nm = re.sub(r"[^A-Za-z0-9]", "", nm)
+                give(t["bank"], self._u16(t["bank"], t["addr"] + 2 * i), f"{tn['prefix']}{nm or f'{i:02X}'}")
         it = next((t for t in self.schemas if t["label"] == "ItemDescriptionTable"), None)
         if it:  # E-0255: item descriptions, by item name (StringTable_ItemNames, 08:$4716)
             for i in list(range(1, it["count"])) + [0]:  # item 0 has no name; a named item wins a shared text
@@ -3611,6 +3620,15 @@ class Rom:
                 out.append(f"    dw ${ev['target']:04X} ; byte offset of the called section from the track start")
             else:
                 out.append(f"    db ${ev['b0']:02X}, ${ev['b1']:02X} ; {ev['text']}")
+
+    def item_name(self, i: int) -> str:
+        """Name of item i: StringTable_ItemNames (bank 8, $4716), E-0026."""
+        q = 8 * BANK + self._u16(8, 0x4716 + 2 * i) - BANK
+        chars = []
+        while self.data[q] != 0xF0 and len(chars) < 16:
+            chars.append(gb_text.BYTE_TO_TEXT.get(self.data[q], "?"))
+            q += 1
+        return "".join(chars)
 
     def monster_name(self, mid: int) -> str:
         """Name of monster id `mid`: StringTable_MonsterNames (bank 8, $4258) for ids below 256,

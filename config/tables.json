@@ -23927,6 +23927,25 @@
         }
       ],
       "note": "E-0256 (C1: row 10 (Boss), band 7 of EncounterBandSpeciesTable)."
+    },
+    {
+      "bank": "1C",
+      "addr": "63FE",
+      "label": "ItemNamesCopy_1C",
+      "count": 99,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "item name",
+          "reason": "item name"
+        }
+      ],
+      "target_names": {
+        "by": "item",
+        "prefix": "ItemName1C_"
+      },
+      "note": "E-0261 (C1: ShopMenu_Case03_Case03, ShopMenu_Case04_Case03 and VaultMenu_Case03_Case09 read the word at $63FE + 2 * item number and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 + 16 * character); the names equal StringTable_ItemNames (08:$4716) for the 99 items)."
     }
   ]
 }
