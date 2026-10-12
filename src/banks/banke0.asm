@@ -7463,18 +7463,12 @@ Data_0E0_7740:: ; heuristic: string; C0
 
 Data_0E0_7753:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "SCENARIO "
-    db $B6
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " GAME", $F1
+    db "SCENARIO ", $B6, " GAME", $F1
     db "         DESIGNERS", $F0
 
 Data_0E0_7776:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "CHARACTER "
-    db $B6
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F1
+    db "CHARACTER ", $B6, $F1
     db "  MONSTER DESIGNER", $F0
 
 Data_0E0_7795:: ; heuristic: string; C0
@@ -7514,18 +7508,17 @@ Data_0E0_7839:: ; heuristic: string; C0
 
 Data_0E0_7849:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "SALES"
-    db $9E, $16, $0A, $1B, $14, $0E, $1D, $12, $17, $10, $F1, $16, $0A, $17, $0A, $10
-    db $0E, $1B, $F0
+    db "SALES", $9E, "MARKETING", $F1
+    db "MANAGER", $F0
 
 Data_0E0_7861:: ; heuristic: string; C0
-    db $0A, $0C, $0C, $18, $1E, $17, $1D, $12, $17, $10, $9E, $0C, $1B, $0E, $0D, $12
-    db $1D, $F1, $16, $0A, $17, $0A, $10, $0E, $1B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ACCOUNTING", $9E, "CREDIT", $F1
+    db "MANAGER", $F0
 
 Data_0E0_787B:: ; heuristic: string; C0
-    db $90, $90, $90, $90, $0A, $9E
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "R ANALYST", $F0
+    db "    A", $9E, "R ANALYST", $F0
 
 Data_0E0_788B:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -7602,8 +7595,7 @@ Data_0E0_79B9:: ; heuristic: string; C0
 
 Data_0E0_79BA:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "    "
-    db $B8, $02, $00, $00, $01, $90, $0E, $17, $12, $21, $F0
+    db "    ", $B8, "2001 ENIX", $F0
 
 ; A = battle slot: HL = the word for that slot at wBattleATK; A = its low byte (the bank-$E0 copy of the battle library, after a string; E-0213)
 ; no direct call (reached through a table, a jump or a vector)

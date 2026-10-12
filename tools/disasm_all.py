@@ -240,6 +240,7 @@ class Rom:
         self.families: list[dict] = []  # config/name_families.json: names for copies of library routines
         self.text_enabled = True  # render prose runs as db strings (--no-text turns it off)
         self._text_runs: dict[int, list[tuple[int, int]]] = {}
+        self.string_targets: set[tuple[int, int]] = set()
         self.alias: dict[tuple[int, int], str] = {}  # address name kept as an alias after a rename
         self.dalias: dict[tuple[int, int], str] = {}  # the same for data labels
         self.streams: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, addr) -> (decompressed, compressed)
@@ -2356,6 +2357,7 @@ class Rom:
                                      "note": f"E-0217 (derived: category list of StringCategories_{cb:02X}_{t:04X}; "
                                              f"one pointer per wStringIndex)"})
             taken += [(cb, s, e) for s, e in spans]
+            self.string_targets |= {(cb, x) for x in strings}
             made += 1
         log(f"string tables derived: {made}")
 
@@ -3362,6 +3364,29 @@ class Rom:
             if b == bank:
                 mask(a, a + used)
         runs = [(base + s, base + e) for s, e in gb_text.find_text_runs(bytes(raw))]
+        # E-0236: a string a derived string list names (E-0217) is text from its start through its
+        # $F0, even where its control-code arguments defeat the prose heuristic; it stops early at
+        # masked bytes or at the next string start
+        starts = sorted(a for b, a in self.string_targets if b == bank)
+        orig = self.data[bank * BANK:(bank + 1) * BANK]
+        forced = []
+        for k, a in enumerate(starts):
+            nxt = starts[k + 1] if k + 1 < len(starts) else base + BANK
+            e = a
+            while e < nxt and raw[e - base] == orig[e - base]:
+                e += 1
+                if orig[e - 1 - base] == 0xF0:
+                    break
+            if e > a:
+                forced.append((a, e))
+        if forced:
+            merged = []
+            for s0, e0 in sorted(runs + forced):
+                if merged and s0 <= merged[-1][1]:
+                    merged[-1] = (merged[-1][0], max(merged[-1][1], e0))
+                else:
+                    merged.append((s0, e0))
+            runs = merged
         self._text_runs[bank] = runs
         return runs
 

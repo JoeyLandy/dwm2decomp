@@ -220,6 +220,16 @@
       "bank": "05",
       "addr": "5AFE",
       "evidence": "E-0228"
+    },
+    {
+      "bank": "3B",
+      "addr": "4E60",
+      "evidence": "E-0236"
+    },
+    {
+      "bank": "3B",
+      "addr": "4EB8",
+      "evidence": "E-0236"
     }
   ]
 }

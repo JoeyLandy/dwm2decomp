@@ -1144,7 +1144,7 @@ Func_019_4605:: ; address name
     push de
     sub a, $0D
     swap a
-    ld de, Data_019_4641
+    ld de, IncrementOffsetRows_19
     add a, e
     ld e, a
     jr nc, Jump_019_4622
@@ -1182,9 +1182,17 @@ Func_019_4632:: ; address name
     ld [hl], a
     ret
 
-; address loaded by ApplyTable4641IncrementsForA0DTo13
-Data_019_4641:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $064641, $70
+; E-0236 (C1: ApplyTable4641IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
+; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding
+IncrementOffsetRows_19::
+Data_019_4641:: ; address name
+    db $E5, $E6, $E7, $E8, $E9, $EA, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $F5, $F6, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $EC, $F0, $F7, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $EC, $F0, $F7, $F8, $F9, $EB, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $EC, $F0, $F7, $F8, $F9, $ED, $F3, $EB, $EF, $80, $00, $00, $00, $00, $00, $00 ; id 17
+    db $FF, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+    db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; only called from BattleEnd_Step3_Sub06_Sub01 (E-0047)
 ; 1 call site from 1 routine (e.g. BattleEnd_Step3_Sub06_Sub01)

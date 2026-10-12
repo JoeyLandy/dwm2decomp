@@ -18091,6 +18091,250 @@
       ],
       "record": "one $A5-byte monster record in the SRAM record format",
       "note": "E-0235 (C1: the ten records PresetMonsterRecordTable points at, $A5 bytes apart; only bytes 0, 1-10 and 15-24 have read meanings, the rest are kept as bytes)."
+    },
+    {
+      "bank": "A0",
+      "addr": "4387",
+      "label": "IncrementOffsetRows_A0",
+      "count": 7,
+      "id_base": 13,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding"
+        }
+      ],
+      "note": "E-0236 (C1: ApplyTable4387IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
+    },
+    {
+      "bank": "19",
+      "addr": "4641",
+      "label": "IncrementOffsetRows_19",
+      "count": 7,
+      "id_base": 13,
+      "fields": [
+        {
+          "type": "db",
+          "size": 16,
+          "line": true,
+          "name": "offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding"
+        }
+      ],
+      "note": "E-0236 (C1: ApplyTable4641IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical)."
+    },
+    {
+      "bank": "E1",
+      "addr": "5D3C",
+      "label": "UnreferencedMetaSpriteSet_E1",
+      "count": 2,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "frame",
+          "reason": "meta-sprite frame"
+        }
+      ],
+      "note": "E-0236 (C1: shape only; no reference found and the bytes occur nowhere else in the ROM; two words point at the two frames that follow, each laid out as the E-0147 meta-sprite frames: 4-byte sprites (Y offset, X offset, tile, attribute) ending with $80)."
+    },
+    {
+      "bank": "E1",
+      "addr": "5D40",
+      "label": "UnreferencedMetaSpriteSet_E1_Frame0",
+      "count": 12,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "sprite: Y offset, X offset, tile, attribute"
+        }
+      ],
+      "note": "E-0236 (C1: shape only; frame 0 of UnreferencedMetaSpriteSet_E1; ends with $80)."
+    },
+    {
+      "bank": "E1",
+      "addr": "5D71",
+      "label": "UnreferencedMetaSpriteSet_E1_Frame1",
+      "count": 14,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 4,
+          "line": true,
+          "name": "sprite: Y offset, X offset, tile, attribute"
+        }
+      ],
+      "note": "E-0236 (C1: shape only; frame 1 of UnreferencedMetaSpriteSet_E1; ends with $80)."
+    },
+    {
+      "bank": "0C",
+      "addr": "7897",
+      "label": "GridEncounterTable",
+      "count": 4,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "encounter list for this wGridCursorX",
+          "reason": "grid encounter list"
+        }
+      ],
+      "note": "E-0236 (C1: ScriptCommand95_Run_Shared02 sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202))."
+    },
+    {
+      "bank": "0C",
+      "addr": "789F",
+      "label": "GridEncounterList0",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "three encounter words for this wScreenCountPlusOne",
+          "reason": "grid encounter"
+        }
+      ],
+      "note": "E-0236 (C1: list 0 of GridEncounterTable)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78A5",
+      "label": "GridEncounters0",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 6,
+          "name": "three encounter words copied to wEncounterMonsters"
+        }
+      ],
+      "note": "E-0236 (C1: the three records of GridEncounterList0)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78B7",
+      "label": "GridEncounterList1",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "three encounter words for this wScreenCountPlusOne",
+          "reason": "grid encounter"
+        }
+      ],
+      "note": "E-0236 (C1: list 1 of GridEncounterTable)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78BD",
+      "label": "GridEncounters1",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 6,
+          "name": "three encounter words copied to wEncounterMonsters"
+        }
+      ],
+      "note": "E-0236 (C1: the three records of GridEncounterList1)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78CF",
+      "label": "GridEncounterList2",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "three encounter words for this wScreenCountPlusOne",
+          "reason": "grid encounter"
+        }
+      ],
+      "note": "E-0236 (C1: list 2 of GridEncounterTable)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78D5",
+      "label": "GridEncounters2",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 6,
+          "name": "three encounter words copied to wEncounterMonsters"
+        }
+      ],
+      "note": "E-0236 (C1: the three records of GridEncounterList2)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78E7",
+      "label": "GridEncounterList3",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "ptr",
+          "name": "three encounter words for this wScreenCountPlusOne",
+          "reason": "grid encounter"
+        }
+      ],
+      "note": "E-0236 (C1: list 3 of GridEncounterTable)."
+    },
+    {
+      "bank": "0C",
+      "addr": "78ED",
+      "label": "GridEncounters3",
+      "count": 3,
+      "id_base": 0,
+      "fields": [
+        {
+          "type": "words",
+          "size": 6,
+          "name": "three encounter words copied to wEncounterMonsters"
+        }
+      ],
+      "note": "E-0236 (C1: the three records of GridEncounterList3)."
+    },
+    {
+      "bank": "85",
+      "addr": "5912",
+      "label": "TalkEvent29WordList",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 60,
+          "per_line": 8,
+          "name": "words to match, then $0000"
+        }
+      ],
+      "note": "E-0236 (C1: DispatchTalkEvent_Case05_Case29_Sub01 compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read)."
+    },
+    {
+      "bank": "85",
+      "addr": "5991",
+      "label": "TalkEvent47WordList",
+      "count": 1,
+      "fields": [
+        {
+          "type": "words",
+          "size": 228,
+          "per_line": 8,
+          "name": "words to match, then $0000"
+        }
+      ],
+      "note": "E-0236 (C1: DispatchTalkEvent_Case05_Case47_Sub01 (unless flag 0 is set) compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear; a match sets hTemp0 to 2; 113 words; what the words identify is not read)."
     }
   ]
 }

@@ -1405,12 +1405,12 @@ Jump_03B_4834::
     ld [wDefeatFlagsBA], a
     ret
 
-; only called from RestoreTargetHPIfHurt (E-0047)
-; 1 call site from 1 routine (e.g. RestoreTargetHPIfHurt)
+; sets the damage word to the target's max HP for action $03, a random 30-40 for actions $01 and $38, else a random 60-70; adds it to the target's HP capped at max HP (the damage word becomes the amount actually added when capped) (E-0236)
+; 2 call sites from 2 routines (e.g. UnreferencedRaiseWord3FAndRestoreHP, RestoreTargetHPIfHurt)
 ; reads: wBattleActionId, wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleHP, wBattleMaxHP
-RestoreTargetHPIfHurt_Sub01::
+RestoreTargetHPByActionAmount::
 Func_03B_483A:: ; address name
     ld a, [wBattleActionId]
     cp a, $03
@@ -1524,7 +1524,7 @@ Jump_03B_48E4::
     ret
 
 ; damage word = DE - (BC - HL) (E-0118)
-; 2 call sites from 2 routines (e.g. RestoreTargetHPIfHurt_Sub01, RestoreTargetMPIfLow_Sub01)
+; 2 call sites from 2 routines (e.g. RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_Sub01)
 ; writes: wBattleDamageLo, wBattleDamageHi
 SetDamageDEMinusBCPlusHL::
 Func_03B_48E9:: ; address name
@@ -1546,7 +1546,7 @@ Func_03B_48E9:: ; address name
 ; 2 call sites from 2 routines (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction, ApplyTargetBattleWordArray3FReduction)
 ; reads: wBattleTarget, wBattleActionId
 ; points at: wBattleWordArray3F
-SubtractActionAmountFromTargetBattleWordArray3F::
+SubtractActionAmountFromTargetBattleWordArray3F:: ; heuristic: follows a terminator; C0
 Func_03B_48FA:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleWordArray3F
@@ -1654,10 +1654,10 @@ Jump_03B_4987::
     ret
 
 ; actions $24 onward: damage = random in the range from Data_03B_4A24[action - $24], then scaled by the target's resistance level for that element (85 percent at level 1, less above) (E-0129)
-; no direct call (reached through a table, a jump or a vector)
+; 1 call site from 1 routine (e.g. UnreferencedRollDamageWithMessage35)
 ; reads: wBattleActionId, wBattleDamageLo, wBattleDamageHi
 ; writes: wBattleDamageLo, wBattleDamageHi
-RollTableDamageScaledByResistance:: ; heuristic: follows a terminator; C0
+RollTableDamageScaledByResistance::
 Func_03B_4990:: ; address name
     ld a, [wBattleActionId]
     sub a, $24
@@ -1772,7 +1772,7 @@ Func_03B_4A34:: ; address name
     ret
 
 ; wBattleDamageLo/wD873 = RandomInRange(HL, BC) (E-0116)
-; 4 call sites from 3 routines (e.g. RollTableDamageScaledByResistance, RestoreTargetHPIfHurt_Sub01, RestoreTargetMPIfLow_Sub01)
+; 4 call sites from 3 routines (e.g. RollTableDamageScaledByResistance, RestoreTargetHPByActionAmount, RestoreTargetMPIfLow_Sub01)
 ; writes: wBattleDamageLo, wBattleDamageHi
 SetDamageRandomInRange::
 Func_03B_4A40:: ; address name
@@ -1979,7 +1979,12 @@ Func_03B_4B02:: ; address name
     add hl, bc
     call JumpToWordAtHL
     ret
-    db $91, $4B, $92, $4B, $92, $4B, $92, $4B, $BD, $4B, $BD, $4B
+    db $91, $4B
+    dw RestoreTargetHPIfHurt
+    dw RestoreTargetHPIfHurt
+    dw RestoreTargetHPIfHurt
+    dw RestoreTargetMPIfLow
+    dw RestoreTargetMPIfLow
     dw CureTargetStatus0Bits01
     dw CureTargetStatus0Bit6
     dw CureTargetStatus0Bit5
@@ -2017,7 +2022,7 @@ Func_03B_4B92:: ; address name
     deref_hl
     call CompareHLToBC
     jr z, Jump_03B_4BBA
-    call RestoreTargetHPIfHurt_Sub01
+    call RestoreTargetHPByActionAmount
     ld l, $37
     ld bc, $4090
     jp Jump_03B_4ED6
@@ -2030,7 +2035,7 @@ Jump_03B_4BBA::
 ; reads: wBattleTarget
 ; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
 ; points at: wBattleMP, wBattleMaxMP
-RestoreTargetMPIfLow:: ; heuristic: follows a terminator; C0
+RestoreTargetMPIfLow:: ; heuristic: target of a pointer table; C0
 Func_03B_4BBD:: ; address name
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -2433,7 +2438,85 @@ Func_03B_4E46:: ; address name
 
 Jump_03B_4E5D::
     jp Jump_03B_4F15
-    INCBIN "dwm2-cobi-us.gbc", $0ECE60, $6F
+
+; calls RollTableDamageScaledByResistance, then stores resolve message $35 (wResolveMsgActor/Target = $35/$B5, flags $A8, arg $80); no caller found (E-0236)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
+UnreferencedRollDamageWithMessage35:: ; configured code entry (E-0236); C0
+Func_03B_4E60:: ; address name
+    call RollTableDamageScaledByResistance
+    jp Jump_03B_4EB0
+
+; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; no caller found (E-0236)
+; no direct call (reached through a table, a jump or a vector)
+; reads: wBattleTarget
+; writes: wResolveMsgActor, wResolveMsgFlags, wResolveMsgArg, wResolveMsgTarget
+; points at: wBattleWordArray3F, wBattleHP, wBattleMaxHP
+UnreferencedRaiseWord3FAndRestoreHP:: ; heuristic: follows a terminator; C0
+Func_03B_4E66:: ; address name
+    ld a, [wBattleTarget]
+    ld hl, wBattleWordArray3F
+    call AddDoubleAToHL_Bank3B
+    ld a, [hl+]
+    add a, $1E
+    ld c, a
+    ld a, [hl]
+    adc a, $00
+    ld b, a
+    ld a, b
+    sub a, $03
+    ld a, c
+    sbc a, $E7
+    jr c, Jump_03B_4E82
+    ld bc, $03E7
+
+Jump_03B_4E82::
+    ld [hl], b
+    dec hl
+    ld [hl], c
+    ld a, [wBattleTarget]
+    ld hl, wBattleHP
+    call AddDoubleAToHL_Bank3B
+    ld a, [hl+]
+    ld b, [hl]
+    ld c, a
+    ld a, [wBattleTarget]
+    ld hl, wBattleMaxHP
+    call AddDoubleAToHL_Bank3B
+    deref_hl
+    call CompareHLToBC
+    jr z, Jump_03B_4EAD
+    call RestoreTargetHPByActionAmount
+    ld l, $37
+    ld bc, $4090
+    jp Jump_03B_4ED6
+
+Jump_03B_4EAD::
+    jp Jump_03B_4EE3
+
+Jump_03B_4EB0::
+    ld hl, $B535
+    ld bc, $80A8
+    jr Jump_03B_4EBE
+
+; HL = $D035, BC = $88A8, then falls into the resolve-message store at $4EBE; skipped by the jr before it and no caller found (E-0236)
+; no direct call (reached through a table, a jump or a vector)
+; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
+UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
+Func_03B_4EB8:: ; address name
+    ld hl, $D035
+    ld bc, $88A8
+
+Jump_03B_4EBE::
+    ld a, l
+    ld [wResolveMsgActor], a
+    ld a, h
+    ld [wResolveMsgTarget], a
+    ld a, c
+    ld [wResolveMsgFlags], a
+    ld a, b
+    ld [wResolveMsgArg], a
+    ret
 
 ; clears wBattleDamageLo/wD873 (the damage word), then wDAC2 = L, wDAC0 = C, wDAC1 = B (the same instructions as the bank-$36 copy) (E-0073)
 ; 1 call site from 1 routine (e.g. InflictStatus0Bit0WithBattleWordArray3FReduction)
@@ -2487,7 +2570,7 @@ Jump_03B_4EFA::
 ; reads: wBattleTarget
 ; writes: wBattleDamageLo, wBattleDamageHi
 ; points at: wBattleStatus
-ClearDamageAndReadTargetStatus0::
+ClearDamageAndReadTargetStatus0:: ; heuristic: follows a terminator; C0
 Func_03B_4F03:: ; address name
     xor a, a
     ld [wBattleDamageLo], a
@@ -2505,7 +2588,7 @@ Jump_03B_4F15::
     db $21, $FF, $D8, $18, $28, $21, $0F, $D9, $18, $23
 
 ; A = battle slot: HL = the word for that slot at wBattleMaxHP; A = its low byte (E-0064)
-; 1 call site from 1 routine (e.g. RestoreTargetHPIfHurt_Sub01)
+; 1 call site from 1 routine (e.g. RestoreTargetHPByActionAmount)
 ; points at: wBattleMaxHP
 GetBattleMaxHP_Bank3B::
 Func_03B_4F25:: ; address name
@@ -2542,7 +2625,7 @@ Jump_03B_4F48::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes appear in 12 banks)
-; 10 call sites from 6 routines (e.g. Func_03B_42F4_Case08, SubtractActionAmountFromTargetBattleWordArray3F, RestoreTargetHPIfHurt, RestoreTargetHPIfHurt_Sub01, ...)
+; 13 call sites from 7 routines (e.g. Func_03B_42F4_Case08, UnreferencedRaiseWord3FAndRestoreHP, RestoreTargetHPByActionAmount, SubtractActionAmountFromTargetBattleWordArray3F, ...)
 AddDoubleAToHL_Bank3B::
 Func_03B_4F52:: ; address name
     add a, a

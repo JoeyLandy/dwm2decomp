@@ -4092,105 +4092,90 @@ Data_024_5D27:: ; address name
     dw Data_024_60CD ; id 21
 
 Data_024_5D53:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Oh? But none", $F1
+    db $EA, $45, " Oh? But none", $F1
     db "appear to be dead", $A4, $FA, $F7
     db $F0
 
 Data_024_5D78:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Oh? But no one", $F1
+    db $EA, $45, " Oh? But no one", $F1
     db "is poisoned.", $FA, $F7
     db $F0
 
 Data_024_5D99:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " But none appear", $F1
+    db $EA, $45, " But none appear", $F1
     db "to be cursed", $A4, $FA, $F7
     db $F0
 
 Data_024_5DBC:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Do you need any", $F1
+    db $EA, $45, " Do you need any", $F1
     db "other help?", $F0
 
 Data_024_5DDB:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " May the gods go", $F1
+    db $EA, $45, " May the gods go", $F1
     db "with you.", $F7
     db $F0
 
 Data_024_5DF9:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which monster", $F1
+    db $EA, $45, " Which monster", $F1
     db "should be revived?", $F0
 
 Data_024_5E1D:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Who should be", $F1
+    db $EA, $45, " Who should be", $F1
     db "cured of poison?", $F0
 
 Data_024_5E3F:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Who should be", $F1
+    db $EA, $45, " Who should be", $F1
     db "freed of a curse?", $F0
 
 Data_024_5E62:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Surely you jest.", $F1
+    db $EA, $45, " Surely you jest.", $F1
     db "That one is alive.", $FA, $F7
     db $F0
 
 Data_024_5E8B:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " But that monster", $F1
+    db $EA, $45, " But that monster", $F1
     db "is not poisoned.", $FA, $F7
     db $F0
 
 Data_024_5EB2:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " But that monster", $F1
+    db $EA, $45, " But that monster", $F1
     db "is not cursed.", $FA, $F7
     db $F0
 
 Data_024_5ED7:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " I must ask for a", $F1
+    db $EA, $45, " I must ask for a", $F1
     db "small donation of", $FA, $F7
     db $EF, $EE, $F9, "0G.", $EF, $EE, "Do you accept?", $F0
 
 Data_024_5F15:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Gods, the", $F1
+    db $EA, $45, " Gods, the", $F1
     db "spirits of earth!", $FA, $F7
     db $EF, $EE, "Please summon the", $EF, $EE, "soul of ", $F9, "0!", $F7
     db $F0
 
 Data_024_5F57:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Gods, I  beg", $F1
+    db $EA, $45, " Gods, I  beg", $F1
     db "you, purify the", $FA, $F7
     db $EF, $EE, "poison sullying", $EF, $EE, $F9, "0!", $F7
     db $F0
 
 Data_024_5F90:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Gods, I beg", $F1
+    db $EA, $45, " Gods, I beg", $F1
     db "you, free ", $F9, "0", $FA, $F7
     db $EF, $EE, "from its enslaving", $EF, $EE, "curse!", $F7
     db $F0
@@ -4221,9 +4206,8 @@ Data_024_6019:: ; heuristic: string; C0
     db $F0
 
 Data_024_6087:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Oh, my, my", $A4, $F1
+    db $EA, $45, " Oh, my, my", $A4, $F1
     db "How deplorable!", $FA, $F7
     db $EF, $EE, "You haven't enough", $EF, $EE, "gold for this.", $FA, $F7
     db $F0

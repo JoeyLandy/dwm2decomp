@@ -663,7 +663,51 @@ Jump_0E1_5D30::
     pop bc
     pop hl
     ret
-    INCBIN "dwm2-cobi-us.gbc", $385D3C, $6E
+
+; E-0236 (C1: shape only; no reference found and the bytes occur nowhere else in the ROM; two words point at the two frames that follow, each laid out as the E-0147 meta-sprite frames: 4-byte sprites (Y offset, X offset, tile, attribute) ending with $80).
+; record: frame
+UnreferencedMetaSpriteSet_E1::
+Data_0E1_5D3C:: ; address name
+    dw UnreferencedMetaSpriteSet_E1_Frame0 ; id 0
+    dw UnreferencedMetaSpriteSet_E1_Frame1 ; id 1
+
+; E-0236 (C1: shape only; frame 0 of UnreferencedMetaSpriteSet_E1; ends with $80).
+; record: sprite: Y offset, X offset, tile, attribute
+UnreferencedMetaSpriteSet_E1_Frame0::
+Data_0E1_5D40:: ; address name
+    db $F0, $25, $0B, $01 ; entry 0
+    db $08, $15, $05, $00 ; entry 1
+    db $08, $08, $07, $00 ; entry 2
+    db $10, $08, $09, $00 ; entry 3
+    db $10, $10, $0A, $00 ; entry 4
+    db $10, $01, $07, $00 ; entry 5
+    db $18, $03, $07, $00 ; entry 6
+    db $18, $FF, $08, $00 ; entry 7
+    db $F8, $18, $0C, $00 ; entry 8
+    db $F8, $28, $0D, $00 ; entry 9
+    db $00, $1B, $0E, $00 ; entry 10
+    db $00, $28, $0F, $00 ; entry 11
+    db $80 ; end
+
+; E-0236 (C1: shape only; frame 1 of UnreferencedMetaSpriteSet_E1; ends with $80).
+; record: sprite: Y offset, X offset, tile, attribute
+UnreferencedMetaSpriteSet_E1_Frame1::
+Data_0E1_5D71:: ; address name
+    db $F7, $1F, $0B, $01 ; entry 0
+    db $F0, $20, $00, $00 ; entry 1
+    db $F8, $18, $01, $00 ; entry 2
+    db $F8, $20, $02, $00 ; entry 3
+    db $F8, $28, $03, $00 ; entry 4
+    db $00, $1B, $04, $00 ; entry 5
+    db $08, $15, $05, $00 ; entry 6
+    db $02, $28, $06, $00 ; entry 7
+    db $08, $08, $07, $00 ; entry 8
+    db $10, $08, $09, $00 ; entry 9
+    db $10, $10, $0A, $00 ; entry 10
+    db $10, $01, $07, $00 ; entry 11
+    db $18, $03, $07, $00 ; entry 12
+    db $18, $FF, $08, $00 ; entry 13
+    db $80 ; end
 
 ; Super Game Boy border set 4: border tiles $00-$7F (4096 bytes, sent with packet set $10); LoadSGBBorderForSetA decompresses it into the cleared vTiles1 and sends it (SGBTransferCompressed)
 ; LZSS-compressed asset: 3046 bytes expand to 4096 into a zero-filled buffer (tools/lzss_gfx.py, E-0016/E-0017; C1)

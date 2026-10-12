@@ -493,35 +493,45 @@ Data_02F_4340:: ; address name
     dw Data_02F_7D11 ; id 33
 
 Data_02F_4384:: ; heuristic: string; C0
-    db $ED, $F9, $00, $90, $24, $33, $33, $28, $24, $35, $36, $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, $F9, "0 appears!", $F1
+    db $EC, $F0
 
 Data_02F_4393:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $24, $33, $33, $28, $24, $35
-    db $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters appear!", $F1
+    db $EC, $F0
 
 Data_02F_43A7:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $24, $33, $33, $28, $24, $35
-    db $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters appear!", $F1
+    db $EC, $F0
 
 Data_02F_43BB:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $24, $33, $33, $28, $24, $35
-    db $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters appear!", $F1
+    db $EC, $F0
 
 Data_02F_43CF:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $24, $33, $33, $28, $24, $35
-    db $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters appear!", $F1
+    db $EC, $F0
 
 Data_02F_43E3:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $24, $33, $33, $28, $24, $35
-    db $99, $F1, $EC, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters appear!", $F1
+    db $EC, $F0
 
 Data_02F_43F7:: ; heuristic: string; C0
-    db $ED, $F6, $3E, $90, $33, $24, $35, $37, $3C, $90, $3A, $24, $36, $F1, $3A, $2C
-    db $33, $28, $27, $90, $32, $38, $37, $99, $E5, $42, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, $F6, "'s party was", $F1
+    db "wiped out!", $E5, $42, $F0
 
 Data_02F_4412:: ; heuristic: string; C0
-    db $ED, $16, $32, $31, $36, $37, $28, $35, $36, $90, $3A, $28, $35, $28, $F1, $27
-    db $28, $29, $28, $24, $37, $28, $27, $99, $E4, $7E, $FA, $F7, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $ED, "Monsters were", $F1
+    db "defeated!", $E4, $7E, $FA, $F7
+    db $F0
 
 Data_02F_442F:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -1265,14 +1275,13 @@ Data_02F_5A35:: ; heuristic: string; C0
 Data_02F_5A82:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Monster was", $F1
-    db "defeated!"
-    db $E4, $7E, $FA, $F7, $F0
+    db "defeated!", $E4, $7E, $FA, $F7
+    db $F0
 
 Data_02F_5A9C:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0's party", $F1
-    db "was wiped out!"
-    db $E5, $42, $F0
+    db "was wiped out!", $E5, $42, $F0
 
 Data_02F_5AB8:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -2271,10 +2280,9 @@ Data_02F_6F68:: ; heuristic: string; C0
     db "all its MP!", $EC, $F0
 
 Data_02F_6F7E:: ; heuristic: string; C0
-    db $ED, $AA, $0C, $2B, $24, $31, $26, $28, $AB, $90, $0C, $2B, $24, $31, $26, $28
-    db $AB, $F1, $0C, $2B, $24, $31, $26, $28, $A4, $AA
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $EC, $F2, $ED, "The call echoed", $F1
+    db $ED, $AA, "Chance, Chance,", $F1
+    db "Chance", $A4, $AA, $EC, $F2, $ED, "The call echoed", $F1
     db "over and over!", $EC, $F0
 
 Data_02F_6FBB:: ; heuristic: string; C0
@@ -2639,19 +2647,18 @@ Data_02F_788D:: ; heuristic: string; C0
     db "Undefined", $F0
 
 Data_02F_7897:: ; heuristic: string; C0
-    db $EF, $EE, $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "'s party got", $EF, $EE, $F9, "0 EX points!", $FA, $F7
+    db $EF, $EE, $F6, "'s party got", $EF, $EE, $F9, "0 EX points!", $FA, $F7
     db $F0
 
 Data_02F_78B7:: ; heuristic: string; C0
-    db $E5, $00
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $ED, $F9, "0 was", $F1
-    db "promoted to Lv", $F9, "G!"
-    INCBIN "dwm2-cobi-us.gbc", $0BF8D2, $6B
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $F9, "q", $FA, $F7
+    db $E5, "0", $ED, $F9, "0 was", $F1
+    db "promoted to Lv", $F9, "G!", $E5, $50, $FA, $F7
+    db $F2, $ED, $F9, "0", $E8, "60Max. HP ", $A2, $F9, "W", $E8, "01Lv", $F9, "G", $E8, "61Max. MP ", $A2, $F9
+    db "a", $FA, $F7
+    db $F2, $ED, $F9, "0", $E8, "60ATK ", $A2, $F9, "e", $E8, "01Lv", $F9, "G", $E8, "61DEF ", $A2, $F9, "i", $FA, $F7
+    db $F2, $ED, $F9, "0", $E8, "60AGL ", $A2, $F9, "m", $E8, "01Lv", $F9, "G", $E8, "61INT ", $A2, $F9, "q", $FA, $F7
     db $F0
 
 Data_02F_7942:: ; heuristic: string; C0
@@ -2791,14 +2798,14 @@ Data_02F_7C12:: ; heuristic: string; C0
 Data_02F_7C2E:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0 was sent", $F1
-    db "back to the farm."
-    db $E5, $D6, $FA, $F7, $F0
+    db "back to the farm.", $E5, $D6, $FA, $F7
+    db $F0
 
 Data_02F_7C51:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0 joined the", $F1
-    db "party."
-    db $E5, $D6, $FA, $F7, $F0
+    db "party.", $E5, $D6, $FA, $F7
+    db $F0
 
 Data_02F_7C6B:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -2827,12 +2834,12 @@ Data_02F_7CE2:: ; heuristic: string; C0
 Data_02F_7CF3:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0 was sent to", $F1
-    db "the farm."
-    db $E5, $54, $FA, $F7, $F0
+    db "the farm.", $E5, $54, $FA, $F7
+    db $F0
 
 Data_02F_7D11:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $ED, $F9, "0 joined the", $F1
-    db "party."
-    db $E5, $54, $FA, $F7, $F0
+    db "party.", $E5, $54, $FA, $F7
+    db $F0
     ds $2D5, $00

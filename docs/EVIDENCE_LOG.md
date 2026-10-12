@@ -2430,6 +2430,28 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0236 — Unreferenced battle routines (bank $3B), increment rows, grid encounters, talk-event word lists, listed strings as text
+
+- Kind: OBSERVATION (reading; C1, code entries C0) and TOOL.
+- **Bank $3B code ($4E60-$4ECF).** Bytes after `jp Jump_03B_4F15` at $4E5D decode as two unreferenced routines; configured code entries at $4E60 and $4EB8.
+  - UnreferencedRollDamageWithMessage35 ($4E60).
+  - UnreferencedRaiseWord3FAndRestoreHP ($4E66).
+  - $4EB8 is a 6-byte `ld hl, $D035 / ld bc, $88A8` that the `jr` before it skips; it falls into the message store at $4EBE (UnreferencedStoreResolveMessage35D0).
+  - The new caller turned $483A from a structural `_Sub01` into a shared routine, now named RestoreTargetHPByActionAmount: max HP for action $03, a random 30-40 for actions $01/$38, else a random 60-70, added to HP and capped at max HP.
+- **IncrementOffsetRows_A0 (A0:$4387) and IncrementOffsetRows_19 (19:$4641).** These are 7 identical rows of 16 bytes. ApplyTable4387IncrementsForA0DTo13 (and the bank $19 copy for $4641) takes row A - $0D and, for each byte before $80, increments the byte at DE + $FF00 + byte, capped at 3.
+- **UnreferencedMetaSpriteSet_E1 (E1:$5D3C).** Two frame pointers and two E-0147-shaped frames (12 and 14 sprites, each list ending with $80). This is the shape only: no reference was found and the bytes occur nowhere else.
+- **GridEncounterTable (0C:$7897).** ScriptCommand95_Run_Shared02 sets battle intro 4 and encounter kind 2, then reads two words:
+  - the word at 2 * wGridCursorX;
+  - then the word at 2 * wScreenCountPlusOne of that list.
+  - It copies 6 bytes from there to wEncounterMonsters. There are 4 lists of 3 pointers, each list followed by its three 6-byte records.
+- **TalkEvent29WordList (85:$5912, 29 words) and TalkEvent47WordList (85:$5991, 113 words), each ending with $0000.**
+  - DispatchTalkEvent_Case05_Case29_Sub01 and _Case47_Sub01 compare the words with hPlayerSpriteStreamLo/Hi (when hPlayerSpriteOverride bit 7 is set and bit 0 clear).
+  - The first one otherwise compares them with record word $0B of party records whose byte $55 bit 7 is clear.
+  - The earlier `dw Data_085_5A00 ...` pointer run inside the second list was false.
+- **Tool.** text_runs_for now also treats each string named by a derived string list (E-0217) as text, from its start through its $F0. It stops at masked bytes or at the next listed start, even where control-code arguments (for example `$E8, "60"`) defeat the prose heuristic. This brings 2F:$78B7 and others out of INCBIN.
+- Unidentified INCBIN went from 4,601 to 3,690 bytes.
+- Binary verification: build/run293 PASS, 0 differing bytes; tests OK.
+
 ### E-0235 — Glyph tile destination lists and preset monster records (bank $0D)
 
 - Kind: OBSERVATION (reading; C1).

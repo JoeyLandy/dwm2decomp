@@ -10835,7 +10835,7 @@ Jump_000_3E76::
     ret
 
 ; Z set when HL == BC; A is clobbered
-; 179 call sites from 117 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FoeHPCheckReadsWrongSlot, ...)
+; 180 call sites from 118 routines (e.g. RandomInRange, DebugMonsterRecordViewer_Update, ClampDebugValueToTableLimit, FoeHPCheckReadsWrongSlot, ...)
 CompareHLToBC::
 Func_000_3E7A:: ; address name
     ld a, h

@@ -810,2004 +810,2671 @@ Data_088_441C:: ; address name
     dw Data_088_5CB7 ; id 255
 
 Data_088_461C:: ; heuristic: string; C0
-    db $17, $32, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "None", $F0
 
 Data_088_4621:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slime", $F0
 
 Data_088_4627:: ; heuristic: string; C0
-    db $1C, $33, $32, $37, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpotSlime", $F0
 
 Data_088_4631:: ; heuristic: string; C0
-    db $0C, $24, $26, $37, $2C, $0B, $24, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CactiBall", $F0
 
 Data_088_463B:: ; heuristic: string; C0
-    db $1D, $24, $2C, $2F, $0E, $24, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TailEater", $F0
 
 Data_088_4645:: ; heuristic: string; C0
-    db $0C, $35, $28, $36, $37, $33, $28, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Crestpent", $F0
 
 Data_088_464F:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $0C, $32, $25, $35, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingCobra", $F0
 
 Data_088_4659:: ; heuristic: string; C0
-    db $0C, $38, $35, $36, $28, $15, $24, $30, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CurseLamp", $F0
 
 Data_088_4663:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slime", $F0
 
 Data_088_4669:: ; heuristic: string; C0
-    db $0A, $31, $37, $25, $28, $24, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Antbear", $F0
 
 Data_088_4671:: ; heuristic: string; C0
-    db $0D, $35, $24, $26, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dracky", $F0
 
 Data_088_4678:: ; heuristic: string; C0
-    db $0E, $2A, $2A, $33, $2F, $24, $37, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Eggplaton", $F0
 
 Data_088_4682:: ; heuristic: string; C0
-    db $13, $28, $3A, $28, $2F, $0B, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "JewelBag", $F0
 
 Data_088_468B:: ; heuristic: string; C0
-    db $11, $32, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Hork", $F0
 
 Data_088_4690:: ; heuristic: string; C0
-    db $20, $3C, $39, $28, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Wyvern", $F0
 
 Data_088_4697:: ; heuristic: string; C0
-    db $0A, $35, $30, $3C, $0A, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmyAnt", $F0
 
 Data_088_469F:: ; heuristic: string; C0
-    db $16, $24, $27, $10, $32, $33, $2B, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadGopher", $F0
 
 Data_088_46A9:: ; heuristic: string; C0
-    db $01, $0E, $3C, $28, $0C, $2F, $32, $3A, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "1EyeClown", $F0
 
 Data_088_46B3:: ; heuristic: string; C0
-    db $1C, $31, $24, $2C, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snaily", $F0
 
 Data_088_46BA:: ; heuristic: string; C0
-    db $19, $32, $2C, $36, $32, $31, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Poisongon", $F0
 
 Data_088_46C4:: ; heuristic: string; C0
-    db $16, $32, $35, $24, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Moray", $F0
 
 Data_088_46CA:: ; heuristic: string; C0
-    db $0E, $3C, $28, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Eyeder", $F0
 
 Data_088_46D1:: ; heuristic: string; C0
-    db $19, $38, $37, $35, $28, $0F, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PutreFish", $F0
 
 Data_088_46DB:: ; heuristic: string; C0
-    db $10, $24, $30, $24, $31, $2C, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gamanian", $F0
 
 Data_088_46E4:: ; heuristic: string; C0
-    db $1C, $33, $2C, $2E, $3C, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpikyBoy", $F0
 
 Data_088_46ED:: ; heuristic: string; C0
-    db $11, $32, $32, $27, $1C, $34, $38, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HoodSquid", $F0
 
 Data_088_46F7:: ; heuristic: string; C0
-    db $0C, $24, $33, $37, $0D, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CaptDead", $F0
 
 Data_088_4700:: ; heuristic: string; C0
-    db $19, $28, $37, $2C, $37, $28, $28, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Petiteel", $F0
 
 Data_088_4709:: ; heuristic: string; C0
-    db $1B, $32, $37, $1B, $24, $39, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RotRaven", $F0
 
 Data_088_4712:: ; heuristic: string; C0
-    db $16, $28, $35, $30, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Merman", $F0
 
 Data_088_4719:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2E, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octokid", $F0
 
 Data_088_4721:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $20, $24, $39, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueWave", $F0
 
 Data_088_472B:: ; heuristic: string; C0
-    db $19, $28, $24, $35, $2F, $10, $28, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PearlGel", $F0
 
 Data_088_4734:: ; heuristic: string; C0
-    db $1D, $32, $35, $37, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Tortragon", $F0
 
 Data_088_473E:: ; heuristic: string; C0
-    db $0A, $34, $38, $24, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AquaHawk", $F0
 
 Data_088_4747:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkEye", $F0
 
 Data_088_474F:: ; heuristic: string; C0
-    db $1B, $24, $3C, $10, $2C, $2A, $24, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RayGigas", $F0
 
 Data_088_4758:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $20, $24, $31, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilWand", $F0
 
 Data_088_4761:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SlimeNite", $F0
 
 Data_088_476B:: ; heuristic: string; C0
-    db $15, $2C, $3D, $24, $35, $27, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LizardMan", $F0
 
 Data_088_4775:: ; heuristic: string; C0
-    db $11, $24, $30, $30, $28, $35, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HammerMan", $F0
 
 Data_088_477F:: ; heuristic: string; C0
-    db $22, $28, $37, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Yeti", $F0
 
 Data_088_4784:: ; heuristic: string; C0
-    db $18, $35, $26, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orc", $F0
 
 Data_088_4788:: ; heuristic: string; C0
-    db $10, $2C, $36, $30, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gismo", $F0
 
 Data_088_478E:: ; heuristic: string; C0
-    db $0D, $35, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Droll", $F0
 
 Data_088_4794:: ; heuristic: string; C0
-    db $10, $32, $32, $33, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Goopi", $F0
 
 Data_088_479A:: ; heuristic: string; C0
-    db $16, $38, $30, $30, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mummy", $F0
 
 Data_088_47A0:: ; heuristic: string; C0
-    db $1D, $35, $28, $28, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TreeBoy", $F0
 
 Data_088_47A8:: ; heuristic: string; C0
-    db $0B, $32, $30, $25, $0C, $35, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BombCrag", $F0
 
 Data_088_47B1:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueNite", $F0
 
 Data_088_47BB:: ; heuristic: string; C0
-    db $10, $35, $2C, $3D, $3D, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grizzly", $F0
 
 Data_088_47C3:: ; heuristic: string; C0
-    db $0D, $28, $30, $32, $31, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Demonite", $F0
 
 Data_088_47CC:: ; heuristic: string; C0
-    db $10, $38, $2F, $33, $33, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gulpple", $F0
 
 Data_088_47D4:: ; heuristic: string; C0
-    db $0F, $32, $3B, $0F, $2C, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FoxFire", $F0
 
 Data_088_47DC:: ; heuristic: string; C0
-    db $0A, $2F, $30, $2C, $35, $24, $2D, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Almiraj", $F0
 
 Data_088_47E4:: ; heuristic: string; C0
-    db $15, $24, $31, $27, $18, $3A, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LandOwl", $F0
 
 Data_088_47EC:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $28, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Goategon", $F0
 
 Data_088_47F5:: ; heuristic: string; C0
-    db $1C, $24, $26, $26, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Saccer", $F0
 
 Data_088_47FC:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingSlime", $F0
 
 Data_088_4806:: ; heuristic: string; C0
-    db $0B, $38, $2F, $2F, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BullBird", $F0
 
 Data_088_480F:: ; heuristic: string; C0
-    db $0C, $35, $24, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CragDevil", $F0
 
 Data_088_4819:: ; heuristic: string; C0
-    db $1C, $37, $24, $35, $29, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Starfish", $F0
 
 Data_088_4822:: ; heuristic: string; C0
-    db $1C, $28, $24, $11, $32, $35, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SeaHorse", $F0
 
 Data_088_482B:: ; heuristic: string; C0
-    db $16, $24, $31, $0E, $24, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ManEater", $F0
 
 Data_088_4834:: ; heuristic: string; C0
-    db $1C, $37, $38, $25, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StubBird", $F0
 
 Data_088_483D:: ; heuristic: string; C0
-    db $10, $2C, $24, $31, $37, $16, $32, $37, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GiantMoth", $F0
 
 Data_088_4847:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoatHorn", $F0
 
 Data_088_4850:: ; heuristic: string; C0
-    db $0F, $24, $31, $2A, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FangSlime", $F0
 
 Data_088_485A:: ; heuristic: string; C0
-    db $1B, $32, $26, $2E, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RockSlime", $F0
 
 Data_088_4864:: ; heuristic: string; C0
-    db $16, $24, $27, $1B, $24, $39, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadRaven", $F0
 
 Data_088_486D:: ; heuristic: string; C0
-    db $0E, $30, $3C, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Emyu", $F0
 
 Data_088_4872:: ; heuristic: string; C0
-    db $0F, $2F, $32, $35, $24, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FloraMan", $F0
 
 Data_088_487B:: ; heuristic: string; C0
-    db $1C, $2F, $38, $35, $33, $28, $35, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slurperon", $F0
 
 Data_088_4885:: ; heuristic: string; C0
-    db $1B, $32, $25, $32, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Roboster", $F0
 
 Data_088_488E:: ; heuristic: string; C0
-    db $16, $24, $27, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadDragon", $F0
 
 Data_088_4898:: ; heuristic: string; C0
-    db $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dragon", $F0
 
 Data_088_489F:: ; heuristic: string; C0
-    db $12, $35, $32, $31, $1D, $38, $35, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "IronTurt", $F0
 
 Data_088_48A8:: ; heuristic: string; C0
-    db $16, $24, $27, $16, $2C, $35, $35, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadMirror", $F0
 
 Data_088_48B2:: ; heuristic: string; C0
-    db $1C, $24, $25, $35, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SabreMan", $F0
 
 Data_088_48BB:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilBeast", $F0
 
 Data_088_48C5:: ; heuristic: string; C0
-    db $20, $24, $35, $16, $24, $31, $37, $2C, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WarMantis", $F0
 
 Data_088_48CF:: ; heuristic: string; C0
-    db $19, $2B, $32, $28, $31, $2C, $3B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Phoenix", $F0
 
 Data_088_48D7:: ; heuristic: string; C0
-    db $0F, $2C, $35, $28, $20, $28, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FireWeed", $F0
 
 Data_088_48E0:: ; heuristic: string; C0
-    db $20, $2C, $2F, $27, $0A, $33, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WildApe", $F0
 
 Data_088_48E8:: ; heuristic: string; C0
-    db $0D, $38, $30, $25, $2C, $35, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dumbira", $F0
 
 Data_088_48F0:: ; heuristic: string; C0
-    db $0B, $28, $2F, $3D, $28, $25, $38, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Belzebub", $F0
 
 Data_088_48F9:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Metaly", $F0
 
 Data_088_4900:: ; heuristic: string; C0
-    db $10, $2B, $32, $36, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GhosTree", $F0
 
 Data_088_4909:: ; heuristic: string; C0
-    db $0B, $24, $25, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Babble", $F0
 
 Data_088_4910:: ; heuristic: string; C0
-    db $15, $2C, $32, $31, $28, $3B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lionex", $F0
 
 Data_088_4917:: ; heuristic: string; C0
-    db $16, $24, $27, $10, $32, $32, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadGoose", $F0
 
 Data_088_4920:: ; heuristic: string; C0
-    db $0B, $38, $25, $25, $2F, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Bubblemon", $F0
 
 Data_088_492A:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $31, $37, $28, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gigantes", $F0
 
 Data_088_4933:: ; heuristic: string; C0
-    db $0E, $3B, $24, $38, $26, $28, $35, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Exaucers", $F0
 
 Data_088_493C:: ; heuristic: string; C0
-    db $0D, $28, $24, $27, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeadNite", $F0
 
 Data_088_4945:: ; heuristic: string; C0
-    db $10, $24, $37, $28, $10, $38, $24, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GateGuard", $F0
 
 Data_088_494F:: ; heuristic: string; C0
-    db $16, $24, $27, $1C, $33, $2C, $35, $2C, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadSpirit", $F0
 
 Data_088_4959:: ; heuristic: string; C0
-    db $0C, $32, $33, $3C, $26, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Copycat", $F0
 
 Data_088_4961:: ; heuristic: string; C0
-    db $17, $2C, $37, $28, $35, $2C, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Niterich", $F0
 
 Data_088_496A:: ; heuristic: string; C0
-    db $0A, $31, $27, $35, $28, $24, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Andreal", $F0
 
 Data_088_4972:: ; heuristic: string; C0
-    db $16, $24, $27, $14, $31, $2C, $2A, $2B, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadKnight", $F0
 
 Data_088_497C:: ; heuristic: string; C0
-    db $1C, $2E, $3C, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkyDragon", $F0
 
 Data_088_4986:: ; heuristic: string; C0
-    db $0C, $32, $2C, $2F, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CoilBird", $F0
 
 Data_088_498F:: ; heuristic: string; C0
-    db $0A, $35, $30, $32, $35, $19, $28, $27, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmorPede", $F0
 
 Data_088_4999:: ; heuristic: string; C0
-    db $16, $24, $27, $11, $32, $35, $31, $28, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadHornet", $F0
 
 Data_088_49A3:: ; heuristic: string; C0
-    db $16, $38, $27, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mudou", $F0
 
 Data_088_49A9:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $0A, $35, $30, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilArmor", $F0
 
 Data_088_49B3:: ; heuristic: string; C0
-    db $1C, $2E, $28, $2F, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skeletor", $F0
 
 Data_088_49BC:: ; heuristic: string; C0
-    db $1F, $24, $30, $33, $2C, $35, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Vampirus", $F0
 
 Data_088_49C5:: ; heuristic: string; C0
-    db $0F, $2F, $32, $35, $24, $2D, $24, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Florajay", $F0
 
 Data_088_49CE:: ; heuristic: string; C0
-    db $0B, $32, $36, $36, $1D, $35, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BossTroll", $F0
 
 Data_088_49D8:: ; heuristic: string; C0
-    db $0C, $2B, $32, $33, $0C, $2F, $32, $3A, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ChopClown", $F0
 
 Data_088_49E2:: ; heuristic: string; C0
-    db $16, $2C, $36, $37, $3C, $20, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MistyWing", $F0
 
 Data_088_49EC:: ; heuristic: string; C0
-    db $0C, $28, $31, $37, $24, $36, $24, $38, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Centasaur", $F0
 
 Data_088_49F6:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GigaDraco", $F0
 
 Data_088_4A00:: ; heuristic: string; C0
-    db $10, $24, $35, $38, $27, $2C, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Garudian", $F0
 
 Data_088_4A09:: ; heuristic: string; C0
-    db $16, $2C, $30, $2C, $26, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mimic", $F0
 
 Data_088_4A0F:: ; heuristic: string; C0
-    db $1D, $24, $37, $36, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Tatsu", $F0
 
 Data_088_4A15:: ; heuristic: string; C0
-    db $0D, $2C, $24, $2A, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Diago", $F0
 
 Data_088_4A1B:: ; heuristic: string; C0
-    db $1C, $24, $30, $36, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Samsi", $F0
 
 Data_088_4A21:: ; heuristic: string; C0
-    db $0B, $24, $3D, $32, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Bazoo", $F0
 
 Data_088_4A27:: ; heuristic: string; C0
-    db $0B, $28, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BeDragon", $F0
 
 Data_088_4A30:: ; heuristic: string; C0
-    db $0B, $24, $25, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Babble", $F0
 
 Data_088_4A37:: ; heuristic: string; C0
-    db $19, $28, $24, $35, $2F, $10, $28, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PearlGel", $F0
 
 Data_088_4A40:: ; heuristic: string; C0
-    db $1C, $33, $2C, $2E, $3C, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpikyBoy", $F0
 
 Data_088_4A49:: ; heuristic: string; C0
-    db $0B, $35, $38, $36, $2B, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Brushead", $F0
 
 Data_088_4A52:: ; heuristic: string; C0
-    db $0D, $35, $24, $26, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dracky", $F0
 
 Data_088_4A59:: ; heuristic: string; C0
-    db $16, $24, $27, $1B, $24, $39, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadRaven", $F0
 
 Data_088_4A62:: ; heuristic: string; C0
-    db $14, $2C, $37, $28, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KiteHawk", $F0
 
 Data_088_4A6B:: ; heuristic: string; C0
-    db $20, $2C, $31, $27, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WindBeast", $F0
 
 Data_088_4A75:: ; heuristic: string; C0
-    db $10, $2C, $36, $30, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gismo", $F0
 
 Data_088_4A7B:: ; heuristic: string; C0
-    db $19, $32, $30, $19, $32, $30, $0B, $32, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PomPomBom", $F0
 
 Data_088_4A85:: ; heuristic: string; C0
-    db $0D, $28, $39, $2C, $33, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Devipine", $F0
 
 Data_088_4A8E:: ; heuristic: string; C0
-    db $10, $38, $2F, $33, $33, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gulpple", $F0
 
 Data_088_4A96:: ; heuristic: string; C0
-    db $0E, $2A, $2A, $33, $2F, $24, $37, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Eggplaton", $F0
 
 Data_088_4AA0:: ; heuristic: string; C0
-    db $11, $24, $30, $30, $28, $35, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HammerMan", $F0
 
 Data_088_4AAA:: ; heuristic: string; C0
-    db $1C, $37, $38, $25, $36, $38, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Stubsuck", $F0
 
 Data_088_4AB3:: ; heuristic: string; C0
-    db $1D, $35, $28, $28, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TreeBoy", $F0
 
 Data_088_4ABB:: ; heuristic: string; C0
-    db $0F, $32, $32, $11, $28, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FooHero", $F0
 
 Data_088_4AC3:: ; heuristic: string; C0
-    db $16, $32, $30, $30, $32, $31, $2D, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mommonja", $F0
 
 Data_088_4ACC:: ; heuristic: string; C0
-    db $0D, $35, $3C, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Drygon", $F0
 
 Data_088_4AD3:: ; heuristic: string; C0
-    db $11, $28, $35, $25, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HerbMan", $F0
 
 Data_088_4ADB:: ; heuristic: string; C0
-    db $0D, $24, $31, $26, $28, $1F, $28, $2A, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DanceVegi", $F0
 
 Data_088_4AE5:: ; heuristic: string; C0
-    db $16, $38, $27, $0D, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MudDoll", $F0
 
 Data_088_4AED:: ; heuristic: string; C0
-    db $1C, $2B, $24, $27, $32, $3A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shadow", $F0
 
 Data_088_4AF4:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $32, $31, $27, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCondor", $F0
 
 Data_088_4AFE:: ; heuristic: string; C0
-    db $0C, $2F, $32, $38, $27, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CloudKing", $F0
 
 Data_088_4B08:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $35, $28, $24, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octoreach", $F0
 
 Data_088_4B12:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octogon", $F0
 
 Data_088_4B1A:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $1C, $34, $38, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingSquid", $F0
 
 Data_088_4B24:: ; heuristic: string; C0
-    db $16, $2C, $36, $37, $3C, $20, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MistyWing", $F0
 
 Data_088_4B2E:: ; heuristic: string; C0
-    db $0C, $32, $33, $3C, $26, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Copycat", $F0
 
 Data_088_4B36:: ; heuristic: string; C0
-    db $17, $2C, $37, $28, $20, $2B, $2C, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "NiteWhip", $F0
 
 Data_088_4B3F:: ; heuristic: string; C0
-    db $10, $32, $32, $33, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Goopi", $F0
 
 Data_088_4B45:: ; heuristic: string; C0
-    db $1C, $28, $35, $39, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Servant", $F0
 
 Data_088_4B4D:: ; heuristic: string; C0
-    db $0A, $35, $30, $3C, $0C, $35, $24, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmyCrab", $F0
 
 Data_088_4B56:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $0C, $35, $24, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkCrab", $F0
 
 Data_088_4B5F:: ; heuristic: string; C0
-    db $18, $35, $32, $26, $2B, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orochi", $F0
 
 Data_088_4B66:: ; heuristic: string; C0
-    db $1C, $28, $35, $33, $28, $31, $37, $2C, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Serpentia", $F0
 
 Data_088_4B70:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GigaDraco", $F0
 
 Data_088_4B7A:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $15, $28, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingLeo", $F0
 
 Data_088_4B82:: ; heuristic: string; C0
-    db $0A, $3D, $38, $35, $2C, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Azurile", $F0
 
 Data_088_4B8A:: ; heuristic: string; C0
-    db $0D, $2C, $39, $2C, $31, $28, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Divinegon", $F0
 
 Data_088_4B94:: ; heuristic: string; C0
-    db $19, $37, $28, $35, $24, $31, $32, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pteranod", $F0
 
 Data_088_4B9D:: ; heuristic: string; C0
-    db $20, $2C, $31, $27, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WindBeast", $F0
 
 Data_088_4BA7:: ; heuristic: string; C0
-    db $0F, $24, $2C, $35, $3C, $1B, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FairyRat", $F0
 
 Data_088_4BB0:: ; heuristic: string; C0
-    db $0B, $2C, $2A, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BigEye", $F0
 
 Data_088_4BB7:: ; heuristic: string; C0
-    db $0B, $38, $2F, $2F, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BullBird", $F0
 
 Data_088_4BC0:: ; heuristic: string; C0
-    db $1D, $35, $28, $28, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TreeBoy", $F0
 
 Data_088_4BC8:: ; heuristic: string; C0
-    db $10, $32, $11, $32, $33, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoHopper", $F0
 
 Data_088_4BD1:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilBeast", $F0
 
 Data_088_4BDB:: ; heuristic: string; C0
-    db $16, $38, $27, $35, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mudron", $F0
 
 Data_088_4BE2:: ; heuristic: string; C0
-    db $1B, $28, $24, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Reaper", $F0
 
 Data_088_4BE9:: ; heuristic: string; C0
-    db $16, $38, $30, $30, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mummy", $F0
 
 Data_088_4BEF:: ; heuristic: string; C0
-    db $13, $28, $3A, $28, $2F, $0B, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "JewelBag", $F0
 
 Data_088_4BF8:: ; heuristic: string; C0
-    db $1C, $37, $24, $35, $29, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Starfish", $F0
 
 Data_088_4C01:: ; heuristic: string; C0
-    db $0B, $35, $38, $36, $2B, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Brushead", $F0
 
 Data_088_4C0A:: ; heuristic: string; C0
-    db $16, $38, $27, $0D, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MudDoll", $F0
 
 Data_088_4C12:: ; heuristic: string; C0
-    db $1B, $38, $36, $2B, $0F, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RushFish", $F0
 
 Data_088_4C1B:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingSlime", $F0
 
 Data_088_4C25:: ; heuristic: string; C0
-    db $19, $32, $2C, $36, $32, $31, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Poisongon", $F0
 
 Data_088_4C2F:: ; heuristic: string; C0
-    db $0D, $35, $3C, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Drygon", $F0
 
 Data_088_4C36:: ; heuristic: string; C0
-    db $0C, $24, $37, $0F, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CatFly", $F0
 
 Data_088_4C3D:: ; heuristic: string; C0
-    db $16, $32, $30, $30, $32, $31, $2D, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mommonja", $F0
 
 Data_088_4C46:: ; heuristic: string; C0
-    db $10, $35, $2C, $3D, $3D, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grizzly", $F0
 
 Data_088_4C4E:: ; heuristic: string; C0
-    db $0C, $35, $24, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CragDevil", $F0
 
 Data_088_4C58:: ; heuristic: string; C0
-    db $19, $2C, $26, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Picky", $F0
 
 Data_088_4C5E:: ; heuristic: string; C0
-    db $19, $2C, $3B, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pixy", $F0
 
 Data_088_4C63:: ; heuristic: string; C0
-    db $0A, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AgDevil", $F0
 
 Data_088_4C6B:: ; heuristic: string; C0
-    db $11, $32, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Hork", $F0
 
 Data_088_4C70:: ; heuristic: string; C0
-    db $20, $2C, $31, $27, $16, $28, $35, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WindMerge", $F0
 
 Data_088_4C7A:: ; heuristic: string; C0
-    db $1C, $33, $2C, $2E, $3C, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpikyBoy", $F0
 
 Data_088_4C83:: ; heuristic: string; C0
-    db $10, $32, $32, $33, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Goopi", $F0
 
 Data_088_4C89:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2E, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octokid", $F0
 
 Data_088_4C91:: ; heuristic: string; C0
-    db $0C, $24, $31, $26, $28, $35, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CancerMan", $F0
 
 Data_088_4C9B:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SlimeNite", $F0
 
 Data_088_4CA5:: ; heuristic: string; C0
-    db $0B, $24, $25, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Babble", $F0
 
 Data_088_4CAC:: ; heuristic: string; C0
-    db $1B, $24, $3C, $25, $38, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Rayburn", $F0
 
 Data_088_4CB4:: ; heuristic: string; C0
-    db $0C, $24, $37, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CatMage", $F0
 
 Data_088_4CBC:: ; heuristic: string; C0
-    db $22, $28, $37, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Yeti", $F0
 
 Data_088_4CC1:: ; heuristic: string; C0
-    db $0B, $28, $24, $39, $28, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Beavern", $F0
 
 Data_088_4CC9:: ; heuristic: string; C0
-    db $0F, $2F, $32, $35, $24, $2D, $24, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Florajay", $F0
 
 Data_088_4CD2:: ; heuristic: string; C0
-    db $1D, $32, $24, $27, $36, $37, $32, $32, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Toadstool", $F0
 
 Data_088_4CDC:: ; heuristic: string; C0
-    db $10, $2C, $24, $31, $37, $16, $32, $37, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GiantMoth", $F0
 
 Data_088_4CE6:: ; heuristic: string; C0
-    db $0A, $35, $30, $3C, $0C, $35, $24, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmyCrab", $F0
 
 Data_088_4CEF:: ; heuristic: string; C0
-    db $16, $24, $27, $11, $32, $35, $31, $28, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadHornet", $F0
 
 Data_088_4CF9:: ; heuristic: string; C0
-    db $0D, $28, $30, $32, $31, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Demonite", $F0
 
 Data_088_4D02:: ; heuristic: string; C0
-    db $01, $0E, $3C, $28, $0C, $2F, $32, $3A, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "1EyeClown", $F0
 
 Data_088_4D0C:: ; heuristic: string; C0
-    db $0D, $28, $24, $27, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeadNite", $F0
 
 Data_088_4D15:: ; heuristic: string; C0
-    db $10, $2C, $36, $30, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gismo", $F0
 
 Data_088_4D1B:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octogon", $F0
 
 Data_088_4D23:: ; heuristic: string; C0
-    db $1C, $31, $24, $2C, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snaily", $F0
 
 Data_088_4D2A:: ; heuristic: string; C0
-    db $0B, $32, $3B, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BoxSlime", $F0
 
 Data_088_4D33:: ; heuristic: string; C0
-    db $1F, $24, $30, $33, $2C, $35, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Vampirus", $F0
 
 Data_088_4D3C:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $2F, $35, $32, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skullroo", $F0
 
 Data_088_4D45:: ; heuristic: string; C0
-    db $0B, $38, $2F, $2F, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BullBird", $F0
 
 Data_088_4D4E:: ; heuristic: string; C0
-    db $0D, $24, $31, $26, $28, $1F, $28, $2A, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DanceVegi", $F0
 
 Data_088_4D58:: ; heuristic: string; C0
-    db $1C, $37, $24, $2A, $0B, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StagBug", $F0
 
 Data_088_4D60:: ; heuristic: string; C0
-    db $0A, $35, $30, $32, $35, $19, $28, $27, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmorPede", $F0
 
 Data_088_4D6A:: ; heuristic: string; C0
-    db $0C, $24, $37, $24, $33, $2C, $2F, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Catapila", $F0
 
 Data_088_4D73:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkEye", $F0
 
 Data_088_4D7B:: ; heuristic: string; C0
-    db $10, $35, $28, $30, $2F, $2C, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gremlin", $F0
 
 Data_088_4D83:: ; heuristic: string; C0
-    db $16, $28, $27, $38, $36, $24, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MedusaEye", $F0
 
 Data_088_4D8D:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $0A, $35, $30, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilArmor", $F0
 
 Data_088_4D97:: ; heuristic: string; C0
-    db $16, $24, $27, $16, $2C, $35, $35, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadMirror", $F0
 
 Data_088_4DA1:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueNite", $F0
 
 Data_088_4DAB:: ; heuristic: string; C0
-    db $0D, $38, $30, $25, $2C, $35, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dumbira", $F0
 
 Data_088_4DB3:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Metaly", $F0
 
 Data_088_4DBA:: ; heuristic: string; C0
-    db $1C, $31, $24, $2E, $28, $0B, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SnakeBat", $F0
 
 Data_088_4DC3:: ; heuristic: string; C0
-    db $10, $38, $2F, $33, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GulpBeast", $F0
 
 Data_088_4DCD:: ; heuristic: string; C0
-    db $16, $24, $27, $10, $32, $33, $2B, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadGopher", $F0
 
 Data_088_4DD7:: ; heuristic: string; C0
-    db $16, $2C, $36, $37, $3C, $20, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MistyWing", $F0
 
 Data_088_4DE1:: ; heuristic: string; C0
-    db $15, $24, $31, $27, $18, $3A, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LandOwl", $F0
 
 Data_088_4DE9:: ; heuristic: string; C0
-    db $0D, $28, $39, $2C, $33, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Devipine", $F0
 
 Data_088_4DF2:: ; heuristic: string; C0
-    db $0B, $28, $2F, $3D, $28, $25, $38, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Belzebub", $F0
 
 Data_088_4DFB:: ; heuristic: string; C0
-    db $0F, $32, $32, $11, $28, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FooHero", $F0
 
 Data_088_4E03:: ; heuristic: string; C0
-    db $0B, $38, $25, $25, $2F, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Bubblemon", $F0
 
 Data_088_4E0D:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoatHorn", $F0
 
 Data_088_4E16:: ; heuristic: string; C0
-    db $1C, $33, $32, $32, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Spooky", $F0
 
 Data_088_4E1D:: ; heuristic: string; C0
-    db $19, $38, $37, $35, $28, $19, $38, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PutrePup", $F0
 
 Data_088_4E26:: ; heuristic: string; C0
-    db $0C, $32, $33, $3C, $26, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Copycat", $F0
 
 Data_088_4E2E:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalDrak", $F0
 
 Data_088_4E38:: ; heuristic: string; C0
-    db $1B, $24, $3C, $10, $2C, $2A, $24, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RayGigas", $F0
 
 Data_088_4E41:: ; heuristic: string; C0
-    db $19, $28, $24, $35, $2F, $10, $28, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PearlGel", $F0
 
 Data_088_4E4A:: ; heuristic: string; C0
-    db $10, $24, $36, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gasgon", $F0
 
 Data_088_4E51:: ; heuristic: string; C0
-    db $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dragon", $F0
 
 Data_088_4E58:: ; heuristic: string; C0
-    db $0A, $35, $35, $32, $3A, $0D, $32, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArrowDog", $F0
 
 Data_088_4E61:: ; heuristic: string; C0
-    db $14, $2C, $37, $28, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KiteHawk", $F0
 
 Data_088_4E6A:: ; heuristic: string; C0
-    db $1C, $37, $38, $25, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StubBird", $F0
 
 Data_088_4E73:: ; heuristic: string; C0
-    db $23, $24, $33, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ZapBird", $F0
 
 Data_088_4E7B:: ; heuristic: string; C0
-    db $20, $28, $28, $27, $0B, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WeedBug", $F0
 
 Data_088_4E83:: ; heuristic: string; C0
-    db $15, $2C, $33, $36, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lipsy", $F0
 
 Data_088_4E89:: ; heuristic: string; C0
-    db $16, $38, $2F, $37, $2C, $0E, $3C, $28, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MultiEyes", $F0
 
 Data_088_4E93:: ; heuristic: string; C0
-    db $1C, $2B, $24, $27, $32, $3A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shadow", $F0
 
 Data_088_4E9A:: ; heuristic: string; C0
-    db $0C, $24, $33, $37, $0D, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CaptDead", $F0
 
 Data_088_4EA3:: ; heuristic: string; C0
-    db $0C, $38, $35, $36, $28, $15, $24, $30, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CurseLamp", $F0
 
 Data_088_4EAD:: ; heuristic: string; C0
-    db $0A, $31, $2A, $2F, $28, $35, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Angleron", $F0
 
 Data_088_4EB6:: ; heuristic: string; C0
-    db $10, $24, $30, $24, $31, $2C, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gamanian", $F0
 
 Data_088_4EBF:: ; heuristic: string; C0
-    db $20, $2B, $24, $2F, $28, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhaleMage", $F0
 
 Data_088_4EC9:: ; heuristic: string; C0
-    db $1C, $33, $32, $37, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpotKing", $F0
 
 Data_088_4ED2:: ; heuristic: string; C0
-    db $1C, $2E, $3C, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkyDragon", $F0
 
 Data_088_4EDC:: ; heuristic: string; C0
-    db $1D, $32, $31, $2A, $38, $28, $2F, $2F, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Tonguella", $F0
 
 Data_088_4EE6:: ; heuristic: string; C0
-    db $1C, $24, $26, $26, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Saccer", $F0
 
 Data_088_4EED:: ; heuristic: string; C0
-    db $20, $3C, $39, $28, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Wyvern", $F0
 
 Data_088_4EF4:: ; heuristic: string; C0
-    db $0A, $34, $38, $24, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AquaHawk", $F0
 
 Data_088_4EFD:: ; heuristic: string; C0
-    db $10, $24, $35, $38, $27, $2C, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Garudian", $F0
 
 Data_088_4F06:: ; heuristic: string; C0
-    db $0E, $3C, $28, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Eyeder", $F0
 
 Data_088_4F0D:: ; heuristic: string; C0
-    db $0A, $35, $26, $0D, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArcDemon", $F0
 
 Data_088_4F16:: ; heuristic: string; C0
-    db $15, $2C, $32, $31, $28, $3B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lionex", $F0
 
 Data_088_4F1D:: ; heuristic: string; C0
-    db $10, $24, $37, $28, $10, $38, $24, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GateGuard", $F0
 
 Data_088_4F27:: ; heuristic: string; C0
-    db $0C, $28, $31, $37, $24, $36, $24, $38, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Centasaur", $F0
 
 Data_088_4F31:: ; heuristic: string; C0
-    db $1B, $32, $25, $32, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Roboster", $F0
 
 Data_088_4F3A:: ; heuristic: string; C0
-    db $0E, $2A, $2A, $33, $2F, $24, $37, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Eggplaton", $F0
 
 Data_088_4F44:: ; heuristic: string; C0
-    db $0C, $2F, $24, $3A, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Clawster", $F0
 
 Data_088_4F4D:: ; heuristic: string; C0
-    db $16, $28, $35, $1D, $2C, $2A, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MerTiger", $F0
 
 Data_088_4F56:: ; heuristic: string; C0
-    db $1D, $35, $28, $28, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TreeSlime", $F0
 
 Data_088_4F60:: ; heuristic: string; C0
-    db $1C, $3A, $32, $35, $27, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Swordgon", $F0
 
 Data_088_4F69:: ; heuristic: string; C0
-    db $1C, $38, $33, $28, $35, $1D, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SuperTen", $F0
 
 Data_088_4F72:: ; heuristic: string; C0
-    db $11, $24, $30, $30, $28, $35, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HammerMan", $F0
 
 Data_088_4F7C:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $28, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Goategon", $F0
 
 Data_088_4F85:: ; heuristic: string; C0
-    db $0D, $35, $24, $26, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dracky", $F0
 
 Data_088_4F8C:: ; heuristic: string; C0
-    db $19, $38, $37, $35, $28, $0F, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PutreFish", $F0
 
 Data_088_4F96:: ; heuristic: string; C0
-    db $0A, $30, $25, $28, $35, $20, $28, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AmberWeed", $F0
 
 Data_088_4FA0:: ; heuristic: string; C0
-    db $20, $24, $35, $16, $24, $31, $37, $2C, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WarMantis", $F0
 
 Data_088_4FAA:: ; heuristic: string; C0
-    db $18, $35, $26, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orc", $F0
 
 Data_088_4FAE:: ; heuristic: string; C0
-    db $0C, $2B, $32, $33, $0C, $2F, $32, $3A, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ChopClown", $F0
 
 Data_088_4FB8:: ; heuristic: string; C0
-    db $16, $38, $30, $30, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mummy", $F0
 
 Data_088_4FBE:: ; heuristic: string; C0
-    db $16, $24, $27, $1C, $33, $2C, $35, $2C, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadSpirit", $F0
 
 Data_088_4FC8:: ; heuristic: string; C0
-    db $19, $32, $30, $19, $32, $30, $0B, $32, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PomPomBom", $F0
 
 Data_088_4FD2:: ; heuristic: string; C0
-    db $0B, $32, $30, $25, $0C, $35, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BombCrag", $F0
 
 Data_088_4FDB:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $35, $24, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octoraid", $F0
 
 Data_088_4FE4:: ; heuristic: string; C0
-    db $0A, $31, $27, $35, $28, $24, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Andreal", $F0
 
 Data_088_4FEC:: ; heuristic: string; C0
-    db $10, $35, $28, $24, $37, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GreatDrak", $F0
 
 Data_088_4FF6:: ; heuristic: string; C0
-    db $1D, $35, $38, $30, $33, $28, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Trumpeter", $F0
 
 Data_088_5000:: ; heuristic: string; C0
-    db $19, $35, $32, $37, $32, $16, $28, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ProtoMech", $F0
 
 Data_088_500A:: ; heuristic: string; C0
-    db $0A, $35, $30, $32, $35, $33, $2C, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Armorpion", $F0
 
 Data_088_5014:: ; heuristic: string; C0
-    db $0D, $2C, $2A, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Digster", $F0
 
 Data_088_501C:: ; heuristic: string; C0
-    db $0B, $32, $36, $36, $1D, $35, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BossTroll", $F0
 
 Data_088_5026:: ; heuristic: string; C0
-    db $16, $24, $27, $14, $31, $2C, $2A, $2B, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadKnight", $F0
 
 Data_088_5030:: ; heuristic: string; C0
-    db $18, $2A, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Ogre", $F0
 
 Data_088_5035:: ; heuristic: string; C0
-    db $0D, $28, $24, $27, $17, $32, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeadNoble", $F0
 
 Data_088_503F:: ; heuristic: string; C0
-    db $1C, $2E, $28, $2F, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skeletor", $F0
 
 Data_088_5048:: ; heuristic: string; C0
-    db $1C, $37, $32, $31, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StoneMan", $F0
 
 Data_088_5051:: ; heuristic: string; C0
-    db $0F, $2C, $36, $2B, $1B, $2C, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FishRider", $F0
 
 Data_088_505B:: ; heuristic: string; C0
-    db $0A, $3B, $28, $1C, $2B, $24, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AxeShark", $F0
 
 Data_088_5064:: ; heuristic: string; C0
-    db $0A, $34, $38, $24, $27, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Aquadon", $F0
 
 Data_088_506C:: ; heuristic: string; C0
-    db $0D, $2C, $2A, $32, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Digong", $F0
 
 Data_088_5073:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalKing", $F0
 
 Data_088_507D:: ; heuristic: string; C0
-    db $1C, $28, $35, $33, $28, $31, $37, $2C, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Serpentia", $F0
 
 Data_088_5087:: ; heuristic: string; C0
-    db $0C, $32, $24, $37, $32, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Coatol", $F0
 
 Data_088_508E:: ; heuristic: string; C0
-    db $18, $35, $32, $26, $2B, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orochi", $F0
 
 Data_088_5095:: ; heuristic: string; C0
-    db $0B, $24, $37, $37, $2F, $28, $1B, $28, $3B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BattleRex", $F0
 
 Data_088_509F:: ; heuristic: string; C0
-    db $20, $2B, $2C, $33, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhipBird", $F0
 
 Data_088_50A8:: ; heuristic: string; C0
-    db $1C, $2B, $24, $31, $37, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shantak", $F0
 
 Data_088_50B0:: ; heuristic: string; C0
-    db $1B, $32, $36, $28, $39, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Rosevine", $F0
 
 Data_088_50B9:: ; heuristic: string; C0
-    db $10, $35, $28, $31, $27, $24, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grendal", $F0
 
 Data_088_50C1:: ; heuristic: string; C0
-    db $0A, $2E, $38, $25, $24, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Akubar", $F0
 
 Data_088_50C8:: ; heuristic: string; C0
-    db $13, $24, $30, $2C, $35, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Jamirus", $F0
 
 Data_088_50D0:: ; heuristic: string; C0
-    db $15, $24, $30, $33, $10, $28, $31, $2C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LampGenie", $F0
 
 Data_088_50DA:: ; heuristic: string; C0
-    db $20, $2B, $2C, $37, $28, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhiteKing", $F0
 
 Data_088_50E4:: ; heuristic: string; C0
-    db $17, $2C, $37, $28, $35, $2C, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Niterich", $F0
 
 Data_088_50ED:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $1C, $34, $38, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingSquid", $F0
 
 Data_088_50F7:: ; heuristic: string; C0
-    db $10, $35, $24, $2E, $32, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grakos", $F0
 
 Data_088_50FE:: ; heuristic: string; C0
-    db $1C, $2F, $24, $25, $25, $2C, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slabbit", $F0
 
 Data_088_5106:: ; heuristic: string; C0
-    db $0C, $32, $2C, $2F, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CoilBird", $F0
 
 Data_088_510F:: ; heuristic: string; C0
-    db $0F, $24, $2C, $35, $3C, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FairyDrak", $F0
 
 Data_088_5119:: ; heuristic: string; C0
-    db $18, $31, $2C, $32, $31, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Oniono", $F0
 
 Data_088_5120:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $1C, $28, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilSeed", $F0
 
 Data_088_5129:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $24, $31, $27, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCandle", $F0
 
 Data_088_5133:: ; heuristic: string; C0
-    db $0D, $35, $24, $2A, $32, $31, $14, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DragonKid", $F0
 
 Data_088_513D:: ; heuristic: string; C0
-    db $0D, $38, $26, $2E, $14, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DuckKite", $F0
 
 Data_088_5146:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingTree", $F0
 
 Data_088_514F:: ; heuristic: string; C0
-    db $10, $2C, $24, $31, $37, $1C, $2F, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GiantSlug", $F0
 
 Data_088_5159:: ; heuristic: string; C0
-    db $10, $32, $33, $2B, $28, $26, $24, $27, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gophecada", $F0
 
 Data_088_5163:: ; heuristic: string; C0
-    db $1B, $32, $37, $1B, $24, $39, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RotRaven", $F0
 
 Data_088_516C:: ; heuristic: string; C0
-    db $0C, $2B, $24, $30, $28, $2F, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Chamelgon", $F0
 
 Data_088_5176:: ; heuristic: string; C0
-    db $16, $24, $27, $19, $28, $26, $2E, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadPecker", $F0
 
 Data_088_5180:: ; heuristic: string; C0
-    db $16, $24, $27, $19, $2F, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadPlant", $F0
 
 Data_088_5189:: ; heuristic: string; C0
-    db $0F, $24, $26, $28, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FaceTree", $F0
 
 Data_088_5192:: ; heuristic: string; C0
-    db $0B, $28, $24, $31, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BeanMan", $F0
 
 Data_088_519A:: ; heuristic: string; C0
-    db $0C, $24, $37, $24, $33, $2C, $2F, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Catapila", $F0
 
 Data_088_51A3:: ; heuristic: string; C0
-    db $0F, $24, $26, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Facer", $F0
 
 Data_088_51A9:: ; heuristic: string; C0
-    db $1F, $32, $32, $27, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Voodoll", $F0
 
 Data_088_51B1:: ; heuristic: string; C0
-    db $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Golem", $F0
 
 Data_088_51B7:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $20, $24, $39, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueWave", $F0
 
 Data_088_51C1:: ; heuristic: string; C0
-    db $0B, $32, $3B, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BoxSlime", $F0
 
 Data_088_51CA:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $0B, $32, $35, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SlimeBorg", $F0
 
 Data_088_51D4:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkHorn", $F0
 
 Data_088_51DD:: ; heuristic: string; C0
-    db $16, $24, $31, $0E, $24, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ManEater", $F0
 
 Data_088_51E6:: ; heuristic: string; C0
-    db $1C, $31, $24, $33, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snapper", $F0
 
 Data_088_51EE:: ; heuristic: string; C0
-    db $10, $2B, $32, $36, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GhosTree", $F0
 
 Data_088_51F7:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $1B, $2C, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkulRider", $F0
 
 Data_088_5201:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $31, $37, $28, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gigantes", $F0
 
 Data_088_520A:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $33, $28, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skulpent", $F0
 
 Data_088_5213:: ; heuristic: string; C0
-    db $0A, $34, $38, $24, $35, $28, $2F, $2F, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Aquarella", $F0
 
 Data_088_521D:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldSlime", $F0
 
 Data_088_5227:: ; heuristic: string; C0
-    db $10, $35, $24, $31, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GranSlime", $F0
 
 Data_088_5231:: ; heuristic: string; C0
-    db $0D, $2C, $39, $2C, $31, $28, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Divinegon", $F0
 
 Data_088_523B:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $15, $28, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingLeo", $F0
 
 Data_088_5243:: ; heuristic: string; C0
-    db $1B, $24, $2C, $31, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RainHawk", $F0
 
 Data_088_524C:: ; heuristic: string; C0
-    db $0D, $38, $35, $35, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Durran", $F0
 
 Data_088_5253:: ; heuristic: string; C0
-    db $15, $24, $3D, $24, $30, $24, $31, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lazamanus", $F0
 
 Data_088_525D:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldGolem", $F0
 
 Data_088_5267:: ; heuristic: string; C0
-    db $19, $2C, $2F, $2F, $32, $3A, $1B, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PillowRat", $F0
 
 Data_088_5271:: ; heuristic: string; C0
-    db $0A, $35, $30, $32, $35, $19, $28, $27, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmorPede", $F0
 
 Data_088_527B:: ; heuristic: string; C0
-    db $20, $2C, $2F, $27, $0A, $33, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WildApe", $F0
 
 Data_088_5283:: ; heuristic: string; C0
-    db $0C, $2F, $24, $3A, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Clawster", $F0
 
 Data_088_528C:: ; heuristic: string; C0
-    db $10, $38, $2F, $33, $33, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gulpple", $F0
 
 Data_088_5294:: ; heuristic: string; C0
-    db $0D, $24, $35, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Darck", $F0
 
 Data_088_529A:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCat", $F0
 
 Data_088_52A1:: ; heuristic: string; C0
-    db $11, $32, $35, $31, $0B, $28, $28, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HornBeet", $F0
 
 Data_088_52AA:: ; heuristic: string; C0
-    db $1C, $2E, $3C, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkyDragon", $F0
 
 Data_088_52B4:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octogon", $F0
 
 Data_088_52BC:: ; heuristic: string; C0
-    db $1C, $28, $35, $39, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Servant", $F0
 
 Data_088_52C4:: ; heuristic: string; C0
-    db $0D, $24, $35, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Darck", $F0
 
 Data_088_52CA:: ; heuristic: string; C0
-    db $10, $2C, $24, $31, $37, $20, $32, $35, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GiantWorm", $F0
 
 Data_088_52D4:: ; heuristic: string; C0
-    db $1C, $33, $32, $32, $2E, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Spooky", $F0
 
 Data_088_52DB:: ; heuristic: string; C0
-    db $0B, $28, $24, $39, $28, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Beavern", $F0
 
 Data_088_52E3:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $24, $31, $27, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCandle", $F0
 
 Data_088_52ED:: ; heuristic: string; C0
-    db $1C, $33, $2C, $2E, $3C, $0B, $32, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpikyBoy", $F0
 
 Data_088_52F6:: ; heuristic: string; C0
-    db $0A, $31, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Anemon", $F0
 
 Data_088_52FD:: ; heuristic: string; C0
-    db $0A, $35, $35, $32, $3A, $0D, $32, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArrowDog", $F0
 
 Data_088_5306:: ; heuristic: string; C0
-    db $19, $3C, $38, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pyuro", $F0
 
 Data_088_530C:: ; heuristic: string; C0
-    db $0D, $24, $31, $26, $28, $1F, $28, $2A, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DanceVegi", $F0
 
 Data_088_5316:: ; heuristic: string; C0
-    db $0B, $35, $38, $36, $2B, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Brushead", $F0
 
 Data_088_531F:: ; heuristic: string; C0
-    db $16, $2C, $31, $2C, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MiniDrak", $F0
 
 Data_088_5328:: ; heuristic: string; C0
-    db $19, $37, $28, $35, $24, $31, $32, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pteranod", $F0
 
 Data_088_5331:: ; heuristic: string; C0
-    db $0D, $35, $24, $2A, $32, $31, $14, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DragonKid", $F0
 
 Data_088_533B:: ; heuristic: string; C0
-    db $0C, $24, $37, $0F, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CatFly", $F0
 
 Data_088_5342:: ; heuristic: string; C0
-    db $0B, $32, $31, $28, $1C, $2F, $24, $39, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BoneSlave", $F0
 
 Data_088_534C:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $1C, $34, $38, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingSquid", $F0
 
 Data_088_5356:: ; heuristic: string; C0
-    db $0B, $28, $24, $36, $37, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BeastNite", $F0
 
 Data_088_5360:: ; heuristic: string; C0
-    db $0D, $35, $3C, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Drygon", $F0
 
 Data_088_5367:: ; heuristic: string; C0
-    db $19, $38, $30, $33, $32, $2C, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pumpoise", $F0
 
 Data_088_5370:: ; heuristic: string; C0
-    db $0F, $2C, $36, $2B, $1B, $2C, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FishRider", $F0
 
 Data_088_537A:: ; heuristic: string; C0
-    db $20, $24, $2F, $35, $38, $36, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WalrusMan", $F0
 
 Data_088_5384:: ; heuristic: string; C0
-    db $1C, $37, $38, $25, $36, $38, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Stubsuck", $F0
 
 Data_088_538D:: ; heuristic: string; C0
-    db $1C, $2B, $24, $27, $32, $3A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shadow", $F0
 
 Data_088_5394:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingTree", $F0
 
 Data_088_539D:: ; heuristic: string; C0
-    db $0A, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AgDevil", $F0
 
 Data_088_53A5:: ; heuristic: string; C0
-    db $19, $38, $33, $33, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Puppetor", $F0
 
 Data_088_53AE:: ; heuristic: string; C0
-    db $0A, $35, $26, $0D, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArcDemon", $F0
 
 Data_088_53B7:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoatHorn", $F0
 
 Data_088_53C0:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalDrak", $F0
 
 Data_088_53CA:: ; heuristic: string; C0
-    db $0A, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AgDevil", $F0
 
 Data_088_53D2:: ; heuristic: string; C0
-    db $19, $38, $33, $33, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Puppetor", $F0
 
 Data_088_53DB:: ; heuristic: string; C0
-    db $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Golem", $F0
 
 Data_088_53E1:: ; heuristic: string; C0
-    db $0E, $39, $2C, $2F, $1C, $28, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EvilSeed", $F0
 
 Data_088_53EA:: ; heuristic: string; C0
-    db $0E, $3C, $28, $0B, $24, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "EyeBall", $F0
 
 Data_088_53F2:: ; heuristic: string; C0
-    db $0C, $2B, $24, $30, $28, $2F, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Chamelgon", $F0
 
 Data_088_53FC:: ; heuristic: string; C0
-    db $0F, $32, $32, $11, $28, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FooHero", $F0
 
 Data_088_5404:: ; heuristic: string; C0
-    db $0B, $32, $3B, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BoxSlime", $F0
 
 Data_088_540D:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $25, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Metabble", $F0
 
 Data_088_5416:: ; heuristic: string; C0
-    db $0F, $24, $2C, $35, $3C, $1B, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FairyRat", $F0
 
 Data_088_541F:: ; heuristic: string; C0
-    db $1C, $3A, $32, $35, $27, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Swordgon", $F0
 
 Data_088_5428:: ; heuristic: string; C0
-    db $16, $32, $30, $30, $32, $31, $2D, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mommonja", $F0
 
 Data_088_5431:: ; heuristic: string; C0
-    db $14, $2C, $37, $28, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KiteHawk", $F0
 
 Data_088_543A:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $32, $31, $27, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCondor", $F0
 
 Data_088_5444:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1C, $31, $24, $2E, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingSnake", $F0
 
 Data_088_544E:: ; heuristic: string; C0
-    db $10, $35, $28, $24, $37, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GreatDrak", $F0
 
 Data_088_5458:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $1C, $34, $38, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingSquid", $F0
 
 Data_088_5462:: ; heuristic: string; C0
-    db $20, $2C, $31, $27, $0B, $28, $24, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WindBeast", $F0
 
 Data_088_546C:: ; heuristic: string; C0
-    db $16, $24, $27, $10, $32, $32, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadGoose", $F0
 
 Data_088_5475:: ; heuristic: string; C0
-    db $20, $2B, $24, $2F, $28, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhaleMage", $F0
 
 Data_088_547F:: ; heuristic: string; C0
-    db $1C, $28, $24, $11, $32, $35, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SeaHorse", $F0
 
 Data_088_5488:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $35, $28, $24, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octoreach", $F0
 
 Data_088_5492:: ; heuristic: string; C0
-    db $12, $26, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "IceMan", $F0
 
 Data_088_5499:: ; heuristic: string; C0
-    db $1C, $2B, $24, $27, $32, $3A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shadow", $F0
 
 Data_088_54A0:: ; heuristic: string; C0
-    db $0B, $2C, $2A, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BigEye", $F0
 
 Data_088_54A7:: ; heuristic: string; C0
-    db $0B, $24, $2F, $3D, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Balzak", $F0
 
 Data_088_54AE:: ; heuristic: string; C0
-    db $1B, $32, $37, $1B, $24, $39, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RotRaven", $F0
 
 Data_088_54B7:: ; heuristic: string; C0
-    db $13, $24, $30, $2C, $35, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Jamirus", $F0
 
 Data_088_54BF:: ; heuristic: string; C0
-    db $1C, $2E, $3C, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkyDragon", $F0
 
 Data_088_54C9:: ; heuristic: string; C0
-    db $10, $35, $28, $30, $2F, $2C, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gremlin", $F0
 
 Data_088_54D1:: ; heuristic: string; C0
-    db $0C, $35, $28, $36, $37, $33, $28, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Crestpent", $F0
 
 Data_088_54DB:: ; heuristic: string; C0
-    db $1C, $33, $32, $37, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpotKing", $F0
 
 Data_088_54E4:: ; heuristic: string; C0
-    db $10, $38, $2F, $33, $33, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gulpple", $F0
 
 Data_088_54EC:: ; heuristic: string; C0
-    db $0F, $24, $2C, $35, $3C, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FairyDrak", $F0
 
 Data_088_54F6:: ; heuristic: string; C0
-    db $0D, $38, $26, $2E, $14, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DuckKite", $F0
 
 Data_088_54FF:: ; heuristic: string; C0
-    db $0F, $38, $31, $2E, $3C, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FunkyBird", $F0
 
 Data_088_5509:: ; heuristic: string; C0
-    db $0D, $24, $31, $26, $28, $1F, $28, $2A, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DanceVegi", $F0
 
 Data_088_5513:: ; heuristic: string; C0
-    db $1C, $2F, $38, $35, $33, $28, $35, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slurperon", $F0
 
 Data_088_551D:: ; heuristic: string; C0
-    db $16, $24, $27, $19, $2F, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadPlant", $F0
 
 Data_088_5526:: ; heuristic: string; C0
-    db $18, $35, $26, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orc", $F0
 
 Data_088_552A:: ; heuristic: string; C0
-    db $19, $38, $37, $35, $28, $19, $38, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PutrePup", $F0
 
 Data_088_5533:: ; heuristic: string; C0
-    db $0D, $28, $39, $2C, $33, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Devipine", $F0
 
 Data_088_553C:: ; heuristic: string; C0
-    db $0A, $31, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Anemon", $F0
 
 Data_088_5543:: ; heuristic: string; C0
-    db $11, $28, $35, $25, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HerbMan", $F0
 
 Data_088_554B:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingSlime", $F0
 
 Data_088_5555:: ; heuristic: string; C0
-    db $0C, $32, $24, $37, $32, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Coatol", $F0
 
 Data_088_555C:: ; heuristic: string; C0
-    db $0F, $24, $31, $2A, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FangSlime", $F0
 
 Data_088_5566:: ; heuristic: string; C0
-    db $10, $35, $2C, $3D, $3D, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grizzly", $F0
 
 Data_088_556E:: ; heuristic: string; C0
-    db $0B, $28, $24, $36, $37, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BeastNite", $F0
 
 Data_088_5578:: ; heuristic: string; C0
-    db $11, $28, $24, $2F, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Healer", $F0
 
 Data_088_557F:: ; heuristic: string; C0
-    db $1E, $31, $2C, $26, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Unicorn", $F0
 
 Data_088_5587:: ; heuristic: string; C0
-    db $1C, $38, $33, $28, $35, $1D, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SuperTen", $F0
 
 Data_088_5590:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slime", $F0
 
 Data_088_5596:: ; heuristic: string; C0
-    db $1B, $32, $26, $2E, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RockSlime", $F0
 
 Data_088_55A0:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $25, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Metabble", $F0
 
 Data_088_55A9:: ; heuristic: string; C0
-    db $10, $32, $35, $24, $2A, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gorago", $F0
 
 Data_088_55B0:: ; heuristic: string; C0
-    db $1C, $2F, $24, $25, $25, $2C, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slabbit", $F0
 
 Data_088_55B8:: ; heuristic: string; C0
-    db $16, $38, $2F, $37, $2C, $0E, $3C, $28, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MultiEyes", $F0
 
 Data_088_55C2:: ; heuristic: string; C0
-    db $0F, $24, $2C, $35, $3C, $1B, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FairyRat", $F0
 
 Data_088_55CB:: ; heuristic: string; C0
-    db $1C, $37, $38, $25, $36, $38, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Stubsuck", $F0
 
 Data_088_55D4:: ; heuristic: string; C0
-    db $16, $24, $27, $19, $2F, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadPlant", $F0
 
 Data_088_55DD:: ; heuristic: string; C0
-    db $1C, $31, $24, $33, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snapper", $F0
 
 Data_088_55E5:: ; heuristic: string; C0
-    db $10, $35, $28, $31, $27, $24, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grendal", $F0
 
 Data_088_55ED:: ; heuristic: string; C0
-    db $10, $32, $11, $32, $33, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoHopper", $F0
 
 Data_088_55F6:: ; heuristic: string; C0
-    db $0A, $35, $35, $32, $3A, $0D, $32, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArrowDog", $F0
 
 Data_088_55FF:: ; heuristic: string; C0
-    db $1C, $37, $24, $2A, $0B, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StagBug", $F0
 
 Data_088_5607:: ; heuristic: string; C0
-    db $0F, $2C, $35, $28, $20, $28, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FireWeed", $F0
 
 Data_088_5610:: ; heuristic: string; C0
-    db $0A, $2A, $0D, $28, $39, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AgDevil", $F0
 
 Data_088_5618:: ; heuristic: string; C0
-    db $10, $35, $2C, $3D, $3D, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grizzly", $F0
 
 Data_088_5620:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $1B, $2C, $27, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SkulRider", $F0
 
 Data_088_562A:: ; heuristic: string; C0
-    db $20, $24, $2F, $35, $38, $36, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WalrusMan", $F0
 
 Data_088_5634:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $24, $31, $27, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCandle", $F0
 
 Data_088_563E:: ; heuristic: string; C0
-    db $1B, $28, $24, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Reaper", $F0
 
 Data_088_5645:: ; heuristic: string; C0
-    db $19, $35, $32, $37, $32, $16, $28, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ProtoMech", $F0
 
 Data_088_564F:: ; heuristic: string; C0
-    db $1B, $32, $25, $32, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Roboster", $F0
 
 Data_088_5658:: ; heuristic: string; C0
-    db $0C, $24, $37, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CatMage", $F0
 
 Data_088_5660:: ; heuristic: string; C0
-    db $0F, $24, $26, $28, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FaceTree", $F0
 
 Data_088_5669:: ; heuristic: string; C0
-    db $18, $2A, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Ogre", $F0
 
 Data_088_566E:: ; heuristic: string; C0
-    db $0C, $38, $35, $36, $28, $15, $24, $30, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CurseLamp", $F0
 
 Data_088_5678:: ; heuristic: string; C0
-    db $0A, $31, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Anemon", $F0
 
 Data_088_567F:: ; heuristic: string; C0
-    db $15, $2C, $33, $36, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lipsy", $F0
 
 Data_088_5685:: ; heuristic: string; C0
-    db $20, $28, $28, $27, $0B, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WeedBug", $F0
 
 Data_088_568D:: ; heuristic: string; C0
-    db $1C, $33, $2C, $2E, $28, $35, $32, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Spikerous", $F0
 
 Data_088_5697:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $2F, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skullgon", $F0
 
 Data_088_56A0:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $33, $28, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skulpent", $F0
 
 Data_088_56A9:: ; heuristic: string; C0
-    db $0B, $38, $37, $37, $28, $35, $29, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Butterfly", $F0
 
 Data_088_56B3:: ; heuristic: string; C0
-    db $19, $2C, $3B, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pixy", $F0
 
 Data_088_56B8:: ; heuristic: string; C0
-    db $0C, $32, $33, $3C, $26, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Copycat", $F0
 
 Data_088_56C0:: ; heuristic: string; C0
-    db $1C, $37, $32, $31, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StoneMan", $F0
 
 Data_088_56C9:: ; heuristic: string; C0
-    db $20, $2B, $2C, $33, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhipBird", $F0
 
 Data_088_56D2:: ; heuristic: string; C0
-    db $16, $2C, $30, $28, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MimeSlime", $F0
 
 Data_088_56DC:: ; heuristic: string; C0
-    db $1D, $32, $31, $2A, $38, $28, $2F, $2F, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Tonguella", $F0
 
 Data_088_56E6:: ; heuristic: string; C0
-    db $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Golem", $F0
 
 Data_088_56EC:: ; heuristic: string; C0
-    db $0B, $38, $25, $25, $2F, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Bubblemon", $F0
 
 Data_088_56F6:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueNite", $F0
 
 Data_088_5700:: ; heuristic: string; C0
-    db $19, $38, $33, $33, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Puppetor", $F0
 
 Data_088_5709:: ; heuristic: string; C0
-    db $0E, $3B, $24, $38, $26, $28, $35, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Exaucers", $F0
 
 Data_088_5712:: ; heuristic: string; C0
-    db $20, $2B, $24, $2F, $28, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhaleMage", $F0
 
 Data_088_571C:: ; heuristic: string; C0
-    db $16, $28, $27, $38, $36, $24, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MedusaEye", $F0
 
 Data_088_5726:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalKing", $F0
 
 Data_088_5730:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $15, $28, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingLeo", $F0
 
 Data_088_5738:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldGolem", $F0
 
 Data_088_5742:: ; heuristic: string; C0
-    db $10, $35, $28, $24, $37, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GreatDrak", $F0
 
 Data_088_574C:: ; heuristic: string; C0
-    db $20, $24, $37, $24, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Watabou", $F0
 
 Data_088_5754:: ; heuristic: string; C0
-    db $0D, $38, $35, $35, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Durran", $F0
 
 Data_088_575B:: ; heuristic: string; C0
-    db $0D, $28, $30, $32, $31, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Demonite", $F0
 
 Data_088_5764:: ; heuristic: string; C0
-    db $0B, $32, $36, $36, $1D, $35, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BossTroll", $F0
 
 Data_088_576E:: ; heuristic: string; C0
-    db $13, $28, $3A, $28, $2F, $0B, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "JewelBag", $F0
 
 Data_088_5777:: ; heuristic: string; C0
-    db $0B, $32, $31, $28, $1C, $2F, $24, $39, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BoneSlave", $F0
 
 Data_088_5781:: ; heuristic: string; C0
-    db $0D, $28, $24, $27, $17, $32, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeadNoble", $F0
 
 Data_088_578B:: ; heuristic: string; C0
-    db $1B, $32, $2A, $38, $28, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RogueNite", $F0
 
 Data_088_5795:: ; heuristic: string; C0
-    db $0B, $24, $2F, $3D, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Balzak", $F0
 
 Data_088_579C:: ; heuristic: string; C0
-    db $1F, $32, $32, $27, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Voodoll", $F0
 
 Data_088_57A4:: ; heuristic: string; C0
-    db $10, $24, $37, $28, $10, $38, $24, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GateGuard", $F0
 
 Data_088_57AE:: ; heuristic: string; C0
-    db $16, $24, $27, $16, $2C, $35, $35, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadMirror", $F0
 
 Data_088_57B8:: ; heuristic: string; C0
-    db $10, $35, $24, $2E, $32, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grakos", $F0
 
 Data_088_57BF:: ; heuristic: string; C0
-    db $1C, $26, $24, $2F, $2F, $32, $33, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Scallopa", $F0
 
 Data_088_57C8:: ; heuristic: string; C0
-    db $1C, $31, $24, $2C, $2F, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snaily", $F0
 
 Data_088_57CF:: ; heuristic: string; C0
-    db $0C, $2F, $24, $3A, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Clawster", $F0
 
 Data_088_57D8:: ; heuristic: string; C0
-    db $1C, $2B, $24, $27, $32, $3A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shadow", $F0
 
 Data_088_57DF:: ; heuristic: string; C0
-    db $16, $2C, $30, $2C, $26, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mimic", $F0
 
 Data_088_57E5:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalKing", $F0
 
 Data_088_57EF:: ; heuristic: string; C0
-    db $1B, $24, $2C, $31, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RainHawk", $F0
 
 Data_088_57F8:: ; heuristic: string; C0
-    db $0C, $32, $24, $37, $32, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Coatol", $F0
 
 Data_088_57FF:: ; heuristic: string; C0
-    db $19, $2B, $32, $28, $31, $2C, $3B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Phoenix", $F0
 
 Data_088_5807:: ; heuristic: string; C0
-    db $1C, $2B, $24, $31, $37, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shantak", $F0
 
 Data_088_580F:: ; heuristic: string; C0
-    db $0B, $2F, $2C, $3D, $3D, $24, $35, $27, $3C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Blizzardy", $F0
 
 Data_088_5819:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $2F, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skullgon", $F0
 
 Data_088_5822:: ; heuristic: string; C0
-    db $0A, $2E, $38, $25, $24, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Akubar", $F0
 
 Data_088_5829:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkHorn", $F0
 
 Data_088_5832:: ; heuristic: string; C0
-    db $1C, $28, $35, $33, $28, $31, $37, $2C, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Serpentia", $F0
 
 Data_088_583C:: ; heuristic: string; C0
-    db $1C, $38, $33, $28, $35, $1D, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SuperTen", $F0
 
 Data_088_5845:: ; heuristic: string; C0
-    db $1E, $31, $2C, $26, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Unicorn", $F0
 
 Data_088_584D:: ; heuristic: string; C0
-    db $14, $2C, $37, $28, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KiteHawk", $F0
 
 Data_088_5856:: ; heuristic: string; C0
-    db $0F, $32, $3B, $0F, $2C, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FoxFire", $F0
 
 Data_088_585E:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalDrak", $F0
 
 Data_088_5868:: ; heuristic: string; C0
-    db $0A, $3B, $28, $1C, $2B, $24, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AxeShark", $F0
 
 Data_088_5871:: ; heuristic: string; C0
-    db $1C, $37, $32, $31, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StoneMan", $F0
 
 Data_088_587A:: ; heuristic: string; C0
-    db $16, $28, $27, $38, $36, $24, $0E, $3C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MedusaEye", $F0
 
 Data_088_5884:: ; heuristic: string; C0
-    db $16, $24, $27, $11, $32, $35, $31, $28, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadHornet", $F0
 
 Data_088_588E:: ; heuristic: string; C0
-    db $18, $31, $2C, $32, $31, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Oniono", $F0
 
 Data_088_5895:: ; heuristic: string; C0
-    db $1D, $24, $2C, $2F, $0E, $24, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "TailEater", $F0
 
 Data_088_589F:: ; heuristic: string; C0
-    db $0B, $28, $24, $36, $37, $17, $2C, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BeastNite", $F0
 
 Data_088_58A9:: ; heuristic: string; C0
-    db $16, $2C, $30, $28, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MimeSlime", $F0
 
 Data_088_58B3:: ; heuristic: string; C0
-    db $16, $24, $27, $0D, $35, $24, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadDragon", $F0
 
 Data_088_58BD:: ; heuristic: string; C0
-    db $20, $2C, $31, $2A, $1C, $31, $24, $2E, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WingSnake", $F0
 
 Data_088_58C7:: ; heuristic: string; C0
-    db $18, $35, $32, $26, $2B, $2C, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orochi", $F0
 
 Data_088_58CE:: ; heuristic: string; C0
-    db $1D, $35, $38, $30, $33, $28, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Trumpeter", $F0
 
 Data_088_58D8:: ; heuristic: string; C0
-    db $20, $3C, $39, $28, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Wyvern", $F0
 
 Data_088_58DF:: ; heuristic: string; C0
-    db $0D, $28, $39, $2C, $33, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Devipine", $F0
 
 Data_088_58E8:: ; heuristic: string; C0
-    db $1C, $31, $24, $33, $33, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Snapper", $F0
 
 Data_088_58F0:: ; heuristic: string; C0
-    db $1C, $37, $24, $2A, $0B, $38, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StagBug", $F0
 
 Data_088_58F8:: ; heuristic: string; C0
-    db $0A, $35, $30, $3C, $0C, $35, $24, $25, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArmyCrab", $F0
 
 Data_088_5901:: ; heuristic: string; C0
-    db $0A, $35, $26, $0D, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArcDemon", $F0
 
 Data_088_590A:: ; heuristic: string; C0
-    db $01, $0E, $3C, $28, $0C, $2F, $32, $3A, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "1EyeClown", $F0
 
 Data_088_5914:: ; heuristic: string; C0
-    db $16, $24, $27, $14, $31, $2C, $2A, $2B, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadKnight", $F0
 
 Data_088_591E:: ; heuristic: string; C0
-    db $0C, $24, $33, $37, $0D, $28, $24, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "CaptDead", $F0
 
 Data_088_5927:: ; heuristic: string; C0
-    db $1C, $28, $35, $39, $24, $31, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Servant", $F0
 
 Data_088_592F:: ; heuristic: string; C0
-    db $15, $24, $39, $24, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LavaMan", $F0
 
 Data_088_5937:: ; heuristic: string; C0
-    db $0B, $32, $30, $25, $0C, $35, $24, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BombCrag", $F0
 
 Data_088_5940:: ; heuristic: string; C0
-    db $1B, $38, $36, $2B, $0F, $2C, $36, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RushFish", $F0
 
 Data_088_5949:: ; heuristic: string; C0
-    db $20, $2B, $24, $2F, $28, $16, $24, $2A, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhaleMage", $F0
 
 Data_088_5953:: ; heuristic: string; C0
-    db $1C, $33, $32, $37, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SpotKing", $F0
 
 Data_088_595C:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $0B, $32, $35, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SlimeBorg", $F0
 
 Data_088_5966:: ; heuristic: string; C0
-    db $15, $2C, $3D, $24, $35, $27, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LizardMan", $F0
 
 Data_088_5970:: ; heuristic: string; C0
-    db $10, $35, $28, $24, $37, $0D, $35, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GreatDrak", $F0
 
 Data_088_597A:: ; heuristic: string; C0
-    db $16, $24, $27, $0C, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MadCat", $F0
 
 Data_088_5981:: ; heuristic: string; C0
-    db $0E, $30, $3C, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Emyu", $F0
 
 Data_088_5986:: ; heuristic: string; C0
-    db $11, $32, $35, $31, $0B, $28, $28, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HornBeet", $F0
 
 Data_088_598F:: ; heuristic: string; C0
-    db $18, $2A, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Ogre", $F0
 
 Data_088_5994:: ; heuristic: string; C0
-    db $19, $38, $37, $35, $28, $19, $38, $33, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PutrePup", $F0
 
 Data_088_599D:: ; heuristic: string; C0
-    db $1B, $32, $25, $32, $36, $37, $28, $35, $02, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Roboster2", $F0
 
 Data_088_59A7:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldGolem", $F0
 
 Data_088_59B1:: ; heuristic: string; C0
-    db $20, $2B, $2C, $37, $28, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhiteKing", $F0
 
 Data_088_59BB:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldSlime", $F0
 
 Data_088_59C5:: ; heuristic: string; C0
-    db $0D, $2C, $39, $2C, $31, $28, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Divinegon", $F0
 
 Data_088_59CF:: ; heuristic: string; C0
-    db $14, $2C, $31, $2A, $15, $28, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "KingLeo", $F0
 
 Data_088_59D7:: ; heuristic: string; C0
-    db $1B, $24, $2C, $31, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RainHawk", $F0
 
 Data_088_59E0:: ; heuristic: string; C0
-    db $1B, $32, $36, $28, $39, $2C, $31, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Rosevine", $F0
 
 Data_088_59E9:: ; heuristic: string; C0
-    db $0A, $35, $30, $32, $35, $33, $2C, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Armorpion", $F0
 
 Data_088_59F3:: ; heuristic: string; C0
-    db $0D, $38, $35, $35, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Durran", $F0
 
 Data_088_59FA:: ; heuristic: string; C0
-    db $0A, $34, $38, $24, $27, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Aquadon", $F0
 
 Data_088_5A02:: ; heuristic: string; C0
-    db $20, $24, $35, $38, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Warubou", $F0
 
 Data_088_5A0A:: ; heuristic: string; C0
-    db $19, $28, $37, $2C, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Petibou", $F0
 
 Data_088_5A12:: ; heuristic: string; C0
-    db $1C, $2E, $28, $2F, $28, $37, $32, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skeletor", $F0
 
 Data_088_5A1B:: ; heuristic: string; C0
-    db $1C, $37, $32, $31, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StoneMan", $F0
 
 Data_088_5A24:: ; heuristic: string; C0
-    db $0F, $38, $31, $2E, $3C, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FunkyBird", $F0
 
 Data_088_5A2E:: ; heuristic: string; C0
-    db $0C, $32, $33, $3C, $26, $24, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Copycat", $F0
 
 Data_088_5A36:: ; heuristic: string; C0
-    db $0A, $31, $27, $35, $28, $24, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Andreal", $F0
 
 Data_088_5A3E:: ; heuristic: string; C0
-    db $0D, $35, $3C, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Drygon", $F0
 
 Data_088_5A45:: ; heuristic: string; C0
-    db $0B, $38, $37, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Butch", $F0
 
 Data_088_5A4B:: ; heuristic: string; C0
-    db $19, $38, $30, $33, $32, $2C, $36, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pumpoise", $F0
 
 Data_088_5A54:: ; heuristic: string; C0
-    db $15, $32, $35, $27, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LordDraco", $F0
 
 Data_088_5A5E:: ; heuristic: string; C0
-    db $0A, $35, $26, $0D, $28, $30, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ArcDemon", $F0
 
 Data_088_5A67:: ; heuristic: string; C0
-    db $20, $2B, $2C, $33, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhipBird", $F0
 
 Data_088_5A70:: ; heuristic: string; C0
-    db $1C, $37, $32, $31, $28, $16, $24, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "StoneMan", $F0
 
 Data_088_5A79:: ; heuristic: string; C0
-    db $0D, $28, $24, $27, $17, $32, $25, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeadNoble", $F0
 
 Data_088_5A83:: ; heuristic: string; C0
-    db $16, $28, $37, $24, $2F, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "MetalKing", $F0
 
 Data_088_5A8D:: ; heuristic: string; C0
-    db $1C, $28, $35, $33, $28, $31, $37, $2C, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Serpentia", $F0
 
 Data_088_5A97:: ; heuristic: string; C0
-    db $12, $35, $32, $31, $1D, $38, $35, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "IronTurt", $F0
 
 Data_088_5AA0:: ; heuristic: string; C0
-    db $23, $24, $33, $0B, $2C, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "ZapBird", $F0
 
 Data_088_5AA8:: ; heuristic: string; C0
-    db $0F, $32, $32, $11, $28, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "FooHero", $F0
 
 Data_088_5AB0:: ; heuristic: string; C0
-    db $10, $32, $24, $37, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoatHorn", $F0
 
 Data_088_5AB9:: ; heuristic: string; C0
-    db $12, $31, $39, $28, $35, $3D, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Inverzon", $F0
 
 Data_088_5AC2:: ; heuristic: string; C0
-    db $1F, $32, $32, $27, $32, $2F, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Voodoll", $F0
 
 Data_088_5ACA:: ; heuristic: string; C0
-    db $0A, $3B, $28, $1C, $2B, $24, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AxeShark", $F0
 
 Data_088_5AD3:: ; heuristic: string; C0
-    db $0D, $2C, $2A, $32, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Digong", $F0
 
 Data_088_5ADA:: ; heuristic: string; C0
-    db $1C, $3A, $32, $35, $27, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Swordgon", $F0
 
 Data_088_5AE3:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GigaDraco", $F0
 
 Data_088_5AED:: ; heuristic: string; C0
-    db $1C, $38, $33, $28, $35, $1D, $28, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "SuperTen", $F0
 
 Data_088_5AF6:: ; heuristic: string; C0
-    db $0B, $2C, $2A, $1B, $32, $32, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "BigRoost", $F0
 
 Data_088_5AFF:: ; heuristic: string; C0
-    db $10, $2B, $32, $36, $1D, $35, $28, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GhosTree", $F0
 
 Data_088_5B08:: ; heuristic: string; C0
-    db $20, $24, $35, $16, $24, $31, $37, $2C, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WarMantis", $F0
 
 Data_088_5B12:: ; heuristic: string; C0
-    db $11, $28, $24, $2F, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Healer", $F0
 
 Data_088_5B19:: ; heuristic: string; C0
-    db $14, $24, $2A, $28, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Kagebou", $F0
 
 Data_088_5B21:: ; heuristic: string; C0
-    db $0D, $2C, $30, $28, $31, $36, $24, $38, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Dimensaur", $F0
 
 Data_088_5B2B:: ; heuristic: string; C0
-    db $15, $24, $30, $2C, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lamia", $F0
 
 Data_088_5B31:: ; heuristic: string; C0
-    db $0D, $35, $24, $26, $32, $15, $32, $35, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DracoLord", $F0
 
 Data_088_5B3B:: ; heuristic: string; C0
-    db $15, $32, $35, $27, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LordDraco", $F0
 
 Data_088_5B45:: ; heuristic: string; C0
-    db $11, $24, $35, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Hargon", $F0
 
 Data_088_5B4C:: ; heuristic: string; C0
-    db $1C, $2C, $27, $32, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Sidoh", $F0
 
 Data_088_5B52:: ; heuristic: string; C0
-    db $10, $28, $31, $32, $36, $2C, $27, $32, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Genosidoh", $F0
 
 Data_088_5B5C:: ; heuristic: string; C0
-    db $0B, $24, $35, $24, $30, $32, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Baramos", $F0
 
 Data_088_5B64:: ; heuristic: string; C0
-    db $23, $32, $30, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Zoma", $F0
 
 Data_088_5B69:: ; heuristic: string; C0
-    db $0A, $36, $38, $35, $24, $23, $32, $30, $24, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "AsuraZoma", $F0
 
 Data_088_5B73:: ; heuristic: string; C0
-    db $19, $2C, $3D, $3D, $24, $35, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Pizzaro", $F0
 
 Data_088_5B7B:: ; heuristic: string; C0
-    db $19, $36, $3C, $26, $2B, $32, $19, $2C, $3D, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "PsychoPiz", $F0
 
 Data_088_5B85:: ; heuristic: string; C0
-    db $0E, $36, $37, $28, $35, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Esterk", $F0
 
 Data_088_5B8C:: ; heuristic: string; C0
-    db $16, $2C, $35, $38, $27, $35, $24, $24, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mirudraas", $F0
 
 Data_088_5B96:: ; heuristic: string; C0
-    db $16, $38, $27, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Mudou", $F0
 
 Data_088_5B9C:: ; heuristic: string; C0
-    db $0D, $28, $24, $37, $2B, $16, $32, $35, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DeathMore", $F0
 
 Data_088_5BA6:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $27, $35, $2C, $38, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Darkdrium", $F0
 
 Data_088_5BB0:: ; heuristic: string; C0
-    db $18, $35, $2A, $32, $27, $28, $30, $2C, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orgodemir", $F0
 
 Data_088_5BBA:: ; heuristic: string; C0
-    db $0D, $24, $35, $26, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Darck", $F0
 
 Data_088_5BC0:: ; heuristic: string; C0
-    db $11, $24, $2F, $32, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "HaloSlime", $F0
 
 Data_088_5BCA:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldSlime", $F0
 
 Data_088_5BD4:: ; heuristic: string; C0
-    db $10, $35, $24, $31, $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GranSlime", $F0
 
 Data_088_5BDE:: ; heuristic: string; C0
-    db $20, $32, $31, $27, $28, $35, $0E, $2A, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WonderEgg", $F0
 
 Data_088_5BE8:: ; heuristic: string; C0
-    db $18, $35, $2F, $2C, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Orligon", $F0
 
 Data_088_5BF0:: ; heuristic: string; C0
-    db $10, $2C, $2A, $24, $0D, $35, $24, $26, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GigaDraco", $F0
 
 Data_088_5BFA:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $11, $32, $35, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkHorn", $F0
 
 Data_088_5C03:: ; heuristic: string; C0
-    db $10, $32, $35, $24, $2A, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Gorago", $F0
 
 Data_088_5C0A:: ; heuristic: string; C0
-    db $1B, $24, $2C, $31, $11, $24, $3A, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "RainHawk", $F0
 
 Data_088_5C13:: ; heuristic: string; C0
-    db $0A, $3D, $38, $35, $2C, $2F, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Azurile", $F0
 
 Data_088_5C1B:: ; heuristic: string; C0
-    db $1C, $2B, $24, $31, $37, $24, $2E, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Shantak", $F0
 
 Data_088_5C23:: ; heuristic: string; C0
-    db $20, $24, $37, $24, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Watabou", $F0
 
 Data_088_5C2B:: ; heuristic: string; C0
-    db $20, $24, $35, $38, $25, $32, $38, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Warubou", $F0
 
 Data_088_5C33:: ; heuristic: string; C0
-    db $0E, $2A, $27, $35, $24, $26, $2C, $2F, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Egdracil", $F0
 
 Data_088_5C3C:: ; heuristic: string; C0
-    db $0D, $2C, $2A, $36, $37, $28, $35, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Digster", $F0
 
 Data_088_5C44:: ; heuristic: string; C0
-    db $1C, $2E, $38, $2F, $24, $35, $24, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Skularach", $F0
 
 Data_088_5C4E:: ; heuristic: string; C0
-    db $1D, $2C, $37, $24, $31, $2C, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Titanis", $F0
 
 Data_088_5C56:: ; heuristic: string; C0
-    db $15, $24, $30, $33, $10, $28, $31, $2C, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "LampGenie", $F0
 
 Data_088_5C60:: ; heuristic: string; C0
-    db $17, $2C, $37, $28, $35, $2C, $26, $2B, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Niterich", $F0
 
 Data_088_5C69:: ; heuristic: string; C0
-    db $20, $2B, $2C, $37, $28, $14, $2C, $31, $2A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "WhiteKing", $F0
 
 Data_088_5C73:: ; heuristic: string; C0
-    db $15, $24, $3D, $24, $30, $24, $31, $38, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Lazamanus", $F0
 
 Data_088_5C7D:: ; heuristic: string; C0
-    db $10, $32, $2F, $27, $10, $32, $2F, $28, $30, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "GoldGolem", $F0
 
 Data_088_5C87:: ; heuristic: string; C0
-    db $0D, $24, $35, $2E, $16, $24, $37, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "DarkMate", $F0
 
 Data_088_5C90:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $2A, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octogon", $F0
 
 Data_088_5C98:: ; heuristic: string; C0
-    db $18, $26, $37, $32, $35, $24, $2C, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Octoraid", $F0
 
 Data_088_5CA1:: ; heuristic: string; C0
-    db $10, $35, $24, $2E, $32, $36, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Grakos", $F0
 
 Data_088_5CA8:: ; heuristic: string; C0
-    db $19, $32, $36, $28, $2C, $27, $32, $31, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Poseidon", $F0
 
 Data_088_5CB1:: ; heuristic: string; C0
-    db $1C, $2F, $2C, $30, $28, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Slime", $F0
 
 Data_088_5CB7:: ; heuristic: string; C0
-    db $1E, $31, $27, $28, $29, $2C, $31, $28, $27, $F0, $30, $28, $F0, $1E, $31, $27
-    db $28, $29, $2C, $31, $28, $27, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Undefined", $F0
+    db $30, $28, $F0, $1E, $31, $27, $28, $29, $2C, $31, $28, $27, $F0
     ds $2332, $00

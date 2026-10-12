@@ -4132,7 +4132,7 @@ Func_085_5882:: ; address name
     jr z, Jump_085_58B3
     and a, $01
     jr nz, Jump_085_58B3
-    ld de, $5912
+    ld de, TalkEvent29WordList
     ldh a, [hPlayerSpriteStreamLo]
     ld l, a
     ldh a, [hPlayerSpriteStreamHi]
@@ -4196,7 +4196,7 @@ Jump_085_58C6::
     ld c, $0B
     call LoadSRAMRecordWord
     pop bc
-    ld de, $5912
+    ld de, TalkEvent29WordList
 
 Jump_085_58DF::
     push de
@@ -4245,10 +4245,15 @@ Jump_085_5909::
     inc a
     ldh [hTemp0], a
     ret
-    db $09, $00, $0E, $00, $11, $00, $12, $00, $16, $00, $18, $00, $19, $00, $2B, $00
-    db $38, $00, $40, $00, $41, $00, $94, $00, $C6, $00, $EC, $00, $01, $01, $05, $01
-    db $19, $01, $1B, $01, $1F, $01, $20, $01, $24, $01, $26, $01, $27, $01, $29, $01
-    db $2A, $01, $2F, $01, $30, $01, $35, $01, $37, $01, $00, $00
+
+; E-0236 (C1: DispatchTalkEvent_Case05_Case29_Sub01 compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read).
+; record: words to match, then $0000
+TalkEvent29WordList::
+Data_085_5912:: ; address name
+    dw $0009, $000E, $0011, $0012, $0016, $0018, $0019, $002B ; entry 0
+    dw $0038, $0040, $0041, $0094, $00C6, $00EC, $0101, $0105
+    dw $0119, $011B, $011F, $0120, $0124, $0126, $0127, $0129
+    dw $012A, $012F, $0130, $0135, $0137, $0000
 
 ; only called from DispatchTalkEvent_Case05_Case47 (E-0047)
 ; 1 call site from 1 routine (e.g. DispatchTalkEvent_Case05_Case47)
@@ -4271,7 +4276,7 @@ Jump_085_5960::
     ret
 
 Jump_085_5964::
-    ld de, $5991
+    ld de, TalkEvent47WordList
     ldh a, [hPlayerSpriteStreamLo]
     ld l, a
     ldh a, [hPlayerSpriteStreamHi]
@@ -4312,23 +4317,26 @@ Jump_085_598C::
     ld a, $02
     ldh [hTemp0], a
     ret
-    INCBIN "dwm2-cobi-us.gbc", $215991, $43
-    dw Data_085_5A00
-    dw Data_085_5B00
-    dw Data_085_6500
-    dw Data_085_6A00
-    dw Data_085_6D00
-    dw Data_085_6F00
-    dw Data_085_7000
-    dw Data_085_7100
-    dw Data_085_7300
-    dw Data_085_7400
-    dw Data_085_7600
-    db $00, $84, $00, $8D, $00, $8E, $00, $91, $00, $92, $00, $93, $00, $94, $00, $95
-    db $00, $96, $00, $97, $00, $99
 
-Data_085_5A00:: ; heuristic: target of a monotone pointer table; C0
-    INCBIN "dwm2-cobi-us.gbc", $215A00, $75
+; E-0236 (C1: DispatchTalkEvent_Case05_Case47_Sub01 (unless flag 0 is set) compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear; a match sets hTemp0 to 2; 113 words; what the words identify is not read).
+; record: words to match, then $0000
+TalkEvent47WordList::
+Data_085_5991:: ; address name
+    dw $0001, $0002, $0004, $0005, $0007, $0008, $0009, $000A ; entry 0
+    dw $000B, $000D, $000F, $0011, $0012, $0016, $001A, $0024
+    dw $0028, $002E, $0031, $0032, $0034, $0036, $0039, $003A
+    dw $0048, $0049, $004A, $004B, $004D, $004F, $0050, $0053
+    dw $0054, $0057, $005A, $005B, $0065, $006A, $006D, $006F
+    dw $0070, $0071, $0073, $0074, $0076, $0084, $008D, $008E
+    dw $0091, $0092, $0093, $0094, $0095, $0096, $0097, $0099
+    dw $009A, $009E, $00A4, $00A5, $00A6, $00A7, $00B0, $00B1
+    dw $00B2, $00B3, $00B4, $00B5, $00B6, $00B7, $00B9, $00BA
+    dw $00BB, $00BD, $00BF, $00C5, $00D3, $00D6, $00D7, $00D8
+    dw $00DC, $00DD, $00D4, $00F0, $00F6, $00F8, $00F9, $00FD
+    dw $0100, $0101, $0103, $0105, $010D, $010E, $0119, $011B
+    dw $011C, $011E, $0121, $0122, $0126, $0127, $012B, $012C
+    dw $013C, $013D, $0140, $015A, $0149, $014D, $014E, $015B
+    dw $0144, $0000
 
 ; only called from routines of DispatchTalkEvent (E-0098)
 ; 3 call sites from 3 routines (e.g. DispatchTalkEvent_Case05_Case4C, DispatchTalkEvent_Case05_Case6E, DispatchTalkEvent_Case05_Case6F)

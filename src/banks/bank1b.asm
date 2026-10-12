@@ -1609,219 +1609,187 @@ Data_01B_4C9D:: ; address name
     dw Text_1B_5190 ; id 41
 
 Data_01B_4CF1:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Welcome. What", $F1
+    db $EA, $45, " Welcome. What", $F1
     db "would you like?", $F0
 
 Data_01B_4D12:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which will be", $F1
+    db $EA, $45, " Which will be", $F1
     db "the base monster?", $F0
 
 Data_01B_4D35:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " This is the one", $F1
+    db $EA, $45, " This is the one", $F1
     db "you want?", $F0
 
 Data_01B_4D52:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Is there", $F1
+    db $EA, $45, " Is there", $F1
     db "anything else?", $F0
 
 Data_01B_4D6D:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You won't have a", $F1
+    db $EA, $45, " You won't have a", $F1
     db "monster with you!", $F7
     db $F0
 
 Data_01B_4D93:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " That's too low", $F1
+    db $EA, $45, " That's too low", $F1
     db "in level to breed.", $F7
     db $F0
 
 Data_01B_4DB8:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " And what will", $F1
+    db $EA, $45, " And what will", $F1
     db "its mate be?", $F0
 
 Data_01B_4DD6:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " There's no", $F1
+    db $EA, $45, " There's no", $F1
     db "potential mate.", $F7
     db $F0
 
 Data_01B_4DF4:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " ", $F9, "0", $F1
+    db $EA, $45, " ", $F9, "0", $F1
     db "will result from", $FA, $F7
     db $EF, $EE, "this.", $EF, $EE, $F7
     db $F0
 
 Data_01B_4E17:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " A great monster", $F1
+    db $EA, $45, " A great monster", $F1
     db "will be born!", $F7
     db $F0
 
 Data_01B_4E39:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You already had", $F1
+    db $EA, $45, " You already had", $F1
     db "that monster.", $F7
     db $F0
 
 Data_01B_4E5B:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You", $42, "e never had", $F1
+    db $EA, $45, " You", $42, "e never had", $F1
     db "that monster.", $F7
     db $F0
 
 Data_01B_4E7D:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " OK to record in", $F1
+    db $EA, $45, " OK to record in", $F1
     db "your Journal?", $F0
 
 Data_01B_4E9E:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Fine, fine!", $F1
+    db $EA, $45, " Fine, fine!", $F1
     db "I'll do it!", $F7
     db $F0
 
 Data_01B_4EB9:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Hatching that", $F1
+    db $EA, $45, " Hatching that", $F1
     db "will cost ", $F9, "0G.", $FA, $F7
     db $F2, "Should I hatch it", $F1
     db "too?", $F0
 
 Data_01B_4EF2:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " I'll hatch the", $F1
+    db $EA, $45, " I'll hatch the", $F1
     db "egg too, then.", $F7
     db $F0
 
 Data_01B_4F13:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " I won't hatch", $F1
+    db $EA, $45, " I won't hatch", $F1
     db "the egg, then.", $F7
     db $F0
 
 Data_01B_4F33:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You don't have", $F1
+    db $EA, $45, " You don't have", $F1
     db "enough gold, so", $FA, $F7
     db $F2, "I'll just do the", $F1
     db "breeding.", $F7
     db $F0
 
 Data_01B_4F71:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " I'll send the", $F1
+    db $EA, $45, " I'll send the", $F1
     db "egg to the farm.", $F7
     db $F0
 
 Data_01B_4F93:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Will you take", $F1
+    db $EA, $45, " Will you take", $F1
     db $F9, "0 with you?", $F0
 
 Data_01B_4FB1:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Raise it with", $F1
+    db $EA, $45, " Raise it with", $F1
     db "love and care!", $F7
     db $F0
 
 Data_01B_4FD2:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " I'll send ", $F9, "0", $F1
+    db $EA, $45, " I'll send ", $F9, "0", $F1
     db "to the farm, then.", $F7
     db $F0
 
 Data_01B_4FF5:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which will go", $F1
+    db $EA, $45, " Which will go", $F1
     db "back to the farm?", $F0
 
 Data_01B_5018:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Is this the one", $F1
+    db $EA, $45, " Is this the one", $F1
     db "to send home?", $F0
 
 Data_01B_5039:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " ", $F9, "0 is", $F1
+    db $EA, $45, " ", $F9, "0 is", $F1
     db "going to the farm.", $F7
     db $F0
 
 Data_01B_5056:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which egg should", $F1
+    db $EA, $45, " Which egg should", $F1
     db "I hatch?", $F0
 
 Data_01B_5073:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " That will cost", $F1
+    db $EA, $45, " That will cost", $F1
     db $F9, "0G. OK?", $F0
 
 Data_01B_508E:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " There isn't a", $F1
+    db $EA, $45, " There isn't a", $F1
     db "single egg here.", $F7
     db $F0
 
 Data_01B_50B0:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You don't have", $F1
+    db $EA, $45, " You don't have", $F1
     db "enough gold.", $F7
     db $F0
 
 Data_01B_50CF:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You got the egg", $F1
+    db $EA, $45, " You got the egg", $F1
     db "of ", $F9, "0.", $F7
     db $F0
 
 Data_01B_50EA:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Become a great", $F1
+    db $EA, $45, " Become a great", $F1
     db "master!", $F7
     db $F0
 
 Data_01B_5105:: ; heuristic: string; C0
-    db $EA, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Fine, fine.", $F1
+    db $EA, $45, " Fine, fine.", $F1
     db "Just wait here.", $F7
     db $F0
 

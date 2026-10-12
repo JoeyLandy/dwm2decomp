@@ -244,10 +244,7 @@ Data_037_4298:: ; heuristic: string; C0
     db $F9, "G happily ate", $F1
     db "the treat.", $F7
     db $F2, $F9, "G's affection", $F1
-    db "for "
-    db $F6
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " rose!", $F7
+    db "for ", $F6, " rose!", $F7
     db $F0
 
 Data_037_42CE:: ; heuristic: string; C0
@@ -331,9 +328,8 @@ Data_037_44AB:: ; heuristic: string; C0
     db $F0
 
 Data_037_44CD:: ; heuristic: string; C0
-    db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " held aloft", $F1
+    db $F6, " held aloft", $F1
     db "the ", $F9, "W!", $F7
     db $F0
 
@@ -392,10 +388,7 @@ Data_037_45DB:: ; heuristic: string; C0
     db "were healed.", $F7
     db $F2, $F9, "'r's wounds", $F1
     db "were healed.", $F7
-    db $F2, $F9
-    db $50
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "'s wounds", $F1
+    db $F2, $F9, $50, "'s wounds", $F1
     db "were healed.", $F7
     db $F0
 
@@ -472,10 +465,7 @@ Data_037_4770:: ; heuristic: string; C0
     db "uncursed.", $F7
     db $F2, $F9, "'r was", $F1
     db "uncursed.", $F7
-    db $F2, $F9
-    db $50
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " was", $F1
+    db $F2, $F9, $50, " was", $F1
     db "uncursed.", $F7
     db $F0
 
@@ -503,9 +493,8 @@ Data_037_47DD:: ; heuristic: string; C0
     db $F0
 
 Data_037_47FC:: ; heuristic: string; C0
-    db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " asked ", $F9, "0", $F1
+    db $F6, " asked ", $F9, "0", $F1
     db "to run an errand.", $F7
     db $F0
 
@@ -547,9 +536,7 @@ Data_037_4892:: ; heuristic: string; C0
 Data_037_48A4:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 whispered in", $F1
-    db $F6
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "'s ear.", $FA, $F7
+    db $F6, "'s ear.", $FA, $F7
     db $F0
 
 Data_037_48BE:: ; heuristic: string; C0
@@ -576,10 +563,7 @@ Data_037_492B:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 returned", $F1
     db "with an item.", $FA, $F7
-    db $F2
-    db $F6
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " obtained one", $F1
+    db $F2, $F6, " obtained one", $F1
     db $F9, "m.", $F7
     db $F0
 

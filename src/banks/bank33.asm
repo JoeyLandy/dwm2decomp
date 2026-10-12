@@ -3792,22 +3792,19 @@ Data_033_64A7:: ; address name
     dw BeginStringDisplay_Bank33_7037 ; id 54
 
 Data_033_6515:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You", $42, "e finished", $F1
+    db $EB, $45, " You", $42, "e finished", $F1
     db "that Class.", $F7
     db $F0
 
 Data_033_6534:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which Class will", $F1
+    db $EB, $45, " Which Class will", $F1
     db "you challenge?", $F0
 
 Data_033_6557:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Train some"
+    db $EB, $45, " Train some"
 
 Data_033_6564:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -3816,76 +3813,65 @@ Data_033_6564:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_033_657F:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Let me confirm", $F1
+    db $EB, $45, " Let me confirm", $F1
     db "that-the ", $F9, "0 Class?", $F0
 
 Data_033_65A4:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Good luck! I'll", $F1
+    db $EB, $45, " Good luck! I'll", $F1
     db "cheer for you!", $F7
     db $F0
 
 Data_033_65C6:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Not enough gold", $F1
+    db $EB, $45, " Not enough gold", $F1
     db "for that Class!", $F7
     db $F0
 
 Data_033_65EA:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Oh", $A4, " The crowd", $F1
+    db $EB, $45, " Oh", $A4, " The crowd", $F1
     db "wanted to see you", $A4, $F7
     db $F0
 
 Data_033_660F:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " How many masters", $F1
+    db $EB, $45, " How many masters", $F1
     db "in the group?", $F0
 
 Data_033_6631:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Will you try a", $F1
+    db $EB, $45, " Will you try a", $F1
     db "Master Battle?", $F0
 
 Data_033_6652:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " The S Class", $F1
+    db $EB, $45, " The S Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_6695:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " The A Class", $F1
+    db $EB, $45, " The A Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_66D8:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " The B Class", $F1
+    db $EB, $45, " The B Class", $F1
     db "should be good.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_671B:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " It could get", $F1
+    db $EB, $45, " It could get", $F1
     db "rough out there.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_6760:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " It "
+    db $EB, $45, " It "
 
 Data_033_6766:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -3894,52 +3880,52 @@ Data_033_6766:: ; heuristic: target of a monotone pointer table; C0
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_67A5:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " The E Class", $F1
+    db $EB, $45, " The E Class", $F1
     db "should do.", $FA, $F7
     db $EF, $EE, "Which Class will", $EF, $EE, "you challenge?", $F0
 
 Data_033_67E3:: ; heuristic: string; C0
-    db $EB, $45, $90, $12, $36, $90, $F9, $00, $90, $0C, $2F, $24, $36, $36, $90, $18
-    db $14, $98, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $EB, $45, " Is ", $F9, "0 Class OK?", $F0
 
 Data_033_67F6:: ; heuristic: string; C0
-    db $EB, $45, $90, $12, $90, $2B, $32, $33, $28, $90, $3C, $32, $38, $90, $27, $32
-    db $F1, $3A, $28, $2F, $2F, $99, $F7, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $EB, $45, " I hope you do", $F1
+    db "well!", $F7
+    db $F0
 
 Data_033_680E:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You need more", $F1
+    db $EB, $45, " You need more", $F1
     db "gold to register.", $F7
     db $F0
 
 Data_033_6832:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You can't try", $F1
+    db $EB, $45, " You can't try", $F1
     db "that Class yet.", $F7
     db $F0
 
 Data_033_6853:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "lasSABCDE"
-    db $AC, $17, $32, $F0
+    db "lasSABCDE", $AC, "No", $F0
 
 Data_033_6860:: ; heuristic: string; C0
-    db $0B, $24, $37, $37, $2F, $28, $36, $90, $0C, $32, $36, $37, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "Battles Cost", $F0
 
 Data_033_686D:: ; heuristic: string; C0
-    db $12, $17, $0F, $18, $1D, $0E, $1C, $14, $15, $19, $0A, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "INFOTESKLPA", $F0
 
 Data_033_6879:: ; heuristic: string; C0
-    db $2F, $24, $36, $1C, $0A, $0B, $0C, $0D, $0E, $AC, $17, $32, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "lasSABCDE", $AC, "No", $F0
 
 Data_033_6886:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won the", $EF, $EE, "Kids", $95, " Class!", $FA, $F7
     db $EF, $EE, "The King will give", $EF, $EE, "you his official", $FA, $F7
@@ -3956,36 +3942,32 @@ Data_033_6968:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_033_69CE:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won the", $EF, $EE, "C Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
 Data_033_6A2E:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won the", $EF, $EE, "B Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
 Data_033_6A8E:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won the", $EF, $EE, "A Class!", $FA, $F7
     db $EF, $EE, "Here's your prize", $EF, $EE, "-a  Magic Key!", $F7
     db $F0
 
 Data_033_6AEE:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e finally won", $EF, $EE, "the S Class!", $FA, $F7
     db $EF, $EE, "You can now choose", $EF, $EE, "any Class you want", $FA, $F7
@@ -4001,9 +3983,8 @@ Data_033_6B6A:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_033_6C08:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Too bad you", $F1
+    db $EB, $45, " Too bad you", $F1
     db "didn't make it.", $FA, $F7
     db $EF, $EE, "It's hard to win", $EF, $EE, "if your monsters", $FA, $F7
     db $EF, $EE, "aren't leveled up", $EF, $EE, "enough.", $FA, $F7
@@ -4011,9 +3992,8 @@ Data_033_6C08:: ; heuristic: string; C0
     db $F0
 
 Data_033_6C8D:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Too bad you", $F1
+    db $EB, $45, " Too bad you", $F1
     db "didn't make it.", $FA, $F7
     db $EF, $EE, "You can create", $EF, $EE, "tougher monsters", $FA, $F7
     db $EF, $EE, "by leveling up", $EF, $EE, "those you bred.", $FA, $F7
@@ -4021,9 +4001,8 @@ Data_033_6C8D:: ; heuristic: string; C0
     db $F0
 
 Data_033_6D17:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db $F9, "0 does it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won", $EF, $EE, $F9, "GG!", $FA, $F7
     db $EF, $EE, "We hope you'll", $EF, $EE, "battle here agai"
@@ -4034,9 +4013,8 @@ Data_033_6D6C:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_033_6D70:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " You lost?", $F1
+    db $EB, $45, " You lost?", $F1
     db "That's too bad.", $FA, $F7
     db $EF, $EE, "Try again after", $EF, $EE, "leveling up your", $FA, $F7
     db $EF, $EE, "monsters some", $EF, $EE, "more.", $F7
@@ -4045,71 +4023,62 @@ Data_033_6D70:: ; heuristic: string; C0
 Data_033_6DCA:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
-    db "the Magic Key."
-    db $E5, $58, $F7, $E9, $FF, $F0
+    db "the Magic Key.", $E5, $58, $F7
+    db $E9, $FF, $F0
 
 Data_033_6DEA:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " ", $A4, "Oh, but your", $F1
+    db $EB, $45, " ", $A4, "Oh, but your", $F1
     db "key ring is full.", $FA, $F7
     db $EF, $EE, "You'll have to", $EF, $EE, "make room, and", $FA, $F7
     db $EF, $EE, "come back for this", $EF, $EE, "later.", $F7
     db $F0
 
 Data_033_6E4D:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Here's the Magic", $F1
-    db "Key you"
-    db $44
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " won!", $F7
+    db $EB, $45, " Here's the Magic", $F1
+    db "Key you", $44, " won!", $F7
     db $F0
 
 Data_033_6E6F:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db $F9, "0 received", $F1
-    db "the Pirate Key."
-    db $E5, $58, $F7, $E9, $FF, $F0
+    db "the Pirate Key.", $E5, $58, $F7
+    db $E9, $FF, $F0
 
 Data_033_6E90:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Here's the Pirate", $F1
-    db "Key you"
-    db $44, $90, $3A, $32, $31, $99, $F7, $F0
+    db $EB, $45, " Here's the Pirate", $F1
+    db "Key you", $44, " won!", $F7
+    db $F0
 
 Data_033_6EB3:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Congratulations!", $F1
+    db $EB, $45, " Congratulations!", $F1
     db "You did it!", $FA, $F7
     db $EF, $EE, "You", $42, "e won the", $EF, $EE, $F9, "0 Class!", $FA, $F7
     db $EF, $EE, "Choose one of", $EF, $EE, "these chests!", $F7
     db $F0
 
 Data_033_6F10:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Do you want the", $F1
+    db $EB, $45, " Do you want the", $F1
     db "left chest?", $F0
 
 Data_033_6F2F:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Do you want the", $F1
+    db $EB, $45, " Do you want the", $F1
     db "right chest?", $F0
 
 Data_033_6F4F:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Your prize is", $F1
+    db $EB, $45, " Your prize is", $F1
     db "one ", $F9, "G!", $F7
     db $F0
 
 Data_033_6F69:: ; heuristic: string; C0
-    db $EB, $45, $90, $22, $32
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db $EB, $45, " Yo"
 
 Data_033_6F6E:: ; heuristic: target of a monotone pointer table; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -4118,18 +4087,16 @@ Data_033_6F6E:: ; heuristic: target of a monotone pointer table; C0
     db $F0
 
 Data_033_6F88:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " ", $A4, "Oh, but you", $F1
+    db $EB, $45, " ", $A4, "Oh, but you", $F1
     db "have no room.", $FA, $F7
     db $EF, $EE, "Well, instead of", $EF, $EE, "the ", $F9, "G,", $FA, $F7
     db $EF, $EE, "here's 6000G.", $EF, $EE, $F7
     db $F0
 
 Data_033_6FD6:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " ", $A4, "Oh, but your", $F1
+    db $EB, $45, " ", $A4, "Oh, but your", $F1
     db "key ring is full.", $FA, $F7
     db $EF, $EE, "Well, instead of", $EF, $EE, "the Magic Key,", $FA, $F7
     db $EF, $EE, "here's 6000G", $EF, $EE, "instead.", $F7

@@ -180,13 +180,11 @@ Data_007_419F:: ; heuristic: string; C0
 Data_007_41A3:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Kill A", $F1
-    db $E8, $07, $01, $17, $28, $3B, $37, $90, $0B, $F0
+    db $E8, "71Next B", $F0
 
 Data_007_41B4:: ; heuristic: string; C0
-    db $1B, $0E, $1C, $1E, $15, $1D, $1C, $0D, $38, $32, $20, $A2, $15, $28, $39, $28
-    db $2F, $1D, $38, $35, $31, $36, $20, $2C, $31, $92
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db "RankOwnWDuoLOwnL", $F0
+    db "RESULTSDuoW", $A2, "LevelTurnsWin", $92, "RankOwnWDuoLOwnL", $F0
 
 Data_007_41DF:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -239,8 +237,7 @@ Data_007_42BF:: ; heuristic: string; C0
 Data_007_42DE:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "Play the boy's", $F1
-    db "adventure?"
-    db $FF, $F0
+    db "adventure?", $FF, $F0
 
 Data_007_42F8:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -264,8 +261,7 @@ Data_007_4346:: ; heuristic: string; C0
     db "Your pal doesn't", $F1
     db "have enough gold.", $FA, $F7
     db $F2, "Will you pay the", $F1
-    db "1000G battle fee?"
-    db $FF, $F0
+    db "1000G battle fee?", $FF, $F0
 
 Data_007_438E:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -334,8 +330,7 @@ Data_007_4532:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "The battle results", $F1
     db "will be recorded.", $FA, $F7
-    db $F2, "Is that OK?"
-    db $FF, $F0
+    db $F2, "Is that OK?", $FF, $F0
 
 Data_007_4566:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -352,10 +347,7 @@ Data_007_4589:: ; heuristic: string; C0
 Data_007_45A8:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
     db "In Team Mode, you", $F1
-    db "both lost."
-    db $E5
-; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db $42, $FA, $F7
+    db "both lost.", $E5, $42, $FA, $F7
     db $F0
 
 Data_007_45C9:: ; heuristic: string; C0
@@ -365,9 +357,8 @@ Data_007_45C9:: ; heuristic: string; C0
     db $F0
 
 Data_007_45E9:: ; heuristic: string; C0
-    db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " obtained an", $F1
+    db $F6, " obtained an", $F1
     db "egg of ", $F9, "0.", $FA, $F7
     db $F0
 
@@ -384,9 +375,8 @@ Data_007_4619:: ; heuristic: string; C0
     db $F0
 
 Data_007_462E:: ; heuristic: string; C0
-    db $F6
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " received", $F1
+    db $F6, " received", $F1
     db $F9, "WG.", $F0
 
 Data_007_463E:: ; heuristic: string; C0
@@ -394,8 +384,7 @@ Data_007_463E:: ; heuristic: string; C0
     db "There is no room", $F1
     db "for more monsters.", $FA, $F7
     db $F2, "Switch it with", $F1
-    db "another monster?"
-    db $FF, $F0
+    db "another monster?", $FF, $F0
 
 Data_007_4685:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -409,8 +398,7 @@ Data_007_46BA:: ; heuristic: string; C0
     db "For Team Mode,", $F1
     db "1000G is charged.", $FA, $F7
     db $F2, "Will you pay this", $F1
-    db "fee?"
-    db $FF, $F0
+    db "fee?", $FF, $F0
 
 Data_007_46F5:: ; heuristic: string; C0
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
@@ -474,8 +462,8 @@ Data_007_482A:: ; heuristic: string; C0
     db "Congratulations", $F1
     db "for your victory!", $FA, $F7
     db $F2, "You", $42, "e won the", $F1
-    db "tournament!"
-    db $E5, $00, $E4, $7E, $FA, $F7, $F0
+    db "tournament!", $E5, "0", $E4, $7E, $FA, $F7
+    db $F0
 
 ; start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)
 ; 1 call site from 1 routine (e.g. RunGameModeInit_Case05)

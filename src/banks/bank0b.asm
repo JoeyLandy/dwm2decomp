@@ -442,40 +442,36 @@ Data_00B_4326:: ; address name
     dw Data_00B_6D2F ; id 10
 
 Data_00B_433C:: ; heuristic: string; C0
-    db $98, $98, $98, $F0
+; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
+    db "???", $F0
 
 Data_00B_4340:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Welcome to the", $F1
+    db $EB, $45, " Welcome to the", $F1
     db "library.", $FA, $F7
     db $F2, "Which family will", $F1
     db "you check?", $F0
 
 Data_00B_437A:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Come back if you", $F1
+    db $EB, $45, " Come back if you", $F1
     db "need to check up", $FA, $F7
     db $EF, $EE, "on your monster", $EF, $EE, "Catalog.", $F7
     db $F0
 
 Data_00B_43BD:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which species", $F1
+    db $EB, $45, " Which species", $F1
     db "will you check?", $F0
 
 Data_00B_43DE:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " Which family", $F1
+    db $EB, $45, " Which family", $F1
     db "will you check?", $F0
 
 Data_00B_43FE:: ; heuristic: string; C0
-    db $EB, $45
 ; text (E-0024): characters via charmap.inc; $XX bytes are control or glyph codes of unknown meaning
-    db " That family is a", $F1
+    db $EB, $45, " That family is a", $F1
     db "mystery still", $A4, $F7
     db $F0
 

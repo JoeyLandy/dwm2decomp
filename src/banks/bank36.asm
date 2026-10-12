@@ -966,7 +966,7 @@ Jump_036_464D::
     bit 7, [hl]
     jr z, Jump_036_4679
     res 7, [hl]
-    call ResolveStepComputeDamage_Sub02
+    call UnreferencedStoreResolveMessage35D0_Bank36
     ld a, [wBattleActor]
     call GetBattleATK
     call RandomWithin5PercentOfHL
@@ -7065,7 +7065,7 @@ ActionEffect_ActionD2:: ; code pointer of the table ActionEffectTable; C0
 Func_036_691E:: ; address name
     call ActionEffect_ActionD2_Sub01
     farcall RunA3414FAndMarkWDA5B3
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D3; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7074,7 +7074,7 @@ ActionEffect_ActionD3:: ; code pointer of the table ActionEffectTable; C0
 Func_036_692A:: ; address name
     call ActionEffect_ActionD3_Sub01
     farcall RunA3414FAndMarkWDA5B3
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D4; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7083,7 +7083,7 @@ ActionEffect_ActionD4:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6936:: ; address name
     call ActionEffect_ActionD4_Sub01
     farcall RunA3414FAndMarkWDA5B3
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D5; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7092,7 +7092,7 @@ ActionEffect_ActionD5:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6942:: ; address name
     call SkillDamageScaledBySlotResistancesByte6Bits32
     farcall RunA3414FAndMarkWDA5B3
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D6; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7111,7 +7111,7 @@ ActionEffect_ActionD7:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6957:: ; address name
     farcall RunA3414FAndMarkWDA5B3
     call ActionEffect_ActionD7_Sub01
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7120,7 +7120,7 @@ ActionEffect_ActionD8:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6963:: ; address name
     farcall RunA3414FAndMarkWDA5B3
     call ActionEffect_ActionD8_Sub01
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 217; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7129,7 +7129,7 @@ ActionEffect_ActionD9:: ; code pointer of the table ActionEffectTable; C0
 Func_036_696F:: ; address name
     call ActionEffect_ActionD9_Sub01
     farcall RunA3414FAndMarkWDA5B3
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -7452,7 +7452,7 @@ Func_036_6B74:: ; address name
 ActionEffect_Action00:: ; code pointer of the table ActionEffectTable; C0
 Func_036_6B75:: ; address name
     call ComputeAttackDamage
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8632,7 +8632,7 @@ Jump_036_720C::
 
 Jump_036_7214::
     call ActionEffect_CallHelp_Sub01
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 80 FireSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8640,7 +8640,7 @@ Jump_036_7214::
 ActionEffect_FireSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_721A:: ; address name
     call AttackDamageScaledBySlotResistancesByte0Bits54
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 81 VacuSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8648,7 +8648,7 @@ Func_036_721A:: ; address name
 ActionEffect_VacuSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7220:: ; address name
     call AttackDamageScaledBySlotResistancesByte1Bits76
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 82 BoltSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8656,7 +8656,7 @@ Func_036_7220:: ; address name
 ActionEffect_BoltSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7226:: ; address name
     call AttackDamageScaledBySlotResistancesByte1Bits54
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 83 IceSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8664,7 +8664,7 @@ Func_036_7226:: ; address name
 ActionEffect_IceSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_722C:: ; address name
     call AttackDamageScaledBySlotResistancesByte1Bits32
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 84 SlimeBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8672,7 +8672,7 @@ Func_036_722C:: ; address name
 ActionEffect_SlimeBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7232:: ; address name
     call AttackDamageHalvedDEFVsSlime
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 85 DrakSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8680,7 +8680,7 @@ Func_036_7232:: ; address name
 ActionEffect_DrakSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7238:: ; address name
     call AttackDamageHalvedDEFVsDragon
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 86 BeastCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8688,7 +8688,7 @@ Func_036_7238:: ; address name
 ActionEffect_BeastCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_723E:: ; address name
     call AttackDamageHalvedDEFVsBeast
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 87 BirdBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8696,7 +8696,7 @@ Func_036_723E:: ; address name
 ActionEffect_BirdBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7244:: ; address name
     call AttackDamageHalvedDEFVsBird
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 88 BugBlow; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8704,7 +8704,7 @@ Func_036_7244:: ; address name
 ActionEffect_BugBlow:: ; code pointer of the table ActionEffectTable; C0
 Func_036_724A:: ; address name
     call AttackDamageHalvedDEFVsBug
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 89 Shears; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8712,7 +8712,7 @@ Func_036_724A:: ; address name
 ActionEffect_Shears:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7250:: ; address name
     call AttackDamageHalvedDEFVsPlant
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 90 DevilCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8720,7 +8720,7 @@ Func_036_7250:: ; address name
 ActionEffect_DevilCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7256:: ; address name
     call AttackDamageHalvedDEFVsDemon
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 91 ZombieCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8728,7 +8728,7 @@ Func_036_7256:: ; address name
 ActionEffect_ZombieCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_725C:: ; address name
     call AttackDamageHalvedDEFVsZombie
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 92 CleanCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8736,7 +8736,7 @@ Func_036_725C:: ; address name
 ActionEffect_CleanCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7262:: ; address name
     call AttackDamageHalvedDEFVsMaterial
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 93 AquaCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8744,7 +8744,7 @@ Func_036_7262:: ; address name
 ActionEffect_AquaCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7268:: ; address name
     call AttackDamageHalvedDEFVsWater
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 94 MetalCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8752,7 +8752,7 @@ Func_036_7268:: ; address name
 ActionEffect_MetalCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_726E:: ; address name
     call AttackDamageTimes1_5IfSlotDamageFlagsBit0
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 95 PoisonHit, 96 Paralyze, 97 NapAttack; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8777,7 +8777,7 @@ Func_036_7278:: ; address name
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 99 BiAttack, 100 QuadHits; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8785,7 +8785,7 @@ Func_036_7278:: ; address name
 ActionEffect_BiAttack:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7291:: ; address name
     call ActionEffect_BiAttack_Sub01
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 101 RainSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8818,7 +8818,7 @@ Jump_036_72B9::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 102 MultiCut; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8826,7 +8826,7 @@ Jump_036_72B9::
 ActionEffect_MultiCut:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72C4:: ; address name
     call ActionEffect_MultiCut_Sub01
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 103 GigaSlash; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8834,7 +8834,7 @@ Func_036_72C4:: ; address name
 ActionEffect_GigaSlash:: ; code pointer of the table ActionEffectTable; C0
 Func_036_72CA:: ; address name
     call SkillDamageScaledBySlotResistancesByte6Bits32
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 104 ChargeUp; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8867,7 +8867,7 @@ Func_036_72E0:: ; address name
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 106 HighJump; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8990,7 +8990,7 @@ Func_036_7387:: ; address name
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 111 Ramming; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -8998,7 +8998,7 @@ Func_036_7387:: ; address name
 ActionEffect_Ramming:: ; code pointer of the table ActionEffectTable; C0
 Func_036_73B7:: ; address name
     call DamageEightyPercentOfTargetHPScaled
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through ActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) 112 Kamikaze; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10226,7 +10226,7 @@ Func_036_7AD5:: ; address name
 ActionEffect_ActionB9:: ; code pointer of the table ActionEffectTable; C0
 Func_036_7AEE:: ; address name
     call AttackDamageWithATK200
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (36:6726, indexed by wBattleActionId) for action(s) $BA; ids below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; no direct call (reached through a table, a jump or a vector)
@@ -10344,7 +10344,7 @@ Func_036_7B89:: ; address name
     cp a, $C0
     jr c, Jump_036_7B99
     call ComputeAttackDamage
-    jp ResolveStepComputeDamage_Sub02
+    jp UnreferencedStoreResolveMessage35D0_Bank36
 
 Jump_036_7B99::
     ld h, $D0
@@ -10535,10 +10535,10 @@ Jump_036_7C7D::
     ld bc, $80A8
     jr Jump_036_7C8B
 
-; only called from ResolveStepComputeDamage (E-0047)
+; the same 23 bytes as UnreferencedStoreResolveMessage35D0 (3B:4EB8)
 ; 1 call site from 1 routine (e.g. ResolveStepComputeDamage)
 ; writes: wResolveMsgActor, wResolveMsgTarget, wResolveMsgFlags, wResolveMsgArg
-ResolveStepComputeDamage_Sub02::
+UnreferencedStoreResolveMessage35D0_Bank36::
 Func_036_7C85:: ; address name
     ld hl, $D035
     ld bc, $88A8

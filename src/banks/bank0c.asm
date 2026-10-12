@@ -7996,7 +7996,7 @@ Func_00C_74A6:: ; address name
     ld [wEncounterKind], a
     ld a, [wGridCursorX]
     sla a
-    ld hl, Data_00C_7897
+    ld hl, GridEncounterTable
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -8328,9 +8328,86 @@ Data_00C_787D:: ; heuristic: pointer load in the same bank (bank assumed); C0
     db $7F, $78, $85, $78, $8B, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00
 
-; address loaded by ScriptCommand95_Run_Shared02
-Data_00C_7897:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $033897, $68
+; E-0236 (C1: ScriptCommand95_Run_Shared02 sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202)).
+; record: encounter list for this wGridCursorX
+GridEncounterTable::
+Data_00C_7897:: ; address name
+    dw GridEncounterList0 ; id 0
+    dw GridEncounterList1 ; id 1
+    dw GridEncounterList2 ; id 2
+    dw GridEncounterList3 ; id 3
+
+; E-0236 (C1: list 0 of GridEncounterTable).
+; record: three encounter words for this wScreenCountPlusOne
+GridEncounterList0::
+Data_00C_789F:: ; address name
+    dw GridEncounters0 ; id 0
+    dw Data_00C_78AB ; id 1
+    dw Data_00C_78B1 ; id 2
+
+; E-0236 (C1: the three records of GridEncounterList0).
+; record: three encounter words copied to wEncounterMonsters
+GridEncounters0::
+Data_00C_78A5:: ; address name
+    dw $008A, $008B, $008C ; id 0
+Data_00C_78AB:: ; heuristic: grid encounter; C0
+    dw $008D, $008E, $008F ; id 1
+Data_00C_78B1:: ; heuristic: grid encounter; C0
+    dw $0090, $0091, $0090 ; id 2
+
+; E-0236 (C1: list 1 of GridEncounterTable).
+; record: three encounter words for this wScreenCountPlusOne
+GridEncounterList1::
+Data_00C_78B7:: ; address name
+    dw GridEncounters1 ; id 0
+    dw Data_00C_78C3 ; id 1
+    dw Data_00C_78C9 ; id 2
+
+; E-0236 (C1: the three records of GridEncounterList1).
+; record: three encounter words copied to wEncounterMonsters
+GridEncounters1::
+Data_00C_78BD:: ; address name
+    dw $0092, $0093, $0092 ; id 0
+Data_00C_78C3:: ; heuristic: grid encounter; C0
+    dw $0094, $0095, $0094 ; id 1
+Data_00C_78C9:: ; heuristic: grid encounter; C0
+    dw $0096, $0097, $0098 ; id 2
+
+; E-0236 (C1: list 2 of GridEncounterTable).
+; record: three encounter words for this wScreenCountPlusOne
+GridEncounterList2::
+Data_00C_78CF:: ; address name
+    dw GridEncounters2 ; id 0
+    dw Data_00C_78DB ; id 1
+    dw Data_00C_78E1 ; id 2
+
+; E-0236 (C1: the three records of GridEncounterList2).
+; record: three encounter words copied to wEncounterMonsters
+GridEncounters2::
+Data_00C_78D5:: ; address name
+    dw $0099, $009A, $009B ; id 0
+Data_00C_78DB:: ; heuristic: grid encounter; C0
+    dw $009C, $009D, $009E ; id 1
+Data_00C_78E1:: ; heuristic: grid encounter; C0
+    dw $009F, $00A0, $00A1 ; id 2
+
+; E-0236 (C1: list 3 of GridEncounterTable).
+; record: three encounter words for this wScreenCountPlusOne
+GridEncounterList3::
+Data_00C_78E7:: ; address name
+    dw GridEncounters3 ; id 0
+    dw Data_00C_78F3 ; id 1
+    dw Data_00C_78F9 ; id 2
+
+; E-0236 (C1: the three records of GridEncounterList3).
+; record: three encounter words copied to wEncounterMonsters
+GridEncounters3::
+Data_00C_78ED:: ; address name
+    dw $00A2, $00A3, $00A2 ; id 0
+Data_00C_78F3:: ; heuristic: grid encounter; C0
+    dw $00A4, $00A5, $00A4 ; id 1
+Data_00C_78F9:: ; heuristic: grid encounter; C0
+    dw $00A6, $00A7, $00A8 ; id 2
 
 ; E-0183 (C1: ScriptCommand96_Run_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random number below it by repeated subtraction before indexing the list).
 ; record: number of usable entries in the list (39 each)

@@ -656,7 +656,7 @@ Func_0A0_434B:: ; address name
     push de
     sub a, $0D
     swap a
-    ld de, Data_0A0_4387
+    ld de, IncrementOffsetRows_A0
     add a, e
     ld e, a
     jr nc, Jump_0A0_4368
@@ -694,9 +694,17 @@ Func_0A0_4378:: ; address name
     ld [hl], a
     ret
 
-; address loaded by ApplyTable4387IncrementsForA0DTo13
-Data_0A0_4387:: ; heuristic: pointer load in the same bank (bank assumed); C0
-    INCBIN "dwm2-cobi-us.gbc", $280387, $70
+; E-0236 (C1: ApplyTable4387IncrementsForA0DTo13 takes A in $0D-$13, reads row 16 * (A - $0D) and for each byte before $80 increments the byte at DE + $FF00 + byte, capped at 3 (IncrementTableByteCappedAt3); 7 rows; the bank $19 and $A0 copies are identical).
+; record: offsets ($FF00 + byte, added to the base in DE) of the bytes to increment, up to $80, then zero padding
+IncrementOffsetRows_A0::
+Data_0A0_4387:: ; address name
+    db $E5, $E6, $E7, $E8, $E9, $EA, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
+    db $F5, $F6, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
+    db $EC, $F0, $F7, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
+    db $EC, $F0, $F7, $F8, $F9, $EB, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
+    db $EC, $F0, $F7, $F8, $F9, $ED, $F3, $EB, $EF, $80, $00, $00, $00, $00, $00, $00 ; id 17
+    db $FF, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
+    db $FA, $FB, $FC, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
 ; runs Func_0A0_4410 for slots 0-3 or Func_0A0_456F for slots 4-7, clears the species record buffer and restores wD868 (E-0122)
 ; 2 call sites from 2 routines (e.g. GameMode7_Init_Sub01_Sub03, RunBattlePhaseWhenTextIdle_A0_Case00_Case06_Sub03)
