@@ -55,7 +55,30 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-12, after E-0291)
+## Readability state (2026-10-12, after E-0308)
+
+Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run426). Tests: 177 run, 3 skipped. The figures below are measured from the generated `src/`:
+
+| Measure | State |
+| --- | --- |
+| Labels with only an address name | 0. No primary `Func_`/`Jump_`/`Data_` label is left (`tools/rank_unnamed.py`: 0 routines). Address names remain as aliases under the names. |
+| RAM operands with only an address name | 0 (`tools/rank_unnamed.py --ram`) |
+| Structural labels | 0 left unnamed: no bare dispatcher and no bare step (generator count, E-0305). Every dispatcher is named, by reading (E-0288 to E-0304) or, for the smallest, from its steps. Global names that still contain `_CaseNN`/`_SubNN` keep it for a state number or to keep a descriptive name unique. |
+| Branch targets | 13,086 named by shape (E-0287). Most are local labels such as `.loop`, `.set_sprite_slot_count`, `.call_queue_music`, `.return_01`; the rest are `<Routine>_<Shape>` globals. |
+| Record and structure fields | 2,101 operands use field constants from src/records.inc (E-0290 to E-0308): `MON_*` (the $A5-byte monster record), `BATTLER_*` (the $4E-byte battler record), `SPECIES_*` (the 47-byte species record), `OBJ_*` and `SCRIPTOBJ_*` (field objects). |
+| Monster record bytes not read | $28, $33 |
+| Species record bytes not read | 2-3, 5, $0B-$0F, $11, $2D-$2E |
+| Event scripts and talk events | Every command type is a named constant (E-0244, E-0286, E-0293). Talk categories are named by region (E-0288). |
+| String quotes | Message words, string displays (including through category and index wrappers, E-0292 and E-0294) and battle text are quoted at their call sites. |
+| `INCBIN` without an asset comment | 0 (E-0301 corrected E-0289's reading of 17:5D79) |
+
+Most names are C1 readings of what the code does, and many describe mechanics rather than confirmed game meaning. Open questions:
+- Which sex value bit 0 of MON_SEX stands for.
+- What MON_EGG 1 and 2 distinguish.
+- What wTopStat1 and the family scores (changed by gifts) mean in play.
+- The species and record bytes listed above.
+
+## Readability state (2026-10-12, after E-0291) (superseded above)
 
 Binary identity passes: SHA-256 `8e38a742...766d4e`, 0 differing bytes (build/run393). Tests: 173 run, 3 skipped. The figures below are measured from the generated `src/`:
 
